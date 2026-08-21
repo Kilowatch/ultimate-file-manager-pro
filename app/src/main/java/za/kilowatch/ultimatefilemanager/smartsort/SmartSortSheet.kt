@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -151,31 +152,48 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         val btnHistory = view.findViewById<MaterialButton>(R.id.btnHistory)
         var lastResult: SmartSortResult? = null
 
-        btnPreview.setOnClickListener {
+                btnPreview.setOnClickListener {
+            val err = validateConfig(view)
+            if (err != null) {
+                showValidationErrorDialog(err)
+                return@setOnClickListener
+            }
             val config = buildConfig(view)
-            layoutPreview.visibility = View.GONE
             lifecycleScope.launch {
                 val preview = withContext(Dispatchers.IO) {
                     engine.preview(folderPath, config)
                 }
+                val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_smart_sort_preview, null)
                 val sb = StringBuilder()
                 preview.categoryCounts.forEach { (cat, count) ->
-                    sb.appendLine("$cat: $count files")
+                    sb.appendLine("$cat: $count")
                 }
-                sb.appendLine()
-                sb.appendLine("Total: ${preview.totalFiles} files")
+                if (sb.isEmpty()) sb.appendLine(getString(R.string.smart_sort_empty))
+                dialogView.findViewById<TextView>(R.id.txtPreviewStats).text = sb.toString().trimEnd()
+                dialogView.findViewById<TextView>(R.id.txtTotalFiles).text = getString(R.string.smart_sort_preview_total, preview.totalFiles)
+
+                val conflictsAlert = dialogView.findViewById<View>(R.id.layoutConflictsAlert)
+                val txtConflicts = dialogView.findViewById<TextView>(R.id.txtConflictsCount)
                 if (preview.conflicts.isNotEmpty()) {
-                    sb.appendLine("Conflicts: ${preview.conflicts.size}")
+                    txtConflicts.text = getString(R.string.smart_sort_preview_conflicts, preview.conflicts.size)
+                    conflictsAlert.visibility = View.VISIBLE
+                } else {
+                    conflictsAlert.visibility = View.GONE
                 }
-                txtPreview.text = sb.toString()
-                layoutPreview.visibility = View.VISIBLE
+
+                val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .create()
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialogView.findViewById<View>(R.id.btnDone).setOnClickListener { dialog.dismiss() }
+                dialog.show()
             }
         }
 
         btnStart.setOnClickListener {
-            if (isCustomMode && (sheetCustomRules.isEmpty() || sheetCustomRules.none { it.enabled })) {
-                com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
-                    .setMessage(R.string.smart_sort_no_rules).setPositiveButton(R.string.got_it_1, null).show()
+            val err = validateConfig(view)
+            if (err != null) {
+                showValidationErrorDialog(err)
                 return@setOnClickListener
             }
             val config = buildConfig(view)
@@ -244,6 +262,68 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         }
     }
 
+    private fun validateConfig(view: View): String? {
+        val cs = view.findViewById<ChipGroup>(R.id.cgScope)
+        if (cs.checkedChipId == -1) return getString(R.string.smart_sort_err_scope)
+        if (cs.checkedChipId == R.id.chipRecursive) {
+            val cg = view.findViewById<ChipGroup>(R.id.cgSubfolderMode)
+            if (cg.checkedChipId == -1) return getString(R.string.smart_sort_err_subfolder)
+        }
+        if (isCustomMode) {
+            if (sheetCustomRules.isEmpty() || sheetCustomRules.none { it.enabled }) return getString(R.string.smart_sort_no_rules)
+            for (r in sheetCustomRules) {
+                if (!r.enabled) continue
+                if (r.description.isBlank()) return getString(R.string.smart_sort_description_empty)
+                if (r.extensions.isEmpty()) return getString(R.string.smart_sort_no_extensions)
+            }
+        } else {
+            val cm = view.findViewById<ChipGroup>(R.id.cgSortMode)
+            if (cm.checkedChipId == -1) return getString(R.string.smart_sort_err_mode)
+            val has = when (cm.checkedChipId) {
+                R.id.chipModeType -> SmartSortCategory.entries.any { cat ->
+                    val id = when (cat) {
+                        SmartSortCategory.PHOTOS -> R.id.chipCatPhotos
+                        SmartSortCategory.VIDEOS -> R.id.chipCatVideos
+                        SmartSortCategory.AUDIO -> R.id.chipCatAudio
+                        SmartSortCategory.DOCUMENTS -> R.id.chipCatDocuments
+                        SmartSortCategory.ARCHIVES -> R.id.chipCatArchives
+                        SmartSortCategory.APPS -> R.id.chipCatApps
+                        SmartSortCategory.EBOOKS -> R.id.chipCatEbooks
+                    }
+                    view.findViewById<Chip>(id)?.isChecked == true
+                }
+                R.id.chipModeSize -> SizeTier.entries.any { t ->
+                    val id = when (t) {
+                        SizeTier.TINY -> R.id.chipSizeTiny
+                        SizeTier.SMALL -> R.id.chipSizeSmall
+                        SizeTier.MEDIUM -> R.id.chipSizeMedium
+                        SizeTier.LARGE -> R.id.chipSizeLarge
+                        SizeTier.HUGE -> R.id.chipSizeHuge
+                    }
+                    view.findViewById<Chip>(id)?.isChecked == true
+                }
+                R.id.chipModeDate -> DatePeriod.entries.any { p ->
+                    val id = when (p) {
+                        DatePeriod.TODAY -> R.id.chipDateToday
+                        DatePeriod.THIS_WEEK -> R.id.chipDateWeek
+                        DatePeriod.THIS_MONTH -> R.id.chipDateMonth
+                        DatePeriod.THIS_YEAR -> R.id.chipDateYear
+                        DatePeriod.OLDER -> R.id.chipDateOlder
+                    }
+                    view.findViewById<Chip>(id)?.isChecked == true
+                }
+                else -> true
+            }
+            if (!has) {
+                val io = view.findViewById<Chip>(R.id.chipIncludeOther)?.isChecked == true
+                if (!io) return getString(R.string.smart_sort_err_no_category)
+            }
+        }
+        if (view.findViewById<ChipGroup>(R.id.cgDuplicateStrategy).checkedChipId == -1) return getString(R.string.smart_sort_err_duplicate)
+        if (view.findViewById<ChipGroup>(R.id.cgExistingFolderStrategy).checkedChipId == -1) return getString(R.string.smart_sort_err_existing)
+        return null
+    }
+
     private fun buildConfig(view: View): SmartSortConfig {
         val cgScope = view.findViewById<ChipGroup>(R.id.cgScope)
         val isRecursive = cgScope.checkedChipId == R.id.chipRecursive
@@ -294,9 +374,8 @@ class SmartSortSheet : BottomSheetDialogFragment() {
                 SmartSortCategory.ARCHIVES -> R.id.chipCatArchives
                 SmartSortCategory.APPS -> R.id.chipCatApps
                 SmartSortCategory.EBOOKS -> R.id.chipCatEbooks
-                else -> null
             }
-            chipId != null && view.findViewById<Chip>(chipId)?.isChecked == true
+            view.findViewById<Chip>(chipId)?.isChecked == true
         }.toSet()
 
         val enabledSizes = SizeTier.entries.filter { tier ->
@@ -517,112 +596,153 @@ class SmartSortSheet : BottomSheetDialogFragment() {
             val btnActionRow = LinearLayout(requireContext()).apply { orientation = LinearLayout.HORIZONTAL; setPadding(48, 4, 0, 0) }
             val btnEdit = com.google.android.material.button.MaterialButton(requireContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply { layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(8, 0, 8, 0) }; text = getString(R.string.smart_sort_edit_rule); textSize = 12f; minimumHeight = 0; setPadding(8, 2, 8, 2); setOnClickListener { showSheetEditRuleDialog(view, index) } }
             btnActionRow.addView(btnEdit)
-            val btnDelete = com.google.android.material.button.MaterialButton(requireContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply { layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(8, 0, 8, 0) }; text = getString(R.string.smart_sort_delete_rule); textSize = 12f; minimumHeight = 0; setPadding(8, 2, 8, 2); setOnClickListener { com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog).setTitle(R.string.smart_sort_delete_rule_confirm).setIcon(R.drawable.ic_delete).setPositiveButton(R.string.smart_sort_delete_rule) { _, _ -> sheetCustomRules.removeAt(index); customCategoryPaths.remove(rule.id); customCategoryShareIds.remove(rule.id); renderSheetCustomRules(view) }.setNegativeButton(R.string.cancel, null).show() } }
+            val btnDelete = com.google.android.material.button.MaterialButton(requireContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply { layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(8, 0, 8, 0) }; text = getString(R.string.smart_sort_delete_rule); textSize = 12f; minimumHeight = 0; setPadding(8, 2, 8, 2); setOnClickListener { val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_smart_sort_delete_rule_confirm, null)
+                val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog).setView(dialogView).create()
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialogView.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
+                    sheetCustomRules.removeAt(index)
+                    customCategoryPaths.remove(rule.id)
+                    customCategoryShareIds.remove(rule.id)
+                    renderSheetCustomRules(view)
+                    dialog.dismiss()
+                }
+                dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
+                dialog.show() } }
             btnActionRow.addView(btnDelete)
             card.addView(btnActionRow)
             container.addView(card)
         }
     }
 
+            private fun showValidationErrorDialog(errorMsg: String) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_smart_sort_validation_error, null)
+        dialogView.findViewById<TextView>(R.id.txtErrorMessage).text = errorMsg
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialogView.findViewById<View>(R.id.btnDone).setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
+
     private fun showSheetAddRuleDialog(view: View) {
-        val input = EditText(requireContext()).apply {
-            hint = getString(R.string.smart_sort_rule_description)
-            setPadding(24, 16, 24, 16)
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_smart_sort_add_rule, null)
+        val txtInput = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.txtRuleDescription)
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
+            val desc = txtInput.text?.toString()?.trim() ?: ""
+            if (desc.isEmpty()) {
+                dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.txtRuleDescriptionLayout)?.error = getString(R.string.smart_sort_description_empty)
+                return@setOnClickListener
+            }
+            sheetCustomRules.add(SmartSortCustomRule(description = desc))
+            renderSheetCustomRules(view)
+            dialog.dismiss()
         }
-        val dialogContainer = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL; setPadding(24, 8, 24, 8)
-            addView(input)
-        }
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
-            .setTitle(R.string.smart_sort_add_rule).setView(dialogContainer)
-            .setPositiveButton(R.string.smart_sort_add_rule) { d, _ ->
-                val desc = input.text?.toString()?.trim() ?: ""
-                if (desc.isEmpty()) {
-                    com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
-                        .setMessage(R.string.smart_sort_description_empty).setPositiveButton(R.string.got_it_1, null).show()
-                    return@setPositiveButton
-                }
-                sheetCustomRules.add(SmartSortCustomRule(description = desc))
-                renderSheetCustomRules(view)
-                d.dismiss()
-            }.setNegativeButton(R.string.cancel, null).show()
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
+        dialog.show()
     }
 
     private fun showSheetEditRuleDialog(view: View, index: Int) {
         val rule = sheetCustomRules[index]
-        val input = EditText(requireContext()).apply {
-            setText(rule.description)
-            hint = getString(R.string.smart_sort_rule_description)
-            setPadding(24, 16, 24, 16)
-        }
-        val dialogContainer = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL; setPadding(24, 8, 24, 8)
-            addView(input)
-        }
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
-            .setTitle(R.string.smart_sort_edit_rule).setView(dialogContainer)
-            .setPositiveButton(R.string.smart_sort_edit_rule) { d, _ ->
-                val desc = input.text?.toString()?.trim() ?: ""
-                if (desc.isEmpty()) {
-                    com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
-                        .setMessage(R.string.smart_sort_description_empty).setPositiveButton(R.string.got_it_1, null).show()
-                    return@setPositiveButton
-                }
-                sheetCustomRules[index] = rule.copy(description = desc)
-                renderSheetCustomRules(view)
-                d.dismiss()
-            }.setNegativeButton(R.string.cancel, null).show()
-    }
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_smart_sort_add_rule, null)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        txtTitle.setText(R.string.smart_sort_edit_rule)
+        val txtInput = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.txtRuleDescription)
+        txtInput.setText(rule.description)
 
-    private fun showSheetAddExtensionDialog(view: View, ruleIndex: Int) {
-        val input = EditText(requireContext()).apply {
-            hint = getString(R.string.smart_sort_extension_empty)
-            setPadding(24, 16, 24, 16)
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
+            val desc = txtInput.text?.toString()?.trim() ?: ""
+            if (desc.isEmpty()) {
+                dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.txtRuleDescriptionLayout)?.error = getString(R.string.smart_sort_description_empty)
+                return@setOnClickListener
+            }
+            sheetCustomRules[index] = rule.copy(description = desc)
+            renderSheetCustomRules(view)
+            dialog.dismiss()
         }
-        val errorText = android.widget.TextView(requireContext()).apply {
-            textSize = 12f; visibility = View.GONE
-        }
-        val dialogContainer = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL; setPadding(24, 8, 24, 8)
-            addView(input); addView(errorText)
-        }
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
-            .setTitle(R.string.smart_sort_add_extension).setView(dialogContainer)
-            .setPositiveButton(R.string.smart_sort_add_extension) { d, _ ->
-                val ext = input.text?.toString()?.trim()?.lowercase() ?: ""
-                if (ext.isEmpty()) {
-                    errorText.text = getString(R.string.smart_sort_extension_empty)
-                    errorText.visibility = View.VISIBLE; return@setPositiveButton
-                }
-                for ((otherIdx, other) in sheetCustomRules.withIndex()) {
-                    if (otherIdx != ruleIndex && ext in other.extensions) {
-                        d.dismiss()
-                        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog).setTitle(getString(R.string.smart_sort_extension_already_used, ext, other.description)).setPositiveButton(R.string.got_it_1, null).show()
-                        return@setPositiveButton
-                    }
-                }
-                sheetCustomRules[ruleIndex].extensions.add(ext)
-                d.dismiss(); renderSheetCustomRules(view)
-            }.setNegativeButton(R.string.cancel, null).create()
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
 
-    private fun showSheetRemoveExtensionsDialog(view: View, ruleIndex: Int) {
-        val rule = sheetCustomRules[ruleIndex]
-        val dialogView = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL; setPadding(24, 16, 24, 8) }
-        for (ext in rule.extensions.toList()) {
-            val card = com.google.android.material.card.MaterialCardView(requireContext()).apply {
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(0, 0, 0, 16) }
-                radius = 16f
-                strokeWidth = 0
-                setCardBackgroundColor(android.graphics.Color.TRANSPARENT); setBackgroundResource(R.drawable.bg_glass_card_dark)
+    private fun showSheetAddExtensionDialog(view: View, ruleIndex: Int) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_smart_sort_add_extension, null)
+        val txtInput = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.txtExtension)
+        val txtErr = dialogView.findViewById<TextView>(R.id.txtExtensionError)
+
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
+            val ext = txtInput.text?.toString()?.trim()?.lowercase()?.removePrefix(".") ?: ""
+            if (ext.isEmpty()) {
+                txtErr.text = getString(R.string.smart_sort_extension_empty)
+                txtErr.visibility = View.VISIBLE
+                return@setOnClickListener
             }
-            val row = LinearLayout(requireContext()).apply { orientation = LinearLayout.HORIZONTAL; gravity = android.view.Gravity.CENTER_VERTICAL; setPadding(32, 24, 32, 24) }
-            row.addView(TextView(requireContext()).apply { text = ext; textSize = 20f; setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.mobile_text_primary)); layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
-            val trash = ImageView(requireContext()).apply { layoutParams = LinearLayout.LayoutParams(56, 56); setImageResource(R.drawable.ic_delete); imageTintList = android.content.res.ColorStateList.valueOf(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_error)); setOnClickListener { rule.extensions.remove(ext); dialogView.removeView(card) } }
-            row.addView(trash); card.addView(row); dialogView.addView(card)
+            for ((otherIdx, other) in sheetCustomRules.withIndex()) {
+                if (otherIdx != ruleIndex && ext in other.extensions) {
+                    txtErr.text = getString(R.string.smart_sort_extension_already_used, ext, other.description)
+                    txtErr.visibility = View.VISIBLE
+                    return@setOnClickListener
+                }
+            }
+            sheetCustomRules[ruleIndex].extensions.add(ext)
+            dialog.dismiss()
+            renderSheetCustomRules(view)
         }
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog).setTitle(R.string.smart_sort_remove_extensions_title).setView(dialogView).setPositiveButton(R.string.done) { _, _ -> renderSheetCustomRules(view) }.create()
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
+
+        private fun showSheetRemoveExtensionsDialog(view: View, ruleIndex: Int) {
+        val rule = sheetCustomRules[ruleIndex]
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_smart_sort_remove_extensions, null)
+        val layoutList = dialogView.findViewById<LinearLayout>(R.id.layoutExtensionList)
+        val txtEmpty = dialogView.findViewById<TextView>(R.id.txtEmptyExtensions)
+
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val inflater = LayoutInflater.from(requireContext())
+        fun renderExtensionList() {
+            layoutList.removeAllViews()
+            if (rule.extensions.isEmpty()) {
+                txtEmpty.visibility = View.VISIBLE
+                return
+            }
+            txtEmpty.visibility = View.GONE
+
+            for (ext in rule.extensions.toList()) {
+                val row = inflater.inflate(R.layout.item_smart_sort_remove_extension, layoutList, false)
+                row.findViewById<TextView>(R.id.txtExtensionName).text = if (ext.startsWith(".")) ext else ".$ext"
+                row.findViewById<View>(R.id.btnDeleteExtension).setOnClickListener {
+                    rule.extensions.remove(ext)
+                    renderExtensionList()
+                }
+                layoutList.addView(row)
+            }
+        }
+
+        renderExtensionList()
+
+        dialogView.findViewById<View>(R.id.btnDone).setOnClickListener {
+            dialog.dismiss()
+            renderSheetCustomRules(view)
+        }
         dialog.show()
     }
 

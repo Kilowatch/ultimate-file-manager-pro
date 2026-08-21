@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Support Success Dialog - TV glass card with yellow focus
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="540dp"
+    android:layout_width="500dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_support_dialog_card"
-    android:padding="28dp"
+    android:background="@drawable/bg_tv_glass_card"
+    android:padding="24dp"
     android:gravity="center_horizontal">
 
-    <!-- Success Badge Circle -->
-    <FrameLayout
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:background="@drawable/bg_icon_circle_accent"
-        android:layout_marginBottom="16dp">
-
-        <ImageView
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_success"
-            app:tint="@color/ufm_progress_fill" />
-    </FrameLayout>
+    <!-- Success Badge -->
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_success"
+        app:tint="@color/ufm_progress_fill"
+        android:layout_marginBottom="12dp"
+        android:contentDescription="@null" />
 
     <!-- Title -->
     <TextView
@@ -31,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="@string/support_success_title"
         android:textColor="@color/tv_text_primary"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:fontFamily="sans-serif-black"
         android:gravity="center" />
 
@@ -41,23 +38,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="22dp"
         android:text="@string/support_success_message"
         android:textColor="@color/tv_text_secondary"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:gravity="center"
-        android:lineSpacingExtra="4dp" />
+        android:lineSpacingExtra="3dp" />
 
     <!-- TV OK Button -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDialogOk"
+        style="@style/TvContinueButton"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="44dp"
         android:text="@android:string/ok"
-        android:textColor="@color/tv_text_primary"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:fontFamily="sans-serif-medium"
         android:focusable="true"
-        android:background="@drawable/selector_tv_button" />
+        android:clickable="true"
+        android:insetTop="0dp"
+        android:insetBottom="0dp" />
 
 </LinearLayout>

@@ -60,16 +60,22 @@ class SmartSortHistorySheet : BottomSheetDialogFragment() {
         updateList(entries, txtEmpty, layoutList)
 
         btnClearAll.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
-                .setTitle(R.string.smart_sort_history_clear_all_title)
-                .setMessage(R.string.smart_sort_history_clear_all_msg)
-                .setPositiveButton(R.string.smart_sort_history_delete) { _, _ ->
-                    SmartSortHistoryManager.clearAll()
-                    updateList(emptyList(), txtEmpty, layoutList)
-                    onRefresh?.invoke()
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_smart_sort_clear_history_confirm, null)
+            val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
+                .setView(dialogView)
+                .create()
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            dialogView.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
+                SmartSortHistoryManager.clearAll()
+                updateList(emptyList(), txtEmpty, layoutList)
+                onRefresh?.invoke()
+                dialog.dismiss()
+            }
+            dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
         }
     }
 
@@ -101,29 +107,18 @@ class SmartSortHistorySheet : BottomSheetDialogFragment() {
 
             card.findViewById<MaterialButton>(R.id.btnHistoryUndo).setOnClickListener {
                 val context = requireContext()
-                val undoProgressView = LinearLayout(context).apply {
-                    orientation = LinearLayout.VERTICAL
-                    setPadding(48, 32, 48, 8)
-                }
-                val undoStatusText = TextView(context).apply {
-                    text = getString(R.string.smart_sort_undoing)
-                    textSize = 14f
-                }
-                val undoProgressBar = android.widget.ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal).apply {
-                    max = 100
-                    progress = 0
-                    layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    ).apply { topMargin = 16 }
-                }
-                undoProgressView.addView(undoStatusText)
-                undoProgressView.addView(undoProgressBar)
+                val undoProgressView = LayoutInflater.from(context).inflate(R.layout.dialog_smart_sort_progress, null)
+                val undoStatusText = undoProgressView.findViewById<TextView>(R.id.txtProgress)
+                val undoProgressBar = undoProgressView.findViewById<ProgressBar>(R.id.progressBar)
+                undoProgressView.findViewById<TextView>(R.id.txtTitle).setText(R.string.smart_sort_undo)
+                undoProgressBar.max = 100
+                undoProgressBar.progress = 0
+
                 val undoDialog = MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
-                    .setTitle(R.string.smart_sort_undo)
                     .setView(undoProgressView)
                     .setCancelable(false)
                     .create()
+                undoDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                 undoDialog.show()
 
                 lifecycleScope.launch {
@@ -138,7 +133,7 @@ class SmartSortHistorySheet : BottomSheetDialogFragment() {
                             engine.undo(entry.manifestFolderPath, manifest, config) { fileName, current, total ->
                                 requireActivity().runOnUiThread {
                                     undoStatusText.text = getString(R.string.smart_sort_progress_moving, fileName, current, total)
-                                    undoProgressBar.progress = (current * 100) / total
+                                    undoProgressBar.progress = if (total > 0) (current * 100) / total else 0
                                 }
                             }
                         }

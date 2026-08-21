@@ -388,6 +388,12 @@
     <string name="analyzer_duplicate_copy_plural">%1$d copies</string>
     <string name="analyzer_duplicate_saves">saves %1$s</string>
     <!-- Section headers inside Overview -->
+    <string name="analyzer_info_notice">Inspect disk usage, explore categorized storage breakdown, and discover large files, duplicates, and cleanup suggestions.</string>
+    <string name="analyzer_section_storage_breakdown">Storage Breakdown</string>
+    <string name="analyzer_section_top_folders">Top Folders</string>
+    <string name="analyzer_section_app_usage">App Storage Usage</string>
+    <string name="analyzer_empty_state_desc">No items found for this analysis category.</string>
+    <string name="analyzer_action_review">Review &amp; Clean</string>
     <string name="analyzer_top_folders">Top Folders by Size</string>
     <string name="analyzer_app_usage">App Storage Usage</string>
     <!-- Non-indexed banners -->
@@ -588,6 +594,8 @@
     <string name="settings_network_open_cache_subtitle_off">Disabled — direct stream (default)</string>
 
     <!-- Open Source Licenses -->
+    <string name="policy_section_agreements">Policies &amp; Agreements</string>
+    <string name="policy_section_attributions">Attributions &amp; Licenses</string>
     <string name="policy_licenses_button">Open Source Licenses</string>
     <string name="policy_selection_subtitle2">T&amp;C\'s, Privacy Policy &amp; Licenses</string>
     <string name="no_browser_installed_dialog_message">No browser is installed on this device.\n\nVisit this URL on another device:\n\n%1$s</string>
@@ -821,6 +829,7 @@
     <string name="network_tile_subtitle">SMB, FTP and more</string>
     <string name="network_shares_title">Network Shares</string>
     <string name="network_shares_subtitle">SMB · FTP</string>
+    <string name="network_shares_info_notice">Connect to SMB, FTP, SFTP, SCP, and NFS shares on your local network to browse, transfer, and organize files seamlessly.</string>
     <string name="network_add_share">Add share</string>
     <string name="network_empty_title">No network shares configured</string>
     <string name="network_empty_body">Tap the + button to add an SMB or FTP share.\nConfigured shares will appear in any app\'s file picker.</string>
@@ -836,6 +845,7 @@
     <string name="network_field_name">Share name (e.g. Main NAS)</string>
     <string name="network_field_host">Host / IP address</string>
     <string name="network_field_port">Port (leave blank for default)</string>
+    <string name="network_section_credentials">Credentials &amp; Authentication</string>
     <string name="network_field_username">Username (blank = guest)</string>
     <string name="network_field_password">Password or Passphrase</string>
     <string name="network_field_domain">Domain (SMB only)</string>
@@ -1021,6 +1031,17 @@
     <string name="conflict_log_title">Conflict Log</string>
     <string name="conflict_log_empty">No conflicts recorded</string>
     <string name="conflict_log_entry">%1$s — used %2$s version</string>
+
+    <string name="configure_sync_folders_schedule">Configure folders &amp; sync schedule</string>
+    <string name="sync_section_profile_direction">Profile &amp; Direction</string>
+    <string name="sync_section_folders">Folders &amp; Locations</string>
+    <string name="sync_section_schedule">Schedule &amp; Automation</string>
+    <string name="sync_section_conflict">Conflict Handling &amp; Deletions</string>
+    <string name="sync_section_filtering">File Filtering &amp; Tags</string>
+    <string name="general_settings">General Settings</string>
+    <string name="schedule_and_triggers">Schedule &amp; Triggers</string>
+    <string name="schedule_mode">Schedule Mode</string>
+    <string name="options">Options</string>
 
     <!-- Generic -->
     <string name="cancel">Cancel</string>
@@ -2300,6 +2321,7 @@
     <!-- Smart Sort -->
     <string name="smart_sort_title">Smart Sort</string>
     <string name="smart_sort_tile_subtitle">Organize files into categories</string>
+    <string name="smart_sort_info_notice">Automatically categorize and organize files into structured folders by type, size, date, or custom rules. Select a storage drive or share below to begin.</string>
     <string name="smart_sort_config">Smart Sort Configuration</string>
     <string name="smart_sort_here">Smart Sort This Folder</string>
     <string name="smart_sort_select_drive">Select a drive</string>
@@ -2479,6 +2501,7 @@
     <string name="set_up_smb_ftp">Set Up SMB / FTP</string>
     <string name="sync_enabled">Sync enabled</string>
     <string name="sync_disabled">Sync disabled</string>
+    <string name="sync_delete_profile_confirm_msg">Are you sure you want to delete \"%1$s\"? This cannot be undone.</string>
     <string name="profile_deleted">Profile deleted</string>
     <string name="every_formatintervalprofileintervalminutes">Every %1$s</string>
     <string name="daily_at_timestr">Daily at %1$s</string>
@@ -2665,6 +2688,8 @@
     <string name="apng4android_comgithubpenfeizhou">APNG4Android (com.github.penfeizhou.android.animation)</string>
     <string name="online_storages_title">Online Storages</string>
     <string name="online_storages_subtitle">OneDrive, Google Drive and more</string>
+    <string name="online_storages_info_notice">Connect to cloud storage providers including OneDrive, Google Drive, Dropbox, Box, AWS S3, WebDAV, and RClone to browse, transfer, and sync files.</string>
+    <string name="online_storage_delete_confirm_body">Are you sure you want to remove the connection to \"%1$s\"?</string>
     <string name="opening_online_storages">Opening Online Storages…</string>
 
     <string name="online_storages_empty_title">No Accounts Connected</string>
@@ -4296,6 +4321,39 @@
     <string name="dlna_info_notice">Stream photos, music, and videos to smart TVs and DLNA media players on your local Wi-Fi network, or allow other devices to cast media to this device.</string>
     <string name="dlna_settings_info_notice">Configure how your device appears on the local network and choose directories to share. DLNA media shares are strictly read-only.</string>
     <string name="dlna_empty_shared_folders_desc">Tap \'Add Folder\' to select internal storage, SD card, or USB folders to expose via DLNA.</string>
+
+    <!-- Smart Sort Modernization -->
+    <string name="smart_sort_empty">No storage drives found</string>
+    <string name="smart_sort_history_moved">Moved</string>
+    <string name="smart_sort_history_skipped">Skipped</string>
+    <string name="smart_sort_history_failed">Failed</string>
+
+    <!-- Rate Us Modernization -->
+    <string name="rate_us_section_rate">Rating &amp; Feedback</string>
+    <string name="rate_us_section_support">More Ways to Support</string>
+    <string name="rate_us_support_title">Support the Project</string>
+    <string name="rate_us_support_subtitle">Leave a tip if you can support the project</string>
+    <string name="rate_us_stars_description">5-star rating</string>
+
+    <!-- Help & Support Modernization -->
+    <string name="support_section_channels">Contact Channels</string>
+    <string name="support_section_direct">Direct Contact</string>
+    <string name="support_direct_email_title">support@kilowatch.co.za</string>
+    <string name="support_direct_email_subtitle">Email the development team directly</string>
+    <string name="support_direct_email_copied">Support email copied to clipboard</string>
+
+    <!-- About Modernization -->
+    <string name="about_section_app">App Information</string>
+    <string name="about_section_support">Developer &amp; Links</string>
+    <string name="about_section_legal">Legal &amp; Policies</string>
+    <string name="about_section_acknowledgments">Acknowledgments</string>
+    <string name="about_legal_title">Privacy Policy &amp; Terms</string>
+    <string name="about_legal_subtitle">Review our privacy policy, terms of service, and licenses</string>
+    <string name="about_rate_title">Rate &amp; Review</string>
+    <string name="about_rate_subtitle">Share your experience on Google Play</string>
+    <string name="about_support_title">Help &amp; Support</string>
+    <string name="about_support_subtitle">Report an issue or request features</string>
+    <string name="about_email_copied">Support email copied to clipboard</string>
 </resources>
 
 

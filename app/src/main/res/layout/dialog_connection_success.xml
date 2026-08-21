@@ -1,119 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Premium "Connection Successful" dialog.
-     Root view has a solid opaque surface background (auto light/dark via theme).
-     No window-transparent tricks needed — MaterialAlertDialogBuilder clips to rounded corners. -->
+<!--
+    Network Connection Success Dialog (TV Standard)
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_dialog_surface"
-    android:clipToOutline="true"
-    android:padding="0dp">
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp">
 
-    <!-- Green accent top bar -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/status_success" />
+    <!-- Success Hero Badge (56dp with green circle) -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/bg_success_circle">
 
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check"
+            app:tint="@color/white"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtSuccessTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/network_dialog_success_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-black" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/txtSuccessSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/network_dialog_success_body"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14.5sp"
+        android:gravity="center"
+        android:lineSpacingExtra="3dp" />
+
+    <!-- Action Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="28dp">
+        android:orientation="vertical">
 
-        <!-- Icon + Title row -->
-        <LinearLayout
+        <!-- Save & Exit -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSuccessSave"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:layout_height="52dp"
+            android:text="@string/network_dialog_success_save"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-bold"
+            app:backgroundTint="@color/status_success"
+            app:cornerRadius="12dp"
+            app:elevation="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:icon="@drawable/ic_check"
+            app:iconTint="@color/white"
+            app:iconSize="20dp"
+            app:iconGravity="textStart" />
 
-            <!-- Green success circle icon -->
-            <FrameLayout
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:background="@drawable/bg_success_circle"
-                android:layout_marginEnd="16dp">
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_check"
-                    android:contentDescription="@null"
-                    app:tint="@color/white" />
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtSuccessTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/network_dialog_success_title"
-                    android:textColor="@color/ufm_text_primary"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-black" />
-
-                <TextView
-                    android:id="@+id/txtSuccessSubtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="@string/network_dialog_success_body"
-                    android:textColor="@color/ufm_text_secondary"
-                    android:textSize="13sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Divider -->
-        <View
+        <!-- Keep Editing -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSuccessCancel"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#33FFFFFF"
-            android:layout_marginBottom="20dp" />
-
-        <!-- Buttons row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end">
-
-            <!-- Cancel -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSuccessCancel"
-                style="@style/Widget.Material3Expressive.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/network_dialog_success_cancel"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="14sp" />
-
-            <!-- Save & Exit -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSuccessSave"
-                style="@style/Widget.Material3Expressive.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:text="@string/network_dialog_success_save"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                app:backgroundTint="@color/status_success"
-                app:cornerRadius="12dp"
-                app:elevation="0dp"
-                app:icon="@drawable/ic_check"
-                app:iconTint="@color/white"
-                app:iconSize="18dp" />
-        </LinearLayout>
+            android:layout_height="44dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/network_dialog_success_cancel"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14.5sp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp" />
     </LinearLayout>
 
 </LinearLayout>

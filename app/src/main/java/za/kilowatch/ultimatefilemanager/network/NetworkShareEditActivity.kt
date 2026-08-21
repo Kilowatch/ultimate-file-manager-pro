@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -87,19 +85,12 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private lateinit var tilUsername:     TextInputLayout
     private lateinit var tilPassword:     TextInputLayout
 
-    private var rgType:           RadioGroup? = null
     private var chipSmb:          MaterialButton? = null
     private var chipFtp:          MaterialButton? = null
     private var chipSftp:         MaterialButton? = null
     private var chipScp:          MaterialButton? = null
     private var chipNfs:          MaterialButton? = null
     private var chipDlna:         MaterialButton? = null
-
-    private var rbSmb:            RadioButton? = null
-    private var rbSftp:           RadioButton? = null
-    private var rbScp:            RadioButton? = null
-    private var rbNfs:            RadioButton? = null
-    private var rbDlna:           RadioButton? = null
 
     // DLNA-specific views
     private lateinit var btnSelectDlnaDevice: MaterialButton
@@ -113,9 +104,13 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private lateinit var etDomain:        TextInputEditText
     private lateinit var etPath:          TextInputEditText
     private var layerSmbProtocol:         View? = null
-    private lateinit var rgSmbProtocol:   RadioGroup
-    private lateinit var rgAccess:        RadioGroup
-    private lateinit var rbReadOnly:      RadioButton
+    private var chipSmbAuto:              MaterialButton? = null
+    private var chipSmb2:                 MaterialButton? = null
+    private var chipSmb3:                 MaterialButton? = null
+
+    private var chipReadOnly:             MaterialButton? = null
+    private var chipReadWrite:            MaterialButton? = null
+
     private lateinit var txtResult:       TextView
     private lateinit var txtHostKeyFingerprint: TextView
     private lateinit var btnTest:         View
@@ -126,10 +121,12 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private lateinit var btnBrowseShares: ImageButton
 
     // SMB Connection Type toggle (Share / Server)
-    private var layerSmbConnectionType:    View? = null
+    private var layerSmbConnectionType:   View? = null
     private var chipSmbShare:             MaterialButton? = null
     private var chipSmbServer:            MaterialButton? = null
-    private var rgSmbConnectionType:      RadioGroup? = null
+
+    // Credentials Card
+    private lateinit var cardCredentials: View
 
     // SSH views
     private lateinit var cardSshAuth:     View
@@ -140,7 +137,9 @@ class NetworkShareEditActivity : AppCompatActivity() {
 
     // NFS-specific views
     private var layerNfsVersion:  View? = null
-    private var rgNfsVersion:    RadioGroup? = null
+    private var chipNfsAuto:      MaterialButton? = null
+    private var chipNfs3:         MaterialButton? = null
+    private var chipNfs4:         MaterialButton? = null
     private var layerNfsDebugLog: View? = null
     private var txtNfsDebugLog:  TextView? = null
     private var btnCopyDebugLog: View? = null
@@ -214,17 +213,12 @@ class NetworkShareEditActivity : AppCompatActivity() {
     }
 
     private fun bindViews() {
-        val isTv = DeviceUtils.isTvDevice(this)
-        rgType           = findViewById(R.id.rgType)
-        // Note: cgType is gone, replaced by individual buttons in grid
-        
         chipSmb          = findViewById(R.id.chipSmb)
         chipFtp          = findViewById(R.id.chipFtp)
         chipSftp         = findViewById(R.id.chipSftp)
         chipScp          = findViewById(R.id.chipScp)
         chipNfs          = findViewById(R.id.chipNfs)
         chipDlna         = findViewById(R.id.chipDlna)
-        rbSmb            = findViewById(R.id.rbSmb)
 
         etName           = findViewById(R.id.etName)
         etHost           = findViewById(R.id.etHost)
@@ -237,9 +231,13 @@ class NetworkShareEditActivity : AppCompatActivity() {
         etDomain         = findViewById(R.id.etDomain)
         etPath           = findViewById(R.id.etPath)
         layerSmbProtocol = findViewById(R.id.cardSmbProtocol) ?: findViewById(R.id.layerSmbProtocol)
-        rgSmbProtocol    = findViewById(R.id.rgSmbProtocol)
-        rgAccess         = findViewById(R.id.rgAccess)
-        rbReadOnly       = findViewById(R.id.rbReadOnly)
+        chipSmbAuto      = findViewById(R.id.chipSmbAuto)
+        chipSmb2         = findViewById(R.id.chipSmb2)
+        chipSmb3         = findViewById(R.id.chipSmb3)
+
+        chipReadOnly     = findViewById(R.id.chipReadOnly)
+        chipReadWrite    = findViewById(R.id.chipReadWrite)
+
         txtResult        = findViewById(R.id.txtTestResult)
         txtHostKeyFingerprint = findViewById(R.id.txtHostKeyFingerprint)
         btnTest          = findViewById(R.id.btnTest)
@@ -253,28 +251,24 @@ class NetworkShareEditActivity : AppCompatActivity() {
         layerSmbConnectionType = findViewById(R.id.layerSmbConnectionType)
         chipSmbShare          = findViewById(R.id.chipSmbShare)
         chipSmbServer         = findViewById(R.id.chipSmbServer)
-        rgSmbConnectionType   = findViewById(R.id.rgSmbConnectionType)
-
-        // SSH TV RadioButtons
-        rbSftp           = findViewById(R.id.rbSftp)
-        rbScp            = findViewById(R.id.rbScp)
-        rbNfs            = findViewById(R.id.rbNfs)
-        rbDlna           = findViewById(R.id.rbDlna)
 
         // DLNA-specific views
-        btnSelectDlnaDevice = findViewById(R.id.btnSelectDlnaDevice)
+        btnSelectDlnaDevice   = findViewById(R.id.btnSelectDlnaDevice)
         txtDlnaSelectedDevice = findViewById(R.id.txtDlnaSelectedDevice)
-        layerHost         = findViewById(R.id.layerHost)
-        layerPort         = findViewById(R.id.layerPort)
-        layerPath         = findViewById(R.id.layerPath)
+        layerHost             = findViewById(R.id.layerHost)
+        layerPort             = findViewById(R.id.layerPort)
+        layerPath             = findViewById(R.id.layerPath)
 
+        cardCredentials  = findViewById(R.id.cardCredentials)
         cardSshAuth      = findViewById(R.id.cardSshAuth)
         etPrivateKey     = findViewById(R.id.etPrivateKey)
         btnPickKey       = findViewById(R.id.btnPickKey)
         cbUseKeychain    = findViewById(R.id.cbUseKeychain)
         btnToggleSshAuth = findViewById(R.id.btnToggleSshAuth)
         layerNfsVersion  = findViewById(R.id.layerNfsVersion)
-        rgNfsVersion     = findViewById(R.id.rgNfsVersion)
+        chipNfsAuto      = findViewById(R.id.chipNfsAuto)
+        chipNfs3         = findViewById(R.id.chipNfs3)
+        chipNfs4         = findViewById(R.id.chipNfs4)
         layerNfsDebugLog = findViewById(R.id.layerNfsDebugLog)
         txtNfsDebugLog   = findViewById(R.id.txtNfsDebugLog)
         btnCopyDebugLog  = findViewById(R.id.btnCopyDebugLog)
@@ -311,9 +305,10 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private fun setupTypeToggle() {
         // Ensure SMB is the default protocol for both mobile and TV
         chipSmb?.isChecked = true
-        rgType?.check(R.id.rbSmb)
-        val isSmbNow = rbSmb?.isChecked == true || chipSmb?.isChecked == true
-        val isDlnaNow = chipDlna?.isChecked == true || rbDlna?.isChecked == true
+        val isSmbNow = chipSmb?.isChecked == true
+        val isDlnaNow = chipDlna?.isChecked == true
+        val isNfsNow = chipNfs?.isChecked == true
+        cardCredentials.visibility = if (isNfsNow || isDlnaNow) View.GONE else View.VISIBLE
         tilDomain.visibility       = if (isSmbNow) View.VISIBLE else View.GONE
         btnBrowseShares.visibility = if (isSmbNow) View.VISIBLE else View.GONE
         layerSmbProtocol?.visibility = if (isSmbNow) View.VISIBLE else View.GONE
@@ -337,11 +332,10 @@ class NetworkShareEditActivity : AppCompatActivity() {
             }
             previousTypeId = checkedId
 
-            val isSmb = (checkedId == R.id.rbSmb || checkedId == R.id.chipSmb)
-            val isSsh = (checkedId == R.id.rbSftp || checkedId == R.id.chipSftp ||
-                         checkedId == R.id.rbScp || checkedId == R.id.chipScp)
-            val isNfs = (checkedId == R.id.rbNfs || checkedId == R.id.chipNfs)
-            val isDlna = (checkedId == R.id.rbDlna || checkedId == R.id.chipDlna)
+            val isSmb = (checkedId == R.id.chipSmb)
+            val isSsh = (checkedId == R.id.chipSftp || checkedId == R.id.chipScp)
+            val isNfs = (checkedId == R.id.chipNfs)
+            val isDlna = (checkedId == R.id.chipDlna)
 
             if (isDlna) {
                 applyDlnaVisibility()
@@ -353,14 +347,11 @@ class NetworkShareEditActivity : AppCompatActivity() {
             resetConnectionTested()
         }
 
-        // TV RadioGroup
-        rgType?.setOnCheckedChangeListener { _, checkedId -> onTypeChange(checkedId) }
-
-        // Mobile individual buttons (Grid)
-        val mobileButtons = listOf(chipSmb, chipFtp, chipSftp, chipScp, chipNfs, chipDlna)
-        mobileButtons.forEach { btn ->
+        // Protocol type buttons
+        val typeButtons = listOf(chipSmb, chipFtp, chipSftp, chipScp, chipNfs, chipDlna)
+        typeButtons.forEach { btn ->
             btn?.setOnClickListener { clicked ->
-                mobileButtons.forEach { it?.isChecked = (it == clicked) }
+                typeButtons.forEach { it?.isChecked = (it == clicked) }
                 onTypeChange(clicked.id)
             }
         }
@@ -379,20 +370,16 @@ class NetworkShareEditActivity : AppCompatActivity() {
         etPrivateKey.setOnClickListener { btnPickKey.performClick() }
 
         // ── SMB Connection Type (Share / Server) ──────────────────────────────
-
-        // Explicitly default to Share (covers any edge case where XML defaults don't propagate)
         chipSmbShare?.isChecked = true
         chipSmbServer?.isChecked = false
-        rgSmbConnectionType?.check(R.id.rbSmbShare)
 
         val onConnTypeChange: () -> Unit = {
-            val isServer = chipSmbServer?.isChecked == true ||
-                    rgSmbConnectionType?.checkedRadioButtonId == R.id.rbSmbServer
+            val isServer = chipSmbServer?.isChecked == true
             layerPath.visibility = if (isServer) View.GONE else View.VISIBLE
             btnBrowseShares.visibility = if (isServer) View.GONE else View.VISIBLE
+            resetConnectionTested()
         }
 
-        // Mobile buttons
         val connButtons = listOf(chipSmbShare, chipSmbServer)
         connButtons.forEach { btn ->
             btn?.setOnClickListener { clicked ->
@@ -401,8 +388,35 @@ class NetworkShareEditActivity : AppCompatActivity() {
             }
         }
 
-        // TV RadioGroup
-        rgSmbConnectionType?.setOnCheckedChangeListener { _, _ -> onConnTypeChange() }
+        // ── NFS Version Selector ──────────────────────────────────────────────
+        val nfsButtons = listOf(chipNfsAuto, chipNfs3, chipNfs4)
+        chipNfsAuto?.isChecked = true
+        nfsButtons.forEach { btn ->
+            btn?.setOnClickListener { clicked ->
+                nfsButtons.forEach { it?.isChecked = (it == clicked) }
+                resetConnectionTested()
+            }
+        }
+
+        // ── SMB Protocol Selector ─────────────────────────────────────────────
+        val smbProtoButtons = listOf(chipSmbAuto, chipSmb2, chipSmb3)
+        chipSmbAuto?.isChecked = true
+        smbProtoButtons.forEach { btn ->
+            btn?.setOnClickListener { clicked ->
+                smbProtoButtons.forEach { it?.isChecked = (it == clicked) }
+                resetConnectionTested()
+            }
+        }
+
+        // ── Access Mode Selector ──────────────────────────────────────────────
+        val accessButtons = listOf(chipReadOnly, chipReadWrite)
+        chipReadOnly?.isChecked = true
+        chipReadWrite?.isChecked = false
+        accessButtons.forEach { btn ->
+            btn?.setOnClickListener { clicked ->
+                accessButtons.forEach { it?.isChecked = (it == clicked) }
+            }
+        }
     }
 
     /** Apply layerPath visibility based on whether the connection type is Server mode. */
@@ -412,8 +426,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             btnBrowseShares.visibility = View.GONE
             return
         }
-        val isServer = chipSmbServer?.isChecked == true ||
-                rgSmbConnectionType?.checkedRadioButtonId == R.id.rbSmbServer
+        val isServer = chipSmbServer?.isChecked == true
         layerPath.visibility = if (isServer) View.GONE else View.VISIBLE
         btnBrowseShares.visibility = if (isServer) View.GONE else View.VISIBLE
     }
@@ -422,7 +435,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
      * Clears all connection-specific fields. Called when the user switches
      * share types so that no stale credentials carry over.
      *
-     * Preserves: [etName] (display name), [rgAccess] (Read Only / Read Write).
+     * Preserves: [etName] (display name), [chipReadOnly] / [chipReadWrite] (Read Only / Read Write).
      * Also discards any in-progress edit reference so switching back to the
      * previous type does not restore old field values.
      */
@@ -438,12 +451,19 @@ class NetworkShareEditActivity : AppCompatActivity() {
         txtDlnaSelectedDevice.visibility = View.GONE
         txtDlnaSelectedDevice.text = ""
         selectedDlnaServer = null
-        rgSmbProtocol.check(R.id.rbSmbAuto)
-        rgNfsVersion?.check(R.id.rbNfsAuto)
+
+        chipSmbAuto?.isChecked = true
+        chipSmb2?.isChecked = false
+        chipSmb3?.isChecked = false
+
+        chipNfsAuto?.isChecked = true
+        chipNfs3?.isChecked = false
+        chipNfs4?.isChecked = false
+
         // Reset SMB connection type to Share
         chipSmbShare?.isChecked = true
         chipSmbServer?.isChecked = false
-        rgSmbConnectionType?.check(R.id.rbSmbShare)
+
         txtHostKeyFingerprint.visibility = View.GONE
         txtHostKeyFingerprint.text = ""
         txtResult.visibility = View.GONE
@@ -471,13 +491,15 @@ class NetworkShareEditActivity : AppCompatActivity() {
         layerNfsVersion?.visibility = View.GONE
         btnToggleSshAuth.visibility = View.GONE
         cardSshAuth.visibility = View.GONE
+        cardCredentials.visibility = View.GONE
         txtHostKeyFingerprint.visibility = View.GONE
         btnSelectDlnaDevice.visibility = View.VISIBLE
+
         // Force read-only for DLNA
-        rgAccess.check(R.id.rbReadOnly)
-        for (i in 0 until rgAccess.childCount) {
-            rgAccess.getChildAt(i).isEnabled = false
-        }
+        chipReadOnly?.isChecked = true
+        chipReadWrite?.isChecked = false
+        chipReadOnly?.isEnabled = false
+        chipReadWrite?.isEnabled = false
     }
 
     /** Restore normal field visibility when switching away from DLNA. */
@@ -492,6 +514,9 @@ class NetworkShareEditActivity : AppCompatActivity() {
         // Apply connection type visibility (hides/shows layerPath + btnBrowseShares)
         applyConnectionTypeVisibility(isSmb)
         txtDlnaSelectedDevice.visibility = View.GONE
+
+        // Credentials card visibility (hidden for NFS and DLNA)
+        cardCredentials.visibility = if (isNfs) View.GONE else View.VISIBLE
 
         // NFS-specific visibility
         tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
@@ -509,13 +534,9 @@ class NetworkShareEditActivity : AppCompatActivity() {
             txtHostKeyFingerprint.setOnClickListener(null)
         }
 
-        tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
-        tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
-
         // Re-enable access mode
-        for (i in 0 until rgAccess.childCount) {
-            rgAccess.getChildAt(i).isEnabled = true
-        }
+        chipReadOnly?.isEnabled = true
+        chipReadWrite?.isEnabled = true
     }
 
     /**
@@ -594,32 +615,14 @@ class NetworkShareEditActivity : AppCompatActivity() {
     }
 
     private fun populateFields(share: NetworkShare) {
-        val mobileButtons = listOf(chipSmb, chipFtp, chipSftp, chipScp, chipNfs, chipDlna)
+        val typeButtons = listOf(chipSmb, chipFtp, chipSftp, chipScp, chipNfs, chipDlna)
         when (share.type) {
-            ShareType.SMB  -> {
-                rgType?.check(R.id.rbSmb)
-                mobileButtons.forEach { it?.isChecked = (it?.id == R.id.chipSmb) }
-            }
-            ShareType.FTP  -> {
-                rgType?.check(R.id.rbFtp)
-                mobileButtons.forEach { it?.isChecked = (it?.id == R.id.chipFtp) }
-            }
-            ShareType.SFTP -> {
-                rgType?.check(R.id.rbSftp)
-                mobileButtons.forEach { it?.isChecked = (it?.id == R.id.chipSftp) }
-            }
-            ShareType.SCP -> {
-                rgType?.check(R.id.rbScp)
-                mobileButtons.forEach { it?.isChecked = (it?.id == R.id.chipScp) }
-            }
-            ShareType.NFS -> {
-                rgType?.check(R.id.rbNfs)
-                mobileButtons.forEach { it?.isChecked = (it?.id == R.id.chipNfs) }
-            }
-            ShareType.DLNA -> {
-                rgType?.check(R.id.rbDlna)
-                mobileButtons.forEach { it?.isChecked = (it?.id == R.id.chipDlna) }
-            }
+            ShareType.SMB  -> typeButtons.forEach { it?.isChecked = (it?.id == R.id.chipSmb) }
+            ShareType.FTP  -> typeButtons.forEach { it?.isChecked = (it?.id == R.id.chipFtp) }
+            ShareType.SFTP -> typeButtons.forEach { it?.isChecked = (it?.id == R.id.chipSftp) }
+            ShareType.SCP  -> typeButtons.forEach { it?.isChecked = (it?.id == R.id.chipScp) }
+            ShareType.NFS  -> typeButtons.forEach { it?.isChecked = (it?.id == R.id.chipNfs) }
+            ShareType.DLNA -> typeButtons.forEach { it?.isChecked = (it?.id == R.id.chipDlna) }
             else -> {}
         }
         etName.setText(share.name)
@@ -636,26 +639,31 @@ class NetworkShareEditActivity : AppCompatActivity() {
         cbUseKeychain.isChecked = share.useKeychain
         
         if (share.type == ShareType.SMB) {
+            val smbProtoButtons = listOf(chipSmbAuto, chipSmb2, chipSmb3)
             when (share.smbProtocol) {
-                "SMB2" -> rgSmbProtocol.check(R.id.rbSmb2)
-                "SMB3" -> rgSmbProtocol.check(R.id.rbSmb3)
-                else   -> rgSmbProtocol.check(R.id.rbSmbAuto)
+                "SMB2" -> smbProtoButtons.forEach { it?.isChecked = (it?.id == R.id.chipSmb2) }
+                "SMB3" -> smbProtoButtons.forEach { it?.isChecked = (it?.id == R.id.chipSmb3) }
+                else   -> smbProtoButtons.forEach { it?.isChecked = (it?.id == R.id.chipSmbAuto) }
             }
             // Restore connection type toggle
             if (share.isServerMode) {
                 chipSmbServer?.isChecked = true
                 chipSmbShare?.isChecked = false
-                rgSmbConnectionType?.check(R.id.rbSmbServer)
             } else {
                 chipSmbShare?.isChecked = true
                 chipSmbServer?.isChecked = false
-                rgSmbConnectionType?.check(R.id.rbSmbShare)
             }
             // Apply connection type visibility so layerPath is hidden for server mode
             applyConnectionTypeVisibility(true)
         }
         
-        rgAccess.check(if (share.readOnly) R.id.rbReadOnly else R.id.rbReadWrite)
+        if (share.readOnly) {
+            chipReadOnly?.isChecked = true
+            chipReadWrite?.isChecked = false
+        } else {
+            chipReadWrite?.isChecked = true
+            chipReadOnly?.isChecked = false
+        }
 
         // Initial visibility
         val isSsh = (share.type == ShareType.SFTP || share.type == ShareType.SCP)
@@ -678,6 +686,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         applyConnectionTypeVisibility(isSmb)
 
         val isNfs = (share.type == ShareType.NFS)
+        cardCredentials.visibility = if (isNfs || share.type == ShareType.DLNA) View.GONE else View.VISIBLE
         tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
         tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
 
@@ -685,10 +694,11 @@ class NetworkShareEditActivity : AppCompatActivity() {
         layerNfsVersion?.visibility = if (isNfs) View.VISIBLE else View.GONE
         btnScanNfsHosts.visibility = if (isNfs) View.VISIBLE else View.GONE
         if (isNfs) {
+            val nfsButtons = listOf(chipNfsAuto, chipNfs3, chipNfs4)
             when (share.nfsVersion) {
-                0 -> rgNfsVersion?.check(R.id.rbNfsAuto)
-                4 -> rgNfsVersion?.check(R.id.rbNfs4)
-                else -> rgNfsVersion?.check(R.id.rbNfs3) // default v3
+                0 -> nfsButtons.forEach { it?.isChecked = (it?.id == R.id.chipNfsAuto) }
+                4 -> nfsButtons.forEach { it?.isChecked = (it?.id == R.id.chipNfs4) }
+                else -> nfsButtons.forEach { it?.isChecked = (it?.id == R.id.chipNfs3) } // default v3
             }
         }
 
@@ -743,6 +753,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setView(dialogView)
             .setCancelable(true)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<View>(R.id.btnScanCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -846,6 +858,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
         dialogView.findViewById<View>(R.id.btnCredCancel).setOnClickListener { dialog.dismiss() }
         dialogView.findViewById<View>(R.id.btnCredConnect).setOnClickListener {
             // Copy credential fields back to the main form
@@ -858,8 +872,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             dialog.dismiss()
             // Automatically open the share browser only in Share mode.
             // In Server mode the user connects to the whole server, not a specific share.
-            val isServerMode = chipSmbServer?.isChecked == true ||
-                    rgSmbConnectionType?.checkedRadioButtonId == R.id.rbSmbServer
+            val isServerMode = chipSmbServer?.isChecked == true
             if (!isServerMode) {
                 showShareBrowserDialog()
             }
@@ -896,6 +909,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setView(dialogView)
             .setCancelable(true)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<View>(R.id.btnSharesCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -985,6 +1000,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setView(dialogView)
             .setCancelable(true)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         var cancelled = false
         dialogView.findViewById<View>(R.id.btnScanCancel).setOnClickListener {
@@ -1142,6 +1159,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
         var cancelled = false
         dialogView.findViewById<View>(R.id.btnScanCancel).setOnClickListener {
             cancelled = true
@@ -1266,6 +1285,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setView(dialogView)
             .setCancelable(true)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<View>(R.id.btnSharesCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -1437,24 +1458,20 @@ class NetworkShareEditActivity : AppCompatActivity() {
             return null
         }
         
-        val readOnly = (rgAccess.checkedRadioButtonId == R.id.rbReadOnly)
+        val readOnly = (chipReadOnly?.isChecked == true)
         val rawPath  = etPath.text?.toString()?.trim() ?: ""
 
-        val mobileSelectedId = listOf(chipSmb, chipFtp, chipSftp, chipScp, chipNfs, chipDlna).firstOrNull { it?.isChecked == true }?.id
-        val selectedType = rgType?.checkedRadioButtonId ?: mobileSelectedId ?: -1
+        val selectedType = listOf(chipSmb, chipFtp, chipSftp, chipScp, chipNfs, chipDlna).firstOrNull { it?.isChecked == true }?.id
         val type = when (selectedType) {
-            R.id.rbSftp, R.id.chipSftp -> ShareType.SFTP
-            R.id.rbScp, R.id.chipScp   -> ShareType.SCP
-            R.id.rbNfs, R.id.chipNfs   -> ShareType.NFS
-            R.id.rbFtp, R.id.chipFtp   -> ShareType.FTP
-            R.id.rbDlna, R.id.chipDlna  -> ShareType.DLNA
-            else                       -> ShareType.SMB
+            R.id.chipSftp -> ShareType.SFTP
+            R.id.chipScp  -> ShareType.SCP
+            R.id.chipNfs  -> ShareType.NFS
+            R.id.chipFtp  -> ShareType.FTP
+            R.id.chipDlna -> ShareType.DLNA
+            else          -> ShareType.SMB
         }
 
-        val isServerMode = type == ShareType.SMB && (
-            chipSmbServer?.isChecked == true ||
-            rgSmbConnectionType?.checkedRadioButtonId == R.id.rbSmbServer
-        )
+        val isServerMode = type == ShareType.SMB && chipSmbServer?.isChecked == true
 
         val normalizedPath = if (isServerMode) {
             ""  // Server mode: no remote path needed
@@ -1471,10 +1488,10 @@ class NetworkShareEditActivity : AppCompatActivity() {
         // Note: Password encryption is handled by NetworkShareRepository during persistence.
 
         val smbProtocol = if (type == ShareType.SMB) {
-            when (rgSmbProtocol.checkedRadioButtonId) {
-                R.id.rbSmb2 -> "SMB2"
-                R.id.rbSmb3 -> "SMB3"
-                else        -> "AUTO"
+            when {
+                chipSmb2?.isChecked == true -> "SMB2"
+                chipSmb3?.isChecked == true -> "SMB3"
+                else                        -> "AUTO"
             }
         } else "AUTO"
 
@@ -1502,11 +1519,11 @@ class NetworkShareEditActivity : AppCompatActivity() {
             hostKeyFingerprint = if (existingShare != null &&
                 (host != existingShare!!.host || (etPort.text?.toString()?.trim()?.toIntOrNull() ?: 0) != existingShare!!.port)
             ) null else existingShare?.hostKeyFingerprint ?: testedHostKeyFingerprint,
-            nfsVersion = if (type == ShareType.NFS && rgNfsVersion != null) {
-                when (rgNfsVersion!!.checkedRadioButtonId) {
-                    R.id.rbNfsAuto -> 0
-                    R.id.rbNfs4 -> 4
-                    else -> 3
+            nfsVersion = if (type == ShareType.NFS) {
+                when {
+                    chipNfsAuto?.isChecked == true -> 0
+                    chipNfs4?.isChecked == true    -> 4
+                    else                           -> 3
                 }
             } else 3
         )
@@ -1639,6 +1656,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setView(dialogView)
             .setCancelable(true)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<MaterialButton>(R.id.btnSuccessSave).setOnClickListener {
             repo.save(share)

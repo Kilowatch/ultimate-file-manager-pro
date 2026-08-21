@@ -1,66 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TV: Share browser dialog -->
+<!--
+    Network Share Browser Dialog (TV Standard)
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="480dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="28dp"
-    android:background="@drawable/bg_glass_card_dark">
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp">
 
-    <!-- Title row -->
+    <!-- Top Row: 52dp Frosted Badge + Title -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
-        <ImageView
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:src="@drawable/ic_folder"
-            app:tint="@color/tv_accent"
-            android:layout_marginEnd="10dp"/>
-        <TextView
-            android:id="@+id/txtSharesTitle"
+        android:layout_marginBottom="18dp">
+
+        <FrameLayout
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_folder"
+                app:tint="@color/tv_accent"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/smb_shares_title_generic"
-            android:textColor="@color/tv_text_primary"
-            android:textSize="20sp"
-            android:fontFamily="sans-serif-medium"/>
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/txtSharesTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smb_shares_title_generic"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/network_shares_title"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Loading -->
-    <LinearLayout
+    <!-- Loading Indicator Card -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/layerLoading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="16dp">
-        <ProgressBar
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminate="true"
-            android:layout_marginBottom="10dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/smb_shares_loading"
-            android:textColor="@color/tv_text_secondary"
-            android:textSize="14sp"/>
-    </LinearLayout>
+        android:layout_marginBottom="14dp"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border">
 
-    <!-- Shares list -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp">
+
+            <ProgressBar
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:indeterminate="true"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smb_shares_loading"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13.5sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Shares List -->
     <LinearLayout
         android:id="@+id/layerSharesList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/txtNoShares"
@@ -68,26 +109,31 @@
             android:layout_height="wrap_content"
             android:text="@string/smb_shares_none"
             android:textColor="@color/tv_text_secondary"
-            android:textSize="14sp"
+            android:textSize="14.5sp"
             android:gravity="center"
-            android:padding="16dp"
-            android:visibility="gone"/>
+            android:padding="20dp"
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvShares"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxHeight="280dp"
-            android:nestedScrollingEnabled="true"/>
+            android:nestedScrollingEnabled="true" />
     </LinearLayout>
 
-    <!-- Cancel -->
+    <!-- Cancel Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSharesCancel"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_marginTop="8dp"
-        android:focusable="true"
-        android:text="@string/cancel"/>
+        android:layout_marginTop="16dp"
+        android:text="@string/cancel"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14.5sp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="12dp" />
+
 </LinearLayout>

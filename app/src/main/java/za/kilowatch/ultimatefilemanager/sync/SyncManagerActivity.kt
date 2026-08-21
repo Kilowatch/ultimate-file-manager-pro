@@ -57,7 +57,10 @@ class SyncManagerActivity : AppCompatActivity() {
         layoutEmptyState = findViewById(R.id.layoutEmptyState)
         recycler = findViewById(R.id.recyclerSyncProfiles)
 
-        findViewById<ImageView>(R.id.btnBack).setOnClickListener { navigateBack() }
+        findViewById<View>(R.id.btnBack).setOnClickListener { navigateBack() }
+        findViewById<View>(R.id.btnAddProfile)?.setOnClickListener {
+            startActivity(Intent(this, SyncEditActivity::class.java))
+        }
 
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -94,10 +97,7 @@ class SyncManagerActivity : AppCompatActivity() {
                 startActivity(intent)
             },
             onDelete = { profile ->
-                repo.delete(profile.id)
-                SyncScheduler.cancelSync(this, profile.id)
-                loadProfiles()
-                showSnackbar(getString(R.string.profile_deleted))
+                showDeleteConfirmDialog(profile)
             },
             onSyncNow = { profile ->
                 Toast.makeText(this, R.string.sync_triggered_locally_background_job, Toast.LENGTH_SHORT).show()
@@ -111,6 +111,34 @@ class SyncManagerActivity : AppCompatActivity() {
         )
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
+    }
+
+    private fun showDeleteConfirmDialog(profile: SyncProfile) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_sync_profile_delete_confirm, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<TextView>(R.id.txtTitle).text =
+            getString(R.string.delete_confirm_single, profile.name)
+        dialogView.findViewById<TextView>(R.id.txtMessage).text =
+            getString(R.string.sync_delete_profile_confirm_msg, profile.name)
+
+        dialogView.findViewById<View>(R.id.btnDelete).setOnClickListener {
+            dialog.dismiss()
+            repo.delete(profile.id)
+            SyncScheduler.cancelSync(this, profile.id)
+            loadProfiles()
+            showSnackbar(getString(R.string.profile_deleted))
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun loadProfiles() {

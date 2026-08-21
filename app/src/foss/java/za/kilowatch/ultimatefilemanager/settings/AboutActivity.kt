@@ -1,16 +1,23 @@
 package za.kilowatch.ultimatefilemanager.settings
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.support.SupportActivity
+import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -21,8 +28,6 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
  *  - A Source Code link to the GitHub repository
  *  - A Report a Bug link to GitHub Issues
  *  - The GPL-3.0 notice (satisfies GPL-3.0 §4 user notification requirement)
- *
- * TODO: Replace the GitHub URL below with your real repository URL once published.
  */
 class AboutActivity : AppCompatActivity() {
 
@@ -33,7 +38,7 @@ class AboutActivity : AppCompatActivity() {
 
     private var isTv = false
 
-    override fun attachBaseContext(newBase: android.content.Context) {
+    override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
@@ -83,22 +88,55 @@ class AboutActivity : AppCompatActivity() {
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
-                if (hasFocus) btnBack.setBackgroundResource(R.drawable.bg_icon_circle_focused)
-                else btnBack.setBackgroundResource(R.drawable.bg_icon_circle_accent)
             }
         }
         btnBack?.setOnClickListener { finish() }
 
+        // Support Email row
+        findViewById<View?>(R.id.cardSupportEmail)?.setOnClickListener {
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:support@kilowatch.co.za")
+                putExtra(Intent.EXTRA_SUBJECT, "[UFM FOSS] General Inquiry")
+            }
+            try {
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.about_title)))
+            } catch (e: Exception) {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                val clip = ClipData.newPlainText("Support Email", "support@kilowatch.co.za")
+                clipboard?.setPrimaryClip(clip)
+                Toast.makeText(this, R.string.about_email_copied, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Help & Support row
+        findViewById<View?>(R.id.cardHelpSupport)?.setOnClickListener {
+            startActivity(Intent(this, SupportActivity::class.java))
+        }
+
+        // Rate & Review row
+        findViewById<View?>(R.id.cardRateUs)?.setOnClickListener {
+            startActivity(Intent(this, RateUsActivity::class.java))
+        }
+
+        // Legal & Policies row
+        findViewById<View?>(R.id.cardLegal)?.setOnClickListener {
+            startActivity(Intent(this, PolicySelectionActivity::class.java))
+        }
+
         // Source Code button — links to GitHub repository
-        val btnSourceCode = findViewById<android.view.View?>(R.id.btnSourceCode)
+        val btnSourceCode = findViewById<View?>(R.id.btnSourceCode)
         btnSourceCode?.setOnClickListener { openUrl(GITHUB_REPO_URL) }
 
         // Report a Bug button — links to GitHub Issues
-        val btnReportBug = findViewById<android.view.View?>(R.id.btnReportBug)
+        val btnReportBug = findViewById<View?>(R.id.btnReportBug)
         btnReportBug?.setOnClickListener { openUrl(GITHUB_ISSUES_URL) }
     }
 
     private fun openUrl(url: String) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (e: Exception) {
+            Toast.makeText(this, url, Toast.LENGTH_LONG).show()
+        }
     }
 }

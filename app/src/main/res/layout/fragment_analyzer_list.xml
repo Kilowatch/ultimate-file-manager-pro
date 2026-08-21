@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Generic List Tab Fragment Layout — shared by Large Files, Duplicates, Junk, Suggestions.
-    When the storage is not indexed the banner is shown; the RecyclerView is hidden.
+    Generic List Tab Fragment Layout — Language & Grouped Glass Card Standard
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,52 +9,115 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- "Not indexed" banner -->
-    <LinearLayout
+    <!-- "Not indexed" guidance card -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/layoutNotIndexed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="@dimen/margin_lg"
+        android:layout_margin="16dp"
         android:visibility="gone"
+        app:cardBackgroundColor="@color/mobile_glass_card"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/mobile_glass_stroke"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/txtListNotIndexed"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="14sp"
-            tools:text="⚡ Index this storage to unlock advanced analysis" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp">
 
-    <!-- Empty state text (no duplicates, no large files, etc.) -->
-    <TextView
-        android:id="@+id/txtListEmptyState"
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_about"
+                    app:tint="@color/ufm_risk_moderate"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/txtListNotIndexed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:textColor="@color/mobile_card_text_secondary"
+                android:textSize="13.5sp"
+                android:lineSpacingExtra="2dp"
+                tools:text="Index this storage to unlock advanced analysis for this category." />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Empty state card -->
+    <LinearLayout
+        android:id="@+id/layoutEmptyState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_lg"
-        android:gravity="center"
-        android:textColor="@color/mobile_text_secondary"
-        android:textSize="14sp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="32dp"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="No duplicates found" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- "Verifying content…" progress row — shown only during Phase-2 full-hash pass (Duplicates tab) -->
+        <FrameLayout
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginBottom="14dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_search"
+                app:tint="?attr/colorPrimary"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/txtListEmptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-bold"
+            android:textAlignment="center"
+            tools:text="No duplicates found" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/analyzer_empty_state_desc"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <!-- "Verifying content…" progress card (Duplicates tab) -->
     <LinearLayout
         android:id="@+id/layoutVerifying"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:background="@color/mobile_glass_card"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,14 +129,14 @@
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="10dp" />
 
         <TextView
             android:id="@+id/txtVerifying"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/analyzer_dup_verifying"
-            android:textColor="@color/mobile_text_secondary"
+            android:textColor="@color/mobile_card_text_secondary"
             android:textSize="13sp" />
 
     </LinearLayout>
@@ -84,8 +146,8 @@
         android:id="@+id/recyclerAnalyzerList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="@dimen/margin_sm"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
         android:clipToPadding="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/layoutVerifying"
@@ -93,4 +155,3 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

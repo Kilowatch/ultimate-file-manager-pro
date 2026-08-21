@@ -68,13 +68,21 @@
             tools:text="English" />
     </LinearLayout>
 
-    <!-- Selection RadioButton on Right -->
-    <RadioButton
-        android:id="@+id/rbSelect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:buttonTint="?attr/colorPrimary"
-        android:clickable="false"
-        android:focusable="false"
-        android:saveEnabled="false" />
+    <!-- Modern Selection Indicator on Right -->
+    <FrameLayout
+        android:id="@+id/checkContainer"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgCheck"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check_circle"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
 </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Junk/Old File Row — Mobile
+    Junk/Old File Row — Language & Grouped Glass Card Standard
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,7 +12,7 @@
     android:clickable="true"
     android:focusable="true"
     app:cardBackgroundColor="@color/mobile_glass_card"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
     app:strokeColor="@color/mobile_glass_stroke"
@@ -23,16 +23,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="12dp"
         android:paddingVertical="10dp">
         
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="@dimen/margin_md"
-            android:src="@drawable/ic_junk"
-            app:tint="@color/mobile_card_text_secondary"
-            android:contentDescription="@null" />
+        <FrameLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="10dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_junk"
+                app:tint="@color/mobile_card_text_secondary"
+                android:contentDescription="@null" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -45,9 +52,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_card_text_primary"
-                android:textSize="13sp"
+                android:textSize="13.5sp"
+                android:fontFamily="sans-serif-bold"
                 android:maxLines="1"
-                android:ellipsize="end"
+                android:ellipsize="middle"
                 tools:text=".thumbdata4--96746816" />
 
             <TextView
@@ -56,8 +64,10 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_card_text_secondary"
                 android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
                 android:maxLines="1"
-                android:ellipsize="start"
+                android:ellipsize="middle"
+                android:layout_marginTop="2dp"
                 tools:text="/storage/emulated/0/.thumbnails" />
 
         </LinearLayout>
@@ -67,8 +77,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/ufm_risk_safe"
-            android:textSize="12sp"
-            android:fontFamily="sans-serif-medium"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-bold"
             tools:text="12 MB" />
 
     </LinearLayout>

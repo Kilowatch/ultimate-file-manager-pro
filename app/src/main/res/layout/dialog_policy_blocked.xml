@@ -35,7 +35,7 @@
                 android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_lock"
-                android:tint="@color/white"
+                app:tint="@color/white"
                 android:contentDescription="@null" />
         </FrameLayout>
 

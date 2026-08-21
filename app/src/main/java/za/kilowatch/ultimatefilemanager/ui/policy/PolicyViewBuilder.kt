@@ -463,26 +463,30 @@ object PolicyViewBuilder {
         val acceptedTime = prefs.getLong(prefsKey, 0L)
 
         if (acceptedTime == 0L) {
+            val paddingMultiplier = if (isTvDevice) 1.3f else 1f
+
             val checkBox = android.widget.CheckBox(context).apply {
                 tag = "acceptance_checkbox"
                 text = if (isTerms) context.getString(R.string.i_have_read_and_accept_the_terms_conditions) else context.getString(R.string.i_have_read_and_accept_the_privacy_policy)
-                setTextColor(ContextCompat.getColor(context, R.color.policy_ink))
-                val paddingMultiplier = if (isTvDevice) 1.5f else 1f
-                textSize = 15f * paddingMultiplier
+                setTextColor(ContextCompat.getColor(context, if (isTvDevice) R.color.tv_text_primary else R.color.mobile_text_primary))
+                textSize = 14.5f * paddingMultiplier
+                buttonTintList = ContextCompat.getColorStateList(context, if (isTvDevice) R.color.tv_button_focused_yellow else R.color.selector_protocol_text)
                 layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
-                    bottomMargin = dp(context, 16)
+                    bottomMargin = dp(context, (14 * paddingMultiplier).toInt())
                 }
             }
 
-            val continueButton = android.widget.Button(context).apply {
-                text = "Continue"
+            val continueButton = com.google.android.material.button.MaterialButton(context).apply {
+                text = context.getString(R.string.btn_continue)
                 isEnabled = false
                 isAllCaps = false
-                val paddingMultiplier = if (isTvDevice) 1.5f else 1f
-                textSize = 16f * paddingMultiplier
-                setTextColor(ContextCompat.getColor(context, za.kilowatch.ultimatefilemanager.R.color.white))
-                background = context.createRoundedBackground(R.color.policy_accent, 8f * paddingMultiplier)
-                layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+                textSize = 15f * paddingMultiplier
+                setTextColor(ContextCompat.getColor(context, R.color.white))
+                cornerRadius = dp(context, (12 * paddingMultiplier).toInt())
+                val normalBg = if (isTvDevice) ContextCompat.getColor(context, R.color.tv_glass_white_10) else ContextCompat.getColor(context, R.color.mobile_glass_card)
+                backgroundTintList = android.content.res.ColorStateList.valueOf(normalBg)
+                alpha = 0.5f
+                layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, dp(context, (50 * paddingMultiplier).toInt()))
 
                 setOnClickListener {
                     val currentTime = System.currentTimeMillis()
@@ -495,12 +499,21 @@ object PolicyViewBuilder {
                 }
             }
 
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                continueButton.isEnabled = isChecked
+                continueButton.alpha = if (isChecked) 1f else 0.5f
+                if (!isTvDevice) {
+                    val accentColor = ContextCompat.getColor(context, R.color.ufm_primary)
+                    val dimColor = ContextCompat.getColor(context, R.color.mobile_glass_card)
+                    continueButton.backgroundTintList = android.content.res.ColorStateList.valueOf(if (isChecked) accentColor else dimColor)
+                }
+            }
+
             if (isTvDevice) {
                 checkBox.isFocusable = true
-                checkBox.isFocusableInTouchMode = false
-                val defaultColor = ContextCompat.getColor(context, R.color.policy_ink)
                 val focusColor = ContextCompat.getColor(context, R.color.tv_button_focused_yellow_text)
-                
+                val defaultColor = ContextCompat.getColor(context, R.color.tv_text_primary)
+
                 checkBox.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
                         checkBox.setTextColor(focusColor)
@@ -510,38 +523,20 @@ object PolicyViewBuilder {
                         checkBox.background = null
                     }
                 }
-            }
 
-            continueButton.background = context.createRoundedBackground(R.color.policy_slate, 8f)
-
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                continueButton.isEnabled = isChecked
-                if (!continueButton.isFocused) {
-                    continueButton.background = if (isChecked) {
-                        context.createRoundedBackground(R.color.policy_accent, 8f)
-                    } else {
-                        context.createRoundedBackground(R.color.policy_slate, 8f)
-                    }
-                }
-            }
-
-            if (isTvDevice) {
                 continueButton.isFocusable = true
-                continueButton.isFocusableInTouchMode = false
-                val whiteColor = ContextCompat.getColor(context, R.color.white)
-                val focusTextColor = ContextCompat.getColor(context, R.color.tv_button_focused_yellow_text)
-                
+                val yellowText = ContextCompat.getColor(context, R.color.tv_button_focused_yellow_text)
+                val whiteText = ContextCompat.getColor(context, R.color.white)
+                val yellowCsl = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tv_button_focused_yellow))
+                val glassCsl = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tv_glass_white_10))
+
                 continueButton.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
-                        continueButton.setTextColor(focusTextColor)
-                        continueButton.background = context.createRoundedBackground(R.color.tv_button_focused_yellow, 8f)
+                        continueButton.setTextColor(yellowText)
+                        continueButton.backgroundTintList = yellowCsl
                     } else {
-                        continueButton.setTextColor(whiteColor)
-                        continueButton.background = if (checkBox.isChecked) {
-                            context.createRoundedBackground(R.color.policy_accent, 8f)
-                        } else {
-                            context.createRoundedBackground(R.color.policy_slate, 8f)
-                        }
+                        continueButton.setTextColor(whiteText)
+                        continueButton.backgroundTintList = glassCsl
                     }
                 }
             }
@@ -568,24 +563,24 @@ object PolicyViewBuilder {
         val paddingMultiplier = if (isTv) 1.3f else 1f
         return LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            val bgRes = if (isTv) R.color.tv_glass_white_10 else R.color.policy_accent
-            setBackgroundColor(ContextCompat.getColor(context, bgRes))
-            background = context.createRoundedBackground(bgRes, 16f * paddingMultiplier)
+            val bgRes = if (isTv) R.color.tv_glass_white_10 else R.color.mobile_glass_card
+            val strokeRes = if (isTv) R.color.tv_glass_border else R.color.mobile_glass_stroke
+            background = context.createGlassBackground(bgRes, strokeRes, 16f * paddingMultiplier)
             setPadding(dp(context, (20 * paddingMultiplier).toInt()), dp(context, (16 * paddingMultiplier).toInt()), dp(context, (20 * paddingMultiplier).toInt()), dp(context, (16 * paddingMultiplier).toInt()))
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
                 bottomMargin = dp(context, (4 * paddingMultiplier).toInt())
             }
-            
+
             addView(TextView(context).apply {
                 text = "Plain-English Summary"
-                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.policy_toolbar_text))
+                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.mobile_text_primary))
                 textSize = 13f * textMultiplier
                 setTypeface(typeface, Typeface.BOLD)
                 setPadding(0, 0, 0, dp(context, (4 * paddingMultiplier).toInt()))
             })
             addView(TextView(context).apply {
                 text = contentText
-                setTextColor(if (isTv) ContextCompat.getColor(context, R.color.tv_text_secondary) else 0xCCFFFFFF.toInt())
+                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
                 textSize = 13.5f * textMultiplier
                 setLineSpacing(0f, 1.45f)
             })
@@ -596,14 +591,15 @@ object PolicyViewBuilder {
         val paddingMultiplier = if (isTv) 1.3f else 1f
         return LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            val bgRes = if (isTv) R.color.tv_glass_white_10 else R.color.policy_surface
-            background = context.createRoundedBackground(bgRes, 16f * paddingMultiplier)
-            elevation = if (isTv) 0f else dp(context, 2).toFloat()
+            val bgRes = if (isTv) R.color.tv_glass_white_10 else R.color.mobile_glass_card
+            val strokeRes = if (isTv) R.color.tv_glass_border else R.color.mobile_glass_stroke
+            background = context.createGlassBackground(bgRes, strokeRes, 16f * paddingMultiplier)
+            elevation = 0f
             setPadding(dp(context, (20 * paddingMultiplier).toInt()), dp(context, (20 * paddingMultiplier).toInt()), dp(context, (20 * paddingMultiplier).toInt()), dp(context, (20 * paddingMultiplier).toInt()))
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
                 bottomMargin = dp(context, (14 * paddingMultiplier).toInt())
             }
-            
+
             block()
         }
     }
@@ -625,13 +621,17 @@ object PolicyViewBuilder {
                 layoutParams = LinearLayout.LayoutParams(dp(context, (40 * paddingMultiplier).toInt()), dp(context, (40 * paddingMultiplier).toInt())).apply {
                     marginEnd = dp(context, (12 * paddingMultiplier).toInt())
                 }
-                background = context.createRoundedBackground(if (isTv) R.color.tv_glass_white_20 else R.color.policy_accent_light, 10f * paddingMultiplier)
+                background = context.createGlassBackground(
+                    if (isTv) R.color.tv_glass_white_20 else R.color.mobile_glass_card,
+                    if (isTv) R.color.tv_glass_white_20 else R.color.mobile_glass_stroke,
+                    12f * paddingMultiplier
+                )
             })
 
             // Title
             addView(TextView(context).apply {
                 text = title
-                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.policy_ink))
+                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.mobile_text_primary))
                 textSize = 16f * textMultiplier
                 setTypeface(typeface, Typeface.BOLD)
                 layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f)
@@ -644,7 +644,7 @@ object PolicyViewBuilder {
         val paddingMultiplier = if (isTv) 1.3f else 1f
         return TextView(context).apply {
             text = contentText
-            setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_accent else R.color.policy_accent))
+            setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_accent else R.color.ufm_accent_light))
             textSize = 11.5f * textMultiplier
             setTypeface(typeface, Typeface.BOLD)
             isAllCaps = true
@@ -661,7 +661,7 @@ object PolicyViewBuilder {
         val paddingMultiplier = if (isTv) 1.3f else 1f
         return TextView(context).apply {
             text = contentText
-            setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_secondary else R.color.policy_ink))
+            setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
             textSize = 14.5f * textMultiplier
             setLineSpacing(0f, 1.5f)
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
@@ -683,8 +683,8 @@ object PolicyViewBuilder {
 
             val (symbol, bgColor, fgColor) = when (style) {
                 CheckStyle.CHECK  -> Triple("✓", if (isTv) R.color.tv_glass_green else R.color.policy_green_bg, R.color.policy_green)
-                CheckStyle.CROSS  -> Triple("✕", if (isTv) R.color.tv_glass_red else R.color.policy_red_bg,   R.color.policy_red)
-                CheckStyle.BULLET -> Triple("•", if (isTv) R.color.tv_glass_blue else R.color.policy_accent_light, if (isTv) R.color.tv_accent else R.color.policy_accent)
+                CheckStyle.CROSS  -> Triple("✕", if (isTv) R.color.tv_glass_red else R.color.policy_red_bg, R.color.policy_red)
+                CheckStyle.BULLET -> Triple("•", if (isTv) R.color.tv_glass_blue else R.color.policy_accent_light, if (isTv) R.color.tv_accent else R.color.ufm_accent_light)
             }
 
             addView(TextView(context).apply {
@@ -702,7 +702,7 @@ object PolicyViewBuilder {
 
             addView(TextView(context).apply {
                 text = rowText
-                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_secondary else R.color.policy_ink))
+                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
                 textSize = 14f * textMultiplier
                 setLineSpacing(0f, 1.45f)
                 layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f)
@@ -721,11 +721,11 @@ object PolicyViewBuilder {
 
             addView(TextView(context).apply {
                 text = number.toString()
-                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.policy_toolbar_text))
+                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.white))
                 textSize = 11f * textMultiplier
                 gravity = Gravity.CENTER
                 setTypeface(typeface, Typeface.BOLD)
-                background = context.createRoundedBackground(if (isTv) R.color.tv_glass_white_20 else R.color.policy_accent, 11f * paddingMultiplier)
+                background = context.createRoundedBackground(if (isTv) R.color.tv_glass_white_20 else R.color.ufm_primary, 11f * paddingMultiplier)
                 layoutParams = LinearLayout.LayoutParams(dp(context, (24 * paddingMultiplier).toInt()), dp(context, (24 * paddingMultiplier).toInt())).apply {
                     marginEnd = dp(context, (12 * paddingMultiplier).toInt())
                     topMargin = dp(context, (2 * paddingMultiplier).toInt())
@@ -734,7 +734,7 @@ object PolicyViewBuilder {
 
             addView(TextView(context).apply {
                 text = rowText
-                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_secondary else R.color.policy_ink))
+                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
                 textSize = 14f * textMultiplier
                 setLineSpacing(0f, 1.45f)
                 layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f)
@@ -748,7 +748,7 @@ object PolicyViewBuilder {
         val bgColor = if (isTv) {
             if (alternate) R.color.tv_glass_white_10 else android.R.color.transparent
         } else {
-            if (alternate) R.color.policy_row_alt else R.color.policy_surface
+            if (alternate) R.color.mobile_glass_card else android.R.color.transparent
         }
         return LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -758,7 +758,7 @@ object PolicyViewBuilder {
 
             addView(TextView(context).apply {
                 text = label
-                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.policy_accent))
+                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.ufm_accent_light))
                 textSize = 13f * textMultiplier
                 setTypeface(typeface, Typeface.BOLD)
                 layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, 0.38f)
@@ -766,7 +766,7 @@ object PolicyViewBuilder {
 
             addView(TextView(context).apply {
                 text = detail
-                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_secondary else R.color.policy_slate))
+                setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
                 textSize = 13f * textMultiplier
                 setLineSpacing(0f, 1.4f)
                 layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, 0.62f)
@@ -786,14 +786,14 @@ object PolicyViewBuilder {
         val textMultiplier = if (isTv) 1.3f else 1f
         val paddingMultiplier = if (isTv) 1.3f else 1f
         val (bgRes, borderColor) = when (style) {
-            AlertStyle.INFO    -> (if (isTv) R.color.tv_glass_blue else R.color.policy_accent_light) to R.color.policy_accent
+            AlertStyle.INFO    -> (if (isTv) R.color.tv_glass_blue else R.color.mobile_glass_card) to R.color.ufm_accent_light
             AlertStyle.SUCCESS -> (if (isTv) R.color.tv_glass_green else R.color.policy_green_bg) to R.color.policy_green
             AlertStyle.DANGER  -> (if (isTv) R.color.tv_glass_red else R.color.policy_red_bg) to R.color.policy_red
         }
 
         return LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            background = context.createRoundedBackground(bgRes, 6f)
+            background = context.createRoundedBackground(bgRes, 10f * paddingMultiplier)
             clipToOutline = true
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
                 topMargin = dp(context, (4 * paddingMultiplier).toInt())
@@ -810,9 +810,9 @@ object PolicyViewBuilder {
                 orientation = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(0, WRAP_CONTENT, 1f)
                 setPadding(
-                    dp(context, (16 * paddingMultiplier).toInt() - dp(context, 6)), 
-                    dp(context, (14 * paddingMultiplier).toInt()), 
-                    dp(context, (16 * paddingMultiplier).toInt()), 
+                    dp(context, (16 * paddingMultiplier).toInt() - dp(context, 6)),
+                    dp(context, (14 * paddingMultiplier).toInt()),
+                    dp(context, (16 * paddingMultiplier).toInt()),
                     dp(context, (14 * paddingMultiplier).toInt())
                 )
 
@@ -833,7 +833,7 @@ object PolicyViewBuilder {
                     addView(TextView(context).apply {
                         text = title
                         val titleRes = when (style) {
-                            AlertStyle.INFO    -> (if (isTv) R.color.tv_text_primary else R.color.policy_ink)
+                            AlertStyle.INFO    -> (if (isTv) R.color.tv_text_primary else R.color.mobile_text_primary)
                             AlertStyle.SUCCESS -> R.color.policy_green
                             AlertStyle.DANGER  -> R.color.policy_red
                         }
@@ -845,7 +845,7 @@ object PolicyViewBuilder {
 
                     addView(TextView(context).apply {
                         text = message
-                        val msgRes = if (isTv) R.color.tv_text_hint else R.color.policy_slate
+                        val msgRes = if (isTv) R.color.tv_text_hint else R.color.mobile_text_secondary
                         setTextColor(ContextCompat.getColor(context, msgRes))
                         textSize = 13f * textMultiplier
                         setLineSpacing(0f, 1.45f)
@@ -860,7 +860,7 @@ object PolicyViewBuilder {
         val paddingMultiplier = if (isTv) 1.3f else 1f
         return TextView(context).apply {
             text = contentText
-            setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_hint else R.color.policy_slate))
+            setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_hint else R.color.mobile_text_secondary))
             textSize = 13f * textMultiplier
             gravity = Gravity.CENTER_HORIZONTAL
             setPadding(dp(context, (16 * paddingMultiplier).toInt()), dp(context, (16 * paddingMultiplier).toInt()), dp(context, (16 * paddingMultiplier).toInt()), dp(context, (8 * paddingMultiplier).toInt()))
@@ -878,6 +878,20 @@ object PolicyViewBuilder {
     // Drawing helpers
     // ─────────────────────────────────────────────────────────────
 
+    private fun Context.createGlassBackground(
+        colorRes: Int,
+        strokeColorRes: Int,
+        radiusDp: Float,
+        strokeWidthDp: Float = 1f
+    ): android.graphics.drawable.GradientDrawable {
+        return android.graphics.drawable.GradientDrawable().apply {
+            shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+            cornerRadius = dp(this@createGlassBackground, radiusDp.toInt()).toFloat()
+            setColor(ContextCompat.getColor(this@createGlassBackground, colorRes))
+            setStroke(dp(this@createGlassBackground, strokeWidthDp.toInt()), ContextCompat.getColor(this@createGlassBackground, strokeColorRes))
+        }
+    }
+
     private fun Context.createRoundedBackground(
         colorRes: Int,
         radiusDp: Float
@@ -888,8 +902,6 @@ object PolicyViewBuilder {
             setColor(ContextCompat.getColor(this@createRoundedBackground, colorRes))
         }
     }
-
-    // Removed createLeftBorderBackground as it relies on overlapping layers
 
     private fun dp(context: Context, value: Int): Int =
         TypedValue.applyDimension(

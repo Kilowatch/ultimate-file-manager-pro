@@ -24,6 +24,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
+import android.view.LayoutInflater
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 class SmartSortTvActivity : AppCompatActivity() {
@@ -39,6 +42,8 @@ class SmartSortTvActivity : AppCompatActivity() {
     private var pendingRuleIndex = -1
     private var savedConfigId: String? = null
     private var autoExecuteOnLoad = false
+    private var handledFontChange = false
+    private var handledLocaleChange = false
 
     
     private fun fixCategoryFocus() {
@@ -89,12 +94,34 @@ class SmartSortTvActivity : AppCompatActivity() {
         const val RESULT_SORTED = "result_sorted"
     }
 
+        override fun onResume() {
+        super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("handledFontChange", handledFontChange)
+        outState.putBoolean("handledLocaleChange", handledLocaleChange)
+    }
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handledFontChange = savedInstanceState?.getBoolean("handledFontChange", false) ?: false
+        handledLocaleChange = savedInstanceState?.getBoolean("handledLocaleChange", false) ?: false
         enableEdgeToEdge()
         val isTv = DeviceUtils.isTvDevice(this)
         setContentView(if (isTv) R.layout.activity_smart_sort_tv else R.layout.activity_smart_sort_config)
@@ -301,72 +328,106 @@ fixCategoryFocus(); fixCategoryFocus()
         updateLabels(defaultPrefix)
         wireCategoryFolderButtons()
 
-        btnPreview.setOnClickListener {
+                btnPreview.setOnClickListener {
             val err = validateConfig()
-            if (err != null) { MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(R.string.smart_sort_validation_error).setMessage(err).setPositiveButton(R.string.got_it_1, null).show(); return@setOnClickListener }
+            if (err != null) {
+                showValidationErrorDialog(err)
+                return@setOnClickListener
+            }
             lifecycleScope.launch {
                 val preview = withContext(Dispatchers.IO) { engine.preview(folderPath, buildConfig()) }
+                val dialogView = LayoutInflater.from(this@SmartSortTvActivity).inflate(
+                    if (isTvDevice) R.layout.dialog_smart_sort_preview_tv else R.layout.dialog_smart_sort_preview,
+                    null
+                )
                 val sb = StringBuilder()
                 preview.categoryCounts.forEach { (c, n) -> sb.appendLine("$c: $n") }
-                sb.appendLine(getString(R.string.smart_sort_preview_total, preview.totalFiles))
-                if (preview.conflicts.isNotEmpty()) sb.appendLine(getString(R.string.smart_sort_preview_conflicts, preview.conflicts.size))
-                MaterialAlertDialogBuilder(this@SmartSortTvActivity, R.style.UFM_Dialog).setTitle(R.string.smart_sort_preview_title).setView(LinearLayout(this@SmartSortTvActivity).apply { 
-                    orientation = LinearLayout.VERTICAL; setPadding(48, 24, 48, 24)
-                    addView(com.google.android.material.card.MaterialCardView(this@SmartSortTvActivity).apply {
-                        radius = 16f; strokeWidth = 0; setCardBackgroundColor(android.graphics.Color.TRANSPARENT); setBackgroundResource(R.drawable.bg_glass_card_dark)
-                        addView(TextView(context).apply { text = sb.toString(); textSize = 14f; setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.mobile_text_secondary)); setPadding(32, 32, 32, 32) })
-                    })
-                }).setPositiveButton(R.string.got_it_1, null).show()
+                if (sb.isEmpty()) sb.appendLine(getString(R.string.smart_sort_empty))
+                dialogView.findViewById<TextView>(R.id.txtPreviewStats).text = sb.toString().trimEnd()
+                dialogView.findViewById<TextView>(R.id.txtTotalFiles).text = getString(R.string.smart_sort_preview_total, preview.totalFiles)
+
+                val conflictsAlert = dialogView.findViewById<View>(R.id.layoutConflictsAlert)
+                val txtConflicts = dialogView.findViewById<TextView>(R.id.txtConflictsCount)
+                if (preview.conflicts.isNotEmpty()) {
+                    txtConflicts.text = getString(R.string.smart_sort_preview_conflicts, preview.conflicts.size)
+                    conflictsAlert.visibility = View.VISIBLE
+                } else {
+                    conflictsAlert.visibility = View.GONE
+                }
+
+                val dialog = MaterialAlertDialogBuilder(this@SmartSortTvActivity, R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .create()
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialogView.findViewById<View>(R.id.btnDone).setOnClickListener { dialog.dismiss() }
+                dialog.show()
             }
         }
 
         btnStart.setOnClickListener {
             val err = validateConfig()
-            if (err != null) { MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(R.string.smart_sort_validation_error).setMessage(err).setPositiveButton(R.string.got_it_1, null).show(); return@setOnClickListener }
-            btnPreview.isEnabled = false; btnStart.isEnabled = false
-            val pv = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(48, 32, 48, 8) }
-            val pst = TextView(this).apply { text = getString(R.string.smart_sort_progress_moving, "", 0, 0); textSize = 14f }
-            val pb = android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply { max = 100; progress = 0; layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = 16; bottomMargin = 8 } }
-            pv.addView(pst); pv.addView(pb)
-            val pd = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(R.string.smart_sort_start).setView(pv).setCancelable(false).create()
+            if (err != null) {
+                showValidationErrorDialog(err)
+                return@setOnClickListener
+            }
+            btnPreview.isEnabled = false
+            btnStart.isEnabled = false
+
+            val progressView = LayoutInflater.from(this).inflate(
+                if (isTvDevice) R.layout.dialog_smart_sort_progress_tv else R.layout.dialog_smart_sort_progress,
+                null
+            )
+            val txtProgress = progressView.findViewById<TextView>(R.id.txtProgress)
+            val progressBar = progressView.findViewById<ProgressBar>(R.id.progressBar)
+            progressBar.max = 100
+            progressBar.progress = 0
+
+            val pd = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(progressView)
+                .setCancelable(false)
+                .create()
+            pd.window?.setBackgroundDrawableResource(android.R.color.transparent)
             pd.show()
+
             val cfg = buildConfig()
             lifecycleScope.launch {
-                val result = engine.execute(folderPath, cfg) { fn, cur, tot -> runOnUiThread { pst.text = getString(R.string.smart_sort_progress_moving, fn, cur, tot); pb.progress = (cur * 100) / tot } }
-                pd.dismiss(); btnPreview.isEnabled = true; btnStart.isEnabled = true
-                if (result.movedCount > 0) SmartSortHistoryManager.addEntry(folderPath, result.movedCount, result.skippedCount, result.failedCount)
-                val summary = buildString {
-                    appendLine(getString(R.string.smart_sort_result_moved, result.movedCount))
-                    appendLine(getString(R.string.smart_sort_result_skipped, result.skippedCount))
-                    if (result.failedCount > 0) appendLine(getString(R.string.smart_sort_result_failed, result.failedCount))
-                }
-                val manifest = result.manifest
-                val rdv = LinearLayout(this@SmartSortTvActivity).apply { orientation = LinearLayout.VERTICAL; setPadding(24, 16, 24, 8) }
-                rdv.addView(com.google.android.material.card.MaterialCardView(this@SmartSortTvActivity).apply { radius = 16f; strokeWidth = 0; setCardBackgroundColor(android.graphics.Color.TRANSPARENT); setBackgroundResource(R.drawable.bg_glass_card_dark); layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(0,0,0,16) }; addView(TextView(this@SmartSortTvActivity).apply { text = summary; textSize = 14f; setTextColor(androidx.core.content.ContextCompat.getColor(this@SmartSortTvActivity, R.color.mobile_text_secondary)); setPadding(32,32,32,32) }) })
-                if (result.movedCount > 0) {
-                    val btnU = com.google.android.material.button.MaterialButton(this@SmartSortTvActivity, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply { layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(8, 0, 8, 0) };
-
-                        text = getString(R.string.smart_sort_undo); layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = 16 }
-                        setOnClickListener {
-                            val upv = LinearLayout(this@SmartSortTvActivity).apply { orientation = LinearLayout.VERTICAL; setPadding(48, 32, 48, 8) }
-                            val ust = TextView(this@SmartSortTvActivity).apply { text = getString(R.string.smart_sort_undoing); textSize = 14f }
-                            val upb = android.widget.ProgressBar(this@SmartSortTvActivity, null, android.R.attr.progressBarStyleHorizontal).apply { max = 100; progress = 0; layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = 16 } }
-                            upv.addView(ust); upv.addView(upb)
-                            val ud = MaterialAlertDialogBuilder(this@SmartSortTvActivity, R.style.UFM_Dialog).setTitle(R.string.smart_sort_undo).setView(upv).setCancelable(false).create()
-                            ud.show()
-                            lifecycleScope.launch {
-                                if (manifest != null) {
-                                    val uc = SmartSortConfig(shareInfo = shareId?.let { SmartSortShareHolder.resolve(it) })
-                                    engine.undo(folderPath, manifest, uc) { fn, cur, tot -> runOnUiThread { ust.text = getString(R.string.smart_sort_progress_moving, fn, cur, tot); upb.progress = (cur * 100) / tot } }
-                                    SmartSortHistoryManager.removeEntryForPath(folderPath)
-                                }
-                                ud.dismiss(); setResult(RESULT_OK, Intent().apply { putExtra(RESULT_SORTED, true) }); finish()
-                            }
-                        }
+                val result = engine.execute(folderPath, cfg) { fn, cur, tot ->
+                    runOnUiThread {
+                        txtProgress.text = getString(R.string.smart_sort_progress_moving, fn, cur, tot)
+                        progressBar.progress = if (tot > 0) (cur * 100) / tot else 0
                     }
-                    rdv.addView(btnU)
                 }
-                MaterialAlertDialogBuilder(this@SmartSortTvActivity, R.style.UFM_Dialog).setTitle(R.string.smart_sort_result_title).setView(rdv).setPositiveButton(R.string.got_it_1) { d, _ -> d.dismiss(); setResult(RESULT_OK, Intent().apply { putExtra(RESULT_SORTED, true) }); finish() }.setCancelable(false).show()
+                pd.dismiss()
+                btnPreview.isEnabled = true
+                btnStart.isEnabled = true
+                if (result.movedCount > 0) {
+                    SmartSortHistoryManager.addEntry(folderPath, result.movedCount, result.skippedCount, result.failedCount)
+                }
+
+                val resultsView = LayoutInflater.from(this@SmartSortTvActivity).inflate(
+                    if (isTvDevice) R.layout.dialog_smart_sort_results_tv else R.layout.dialog_smart_sort_results,
+                    null
+                )
+                resultsView.findViewById<TextView>(R.id.txtMovedCount).text = result.movedCount.toString()
+                resultsView.findViewById<TextView>(R.id.txtSkippedCount).text = result.skippedCount.toString()
+                resultsView.findViewById<TextView>(R.id.txtFailedCount).text = result.failedCount.toString()
+                resultsView.findViewById<TextView>(R.id.txtResultMessage).text = if (result.failedCount > 0) {
+                    getString(R.string.smart_sort_result_failed, result.failedCount)
+                } else {
+                    getString(R.string.smart_sort_result_moved, result.movedCount)
+                }
+
+                val resDialog = MaterialAlertDialogBuilder(this@SmartSortTvActivity, R.style.UFM_Dialog)
+                    .setView(resultsView)
+                    .setCancelable(false)
+                    .create()
+                resDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                resultsView.findViewById<View>(R.id.btnDone).setOnClickListener {
+                    resDialog.dismiss()
+                    setResult(RESULT_OK, Intent().apply { putExtra(RESULT_SORTED, true) })
+                    finish()
+                }
+                resDialog.show()
             }
         }
     }
@@ -474,61 +535,144 @@ private fun renderCustomRules(container: LinearLayout?, emptyText: TextView?) {
 }
 private val isTvDevice: Boolean get() = DeviceUtils.isTvDevice(this)
 private fun showAddRuleDialog(ruleContainer: LinearLayout?, emptyText: TextView?) {
-    val inpWrapper = com.google.android.material.textfield.TextInputLayout(this, null, com.google.android.material.R.attr.textInputStyle).apply { hint = getString(R.string.smart_sort_rule_description); layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(16, 8, 16, 8) } }
-    val inp = com.google.android.material.textfield.TextInputEditText(inpWrapper.context).apply { layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) }
-    inpWrapper.addView(inp)
-    MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(R.string.smart_sort_add_rule).setView(LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; addView(inpWrapper) }).setPositiveButton(R.string.smart_sort_add_rule) { d, _ ->
-        val desc = inp.text?.toString()?.trim() ?: ""
-        if (desc.isEmpty()) { MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setMessage(R.string.smart_sort_description_empty).setPositiveButton(R.string.got_it_1, null).show(); return@setPositiveButton }
-        customRules.add(SmartSortCustomRule(description = desc)); renderCustomRules(ruleContainer, emptyText); d.dismiss()
-    }.setNegativeButton(R.string.cancel, null).show()
+    val dialogView = LayoutInflater.from(this).inflate(
+        if (isTvDevice) R.layout.dialog_smart_sort_add_rule_tv else R.layout.dialog_smart_sort_add_rule,
+        null
+    )
+    val txtInput = dialogView.findViewById<TextInputEditText>(R.id.txtRuleDescription)
+    val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+        .setView(dialogView)
+        .create()
+    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+    dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
+        val desc = txtInput.text?.toString()?.trim() ?: ""
+        if (desc.isEmpty()) {
+            dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.txtRuleDescriptionLayout)?.error = getString(R.string.smart_sort_description_empty)
+            return@setOnClickListener
+        }
+        customRules.add(SmartSortCustomRule(description = desc))
+        renderCustomRules(ruleContainer, emptyText)
+        dialog.dismiss()
+    }
+    dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+        dialog.dismiss()
+    }
+    dialog.show()
 }
+
 private fun showEditRuleDialog(index: Int, container: LinearLayout?, emptyText: TextView?) {
     val rule = customRules[index]
-    val inpWrapper = com.google.android.material.textfield.TextInputLayout(this, null, com.google.android.material.R.attr.textInputStyle).apply { hint = getString(R.string.smart_sort_rule_description); layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(16, 8, 16, 8) } }
-    val inp = com.google.android.material.textfield.TextInputEditText(inpWrapper.context).apply { setText(rule.description); layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) }
-    inpWrapper.addView(inp)
-    MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(R.string.smart_sort_edit_rule).setView(LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; addView(inpWrapper) }).setPositiveButton(R.string.smart_sort_edit_rule) { d, _ ->
-        val desc = inp.text?.toString()?.trim() ?: ""
-        if (desc.isEmpty()) { MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setMessage(R.string.smart_sort_description_empty).setPositiveButton(R.string.got_it_1, null).show(); return@setPositiveButton }
-        customRules[index] = rule.copy(description = desc); renderCustomRules(container, emptyText); d.dismiss()
-    }.setNegativeButton(R.string.cancel, null).show()
+    val dialogView = LayoutInflater.from(this).inflate(
+        if (isTvDevice) R.layout.dialog_smart_sort_add_rule_tv else R.layout.dialog_smart_sort_add_rule,
+        null
+    )
+    val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+    txtTitle.setText(R.string.smart_sort_edit_rule)
+    val txtInput = dialogView.findViewById<TextInputEditText>(R.id.txtRuleDescription)
+    txtInput.setText(rule.description)
+
+    val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+        .setView(dialogView)
+        .create()
+    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+    dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
+        val desc = txtInput.text?.toString()?.trim() ?: ""
+        if (desc.isEmpty()) {
+            dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.txtRuleDescriptionLayout)?.error = getString(R.string.smart_sort_description_empty)
+            return@setOnClickListener
+        }
+        customRules[index] = rule.copy(description = desc)
+        renderCustomRules(container, emptyText)
+        dialog.dismiss()
+    }
+    dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+        dialog.dismiss()
+    }
+    dialog.show()
 }
+
 private fun showAddExtensionDialog(ruleIndex: Int) {
-    val inpWrapper = com.google.android.material.textfield.TextInputLayout(this, null, com.google.android.material.R.attr.textInputStyle).apply { hint = getString(R.string.smart_sort_extension_empty); layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(16, 8, 16, 8) } }
-    val inp = com.google.android.material.textfield.TextInputEditText(inpWrapper.context).apply { layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) }
-    inpWrapper.addView(inp)
-    val err = android.widget.TextView(this).apply { textSize = 12f; visibility = View.GONE }
-    val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(R.string.smart_sort_add_extension).setView(LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; addView(inpWrapper); addView(err) }).setPositiveButton(R.string.smart_sort_add_extension) { d, _ ->
-        val ext = inp.text?.toString()?.trim()?.lowercase() ?: ""
-        if (ext.isEmpty()) { err.text = getString(R.string.smart_sort_extension_empty); err.visibility = View.VISIBLE; return@setPositiveButton }
+    val dialogView = LayoutInflater.from(this).inflate(
+        if (isTvDevice) R.layout.dialog_smart_sort_add_extension_tv else R.layout.dialog_smart_sort_add_extension,
+        null
+    )
+    val txtInput = dialogView.findViewById<TextInputEditText>(R.id.txtExtension)
+    val txtErr = dialogView.findViewById<TextView>(R.id.txtExtensionError)
+
+    val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+        .setView(dialogView)
+        .create()
+    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+    dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
+        val ext = txtInput.text?.toString()?.trim()?.lowercase()?.removePrefix(".") ?: ""
+        if (ext.isEmpty()) {
+            txtErr.text = getString(R.string.smart_sort_extension_empty)
+            txtErr.visibility = View.VISIBLE
+            return@setOnClickListener
+        }
         for ((oi, or) in customRules.withIndex()) {
             if (oi != ruleIndex && ext in or.extensions) {
-                d.dismiss()
-                MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(getString(R.string.smart_sort_extension_already_used, ext, or.description)).setPositiveButton(R.string.got_it_1, null).show()
-                return@setPositiveButton
+                txtErr.text = getString(R.string.smart_sort_extension_already_used, ext, or.description)
+                txtErr.visibility = View.VISIBLE
+                return@setOnClickListener
             }
         }
-        customRules[ruleIndex].extensions.add(ext); d.dismiss(); renderCustomRules(findViewById(R.id.layoutCustomRules) ?: findViewById(R.id.layoutCustomRules), findViewById(R.id.txtCustomRulesEmpty))
-    }.setNegativeButton(R.string.cancel, null).create()
+        customRules[ruleIndex].extensions.add(ext)
+        dialog.dismiss()
+        renderCustomRules(findViewById(R.id.layoutCustomRules), findViewById(R.id.txtCustomRulesEmpty))
+    }
+    dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+        dialog.dismiss()
+    }
     dialog.show()
 }
 private fun showRemoveExtensionsDialog(ruleIndex: Int) {
     val rule = customRules[ruleIndex]
-    val dialogView = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(24, 16, 24, 8) }
-    for (ext in rule.extensions.toList()) {
-        val card = com.google.android.material.card.MaterialCardView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(0, 0, 0, 16) }
-            radius = 16f
-            strokeWidth = 0
-            setCardBackgroundColor(android.graphics.Color.TRANSPARENT); setBackgroundResource(R.drawable.bg_glass_card_dark)
+    val dialogView = LayoutInflater.from(this).inflate(
+        if (isTvDevice) R.layout.dialog_smart_sort_remove_extensions_tv else R.layout.dialog_smart_sort_remove_extensions,
+        null
+    )
+    val layoutList = dialogView.findViewById<LinearLayout>(R.id.layoutExtensionList)
+    val txtEmpty = dialogView.findViewById<TextView>(R.id.txtEmptyExtensions)
+
+    val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+        .setView(dialogView)
+        .create()
+    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+    val inflater = LayoutInflater.from(this)
+    fun renderExtensionList() {
+        layoutList.removeAllViews()
+        if (rule.extensions.isEmpty()) {
+            txtEmpty.visibility = View.VISIBLE
+            return
         }
-        val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = android.view.Gravity.CENTER_VERTICAL; setPadding(32, 24, 32, 24) }
-        row.addView(TextView(this).apply { text = ext; textSize = 20f; setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.mobile_text_primary)); layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f) })
-        val trash = ImageView(this).apply { layoutParams = LinearLayout.LayoutParams(56, 56); setImageResource(R.drawable.ic_delete); imageTintList = android.content.res.ColorStateList.valueOf(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_error)); setOnClickListener { rule.extensions.remove(ext); dialogView.removeView(card) } }
-        row.addView(trash); card.addView(row); dialogView.addView(card)
+        txtEmpty.visibility = View.GONE
+
+        for (ext in rule.extensions.toList()) {
+            val row = inflater.inflate(
+                if (isTvDevice) R.layout.item_smart_sort_remove_extension_tv else R.layout.item_smart_sort_remove_extension,
+                layoutList,
+                false
+            )
+            row.findViewById<TextView>(R.id.txtExtensionName).text = if (ext.startsWith(".")) ext else ".$ext"
+            row.findViewById<View>(R.id.btnDeleteExtension).setOnClickListener {
+                rule.extensions.remove(ext)
+                renderExtensionList()
+            }
+            layoutList.addView(row)
+        }
     }
-    val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(R.string.smart_sort_remove_extensions_title).setView(dialogView).setPositiveButton(R.string.done) { _, _ -> renderCustomRules(findViewById(R.id.layoutCustomRules) ?: findViewById(R.id.layoutCustomRules), findViewById(R.id.txtCustomRulesEmpty)) }.create()
+
+    renderExtensionList()
+
+    dialogView.findViewById<View>(R.id.btnDone).setOnClickListener {
+        dialog.dismiss()
+        renderCustomRules(findViewById(R.id.layoutCustomRules), findViewById(R.id.txtCustomRulesEmpty))
+    }
     dialog.show()
 }
 private fun pickCustomRuleFolder(ruleIndex: Int) {
@@ -582,14 +726,61 @@ private fun buildConfig(): SmartSortConfig {
 }
 private fun onSaveButtonClicked() {
     if (savedConfigId != null) {
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(R.string.smart_sort_edit_config).setIcon(R.drawable.ic_edit).setPositiveButton(R.string.smart_sort_save_changes) { _, _ -> showSaveDescriptionDialog(true) }.setNeutralButton(R.string.smart_sort_delete_saved) { _, _ -> MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(getString(R.string.smart_sort_delete_saved_confirm_title, "")).setIcon(R.drawable.ic_delete).setMessage(getString(R.string.smart_sort_delete_saved_confirm_msg, "")).setPositiveButton(R.string.smart_sort_delete_saved) { _, _ -> savedConfigId?.let { SmartSortSavedConfigRepository.delete(it) }; savedConfigId = null; updateSaveIcon(); updateSaveButtonState() }.setNegativeButton(R.string.cancel, null).show() }.setNegativeButton(R.string.cancel, null).show()
-    } else showSaveDescriptionDialog(false)
+        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.smart_sort_edit_config)
+            .setIcon(R.drawable.ic_edit)
+            .setPositiveButton(R.string.smart_sort_save_changes) { _, _ -> showSaveDescriptionDialog(true) }
+            .setNeutralButton(R.string.smart_sort_delete_saved) { _, _ ->
+                val dialogView = LayoutInflater.from(this).inflate(
+                    if (isTvDevice) R.layout.dialog_smart_sort_delete_config_confirm_tv else R.layout.dialog_smart_sort_delete_config_confirm,
+                    null
+                )
+                val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .create()
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialogView.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
+                    savedConfigId?.let { SmartSortSavedConfigRepository.delete(it) }
+                    savedConfigId = null
+                    updateSaveIcon()
+                    updateSaveButtonState()
+                    dialog.dismiss()
+                }
+                dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialog.show()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    } else {
+        showSaveDescriptionDialog(false)
+    }
 }
 private fun showSaveDescriptionDialog(isEdit: Boolean) {
-    val inpWrapper = com.google.android.material.textfield.TextInputLayout(this, null, com.google.android.material.R.attr.textInputStyle).apply { hint = getString(R.string.smart_sort_enter_description); layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(16, 8, 16, 8) } }
-    val inp = com.google.android.material.textfield.TextInputEditText(inpWrapper.context).apply { layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) }
-    inpWrapper.addView(inp)
-    MaterialAlertDialogBuilder(this, R.style.UFM_Dialog).setTitle(R.string.smart_sort_save_description).setView(LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; addView(inpWrapper) }).setPositiveButton(R.string.smart_sort_save_config) { _, _ -> val d = inp.text?.toString()?.trim() ?: ""; if (d.isNotEmpty()) saveCurrentConfig(d) }.setNegativeButton(R.string.cancel, null).show()
+    val dialogView = LayoutInflater.from(this).inflate(
+        if (isTvDevice) R.layout.dialog_smart_sort_save_description_tv else R.layout.dialog_smart_sort_save_description,
+        null
+    )
+    val txtInput = dialogView.findViewById<TextInputEditText>(R.id.txtConfigDescription)
+    val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+        .setView(dialogView)
+        .create()
+    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+    dialogView.findViewById<View>(R.id.btnSaveConfirm).setOnClickListener {
+        val d = txtInput.text?.toString()?.trim() ?: ""
+        if (d.isNotEmpty()) {
+            saveCurrentConfig(d)
+            dialog.dismiss()
+        } else {
+            dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.txtConfigDescriptionLayout)?.error = getString(R.string.smart_sort_enter_description)
+        }
+    }
+    dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+        dialog.dismiss()
+    }
+    dialog.show()
 }
 private fun saveCurrentConfig(description: String) {
     val cfg = buildConfig(); val json = serializeConfigToJson(cfg)
@@ -607,8 +798,10 @@ private fun serializeConfigToJson(config: SmartSortConfig): org.json.JSONObject 
     put("customRules", org.json.JSONArray(config.customRules.map { r -> org.json.JSONObject().apply { put("id", r.id); put("description", r.description); put("extensions", org.json.JSONArray(r.extensions.toList())); put("enabled", r.enabled); if (r.customFolderPath != null) put("customFolderPath", r.customFolderPath); if (r.customFolderShareId != null) put("customFolderShareId", r.customFolderShareId) } }))
 }
 private fun loadSavedConfig(saved: SmartSortSavedConfig) {
-    try { savedConfigId = saved.id; val j = org.json.JSONObject(saved.configJson)
-        val sid = j.optString("sourceShareId", null)
+    try {
+        savedConfigId = saved.id
+        val j = org.json.JSONObject(saved.configJson)
+        val sid = if (j.has("sourceShareId") && !j.isNull("sourceShareId")) j.getString("sourceShareId") else null
         if (sid != null) shareId = sid
 
         val recursive = j.optBoolean("recursive", false)
@@ -642,7 +835,28 @@ private fun loadSavedConfig(saved: SmartSortSavedConfig) {
         findViewById<TextInputEditText>(R.id.txtPrefix)?.setText(j.optString("prefix", "UFM"))
         j.optJSONObject("customCategoryPaths")?.let { o -> customCategoryPaths.clear(); for (k in o.keys()) customCategoryPaths[k] = o.getString(k) }
         j.optJSONObject("customCategoryShareIds")?.let { o -> customCategoryShareIds.clear(); for (k in o.keys()) customCategoryShareIds[k] = o.getString(k) }
-        j.optJSONArray("customRules")?.let { a -> customRules.clear(); for (i in 0 until a.length()) { val r = a.getJSONObject(i); val exts = mutableSetOf<String>(); r.optJSONArray("extensions")?.let { e -> for (j in 0 until e.length()) exts.add(e.getString(j)) }; val rule = SmartSortCustomRule(id = r.optString("id", java.util.UUID.randomUUID().toString()), description = r.optString("description", ""), extensions = exts, enabled = r.optBoolean("enabled", true), customFolderPath = r.optString("customFolderPath", null), customFolderShareId = r.optString("customFolderShareId", null)); if (rule.customFolderPath != null) customCategoryPaths[rule.id] = rule.customFolderPath!!; if (rule.customFolderShareId != null) customCategoryShareIds[rule.id] = rule.customFolderShareId!!; customRules.add(rule) }; renderCustomRules(findViewById(R.id.layoutCustomRules) ?: findViewById(R.id.layoutCustomRules), findViewById(R.id.txtCustomRulesEmpty)) }
+        j.optJSONArray("customRules")?.let { a ->
+            customRules.clear()
+            for (i in 0 until a.length()) {
+                val r = a.getJSONObject(i)
+                val exts = mutableSetOf<String>()
+                r.optJSONArray("extensions")?.let { e -> for (j in 0 until e.length()) exts.add(e.getString(j)) }
+                val customFolderPath = if (r.has("customFolderPath") && !r.isNull("customFolderPath")) r.getString("customFolderPath") else null
+                val customFolderShareId = if (r.has("customFolderShareId") && !r.isNull("customFolderShareId")) r.getString("customFolderShareId") else null
+                val rule = SmartSortCustomRule(
+                    id = r.optString("id", java.util.UUID.randomUUID().toString()),
+                    description = r.optString("description", ""),
+                    extensions = exts,
+                    enabled = r.optBoolean("enabled", true),
+                    customFolderPath = customFolderPath,
+                    customFolderShareId = customFolderShareId
+                )
+                if (rule.customFolderPath != null) customCategoryPaths[rule.id] = rule.customFolderPath!!
+                if (rule.customFolderShareId != null) customCategoryShareIds[rule.id] = rule.customFolderShareId!!
+                customRules.add(rule)
+            }
+            renderCustomRules(findViewById(R.id.layoutCustomRules) ?: findViewById(R.id.layoutCustomRules), findViewById(R.id.txtCustomRulesEmpty))
+        }
     } catch (_: Exception) {}
 }
 private fun updateSaveButtonState() {
@@ -655,7 +869,21 @@ private fun updateSaveIcon() {
     if (savedConfigId != null) { btn.setImageResource(R.drawable.ic_edit); btn.alpha = 1.0f; btn.isEnabled = true }
     else { btn.setImageResource(R.drawable.ic_save); btn.alpha = 0.4f; btn.isEnabled = false }
 }
-private fun setupTvFocus() {
+    private fun showValidationErrorDialog(errorMsg: String) {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTvDevice) R.layout.dialog_smart_sort_validation_error_tv else R.layout.dialog_smart_sort_validation_error,
+            null
+        )
+        dialogView.findViewById<TextView>(R.id.txtErrorMessage).text = errorMsg
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialogView.findViewById<View>(R.id.btnDone).setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
+
+    private fun setupTvFocus() {
     val yb = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
     val wt = getColor(R.color.tv_text_primary); val yt = getColor(R.color.tv_button_focused_yellow_text)
     listOf(R.id.chipSortStandard, R.id.chipSortCustom, R.id.chipRootOnly, R.id.chipRecursive, R.id.chipFlatten, R.id.chipPreserve, R.id.chipModeType, R.id.chipModeSize, R.id.chipModeDate, R.id.chipIncludeOther, R.id.chipDupSkip, R.id.chipDupRename, R.id.chipDupOverwrite, R.id.chipExistingMerge, R.id.chipExistingSkip, R.id.chipExistingRename).forEach { id -> val chip = findViewById<Chip>(id) ?: return@forEach; chip.setOnFocusChangeListener { _, hf -> if (hf) { chip.chipBackgroundColor = yb; chip.setTextColor(yt) } else { chip.chipBackgroundColor = null; chip.setTextColor(wt) } } }

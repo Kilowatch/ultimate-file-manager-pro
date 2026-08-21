@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/ufm_surface">
+    android:background="@drawable/bg_dialog_glass">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -1286,36 +1286,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="@dimen/margin_md">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:background="@color/mobile_glass_header">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPreview"
             style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="@dimen/margin_sm"
             android:text="@string/smart_sort_preview"
-            android:textColor="?attr/colorSecondary" />
+            android:textColor="?attr/colorPrimary"
+            android:textSize="13.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp"
+            android:layout_marginEnd="8dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStartSort"
-            style="@style/ContinueButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/continue_button_height"
+            android:layout_height="50dp"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_sm"
-            android:text="@string/smart_sort_start" />
+            android:text="@string/smart_sort_start"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp"
+            app:backgroundTint="?attr/colorPrimary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnHistory"
             style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginStart="@dimen/margin_sm"
+            android:layout_marginStart="8dp"
             android:text="@string/smart_sort_history"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="12sp" />
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp" />
     </LinearLayout>
 </LinearLayout>

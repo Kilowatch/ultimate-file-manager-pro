@@ -2,7 +2,9 @@ package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.billing.SupporterLoyaltyActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.ReviewHelper
 import za.kilowatch.ultimatefilemanager.util.ReviewPrefs
@@ -28,7 +31,7 @@ class RateUsActivity : AppCompatActivity() {
         }
     }
 
-    override fun attachBaseContext(newBase: android.content.Context) {
+    override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
@@ -62,16 +65,11 @@ class RateUsActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         
         if (isTv) {
-            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
-                if (hasFocus) {
-                    btnBack.setBackgroundResource(R.drawable.bg_icon_circle_focused)
-                } else {
-                    btnBack.setBackgroundResource(R.drawable.bg_icon_circle_accent)
-                }
             }
         }
         
@@ -81,28 +79,20 @@ class RateUsActivity : AppCompatActivity() {
         val btnRateUs = findViewById<MaterialButton>(R.id.btnRateUs)
         btnRateUs.text = getString(R.string.rate_us_button_play_foss)
 
-        if (isTv) {
-            val defaultColor = getColor(R.color.ufm_primary)
-            val focusColor = getColor(R.color.tv_button_focused_yellow)
-            val defaultTextColor = getColor(R.color.tv_text_primary)
-            val focusTextColor = getColor(R.color.tv_button_focused_yellow_text)
-            
-            btnRateUs.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    btnRateUs.setBackgroundColor(focusColor)
-                    btnRateUs.setTextColor(focusTextColor)
-                    btnRateUs.iconTint = android.content.res.ColorStateList.valueOf(focusTextColor)
-                } else {
-                    btnRateUs.setBackgroundColor(defaultColor)
-                    btnRateUs.setTextColor(defaultTextColor)
-                    btnRateUs.iconTint = android.content.res.ColorStateList.valueOf(defaultTextColor)
-                }
-            }
-        }
-
         btnRateUs.setOnClickListener {
             ReviewPrefs.onRateUsTapped(this)
             ReviewHelper.launchInAppReview(this) // Redirects to F-Droid
         }
+
+        // Tip Jar Card / Button Click Handling
+        val cardTipJar = findViewById<View?>(R.id.cardTipJar)
+        val btnTipJar = findViewById<View?>(R.id.btnTipJar)
+
+        val tipClickListener = View.OnClickListener {
+            startActivity(Intent(this, SupporterLoyaltyActivity::class.java))
+        }
+
+        cardTipJar?.setOnClickListener(tipClickListener)
+        btnTipJar?.setOnClickListener(tipClickListener)
     }
 }

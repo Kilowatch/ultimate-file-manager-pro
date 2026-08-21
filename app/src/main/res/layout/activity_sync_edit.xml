@@ -7,56 +7,79 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_mobile_gradient">
 
+    <!-- ══════════════════════════════════════════════════
+         HEADER BAR — 56dp glass header bar
+         ══════════════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="14dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Back Button -->
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_arrow_back"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@color/mobile_icon_tint" />
+        <!-- Frosted Back Button -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="14dp">
 
-        <!-- Accent divider -->
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/close"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
 
-        <TextView
-            android:id="@+id/txtTitle"
-            android:layout_width="wrap_content"
+        <!-- Title + Subtitle -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/edit_sync_profile"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="17sp"
-            android:fontFamily="sans-serif-black"
-            android:letterSpacing="0.01"
-            android:maxLines="1"
-            android:ellipsize="end" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_sync_profile"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.01"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/txtSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/configure_sync_folders_schedule"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
 
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/layoutBottomBar"
         app:layout_constraintTop_toBottomOf="@+id/layoutHeader">
 
@@ -64,39 +87,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="16dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/profile_name_eg_dcim_backup"
-                app:hintTextColor="@color/mobile_text_secondary"
-                android:textColorHint="@color/mobile_text_secondary">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/mobile_text_primary"
-                    android:inputType="textCapWords" />
-            </com.google.android.material.textfield.TextInputLayout>
-
+            <!-- ══════════════════════════════════════════════════
+                 CARD 1: GENERAL & FOLDERS
+                 ══════════════════════════════════════════════════ -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/source_phone"
-                android:textColor="@color/mobile_text_secondary"
-                android:textStyle="bold" />
+                android:text="@string/general_settings"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="8dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="20dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardElevation="0dp"
                 app:strokeColor="@color/mobile_glass_stroke"
-                app:strokeWidth="1dp">
+                app:strokeWidth="1dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -104,266 +119,422 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
-                        android:id="@+id/txtLocalPath"
+                    <!-- Profile Name -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/not_selected"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="16sp" />
+                        android:hint="@string/profile_name_eg_dcim_backup"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxStrokeColor="?attr/colorPrimary"
+                        app:hintTextColor="?attr/colorPrimary"
+                        android:textColorHint="@color/mobile_text_secondary">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnSelectLocal"
-                        style="@style/Widget.Material3Expressive.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/select_folder" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/mobile_text_primary"
+                            android:inputType="textCapWords" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/destination_network_share"
-                android:textColor="@color/mobile_text_secondary"
-                android:textStyle="bold" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="@string/select_share"
-                app:hintTextColor="@color/mobile_text_secondary"
-                android:textColorHint="@color/mobile_text_secondary">
-
-                <AutoCompleteTextView
-                    android:id="@+id/dropdownShare"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/mobile_text_primary"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Remote path browse card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
+                    <!-- Source Folder Label -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/source_phone"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-bold" />
+
+                    <!-- Source Folder Path Card with Browse Button -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/txtLocalPath"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/not_selected"
+                            android:textColor="@color/mobile_card_text_primary"
+                            android:textSize="14sp"
+                            android:maxLines="1"
+                            android:ellipsize="middle" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSelectLocal"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="@string/select_folder"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorPrimary"
+                            app:strokeColor="?attr/colorPrimary"
+                            app:cornerRadius="10dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp" />
+                    </LinearLayout>
+
+                    <!-- Destination Share Dropdown -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/destination_network_share"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-bold" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:hint="@string/select_share"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxStrokeColor="?attr/colorPrimary"
+                        app:hintTextColor="?attr/colorPrimary"
+                        app:endIconTint="?attr/colorPrimary"
+                        android:textColorHint="@color/mobile_text_secondary">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/dropdownShare"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/mobile_text_primary"
+                            android:popupBackground="@drawable/bg_dropdown_glass"
+                            android:dropDownVerticalOffset="4dp"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Remote Path -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
                         android:text="@string/remote_folder"
                         android:textColor="@color/mobile_text_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-bold" />
 
-                    <TextView
-                        android:id="@+id/txtRemotePath"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/not_selected"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="15sp" />
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:padding="10dp">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnBrowseRemote"
-                        style="@style/Widget.Material3Expressive.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/browse_remote" />
+                        <TextView
+                            android:id="@+id/txtRemotePath"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/not_selected"
+                            android:textColor="@color/mobile_card_text_primary"
+                            android:textSize="14sp"
+                            android:maxLines="1"
+                            android:ellipsize="middle" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnBrowseRemote"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="@string/browse_remote"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorPrimary"
+                            app:strokeColor="?attr/colorPrimary"
+                            app:cornerRadius="10dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ====== Settings Section ====== -->
+            <!-- ══════════════════════════════════════════════════
+                 CARD 2: SCHEDULE & AUTOMATION
+                 ══════════════════════════════════════════════════ -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/settings"
-                android:textColor="@color/mobile_text_secondary"
-                android:textStyle="bold" />
+                android:text="@string/schedule_and_triggers"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="8dp" />
 
-            <!-- Schedule type radio group -->
-            <RadioGroup
-                android:id="@+id/radioGroupSchedule"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:strokeColor="@color/mobile_glass_stroke"
+                app:strokeWidth="1dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
 
-                <RadioButton
-                    android:id="@+id/radioInterval"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:textColor="@color/mobile_text_primary"
-                    android:text="@string/every_x_minshrs" />
-
-                <RadioButton
-                    android:id="@+id/radioScheduled"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/mobile_text_primary"
-                    android:text="@string/scheduled_time" />
-            </RadioGroup>
-
-            <!-- Interval section -->
-            <LinearLayout
-                android:id="@+id/layoutIntervalSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="8dp">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/sync_frequency"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    android:textColorHint="@color/mobile_text_secondary">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/dropdownInterval"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/schedule_mode"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Schedule Mode Buttons: Stacked Vertically -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/chipInterval"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/every_x_minshrs"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        app:icon="@drawable/ic_sync"
+                        app:iconGravity="textStart"
+                        app:backgroundTint="@color/selector_protocol_bg"
+                        app:iconTint="@color/selector_protocol_text"
+                        android:textColor="@color/selector_protocol_text"
+                        app:cornerRadius="12dp"
+                        app:strokeColor="@color/mobile_glass_stroke"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/chipScheduled"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/scheduled_time"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        app:icon="@drawable/ic_time"
+                        app:iconGravity="textStart"
+                        app:backgroundTint="@color/selector_protocol_bg"
+                        app:iconTint="@color/selector_protocol_text"
+                        android:textColor="@color/selector_protocol_text"
+                        app:cornerRadius="12dp"
+                        app:strokeColor="@color/mobile_glass_stroke"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp" />
+
+                    <!-- Interval Section -->
+                    <LinearLayout
+                        android:id="@+id/layoutIntervalSection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/mobile_text_primary"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        android:orientation="vertical"
+                        android:layout_marginTop="4dp">
 
-            <!-- Scheduled section -->
-            <LinearLayout
-                android:id="@+id/layoutScheduledSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="8dp"
-                android:visibility="gone">
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/sync_frequency"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="?attr/colorPrimary"
+                            app:hintTextColor="?attr/colorPrimary"
+                            app:endIconTint="?attr/colorPrimary"
+                            android:textColorHint="@color/mobile_text_secondary">
 
-                <!-- Period dropdown (Daily / Weekly / Monthly) -->
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/repeat"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    android:textColorHint="@color/mobile_text_secondary">
+                            <AutoCompleteTextView
+                                android:id="@+id/dropdownInterval"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/mobile_text_primary"
+                                android:popupBackground="@drawable/bg_dropdown_glass"
+                                android:dropDownVerticalOffset="4dp"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/dropdownPeriod"
+                    <!-- Scheduled Section -->
+                    <LinearLayout
+                        android:id="@+id/layoutScheduledSection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/mobile_text_primary"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:orientation="vertical"
+                        android:layout_marginTop="4dp"
+                        android:visibility="gone">
 
-                <!-- Day of week (weekly only) -->
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:id="@+id/layoutDayOfWeek"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="@string/day_of_week"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    android:textColorHint="@color/mobile_text_secondary"
-                    android:visibility="gone">
+                        <!-- Period Dropdown -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/repeat"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="?attr/colorPrimary"
+                            app:hintTextColor="?attr/colorPrimary"
+                            app:endIconTint="?attr/colorPrimary"
+                            android:textColorHint="@color/mobile_text_secondary">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/dropdownDayOfWeek"
+                            <AutoCompleteTextView
+                                android:id="@+id/dropdownPeriod"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/mobile_text_primary"
+                                android:popupBackground="@drawable/bg_dropdown_glass"
+                                android:dropDownVerticalOffset="4dp"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Day of Week (Weekly) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:id="@+id/layoutDayOfWeek"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/day_of_week"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="?attr/colorPrimary"
+                            app:hintTextColor="?attr/colorPrimary"
+                            app:endIconTint="?attr/colorPrimary"
+                            android:textColorHint="@color/mobile_text_secondary"
+                            android:visibility="gone">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/dropdownDayOfWeek"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/mobile_text_primary"
+                                android:popupBackground="@drawable/bg_dropdown_glass"
+                                android:dropDownVerticalOffset="4dp"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Day of Month (Monthly) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:id="@+id/layoutDayOfMonth"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/day_of_month"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="?attr/colorPrimary"
+                            app:hintTextColor="?attr/colorPrimary"
+                            app:endIconTint="?attr/colorPrimary"
+                            android:textColorHint="@color/mobile_text_secondary"
+                            android:visibility="gone">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/dropdownDayOfMonth"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/mobile_text_primary"
+                                android:popupBackground="@drawable/bg_dropdown_glass"
+                                android:dropDownVerticalOffset="4dp"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/sync_time"
+                            android:textColor="@color/mobile_text_secondary"
+                            android:textSize="13sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TimePicker
+                            android:id="@+id/timePicker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="6dp"
+                            android:timePickerMode="spinner" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Notifications Switch -->
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switchNotifications"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:textColor="@color/mobile_text_primary"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="@string/show_sync_notifications" />
 
-                <!-- Day of month (monthly only) -->
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:id="@+id/layoutDayOfMonth"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="@string/day_of_month"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    android:textColorHint="@color/mobile_text_secondary"
-                    android:visibility="gone">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/dropdownDayOfMonth"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/mobile_text_primary"
-                        android:inputType="none" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Time picker label -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/sync_time"
-                    android:textColor="@color/mobile_text_secondary"
-                    android:textSize="12sp" />
-
-                <TimePicker
-                    android:id="@+id/timePicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="4dp"
-                    android:timePickerMode="spinner" />
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchNotifications"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:checked="true"
-                android:textColor="@color/mobile_text_primary"
-                android:text="@string/show_sync_notifications" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>
 
+    <!-- ══════════════════════════════════════════════════
+         BOTTOM ACTION BAR
+         ══════════════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/layoutBottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#AA000000"
+        android:background="@color/mobile_glass_header"
         android:elevation="8dp"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDelete"
             style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:text="@string/delete_1"
             android:textColor="@color/ufm_denied"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -374,11 +545,19 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:backgroundTint="?attr/colorPrimary"
+            android:layout_height="50dp"
+            android:minWidth="130dp"
+            android:text="@string/save_profile"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.02"
             android:textColor="@color/white"
-            android:text="@string/save_profile" />
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="14dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

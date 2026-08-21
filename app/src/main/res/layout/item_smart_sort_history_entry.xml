@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Sort History Entry Item (Language & Grouped Glass Card Standard)
+-->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_sm"
-    app:cardBackgroundColor="?attr/colorSurfaceVariant"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="0dp">
+    android:layout_marginVertical="5dp"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/mobile_glass_stroke">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/margin_md">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/txtHistoryFolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/ufm_text_primary"
-            android:textSize="14sp"
-            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
             android:maxLines="2"
             android:ellipsize="middle"
             tools:text="/storage/emulated/0/DCIM" />
@@ -31,8 +36,9 @@
             android:id="@+id/txtHistoryDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/ufm_text_secondary"
-            android:textSize="12sp"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="11.5sp"
+            android:fontFamily="sans-serif-medium"
             android:layout_marginTop="2dp"
             tools:text="2026-05-14 12:30" />
 
@@ -40,56 +46,52 @@
             android:id="@+id/txtHistorySummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textColor="@color/mobile_card_text_secondary"
             android:textSize="12sp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             tools:text="Moved: 120, Skipped: 3, Failed: 0" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/margin_sm">
+            android:layout_marginTop="12dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnHistoryUndo"
-                style="@style/Widget.Material3Expressive.Button.TextButton"
+                style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="36dp"
-                
-                
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="@string/smart_sort_undo"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="12.5sp"
+                android:fontFamily="sans-serif-bold"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:paddingVertical="4dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="@dimen/margin_sm"
-                android:text="@string/smart_sort_undo"
-                android:textColor="?attr/colorSecondary"
-                android:textSize="13sp"
+                app:cornerRadius="10dp"
                 app:icon="@drawable/ic_refresh"
                 app:iconSize="16dp"
-                app:iconTint="?attr/colorSecondary" />
+                app:iconTint="?attr/colorPrimary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnHistoryDelete"
                 style="@style/Widget.Material3Expressive.Button.TextButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="36dp"
-                
-                
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="@string/smart_sort_history_delete"
+                android:textColor="@color/status_error"
+                android:textSize="12.5sp"
+                android:fontFamily="sans-serif-bold"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:paddingVertical="4dp"
-                android:layout_weight="1"
-                android:layout_marginStart="@dimen/margin_sm"
-                android:text="@string/smart_sort_history_delete"
-                android:textColor="#FFE53935"
-                android:textSize="13sp"
+                app:cornerRadius="10dp"
                 app:icon="@drawable/ic_delete"
                 app:iconSize="16dp"
-                app:iconTint="#FFE53935" />
+                app:iconTint="@color/status_error" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

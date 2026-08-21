@@ -1,42 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<!--
+    Mobile Help & Support Activity - Grouped card design matching UFM standard
+-->
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".support.SupportActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Solid Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:background="@color/mobile_glass_header"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:paddingHorizontal="16dp"
+        android:background="@color/mobile_toolbar_solid"
+        android:elevation="4dp">
 
+        <!-- Back Button in Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_arrow_back"
                 android:contentDescription="@string/cd_support_back"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="false"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
@@ -45,35 +47,47 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/support_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/support_tile_subtitle"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
+    <!-- Header Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mobile_glass_stroke" />
+
+    <!-- Scrollable Content with Grouped Sections -->
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
         android:fillViewport="true"
-        android:isScrollContainer="true"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/margin_md"
-            android:gravity="center_horizontal">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="28dp">
 
             <!-- ======== OPTIONS VIEW ======== -->
             <LinearLayout
@@ -83,78 +97,282 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <!-- Hero Header -->
-                <LinearLayout
+                <!-- Section 1: Contact Channels -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/support_section_channels"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-black"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.05"
+                    android:paddingStart="4dp"
+                    android:paddingTop="14dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp" />
+
+                <!-- Grouped Card 1: Support Channel Rows -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:paddingVertical="16dp"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="12dp"
+                    app:cardBackgroundColor="@color/mobile_glass_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/mobile_glass_stroke">
 
-                    <FrameLayout
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:background="@drawable/bg_icon_circle_accent"
-                        android:layout_marginBottom="12dp">
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_support"
-                            app:tint="@color/mobile_icon_tint" />
-                    </FrameLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/support_title"
-                        android:textColor="@color/mobile_text_primary"
-                        android:textSize="22sp"
-                        android:fontFamily="sans-serif-black" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/support_tile_subtitle"
-                        android:textColor="@color/mobile_text_secondary"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                        <!-- 1. Report Bug Row -->
+                        <LinearLayout
+                            android:id="@+id/cardReportBug"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
 
-                <!-- Report Bug Card -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardReportBug"
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_bug_report"
+                                    app:tint="#FF5252"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/support_report_bug"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/support_report_bug_subtitle"
+                                    android:textColor="@color/mobile_card_text_secondary"
+                                    android:textSize="12sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_arrow_forward"
+                                app:tint="@color/mobile_card_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/mobile_glass_stroke" />
+
+                        <!-- 2. Feature Request Row -->
+                        <LinearLayout
+                            android:id="@+id/cardFeatureRequest"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_feature_request"
+                                    app:tint="#00B0FF"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/support_feature_request"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/support_feature_request_subtitle"
+                                    android:textColor="@color/mobile_card_text_secondary"
+                                    android:textSize="12sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_arrow_forward"
+                                app:tint="@color/mobile_card_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/mobile_glass_stroke" />
+
+                        <!-- 3. General Support Row -->
+                        <LinearLayout
+                            android:id="@+id/cardGeneral"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_message"
+                                    app:tint="#00E676"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/support_general"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/support_general_subtitle"
+                                    android:textColor="@color/mobile_card_text_secondary"
+                                    android:textSize="12sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/ic_arrow_forward"
+                                app:tint="@color/mobile_card_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Section 2: Direct Contact -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/support_section_direct"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-black"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.05"
+                    android:paddingStart="4dp"
+                    android:paddingTop="14dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="8dp" />
+
+                <!-- Grouped Card 2: Direct Email Row -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardDirectEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
+                    android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardBackgroundColor="@color/mobile_glass_card"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:cardCornerRadius="16dp">
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:rippleColor="@color/mobile_glass_ripple">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:padding="16dp"
-                        android:background="@drawable/bg_glass_card_dark">
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp">
 
                         <FrameLayout
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@drawable/bg_icon_circle_accent">
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
 
                             <ImageView
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/ic_bug_report"
-                                app:tint="@color/mobile_icon_tint" />
+                                android:src="@drawable/ic_support"
+                                app:tint="?attr/colorPrimary"
+                                android:contentDescription="@null" />
                         </FrameLayout>
 
                         <LinearLayout
@@ -162,163 +380,35 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:layout_marginStart="16dp">
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/support_report_bug"
-                                android:textColor="@color/mobile_text_primary"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-medium" />
+                                android:text="@string/support_direct_email_title"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="@string/support_report_bug_subtitle"
-                                android:textColor="@color/mobile_text_secondary"
-                                android:textSize="13sp" />
+                                android:text="@string/support_direct_email_subtitle"
+                                android:textColor="@color/mobile_card_text_secondary"
+                                android:textSize="12sp"
+                                android:layout_marginTop="2dp" />
                         </LinearLayout>
 
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_arrow_forward"
-                            app:tint="@color/mobile_text_secondary" />
+                            app:tint="@color/mobile_card_text_secondary"
+                            android:contentDescription="@null" />
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <!-- Feature Request Card -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardFeatureRequest"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    app:cardElevation="0dp"
-                    app:cardCornerRadius="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="16dp"
-                        android:background="@drawable/bg_glass_card_dark">
-
-                        <FrameLayout
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@drawable/bg_icon_circle_accent">
-
-                            <ImageView
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_feature_request"
-                                app:tint="@color/mobile_icon_tint" />
-                        </FrameLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="16dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/support_feature_request"
-                                android:textColor="@color/mobile_text_primary"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="@string/support_feature_request_subtitle"
-                                android:textColor="@color/mobile_text_secondary"
-                                android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_arrow_forward"
-                            app:tint="@color/mobile_text_secondary" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- General Card -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardGeneral"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    app:cardElevation="0dp"
-                    app:cardCornerRadius="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="16dp"
-                        android:background="@drawable/bg_glass_card_dark">
-
-                        <FrameLayout
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@drawable/bg_icon_circle_accent">
-
-                            <ImageView
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_message"
-                                app:tint="@color/mobile_icon_tint" />
-                        </FrameLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="16dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/support_general"
-                                android:textColor="@color/mobile_text_primary"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="@string/support_general_subtitle"
-                                android:textColor="@color/mobile_text_secondary"
-                                android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_arrow_forward"
-                            app:tint="@color/mobile_text_secondary" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
             </LinearLayout>
 
             <!-- ======== FORM VIEW ======== -->
@@ -329,264 +419,322 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <!-- Form Title Header Badge -->
-                <LinearLayout
+                <!-- Form Header Card -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="20dp">
+                    android:layout_marginBottom="14dp"
+                    app:cardBackgroundColor="@color/mobile_glass_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/mobile_glass_stroke">
 
-                    <FrameLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_icon_circle_accent">
-
-                        <ImageView
-                            android:id="@+id/imgFormHeaderIcon"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_support"
-                            app:tint="@color/mobile_icon_tint" />
-                    </FrameLayout>
-
-                    <TextView
-                        android:id="@+id/txtFormType"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="14dp"
-                        android:textColor="@color/mobile_text_primary"
-                        android:textSize="20sp"
-                        android:fontFamily="sans-serif-black" />
-                </LinearLayout>
-
-                <!-- Subject field -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputSubject"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:hint="@string/support_subject"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="200"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="?attr/colorPrimary"
-                    app:boxCornerRadiusTopStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp"
-                    app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusBottomEnd="14dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtSubject"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:maxLength="200"
-                        android:singleLine="true"
-                        android:textColor="@color/mobile_text_primary"
-                        android:textColorHint="@color/mobile_text_secondary" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
 
-                <!-- Description / Message field -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputMessage"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:id="@+id/imgFormHeaderIcon"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_support"
+                                app:tint="?attr/colorPrimary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp">
+
+                            <TextView
+                                android:id="@+id/txtFormType"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/mobile_text_primary"
+                                android:textSize="17sp"
+                                android:fontFamily="sans-serif-black" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/support_tile_subtitle"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Grouped Form Fields Card -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:hint="@string/support_description"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="5000"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="?attr/colorPrimary"
-                    app:boxCornerRadiusTopStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp"
-                    app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusBottomEnd="14dp">
+                    android:layout_marginBottom="14dp"
+                    app:cardBackgroundColor="@color/mobile_glass_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/mobile_glass_stroke">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtMessage"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
-                        android:maxLength="5000"
-                        android:maxLines="8"
-                        android:minLines="4"
-                        android:textColor="@color/mobile_text_primary"
-                        android:textColorHint="@color/mobile_text_secondary" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                <!-- Steps to Reproduce (Bug only) -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputSteps"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:visibility="gone"
-                    android:hint="@string/support_steps"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="?attr/colorPrimary"
-                    app:boxCornerRadiusTopStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp"
-                    app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusBottomEnd="14dp">
+                        <!-- Subject field -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputSubject"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="14dp"
+                            android:hint="@string/support_subject"
+                            app:counterEnabled="true"
+                            app:counterMaxLength="200"
+                            app:hintTextColor="@color/mobile_text_secondary"
+                            app:boxStrokeColor="?attr/colorPrimary"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtSteps"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
-                        android:maxLength="5000"
-                        android:maxLines="6"
-                        android:minLines="3"
-                        android:textColor="@color/mobile_text_primary"
-                        android:textColorHint="@color/mobile_text_secondary" />
-                </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edtSubject"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text"
+                                android:maxLength="200"
+                                android:singleLine="true"
+                                android:textColor="@color/mobile_text_primary"
+                                android:textColorHint="@color/mobile_text_secondary" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Use Case (Feature only) -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputUseCase"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:visibility="gone"
-                    android:hint="@string/support_use_case"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="?attr/colorPrimary"
-                    app:boxCornerRadiusTopStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp"
-                    app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusBottomEnd="14dp">
+                        <!-- Description / Message field -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputMessage"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="14dp"
+                            android:hint="@string/support_description"
+                            app:counterEnabled="true"
+                            app:counterMaxLength="5000"
+                            app:hintTextColor="@color/mobile_text_secondary"
+                            app:boxStrokeColor="?attr/colorPrimary"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtUseCase"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
-                        android:maxLength="5000"
-                        android:maxLines="4"
-                        android:minLines="2"
-                        android:textColor="@color/mobile_text_primary"
-                        android:textColorHint="@color/mobile_text_secondary" />
-                </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edtMessage"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:maxLength="5000"
+                                android:maxLines="8"
+                                android:minLines="4"
+                                android:textColor="@color/mobile_text_primary"
+                                android:textColorHint="@color/mobile_text_secondary" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Email field (optional) -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/inputEmail"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:hint="@string/support_email"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="?attr/colorPrimary"
-                    app:boxCornerRadiusTopStart="14dp"
-                    app:boxCornerRadiusTopEnd="14dp"
-                    app:boxCornerRadiusBottomStart="14dp"
-                    app:boxCornerRadiusBottomEnd="14dp">
+                        <!-- Steps to Reproduce (Bug only) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputSteps"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="14dp"
+                            android:visibility="gone"
+                            android:hint="@string/support_steps"
+                            app:hintTextColor="@color/mobile_text_secondary"
+                            app:boxStrokeColor="?attr/colorPrimary"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:maxLength="254"
-                        android:singleLine="true"
-                        android:textColor="@color/mobile_text_primary"
-                        android:textColorHint="@color/mobile_text_secondary" />
-                </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edtSteps"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:maxLength="5000"
+                                android:maxLines="6"
+                                android:minLines="3"
+                                android:textColor="@color/mobile_text_primary"
+                                android:textColorHint="@color/mobile_text_secondary" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Remember email checkbox (optional) -->
-                <CheckBox
-                    android:id="@+id/chkRememberEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/support_remember_email"
-                    android:textColor="@color/mobile_text_primary"
-                    android:buttonTint="?attr/colorPrimary"
-                    android:checked="false" />
+                        <!-- Use Case (Feature only) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputUseCase"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="14dp"
+                            android:visibility="gone"
+                            android:hint="@string/support_use_case"
+                            app:hintTextColor="@color/mobile_text_secondary"
+                            app:boxStrokeColor="?attr/colorPrimary"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp">
 
-                <!-- Dynamic Container for attached files (Up to 5) -->
-                <LinearLayout
-                    android:id="@+id/layoutAttachmentContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edtUseCase"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:maxLength="5000"
+                                android:maxLines="4"
+                                android:minLines="2"
+                                android:textColor="@color/mobile_text_primary"
+                                android:textColorHint="@color/mobile_text_secondary" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Add Attachment button -->
-                <LinearLayout
-                    android:id="@+id/layoutAttachment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="24dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:background="@drawable/bg_glass_card_dark"
-                    android:padding="14dp">
+                        <!-- Email field (optional) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputEmail"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:hint="@string/support_email"
+                            app:hintTextColor="@color/mobile_text_secondary"
+                            app:boxStrokeColor="?attr/colorPrimary"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_add"
-                        app:tint="?attr/colorPrimary" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edtEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textEmailAddress"
+                                android:maxLength="254"
+                                android:singleLine="true"
+                                android:textColor="@color/mobile_text_primary"
+                                android:textColorHint="@color/mobile_text_secondary" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:id="@+id/txtAttachment"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:text="@string/support_attach_file"
-                        android:textColor="@color/mobile_text_primary"
-                        android:textSize="14sp"
-                        android:fontFamily="sans-serif-medium" />
+                        <!-- Remember email checkbox -->
+                        <CheckBox
+                            android:id="@+id/chkRememberEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="14dp"
+                            android:text="@string/support_remember_email"
+                            android:textColor="@color/mobile_text_primary"
+                            android:buttonTint="?attr/colorPrimary"
+                            android:checked="false" />
 
-                    <ImageView
-                        android:id="@+id/btnRemoveAttachment"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_close"
-                        android:contentDescription="@string/support_remove_file"
-                        android:visibility="gone"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground"
-                        app:tint="@color/mobile_text_secondary" />
-                </LinearLayout>
+                        <!-- Dynamic Container for attached files -->
+                        <LinearLayout
+                            android:id="@+id/layoutAttachmentContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
 
-                <!-- Send button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSend"
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:text="@string/support_send"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    app:cornerRadius="14dp"
-                    app:backgroundTint="?attr/colorPrimary" />
+                        <!-- Attach File Button Card -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/layoutAttachment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="18dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardBackgroundColor="@color/mobile_glass_card"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="@color/mobile_glass_stroke"
+                            app:rippleColor="@color/mobile_glass_ripple">
 
-                <!-- Honeypot field -->
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtHoneypot"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:visibility="gone"
-                    android:importantForAccessibility="no" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="12dp">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:src="@drawable/ic_add"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+
+                                <TextView
+                                    android:id="@+id/txtAttachment"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="10dp"
+                                    android:text="@string/support_attach_file"
+                                    android:textColor="@color/mobile_text_primary"
+                                    android:textSize="14sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <ImageView
+                                    android:id="@+id/btnRemoveAttachment"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:padding="4dp"
+                                    android:src="@drawable/ic_close"
+                                    android:contentDescription="@string/support_remove_file"
+                                    android:visibility="gone"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:background="?attr/selectableItemBackground"
+                                    app:tint="@color/mobile_text_secondary" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Send Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSend"
+                            style="@style/Widget.Material3Expressive.Button"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:text="@string/support_send"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:textAllCaps="false"
+                            app:cornerRadius="12dp"
+                            app:backgroundTint="?attr/colorPrimary" />
+
+                        <!-- Honeypot field -->
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtHoneypot"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:visibility="gone"
+                            android:importantForAccessibility="no" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

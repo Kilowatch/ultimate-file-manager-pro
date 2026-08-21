@@ -35,7 +35,7 @@ class SyncProfileAdapter(
         private val txtDest: TextView = view.findViewById(R.id.txtDest)
         private val txtLastSync: TextView = view.findViewById(R.id.txtLastSync)
         private val switchEnabled: MaterialSwitch = view.findViewById(R.id.switchEnabled)
-        private val btnMenu: ImageView = view.findViewById(R.id.btnMenu)
+        private val btnMenu: View = view.findViewById(R.id.btnMenu)
 
         fun bind(profile: SyncProfile) {
             txtName.text = profile.name
@@ -83,19 +83,40 @@ class SyncProfileAdapter(
             }
 
             btnMenu.setOnClickListener { v ->
-                val popup = PopupMenu(v.context, v)
-                popup.menu.add(0, 1, 0, itemView.context.getString(R.string.edit))
-                popup.menu.add(0, 2, 0, itemView.context.getString(R.string.action_delete))
-                popup.menu.add(0, 3, 0, itemView.context.getString(R.string.sync_now))
-                popup.setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        1 -> { onEdit(profile); true }
-                        2 -> { onDelete(profile); true }
-                        3 -> { onSyncNow(profile); true }
-                        else -> false
-                    }
+                val inflater = LayoutInflater.from(v.context)
+                val popupView = inflater.inflate(R.layout.popup_sync_profile_menu, null)
+                val density = v.resources.displayMetrics.density
+                val popupWidth = (200 * density).toInt()
+                val popupWindow = android.widget.PopupWindow(
+                    popupView,
+                    popupWidth,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    true
+                ).apply {
+                    elevation = 16f * density
+                    isOutsideTouchable = true
+                    isFocusable = true
+                    setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+                    animationStyle = android.R.style.Animation_Dialog
                 }
-                popup.show()
+
+                popupView.findViewById<View>(R.id.menuSyncNow).setOnClickListener {
+                    popupWindow.dismiss()
+                    onSyncNow(profile)
+                }
+
+                popupView.findViewById<View>(R.id.menuEdit).setOnClickListener {
+                    popupWindow.dismiss()
+                    onEdit(profile)
+                }
+
+                popupView.findViewById<View>(R.id.menuDelete).setOnClickListener {
+                    popupWindow.dismiss()
+                    onDelete(profile)
+                }
+
+                val xOffset = -(popupWidth - v.width)
+                popupWindow.showAsDropDown(v, xOffset, (4 * density).toInt())
             }
 
             itemView.setOnClickListener {

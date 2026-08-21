@@ -26,7 +26,7 @@
         <FrameLayout
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:layout_width="32dp"
@@ -93,7 +93,7 @@
             android:textColor="#BBFFFFFF"
             android:textSize="14sp"
             android:layout_marginTop="4dp"/>
-            
+
         <View
             android:layout_width="36dp"
             android:layout_height="3dp"
@@ -112,34 +112,56 @@
         app:layout_constraintBottom_toTopOf="@id/layoutFooter">
 
         <!-- Terms Card -->
-        <FrameLayout
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTerms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_glass_card"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="14dp"
             android:clickable="true"
-            android:focusable="true">
-            
+            android:focusable="true"
+            app:cardBackgroundColor="@color/mobile_glass_card"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:rippleColor="@color/mobile_glass_ripple">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="16dp">
-                
+
+                <FrameLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_btn_icon_frosted">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_policy"
+                        app:tint="?attr/colorPrimary"
+                        android:contentDescription="@null" />
+                </FrameLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginStart="14dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/terms_amp_conditions"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/mobile_card_text_primary"
                         android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:fontFamily="sans-serif-bold" />
+
                     <TextView
                         android:id="@+id/tvTermsStatus"
                         android:layout_width="wrap_content"
@@ -147,45 +169,68 @@
                         android:text="@string/required"
                         android:textColor="?attr/colorPrimary"
                         android:textSize="13sp"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="3dp" />
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_agenda"
-                    app:tint="#88FFFFFF" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_arrow_forward"
+                    app:tint="@color/mobile_card_text_secondary"
+                    android:contentDescription="@null" />
             </LinearLayout>
-        </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Privacy Policy Card -->
-        <FrameLayout
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardPrivacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_glass_card"
             android:clickable="true"
-            android:focusable="true">
-            
+            android:focusable="true"
+            app:cardBackgroundColor="@color/mobile_glass_card"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:rippleColor="@color/mobile_glass_ripple">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="16dp">
-                
+
+                <FrameLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_btn_icon_frosted">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lock"
+                        app:tint="?attr/colorPrimary"
+                        android:contentDescription="@null" />
+                </FrameLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginStart="14dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/privacy_policy"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/mobile_card_text_primary"
                         android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:fontFamily="sans-serif-bold" />
+
                     <TextView
                         android:id="@+id/tvPrivacyStatus"
                         android:layout_width="wrap_content"
@@ -193,16 +238,17 @@
                         android:text="@string/required"
                         android:textColor="?attr/colorPrimary"
                         android:textSize="13sp"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="3dp" />
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_info_details"
-                    app:tint="#88FFFFFF" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_arrow_forward"
+                    app:tint="@color/mobile_card_text_secondary"
+                    android:contentDescription="@null" />
             </LinearLayout>
-        </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 
@@ -240,7 +286,7 @@
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:backgroundTint="?attr/colorPrimary"
-            app:cornerRadius="24dp" />
+            app:cornerRadius="12dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

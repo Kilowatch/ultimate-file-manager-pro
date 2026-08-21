@@ -1,94 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    TV In-App Review Dialog - TV glass card with vertical button stack and yellow focus
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="720dp"
+    android:layout_width="520dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/bg_tv_glass_card"
     android:padding="24dp"
     android:gravity="center_horizontal">
 
+    <!-- Hero Star Icon -->
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_star"
+        app:tint="@color/tv_button_focused_yellow"
+        android:layout_marginBottom="12dp"
+        android:contentDescription="@null" />
+
+    <!-- Title -->
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hey_got_a_minute"
         android:textColor="@color/tv_text_primary"
-        android:textSize="24sp"
-        android:fontFamily="sans-serif-medium" />
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-black" />
 
+    <!-- 5-Star Visual Accent -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_star"
+            app:tint="@color/tv_button_focused_yellow"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_star"
+            app:tint="@color/tv_button_focused_yellow"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_star"
+            app:tint="@color/tv_button_focused_yellow"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_star"
+            app:tint="@color/tv_button_focused_yellow"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_star"
+            app:tint="@color/tv_button_focused_yellow"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+    <!-- Message Body -->
     <TextView
         android:id="@+id/txtMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:text="@string/youve_been_using_the_app"
         android:textColor="@color/tv_text_secondary"
-        android:textSize="15sp"
-        android:lineSpacingExtra="4dp"
-        android:textAlignment="center" />
+        android:textSize="14sp"
+        android:lineSpacingExtra="3dp"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp" />
 
-    <LinearLayout
+    <!-- Vertical Button Stack (Stacked below each other) -->
+    <!-- 1. Primary Rate Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRate"
+        style="@style/TvContinueButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_height="44dp"
+        android:paddingHorizontal="16dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/rate_the_app"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        app:icon="@drawable/ic_star"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRate"
-            style="@style/TvContinueButton"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:paddingHorizontal="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/rate_the_app" />
+    <!-- 2. Maybe Later Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnMaybeLater"
+        style="@style/TvContinueButton"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="16dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/maybe_later"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnMaybeLater"
-            style="@style/TvContinueButton"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:layout_marginStart="12dp"
-            android:paddingHorizontal="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/maybe_later" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnNoThanks"
-            style="@style/TvContinueButton"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_weight="1"
-            android:layout_marginStart="12dp"
-            android:paddingHorizontal="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/no_thanks_1"
-            android:textColor="@color/tv_text_primary"
-            android:backgroundTint="#26FFFFFF" />
-
-    </LinearLayout>
+    <!-- 3. No Thanks Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnNoThanks"
+        style="@style/TvContinueButton"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="16dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/no_thanks_1"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium" />
 
     <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
-        android:background="#1A000000" />
+        android:background="@color/tv_glass_border" />
 
+    <!-- Tip Jar Link Button -->
     <TextView
         android:id="@+id/btnTipLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:padding="12dp"
+        android:layout_marginTop="12dp"
+        android:padding="10dp"
         android:text="@string/theres_also_a_tiny_coffee"
         android:textColor="@color/tile_tip_jar_accent"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:textAlignment="center"
         android:gravity="center"
         android:fontFamily="sans-serif-medium"

@@ -41,6 +41,8 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.ui.StorageBarView
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import android.os.StatFs
 import android.text.format.Formatter
@@ -91,12 +93,18 @@ class StorageAnalyzerActivity : AppCompatActivity() {
     // ── Duplicate adapter reference (for delete FAB) ─────────────────────────
     private var duplicateAdapter: AnalyzerDuplicateAdapter? = null
 
+    // Persisted through recreate() to prevent looping when restartPending is still true.
+    private var handledFontChange = false
+    private var handledLocaleChange = false
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handledFontChange = savedInstanceState?.getBoolean("font_handled", false) ?: false
+        handledLocaleChange = savedInstanceState?.getBoolean("locale_handled", false) ?: false
         enableEdgeToEdge()
         setContentView(if (isTv) R.layout.activity_storage_analyzer_tv else R.layout.activity_storage_analyzer)
 
@@ -137,6 +145,12 @@ class StorageAnalyzerActivity : AppCompatActivity() {
             }
         }.attach()
 
+        if (!isTv) {
+            val primaryColor = ThemeColors.primary(this)
+            tabLayout.setSelectedTabIndicatorColor(primaryColor)
+            tabLayout.setTabTextColors(ContextCompat.getColor(this, R.color.mobile_text_secondary), primaryColor)
+        }
+
         viewPager.registerOnPageChangeCallback(object : androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 if (position != TAB_DUPLICATES) {
@@ -152,6 +166,26 @@ class StorageAnalyzerActivity : AppCompatActivity() {
         observeViewModel()
         setupDeleteFab()
         setupTvFocus()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
     }
 
     private fun setupTvFocus() {
@@ -682,12 +716,28 @@ class StorageAnalyzerActivity : AppCompatActivity() {
                 DuplicateSafetySheet.newInstance(dangerousFiles, onConfirm)
                     .show(supportFragmentManager, DuplicateSafetySheet.TAG)
             } else {
-                AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.analyzer_delete_confirm_title, toDelete.size))
-                    .setMessage(R.string.analyzer_delete_confirm_msg)
-                    .setPositiveButton(R.string.delete) { _, _ -> onConfirm() }
-                    .setNegativeButton(R.string.cancel, null)
-                    .show()
+                val layoutRes = if (isTv) R.layout.dialog_analyzer_delete_confirm_tv else R.layout.dialog_analyzer_delete_confirm
+                val dialogView = layoutInflater.inflate(layoutRes, null)
+                val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .create()
+
+                val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+                val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+
+                txtTitle?.text = getString(R.string.delete)
+                txtMessage?.text = getString(R.string.analyzer_delete_confirm_msg)
+
+                dialogView.findViewById<View>(R.id.btnDeleteConfirm)?.setOnClickListener {
+                    dialog.dismiss()
+                    onConfirm()
+                }
+                dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                dialog.show()
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             }
         }
     }
@@ -906,9 +956,18 @@ class OverviewTabFragment : AnalyzerTabFragment() {
             }
         }
 
+        // Dynamic section headers tinting
+        if (!isTv) {
+            val primaryColor = ThemeColors.primary(v.context)
+            v.findViewById<TextView>(R.id.labelSectionBreakdown)?.setTextColor(primaryColor)
+            v.findViewById<TextView>(R.id.labelSectionTopFolders)?.setTextColor(primaryColor)
+            v.findViewById<TextView>(R.id.labelSectionAppUsage)?.setTextColor(primaryColor)
+        }
+
         // Top folders (if indexed)
-        v.findViewById<View>(R.id.cardTopFolders)?.visibility =
-            if (report.isIndexed && report.topFolders.isNotEmpty()) View.VISIBLE else View.GONE
+        val showTopFolders = report.isIndexed && report.topFolders.isNotEmpty()
+        v.findViewById<View>(R.id.labelSectionTopFolders)?.visibility = if (showTopFolders) View.VISIBLE else View.GONE
+        v.findViewById<View>(R.id.cardTopFolders)?.visibility = if (showTopFolders) View.VISIBLE else View.GONE
         val folderContainer = v.findViewById<android.widget.LinearLayout>(R.id.layoutTopFolders)
         folderContainer?.removeAllViews()
         val maxSizeFolder = report.topFolders.maxOfOrNull { it.totalSize } ?: 1L
@@ -954,8 +1013,9 @@ class OverviewTabFragment : AnalyzerTabFragment() {
         }
 
         // App usage (if indexed)
-        v.findViewById<View>(R.id.cardAppUsage)?.visibility =
-            if (report.isIndexed && report.appUsage.isNotEmpty()) View.VISIBLE else View.GONE
+        val showAppUsage = report.isIndexed && report.appUsage.isNotEmpty()
+        v.findViewById<View>(R.id.labelSectionAppUsage)?.visibility = if (showAppUsage) View.VISIBLE else View.GONE
+        v.findViewById<View>(R.id.cardAppUsage)?.visibility = if (showAppUsage) View.VISIBLE else View.GONE
         val appContainer = v.findViewById<android.widget.LinearLayout>(R.id.layoutAppUsage)
         appContainer?.removeAllViews()
         report.appUsage.forEach { app ->

@@ -2,10 +2,14 @@ package za.kilowatch.ultimatefilemanager.sync.advanced
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.RadioGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,8 +17,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
 import za.kilowatch.ultimatefilemanager.R
@@ -22,12 +30,10 @@ import za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
+import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
-import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
-import android.view.LayoutInflater
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 class AdvancedSyncEditActivity : AppCompatActivity() {
 
@@ -44,56 +50,62 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     private var destLocalUri: String = ""
     private var destLocalDisplayPath: String = ""
     private var selectedIntervalMinutes: Int = 60
+    private var selectedScheduleType: String = "interval"
 
     private lateinit var editName: TextInputEditText
-    private lateinit var txtSourceLabel: android.widget.TextView
-    private lateinit var txtDestLabel: android.widget.TextView
-    private lateinit var txtLocalPath: android.widget.TextView
-    private lateinit var txtRemotePath: android.widget.TextView
-    private lateinit var chipDirectionUpload: android.view.View
-    private lateinit var chipDirectionDownload: android.view.View
-    private lateinit var chipDirectionTwoway: android.view.View
-    private lateinit var txtDirectionDesc: android.widget.TextView
-    private lateinit var chipInterval: android.view.View
-    private lateinit var chipScheduled: android.view.View
-    private lateinit var chipManual: android.view.View
+    private lateinit var txtSourceLabel: TextView
+    private lateinit var txtDestLabel: TextView
+    private lateinit var txtLocalPath: TextView
+    private lateinit var txtRemotePath: TextView
+    private lateinit var chipDirectionUpload: View
+    private lateinit var chipDirectionDownload: View
+    private lateinit var chipDirectionTwoway: View
+    private lateinit var txtDirectionDesc: TextView
+    private lateinit var chipInterval: View
+    private lateinit var chipScheduled: View
+    private lateinit var chipManual: View
     private lateinit var layoutIntervalSection: View
     private lateinit var layoutScheduledSection: View
-    private lateinit var layoutDayOfWeek: View
-    private lateinit var layoutDayOfMonth: View
+    private var layoutDayOfWeek: View? = null
+    private var layoutDayOfMonth: View? = null
     private lateinit var layoutConflictResolution: View
-    private lateinit var chipConflictSkip: android.view.View
-    private lateinit var chipConflictNewest: android.view.View
-    private lateinit var chipConflictKeepLocal: android.view.View
-    private lateinit var chipConflictKeepRemote: android.view.View
+    private lateinit var chipConflictSkip: View
+    private lateinit var chipConflictNewest: View
+    private lateinit var chipConflictKeepLocal: View
+    private lateinit var chipConflictKeepRemote: View
     private var layoutSyncDeletions: View? = null
-    private lateinit var dropdownInterval: AutoCompleteTextView
-    private lateinit var dropdownPeriod: AutoCompleteTextView
-    private lateinit var dropdownDayOfWeek: AutoCompleteTextView
-    private lateinit var dropdownDayOfMonth: AutoCompleteTextView
-    private lateinit var timePicker: TimePicker
-    private lateinit var switchDownloadSubfolders: MaterialSwitch
+    private var dropdownInterval: AutoCompleteTextView? = null
+    private var dropdownPeriod: AutoCompleteTextView? = null
+    private var dropdownDayOfWeek: AutoCompleteTextView? = null
+    private var dropdownDayOfMonth: AutoCompleteTextView? = null
+    private var timePicker: TimePicker? = null
+    private var switchDownloadSubfolders: MaterialSwitch? = null
     private var layoutDownloadSubfolders: View? = null
     private lateinit var switchInstantSync: MaterialSwitch
     private lateinit var switchWifiOnly: MaterialSwitch
-    private lateinit var switchMoveFiles: MaterialSwitch
-    private var txtMoveFilesSummary: android.widget.TextView? = null
-    private lateinit var switchSyncDeletions: MaterialSwitch
+    private var switchMoveFiles: MaterialSwitch? = null
+    private var txtMoveFilesSummary: TextView? = null
+    private var switchSyncDeletions: MaterialSwitch? = null
+    private var txtHeaderFiltering: View? = null
+    private var cardFiltering: View? = null
     private var layoutFilters: View? = null
-    private lateinit var toggleExtensionMode: com.google.android.material.button.MaterialButtonToggleGroup
+    private var chipFilterAll: View? = null
+    private var chipFilterOnly: View? = null
+    private var chipFilterSkip: View? = null
     private var layoutFilterExtensions: View? = null
-    private var txtFilterExtensionsLabel: android.widget.TextView? = null
-    private lateinit var editFilterExtensions: TextInputEditText
-    private lateinit var editExcludePatterns: TextInputEditText
-    private lateinit var editIncludePatterns: TextInputEditText
-    private lateinit var editMinSize: TextInputEditText
-    private lateinit var editMaxSize: TextInputEditText
-    private lateinit var toggleMinSizeUnit: com.google.android.material.button.MaterialButtonToggleGroup
-    private lateinit var toggleMaxSizeUnit: com.google.android.material.button.MaterialButtonToggleGroup
-    private lateinit var editMinAge: TextInputEditText
-    private lateinit var editMaxAge: TextInputEditText
+    private var txtFilterExtensionsLabel: TextView? = null
+    private var editFilterExtensions: TextInputEditText? = null
+    private var editExcludePatterns: TextInputEditText? = null
+    private var editIncludePatterns: TextInputEditText? = null
+    private var editMinSize: TextInputEditText? = null
+    private var editMaxSize: TextInputEditText? = null
+    private var toggleMinSizeUnit: MaterialButtonToggleGroup? = null
+    private var toggleMaxSizeUnit: MaterialButtonToggleGroup? = null
+    private var editMinAge: TextInputEditText? = null
+    private var editMaxAge: TextInputEditText? = null
     private lateinit var switchNotifications: MaterialSwitch
-    private lateinit var btnDelete: MaterialButton
+    private lateinit var btnDelete: View
+
     private var layoutTagsFilterSection: View? = null
     private var layoutIncludeTags: View? = null
     private var layoutExcludeTags: View? = null
@@ -114,6 +126,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
 
     private var selectedDirection = "upload"
     private var selectedConflictStrategy = "skip"
+    private var selectedExtensionMode = "all"
 
     private val sourceFolderLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -167,7 +180,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val isTv = DeviceUtils.isTvDevice(this)
         setContentView(
             if (isTv) R.layout.activity_advanced_sync_edit_tv
             else R.layout.activity_advanced_sync_edit
@@ -202,23 +215,27 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         chipConflictNewest = findViewById(R.id.chipConflictNewest)
         chipConflictKeepLocal = findViewById(R.id.chipConflictKeepLocal)
         chipConflictKeepRemote = findViewById(R.id.chipConflictKeepRemote)
-        layoutSyncDeletions = findViewById<View>(R.id.layoutSyncDeletions)
+        layoutSyncDeletions = findViewById(R.id.layoutSyncDeletions)
         dropdownInterval = findViewById(R.id.dropdownInterval)
         dropdownPeriod = findViewById(R.id.dropdownPeriod)
         dropdownDayOfWeek = findViewById(R.id.dropdownDayOfWeek)
         dropdownDayOfMonth = findViewById(R.id.dropdownDayOfMonth)
         timePicker = findViewById(R.id.timePicker)
         switchDownloadSubfolders = findViewById(R.id.switchDownloadSubfolders)
-        layoutDownloadSubfolders = findViewById<View>(R.id.layoutDownloadSubfolders)
+        layoutDownloadSubfolders = findViewById(R.id.layoutDownloadSubfolders)
         switchInstantSync = findViewById(R.id.switchInstantSync)
         switchWifiOnly = findViewById(R.id.switchWifiOnly)
         switchMoveFiles = findViewById(R.id.switchMoveFiles)
-        txtMoveFilesSummary = findViewById<android.widget.TextView>(R.id.txtMoveFilesSummary)
+        txtMoveFilesSummary = findViewById(R.id.txtMoveFilesSummary)
         switchSyncDeletions = findViewById(R.id.switchSyncDeletions)
-        layoutFilters = findViewById<View>(R.id.layoutFilters)
-        toggleExtensionMode = findViewById(R.id.toggleExtensionMode)
-        txtFilterExtensionsLabel = findViewById<android.widget.TextView>(R.id.txtFilterExtensionsLabel)
-        layoutFilterExtensions = findViewById<View>(R.id.layoutFilterExtensions)
+        txtHeaderFiltering = findViewById(R.id.txtHeaderFiltering)
+        cardFiltering = findViewById(R.id.cardFiltering)
+        layoutFilters = findViewById(R.id.layoutFilters)
+        chipFilterAll = findViewById(R.id.chipFilterAll)
+        chipFilterOnly = findViewById(R.id.chipFilterOnly)
+        chipFilterSkip = findViewById(R.id.chipFilterSkip)
+        txtFilterExtensionsLabel = findViewById(R.id.txtFilterExtensionsLabel)
+        layoutFilterExtensions = findViewById(R.id.layoutFilterExtensions)
         editFilterExtensions = findViewById(R.id.editFilterExtensions)
         editExcludePatterns = findViewById(R.id.editExcludePatterns)
         editIncludePatterns = findViewById(R.id.editIncludePatterns)
@@ -239,7 +256,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
         // ── Local folder picker ────────────────────────────────────────────────
-        findViewById<MaterialButton>(R.id.btnSelectLocal).setOnClickListener {
+        findViewById<View>(R.id.btnSelectLocal).setOnClickListener {
             val intent = Intent(this, StorageBrowserActivity::class.java).apply {
                 putExtra(StorageBrowserActivity.EXTRA_ADVANCED_SYNC_FOLDER_PICKER, true)
             }
@@ -247,56 +264,8 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         }
 
         // ── Remote destination folder picker ───────────────────────────────────
-        findViewById<MaterialButton>(R.id.btnBrowseRemote).setOnClickListener {
-            val netShares = NetworkShareRepository.getInstance(this).getAll()
-            val onlineStorages = OnlineStorageRepository.getInstance(this).getAll()
-
-            // Build combined list: "Local folder" first, then network shares, then online storages
-            val labels = mutableListOf<String>()
-            val itemTypes = mutableListOf<String>() // "local" | "net" | "online"
-            val itemIds = mutableListOf<String>()   // share/online id, empty for local
-
-            labels.add(getString(R.string.advanced_sync_local_folder))
-            itemTypes.add("local")
-            itemIds.add("")
-
-            netShares.forEach { share ->
-                labels.add(share.name.ifEmpty { share.host })
-                itemTypes.add("net")
-                itemIds.add(share.id)
-            }
-            onlineStorages.forEach { storage ->
-                labels.add(storage.displayName)
-                itemTypes.add("online")
-                itemIds.add(storage.id)
-            }
-
-            MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.select_destination)
-                .setItems(labels.toTypedArray()) { _, which ->
-                    val type = itemTypes[which]
-                    val id = itemIds[which]
-                    android.util.Log.d("AdvSyncDest", "Selected dest: type=$type, id=$id")
-                    when (type) {
-                        "local" -> {
-                            // Launch local folder picker in destination mode
-                            val intent = Intent(this, StorageBrowserActivity::class.java).apply {
-                                putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_DEST_PICKER, true)
-                            }
-                            destLocalFolderLauncher.launch(intent)
-                        }
-                        "net" -> {
-                            selectedNetworkShareId = id
-                            launchNetworkBrowserForDest(id, isOnline = false)
-                        }
-                        "online" -> {
-                            selectedNetworkShareId = id
-                            launchNetworkBrowserForDest(id, isOnline = true)
-                        }
-                    }
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+        findViewById<View>(R.id.btnBrowseRemote).setOnClickListener {
+            showDestinationChooserDialog()
         }
 
         // ── Direction chip selection ────────────────────────────────────────────
@@ -304,22 +273,19 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         chipDirectionDownload.setOnClickListener { selectDirection("download") }
         chipDirectionTwoway.setOnClickListener { selectDirection("twoway") }
 
-        // Extension mode toggle — show/hide the extensions field
-        toggleExtensionMode.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (!isChecked) return@addOnButtonCheckedListener
-            val visible = if (checkedId == R.id.chipFilterAll) View.GONE else View.VISIBLE
-            txtFilterExtensionsLabel?.visibility = visible
-            layoutFilterExtensions?.visibility = visible
-            updateTagsVisibility()
-        }
+        // Filter mode chips (All / Only / Skip)
+        chipFilterAll?.setOnClickListener { selectFilterMode("all") }
+        chipFilterOnly?.setOnClickListener { selectFilterMode("only") }
+        chipFilterSkip?.setOnClickListener { selectFilterMode("skip") }
+        selectFilterMode("all")
 
         // Move files and Sync deletions are mutually exclusive
-        switchMoveFiles.setOnCheckedChangeListener { _, isChecked ->
+        switchMoveFiles?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                switchSyncDeletions.isChecked = false
-                switchSyncDeletions.isEnabled = false
+                switchSyncDeletions?.isChecked = false
+                switchSyncDeletions?.isEnabled = false
             } else {
-                switchSyncDeletions.isEnabled = true
+                switchSyncDeletions?.isEnabled = true
             }
         }
 
@@ -333,55 +299,58 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         selectSchedule("interval")
 
         // ── Period dropdown ────────────────────────────────────────────────────
-        val periodAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, periods)
-        dropdownPeriod.setAdapter(periodAdapter)
-        dropdownPeriod.setText(periods[0], false)
-        dropdownPeriod.setOnItemClickListener { _, _, position, _ ->
-            selectedPeriod = periodValues[position]
-            layoutDayOfWeek.visibility = if (selectedPeriod == "weekly") View.VISIBLE else View.GONE
-            layoutDayOfMonth.visibility = if (selectedPeriod == "monthly") View.VISIBLE else View.GONE
-        }
-
-        val dowAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, daysOfWeek)
-        dropdownDayOfWeek.setAdapter(dowAdapter)
-        dropdownDayOfWeek.setText(daysOfWeek[0], false)
-        dropdownDayOfWeek.setOnItemClickListener { _, _, position, _ ->
-            selectedDayOfWeek = daysOfWeekValues[position]
-        }
-
-        val domAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, daysOfMonth)
-        dropdownDayOfMonth.setAdapter(domAdapter)
-        dropdownDayOfMonth.setText(daysOfMonth[0], false)
-        dropdownDayOfMonth.setOnItemClickListener { _, _, position, _ ->
-            selectedDayOfMonth = daysOfMonthValues[position]
-        }
-
-        // ── Conflict chips ─────────────────────────────────────────────────────
-        val conflictChips = listOf(chipConflictSkip, chipConflictNewest, chipConflictKeepLocal, chipConflictKeepRemote)
-        conflictChips.forEach { chip ->
-            chip.setOnClickListener {
-                selectedConflictStrategy = when (chip.id) {
-                    R.id.chipConflictNewest -> "newest"
-                    R.id.chipConflictKeepLocal -> "keep_local"
-                    R.id.chipConflictKeepRemote -> "keep_remote"
-                    else -> "skip"
-                }
-                conflictChips.forEach { c ->
-                    if (c is com.google.android.material.button.MaterialButton) {
-                        c.isCheckable = true
-                        c.isChecked = c.id == chip.id
-                    }
-                }
+        dropdownPeriod?.let { dp ->
+            val periodAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, periods)
+            dp.setAdapter(periodAdapter)
+            dp.setText(periods[0], false)
+            dp.setOnItemClickListener { _, _, position, _ ->
+                selectedPeriod = periodValues[position]
+                layoutDayOfWeek?.visibility = if (selectedPeriod == "weekly") View.VISIBLE else View.GONE
+                layoutDayOfMonth?.visibility = if (selectedPeriod == "monthly") View.VISIBLE else View.GONE
             }
         }
 
+        dropdownDayOfWeek?.let { ddow ->
+            val dowAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, daysOfWeek)
+            ddow.setAdapter(dowAdapter)
+            ddow.setText(daysOfWeek[0], false)
+            ddow.setOnItemClickListener { _, _, position, _ ->
+                selectedDayOfWeek = daysOfWeekValues[position]
+            }
+        }
+
+        dropdownDayOfMonth?.let { ddom ->
+            val domAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, daysOfMonth)
+            ddom.setAdapter(domAdapter)
+            ddom.setText(daysOfMonth[0], false)
+            ddom.setOnItemClickListener { _, _, position, _ ->
+                selectedDayOfMonth = daysOfMonthValues[position]
+            }
+        }
+
+        // ── Conflict chips ─────────────────────────────────────────────────────
+        chipConflictSkip.setOnClickListener { selectConflictStrategy("skip") }
+        chipConflictNewest.setOnClickListener { selectConflictStrategy("newest") }
+        chipConflictKeepLocal.setOnClickListener { selectConflictStrategy("keep_local") }
+        chipConflictKeepRemote.setOnClickListener { selectConflictStrategy("keep_remote") }
+        selectConflictStrategy("skip")
+
         // ── Save / Delete ──────────────────────────────────────────────────────
-        findViewById<MaterialButton>(R.id.btnSave).setOnClickListener { saveProfile() }
-        btnDelete.setOnClickListener { deleteProfile() }
+        findViewById<View>(R.id.btnSave).setOnClickListener { saveProfile() }
+        btnDelete.setOnClickListener { showDeleteConfirmDialog() }
 
         setupIntervalDropdown()
 
         profileId = intent.getStringExtra(EXTRA_PROFILE_ID)
+        val shareExtra = intent.getStringExtra(EXTRA_SHARE_ID)
+        if (shareExtra != null && profileId == null) {
+            selectedNetworkShareId = shareExtra
+            val share = NetworkShareRepository.getInstance(this).getById(shareExtra)
+            if (share != null) {
+                editName.setText(getString(R.string.backup_sync_between_mobile_and) + " " + (share.name.ifEmpty { share.host }))
+            }
+        }
+
         if (profileId != null) {
             loadProfile(profileId!!)
         } else {
@@ -390,39 +359,84 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     }
 
     private fun selectSchedule(type: String) {
+        selectedScheduleType = type
+        val isInterval = type == "interval"
+        val isScheduled = type == "scheduled"
+        val isManual = type == "manual"
+
         listOf(chipInterval, chipScheduled, chipManual).forEach { c ->
-            if (c is com.google.android.material.button.MaterialButton) {
+            if (c is MaterialButton) {
                 c.isCheckable = true
-                c.isChecked = c.id == when (type) {
-                    "scheduled" -> R.id.chipScheduled
-                    "manual" -> R.id.chipManual
-                    else -> R.id.chipInterval
-                }
+                c.isChecked = (c == chipInterval && isInterval) || (c == chipScheduled && isScheduled) || (c == chipManual && isManual)
+            } else if (c is Button) {
+                val isSelected = (c == chipInterval && isInterval) || (c == chipScheduled && isScheduled) || (c == chipManual && isManual)
+                c.setBackgroundResource(if (isSelected) R.drawable.selector_tv_button_yellow else R.drawable.selector_tv_button)
             }
         }
-        layoutIntervalSection.visibility = if (type == "interval") View.VISIBLE else View.GONE
-        layoutScheduledSection.visibility = if (type == "scheduled") View.VISIBLE else View.GONE
+
+        layoutIntervalSection.visibility = if (isInterval) View.VISIBLE else View.GONE
+        layoutScheduledSection.visibility = if (isScheduled) View.VISIBLE else View.GONE
     }
 
     private fun selectDirection(dir: String) {
         selectedDirection = dir
-        updateDirectionDescription()
-        // Update visual selection state for chips
-        val selectedId = when (dir) {
-            "download" -> R.id.chipDirectionDownload
-            "twoway" -> R.id.chipDirectionTwoway
-            else -> R.id.chipDirectionUpload
-        }
-        listOf(chipDirectionUpload, chipDirectionDownload, chipDirectionTwoway).forEach { chip ->
-            val isSel = chip.id == selectedId
-            if (chip is com.google.android.material.button.MaterialButton) {
-                chip.isCheckable = true
-                chip.isChecked = isSel
-            } else {
-                chip.alpha = if (isSel) 1.0f else 0.5f
+        val isUpload = dir == "upload"
+        val isDownload = dir == "download"
+        val isTwoway = dir == "twoway"
+
+        listOf(chipDirectionUpload, chipDirectionDownload, chipDirectionTwoway).forEach { c ->
+            if (c is MaterialButton) {
+                c.isCheckable = true
+                c.isChecked = (c == chipDirectionUpload && isUpload) || (c == chipDirectionDownload && isDownload) || (c == chipDirectionTwoway && isTwoway)
+            } else if (c is Button) {
+                val isSelected = (c == chipDirectionUpload && isUpload) || (c == chipDirectionDownload && isDownload) || (c == chipDirectionTwoway && isTwoway)
+                c.setBackgroundResource(if (isSelected) R.drawable.selector_tv_button_yellow else R.drawable.selector_tv_button)
             }
         }
+
+        updateDirectionDescription()
         updateDirectionSections()
+    }
+
+    private fun selectConflictStrategy(strategy: String) {
+        selectedConflictStrategy = strategy
+        val conflictChips = listOf(chipConflictSkip, chipConflictNewest, chipConflictKeepLocal, chipConflictKeepRemote)
+        conflictChips.forEach { c ->
+            val isSelected = when (strategy) {
+                "newest" -> c == chipConflictNewest
+                "keep_local" -> c == chipConflictKeepLocal
+                "keep_remote" -> c == chipConflictKeepRemote
+                else -> c == chipConflictSkip
+            }
+            if (c is MaterialButton) {
+                c.isCheckable = true
+                c.isChecked = isSelected
+            } else if (c is Button) {
+                c.setBackgroundResource(if (isSelected) R.drawable.selector_tv_button_yellow else R.drawable.selector_tv_button)
+            }
+        }
+    }
+
+    private fun selectFilterMode(mode: String) {
+        selectedExtensionMode = mode
+        val filterChips = listOfNotNull(chipFilterAll, chipFilterOnly, chipFilterSkip)
+        filterChips.forEach { c ->
+            val isSelected = when (mode) {
+                "only" -> c == chipFilterOnly
+                "skip" -> c == chipFilterSkip
+                else -> c == chipFilterAll
+            }
+            if (c is MaterialButton) {
+                c.isCheckable = true
+                c.isChecked = isSelected
+            } else if (c is Button) {
+                c.setBackgroundResource(if (isSelected) R.drawable.selector_tv_button_yellow else R.drawable.selector_tv_button)
+            }
+        }
+        val visible = if (mode == "all") View.GONE else View.VISIBLE
+        txtFilterExtensionsLabel?.visibility = visible
+        layoutFilterExtensions?.visibility = visible
+        updateTagsVisibility()
     }
 
     private fun updateDirectionDescription() {
@@ -435,9 +449,12 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             selectedDirection == "twoway" -> R.string.sync_direction_twoway_desc
             else -> R.string.sync_direction_upload_desc
         })
-        // Update destination button label
-        val btnBrowse = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnBrowseRemote)
-        btnBrowse?.text = getString(if (isLocal) R.string.advanced_sync_dest_select else R.string.browse_remote)
+        val btnBrowse = findViewById<View>(R.id.btnBrowseRemote)
+        if (btnBrowse is MaterialButton) {
+            btnBrowse.text = getString(if (isLocal) R.string.advanced_sync_dest_select else R.string.browse_remote)
+        } else if (btnBrowse is Button) {
+            btnBrowse.text = getString(if (isLocal) R.string.advanced_sync_dest_select else R.string.browse_remote)
+        }
     }
 
     private fun updateDirectionSections() {
@@ -447,8 +464,11 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             if (selectedDirection == "twoway") View.GONE else View.VISIBLE
         layoutDownloadSubfolders?.visibility =
             if (selectedDirection == "download") View.VISIBLE else View.GONE
-        layoutFilters?.visibility =
-            if (selectedDirection != "twoway") View.VISIBLE else View.GONE
+
+        val filterVisibility = if (selectedDirection != "twoway") View.VISIBLE else View.GONE
+        txtHeaderFiltering?.visibility = filterVisibility
+        cardFiltering?.visibility = filterVisibility
+        layoutFilters?.visibility = filterVisibility
 
         // Swap Source/Destination labels for Download direction
         if (selectedDirection == "download") {
@@ -459,23 +479,21 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             txtDestLabel.setText(R.string.destination)
         }
 
-        // Update sync deletions summary and move files text based on direction
-        val summaryView = findViewById<android.widget.TextView>(R.id.txtSyncDeletionsSummary)
+        val summaryView = findViewById<TextView>(R.id.txtSyncDeletionsSummary)
         summaryView?.setText(
             if (selectedDirection == "download") R.string.sync_deletions_summary_download
             else R.string.sync_deletions_summary_upload
         )
         if (selectedDirection == "download") {
-            switchMoveFiles.setText(R.string.move_files_download)
+            switchMoveFiles?.setText(R.string.move_files_download)
             txtMoveFilesSummary?.setText(R.string.move_files_download_summary)
         } else {
-            switchMoveFiles.setText(R.string.move_files_upload)
+            switchMoveFiles?.setText(R.string.move_files_upload)
             txtMoveFilesSummary?.setText(R.string.move_files_upload_summary)
         }
     }
 
     private fun launchNetworkBrowserForDest(shareId: String, isOnline: Boolean) {
-        android.util.Log.d("AdvSyncDest", "launchNetworkBrowserForDest: shareId=$shareId, isOnline=$isOnline")
         val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
             putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
             putExtra("isOnlineStorage", isOnline)
@@ -486,18 +504,20 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     }
 
     private fun setupIntervalDropdown() {
-        val intervals = listOf(
-            getString(R.string.q5_minutes), getString(R.string.q10_minutes),
-            getString(R.string.q15_minutes), getString(R.string.q30_minutes),
-            getString(R.string.q1_hour), getString(R.string.q6_hours),
-            getString(R.string.q12_hours), getString(R.string.q24_hours)
-        )
-        val intervalValues = listOf(5, 10, 15, 30, 60, 360, 720, 1440)
-        val intervalAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, intervals)
-        dropdownInterval.setAdapter(intervalAdapter)
-        dropdownInterval.setText(intervals[2], false)
-        dropdownInterval.setOnItemClickListener { _, _, position, _ ->
-            selectedIntervalMinutes = intervalValues[position]
+        dropdownInterval?.let { di ->
+            val intervals = listOf(
+                getString(R.string.q5_minutes), getString(R.string.q10_minutes),
+                getString(R.string.q15_minutes), getString(R.string.q30_minutes),
+                getString(R.string.q1_hour), getString(R.string.q6_hours),
+                getString(R.string.q12_hours), getString(R.string.q24_hours)
+            )
+            val intervalValues = listOf(5, 10, 15, 30, 60, 360, 720, 1440)
+            val intervalAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, intervals)
+            di.setAdapter(intervalAdapter)
+            di.setText(intervals[2], false)
+            di.setOnItemClickListener { _, _, position, _ ->
+                selectedIntervalMinutes = intervalValues[position]
+            }
         }
         selectedIntervalMinutes = 60
     }
@@ -522,49 +542,30 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
 
         // Direction
         selectDirection(profile.direction)
-        if (profile.direction == "twoway") {
-            layoutConflictResolution.visibility = View.VISIBLE
-        }
 
         // Conflict strategy
-        selectedConflictStrategy = profile.conflictStrategy
-        val conflictChips = listOf(chipConflictSkip, chipConflictNewest, chipConflictKeepLocal, chipConflictKeepRemote)
-        val selectedChipId = when (profile.conflictStrategy) {
-            "newest" -> R.id.chipConflictNewest
-            "keep_local" -> R.id.chipConflictKeepLocal
-            "keep_remote" -> R.id.chipConflictKeepRemote
-            else -> R.id.chipConflictSkip
-        }
-        conflictChips.forEach { c ->
-            if (c is com.google.android.material.button.MaterialButton) {
-                c.isCheckable = true
-                c.isChecked = c.id == selectedChipId
-            }
-        }
+        selectConflictStrategy(profile.conflictStrategy)
 
         // Schedule
         when (profile.scheduleType) {
             "scheduled" -> {
                 selectSchedule("scheduled")
-                layoutIntervalSection.visibility = View.GONE
-                layoutScheduledSection.visibility = View.VISIBLE
-
                 val pIndex = periodValues.indexOf(profile.scheduledPeriod).coerceAtLeast(0)
                 selectedPeriod = profile.scheduledPeriod
-                dropdownPeriod.setText(periods[pIndex], false)
-                layoutDayOfWeek.visibility = if (selectedPeriod == "weekly") View.VISIBLE else View.GONE
-                layoutDayOfMonth.visibility = if (selectedPeriod == "monthly") View.VISIBLE else View.GONE
+                dropdownPeriod?.setText(periods[pIndex], false)
+                layoutDayOfWeek?.visibility = if (selectedPeriod == "weekly") View.VISIBLE else View.GONE
+                layoutDayOfMonth?.visibility = if (selectedPeriod == "monthly") View.VISIBLE else View.GONE
 
                 val dowIndex = daysOfWeekValues.indexOf(profile.scheduledDayOfWeek).coerceAtLeast(0)
                 selectedDayOfWeek = profile.scheduledDayOfWeek
-                dropdownDayOfWeek.setText(daysOfWeek[dowIndex], false)
+                dropdownDayOfWeek?.setText(daysOfWeek[dowIndex], false)
 
                 val domIndex = daysOfMonthValues.indexOf(profile.scheduledDayOfMonth).coerceAtLeast(0)
                 selectedDayOfMonth = profile.scheduledDayOfMonth
-                dropdownDayOfMonth.setText(daysOfMonth[domIndex], false)
+                dropdownDayOfMonth?.setText(daysOfMonth[domIndex], false)
 
-                timePicker.hour = profile.scheduledHour
-                timePicker.minute = profile.scheduledMinute
+                timePicker?.hour = profile.scheduledHour
+                timePicker?.minute = profile.scheduledMinute
             }
             "manual" -> {
                 selectSchedule("manual")
@@ -580,40 +581,37 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
                 )
                 val iIndex = intervalValues.indexOf(profile.intervalMinutes).coerceAtLeast(0)
                 selectedIntervalMinutes = profile.intervalMinutes
-                dropdownInterval.setText(intervals[iIndex], false)
+                dropdownInterval?.setText(intervals[iIndex], false)
             }
         }
 
         // Toggles
-        switchDownloadSubfolders.isChecked = profile.downloadSubfolders
+        switchDownloadSubfolders?.isChecked = profile.downloadSubfolders
         switchInstantSync.isChecked = profile.instantSyncEnabled
         switchWifiOnly.isChecked = profile.wifiOnly
-        switchMoveFiles.isChecked = profile.moveFiles
-        editFilterExtensions.setText(profile.extensionFilters)
-        editExcludePatterns.setText(profile.excludePatterns)
-        editIncludePatterns.setText(profile.includePatterns)
-        editMinSize.setText(if (profile.minSizeBytes > 0) {
+        switchMoveFiles?.isChecked = profile.moveFiles
+        editFilterExtensions?.setText(profile.extensionFilters)
+        editExcludePatterns?.setText(profile.excludePatterns)
+        editIncludePatterns?.setText(profile.includePatterns)
+        editMinSize?.setText(if (profile.minSizeBytes > 0) {
             ((if (profile.minSizeIsGB) profile.minSizeBytes / (1024*1024*1024) else profile.minSizeBytes / (1024*1024)).toString())
         } else "")
-        editMaxSize.setText(if (profile.maxSizeBytes > 0) {
+        editMaxSize?.setText(if (profile.maxSizeBytes > 0) {
             ((if (profile.maxSizeIsGB) profile.maxSizeBytes / (1024*1024*1024) else profile.maxSizeBytes / (1024*1024)).toString())
         } else "")
-        toggleMinSizeUnit.check(if (profile.minSizeIsGB) R.id.chipSizeMinGB else R.id.chipSizeMinMB)
-        toggleMaxSizeUnit.check(if (profile.maxSizeIsGB) R.id.chipSizeMaxGB else R.id.chipSizeMaxMB)
-        editMinAge.setText(if (profile.minAgeMinutes > 0) (profile.minAgeMinutes / (24*60)).toString() else "")
-        editMaxAge.setText(if (profile.maxAgeMinutes > 0) (profile.maxAgeMinutes / (24*60)).toString() else "")
-        val extChip = when (profile.extensionMode) {
-            "only" -> R.id.chipFilterOnly
-            "skip" -> R.id.chipFilterSkip
-            else -> R.id.chipFilterAll
-        }
-        toggleExtensionMode.check(extChip)
+        toggleMinSizeUnit?.check(if (profile.minSizeIsGB) R.id.chipSizeMinGB else R.id.chipSizeMinMB)
+        toggleMaxSizeUnit?.check(if (profile.maxSizeIsGB) R.id.chipSizeMaxGB else R.id.chipSizeMaxMB)
+        editMinAge?.setText(if (profile.minAgeMinutes > 0) (profile.minAgeMinutes / (24*60)).toString() else "")
+        editMaxAge?.setText(if (profile.maxAgeMinutes > 0) (profile.maxAgeMinutes / (24*60)).toString() else "")
+
+        selectFilterMode(profile.extensionMode)
+
         val extVisible = if (profile.extensionMode == "all") View.GONE else View.VISIBLE
         txtFilterExtensionsLabel?.visibility = extVisible
         layoutFilterExtensions?.visibility = extVisible
-        switchSyncDeletions.isChecked = profile.syncDeletions
+        switchSyncDeletions?.isChecked = profile.syncDeletions
         if (profile.moveFiles) {
-            switchSyncDeletions.isEnabled = false
+            switchSyncDeletions?.isEnabled = false
         }
         switchNotifications.isChecked = profile.notificationsEnabled
 
@@ -639,15 +637,11 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             if (srcCanonical == destCanonical ||
                 destCanonical.startsWith(srcCanonical + java.io.File.separator) ||
                 srcCanonical.startsWith(destCanonical + java.io.File.separator)) {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.important_warning)
-                    .setMessage(R.string.advanced_sync_same_path_warning)
-                    .setIcon(R.drawable.ic_warning)
-                    .setPositiveButton(R.string.btn_continue) { _, _ ->
-                        proceedSaveProfile(name)
-                    }
-                    .setNegativeButton(R.string.cancel, null)
-                    .show()
+                showWarningDialog(
+                    title = getString(R.string.important_warning),
+                    message = getString(R.string.advanced_sync_same_path_warning),
+                    onContinue = { proceedSaveProfile(name) }
+                )
                 return
             }
         }
@@ -656,37 +650,99 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     }
 
     private fun proceedSaveProfile(name: String) {
-        val scheduleType = when {
-            (chipScheduled as? com.google.android.material.button.MaterialButton)?.isChecked == true -> "scheduled"
-            (chipManual as? com.google.android.material.button.MaterialButton)?.isChecked == true -> "manual"
-            else -> "interval"
-        }
+        val scheduleType = selectedScheduleType
 
         // Show destructive operation warning for Upload/Download with sync deletions enabled
-        if (switchSyncDeletions.isChecked && selectedDirection != "twoway") {
+        if (switchSyncDeletions?.isChecked == true && selectedDirection != "twoway") {
             val warningMessage = if (selectedDirection == "upload") {
-                R.string.sync_deletions_warning_upload
+                getString(R.string.sync_deletions_warning_upload)
             } else {
-                R.string.sync_deletions_warning_download
+                getString(R.string.sync_deletions_warning_download)
             }
-            MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.sync_deletions_warning_title)
-                .setMessage(warningMessage)
-                .setIcon(R.drawable.ic_warning)
-                .setPositiveButton(R.string.btn_continue) { _, _ ->
-                    doSaveProfile(name, scheduleType)
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .setNeutralButton(R.string.switch_to_twoway) { _, _ ->
-                    // Switch to Two-way and save
+            showWarningDialog(
+                title = getString(R.string.sync_deletions_warning_title),
+                message = warningMessage,
+                showSwitchToTwoWay = true,
+                onContinue = { doSaveProfile(name, scheduleType) },
+                onSwitchToTwoWay = {
                     selectDirection("twoway")
                     doSaveProfile(name, scheduleType)
                 }
-                .show()
+            )
             return
         }
 
         doSaveProfile(name, scheduleType)
+    }
+
+    private fun showWarningDialog(
+        title: String,
+        message: String,
+        showSwitchToTwoWay: Boolean = false,
+        onContinue: () -> Unit,
+        onSwitchToTwoWay: (() -> Unit)? = null
+    ) {
+        val isTv = DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_sync_warning_tv else R.layout.dialog_sync_warning
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<TextView>(R.id.txtTitle).text = title
+        dialogView.findViewById<TextView>(R.id.txtMessage).text = message
+
+        dialogView.findViewById<View>(R.id.btnContinue).setOnClickListener {
+            dialog.dismiss()
+            onContinue()
+        }
+
+        val btnNeutral = dialogView.findViewById<View>(R.id.btnNeutral)
+        if (showSwitchToTwoWay && onSwitchToTwoWay != null) {
+            btnNeutral.visibility = View.VISIBLE
+            btnNeutral.setOnClickListener {
+                dialog.dismiss()
+                onSwitchToTwoWay()
+            }
+        } else {
+            btnNeutral.visibility = View.GONE
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteConfirmDialog() {
+        val currentName = editName.text.toString().trim().ifEmpty { getString(R.string.sync_now) }
+        val isTv = DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_sync_profile_delete_confirm_tv else R.layout.dialog_sync_profile_delete_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<TextView>(R.id.txtTitle).text =
+            getString(R.string.delete_confirm_single, currentName)
+        dialogView.findViewById<TextView>(R.id.txtMessage).text =
+            getString(R.string.sync_delete_profile_confirm_msg, currentName)
+
+        dialogView.findViewById<View>(R.id.btnDelete).setOnClickListener {
+            dialog.dismiss()
+            deleteProfile()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun doSaveProfile(name: String, scheduleType: String) {
@@ -725,37 +781,33 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             destLocalDisplayPath = destLocalDisplayPath,
             direction = selectedDirection,
             conflictStrategy = selectedConflictStrategy,
+            syncDeletions = switchSyncDeletions?.isChecked ?: false,
+            moveFiles = switchMoveFiles?.isChecked ?: false,
             scheduleType = scheduleType,
             intervalMinutes = selectedIntervalMinutes,
-            scheduledHour = timePicker.hour,
-            scheduledMinute = timePicker.minute,
+            scheduledHour = timePicker?.hour ?: 0,
+            scheduledMinute = timePicker?.minute ?: 0,
             scheduledPeriod = selectedPeriod,
             scheduledDayOfWeek = selectedDayOfWeek,
             scheduledDayOfMonth = selectedDayOfMonth,
             instantSyncEnabled = switchInstantSync.isChecked,
-            syncDeletions = switchSyncDeletions.isChecked,
-            moveFiles = switchMoveFiles.isChecked,
-            extensionMode = when (toggleExtensionMode.checkedButtonId) {
-                R.id.chipFilterOnly -> "only"
-                R.id.chipFilterSkip -> "skip"
-                else -> "all"
-            },
-            extensionFilters = editFilterExtensions.text.toString().trim(),
-            excludePatterns = editExcludePatterns.text.toString().trim(),
-            includePatterns = editIncludePatterns.text.toString().trim(),
+            extensionMode = selectedExtensionMode,
+            extensionFilters = editFilterExtensions?.text?.toString()?.trim() ?: "",
+            excludePatterns = editExcludePatterns?.text?.toString()?.trim() ?: "",
+            includePatterns = editIncludePatterns?.text?.toString()?.trim() ?: "",
             includeTags = incTags,
             excludeTags = excTags,
-            minSizeBytes = (editMinSize.text.toString().toDoubleOrNull() ?: 0.0).let {
-                (it * if (toggleMinSizeUnit.checkedButtonId == R.id.chipSizeMinGB) 1024*1024*1024 else 1024*1024).toLong()
+            minSizeBytes = (editMinSize?.text?.toString()?.toDoubleOrNull() ?: 0.0).let {
+                (it * if (toggleMinSizeUnit?.checkedButtonId == R.id.chipSizeMinGB) 1024*1024*1024 else 1024*1024).toLong()
             },
-            maxSizeBytes = (editMaxSize.text.toString().toDoubleOrNull() ?: 0.0).let {
-                (it * if (toggleMaxSizeUnit.checkedButtonId == R.id.chipSizeMaxGB) 1024*1024*1024 else 1024*1024).toLong()
+            maxSizeBytes = (editMaxSize?.text?.toString()?.toDoubleOrNull() ?: 0.0).let {
+                (it * if (toggleMaxSizeUnit?.checkedButtonId == R.id.chipSizeMaxGB) 1024*1024*1024 else 1024*1024).toLong()
             },
-            minSizeIsGB = toggleMinSizeUnit.checkedButtonId == R.id.chipSizeMinGB,
-            maxSizeIsGB = toggleMaxSizeUnit.checkedButtonId == R.id.chipSizeMaxGB,
-            minAgeMinutes = (editMinAge.text.toString().toLongOrNull() ?: 0L) * 24 * 60,
-            maxAgeMinutes = (editMaxAge.text.toString().toLongOrNull() ?: 0L) * 24 * 60,
-            downloadSubfolders = switchDownloadSubfolders.isChecked,
+            minSizeIsGB = toggleMinSizeUnit?.checkedButtonId == R.id.chipSizeMinGB,
+            maxSizeIsGB = toggleMaxSizeUnit?.checkedButtonId == R.id.chipSizeMaxGB,
+            minAgeMinutes = (editMinAge?.text?.toString()?.toLongOrNull() ?: 0L) * 24 * 60,
+            maxAgeMinutes = (editMaxAge?.text?.toString()?.toLongOrNull() ?: 0L) * 24 * 60,
+            downloadSubfolders = switchDownloadSubfolders?.isChecked ?: false,
             wifiOnly = switchWifiOnly.isChecked,
             enabled = true,
             notificationsEnabled = switchNotifications.isChecked,
@@ -789,7 +841,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
 
     private fun setupTagsFilterSection(profile: AdvancedSyncProfile?) {
         val allTags = FileTagsManager.getAllCreatedTags(this).sorted()
-        val isMobile = !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val isMobile = !DeviceUtils.isTvDevice(this)
         val section = layoutTagsFilterSection ?: return
 
         if (isMobile && allTags.isNotEmpty()) {
@@ -805,18 +857,18 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             val activeExc = profile?.excludeTags?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }?.toSet() ?: emptySet()
 
             for (tag in allTags) {
-                // Include chip
                 val chipInc = LayoutInflater.from(this)
                     .inflate(R.layout.item_tag_chip, cgInc, false) as Chip
                 chipInc.text = "#$tag"
+                chipInc.isCheckable = true
                 chipInc.isChecked = activeInc.contains(tag)
                 chipInc.isCheckedIconVisible = true
                 cgInc.addView(chipInc)
 
-                // Exclude chip
                 val chipExc = LayoutInflater.from(this)
                     .inflate(R.layout.item_tag_chip, cgExc, false) as Chip
                 chipExc.text = "#$tag"
+                chipExc.isCheckable = true
                 chipExc.isChecked = activeExc.contains(tag)
                 chipExc.isCheckedIconVisible = true
                 cgExc.addView(chipExc)
@@ -830,25 +882,24 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
 
     private fun updateTagsVisibility() {
         val allTags = FileTagsManager.getAllCreatedTags(this).sorted()
-        val isMobile = !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val isMobile = !DeviceUtils.isTvDevice(this)
         val section = layoutTagsFilterSection ?: return
 
         if (isMobile && allTags.isNotEmpty()) {
             section.visibility = View.VISIBLE
-            val checkedId = toggleExtensionMode.checkedButtonId
             val layInc = layoutIncludeTags
             val layExc = layoutExcludeTags
 
-            when (checkedId) {
-                R.id.chipFilterOnly -> {
+            when (selectedExtensionMode) {
+                "only" -> {
                     layInc?.visibility = View.VISIBLE
                     layExc?.visibility = View.GONE
                 }
-                R.id.chipFilterSkip -> {
+                "skip" -> {
                     layInc?.visibility = View.GONE
                     layExc?.visibility = View.VISIBLE
                 }
-                else -> { // R.id.chipFilterAll
+                else -> {
                     layInc?.visibility = View.VISIBLE
                     layExc?.visibility = View.VISIBLE
                 }
@@ -856,5 +907,98 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         } else {
             section.visibility = View.GONE
         }
+    }
+
+    private fun showDestinationChooserDialog() {
+        val netShares = NetworkShareRepository.getInstance(this).getAll()
+        val onlineStorages = OnlineStorageRepository.getInstance(this).getAll()
+
+        data class DestOption(val title: String, val subtitle: String, val iconRes: Int, val type: String, val id: String)
+
+        val options = mutableListOf<DestOption>()
+        options.add(
+            DestOption(
+                title = getString(R.string.advanced_sync_local_folder),
+                subtitle = getString(R.string.source_phone),
+                iconRes = R.drawable.ic_storage_internal,
+                type = "local",
+                id = ""
+            )
+        )
+        netShares.forEach { share ->
+            options.add(
+                DestOption(
+                    title = share.name.ifEmpty { share.host },
+                    subtitle = "${share.type.name} " + getString(R.string.destination_network_share),
+                    iconRes = R.drawable.ic_network,
+                    type = "net",
+                    id = share.id
+                )
+            )
+        }
+        onlineStorages.forEach { storage ->
+            options.add(
+                DestOption(
+                    title = storage.displayName.ifEmpty { storage.email },
+                    subtitle = "${storage.provider.name} " + getString(R.string.destination_network_share),
+                    iconRes = R.drawable.ic_cloud,
+                    type = "online",
+                    id = storage.id
+                )
+            )
+        }
+
+        val isTv = DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_sync_select_destination_tv else R.layout.dialog_sync_select_destination
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val recycler = dialogView.findViewById<RecyclerView>(R.id.recyclerDestinations)
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+                val itemView = layoutInflater.inflate(R.layout.item_sync_destination, parent, false)
+                return object : RecyclerView.ViewHolder(itemView) {}
+            }
+
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+                val opt = options[position]
+                val v = holder.itemView
+                v.findViewById<ImageView>(R.id.imgDestIcon).setImageResource(opt.iconRes)
+                v.findViewById<TextView>(R.id.txtDestTitle).text = opt.title
+                v.findViewById<TextView>(R.id.txtDestSubtitle).text = opt.subtitle
+                v.setOnClickListener {
+                    dialog.dismiss()
+                    when (opt.type) {
+                        "local" -> {
+                            val intent = Intent(this@AdvancedSyncEditActivity, StorageBrowserActivity::class.java).apply {
+                                putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_DEST_PICKER, true)
+                            }
+                            destLocalFolderLauncher.launch(intent)
+                        }
+                        "net" -> {
+                            selectedNetworkShareId = opt.id
+                            launchNetworkBrowserForDest(opt.id, isOnline = false)
+                        }
+                        "online" -> {
+                            selectedNetworkShareId = opt.id
+                            launchNetworkBrowserForDest(opt.id, isOnline = true)
+                        }
+                    }
+                }
+            }
+
+            override fun getItemCount(): Int = options.size
+        }
+
+        dialogView.findViewById<android.view.View>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Duplicate File Row — TV
+    Duplicate File Row — TV (Language & Grouped Glass Card Standard)
 -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="2dp"
@@ -18,10 +19,11 @@
         android:layout_height="64dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="28dp"
-        android:paddingEnd="12dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="16dp"
         android:duplicateParentState="true">
 
+        <!-- CheckBox -->
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/checkDupFile"
             android:layout_width="wrap_content"
@@ -32,6 +34,26 @@
             android:focusable="false"
             android:clickable="false" />
 
+        <!-- Icon Badge -->
+        <FrameLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="12dp"
+            android:duplicateParentState="true">
+
+            <ImageView
+                android:id="@+id/imgDupFileIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_file"
+                app:tint="@color/selector_tv_storage_category_icon_tint"
+                android:duplicateParentState="true"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <!-- Name & Path -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,9 +66,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/selector_tv_storage_category_text_primary"
-                android:textSize="14sp"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
                 android:maxLines="1"
-                android:ellipsize="end"
+                android:ellipsize="middle"
                 android:duplicateParentState="true"
                 tools:text="IMG_20230101.jpg" />
 
@@ -56,26 +79,30 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/selector_tv_storage_category_text_secondary"
                 android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
                 android:maxLines="1"
-                android:ellipsize="start"
+                android:ellipsize="middle"
                 android:duplicateParentState="true"
                 tools:text="/storage/emulated/0/DCIM" />
 
         </LinearLayout>
 
+        <!-- Size + Location Badge -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="end"
+            android:layout_marginStart="10dp"
             android:duplicateParentState="true">
 
             <TextView
                 android:id="@+id/txtDupFileSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/selector_tv_storage_category_text_secondary"
+                android:textColor="@color/selector_tv_storage_category_text_accent"
                 android:textSize="13sp"
+                android:fontFamily="sans-serif-bold"
                 android:duplicateParentState="true"
                 tools:text="4.2 MB" />
 
@@ -83,11 +110,11 @@
                 android:id="@+id/txtDupLocationBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:paddingHorizontal="6dp"
+                android:layout_marginTop="3dp"
+                android:paddingHorizontal="8dp"
                 android:paddingVertical="2dp"
-                android:textSize="10sp"
-                android:textStyle="bold"
+                android:textSize="10.5sp"
+                android:fontFamily="sans-serif-bold"
                 android:background="@drawable/bg_badge_in_folder"
                 android:textColor="#00897B"
                 android:duplicateParentState="true"

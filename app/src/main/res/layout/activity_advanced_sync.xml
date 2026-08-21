@@ -7,37 +7,42 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_mobile_gradient">
 
+    <!-- ══════════════════════════════════════════════════
+         HEADER BAR — 56dp glass header bar
+         ══════════════════════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="14dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_arrow_back"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@color/mobile_icon_tint" />
+        <!-- Frosted Back Button -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="14dp">
 
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/close"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
 
+        <!-- Title + Subtitle -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -50,19 +55,42 @@
                 android:layout_height="wrap_content"
                 android:text="@string/advanced_sync_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black"
                 android:letterSpacing="0.01"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
             <TextView
+                android:id="@+id/txtSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/advanced_sync_subtitle"
                 android:textColor="@color/mobile_text_secondary"
-                android:textSize="13sp" />
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="end" />
         </LinearLayout>
+
+        <!-- Frosted Add Button in Header -->
+        <FrameLayout
+            android:id="@+id/btnAddProfile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_add"
+                android:contentDescription="@string/add_profile"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
+
     </LinearLayout>
 
     <!-- Profile list -->
@@ -71,8 +99,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="104dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutHeader" />
 
@@ -83,25 +111,34 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="40dp"
+        android:padding="32dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutHeader">
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_sync_advanced"
-            app:tint="?attr/colorOnSurfaceVariant" />
+        <!-- Hero Badge -->
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_sync_advanced"
+                app:tint="?attr/colorPrimary"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:text="@string/advanced_sync_empty_title"
             android:textColor="@color/mobile_text_primary"
             android:textSize="20sp"
-            android:fontFamily="sans-serif-medium" />
+            android:fontFamily="sans-serif-black" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -109,8 +146,9 @@
             android:layout_marginTop="8dp"
             android:text="@string/advanced_sync_empty_desc"
             android:textColor="@color/mobile_text_secondary"
-            android:textSize="14sp"
-            android:gravity="center" />
+            android:textSize="13.5sp"
+            android:textAlignment="center"
+            android:lineSpacingExtra="3dp" />
     </LinearLayout>
 
     <!-- FAB -->
@@ -118,9 +156,10 @@
         android:id="@+id/fabAddProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="24dp"
         android:text="@string/add_profile"
-        android:icon="@drawable/ic_add"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_add"
         app:iconTint="@android:color/white"
         app:backgroundTint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -41,18 +41,32 @@ class AnalyzerRecommendationAdapter(
         holder.txtDesc.text    = item.description
         holder.txtSavings.text = ctx.getString(R.string.save_formatterformatfilesizectx_itemestimatedbytes, Formatter.formatFileSize(ctx, item.estimatedBytes))
 
-        val (riskLabel, riskColor, riskIcon) = when (item.riskLevel) {
-            RiskLevel.SAFE          -> Triple("SAFE", ContextCompat.getColor(ctx, R.color.ufm_risk_safe), R.drawable.ic_junk)
-            RiskLevel.MODERATE      -> Triple("MODERATE", ContextCompat.getColor(ctx, R.color.ufm_risk_moderate), R.drawable.ic_warning_badge)
-            RiskLevel.MANUAL_REVIEW -> Triple(ctx.getString(R.string.manual_review), ContextCompat.getColor(ctx, R.color.ufm_risk_manual), R.drawable.ic_warning_badge)
+        val (riskLabel, riskColor, riskBgRes, defaultIcon) = when (item.riskLevel) {
+            RiskLevel.SAFE          -> Quad("SAFE TO CLEAN", ContextCompat.getColor(ctx, R.color.ufm_risk_safe), R.drawable.bg_badge_risk_safe, R.drawable.ic_junk)
+            RiskLevel.MODERATE      -> Quad("MODERATE RISK", ContextCompat.getColor(ctx, R.color.ufm_risk_moderate), R.drawable.bg_badge_risk_moderate, R.drawable.ic_warning_badge)
+            RiskLevel.MANUAL_REVIEW -> Quad(ctx.getString(R.string.manual_review), ContextCompat.getColor(ctx, R.color.ufm_risk_manual), R.drawable.bg_badge_risk_manual, R.drawable.ic_warning_badge)
         }
+
+        val iconRes = when {
+            item.title.contains("APK", ignoreCase = true) -> R.drawable.ic_apps
+            item.title.contains("Duplicate", ignoreCase = true) -> R.drawable.ic_copy
+            item.title.contains("Download", ignoreCase = true) -> R.drawable.ic_file
+            item.title.contains("Old", ignoreCase = true) || item.title.contains("Large", ignoreCase = true) -> R.drawable.ic_file
+            else -> defaultIcon
+        }
+
         holder.txtRisk.text = riskLabel
         holder.txtRisk.setTextColor(riskColor)
-        holder.imgIcon.setImageResource(riskIcon)
-        holder.imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(riskColor)
+        holder.txtRisk.setBackgroundResource(riskBgRes)
+        holder.imgIcon.setImageResource(iconRes)
+        if (!isTv) {
+            holder.imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(riskColor)
+        }
 
         holder.itemView.setOnClickListener { onClick(item) }
     }
+
+    private data class Quad<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
 
     override fun getItemCount(): Int = items.size
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +16,8 @@ import za.kilowatch.ultimatefilemanager.indexing.FileIndex
 /**
  * Two view-type adapter for the Duplicates tab.
  *
- * - VIEW_TYPE_GROUP  = expandable group header (hash fingerprint + wasted space badge)
- * - VIEW_TYPE_FILE   = child file row with checkbox
+ * - VIEW_TYPE_GROUP  = expandable group header (filename preview, hash fingerprint, wasted space badge)
+ * - VIEW_TYPE_FILE   = child file row with checkbox, type icon, path, and size
  *
  * The host activity observes [checkedFiles] and shows/hides a delete FAB accordingly.
  */
@@ -88,14 +89,25 @@ class AnalyzerDuplicateAdapter(
             is Row.G -> {
                 val g  = row.g.group
                 val vh = holder as GroupVH
-                vh.txtHash.text     = "⋯${g.hash.takeLast(12)}"
+                
+                val previewName = g.files.firstOrNull()?.filename ?: ctx.getString(R.string.analyzer_tab_duplicates)
+                vh.txtFileNamePreview?.text = previewName
+                vh.txtHash.text = "SHA-256 · ⋯${g.hash.takeLast(12)}"
+                
                 val countStr = if (g.files.size == 1) ctx.getString(R.string.analyzer_duplicate_copy_singular, 1) else ctx.getString(R.string.analyzer_duplicate_copy_plural, g.files.size)
                 val savesStr = ctx.getString(R.string.analyzer_duplicate_saves, Formatter.formatFileSize(ctx, g.wastedBytes))
-                vh.txtWasted.text   = "$countStr · $savesStr"
+                vh.txtCount?.text = countStr
+                vh.txtWasted.text = savesStr
+                
                 val collapsed = collapsedGroups.contains(g.hash)
-                vh.txtToggle.text = if (collapsed) "▶" else "▼"
-                // Show amber "⚠ Quick match only" badge for groups skipped by Phase-2 full-hash
-                vh.txtUnverifiedBadge.visibility = if (g.isVerified) android.view.View.GONE else android.view.View.VISIBLE
+                vh.imgChevron?.rotation = if (collapsed) 0f else 90f
+                vh.txtToggle?.text = if (collapsed) "▶" else "▼"
+                
+                // Show unverified badge if skipped full verification
+                val unverifiedVis = if (g.isVerified) View.GONE else View.VISIBLE
+                vh.layoutUnverified?.visibility = unverifiedVis
+                vh.txtUnverifiedBadge?.visibility = unverifiedVis
+
                 vh.itemView.setOnClickListener {
                     if (collapsed) collapsedGroups.remove(g.hash) else collapsedGroups.add(g.hash)
                     refresh()
@@ -107,6 +119,16 @@ class AnalyzerDuplicateAdapter(
                 vh.txtName.text   = fi.filename
                 vh.txtPath.text   = fi.folderPath
                 vh.txtSize.text   = Formatter.formatFileSize(ctx, fi.size)
+
+                val ext = fi.filename.substringAfterLast('.', "").lowercase()
+                val iconRes = when (ext) {
+                    "mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "jpg", "jpeg", "png", "gif", "webp", "bmp", "heic", "svg" -> R.drawable.ic_photo_video
+                    "mp3", "m4a", "aac", "flac", "wav", "ogg", "opus" -> R.drawable.ic_audio
+                    "apk", "apks", "xapk", "apkm" -> R.drawable.ic_apps
+                    "zip", "rar", "7z", "tar", "gz" -> R.drawable.ic_folder
+                    else -> R.drawable.ic_file
+                }
+                vh.imgFileIcon?.setImageResource(iconRes)
 
                 if (!targetFolder.isNullOrEmpty()) {
                     val cleanFileFolder = fi.folderPath.trimEnd('/')
@@ -147,18 +169,23 @@ class AnalyzerDuplicateAdapter(
     override fun getItemCount(): Int = rows.size
 
     inner class GroupVH(v: View) : RecyclerView.ViewHolder(v) {
-        val txtHash           : TextView = v.findViewById(R.id.txtDupHash)
-        val txtWasted         : TextView = v.findViewById(R.id.txtDupWasted)
-        val txtToggle         : TextView = v.findViewById(R.id.txtDupToggle)
-        val txtUnverifiedBadge: TextView = v.findViewById(R.id.txtUnverifiedBadge)
+        val txtFileNamePreview: TextView? = v.findViewById(R.id.txtDupFileNamePreview)
+        val txtHash           : TextView  = v.findViewById(R.id.txtDupHash)
+        val txtWasted         : TextView  = v.findViewById(R.id.txtDupWasted)
+        val txtCount          : TextView? = v.findViewById(R.id.txtDupCount)
+        val imgChevron        : ImageView? = v.findViewById(R.id.imgDupChevron)
+        val txtToggle         : TextView? = v.findViewById(R.id.txtDupToggle)
+        val txtUnverifiedBadge: TextView? = v.findViewById(R.id.txtUnverifiedBadge)
+        val layoutUnverified  : View?     = v.findViewById(R.id.layoutUnverifiedBadge)
     }
 
     inner class FileVH(v: View) : RecyclerView.ViewHolder(v) {
-        val txtName          : TextView = v.findViewById(R.id.txtDupFileName)
-        val txtPath          : TextView = v.findViewById(R.id.txtDupFilePath)
-        val txtSize          : TextView = v.findViewById(R.id.txtDupFileSize)
-        val txtLocationBadge : TextView = v.findViewById(R.id.txtDupLocationBadge)
-        val checkbox         : CheckBox = v.findViewById(R.id.checkDupFile)
+        val txtName          : TextView  = v.findViewById(R.id.txtDupFileName)
+        val txtPath          : TextView  = v.findViewById(R.id.txtDupFilePath)
+        val txtSize          : TextView  = v.findViewById(R.id.txtDupFileSize)
+        val txtLocationBadge : TextView  = v.findViewById(R.id.txtDupLocationBadge)
+        val imgFileIcon      : ImageView? = v.findViewById(R.id.imgDupFileIcon)
+        val checkbox         : CheckBox  = v.findViewById(R.id.checkDupFile)
     }
 
     companion object {

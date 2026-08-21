@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Analyzer Folder Row — Mobile (glassmorphism light theme)
-    Shows folder name, file count, size, and a proportional fill bar.
+    Analyzer Folder Row — Language & Grouped Glass Card Standard
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,21 +23,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/margin_md">
+        android:padding="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
-            
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="@dimen/margin_sm"
-                android:src="@drawable/ic_folder"
-                app:tint="@color/tv_accent"
-                android:contentDescription="@null" />
+
+            <FrameLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="10dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_folder"
+                    app:tint="?attr/colorPrimary"
+                    android:contentDescription="@null" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/txtFolderName"
@@ -47,27 +53,28 @@
                 android:layout_weight="1"
                 android:textColor="@color/mobile_card_text_primary"
                 android:textSize="14sp"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="sans-serif-bold"
                 android:maxLines="1"
-                android:ellipsize="start"
+                android:ellipsize="middle"
                 tools:text="…/DCIM/Camera" />
 
             <TextView
                 android:id="@+id/txtFolderCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_sm"
+                android:layout_marginEnd="8dp"
                 android:textColor="@color/mobile_card_text_secondary"
                 android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
                 tools:text="1,234 files" />
 
             <TextView
                 android:id="@+id/txtFolderSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/tv_accent"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="13sp"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="sans-serif-bold"
                 tools:text="4.8 GB" />
         </LinearLayout>
 
@@ -76,9 +83,9 @@
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
             android:indeterminate="false"
-            android:progressTint="@color/tv_accent"
+            android:progressTint="?attr/colorPrimary"
             android:progressBackgroundTint="@color/mobile_glass_stroke"
             tools:progress="70" />
 

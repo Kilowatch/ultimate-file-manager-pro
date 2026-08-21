@@ -1,55 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Google Drive Scope Dialog (TV Standard)
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="560dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:background="@drawable/bg_glass_card"
-    android:gravity="center">
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp">
 
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_cloud"
-        android:tint="@color/tv_button_focused_yellow"
-        android:layout_marginBottom="8dp" />
-
-    <TextView
-        android:id="@+id/txtGdriveScopeTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/gdrive_premium_title"
-        android:textColor="@color/tv_text_primary"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif-black"
-        android:textAlignment="center" />
-
-    <TextView
-        android:id="@+id/txtGdriveScopeMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/gdrive_premium_message"
-        android:textColor="@color/tv_text_secondary"
-        android:textSize="14sp"
-        android:textAlignment="center" />
-
+    <!-- Top Row: 52dp Frosted Badge + Title -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="18dp">
+
+        <FrameLayout
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_cloud"
+                app:tint="@color/tv_accent"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/txtGdriveScopeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gdrive_premium_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/add_online_storage_gdrive"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Description Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border">
+
+        <TextView
+            android:id="@+id/txtGdriveScopeMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="18dp"
+            android:text="@string/gdrive_premium_message"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14.5sp"
+            android:lineSpacingExtra="3dp" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
         android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGdriveScopeLearnMore"
             style="@style/TvContinueButton"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_weight="1"
-            android:paddingHorizontal="4dp"
             android:text="@string/gdrive_scope_btn_learn_more"
             android:textSize="13sp"
             android:focusable="true"
@@ -59,9 +103,8 @@
             android:id="@+id/btnGdriveScopeCancel"
             style="@style/TvContinueButton"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_weight="1"
-            android:paddingHorizontal="4dp"
             android:text="@string/gdrive_scope_btn_cancel"
             android:textSize="13sp"
             android:focusable="true"
@@ -71,11 +114,11 @@
             android:id="@+id/btnGdriveScopeOk"
             style="@style/TvContinueButton"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_weight="1"
-            android:paddingHorizontal="4dp"
             android:text="@string/btn_ok"
             android:textSize="13sp"
             android:focusable="true" />
     </LinearLayout>
+
 </LinearLayout>

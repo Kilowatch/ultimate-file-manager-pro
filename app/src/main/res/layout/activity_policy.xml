@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Mobile Policy Activity - glassmorphism design
+    Mobile Policy Activity - Solid non-transparent toolbar with standard header layout
     Displays Terms & Conditions or Privacy Policy content
 -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient"
-    android:fitsSystemWindows="true">
+    android:orientation="vertical"
+    android:background="@drawable/bg_mobile_gradient">
 
-    <!-- Glass Header Bar -->
+    <!-- Solid Header Bar (100% opaque, not transparent) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_toolbar_solid"
         android:elevation="4dp">
 
-        <!-- Back Button in Accent Circle -->
+        <!-- Back Button in Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -38,7 +39,6 @@
                 android:contentDescription="@string/cd_back"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="false"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tc_screen_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
@@ -68,24 +68,29 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Scrollable Content -->
+    <!-- Header Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mobile_glass_stroke" />
+
+    <!-- Scrollable Content strictly below toolbar -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingTop="72dp"
-        android:paddingBottom="32dp"
         android:paddingHorizontal="@dimen/margin_md"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:paddingTop="14dp"
+        android:paddingBottom="32dp">
 
         <LinearLayout
             android:id="@+id/contentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/margin_md" />
+            android:orientation="vertical" />
 
     </androidx.core.widget.NestedScrollView>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

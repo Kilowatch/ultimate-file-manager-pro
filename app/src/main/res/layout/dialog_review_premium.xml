@@ -1,87 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Mobile In-App Review Dialog - Dark glassmorphism with vertical button stack
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="28dp">
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
 
+    <!-- Hero Star Icon Badge -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_star"
+            app:tint="#FFD700"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Title -->
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hey_got_a_minute"
-        android:textColor="@color/ufm_text_primary"
-        android:textSize="24sp"
-        android:fontFamily="sans-serif-medium"
-        android:layout_gravity="center_horizontal"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
         android:textAlignment="center" />
 
+    <!-- 5-Star Visual Accent -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_star"
+            app:tint="#FFD700"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_star"
+            app:tint="#FFD700"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_star"
+            app:tint="#FFD700"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_star"
+            app:tint="#FFD700"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_star"
+            app:tint="#FFD700"
+            android:layout_marginHorizontal="2dp"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+    <!-- Message Body -->
     <TextView
         android:id="@+id/txtMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="@string/youve_been_using_the_app"
-        android:textColor="@color/ufm_text_secondary"
-        android:textSize="14sp"
-        android:lineSpacingExtra="4dp"
-        android:textAlignment="center" />
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:lineSpacingMultiplier="1.3"
+        android:textAlignment="center"
+        android:layout_marginBottom="22dp" />
 
+    <!-- Vertical Button Stack (Stacked below each other) -->
+    <!-- 1. Primary Rate Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRate"
         style="@style/Widget.Material3Expressive.Button"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="28dp"
+        android:layout_height="50dp"
         android:text="@string/rate_the_app"
-        app:cornerRadius="16dp"
-        android:backgroundTint="?attr/colorPrimary"
-        android:textColor="@color/white"
+        android:textColor="#FFFFFFFF"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-bold"
         android:textAllCaps="false"
-        android:textSize="16sp" />
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_star"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="#FFFFFFFF" />
 
+    <!-- 2. Maybe Later Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnMaybeLater"
         style="@style/Widget.Material3Expressive.Button.TonalButton"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="12dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="10dp"
         android:text="@string/maybe_later"
-        app:cornerRadius="16dp"
-        android:textAllCaps="false"
-        android:textSize="15sp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnNoThanks"
-        style="@style/Widget.Material3Expressive.Button.TonalButton"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/no_thanks"
-        android:textColor="@color/ufm_text_primary"
-        android:backgroundTint="#1A000000"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="14sp"
         android:fontFamily="sans-serif-medium"
         android:textAllCaps="false"
-        android:textSize="14sp" />
+        app:backgroundTint="@color/mobile_glass_card"
+        app:cornerRadius="12dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/mobile_glass_stroke" />
+
+    <!-- 3. No Thanks Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnNoThanks"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/no_thanks"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:textAllCaps="false" />
 
     <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="24dp"
-        android:background="?attr/colorSurfaceVariant" />
+        android:layout_marginTop="12dp"
+        android:background="@color/mobile_glass_stroke" />
 
+    <!-- Tip Jar Link Row -->
     <TextView
         android:id="@+id/btnTipLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:padding="8dp"
         android:text="@string/theres_also_a_tiny_coffee"
         android:textColor="@color/tile_tip_jar_accent"
         android:textSize="13sp"
         android:textAlignment="center"
+        android:gravity="center"
         android:fontFamily="sans-serif-medium"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"

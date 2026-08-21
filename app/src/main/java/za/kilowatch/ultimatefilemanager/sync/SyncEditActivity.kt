@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
 import za.kilowatch.ultimatefilemanager.R
@@ -23,7 +22,6 @@ import za.kilowatch.ultimatefilemanager.network.NetworkShareManagerActivity
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
-import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 
 class SyncEditActivity : AppCompatActivity() {
@@ -40,16 +38,18 @@ class SyncEditActivity : AppCompatActivity() {
     private var selectedNetworkShareId: String? = null
     private var selectedIntervalMinutes: Int = 60
     private var selectedRemotePath: String = ""
+    private var selectedScheduleType: String = "interval"
 
     private lateinit var editName: TextInputEditText
-    private lateinit var txtLocalPath: android.widget.TextView
-    private lateinit var txtRemotePath: android.widget.TextView
+    private lateinit var txtLocalPath: TextView
+    private lateinit var txtRemotePath: TextView
     private lateinit var dropdownShare: AutoCompleteTextView
     private lateinit var dropdownInterval: AutoCompleteTextView
     private lateinit var dropdownPeriod: AutoCompleteTextView
     private lateinit var dropdownDayOfWeek: AutoCompleteTextView
     private lateinit var dropdownDayOfMonth: AutoCompleteTextView
-    private lateinit var radioGroupSchedule: RadioGroup
+    private lateinit var chipInterval: MaterialButton
+    private lateinit var chipScheduled: MaterialButton
     private lateinit var layoutIntervalSection: View
     private lateinit var layoutScheduledSection: View
     private lateinit var layoutDayOfWeek: View
@@ -126,7 +126,8 @@ class SyncEditActivity : AppCompatActivity() {
         dropdownPeriod = findViewById(R.id.dropdownPeriod)
         dropdownDayOfWeek = findViewById(R.id.dropdownDayOfWeek)
         dropdownDayOfMonth = findViewById(R.id.dropdownDayOfMonth)
-        radioGroupSchedule = findViewById(R.id.radioGroupSchedule)
+        chipInterval = findViewById(R.id.chipInterval)
+        chipScheduled = findViewById(R.id.chipScheduled)
         layoutIntervalSection = findViewById(R.id.layoutIntervalSection)
         layoutScheduledSection = findViewById(R.id.layoutScheduledSection)
         layoutDayOfWeek = findViewById(R.id.layoutDayOfWeek)
@@ -160,22 +161,13 @@ class SyncEditActivity : AppCompatActivity() {
             remoteFolderLauncher.launch(intent)
         }
 
-        // ── Schedule radio group ─────────────────────────────────────────────
-        radioGroupSchedule.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.radioInterval -> {
-                    layoutIntervalSection.visibility = View.VISIBLE
-                    layoutScheduledSection.visibility = View.GONE
-                }
-                R.id.radioScheduled -> {
-                    layoutIntervalSection.visibility = View.GONE
-                    layoutScheduledSection.visibility = View.VISIBLE
-                }
-            }
-        }
+        // ── Schedule chips ───────────────────────────────────────────────────
+        chipInterval.setOnClickListener { selectSchedule("interval") }
+        chipScheduled.setOnClickListener { selectSchedule("scheduled") }
+        selectSchedule("interval")
 
         // ── Period dropdown ──────────────────────────────────────────────────
-        val periodAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, periods)
+        val periodAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, periods)
         dropdownPeriod.setAdapter(periodAdapter)
         dropdownPeriod.setText(periods[0], false)
         dropdownPeriod.setOnItemClickListener { _, _, position, _ ->
@@ -185,7 +177,7 @@ class SyncEditActivity : AppCompatActivity() {
         }
 
         // ── Day of week dropdown ─────────────────────────────────────────────
-        val dowAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, daysOfWeek)
+        val dowAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, daysOfWeek)
         dropdownDayOfWeek.setAdapter(dowAdapter)
         dropdownDayOfWeek.setText(daysOfWeek[0], false)
         dropdownDayOfWeek.setOnItemClickListener { _, _, position, _ ->
@@ -193,7 +185,7 @@ class SyncEditActivity : AppCompatActivity() {
         }
 
         // ── Day of month dropdown ────────────────────────────────────────────
-        val domAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, daysOfMonth)
+        val domAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, daysOfMonth)
         dropdownDayOfMonth.setAdapter(domAdapter)
         dropdownDayOfMonth.setText(daysOfMonth[0], false)
         dropdownDayOfMonth.setOnItemClickListener { _, _, position, _ ->
@@ -202,7 +194,7 @@ class SyncEditActivity : AppCompatActivity() {
 
         // ── Save / Delete buttons ────────────────────────────────────────────
         findViewById<MaterialButton>(R.id.btnSave).setOnClickListener { saveProfile() }
-        btnDelete.setOnClickListener { deleteProfile() }
+        btnDelete.setOnClickListener { showDeleteConfirmDialog() }
 
         setupShareDropdown()
         setupIntervalDropdown()
@@ -211,12 +203,24 @@ class SyncEditActivity : AppCompatActivity() {
         if (profileId != null) {
             loadProfile(profileId!!)
         } else {
-            // Check if there are any network shares; if not, show the premium setup dialog
+            // Check if there are any network shares; if not, show the setup dialog
             val shares = netRepo.getAll()
             if (shares.isEmpty()) {
                 showNoShareDialog()
             }
         }
+    }
+
+    private fun selectSchedule(type: String) {
+        selectedScheduleType = type
+        val isInterval = type == "interval"
+        chipInterval.isCheckable = true
+        chipInterval.isChecked = isInterval
+        chipScheduled.isCheckable = true
+        chipScheduled.isChecked = !isInterval
+
+        layoutIntervalSection.visibility = if (isInterval) View.VISIBLE else View.GONE
+        layoutScheduledSection.visibility = if (isInterval) View.GONE else View.VISIBLE
     }
 
     // ─────────────────────────────────────────────────────────────────────
@@ -226,7 +230,7 @@ class SyncEditActivity : AppCompatActivity() {
     private fun setupShareDropdown() {
         networkShares = netRepo.getAll()
         val shareNames = networkShares.map { it.name.ifEmpty { it.host } }
-        val shareAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, shareNames)
+        val shareAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, shareNames)
         dropdownShare.setAdapter(shareAdapter)
         dropdownShare.setOnItemClickListener { _, _, position, _ ->
             selectedNetworkShareId = networkShares[position].id
@@ -237,9 +241,13 @@ class SyncEditActivity : AppCompatActivity() {
     }
 
     private fun setupIntervalDropdown() {
-        val intervals = listOf(getString(R.string.q15_minutes), getString(R.string.q30_minutes), getString(R.string.q1_hour), getString(R.string.q6_hours), getString(R.string.q12_hours), getString(R.string.q24_hours))
+        val intervals = listOf(
+            getString(R.string.q15_minutes), getString(R.string.q30_minutes),
+            getString(R.string.q1_hour), getString(R.string.q6_hours),
+            getString(R.string.q12_hours), getString(R.string.q24_hours)
+        )
         val intervalValues = listOf(15, 30, 60, 360, 720, 1440)
-        val intervalAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, intervals)
+        val intervalAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, intervals)
         dropdownInterval.setAdapter(intervalAdapter)
         dropdownInterval.setText(intervals[2], false) // Default: 1 hr
         dropdownInterval.setOnItemClickListener { _, _, position, _ ->
@@ -249,26 +257,56 @@ class SyncEditActivity : AppCompatActivity() {
     }
 
     // ─────────────────────────────────────────────────────────────────────
-    //  Premium dialog: no SMB shares configured
+    //  Dialog: no SMB shares configured
     // ─────────────────────────────────────────────────────────────────────
 
     private fun showNoShareDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.network_share_required)
-            .setMessage(
-                "Folder Sync requires an SMB or FTP network share to be set up first.\n\n" +
-                getString(R.string.please_add_a_share_connection_in_network_shares_then_come_back_to_create_a_sync_profile)
-            )
-            .setIcon(R.drawable.ic_network)
-            .setPositiveButton(getString(R.string.set_up_smb_ftp)) { _, _ ->
-                startActivity(Intent(this, NetworkShareManagerActivity::class.java))
-                finish()
-            }
-            .setNegativeButton(R.string.cancel) { _, _ ->
-                finish()
-            }
+        val dialogView = layoutInflater.inflate(R.layout.dialog_sync_no_share, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
             .setCancelable(false)
-            .show()
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.btnSetup).setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, NetworkShareManagerActivity::class.java))
+            finish()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+            finish()
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteConfirmDialog() {
+        val currentName = editName.text.toString().trim().ifEmpty { getString(R.string.sync_now) }
+        val dialogView = layoutInflater.inflate(R.layout.dialog_sync_profile_delete_confirm, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<TextView>(R.id.txtTitle).text =
+            getString(R.string.delete_confirm_single, currentName)
+        dialogView.findViewById<TextView>(R.id.txtMessage).text =
+            getString(R.string.sync_delete_profile_confirm_msg, currentName)
+
+        dialogView.findViewById<View>(R.id.btnDelete).setOnClickListener {
+            dialog.dismiss()
+            deleteProfile()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     // ─────────────────────────────────────────────────────────────────────
@@ -294,9 +332,7 @@ class SyncEditActivity : AppCompatActivity() {
 
         // Schedule type
         if (profile.scheduleType == "scheduled") {
-            radioGroupSchedule.check(R.id.radioScheduled)
-            layoutIntervalSection.visibility = View.GONE
-            layoutScheduledSection.visibility = View.VISIBLE
+            selectSchedule("scheduled")
 
             // Period
             val pIndex = periodValues.indexOf(profile.scheduledPeriod).coerceAtLeast(0)
@@ -319,9 +355,13 @@ class SyncEditActivity : AppCompatActivity() {
             timePicker.hour = profile.scheduledHour
             timePicker.minute = profile.scheduledMinute
         } else {
-            radioGroupSchedule.check(R.id.radioInterval)
+            selectSchedule("interval")
             val intervalValues = listOf(15, 30, 60, 360, 720, 1440)
-            val intervals = listOf("15 minutes", "30 minutes", "1 hour", "6 hours", "12 hours", "24 hours")
+            val intervals = listOf(
+                getString(R.string.q15_minutes), getString(R.string.q30_minutes),
+                getString(R.string.q1_hour), getString(R.string.q6_hours),
+                getString(R.string.q12_hours), getString(R.string.q24_hours)
+            )
             val iIndex = intervalValues.indexOf(profile.intervalMinutes).coerceAtLeast(0)
             selectedIntervalMinutes = profile.intervalMinutes
             dropdownInterval.setText(intervals[iIndex], false)
@@ -339,7 +379,7 @@ class SyncEditActivity : AppCompatActivity() {
             return
         }
 
-        val isScheduled = radioGroupSchedule.checkedRadioButtonId == R.id.radioScheduled
+        val isScheduled = selectedScheduleType == "scheduled"
 
         val profile = SyncProfile(
             id = profileId ?: java.util.UUID.randomUUID().toString(),

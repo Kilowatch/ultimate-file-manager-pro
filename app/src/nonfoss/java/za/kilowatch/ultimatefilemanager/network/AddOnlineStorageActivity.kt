@@ -267,6 +267,8 @@ class AddOnlineStorageActivity : AppCompatActivity() {
             .setCancelable(false)
             .create()
 
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
         val messageView = dialogView.findViewById<TextView>(R.id.txtGdriveScopeMessage)
         if (!isTv) {
             messageView.movementMethod = LinkMovementMethod.getInstance()

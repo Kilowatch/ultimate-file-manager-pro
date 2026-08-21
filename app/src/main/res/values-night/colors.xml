@@ -73,6 +73,7 @@
     <color name="tv_focus_glow">#4D38BDF8</color>
     <color name="tv_focus_border_strong">#FF38BDF8</color>
     <color name="tv_focus_glow_outer">#8038BDF8</color>
+    <color name="tv_glass_white_05">#0DFFFFFF</color>
     <color name="tv_glass_white_15">#26FFFFFF</color>
     <color name="tv_surface_focused">#3338BDF8</color>
     <color name="tv_button_focused_bg">#FF38BDF8</color>

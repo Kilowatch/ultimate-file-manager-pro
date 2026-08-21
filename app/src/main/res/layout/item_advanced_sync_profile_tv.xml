@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="12dp"
+    android:layout_margin="10dp"
     android:focusable="true"
     android:clickable="true"
     android:background="@drawable/selector_tv_card"
     app:cardBackgroundColor="@color/tv_glass_white_10"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    app:strokeColor="@color/tv_glass_border"
+    app:strokeWidth="1dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,11 +23,13 @@
             android:id="@+id/iconDirection"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="8dp"
+            android:padding="10dp"
             android:src="@drawable/ic_direction_twoway"
+            android:background="@drawable/bg_btn_icon_frosted"
             app:tint="@color/tv_text_primary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:importantForAccessibility="no" />
 
         <TextView
             android:id="@+id/txtName"
@@ -33,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-black"
             android:maxLines="1"
             android:textColor="@color/tv_text_primary"
             android:textSize="20sp"
@@ -48,9 +52,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
-            android:textColor="@color/tv_text_secondary"
+            android:paddingVertical="3dp"
+            android:textColor="@color/tv_accent"
             android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
             app:layout_constraintTop_toBottomOf="@+id/txtName"
             app:layout_constraintStart_toStartOf="@+id/txtName"
             tools:text="Every 1h" />
@@ -59,8 +64,8 @@
             android:id="@+id/txtSource"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:drawablePadding="8dp"
+            android:layout_marginTop="16dp"
+            android:drawablePadding="10dp"
             android:ellipsize="middle"
             android:maxLines="1"
             android:textColor="@color/tv_text_secondary"
@@ -76,8 +81,8 @@
             android:id="@+id/txtDest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="8dp"
+            android:layout_marginTop="6dp"
+            android:drawablePadding="10dp"
             android:ellipsize="middle"
             android:maxLines="1"
             android:textColor="@color/tv_text_secondary"

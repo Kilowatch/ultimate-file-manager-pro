@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    App Storage Usage Row — Mobile
-    Shows app name, total size, and file count.
+    App Storage Usage Row — Language & Grouped Glass Card Standard
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,13 +12,20 @@
     android:gravity="center_vertical"
     android:paddingVertical="4dp">
 
+    <FrameLayout
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginEnd="10dp">
+
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="@dimen/margin_md"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
             android:src="@drawable/ic_apps"
-            app:tint="@color/tv_accent"
+            app:tint="?attr/colorPrimary"
             android:contentDescription="@null" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/txtAppName"
@@ -28,25 +34,26 @@
         android:layout_weight="1"
         android:textColor="@color/mobile_card_text_primary"
         android:textSize="14sp"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="sans-serif-bold"
         tools:text="WhatsApp" />
 
     <TextView
         android:id="@+id/txtAppFileCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_md"
+        android:layout_marginEnd="10dp"
         android:textColor="@color/mobile_card_text_secondary"
         android:textSize="12sp"
+        android:fontFamily="sans-serif-medium"
         tools:text="3,421 files" />
 
     <TextView
         android:id="@+id/txtAppSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/tv_accent"
+        android:textColor="?attr/colorPrimary"
         android:textSize="13sp"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="sans-serif-bold"
         tools:text="2.1 GB" />
 
 </LinearLayout>

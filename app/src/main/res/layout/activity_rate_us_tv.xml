@@ -9,42 +9,44 @@
     android:background="@drawable/bg_tv_gradient"
     tools:context=".settings.RateUsActivity">
 
-    <!-- Header Section -->
+    <!-- TV Header Bar (Solid dark) -->
     <LinearLayout
         android:id="@+id/layerHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="72dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="32dp"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="12dp"
+            android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
-            android:background="@drawable/bg_icon_circle_accent"
+            android:background="@drawable/selector_tv_icon_btn"
             android:focusable="true"
             android:clickable="true"
-            android:nextFocusRight="@+id/btnRateUs"
-            android:nextFocusDown="@+id/btnRateUs"
+            android:contentDescription="@string/cd_back"
             app:tint="@color/tv_text_primary" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="24dp">
+            android:layout_marginStart="@dimen/margin_md">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rate_us_title"
                 android:textColor="@color/tv_text_primary"
-                android:textSize="28sp"
+                android:textSize="22sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
@@ -52,70 +54,150 @@
                 android:layout_height="wrap_content"
                 android:text="@string/rate_us_subtitle"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="18sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="14sp"
+                android:layout_marginTop="2dp" />
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Content Container -->
-    <LinearLayout
-        android:layout_width="500dp"
+    <!-- TV Centered Card Container -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="540dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="24dp"
-        android:background="@drawable/bg_glass_card_dark"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border"
         app:layout_constraintTop_toBottomOf="@id/layerHeader"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginBottom="16dp"
-            android:src="@drawable/ic_star"
-            app:tint="@color/tv_accent" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/rate_us_screen_title"
-            android:textColor="@color/tv_text_primary"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="12dp" />
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
 
-        <TextView
-            android:id="@+id/txtRateUsBody"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/rate_us_screen_body"
-            android:textColor="@color/tv_text_secondary"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:lineSpacingMultiplier="1.3"
-            android:layout_marginBottom="24dp" />
+            <!-- Hero Star Icon -->
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_star"
+                app:tint="@color/tv_button_focused_yellow"
+                android:layout_marginBottom="12dp"
+                android:contentDescription="@null" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRateUs"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="240dp"
-            android:layout_height="52dp"
-            android:text="@string/rate_us_button_play"
-            android:textColor="@color/tv_text_primary"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:focusable="true"
-            android:clickable="true"
-            app:backgroundTint="@color/ufm_primary"
-            app:cornerRadius="12dp"
-            app:elevation="0dp"
-            app:icon="@drawable/ic_star"
-            app:iconGravity="textStart"
-            app:iconTint="@color/tv_text_primary" />
+            <!-- Title -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rate_us_screen_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:layout_marginBottom="8dp" />
 
-    </LinearLayout>
+            <!-- 5-Star Visual Accent -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="14dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/tv_button_focused_yellow"
+                    android:layout_marginHorizontal="2dp"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/tv_button_focused_yellow"
+                    android:layout_marginHorizontal="2dp"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/tv_button_focused_yellow"
+                    android:layout_marginHorizontal="2dp"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/tv_button_focused_yellow"
+                    android:layout_marginHorizontal="2dp"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="@color/tv_button_focused_yellow"
+                    android:layout_marginHorizontal="2dp"
+                    android:contentDescription="@null" />
+            </LinearLayout>
+
+            <!-- Body Text -->
+            <TextView
+                android:id="@+id/txtRateUsBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rate_us_screen_body"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.3"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Vertical Button Stack (Stacked cleanly below each other) -->
+            <!-- 1. Primary Rate Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRateUs"
+                style="@style/TvContinueButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/rate_us_button_play"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                android:focusable="true"
+                android:clickable="true"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:icon="@drawable/ic_star"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp" />
+
+            <!-- 2. Supporter / Tip Jar Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTipJar"
+                style="@style/TvContinueButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/rate_us_support_title"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                android:focusable="true"
+                android:clickable="true"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:icon="@drawable/ic_coffee"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Online Storage Manager Activity — TV Standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_tv_gradient">
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".network.OnlineStorageManagerActivity">
 
-    <!-- TV Header -->
+    <!-- TV Header Bar -->
     <LinearLayout
-        android:id="@+id/layerHeader"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="32dp"
+        android:paddingHorizontal="32dp"
+        android:background="@color/tv_glass_white_10"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
             android:background="@drawable/selector_tv_icon_btn"
             android:focusable="true"
-            android:focusableInTouchMode="false"
             android:clickable="true"
+            android:contentDescription="@string/cd_back"
             app:tint="@color/tv_text_primary" />
 
         <LinearLayout
@@ -35,84 +42,160 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="24dp">
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="16dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/online_storages_title"
                 android:textColor="@color/tv_text_primary"
-                android:textSize="28sp"
+                android:textSize="22sp"
                 android:fontFamily="sans-serif-black" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/online_storages_subtitle"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="18sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/btnAddStorage"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:padding="14dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
             android:src="@drawable/ic_add"
             android:background="@drawable/selector_tv_icon_btn"
             android:focusable="true"
-            android:focusableInTouchMode="false"
             android:clickable="true"
-            android:nextFocusDown="@+id/rvStorages"
-            app:tint="@color/tv_text_primary" />
+            android:contentDescription="@string/add_online_storage_title"
+            app:tint="@color/tv_accent" />
     </LinearLayout>
 
-    <!-- Empty state -->
-    <LinearLayout
-        android:id="@+id/emptyState"
+    <!-- TV Scroll Container -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="60dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/layerHeader"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="24dp"
-            android:src="@drawable/ic_cloud"
-            android:alpha="0.4"
-            app:tint="@color/tv_text_secondary" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/online_storages_empty_title"
-            android:textColor="@color/tv_text_secondary"
-            android:textSize="22sp"
-            android:gravity="center"
-            android:fontFamily="sans-serif-medium" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/online_storages_empty_subtitle"
-            android:textColor="@color/tv_text_secondary"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:alpha="0.7"
-            android:lineSpacingMultiplier="1.4" />
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvStorages"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingHorizontal="32dp"
-        android:paddingBottom="32dp"
         android:clipToPadding="false"
-        android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@id/layerHeader"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="32dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="36dp"
+            android:orientation="vertical">
+
+            <!-- TV Info Guidance Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="14dp">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_cloud"
+                            app:tint="@color/tv_accent"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/txtInfoNotice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/online_storages_info_notice"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="13.5sp"
+                        android:lineSpacingExtra="3dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- TV Accounts List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvStorages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
+                tools:listitem="@layout/item_online_storage_tv" />
+
+            <!-- TV Empty State -->
+            <LinearLayout
+                android:id="@+id/emptyState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingVertical="48dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <FrameLayout
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_cloud"
+                        app:tint="@color/tv_text_secondary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/online_storages_empty_title"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/online_storages_empty_subtitle"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp"
+                    android:paddingHorizontal="24dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

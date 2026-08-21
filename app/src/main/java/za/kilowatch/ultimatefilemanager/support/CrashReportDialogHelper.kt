@@ -99,9 +99,9 @@ object CrashReportDialogHelper {
             .setCancelable(false)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(
-            if (isTv) R.drawable.bg_dialog_glass else R.drawable.bg_dialog_surface
-        )
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(
+            android.graphics.Color.TRANSPARENT
+        ))
 
         // Bind title and message based on crash vs ANR
         val titleRes = if (reportType == "anr") R.string.crash_report_anr_title else R.string.crash_report_crash_title

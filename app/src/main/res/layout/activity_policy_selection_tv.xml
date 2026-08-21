@@ -6,33 +6,31 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_tv_premium_dark"
+    android:background="@drawable/bg_tv_gradient"
     tools:context=".ui.policy.PolicySelectionActivity">
 
-    <!-- Premium TV Header -->
+    <!-- Premium TV Header (Solid dark background) -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="72dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/tv_safe_horizontal"
-        android:background="#26000000"
+        android:background="@color/tv_glass_white_10"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:padding="12dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
             android:contentDescription="@string/cd_back"
             android:clickable="true"
             android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:tint="@color/tv_text_primary"
             android:background="@drawable/selector_tv_icon_btn" />
 
         <LinearLayout
@@ -40,171 +38,275 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginHorizontal="24dp">
+            android:layout_marginHorizontal="@dimen/margin_md">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/legal_amp_policy"
+                android:text="@string/policy_selection_title"
                 android:textColor="@color/tv_text_primary"
-                android:textSize="28sp"
+                android:textSize="22sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/please_review_the_terms_before"
+                android:text="@string/policy_selection_subtitle2"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Hidden toolbar for compatibility -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- Scrollable TV Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Policy Cards Container -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:paddingHorizontal="96dp"
-        android:paddingVertical="32dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Terms & Conditions Button Component -->
         <LinearLayout
-            android:id="@+id/cardTerms"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:layout_marginBottom="24dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="32dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:background="@drawable/selector_tv_policy_button">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal"
+            android:paddingTop="@dimen/margin_md"
+            android:paddingBottom="48dp">
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_policy"
-                android:layout_marginEnd="24dp"
-                app:tint="@color/selector_tv_policy_icon"
-                android:duplicateParentState="true" />
-
+            <!-- Section 1: Policies & Agreements Header -->
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/terms_amp_conditions"
-                android:textColor="@color/selector_tv_policy_text"
-                android:textSize="24sp"
-                android:fontFamily="sans-serif-medium"
-                android:duplicateParentState="true" />
+                android:text="@string/policy_section_agreements"
+                android:textColor="@color/tv_accent"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="10dp" />
 
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/ic_arrow_back"
-                android:rotation="180"
-                app:tint="@color/selector_tv_policy_icon"
-                android:alpha="0.7"
-                android:duplicateParentState="true" />
-        </LinearLayout>
+            <!-- Terms & Conditions Button Component -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardTerms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
 
-        <!-- Privacy Policy Button Component -->
-        <LinearLayout
-            android:id="@+id/cardPrivacy"
-            android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="32dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:background="@drawable/selector_tv_policy_button">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="14dp">
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_policy"
-                android:layout_marginEnd="24dp"
-                app:tint="@color/selector_tv_policy_icon"
-                android:duplicateParentState="true" />
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/ic_policy"
+                        android:layout_marginEnd="16dp"
+                        app:tint="@color/selector_tv_policy_icon"
+                        android:duplicateParentState="true"
+                        android:contentDescription="@null" />
 
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/terms_amp_conditions"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:duplicateParentState="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tc_screen_title"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp"
+                            android:layout_marginTop="2dp"
+                            android:duplicateParentState="true" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/tv_text_secondary"
+                        android:alpha="0.8"
+                        android:duplicateParentState="true"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Privacy Policy Button Component -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPrivacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="14dp">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/ic_lock"
+                        android:layout_marginEnd="16dp"
+                        app:tint="@color/selector_tv_policy_icon"
+                        android:duplicateParentState="true"
+                        android:contentDescription="@null" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/privacy_policy"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:duplicateParentState="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pp_screen_title"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp"
+                            android:layout_marginTop="2dp"
+                            android:duplicateParentState="true" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/tv_text_secondary"
+                        android:alpha="0.8"
+                        android:duplicateParentState="true"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Section 2: Attributions & Licenses Header -->
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/privacy_policy"
-                android:textColor="@color/selector_tv_policy_text"
-                android:textSize="24sp"
-                android:fontFamily="sans-serif-medium"
-                android:duplicateParentState="true" />
+                android:text="@string/policy_section_attributions"
+                android:textColor="@color/tv_accent"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="10dp" />
 
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/ic_arrow_back"
-                android:rotation="180"
-                app:tint="@color/selector_tv_policy_icon"
-                android:alpha="0.7"
-                android:duplicateParentState="true" />
-        </LinearLayout>
-
-        <!-- Open Source Licenses Button Component -->
-        <LinearLayout
-            android:id="@+id/cardLicenses"
-            android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:layout_marginTop="24dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="32dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:background="@drawable/selector_tv_policy_button">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_policy"
-                android:layout_marginEnd="24dp"
-                app:tint="@color/selector_tv_policy_icon"
-                android:duplicateParentState="true" />
-
-            <TextView
-                android:layout_width="0dp"
+            <!-- Open Source Licenses Button Component -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardLicenses"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/policy_licenses_button"
-                android:textColor="@color/selector_tv_policy_text"
-                android:textSize="24sp"
-                android:fontFamily="sans-serif-medium"
-                android:duplicateParentState="true" />
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
 
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/ic_arrow_back"
-                android:rotation="180"
-                app:tint="@color/selector_tv_policy_icon"
-                android:alpha="0.7"
-                android:duplicateParentState="true" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="14dp">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/ic_policy"
+                        android:layout_marginEnd="16dp"
+                        app:tint="@color/selector_tv_policy_icon"
+                        android:duplicateParentState="true"
+                        android:contentDescription="@null" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/policy_licenses_button"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:duplicateParentState="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/thirdparty_library_attributions"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp"
+                            android:layout_marginTop="2dp"
+                            android:duplicateParentState="true" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/tv_text_secondary"
+                        android:alpha="0.8"
+                        android:duplicateParentState="true"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
-
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

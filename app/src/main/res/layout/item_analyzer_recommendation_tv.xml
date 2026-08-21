@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Cleanup Recommendation Card — TV
+    Cleanup Recommendation Card — TV (Language & Grouped Glass Card Standard)
 -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,9 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="14dp"
+        android:padding="16dp"
         android:duplicateParentState="true">
 
+        <!-- Top Row: Icon + Risk + Savings -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,43 +29,71 @@
             android:gravity="center_vertical"
             android:duplicateParentState="true">
 
-            <ImageView
-                android:id="@+id/imgRecIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_warning_badge"
-                android:contentDescription="@null"
-                android:duplicateParentState="true"
-                app:tint="@color/selector_tv_storage_category_icon_tint" />
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="12dp"
+                android:duplicateParentState="true">
+
+                <ImageView
+                    android:id="@+id/imgRecIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_junk"
+                    app:tint="@color/selector_tv_storage_category_icon_tint"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/txtRecRisk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="3dp"
-                android:background="@drawable/bg_status_dot"
-                android:textSize="10sp"
-                android:fontFamily="sans-serif-medium"
+                android:paddingVertical="4dp"
+                android:background="@drawable/bg_badge_risk_safe"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-bold"
                 android:textAllCaps="true"
                 android:letterSpacing="0.06"
                 android:duplicateParentState="true"
                 tools:text="SAFE"
                 tools:textColor="@color/ufm_risk_safe" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/txtRecSavings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:textColor="@color/selector_tv_storage_category_text_accent"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-bold"
+                android:duplicateParentState="true"
+                tools:text="Save 1.2 GB" />
         </LinearLayout>
 
+        <!-- Title -->
         <TextView
             android:id="@+id/txtRecTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:textColor="@color/selector_tv_storage_category_text_primary"
             android:textSize="17sp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-bold"
             android:duplicateParentState="true"
             tools:text="Clear Cache &amp; Temp Files" />
 
+        <!-- Description -->
         <TextView
             android:id="@+id/txtRecDescription"
             android:layout_width="match_parent"
@@ -72,21 +101,39 @@
             android:layout_marginTop="4dp"
             android:textColor="@color/selector_tv_storage_category_text_secondary"
             android:textSize="14sp"
-            android:maxLines="2"
+            android:lineSpacingExtra="3dp"
+            android:maxLines="3"
             android:ellipsize="end"
             android:duplicateParentState="true"
             tools:text="Found 247 cache/temp files in well-known junk folders." />
 
-        <TextView
-            android:id="@+id/txtRecSavings"
-            android:layout_width="wrap_content"
+        <!-- TV Action Footer -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/selector_tv_storage_category_text_accent"
-            android:textSize="15sp"
-            android:fontFamily="sans-serif-medium"
-            android:duplicateParentState="true"
-            tools:text="Save 1.2 GB" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            android:duplicateParentState="true">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/analyzer_action_review"
+                android:textColor="@color/selector_tv_storage_category_text_accent"
+                android:textSize="13.5sp"
+                android:fontFamily="sans-serif-bold"
+                android:duplicateParentState="true" />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="@color/selector_tv_storage_category_icon_tint"
+                android:duplicateParentState="true"
+                android:importantForAccessibility="no" />
+        </LinearLayout>
 
     </LinearLayout>
 </FrameLayout>

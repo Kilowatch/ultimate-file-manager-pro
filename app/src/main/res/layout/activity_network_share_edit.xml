@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network Share Edit Activity — Language & Grouped Glass Card Standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient">
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".network.NetworkShareEditActivity">
 
-    <!-- Header -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="20dp"
@@ -34,20 +41,23 @@
                 android:focusable="true"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
+
             <TextView
                 android:id="@+id/txtToolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/network_edit_title_add"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,6 +70,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -67,9 +79,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/margin_md">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp">
 
-            <!-- Type selector -->
+            <!-- 1. Protocol Type Selector Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,25 +92,31 @@
                 app:cardElevation="0dp"
                 app:strokeColor="@color/mobile_glass_stroke"
                 app:strokeWidth="1dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/network_field_type"
-                        android:textColor="@color/mobile_card_text_secondary"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="12sp"
-                        android:layout_marginBottom="8dp" />
+                        android:fontFamily="sans-serif-black"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05"
+                        android:layout_marginBottom="10dp" />
+
                     <LinearLayout
                         android:id="@+id/gridType"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="8dp">
+                        android:orientation="vertical">
 
+                        <!-- Row 1: SMB, FTP, SFTP -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -107,11 +126,11 @@
                                 android:id="@+id/chipSmb"
                                 style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="56dp"
                                 android:layout_weight="1"
-                                android:layout_margin="4dp"
+                                android:layout_margin="3dp"
                                 android:text="@string/network_type_smb"
-                                android:textSize="12sp"
+                                android:textSize="12.5sp"
                                 android:maxLines="1"
                                 android:ellipsize="end"
                                 app:icon="@drawable/ic_network"
@@ -133,11 +152,11 @@
                                 android:id="@+id/chipFtp"
                                 style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="56dp"
                                 android:layout_weight="1"
-                                android:layout_margin="4dp"
+                                android:layout_margin="3dp"
                                 android:text="@string/network_type_ftp"
-                                android:textSize="12sp"
+                                android:textSize="12.5sp"
                                 android:maxLines="1"
                                 android:ellipsize="end"
                                 app:icon="@drawable/ic_remote_manage"
@@ -158,11 +177,11 @@
                                 android:id="@+id/chipSftp"
                                 style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="56dp"
                                 android:layout_weight="1"
-                                android:layout_margin="4dp"
+                                android:layout_margin="3dp"
                                 android:text="@string/network_type_sftp"
-                                android:textSize="12sp"
+                                android:textSize="12.5sp"
                                 android:maxLines="1"
                                 android:ellipsize="end"
                                 app:icon="@drawable/ic_lock"
@@ -178,23 +197,24 @@
                                 android:insetBottom="0dp"
                                 android:paddingStart="4dp"
                                 android:paddingEnd="4dp" />
-
                         </LinearLayout>
 
+                        <!-- Row 2: SCP, NFS, DLNA -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
                             android:orientation="horizontal">
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipScp"
                                 style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="56dp"
                                 android:layout_weight="1"
-                                android:layout_margin="4dp"
+                                android:layout_margin="3dp"
                                 android:text="@string/network_type_scp"
-                                android:textSize="12sp"
+                                android:textSize="12.5sp"
                                 android:maxLines="1"
                                 android:ellipsize="end"
                                 app:icon="@drawable/ic_terminal"
@@ -215,11 +235,11 @@
                                 android:id="@+id/chipNfs"
                                 style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="56dp"
                                 android:layout_weight="1"
-                                android:layout_margin="4dp"
+                                android:layout_margin="3dp"
                                 android:text="@string/network_type_nfs"
-                                android:textSize="12sp"
+                                android:textSize="12.5sp"
                                 android:maxLines="1"
                                 android:ellipsize="end"
                                 app:icon="@drawable/ic_nfs"
@@ -236,15 +256,15 @@
                                 android:paddingStart="4dp"
                                 android:paddingEnd="4dp" />
 
-                                <com.google.android.material.button.MaterialButton
+                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipDlna"
                                 style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="56dp"
                                 android:layout_weight="1"
-                                android:layout_margin="4dp"
+                                android:layout_margin="3dp"
                                 android:text="@string/network_type_dlna"
-                                android:textSize="12sp"
+                                android:textSize="12.5sp"
                                 android:maxLines="1"
                                 android:ellipsize="end"
                                 app:icon="@drawable/ic_dlna"
@@ -260,16 +280,12 @@
                                 android:insetBottom="0dp"
                                 android:paddingStart="4dp"
                                 android:paddingEnd="4dp" />
-
                         </LinearLayout>
-
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-
-
-            <!-- Connection fields card -->
+            <!-- 2. Connection Details Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -279,12 +295,25 @@
                 app:cardElevation="0dp"
                 app:strokeColor="@color/mobile_glass_stroke"
                 app:strokeWidth="1dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/network_field_name"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-black"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05"
+                        android:layout_marginBottom="10dp" />
+
+                    <!-- Display Name Field -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
@@ -294,10 +323,13 @@
                         android:textColorHint="@color/mobile_text_primary"
                         app:hintTextColor="@color/mobile_text_primary"
                         app:boxStrokeColor="?attr/colorPrimary">
-                        <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
+
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textColorHint="@color/mobile_text_primary"
                             android:inputType="text"
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -335,24 +367,27 @@
                         android:orientation="vertical"
                         android:layout_marginBottom="12dp"
                         android:visibility="gone">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/network_field_connection_type"
                             android:textColor="@color/mobile_card_text_secondary"
                             android:textSize="12sp"
-                            android:layout_marginBottom="8dp" />
+                            android:layout_marginBottom="6dp" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipSmbShare"
                                 style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
-                                android:layout_margin="4dp"
+                                android:layout_margin="3dp"
                                 android:text="@string/network_conn_type_share"
                                 android:textSize="12sp"
                                 android:maxLines="1"
@@ -369,13 +404,14 @@
                                 android:insetBottom="0dp"
                                 android:paddingStart="4dp"
                                 android:paddingEnd="4dp" />
+
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipSmbServer"
                                 style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
-                                android:layout_margin="4dp"
+                                android:layout_margin="3dp"
                                 android:text="@string/network_conn_type_server"
                                 android:textSize="12sp"
                                 android:maxLines="1"
@@ -402,6 +438,7 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:layout_marginBottom="12dp">
+
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
@@ -411,6 +448,7 @@
                             android:textColorHint="@color/mobile_text_primary"
                             app:hintTextColor="@color/mobile_text_primary"
                             app:boxStrokeColor="?attr/colorPrimary">
+
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etHost"
                                 android:textColor="@color/mobile_text_primary"
@@ -420,28 +458,35 @@
                                 android:inputType="textUri"
                                 android:imeOptions="actionNext" />
                         </com.google.android.material.textfield.TextInputLayout>
+
                         <ImageButton
                             android:id="@+id/btnScanHosts"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
                             android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_icon_circle_accent"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:padding="11dp"
+                            android:scaleType="fitCenter"
                             android:src="@drawable/ic_search"
                             android:contentDescription="@string/smb_cd_scan"
                             android:visibility="visible"
-                            app:tint="@color/mobile_text_primary" />
+                            app:tint="?attr/colorPrimary" />
+
                         <ImageButton
                             android:id="@+id/btnScanNfsHosts"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
                             android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_icon_circle_accent"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:padding="11dp"
+                            android:scaleType="fitCenter"
                             android:src="@drawable/ic_search"
                             android:contentDescription="@string/nfs_scan_btn"
                             android:visibility="gone"
-                            app:tint="@color/mobile_text_primary" />
+                            app:tint="?attr/colorPrimary" />
                     </LinearLayout>
 
+                    <!-- Port field -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layerPort"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -452,14 +497,18 @@
                         android:textColorHint="@color/mobile_text_primary"
                         app:hintTextColor="@color/mobile_text_primary"
                         app:boxStrokeColor="?attr/colorPrimary">
-                        <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
+
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPort"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textColorHint="@color/mobile_text_primary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Host key fingerprint (SSH only) -->
                     <TextView
                         android:id="@+id/txtHostKeyFingerprint"
                         android:layout_width="match_parent"
@@ -474,6 +523,80 @@
                         android:background="?attr/selectableItemBackground"
                         android:text="@string/ssh_host_key_not_verified" />
 
+                    <!-- Remote path field + Browse button -->
+                    <LinearLayout
+                        android:id="@+id/layerPath"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="@string/network_field_path"
+                            android:textColorHint="@color/mobile_text_primary"
+                            app:hintTextColor="@color/mobile_text_primary"
+                            app:boxStrokeColor="?attr/colorPrimary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etPath"
+                                android:textColor="@color/mobile_text_primary"
+                                android:textColorHint="@color/mobile_text_primary"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textUri"
+                                android:imeOptions="actionDone" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <ImageButton
+                            android:id="@+id/btnBrowseShares"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:padding="11dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_folder"
+                            android:contentDescription="@string/smb_cd_browse_shares"
+                            android:visibility="visible"
+                            app:tint="?attr/colorPrimary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 3. Credentials & Authentication Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCredentials"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/mobile_glass_stroke"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/network_section_credentials"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-black"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05"
+                        android:layout_marginBottom="10dp" />
+
+                    <!-- Username Field -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilUsername"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -484,14 +607,18 @@
                         android:textColorHint="@color/mobile_text_primary"
                         app:hintTextColor="@color/mobile_text_primary"
                         app:boxStrokeColor="?attr/colorPrimary">
-                        <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
+
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etUsername"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textColorHint="@color/mobile_text_primary"
                             android:inputType="text"
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Password Field -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilPassword"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -503,13 +630,132 @@
                         android:textColorHint="@color/mobile_text_primary"
                         app:hintTextColor="@color/mobile_text_primary"
                         app:boxStrokeColor="?attr/colorPrimary">
-                        <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
+
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textColorHint="@color/mobile_text_primary"
                             android:inputType="textPassword"
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Domain Field (SMB only) -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDomain"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="@string/network_field_domain"
+                        android:textColorHint="@color/mobile_text_primary"
+                        app:hintTextColor="@color/mobile_text_primary"
+                        app:boxStrokeColor="?attr/colorPrimary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDomain"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textColorHint="@color/mobile_text_primary"
+                            android:inputType="text"
+                            android:imeOptions="actionNext" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- SSH Auth Toggle Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnToggleSshAuth"
+                        style="@style/Widget.Material3Expressive.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/network_btn_show_ssh_auth"
+                        android:textColor="?attr/colorPrimary"
+                        android:visibility="gone" />
+
+                    <!-- SSH Key Configuration Sub-card -->
+                    <LinearLayout
+                        android:id="@+id/cardSshAuth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/network_header_ssh_auth"
+                            android:textColor="@color/mobile_card_text_secondary"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-black"
+                            android:layout_marginBottom="8dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:hint="@string/network_field_private_key"
+                                android:textColorHint="@color/mobile_text_primary"
+                                app:hintTextColor="@color/mobile_text_primary"
+                                app:boxStrokeColor="?attr/colorPrimary">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etPrivateKey"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/mobile_text_primary"
+                                    android:inputType="text"
+                                    android:focusable="false"
+                                    android:clickable="true" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPickKey"
+                                style="@style/Widget.Material3Expressive.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:text="@string/network_btn_pick_key"
+                                android:textColor="?attr/colorPrimary" />
+                        </LinearLayout>
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/cbUseKeychain"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/network_label_use_keychain"
+                            android:textColor="@color/mobile_card_text_primary"
+                            app:buttonTint="?attr/colorPrimary" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 4. Protocol Options & Access Mode Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/mobile_glass_stroke"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <!-- NFS Version Selector (NFS only) -->
                     <LinearLayout
@@ -523,295 +769,227 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginBottom="6dp"
                             android:text="@string/nfs_version"
-                            android:textColor="@color/mobile_text_primary"
-                            android:textSize="14sp" />
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-black"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05" />
 
-                        <RadioGroup
-                            android:id="@+id/rgNfsVersion"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <RadioButton
-                                android:id="@+id/rbNfsAuto"
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/chipNfsAuto"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
+                                android:layout_margin="3dp"
                                 android:text="@string/nfs_version_auto"
-                                android:textColor="@color/mobile_text_primary" />
+                                android:textSize="12sp"
+                                android:checkable="true"
+                                android:checked="true"
+                                app:backgroundTint="@color/selector_protocol_bg"
+                                app:iconTint="@color/selector_protocol_text"
+                                android:textColor="@color/selector_protocol_text"
+                                android:gravity="center"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/mobile_glass_stroke"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp" />
 
-                            <RadioButton
-                                android:id="@+id/rbNfs3"
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/chipNfs3"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
+                                android:layout_margin="3dp"
                                 android:text="@string/nfs_version_3"
-                                android:textColor="@color/mobile_text_primary" />
+                                android:textSize="12sp"
+                                android:checkable="true"
+                                app:backgroundTint="@color/selector_protocol_bg"
+                                app:iconTint="@color/selector_protocol_text"
+                                android:textColor="@color/selector_protocol_text"
+                                android:gravity="center"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/mobile_glass_stroke"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp" />
 
-                            <RadioButton
-                                android:id="@+id/rbNfs4"
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/chipNfs4"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="48dp"
                                 android:layout_weight="1"
+                                android:layout_margin="3dp"
                                 android:text="@string/nfs_version_4"
-                                android:textColor="@color/mobile_text_primary" />
-                        </RadioGroup>
+                                android:textSize="12sp"
+                                android:checkable="true"
+                                app:backgroundTint="@color/selector_protocol_bg"
+                                app:iconTint="@color/selector_protocol_text"
+                                android:textColor="@color/selector_protocol_text"
+                                android:gravity="center"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/mobile_glass_stroke"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Domain (SMB only) -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilDomain"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <!-- SMB Protocol Version (SMB only) -->
+                    <LinearLayout
+                        android:id="@+id/cardSmbProtocol"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:hint="@string/network_field_domain"
-                        android:textColorHint="@color/mobile_text_primary"
-                        app:hintTextColor="@color/mobile_text_primary"
-                        app:boxStrokeColor="?attr/colorPrimary">
-                        <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
-                            android:id="@+id/etDomain"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="text"
-                            android:imeOptions="actionNext" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:orientation="vertical">
 
-                    <!-- Remote path field + Browse button -->
-                    <LinearLayout
-                        android:id="@+id/layerPath"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="@string/network_field_path"
-                            android:textColorHint="@color/mobile_text_primary"
-                            app:hintTextColor="@color/mobile_text_primary"
-                            app:boxStrokeColor="?attr/colorPrimary">
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etPath"
-                                android:textColor="@color/mobile_text_primary"
-                                android:textColorHint="@color/mobile_text_primary"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="textUri"
-                                android:imeOptions="actionDone" />
-                        </com.google.android.material.textfield.TextInputLayout>
-                        <ImageButton
-                            android:id="@+id/btnBrowseShares"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_icon_circle_accent"
-                            android:src="@drawable/ic_folder"
-                            android:contentDescription="@string/smb_cd_browse_shares"
-                            android:visibility="visible"
-                            app:tint="@color/mobile_text_primary" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- SSH Auth Toggle -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnToggleSshAuth"
-                style="@style/Widget.Material3Expressive.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/network_btn_show_ssh_auth"
-                android:textColor="?attr/colorPrimary"
-                android:visibility="gone" />
-
-            <!-- SSH Authentication card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardSshAuth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:strokeWidth="1dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/network_header_ssh_auth"
-                        android:textColor="@color/mobile_card_text_secondary"
-                        android:textSize="12sp"
-                        android:fontFamily="sans-serif-black"
-                        android:layout_marginBottom="12dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="@string/network_field_private_key"
-                            android:textColorHint="@color/mobile_text_primary"
-                            app:hintTextColor="@color/mobile_text_primary"
-                            app:boxStrokeColor="?attr/colorPrimary">
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etPrivateKey"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/mobile_text_primary"
-                                android:inputType="text"
-                                android:focusable="false"
-                                android:clickable="true" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnPickKey"
-                            style="@style/Widget.Material3Expressive.Button.TextButton"
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/network_btn_pick_key"
-                            android:textColor="?attr/colorPrimary" />
+                            android:text="@string/network_field_smb_protocol"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-black"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05"
+                            android:layout_marginBottom="6dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/chipSmbAuto"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:layout_marginBottom="6dp"
+                                android:text="@string/network_smb_protocol_auto"
+                                android:textSize="12.5sp"
+                                android:checkable="true"
+                                android:checked="true"
+                                app:backgroundTint="@color/selector_protocol_bg"
+                                app:iconTint="@color/selector_protocol_text"
+                                android:textColor="@color/selector_protocol_text"
+                                android:gravity="center"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/mobile_glass_stroke"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/chipSmb2"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:layout_marginBottom="6dp"
+                                android:text="@string/network_smb_protocol_smb2"
+                                android:textSize="12.5sp"
+                                android:checkable="true"
+                                app:backgroundTint="@color/selector_protocol_bg"
+                                app:iconTint="@color/selector_protocol_text"
+                                android:textColor="@color/selector_protocol_text"
+                                android:gravity="center"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/mobile_glass_stroke"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/chipSmb3"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:text="@string/network_smb_protocol_smb3"
+                                android:textSize="12.5sp"
+                                android:checkable="true"
+                                app:backgroundTint="@color/selector_protocol_bg"
+                                app:iconTint="@color/selector_protocol_text"
+                                android:textColor="@color/selector_protocol_text"
+                                android:gravity="center"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/mobile_glass_stroke"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <com.google.android.material.checkbox.MaterialCheckBox
-                        android:id="@+id/cbUseKeychain"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/network_label_use_keychain"
-                        android:textColor="@color/mobile_card_text_primary"
-                        app:buttonTint="?attr/colorPrimary" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- SMB Protocol Version card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardSmbProtocol"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:strokeWidth="1dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/network_field_smb_protocol"
-                        android:textColor="@color/mobile_card_text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="8dp" />
-                    <RadioGroup
-                        android:id="@+id/rgSmbProtocol"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <RadioButton
-                            android:id="@+id/rbSmbAuto"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/network_smb_protocol_auto"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:checked="true" />
-                        <RadioButton
-                            android:id="@+id/rbSmb2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/network_smb_protocol_smb2"
-                            android:textColor="@color/mobile_card_text_primary" />
-                        <RadioButton
-                            android:id="@+id/rbSmb3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/network_smb_protocol_smb3"
-                            android:textColor="@color/mobile_card_text_primary" />
-                    </RadioGroup>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Access Mode card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:strokeWidth="1dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    <!-- Access Mode Section -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/network_field_access"
-                        android:textColor="@color/mobile_card_text_secondary"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="12sp"
-                        android:layout_marginBottom="8dp" />
-                    <RadioGroup
-                        android:id="@+id/rgAccess"
+                        android:fontFamily="sans-serif-black"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.05"
+                        android:layout_marginBottom="6dp" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <RadioButton
-                            android:id="@+id/rbReadOnly"
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/chipReadOnly"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="48dp"
+                            android:layout_marginBottom="6dp"
                             android:text="@string/network_access_readonly"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:checked="true" />
-                        <RadioButton
-                            android:id="@+id/rbReadWrite"
+                            android:textSize="12.5sp"
+                            android:checkable="true"
+                            android:checked="true"
+                            app:backgroundTint="@color/selector_protocol_bg"
+                            app:iconTint="@color/selector_protocol_text"
+                            android:textColor="@color/selector_protocol_text"
+                            android:gravity="center"
+                            app:cornerRadius="12dp"
+                            app:strokeColor="@color/mobile_glass_stroke"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/chipReadWrite"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
+                            android:layout_height="48dp"
                             android:text="@string/network_access_readwrite"
-                            android:textColor="@color/mobile_card_text_primary" />
-                    </RadioGroup>
+                            android:textSize="12.5sp"
+                            android:checkable="true"
+                            app:backgroundTint="@color/selector_protocol_bg"
+                            app:iconTint="@color/selector_protocol_text"
+                            android:textColor="@color/selector_protocol_text"
+                            android:gravity="center"
+                            app:cornerRadius="12dp"
+                            app:strokeColor="@color/mobile_glass_stroke"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Test Connection result -->
+            <!-- Test Connection Result Card -->
             <TextView
                 android:id="@+id/txtTestResult"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:padding="12dp"
+                android:padding="14dp"
                 android:textSize="13sp"
                 android:gravity="center"
                 android:visibility="gone"
-                android:background="@drawable/bg_glass_card_dark" />
+                android:background="@drawable/bg_glass_card" />
 
             <!-- NFS Debug Log (shown on NFS errors) -->
             <LinearLayout
@@ -822,7 +1000,7 @@
                 android:orientation="vertical"
                 android:padding="12dp"
                 android:visibility="gone"
-                android:background="@drawable/bg_glass_card_dark">
+                android:background="@drawable/bg_glass_card">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -854,29 +1032,39 @@
                     android:textColor="?attr/colorPrimary" />
             </LinearLayout>
 
-            <!-- Test Connection -->
+            <!-- Test Connection Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTest"
                 style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="50dp"
                 android:layout_marginBottom="10dp"
                 android:text="@string/network_btn_test"
-                android:textSize="15sp" />
+                android:textColor="?attr/colorPrimary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
+                app:cornerRadius="12dp"
+                app:strokeColor="@color/mobile_glass_stroke"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
 
-            <!-- Save -->
+            <!-- Save Share Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 style="@style/Widget.Material3Expressive.Button"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="50dp"
                 android:layout_marginBottom="24dp"
                 android:text="@string/network_btn_save"
                 android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
                 android:textColor="@color/btn_save_text_color"
                 app:backgroundTint="@color/btn_save_bg_tint"
                 app:cornerRadius="12dp"
-                app:elevation="0dp" />
+                app:elevation="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,9 @@ package za.kilowatch.ultimatefilemanager.ui.policy
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -9,13 +12,17 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.json.JSONArray
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
  * Open Source Licenses screen.
@@ -51,7 +58,7 @@ class LicensesActivity : AppCompatActivity() {
         // ── Root layout ──────────────────────────────────────────────────────
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundResource(R.drawable.bg_mobile_gradient)
+            setBackgroundResource(if (isTv) R.drawable.bg_tv_premium_dark else R.drawable.bg_mobile_gradient)
             id = R.id.main
         }
 
@@ -59,10 +66,11 @@ class LicensesActivity : AppCompatActivity() {
         val header = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = android.view.Gravity.CENTER_VERTICAL
-            val pad = (16 * resources.displayMetrics.density).toInt()
-            setPadding(pad, pad, pad, pad)
+            val padH = (if (isTv) 27 else 16 * resources.displayMetrics.density).toInt()
+            val padV = (14 * resources.displayMetrics.density).toInt()
+            setPadding(padH, padV, padH, padV)
             setBackgroundColor(getColor(if (isTv) R.color.tv_glass_white_10 else R.color.mobile_glass_header))
-            minimumHeight = (if (isTv) 80 else 72).let { (it * resources.displayMetrics.density).toInt() }
+            minimumHeight = ((if (isTv) 80 else 72) * resources.displayMetrics.density).toInt()
         }
 
         val btnBack = ImageView(this).apply {
@@ -70,27 +78,16 @@ class LicensesActivity : AppCompatActivity() {
             contentDescription = getString(R.string.cd_back)
             val sizeDp = if (isTv) 52 else 44
             val size = (sizeDp * resources.displayMetrics.density).toInt()
+            val p = ((if (isTv) 12 else 11) * resources.displayMetrics.density).toInt()
+            setPadding(p, p, p, p)
             layoutParams = LinearLayout.LayoutParams(size, size)
             isFocusable = true
+            isClickable = true
             if (isTv) {
-                // Set a rounded background drawable so the yellow tint is visible on focus
-                val bg = android.graphics.drawable.GradientDrawable().apply {
-                    shape = android.graphics.drawable.GradientDrawable.OVAL
-                    setColor(android.graphics.Color.TRANSPARENT)
-                }
-                background = bg
+                background = ContextCompat.getDrawable(this@LicensesActivity, R.drawable.selector_tv_icon_btn)
                 imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-                setOnFocusChangeListener { _, hasFocus ->
-                    bg.setColor(
-                        if (hasFocus) getColor(R.color.tv_button_focused_yellow)
-                        else android.graphics.Color.TRANSPARENT
-                    )
-                    imageTintList = android.content.res.ColorStateList.valueOf(
-                        if (hasFocus) getColor(R.color.tv_button_focused_yellow_text)
-                        else getColor(R.color.tv_text_primary)
-                    )
-                }
             } else {
+                background = ContextCompat.getDrawable(this@LicensesActivity, R.drawable.bg_btn_icon_frosted)
                 imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.mobile_icon_tint))
             }
             setOnClickListener { finish() }
@@ -99,7 +96,7 @@ class LicensesActivity : AppCompatActivity() {
         val titleText = TextView(this).apply {
             text = getString(R.string.policy_licenses_button)
             setTextColor(getColor(if (isTv) R.color.tv_text_primary else R.color.mobile_text_primary))
-            textSize = if (isTv) 22f else 20f
+            textSize = if (isTv) 24f else 20f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             val margin = (16 * resources.displayMetrics.density).toInt()
             layoutParams = LinearLayout.LayoutParams(
@@ -117,12 +114,14 @@ class LicensesActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
+            clipToPadding = false
         }
 
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            val pad = (16 * resources.displayMetrics.density).toInt()
-            setPadding(pad, pad, pad, (pad * 3))
+            val padH = (if (isTv) 27 else 16 * resources.displayMetrics.density).toInt()
+            val padV = (16 * resources.displayMetrics.density).toInt()
+            setPadding(padH, padV, padH, (padV * 3))
         }
 
         // ── Load license data ─────────────────────────────────────────────────
@@ -236,87 +235,141 @@ class LicensesActivity : AppCompatActivity() {
 
     // ── View builders ─────────────────────────────────────────────────────────
 
-    private fun makeLibraryCard(lib: LibInfo): android.view.View {
-        // Map SPDX identifiers to their canonical URL
-        val licenseUrl = when {
-            lib.url.isNotBlank() -> lib.url
-            lib.license.contains("Apache-2.0", ignoreCase = true) ->
-                "https://www.apache.org/licenses/LICENSE-2.0"
-            lib.license.contains("LGPL-2.1", ignoreCase = true) ->
-                "https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
-            lib.license.contains("BSD-3", ignoreCase = true) ->
-                "https://opensource.org/licenses/BSD-3-Clause"
-            lib.license.contains("BSD-2", ignoreCase = true) ->
-                "https://opensource.org/licenses/BSD-2-Clause"
-            lib.license.contains("MIT", ignoreCase = true) ->
-                "https://opensource.org/licenses/MIT"
-            lib.license.contains("EPL-2.0", ignoreCase = true) ->
-                "https://www.eclipse.org/legal/epl-2.0/"
-            lib.license.contains("EPL-1.0", ignoreCase = true) ->
-                "https://www.eclipse.org/legal/epl-v10.html"
-            else -> ""
+    private fun sanitizeUrl(rawUrl: String, licenseName: String): String {
+        var u = rawUrl.trim()
+        if (u.startsWith("scm:git:", ignoreCase = true)) {
+            u = u.substring(8).trim()
         }
+        if (u.startsWith("scm:", ignoreCase = true)) {
+            u = u.substring(4).trim()
+        }
+        if (u.startsWith("git://", ignoreCase = true)) {
+            u = "https://" + u.substring(6)
+        }
+        if (u.startsWith("git@", ignoreCase = true)) {
+            u = "https://" + u.substring(4).replace(":", "/")
+        }
+        if (u.endsWith(".git", ignoreCase = true)) {
+            u = u.substring(0, u.length - 4)
+        }
+        if (!u.startsWith("http://", ignoreCase = true) && !u.startsWith("https://", ignoreCase = true)) {
+            u = when {
+                licenseName.contains("Apache-2.0", ignoreCase = true) -> "https://www.apache.org/licenses/LICENSE-2.0"
+                licenseName.contains("LGPL-2.1", ignoreCase = true) -> "https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
+                licenseName.contains("BSD-3", ignoreCase = true) -> "https://opensource.org/licenses/BSD-3-Clause"
+                licenseName.contains("BSD-2", ignoreCase = true) -> "https://opensource.org/licenses/BSD-2-Clause"
+                licenseName.contains("MIT", ignoreCase = true) -> "https://opensource.org/licenses/MIT"
+                licenseName.contains("EPL-2.0", ignoreCase = true) -> "https://www.eclipse.org/legal/epl-2.0/"
+                licenseName.contains("EPL-1.0", ignoreCase = true) -> "https://www.eclipse.org/legal/epl-v10.html"
+                else -> ""
+            }
+        }
+        return u
+    }
 
-        val card = com.google.android.material.card.MaterialCardView(this).apply {
+    private fun makeLibraryCard(lib: LibInfo): android.view.View {
+        val cleanUrl = sanitizeUrl(lib.url, lib.license)
+        val isTv2 = DeviceUtils.isTvDevice(this@LicensesActivity)
+
+        val card = MaterialCardView(this).apply {
             val margin = (8 * resources.displayMetrics.density).toInt()
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).also { it.bottomMargin = margin }
-            radius = (12 * resources.displayMetrics.density)
+            radius = (16 * resources.displayMetrics.density)
             cardElevation = 0f
-            val isTv2 = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this@LicensesActivity)
             setCardBackgroundColor(getColor(if (isTv2) R.color.tv_glass_white_10 else R.color.mobile_glass_card))
             strokeWidth = (1 * resources.displayMetrics.density).toInt()
             strokeColor = getColor(if (isTv2) R.color.tv_glass_white_20 else R.color.mobile_glass_stroke)
-            if (licenseUrl.isNotBlank()) {
+            if (cleanUrl.isNotBlank()) {
                 isClickable = true
                 isFocusable = true
-                rippleColor = android.content.res.ColorStateList.valueOf(
+                rippleColor = ColorStateList.valueOf(
                     getColor(if (isTv2) R.color.tv_glass_white_20 else R.color.mobile_glass_ripple)
                 )
+            }
+            if (isTv2) {
+                setOnFocusChangeListener { _, hasFocus ->
+                    strokeColor = getColor(if (hasFocus) R.color.tv_button_focused_yellow else R.color.tv_glass_white_20)
+                    strokeWidth = ((if (hasFocus) 2 else 1) * resources.displayMetrics.density).toInt()
+                }
             }
         }
 
         val inner = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            val pad = (14 * resources.displayMetrics.density).toInt()
+            val pad = (16 * resources.displayMetrics.density).toInt()
             setPadding(pad, pad, pad, pad)
         }
 
-        inner.addView(makeBodyText("${lib.name}${if (lib.version.isNotBlank()) " ${lib.version}" else ""}", isBody = false))
-        inner.addView(makeBodyText(lib.license, isBody = true))
+        // Top Row: Title + License Tag Badge
+        val topRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
 
-        if (licenseUrl.isNotBlank()) {
-            val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
-            // Hint text differs: TV has no browser so we offer a copy-link fallback
-            inner.addView(makeBodyText(
-                if (isTv) getString(R.string.select_to_copy_link) else getString(R.string.tap_to_view_full_license),
-                isBody = true
-            ))
+        val titleTv = TextView(this).apply {
+            text = "${lib.name}${if (lib.version.isNotBlank()) " ${lib.version}" else ""}"
+            textSize = if (isTv2) 16f else 15f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(getColor(if (isTv2) R.color.tv_text_primary else R.color.mobile_card_text_primary))
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        val badge = TextView(this).apply {
+            text = lib.license
+            textSize = 11f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(getColor(if (isTv2) R.color.tv_accent else R.color.ufm_accent_light))
+            val padH = (10 * resources.displayMetrics.density).toInt()
+            val padV = (4 * resources.displayMetrics.density).toInt()
+            setPadding(padH, padV, padH, padV)
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 8 * resources.displayMetrics.density
+                setColor(getColor(if (isTv2) R.color.tv_glass_white_20 else R.color.mobile_glass_card))
+                setStroke((1 * resources.displayMetrics.density).toInt(), getColor(if (isTv2) R.color.tv_glass_white_20 else R.color.mobile_glass_stroke))
+            }
+        }
+
+        topRow.addView(titleTv)
+        topRow.addView(badge)
+        inner.addView(topRow)
+
+        if (cleanUrl.isNotBlank()) {
+            val isTv = DeviceUtils.isTvDevice(this)
+            val hintTv = TextView(this).apply {
+                text = if (isTv) getString(R.string.select_to_copy_link) else getString(R.string.tap_to_view_full_license)
+                textSize = 12f
+                setTextColor(getColor(if (isTv) R.color.tv_text_secondary else R.color.mobile_card_text_secondary))
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).also { it.topMargin = (6 * resources.displayMetrics.density).toInt() }
+            }
+            inner.addView(hintTv)
 
             card.setOnClickListener {
-                // On TV: system stubs may resolve HTTP intents but still show the "no app"
-                // toast when startActivity is called. Skip the browser attempt entirely on TV.
                 if (isTv) {
-                    showCopyLinkDialog(lib.name, licenseUrl)
+                    showModernLicenseDialog(lib.name, lib.version, lib.license, cleanUrl)
                     return@setOnClickListener
                 }
 
-                val viewIntent = android.content.Intent(
-                    android.content.Intent.ACTION_VIEW,
-                    android.net.Uri.parse(licenseUrl)
-                )
-                @Suppress("DEPRECATION")
-                val canOpen = packageManager.resolveActivity(
-                    viewIntent,
-                    android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
-                ) != null
-
-                if (canOpen) {
+                try {
+                    val viewIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        android.net.Uri.parse(cleanUrl)
+                    ).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
                     startActivity(viewIntent)
-                } else {
-                    showCopyLinkDialog(lib.name, licenseUrl)
+                } catch (e: Exception) {
+                    showModernLicenseDialog(lib.name, lib.version, lib.license, cleanUrl)
                 }
             }
         }
@@ -325,44 +378,152 @@ class LicensesActivity : AppCompatActivity() {
         return card
     }
 
-    /** Shows a themed dialog with the licence URL and a Copy button.
-     *  Used on TV (no browser) and on any device where no browser resolves the intent. */
-    private fun showCopyLinkDialog(title: String, url: String) {
-        val bgColor  = try { getColor(R.color.tv_bg_gradient_end) } catch (_: Exception) { 0xFF1A1A2E.toInt() }
-        val white    = try { getColor(R.color.tv_text_primary) } catch (_: Exception) { 0xFFFFFFFF.toInt() }
-        val black    = try { getColor(R.color.tv_button_focused_yellow_text) } catch (_: Exception) { 0xFF000000.toInt() }
-        val yellowCsl = android.content.res.ColorStateList.valueOf(
-            try { getColor(R.color.tv_button_focused_yellow) } catch (_: Exception) { 0xFFFFD600.toInt() }
-        )
-        val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+    /** Shows a modern themed glass dialog with the library details and Copy button. */
+    private fun showModernLicenseDialog(name: String, version: String, license: String, url: String) {
+        val isTv = DeviceUtils.isTvDevice(this)
+        val density = resources.displayMetrics.density
 
-        val dlg = com.google.android.material.dialog.MaterialAlertDialogBuilder(
-            this,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-        )
-            .setTitle(title)
-            .setMessage(getString(R.string.no_browser_installed_dialog_message, url))
-            .setPositiveButton(getString(R.string.copy_link), null)
-            .setNegativeButton(getString(R.string.close), null)
-            .create()
+        val dialogView = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            val pad = (20 * density).toInt()
+            setPadding(pad, pad, pad, pad)
+            background = ContextCompat.getDrawable(this@LicensesActivity, if (isTv) R.drawable.bg_tv_glass_card else R.drawable.bg_dialog_glass)
+        }
 
-        dlg.show()
-        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(bgColor))
-        dlg.findViewById<android.widget.TextView>(
-            com.google.android.material.R.id.alertTitle
-        )?.setTextColor(white)
-        dlg.findViewById<android.widget.TextView>(android.R.id.message)?.setTextColor(white)
-        dlg.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-            backgroundTintList = yellowCsl; setTextColor(black)
+        // Header Icon Badge + Title Container
+        val headerLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
+
+        val iconBadge = android.widget.FrameLayout(this).apply {
+            val size = (44 * density).toInt()
+            layoutParams = LinearLayout.LayoutParams(size, size).apply {
+                marginEnd = (14 * density).toInt()
+            }
+            background = ContextCompat.getDrawable(this@LicensesActivity, R.drawable.bg_btn_icon_frosted)
+            addView(ImageView(this@LicensesActivity).apply {
+                val iconSize = (22 * density).toInt()
+                layoutParams = android.widget.FrameLayout.LayoutParams(iconSize, iconSize, android.view.Gravity.CENTER)
+                setImageResource(R.drawable.ic_policy)
+                imageTintList = ColorStateList.valueOf(getColor(if (isTv) R.color.tv_button_focused_yellow else R.color.ufm_primary))
+            })
+        }
+
+        val titleContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+
+            addView(TextView(this@LicensesActivity).apply {
+                text = "$name${if (version.isNotBlank()) " $version" else ""}"
+                setTextColor(getColor(if (isTv) R.color.tv_text_primary else R.color.mobile_text_primary))
+                textSize = if (isTv) 18f else 16f
+                typeface = Typeface.DEFAULT_BOLD
+            })
+
+            addView(TextView(this@LicensesActivity).apply {
+                text = license
+                setTextColor(getColor(if (isTv) R.color.tv_accent else R.color.ufm_accent_light))
+                textSize = 12f
+                typeface = Typeface.DEFAULT_BOLD
+                setPadding(0, (2 * density).toInt(), 0, 0)
+            })
+        }
+
+        headerLayout.addView(iconBadge)
+        headerLayout.addView(titleContainer)
+        dialogView.addView(headerLayout)
+
+        // URL section label
+        dialogView.addView(TextView(this).apply {
+            text = "License & Repository URL:"
+            setTextColor(getColor(if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
+            textSize = 12f
+            setPadding(0, (16 * density).toInt(), 0, (6 * density).toInt())
+        })
+
+        // Sleek URL Box Card
+        val urlCard = MaterialCardView(this).apply {
+            radius = 12 * density
+            cardElevation = 0f
+            setCardBackgroundColor(getColor(if (isTv) R.color.tv_glass_white_10 else R.color.mobile_glass_card))
+            strokeWidth = (1 * density).toInt()
+            strokeColor = getColor(if (isTv) R.color.tv_glass_border else R.color.mobile_glass_stroke)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                bottomMargin = (20 * density).toInt()
+            }
+        }
+
+        val urlText = TextView(this).apply {
+            text = url
+            setTextIsSelectable(true)
+            textSize = 13f
+            setTextColor(getColor(if (isTv) R.color.tv_text_primary else R.color.mobile_text_primary))
+            val p = (12 * density).toInt()
+            setPadding(p, p, p, p)
+        }
+        urlCard.addView(urlText)
+        dialogView.addView(urlCard)
+
+        // Action Buttons: Copy Link + Close
+        val buttonRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.END
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        }
+
+        var alertDialog: androidx.appcompat.app.AlertDialog? = null
+
+        val btnClose = com.google.android.material.button.MaterialButton(
+            this, null, android.R.attr.borderlessButtonStyle
+        ).apply {
+            text = getString(R.string.close)
+            setTextColor(getColor(if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
+            textSize = 14f
+            isAllCaps = false
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, (44 * density).toInt()).apply {
+                marginEnd = (8 * density).toInt()
+            }
+            setOnClickListener { alertDialog?.dismiss() }
+        }
+
+        val btnCopy = com.google.android.material.button.MaterialButton(this).apply {
+            text = getString(R.string.copy_link)
+            textSize = 14f
+            isAllCaps = false
+            cornerRadius = (12 * density).toInt()
+            if (isTv) {
+                backgroundTintList = ColorStateList.valueOf(getColor(R.color.tv_glass_white_20))
+                setTextColor(getColor(R.color.tv_text_primary))
+                isFocusable = true
+                setOnFocusChangeListener { _, hasFocus ->
+                    backgroundTintList = ColorStateList.valueOf(getColor(if (hasFocus) R.color.tv_button_focused_yellow else R.color.tv_glass_white_20))
+                    setTextColor(getColor(if (hasFocus) R.color.tv_button_focused_yellow_text else R.color.tv_text_primary))
+                }
+            } else {
+                backgroundTintList = ColorStateList.valueOf(getColor(R.color.ufm_primary))
+                setTextColor(getColor(R.color.white))
+            }
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, (44 * density).toInt())
             setOnClickListener {
                 val cm = getSystemService(android.content.ClipboardManager::class.java)
                 cm.setPrimaryClip(android.content.ClipData.newPlainText(getString(R.string.license_url), url))
-                dlg.dismiss()
+                android.widget.Toast.makeText(this@LicensesActivity, "Link copied to clipboard", android.widget.Toast.LENGTH_SHORT).show()
+                alertDialog?.dismiss()
             }
         }
-        dlg.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-            backgroundTintList = glassCsl; setTextColor(white)
-        }
+
+        buttonRow.addView(btnClose)
+        buttonRow.addView(btnCopy)
+        dialogView.addView(buttonRow)
+
+        alertDialog = MaterialAlertDialogBuilder(this)
+            .setView(dialogView)
+            .create()
+
+        alertDialog.show()
+        alertDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun makeBodyText(text: String, isBody: Boolean) = TextView(this).apply {
@@ -374,7 +535,7 @@ class LicensesActivity : AppCompatActivity() {
             isBody                -> R.color.mobile_card_text_secondary
             else                  -> R.color.mobile_card_text_primary
         }))
-        if (!isBody) typeface = android.graphics.Typeface.DEFAULT_BOLD
+        if (!isBody) typeface = Typeface.DEFAULT_BOLD
         layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT

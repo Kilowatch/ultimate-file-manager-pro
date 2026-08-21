@@ -226,6 +226,8 @@ class GoogleDriveAuthActivity : AppCompatActivity() {
             .setView(dialogView)
             .create()
 
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
         dialogView.findViewById<TextView>(R.id.txtPolicyDetails)?.text = message
         dialogView.findViewById<View>(R.id.btnPolicyOk).setOnClickListener {
             dialog.dismiss()

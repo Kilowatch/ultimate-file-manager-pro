@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RadioButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -35,7 +34,7 @@ class LanguageActivity : AppCompatActivity() {
 
     private var isTv = false
     private lateinit var contentLayout: LinearLayout
-    private val optionViews = mutableListOf<Pair<String, RadioButton>>()
+    private val optionViews = mutableListOf<Pair<String, View>>()
     private val tvCards = mutableListOf<MaterialCardView>()
 
     private data class LanguageItem(
@@ -186,11 +185,11 @@ class LanguageActivity : AppCompatActivity() {
         val imgIcon = row.findViewById<ImageView>(R.id.imgIcon)
         val txtTitle = row.findViewById<TextView>(R.id.txtTitle)
         val txtSubtitle = row.findViewById<TextView>(R.id.txtSubtitle)
-        val rbSelect = row.findViewById<RadioButton>(R.id.rbSelect)
+        val checkContainer = row.findViewById<View>(R.id.checkContainer)
 
         txtTitle.setText(item.titleRes)
         txtSubtitle.text = item.nativeSubtitle
-        rbSelect.isChecked = (item.code == currentLocale)
+        checkContainer.visibility = if (item.code == currentLocale) View.VISIBLE else View.GONE
 
         if (item.flagAsset != null) {
             imgFlag.visibility = View.VISIBLE
@@ -208,7 +207,7 @@ class LanguageActivity : AppCompatActivity() {
 
         row.tag = item.code
         row.setOnClickListener { selectLanguage(item.code) }
-        optionViews.add(Pair(item.code, rbSelect))
+        optionViews.add(Pair(item.code, checkContainer))
     }
 
     private fun createSectionHeader(titleRes: Int): TextView {
@@ -274,11 +273,11 @@ class LanguageActivity : AppCompatActivity() {
             val imgIcon = card.findViewById<ImageView>(R.id.imgIcon)
             val txtLabel = card.findViewById<TextView>(R.id.txtLabel)
             val txtSubtitle = card.findViewById<TextView>(R.id.txtSubtitle)
-            val rbSelect = card.findViewById<RadioButton>(R.id.rbSelect)
+            val checkContainer = card.findViewById<View>(R.id.checkContainer)
 
             txtLabel.setText(item.titleRes)
             txtSubtitle.text = item.nativeSubtitle
-            rbSelect.isChecked = (item.code == currentLocale)
+            checkContainer.visibility = if (item.code == currentLocale) View.VISIBLE else View.GONE
 
             if (item.flagAsset != null) {
                 imgFlag.visibility = View.VISIBLE
@@ -299,7 +298,7 @@ class LanguageActivity : AppCompatActivity() {
             card.tag = item.code
             card.setOnClickListener { selectLanguage(item.code) }
             tvCards.add(card)
-            optionViews.add(Pair(item.code, rbSelect))
+            optionViews.add(Pair(item.code, checkContainer))
             contentLayout.addView(card)
         }
     }
@@ -322,8 +321,8 @@ class LanguageActivity : AppCompatActivity() {
     }
 
     private fun updateSelection(locale: String) {
-        for ((code, rb) in optionViews) {
-            rb.isChecked = (code == locale)
+        for ((code, check) in optionViews) {
+            check.visibility = if (code == locale) View.VISIBLE else View.GONE
         }
 
         if (isTv) {
@@ -333,13 +332,7 @@ class LanguageActivity : AppCompatActivity() {
             for (card in tvCards) {
                 val code = card.tag as String
                 val isSelected = (code == locale)
-                val rb = card.findViewById<RadioButton>(R.id.rbSelect)
-                rb.isChecked = isSelected
-
                 card.strokeColor = if (isSelected) activeColor else inactiveColor
-                if (!card.hasFocus()) {
-                    rb.buttonTintList = ColorStateList.valueOf(if (isSelected) activeColor else getColor(R.color.tv_text_secondary))
-                }
             }
         }
     }
@@ -352,19 +345,18 @@ class LanguageActivity : AppCompatActivity() {
         val secondaryText = getColor(R.color.tv_text_secondary)
 
         card.setOnFocusChangeListener { _, hasFocus ->
-            val isSelected = (card.tag as String) == LocaleHelper.getSavedLocale(this)
-            val rb = card.findViewById<RadioButton>(R.id.rbSelect)
+            val imgCheck = card.findViewById<ImageView>(R.id.imgCheck)
             val imgIcon = card.findViewById<ImageView>(R.id.imgIcon)
             if (hasFocus) {
                 card.setCardBackgroundColor(yellowFill)
                 setCardTextColors(card, blackText, blackText)
-                rb.buttonTintList = ColorStateList.valueOf(blackText)
-                imgIcon.imageTintList = ColorStateList.valueOf(blackText)
+                imgCheck?.imageTintList = ColorStateList.valueOf(blackText)
+                imgIcon?.imageTintList = ColorStateList.valueOf(blackText)
             } else {
                 card.setCardBackgroundColor(glassColor)
                 setCardTextColors(card, primaryText, secondaryText)
-                rb.buttonTintList = ColorStateList.valueOf(if (isSelected) getColor(R.color.tv_accent) else secondaryText)
-                imgIcon.imageTintList = ColorStateList.valueOf(primaryText)
+                imgCheck?.imageTintList = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                imgIcon?.imageTintList = ColorStateList.valueOf(primaryText)
             }
         }
     }

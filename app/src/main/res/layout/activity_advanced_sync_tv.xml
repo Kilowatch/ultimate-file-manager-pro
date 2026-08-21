@@ -51,6 +51,18 @@
                 android:textSize="16sp"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnAddProfile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_add"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:clickable="true"
+            app:tint="@color/tv_text_primary" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

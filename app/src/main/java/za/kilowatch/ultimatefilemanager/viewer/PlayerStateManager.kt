@@ -115,18 +115,18 @@ object PlayerStateManager {
                 queue.add(
                     QueueItem(
                         path = item.getString("path"),
-                        title = item.optString("title", null),
-                        artist = item.optString("artist", null),
-                        album = item.optString("album", null),
+                        title = item.optString("title").takeIf { it.isNotEmpty() },
+                        artist = item.optString("artist").takeIf { it.isNotEmpty() },
+                        album = item.optString("album").takeIf { it.isNotEmpty() },
                         duration = item.optLong("duration", 0L),
                         isVideo = item.optBoolean("isVideo", false),
                         fileSize = item.optLong("fileSize", 0L),
-                        shareId = item.optString("shareId", null),
-                        shareHost = item.optString("shareHost", null),
-                        shareUsername = item.optString("shareUsername", null),
-                        shareName = item.optString("shareName", null),
-                        provider = item.optString("provider", null),
-                        remotePath = item.optString("remotePath", null)
+                        shareId = item.optString("shareId").takeIf { it.isNotEmpty() },
+                        shareHost = item.optString("shareHost").takeIf { it.isNotEmpty() },
+                        shareUsername = item.optString("shareUsername").takeIf { it.isNotEmpty() },
+                        shareName = item.optString("shareName").takeIf { it.isNotEmpty() },
+                        provider = item.optString("provider").takeIf { it.isNotEmpty() },
+                        remotePath = item.optString("remotePath").takeIf { it.isNotEmpty() }
                     )
                 )
             }

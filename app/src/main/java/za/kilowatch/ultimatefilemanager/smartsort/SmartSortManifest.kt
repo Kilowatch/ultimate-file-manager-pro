@@ -82,12 +82,13 @@ data class SmartSortManifest(
                 val entriesArray = json.getJSONArray("entries")
                 val entries = (0 until entriesArray.length()).map { i ->
                     val entry = entriesArray.getJSONObject(i)
+                    val catKey = if (entry.has("categoryKey") && !entry.isNull("categoryKey")) entry.getString("categoryKey") else null
                     SortManifestEntry(
                         originalPath = entry.getString("originalPath"),
                         newPath = entry.getString("newPath"),
                         fileSize = entry.optLong("fileSize", 0L),
                         timestamp = entry.optLong("timestamp", 0L),
-                        categoryKey = entry.optString("categoryKey", null)
+                        categoryKey = catKey
                     )
                 }
                 val customPaths = mutableMapOf<String, String>()
@@ -107,13 +108,14 @@ data class SmartSortManifest(
                         }
                     }
                 }
+                val srcShareId = if (json.has("sourceShareId") && !json.isNull("sourceShareId")) json.getString("sourceShareId") else null
                 SmartSortManifest(
                     sourcePath = json.getString("sourcePath"),
                     entries = entries,
                     createdAt = json.getLong("createdAt"),
                     customCategoryPaths = customPaths,
                     customCategoryShareIds = customShareIds,
-                    sourceShareId = json.optString("sourceShareId", null)
+                    sourceShareId = srcShareId
                 )
             } catch (e: Exception) {
                 null

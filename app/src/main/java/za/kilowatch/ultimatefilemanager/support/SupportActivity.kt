@@ -155,7 +155,7 @@ class SupportActivity : AppCompatActivity() {
                 )
             }
         }
-        val scrollView = findViewById<ScrollView>(R.id.scrollView)
+        val scrollView = findViewById<View?>(R.id.scrollView)
         val editTexts = listOf(
             findViewById<TextInputEditText>(R.id.edtSubject),
             findViewById<TextInputEditText>(R.id.edtMessage),
@@ -168,7 +168,10 @@ class SupportActivity : AppCompatActivity() {
                 if (hasFocus && scrollView != null) {
                     scrollView.postDelayed({
                         val parentLayout = view.parent?.parent as? View ?: view
-                        scrollView.smoothScrollTo(0, parentLayout.top)
+                        when (scrollView) {
+                            is androidx.core.widget.NestedScrollView -> scrollView.smoothScrollTo(0, parentLayout.top)
+                            is android.widget.ScrollView -> scrollView.smoothScrollTo(0, parentLayout.top)
+                        }
                     }, 200)
                 }
             }
@@ -183,21 +186,30 @@ class SupportActivity : AppCompatActivity() {
         }
 
         if (isTv) {
-            val rememberRow = findViewById<LinearLayout>(R.id.layoutRememberEmail)
-            val txtRemember = findViewById<TextView>(R.id.txtRememberEmail)
-            rememberRow.setOnClickListener { chkRememberEmail.isChecked = !chkRememberEmail.isChecked }
             val yellowCsl = android.content.res.ColorStateList.valueOf(
                 getColor(R.color.tv_button_focused_yellow_text)
             )
             val defaultCsl = android.content.res.ColorStateList.valueOf(
                 getColor(R.color.tv_text_primary)
             )
-            rememberRow.setOnFocusChangeListener { _, hasFocus ->
-                rememberRow.setBackgroundResource(
-                    if (hasFocus) R.drawable.selector_tv_button_yellow
-                    else R.drawable.selector_tv_button
-                )
-                txtRemember.setTextColor(if (hasFocus) yellowCsl else defaultCsl)
+            chkRememberEmail.setOnFocusChangeListener { _, hasFocus ->
+                chkRememberEmail.setTextColor(if (hasFocus) yellowCsl else defaultCsl)
+            }
+        }
+
+        // Direct email card
+        findViewById<View?>(R.id.cardDirectEmail)?.setOnClickListener {
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = android.net.Uri.parse("mailto:support@kilowatch.co.za")
+                putExtra(Intent.EXTRA_SUBJECT, "[UFM Support] Help & Support")
+            }
+            try {
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.support_title)))
+            } catch (e: Exception) {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("Support Email", "support@kilowatch.co.za")
+                clipboard?.setPrimaryClip(clip)
+                Toast.makeText(this, R.string.support_direct_email_copied, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -213,10 +225,6 @@ class SupportActivity : AppCompatActivity() {
             btnBack.imageTintList = whiteCsl
             btnBack.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
-                btnBack.setBackgroundResource(
-                    if (hasFocus) R.drawable.bg_icon_circle_focused
-                    else R.drawable.bg_icon_circle_accent
-                )
             }
         }
     }
@@ -705,6 +713,7 @@ class SupportActivity : AppCompatActivity() {
 
     // ─── Back Navigation ────────────────────────────────────────
 
+    @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
         val formVisible = findViewById<View>(R.id.layoutForm).visibility == View.VISIBLE

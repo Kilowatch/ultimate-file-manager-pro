@@ -72,13 +72,22 @@
                 tools:text="English" />
         </LinearLayout>
 
-        <RadioButton
-            android:id="@+id/rbSelect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/tv_button_focused_yellow"
-            android:clickable="false"
-            android:focusable="false"
-            android:saveEnabled="false" />
+        <!-- Modern Selection Indicator on Right -->
+        <FrameLayout
+            android:id="@+id/checkContainer"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/imgCheck"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_check_circle"
+                app:tint="@color/tv_button_focused_yellow"
+                android:contentDescription="@null" />
+        </FrameLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

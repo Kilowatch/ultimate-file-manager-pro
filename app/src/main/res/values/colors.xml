@@ -77,6 +77,7 @@
     <!-- TV Premium — Light mode (day) palette -->
     <color name="tv_bg_gradient_start">#FFF0F4FF</color>
     <color name="tv_bg_gradient_end">#FFE8F0FE</color>
+    <color name="tv_glass_white_05">#0D000000</color>
     <color name="tv_glass_white_10">#1A000000</color>
     <color name="tv_glass_white_20">#33000000</color>
     <color name="tv_glass_white_30">#4D000000</color>

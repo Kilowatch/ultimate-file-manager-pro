@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="8dp"
+    android:layout_marginVertical="6dp"
     app:cardBackgroundColor="@color/mobile_glass_card"
     app:strokeColor="@color/mobile_glass_stroke"
     app:strokeWidth="1dp"
@@ -17,50 +17,58 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Direction icon -->
-        <ImageView
-            android:id="@+id/iconDirection"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_circle_translucent"
-            android:padding="8dp"
-            android:src="@drawable/ic_direction_twoway"
-            app:tint="?attr/colorPrimary"
+        <!-- Direction Icon in Frosted Squircle -->
+        <FrameLayout
+            android:id="@+id/layoutIcon"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_btn_icon_frosted"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Green dot (active indicator) -->
+            <ImageView
+                android:id="@+id/iconDirection"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_direction_twoway"
+                app:tint="?attr/colorPrimary"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <!-- Green dot (active watcher indicator) -->
         <ImageView
             android:id="@+id/iconActiveDot"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:src="@drawable/ic_active_dot"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/iconDirection"
-            app:layout_constraintTop_toTopOf="@+id/iconDirection" />
+            app:layout_constraintStart_toStartOf="@+id/layoutIcon"
+            app:layout_constraintTop_toTopOf="@+id/layoutIcon" />
 
         <TextView
             android:id="@+id/txtName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="14dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-black"
             android:maxLines="1"
             android:textColor="@color/mobile_card_text_primary"
-            android:textSize="18sp"
+            android:textSize="17sp"
             app:layout_constraintEnd_toStartOf="@+id/btnMenu"
-            app:layout_constraintStart_toEndOf="@+id/iconDirection"
-            app:layout_constraintTop_toTopOf="@+id/iconDirection"
+            app:layout_constraintStart_toEndOf="@+id/layoutIcon"
+            app:layout_constraintTop_toTopOf="@+id/layoutIcon"
             tools:text="DCIM Advanced Sync" />
 
-        <!-- Trigger indicator icons -->
+        <!-- Trigger indicator badges -->
         <LinearLayout
             android:id="@+id/layoutTriggers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/txtName"
             app:layout_constraintStart_toStartOf="@+id/txtName">
@@ -74,6 +82,7 @@
                 android:paddingVertical="2dp"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
                 tools:text="Every 1h" />
 
             <ImageView
@@ -97,23 +106,32 @@
                 android:contentDescription="@string/network_wifi_only" />
         </LinearLayout>
 
-        <ImageView
+        <!-- Frosted Menu Button -->
+        <FrameLayout
             android:id="@+id/btnMenu"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="4dp"
-            android:src="@drawable/ic_more_vert"
-            app:tint="@color/mobile_card_text_secondary"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_more_vert"
+                app:tint="@color/mobile_card_text_secondary"
+                android:contentDescription="@string/options" />
+        </FrameLayout>
 
         <!-- Source / Dest -->
         <LinearLayout
             android:id="@+id/layoutPaths"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toStartOf="@+id/switchEnabled"
             app:layout_constraintStart_toStartOf="parent"
@@ -127,18 +145,18 @@
                 android:ellipsize="middle"
                 android:maxLines="1"
                 android:textColor="@color/mobile_card_text_secondary"
-                android:textSize="14sp"
+                android:textSize="13.5sp"
                 app:drawableStartCompat="@drawable/ic_phone"
-                app:drawableTint="?attr/colorOnSurfaceVariant"
+                app:drawableTint="?attr/colorPrimary"
                 tools:text="Internal Storage/DCIM" />
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:layout_marginStart="4dp"
-                android:layout_marginVertical="2dp"
+                android:layout_marginVertical="3dp"
                 android:src="@drawable/ic_arrow_down"
-                app:tint="?attr/colorOnSurfaceVariant" />
+                app:tint="?attr/colorPrimary" />
 
             <TextView
                 android:id="@+id/txtDest"
@@ -148,9 +166,9 @@
                 android:ellipsize="middle"
                 android:maxLines="1"
                 android:textColor="@color/mobile_card_text_secondary"
-                android:textSize="14sp"
+                android:textSize="13.5sp"
                 app:drawableStartCompat="@drawable/ic_network"
-                app:drawableTint="?attr/colorOnSurfaceVariant"
+                app:drawableTint="?attr/colorPrimary"
                 tools:text="NAS Media / Backups" />
 
         </LinearLayout>
@@ -163,24 +181,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/layoutPaths" />
 
+        <!-- Divider -->
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
             android:background="@color/mobile_glass_stroke"
             app:layout_constraintTop_toBottomOf="@+id/layoutPaths" />
 
+        <!-- Last Sync Info -->
         <TextView
             android:id="@+id/txtLastSync"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
             android:drawablePadding="8dp"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textColor="@color/mobile_text_secondary"
             android:textSize="12sp"
             app:drawableStartCompat="@drawable/ic_time"
-            app:drawableTint="?attr/colorOnSurfaceVariant"
+            app:drawableTint="@color/mobile_text_secondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider"

@@ -1,139 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Overview Tab Fragment Layout — Mobile only
-    Contains: storage bar, total usage text, category list, top folders card, app usage card.
+    Overview Tab Fragment Layout — Language & Grouped Glass Card Standard
 -->
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:focusable="false"
-    android:focusableInTouchMode="false">
+    android:overScrollMode="never">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:descendantFocusability="afterDescendants"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="@dimen/margin_md">
+        android:padding="16dp">
 
-        <!-- Usage summary container, focusable so it can be scrolled fully to top on D-Pad Up -->
-        <LinearLayout
-            android:id="@+id/layoutUsageSummary"
+        <!-- Top Guidance Notice Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="@dimen/margin_sm"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/mobile_glass_card"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke">
 
-            <!-- Total disk usage -->
-            <TextView
-                android:id="@+id/txtAnalyzerTotalUsage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/mobile_text_primary"
-                android:textSize="18sp"
-                android:fontFamily="sans-serif-medium"
-                android:layout_marginBottom="@dimen/margin_md"
-                tools:text="45.2 GB used of 128 GB" />
-
-            <!-- Segmented storage bar -->
-            <za.kilowatch.ultimatefilemanager.ui.StorageBarView
-                android:id="@+id/storageBar"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="24dp" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="14dp">
 
-        <!-- Category breakdown -->
-        <LinearLayout
-            android:id="@+id/layoutOverviewCategories"
+                <FrameLayout
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_btn_icon_frosted">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_about"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/analyzer_info_notice"
+                    android:textColor="@color/mobile_card_text_secondary"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Disk Usage Summary Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardUsageSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="@color/mobile_glass_card"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke">
+
+            <LinearLayout
+                android:id="@+id/layoutUsageSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Total disk usage -->
+                <TextView
+                    android:id="@+id/txtAnalyzerTotalUsage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:layout_marginBottom="14dp"
+                    tools:text="45.2 GB used of 128 GB" />
+
+                <!-- Segmented storage bar -->
+                <za.kilowatch.ultimatefilemanager.ui.StorageBarView
+                    android:id="@+id/storageBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Section 1 Header: Storage Breakdown -->
+        <TextView
+            android:id="@+id/labelSectionBreakdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/analyzer_section_storage_breakdown"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-black"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Category breakdown Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="@color/mobile_glass_card"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke">
+
+            <LinearLayout
+                android:id="@+id/layoutOverviewCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Section 2 Header: Top Folders -->
+        <TextView
+            android:id="@+id/labelSectionTopFolders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/analyzer_section_top_folders"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-black"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <!-- Top Folders Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardTopFolders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_lg"
+            android:layout_marginBottom="20dp"
             android:visibility="gone"
-            android:focusable="false"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+            tools:visibility="visible"
             app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/mobile_glass_stroke">
 
             <LinearLayout
+                android:id="@+id/layoutTopFolders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="@dimen/margin_md">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/analyzer_top_folders"
-                    android:textColor="@color/mobile_card_text_primary"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_marginBottom="@dimen/margin_sm" />
-
-                <LinearLayout
-                    android:id="@+id/layoutTopFolders"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </LinearLayout>
+                android:padding="8dp" />
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- Section 3 Header: App Usage -->
+        <TextView
+            android:id="@+id/labelSectionAppUsage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/analyzer_section_app_usage"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-black"
+            android:textAllCaps="true"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <!-- App Usage Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardAppUsage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_md"
-            android:layout_marginBottom="@dimen/margin_lg"
+            android:layout_marginBottom="24dp"
             android:visibility="gone"
-            android:focusable="false"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+            tools:visibility="visible"
             app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/mobile_glass_stroke">
 
             <LinearLayout
+                android:id="@+id/layoutAppUsage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="@dimen/margin_md">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/analyzer_app_usage"
-                    android:textColor="@color/mobile_card_text_primary"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_marginBottom="@dimen/margin_sm" />
-
-                <LinearLayout
-                    android:id="@+id/layoutAppUsage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </LinearLayout>
+                android:padding="8dp" />
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

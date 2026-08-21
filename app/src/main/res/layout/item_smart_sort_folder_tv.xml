@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Sort Storage / Drive Row — TV (Language & Grouped Glass Card Standard)
+-->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/margin_md"
     android:layout_marginVertical="4dp"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
     app:cardBackgroundColor="@color/tv_glass_white_10"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="14dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
-    app:strokeColor="@color/tv_glass_white_15"
-    app:rippleColor="@color/tv_glass_white_20">
+    app:strokeColor="@color/tv_glass_border">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="@dimen/margin_md">
+        android:padding="14dp"
+        android:duplicateParentState="true">
 
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:duplicateParentState="true">
 
             <ImageView
                 android:id="@+id/imgFolderIcon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_folder"
                 android:contentDescription="@string/cd_storage_icon"
-                app:tint="@color/tv_accent" />
+                app:tint="@color/selector_tv_storage_category_icon_tint"
+                android:duplicateParentState="true" />
         </FrameLayout>
 
         <LinearLayout
@@ -44,38 +48,41 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp"
+            android:duplicateParentState="true">
 
             <TextView
                 android:id="@+id/txtFolderName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/tv_text_primary"
+                android:textColor="@color/selector_tv_storage_category_text_primary"
                 android:textSize="15sp"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="sans-serif-bold"
                 android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="Camera" />
+                android:ellipsize="middle"
+                android:duplicateParentState="true"
+                tools:text="Internal Storage" />
 
             <TextView
                 android:id="@+id/txtFolderPath"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/tv_text_hint"
+                android:textColor="@color/selector_tv_storage_category_text_secondary"
                 android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
                 android:maxLines="1"
                 android:ellipsize="middle"
-                tools:text="/storage/emulated/0/DCIM/Camera" />
+                android:duplicateParentState="true"
+                tools:text="/storage/emulated/0" />
         </LinearLayout>
 
         <ImageView
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:src="@drawable/ic_arrow_back"
-            android:rotation="180"
-            android:alpha="0.4"
-            app:tint="@color/tv_text_hint"
-            android:contentDescription="@null" />
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/selector_tv_storage_category_icon_tint"
+            android:duplicateParentState="true"
+            android:importantForAccessibility="no" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

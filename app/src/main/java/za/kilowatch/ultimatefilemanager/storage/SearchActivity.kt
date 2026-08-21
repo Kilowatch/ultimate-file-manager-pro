@@ -47,6 +47,7 @@ import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 /**
  * Searches files by name across selected storage volume.
@@ -701,19 +702,42 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun showFileContextMenu(file: File) {
-        val options = mutableListOf<String>()
-        val actions = mutableListOf<() -> Unit>()
+        val layoutRes = if (isTv) R.layout.dialog_search_file_actions_tv else R.layout.dialog_search_file_actions
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val imgItemIcon = dialogView.findViewById<ImageView>(R.id.imgItemIcon)
+        val txtItemName = dialogView.findViewById<TextView>(R.id.txtItemName)
+        val txtItemPath = dialogView.findViewById<TextView>(R.id.txtItemPath)
+
+        txtItemName.text = file.name
+        txtItemPath.text = file.parentFile?.absolutePath ?: file.absolutePath
+
+        if (file.isDirectory) {
+            imgItemIcon.setImageResource(R.drawable.ic_folder)
+        } else {
+            imgItemIcon.setImageResource(R.drawable.ic_file)
+        }
 
         // Open
-        if (!file.isDirectory) {
-            options.add(getString(R.string.action_open))
-            actions.add { openFile(file) }
+        val btnOpen = dialogView.findViewById<View>(R.id.btnActionOpen)
+        if (file.isDirectory) {
+            btnOpen.visibility = View.GONE
+        } else {
+            btnOpen.visibility = View.VISIBLE
+            btnOpen.setOnClickListener {
+                dialog.dismiss()
+                openFile(file)
+            }
         }
 
         // Open Folder Location
-        options.add(getString(R.string.action_open_folder))
-        actions.add {
-            val parentDir = file.parentFile ?: return@add
+        dialogView.findViewById<View>(R.id.btnActionOpenFolder).setOnClickListener {
+            dialog.dismiss()
+            val parentDir = file.parentFile ?: return@setOnClickListener
             val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(parentDir.absolutePath)
             val intent = Intent(this, FileBrowserActivity::class.java).apply {
                 putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
@@ -727,68 +751,61 @@ class SearchActivity : AppCompatActivity() {
         }
 
         // Copy
-        options.add(getString(R.string.action_copy))
-        actions.add {
+        dialogView.findViewById<View>(R.id.btnActionCopy).setOnClickListener {
+            dialog.dismiss()
             handleCopyOrCut(file, isMove = false)
         }
 
         // Move
-        options.add(getString(R.string.action_move))
-        actions.add {
+        dialogView.findViewById<View>(R.id.btnActionMove).setOnClickListener {
+            dialog.dismiss()
             handleCopyOrCut(file, isMove = true)
         }
 
         // Rename
-        options.add(getString(R.string.action_rename))
-        actions.add { showRenameDialog(file) }
+        dialogView.findViewById<View>(R.id.btnActionRename).setOnClickListener {
+            dialog.dismiss()
+            showRenameDialog(file)
+        }
 
         // Share (files only)
-        if (!file.isDirectory) {
-            options.add(getString(R.string.action_share))
-            actions.add { shareFile(file) }
+        val btnShare = dialogView.findViewById<View>(R.id.btnActionShare)
+        if (file.isDirectory) {
+            btnShare.visibility = View.GONE
+        } else {
+            btnShare.visibility = View.VISIBLE
+            btnShare.setOnClickListener {
+                dialog.dismiss()
+                shareFile(file)
+            }
         }
 
         // Extract Here
+        val btnExtract = dialogView.findViewById<View>(R.id.btnActionExtract)
         val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
         if (!file.isDirectory && za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(file) && pm.isIconEnabled(this, pm.KEY_EXTRACT)) {
-            options.add(getString(R.string.action_extract_here))
-            actions.add { performExtractHere(file) }
+            btnExtract.visibility = View.VISIBLE
+            btnExtract.setOnClickListener {
+                dialog.dismiss()
+                performExtractHere(file)
+            }
+        } else {
+            btnExtract.visibility = View.GONE
         }
 
         // Delete
-        options.add(getString(R.string.action_delete))
-        actions.add { confirmDelete(file) }
-
-        val bgColor = getColor(R.color.tv_bg_gradient_end)
-        val white = getColor(R.color.tv_text_primary)
-
-        // Custom adapter so list items render white on dark background
-        val listAdapter = object : android.widget.ArrayAdapter<String>(
-            this, android.R.layout.simple_list_item_1, options
-        ) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = super.getView(position, convertView, parent)
-                (v as? TextView)?.setTextColor(white)
-                v.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                return v
-            }
+        dialogView.findViewById<View>(R.id.btnActionDelete).setOnClickListener {
+            dialog.dismiss()
+            confirmDelete(file)
         }
 
-        val dialog = MaterialAlertDialogBuilder(this,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(file.name)
-            .setAdapter(listAdapter) { _, which ->
-                actions[which]()
-            }
-            .create()
+        // Cancel
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+        }
+
         dialog.show()
-        dialog.window?.setBackgroundDrawable(
-            android.graphics.drawable.ColorDrawable(bgColor)
-        )
-        val titleView = dialog.findViewById<android.widget.TextView>(
-            com.google.android.material.R.id.alertTitle
-        ) ?: dialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
-        titleView?.setTextColor(white)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun handleCopyOrCut(file: File, isMove: Boolean) {
@@ -887,78 +904,84 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showRenameDialog(file: File) {
-        val bgColor = getColor(R.color.tv_bg_gradient_end)
-        val white = getColor(R.color.tv_text_primary)
-        val black = getColor(R.color.tv_button_focused_yellow_text)
-        val yellow = getColor(R.color.tv_button_focused_yellow)
-        val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
-        val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+        val layoutRes = if (isTv) R.layout.dialog_search_rename_tv else R.layout.dialog_search_rename
+        val dialogView = layoutInflater.inflate(layoutRes, null)
 
-        val input = EditText(this).apply {
-            setText(file.name)
-            selectAll()
-            setPadding(48, 32, 48, 16)
-            setTextColor(white)
-            setHintTextColor(getColor(R.color.tv_text_hint))
-            backgroundTintList = yellowCsl
-        }
-
-        val dialog = MaterialAlertDialogBuilder(this,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(R.string.action_rename)
-            .setView(input)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val newName = input.text.toString().trim()
-                if (newName.isNotEmpty() && newName != file.name) {
-                    val target = File(file.parentFile, newName)
-                    if (file.renameTo(target)) {
-                        val oldPath = file.absolutePath
-                        val newPath = target.absolutePath
-                        val isDir = target.isDirectory
-
-                        // Sync index in background
-                        scope.launch(Dispatchers.IO) {
-                            try {
-                                val repo = UfmApplication.indexingRepository
-                                if (isDir) {
-                                    repo.deleteTreeFromIndex(oldPath)
-                                    val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newPath)
-                                    repo.indexFolder(newPath, sid, stype)
-                                } else {
-                                    repo.deleteFromIndex(oldPath)
-                                    val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newPath)
-                                    repo.indexFile(target, sid, stype)
-                                }
-                            } catch (e: Exception) {
-                                GoRoLog.e("SearchActivity", "Index sync failed for rename: ${e.message}")
-                            }
-                        }
-
-                        showSnackbar(getString(R.string.renamed_to_newname, newName))
-                        val query = editSearch.text?.toString()?.trim() ?: ""
-                        if (query.length >= 2) {
-                            searchJob?.cancel()
-                            searchJob = scope.launch { performSearch(query) }
-                        }
-                    } else {
-                        showSnackbar(getString(R.string.rename_error))
-                    }
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
             .create()
+
+        val txtOriginalName = dialogView.findViewById<TextView>(R.id.txtOriginalName)
+        val editFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editFileName)
+        val btnSaveRename = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveRename)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
+        val inputLayout = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.inputLayoutFileName)
+
+        if (!isTv) {
+            val primaryColor = ThemeColors.primary(this)
+            val onPrimaryColor = ThemeColors.onPrimary(this)
+            inputLayout?.setBoxStrokeColor(primaryColor)
+            btnSaveRename.backgroundTintList = android.content.res.ColorStateList.valueOf(primaryColor)
+            btnSaveRename.setTextColor(onPrimaryColor)
+        }
+
+        txtOriginalName.text = file.name
+        editFileName.setText(file.name)
+        val dotIndex = file.name.lastIndexOf('.')
+        if (!file.isDirectory && dotIndex > 0) {
+            editFileName.setSelection(0, dotIndex)
+        } else {
+            editFileName.selectAll()
+        }
+
+        btnSaveRename.setOnClickListener {
+            val newName = editFileName.text?.toString()?.trim().orEmpty()
+            if (newName.isNotEmpty() && newName != file.name) {
+                val target = File(file.parentFile, newName)
+                if (file.renameTo(target)) {
+                    val oldPath = file.absolutePath
+                    val newPath = target.absolutePath
+                    val isDir = target.isDirectory
+
+                    // Sync index in background
+                    scope.launch(Dispatchers.IO) {
+                        try {
+                            val repo = UfmApplication.indexingRepository
+                            if (isDir) {
+                                repo.deleteTreeFromIndex(oldPath)
+                                val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newPath)
+                                repo.indexFolder(newPath, sid, stype)
+                            } else {
+                                repo.deleteFromIndex(oldPath)
+                                val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newPath)
+                                repo.indexFile(target, sid, stype)
+                            }
+                        } catch (e: Exception) {
+                            GoRoLog.e("SearchActivity", "Index sync failed for rename: ${e.message}")
+                        }
+                    }
+
+                    showSnackbar(getString(R.string.renamed_to_newname, newName))
+                    val query = editSearch.text?.toString()?.trim() ?: ""
+                    if (query.length >= 2) {
+                        searchJob?.cancel()
+                        searchJob = scope.launch { performSearch(query) }
+                    }
+                    dialog.dismiss()
+                } else {
+                    showSnackbar(getString(R.string.rename_error))
+                }
+            } else if (newName == file.name) {
+                dialog.dismiss()
+            }
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
         dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(bgColor))
-        val titleView = dialog.findViewById<android.widget.TextView>(
-            com.google.android.material.R.id.alertTitle
-        ) ?: dialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
-        titleView?.setTextColor(white)
-        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-            backgroundTintList = yellowCsl; setTextColor(black)
-        }
-        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-            backgroundTintList = glassCsl; setTextColor(white)
-        }
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performExtractHere(file: File) {
@@ -1142,80 +1165,75 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun confirmDelete(file: File) {
-        val bgColor = getColor(R.color.tv_bg_gradient_end)
-        val white = getColor(R.color.tv_text_primary)
-        val black = getColor(R.color.tv_button_focused_yellow_text)
-        val yellow = getColor(R.color.tv_button_focused_yellow)
-        val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
-        val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+        val layoutRes = if (isTv) R.layout.dialog_search_delete_confirm_tv else R.layout.dialog_search_delete_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
 
-        val dialog = MaterialAlertDialogBuilder(this,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(R.string.action_delete)
-            .setMessage(getString(R.string.delete_filename, file.name))
-            .setPositiveButton(R.string.action_delete) { _, _ ->
-                val path = file.absolutePath
-                val isDir = file.isDirectory
-                val name = file.name
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
 
-                // Run the blocking delete (File.delete -> native remove syscall) on the
-                // IO dispatcher: on slow or busy storage a single delete can exceed the
-                // 5 s ANR watchdog threshold and freeze the main thread (reported from a
-                // KTC JVC 2K TV, SDK 34, app 1.8.0-GOOGLE).
-                scope.launch(Dispatchers.IO) {
-                    val deleted = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
-                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
-                    } else if (isDir) {
-                        file.deleteRecursively()
-                    } else {
-                        file.delete()
-                    }
-                    withContext(Dispatchers.Main) {
-                        if (deleted) {
-                            // Sync index in background
-                            scope.launch(Dispatchers.IO) {
-                                try {
-                                    val repo = UfmApplication.indexingRepository
-                                    if (isDir) repo.deleteTreeFromIndex(path)
-                                    else repo.deleteFromIndex(path)
-                                } catch (e: Exception) {
-                                    GoRoLog.e("SearchActivity", "Index sync failed for delete: ${e.message}")
-                                }
-                            }
+        val txtDeleteMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnDeleteConfirm = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
-                            showSnackbar(getString(R.string.name_deleted, name))
-                            val query = editSearch.text?.toString()?.trim() ?: ""
-                            if (query.length >= 2) {
-                                searchJob?.cancel()
-                                searchJob = scope.launch { performSearch(query, offset = 0, append = false) }
+        txtDeleteMessage.text = getString(R.string.delete_filename, file.name)
+
+        btnDeleteConfirm.setOnClickListener {
+            dialog.dismiss()
+            val path = file.absolutePath
+            val isDir = file.isDirectory
+            val name = file.name
+
+            // Run the blocking delete (File.delete -> native remove syscall) on the
+            // IO dispatcher: on slow or busy storage a single delete can exceed the
+            // 5 s ANR watchdog threshold and freeze the main thread.
+            scope.launch(Dispatchers.IO) {
+                val deleted = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
+                } else if (isDir) {
+                    file.deleteRecursively()
+                } else {
+                    file.delete()
+                }
+                withContext(Dispatchers.Main) {
+                    if (deleted) {
+                        // Sync index in background
+                        scope.launch(Dispatchers.IO) {
+                            try {
+                                val repo = UfmApplication.indexingRepository
+                                if (isDir) repo.deleteTreeFromIndex(path)
+                                else repo.deleteFromIndex(path)
+                            } catch (e: Exception) {
+                                GoRoLog.e("SearchActivity", "Index sync failed for delete: ${e.message}")
                             }
-                        } else {
-                            val hasProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(path)
-                            val shizukuAuthorized = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isAuthorized()
-                            val msg = if (hasProtected && !shizukuAuthorized) {
-                                getString(R.string.delete_error_shizuku_required)
-                            } else {
-                                getString(R.string.failed_to_delete_name, name)
-                            }
-                            showSnackbar(msg)
                         }
+
+                        showSnackbar(getString(R.string.name_deleted, name))
+                        val query = editSearch.text?.toString()?.trim() ?: ""
+                        if (query.length >= 2) {
+                            searchJob?.cancel()
+                            searchJob = scope.launch { performSearch(query, offset = 0, append = false) }
+                        }
+                    } else {
+                        val hasProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(path)
+                        val shizukuAuthorized = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isAuthorized()
+                        val msg = if (hasProtected && !shizukuAuthorized) {
+                            getString(R.string.delete_error_shizuku_required)
+                        } else {
+                            getString(R.string.failed_to_delete_name, name)
+                        }
+                        showSnackbar(msg)
                     }
                 }
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .create()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
         dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(bgColor))
-        val titleView = dialog.findViewById<android.widget.TextView>(
-            com.google.android.material.R.id.alertTitle
-        ) ?: dialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
-        titleView?.setTextColor(white)
-        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-            backgroundTintList = yellowCsl; setTextColor(black)
-        }
-        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-            backgroundTintList = glassCsl; setTextColor(white)
-        }
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
 

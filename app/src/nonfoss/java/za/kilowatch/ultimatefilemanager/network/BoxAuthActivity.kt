@@ -87,6 +87,7 @@ class BoxAuthActivity : AppCompatActivity() {
         val webView = findViewById<WebView>(R.id.webview)
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
+        @Suppress("DEPRECATION")
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -288,6 +289,8 @@ class BoxAuthActivity : AppCompatActivity() {
             .setCancelable(true)
             .setView(dialogView)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<android.widget.TextView>(R.id.txtPolicyDetails)?.text = message
         dialogView.findViewById<View>(R.id.btnPolicyOk).setOnClickListener {

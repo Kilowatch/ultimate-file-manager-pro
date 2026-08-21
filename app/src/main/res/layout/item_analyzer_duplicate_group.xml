@@ -1,72 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Duplicate Group Header — Mobile
-    Expandable header showing hash fingerprint + wasted space badge + collapse toggle.
+    Duplicate Group Header — Language & Grouped Glass Card Standard
 -->
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="48dp"
-    android:orientation="vertical"
-    android:paddingHorizontal="@dimen/margin_md"
-    android:paddingVertical="4dp"
-    android:background="@color/mobile_glass_card"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="2dp"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:rippleColor="@color/mobile_glass_ripple">
 
-    <!-- Main row: toggle | hash | wasted -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
 
-        <TextView
-            android:id="@+id/txtDupToggle"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:gravity="center"
-            android:textColor="@color/tv_accent"
-            android:textSize="13sp"
-            android:layout_marginEnd="@dimen/margin_sm"
-            tools:text="▼" />
-
-        <TextView
-            android:id="@+id/txtDupHash"
-            android:layout_width="0dp"
+        <!-- Top Header Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/mobile_card_text_primary"
-            android:textSize="13sp"
-            android:fontFamily="monospace"
-            tools:text="⋯a3f9c12b0d4e" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/txtDupWasted"
+            <!-- Frosted Icon Badge -->
+            <FrameLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_btn_icon_frosted">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_copy"
+                    app:tint="?attr/colorPrimary"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
+
+            <!-- Name & Hash Info -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:id="@+id/txtDupFileNamePreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="14.5sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:maxLines="1"
+                    android:ellipsize="middle"
+                    tools:text="sample_video.mp4" />
+
+                <TextView
+                    android:id="@+id/txtDupHash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_secondary"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    android:maxLines="1"
+                    android:ellipsize="middle"
+                    android:layout_marginTop="2dp"
+                    tools:text="SHA-256 · ⋯a3f9c12b0d4e" />
+            </LinearLayout>
+
+            <!-- Copies & Savings Badges -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end"
+                android:layout_marginStart="8dp">
+
+                <TextView
+                    android:id="@+id/txtDupWasted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/status_error"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-bold"
+                    tools:text="saves 48 MB" />
+
+                <TextView
+                    android:id="@+id/txtDupCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_secondary"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginTop="2dp"
+                    tools:text="3 copies" />
+            </LinearLayout>
+
+            <!-- Chevron Toggle -->
+            <ImageView
+                android:id="@+id/imgDupChevron"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginStart="6dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="@color/mobile_icon_tint"
+                android:importantForAccessibility="no" />
+
+            <!-- Hidden TextView stub for code compatibility if needed -->
+            <TextView
+                android:id="@+id/txtDupToggle"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- Unverified warning chip -->
+        <LinearLayout
+            android:id="@+id/layoutUnverifiedBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/ufm_risk_moderate"
-            android:textSize="12sp"
-            android:fontFamily="sans-serif-medium"
-            tools:text="3 copies · saves 48 MB" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="48dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/ic_warning_badge"
+                app:tint="#FFFFA726"
+                android:importantForAccessibility="no" />
+
+            <TextView
+                android:id="@+id/txtUnverifiedBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/analyzer_dup_unverified_badge"
+                android:textColor="#FFFFA726"
+                android:textSize="10.5sp"
+                android:fontFamily="sans-serif-bold" />
+        </LinearLayout>
 
     </LinearLayout>
-
-    <!-- Unverified badge — only shown when isVerified=false (file too large for full-hash) -->
-    <TextView
-        android:id="@+id/txtUnverifiedBadge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="4dp"
-        android:text="@string/analyzer_dup_unverified_badge"
-        android:textColor="#FFFFA726"
-        android:textSize="11sp"
-        android:fontFamily="sans-serif-medium"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-</LinearLayout>
-
+</com.google.android.material.card.MaterialCardView>

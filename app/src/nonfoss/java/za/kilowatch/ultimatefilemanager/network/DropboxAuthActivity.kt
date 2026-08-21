@@ -23,6 +23,7 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
@@ -174,7 +175,7 @@ class DropboxAuthActivity : AppCompatActivity() {
     }
 
     private suspend fun fetchUserInfo(accessToken: String): JsonObject = withContext(Dispatchers.IO) {
-        val emptyBody = RequestBody.create(null, ByteArray(0))
+        val emptyBody = ByteArray(0).toRequestBody(null)
         httpClient.newCall(
             Request.Builder()
                 .url("https://api.dropboxapi.com/2/users/get_current_account")
@@ -196,6 +197,8 @@ class DropboxAuthActivity : AppCompatActivity() {
             .setCancelable(true)
             .setView(dialogView)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<TextView>(R.id.txtPolicyDetails)?.text = message
         dialogView.findViewById<View>(R.id.btnPolicyOk).setOnClickListener {

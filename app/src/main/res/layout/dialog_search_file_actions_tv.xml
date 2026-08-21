@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Search File Actions Dialog — Language & Grouped Glass Card Standard
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp">
+
+    <!-- Header: File Icon + Name & Path -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_icon_circle_accent">
+
+            <ImageView
+                android:id="@+id/imgItemIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_file"
+                app:tint="@color/white"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/txtItemName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="sample_document.pdf" />
+
+            <TextView
+                android:id="@+id/txtItemPath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                android:layout_marginTop="2dp"
+                tools:text="/storage/emulated/0/Documents" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/tv_glass_border" />
+
+    <!-- Action Rows Container -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="380dp"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Open -->
+            <LinearLayout
+                android:id="@+id/btnActionOpen"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:background="@drawable/selector_tv_list_item"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_eye"
+                    android:duplicateParentState="true"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/action_open"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:textSize="16sp"
+                    android:duplicateParentState="true"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Open Folder Location -->
+            <LinearLayout
+                android:id="@+id/btnActionOpenFolder"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:background="@drawable/selector_tv_list_item"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_folder"
+                    android:duplicateParentState="true"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/action_open_folder"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:textSize="16sp"
+                    android:duplicateParentState="true"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Copy -->
+            <LinearLayout
+                android:id="@+id/btnActionCopy"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:background="@drawable/selector_tv_list_item"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_copy"
+                    android:duplicateParentState="true"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/action_copy"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:textSize="16sp"
+                    android:duplicateParentState="true"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Move -->
+            <LinearLayout
+                android:id="@+id/btnActionMove"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:background="@drawable/selector_tv_list_item"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_move"
+                    android:duplicateParentState="true"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/action_move"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:textSize="16sp"
+                    android:duplicateParentState="true"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Rename -->
+            <LinearLayout
+                android:id="@+id/btnActionRename"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:background="@drawable/selector_tv_list_item"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_edit"
+                    android:duplicateParentState="true"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/action_rename"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:textSize="16sp"
+                    android:duplicateParentState="true"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Share (Files Only) -->
+            <LinearLayout
+                android:id="@+id/btnActionShare"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:background="@drawable/selector_tv_list_item"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_share"
+                    android:duplicateParentState="true"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/action_share"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:textSize="16sp"
+                    android:duplicateParentState="true"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Extract Here (Archives Only) -->
+            <LinearLayout
+                android:id="@+id/btnActionExtract"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:background="@drawable/selector_tv_list_item"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_extract"
+                    android:duplicateParentState="true"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/action_extract_here"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:textSize="16sp"
+                    android:duplicateParentState="true"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Delete -->
+            <LinearLayout
+                android:id="@+id/btnActionDelete"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:background="@drawable/selector_tv_list_item"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_delete"
+                    android:duplicateParentState="true"
+                    app:tint="@color/status_error"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/action_delete"
+                    android:textColor="@color/status_error"
+                    android:textSize="16sp"
+                    android:duplicateParentState="true"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/tv_glass_border" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/cancel"
+        android:textSize="15sp"
+        android:focusable="true"
+        android:textColor="@color/tv_text_secondary" />
+
+</LinearLayout>

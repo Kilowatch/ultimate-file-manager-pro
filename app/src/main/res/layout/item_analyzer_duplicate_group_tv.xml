@@ -1,84 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Duplicate Group Header — TV
+    Duplicate Group Header — TV (Language & Grouped Glass Card Standard)
 -->
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="2dp"
-    android:clickable="false"
-    android:focusable="false"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="2dp"
+    android:clickable="true"
+    android:focusable="true"
     android:focusableInTouchMode="false"
     android:background="@drawable/selector_tv_storage_category_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="60dp"
+        android:minHeight="64dp"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="6dp"
+        android:paddingVertical="10dp"
         android:duplicateParentState="true">
 
-        <!-- Main row: toggle | hash | wasted -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:duplicateParentState="true">
 
-            <TextView
-                android:id="@+id/txtDupToggle"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:gravity="center"
-                android:textColor="@color/selector_tv_storage_category_text_accent"
-                android:textSize="14sp"
-                android:layout_marginEnd="8dp"
-                android:duplicateParentState="true"
-                tools:text="▼" />
+            <!-- TV Icon Badge -->
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_icon_circle_accent"
+                android:duplicateParentState="true">
 
-            <TextView
-                android:id="@+id/txtDupHash"
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_copy"
+                    app:tint="@color/white"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
+
+            <!-- Name & Hash -->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/selector_tv_storage_category_text_primary"
-                android:textSize="14sp"
-                android:fontFamily="monospace"
-                android:duplicateParentState="true"
-                tools:text="⋯a3f9c12b0d4e" />
+                android:orientation="vertical"
+                android:layout_marginStart="14dp"
+                android:duplicateParentState="true">
 
-            <TextView
-                android:id="@+id/txtDupWasted"
+                <TextView
+                    android:id="@+id/txtDupFileNamePreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/selector_tv_storage_category_text_primary"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:maxLines="1"
+                    android:ellipsize="middle"
+                    android:duplicateParentState="true"
+                    tools:text="sample_video.mp4" />
+
+                <TextView
+                    android:id="@+id/txtDupHash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/selector_tv_storage_category_text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    android:maxLines="1"
+                    android:ellipsize="middle"
+                    android:layout_marginTop="2dp"
+                    android:duplicateParentState="true"
+                    tools:text="SHA-256 · ⋯a3f9c12b0d4e" />
+            </LinearLayout>
+
+            <!-- Badges -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/selector_tv_storage_category_text_moderate"
-                android:textSize="13sp"
-                android:fontFamily="sans-serif-medium"
+                android:orientation="vertical"
+                android:gravity="end"
+                android:layout_marginStart="10dp"
+                android:duplicateParentState="true">
+
+                <TextView
+                    android:id="@+id/txtDupWasted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/selector_tv_storage_category_text_moderate"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:duplicateParentState="true"
+                    tools:text="saves 48 MB" />
+
+                <TextView
+                    android:id="@+id/txtDupCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/selector_tv_storage_category_text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginTop="2dp"
+                    android:duplicateParentState="true"
+                    tools:text="3 copies" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgDupChevron"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="@color/selector_tv_storage_category_icon_tint"
                 android:duplicateParentState="true"
-                tools:text="3 copies · saves 48 MB" />
+                android:importantForAccessibility="no" />
+
+            <!-- Hidden TextView stub for code compatibility if needed -->
+            <TextView
+                android:id="@+id/txtDupToggle"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
-        <!-- Unverified badge — only shown when isVerified=false (file too large for full-hash) -->
+        <!-- Unverified warning chip -->
         <TextView
             android:id="@+id/txtUnverifiedBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="4dp"
             android:text="@string/analyzer_dup_unverified_badge"
             android:textColor="#FFFFA726"
-            android:textSize="12sp"
-            android:fontFamily="sans-serif-medium"
+            android:textSize="11.5sp"
+            android:fontFamily="sans-serif-bold"
             android:duplicateParentState="true"
             android:visibility="gone"
             tools:visibility="visible" />
 
     </LinearLayout>
 </FrameLayout>
-

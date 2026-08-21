@@ -1,16 +1,23 @@
 package za.kilowatch.ultimatefilemanager.settings
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.support.SupportActivity
+import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -63,13 +70,39 @@ class AboutActivity : AppCompatActivity() {
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
-                if (hasFocus) {
-                    btnBack.setBackgroundResource(R.drawable.bg_icon_circle_focused)
-                } else {
-                    btnBack.setBackgroundResource(R.drawable.bg_icon_circle_accent)
-                }
             }
         }
         btnBack?.setOnClickListener { finish() }
+
+        // Support Email row
+        findViewById<View?>(R.id.cardSupportEmail)?.setOnClickListener {
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:support@kilowatch.co.za")
+                putExtra(Intent.EXTRA_SUBJECT, "[UFM] General Inquiry")
+            }
+            try {
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.about_title)))
+            } catch (e: Exception) {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                val clip = ClipData.newPlainText("Support Email", "support@kilowatch.co.za")
+                clipboard?.setPrimaryClip(clip)
+                Toast.makeText(this, R.string.about_email_copied, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Help & Support row
+        findViewById<View?>(R.id.cardHelpSupport)?.setOnClickListener {
+            startActivity(Intent(this, SupportActivity::class.java))
+        }
+
+        // Rate & Review row
+        findViewById<View?>(R.id.cardRateUs)?.setOnClickListener {
+            startActivity(Intent(this, RateUsActivity::class.java))
+        }
+
+        // Legal & Policies row
+        findViewById<View?>(R.id.cardLegal)?.setOnClickListener {
+            startActivity(Intent(this, PolicySelectionActivity::class.java))
+        }
     }
 }

@@ -81,15 +81,34 @@ class NetworkShareManagerActivity : AppCompatActivity() {
     }
 
     private fun confirmDelete(share: NetworkShare) {
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(getString(R.string.network_delete_confirm_title))
-            .setMessage(getString(R.string.network_delete_confirm_body, share.name))
-            .setPositiveButton(getString(R.string.network_delete_confirm_yes)) { _, _ ->
-                repo.delete(share.id)
-                refresh()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        val isTv = DeviceUtils.isTvDevice(this)
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_network_share_delete_confirm_tv
+            else R.layout.dialog_network_share_delete_confirm,
+            null
+        )
+
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        txtMessage?.text = getString(R.string.network_delete_confirm_body, share.name)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.btnDeleteConfirm)?.setOnClickListener {
+            repo.delete(share.id)
+            refresh()
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     // ── Adapter ───────────────────────────────────────────────────────────────
@@ -124,8 +143,8 @@ class NetworkShareManagerActivity : AppCompatActivity() {
             private val host = view.findViewById<TextView>(R.id.txtShareHost)
             private val layoutWarning = view.findViewById<View?>(R.id.layoutWarning)
             // Mobile layout has inline buttons; TV layout does not.
-            private val edit = view.findViewById<ImageView?>(R.id.btnEdit)
-            private val del  = view.findViewById<ImageView?>(R.id.btnDelete)
+            private val edit = view.findViewById<View?>(R.id.btnEdit)
+            private val del  = view.findViewById<View?>(R.id.btnDelete)
 
             fun bind(share: NetworkShare) {
                 name.text = share.name
@@ -158,38 +177,54 @@ class NetworkShareManagerActivity : AppCompatActivity() {
             }
 
             private fun showTvActionDialog(share: NetworkShare) {
-                MaterialAlertDialogBuilder(itemView.context, R.style.UFM_Dialog)
-                    .setTitle(share.name)
-                    .setItems(
-                        arrayOf(
-                            itemView.context.getString(R.string.network_action_browse),
-                            itemView.context.getString(R.string.network_action_edit),
-                            itemView.context.getString(R.string.network_action_delete)
-                        )
-                    ) { _, which ->
-                        when (which) {
-                            0 -> {
-                                if (share.isCredentialsStripped) {
-                                    android.widget.Toast.makeText(
-                                        itemView.context,
-                                        R.string.backup_toast_please_fill_credentials,
-                                        android.widget.Toast.LENGTH_SHORT
-                                    ).show()
-                                    onEdit(share)
-                                } else {
-                                    val intent = Intent(itemView.context, NetworkBrowserActivity::class.java).apply {
-                                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, share.id)
-                                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, share.name)
-                                    }
-                                    itemView.context.startActivity(intent)
-                                }
-                            }
-                            1 -> onEdit(share)
-                            2 -> onDelete(share)
+                val dialogView = LayoutInflater.from(itemView.context).inflate(
+                    R.layout.dialog_network_share_actions_tv,
+                    null
+                )
+
+                dialogView.findViewById<TextView>(R.id.txtShareTitle)?.text = share.name
+                dialogView.findViewById<TextView>(R.id.txtShareSubtitle)?.text = "${share.type.name} • ${share.host}"
+
+                val dialog = MaterialAlertDialogBuilder(itemView.context, R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .setCancelable(true)
+                    .create()
+
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+                dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                dialogView.findViewById<View>(R.id.btnActionBrowse)?.setOnClickListener {
+                    dialog.dismiss()
+                    if (share.isCredentialsStripped) {
+                        android.widget.Toast.makeText(
+                            itemView.context,
+                            R.string.backup_toast_please_fill_credentials,
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                        onEdit(share)
+                    } else {
+                        val intent = Intent(itemView.context, NetworkBrowserActivity::class.java).apply {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, share.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, share.name)
                         }
+                        itemView.context.startActivity(intent)
                     }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show()
+                }
+
+                dialogView.findViewById<View>(R.id.btnActionEdit)?.setOnClickListener {
+                    dialog.dismiss()
+                    onEdit(share)
+                }
+
+                dialogView.findViewById<View>(R.id.btnActionDelete)?.setOnClickListener {
+                    dialog.dismiss()
+                    onDelete(share)
+                }
+
+                dialog.show()
             }
         }
     }

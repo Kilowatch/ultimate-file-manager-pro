@@ -18,4 +18,5 @@
     <!-- FOSS Rate Us Overrides -->
     <string name="rate_us_screen_body_foss">Your feedback helps us improve and directly supports the development of the app.\n\nCould you take a moment to leave a review on F-Droid?</string>
     <string name="rate_us_button_play_foss">Rate on F-Droid</string>
+    <string name="about_rate_subtitle">Share your experience on F-Droid</string>
 </resources>

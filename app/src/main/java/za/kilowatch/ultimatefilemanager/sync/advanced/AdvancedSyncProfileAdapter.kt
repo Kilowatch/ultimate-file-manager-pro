@@ -32,7 +32,7 @@ class AdvancedSyncProfileAdapter(
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val iconDirection: ImageView = view.findViewById(R.id.iconDirection)
+        private val iconDirection: ImageView? = view.findViewById(R.id.iconDirection)
         private val iconActiveDot: ImageView? = view.findViewById(R.id.iconActiveDot)
         private val txtName: TextView = view.findViewById(R.id.txtName)
         private val txtScheduleType: TextView = view.findViewById(R.id.txtScheduleType)
@@ -40,9 +40,9 @@ class AdvancedSyncProfileAdapter(
         private val iconWifiOnly: ImageView? = view.findViewById(R.id.iconWifiOnly)
         private val txtSource: TextView = view.findViewById(R.id.txtSource)
         private val txtDest: TextView = view.findViewById(R.id.txtDest)
-        private val txtLastSync: TextView = view.findViewById(R.id.txtLastSync)
-        private val switchEnabled: MaterialSwitch = view.findViewById(R.id.switchEnabled)
-        private val btnMenu: ImageView = view.findViewById(R.id.btnMenu)
+        private val txtLastSync: TextView? = view.findViewById(R.id.txtLastSync)
+        private val switchEnabled: MaterialSwitch? = view.findViewById(R.id.switchEnabled)
+        private val btnMenu: View? = view.findViewById(R.id.btnMenu)
 
         fun bind(profile: AdvancedSyncProfile) {
             txtName.text = profile.name
@@ -50,16 +50,16 @@ class AdvancedSyncProfileAdapter(
             // Direction icon
             when (profile.direction) {
                 "download" -> {
-                    iconDirection.setImageResource(R.drawable.ic_direction_download)
-                    iconDirection.contentDescription = itemView.context.getString(R.string.sync_direction_download)
+                    iconDirection?.setImageResource(R.drawable.ic_direction_download)
+                    iconDirection?.contentDescription = itemView.context.getString(R.string.sync_direction_download)
                 }
                 "twoway" -> {
-                    iconDirection.setImageResource(R.drawable.ic_direction_twoway)
-                    iconDirection.contentDescription = itemView.context.getString(R.string.sync_direction_twoway)
+                    iconDirection?.setImageResource(R.drawable.ic_direction_twoway)
+                    iconDirection?.contentDescription = itemView.context.getString(R.string.sync_direction_twoway)
                 }
                 else -> {
-                    iconDirection.setImageResource(R.drawable.ic_direction_upload)
-                    iconDirection.contentDescription = itemView.context.getString(R.string.sync_direction_upload)
+                    iconDirection?.setImageResource(R.drawable.ic_direction_upload)
+                    iconDirection?.contentDescription = itemView.context.getString(R.string.sync_direction_upload)
                 }
             }
 
@@ -108,42 +108,68 @@ class AdvancedSyncProfileAdapter(
             }
 
             // Last sync
-            if (profile.lastSyncTime > 0) {
-                val timeStr = android.text.format.DateUtils.getRelativeTimeSpanString(
-                    profile.lastSyncTime, System.currentTimeMillis(),
-                    android.text.format.DateUtils.MINUTE_IN_MILLIS
-                )
-                txtLastSync.text = itemView.context.getString(
-                    R.string.last_sync_timestr_profilelastsyncfilecount_files, timeStr, profile.lastSyncFileCount
-                )
-            } else {
-                txtLastSync.setText(R.string.never_synced)
+            if (txtLastSync != null) {
+                if (profile.lastSyncTime > 0) {
+                    val timeStr = android.text.format.DateUtils.getRelativeTimeSpanString(
+                        profile.lastSyncTime, System.currentTimeMillis(),
+                        android.text.format.DateUtils.MINUTE_IN_MILLIS
+                    )
+                    txtLastSync.text = itemView.context.getString(
+                        R.string.last_sync_timestr_profilelastsyncfilecount_files, timeStr, profile.lastSyncFileCount
+                    )
+                } else {
+                    txtLastSync.setText(R.string.never_synced)
+                }
             }
 
             // Enabled switch
-            switchEnabled.setOnCheckedChangeListener(null)
-            switchEnabled.isChecked = profile.enabled
-            switchEnabled.setOnCheckedChangeListener { _, isChecked ->
+            switchEnabled?.setOnCheckedChangeListener(null)
+            switchEnabled?.isChecked = profile.enabled
+            switchEnabled?.setOnCheckedChangeListener { _, isChecked ->
                 onToggle(profile, isChecked)
             }
 
             // Menu
-            btnMenu.setOnClickListener { v ->
-                val popup = PopupMenu(v.context, v)
-                popup.menu.add(0, 1, 0, itemView.context.getString(R.string.edit))
-                popup.menu.add(0, 2, 0, itemView.context.getString(R.string.sync_now))
-                popup.menu.add(0, 3, 0, itemView.context.getString(R.string.conflict_log_title))
-                popup.menu.add(0, 4, 0, itemView.context.getString(R.string.action_delete))
-                popup.setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        1 -> { onEdit(profile); true }
-                        2 -> { onSyncNow(profile); true }
-                        3 -> { onViewConflictLog(profile); true }
-                        4 -> { onDelete(profile); true }
-                        else -> false
-                    }
+            btnMenu?.setOnClickListener { v ->
+                val inflater = LayoutInflater.from(v.context)
+                val popupView = inflater.inflate(R.layout.popup_advanced_sync_profile_menu, null)
+                val density = v.resources.displayMetrics.density
+                val popupWidth = (210 * density).toInt()
+                val popupWindow = android.widget.PopupWindow(
+                    popupView,
+                    popupWidth,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    true
+                ).apply {
+                    elevation = 16f * density
+                    isOutsideTouchable = true
+                    isFocusable = true
+                    setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+                    animationStyle = android.R.style.Animation_Dialog
                 }
-                popup.show()
+
+                popupView.findViewById<View>(R.id.menuSyncNow).setOnClickListener {
+                    popupWindow.dismiss()
+                    onSyncNow(profile)
+                }
+
+                popupView.findViewById<View>(R.id.menuEdit).setOnClickListener {
+                    popupWindow.dismiss()
+                    onEdit(profile)
+                }
+
+                popupView.findViewById<View>(R.id.menuConflictLog).setOnClickListener {
+                    popupWindow.dismiss()
+                    onViewConflictLog(profile)
+                }
+
+                popupView.findViewById<View>(R.id.menuDelete).setOnClickListener {
+                    popupWindow.dismiss()
+                    onDelete(profile)
+                }
+
+                val xOffset = -(popupWidth - v.width)
+                popupWindow.showAsDropDown(v, xOffset, (4 * density).toInt())
             }
 
             itemView.setOnClickListener {

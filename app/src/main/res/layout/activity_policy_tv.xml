@@ -21,7 +21,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/tv_safe_horizontal"
-        android:background="@drawable/bg_tv_gradient"
+        android:background="@color/tv_glass_white_10"
         android:elevation="4dp">
 
         <ImageView

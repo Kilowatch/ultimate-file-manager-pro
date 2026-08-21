@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Smart Sort Storage Picker Screen (Language & Grouped Glass Card Standard)
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,131 +12,203 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".smartsort.SmartSortActivity">
 
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
-        android:id="@+id/layoutToolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="14dp"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/btnPickerBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/cd_back"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@color/mobile_icon_tint" />
+        <!-- Frosted Back Button (40dp squircle) -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
+            <ImageView
+                android:id="@+id/btnPickerBack"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
+        <!-- Title & Path Subtitle -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="8dp">
 
             <TextView
+                android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/smart_sort_title"
+                android:text="@string/smart_sort_select_folder"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-black"
-                android:letterSpacing="0.01"
-                android:maxLines="1"
-                android:ellipsize="end" />
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black" />
 
             <TextView
                 android:id="@+id/txtPath"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/select_storage"
                 android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp"
-                android:layout_marginTop="2dp"
                 android:maxLines="1"
-                android:ellipsize="middle"
-                tools:text="/storage/emulated/0" />
+                android:ellipsize="middle" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/btnRecentConfigs"
+        <!-- Frosted Recent Configurations Button (40dp squircle) -->
+        <FrameLayout
+            android:id="@+id/layoutRecentConfigs"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_history"
-            android:contentDescription="@string/smart_sort_recent"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/mobile_icon_tint"
-            android:visibility="gone" />
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/btnRecentConfigs"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_history"
+                android:contentDescription="@string/smart_sort_recent"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerFolders"
+    <!-- Scrollable Container for Grouped Glass Cards -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingVertical="@dimen/margin_xs"
-        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_smart_sort_folder" />
-
-    <LinearLayout
-        android:id="@+id/layoutEmpty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="@dimen/icon_size_xl"
-            android:layout_height="@dimen/icon_size_xl"
-            android:src="@drawable/ic_folder"
-            android:alpha="0.3"
-            app:tint="@color/mobile_icon_tint"
-            android:contentDescription="@null" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Info Guidance Card (File Tags Standard) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/mobile_text_secondary"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"
-                android:maxLines="1"
-                android:ellipsize="middle"
-                tools:text="/storage/emulated/0" />
-        </LinearLayout>
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp">
+
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_sort"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/txtInfoNotice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/smart_sort_info_notice"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="12.5sp"
+                        android:lineSpacingExtra="2dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Dynamic Grouped Glass Cards Container -->
+            <LinearLayout
+                android:id="@+id/contentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/layoutEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingVertical="48dp"
+                android:visibility="gone">
+
+                <FrameLayout
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/bg_btn_icon_frosted">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_folder"
+                        app:tint="@color/mobile_icon_tint"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/smart_sort_empty"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/smart_sort_select_folder"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="12.5sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

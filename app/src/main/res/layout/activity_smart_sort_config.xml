@@ -9,50 +9,50 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".smartsort.SmartSortTvActivity">
 
+        <!-- Fixed 56dp Glass Header Bar -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="14dp"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/cd_back"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@color/mobile_icon_tint" />
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/smart_sort_config"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black"
                 android:maxLines="1"
                 android:ellipsize="end" />
@@ -63,23 +63,29 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp"
-                android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:ellipsize="middle"
                 tools:text="/storage/emulated/0/DCIM" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/btnSaveConfig"
+        <FrameLayout
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_save"
-            android:contentDescription="@string/smart_sort_save_config"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/mobile_icon_tint" />
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginStart="8dp">
+
+            <ImageView
+                android:id="@+id/btnSaveConfig"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_save"
+                android:contentDescription="@string/smart_sort_save_config"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -1331,13 +1337,15 @@
             </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+        <!-- Fixed Glass Bottom Action Bar -->
     <LinearLayout
         android:id="@+id/layoutActions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="@dimen/margin_md"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -1346,31 +1354,43 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPreview"
             style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="@dimen/margin_sm"
             android:text="@string/smart_sort_preview"
-            android:textColor="?attr/colorSecondary" />
+            android:textColor="?attr/colorPrimary"
+            android:textSize="13.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp"
+            android:layout_marginEnd="8dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStartSort"
-            style="@style/ContinueButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/continue_button_height"
+            android:layout_height="50dp"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_sm"
-            android:text="@string/smart_sort_start" />
+            android:text="@string/smart_sort_start"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp"
+            app:backgroundTint="?attr/colorPrimary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnTvHistory"
             style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginStart="@dimen/margin_sm"
+            android:layout_marginStart="8dp"
             android:text="@string/smart_sort_history"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="12sp" />
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp" />
     </LinearLayout>
 
     <com.google.android.material.appbar.MaterialToolbar

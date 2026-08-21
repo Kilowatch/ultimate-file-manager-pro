@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<!--
+    Mobile Rate Us Activity (FOSS) - Grouped card design matching UFM standard
+-->
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".settings.RateUsActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Solid Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:background="@color/mobile_glass_header"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:paddingHorizontal="16dp"
+        android:background="@color/mobile_toolbar_solid"
+        android:elevation="4dp">
 
-        <!-- Back Button in Accent Circle -->
+        <!-- Back Button in Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -37,7 +39,6 @@
                 android:contentDescription="@string/cd_back"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="false"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
@@ -46,14 +47,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rate_us_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
@@ -65,66 +66,265 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
+    <!-- Header Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mobile_glass_stroke" />
+
+    <!-- Scrollable Content with Grouped Sections -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_weight="1"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/margin_md"
-            android:gravity="center_horizontal">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="28dp">
 
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="24dp"
-                android:src="@drawable/ic_star"
-                app:tint="@color/mobile_icon_tint" />
-
+            <!-- Section 1: Rating & Feedback Header -->
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rate_us_section_rate"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="8dp" />
+
+            <!-- Grouped Card 1: Star Rating Hero Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/rate_us_screen_title"
-                android:textColor="@color/mobile_text_primary"
-                android:textSize="24sp"
-                android:gravity="center"
-                android:fontFamily="sans-serif-black" />
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:padding="20dp">
+
+                    <!-- Frosted Squircle Hero Star Badge -->
+                    <FrameLayout
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_star"
+                            app:tint="#FFD700"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
+
+                    <!-- Title -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="@string/rate_us_screen_title"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-black"
+                        android:textAlignment="center" />
+
+                    <!-- 5-Star Visual Preview Row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="12dp"
+                        android:contentDescription="@string/rate_us_stars_description">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star"
+                            app:tint="#FFD700"
+                            android:layout_marginHorizontal="2dp"
+                            android:contentDescription="@null" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star"
+                            app:tint="#FFD700"
+                            android:layout_marginHorizontal="2dp"
+                            android:contentDescription="@null" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star"
+                            app:tint="#FFD700"
+                            android:layout_marginHorizontal="2dp"
+                            android:contentDescription="@null" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star"
+                            app:tint="#FFD700"
+                            android:layout_marginHorizontal="2dp"
+                            android:contentDescription="@null" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_star"
+                            app:tint="#FFD700"
+                            android:layout_marginHorizontal="2dp"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+
+                    <!-- Body Text -->
+                    <TextView
+                        android:id="@+id/txtRateUsBody"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rate_us_screen_body_foss"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:textAlignment="center"
+                        android:layout_marginBottom="18dp" />
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/mobile_glass_stroke"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Primary F-Droid Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRateUs"
+                        style="@style/Widget.Material3Expressive.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="@string/rate_us_button_play_foss"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:textAllCaps="false"
+                        app:backgroundTint="?attr/colorPrimary"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_star"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconTint="#FFFFFFFF"
+                        app:rippleColor="#33FFFFFF" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Section 2: More Ways to Support Header -->
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rate_us_section_support"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="8dp" />
+
+            <!-- Grouped Card 2: Tip Jar Row -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardTipJar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:text="@string/rate_us_screen_body_foss"
-                android:textColor="@color/mobile_text_secondary"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:lineSpacingMultiplier="1.2" />
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke"
+                app:rippleColor="@color/mobile_glass_ripple">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRateUs"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="@string/rate_us_button_play_foss"
-                android:textColor="@color/mobile_text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:stateListAnimator="@null"
-                app:backgroundTint="@color/ufm_primary"
-                app:cornerRadius="12dp"
-                app:elevation="0dp"
-                app:icon="@drawable/ic_star"
-                app:iconGravity="textStart"
-                app:iconTint="@color/mobile_text_primary"
-                app:rippleColor="#33FFFFFF" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="13dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_coffee"
+                            app:tint="@color/tile_tip_jar_accent"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rate_us_support_title"
+                            android:textColor="@color/mobile_card_text_primary"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rate_us_support_subtitle"
+                            android:textColor="@color/mobile_card_text_secondary"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/mobile_card_text_secondary"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
