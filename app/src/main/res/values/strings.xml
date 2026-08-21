@@ -4401,6 +4401,14 @@
     <string name="reset_categorized_dialog_msg">This will restore all category headers, tile positions, and expansion states to their factory defaults. Custom color settings will be preserved.</string>
     <string name="reset_categorized_dialog_confirm">Reset to Default</string>
     <string name="reset_categorized_success">Category layout restored to default</string>
+
+    <string name="option_edit_custom_tile_desc">Change tile label, icon, or visibility</string>
+    <string name="option_delete_custom_tile_desc">Remove this tile and restore its contents</string>
+    <string name="custom_tile_select_icon_desc">Choose a built-in icon or browse your own</string>
+    <string name="indexing_offer_benefit_search">Instant search across all files</string>
+    <string name="indexing_offer_benefit_speed">Faster folder and file loading</string>
+    <string name="indexing_offer_benefit_duplicates">Duplicate and large file detection</string>
+    <string name="auto_restore_offer_subtitle">Auto-Restore Detected</string>
 </resources>
 
 

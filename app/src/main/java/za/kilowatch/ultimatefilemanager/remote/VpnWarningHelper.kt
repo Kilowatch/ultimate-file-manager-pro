@@ -99,5 +99,6 @@ object VpnWarningHelper {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 }

@@ -722,24 +722,33 @@ class StorageBrowserActivity : AppCompatActivity() {
         val themeExists = AutoBackupPrefs.getThemeFile(this).exists()
 
         val detectedItems = mutableListOf<String>()
-        if (configExists) detectedItems.add(getString(R.string.auto_restore_detected_config))
-        if (themeExists) detectedItems.add(getString(R.string.auto_restore_detected_theme))
+        if (configExists) detectedItems.add("• " + getString(R.string.auto_restore_detected_config))
+        if (themeExists) detectedItems.add("• " + getString(R.string.auto_restore_detected_theme))
 
-        val message = getString(R.string.auto_restore_message) + "\n\n" + detectedItems.joinToString("\n")
+        val dialogView = layoutInflater.inflate(R.layout.dialog_auto_restore_offer, null)
+        val txtDetected = dialogView.findViewById<TextView>(R.id.txtAutoRestoreDetected)
+        txtDetected.text = detectedItems.joinToString("\n")
+
+        val btnRestore = dialogView.findViewById<View>(R.id.btnAutoRestore)
+        val btnSkip = dialogView.findViewById<View>(R.id.btnAutoRestoreSkip)
 
         val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-            .setTitle(R.string.auto_restore_title)
-            .setMessage(message)
-            .setPositiveButton(R.string.auto_restore_btn_restore) { _, _ ->
-                performAutoBackupRestore(configExists, themeExists)
-            }
-            .setNegativeButton(R.string.auto_restore_btn_skip) { _, _ ->
-                AutoBackupPrefs.setRestorePromptShown(ctx)
-            }
+            .setView(dialogView)
             .setCancelable(false)
             .create()
 
+        btnRestore.setOnClickListener {
+            dialog.dismiss()
+            performAutoBackupRestore(configExists, themeExists)
+        }
+
+        btnSkip.setOnClickListener {
+            dialog.dismiss()
+            AutoBackupPrefs.setRestorePromptShown(ctx)
+        }
+
         dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     private fun performAutoBackupRestore(configExists: Boolean, themeExists: Boolean) {
@@ -1553,12 +1562,14 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
             item.isTvRemoteTile -> {
                 if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.P) {
-                    com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                        .setTitle(R.string.bt_remote_unsupported_title)
-                        .setMessage(R.string.bt_remote_unsupported_message)
-                        .setPositiveButton(R.string.got_it_1) { d, _ -> d.dismiss() }
+                    val dialogView = layoutInflater.inflate(R.layout.dialog_bt_remote_unsupported, null)
+                    val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                        .setView(dialogView)
                         .setCancelable(true)
-                        .show()
+                        .create()
+                    dialogView.findViewById<View>(R.id.btnGotIt)?.setOnClickListener { dialog.dismiss() }
+                    dialog.show()
+                    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
                 } else {
                     startActivity(Intent(this, za.kilowatch.ultimatefilemanager.network.TvRemoteActivity::class.java))
                     showPremiumSnackbar(getString(R.string.opening_itemlabel, getString(R.string.tv_remote)))
@@ -2786,32 +2797,22 @@ class StorageBrowserActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    /** Shows the full built-in icon picker dialog (same icon set as Tile Color â†’ Icons). */
+    /** Shows the full built-in icon picker dialog (same icon set as Tile Color -> Icons). */
     private fun showSimpleIconPickerDialog(targetImageView: ImageView) {
         val allIcons = za.kilowatch.ultimatefilemanager.settings.ALL_BUILTIN_ICONS
         val density = resources.displayMetrics.density
 
-        val dialogView = LinearLayout(this)
-        dialogView.orientation = LinearLayout.VERTICAL
-        dialogView.setPadding((16 * density).toInt(), (16 * density).toInt(), (16 * density).toInt(), (16 * density).toInt())
+        val dialogView = layoutInflater.inflate(R.layout.dialog_custom_tile_icon_picker, null)
+        val rv = dialogView.findViewById<RecyclerView>(R.id.rvIconPicker)
+        val btnBrowse = dialogView.findViewById<View>(R.id.btnBrowseIcon)
+        val btnDone = dialogView.findViewById<View>(R.id.btnDoneIconPicker)
 
-        val rv = RecyclerView(this)
         rv.layoutManager = GridLayoutManager(this, 5)
-        rv.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (400 * density).toInt())
 
-        val btnBrowse = com.google.android.material.button.MaterialButton(this)
-        btnBrowse.text = getString(R.string.tile_icon_browse)
-        btnBrowse.setIconResource(R.drawable.ic_folder)
-        val btnLp = ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        btnLp.topMargin = (12 * density).toInt()
-        btnBrowse.layoutParams = btnLp
         btnBrowse.setOnClickListener {
             activeTileIdForIcon = "custom_tile_icon_picker"
             launchTileIconPicker("custom_tile_icon_picker")
         }
-
-        dialogView.addView(rv)
-        dialogView.addView(btnBrowse)
 
         // Built-in icon adapter (same pattern as TileColorBottomSheet.BuiltinIconAdapter)
         rv.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -2845,8 +2846,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                 val bg = android.graphics.drawable.GradientDrawable()
                 bg.shape = android.graphics.drawable.GradientDrawable.OVAL
                 if (isSelected) {
-                    bg.setColor(0x33000000.toInt())
-                    bg.setStroke(3, 0xFFFF0000.toInt())
+                    bg.setColor(0x3300897B.toInt())
+                    bg.setStroke(3, 0xFF00897B.toInt())
                 } else {
                     bg.setColor(0x0FFFFFFF.toInt())
                     bg.setStroke(1, 0x44000000.toInt())
@@ -2864,15 +2865,20 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
 
         val iconPickerDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(getString(R.string.custom_tile_select_icon))
             .setView(dialogView)
-            .setPositiveButton(android.R.string.ok, null)
-            .show()
+            .create()
+
+        btnDone.setOnClickListener {
+            iconPickerDialog.dismiss()
+        }
 
         // Restore D-pad focus to the icon preview when the picker dialog is dismissed
         iconPickerDialog.setOnDismissListener {
             targetImageView.requestFocus()
         }
+
+        iconPickerDialog.show()
+        iconPickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     private fun showCreateCustomTileDialogTv(isEdit: Boolean, existingData: CustomTileManager.CustomTileData?) {
@@ -2886,17 +2892,14 @@ class StorageBrowserActivity : AppCompatActivity() {
         val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
         txtDialogTitle.text = if (isEdit) getString(R.string.custom_tile_edit_title) else getString(R.string.custom_tile_create_title)
+        btnSave.text = if (isEdit) getString(R.string.save) else getString(R.string.custom_tile_add_button)
+
         if (isEdit && existingData != null) {
             edtTitle.setText(existingData.title)
             edtSubtitle.setText(existingData.subtitle)
             switchShowInPicker.isChecked = existingData.showInFolderPicker
         }
         imgIcon.setImageResource(selectedCustomTileIconRes)
-
-        // TV D-pad: clicking the toggle row toggles the show-in-picker switch
-        dialogView.findViewById<android.widget.LinearLayout>(R.id.layoutToggleShowInPicker).setOnClickListener {
-            switchShowInPicker.isChecked = !switchShowInPicker.isChecked
-        }
 
         // TV D-pad: clicking the icon preview opens the built-in icon picker
         imgIcon.setOnClickListener {
@@ -2938,22 +2941,46 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
                 .show()
         } else {
-            val sheet = com.google.android.material.bottomsheet.BottomSheetDialog(this)
-            val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_manage_tiles, null)
-            // Use a simple list for mobile
-            val options = arrayOf(
-                getString(R.string.custom_tile_edit_title),
-                getString(R.string.custom_tile_delete_title)
-            )
-            com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(item.label)
-                .setItems(options) { _, which ->
-                    when (which) {
-                        0 -> showCreateCustomTileDialog(item.id) // Edit
-                        1 -> confirmDeleteCustomTile(item) // Delete
-                    }
-                }
-                .show()
+            val dialogView = layoutInflater.inflate(R.layout.dialog_custom_tile_options, null)
+            val imgHeaderIcon = dialogView.findViewById<ImageView>(R.id.imgCustomTileHeaderIcon)
+            val txtHeaderTitle = dialogView.findViewById<TextView>(R.id.txtCustomTileHeaderTitle)
+            val txtHeaderSubtitle = dialogView.findViewById<TextView>(R.id.txtCustomTileHeaderSubtitle)
+            val btnEdit = dialogView.findViewById<View>(R.id.btnOptionEditCustomTile)
+            val btnDelete = dialogView.findViewById<View>(R.id.btnOptionDeleteCustomTile)
+            val btnCancel = dialogView.findViewById<View>(R.id.btnCancelCustomTileOptions)
+
+            txtHeaderTitle.text = item.label
+            if (!item.subtitle.isNullOrBlank()) {
+                txtHeaderSubtitle.text = item.subtitle
+                txtHeaderSubtitle.visibility = View.VISIBLE
+            } else {
+                txtHeaderSubtitle.visibility = View.GONE
+            }
+
+            if (item.iconRes != 0) {
+                imgHeaderIcon.setImageResource(item.iconRes)
+            }
+
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .create()
+
+            btnEdit.setOnClickListener {
+                dialog.dismiss()
+                showCreateCustomTileDialog(item.id)
+            }
+
+            btnDelete.setOnClickListener {
+                dialog.dismiss()
+                confirmDeleteCustomTile(item)
+            }
+
+            btnCancel.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         }
     }
 
@@ -3001,48 +3028,111 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     private fun confirmDeleteCustomTile(item: StorageItem) {
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(getString(R.string.custom_tile_delete_confirm))
-            .setMessage(getString(R.string.custom_tile_delete_warning))
-            .setPositiveButton(getString(R.string.custom_tile_delete_title)) { _, _ ->
-                // Move all child tiles back to main screen
-                val childIds = CustomTileManager.getChildTiles(this, item.id)
-                for (childId in childIds) {
-                    CustomTileManager.setTileParent(this, childId, null)
+        if (isTv) {
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setTitle(getString(R.string.custom_tile_delete_confirm))
+                .setMessage(getString(R.string.custom_tile_delete_warning))
+                .setPositiveButton(getString(R.string.custom_tile_delete_title)) { _, _ ->
+                    deleteCustomTileInternal(item)
                 }
-                // Update hidden tile parents for tiles hidden from this custom tile
-                val hiddenParents = TileOrderManager.loadHiddenParents(this).toMutableMap()
-                for ((tileId, parentId) in hiddenParents) {
-                    if (parentId == item.id) {
-                        hiddenParents[tileId] = null
-                    }
-                }
-                val hidden = TileOrderManager.loadHidden(this)
-                TileOrderManager.saveHidden(this, hidden, hiddenParents)
+                .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
+                .show()
+        } else {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_delete_custom_tile_confirm, null)
+            val txtTileName = dialogView.findViewById<TextView>(R.id.txtTileName)
+            txtTileName.text = item.label
+            txtTileName.visibility = View.VISIBLE
 
-                CustomTileManager.deleteCustomTile(this, item.id)
-                showPremiumSnackbar(getString(R.string.custom_tile_deleted))
-                loadStorageVolumes()
+            val btnDeleteConfirm = dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+            val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .create()
+
+            btnDeleteConfirm.setOnClickListener {
+                dialog.dismiss()
+                deleteCustomTileInternal(item)
             }
-            .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
-            .show()
+
+            btnCancel.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
+    }
+
+    private fun deleteCustomTileInternal(item: StorageItem) {
+        // Move all child tiles back to main screen
+        val childIds = CustomTileManager.getChildTiles(this, item.id)
+        for (childId in childIds) {
+            CustomTileManager.setTileParent(this, childId, null)
+        }
+        // Update hidden tile parents for tiles hidden from this custom tile
+        val hiddenParents = TileOrderManager.loadHiddenParents(this).toMutableMap()
+        for ((tileId, parentId) in hiddenParents) {
+            if (parentId == item.id) {
+                hiddenParents[tileId] = null
+            }
+        }
+        val hidden = TileOrderManager.loadHidden(this)
+        TileOrderManager.saveHidden(this, hidden, hiddenParents)
+
+        CustomTileManager.deleteCustomTile(this, item.id)
+        showPremiumSnackbar(getString(R.string.custom_tile_deleted))
+        loadStorageVolumes()
     }
 
     private fun confirmDeleteCustomHeader(item: StorageItem) {
         val catId = item.categoryId ?: return
         val headerTitle = item.label
 
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(getString(R.string.custom_header_delete_title))
-            .setMessage(getString(R.string.custom_header_delete_warning))
-            .setPositiveButton(getString(R.string.delete)) { _, _ ->
-                MainMenuViewModeManager.deleteCustomCategory(this, catId)
-                storageAdapter.refreshDisplayedList(this)
-                storageAdapter.notifyDataSetChanged()
-                showPremiumSnackbar(getString(R.string.custom_header_deleted, headerTitle))
+        if (isTv) {
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setTitle(getString(R.string.custom_header_delete_title))
+                .setMessage(getString(R.string.custom_header_delete_warning))
+                .setPositiveButton(getString(R.string.delete)) { _, _ ->
+                    deleteCustomHeaderInternal(catId, headerTitle)
+                }
+                .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
+                .show()
+        } else {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_delete_category_header_confirm, null)
+            val txtHeaderName = dialogView.findViewById<TextView>(R.id.txtHeaderName)
+            txtHeaderName.text = headerTitle
+            txtHeaderName.visibility = View.VISIBLE
+
+            val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteHeaderMessage)
+            txtMessage.text = getString(R.string.custom_header_delete_confirm, headerTitle) + "\n" + getString(R.string.custom_header_delete_warning)
+
+            val btnDeleteConfirm = dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+            val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .create()
+
+            btnDeleteConfirm.setOnClickListener {
+                dialog.dismiss()
+                deleteCustomHeaderInternal(catId, headerTitle)
             }
-            .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
-            .show()
+
+            btnCancel.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
+    }
+
+    private fun deleteCustomHeaderInternal(catId: String, headerTitle: String) {
+        MainMenuViewModeManager.deleteCustomCategory(this, catId)
+        storageAdapter.refreshDisplayedList(this)
+        storageAdapter.notifyDataSetChanged()
+        showPremiumSnackbar(getString(R.string.custom_header_deleted, headerTitle))
     }
 
     private fun saveCustomTile(title: String, subtitle: String, showInFolderPicker: Boolean = false) {
