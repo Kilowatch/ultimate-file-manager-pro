@@ -50,6 +50,15 @@ Pilih Bahasa
     <string name="language_system_default">
 Default Sistem
 </string>
+    <string name="language_system_default_desc">
+Ikuti bahasa sistem perangkat
+</string>
+    <string name="language_section_system">
+Preferensi Sistem
+</string>
+    <string name="language_section_available">
+Bahasa yang Tersedia
+</string>
     <string name="settings_list_size_title">
 Ukuran Baris Pengaturan
 </string>
@@ -460,6 +469,36 @@ Anda belum menambahkan favorit apa pun.\n
 \n
 Tekan lama file atau folder dan ketuk ikon bintang untuk menambahkannya di sini.
 </string>
+    <string name="manage_favorites_empty_title">
+Tidak Ada Favorit yang Ditandai
+</string>
+    <string name="manage_favorites_empty_desc">
+Ketuk ikon bintang pada file atau folder apa pun di penjelajah file untuk menandainya agar akses cepat di sini.
+</string>
+    <string name="manage_favorites_info_notice">
+File dan folder yang ditandai muncul di laci navigasi dan panel akses cepat untuk navigasi cepat. Ketuk ikon tempat sampah untuk menghapus favorit.
+</string>
+    <string name="manage_favorites_clear_all">
+Hapus Semua Favorit
+</string>
+    <string name="manage_favorites_clear_all_confirm_title">
+Hapus Semua Favorit?
+</string>
+    <string name="manage_favorites_clear_all_confirm_message">
+Yakin ingin menghapus semua item dari daftar favorit? Ini tidak akan menghapus file atau folder aslinya.
+</string>
+    <string name="manage_favorites_remove_confirm_title">
+Hapus Favorit?
+</string>
+    <string name="manage_favorites_remove_confirm_message">
+Yakin ingin menghapus \"%1$s\" dari daftar favorit?
+</string>
+    <string name="manage_favorites_remove_btn">
+Hapus Favorit
+</string>
+    <string name="manage_favorites_cleared_all_toast">
+Semua favorit dihapus
+</string>
     <string name="manage_favorites_removed">
 %1$s dihapus dari favorit
 </string>
@@ -650,6 +689,21 @@ Untuk mengaktifkan:\n
 3. Aktifkan \"USB Debugging\"\n
 \n
 Jika Anda tidak melihat Opsi Pengembang, buka Tentang dan ketuk \"Nomor Build\" sebanyak 7 kali terlebih dahulu.\"
+</string>
+    <string name="adb_enable_desc">
+USB Debugging harus diaktifkan di TV untuk mengambil tangkapan layar.
+</string>
+    <string name="adb_step_1">
+1. Buka Pengaturan di Android TV Anda
+</string>
+    <string name="adb_step_2">
+2. Buka Preferensi Perangkat → Opsi Pengembang
+</string>
+    <string name="adb_step_3">
+3. Aktifkan \"USB Debugging\"
+</string>
+    <string name="adb_step_tip">
+Kiat: Jika Opsi Pengembang tersembunyi, buka Pengaturan → Tentang dan ketuk \"Nomor Build\" sebanyak 7 kali.
 </string>
     <string name="adb_pairing_required">
 Pemasangan ADB Diperlukan
@@ -1061,6 +1115,24 @@ Saran
 menghemat %1$s
 </string>
     <!-- Section headers inside Overview -->
+    <string name="analyzer_info_notice">
+Periksa penggunaan disk, jelajahi rincian penyimpanan berkategori, dan temukan file besar, duplikat, serta saran pembersihan.
+</string>
+    <string name="analyzer_section_storage_breakdown">
+Rincian Penyimpanan
+</string>
+    <string name="analyzer_section_top_folders">
+Folder Teratas
+</string>
+    <string name="analyzer_section_app_usage">
+Penggunaan Penyimpanan Aplikasi
+</string>
+    <string name="analyzer_empty_state_desc">
+Tidak ada item yang ditemukan untuk kategori analisis ini.
+</string>
+    <string name="analyzer_action_review">
+Tinjau &amp; Bersihkan
+</string>
     <string name="analyzer_top_folders">
 Folder Teratas berdasarkan Ukuran
 </string>
@@ -1273,14 +1345,29 @@ File terenkripsi ini akan dihapus secara permanen dan tidak dapat dibatalkan.
 Hapus Permanen
 </string>
 
+    <string name="theme_section_color_palette">
+Palet Warna
+</string>
+    <string name="theme_section_mode">
+Mode Tema
+</string>
     <string name="theme_light">
 Terang
+</string>
+    <string name="theme_light_desc">
+Antarmuka cerah dan bersih
 </string>
     <string name="theme_dark">
 Gelap
 </string>
+    <string name="theme_dark_desc">
+Tema gelap redup yang nyaman
+</string>
     <string name="theme_system">
 Default Sistem
+</string>
+    <string name="theme_system_desc">
+Ikuti jadwal siang / malam sistem
 </string>
     <string name="theme_amoled">
 Hitam AMOLED
@@ -1323,6 +1410,30 @@ Ukuran font diterapkan
     <string name="font_size_preview">
 Rubah coklat cepat melompat
 </string>
+    <string name="font_size_small_desc">
+85% • Ukuran ringkas untuk kepadatan layar lebih tinggi
+</string>
+    <string name="font_size_normal_desc">
+100% • Ukuran font default yang disarankan
+</string>
+    <string name="font_size_large_desc">
+115% • Ukuran diperbesar untuk keterbacaan lebih baik
+</string>
+    <string name="font_size_preview_title">
+Pratinjau Font Langsung
+</string>
+    <string name="font_size_preview_sample_heading">
+Ultimate File Manager Pro
+</string>
+    <string name="font_size_preview_sample_body">
+Rubah coklat yang cepat melompati anjing yang malas. Manajer file panel ganda untuk pengguna tingkat lanjut di Android &amp; TV.
+</string>
+    <string name="font_size_section_preview">
+Pratinjau Langsung
+</string>
+    <string name="font_size_section_options">
+Opsi Ukuran Teks
+</string>
 
     <!-- Storage Renaming -->
     <string name="settings_storage_rename_title">
@@ -1331,11 +1442,56 @@ Nama Drive Kustom
     <string name="settings_storage_rename_subtitle">
 Ubah nama drive USB dan penyimpanan lokal
 </string>
+    <string name="storage_rename_section_connected">
+Drive Penyimpanan Terhubung
+</string>
+    <string name="storage_rename_section_offline">
+Drive Offline / Terputus
+</string>
+    <string name="storage_rename_original_details">
+Asli: %1$s • %2$s
+</string>
+    <string name="storage_rename_info_notice">
+Label kustom yang ditetapkan ke penyimpanan internal, kartu SD, dan drive USB. Ketuk drive mana pun untuk mengganti nama atau mengatur ulang label tampilannya.
+</string>
+    <string name="storage_rename_empty_title">
+Tidak Ada Drive Penyimpanan Ditemukan
+</string>
+    <string name="storage_rename_empty_desc">
+Drive penyimpanan internal dan eksternal yang terhubung akan muncul di sini untuk penamaan dan identifikasi kustom.
+</string>
     <string name="rename_drive_dialog_title">
 Ubah Nama Drive
 </string>
+    <string name="storage_rename_dialog_subtitle">
+Masukkan nama kustom untuk %1$s
+</string>
     <string name="custom_name_hint">
 Nama drive baru
+</string>
+    <string name="storage_rename_reset_btn">
+Atur Ulang ke Default
+</string>
+    <string name="storage_rename_save_btn">
+Simpan Nama Kustom
+</string>
+    <string name="storage_rename_saved_toast">
+Drive diganti nama menjadi \"%1$s\"
+</string>
+    <string name="storage_rename_reset_toast">
+Drive diatur ulang ke nama aslinya
+</string>
+    <string name="storage_rename_clear_all">
+Atur Ulang Semua Nama Drive
+</string>
+    <string name="storage_rename_clear_all_confirm_title">
+Atur Ulang Semua Nama Drive?
+</string>
+    <string name="storage_rename_clear_all_confirm_message">
+Yakin ingin mengatur ulang semua label drive kustom kembali ke nama sistem default?
+</string>
+    <string name="storage_rename_cleared_all_toast">
+Semua nama drive diatur ulang ke default
 </string>
     <string name="reset_action">
 Reset
@@ -1428,11 +1584,29 @@ Pilih layar yang terbuka saat peluncuran
     <string name="start_screen_storage_browser">
 Menu Utama (Default)
 </string>
+    <string name="start_screen_storage_browser_desc">
+Layar beranda standar dengan semua penyimpanan dan pintasan cepat
+</string>
     <string name="start_screen_twin_window">
 Jendela Kembar
 </string>
+    <string name="start_screen_twin_window_desc">
+Manajer file panel ganda berdampingan
+</string>
     <string name="start_screen_file_server">
 Server File
+</string>
+    <string name="start_screen_file_server_desc">
+Kontrol server file HTTP, FTP, dan WebDAV
+</string>
+    <string name="start_screen_section_main">
+Layar Utama
+</string>
+    <string name="start_screen_section_storages">
+Drive Penyimpanan Langsung
+</string>
+    <string name="start_screen_storage_desc">
+Buka drive ini secara langsung saat peluncuran
 </string>
 
     <!-- Analytics Toggle -->
@@ -1507,6 +1681,12 @@ Dinonaktifkan — streaming langsung (default)
 </string>
 
     <!-- Open Source Licenses -->
+    <string name="policy_section_agreements">
+Kebijakan &amp; Perjanjian
+</string>
+    <string name="policy_section_attributions">
+Atribusi &amp; Lisensi
+</string>
     <string name="policy_licenses_button">
 Lisensi Sumber Terbuka
 </string>
@@ -1640,8 +1820,38 @@ Kelola aplikasi default untuk jenis file
     <string name="default_apps_empty">
 Belum ada aplikasi default yang ditetapkan.
 </string>
+    <string name="default_apps_empty_title">
+Tidak Ada Aplikasi Default yang Dikonfigurasi
+</string>
+    <string name="default_apps_empty_desc">
+Saat Anda membuka file dengan \"Selalu\", file tersebut akan muncul di sini sehingga Anda dapat mengelola atau mengatur ulang aturan asosiasi file.
+</string>
+    <string name="default_apps_info_notice">
+Jenis file yang dikonfigurasi untuk terbuka otomatis dengan penampil atau aplikasi tertentu. Ketuk ikon tempat sampah untuk mengatur ulang aturan asosiasi.
+</string>
     <string name="default_apps_clear_all">
 Hapus Semua Default
+</string>
+    <string name="default_apps_clear_all_confirm_title">
+Hapus Semua Aplikasi Default
+</string>
+    <string name="default_apps_clear_all_confirm_message">
+Yakin ingin menghapus semua preferensi asosiasi file? File akan meminta aplikasi saat dibuka.
+</string>
+    <string name="default_app_remove_confirm_title">
+Atur Ulang Asosiasi .%1$s?
+</string>
+    <string name="default_app_remove_confirm_message">
+Yakin ingin mengatur ulang aplikasi default untuk .%1$s (%2$s)? Anda akan diminta memilih aplikasi saat membuka jenis file ini berikutnya.
+</string>
+    <string name="default_app_remove_btn">
+Atur Ulang Default
+</string>
+    <string name="default_apps_removed_toast">
+Atur ulang default untuk .%1$s
+</string>
+    <string name="default_apps_cleared_all_toast">
+Semua aplikasi default dihapus
 </string>
     <string name="default_apps_extension_label">
 Jenis file: %1$s
@@ -1972,6 +2182,15 @@ Pilih drive
     <string name="all_drives">
 Semua Drive
 </string>
+    <string name="search_select_location_title">
+Lokasi Pencarian
+</string>
+    <string name="search_select_location_subtitle">
+Pilih lokasi penyimpanan untuk dicari
+</string>
+    <string name="search_all_drives_subtitle">
+Cari di semua penyimpanan yang terhubung
+</string>
 
     <!-- Category detail -->
     <string name="category_files_title">
@@ -2117,6 +2336,9 @@ Berbagi Jaringan
     <string name="network_shares_subtitle">
 SMB · FTP
 </string>
+    <string name="network_shares_info_notice">
+Hubungkan ke berbagi SMB, FTP, SFTP, SCP, dan NFS di jaringan lokal Anda untuk menjelajah, mentransfer, dan mengatur file dengan mulus.
+</string>
     <string name="network_add_share">
 Tambah berbagi
 </string>
@@ -2162,6 +2384,9 @@ Host / Alamat IP
 </string>
     <string name="network_field_port">
 Port (biarkan kosong untuk default)
+</string>
+    <string name="network_section_credentials">
+Kredensial &amp; Autentikasi
 </string>
     <string name="network_field_username">
 Nama pengguna (kosong = tamu)
@@ -2681,6 +2906,37 @@ Tidak ada konflik yang tercatat
 %1$s — menggunakan versi %2$s
 </string>
 
+    <string name="configure_sync_folders_schedule">
+Konfigurasi folder &amp; jadwal sinkronisasi
+</string>
+    <string name="sync_section_profile_direction">
+Profil &amp; Arah
+</string>
+    <string name="sync_section_folders">
+Folder &amp; Lokasi
+</string>
+    <string name="sync_section_schedule">
+Jadwal &amp; Otomatisasi
+</string>
+    <string name="sync_section_conflict">
+Penanganan Konflik &amp; Penghapusan
+</string>
+    <string name="sync_section_filtering">
+Penyaringan File &amp; Tag
+</string>
+    <string name="general_settings">
+Pengaturan Umum
+</string>
+    <string name="schedule_and_triggers">
+Jadwal &amp; Pemicu
+</string>
+    <string name="schedule_mode">
+Mode Jadwal
+</string>
+    <string name="options">
+Opsi
+</string>
+
     <!-- Generic -->
     <string name="cancel">
 Batal
@@ -2885,6 +3141,58 @@ Dipulihkan ke: Menu Utama
 Dipulihkan ke: %1$s
 </string>
 
+    <!-- Add Options Dialog -->
+    <string name="add_menu_options_title">
+Buat Baru
+</string>
+    <string name="add_menu_options_desc">
+Pilih apa yang ingin Anda tambahkan ke menu utama.
+</string>
+    <string name="option_create_header_title">
+Buat Header Baru
+</string>
+    <string name="option_create_header_desc">
+Tambahkan header bagian kustom untuk mengatur pintasan Anda
+</string>
+    <string name="option_create_tile_title">
+Buat Pintasan Kustom
+</string>
+    <string name="option_create_tile_desc">
+Tambahkan pintasan kustom untuk mengelompokkan pintasan dan folder
+</string>
+
+    <!-- Custom Category Headers -->
+    <string name="custom_header_create_title">
+Buat Header Baru
+</string>
+    <string name="custom_header_create_desc">
+Masukkan judul untuk header kategori ini.
+</string>
+    <string name="custom_header_name_hint">
+Nama Header (wajib)
+</string>
+    <string name="custom_header_name_required">
+Nama header wajib diisi
+</string>
+    <string name="custom_header_created">
+Header kategori dibuat
+</string>
+    <string name="custom_header_add_button">
+Tambah Header
+</string>
+    <string name="custom_header_delete_title">
+Hapus Header Kategori
+</string>
+    <string name="custom_header_delete_confirm">
+Hapus \"%1$s\"?
+</string>
+    <string name="custom_header_delete_warning">
+Semua pintasan di dalamnya akan dipindahkan kembali ke lokasi aslinya.
+</string>
+    <string name="custom_header_deleted">
+Header kategori \"%1$s\" dihapus
+</string>
+
     <!-- Custom Tiles -->
     <string name="custom_tile_create_title">
 Buat Ubin Kustom
@@ -3032,6 +3340,12 @@ Pilih ubin untuk mewarnai
     <string name="tile_color_message_select">
 Ketuk ubin setelah menekan Pilih untuk membuka pemilih warna.
 </string>
+    <string name="tile_color_tip_title">
+Kustomisasi Warna Pintasan
+</string>
+    <string name="tile_color_tip_desc">
+Ketuk drive penyimpanan atau pintasan fitur mana pun di layar beranda untuk menyesuaikan palet warnanya
+</string>
     <string name="tile_color_button_select">
 Pilih Ubin
 </string>
@@ -3148,6 +3462,9 @@ Detail Pengindeks
 </string>
     <string name="storage_indexer_delete_records">
 Hapus Catatan Terindeks
+</string>
+    <string name="storage_indexer_delete_records_desc">
+Bersihkan basis data pengindeksan untuk penyimpanan ini
 </string>
     <string name="storage_indexer_not_now">
 Abaikan Penyimpanan Ini (Nanti Saja)
@@ -3403,14 +3720,41 @@ Daftar
     <string name="layout_grid">
 Grid
 </string>
+    <string name="layout_list_size_section">
+Ukuran Tata Letak Daftar
+</string>
+    <string name="layout_size_large">
+Besar
+</string>
+    <string name="layout_size_large_desc">
+Baris lega dengan ikon besar
+</string>
+    <string name="layout_size_medium">
+Sedang
+</string>
+    <string name="layout_size_medium_desc">
+Tinggi baris standar yang seimbang
+</string>
+    <string name="layout_size_small">
+Kecil
+</string>
+    <string name="layout_size_small_desc">
+Baris ringkas dengan kepadatan tinggi
+</string>
     <string name="column_count">
 Kolom
 </string>
     <string name="columns_4">
 4 Kolom
 </string>
+    <string name="columns_4_desc">
+Tata letak kisi 4 kolom yang ringkas
+</string>
     <string name="columns_3">
 3 Kolom
+</string>
+    <string name="columns_3_desc">
+Tata letak kisi 3 kolom yang lega
 </string>
 
     <!-- Long Press Duration Settings -->
@@ -3426,6 +3770,114 @@ Ikon Bilah Alat Tekan Lama
 </string>
     <string name="settings_toolbar_icons_subtitle">
 Kustomisasi bilah aksi pilihan
+</string>
+    <string name="settings_toolbar_icons_info_notice">
+Sesuaikan tombol tindakan mana yang muncul di bilah alat saat file atau folder dipilih. Matikan tindakan yang tidak Anda gunakan agar ruang kerja tetap bersih dan efisien.
+</string>
+    <string name="settings_toolbar_icons_reset_defaults">
+Atur Ulang ke Default
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_title">
+Atur Ulang Ikon Bilah Alat?
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_message">
+Yakin ingin mengatur ulang semua ikon bilah alat pilihan kembali ke status aktif default?
+</string>
+    <string name="settings_toolbar_icons_reset_toast">
+Ikon bilah alat diatur ulang ke default
+</string>
+    <string name="toolbar_section_file_operations">
+Operasi File
+</string>
+    <string name="toolbar_section_security">
+Keamanan &amp; Privasi
+</string>
+    <string name="toolbar_section_selection_navigation">
+Pilihan &amp; Markah
+</string>
+    <string name="toolbar_section_tools_media">
+Arsip, Media &amp; Utilitas
+</string>
+    <string name="toolbar_desc_create_new">
+Buat file, folder, atau arsip baru
+</string>
+    <string name="toolbar_desc_copy">
+Duplikat item yang dipilih ke papan klip
+</string>
+    <string name="toolbar_desc_move">
+Potong item yang dipilih untuk dipindahkan
+</string>
+    <string name="toolbar_desc_rename">
+Ganti nama file atau direktori yang dipilih
+</string>
+    <string name="toolbar_desc_share">
+Kirim file melalui lembar berbagi sistem
+</string>
+    <string name="toolbar_desc_delete">
+Hapus permanen atau pindahkan item ke tempat sampah
+</string>
+    <string name="toolbar_desc_copy_encrypt">
+Enkripsi dan salin item
+</string>
+    <string name="toolbar_desc_move_encrypt">
+Enkripsi dan pindahkan item
+</string>
+    <string name="toolbar_desc_protect">
+Tetapkan bendera baca-saja atau terlindungi
+</string>
+    <string name="toolbar_desc_unprotect">
+Hapus kunci perlindungan
+</string>
+    <string name="toolbar_desc_hide">
+Tandai item sebagai tersembunyi
+</string>
+    <string name="toolbar_desc_unhide">
+Tampilkan file tersembunyi
+</string>
+    <string name="toolbar_desc_select_all">
+Pilih semua item di panel saat ini
+</string>
+    <string name="toolbar_desc_invert_selection">
+Ubah status pemilihan semua item
+</string>
+    <string name="toolbar_desc_favorite">
+Tambahkan atau hapus dari markah berbintang
+</string>
+    <string name="toolbar_desc_pin">
+Sematkan item ke panel akses cepat
+</string>
+    <string name="toolbar_desc_unpin">
+Lepas sematan item dari akses cepat
+</string>
+    <string name="toolbar_desc_compress">
+Buat arsip ZIP atau 7Z
+</string>
+    <string name="toolbar_desc_extract">
+Dekompres arsip di folder saat ini
+</string>
+    <string name="toolbar_desc_compress_image">
+Optimalkan ukuran file gambar
+</string>
+    <string name="toolbar_desc_retrigger_thumbnails">
+Bangun ulang gambar dan video mini yang di-cache
+</string>
+    <string name="toolbar_desc_create_gif">
+Rakit gambar menjadi GIF animasi
+</string>
+    <string name="toolbar_desc_exif_tools">
+Bersihkan metadata dan ganti nama foto secara massal
+</string>
+    <string name="toolbar_desc_set_home_wallpaper">
+Tetapkan gambar yang dipilih sebagai wallpaper layar beranda
+</string>
+    <string name="toolbar_desc_set_lock_wallpaper">
+Tetapkan gambar yang dipilih sebagai wallpaper layar kunci
+</string>
+    <string name="toolbar_desc_duplicate_finder">
+Pindai dan deteksi file duplikat
+</string>
+    <string name="toolbar_desc_large_files_finder">
+Identifikasi file yang menghabiskan penyimpanan berlebihan
 </string>
     <string name="long_press_duration_seconds">
 %1$.1f detik
@@ -3561,6 +4013,54 @@ Pasangkan dan Hubungkan
     <string name="connect_to_android_device">
 Hubungkan ke perangkat Android
 </string>
+    <string name="adb_terminal_empty_title">
+ADB Shell Siap
+</string>
+    <string name="adb_terminal_empty_subtitle">
+Hubungkan ke perangkat Android atau TV untuk menjalankan perintah shell, memeriksa paket, dan memantau proses sistem.
+</string>
+    <string name="adb_terminal_clear">
+Bersihkan Konsol
+</string>
+    <string name="adb_terminal_copy">
+Salin Output
+</string>
+    <string name="adb_terminal_cleared">
+Output terminal dibersihkan
+</string>
+    <string name="adb_terminal_copied">
+Semua output disalin ke papan klip
+</string>
+    <string name="adb_quick_commands">
+Perintah Cepat
+</string>
+    <string name="adb_host_label">
+Alamat IP Perangkat Target
+</string>
+    <string name="adb_host_hint">
+192.168.1.50 atau 127.0.0.1
+</string>
+    <string name="adb_pairing_guide_title">
+Panduan Pemasangan Nirkabel 3 Langkah
+</string>
+    <string name="adb_pairing_guide_step1">
+Aktifkan Opsi Pengembang &amp; Debugging Nirkabel pada perangkat target
+</string>
+    <string name="adb_pairing_guide_step2">
+Ketuk \"Pasangkan perangkat dengan kode pemasangan\" di setelan Debugging Nirkabel
+</string>
+    <string name="adb_pairing_guide_step3">
+Masukkan IP yang ditampilkan, port pemasangan, dan kode PIN 6 digit di bawah
+</string>
+    <string name="adb_discovery_title">
+Penemuan Otomatis Perangkat Jaringan
+</string>
+    <string name="adb_manual_title">
+Setelan IP &amp; Port Target
+</string>
+    <string name="adb_pin_title">
+Kode Pemasangan 6 Digit
+</string>
     <string name="search_apps">
 Cari aplikasi...
 </string>
@@ -3576,6 +4076,36 @@ Kelola koneksi TV
     <string name="no_devices_paired_yetntap_to">
 Belum ada perangkat yang dipasangkan.\n
 Ketuk + untuk menautkan TV.
+</string>
+    <string name="link_tv">
+Tautkan TV
+</string>
+    <string name="link_tv_button">
+Tautkan TV Baru
+</string>
+    <string name="paired_tvs_empty_title">
+Belum Ada TV yang Dipasangkan
+</string>
+    <string name="paired_tvs_empty_subtitle">
+Hubungkan ponsel Anda ke Android TV yang menjalankan UFM untuk transfer file nirkabel, pengelolaan penyimpanan, dan akses jarak jauh.
+</string>
+    <string name="tv_pairing_guide_title">
+Panduan Singkat 3 Langkah
+</string>
+    <string name="tv_pairing_guide_step1">
+Buka UFM di Android TV Anda
+</string>
+    <string name="tv_pairing_guide_step2">
+Pilih \"Ponsel yang Dipasangkan\" di menu utama TV
+</string>
+    <string name="tv_pairing_guide_step3">
+Pilih \"Tautkan Aplikasi Seluler\" di TV untuk mendapatkan PIN 4 digit
+</string>
+    <string name="paired_status_connected">
+Terhubung
+</string>
+    <string name="paired_status_disconnected">
+Terputus
 </string>
     <string name="paired_phones">
 Ponsel yang Dipasangkan
@@ -4443,8 +4973,14 @@ USB Debugging Diperlukan
     <string name="take_screenshot">
 Ambil Screenshot
 </string>
+    <string name="take_screenshot_subtitle">
+Ambil tangkapan layar TV saat ini ke perangkat Anda
+</string>
     <string name="record_screen">
 Rekam Layar
+</string>
+    <string name="record_screen_subtitle">
+Rekam video layar TV dengan opsi audio
 </string>
     <string name="record_screen_audio_title">
 Audio TV
@@ -5626,13 +6162,43 @@ Kesalahan memuat direktori: %1$s
     <string name="sideload_apk">
 Sideload APK
 </string>
+    <string name="sideload_apk_subtitle">
+Pasang paket APK tunggal ke TV
+</string>
     <string name="sideload_xapk">
 Sideload XAPK
+</string>
+    <string name="sideload_xapk_subtitle">
+Pasang aplikasi XAPK / APKM bundel ke TV
+</string>
+    <string name="sideload_dialog_desc_apk">
+Pasang paket aplikasi Android (.apk) dari perangkat Anda ke TV yang dipasangkan.
+</string>
+    <string name="sideload_dialog_desc_xapk">
+Pasang paket aplikasi bundel (.xapk / .apkm) dari perangkat Anda ke TV yang dipasangkan.
+</string>
+    <string name="sideload_step_1_apk">
+1. Pilih file .apk dari penyimpanan perangkat Anda
+</string>
+    <string name="sideload_step_1_xapk">
+1. Pilih paket .xapk / .apkm dari penyimpanan perangkat Anda
+</string>
+    <string name="sideload_step_2">
+2. UFM akan mentransfer paket secara nirkabel ke TV Anda
+</string>
+    <string name="sideload_step_3">
+3. Konfirmasi dialog pemasangan di layar TV Anda untuk menyelesaikan pemasangan.
+</string>
+    <string name="sideload_choose_file">
+Pilih File
 </string>
 
     <!-- Transfer Settings Feature -->
     <string name="transfer_settings">
 Transfer Pengaturan
+</string>
+    <string name="transfer_settings_action_subtitle">
+Transfer setelan dan berbagi jaringan ke TV
 </string>
     <string name="transfer_settings_select_all">
 Pilih Semua
@@ -6139,6 +6705,9 @@ Smart Sort
 </string>
     <string name="smart_sort_tile_subtitle">
 Atur berkas ke dalam kategori
+</string>
+    <string name="smart_sort_info_notice">
+Kategorikan dan atur file secara otomatis ke dalam folder terstruktur berdasarkan jenis, ukuran, tanggal, atau aturan kustom. Pilih drive penyimpanan atau berbagi di bawah untuk memulai.
 </string>
     <string name="smart_sort_config">
 Konfigurasi Smart Sort
@@ -6676,6 +7245,9 @@ Sinkronisasi diaktifkan
 </string>
     <string name="sync_disabled">
 Sinkronisasi dinonaktifkan
+</string>
+    <string name="sync_delete_profile_confirm_msg">
+Yakin ingin menghapus \"%1$s\"? Tindakan ini tidak dapat dibatalkan.
 </string>
     <string name="profile_deleted">
 Profil dihapus
@@ -7233,6 +7805,12 @@ Penyimpanan Online
     <string name="online_storages_subtitle">
 OneDrive, Google Drive, dan lainnya
 </string>
+    <string name="online_storages_info_notice">
+Hubungkan ke penyedia penyimpanan cloud termasuk OneDrive, Google Drive, Dropbox, Box, AWS S3, WebDAV, dan RClone untuk menjelajah, mentransfer, dan menyinkronkan file.
+</string>
+    <string name="online_storage_delete_confirm_body">
+Yakin ingin menghapus koneksi ke \"%1$s\"?
+</string>
     <string name="opening_online_storages">
 Membuka Penyimpanan Online…
 </string>
@@ -7547,6 +8125,111 @@ Akses Istimewa diaktifkan dan aktif
 </string>
     <string name="shizuku_adb_not_connected">
 ADB tidak terhubung. Hubungkan melalui Terminal ADB untuk mengaktifkan Akses Istimewa secara otomatis.
+</string>
+    <string name="shizuku_header_subtitle">
+Layanan Shizuku &amp; Shevery
+</string>
+    <string name="shizuku_status_not_installed_desc">
+Instal Shizuku atau Shevery untuk membuka folder Android/data yang dilindungi dan operasi dengan hak akses tinggi tanpa root.
+</string>
+    <string name="shizuku_status_stopped_desc">
+Layanan dengan hak akses tinggi telah terinstal tetapi saat ini tidak berjalan. Mulai layanan melalui Debugging Nirkabel atau aplikasi pengelola Anda.
+</string>
+    <string name="shizuku_status_unauthorized_desc">
+Layanan berjalan, tetapi UFM memerlukan otorisasi untuk mengakses API tingkat sistem.
+</string>
+    <string name="shizuku_status_active_desc">
+Layanan dengan hak akses tinggi aktif dengan izin penuh yang diberikan. Folder yang dilindungi dan operasi dengan hak akses tinggi siap digunakan.
+</string>
+    <string name="shizuku_badge_unavailable">
+TIDAK TERSEDIA
+</string>
+    <string name="shizuku_badge_stopped">
+TIDAK AKTIF
+</string>
+    <string name="shizuku_badge_auth_needed">
+PERLU OTORISASI
+</string>
+    <string name="shizuku_badge_connected">
+TERHUBUNG
+</string>
+    <string name="shizuku_section_capabilities">
+Kemampuan Hak Akses Tinggi
+</string>
+    <string name="shizuku_feature_protected_title">
+Folder yang Dilindungi
+</string>
+    <string name="shizuku_feature_protected_desc">
+Akses baca/tulis penuh ke Android/data &amp; obb
+</string>
+    <string name="shizuku_feature_speed_title">
+Operasi Berkecepatan Tinggi
+</string>
+    <string name="shizuku_feature_speed_desc">
+I/O langsung tingkat sistem tanpa root
+</string>
+    <string name="shizuku_feature_security_title">
+Tanpa Root &amp; Aman
+</string>
+    <string name="shizuku_feature_security_desc">
+Jembatan API istimewa Android standar
+</string>
+    <string name="shizuku_section_managers">
+Pengelola yang Tersedia
+</string>
+    <string name="shizuku_manager_shizuku_title">
+Shizuku
+</string>
+    <string name="shizuku_manager_shizuku_desc">
+Layanan hak akses tinggi standar dari GitHub
+</string>
+    <string name="shizuku_manager_shevery_title">
+Shevery
+</string>
+    <string name="shizuku_manager_shevery_desc">
+Alternatif cepat dan ringan
+</string>
+    <string name="shizuku_download_shizuku_apk">
+Unduh Shizuku (APK)
+</string>
+    <string name="shizuku_download_shevery_apk">
+Unduh Shevery (APK)
+</string>
+    <string name="shizuku_open_manager">
+Buka Pengelola %1$s
+</string>
+    <string name="shizuku_section_setup_guide">
+Panduan Penyiapan 3 Langkah
+</string>
+    <string name="shizuku_step_1">
+1. Instal APK
+</string>
+    <string name="shizuku_step_2">
+2. Mulai Layanan
+</string>
+    <string name="shizuku_step_3">
+3. Otorisasi UFM
+</string>
+    <string name="shizuku_service_info_title">
+Informasi Layanan
+</string>
+    <string name="shizuku_service_provider_label">
+Penyedia Layanan
+</string>
+    <string name="shizuku_service_mode_label">
+Mode Koneksi
+</string>
+    <string name="shizuku_service_permission_label">
+Tingkat Izin
+</string>
+    <string name="shizuku_service_mode_adb">
+ADB / Debugging Nirkabel
+</string>
+    <string name="shizuku_permission_granted_api">
+Diberikan (API v23)
+</string>
+    <string name="shizuku_recheck_status">
+Periksa Ulang Status
 </string>
     <string name="shizuku_manager_open_error">
 Tidak dapat membuka manajer. Harap instal Shizuku atau Shevery terlebih dahulu.
@@ -8714,6 +9397,21 @@ Catatan kosong
     <string name="notes_folder_title">
 Catatan Saya
 </string>
+    <string name="export_txt_desc">
+Dokumen teks biasa (.txt)
+</string>
+    <string name="export_csv_desc">
+Nilai yang dipisahkan koma (.csv)
+</string>
+    <string name="export_pdf_desc">
+Format Dokumen Portabel (.pdf)
+</string>
+    <string name="notepad_select_format_desc">
+Pilih format ekspor untuk dokumen Anda
+</string>
+    <string name="notepad_destination_label">
+Lokasi Penyimpanan
+</string>
     <string name="notepad_select_export_format">
 Simpan Sebagai
 </string>
@@ -8764,11 +9462,35 @@ Berkas disimpan
     <string name="settings_apk_extract_title">
 Ekstrak APK / XAPK
 </string>
+    <string name="settings_apk_extract_subtitle">
+Atur ekstraksi aplikasi dan metadata manifes
+</string>
     <string name="settings_apk_extract_subtitle_off">
 Hanya ekstraksi standar
 </string>
     <string name="settings_apk_extract_subtitle_on">
 Ditingkatkan
+</string>
+    <string name="settings_apk_extract_info_notice">
+Atur preferensi ekstraksi untuk aplikasi yang terinstal. Jika diaktifkan, UFM menyimpan ikon aplikasi dan metadata JSON di samping file APK dan XAPK yang diekstrak.
+</string>
+    <string name="settings_apk_extract_reset_defaults">
+Atur Ulang ke Default
+</string>
+    <string name="settings_apk_extract_reset_confirm_title">
+Atur Ulang Setelan Ekstraksi?
+</string>
+    <string name="settings_apk_extract_reset_confirm_message">
+Yakin ingin mengatur ulang semua setelan ekstraksi APK dan XAPK serta kolom metadata kembali ke default?
+</string>
+    <string name="settings_apk_extract_reset_toast">
+Setelan ekstraksi diatur ulang ke default
+</string>
+    <string name="settings_apk_extract_metadata_header">
+Kolom Metadata yang Disertakan dalam JSON
+</string>
+    <string name="settings_apk_extract_section_general">
+Fitur Ekstraksi
 </string>
     <string name="apk_extract_master_title">
 Ekstrak APK/XAPK Ditingkatkan
@@ -8794,44 +9516,86 @@ Bidang metadata yang akan disertakan dalam JSON
     <string name="field_extracted_date">
 Tanggal Diekstrak
 </string>
+    <string name="field_extracted_date_desc">
+Stempel waktu saat file diekstrak (extracted_date)
+</string>
     <string name="field_package_name">
 Nama Paket
+</string>
+    <string name="field_package_name_desc">
+ID aplikasi Android unik (package_name)
 </string>
     <string name="field_version_name">
 Nama Versi
 </string>
+    <string name="field_version_name_desc">
+String versi yang terlihat pengguna (version_name)
+</string>
     <string name="field_version_code">
 Kode Versi
+</string>
+    <string name="field_version_code_desc">
+Integer versi numerik internal (version_code)
 </string>
     <string name="field_label">
 Label Aplikasi
 </string>
+    <string name="field_label_desc">
+Nama tampilan aplikasi (label)
+</string>
     <string name="field_install_time">
 Tanggal Instalasi
+</string>
+    <string name="field_install_time_desc">
+Stempel waktu pemasangan asli di perangkat (install_time)
 </string>
     <string name="field_last_update_time">
 Tanggal Pembaruan Terakhir
 </string>
+    <string name="field_last_update_time_desc">
+Stempel waktu pembaruan terakhir di perangkat (last_update_time)
+</string>
     <string name="field_target_sdk">
 SDK Target
+</string>
+    <string name="field_target_sdk_desc">
+Versi API Android target (target_sdk)
 </string>
     <string name="field_min_sdk">
 SDK Minimum
 </string>
+    <string name="field_min_sdk_desc">
+Versi API Android minimum yang diperlukan (min_sdk)
+</string>
     <string name="field_app_size">
 Ukuran Aplikasi
+</string>
+    <string name="field_app_size_desc">
+Ukuran total aplikasi terinstal dalam byte (app_size)
 </string>
     <string name="field_source_dir">
 Direktori Sumber
 </string>
+    <string name="field_source_dir_desc">
+Path direktori sistem file dari APK dasar (source_dir)
+</string>
     <string name="field_split_apks">
 APK Terpisah
+</string>
+    <string name="field_split_apks_desc">
+Daftar path APK konfigurasi split (split_apks)
 </string>
     <string name="field_has_obb">
 Memiliki OBB
 </string>
+    <string name="field_has_obb_desc">
+Menunjukkan keberadaan data ekspansi OBB (has_obb)
+</string>
     <string name="field_permissions">
 Izin
+</string>
+    <string name="field_permissions_desc">
+Daftar izin manifes yang diminta (permissions)
 </string>
     <string name="extracts_subtitle_files">
 berkas
@@ -8980,6 +9744,45 @@ Tile &amp; Grup Kustom
 </string>
     <string name="backup_import_details_title">
 Pratinjau Impor
+</string>
+    <string name="backup_restore_notice">
+Buat file cadangan yang dapat diekspor dari setelan, tile kustom, dan berbagi jaringan Anda, atau pulihkan dari arsip cadangan yang telah diekspor sebelumnya.
+</string>
+    <string name="backup_restore_section_actions">
+Tindakan
+</string>
+    <string name="backup_export_notice">
+Pilih kategori dan komponen konfigurasi yang ingin Anda sertakan dalam arsip cadangan ini.
+</string>
+    <string name="backup_import_notice">
+Tinjau kategori konfigurasi yang ditemukan dalam arsip ini. Pemulihan akan menerapkan setelan ini dan memulai ulang aplikasi.
+</string>
+    <string name="backup_import_password_desc">
+File cadangan ini dienkripsi dengan kata sandi. Masukkan kata sandi di bawah untuk mendekripsi dan meninjau isinya.
+</string>
+    <string name="backup_password_dialog_desc">
+Lindungi file cadangan Anda secara opsional dengan enkripsi AES-256. Jika Anda melewati pengaturan kata sandi, file akan disimpan tanpa enkripsi.
+</string>
+    <string name="backup_skip_confirm_desc">
+Menyimpan tanpa enkripsi berarti siapa pun yang memiliki akses ke file cadangan dapat membaca setelan dan konfigurasi yang diekspor. Yakin ingin melanjutkan tanpa kata sandi?
+</string>
+    <string name="backup_import_guide_title">
+Impor Setelan
+</string>
+    <string name="backup_import_guide_subtitle">
+Pilih File Cadangan
+</string>
+    <string name="backup_import_guide_msg">
+Pilih arsip cadangan yang diekspor (.ufmconfig) dari penyimpanan perangkat Anda. Setelan, berbagi jaringan, tile kustom, dan preferensi Anda akan dipulihkan.
+</string>
+    <string name="backup_import_guide_format_label">
+Format Arsip yang Didukung
+</string>
+    <string name="backup_import_guide_format_val">
+File *.ufmconfig
+</string>
+    <string name="backup_import_guide_btn_browse">
+Pilih File Cadangan
 </string>
 
     <!-- Auto Backup -->
@@ -9189,6 +9992,9 @@ Pengaturan &amp; Preferensi
 </string>
     <string name="category_main_menu_tiles">
 Ubin Menu Utama
+</string>
+    <string name="category_icons_count">
+Ikon %1$d disertakan
 </string>
     <string name="icon_file_generic">
 Berkas Umum
@@ -9470,6 +10276,12 @@ Perisai Centang
 </string>
     <string name="icon_status_shield_alert">
 Perisai Peringatan
+</string>
+    <string name="icon_status_customized">
+Dikustomisasi
+</string>
+    <string name="icon_status_default">
+Default
 </string>
     <string name="icon_view_grid_small">
 Grid Kecil
@@ -9858,6 +10670,26 @@ Enkripsi &amp; Ekspor
 Lewati (tanpa enkripsi)
 </string>
 
+    <!-- Theme pack import instructions -->
+    <string name="theme_import_instructions_title">
+Impor Paket Ikon
+</string>
+    <string name="theme_import_instructions_desc">
+Impor ikon kustom dan warna tile dari file .ufmtheme yang telah diekspor sebelumnya.
+</string>
+    <string name="theme_import_step_select">
+Temukan dan pilih file .ufmtheme di penyimpanan
+</string>
+    <string name="theme_import_step_password">
+Masukkan kata sandi dekripsi jika paket dilindungi
+</string>
+    <string name="theme_import_step_preview">
+Pratinjau ikon yang disertakan dan konfirmasi untuk menerapkan
+</string>
+    <string name="theme_import_btn_select">
+Pilih File .ufmtheme
+</string>
+
     <!-- Theme pack import password -->
     <string name="theme_import_password_title">
 Masukkan kata sandi paket tema
@@ -10188,6 +11020,9 @@ Tetap dijeda setelah interupsi
     <string name="settings_skip_length_title">
 Panjang lompatan
 </string>
+    <string name="settings_skip_length_dialog_desc">
+Pilih seberapa jauh lompat maju atau mundur saat mencari posisi dalam pemutaran media.
+</string>
     <string name="skip_length_option_3s">
 3s
 </string>
@@ -10205,6 +11040,27 @@ Panjang lompatan
 </string>
     <string name="skip_length_option_disable">
 Nonaktif
+</string>
+    <string name="skip_length_desc_3s">
+Lewati 3 detik
+</string>
+    <string name="skip_length_desc_5s">
+Lewati 5 detik
+</string>
+    <string name="skip_length_desc_10s">
+Lewati 10 detik (Default)
+</string>
+    <string name="skip_length_desc_20s">
+Lewati 20 detik
+</string>
+    <string name="skip_length_desc_30s">
+Lewati 30 detik
+</string>
+    <string name="skip_length_desc_disable">
+Sembunyikan tombol lompat maju dan mundur
+</string>
+    <string name="skip_length_toast_set">
+Panjang lompatan disetel ke %1$s
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -10447,6 +11303,51 @@ Tag File
     <string name="settings_file_tags_subtitle">
 Kelola hashtag dan opsi penandaan
 </string>
+    <string name="settings_file_tags_info_notice">
+Tag kustom yang ditetapkan ke file dan folder untuk pemfilteran, pencarian, dan kategorisasi cepat. Ketuk ikon tempat sampah pada tag mana pun untuk menghapusnya secara global.
+</string>
+    <string name="settings_file_tags_empty_title">
+Belum Ada Tag File yang Dibuat
+</string>
+    <string name="settings_file_tags_empty_desc">
+Beri tag pada file atau folder mana pun dari lembar properti file atau toolbar multi-pilih untuk mengatur media dan dokumen Anda di sini.
+</string>
+    <string name="settings_file_tags_delete_confirm_title">
+Hapus Tag?
+</string>
+    <string name="settings_file_tags_delete_confirm_message">
+Yakin ingin menghapus tag \"#%1$s\"? Tag akan dihapus dari semua file dan folder yang diberi tag.
+</string>
+    <string name="settings_file_tags_delete_btn">
+Hapus Tag
+</string>
+    <string name="settings_file_tags_clear_all">
+Hapus Semua Tag
+</string>
+    <string name="settings_file_tags_clear_all_confirm_title">
+Hapus Semua Tag File?
+</string>
+    <string name="settings_file_tags_clear_all_confirm_message">
+Yakin ingin menghapus secara permanen semua tag file yang telah dibuat? Ini akan menghapus semua tag dari semua file dan folder.
+</string>
+    <string name="settings_file_tags_deleted_toast">
+Tag #%1$s dihapus
+</string>
+    <string name="settings_file_tags_cleared_all_toast">
+Semua tag file dihapus
+</string>
+    <string name="settings_file_tags_multi_title">
+Penandaan Multi-File
+</string>
+    <string name="settings_file_tags_multi_desc">
+Memungkinkan pemberian tag pada beberapa file sekaligus saat dipilih
+</string>
+    <string name="settings_file_tags_created_header">
+Tag yang Dibuat
+</string>
+    <string name="settings_file_tags_empty">
+Belum ada tag yang dibuat
+</string>
     <string name="action_tag">
 Tag
 </string>
@@ -10523,8 +11424,41 @@ Tidak ada pengaturan urutan khusus folder yang disimpan.\n
 \n
 Buka folder, ketuk Urutkan &amp; Filter dan pilih \"Folder Ini\" untuk membuat override.
 </string>
+    <string name="folder_sort_manager_empty_title">
+Tidak Ada Pengesampingan Urutan yang Dikonfigurasi
+</string>
+    <string name="folder_sort_manager_empty_desc">
+Saat Anda mengubah urutan pengurutan atau filter untuk folder tertentu menggunakan \"Folder Ini\", aturan tersebut akan muncul di sini sehingga Anda dapat mengelola atau mengatur ulang aturan pengurutan kustom.
+</string>
+    <string name="folder_sort_manager_info_notice">
+Urutan pengurutan khusus dan filter yang dikonfigurasi untuk direktori tertentu. Ketuk ikon tempat sampah untuk mengembalikan folder ke pengurutan global.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Bersihkan Semua Pengaturan Khusus
+</string>
     <string name="folder_sort_manager_clear_confirm">
 Hapus semua override urutan khusus folder? Folder akan kembali ke pengaturan urutan global.
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_title">
+Bersihkan Semua Pengaturan Khusus Pengurutan?
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_message">
+Anda yakin ingin menghapus semua pengaturan khusus pengurutan per folder? Semua folder akan kembali ke pengaturan pengurutan dan filter global Anda.
+</string>
+    <string name="folder_sort_manager_remove_confirm_title">
+Atur Ulang Pengaturan Khusus Pengurutan Folder?
+</string>
+    <string name="folder_sort_manager_remove_confirm_message">
+Anda yakin ingin menghapus pengaturan khusus pengurutan untuk \"%1$s\"? Folder ini akan kembali ke pengurutan global.
+</string>
+    <string name="folder_sort_manager_remove_btn">
+Atur Ulang Pengaturan Khusus
+</string>
+    <string name="folder_sort_manager_cleared_all_toast">
+Semua pengaturan khusus pengurutan folder telah dibersihkan
+</string>
+    <string name="folder_sort_manager_deleted">
+Pengaturan khusus untuk %1$s telah dihapus
 </string>
     <string name="folder_sort_network_badge">
 Jaringan / Online
@@ -10686,6 +11620,9 @@ Tidak Dapat Mengirim
 Terjadi kesalahan. Silakan coba lagi.
 </string>
     <string name="support_retry">
+Coba Lagi
+</string>
+    <string name="retry">
 Coba Lagi
 </string>
     <string name="support_no_internet">
@@ -11225,6 +12162,343 @@ Tanpa GPS
     <string name="exif_select_destination_folder">
 Pilih Folder Output
 </string>
+
+    <!-- Video Thumbnail Time Modernization -->
+    <string name="vtt_section_options">
+Titik Tangkap
+</string>
+    <string name="vtt_info_notice">
+Pilih stempel waktu yang digunakan untuk menghasilkan thumbnail video di seluruh aplikasi. Mengatur persentase menghindari bingkai kosong, gelap, atau intro di awal video.
+</string>
+    <string name="vtt_percent_0_subtitle">
+Tangkap bingkai pertama dari video (00:00)
+</string>
+    <string name="vtt_percent_10_subtitle">
+Default yang disarankan — melewati bingkai hitam atau intro pembuka
+</string>
+    <string name="vtt_percent_25_subtitle">
+Tangkap bingkai pada 25% durasi video
+</string>
+    <string name="vtt_percent_50_subtitle">
+Tangkap bingkai tepat di titik tengah (50%) video
+</string>
+    <string name="vtt_percent_75_subtitle">
+Tangkap bingkai pada 75% durasi video
+</string>
+
+    <!-- Network Thumbnail Settings Modernization -->
+    <string name="nt_section_caching">
+Konfigurasi
+</string>
+    <string name="nt_section_storage">
+Penyimpanan &amp; Pemeliharaan
+</string>
+    <string name="nt_info_notice">
+Thumbnail jarak jauh disimpan dalam cache lokal sehingga berbagi jaringan, SMB, FTP, SFTP, dan drive cloud menampilkan pratinjau gambar dan video dengan cepat tanpa mengunduh ulang file.
+</string>
+    <string name="nt_cache_folder_guide_title">
+Pilih Lokasi Cache
+</string>
+    <string name="nt_cache_folder_guide_msg">
+Pilih direktori penyimpanan internal atau kartu SD untuk menyimpan file cache thumbnail jaringan.\n
+\n
+Di penjelajah penyimpanan, navigasikan ke direktori yang Anda inginkan dan ketuk \"PILIH FOLDER INI\" di bagian atas.
+</string>
+    <string name="nt_cache_folder_btn_browse">
+Telusuri Penyimpanan
+</string>
+    <string name="nt_cache_folder_btn_reset_default">
+Atur Ulang ke Lokasi Bawaan
+</string>
+    <string name="nt_cache_folder_current_label">
+Lokasi Saat Ini:
+</string>
+
+    <!-- Cache Limit Dialog Modernization -->
+    <string name="nt_cache_limit_dialog_desc">
+Pilih ruang disk maksimum yang digunakan untuk menyimpan cache thumbnail jarak jauh.
+</string>
+    <string name="nt_limit_subtitle_500mb">
+Default standar — ideal untuk penelusuran umum
+</string>
+    <string name="nt_limit_subtitle_1gb">
+Disarankan untuk penggunaan jaringan sedang
+</string>
+    <string name="nt_limit_subtitle_2gb">
+Penyimpanan besar untuk thumbnail foto &amp; video
+</string>
+    <string name="nt_limit_subtitle_5gb">
+Kapasitas cache standar maksimum
+</string>
+    <string name="nt_limit_subtitle_custom">
+Tetapkan batas penyimpanan kustom dalam MB atau GB
+</string>
+    <string name="nt_custom_limit_dialog_title">
+Batas Cache Kustom
+</string>
+    <string name="nt_custom_limit_dialog_desc">
+Masukkan batas ukuran kustom dalam MB atau GB
+</string>
+    <string name="nt_custom_presets_label">
+Prasetel Cepat
+</string>
+    <string name="nt_custom_size_label">
+Ukuran Kustom
+</string>
+
+    <!-- File Server System Tiles Modernization -->
+    <string name="file_server_tiles_section_server">
+Server File
+</string>
+    <string name="file_server_tiles_section_tiles">
+Ubin Pengaturan Cepat
+</string>
+    <string name="file_server_tiles_info_notice">
+Ubin Pengaturan Cepat memungkinkan Anda memulai dan menghentikan server media FTP, SFTP, dan DLNA langsung dari laci notifikasi Android tanpa membuka aplikasi.
+</string>
+
+    <!-- Storage Indexer Modernization -->
+    <string name="storage_indexer_section_storages">
+Penyimpanan Terdeteksi
+</string>
+    <string name="storage_indexer_section_actions">
+Pemeliharaan
+</string>
+    <string name="storage_indexer_info_notice">
+Indeks penyimpanan internal dan drive yang dapat dilepas untuk hasil pencarian instan, deteksi duplikat, dan pemfilteran kategori di seluruh perangkat Anda.
+</string>
+    <string name="storage_indexer_detail_info_notice">
+Volume penyimpanan ini telah diindeks. Rekaman yang diindeks memungkinkan pencarian multi-kriteria dengan cepat tanpa memindai sistem file.
+</string>
+    <string name="storage_indexer_btn_delete_confirm">
+Hapus Rekaman
+</string>
+
+    <!-- Auto Backup Modernization -->
+    <string name="auto_backup_section_general">
+Konfigurasi
+</string>
+    <string name="auto_backup_section_schedule">
+Jadwal
+</string>
+    <string name="auto_backup_section_security">
+Keamanan &amp; Enkripsi
+</string>
+    <string name="auto_backup_section_location">
+Tujuan Cadangan
+</string>
+    <string name="auto_backup_info_notice">
+Cadangan Otomatis secara berkala membuat cadangan terenkripsi atau biasa dari preferensi aplikasi, tema kustom, dan ubin Anda sehingga Anda tidak pernah kehilangan konfigurasi.
+</string>
+    <string name="auto_backup_folder_guide_title">
+Pilih Folder Cadangan
+</string>
+    <string name="auto_backup_folder_guide_msg">
+Pilih di mana cadangan otomatis akan disimpan. Navigasikan ke folder lokal atau yang dapat dilepas dan ketuk tombol simpan untuk mengonfirmasi.
+</string>
+    <string name="auto_backup_folder_guide_current">
+Lokasi Saat Ini:
+</string>
+    <string name="auto_backup_folder_guide_btn_choose">
+Pilih Folder
+</string>
+    <string name="auto_backup_reset_success">
+Lokasi cadangan diatur ulang ke bawaan (Documents/UFM).
+</string>
+
+    <!-- File Server Modernization -->
+    <string name="file_server_section_services">
+Layanan Server
+</string>
+    <string name="file_server_section_profiles">
+Otentikasi &amp; Akses
+</string>
+    <string name="file_server_info_notice">
+Host server file FTP dan SFTP lokal atau streaming media melalui DLNA. Perangkat di jaringan Wi-Fi lokal Anda dapat terhubung untuk menelusuri, streaming, dan mentransfer file.
+</string>
+    <string name="file_server_empty_profiles_desc">
+Ketuk \\\'Tambah Profil\\\' untuk mengonfigurasi kredensial login, izin akses, dan direktori bersama.
+</string>
+
+    <!-- DLNA Modernization -->
+    <string name="dlna_section_services">
+Layanan DLNA
+</string>
+    <string name="dlna_section_config">
+Konfigurasi
+</string>
+    <string name="dlna_section_identification">
+Identifikasi
+</string>
+    <string name="dlna_section_shared_folders">
+Direktori Bersama
+</string>
+    <string name="dlna_info_notice">
+Streaming foto, musik, dan video ke TV pintar dan pemutar media DLNA di jaringan Wi-Fi lokal Anda, atau izinkan perangkat lain melakukan cast media ke perangkat ini.
+</string>
+    <string name="dlna_settings_info_notice">
+Konfigurasi tampilan perangkat Anda di jaringan lokal dan pilih direktori untuk dibagikan. Berbagi media DLNA bersifat hanya baca secara ketat.
+</string>
+    <string name="dlna_empty_shared_folders_desc">
+Ketuk \\\'Tambah Folder\\\' untuk memilih folder penyimpanan internal, kartu SD, atau USB untuk ditampilkan melalui DLNA.
+</string>
+
+    <!-- Smart Sort Modernization -->
+    <string name="smart_sort_empty">
+Tidak ada drive penyimpanan ditemukan
+</string>
+    <string name="smart_sort_history_moved">
+Dipindahkan
+</string>
+    <string name="smart_sort_history_skipped">
+Dilewati
+</string>
+    <string name="smart_sort_history_failed">
+Gagal
+</string>
+
+    <!-- Rate Us Modernization -->
+    <string name="rate_us_section_rate">
+Peringkat &amp; Masukan
+</string>
+    <string name="rate_us_section_support">
+Lebih Banyak Cara untuk Mendukung
+</string>
+    <string name="rate_us_support_title">
+Dukung Proyek
+</string>
+    <string name="rate_us_support_subtitle">
+Berikan tip jika Anda dapat mendukung proyek
+</string>
+    <string name="rate_us_stars_description">
+Peringkat bintang 5
+</string>
+
+    <!-- Help & Support Modernization -->
+    <string name="support_section_channels">
+Saluran Kontak
+</string>
+    <string name="support_section_direct">
+Kontak Langsung
+</string>
+    <string name="support_direct_email_title">
+support@kilowatch.co.za
+</string>
+    <string name="support_direct_email_subtitle">
+Kirim email langsung ke tim pengembangan
+</string>
+    <string name="support_direct_email_copied">
+Email dukungan disalin ke papan klip
+</string>
+
+    <!-- About Modernization -->
+    <string name="about_section_app">
+Informasi Aplikasi
+</string>
+    <string name="about_section_support">
+Pengembang &amp; Tautan
+</string>
+    <string name="about_section_legal">
+Hukum &amp; Kebijakan
+</string>
+    <string name="about_section_acknowledgments">
+Penghargaan
+</string>
+    <string name="about_legal_title">
+Kebijakan Privasi &amp; Ketentuan
+</string>
+    <string name="about_legal_subtitle">
+Tinjau kebijakan privasi, ketentuan layanan, dan lisensi kami
+</string>
+    <string name="about_rate_title">
+Beri Peringkat &amp; Ulasan
+</string>
+    <string name="about_rate_subtitle">
+Bagikan pengalaman Anda di Google Play
+</string>
+    <string name="about_support_title">
+Bantuan &amp; Dukungan
+</string>
+    <string name="about_support_subtitle">
+Laporkan masalah atau minta fitur
+</string>
+    <string name="about_email_copied">
+Email dukungan disalin ke papan klip
+</string>
+
+    <!-- Main Menu Categorized Modernization -->
+    <string name="main_menu_category_storage">
+Penyimpanan
+</string>
+    <string name="main_menu_category_connect">
+Koneksi
+</string>
+    <string name="main_menu_category_sync">
+Sinkronisasi Folder
+</string>
+    <string name="main_menu_category_organize">
+Atur
+</string>
+    <string name="main_menu_category_utilities">
+Utilitas
+</string>
+    <string name="main_menu_category_security">
+Keamanan &amp; Lanjutan
+</string>
+    <string name="main_menu_category_settings">
+Pengaturan &amp; Lainnya
+</string>
+    <string name="main_menu_layout_modern_categorized">
+Modern Terkategori
+</string>
+    <string name="main_menu_layout_modern_desc">
+Diatur ke dalam bagian kategori yang dapat diperluas
+</string>
+    <string name="main_menu_layout_classic_grid">
+Grid Klasik
+</string>
+    <string name="main_menu_layout_classic_grid_desc">
+Grid multi-kolom datar (3 atau 4 kolom)
+</string>
+    <string name="main_menu_layout_classic_list">
+Daftar Klasik
+</string>
+    <string name="main_menu_layout_classic_list_desc">
+Daftar satu kolom datar (Besar, Sedang, Kecil)
+</string>
+    <string name="main_menu_section_items_count">
+%1$d item
+</string>
+    <string name="main_menu_section_item_count_single">
+1 item
+</string>
+
+    <!-- Reset Category Layout -->
+    <string name="reset_categorized_layout_section">
+Atur Ulang
+</string>
+    <string name="reset_categorized_layout_title">
+Atur Ulang Tata Letak Kategori
+</string>
+    <string name="reset_categorized_layout_desc">
+Pulihkan urutan kategori, posisi ubin, dan status perluasan ke bawaan
+</string>
+    <string name="reset_categorized_dialog_title">
+Atur Ulang Tata Letak Kategori?
+</string>
+    <string name="reset_categorized_dialog_subtitle">
+Pulihkan pengaturan pabrik
+</string>
+    <string name="reset_categorized_dialog_msg">
+Ini akan memulihkan semua header kategori, posisi ubin, dan status perluasan ke bawaan pabrik. Pengaturan warna kustom akan dipertahankan.
+</string>
+    <string name="reset_categorized_dialog_confirm">
+Atur Ulang ke Bawaan
+</string>
+    <string name="reset_categorized_success">
+Tata letak kategori dipulihkan ke bawaan
+</string>
 </resources>
+
 
 

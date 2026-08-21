@@ -50,6 +50,15 @@ Ultimate File Manager Pro
     <string name="language_system_default">
 Системна за замовчуванням
 </string>
+    <string name="language_system_default_desc">
+Відповідати мові системи пристрою
+</string>
+    <string name="language_section_system">
+Системна мова
+</string>
+    <string name="language_section_available">
+Доступні мови
+</string>
     <string name="settings_list_size_title">
 Розмір рядка налаштувань
 </string>
@@ -460,6 +469,36 @@ USB-накопичувач
 \n
 Довго натисніть файл або папку та торкніться значка зірки, щоб додати його сюди.
 </string>
+    <string name="manage_favorites_empty_title">
+Немає обраного
+</string>
+    <string name="manage_favorites_empty_desc">
+Торкніться значка зірки біля будь-якого файлу чи папки у файловому менеджері, щоб додати його до обраного для швидкого доступу.
+</string>
+    <string name="manage_favorites_info_notice">
+Обрані файли та папки з’являються у бічній панелі навігації та панелях швидкого доступу для швидкої навігації. Торкніться значка кошика, щоб видалити елемент з обраного.
+</string>
+    <string name="manage_favorites_clear_all">
+Очистити все обране
+</string>
+    <string name="manage_favorites_clear_all_confirm_title">
+Очистити все обране?
+</string>
+    <string name="manage_favorites_clear_all_confirm_message">
+Ви впевнені, що хочете видалити всі елементи зі списку обраного? Це не видалить самі файли чи папки.
+</string>
+    <string name="manage_favorites_remove_confirm_title">
+Видалити з обраного?
+</string>
+    <string name="manage_favorites_remove_confirm_message">
+Ви впевнені, що хочете видалити \"%1$s\" зі списку обраного?
+</string>
+    <string name="manage_favorites_remove_btn">
+Видалити з обраного
+</string>
+    <string name="manage_favorites_cleared_all_toast">
+Усі обрані елементи видалено
+</string>
     <string name="manage_favorites_removed">
 %1$s видалено з вибраного
 </string>
@@ -650,6 +689,21 @@ DCIM
 3. Увімкніть \"Налагодження по USB\"\n
 \n
 Якщо ви не бачите Параметри розробника, спочатку перейдіть до \"Про пристрій\" і натисніть \"Номер збірки\" 7 разів.\"
+</string>
+    <string name="adb_enable_desc">
+Для створення скріншотів на телевізорі потрібно ввімкнути налагодження USB.
+</string>
+    <string name="adb_step_1">
+1. Відкрийте «Налаштування» на вашому Android TV.
+</string>
+    <string name="adb_step_2">
+2. Перейдіть у «Параметри пристрою» → «Параметри розробника»
+</string>
+    <string name="adb_step_3">
+3. Увімкніть «Налагодження USB»
+</string>
+    <string name="adb_step_tip">
+Порада: якщо «Параметри розробника» приховані, перейдіть у «Налаштування» → «Про пристрій» і торкніться «Номер збірки» 7 разів.
 </string>
     <string name="adb_pairing_required">
 Потрібне сполучення ADB
@@ -1061,6 +1115,24 @@ APK
 економить %1$s
 </string>
     <!-- Section headers inside Overview -->
+    <string name="analyzer_info_notice">
+Перевіряйте використання диска, переглядайте деталізацію пам’яті за категоріями та знаходьте великі файли, дублікати і рекомендації з очищення.
+</string>
+    <string name="analyzer_section_storage_breakdown">
+Розподіл пам’яті
+</string>
+    <string name="analyzer_section_top_folders">
+Найбільші папки
+</string>
+    <string name="analyzer_section_app_usage">
+Використання пам’яті застосунками
+</string>
+    <string name="analyzer_empty_state_desc">
+Не знайдено елементів для цієї категорії аналізу.
+</string>
+    <string name="analyzer_action_review">
+Перегляд та очищення
+</string>
     <string name="analyzer_top_folders">
 Найбільші папки за розміром
 </string>
@@ -1273,14 +1345,29 @@ XXXXXXXXXXXXXXXX
 Видалити назавжди
 </string>
 
+    <string name="theme_section_color_palette">
+Палітра кольорів
+</string>
+    <string name="theme_section_mode">
+Режим теми
+</string>
     <string name="theme_light">
 Світла
+</string>
+    <string name="theme_light_desc">
+Чистий яскравий інтерфейс
 </string>
     <string name="theme_dark">
 Темна
 </string>
+    <string name="theme_dark_desc">
+Комфортна темна тема для слабкого освітлення
+</string>
     <string name="theme_system">
 Системна за замовчуванням
+</string>
+    <string name="theme_system_desc">
+Використовувати системний розклад дня/ночі
 </string>
     <string name="theme_amoled">
 AMOLED чорний
@@ -1323,6 +1410,30 @@ Material You
     <string name="font_size_preview">
 Швидка бура лисиця стрибає
 </string>
+    <string name="font_size_small_desc">
+85% • Компактний розмір для вищої щільності екрана
+</string>
+    <string name="font_size_normal_desc">
+100% • Стандартний рекомендований розмір шрифту
+</string>
+    <string name="font_size_large_desc">
+115% • Збільшений розмір для покращення читабельності
+</string>
+    <string name="font_size_preview_title">
+Попередній перегляд шрифту
+</string>
+    <string name="font_size_preview_sample_heading">
+Ultimate File Manager Pro
+</string>
+    <string name="font_size_preview_sample_body">
+Швидка бура лисиця стрибає через ледачого пса. Двопанельний файловий менеджер для просунутих користувачів на Android і TV.
+</string>
+    <string name="font_size_section_preview">
+Попередній перегляд
+</string>
+    <string name="font_size_section_options">
+Параметри розміру тексту
+</string>
 
     <!-- Storage Renaming -->
     <string name="settings_storage_rename_title">
@@ -1331,11 +1442,56 @@ Material You
     <string name="settings_storage_rename_subtitle">
 Перейменувати USB та локальні диски
 </string>
+    <string name="storage_rename_section_connected">
+Підключені накопичувачі
+</string>
+    <string name="storage_rename_section_offline">
+Офлайн / відключені накопичувачі
+</string>
+    <string name="storage_rename_original_details">
+Оригінал: %1$s • %2$s
+</string>
+    <string name="storage_rename_info_notice">
+Власні назви для внутрішньої пам’яті, SD-карт і USB-накопичувачів. Торкніться будь-якого диска, щоб перейменувати або скинути його відображувану назву.
+</string>
+    <string name="storage_rename_empty_title">
+Накопичувачі не знайдено
+</string>
+    <string name="storage_rename_empty_desc">
+Підключені внутрішні та зовнішні накопичувачі з’являться тут для налаштування назв та ідентифікації.
+</string>
     <string name="rename_drive_dialog_title">
 Перейменувати диск
 </string>
+    <string name="storage_rename_dialog_subtitle">
+Введіть власну назву для %1$s
+</string>
     <string name="custom_name_hint">
 Нова назва диска
+</string>
+    <string name="storage_rename_reset_btn">
+Скинути до початкової
+</string>
+    <string name="storage_rename_save_btn">
+Зберегти власну назву
+</string>
+    <string name="storage_rename_saved_toast">
+Накопичувач перейменовано на \"%1$s\"
+</string>
+    <string name="storage_rename_reset_toast">
+Назву накопичувача скинуто до початкової
+</string>
+    <string name="storage_rename_clear_all">
+Скинути назви всіх накопичувачів
+</string>
+    <string name="storage_rename_clear_all_confirm_title">
+Скинути назви всіх накопичувачів?
+</string>
+    <string name="storage_rename_clear_all_confirm_message">
+Ви впевнені, що хочете скинути всі власні назви накопичувачів до системних назв за замовчуванням?
+</string>
+    <string name="storage_rename_cleared_all_toast">
+Усі назви накопичувачів скинуто до значень за замовчуванням
 </string>
     <string name="reset_action">
 Скинути
@@ -1428,11 +1584,29 @@ Material You
     <string name="start_screen_storage_browser">
 Головне меню (за замовчуванням)
 </string>
+    <string name="start_screen_storage_browser_desc">
+Стандартний домашній екран з усіма накопичувачами та швидкими плитками
+</string>
     <string name="start_screen_twin_window">
 Подвійне вікно
 </string>
+    <string name="start_screen_twin_window_desc">
+Двопанельний файловий менеджер із бічними панелями
+</string>
     <string name="start_screen_file_server">
 Файловий сервер
+</string>
+    <string name="start_screen_file_server_desc">
+Елементи керування файловим сервером HTTP, FTP і WebDAV
+</string>
+    <string name="start_screen_section_main">
+Головні екрани
+</string>
+    <string name="start_screen_section_storages">
+Прямий доступ до накопичувачів
+</string>
+    <string name="start_screen_storage_desc">
+Відкривати цей диск безпосередньо під час запуску
 </string>
 
     <!-- Analytics Toggle -->
@@ -1507,6 +1681,12 @@ Material You
 </string>
 
     <!-- Open Source Licenses -->
+    <string name="policy_section_agreements">
+Політики та угоди
+</string>
+    <string name="policy_section_attributions">
+Атрибуція та ліцензії
+</string>
     <string name="policy_licenses_button">
 Ліцензії з відкритим кодом
 </string>
@@ -1640,8 +1820,38 @@ APK
     <string name="default_apps_empty">
 Не встановлено стандартних застосунків.
 </string>
+    <string name="default_apps_empty_title">
+Типові застосунки не налаштовано
+</string>
+    <string name="default_apps_empty_desc">
+Коли ви відкриваєте файл через «Завжди», він з’явиться тут, щоб ви могли керувати правилами асоціації файлів або скинути їх.
+</string>
+    <string name="default_apps_info_notice">
+Типи файлів, налаштовані на автоматичне відкриття певним переглядачем або застосунком. Торкніться значка кошика, щоб скинути правило асоціації.
+</string>
     <string name="default_apps_clear_all">
 Очистити всі стандартні
+</string>
+    <string name="default_apps_clear_all_confirm_title">
+Очистити всі типові застосунки
+</string>
+    <string name="default_apps_clear_all_confirm_message">
+Ви впевнені, що хочете очистити всі налаштування асоціацій файлів? Під час відкриття файлів буде з’являтися запит на вибір застосунку.
+</string>
+    <string name="default_app_remove_confirm_title">
+Скинути асоціацію для .%1$s?
+</string>
+    <string name="default_app_remove_confirm_message">
+Ви впевнені, що хочете скинути типовий застосунок для .%1$s (%2$s)? Наступного разу під час відкриття файлів цього типу буде запропоновано вибрати застосунок.
+</string>
+    <string name="default_app_remove_btn">
+Скинути
+</string>
+    <string name="default_apps_removed_toast">
+Скинути типовий застосунок для .%1$s
+</string>
+    <string name="default_apps_cleared_all_toast">
+Усі типові застосунки очищено
 </string>
     <string name="default_apps_extension_label">
 Тип файлу: %1$s
@@ -1972,6 +2182,15 @@ UFM Slide Show
     <string name="all_drives">
 Всі диски
 </string>
+    <string name="search_select_location_title">
+Місце пошуку
+</string>
+    <string name="search_select_location_subtitle">
+Виберіть місце зберігання для пошуку
+</string>
+    <string name="search_all_drives_subtitle">
+Шукати по всіх підключених накопичувачах
+</string>
 
     <!-- Category detail -->
     <string name="category_files_title">
@@ -2117,6 +2336,9 @@ SMB, FTP та інше
     <string name="network_shares_subtitle">
 SMB · FTP
 </string>
+    <string name="network_shares_info_notice">
+Підключайтеся до спільних ресурсів SMB, FTP, SFTP, SCP і NFS у локальній мережі, щоб безперешкодно переглядати, передавати та впорядковувати файли.
+</string>
     <string name="network_add_share">
 Додати ресурс
 </string>
@@ -2162,6 +2384,9 @@ DLNA
 </string>
     <string name="network_field_port">
 Порт (залиште порожнім для стандартного)
+</string>
+    <string name="network_section_credentials">
+Облікові дані та автентифікація
 </string>
     <string name="network_field_username">
 Ім\'я користувача (порожньо = гість)
@@ -2681,6 +2906,37 @@ jpg, png, mp4
 %1$s — використано версію %2$s
 </string>
 
+    <string name="configure_sync_folders_schedule">
+Налаштувати папки та розклад синхронізації
+</string>
+    <string name="sync_section_profile_direction">
+Профіль і напрямок
+</string>
+    <string name="sync_section_folders">
+Папки та розташування
+</string>
+    <string name="sync_section_schedule">
+Розклад та автоматизація
+</string>
+    <string name="sync_section_conflict">
+Обробка конфліктів та видалення
+</string>
+    <string name="sync_section_filtering">
+Фільтрування файлів і теги
+</string>
+    <string name="general_settings">
+Загальні налаштування
+</string>
+    <string name="schedule_and_triggers">
+Розклад і тригери
+</string>
+    <string name="schedule_mode">
+Режим розкладу
+</string>
+    <string name="options">
+Параметри
+</string>
+
     <!-- Generic -->
     <string name="cancel">
 Скасувати
@@ -2885,6 +3141,58 @@ NFS-серверів у цій мережі не знайдено
 Відновлюється до: %1$s
 </string>
 
+    <!-- Add Options Dialog -->
+    <string name="add_menu_options_title">
+Створити
+</string>
+    <string name="add_menu_options_desc">
+Виберіть, що ви хочете додати до головного меню.
+</string>
+    <string name="option_create_header_title">
+Створити новий заголовок
+</string>
+    <string name="option_create_header_desc">
+Додайте власний заголовок розділу, щоб упорядкувати свої плитки
+</string>
+    <string name="option_create_tile_title">
+Створити власну плитку
+</string>
+    <string name="option_create_tile_desc">
+Додайте власну плитку для групування ярликів і папок
+</string>
+
+    <!-- Custom Category Headers -->
+    <string name="custom_header_create_title">
+Створити новий заголовок
+</string>
+    <string name="custom_header_create_desc">
+Введіть назву для цього заголовка категорії.
+</string>
+    <string name="custom_header_name_hint">
+Назва заголовка (обов’язково)
+</string>
+    <string name="custom_header_name_required">
+Назва заголовка обов’язкова
+</string>
+    <string name="custom_header_created">
+Заголовок категорії створено
+</string>
+    <string name="custom_header_add_button">
+Додати заголовок
+</string>
+    <string name="custom_header_delete_title">
+Видалити заголовок категорії
+</string>
+    <string name="custom_header_delete_confirm">
+Видалити \"%1$s\"?
+</string>
+    <string name="custom_header_delete_warning">
+Усі плитки всередині буде переміщено назад до їхнього початкового розташування.
+</string>
+    <string name="custom_header_deleted">
+Заголовок категорії \"%1$s\" видалено
+</string>
+
     <!-- Custom Tiles -->
     <string name="custom_tile_create_title">
 Створити власну плитку
@@ -3032,6 +3340,12 @@ NFS-серверів у цій мережі не знайдено
     <string name="tile_color_message_select">
 Торкніться плитки після натискання «Вибрати», щоб відкрити палітру кольорів.
 </string>
+    <string name="tile_color_tip_title">
+Налаштування кольору плиток
+</string>
+    <string name="tile_color_tip_desc">
+Торкніться будь-якого накопичувача або функціональної плитки на головному екрані, щоб налаштувати її кольорову палітру
+</string>
     <string name="tile_color_button_select">
 Вибрати плитку
 </string>
@@ -3148,6 +3462,9 @@ NFS-серверів у цій мережі не знайдено
 </string>
     <string name="storage_indexer_delete_records">
 Видалити індексовані записи
+</string>
+    <string name="storage_indexer_delete_records_desc">
+Очистити базу даних індексування для цього накопичувача
 </string>
     <string name="storage_indexer_not_now">
 Ігнорувати це сховище (Не зараз)
@@ -3403,14 +3720,41 @@ OK
     <string name="layout_grid">
 Сітка
 </string>
+    <string name="layout_list_size_section">
+Розмір списку
+</string>
+    <string name="layout_size_large">
+Великий
+</string>
+    <string name="layout_size_large_desc">
+Просторі рядки з великими іконками
+</string>
+    <string name="layout_size_medium">
+Середній
+</string>
+    <string name="layout_size_medium_desc">
+Стандартна збалансована висота рядків
+</string>
+    <string name="layout_size_small">
+Малий
+</string>
+    <string name="layout_size_small_desc">
+Компактні рядки з високою щільністю
+</string>
     <string name="column_count">
 Стовпці
 </string>
     <string name="columns_4">
 4 стовпці
 </string>
+    <string name="columns_4_desc">
+Компактна сітка на 4 колонки
+</string>
     <string name="columns_3">
 3 стовпці
+</string>
+    <string name="columns_3_desc">
+Простора сітка на 3 колонки
 </string>
 
     <!-- Long Press Duration Settings -->
@@ -3426,6 +3770,114 @@ OK
 </string>
     <string name="settings_toolbar_icons_subtitle">
 Налаштувати панель дій виділення
+</string>
+    <string name="settings_toolbar_icons_info_notice">
+Налаштуйте, які кнопки дій з’являються на панелі інструментів, коли вибрано файли чи папки. Вимкніть дії, які ви не використовуєте, щоб робочий простір залишався чистим та ефективним.
+</string>
+    <string name="settings_toolbar_icons_reset_defaults">
+Скинути до стандартних
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_title">
+Скинути значки панелі інструментів?
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_message">
+Ви впевнені, що хочете скинути всі значки панелі інструментів вибору до стандартного ввімкненого стану?
+</string>
+    <string name="settings_toolbar_icons_reset_toast">
+Значки панелі інструментів скинуто до стандартних
+</string>
+    <string name="toolbar_section_file_operations">
+Операції з файлами
+</string>
+    <string name="toolbar_section_security">
+Безпека та конфіденційність
+</string>
+    <string name="toolbar_section_selection_navigation">
+Виділення та закладки
+</string>
+    <string name="toolbar_section_tools_media">
+Архіви, медіа та утиліти
+</string>
+    <string name="toolbar_desc_create_new">
+Створювати нові файли, папки чи архіви
+</string>
+    <string name="toolbar_desc_copy">
+Копіювати вибрані елементи в буфер обміну
+</string>
+    <string name="toolbar_desc_move">
+Вирізати вибрані елементи для переміщення
+</string>
+    <string name="toolbar_desc_rename">
+Перейменувати вибраний файл або каталог
+</string>
+    <string name="toolbar_desc_share">
+Надіслати файли через системну панель обміну
+</string>
+    <string name="toolbar_desc_delete">
+Остаточно видалити або перемістити у кошик
+</string>
+    <string name="toolbar_desc_copy_encrypt">
+Зашифрувати та скопіювати елементи
+</string>
+    <string name="toolbar_desc_move_encrypt">
+Зашифрувати та перемістити елементи
+</string>
+    <string name="toolbar_desc_protect">
+Встановити позначку «лише для читання» або захист
+</string>
+    <string name="toolbar_desc_unprotect">
+Зняти блокування захисту
+</string>
+    <string name="toolbar_desc_hide">
+Позначити елементи як приховані
+</string>
+    <string name="toolbar_desc_unhide">
+Показати приховані файли
+</string>
+    <string name="toolbar_desc_select_all">
+Вибрати всі елементи в поточній панелі
+</string>
+    <string name="toolbar_desc_invert_selection">
+Перемкнути стан вибору всіх елементів
+</string>
+    <string name="toolbar_desc_favorite">
+Додати або видалити з обраного
+</string>
+    <string name="toolbar_desc_pin">
+Закріпити елемент на панелі швидкого доступу
+</string>
+    <string name="toolbar_desc_unpin">
+Відкріпити елемент із панелі швидкого доступу
+</string>
+    <string name="toolbar_desc_compress">
+Створити ZIP або 7Z архів
+</string>
+    <string name="toolbar_desc_extract">
+Розпакувати архів у поточну папку
+</string>
+    <string name="toolbar_desc_compress_image">
+Оптимізувати розмір файлу зображення
+</string>
+    <string name="toolbar_desc_retrigger_thumbnails">
+Перебудувати кешовані мініатюри зображень і відео
+</string>
+    <string name="toolbar_desc_create_gif">
+Зібрати зображення в анімований GIF
+</string>
+    <string name="toolbar_desc_exif_tools">
+Очистити метадані та виконати пакетне перейменування фото
+</string>
+    <string name="toolbar_desc_set_home_wallpaper">
+Встановити вибране зображення як шпалери головного екрана
+</string>
+    <string name="toolbar_desc_set_lock_wallpaper">
+Встановити вибране зображення як шпалери екрана блокування
+</string>
+    <string name="toolbar_desc_duplicate_finder">
+Сканувати та виявляти дублікати файлів
+</string>
+    <string name="toolbar_desc_large_files_finder">
+Визначити файли, що займають зайве місце
 </string>
     <string name="long_press_duration_seconds">
 %1$.1f секунд
@@ -3561,6 +4013,54 @@ OK
     <string name="connect_to_android_device">
 Підключитися до пристрою Android
 </string>
+    <string name="adb_terminal_empty_title">
+ADB Shell готовий
+</string>
+    <string name="adb_terminal_empty_subtitle">
+Підключіться до пристрою Android або телевізора, щоб виконувати команди оболонки, переглядати пакети та контролювати системні процеси.
+</string>
+    <string name="adb_terminal_clear">
+Очистити консоль
+</string>
+    <string name="adb_terminal_copy">
+Копіювати вивід
+</string>
+    <string name="adb_terminal_cleared">
+Вивід терміналу очищено
+</string>
+    <string name="adb_terminal_copied">
+Весь вивід скопійовано в буфер обміну
+</string>
+    <string name="adb_quick_commands">
+Швидкі команди
+</string>
+    <string name="adb_host_label">
+IP-адреса цільового пристрою
+</string>
+    <string name="adb_host_hint">
+192.168.1.50 або 127.0.0.1
+</string>
+    <string name="adb_pairing_guide_title">
+Інструкція з бездротового сполучення за 3 кроки
+</string>
+    <string name="adb_pairing_guide_step1">
+Увімкніть параметри розробника та бездротове налагодження на цільовому пристрої
+</string>
+    <string name="adb_pairing_guide_step2">
+Торкніться «Сполучити пристрій за кодом» у налаштуваннях бездротового налагодження
+</string>
+    <string name="adb_pairing_guide_step3">
+Введіть показані IP-адресу, порт сполучення та 6-значний PIN-код нижче
+</string>
+    <string name="adb_discovery_title">
+Автоматичне виявлення мережевих пристроїв
+</string>
+    <string name="adb_manual_title">
+Налаштування IP та порту цільового пристрою
+</string>
+    <string name="adb_pin_title">
+6-значний код сполучення
+</string>
     <string name="search_apps">
 Пошук додатків...
 </string>
@@ -3576,6 +4076,36 @@ OK
     <string name="no_devices_paired_yetntap_to">
 Ще не сполучено пристроїв.\n
 Натисніть +, щоб зв\'язати телевізор.
+</string>
+    <string name="link_tv">
+Приєднати телевізор
+</string>
+    <string name="link_tv_button">
+Приєднати новий телевізор
+</string>
+    <string name="paired_tvs_empty_title">
+Ще немає сполучених телевізорів
+</string>
+    <string name="paired_tvs_empty_subtitle">
+Підключіть телефон до Android TV з запущеним UFM для бездротової передачі файлів, керування сховищем і віддаленого доступу.
+</string>
+    <string name="tv_pairing_guide_title">
+Коротка інструкція за 3 кроки
+</string>
+    <string name="tv_pairing_guide_step1">
+Відкрийте UFM на вашому Android TV
+</string>
+    <string name="tv_pairing_guide_step2">
+Виберіть «Сполучені телефони» в головному меню телевізора
+</string>
+    <string name="tv_pairing_guide_step3">
+Виберіть «Приєднати мобільний застосунок» на телевізорі, щоб отримати 4-значний PIN
+</string>
+    <string name="paired_status_connected">
+Підключено
+</string>
+    <string name="paired_status_disconnected">
+Відключено
 </string>
     <string name="paired_phones">
 Сполучені телефони
@@ -4443,8 +4973,14 @@ ASS
     <string name="take_screenshot">
 Зробити знімок екрана
 </string>
+    <string name="take_screenshot_subtitle">
+Захопити поточний екран телевізора на ваш пристрій
+</string>
     <string name="record_screen">
 Запис екрану
+</string>
+    <string name="record_screen_subtitle">
+Записати відео з екрана телевізора з параметрами аудіо
 </string>
     <string name="record_screen_audio_title">
 Аудіо ТВ
@@ -5626,13 +6162,43 @@ PIN-код сховища
     <string name="sideload_apk">
 Бічне завантаження APK
 </string>
+    <string name="sideload_apk_subtitle">
+Встановити один пакет APK на телевізор
+</string>
     <string name="sideload_xapk">
 Бічне завантаження XAPK
+</string>
+    <string name="sideload_xapk_subtitle">
+Встановити збірки застосунків XAPK / APKM на телевізор
+</string>
+    <string name="sideload_dialog_desc_apk">
+Встановіть пакет застосунку Android (.apk) з вашого пристрою на сполучений телевізор.
+</string>
+    <string name="sideload_dialog_desc_xapk">
+Встановіть збірку застосунку (.xapk / .apkm) з вашого пристрою на сполучений телевізор.
+</string>
+    <string name="sideload_step_1_apk">
+1. Виберіть файл .apk зі сховища вашого пристрою
+</string>
+    <string name="sideload_step_1_xapk">
+1. Виберіть пакет .xapk / .apkm зі сховища вашого пристрою
+</string>
+    <string name="sideload_step_2">
+2. UFM бездротово передасть пакет на ваш телевізор
+</string>
+    <string name="sideload_step_3">
+3. Підтвердьте запит на встановлення на екрані телевізора, щоб завершити
+</string>
+    <string name="sideload_choose_file">
+Виберіть файл
 </string>
 
     <!-- Transfer Settings Feature -->
     <string name="transfer_settings">
 Перенести налаштування
+</string>
+    <string name="transfer_settings_action_subtitle">
+Передати налаштування та мережеві ресурси на телевізор
 </string>
     <string name="transfer_settings_select_all">
 Вибрати все
@@ -6139,6 +6705,9 @@ Smart Sort
 </string>
     <string name="smart_sort_tile_subtitle">
 Упорядкувати файли за категоріями
+</string>
+    <string name="smart_sort_info_notice">
+Автоматично категоризуйте та організовуйте файли у структуровані папки за типом, розміром, датою або спеціальними правилами. Виберіть диск або мережевий ресурс нижче, щоб почати.
 </string>
     <string name="smart_sort_config">
 Налаштування Smart Sort
@@ -6676,6 +7245,9 @@ Smart Sort для цієї папки
 </string>
     <string name="sync_disabled">
 Синхронізацію вимкнено
+</string>
+    <string name="sync_delete_profile_confirm_msg">
+Ви впевнені, що хочете видалити «%1$s»? Цю дію не можна скасувати.
 </string>
     <string name="profile_deleted">
 Профіль видалено
@@ -7233,6 +7805,12 @@ APNG4Android (com.github.penfeizhou.android.animation)
     <string name="online_storages_subtitle">
 OneDrive, Google Drive та інші
 </string>
+    <string name="online_storages_info_notice">
+Підключайтеся до хмарних постачальників сховищ, зокрема OneDrive, Google Drive, Dropbox, Box, AWS S3, WebDAV та RClone, щоб переглядати, передавати та синхронізувати файли.
+</string>
+    <string name="online_storage_delete_confirm_body">
+Ви впевнені, що хочете видалити з\\\'єднання з «%1$s»?
+</string>
     <string name="opening_online_storages">
 Відкриття хмарних сховищ…
 </string>
@@ -7547,6 +8125,111 @@ UFM вимагає авторизації для виконання розшир
 </string>
     <string name="shizuku_adb_not_connected">
 ADB не підключено. Підключіться через ADB Terminal, щоб автоматично ввімкнути розширений доступ.
+</string>
+    <string name="shizuku_header_subtitle">
+Служба Shizuku та Shevery
+</string>
+    <string name="shizuku_status_not_installed_desc">
+Встановіть Shizuku або Shevery, щоб отримати доступ до захищених папок Android/data та розширених операцій без root.
+</string>
+    <string name="shizuku_status_stopped_desc">
+Службу з підвищеними правами встановлено, але зараз вона не запущена. Запустіть службу через бездротове налагодження або через менеджер-застосунок.
+</string>
+    <string name="shizuku_status_unauthorized_desc">
+Служба працює, але UFM потребує авторизації для доступу до системних API.
+</string>
+    <string name="shizuku_status_active_desc">
+Служба з підвищеними правами активна, надано повні дозволи. Захищені папки та розширені операції готові.
+</string>
+    <string name="shizuku_badge_unavailable">
+НЕДОСТУПНО
+</string>
+    <string name="shizuku_badge_stopped">
+НЕАКТИВНА
+</string>
+    <string name="shizuku_badge_auth_needed">
+ПОТРІБНА АВТОРИЗАЦІЯ
+</string>
+    <string name="shizuku_badge_connected">
+ПІДКЛЮЧЕНО
+</string>
+    <string name="shizuku_section_capabilities">
+Розширені можливості
+</string>
+    <string name="shizuku_feature_protected_title">
+Захищені папки
+</string>
+    <string name="shizuku_feature_protected_desc">
+Повний доступ читання/запису до Android/data та obb
+</string>
+    <string name="shizuku_feature_speed_title">
+Високошвидкісні операції
+</string>
+    <string name="shizuku_feature_speed_desc">
+Пряме системне введення/виведення без root
+</string>
+    <string name="shizuku_feature_security_title">
+Без root і безпечно
+</string>
+    <string name="shizuku_feature_security_desc">
+Стандартний міст привілейованих API Android
+</string>
+    <string name="shizuku_section_managers">
+Доступні менеджери
+</string>
+    <string name="shizuku_manager_shizuku_title">
+Shizuku
+</string>
+    <string name="shizuku_manager_shizuku_desc">
+Стандартна служба з підвищеними правами з GitHub
+</string>
+    <string name="shizuku_manager_shevery_title">
+Shevery
+</string>
+    <string name="shizuku_manager_shevery_desc">
+Легка швидка альтернатива
+</string>
+    <string name="shizuku_download_shizuku_apk">
+Завантажити Shizuku (APK)
+</string>
+    <string name="shizuku_download_shevery_apk">
+Завантажити Shevery (APK)
+</string>
+    <string name="shizuku_open_manager">
+Відкрити менеджер %1$s
+</string>
+    <string name="shizuku_section_setup_guide">
+Інструкція з налаштування за 3 кроки
+</string>
+    <string name="shizuku_step_1">
+1. Встановіть APK
+</string>
+    <string name="shizuku_step_2">
+2. Запустіть службу
+</string>
+    <string name="shizuku_step_3">
+3. Авторизуйте UFM
+</string>
+    <string name="shizuku_service_info_title">
+Інформація про службу
+</string>
+    <string name="shizuku_service_provider_label">
+Постачальник служби
+</string>
+    <string name="shizuku_service_mode_label">
+Режим з\\\'єднання
+</string>
+    <string name="shizuku_service_permission_label">
+Рівень дозволу
+</string>
+    <string name="shizuku_service_mode_adb">
+ADB / Бездротове налагодження
+</string>
+    <string name="shizuku_permission_granted_api">
+Надано (API v23)
+</string>
+    <string name="shizuku_recheck_status">
+Перевірити статус ще раз
 </string>
     <string name="shizuku_manager_open_error">
 Не вдалося відкрити менеджер. Спочатку встановіть Shizuku або Shevery.
@@ -8714,6 +9397,21 @@ TXT
     <string name="notes_folder_title">
 Мої нотатки
 </string>
+    <string name="export_txt_desc">
+Простий текстовий документ (.txt)
+</string>
+    <string name="export_csv_desc">
+Значення, розділені комами (.csv)
+</string>
+    <string name="export_pdf_desc">
+Портативний формат документа (.pdf)
+</string>
+    <string name="notepad_select_format_desc">
+Виберіть формат експорту для вашого документа
+</string>
+    <string name="notepad_destination_label">
+Місце збереження
+</string>
     <string name="notepad_select_export_format">
 Зберегти як
 </string>
@@ -8764,11 +9462,35 @@ TXT
     <string name="settings_apk_extract_title">
 Витяг APK / XAPK
 </string>
+    <string name="settings_apk_extract_subtitle">
+Налаштування витягування застосунків і метаданих маніфесту
+</string>
     <string name="settings_apk_extract_subtitle_off">
 Лише стандартне витягування
 </string>
     <string name="settings_apk_extract_subtitle_on">
 Покращений
+</string>
+    <string name="settings_apk_extract_info_notice">
+Налаштуйте параметри витягування для встановлених застосунків. Якщо ввімкнено, UFM зберігає значки застосунків і метадані JSON разом із витягнутими файлами APK та XAPK.
+</string>
+    <string name="settings_apk_extract_reset_defaults">
+Скинути до стандартних
+</string>
+    <string name="settings_apk_extract_reset_confirm_title">
+Скинути налаштування витягування?
+</string>
+    <string name="settings_apk_extract_reset_confirm_message">
+Ви впевнені, що хочете скинути всі налаштування витягування APK та XAPK і поля метаданих до стандартних?
+</string>
+    <string name="settings_apk_extract_reset_toast">
+Налаштування витягування скинуто до стандартних
+</string>
+    <string name="settings_apk_extract_metadata_header">
+Поля метаданих для включення в JSON
+</string>
+    <string name="settings_apk_extract_section_general">
+Функції витягування
 </string>
     <string name="apk_extract_master_title">
 Покращене витягування APK/XAPK
@@ -8794,44 +9516,86 @@ TXT
     <string name="field_extracted_date">
 Дата витягування
 </string>
+    <string name="field_extracted_date_desc">
+Час вилучення файлу (extracted_date)
+</string>
     <string name="field_package_name">
 Назва пакета
+</string>
+    <string name="field_package_name_desc">
+Унікальний ідентифікатор застосунку Android (package_name)
 </string>
     <string name="field_version_name">
 Назва версії
 </string>
+    <string name="field_version_name_desc">
+Версія, видима користувачеві (version_name)
+</string>
     <string name="field_version_code">
 Код версії
+</string>
+    <string name="field_version_code_desc">
+Внутрішній числовий номер версії (version_code)
 </string>
     <string name="field_label">
 Мітка додатку
 </string>
+    <string name="field_label_desc">
+Відображувана назва застосунку (label)
+</string>
     <string name="field_install_time">
 Дата встановлення
+</string>
+    <string name="field_install_time_desc">
+Час оригінального встановлення на пристрої (install_time)
 </string>
     <string name="field_last_update_time">
 Дата останнього оновлення
 </string>
+    <string name="field_last_update_time_desc">
+Час останнього оновлення на пристрої (last_update_time)
+</string>
     <string name="field_target_sdk">
 Цільовий SDK
+</string>
+    <string name="field_target_sdk_desc">
+Цільова версія API Android (target_sdk)
 </string>
     <string name="field_min_sdk">
 Мінімальний SDK
 </string>
+    <string name="field_min_sdk_desc">
+Мінімальна необхідна версія API Android (min_sdk)
+</string>
     <string name="field_app_size">
 Розмір додатку
+</string>
+    <string name="field_app_size_desc">
+Загальний розмір встановленого застосунку в байтах (app_size)
 </string>
     <string name="field_source_dir">
 Каталог джерела
 </string>
+    <string name="field_source_dir_desc">
+Шлях до каталогу файлової системи базового APK (source_dir)
+</string>
     <string name="field_split_apks">
 Розділені APK
+</string>
+    <string name="field_split_apks_desc">
+Список шляхів до розділених конфігураційних APK (split_apks)
 </string>
     <string name="field_has_obb">
 Має OBB
 </string>
+    <string name="field_has_obb_desc">
+Показує наявність розширених даних OBB (has_obb)
+</string>
     <string name="field_permissions">
 Дозволи
+</string>
+    <string name="field_permissions_desc">
+Список запитаних дозволів маніфесту (permissions)
 </string>
     <string name="extracts_subtitle_files">
 файл(и)
@@ -8980,6 +9744,45 @@ PDF (лише багатосторінковий)
 </string>
     <string name="backup_import_details_title">
 Попередній перегляд імпорту
+</string>
+    <string name="backup_restore_notice">
+Створіть резервну копію ваших налаштувань, користувацьких плиток і мережевих ресурсів, або відновіть з раніше експортованого архіву резервної копії.
+</string>
+    <string name="backup_restore_section_actions">
+Дії
+</string>
+    <string name="backup_export_notice">
+Виберіть категорії конфігурації та компоненти, які потрібно включити в цей архів резервної копії.
+</string>
+    <string name="backup_import_notice">
+Перегляньте категорії конфігурації, знайдені в цьому архіві. Відновлення застосує ці налаштування та перезапустить застосунок.
+</string>
+    <string name="backup_import_password_desc">
+Цей файл резервної копії зашифровано паролем. Введіть пароль нижче, щоб розшифрувати та переглянути його вміст.
+</string>
+    <string name="backup_password_dialog_desc">
+За бажанням захистіть файл резервної копії шифруванням AES-256. Якщо ви пропустите встановлення пароля, файл буде збережено без шифрування.
+</string>
+    <string name="backup_skip_confirm_desc">
+Збереження без шифрування означає, що будь-хто з доступом до файлу резервної копії зможе прочитати ваші експортовані налаштування та конфігурації. Ви впевнені, що хочете продовжити без пароля?
+</string>
+    <string name="backup_import_guide_title">
+Імпортувати налаштування
+</string>
+    <string name="backup_import_guide_subtitle">
+Виберіть файл резервної копії
+</string>
+    <string name="backup_import_guide_msg">
+Виберіть експортований архів резервної копії (.ufmconfig) зі сховища вашого пристрою. Ваші налаштування, мережеві ресурси, користувацькі плитки та параметри будуть відновлені.
+</string>
+    <string name="backup_import_guide_format_label">
+Підтримуваний формат архіву
+</string>
+    <string name="backup_import_guide_format_val">
+файли *.ufmconfig
+</string>
+    <string name="backup_import_guide_btn_browse">
+Виберіть файл резервної копії
 </string>
 
     <!-- Auto Backup -->
@@ -9189,6 +9992,9 @@ AMOLED
 </string>
     <string name="category_main_menu_tiles">
 Плитки головного меню
+</string>
+    <string name="category_icons_count">
+Включено значків %1$d
 </string>
     <string name="icon_file_generic">
 Звичайний файл
@@ -9470,6 +10276,12 @@ XML / Розмітка
 </string>
     <string name="icon_status_shield_alert">
 Щит із попередженням
+</string>
+    <string name="icon_status_customized">
+Налаштовано
+</string>
+    <string name="icon_status_default">
+Стандартні
 </string>
     <string name="icon_view_grid_small">
 Сітка мала
@@ -9858,6 +10670,26 @@ SAF
 Пропустити (без шифрування)
 </string>
 
+    <!-- Theme pack import instructions -->
+    <string name="theme_import_instructions_title">
+Імпортувати набір значків
+</string>
+    <string name="theme_import_instructions_desc">
+Імпортуйте користувацькі значки та кольори плиток із раніше експортованого файлу .ufmtheme.
+</string>
+    <string name="theme_import_step_select">
+Знайдіть і виберіть файл .ufmtheme у сховищі
+</string>
+    <string name="theme_import_step_password">
+Введіть пароль розшифрування, якщо набір захищено
+</string>
+    <string name="theme_import_step_preview">
+Перегляньте включені значки та підтвердьте застосування
+</string>
+    <string name="theme_import_btn_select">
+Виберіть файл .ufmtheme
+</string>
+
     <!-- Theme pack import password -->
     <string name="theme_import_password_title">
 Введіть пароль пакета теми
@@ -10188,6 +11020,9 @@ URL-адреса сервера
     <string name="settings_skip_length_title">
 Крок перемотування
 </string>
+    <string name="settings_skip_length_dialog_desc">
+Виберіть, наскільки перемотувати вперед або назад під час пошуку у відтворенні медіа.
+</string>
     <string name="skip_length_option_3s">
 3 с
 </string>
@@ -10205,6 +11040,27 @@ URL-адреса сервера
 </string>
     <string name="skip_length_option_disable">
 Вимкнути
+</string>
+    <string name="skip_length_desc_3s">
+Пропускати на 3 секунди
+</string>
+    <string name="skip_length_desc_5s">
+Пропускати на 5 секунд
+</string>
+    <string name="skip_length_desc_10s">
+Пропускати на 10 секунд (за замовчуванням)
+</string>
+    <string name="skip_length_desc_20s">
+Пропускати на 20 секунд
+</string>
+    <string name="skip_length_desc_30s">
+Пропускати на 30 секунд
+</string>
+    <string name="skip_length_desc_disable">
+Приховати кнопки перемотування вперед і назад
+</string>
+    <string name="skip_length_toast_set">
+Довжину пропуску встановлено на %1$s
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -10447,6 +11303,51 @@ UFM Spreadsheet Viewer
     <string name="settings_file_tags_subtitle">
 Керування хештегами та параметрами тегування
 </string>
+    <string name="settings_file_tags_info_notice">
+Користувацькі теги, призначені файлам і папкам для швидкої фільтрації, пошуку та категоризації. Торкніться значка кошика на будь-якому тезі, щоб видалити його глобально.
+</string>
+    <string name="settings_file_tags_empty_title">
+Теги файлів не створено
+</string>
+    <string name="settings_file_tags_empty_desc">
+Позначте будь-який файл або папку з панелі властивостей файлу або панелі множинного вибору, щоб упорядкувати тут ваші медіа та документи.
+</string>
+    <string name="settings_file_tags_delete_confirm_title">
+Видалити тег?
+</string>
+    <string name="settings_file_tags_delete_confirm_message">
+Ви впевнені, що хочете видалити тег «#%1$s»? Його буде видалено з усіх позначених файлів і папок.
+</string>
+    <string name="settings_file_tags_delete_btn">
+Видалити тег
+</string>
+    <string name="settings_file_tags_clear_all">
+Видалити всі теги
+</string>
+    <string name="settings_file_tags_clear_all_confirm_title">
+Видалити всі теги файлів?
+</string>
+    <string name="settings_file_tags_clear_all_confirm_message">
+Ви впевнені, що хочете назавжди видалити всі створені теги файлів? Це видалить усі теги з усіх файлів і папок.
+</string>
+    <string name="settings_file_tags_deleted_toast">
+Тег #%1$s видалено
+</string>
+    <string name="settings_file_tags_cleared_all_toast">
+Усі теги файлів видалено
+</string>
+    <string name="settings_file_tags_multi_title">
+Позначення кількох файлів
+</string>
+    <string name="settings_file_tags_multi_desc">
+Дозволяє позначати кілька файлів одночасно, коли вибрано
+</string>
+    <string name="settings_file_tags_created_header">
+Створені теги
+</string>
+    <string name="settings_file_tags_empty">
+Теги ще не створено
+</string>
     <string name="action_tag">
 Тег
 </string>
@@ -10523,8 +11424,41 @@ UFM Spreadsheet Viewer
 \n
 Відкрийте папку, натисніть «Сортування та фільтр» і виберіть «Ця папка», щоб створити перевизначення.
 </string>
+    <string name="folder_sort_manager_empty_title">
+Не налаштовано жодних перевизначень сортування
+</string>
+    <string name="folder_sort_manager_empty_desc">
+Коли ви змінюєте порядок сортування або фільтр для конкретної папки за допомогою «Ця папка», він з\\\'явиться тут, щоб ви могли керувати або скидати спеціальні правила сортування.
+</string>
+    <string name="folder_sort_manager_info_notice">
+Власні порядки сортування та фільтри, налаштовані для конкретних папок. Натисніть на значок кошика, щоб повернути папку до глобального сортування.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Очистити всі перевизначення
+</string>
     <string name="folder_sort_manager_clear_confirm">
 Видалити всі перевизначення сортування для папок? Папки повернуться до глобального налаштування сортування.
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_title">
+Очистити всі перевизначення сортування?
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_message">
+Ви впевнені, що хочете видалити всі перевизначення сортування для окремих папок? Усі папки повернуться до ваших глобальних налаштувань сортування та фільтрів.
+</string>
+    <string name="folder_sort_manager_remove_confirm_title">
+Скинути перевизначення сортування для папки?
+</string>
+    <string name="folder_sort_manager_remove_confirm_message">
+Ви впевнені, що хочете видалити спеціальне перевизначення сортування для \"%1$s\"? Ця папка повернеться до глобального сортування.
+</string>
+    <string name="folder_sort_manager_remove_btn">
+Скинути перевизначення
+</string>
+    <string name="folder_sort_manager_cleared_all_toast">
+Усі перевизначення сортування папок очищено
+</string>
+    <string name="folder_sort_manager_deleted">
+Перевизначення видалено для %1$s
 </string>
     <string name="folder_sort_network_badge">
 Мережа / Онлайн
@@ -10686,6 +11620,9 @@ UFM Spreadsheet Viewer
 Щось пішло не так. Спробуйте ще раз.
 </string>
     <string name="support_retry">
+Спробувати знову
+</string>
+    <string name="retry">
 Спробувати знову
 </string>
     <string name="support_no_internet">
@@ -11225,6 +12162,343 @@ GPS-геотег не знайдено
     <string name="exif_select_destination_folder">
 Виберіть вихідну теку
 </string>
+
+    <!-- Video Thumbnail Time Modernization -->
+    <string name="vtt_section_options">
+Точка захоплення
+</string>
+    <string name="vtt_info_notice">
+Виберіть часову позначку, яка використовується для створення відео-мініатюр у всьому застосунку. Встановлення відсотка дозволяє уникнути порожніх, темних або вступних кадрів на початку відео.
+</string>
+    <string name="vtt_percent_0_subtitle">
+Захопити найперший кадр відео (00:00)
+</string>
+    <string name="vtt_percent_10_subtitle">
+Рекомендовано за замовчуванням — пропускає чорні або вступні кадри
+</string>
+    <string name="vtt_percent_25_subtitle">
+Захопити кадр на 25% тривалості відео
+</string>
+    <string name="vtt_percent_50_subtitle">
+Захопити кадр точно в середині (50%) відео
+</string>
+    <string name="vtt_percent_75_subtitle">
+Захопити кадр на 75% тривалості відео
+</string>
+
+    <!-- Network Thumbnail Settings Modernization -->
+    <string name="nt_section_caching">
+Конфігурація
+</string>
+    <string name="nt_section_storage">
+Сховище та обслуговування
+</string>
+    <string name="nt_info_notice">
+Віддалені мініатюри зберігаються в локальному кеші, тому мережеві ресурси, SMB, FTP, SFTP та хмарні диски швидко показують попередній перегляд зображень і відео без повторного завантаження файлів.
+</string>
+    <string name="nt_cache_folder_guide_title">
+Виберіть розташування кешу
+</string>
+    <string name="nt_cache_folder_guide_msg">
+Виберіть папку на внутрішньому сховищі або SD-картці для зберігання файлів кешу мережевих мініатюр.\n
+\n
+У браузері сховища перейдіть до потрібної папки та торкніться \"ВИБРАТИ ЦЮ ПАПКУ\" угорі.
+</string>
+    <string name="nt_cache_folder_btn_browse">
+Переглянути сховище
+</string>
+    <string name="nt_cache_folder_btn_reset_default">
+Скинути до розташування за замовчуванням
+</string>
+    <string name="nt_cache_folder_current_label">
+Поточне розташування:
+</string>
+
+    <!-- Cache Limit Dialog Modernization -->
+    <string name="nt_cache_limit_dialog_desc">
+Виберіть максимальний обсяг дискового простору для кешування віддалених мініатюр.
+</string>
+    <string name="nt_limit_subtitle_500mb">
+Стандартне значення за замовчуванням — ідеально для звичайного перегляду
+</string>
+    <string name="nt_limit_subtitle_1gb">
+Рекомендовано для помірного використання мережі
+</string>
+    <string name="nt_limit_subtitle_2gb">
+Достатньо місця для фото та відео-мініатюр
+</string>
+    <string name="nt_limit_subtitle_5gb">
+Максимальна стандартна ємність кешу
+</string>
+    <string name="nt_limit_subtitle_custom">
+Встановіть власне обмеження в МБ або ГБ
+</string>
+    <string name="nt_custom_limit_dialog_title">
+Власне обмеження кешу
+</string>
+    <string name="nt_custom_limit_dialog_desc">
+Введіть власне обмеження розміру в МБ або ГБ
+</string>
+    <string name="nt_custom_presets_label">
+Швидкі пресети
+</string>
+    <string name="nt_custom_size_label">
+Власний розмір
+</string>
+
+    <!-- File Server System Tiles Modernization -->
+    <string name="file_server_tiles_section_server">
+Файловий сервер
+</string>
+    <string name="file_server_tiles_section_tiles">
+Плитки швидких налаштувань
+</string>
+    <string name="file_server_tiles_info_notice">
+Плитки швидких налаштувань дозволяють запускати та зупиняти FTP, SFTP та DLNA медіасервери безпосередньо з панелі сповіщень Android, не відкриваючи застосунок.
+</string>
+
+    <!-- Storage Indexer Modernization -->
+    <string name="storage_indexer_section_storages">
+Виявлене сховище
+</string>
+    <string name="storage_indexer_section_actions">
+Обслуговування
+</string>
+    <string name="storage_indexer_info_notice">
+Індексуйте внутрішнє сховище та знімні диски для миттєвих результатів пошуку, виявлення дублікатів і фільтрації за категоріями на вашому пристрої.
+</string>
+    <string name="storage_indexer_detail_info_notice">
+Цей накопичувач проіндексовано. Індексовані записи забезпечують швидкий пошук за багатьма критеріями без сканування файлової системи.
+</string>
+    <string name="storage_indexer_btn_delete_confirm">
+Видалити записи
+</string>
+
+    <!-- Auto Backup Modernization -->
+    <string name="auto_backup_section_general">
+Конфігурація
+</string>
+    <string name="auto_backup_section_schedule">
+Розклад
+</string>
+    <string name="auto_backup_section_security">
+Безпека та шифрування
+</string>
+    <string name="auto_backup_section_location">
+Місце резервного копіювання
+</string>
+    <string name="auto_backup_info_notice">
+Автоматичне резервне копіювання періодично створює зашифровані або звичайні резервні копії ваших налаштувань застосунку, власних тем і плиток, щоб ви ніколи не втрачали свою конфігурацію.
+</string>
+    <string name="auto_backup_folder_guide_title">
+Виберіть папку для резервного копіювання
+</string>
+    <string name="auto_backup_folder_guide_msg">
+Виберіть, де зберігатимуться автоматичні резервні копії. Перейдіть до будь-якої локальної або знімної папки та торкніться кнопки збереження для підтвердження.
+</string>
+    <string name="auto_backup_folder_guide_current">
+Поточне розташування:
+</string>
+    <string name="auto_backup_folder_guide_btn_choose">
+Виберіть папку
+</string>
+    <string name="auto_backup_reset_success">
+Розташування резервної копії скинуто до типового (Documents/UFM).
+</string>
+
+    <!-- File Server Modernization -->
+    <string name="file_server_section_services">
+Серверні служби
+</string>
+    <string name="file_server_section_profiles">
+Автентифікація та доступ
+</string>
+    <string name="file_server_info_notice">
+Запускайте локальні FTP та SFTP файлові сервери або транслюйте медіа через DLNA. Пристрої у вашій локальній Wi-Fi мережі можуть підключатися для перегляду, потокової передачі та передачі файлів.
+</string>
+    <string name="file_server_empty_profiles_desc">
+Торкніться \"Додати профіль\", щоб налаштувати облікові дані, права доступу та спільні папки.
+</string>
+
+    <!-- DLNA Modernization -->
+    <string name="dlna_section_services">
+Служби DLNA
+</string>
+    <string name="dlna_section_config">
+Конфігурація
+</string>
+    <string name="dlna_section_identification">
+Ідентифікація
+</string>
+    <string name="dlna_section_shared_folders">
+Спільні папки
+</string>
+    <string name="dlna_info_notice">
+Транслюйте фото, музику та відео на Smart TV і DLNA медіаплеєри у вашій локальній Wi-Fi мережі або дозвольте іншим пристроям передавати медіа на цей пристрій.
+</string>
+    <string name="dlna_settings_info_notice">
+Налаштуйте, як ваш пристрій відображається в локальній мережі, і виберіть папки для спільного доступу. Медіаресурси DLNA суворо доступні лише для читання.
+</string>
+    <string name="dlna_empty_shared_folders_desc">
+Торкніться \"Додати папку\", щоб вибрати внутрішнє сховище, SD-картку або USB-папки для доступу через DLNA.
+</string>
+
+    <!-- Smart Sort Modernization -->
+    <string name="smart_sort_empty">
+Не знайдено накопичувачів
+</string>
+    <string name="smart_sort_history_moved">
+Переміщено
+</string>
+    <string name="smart_sort_history_skipped">
+Пропущено
+</string>
+    <string name="smart_sort_history_failed">
+Не вдалося
+</string>
+
+    <!-- Rate Us Modernization -->
+    <string name="rate_us_section_rate">
+Оцінка та відгуки
+</string>
+    <string name="rate_us_section_support">
+Більше способів підтримати
+</string>
+    <string name="rate_us_support_title">
+Підтримати проєкт
+</string>
+    <string name="rate_us_support_subtitle">
+Зробіть внесок, якщо можете підтримати проєкт
+</string>
+    <string name="rate_us_stars_description">
+Оцінка 5 зірок
+</string>
+
+    <!-- Help & Support Modernization -->
+    <string name="support_section_channels">
+Контактні канали
+</string>
+    <string name="support_section_direct">
+Прямий контакт
+</string>
+    <string name="support_direct_email_title">
+support@kilowatch.co.za
+</string>
+    <string name="support_direct_email_subtitle">
+Надішліть листа безпосередньо команді розробників
+</string>
+    <string name="support_direct_email_copied">
+Електронну адресу підтримки скопійовано в буфер обміну
+</string>
+
+    <!-- About Modernization -->
+    <string name="about_section_app">
+Інформація про застосунок
+</string>
+    <string name="about_section_support">
+Розробник і посилання
+</string>
+    <string name="about_section_legal">
+Юридична інформація та політики
+</string>
+    <string name="about_section_acknowledgments">
+Подяки
+</string>
+    <string name="about_legal_title">
+Політика конфіденційності та умови
+</string>
+    <string name="about_legal_subtitle">
+Перегляньте нашу політику конфіденційності, умови використання та ліцензії
+</string>
+    <string name="about_rate_title">
+Оцінити та залишити відгук
+</string>
+    <string name="about_rate_subtitle">
+Поділіться своїм досвідом у Google Play
+</string>
+    <string name="about_support_title">
+Довідка та підтримка
+</string>
+    <string name="about_support_subtitle">
+Повідомити про проблему або запропонувати функції
+</string>
+    <string name="about_email_copied">
+Електронну адресу підтримки скопійовано в буфер обміну
+</string>
+
+    <!-- Main Menu Categorized Modernization -->
+    <string name="main_menu_category_storage">
+Сховище
+</string>
+    <string name="main_menu_category_connect">
+Підключення
+</string>
+    <string name="main_menu_category_sync">
+Синхронізація папок
+</string>
+    <string name="main_menu_category_organize">
+Упорядкування
+</string>
+    <string name="main_menu_category_utilities">
+Утиліти
+</string>
+    <string name="main_menu_category_security">
+Безпека та розширені
+</string>
+    <string name="main_menu_category_settings">
+Налаштування та інше
+</string>
+    <string name="main_menu_layout_modern_categorized">
+Сучасний з категоріями
+</string>
+    <string name="main_menu_layout_modern_desc">
+Організований у розгортувані розділи категорій
+</string>
+    <string name="main_menu_layout_classic_grid">
+Класична сітка
+</string>
+    <string name="main_menu_layout_classic_grid_desc">
+Плоска багатоколонкова сітка (3 або 4 колонки)
+</string>
+    <string name="main_menu_layout_classic_list">
+Класичний список
+</string>
+    <string name="main_menu_layout_classic_list_desc">
+Плоский одноколонковий список (Великий, Середній, Малий)
+</string>
+    <string name="main_menu_section_items_count">
+%1$d елементів
+</string>
+    <string name="main_menu_section_item_count_single">
+1 елемент
+</string>
+
+    <!-- Reset Category Layout -->
+    <string name="reset_categorized_layout_section">
+Скинути
+</string>
+    <string name="reset_categorized_layout_title">
+Скинути макет категорій
+</string>
+    <string name="reset_categorized_layout_desc">
+Відновити порядок категорій, положення плиток і стани розгортання до типових
+</string>
+    <string name="reset_categorized_dialog_title">
+Скинути макет категорій?
+</string>
+    <string name="reset_categorized_dialog_subtitle">
+Відновити заводське розташування
+</string>
+    <string name="reset_categorized_dialog_msg">
+Це відновить усі заголовки категорій, положення плиток і стани розгортання до заводських значень. Власні налаштування кольорів буде збережено.
+</string>
+    <string name="reset_categorized_dialog_confirm">
+Скинути до типового
+</string>
+    <string name="reset_categorized_success">
+Макет категорій відновлено до типового
+</string>
 </resources>
+
 
 

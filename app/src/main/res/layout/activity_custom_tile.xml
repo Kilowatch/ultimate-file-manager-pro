@@ -76,7 +76,7 @@
                 android:contentDescription="@string/cd_manage_tiles"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@drawable/bg_icon_circle_accent"
+                android:background="@drawable/bg_btn_icon_frosted"
                 app:tint="@color/mobile_icon_tint"
                 android:visibility="gone" />
 
@@ -92,7 +92,7 @@
                 android:contentDescription="@string/tile_color_title"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@drawable/bg_icon_circle_accent"
+                android:background="@drawable/bg_btn_icon_frosted"
                 app:tint="@color/mobile_icon_tint"
                 android:visibility="gone" />
 
@@ -108,7 +108,7 @@
                 android:contentDescription="@string/tile_color_import"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@drawable/bg_icon_circle_accent"
+                android:background="@drawable/bg_btn_icon_frosted"
                 app:tint="@color/mobile_icon_tint"
                 android:visibility="gone" />
 

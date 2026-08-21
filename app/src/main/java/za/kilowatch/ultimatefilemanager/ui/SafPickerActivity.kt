@@ -119,7 +119,9 @@ class SafPickerActivity : AppCompatActivity() {
         GoRoLog.i("SafPickerActivity onCreate: action=$action, isTree=$isTreeAction, isCreate=$isCreateAction, allowMultiple=$allowMultiple")
         GoRoLog.i("GoRoSAF", "SafPickerActivity opened action=$action isTree=$isTreeAction isCreate=$isCreateAction")
         intent.extras?.let { extras ->
+            @Suppress("DEPRECATION")
             GoRoLog.d("SafPickerActivity extras: ${extras.keySet().joinToString { "$it=${extras.get(it)}" }}")
+            @Suppress("DEPRECATION")
             GoRoLog.d("GoRoSAF", "SafPickerActivity extras: ${extras.keySet().joinToString { "$it=${extras.get(it)}" }}")
         }
 
@@ -351,7 +353,6 @@ class SafPickerActivity : AppCompatActivity() {
                     ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, path)
                     ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, path)
                     ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, path)
-                    ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
                     ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
                     ShareType.NFS -> NfsShareClient.listFiles(share, path)
                     ShareType.DLNA -> DlnaShareClient.listFiles(share, path)
@@ -606,22 +607,23 @@ class SafPickerActivity : AppCompatActivity() {
                         @OptIn(DelicateCoroutinesApi::class)
                         videoJob = GlobalScope.launch(Dispatchers.IO) {
                             val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
-                            var bitmap: android.graphics.Bitmap? = if (file != null) {
+                            val f = file
+                            var bitmap: android.graphics.Bitmap? = if (f != null) {
                                 za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
-                                    file!!.absolutePath, pct, 256, 256
+                                    f.absolutePath, pct, 256, 256
                                 )
                             } else null
 
-                            if (bitmap == null) {
+                            if (bitmap == null && f != null) {
                                 bitmap = try {
                                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                                         android.media.ThumbnailUtils.createVideoThumbnail(
-                                            file!!, android.util.Size(256, 256), null
+                                            f, android.util.Size(256, 256), null
                                         )
                                     } else {
                                         @Suppress("DEPRECATION")
                                         android.media.ThumbnailUtils.createVideoThumbnail(
-                                            file!!.absolutePath,
+                                            f.absolutePath,
                                             android.provider.MediaStore.Video.Thumbnails.MINI_KIND
                                         )
                                     }

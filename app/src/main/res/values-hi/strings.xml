@@ -50,6 +50,15 @@
     <string name="language_system_default">
 सिस्टम डिफ़ॉल्ट
 </string>
+    <string name="language_system_default_desc">
+डिवाइस की सिस्टम भाषा से मिलाएं
+</string>
+    <string name="language_section_system">
+सिस्टम प्राथमिकता
+</string>
+    <string name="language_section_available">
+उपलब्ध भाषाएँ
+</string>
     <string name="settings_list_size_title">
 सेटिंग्स पंक्ति आकार
 </string>
@@ -460,6 +469,36 @@ UFM प्लेयर में अगला स्वतः चलाएँ
 \n
 किसी फ़ाइल या फ़ोल्डर को लंबे समय तक दबाएँ और यहाँ जोड़ने के लिए स्टार आइकन पर टैप करें।
 </string>
+    <string name="manage_favorites_empty_title">
+कोई पसंदीदा बुकमार्क नहीं
+</string>
+    <string name="manage_favorites_empty_desc">
+फ़ाइल ब्राउज़र में किसी भी फ़ाइल या फ़ोल्डर पर स्टार आइकन टैप करें ताकि उसे यहाँ त्वरित पहुँच के लिए बुकमार्क किया जा सके।
+</string>
+    <string name="manage_favorites_info_notice">
+बुकमार्क की गई फ़ाइलें और फ़ोल्डर तेज़ नेविगेशन के लिए नेविगेशन ड्रॉअर और त्वरित पहुँच पैनल में दिखाई देते हैं। किसी पसंदीदा को हटाने के लिए ट्रैश आइकन टैप करें।
+</string>
+    <string name="manage_favorites_clear_all">
+सभी पसंदीदा साफ़ करें
+</string>
+    <string name="manage_favorites_clear_all_confirm_title">
+सभी पसंदीदा साफ़ करें?
+</string>
+    <string name="manage_favorites_clear_all_confirm_message">
+क्या आप वाकई अपनी पसंदीदा सूची से सभी आइटम हटाना चाहते हैं? इससे वास्तविक फ़ाइलें या फ़ोल्डर नहीं हटेंगे।
+</string>
+    <string name="manage_favorites_remove_confirm_title">
+पसंदीदा हटाएं?
+</string>
+    <string name="manage_favorites_remove_confirm_message">
+क्या आप वाकई \"%1$s\" को अपनी पसंदीदा सूची से हटाना चाहते हैं?
+</string>
+    <string name="manage_favorites_remove_btn">
+पसंदीदा हटाएं
+</string>
+    <string name="manage_favorites_cleared_all_toast">
+सभी पसंदीदा हटा दिए गए
+</string>
     <string name="manage_favorites_removed">
 पसंदीदा से %1$s हटाया गया
 </string>
@@ -650,6 +689,21 @@ ADB आवश्यक
 3. \'USB डिबगिंग\' सक्षम करें
 
 यदि आपको डेवलपर विकल्प दिखाई नहीं देता है, तो पहले \'अबाउट\' पर जाएँ और \'बिल्ड नंबर\' पर 7 बार टैप करें।
+</string>
+    <string name="adb_enable_desc">
+स्क्रीनशॉट कैप्चर करने के लिए टीवी पर USB डिबगिंग सक्षम होना चाहिए।
+</string>
+    <string name="adb_step_1">
+1. अपने Android TV पर सेटिंग्स खोलें
+</string>
+    <string name="adb_step_2">
+2. डिवाइस प्राथमिकताएँ → डेवलपर विकल्प पर जाएं
+</string>
+    <string name="adb_step_3">
+3. \"USB डिबगिंग\" चालू करें
+</string>
+    <string name="adb_step_tip">
+टिप: यदि डेवलपर विकल्प छिपा है, तो सेटिंग्स → के बारे में पर जाएं और \"बिल्ड नंबर\" 7 बार टैप करें।
 </string>
     <string name="adb_pairing_required">
 ADB पेयरिंग आवश्यक
@@ -1061,6 +1115,24 @@ APKs
 %1$s बचाता है
 </string>
     <!-- Section headers inside Overview -->
+    <string name="analyzer_info_notice">
+डिस्क उपयोग का निरीक्षण करें, श्रेणीबद्ध स्टोरेज विवरण देखें, और बड़ी फ़ाइलें, डुप्लिकेट और सफाई सुझाव खोजें।
+</string>
+    <string name="analyzer_section_storage_breakdown">
+स्टोरेज विवरण
+</string>
+    <string name="analyzer_section_top_folders">
+शीर्ष फ़ोल्डर
+</string>
+    <string name="analyzer_section_app_usage">
+ऐप स्टोरेज उपयोग
+</string>
+    <string name="analyzer_empty_state_desc">
+इस विश्लेषण श्रेणी के लिए कोई आइटम नहीं मिला।
+</string>
+    <string name="analyzer_action_review">
+समीक्षा करें और साफ़ करें
+</string>
     <string name="analyzer_top_folders">
 आकार के अनुसार शीर्ष फ़ोल्डर
 </string>
@@ -1273,14 +1345,29 @@ PIN सत्यापित करें
 स्थायी रूप से हटाएं
 </string>
 
+    <string name="theme_section_color_palette">
+रंग पैलेट
+</string>
+    <string name="theme_section_mode">
+थीम मोड
+</string>
     <string name="theme_light">
 हल्का
+</string>
+    <string name="theme_light_desc">
+स्वच्छ उज्ज्वल इंटरफ़ेस
 </string>
     <string name="theme_dark">
 गहरा
 </string>
+    <string name="theme_dark_desc">
+आरामदायक कम-रोशनी डार्क थीम
+</string>
     <string name="theme_system">
 सिस्टम डिफ़ॉल्ट
+</string>
+    <string name="theme_system_desc">
+सिस्टम दिन/रात शेड्यूल का पालन करें
 </string>
     <string name="theme_amoled">
 AMOLED काला
@@ -1323,6 +1410,30 @@ Material You
     <string name="font_size_preview">
 तेज़ भूरी लोमड़ी कूदती है
 </string>
+    <string name="font_size_small_desc">
+85% • उच्च स्क्रीन घनत्व के लिए कॉम्पैक्ट आकार
+</string>
+    <string name="font_size_normal_desc">
+100% • डिफ़ॉल्ट अनुशंसित फ़ॉन्ट आकार
+</string>
+    <string name="font_size_large_desc">
+115% • बेहतर पठनीयता के लिए बड़ा आकार
+</string>
+    <string name="font_size_preview_title">
+लाइव फ़ॉन्ट पूर्वावलोकन
+</string>
+    <string name="font_size_preview_sample_heading">
+अल्टीमेट फ़ाइल मैनेजर प्रो
+</string>
+    <string name="font_size_preview_sample_body">
+त्वरित भूरा लोमड़ी आलसी कुत्ते के ऊपर कूदता है। Android और TV पर पावर उपयोगकर्ताओं के लिए डुअल-पेन फ़ाइल मैनेजर।
+</string>
+    <string name="font_size_section_preview">
+लाइव पूर्वावलोकन
+</string>
+    <string name="font_size_section_options">
+टेक्स्ट आकार विकल्प
+</string>
 
     <!-- Storage Renaming -->
     <string name="settings_storage_rename_title">
@@ -1331,11 +1442,56 @@ Material You
     <string name="settings_storage_rename_subtitle">
 USB और स्थानीय स्टोरेज ड्राइव का नाम बदलें
 </string>
+    <string name="storage_rename_section_connected">
+कनेक्टेड स्टोरेज ड्राइव
+</string>
+    <string name="storage_rename_section_offline">
+ऑफ़लाइन / डिस्कनेक्टेड ड्राइव
+</string>
+    <string name="storage_rename_original_details">
+मूल: %1$s • %2$s
+</string>
+    <string name="storage_rename_info_notice">
+आंतरिक स्टोरेज, SD कार्ड और USB ड्राइव को सौंपे गए कस्टम लेबल। किसी भी ड्राइव को नाम बदलने या उसका प्रदर्शन लेबल रीसेट करने के लिए टैप करें।
+</string>
+    <string name="storage_rename_empty_title">
+कोई स्टोरेज ड्राइव नहीं मिला
+</string>
+    <string name="storage_rename_empty_desc">
+कनेक्टेड आंतरिक और बाहरी स्टोरेज ड्राइव कस्टम नामकरण और पहचान के लिए यहाँ दिखाई देंगे।
+</string>
     <string name="rename_drive_dialog_title">
 ड्राइव का नाम बदलें
 </string>
+    <string name="storage_rename_dialog_subtitle">
+%1$s के लिए एक कस्टम नाम दर्ज करें
+</string>
     <string name="custom_name_hint">
 नया ड्राइव नाम
+</string>
+    <string name="storage_rename_reset_btn">
+डिफ़ॉल्ट पर रीसेट करें
+</string>
+    <string name="storage_rename_save_btn">
+कस्टम नाम सहेजें
+</string>
+    <string name="storage_rename_saved_toast">
+ड्राइव का नाम बदलकर \"%1$s\" किया गया
+</string>
+    <string name="storage_rename_reset_toast">
+ड्राइव का नाम मूल नाम पर रीसेट किया गया
+</string>
+    <string name="storage_rename_clear_all">
+सभी ड्राइव नाम रीसेट करें
+</string>
+    <string name="storage_rename_clear_all_confirm_title">
+सभी ड्राइव नाम रीसेट करें?
+</string>
+    <string name="storage_rename_clear_all_confirm_message">
+क्या आप वाकई सभी कस्टम ड्राइव लेबल को उनके डिफ़ॉल्ट सिस्टम नामों पर रीसेट करना चाहते हैं?
+</string>
+    <string name="storage_rename_cleared_all_toast">
+सभी ड्राइव नाम डिफ़ॉल्ट पर रीसेट हो गए
 </string>
     <string name="reset_action">
 रीसेट
@@ -1428,11 +1584,29 @@ USB और स्थानीय स्टोरेज ड्राइव का
     <string name="start_screen_storage_browser">
 मुख्य मेनू (डिफ़ॉल्ट)
 </string>
+    <string name="start_screen_storage_browser_desc">
+सभी स्टोरेज और त्वरित टाइल्स के साथ मानक होम स्क्रीन
+</string>
     <string name="start_screen_twin_window">
 ट्विन विंडो
 </string>
+    <string name="start_screen_twin_window_desc">
+डुअल-पेन साथ-साथ फ़ाइल मैनेजर
+</string>
     <string name="start_screen_file_server">
 फ़ाइल सर्वर
+</string>
+    <string name="start_screen_file_server_desc">
+HTTP, FTP और WebDAV फ़ाइल सर्वर नियंत्रण
+</string>
+    <string name="start_screen_section_main">
+मुख्य स्क्रीन
+</string>
+    <string name="start_screen_section_storages">
+प्रत्यक्ष स्टोरेज ड्राइव
+</string>
+    <string name="start_screen_storage_desc">
+लॉन्च पर इस ड्राइव को सीधे खोलें
 </string>
 
     <!-- Analytics Toggle -->
@@ -1507,6 +1681,12 @@ USB और स्थानीय स्टोरेज ड्राइव का
 </string>
 
     <!-- Open Source Licenses -->
+    <string name="policy_section_agreements">
+नीतियाँ और समझौते
+</string>
+    <string name="policy_section_attributions">
+एट्रिब्यूशन और लाइसेंस
+</string>
     <string name="policy_licenses_button">
 ओपन सोर्स लाइसेंस
 </string>
@@ -1640,8 +1820,38 @@ APKs
     <string name="default_apps_empty">
 कोई डिफ़ॉल्ट एप्लिकेशन सेट नहीं है।
 </string>
+    <string name="default_apps_empty_title">
+कोई डिफ़ॉल्ट ऐप कॉन्फ़िगर नहीं
+</string>
+    <string name="default_apps_empty_desc">
+जब आप किसी फ़ाइल को \"हमेशा\" के साथ खोलते हैं, तो वह यहाँ दिखाई देगी ताकि आप फ़ाइल एसोसिएशन नियमों को प्रबंधित या रीसेट कर सकें।
+</string>
+    <string name="default_apps_info_notice">
+किसी विशिष्ट व्यूअर या ऐप के साथ स्वचालित रूप से खोलने के लिए कॉन्फ़िगर की गई फ़ाइल प्रकार। एसोसिएशन नियम को रीसेट करने के लिए ट्रैश आइकन टैप करें।
+</string>
     <string name="default_apps_clear_all">
 सभी डिफ़ॉल्ट साफ़ करें
+</string>
+    <string name="default_apps_clear_all_confirm_title">
+सभी डिफ़ॉल्ट ऐप साफ़ करें
+</string>
+    <string name="default_apps_clear_all_confirm_message">
+क्या आप वाकई सभी फ़ाइल एसोसिएशन प्राथमिकताएँ साफ़ करना चाहते हैं? फ़ाइलें खोलने पर एक एप्लिकेशन के लिए संकेत देंगी।
+</string>
+    <string name="default_app_remove_confirm_title">
+.%1$s एसोसिएशन रीसेट करें?
+</string>
+    <string name="default_app_remove_confirm_message">
+क्या आप वाकई .%1$s (%2$s) के लिए डिफ़ॉल्ट एप्लिकेशन रीसेट करना चाहते हैं? अगली बार जब आप इस फ़ाइल प्रकार को खोलेंगे तो आपको एक ऐप चुनने के लिए संकेत दिया जाएगा।
+</string>
+    <string name="default_app_remove_btn">
+डिफ़ॉल्ट रीसेट करें
+</string>
+    <string name="default_apps_removed_toast">
+.%1$s के लिए डिफ़ॉल्ट रीसेट करें
+</string>
+    <string name="default_apps_cleared_all_toast">
+सभी डिफ़ॉल्ट एप्लिकेशन साफ़ हो गए
 </string>
     <string name="default_apps_extension_label">
 फ़ाइल प्रकार: %1$s
@@ -1972,6 +2182,15 @@ New File.txt
     <string name="all_drives">
 सभी ड्राइव
 </string>
+    <string name="search_select_location_title">
+खोज स्थान
+</string>
+    <string name="search_select_location_subtitle">
+खोजने के लिए एक स्टोरेज स्थान चुनें
+</string>
+    <string name="search_all_drives_subtitle">
+सभी कनेक्टेड स्टोरेज में खोजें
+</string>
 
     <!-- Category detail -->
     <string name="category_files_title">
@@ -2117,6 +2336,9 @@ SMB, FTP और अधिक
     <string name="network_shares_subtitle">
 SMB · FTP
 </string>
+    <string name="network_shares_info_notice">
+फ़ाइलों को सहजता से ब्राउज़, स्थानांतरित और व्यवस्थित करने के लिए अपने स्थानीय नेटवर्क पर SMB, FTP, SFTP, SCP और NFS शेयरों से कनेक्ट करें।
+</string>
     <string name="network_add_share">
 शेयर जोड़ें
 </string>
@@ -2162,6 +2384,9 @@ DLNA
 </string>
     <string name="network_field_port">
 पोर्ट (डिफ़ॉल्ट के लिए खाली छोड़ें)
+</string>
+    <string name="network_section_credentials">
+क्रेडेंशियल और प्रमाणीकरण
 </string>
     <string name="network_field_username">
 उपयोगकर्ता नाम (खाली = अतिथि)
@@ -2681,6 +2906,37 @@ GB
 %1$s — %2$s संस्करण का उपयोग किया
 </string>
 
+    <string name="configure_sync_folders_schedule">
+फ़ोल्डर और सिंक शेड्यूल कॉन्फ़िगर करें
+</string>
+    <string name="sync_section_profile_direction">
+प्रोफ़ाइल और दिशा
+</string>
+    <string name="sync_section_folders">
+फ़ोल्डर और स्थान
+</string>
+    <string name="sync_section_schedule">
+शेड्यूल और स्वचालन
+</string>
+    <string name="sync_section_conflict">
+संघर्ष प्रबंधन और विलोपन
+</string>
+    <string name="sync_section_filtering">
+फ़ाइल फ़िल्टरिंग और टैग
+</string>
+    <string name="general_settings">
+सामान्य सेटिंग्स
+</string>
+    <string name="schedule_and_triggers">
+शेड्यूल और ट्रिगर
+</string>
+    <string name="schedule_mode">
+शेड्यूल मोड
+</string>
+    <string name="options">
+विकल्प
+</string>
+
     <!-- Generic -->
     <string name="cancel">
 रद्द करें
@@ -2885,6 +3141,58 @@ NFS सर्वरों के लिए स्कैन करें
 पुनर्स्थापित करता है: %1$s
 </string>
 
+    <!-- Add Options Dialog -->
+    <string name="add_menu_options_title">
+नया बनाएं
+</string>
+    <string name="add_menu_options_desc">
+चुनें कि आप मुख्य मेनू में क्या जोड़ना चाहते हैं।
+</string>
+    <string name="option_create_header_title">
+नया हेडर बनाएं
+</string>
+    <string name="option_create_header_desc">
+अपनी टाइल्स को व्यवस्थित करने के लिए एक कस्टम सेक्शन हेडर जोड़ें
+</string>
+    <string name="option_create_tile_title">
+कस्टम टाइल बनाएं
+</string>
+    <string name="option_create_tile_desc">
+शॉर्टकट और फ़ोल्डर समूहीकृत करने के लिए एक कस्टम टाइल जोड़ें
+</string>
+
+    <!-- Custom Category Headers -->
+    <string name="custom_header_create_title">
+नया हेडर बनाएं
+</string>
+    <string name="custom_header_create_desc">
+इस श्रेणी हेडर के लिए एक शीर्षक दर्ज करें।
+</string>
+    <string name="custom_header_name_hint">
+हेडर नाम (आवश्यक)
+</string>
+    <string name="custom_header_name_required">
+हेडर नाम आवश्यक है
+</string>
+    <string name="custom_header_created">
+श्रेणी हेडर बनाया गया
+</string>
+    <string name="custom_header_add_button">
+हेडर जोड़ें
+</string>
+    <string name="custom_header_delete_title">
+श्रेणी हेडर हटाएं
+</string>
+    <string name="custom_header_delete_confirm">
+\"%1$s\" हटाएं?
+</string>
+    <string name="custom_header_delete_warning">
+अंदर की सभी टाइलें उनके मूल स्थान पर वापस ले जाई जाएंगी।
+</string>
+    <string name="custom_header_deleted">
+श्रेणी हेडर \"%1$s\" हटा दिया गया
+</string>
+
     <!-- Custom Tiles -->
     <string name="custom_tile_create_title">
 कस्टम टाइल बनाएँ
@@ -3032,6 +3340,12 @@ NFS सर्वरों के लिए स्कैन करें
     <string name="tile_color_message_select">
 रंग पिकर खोलने के लिए चुनें दबाने के बाद एक टाइल पर टैप करें।
 </string>
+    <string name="tile_color_tip_title">
+टाइल रंग कस्टमाइज़र
+</string>
+    <string name="tile_color_tip_desc">
+अपने रंग पैलेट को वैयक्तिकृत करने के लिए होम स्क्रीन पर किसी भी स्टोरेज ड्राइव या फीचर टाइल को टैप करें
+</string>
     <string name="tile_color_button_select">
 टाइल चुनें
 </string>
@@ -3148,6 +3462,9 @@ UFM रंग कोड
 </string>
     <string name="storage_indexer_delete_records">
 अनुक्रमित रिकॉर्ड हटाएँ
+</string>
+    <string name="storage_indexer_delete_records_desc">
+इस स्टोरेज के लिए इंडेक्सिंग डेटाबेस साफ़ करें
 </string>
     <string name="storage_indexer_not_now">
 इस स्टोरेज को अनदेखा करें (अभी नहीं)
@@ -3403,14 +3720,41 @@ UFM रंग कोड
     <string name="layout_grid">
 ग्रिड
 </string>
+    <string name="layout_list_size_section">
+सूची लेआउट आकार
+</string>
+    <string name="layout_size_large">
+बड़ा
+</string>
+    <string name="layout_size_large_desc">
+बड़े आइकन के साथ विशाल पंक्तियाँ
+</string>
+    <string name="layout_size_medium">
+मध्यम
+</string>
+    <string name="layout_size_medium_desc">
+मानक संतुलित पंक्ति ऊंचाई
+</string>
+    <string name="layout_size_small">
+छोटा
+</string>
+    <string name="layout_size_small_desc">
+उच्च घनत्व के साथ कॉम्पैक्ट पंक्तियाँ
+</string>
     <string name="column_count">
 कॉलम
 </string>
     <string name="columns_4">
 4 कॉलम
 </string>
+    <string name="columns_4_desc">
+कॉम्पैक्ट 4-कॉलम ग्रिड लेआउट
+</string>
     <string name="columns_3">
 3 कॉलम
+</string>
+    <string name="columns_3_desc">
+विशाल 3-कॉलम ग्रिड लेआउट
 </string>
 
     <!-- Long Press Duration Settings -->
@@ -3426,6 +3770,114 @@ UFM रंग कोड
 </string>
     <string name="settings_toolbar_icons_subtitle">
 चयन क्रिया पट्टी को अनुकूलित करें
+</string>
+    <string name="settings_toolbar_icons_info_notice">
+अनुकूलित करें कि फ़ाइलें या फ़ोल्डर चुने जाने पर टूलबार में कौन से क्रिया बटन दिखाई देते हैं। अपने कार्यक्षेत्र को स्वच्छ और कुशल रखने के लिए जिन क्रियाओं का उपयोग नहीं करते उन्हें बंद करें।
+</string>
+    <string name="settings_toolbar_icons_reset_defaults">
+डिफ़ॉल्ट पर रीसेट करें
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_title">
+टूलबार आइकन रीसेट करें?
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_message">
+क्या आप वाकई सभी चयन टूलबार आइकन को उनकी डिफ़ॉल्ट सक्षम स्थिति में रीसेट करना चाहते हैं?
+</string>
+    <string name="settings_toolbar_icons_reset_toast">
+टूलबार आइकन डिफ़ॉल्ट पर रीसेट हो गए
+</string>
+    <string name="toolbar_section_file_operations">
+फ़ाइल संचालन
+</string>
+    <string name="toolbar_section_security">
+सुरक्षा और गोपनीयता
+</string>
+    <string name="toolbar_section_selection_navigation">
+चयन और पसंदीदा
+</string>
+    <string name="toolbar_section_tools_media">
+संग्रह, मीडिया और उपयोगिताएँ
+</string>
+    <string name="toolbar_desc_create_new">
+नई फ़ाइलें, फ़ोल्डर या संग्रह बनाएं
+</string>
+    <string name="toolbar_desc_copy">
+चयनित आइटम को क्लिपबोर्ड पर डुप्लिकेट करें
+</string>
+    <string name="toolbar_desc_move">
+स्थानांतरित करने के लिए चयनित आइटम काटें
+</string>
+    <string name="toolbar_desc_rename">
+चयनित फ़ाइल या निर्देशिका का नाम बदलें
+</string>
+    <string name="toolbar_desc_share">
+सिस्टम शेयर शीट के माध्यम से फ़ाइलें भेजें
+</string>
+    <string name="toolbar_desc_delete">
+आइटम स्थायी रूप से हटाएं या ट्रैश करें
+</string>
+    <string name="toolbar_desc_copy_encrypt">
+आइटम एन्क्रिप्ट और कॉपी करें
+</string>
+    <string name="toolbar_desc_move_encrypt">
+आइटम एन्क्रिप्ट और स्थानांतरित करें
+</string>
+    <string name="toolbar_desc_protect">
+रीड-ओनली या संरक्षित फ़्लैग सेट करें
+</string>
+    <string name="toolbar_desc_unprotect">
+सुरक्षा लॉक हटाएं
+</string>
+    <string name="toolbar_desc_hide">
+आइटम को छिपे हुए के रूप में चिह्नित करें
+</string>
+    <string name="toolbar_desc_unhide">
+छिपी हुई फ़ाइलें दिखाएं
+</string>
+    <string name="toolbar_desc_select_all">
+वर्तमान पैन में सभी आइटम चुनें
+</string>
+    <string name="toolbar_desc_invert_selection">
+सभी आइटम की चयन स्थिति टॉगल करें
+</string>
+    <string name="toolbar_desc_favorite">
+स्टार वाले पसंदीदा में जोड़ें या हटाएं
+</string>
+    <string name="toolbar_desc_pin">
+आइटम को त्वरित पहुँच पैनल में पिन करें
+</string>
+    <string name="toolbar_desc_unpin">
+त्वरित पहुँच से आइटम अनपिन करें
+</string>
+    <string name="toolbar_desc_compress">
+ZIP या 7Z संग्रह बनाएं
+</string>
+    <string name="toolbar_desc_extract">
+वर्तमान फ़ोल्डर में संग्रह को डीकंप्रेस करें
+</string>
+    <string name="toolbar_desc_compress_image">
+छवि फ़ाइल आकार अनुकूलित करें
+</string>
+    <string name="toolbar_desc_retrigger_thumbnails">
+कैश्ड छवि और वीडियो थंबनेल पुनर्निर्माण करें
+</string>
+    <string name="toolbar_desc_create_gif">
+छवियों को एनिमेटेड GIF में इकट्ठा करें
+</string>
+    <string name="toolbar_desc_exif_tools">
+मेटाडेटा साफ़ करें और फ़ोटो का बैच नाम बदलें
+</string>
+    <string name="toolbar_desc_set_home_wallpaper">
+चयनित छवि को होम स्क्रीन वॉलपेपर के रूप में सेट करें
+</string>
+    <string name="toolbar_desc_set_lock_wallpaper">
+चयनित छवि को लॉक स्क्रीन वॉलपेपर के रूप में सेट करें
+</string>
+    <string name="toolbar_desc_duplicate_finder">
+डुप्लिकेट फ़ाइलों को स्कैन और पहचानें
+</string>
+    <string name="toolbar_desc_large_files_finder">
+अत्यधिक स्टोरेज उपभोग करने वाली फ़ाइलों की पहचान करें
 </string>
     <string name="long_press_duration_seconds">
 %1$.1f सेकंड
@@ -3561,6 +4013,54 @@ ADB पेयरिंग
     <string name="connect_to_android_device">
 Android उपकरण से कनेक्ट करें
 </string>
+    <string name="adb_terminal_empty_title">
+ADB शेल तैयार
+</string>
+    <string name="adb_terminal_empty_subtitle">
+शेल कमांड चलाने, पैकेज निरीक्षण करने और सिस्टम प्रोसेस की निगरानी के लिए किसी Android डिवाइस या TV से कनेक्ट करें।
+</string>
+    <string name="adb_terminal_clear">
+कंसोल साफ़ करें
+</string>
+    <string name="adb_terminal_copy">
+आउटपुट कॉपी करें
+</string>
+    <string name="adb_terminal_cleared">
+टर्मिनल आउटपुट साफ़ हो गया
+</string>
+    <string name="adb_terminal_copied">
+सभी आउटपुट क्लिपबोर्ड पर कॉपी हो गया
+</string>
+    <string name="adb_quick_commands">
+त्वरित कमांड
+</string>
+    <string name="adb_host_label">
+लक्ष्य डिवाइस IP पता
+</string>
+    <string name="adb_host_hint">
+192.168.1.50 या 127.0.0.1
+</string>
+    <string name="adb_pairing_guide_title">
+3-चरण वायरलेस पेयरिंग गाइड
+</string>
+    <string name="adb_pairing_guide_step1">
+लक्ष्य डिवाइस पर डेवलपर विकल्प और वायरलेस डिबगिंग सक्षम करें
+</string>
+    <string name="adb_pairing_guide_step2">
+वायरलेस डिबगिंग सेटिंग्स में \"पेयरिंग कोड से डिवाइस जोड़ें\" पर टैप करें
+</string>
+    <string name="adb_pairing_guide_step3">
+नीचे प्रदर्शित IP, पेयरिंग पोर्ट और 6-अंकीय PIN कोड दर्ज करें
+</string>
+    <string name="adb_discovery_title">
+नेटवर्क डिवाइस स्वतः-खोज
+</string>
+    <string name="adb_manual_title">
+लक्ष्य IP और पोर्ट सेटिंग्स
+</string>
+    <string name="adb_pin_title">
+6-अंकीय पेयरिंग कोड
+</string>
     <string name="search_apps">
 ऐप्स खोजें...
 </string>
@@ -3576,6 +4076,36 @@ Android उपकरण से कनेक्ट करें
     <string name="no_devices_paired_yetntap_to">
 अभी तक कोई उपकरण पेयर नहीं हुआ।\n
 टीवी लिंक करने के लिए + टैप करें।
+</string>
+    <string name="link_tv">
+TV लिंक करें
+</string>
+    <string name="link_tv_button">
+नया TV लिंक करें
+</string>
+    <string name="paired_tvs_empty_title">
+अभी कोई TV पेयर्ड नहीं है
+</string>
+    <string name="paired_tvs_empty_subtitle">
+वायरलेस फ़ाइल ट्रांसफर, स्टोरेज प्रबंधन और रिमोट एक्सेस के लिए अपने फोन को UFM चलाने वाले Android TV से कनेक्ट करें।
+</string>
+    <string name="tv_pairing_guide_title">
+3-चरण त्वरित गाइड
+</string>
+    <string name="tv_pairing_guide_step1">
+अपने Android TV पर UFM खोलें
+</string>
+    <string name="tv_pairing_guide_step2">
+TV मुख्य मेनू में \"पेयर्ड फोन\" चुनें
+</string>
+    <string name="tv_pairing_guide_step3">
+4-अंकीय PIN पाने के लिए TV पर \"मोबाइल ऐप लिंक करें\" चुनें
+</string>
+    <string name="paired_status_connected">
+कनेक्टेड
+</string>
+    <string name="paired_status_disconnected">
+डिस्कनेक्टेड
 </string>
     <string name="paired_phones">
 पेयर किए गए फ़ोन
@@ -4443,8 +4973,14 @@ USB डीबगिंग आवश्यक
     <string name="take_screenshot">
 स्क्रीनशॉट लें
 </string>
+    <string name="take_screenshot_subtitle">
+वर्तमान TV स्क्रीन को अपने डिवाइस पर कैप्चर करें
+</string>
     <string name="record_screen">
 स्क्रीन रिकॉर्ड करें
+</string>
+    <string name="record_screen_subtitle">
+ऑडियो विकल्पों के साथ TV स्क्रीन वीडियो रिकॉर्ड करें
 </string>
     <string name="record_screen_audio_title">
 टीवी ऑडियो
@@ -5626,13 +6162,43 @@ APK अपलोड हो रहा है…
     <string name="sideload_apk">
 साइडलोड APK
 </string>
+    <string name="sideload_apk_subtitle">
+TV पर एकल APK पैकेज इंस्टॉल करें
+</string>
     <string name="sideload_xapk">
 साइडलोड XAPK
+</string>
+    <string name="sideload_xapk_subtitle">
+TV पर बंडल XAPK / APKM ऐप्स इंस्टॉल करें
+</string>
+    <string name="sideload_dialog_desc_apk">
+अपने डिवाइस से अपने पेयर्ड TV पर Android एप्लिकेशन पैकेज (.apk) इंस्टॉल करें।
+</string>
+    <string name="sideload_dialog_desc_xapk">
+अपने डिवाइस से अपने पेयर्ड TV पर एक बंडल एप्लिकेशन पैकेज (.xapk / .apkm) इंस्टॉल करें।
+</string>
+    <string name="sideload_step_1_apk">
+1. अपने डिवाइस स्टोरेज से .apk फ़ाइल चुनें
+</string>
+    <string name="sideload_step_1_xapk">
+1. अपने डिवाइस स्टोरेज से .xapk / .apkm पैकेज चुनें
+</string>
+    <string name="sideload_step_2">
+2. UFM पैकेज को आपके TV पर वायरलेस तरीके से ट्रांसफर करेगा
+</string>
+    <string name="sideload_step_3">
+3. समाप्त करने के लिए अपनी TV स्क्रीन पर इंस्टॉल प्रॉम्प्ट की पुष्टि करें
+</string>
+    <string name="sideload_choose_file">
+फ़ाइल चुनें
 </string>
 
     <!-- Transfer Settings Feature -->
     <string name="transfer_settings">
 सेटिंग्स स्थानांतरित करें
+</string>
+    <string name="transfer_settings_action_subtitle">
+सेटिंग्स और नेटवर्क शेयरों को TV पर ट्रांसफर करें
 </string>
     <string name="transfer_settings_select_all">
 सभी चुनें
@@ -6139,6 +6705,9 @@ USB ड्राइव (%1$s)
 </string>
     <string name="smart_sort_tile_subtitle">
 फ़ाइलों को श्रेणियों में व्यवस्थित करें
+</string>
+    <string name="smart_sort_info_notice">
+फ़ाइलों को प्रकार, आकार, दिनांक या कस्टम नियमों द्वारा संरचित फ़ोल्डरों में स्वचालित रूप से वर्गीकृत और व्यवस्थित करें। आरंभ करने के लिए नीचे स्टोरेज ड्राइव या शेयर चुनें।
 </string>
     <string name="smart_sort_config">
 स्मार्ट सॉर्ट कॉन्फ़िगरेशन
@@ -6676,6 +7245,9 @@ SMB/FTP सेट करें
 </string>
     <string name="sync_disabled">
 सिंक अक्षम
+</string>
+    <string name="sync_delete_profile_confirm_msg">
+क्या आप वाकई \"%1$s\" को हटाना चाहते हैं? इसे पूर्ववत नहीं किया जा सकता।
 </string>
     <string name="profile_deleted">
 प्रोफ़ाइल हटा दी गई
@@ -7233,6 +7805,12 @@ APNG4Android (com.github.penfeizhou.android.animation)
     <string name="online_storages_subtitle">
 OneDrive, Google Drive और अन्य
 </string>
+    <string name="online_storages_info_notice">
+फ़ाइलें ब्राउज़ करने, ट्रांसफर करने और सिंक करने के लिए OneDrive, Google Drive, Dropbox, Box, AWS S3, WebDAV और RClone सहित क्लाउड स्टोरेज प्रदाताओं से कनेक्ट करें।
+</string>
+    <string name="online_storage_delete_confirm_body">
+क्या आप वाकई \"%1$s\" से कनेक्शन हटाना चाहते हैं?
+</string>
     <string name="opening_online_storages">
 ऑनलाइन स्टोरेज खोले जा रहे हैं…
 </string>
@@ -7547,6 +8125,111 @@ UFM को उन्नत फ़ाइल संचालन करने क�
 </string>
     <string name="shizuku_adb_not_connected">
 ADB कनेक्ट नहीं है। उन्नत पहुंच को स्वचालित रूप से सक्षम करने के लिए ADB टर्मिनल के माध्यम से कनेक्ट करें।
+</string>
+    <string name="shizuku_header_subtitle">
+Shizuku और Shevery सेवा
+</string>
+    <string name="shizuku_status_not_installed_desc">
+रूट के बिना संरक्षित Android/data फ़ोल्डरों और उन्नत संचालन को अनलॉक करने के लिए Shizuku या Shevery इंस्टॉल करें।
+</string>
+    <string name="shizuku_status_stopped_desc">
+एलिवेटेड सेवा इंस्टॉल है लेकिन वर्तमान में चालू नहीं है। वायरलेस डिबगिंग या अपने मैनेजर ऐप के माध्यम से सेवा प्रारंभ करें।
+</string>
+    <string name="shizuku_status_unauthorized_desc">
+सेवा चालू है, लेकिन UFM को सिस्टम-स्तरीय APIs तक पहुंचने के लिए प्राधिकरण की आवश्यकता है।
+</string>
+    <string name="shizuku_status_active_desc">
+एलिवेटेड सेवा पूर्ण अनुमतियों के साथ सक्रिय है। संरक्षित फ़ोल्डर और उन्नत संचालन तैयार हैं।
+</string>
+    <string name="shizuku_badge_unavailable">
+अनुपलब्ध
+</string>
+    <string name="shizuku_badge_stopped">
+निष्क्रिय
+</string>
+    <string name="shizuku_badge_auth_needed">
+प्रमाणीकरण आवश्यक
+</string>
+    <string name="shizuku_badge_connected">
+कनेक्टेड
+</string>
+    <string name="shizuku_section_capabilities">
+एलिवेटेड क्षमताएँ
+</string>
+    <string name="shizuku_feature_protected_title">
+संरक्षित फ़ोल्डर
+</string>
+    <string name="shizuku_feature_protected_desc">
+Android/data और obb तक पूर्ण पढ़ने/लिखने की पहुंच
+</string>
+    <string name="shizuku_feature_speed_title">
+हाई-स्पीड संचालन
+</string>
+    <string name="shizuku_feature_speed_desc">
+रूट के बिना सीधा सिस्टम-स्तरीय I/O
+</string>
+    <string name="shizuku_feature_security_title">
+रूटलेस और सुरक्षित
+</string>
+    <string name="shizuku_feature_security_desc">
+मानक Android विशेषाधिकार प्राप्त API ब्रिज
+</string>
+    <string name="shizuku_section_managers">
+उपलब्ध मैनेजर
+</string>
+    <string name="shizuku_manager_shizuku_title">
+Shizuku
+</string>
+    <string name="shizuku_manager_shizuku_desc">
+GitHub से मानक एलिवेटेड सेवा
+</string>
+    <string name="shizuku_manager_shevery_title">
+Shevery
+</string>
+    <string name="shizuku_manager_shevery_desc">
+हल्का और तेज़ विकल्प
+</string>
+    <string name="shizuku_download_shizuku_apk">
+Shizuku (APK) डाउनलोड करें
+</string>
+    <string name="shizuku_download_shevery_apk">
+Shevery (APK) डाउनलोड करें
+</string>
+    <string name="shizuku_open_manager">
+%1$s मैनेजर खोलें
+</string>
+    <string name="shizuku_section_setup_guide">
+3-चरण सेटअप गाइड
+</string>
+    <string name="shizuku_step_1">
+1. APK इंस्टॉल करें
+</string>
+    <string name="shizuku_step_2">
+2. सेवा प्रारंभ करें
+</string>
+    <string name="shizuku_step_3">
+3. UFM को अधिकृत करें
+</string>
+    <string name="shizuku_service_info_title">
+सेवा जानकारी
+</string>
+    <string name="shizuku_service_provider_label">
+सेवा प्रदाता
+</string>
+    <string name="shizuku_service_mode_label">
+कनेक्शन मोड
+</string>
+    <string name="shizuku_service_permission_label">
+अनुमति स्तर
+</string>
+    <string name="shizuku_service_mode_adb">
+ADB / वायरलेस डिबगिंग
+</string>
+    <string name="shizuku_permission_granted_api">
+अनुमति प्राप्त (API v23)
+</string>
+    <string name="shizuku_recheck_status">
+स्थिति पुनः जांचें
 </string>
     <string name="shizuku_manager_open_error">
 प्रबंधक नहीं खोला जा सका। कृपया पहले Shizuku या Shevery स्थापित करें।
@@ -8714,6 +9397,21 @@ TXT
     <string name="notes_folder_title">
 मेरे नोट्स
 </string>
+    <string name="export_txt_desc">
+सादा टेक्स्ट दस्तावेज़ (.txt)
+</string>
+    <string name="export_csv_desc">
+अल्पविराम-पृथक मान (.csv)
+</string>
+    <string name="export_pdf_desc">
+पोर्टेबल दस्तावेज़ प्रारूप (.pdf)
+</string>
+    <string name="notepad_select_format_desc">
+अपने दस्तावेज़ के लिए निर्यात प्रारूप चुनें
+</string>
+    <string name="notepad_destination_label">
+गंतव्य सहेजें
+</string>
     <string name="notepad_select_export_format">
 इस रूप में सहेजें
 </string>
@@ -8764,11 +9462,35 @@ TXT
     <string name="settings_apk_extract_title">
 APK / XAPK निकालें
 </string>
+    <string name="settings_apk_extract_subtitle">
+ऐप निष्कर्षण और मैनिफेस्ट मेटाडेटा कॉन्फ़िगर करें
+</string>
     <string name="settings_apk_extract_subtitle_off">
 केवल मानक निष्कर्षण
 </string>
     <string name="settings_apk_extract_subtitle_on">
 उन्नत
+</string>
+    <string name="settings_apk_extract_info_notice">
+इंस्टॉल किए गए एप्लिकेशन के लिए निष्कर्षण प्राथमिकताएँ कॉन्फ़िगर करें। सक्षम होने पर, UFM निकाले गए APK और XAPK फ़ाइलों के साथ ऐप आइकन और JSON मेटाडेटा सहेजता है।
+</string>
+    <string name="settings_apk_extract_reset_defaults">
+डिफ़ॉल्ट पर रीसेट करें
+</string>
+    <string name="settings_apk_extract_reset_confirm_title">
+निष्कर्षण सेटिंग्स रीसेट करें?
+</string>
+    <string name="settings_apk_extract_reset_confirm_message">
+क्या आप वाकई सभी APK और XAPK निष्कर्षण सेटिंग्स और मेटाडेटा फ़ील्ड को डिफ़ॉल्ट पर रीसेट करना चाहते हैं?
+</string>
+    <string name="settings_apk_extract_reset_toast">
+निष्कर्षण सेटिंग्स डिफ़ॉल्ट पर रीसेट हो गईं
+</string>
+    <string name="settings_apk_extract_metadata_header">
+JSON में शामिल करने योग्य मेटाडेटा फ़ील्ड
+</string>
+    <string name="settings_apk_extract_section_general">
+निष्कर्षण सुविधाएँ
 </string>
     <string name="apk_extract_master_title">
 उन्नत APK/XAPK निष्कर्षण
@@ -8794,44 +9516,86 @@ JSON में शामिल करने के लिए मेटाडे�
     <string name="field_extracted_date">
 निकालने की तिथि
 </string>
+    <string name="field_extracted_date_desc">
+फ़ाइल निकाले जाने का टाइमस्टैम्प (extracted_date)
+</string>
     <string name="field_package_name">
 पैकेज का नाम
+</string>
+    <string name="field_package_name_desc">
+अद्वितीय Android एप्लिकेशन ID (package_name)
 </string>
     <string name="field_version_name">
 संस्करण का नाम
 </string>
+    <string name="field_version_name_desc">
+उपयोगकर्ता-दृश्यमान संस्करण स्ट्रिंग (version_name)
+</string>
     <string name="field_version_code">
 संस्करण कोड
+</string>
+    <string name="field_version_code_desc">
+आंतरिक संख्यात्मक संस्करण पूर्णांक (version_code)
 </string>
     <string name="field_label">
 ऐप लेबल
 </string>
+    <string name="field_label_desc">
+एप्लिकेशन का प्रदर्शन नाम (label)
+</string>
     <string name="field_install_time">
 स्थापना तिथि
+</string>
+    <string name="field_install_time_desc">
+डिवाइस पर मूल इंस्टॉलेशन टाइमस्टैम्प (install_time)
 </string>
     <string name="field_last_update_time">
 अंतिम अद्यतन तिथि
 </string>
+    <string name="field_last_update_time_desc">
+डिवाइस पर अंतिम अपडेट टाइमस्टैम्प (last_update_time)
+</string>
     <string name="field_target_sdk">
 लक्ष्य SDK
+</string>
+    <string name="field_target_sdk_desc">
+लक्ष्य Android API संस्करण (target_sdk)
 </string>
     <string name="field_min_sdk">
 न्यूनतम SDK
 </string>
+    <string name="field_min_sdk_desc">
+न्यूनतम आवश्यक Android API संस्करण (min_sdk)
+</string>
     <string name="field_app_size">
 ऐप आकार
+</string>
+    <string name="field_app_size_desc">
+बाइट्स में कुल इंस्टॉल किया गया एप्लिकेशन आकार (app_size)
 </string>
     <string name="field_source_dir">
 स्रोत निर्देशिका
 </string>
+    <string name="field_source_dir_desc">
+बेस APK की फ़ाइल सिस्टम निर्देशिका पथ (source_dir)
+</string>
     <string name="field_split_apks">
 विभाजित APK
+</string>
+    <string name="field_split_apks_desc">
+स्प्लिट कॉन्फ़िगरेशन APK पथों की सूची (split_apks)
 </string>
     <string name="field_has_obb">
 OBB है
 </string>
+    <string name="field_has_obb_desc">
+OBB विस्तार डेटा की उपस्थिति को दर्शाता है (has_obb)
+</string>
     <string name="field_permissions">
 अनुमतियाँ
+</string>
+    <string name="field_permissions_desc">
+अनुरोधित मैनिफेस्ट अनुमतियों की सूची (permissions)
 </string>
     <string name="extracts_subtitle_files">
 फ़ाइल(एँ)
@@ -8980,6 +9744,45 @@ FTP सर्वर प्रोफ़ाइल
 </string>
     <string name="backup_import_details_title">
 आयात पूर्वावलोकन
+</string>
+    <string name="backup_restore_notice">
+अपनी सेटिंग्स, कस्टम टाइल्स और नेटवर्क शेयरों की एक निर्यात योग्य बैकअप फ़ाइल बनाएं, या पहले निर्यात किए गए बैकअप आर्काइव से पुनर्स्थापित करें।
+</string>
+    <string name="backup_restore_section_actions">
+क्रियाएँ
+</string>
+    <string name="backup_export_notice">
+इस बैकअप आर्काइव में शामिल करने के लिए कॉन्फ़िगरेशन श्रेणियाँ और घटक चुनें।
+</string>
+    <string name="backup_import_notice">
+इस आर्काइव में पाई गई कॉन्फ़िगरेशन श्रेणियों की समीक्षा करें। पुनर्स्थापित करने पर ये सेटिंग्स लागू होंगी और ऐप पुनः आरंभ होगा।
+</string>
+    <string name="backup_import_password_desc">
+यह बैकअप फ़ाइल पासवर्ड से एन्क्रिप्टेड है। इसे डिक्रिप्ट करने और इसकी सामग्री की समीक्षा करने के लिए नीचे पासवर्ड दर्ज करें।
+</string>
+    <string name="backup_password_dialog_desc">
+वैकल्पिक रूप से अपनी बैकअप फ़ाइल को AES-256 एन्क्रिप्शन से सुरक्षित रखें। यदि आप पासवर्ड सेट करना छोड़ देते हैं, तो फ़ाइल बिना एन्क्रिप्शन के सहेजी जाएगी।
+</string>
+    <string name="backup_skip_confirm_desc">
+बिना एन्क्रिप्शन के सहेजने का मतलब है कि बैकअप फ़ाइल तक पहुंच रखने वाला कोई भी व्यक्ति आपकी निर्यात की गई सेटिंग्स और कॉन्फ़िगरेशन पढ़ सकता है। क्या आप वाकई बिना पासवर्ड के आगे बढ़ना चाहते हैं?
+</string>
+    <string name="backup_import_guide_title">
+सेटिंग्स आयात करें
+</string>
+    <string name="backup_import_guide_subtitle">
+बैकअप फ़ाइल चुनें
+</string>
+    <string name="backup_import_guide_msg">
+अपने डिवाइस स्टोरेज से निर्यात किया गया बैकअप आर्काइव (.ufmconfig) चुनें। आपकी सेटिंग्स, नेटवर्क शेयर, कस्टम टाइल्स और प्राथमिकताएँ पुनर्स्थापित हो जाएंगी।
+</string>
+    <string name="backup_import_guide_format_label">
+समर्थित आर्काइव प्रारूप
+</string>
+    <string name="backup_import_guide_format_val">
+*.ufmconfig फ़ाइलें
+</string>
+    <string name="backup_import_guide_btn_browse">
+बैकअप फ़ाइल चुनें
 </string>
 
     <!-- Auto Backup -->
@@ -9189,6 +9992,9 @@ AMOLED
 </string>
     <string name="category_main_menu_tiles">
 मुख्य मेनू टाइल्स
+</string>
+    <string name="category_icons_count">
+%1$d आइकन शामिल हैं
 </string>
     <string name="icon_file_generic">
 सामान्य फ़ाइल
@@ -9470,6 +10276,12 @@ XML / मार्कअप
 </string>
     <string name="icon_status_shield_alert">
 शील्ड अलर्ट
+</string>
+    <string name="icon_status_customized">
+अनुकूलित
+</string>
+    <string name="icon_status_default">
+डिफ़ॉल्ट
 </string>
     <string name="icon_view_grid_small">
 ग्रिड छोटा
@@ -9858,6 +10670,26 @@ APK निष्कर्षण सेटिंग्स
 छोड़ें (अनएन्क्रिप्टेड)
 </string>
 
+    <!-- Theme pack import instructions -->
+    <string name="theme_import_instructions_title">
+आइकन पैक आयात करें
+</string>
+    <string name="theme_import_instructions_desc">
+पहले निर्यात की गई .ufmtheme फ़ाइल से अनुकूलित आइकन और टाइल रंग आयात करें।
+</string>
+    <string name="theme_import_step_select">
+स्टोरेज में .ufmtheme फ़ाइल ढूंढें और चुनें
+</string>
+    <string name="theme_import_step_password">
+यदि पैक सुरक्षित है तो डिक्रिप्शन पासवर्ड दर्ज करें
+</string>
+    <string name="theme_import_step_preview">
+शामिल आइकनों का पूर्वावलोकन करें और लागू करने की पुष्टि करें
+</string>
+    <string name="theme_import_btn_select">
+.ufmtheme फ़ाइल चुनें
+</string>
+
     <!-- Theme pack import password -->
     <string name="theme_import_password_title">
 थीम पैक पासवर्ड दर्ज करें
@@ -10188,6 +11020,9 @@ Box
     <string name="settings_skip_length_title">
 छोड़ने की अवधि
 </string>
+    <string name="settings_skip_length_dialog_desc">
+मीडिया प्लेबैक में सीक करते समय आगे या पीछे कितनी दूरी तक जंप करना है, चुनें।
+</string>
     <string name="skip_length_option_3s">
 3 सेकंड
 </string>
@@ -10205,6 +11040,27 @@ Box
 </string>
     <string name="skip_length_option_disable">
 अक्षम करें
+</string>
+    <string name="skip_length_desc_3s">
+3 सेकंड स्किप करें
+</string>
+    <string name="skip_length_desc_5s">
+5 सेकंड स्किप करें
+</string>
+    <string name="skip_length_desc_10s">
+10 सेकंड स्किप करें (डिफ़ॉल्ट)
+</string>
+    <string name="skip_length_desc_20s">
+20 सेकंड स्किप करें
+</string>
+    <string name="skip_length_desc_30s">
+30 सेकंड स्किप करें
+</string>
+    <string name="skip_length_desc_disable">
+आगे और पीछे स्किप बटन छुपाएँ
+</string>
+    <string name="skip_length_toast_set">
+स्किप लंबाई %1$s पर सेट है
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -10447,6 +11303,51 @@ UFM स्प्रेडशीट व्यूअर
     <string name="settings_file_tags_subtitle">
 हैशटैग और टैगिंग विकल्प प्रबंधित करें
 </string>
+    <string name="settings_file_tags_info_notice">
+फ़ाइलों और फ़ोल्डरों को सौंपे गए कस्टम टैग तेज़ फ़िल्टरिंग, खोज और वर्गीकरण के लिए। इसे वैश्विक रूप से हटाने के लिए किसी भी टैग पर ट्रैश आइकन टैप करें।
+</string>
+    <string name="settings_file_tags_empty_title">
+कोई फ़ाइल टैग नहीं बनाए गए
+</string>
+    <string name="settings_file_tags_empty_desc">
+अपने मीडिया और दस्तावेज़ों को यहाँ व्यवस्थित करने के लिए फ़ाइल गुण शीट या मल्टी-सेलेक्ट टूलबार से किसी भी फ़ाइल या फ़ोल्डर को टैग करें।
+</string>
+    <string name="settings_file_tags_delete_confirm_title">
+टैग हटाएँ?
+</string>
+    <string name="settings_file_tags_delete_confirm_message">
+क्या आप वाकई \"#%1$s\" टैग हटाना चाहते हैं? इसे सभी टैग की गई फ़ाइलों और फ़ोल्डरों से हटा दिया जाएगा।
+</string>
+    <string name="settings_file_tags_delete_btn">
+टैग हटाएँ
+</string>
+    <string name="settings_file_tags_clear_all">
+सभी टैग हटाएँ
+</string>
+    <string name="settings_file_tags_clear_all_confirm_title">
+सभी फ़ाइल टैग हटाएँ?
+</string>
+    <string name="settings_file_tags_clear_all_confirm_message">
+क्या आप वाकई सभी बनाए गए फ़ाइल टैग स्थायी रूप से हटाना चाहते हैं? यह सभी फ़ाइलों और फ़ोल्डरों से सभी टैग हटा देगा।
+</string>
+    <string name="settings_file_tags_deleted_toast">
+टैग #%1$s हटा दिया गया
+</string>
+    <string name="settings_file_tags_cleared_all_toast">
+सभी फ़ाइल टैग हटा दिए गए
+</string>
+    <string name="settings_file_tags_multi_title">
+एकाधिक फ़ाइल टैगिंग
+</string>
+    <string name="settings_file_tags_multi_desc">
+चयनित होने पर एक साथ कई फ़ाइलों को टैग करने की अनुमति देता है
+</string>
+    <string name="settings_file_tags_created_header">
+बनाए गए टैग
+</string>
+    <string name="settings_file_tags_empty">
+अभी तक कोई टैग नहीं बनाया गया
+</string>
     <string name="action_tag">
 टैग
 </string>
@@ -10523,8 +11424,41 @@ UFM स्प्रेडशीट व्यूअर
 \n
 एक फ़ोल्डर खोलें, सॉर्ट और फ़िल्टर पर टैप करें और ओवरराइड बनाने के लिए \"यह फ़ोल्डर\" चुनें।
 </string>
+    <string name="folder_sort_manager_empty_title">
+कोई सॉर्ट ओवरराइड कॉन्फ़िगर नहीं
+</string>
+    <string name="folder_sort_manager_empty_desc">
+जब आप \"यह फ़ोल्डर\" का उपयोग करके किसी विशिष्ट फ़ोल्डर के लिए सॉर्ट क्रम या फ़िल्टर बदलते हैं, तो यह यहाँ दिखाई देगा ताकि आप कस्टम सॉर्टिंग नियमों को प्रबंधित या रीसेट कर सकें।
+</string>
+    <string name="folder_sort_manager_info_notice">
+विशिष्ट निर्देशिकाओं के लिए कस्टम सॉर्ट क्रम और फ़िल्टर कॉन्फ़िगर किए गए हैं। किसी फ़ोल्डर को वैश्विक सॉर्टिंग पर वापस लाने के लिए ट्रैश आइकन पर टैप करें।
+</string>
+    <string name="folder_sort_manager_clear_all">
+सभी ओवरराइड साफ़ करें
+</string>
     <string name="folder_sort_manager_clear_confirm">
 सभी फ़ोल्डर-विशिष्ट सॉर्ट ओवरराइड हटाएं? फ़ोल्डर वैश्विक सॉर्ट सेटिंग पर वापस आ जाएंगे।
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_title">
+सभी सॉर्ट ओवरराइड साफ़ करें?
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_message">
+क्या आप सभी प्रति-फ़ोल्डर सॉर्ट ओवरराइड हटाना चाहते हैं? सभी फ़ोल्डर आपकी वैश्विक सॉर्ट और फ़िल्टर सेटिंग्स पर वापस चले जाएंगे।
+</string>
+    <string name="folder_sort_manager_remove_confirm_title">
+फ़ोल्डर सॉर्ट ओवरराइड रीसेट करें?
+</string>
+    <string name="folder_sort_manager_remove_confirm_message">
+क्या आप \"%1$s\" के लिए कस्टम सॉर्ट ओवरराइड हटाना चाहते हैं? यह फ़ोल्डर वैश्विक सॉर्टिंग पर वापस चला जाएगा।
+</string>
+    <string name="folder_sort_manager_remove_btn">
+ओवरराइड रीसेट करें
+</string>
+    <string name="folder_sort_manager_cleared_all_toast">
+सभी फ़ोल्डर सॉर्ट ओवरराइड साफ़ कर दिए गए
+</string>
+    <string name="folder_sort_manager_deleted">
+%1$s के लिए ओवरराइड हटा दिया गया
 </string>
     <string name="folder_sort_network_badge">
 नेटवर्क / ऑनलाइन
@@ -10686,6 +11620,9 @@ UFM स्प्रेडशीट व्यूअर
 कुछ गड़बड़ हुई। कृपया पुनः प्रयास करें।
 </string>
     <string name="support_retry">
+पुनः प्रयास करें
+</string>
+    <string name="retry">
 पुनः प्रयास करें
 </string>
     <string name="support_no_internet">
@@ -11225,6 +12162,343 @@ GPS जियोटैग हटाएं (अक्षांश, देशा�
     <string name="exif_select_destination_folder">
 आउटपुट फ़ोल्डर चुनें
 </string>
+
+    <!-- Video Thumbnail Time Modernization -->
+    <string name="vtt_section_options">
+कैप्चर पॉइंट
+</string>
+    <string name="vtt_info_notice">
+वह टाइमस्टैम्प चुनें जिसका उपयोग पूरे ऐप में वीडियो थंबनेल उत्पन्न करने के लिए किया जाता है। प्रतिशत सेट करने से वीडियो की शुरुआत में खाली, अंधेरे या इंट्रो फ्रेम से बचा जा सकता है।
+</string>
+    <string name="vtt_percent_0_subtitle">
+वीडियो का पहला फ्रेम कैप्चर करें (00:00)
+</string>
+    <string name="vtt_percent_10_subtitle">
+अनुशंसित डिफ़ॉल्ट — काले या शुरुआती इंट्रो फ्रेम को छोड़ता है
+</string>
+    <string name="vtt_percent_25_subtitle">
+वीडियो अवधि के 25% पर फ्रेम कैप्चर करें
+</string>
+    <string name="vtt_percent_50_subtitle">
+वीडियो के ठीक मध्य बिंदु (50%) पर फ्रेम कैप्चर करें
+</string>
+    <string name="vtt_percent_75_subtitle">
+वीडियो अवधि के 75% पर फ्रेम कैप्चर करें
+</string>
+
+    <!-- Network Thumbnail Settings Modernization -->
+    <string name="nt_section_caching">
+कॉन्फ़िगरेशन
+</string>
+    <string name="nt_section_storage">
+स्टोरेज और रखरखाव
+</string>
+    <string name="nt_info_notice">
+रिमोट थंबनेल स्थानीय रूप से कैश किए जाते हैं ताकि नेटवर्क शेयर, SMB, FTP, SFTP और क्लाउड ड्राइव फ़ाइलों को फिर से डाउनलोड किए बिना तेज़ इमेज और वीडियो पूर्वावलोकन प्रदर्शित कर सकें।
+</string>
+    <string name="nt_cache_folder_guide_title">
+कैश स्थान चुनें
+</string>
+    <string name="nt_cache_folder_guide_msg">
+नेटवर्क थंबनेल कैश फ़ाइलों को संग्रहीत करने के लिए आंतरिक स्टोरेज या SD कार्ड निर्देशिका चुनें।\n
+\n
+स्टोरेज ब्राउज़र में, अपनी इच्छित निर्देशिका पर जाएं और सबसे ऊपर \"इस फ़ोल्डर का चयन करें\" पर टैप करें।
+</string>
+    <string name="nt_cache_folder_btn_browse">
+स्टोरेज ब्राउज़ करें
+</string>
+    <string name="nt_cache_folder_btn_reset_default">
+डिफ़ॉल्ट स्थान पर रीसेट करें
+</string>
+    <string name="nt_cache_folder_current_label">
+वर्तमान स्थान:
+</string>
+
+    <!-- Cache Limit Dialog Modernization -->
+    <string name="nt_cache_limit_dialog_desc">
+रिमोट थंबनेल कैश करने के लिए उपयोग की जाने वाली अधिकतम डिस्क स्थान चुनें।
+</string>
+    <string name="nt_limit_subtitle_500mb">
+मानक डिफ़ॉल्ट — सामान्य ब्राउज़िंग के लिए आदर्श
+</string>
+    <string name="nt_limit_subtitle_1gb">
+मध्यम नेटवर्क उपयोग के लिए अनुशंसित
+</string>
+    <string name="nt_limit_subtitle_2gb">
+फ़ोटो और वीडियो थंबनेल के लिए पर्याप्त स्टोरेज
+</string>
+    <string name="nt_limit_subtitle_5gb">
+अधिकतम मानक कैश क्षमता
+</string>
+    <string name="nt_limit_subtitle_custom">
+कस्टम MB या GB स्टोरेज सीमा निर्धारित करें
+</string>
+    <string name="nt_custom_limit_dialog_title">
+कस्टम कैश सीमा
+</string>
+    <string name="nt_custom_limit_dialog_desc">
+MB या GB में कस्टम आकार सीमा दर्ज करें
+</string>
+    <string name="nt_custom_presets_label">
+त्वरित प्रीसेट
+</string>
+    <string name="nt_custom_size_label">
+कस्टम आकार
+</string>
+
+    <!-- File Server System Tiles Modernization -->
+    <string name="file_server_tiles_section_server">
+फ़ाइल सर्वर
+</string>
+    <string name="file_server_tiles_section_tiles">
+त्वरित सेटिंग्स टाइल्स
+</string>
+    <string name="file_server_tiles_info_notice">
+त्वरित सेटिंग्स टाइल्स आपको ऐप खोले बिना अपने Android नोटिफिकेशन ड्रॉअर से सीधे FTP, SFTP और DLNA मीडिया सर्वर शुरू और बंद करने की सुविधा देती हैं।
+</string>
+
+    <!-- Storage Indexer Modernization -->
+    <string name="storage_indexer_section_storages">
+पता लगाया गया स्टोरेज
+</string>
+    <string name="storage_indexer_section_actions">
+रखरखाव
+</string>
+    <string name="storage_indexer_info_notice">
+आपके डिवाइस पर त्वरित खोज परिणाम, डुप्लिकेट पहचान और श्रेणी फ़िल्टरिंग के लिए आंतरिक स्टोरेज और हटाने योग्य ड्राइव को इंडेक्स करें।
+</string>
+    <string name="storage_indexer_detail_info_notice">
+यह स्टोरेज वॉल्यूम इंडेक्स किया गया है। इंडेक्स किए गए रिकॉर्ड फ़ाइल सिस्टम को स्कैन किए बिना तेज़ बहु-मानदंड खोज को सक्षम करते हैं।
+</string>
+    <string name="storage_indexer_btn_delete_confirm">
+रिकॉर्ड हटाएं
+</string>
+
+    <!-- Auto Backup Modernization -->
+    <string name="auto_backup_section_general">
+कॉन्फ़िगरेशन
+</string>
+    <string name="auto_backup_section_schedule">
+शेड्यूल
+</string>
+    <string name="auto_backup_section_security">
+सुरक्षा और एन्क्रिप्शन
+</string>
+    <string name="auto_backup_section_location">
+बैकअप गंतव्य
+</string>
+    <string name="auto_backup_info_notice">
+ऑटो बैकअप समय-समय पर आपकी ऐप प्राथमिकताओं, कस्टम थीम और टाइल्स के एन्क्रिप्टेड या सादे बैकअप बनाता है ताकि आप अपना कॉन्फ़िगरेशन कभी न खोएं।
+</string>
+    <string name="auto_backup_folder_guide_title">
+बैकअप फ़ोल्डर चुनें
+</string>
+    <string name="auto_backup_folder_guide_msg">
+चुनें कि स्वचालित बैकअप कहाँ सहेजे जाएंगे। पुष्टि करने के लिए किसी भी स्थानीय या हटाने योग्य फ़ोल्डर पर जाएं और सेव बटन पर टैप करें।
+</string>
+    <string name="auto_backup_folder_guide_current">
+वर्तमान स्थान:
+</string>
+    <string name="auto_backup_folder_guide_btn_choose">
+फ़ोल्डर चुनें
+</string>
+    <string name="auto_backup_reset_success">
+बैकअप स्थान डिफ़ॉल्ट (Documents/UFM) पर रीसेट कर दिया गया।
+</string>
+
+    <!-- File Server Modernization -->
+    <string name="file_server_section_services">
+सर्वर सेवाएं
+</string>
+    <string name="file_server_section_profiles">
+प्रमाणीकरण और पहुंच
+</string>
+    <string name="file_server_info_notice">
+स्थानीय FTP और SFTP फ़ाइल सर्वर होस्ट करें या DLNA के माध्यम से मीडिया स्ट्रीम करें। आपके स्थानीय Wi-Fi नेटवर्क पर डिवाइस ब्राउज़ करने, स्ट्रीम करने और फ़ाइलें स्थानांतरित करने के लिए कनेक्ट हो सकते हैं।
+</string>
+    <string name="file_server_empty_profiles_desc">
+लॉगिन क्रेडेंशियल, एक्सेस अनुमतियाँ और साझा निर्देशिकाओं को कॉन्फ़िगर करने के लिए \'प्रोफ़ाइल जोड़ें\' पर टैप करें।
+</string>
+
+    <!-- DLNA Modernization -->
+    <string name="dlna_section_services">
+DLNA सेवाएं
+</string>
+    <string name="dlna_section_config">
+कॉन्फ़िगरेशन
+</string>
+    <string name="dlna_section_identification">
+पहचान
+</string>
+    <string name="dlna_section_shared_folders">
+साझा निर्देशिकाएँ
+</string>
+    <string name="dlna_info_notice">
+अपने स्थानीय Wi-Fi नेटवर्क पर स्मार्ट टीवी और DLNA मीडिया प्लेयर पर फ़ोटो, संगीत और वीडियो स्ट्रीम करें, या अन्य डिवाइसों को इस डिवाइस पर मीडिया कास्ट करने की अनुमति दें।
+</string>
+    <string name="dlna_settings_info_notice">
+कॉन्फ़िगर करें कि आपका डिवाइस स्थानीय नेटवर्क पर कैसे दिखाई देता है और साझा करने के लिए निर्देशिकाएँ चुनें। DLNA मीडिया शेयर पूर्ण रूप से केवल-पठनीय हैं।
+</string>
+    <string name="dlna_empty_shared_folders_desc">
+DLNA के माध्यम से प्रदर्शित करने के लिए आंतरिक स्टोरेज, SD कार्ड या USB फ़ोल्डर चुनने हेतु \'फ़ोल्डर जोड़ें\' पर टैप करें।
+</string>
+
+    <!-- Smart Sort Modernization -->
+    <string name="smart_sort_empty">
+कोई स्टोरेज ड्राइव नहीं मिली
+</string>
+    <string name="smart_sort_history_moved">
+स्थानांतरित
+</string>
+    <string name="smart_sort_history_skipped">
+छोड़ा गया
+</string>
+    <string name="smart_sort_history_failed">
+विफल
+</string>
+
+    <!-- Rate Us Modernization -->
+    <string name="rate_us_section_rate">
+रेटिंग और प्रतिक्रिया
+</string>
+    <string name="rate_us_section_support">
+सहायता करने के और तरीके
+</string>
+    <string name="rate_us_support_title">
+परियोजना का समर्थन करें
+</string>
+    <string name="rate_us_support_subtitle">
+यदि आप परियोजना का समर्थन कर सकते हैं तो एक टिप छोड़ें
+</string>
+    <string name="rate_us_stars_description">
+5-स्टार रेटिंग
+</string>
+
+    <!-- Help & Support Modernization -->
+    <string name="support_section_channels">
+संपर्क चैनल
+</string>
+    <string name="support_section_direct">
+सीधा संपर्क
+</string>
+    <string name="support_direct_email_title">
+support@kilowatch.co.za
+</string>
+    <string name="support_direct_email_subtitle">
+विकास टीम को सीधे ईमेल करें
+</string>
+    <string name="support_direct_email_copied">
+सहायता ईमेल क्लिपबोर्ड पर कॉपी कर दिया गया
+</string>
+
+    <!-- About Modernization -->
+    <string name="about_section_app">
+ऐप जानकारी
+</string>
+    <string name="about_section_support">
+डेवलपर और लिंक
+</string>
+    <string name="about_section_legal">
+कानूनी और नीतियाँ
+</string>
+    <string name="about_section_acknowledgments">
+स्वीकृतियाँ
+</string>
+    <string name="about_legal_title">
+गोपनीयता नीति और शर्तें
+</string>
+    <string name="about_legal_subtitle">
+हमारी गोपनीयता नीति, सेवा की शर्तें और लाइसेंस देखें
+</string>
+    <string name="about_rate_title">
+रेट करें और समीक्षा करें
+</string>
+    <string name="about_rate_subtitle">
+Google Play पर अपना अनुभव साझा करें
+</string>
+    <string name="about_support_title">
+सहायता और समर्थन
+</string>
+    <string name="about_support_subtitle">
+कोई समस्या रिपोर्ट करें या सुविधाओं का अनुरोध करें
+</string>
+    <string name="about_email_copied">
+सहायता ईमेल क्लिपबोर्ड पर कॉपी कर दिया गया
+</string>
+
+    <!-- Main Menu Categorized Modernization -->
+    <string name="main_menu_category_storage">
+स्टोरेज
+</string>
+    <string name="main_menu_category_connect">
+कनेक्ट करें
+</string>
+    <string name="main_menu_category_sync">
+फ़ोल्डर सिंक
+</string>
+    <string name="main_menu_category_organize">
+व्यवस्थित करें
+</string>
+    <string name="main_menu_category_utilities">
+उपयोगिताएँ
+</string>
+    <string name="main_menu_category_security">
+सुरक्षा और उन्नत
+</string>
+    <string name="main_menu_category_settings">
+सेटिंग्स और अधिक
+</string>
+    <string name="main_menu_layout_modern_categorized">
+आधुनिक श्रेणीबद्ध
+</string>
+    <string name="main_menu_layout_modern_desc">
+विस्तार योग्य श्रेणी अनुभागों में व्यवस्थित
+</string>
+    <string name="main_menu_layout_classic_grid">
+क्लासिक ग्रिड
+</string>
+    <string name="main_menu_layout_classic_grid_desc">
+फ्लैट बहु-स्तंभ ग्रिड (3 या 4 कॉलम)
+</string>
+    <string name="main_menu_layout_classic_list">
+क्लासिक सूची
+</string>
+    <string name="main_menu_layout_classic_list_desc">
+फ्लैट एकल-स्तंभ सूची (बड़ा, मध्यम, छोटा)
+</string>
+    <string name="main_menu_section_items_count">
+%1$d आइटम
+</string>
+    <string name="main_menu_section_item_count_single">
+1 आइटम
+</string>
+
+    <!-- Reset Category Layout -->
+    <string name="reset_categorized_layout_section">
+रीसेट करें
+</string>
+    <string name="reset_categorized_layout_title">
+श्रेणी लेआउट रीसेट करें
+</string>
+    <string name="reset_categorized_layout_desc">
+श्रेणी क्रम, टाइल स्थिति और विस्तार स्थितियों को डिफ़ॉल्ट पर पुनर्स्थापित करें
+</string>
+    <string name="reset_categorized_dialog_title">
+श्रेणी लेआउट रीसेट करें?
+</string>
+    <string name="reset_categorized_dialog_subtitle">
+फ़ैक्टरी व्यवस्था पुनर्स्थापित करें
+</string>
+    <string name="reset_categorized_dialog_msg">
+यह सभी श्रेणी हेडर, टाइल स्थिति और विस्तार स्थितियों को उनके फ़ैक्टरी डिफ़ॉल्ट पर पुनर्स्थापित करेगा। कस्टम रंग सेटिंग्स संरक्षित रहेंगी।
+</string>
+    <string name="reset_categorized_dialog_confirm">
+डिफ़ॉल्ट पर रीसेट करें
+</string>
+    <string name="reset_categorized_success">
+श्रेणी लेआउट डिफ़ॉल्ट पर पुनर्स्थापित किया गया
+</string>
 </resources>
+
 
 

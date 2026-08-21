@@ -51,19 +51,21 @@ private fun ImageView.safeSetIcon(resId: Int) {
  *                       TV:     triggered on long-press of the OK / DPAD_CENTER key.
  *                       Receives the [StorageItem] AND the [RecyclerView.ViewHolder] so
  *                       the Activity can call ItemTouchHelper.startDrag() for mobile.
- */
-class StorageAdapter(
+ */class StorageAdapter(
     private val isTv: Boolean,
     private val onStorageClick: (StorageItem) -> Unit,
     private val onLongPress: ((StorageItem, RecyclerView.ViewHolder) -> Unit)? = null,
     var onHideClick: ((StorageItem) -> Unit)? = null,
     var onEditModeClick: ((StorageItem) -> Unit)? = null
-) : RecyclerView.Adapter<StorageAdapter.StorageViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val rawItems = mutableListOf<StorageItem>()
     private val items = mutableListOf<StorageItem>()
     private var tileColors: Map<String, TileColorConfig> = emptyMap()
     private var tileIcons: Map<String, String> = emptyMap()
     private var tileIconRes: Map<String, Int> = emptyMap()
+
+    var onCategoryHeaderToggled: ((categoryId: String, isExpanded: Boolean) -> Unit)? = null
 
     fun setTileColors(colors: Map<String, TileColorConfig>) {
         tileColors = colors
@@ -102,22 +104,148 @@ class StorageAdapter(
      */
     var reorderModeId: String? = null
 
-    fun submitList(newItems: List<StorageItem>) {
-        items.clear()
-        items.addAll(newItems)
+    private fun isFeatureTile(item: StorageItem): Boolean =
+        item.isAppsTile || item.isRemoteTile || item.isTvRemoteTile || item.isSearchTile ||
+        item.isAnalyzerTile || item.isVaultTile ||
+        item.isLegalTile || item.isRateUsTile || item.isSafTile ||
+        item.isNetworkTile || item.isPairedDevicesTile || item.isExtractsTile ||
+        item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isTwinWindowTile || item.isShizukuTile || item.isTerminalTile || item.isFileServerTile || item.isSupportTile || item.isAboutTile ||
+        item.isNotepadTile || item.isRecycleBinTile || item.isScannerTile ||
+        item.isSmartSortTile || item.isOnlineStoragesTile || item.isFavoriteTile ||
+        item.isSettingsTile || item.isCustomTile
+
+    fun defaultCategoryForTile(item: StorageItem): String {
+        return when {
+            // Category 2: Connect
+            item.isNetworkTile || item.isOnlineStoragesTile || item.isFileServerTile ||
+            item.isPairedDevicesTile || item.isTvRemoteTile || item.isRemoteTile -> MainMenuViewModeManager.CATEGORY_CONNECT
+
+            // Category 3: Folder Sync
+            item.isSyncTile || item.isAdvancedSyncTile -> MainMenuViewModeManager.CATEGORY_SYNC
+
+            // Category 4: Organize
+            item.isCustomTile || item.isFavoriteTile || item.isSearchTile ||
+            item.isSmartSortTile || item.isAnalyzerTile || item.isRecycleBinTile -> MainMenuViewModeManager.CATEGORY_ORGANIZE
+
+            // Category 5: Utilities
+            item.isScannerTile || item.isNotepadTile || item.isAppsTile ||
+            item.isExtractsTile || item.isTwinWindowTile -> MainMenuViewModeManager.CATEGORY_UTILITIES
+
+            // Category 6: Security & Advanced
+            item.isVaultTile || item.isTerminalTile || item.isShizukuTile -> MainMenuViewModeManager.CATEGORY_SECURITY
+
+            // Category 7: Settings & More
+            item.isSettingsTile || item.isSupportTile || item.isAboutTile ||
+            item.isLegalTile || item.isTipJarTile || item.isRateUsTile -> MainMenuViewModeManager.CATEGORY_SETTINGS
+
+            // Category 1: Storage (Physical Drives, Mounted SMB/FTP Shares, Mounted Cloud Accounts, Connected TV Mounts, SAF)
+            else -> MainMenuViewModeManager.CATEGORY_STORAGE
+        }
+    }
+
+    fun categoryForTile(item: StorageItem, context: android.content.Context? = null): String {
+        val ctx = context ?: adapterContext
+        if (ctx != null) {
+            val customCat = MainMenuViewModeManager.loadTileCategory(ctx, item.id)
+            if (customCat != null) return customCat
+        }
+        return defaultCategoryForTile(item)
+    }
+
+    private var adapterContext: android.content.Context? = null
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        adapterContext = recyclerView.context
+    }
+
+    fun refreshDisplayedList(context: android.content.Context? = null) {
+        val ctx = context ?: adapterContext
+        if (viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED && !isTv) {
+            val categorized = mutableListOf<StorageItem>()
+
+            val allCategoriesInfo = mapOf(
+                MainMenuViewModeManager.CATEGORY_STORAGE to Pair(R.string.main_menu_category_storage, R.drawable.ic_storage_internal),
+                MainMenuViewModeManager.CATEGORY_CONNECT to Pair(R.string.main_menu_category_connect, R.drawable.ic_network),
+                MainMenuViewModeManager.CATEGORY_SYNC to Pair(R.string.main_menu_category_sync, R.drawable.ic_sync),
+                MainMenuViewModeManager.CATEGORY_ORGANIZE to Pair(R.string.main_menu_category_organize, R.drawable.ic_folder_special),
+                MainMenuViewModeManager.CATEGORY_UTILITIES to Pair(R.string.main_menu_category_utilities, R.drawable.ic_apps),
+                MainMenuViewModeManager.CATEGORY_SECURITY to Pair(R.string.main_menu_category_security, R.drawable.ic_shield),
+                MainMenuViewModeManager.CATEGORY_SETTINGS to Pair(R.string.main_menu_category_settings, R.drawable.ic_settings)
+            )
+
+            val customCats = if (ctx != null) MainMenuViewModeManager.loadCustomCategories(ctx) else emptyMap()
+            val savedCatOrder = if (ctx != null) MainMenuViewModeManager.loadCategoryOrder(ctx) else MainMenuViewModeManager.DEFAULT_CATEGORY_ORDER
+
+            for (catId in savedCatOrder) {
+                val isBuiltin = allCategoriesInfo.containsKey(catId)
+                val isCustom = customCats.containsKey(catId)
+                if (!isBuiltin && !isCustom) continue
+
+                val titleStr = if (isBuiltin) {
+                    val titleRes = allCategoriesInfo[catId]!!.first
+                    if (ctx != null) ctx.getString(titleRes) else catId
+                } else {
+                    customCats[catId] ?: catId
+                }
+
+                val iconRes = if (isBuiltin) {
+                    allCategoriesInfo[catId]!!.second
+                } else {
+                    R.drawable.ic_category_header
+                }
+
+                val groupItems = rawItems.filter { categoryForTile(it, ctx) == catId }
+                if (groupItems.isNotEmpty() || isCustom) {
+                    val expanded = if (ctx != null) MainMenuViewModeManager.isCategoryExpanded(ctx, catId) else true
+                    val header = StorageItem(
+                        id = "header_$catId",
+                        label = titleStr,
+                        iconRes = iconRes,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "",
+                        isCategoryHeader = true,
+                        categoryId = catId,
+                        isCategoryExpanded = expanded,
+                        categoryItemCount = groupItems.size
+                    )
+                    categorized.add(header)
+                    if (expanded) {
+                        categorized.addAll(groupItems)
+                    }
+                }
+            }
+
+            items.clear()
+            items.addAll(categorized)
+        } else {
+            items.clear()
+            items.addAll(rawItems)
+        }
+    }
+
+    fun submitList(newItems: List<StorageItem>, context: android.content.Context? = null) {
+        if (context != null) adapterContext = context
+        rawItems.clear()
+        rawItems.addAll(newItems.filter { !it.isCategoryHeader })
+        refreshDisplayedList(context)
         notifyDataSetChanged()
     }
 
     fun addItem(item: StorageItem) {
-        items.add(item)
-        notifyItemInserted(items.size - 1)
+        if (item.isCategoryHeader) return
+        rawItems.add(item)
+        refreshDisplayedList()
+        notifyDataSetChanged()
     }
 
     fun removeById(id: String) {
-        val index = items.indexOfFirst { it.id == id }
-        if (index >= 0) {
-            items.removeAt(index)
-            notifyItemRemoved(index)
+        val rawIdx = rawItems.indexOfFirst { it.id == id }
+        if (rawIdx >= 0) {
+            rawItems.removeAt(rawIdx)
+            refreshDisplayedList()
+            notifyDataSetChanged()
         }
     }
 
@@ -127,20 +255,63 @@ class StorageAdapter(
      */
     fun moveItem(from: Int, to: Int) {
         if (from < 0 || to < 0 || from >= items.size || to >= items.size) return
+
         items.add(to, items.removeAt(from))
         notifyItemMoved(from, to)
+
+        val nonHeaders = items.filter { !it.isCategoryHeader }
+        val newRaw = mutableListOf<StorageItem>()
+        for (nh in nonHeaders) {
+            val found = rawItems.find { it.id == nh.id } ?: nh
+            newRaw.add(found)
+        }
+        for (raw in rawItems) {
+            if (newRaw.none { it.id == raw.id }) {
+                newRaw.add(raw)
+            }
+        }
+        rawItems.clear()
+        rawItems.addAll(newRaw)
+    }
+
+    fun onDragFinished(context: android.content.Context? = null) {
+        val ctx = context ?: adapterContext
+        if (viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED && !isTv && ctx != null) {
+            // 1. Extract and save new category header order
+            val newCatOrder = items.filter { it.isCategoryHeader }.mapNotNull { it.categoryId }.distinct()
+            if (newCatOrder.isNotEmpty()) {
+                MainMenuViewModeManager.saveCategoryOrder(ctx, newCatOrder)
+            }
+
+            // 2. Extract and save tile category memberships
+            var currentCat: String? = null
+            val categoryMap = MainMenuViewModeManager.loadAllTileCategories(ctx).toMutableMap()
+            for (item in items) {
+                if (item.isCategoryHeader) {
+                    currentCat = item.categoryId
+                } else if (currentCat != null) {
+                    categoryMap[item.id] = currentCat
+                }
+            }
+            MainMenuViewModeManager.saveAllTileCategories(ctx, categoryMap)
+        }
+        refreshDisplayedList(ctx)
+        notifyDataSetChanged()
     }
 
     fun getItems(): List<StorageItem> = items.toList()
+    fun getRawItems(): List<StorageItem> = rawItems.toList()
 
     companion object {
         const val VIEW_TYPE_STORAGE = 0
         const val VIEW_TYPE_GRID = 1
+        const val VIEW_TYPE_CATEGORY_HEADER = 2
     }
 
     var viewMode = MainMenuViewModeManager.ViewMode.LIST
         set(value) {
             field = value
+            refreshDisplayedList()
             notifyDataSetChanged()
         }
 
@@ -159,7 +330,7 @@ class StorageAdapter(
     /**
      * When > 0, the adapter forces the inner ConstraintLayout of each TV grid tile to
      * exactly this height (px). Set by [StorageBrowserActivity] after layout so that
-     * exactly 2 complete rows fill the RecyclerView Ã¢â‚¬â€ no partial rows.
+     * exactly 2 complete rows fill the RecyclerView — no partial rows.
      */
     var gridItemHeightPx: Int = -1
         set(value) {
@@ -185,24 +356,198 @@ class StorageAdapter(
         }
 
     override fun getItemViewType(position: Int): Int {
+        val item = items.getOrNull(position)
+        if (item?.isCategoryHeader == true) return VIEW_TYPE_CATEGORY_HEADER
         return if (viewMode == MainMenuViewModeManager.ViewMode.GRID) VIEW_TYPE_GRID else VIEW_TYPE_STORAGE
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StorageViewHolder {
-        val layoutRes = if (viewType == VIEW_TYPE_GRID) {
-            if (isTv) R.layout.item_storage_grid_tv else R.layout.item_storage_grid
-        } else {
-            if (isTv) R.layout.item_storage_card_tv else R.layout.item_storage_card
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_CATEGORY_HEADER -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_storage_category_header, parent, false)
+                CategoryHeaderViewHolder(view)
+            }
+            VIEW_TYPE_GRID -> {
+                val layoutRes = if (isTv) R.layout.item_storage_grid_tv else R.layout.item_storage_grid
+                val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
+                StorageViewHolder(view)
+            }
+            else -> {
+                val layoutRes = if (isTv) R.layout.item_storage_card_tv else R.layout.item_storage_card
+                val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
+                StorageViewHolder(view)
+            }
         }
-        val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
-        return StorageViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: StorageViewHolder, position: Int) {
-        holder.bind(items[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = items.getOrNull(position) ?: return
+        if (holder is CategoryHeaderViewHolder) {
+            holder.bind(item)
+        } else if (holder is StorageViewHolder) {
+            holder.bind(item)
+        }
     }
 
     override fun getItemCount(): Int = items.size
+
+    inner class CategoryHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val iconContainer: FrameLayout? = itemView.findViewById(R.id.iconContainerHeader)
+        private val imgIcon: ImageView = itemView.findViewById(R.id.imgCategoryIcon)
+        private val txtTitle: TextView = itemView.findViewById(R.id.txtCategoryTitle)
+        private val txtCount: TextView = itemView.findViewById(R.id.txtCategoryCount)
+        private val imgChevron: ImageView = itemView.findViewById(R.id.imgCategoryChevron)
+        private val btnDeleteCategoryHeader: ImageView? = itemView.findViewById(R.id.btnDeleteCategoryHeader)
+
+        private val longPressHandler = Handler(Looper.getMainLooper())
+        private var longPressRunnable: Runnable? = null
+
+        fun bind(item: StorageItem) {
+            val context = itemView.context
+            imgIcon.setImageResource(item.iconRes)
+            txtTitle.text = item.label
+            val count = item.categoryItemCount
+            txtCount.text = if (count == 1) {
+                context.getString(R.string.main_menu_section_item_count_single)
+            } else {
+                context.getString(R.string.main_menu_section_items_count, count)
+            }
+
+            val catId = item.categoryId ?: ""
+            val isExpanded = item.isCategoryExpanded
+            imgChevron.rotation = if (isExpanded) 0f else -90f
+
+            val density = context.resources.displayMetrics.density
+            when (itemSize) {
+                MainMenuViewModeManager.ItemSize.LARGE -> {
+                    itemView.setPadding((16 * density).toInt(), (14 * density).toInt(), (16 * density).toInt(), (14 * density).toInt())
+                    val lp = itemView.layoutParams as? ViewGroup.MarginLayoutParams
+                    if (lp != null) {
+                        lp.topMargin = (14 * density).toInt()
+                        lp.bottomMargin = (6 * density).toInt()
+                        itemView.layoutParams = lp
+                    }
+
+                    iconContainer?.layoutParams?.width = (44 * density).toInt()
+                    iconContainer?.layoutParams?.height = (44 * density).toInt()
+                    imgIcon.layoutParams.width = (24 * density).toInt()
+                    imgIcon.layoutParams.height = (24 * density).toInt()
+
+                    txtTitle.textSize = 17f
+                    txtCount.textSize = 12f
+                    txtCount.setPadding((10 * density).toInt(), (4 * density).toInt(), (10 * density).toInt(), (4 * density).toInt())
+
+                    imgChevron.layoutParams.width = (24 * density).toInt()
+                    imgChevron.layoutParams.height = (24 * density).toInt()
+                    btnDeleteCategoryHeader?.layoutParams?.width = (32 * density).toInt()
+                    btnDeleteCategoryHeader?.layoutParams?.height = (32 * density).toInt()
+                }
+                MainMenuViewModeManager.ItemSize.MEDIUM -> {
+                    itemView.setPadding((14 * density).toInt(), (10 * density).toInt(), (14 * density).toInt(), (10 * density).toInt())
+                    val lp = itemView.layoutParams as? ViewGroup.MarginLayoutParams
+                    if (lp != null) {
+                        lp.topMargin = (10 * density).toInt()
+                        lp.bottomMargin = (4 * density).toInt()
+                        itemView.layoutParams = lp
+                    }
+
+                    iconContainer?.layoutParams?.width = (36 * density).toInt()
+                    iconContainer?.layoutParams?.height = (36 * density).toInt()
+                    imgIcon.layoutParams.width = (20 * density).toInt()
+                    imgIcon.layoutParams.height = (20 * density).toInt()
+
+                    txtTitle.textSize = 15f
+                    txtCount.textSize = 11f
+                    txtCount.setPadding((8 * density).toInt(), (3 * density).toInt(), (8 * density).toInt(), (3 * density).toInt())
+
+                    imgChevron.layoutParams.width = (20 * density).toInt()
+                    imgChevron.layoutParams.height = (20 * density).toInt()
+                    btnDeleteCategoryHeader?.layoutParams?.width = (28 * density).toInt()
+                    btnDeleteCategoryHeader?.layoutParams?.height = (28 * density).toInt()
+                }
+                MainMenuViewModeManager.ItemSize.SMALL -> {
+                    itemView.setPadding((10 * density).toInt(), (6 * density).toInt(), (10 * density).toInt(), (6 * density).toInt())
+                    val lp = itemView.layoutParams as? ViewGroup.MarginLayoutParams
+                    if (lp != null) {
+                        lp.topMargin = (6 * density).toInt()
+                        lp.bottomMargin = (2 * density).toInt()
+                        itemView.layoutParams = lp
+                    }
+
+                    iconContainer?.layoutParams?.width = (28 * density).toInt()
+                    iconContainer?.layoutParams?.height = (28 * density).toInt()
+                    imgIcon.layoutParams.width = (16 * density).toInt()
+                    imgIcon.layoutParams.height = (16 * density).toInt()
+
+                    txtTitle.textSize = 13f
+                    txtCount.textSize = 10f
+                    txtCount.setPadding((6 * density).toInt(), (2 * density).toInt(), (6 * density).toInt(), (2 * density).toInt())
+
+                    imgChevron.layoutParams.width = (16 * density).toInt()
+                    imgChevron.layoutParams.height = (16 * density).toInt()
+                    btnDeleteCategoryHeader?.layoutParams?.width = (24 * density).toInt()
+                    btnDeleteCategoryHeader?.layoutParams?.height = (24 * density).toInt()
+                }
+            }
+
+            val isCustomCategory = !isTv && catId.isNotBlank() && MainMenuViewModeManager.loadCustomCategories(context).containsKey(catId)
+
+            if (isEditMode && isCustomCategory) {
+                btnDeleteCategoryHeader?.visibility = View.VISIBLE
+                imgChevron.visibility = View.GONE
+                btnDeleteCategoryHeader?.setOnClickListener {
+                    onEditModeClick?.invoke(item)
+                }
+                itemView.setOnClickListener {
+                    onEditModeClick?.invoke(item)
+                }
+            } else {
+                btnDeleteCategoryHeader?.visibility = View.GONE
+                imgChevron.visibility = View.VISIBLE
+                btnDeleteCategoryHeader?.setOnClickListener(null)
+                itemView.setOnClickListener {
+                    val newExpanded = !item.isCategoryExpanded
+                    item.isCategoryExpanded = newExpanded
+                    MainMenuViewModeManager.setCategoryExpanded(context, catId, newExpanded)
+                    onCategoryHeaderToggled?.invoke(catId, newExpanded)
+                    refreshDisplayedList(context)
+                    notifyDataSetChanged()
+                }
+            }
+
+            // Mobile: touch-hold on header starts drag
+            if (!isTv && onLongPress != null) {
+                itemView.setOnTouchListener { _, motionEvent ->
+                    when (motionEvent.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            val durationMs = LongPressDurationManager.loadDurationMs(itemView.context)
+                            longPressRunnable = Runnable {
+                                itemView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                                onLongPress.invoke(item, this@CategoryHeaderViewHolder)
+                            }
+                            longPressHandler.postDelayed(longPressRunnable!!, durationMs)
+                            false
+                        }
+                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                            longPressRunnable?.let { longPressHandler.removeCallbacks(it) }
+                            longPressRunnable = null
+                            val duration = motionEvent.eventTime - motionEvent.downTime
+                            if (motionEvent.action == MotionEvent.ACTION_UP && duration < 500) {
+                                if (isEditMode && isCustomCategory) {
+                                    onEditModeClick?.invoke(item)
+                                    true
+                                } else if (!isEditMode) {
+                                    itemView.performClick()
+                                    true
+                                } else false
+                            } else false
+                        }
+                        else -> false
+                    }
+                }
+            }
+        }
+    }
 
     inner class StorageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val card: MaterialCardView = itemView as MaterialCardView
@@ -371,7 +716,7 @@ class StorageAdapter(
                 card.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
             }
 
-            // Ã¢â€â‚¬Ã¢â€â‚¬ Mobile: configurable touch-hold Ã¢â€ â€™ start drag Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+            // Ã¢â€ â‚¬Ã¢â€ â‚¬ Mobile: configurable touch-hold Ã¢â€ â€™ start drag Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬
             if (!isTv && onLongPress != null) {
                 itemView.setOnTouchListener { _, motionEvent ->
                     when (motionEvent.action) {
@@ -395,7 +740,7 @@ class StorageAdapter(
             }
 
             // Ã¢â€â‚¬Ã¢â€â‚¬ Dynamic height adjustments for LIST view (All Tiles) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-            if (viewMode == MainMenuViewModeManager.ViewMode.LIST) {
+            if (viewMode == MainMenuViewModeManager.ViewMode.LIST || viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED) {
                 val paddingTarget = if (isTv) {
                     card.getChildAt(0) as? ViewGroup
                 } else {
@@ -620,7 +965,7 @@ class StorageAdapter(
                     else -> ""
                 }
             } else {
-                val showProgress = viewMode == MainMenuViewModeManager.ViewMode.LIST
+                val showProgress = viewMode == MainMenuViewModeManager.ViewMode.LIST || viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED
                 if (showProgress) {
                     when (itemSize) {
                         MainMenuViewModeManager.ItemSize.LARGE -> {
@@ -731,9 +1076,10 @@ class StorageAdapter(
                 // Tint the card background using the tile-specific glass variant
                 val tvBgColor = ContextCompat.getColor(context, accentColorRes)
                 card.setCardBackgroundColor(androidx.core.graphics.ColorUtils.setAlphaComponent(tvBgColor, 40))
-                // Foreground selector handles border Ã¢â‚¬â€ do NOT set card.strokeWidth here
+                // Foreground selector handles border — do NOT set card.strokeWidth here
             } else {
-                iconContainer?.setBackgroundResource(iconCircleRes)
+                icon.setColorFilter(accentColor)
+                iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 // Mobile: apply colored halo border
                 val strokeColor = ContextCompat.getColor(context, strokeColorRes)
                 val strokePx = (2 * context.resources.displayMetrics.density).toInt()
@@ -746,7 +1092,7 @@ class StorageAdapter(
         }
 
         /**
-         * Resets all tile-accent overrides so recycled ViewHolders donÃ¢â‚¬â„¢t bleed into regular tiles.
+         * Resets all tile-accent overrides so recycled ViewHolders don’t bleed into regular tiles.
          */
         private fun resetTileAccent(
             context: android.content.Context,
@@ -757,14 +1103,14 @@ class StorageAdapter(
         ) {
             if (isTv) {
                 icon.setColorFilter(ContextCompat.getColor(context, android.R.color.white))
-                // Card background is the glass layer Ã¢â‚¬â€ no inner layout background to reset
+                // Card background is the glass layer — no inner layout background to reset
                 card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.tv_glass_white_10))
                 card.strokeWidth = 0
                 label.setTextColor(ContextCompat.getColor(context, R.color.tv_text_primary))
                 iconContainer?.setBackgroundResource(R.drawable.bg_glass_card)
             } else {
                 icon.clearColorFilter()
-                iconContainer?.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 label.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_primary))
                 card.strokeWidth = 0
                 card.setStrokeColor(Color.TRANSPARENT)
@@ -808,13 +1154,28 @@ class StorageAdapter(
 
             // Icon background color
             if (config.iconBgColor != Color.TRANSPARENT) {
-                val newDrawable = GradientDrawable()
-                newDrawable.shape = GradientDrawable.OVAL
-                newDrawable.setColor(config.iconBgColor)
-                iconContainer?.background = newDrawable
+                if (isTv) {
+                    val newDrawable = GradientDrawable()
+                    newDrawable.shape = GradientDrawable.OVAL
+                    newDrawable.setColor(config.iconBgColor)
+                    iconContainer?.background = newDrawable
+                } else {
+                    val density = context.resources.displayMetrics.density
+                    val newDrawable = GradientDrawable().apply {
+                        shape = GradientDrawable.RECTANGLE
+                        cornerRadius = 12 * density
+                        setColor(config.iconBgColor)
+                        setStroke((1 * density).toInt(), ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                    }
+                    iconContainer?.background = newDrawable
+                }
             } else {
                 // Reset to default drawable
-                iconContainer?.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                if (isTv) {
+                    iconContainer?.setBackgroundResource(R.drawable.bg_glass_card)
+                } else {
+                    iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
+                }
             }
 
             // Label text color

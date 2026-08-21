@@ -34,12 +34,12 @@
             android:gravity="center_vertical"
             android:padding="@dimen/margin_md">
 
-            <!-- Accent circle icon -->
+            <!-- Frosted glass icon -->
             <FrameLayout
                 android:id="@+id/iconContainer"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
-                android:background="@drawable/bg_icon_circle_accent">
+                android:background="@drawable/bg_btn_icon_frosted">
 
                 <ImageView
                     android:id="@+id/imgStorageIcon"

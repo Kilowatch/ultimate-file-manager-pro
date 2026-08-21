@@ -415,12 +415,15 @@ class TileColorBottomSheet : BottomSheetDialogFragment() {
             if (selectedIconColor != Color.TRANSPARENT) previewIcon?.setColorFilter(selectedIconColor)
             else previewIcon?.clearColorFilter()
             if (selectedIconBgColor != Color.TRANSPARENT) {
-                val d = android.graphics.drawable.GradientDrawable()
-                d.shape = android.graphics.drawable.GradientDrawable.OVAL
-                d.setColor(selectedIconBgColor)
+                val d = android.graphics.drawable.GradientDrawable().apply {
+                    shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+                    cornerRadius = 12 * density
+                    setColor(selectedIconBgColor)
+                    setStroke((1 * density).toInt(), ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                }
                 iconContainer?.background = d
             } else {
-                iconContainer?.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
             }
             val previewLabel    = view.findViewById<android.widget.TextView>(R.id.previewLabel)
             val previewCapacity = view.findViewById<android.widget.TextView>(R.id.previewCapacity)
@@ -455,12 +458,15 @@ class TileColorBottomSheet : BottomSheetDialogFragment() {
             if (selectedIconColor != Color.TRANSPARENT) listIcon?.setColorFilter(selectedIconColor)
             else listIcon?.clearColorFilter()
             if (selectedIconBgColor != Color.TRANSPARENT) {
-                val d = android.graphics.drawable.GradientDrawable()
-                d.shape = android.graphics.drawable.GradientDrawable.OVAL
-                d.setColor(selectedIconBgColor)
+                val d = android.graphics.drawable.GradientDrawable().apply {
+                    shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+                    cornerRadius = 12 * density
+                    setColor(selectedIconBgColor)
+                    setStroke((1 * density).toInt(), ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                }
                 listIconContainer?.background = d
             } else {
-                listIconContainer?.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                listIconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
             }
             val listLabel    = view.findViewById<android.widget.TextView>(R.id.previewListLabel)
             val listCapacity = view.findViewById<android.widget.TextView>(R.id.previewListCapacity)

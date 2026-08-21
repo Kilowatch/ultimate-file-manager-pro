@@ -5,12 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
 
 class SettingsListSizeBottomSheet : BottomSheetDialogFragment() {
@@ -49,52 +47,54 @@ class SettingsListSizeBottomSheet : BottomSheetDialogFragment() {
 
         val imgIcon = view.findViewById<ImageView>(R.id.imgSheetIcon)
         val txtTitle = view.findViewById<TextView>(R.id.txtSheetTitle)
+        val layoutViewModes = view.findViewById<View>(R.id.layoutViewModes)
         val layoutColumns = view.findViewById<View>(R.id.layoutColumns)
         val layoutListSize = view.findViewById<View>(R.id.layoutListSize)
+        val layoutResetCategories = view.findViewById<View>(R.id.layoutResetCategories)
 
-        imgIcon.setImageResource(R.drawable.ic_list_view_custom)
-        txtTitle.text = getString(R.string.settings_list_size_title)
-        layoutListSize.visibility = View.VISIBLE
-        layoutColumns.visibility = View.GONE
+        imgIcon?.setImageResource(R.drawable.ic_list_view_custom)
+        txtTitle?.text = getString(R.string.settings_list_size_title)
+        layoutListSize?.visibility = View.VISIBLE
+        layoutViewModes?.visibility = View.GONE
+        layoutColumns?.visibility = View.GONE
+        layoutResetCategories?.visibility = View.GONE
 
         setupListSizeOptions(view)
     }
 
     private fun setupListSizeOptions(view: View) {
         val context = requireContext()
-        val currentSize = SettingsListSizeManager.loadItemSize(context)
+        val cardLarge = view.findViewById<View>(R.id.cardSizeLarge)
+        val cardMedium = view.findViewById<View>(R.id.cardSizeMedium)
+        val cardSmall = view.findViewById<View>(R.id.cardSizeSmall)
 
-        val cardLarge = view.findViewById<MaterialCardView>(R.id.cardSizeLarge)
-        val cardMedium = view.findViewById<MaterialCardView>(R.id.cardSizeMedium)
-        val cardSmall = view.findViewById<MaterialCardView>(R.id.cardSizeSmall)
+        fun updateUI() {
+            val currentSize = SettingsListSizeManager.loadItemSize(context)
+            view.findViewById<View>(R.id.checkContainerSizeLarge)?.visibility =
+                if (currentSize == SettingsListSizeManager.ItemSize.LARGE) View.VISIBLE else View.GONE
+            view.findViewById<View>(R.id.checkContainerSizeMedium)?.visibility =
+                if (currentSize == SettingsListSizeManager.ItemSize.MEDIUM) View.VISIBLE else View.GONE
+            view.findViewById<View>(R.id.checkContainerSizeSmall)?.visibility =
+                if (currentSize == SettingsListSizeManager.ItemSize.SMALL) View.VISIBLE else View.GONE
+        }
 
-        val rbLarge = view.findViewById<RadioButton>(R.id.rbSizeLarge)
-        val rbMedium = view.findViewById<RadioButton>(R.id.rbSizeMedium)
-        val rbSmall = view.findViewById<RadioButton>(R.id.rbSizeSmall)
+        updateUI()
 
-        rbLarge.isChecked = currentSize == SettingsListSizeManager.ItemSize.LARGE
-        rbMedium.isChecked = currentSize == SettingsListSizeManager.ItemSize.MEDIUM
-        rbSmall.isChecked = currentSize == SettingsListSizeManager.ItemSize.SMALL
-
-        val activeColor = context.getColor(R.color.ufm_primary)
-        val inactiveColor = context.getColor(R.color.mobile_glass_stroke)
-
-        cardLarge.strokeColor = if (currentSize == SettingsListSizeManager.ItemSize.LARGE) activeColor else inactiveColor
-        cardMedium.strokeColor = if (currentSize == SettingsListSizeManager.ItemSize.MEDIUM) activeColor else inactiveColor
-        cardSmall.strokeColor = if (currentSize == SettingsListSizeManager.ItemSize.SMALL) activeColor else inactiveColor
-
-        cardLarge.setOnClickListener {
+        cardLarge?.setOnClickListener {
             SettingsListSizeManager.saveItemSize(context, SettingsListSizeManager.ItemSize.LARGE)
+            updateUI()
             onSettingsChanged?.invoke()
             dismiss()
         }
-        cardMedium.setOnClickListener {
+        cardMedium?.setOnClickListener {
             SettingsListSizeManager.saveItemSize(context, SettingsListSizeManager.ItemSize.MEDIUM)
+            updateUI()
             onSettingsChanged?.invoke()
             dismiss()
         }
-        cardSmall.setOnClickListener {
+        cardSmall?.setOnClickListener {
             SettingsListSizeManager.saveItemSize(context, SettingsListSizeManager.ItemSize.SMALL)
+            updateUI()
             onSettingsChanged?.invoke()
             dismiss()
         }

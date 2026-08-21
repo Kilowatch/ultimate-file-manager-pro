@@ -25,7 +25,7 @@
             android:id="@+id/iconContainer"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:background="@drawable/bg_icon_circle_accent"
+            android:background="@drawable/bg_btn_icon_frosted"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">

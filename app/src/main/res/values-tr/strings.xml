@@ -50,6 +50,15 @@ Dil Seçin
     <string name="language_system_default">
 Sistem Varsayılanı
 </string>
+    <string name="language_system_default_desc">
+Cihaz sistem diline uy
+</string>
+    <string name="language_section_system">
+Sistem Tercihi
+</string>
+    <string name="language_section_available">
+Kullanılabilir Diller
+</string>
     <string name="settings_list_size_title">
 Ayarlar Satır Boyutu
 </string>
@@ -460,6 +469,36 @@ Henüz sık kullanılan eklemediniz.\n
 \n
 Bir dosya veya klasöre uzun basın ve yıldız simgesine dokunarak buraya ekleyin.
 </string>
+    <string name="manage_favorites_empty_title">
+Sık Kullanılan Öğe Yok
+</string>
+    <string name="manage_favorites_empty_desc">
+Dosya tarayıcısında herhangi bir dosya veya klasördeki yıldız simgesine dokunarak buradan hızlı erişim için sık kullanılanlara ekleyin.
+</string>
+    <string name="manage_favorites_info_notice">
+Sık kullanılanlara eklenen dosya ve klasörler, hızlı gezinme için gezinme çekmecesinde ve hızlı erişim panellerinde görünür. Bir sık kullanılanı kaldırmak için çöp kutusu simgesine dokunun.
+</string>
+    <string name="manage_favorites_clear_all">
+Tüm Sık Kullanılanları Temizle
+</string>
+    <string name="manage_favorites_clear_all_confirm_title">
+Tüm Sık Kullanılanlar Temizlensin mi?
+</string>
+    <string name="manage_favorites_clear_all_confirm_message">
+Sık kullanılanlar listenizdeki tüm öğeleri kaldırmak istediğinize emin misiniz? Bu işlem gerçek dosya veya klasörleri silmez.
+</string>
+    <string name="manage_favorites_remove_confirm_title">
+Sık Kullanılan Kaldırılsın mı?
+</string>
+    <string name="manage_favorites_remove_confirm_message">
+Sık kullanılanlar listenizden \"%1$s\" öğesini kaldırmak istediğinize emin misiniz?
+</string>
+    <string name="manage_favorites_remove_btn">
+Sık Kullanılanı Kaldır
+</string>
+    <string name="manage_favorites_cleared_all_toast">
+Tüm sık kullanılanlar kaldırıldı
+</string>
     <string name="manage_favorites_removed">
 %1$s sık kullanılanlardan kaldırıldı
 </string>
@@ -650,6 +689,21 @@ Etkinleştirmek için:\n
 3. \"USB Hata Ayıklama\"yı etkinleştirin\n
 \n
 Geliştirici Seçeneklerini görmüyorsanız, önce Hakkında\'ya gidin ve \"Yapı Numarası\"na 7 kez dokunun.\"
+</string>
+    <string name="adb_enable_desc">
+Ekran görüntüsü almak için TV\\\'de USB Hata Ayıklama etkinleştirilmiş olmalıdır.
+</string>
+    <string name="adb_step_1">
+1. Android TV\\\'nizde Ayarlar\\\'ı açın
+</string>
+    <string name="adb_step_2">
+2. Cihaz Tercihleri → Geliştirici Seçeneklerine gidin
+</string>
+    <string name="adb_step_3">
+3. \"USB Hata Ayıklama\" özelliğini açın
+</string>
+    <string name="adb_step_tip">
+İpucu: Geliştirici Seçenekleri gizliyse, Ayarlar → Hakkında bölümüne gidin ve \"Derleme Numarası\"na 7 kez dokunun.
 </string>
     <string name="adb_pairing_required">
 ADB Eşleştirme Gerekli
@@ -1061,6 +1115,24 @@ Kopyalar
 %1$s tasarruf sağlar
 </string>
     <!-- Section headers inside Overview -->
+    <string name="analyzer_info_notice">
+Disk kullanımını inceleyin, kategorilere ayrılmış depolama dağılımını keşfedin ve büyük dosyaları, kopyaları ve temizlik önerilerini bulun.
+</string>
+    <string name="analyzer_section_storage_breakdown">
+Depolama Dağılımı
+</string>
+    <string name="analyzer_section_top_folders">
+En Büyük Klasörler
+</string>
+    <string name="analyzer_section_app_usage">
+Uygulama Depolama Kullanımı
+</string>
+    <string name="analyzer_empty_state_desc">
+Bu analiz kategorisi için öğe bulunamadı.
+</string>
+    <string name="analyzer_action_review">
+İncele ve Temizle
+</string>
     <string name="analyzer_top_folders">
 Boyuta Göre En Büyük Klasörler
 </string>
@@ -1273,14 +1345,29 @@ Bu şifrelenmiş dosyalar kalıcı olarak silinecek ve geri alınamaz.
 Kalıcı Olarak Sil
 </string>
 
+    <string name="theme_section_color_palette">
+Renk Paleti
+</string>
+    <string name="theme_section_mode">
+Tema Modu
+</string>
     <string name="theme_light">
 Açık
+</string>
+    <string name="theme_light_desc">
+Temiz ve parlak arayüz
 </string>
     <string name="theme_dark">
 Koyu
 </string>
+    <string name="theme_dark_desc">
+Rahat, düşük ışıklı koyu tema
+</string>
     <string name="theme_system">
 Sistem Varsayılanı
+</string>
+    <string name="theme_system_desc">
+Sistem gündüz/gece programını takip et
 </string>
     <string name="theme_amoled">
 AMOLED Siyah
@@ -1323,6 +1410,30 @@ Yazı tipi boyutu uygulandı
     <string name="font_size_preview">
 Hızlı kahverengi tilki zıplar
 </string>
+    <string name="font_size_small_desc">
+85% • Daha yüksek ekran yoğunluğu için kompakt boyut
+</string>
+    <string name="font_size_normal_desc">
+100% • Varsayılan önerilen yazı boyutu
+</string>
+    <string name="font_size_large_desc">
+115% • Geliştirilmiş okunabilirlik için büyütülmüş boyut
+</string>
+    <string name="font_size_preview_title">
+Canlı Yazı Tipi Önizlemesi
+</string>
+    <string name="font_size_preview_sample_heading">
+Ultimate File Manager Pro
+</string>
+    <string name="font_size_preview_sample_body">
+Hızlı kahverengi tilki tembel köpeğin üzerinden atlar. Android ve TV için güç kullanıcılarına yönelik çift bölmeli dosya yöneticisi.
+</string>
+    <string name="font_size_section_preview">
+Canlı Önizleme
+</string>
+    <string name="font_size_section_options">
+Metin Boyutu Seçenekleri
+</string>
 
     <!-- Storage Renaming -->
     <string name="settings_storage_rename_title">
@@ -1331,11 +1442,56 @@ Hızlı kahverengi tilki zıplar
     <string name="settings_storage_rename_subtitle">
 USB ve yerel depolama sürücülerini yeniden adlandırın
 </string>
+    <string name="storage_rename_section_connected">
+Bağlı Depolama Sürücüleri
+</string>
+    <string name="storage_rename_section_offline">
+Çevrimdışı / Bağlantısı Kesilmiş Sürücüler
+</string>
+    <string name="storage_rename_original_details">
+Orijinal: %1$s • %2$s
+</string>
+    <string name="storage_rename_info_notice">
+Dahili depolama, SD kartlar ve USB sürücülere atanan özel etiketler. Görünen adını yeniden adlandırmak veya sıfırlamak için herhangi bir sürücüye dokunun.
+</string>
+    <string name="storage_rename_empty_title">
+Depolama Sürücüsü Bulunamadı
+</string>
+    <string name="storage_rename_empty_desc">
+Bağlı dahili ve harici depolama sürücüleri, özel adlandırma ve tanımlama için burada görünecektir.
+</string>
     <string name="rename_drive_dialog_title">
 Sürücüyü Yeniden Adlandır
 </string>
+    <string name="storage_rename_dialog_subtitle">
+%1$s için özel bir ad girin
+</string>
     <string name="custom_name_hint">
 Yeni sürücü adı
+</string>
+    <string name="storage_rename_reset_btn">
+Varsayılana Sıfırla
+</string>
+    <string name="storage_rename_save_btn">
+Özel Adı Kaydet
+</string>
+    <string name="storage_rename_saved_toast">
+Sürücü, \"%1$s\" olarak yeniden adlandırıldı
+</string>
+    <string name="storage_rename_reset_toast">
+Sürücü orijinal adına sıfırlandı
+</string>
+    <string name="storage_rename_clear_all">
+Tüm Sürücü Adlarını Sıfırla
+</string>
+    <string name="storage_rename_clear_all_confirm_title">
+Tüm Sürücü Adları Sıfırlansın mı?
+</string>
+    <string name="storage_rename_clear_all_confirm_message">
+Tüm özel sürücü etiketlerini varsayılan sistem adlarına sıfırlamak istediğinize emin misiniz?
+</string>
+    <string name="storage_rename_cleared_all_toast">
+Tüm sürücü adları varsayılana sıfırlandı
 </string>
     <string name="reset_action">
 Sıfırla
@@ -1428,11 +1584,29 @@ Uygulama açıldığında hangi ekranın açılacağını seçin
     <string name="start_screen_storage_browser">
 Ana Menü (Varsayılan)
 </string>
+    <string name="start_screen_storage_browser_desc">
+Tüm depolamalar ve hızlı kutucuklarla standart ana ekran
+</string>
     <string name="start_screen_twin_window">
 Çift Pencere
 </string>
+    <string name="start_screen_twin_window_desc">
+Yan yana çift bölmeli dosya yöneticisi
+</string>
     <string name="start_screen_file_server">
 Dosya Sunucusu
+</string>
+    <string name="start_screen_file_server_desc">
+HTTP, FTP ve WebDAV dosya sunucusu kontrolleri
+</string>
+    <string name="start_screen_section_main">
+Ana Ekranlar
+</string>
+    <string name="start_screen_section_storages">
+Doğrudan Depolama Sürücüleri
+</string>
+    <string name="start_screen_storage_desc">
+Başlangıçta bu sürücüyü doğrudan aç
 </string>
 
     <!-- Analytics Toggle -->
@@ -1507,6 +1681,12 @@ Devre dışı — doğrudan akış (varsayılan)
 </string>
 
     <!-- Open Source Licenses -->
+    <string name="policy_section_agreements">
+Politikalar ve Sözleşmeler
+</string>
+    <string name="policy_section_attributions">
+Atıflar ve Lisanslar
+</string>
     <string name="policy_licenses_button">
 Açık Kaynak Lisansları
 </string>
@@ -1640,8 +1820,38 @@ Dosya türleri için varsayılan uygulamaları yönet
     <string name="default_apps_empty">
 Varsayılan uygulama ayarlanmamış.
 </string>
+    <string name="default_apps_empty_title">
+Yapılandırılmış Varsayılan Uygulama Yok
+</string>
+    <string name="default_apps_empty_desc">
+Bir dosyayı \"Her zaman\" ile açtığınızda, dosya ilişkilendirme kurallarını yönetebilmeniz veya sıfırlayabilmeniz için burada görünecektir.
+</string>
+    <string name="default_apps_info_notice">
+Belirli bir görüntüleyici veya uygulamayla otomatik açılacak şekilde yapılandırılmış dosya türleri. Bir ilişkilendirme kuralını sıfırlamak için çöp kutusu simgesine dokunun.
+</string>
     <string name="default_apps_clear_all">
 Tüm Varsayılanları Temizle
+</string>
+    <string name="default_apps_clear_all_confirm_title">
+Tüm Varsayılan Uygulamaları Temizle
+</string>
+    <string name="default_apps_clear_all_confirm_message">
+Tüm dosya ilişkilendirme tercihlerini temizlemek istediğinize emin misiniz? Dosyalar açıldığında bir uygulama seçmeniz istenecektir.
+</string>
+    <string name="default_app_remove_confirm_title">
+.%1$s İlişkilendirmesi Sıfırlansın mı?
+</string>
+    <string name="default_app_remove_confirm_message">
+.%1$s (%2$s) için varsayılan uygulamayı sıfırlamak istediğinize emin misiniz? Bu dosya türünü bir dahaki açışınızda bir uygulama seçmeniz istenecektir.
+</string>
+    <string name="default_app_remove_btn">
+Varsayılanı Sıfırla
+</string>
+    <string name="default_apps_removed_toast">
+.%1$s için varsayılanı sıfırla
+</string>
+    <string name="default_apps_cleared_all_toast">
+Tüm varsayılan uygulamalar temizlendi
 </string>
     <string name="default_apps_extension_label">
 Dosya türü: %1$s
@@ -1972,6 +2182,15 @@ Sürücü seç
     <string name="all_drives">
 Tüm Sürücüler
 </string>
+    <string name="search_select_location_title">
+Arama Konumu
+</string>
+    <string name="search_select_location_subtitle">
+İçinde arama yapılacak bir depolama konumu seçin
+</string>
+    <string name="search_all_drives_subtitle">
+Bağlı tüm depolama alanlarında ara
+</string>
 
     <!-- Category detail -->
     <string name="category_files_title">
@@ -2117,6 +2336,9 @@ Ağ Paylaşımları
     <string name="network_shares_subtitle">
 SMB · FTP
 </string>
+    <string name="network_shares_info_notice">
+Yerel ağınızdaki SMB, FTP, SFTP, SCP ve NFS paylaşımlarına bağlanarak dosyaları sorunsuzca görüntüleyin, aktarın ve düzenleyin.
+</string>
     <string name="network_add_share">
 Paylaşım ekle
 </string>
@@ -2162,6 +2384,9 @@ Sunucu/IP adresi
 </string>
     <string name="network_field_port">
 Port (varsayılan için boş bırakın)
+</string>
+    <string name="network_section_credentials">
+Kimlik Bilgileri ve Kimlik Doğrulama
 </string>
     <string name="network_field_username">
 Kullanıcı adı (boş = misafir)
@@ -2681,6 +2906,37 @@ Kaydedilmiş çakışma yok
 %1$s — %2$s sürümü kullanıldı
 </string>
 
+    <string name="configure_sync_folders_schedule">
+Klasörleri ve senkronizasyon programını yapılandırın
+</string>
+    <string name="sync_section_profile_direction">
+Profil ve Yön
+</string>
+    <string name="sync_section_folders">
+Klasörler ve Konumlar
+</string>
+    <string name="sync_section_schedule">
+Zamanlama ve Otomasyon
+</string>
+    <string name="sync_section_conflict">
+Çakışma Yönetimi ve Silme İşlemleri
+</string>
+    <string name="sync_section_filtering">
+Dosya Filtreleme ve Etiketler
+</string>
+    <string name="general_settings">
+Genel Ayarlar
+</string>
+    <string name="schedule_and_triggers">
+Zamanlama ve Tetikleyiciler
+</string>
+    <string name="schedule_mode">
+Zamanlama Modu
+</string>
+    <string name="options">
+Seçenekler
+</string>
+
     <!-- Generic -->
     <string name="cancel">
 İptal
@@ -2885,6 +3141,58 @@ Geri yükleme yeri: Ana Menü
 Geri yükleme yeri: %1$s
 </string>
 
+    <!-- Add Options Dialog -->
+    <string name="add_menu_options_title">
+Yeni Oluştur
+</string>
+    <string name="add_menu_options_desc">
+Ana menüye ne eklemek istediğinizi seçin.
+</string>
+    <string name="option_create_header_title">
+Yeni Başlık Oluştur
+</string>
+    <string name="option_create_header_desc">
+Kutucuklarınızı düzenlemek için özel bir bölüm başlığı ekleyin
+</string>
+    <string name="option_create_tile_title">
+Özel Kutucuk Oluştur
+</string>
+    <string name="option_create_tile_desc">
+Kısayolları ve klasörleri gruplamak için özel bir kutucuk ekleyin
+</string>
+
+    <!-- Custom Category Headers -->
+    <string name="custom_header_create_title">
+Yeni Başlık Oluştur
+</string>
+    <string name="custom_header_create_desc">
+Bu kategori başlığı için bir başlık girin.
+</string>
+    <string name="custom_header_name_hint">
+Başlık Adı (gerekli)
+</string>
+    <string name="custom_header_name_required">
+Başlık adı zorunludur
+</string>
+    <string name="custom_header_created">
+Kategori başlığı oluşturuldu
+</string>
+    <string name="custom_header_add_button">
+Başlık Ekle
+</string>
+    <string name="custom_header_delete_title">
+Kategori Başlığını Sil
+</string>
+    <string name="custom_header_delete_confirm">
+\"%1$s\" silinsin mi?
+</string>
+    <string name="custom_header_delete_warning">
+İçindeki tüm kutucuklar orijinal konumlarına geri taşınacaktır.
+</string>
+    <string name="custom_header_deleted">
+\"%1$s\" kategori başlığı silindi
+</string>
+
     <!-- Custom Tiles -->
     <string name="custom_tile_create_title">
 Özel Kutucuk Oluştur
@@ -3032,6 +3340,12 @@ Renklendirilecek kutucuğu seçin
     <string name="tile_color_message_select">
 Renk seçiciyi açmak için Seç\'e bastıktan sonra bir kutucuğa dokunun.
 </string>
+    <string name="tile_color_tip_title">
+Kutucuk Renk Özelleştirici
+</string>
+    <string name="tile_color_tip_desc">
+Renk paletini kişiselleştirmek için ana ekrandaki herhangi bir depolama sürücüsüne veya özellik kutucuğuna dokunun
+</string>
     <string name="tile_color_button_select">
 Kutucuk Seç
 </string>
@@ -3148,6 +3462,9 @@ Dizinleyici Ayrıntıları
 </string>
     <string name="storage_indexer_delete_records">
 Dizine Eklenmiş Kayıtları Sil
+</string>
+    <string name="storage_indexer_delete_records_desc">
+Bu depolama için dizinleme veritabanını temizle
 </string>
     <string name="storage_indexer_not_now">
 Bu Depolamayı Yoksay (Şimdi Değil)
@@ -3403,14 +3720,41 @@ Liste
     <string name="layout_grid">
 Izgara
 </string>
+    <string name="layout_list_size_section">
+Liste Düzeni Boyutu
+</string>
+    <string name="layout_size_large">
+Büyük
+</string>
+    <string name="layout_size_large_desc">
+Büyük simgelerle ferah satırlar
+</string>
+    <string name="layout_size_medium">
+Orta
+</string>
+    <string name="layout_size_medium_desc">
+Standart dengeli satır yüksekliği
+</string>
+    <string name="layout_size_small">
+Küçük
+</string>
+    <string name="layout_size_small_desc">
+Yüksek yoğunluklu kompakt satırlar
+</string>
     <string name="column_count">
 Sütunlar
 </string>
     <string name="columns_4">
 4 Sütun
 </string>
+    <string name="columns_4_desc">
+Kompakt 4 sütunlu ızgara düzeni
+</string>
     <string name="columns_3">
 3 Sütun
+</string>
+    <string name="columns_3_desc">
+Ferah 3 sütunlu ızgara düzeni
 </string>
 
     <!-- Long Press Duration Settings -->
@@ -3426,6 +3770,114 @@ Uzun Basma Araç Çubuğu Simgeleri
 </string>
     <string name="settings_toolbar_icons_subtitle">
 Seçim eylem çubuğunu özelleştir
+</string>
+    <string name="settings_toolbar_icons_info_notice">
+Dosyalar veya klasörler seçildiğinde araç çubuğunda hangi işlem düğmelerinin görüneceğini özelleştirin. Çalışma alanınızı temiz ve verimli tutmak için kullanmadığınız işlemleri kapatın.
+</string>
+    <string name="settings_toolbar_icons_reset_defaults">
+Varsayılanlara Sıfırla
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_title">
+Araç Çubuğu Simgeleri Sıfırlansın mı?
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_message">
+Tüm seçim araç çubuğu simgelerini varsayılan etkin durumlarına sıfırlamak istediğinize emin misiniz?
+</string>
+    <string name="settings_toolbar_icons_reset_toast">
+Araç çubuğu simgeleri varsayılanlara sıfırlandı
+</string>
+    <string name="toolbar_section_file_operations">
+Dosya İşlemleri
+</string>
+    <string name="toolbar_section_security">
+Güvenlik ve Gizlilik
+</string>
+    <string name="toolbar_section_selection_navigation">
+Seçim ve Sık Kullanılanlar
+</string>
+    <string name="toolbar_section_tools_media">
+Arşiv, Medya ve Araçlar
+</string>
+    <string name="toolbar_desc_create_new">
+Yeni dosyalar, klasörler veya arşivler oluştur
+</string>
+    <string name="toolbar_desc_copy">
+Seçili öğeleri panoya kopyala
+</string>
+    <string name="toolbar_desc_move">
+Taşımak için seçili öğeleri kes
+</string>
+    <string name="toolbar_desc_rename">
+Seçili dosyayı veya dizini yeniden adlandır
+</string>
+    <string name="toolbar_desc_share">
+Dosyaları sistem paylaşım sayfasıyla gönder
+</string>
+    <string name="toolbar_desc_delete">
+Öğeleri kalıcı olarak sil veya çöp kutusuna taşı
+</string>
+    <string name="toolbar_desc_copy_encrypt">
+Öğeleri şifrele ve kopyala
+</string>
+    <string name="toolbar_desc_move_encrypt">
+Öğeleri şifrele ve taşı
+</string>
+    <string name="toolbar_desc_protect">
+Salt okunur veya korumalı bayrağı ayarla
+</string>
+    <string name="toolbar_desc_unprotect">
+Koruma kilidini kaldır
+</string>
+    <string name="toolbar_desc_hide">
+Öğeleri gizli olarak işaretle
+</string>
+    <string name="toolbar_desc_unhide">
+Gizli dosyaları göster
+</string>
+    <string name="toolbar_desc_select_all">
+Geçerli bölmedeki tüm öğeleri seç
+</string>
+    <string name="toolbar_desc_invert_selection">
+Tüm öğelerin seçim durumunu değiştir
+</string>
+    <string name="toolbar_desc_favorite">
+Yıldızlı sık kullanılanlara ekle veya çıkar
+</string>
+    <string name="toolbar_desc_pin">
+Öğeyi hızlı erişim paneline sabitle
+</string>
+    <string name="toolbar_desc_unpin">
+Öğeyi hızlı erişimden kaldır
+</string>
+    <string name="toolbar_desc_compress">
+ZIP veya 7Z arşivi oluştur
+</string>
+    <string name="toolbar_desc_extract">
+Geçerli klasörde arşivi aç
+</string>
+    <string name="toolbar_desc_compress_image">
+Görüntü dosyası boyutunu optimize et
+</string>
+    <string name="toolbar_desc_retrigger_thumbnails">
+Önbelleğe alınmış görüntü ve video küçük resimlerini yeniden oluştur
+</string>
+    <string name="toolbar_desc_create_gif">
+Görüntüleri animasyonlu GIF olarak birleştir
+</string>
+    <string name="toolbar_desc_exif_tools">
+Meta verileri temizle ve fotoğrafları toplu yeniden adlandır
+</string>
+    <string name="toolbar_desc_set_home_wallpaper">
+Seçili görüntüyü ana ekran duvar kağıdı olarak ayarla
+</string>
+    <string name="toolbar_desc_set_lock_wallpaper">
+Seçili görüntüyü kilit ekranı duvar kağıdı olarak ayarla
+</string>
+    <string name="toolbar_desc_duplicate_finder">
+Yinelenen dosyaları tara ve algıla
+</string>
+    <string name="toolbar_desc_large_files_finder">
+Aşırı depolama tüketen dosyaları belirle
 </string>
     <string name="long_press_duration_seconds">
 %1$.1f saniye
@@ -3561,6 +4013,54 @@ Eşleştir ve Bağlan
     <string name="connect_to_android_device">
 Android cihaza bağlan
 </string>
+    <string name="adb_terminal_empty_title">
+ADB Shell Hazır
+</string>
+    <string name="adb_terminal_empty_subtitle">
+Bir Android cihazına veya TV\\\'ye bağlanarak kabuk komutları çalıştırın, paketleri inceleyin ve sistem süreçlerini izleyin.
+</string>
+    <string name="adb_terminal_clear">
+Konsolu Temizle
+</string>
+    <string name="adb_terminal_copy">
+Çıktıyı Kopyala
+</string>
+    <string name="adb_terminal_cleared">
+Terminal çıktısı temizlendi
+</string>
+    <string name="adb_terminal_copied">
+Tüm çıktı panoya kopyalandı
+</string>
+    <string name="adb_quick_commands">
+Hızlı Komutlar
+</string>
+    <string name="adb_host_label">
+Hedef Cihaz IP Adresi
+</string>
+    <string name="adb_host_hint">
+192.168.1.50 veya 127.0.0.1
+</string>
+    <string name="adb_pairing_guide_title">
+3 Adımlı Kablosuz Eşleştirme Rehberi
+</string>
+    <string name="adb_pairing_guide_step1">
+Hedef cihazda Geliştirici Seçenekleri ve Kablosuz Hata Ayıklamayı etkinleştirin
+</string>
+    <string name="adb_pairing_guide_step2">
+Kablosuz Hata Ayıklama ayarlarında \"Eşleştirme koduyla cihaz eşleştir\"e dokunun
+</string>
+    <string name="adb_pairing_guide_step3">
+Aşağıya görüntülenen IP adresini, eşleştirme portunu ve 6 haneli PIN kodunu girin
+</string>
+    <string name="adb_discovery_title">
+Ağ Cihazı Otomatik Keşfi
+</string>
+    <string name="adb_manual_title">
+Hedef IP ve Port Ayarları
+</string>
+    <string name="adb_pin_title">
+6 Haneli Eşleştirme Kodu
+</string>
     <string name="search_apps">
 Uygulamaları ara...
 </string>
@@ -3576,6 +4076,36 @@ TV bağlantılarını yönet
     <string name="no_devices_paired_yetntap_to">
 Henüz eşleştirilmiş cihaz yok.\n
 TV bağlamak için +\'ya dokunun.
+</string>
+    <string name="link_tv">
+TV Bağla
+</string>
+    <string name="link_tv_button">
+Yeni TV Bağla
+</string>
+    <string name="paired_tvs_empty_title">
+Henüz Eşleştirilmiş TV Yok
+</string>
+    <string name="paired_tvs_empty_subtitle">
+Telefonunuzu UFM çalıştıran Android TV ile bağlayarak kablosuz dosya aktarımı, depolama yönetimi ve uzaktan erişim sağlayın.
+</string>
+    <string name="tv_pairing_guide_title">
+3 Adımlı Hızlı Rehber
+</string>
+    <string name="tv_pairing_guide_step1">
+Android TV\\\'nizde UFM\\\'yi açın
+</string>
+    <string name="tv_pairing_guide_step2">
+TV ana menüsünde \"Eşleştirilmiş Telefonlar\"ı seçin
+</string>
+    <string name="tv_pairing_guide_step3">
+4 haneli PIN\\\'i almak için TV\\\'de \"Mobil Uygulamayı Bağla\"yı seçin
+</string>
+    <string name="paired_status_connected">
+Bağlandı
+</string>
+    <string name="paired_status_disconnected">
+Bağlantı Kesildi
 </string>
     <string name="paired_phones">
 Eşleştirilmiş Telefonlar
@@ -4443,8 +4973,14 @@ USB Hata Ayıklama Gerekli
     <string name="take_screenshot">
 Ekran Görüntüsü Al
 </string>
+    <string name="take_screenshot_subtitle">
+Geçerli TV ekranını cihazınıza yakalayın
+</string>
     <string name="record_screen">
 Ekranı Kaydet
+</string>
+    <string name="record_screen_subtitle">
+Ses seçenekleriyle TV ekranını video olarak kaydedin
 </string>
     <string name="record_screen_audio_title">
 TV Sesi
@@ -5626,13 +6162,43 @@ Dizin yüklenirken hata: %1$s
     <string name="sideload_apk">
 APK Yandan Yükleme
 </string>
+    <string name="sideload_apk_subtitle">
+TV\\\'ye tek APK paketi kurun
+</string>
     <string name="sideload_xapk">
 XAPK Yandan Yükleme
+</string>
+    <string name="sideload_xapk_subtitle">
+TV\\\'ye paketli XAPK / APKM uygulamalarını kurun
+</string>
+    <string name="sideload_dialog_desc_apk">
+Cihazınızdan eşleştirilmiş TV\\\'nize bir Android uygulama paketi (.apk) kurun.
+</string>
+    <string name="sideload_dialog_desc_xapk">
+Cihazınızdan eşleştirilmiş TV\\\'nize paketli bir uygulama paketi (.xapk / .apkm) kurun.
+</string>
+    <string name="sideload_step_1_apk">
+1. Cihaz depolamanızdan .apk dosyasını seçin
+</string>
+    <string name="sideload_step_1_xapk">
+1. Cihaz depolamanızdan .xapk / .apkm paketini seçin
+</string>
+    <string name="sideload_step_2">
+2. UFM paketi TV\\\'nize kablosuz olarak aktaracak
+</string>
+    <string name="sideload_step_3">
+3. Tamamlamak için TV ekranınızdaki kurulum istemini onaylayın
+</string>
+    <string name="sideload_choose_file">
+Dosya Seç
 </string>
 
     <!-- Transfer Settings Feature -->
     <string name="transfer_settings">
 Ayarları Aktar
+</string>
+    <string name="transfer_settings_action_subtitle">
+Ayarları ve ağ paylaşımlarını TV\\\'ye aktarın
 </string>
     <string name="transfer_settings_select_all">
 Tümünü Seç
@@ -6139,6 +6705,9 @@ Akıllı Sıralama
 </string>
     <string name="smart_sort_tile_subtitle">
 Dosyaları kategorilere ayır
+</string>
+    <string name="smart_sort_info_notice">
+Dosyaları türe, boyuta, tarihe veya özel kurallara göre otomatik olarak kategorize edin ve yapılandırılmış klasörlere düzenleyin. Başlamak için aşağıdan bir depolama sürücüsü veya paylaşım seçin.
 </string>
     <string name="smart_sort_config">
 Akıllı Sıralama Yapılandırması
@@ -6676,6 +7245,9 @@ Senkronizasyon etkin
 </string>
     <string name="sync_disabled">
 Senkronizasyon devre dışı
+</string>
+    <string name="sync_delete_profile_confirm_msg">
+\"%1$s\" öğesini silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
 </string>
     <string name="profile_deleted">
 Profil silindi
@@ -7233,6 +7805,12 @@ APNG4Android (com.github.penfeizhou.android.animation)
     <string name="online_storages_subtitle">
 OneDrive, Google Drive ve daha fazlası
 </string>
+    <string name="online_storages_info_notice">
+OneDrive, Google Drive, Dropbox, Box, AWS S3, WebDAV ve RClone dahil bulut depolama sağlayıcılarına bağlanarak dosyaları görüntüleyin, aktarın ve senkronize edin.
+</string>
+    <string name="online_storage_delete_confirm_body">
+\"%1$s\" bağlantısını kaldırmak istediğinize emin misiniz?
+</string>
     <string name="opening_online_storages">
 Çevrimiçi Depolar açılıyor…
 </string>
@@ -7547,6 +8125,111 @@ Yükseltilmiş Erişim etkin ve aktif
 </string>
     <string name="shizuku_adb_not_connected">
 ADB bağlı değil. Yükseltilmiş Erişimi otomatik olarak etkinleştirmek için ADB Terminali üzerinden bağlanın.
+</string>
+    <string name="shizuku_header_subtitle">
+Shizuku ve Shevery Hizmeti
+</string>
+    <string name="shizuku_status_not_installed_desc">
+Korumalı Android/data klasörlerinin ve yükseltilmiş işlemlerin kilidini root gerektirmeden açmak için Shizuku veya Shevery kurun.
+</string>
+    <string name="shizuku_status_stopped_desc">
+Yükseltilmiş hizmet kurulu ancak şu anda çalışmıyor. Hizmeti Kablosuz Hata Ayıklama veya yönetici uygulamanız aracılığıyla başlatın.
+</string>
+    <string name="shizuku_status_unauthorized_desc">
+Hizmet çalışıyor, ancak UFM\\\'nin sistem düzeyindeki API\\\'lere erişmek için yetkilendirme gerekiyor.
+</string>
+    <string name="shizuku_status_active_desc">
+Yükseltilmiş hizmet, tam izinler verilerek etkin. Korumalı klasörler ve yükseltilmiş işlemler hazır.
+</string>
+    <string name="shizuku_badge_unavailable">
+KULLANILAMIYOR
+</string>
+    <string name="shizuku_badge_stopped">
+ETKİN DEĞİL
+</string>
+    <string name="shizuku_badge_auth_needed">
+YETKİ GEREKLİ
+</string>
+    <string name="shizuku_badge_connected">
+BAĞLI
+</string>
+    <string name="shizuku_section_capabilities">
+Yükseltilmiş Yetenekler
+</string>
+    <string name="shizuku_feature_protected_title">
+Korumalı Klasörler
+</string>
+    <string name="shizuku_feature_protected_desc">
+Android/data ve obb için tam okuma/yazma erişimi
+</string>
+    <string name="shizuku_feature_speed_title">
+Yüksek Hızlı İşlemler
+</string>
+    <string name="shizuku_feature_speed_desc">
+Root olmadan doğrudan sistem düzeyinde G/Ç
+</string>
+    <string name="shizuku_feature_security_title">
+Root Gerektirmez ve Güvenli
+</string>
+    <string name="shizuku_feature_security_desc">
+Standart Android ayrıcalıklı API köprüsü
+</string>
+    <string name="shizuku_section_managers">
+Mevcut Yöneticiler
+</string>
+    <string name="shizuku_manager_shizuku_title">
+Shizuku
+</string>
+    <string name="shizuku_manager_shizuku_desc">
+GitHub\\\'dan standart yükseltilmiş hizmet
+</string>
+    <string name="shizuku_manager_shevery_title">
+Shevery
+</string>
+    <string name="shizuku_manager_shevery_desc">
+Hafif ve hızlı alternatif
+</string>
+    <string name="shizuku_download_shizuku_apk">
+Shizuku\\\'yu İndir (APK)
+</string>
+    <string name="shizuku_download_shevery_apk">
+Shevery\\\'yi İndir (APK)
+</string>
+    <string name="shizuku_open_manager">
+%1$s Yöneticisini Aç
+</string>
+    <string name="shizuku_section_setup_guide">
+3 Adımlı Kurulum Rehberi
+</string>
+    <string name="shizuku_step_1">
+1. APK Kurun
+</string>
+    <string name="shizuku_step_2">
+2. Hizmeti Başlatın
+</string>
+    <string name="shizuku_step_3">
+3. UFM\\\'yi Yetkilendirin
+</string>
+    <string name="shizuku_service_info_title">
+Hizmet Bilgisi
+</string>
+    <string name="shizuku_service_provider_label">
+Hizmet Sağlayıcı
+</string>
+    <string name="shizuku_service_mode_label">
+Bağlantı Modu
+</string>
+    <string name="shizuku_service_permission_label">
+İzin Düzeyi
+</string>
+    <string name="shizuku_service_mode_adb">
+ADB / Kablosuz Hata Ayıklama
+</string>
+    <string name="shizuku_permission_granted_api">
+Verildi (API v23)
+</string>
+    <string name="shizuku_recheck_status">
+Durumu Yeniden Kontrol Et
 </string>
     <string name="shizuku_manager_open_error">
 Yönetici açılamadı. Lütfen önce Shizuku veya Shevery\\\'yi kurun.
@@ -8714,6 +9397,21 @@ Not boş
     <string name="notes_folder_title">
 Notlarım
 </string>
+    <string name="export_txt_desc">
+Düz metin belgesi (.txt)
+</string>
+    <string name="export_csv_desc">
+Virgülle ayrılmış değerler (.csv)
+</string>
+    <string name="export_pdf_desc">
+Taşınabilir Belge Formatı (.pdf)
+</string>
+    <string name="notepad_select_format_desc">
+Belgeniz için dışa aktarma biçimini seçin
+</string>
+    <string name="notepad_destination_label">
+Kaydetme Hedefi
+</string>
     <string name="notepad_select_export_format">
 Farklı Kaydet
 </string>
@@ -8764,11 +9462,35 @@ Dosya kaydedildi
     <string name="settings_apk_extract_title">
 APK / XAPK Çıkart
 </string>
+    <string name="settings_apk_extract_subtitle">
+Uygulama çıkarma ve manifest meta verilerini yapılandırın
+</string>
     <string name="settings_apk_extract_subtitle_off">
 Yalnızca standart çıkartma
 </string>
     <string name="settings_apk_extract_subtitle_on">
 Gelişmiş
+</string>
+    <string name="settings_apk_extract_info_notice">
+Yüklü uygulamalar için çıkarma tercihlerini yapılandırın. Etkinleştirildiğinde UFM, çıkarılan APK ve XAPK dosyalarının yanına uygulama simgelerini ve JSON meta verilerini kaydeder.
+</string>
+    <string name="settings_apk_extract_reset_defaults">
+Varsayılanlara Sıfırla
+</string>
+    <string name="settings_apk_extract_reset_confirm_title">
+Çıkarma Ayarları Sıfırlansın mı?
+</string>
+    <string name="settings_apk_extract_reset_confirm_message">
+Tüm APK ve XAPK çıkarma ayarlarını ve meta veri alanlarını varsayılana sıfırlamak istediğinize emin misiniz?
+</string>
+    <string name="settings_apk_extract_reset_toast">
+Çıkarma ayarları varsayılanlara sıfırlandı
+</string>
+    <string name="settings_apk_extract_metadata_header">
+JSON\\\'a Dahil Edilecek Meta Veri Alanları
+</string>
+    <string name="settings_apk_extract_section_general">
+Çıkarma Özellikleri
 </string>
     <string name="apk_extract_master_title">
 Gelişmiş APK/XAPK Çıkartma
@@ -8794,44 +9516,86 @@ JSON\'a dahil edilecek meta veri alanları
     <string name="field_extracted_date">
 Çıkartılma Tarihi
 </string>
+    <string name="field_extracted_date_desc">
+Dosyanın çıkarıldığı zaman damgası (extracted_date)
+</string>
     <string name="field_package_name">
 Paket Adı
+</string>
+    <string name="field_package_name_desc">
+Benzersiz Android uygulama kimliği (package_name)
 </string>
     <string name="field_version_name">
 Sürüm Adı
 </string>
+    <string name="field_version_name_desc">
+Kullanıcı tarafından görülebilen sürüm dizesi (version_name)
+</string>
     <string name="field_version_code">
 Sürüm Kodu
+</string>
+    <string name="field_version_code_desc">
+Dahili sayısal sürüm tamsayısı (version_code)
 </string>
     <string name="field_label">
 Uygulama Etiketi
 </string>
+    <string name="field_label_desc">
+Uygulamanın görünen adı (label)
+</string>
     <string name="field_install_time">
 Yükleme Tarihi
+</string>
+    <string name="field_install_time_desc">
+Cihazdaki ilk kurulum zaman damgası (install_time)
 </string>
     <string name="field_last_update_time">
 Son Güncelleme Tarihi
 </string>
+    <string name="field_last_update_time_desc">
+Cihazdaki son güncelleme zaman damgası (last_update_time)
+</string>
     <string name="field_target_sdk">
 Hedef SDK
+</string>
+    <string name="field_target_sdk_desc">
+Hedef Android API sürümü (target_sdk)
 </string>
     <string name="field_min_sdk">
 Minimum SDK
 </string>
+    <string name="field_min_sdk_desc">
+Gerekli minimum Android API sürümü (min_sdk)
+</string>
     <string name="field_app_size">
 Uygulama Boyutu
+</string>
+    <string name="field_app_size_desc">
+Yüklü uygulamanın bayt cinsinden toplam boyutu (app_size)
 </string>
     <string name="field_source_dir">
 Kaynak Dizini
 </string>
+    <string name="field_source_dir_desc">
+Temel APK\\\'nın dosya sistemi dizin yolu (source_dir)
+</string>
     <string name="field_split_apks">
 Bölünmüş APK\'lar
+</string>
+    <string name="field_split_apks_desc">
+Bölünmüş yapılandırma APK yollarının listesi (split_apks)
 </string>
     <string name="field_has_obb">
 OBB Var
 </string>
+    <string name="field_has_obb_desc">
+OBB genişletme verilerinin varlığını gösterir (has_obb)
+</string>
     <string name="field_permissions">
 İzinler
+</string>
+    <string name="field_permissions_desc">
+İstenen manifest izinlerinin listesi (permissions)
 </string>
     <string name="extracts_subtitle_files">
 dosya(lar)
@@ -8980,6 +9744,45 @@ Akıllı Sıralama Klasör Yapılandırmaları
 </string>
     <string name="backup_import_details_title">
 İçe Aktarma Önizlemesi
+</string>
+    <string name="backup_restore_notice">
+Ayarlarınızın, özel döşemelerinizin ve ağ paylaşımlarınızın dışa aktarılabilir bir yedek dosyasını oluşturun veya önceden dışa aktarılmış bir yedek arşivinden geri yükleyin.
+</string>
+    <string name="backup_restore_section_actions">
+Eylemler
+</string>
+    <string name="backup_export_notice">
+Bu yedek arşivine dahil etmek istediğiniz yapılandırma kategorilerini ve bileşenleri seçin.
+</string>
+    <string name="backup_import_notice">
+Bu arşivde bulunan yapılandırma kategorilerini inceleyin. Geri yükleme, bu ayarları uygulayacak ve uygulamayı yeniden başlatacak.
+</string>
+    <string name="backup_import_password_desc">
+Bu yedek dosyası bir parola ile şifrelenmiştir. İçeriğini çözmek ve incelemek için parolayı aşağıya girin.
+</string>
+    <string name="backup_password_dialog_desc">
+İsteğe bağlı olarak yedek dosyanızı AES-256 şifrelemesiyle koruyun. Parola belirlemeyi atlarsanız dosya şifrelenmeden kaydedilir.
+</string>
+    <string name="backup_skip_confirm_desc">
+Şifrelenmeden kaydetmek, yedek dosyasına erişimi olan herkesin dışa aktarılan ayarlarınızı ve yapılandırmalarınızı okuyabileceği anlamına gelir. Parola olmadan devam etmek istediğinize emin misiniz?
+</string>
+    <string name="backup_import_guide_title">
+Ayarları İçe Aktar
+</string>
+    <string name="backup_import_guide_subtitle">
+Bir Yedek Dosyası Seçin
+</string>
+    <string name="backup_import_guide_msg">
+Cihaz depolamanızdan dışa aktarılmış bir yedek arşivi (.ufmconfig) seçin. Ayarlarınız, ağ paylaşımlarınız, özel döşemeleriniz ve tercihleriniz geri yüklenecek.
+</string>
+    <string name="backup_import_guide_format_label">
+Desteklenen Arşiv Formatı
+</string>
+    <string name="backup_import_guide_format_val">
+*.ufmconfig dosyaları
+</string>
+    <string name="backup_import_guide_btn_browse">
+Yedek Dosyası Seçin
 </string>
 
     <!-- Auto Backup -->
@@ -9189,6 +9992,9 @@ Ayarlar ve Tercihler
 </string>
     <string name="category_main_menu_tiles">
 Ana Menü Kutucukları
+</string>
+    <string name="category_icons_count">
+%1$d simgeleri dahil
 </string>
     <string name="icon_file_generic">
 Genel Dosya
@@ -9470,6 +10276,12 @@ Kalkan Onay
 </string>
     <string name="icon_status_shield_alert">
 Kalkan Uyarı
+</string>
+    <string name="icon_status_customized">
+Özelleştirilmiş
+</string>
+    <string name="icon_status_default">
+Varsayılan
 </string>
     <string name="icon_view_grid_small">
 Küçük Izgara
@@ -9858,6 +10670,26 @@ Bu şifreyi unutursanız, tema paketi kurtarılamaz.
 Atla (şifresiz)
 </string>
 
+    <!-- Theme pack import instructions -->
+    <string name="theme_import_instructions_title">
+Simge Paketini İçe Aktar
+</string>
+    <string name="theme_import_instructions_desc">
+Önceden dışa aktarılmış bir .ufmtheme dosyasından özelleştirilmiş simgeleri ve döşeme renklerini içe aktarın.
+</string>
+    <string name="theme_import_step_select">
+Depolamada bir .ufmtheme dosyası bulun ve seçin
+</string>
+    <string name="theme_import_step_password">
+Paket korumalıysa şifre çözme parolasını girin
+</string>
+    <string name="theme_import_step_preview">
+Dahil edilen simgeleri önizleyin ve uygulamak için onaylayın
+</string>
+    <string name="theme_import_btn_select">
+.ufmtheme Dosyası Seçin
+</string>
+
     <!-- Theme pack import password -->
     <string name="theme_import_password_title">
 Tema paketi şifresini girin
@@ -10188,6 +11020,9 @@ Kesintiden sonra duraklatılmış kalır
     <string name="settings_skip_length_title">
 Atlama süresi
 </string>
+    <string name="settings_skip_length_dialog_desc">
+Medya oynatma sırasında ileri veya geri atlama miktarını seçin.
+</string>
     <string name="skip_length_option_3s">
 3 sn
 </string>
@@ -10205,6 +11040,27 @@ Atlama süresi
 </string>
     <string name="skip_length_option_disable">
 Devre dışı
+</string>
+    <string name="skip_length_desc_3s">
+3 saniye atla
+</string>
+    <string name="skip_length_desc_5s">
+5 saniye atla
+</string>
+    <string name="skip_length_desc_10s">
+10 saniye atla (Varsayılan)
+</string>
+    <string name="skip_length_desc_20s">
+20 saniye atla
+</string>
+    <string name="skip_length_desc_30s">
+30 saniye atla
+</string>
+    <string name="skip_length_desc_disable">
+İleri ve geri atlama düğmelerini gizle
+</string>
+    <string name="skip_length_toast_set">
+Atlama uzunluğu %1$s olarak ayarlandı
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -10447,6 +11303,51 @@ Dosya Etiketleri
     <string name="settings_file_tags_subtitle">
 Hashtag\\\'leri ve etiketleme seçeneklerini yönetin
 </string>
+    <string name="settings_file_tags_info_notice">
+Hızlı filtreleme, arama ve kategorizasyon için dosyalara ve klasörlere atanan özel etiketler. Herhangi bir etiketteki çöp kutusu simgesine dokunarak onu genel olarak kaldırın.
+</string>
+    <string name="settings_file_tags_empty_title">
+Dosya Etiketi Oluşturulmamış
+</string>
+    <string name="settings_file_tags_empty_desc">
+Medyanızı ve belgelerinizi burada düzenlemek için dosya özellikleri sayfasından veya çoklu seçim araç çubuğundan herhangi bir dosya veya klasörü etiketleyin.
+</string>
+    <string name="settings_file_tags_delete_confirm_title">
+Etiket Silinsin mi?
+</string>
+    <string name="settings_file_tags_delete_confirm_message">
+\"#%1$s\" etiketini silmek istediğinize emin misiniz? Etiketlenmiş tüm dosya ve klasörlerden kaldırılacaktır.
+</string>
+    <string name="settings_file_tags_delete_btn">
+Etiketi Sil
+</string>
+    <string name="settings_file_tags_clear_all">
+Tüm Etiketleri Sil
+</string>
+    <string name="settings_file_tags_clear_all_confirm_title">
+Tüm Dosya Etiketleri Silinsin mi?
+</string>
+    <string name="settings_file_tags_clear_all_confirm_message">
+Oluşturulan tüm dosya etiketlerini kalıcı olarak silmek istediğinize emin misiniz? Bu, tüm dosya ve klasörlerdeki tüm etiketleri kaldıracaktır.
+</string>
+    <string name="settings_file_tags_deleted_toast">
+#%1$s etiketi silindi
+</string>
+    <string name="settings_file_tags_cleared_all_toast">
+Tüm dosya etiketleri silindi
+</string>
+    <string name="settings_file_tags_multi_title">
+Çoklu Dosya Etiketleme
+</string>
+    <string name="settings_file_tags_multi_desc">
+Seçildiğinde birden fazla dosyanın aynı anda etiketlenmesine olanak tanır
+</string>
+    <string name="settings_file_tags_created_header">
+Oluşturulan Etiketler
+</string>
+    <string name="settings_file_tags_empty">
+Henüz etiket oluşturulmadı
+</string>
     <string name="action_tag">
 Etiket
 </string>
@@ -10523,8 +11424,41 @@ Klasöre özel sıralama ayarı kaydedilmedi.\n
 \n
 Bir klasör açın, Sırala ve Filtrele\'ye dokunun ve geçersiz kılma oluşturmak için \\\"Bu Klasör\\\"ü seçin.
 </string>
+    <string name="folder_sort_manager_empty_title">
+Yapılandırılmış Sıralama Geçersiz Kılma Yok
+</string>
+    <string name="folder_sort_manager_empty_desc">
+\"Bu Klasör\"ü kullanarak belirli bir klasörün sıralama düzenini veya filtresini değiştirdiğinizde, özel sıralama kurallarını yönetmeniz veya sıfırlamanız için burada görünecektir.
+</string>
+    <string name="folder_sort_manager_info_notice">
+Belirli dizinler için yapılandırılmış özel sıralama düzenleri ve filtreler. Bir klasörü genel sıralamaya döndürmek için çöp kutusu simgesine dokunun.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Tüm Geçersiz Kılmaları Temizle
+</string>
     <string name="folder_sort_manager_clear_confirm">
 Tüm klasöre özel sıralama geçersiz kılmaları kaldırılsın mı? Klasörler genel sıralama ayarına dönecek.
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_title">
+Tüm Sıralama Geçersiz Kılmaları Temizlensin mi?
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_message">
+Tüm klasör bazlı sıralama geçersiz kılmalarını kaldırmak istediğinizden emin misiniz? Tüm klasörler genel sıralama ve filtre ayarlarınıza dönecektir.
+</string>
+    <string name="folder_sort_manager_remove_confirm_title">
+Klasör Sıralama Geçersiz Kılması Sıfırlansın mı?
+</string>
+    <string name="folder_sort_manager_remove_confirm_message">
+\"%1$s\" için özel sıralama geçersiz kılmasını kaldırmak istediğinizden emin misiniz? Bu klasör genel sıralamaya dönecektir.
+</string>
+    <string name="folder_sort_manager_remove_btn">
+Geçersiz Kılmayı Sıfırla
+</string>
+    <string name="folder_sort_manager_cleared_all_toast">
+Tüm klasör sıralama geçersiz kılmaları temizlendi
+</string>
+    <string name="folder_sort_manager_deleted">
+%1$s için geçersiz kılma kaldırıldı
 </string>
     <string name="folder_sort_network_badge">
 Ağ / Çevrimiçi
@@ -10686,6 +11620,9 @@ Gönderilemedi
 Bir hata oluştu. Lütfen tekrar deneyin.
 </string>
     <string name="support_retry">
+Tekrar Dene
+</string>
+    <string name="retry">
 Tekrar Dene
 </string>
     <string name="support_no_internet">
@@ -11225,6 +12162,343 @@ GPS yok
     <string name="exif_select_destination_folder">
 Çıktı Klasörünü Seç
 </string>
+
+    <!-- Video Thumbnail Time Modernization -->
+    <string name="vtt_section_options">
+Yakalama Noktası
+</string>
+    <string name="vtt_info_notice">
+Uygulama genelinde video küçük resimlerini oluşturmak için kullanılan zaman damgasını seçin. Bir yüzde ayarlamak, videoların başında boş, karanlık veya tanıtım karelerinden kaçınır.
+</string>
+    <string name="vtt_percent_0_subtitle">
+Videonun ilk karesini yakala (00:00)
+</string>
+    <string name="vtt_percent_10_subtitle">
+Önerilen varsayılan — siyah veya açılış tanıtım karelerini atlar
+</string>
+    <string name="vtt_percent_25_subtitle">
+Video süresinin %25\\\'inde kare yakala
+</string>
+    <string name="vtt_percent_50_subtitle">
+Videonun tam orta noktasında (%50) kare yakala
+</string>
+    <string name="vtt_percent_75_subtitle">
+Video süresinin %75\\\'inde kare yakala
+</string>
+
+    <!-- Network Thumbnail Settings Modernization -->
+    <string name="nt_section_caching">
+Yapılandırma
+</string>
+    <string name="nt_section_storage">
+Depolama ve Bakım
+</string>
+    <string name="nt_info_notice">
+Uzak küçük resimler yerel olarak önbelleğe alınır; böylece ağ paylaşımları, SMB, FTP, SFTP ve bulut sürücüler dosyaları yeniden indirmeden hızlı görüntü ve video önizlemeleri görüntüler.
+</string>
+    <string name="nt_cache_folder_guide_title">
+Önbellek Konumunu Seç
+</string>
+    <string name="nt_cache_folder_guide_msg">
+Ağ küçük resim önbellek dosyalarını depolamak için bir dahili depolama veya SD kart dizini seçin.\n
+\n
+Depolama tarayıcısında istediğiniz dizine gidin ve üstteki \"BU KLASÖRÜ SEÇ\" öğesine dokunun.
+</string>
+    <string name="nt_cache_folder_btn_browse">
+Depolamaya Gözat
+</string>
+    <string name="nt_cache_folder_btn_reset_default">
+Varsayılan Konuma Sıfırla
+</string>
+    <string name="nt_cache_folder_current_label">
+Geçerli Konum:
+</string>
+
+    <!-- Cache Limit Dialog Modernization -->
+    <string name="nt_cache_limit_dialog_desc">
+Uzak küçük resimleri önbelleğe almak için kullanılan maksimum disk alanını seçin.
+</string>
+    <string name="nt_limit_subtitle_500mb">
+Standart varsayılan — genel tarama için ideal
+</string>
+    <string name="nt_limit_subtitle_1gb">
+Orta düzey ağ kullanımı için önerilir
+</string>
+    <string name="nt_limit_subtitle_2gb">
+Fotoğraf ve video küçük resimleri için geniş depolama
+</string>
+    <string name="nt_limit_subtitle_5gb">
+Maksimum standart önbellek kapasitesi
+</string>
+    <string name="nt_limit_subtitle_custom">
+Özel bir MB veya GB depolama sınırı belirleyin
+</string>
+    <string name="nt_custom_limit_dialog_title">
+Özel Önbellek Sınırı
+</string>
+    <string name="nt_custom_limit_dialog_desc">
+MB veya GB cinsinden özel bir boyut sınırı girin
+</string>
+    <string name="nt_custom_presets_label">
+Hızlı Ön Ayarlar
+</string>
+    <string name="nt_custom_size_label">
+Özel Boyut
+</string>
+
+    <!-- File Server System Tiles Modernization -->
+    <string name="file_server_tiles_section_server">
+Dosya Sunucusu
+</string>
+    <string name="file_server_tiles_section_tiles">
+Hızlı Ayarlar Kutucukları
+</string>
+    <string name="file_server_tiles_info_notice">
+Hızlı Ayarlar kutucukları, uygulamayı açmadan doğrudan Android bildirim çekmecesinden FTP, SFTP ve DLNA medya sunucularını başlatıp durdurmanızı sağlar.
+</string>
+
+    <!-- Storage Indexer Modernization -->
+    <string name="storage_indexer_section_storages">
+Algılanan Depolama
+</string>
+    <string name="storage_indexer_section_actions">
+Bakım
+</string>
+    <string name="storage_indexer_info_notice">
+Cihazınızda anında arama sonuçları, yinelenen dosya algılama ve kategori filtreleme için dahili depolamayı ve çıkarılabilir sürücüleri dizinleyin.
+</string>
+    <string name="storage_indexer_detail_info_notice">
+Bu depolama birimi dizinlenmiştir. Dizinlenmiş kayıtlar, dosya sistemini taramadan hızlı çok ölçütlü arama yapılmasını sağlar.
+</string>
+    <string name="storage_indexer_btn_delete_confirm">
+Kayıtları Sil
+</string>
+
+    <!-- Auto Backup Modernization -->
+    <string name="auto_backup_section_general">
+Yapılandırma
+</string>
+    <string name="auto_backup_section_schedule">
+Zamanlama
+</string>
+    <string name="auto_backup_section_security">
+Güvenlik ve Şifreleme
+</string>
+    <string name="auto_backup_section_location">
+Yedekleme Hedefi
+</string>
+    <string name="auto_backup_info_notice">
+Otomatik Yedekleme, uygulama tercihlerinizin, özel temalarınızın ve kutucuklarınızın şifrelenmiş veya düz yedeklerini periyodik olarak oluşturur; böylece yapılandırmanızı asla kaybetmezsiniz.
+</string>
+    <string name="auto_backup_folder_guide_title">
+Yedekleme Klasörünü Seç
+</string>
+    <string name="auto_backup_folder_guide_msg">
+Otomatik yedeklemelerin kaydedileceği konumu seçin. Herhangi bir yerel veya çıkarılabilir klasöre gidin ve onaylamak için kaydet düğmesine dokunun.
+</string>
+    <string name="auto_backup_folder_guide_current">
+Geçerli Konum:
+</string>
+    <string name="auto_backup_folder_guide_btn_choose">
+Klasör Seç
+</string>
+    <string name="auto_backup_reset_success">
+Yedekleme konumu varsayılana sıfırlandı (Documents/UFM).
+</string>
+
+    <!-- File Server Modernization -->
+    <string name="file_server_section_services">
+Sunucu Hizmetleri
+</string>
+    <string name="file_server_section_profiles">
+Kimlik Doğrulama ve Erişim
+</string>
+    <string name="file_server_info_notice">
+Yerel FTP ve SFTP dosya sunucuları barındırın veya DLNA üzerinden medya akışı yapın. Yerel Wi-Fi ağınızdaki cihazlar göz atmak, akış yapmak ve dosya aktarmak için bağlanabilir.
+</string>
+    <string name="file_server_empty_profiles_desc">
+Giriş kimlik bilgilerini, erişim izinlerini ve paylaşılan dizinleri yapılandırmak için \\\'Profil Ekle\\\' öğesine dokunun.
+</string>
+
+    <!-- DLNA Modernization -->
+    <string name="dlna_section_services">
+DLNA Hizmetleri
+</string>
+    <string name="dlna_section_config">
+Yapılandırma
+</string>
+    <string name="dlna_section_identification">
+Kimlik
+</string>
+    <string name="dlna_section_shared_folders">
+Paylaşılan Dizinler
+</string>
+    <string name="dlna_info_notice">
+Yerel Wi-Fi ağınızdaki akıllı TV\\\'lere ve DLNA medya oynatıcılarına fotoğraf, müzik ve video aktarın veya diğer cihazların bu cihaza medya yayınlamasına izin verin.
+</string>
+    <string name="dlna_settings_info_notice">
+Cihazınızın yerel ağda nasıl görüneceğini yapılandırın ve paylaşılacak dizinleri seçin. DLNA medya paylaşımları kesinlikle salt okunurdur.
+</string>
+    <string name="dlna_empty_shared_folders_desc">
+DLNA üzerinden sunmak için dahili depolama, SD kart veya USB klasörlerini seçmek üzere \\\'Klasör Ekle\\\' öğesine dokunun.
+</string>
+
+    <!-- Smart Sort Modernization -->
+    <string name="smart_sort_empty">
+Depolama sürücüsü bulunamadı
+</string>
+    <string name="smart_sort_history_moved">
+Taşındı
+</string>
+    <string name="smart_sort_history_skipped">
+Atlandı
+</string>
+    <string name="smart_sort_history_failed">
+Başarısız
+</string>
+
+    <!-- Rate Us Modernization -->
+    <string name="rate_us_section_rate">
+Puanlama ve Geri Bildirim
+</string>
+    <string name="rate_us_section_support">
+Desteklemenin Diğer Yolları
+</string>
+    <string name="rate_us_support_title">
+Projeyi Destekle
+</string>
+    <string name="rate_us_support_subtitle">
+Projeyi destekleyebilirseniz bahşiş bırakın.
+</string>
+    <string name="rate_us_stars_description">
+5 yıldızlı değerlendirme
+</string>
+
+    <!-- Help & Support Modernization -->
+    <string name="support_section_channels">
+İletişim Kanalları
+</string>
+    <string name="support_section_direct">
+Doğrudan İletişim
+</string>
+    <string name="support_direct_email_title">
+support@kilowatch.co.za
+</string>
+    <string name="support_direct_email_subtitle">
+Geliştirme ekibine doğrudan e-posta gönderin
+</string>
+    <string name="support_direct_email_copied">
+Destek e-postası panoya kopyalandı
+</string>
+
+    <!-- About Modernization -->
+    <string name="about_section_app">
+Uygulama Bilgileri
+</string>
+    <string name="about_section_support">
+Geliştirici ve Bağlantılar
+</string>
+    <string name="about_section_legal">
+Yasal ve Politikalar
+</string>
+    <string name="about_section_acknowledgments">
+Teşekkürler
+</string>
+    <string name="about_legal_title">
+Gizlilik Politikası ve Koşullar
+</string>
+    <string name="about_legal_subtitle">
+Gizlilik politikamızı, hizmet koşullarımızı ve lisanslarımızı inceleyin
+</string>
+    <string name="about_rate_title">
+Puanla ve İncele
+</string>
+    <string name="about_rate_subtitle">
+Google Play\\\'de deneyiminizi paylaşın
+</string>
+    <string name="about_support_title">
+Yardım ve Destek
+</string>
+    <string name="about_support_subtitle">
+Bir sorun bildirin veya özellik isteyin
+</string>
+    <string name="about_email_copied">
+Destek e-postası panoya kopyalandı
+</string>
+
+    <!-- Main Menu Categorized Modernization -->
+    <string name="main_menu_category_storage">
+Depolama
+</string>
+    <string name="main_menu_category_connect">
+Bağlan
+</string>
+    <string name="main_menu_category_sync">
+Klasör Senkronizasyonu
+</string>
+    <string name="main_menu_category_organize">
+Düzenle
+</string>
+    <string name="main_menu_category_utilities">
+Araçlar
+</string>
+    <string name="main_menu_category_security">
+Güvenlik ve Gelişmiş
+</string>
+    <string name="main_menu_category_settings">
+Ayarlar ve Dahası
+</string>
+    <string name="main_menu_layout_modern_categorized">
+Modern Kategorili
+</string>
+    <string name="main_menu_layout_modern_desc">
+Genişletilebilir kategori bölümleri halinde düzenlenmiştir
+</string>
+    <string name="main_menu_layout_classic_grid">
+Klasik Izgara
+</string>
+    <string name="main_menu_layout_classic_grid_desc">
+Düz çok sütunlu ızgara (3 veya 4 sütun)
+</string>
+    <string name="main_menu_layout_classic_list">
+Klasik Liste
+</string>
+    <string name="main_menu_layout_classic_list_desc">
+Düz tek sütunlu liste (Büyük, Orta, Küçük)
+</string>
+    <string name="main_menu_section_items_count">
+%1$d öğe
+</string>
+    <string name="main_menu_section_item_count_single">
+1 öğe
+</string>
+
+    <!-- Reset Category Layout -->
+    <string name="reset_categorized_layout_section">
+Sıfırla
+</string>
+    <string name="reset_categorized_layout_title">
+Kategori Düzenini Sıfırla
+</string>
+    <string name="reset_categorized_layout_desc">
+Kategori sırasını, kutucuk konumlarını ve genişletme durumlarını varsayılana geri yükle
+</string>
+    <string name="reset_categorized_dialog_title">
+Kategori Düzeni Sıfırlansın mı?
+</string>
+    <string name="reset_categorized_dialog_subtitle">
+Fabrika düzenini geri yükle
+</string>
+    <string name="reset_categorized_dialog_msg">
+Bu, tüm kategori başlıklarını, kutucuk konumlarını ve genişletme durumlarını fabrika varsayılanlarına döndürecektir. Özel renk ayarları korunacaktır.
+</string>
+    <string name="reset_categorized_dialog_confirm">
+Varsayılana Sıfırla
+</string>
+    <string name="reset_categorized_success">
+Kategori düzeni varsayılana geri yüklendi
+</string>
 </resources>
+
 
 

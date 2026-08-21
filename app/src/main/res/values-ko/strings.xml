@@ -50,6 +50,15 @@ Ultimate File Manager Pro
     <string name="language_system_default">
 시스템 기본값
 </string>
+    <string name="language_system_default_desc">
+기기 시스템 언어와 일치
+</string>
+    <string name="language_section_system">
+시스템 기본값
+</string>
+    <string name="language_section_available">
+사용 가능한 언어
+</string>
     <string name="settings_list_size_title">
 설정 행 크기
 </string>
@@ -460,6 +469,36 @@ Ultimate File Manager Pro 아이콘
 \n
 파일 또는 폴더를 길게 누르고 별표 아이콘을 탭하여 추가하세요.
 </string>
+    <string name="manage_favorites_empty_title">
+즐겨찾기 없음
+</string>
+    <string name="manage_favorites_empty_desc">
+파일 브라우저에서 파일이나 폴더의 별 아이콘을 눌러 즐겨찾기에 등록하면 여기에서 바로 접근할 수 있습니다.
+</string>
+    <string name="manage_favorites_info_notice">
+즐겨찾기로 등록한 파일과 폴더는 내비게이션 서랍과 빠른 접근 패널에 표시되어 빠르게 이동할 수 있습니다. 휴지통 아이콘을 눌러 즐겨찾기를 제거하세요.
+</string>
+    <string name="manage_favorites_clear_all">
+즐겨찾기 모두 지우기
+</string>
+    <string name="manage_favorites_clear_all_confirm_title">
+즐겨찾기를 모두 지우시겠습니까?
+</string>
+    <string name="manage_favorites_clear_all_confirm_message">
+즐겨찾기 목록에서 모든 항목을 제거하시겠습니까? 실제 파일이나 폴더는 삭제되지 않습니다.
+</string>
+    <string name="manage_favorites_remove_confirm_title">
+즐겨찾기를 제거하시겠습니까?
+</string>
+    <string name="manage_favorites_remove_confirm_message">
+즐겨찾기 목록에서 \"%1$s\"을(를) 제거하시겠습니까?
+</string>
+    <string name="manage_favorites_remove_btn">
+즐겨찾기 제거
+</string>
+    <string name="manage_favorites_cleared_all_toast">
+모든 즐겨찾기가 제거되었습니다
+</string>
     <string name="manage_favorites_removed">
 %1$s이(가) 즐겨찾기에서 제거됨
 </string>
@@ -650,6 +689,21 @@ ADB 필요
 3. \'USB 디버깅\' 활성화\n
 \n
 개발자 옵션이 보이지 않으면 \'정보\'로 이동하여 \'빌드 번호\'를 7번 누르세요.\"
+</string>
+    <string name="adb_enable_desc">
+스크린샷을 캡처하려면 TV에서 USB 디버깅을 사용 설정해야 합니다.
+</string>
+    <string name="adb_step_1">
+1. Android TV에서 설정을 엽니다.
+</string>
+    <string name="adb_step_2">
+2. 기기 기본 설정 → 개발자 옵션으로 이동합니다.
+</string>
+    <string name="adb_step_3">
+3. \"USB 디버깅\"을 켭니다.
+</string>
+    <string name="adb_step_tip">
+팁: 개발자 옵션이 숨겨져 있으면 설정 → 기기 정보로 이동하여 \"빌드 번호\"를 7번 누릅니다.
 </string>
     <string name="adb_pairing_required">
 ADB 페어링 필요
@@ -1061,6 +1115,24 @@ APK
 %1$s 절약
 </string>
     <!-- Section headers inside Overview -->
+    <string name="analyzer_info_notice">
+디스크 사용량을 검사하고, 저장 공간을 카테고리별로 확인하며, 대용량 파일, 중복 파일, 정리 제안을 찾아보세요.
+</string>
+    <string name="analyzer_section_storage_breakdown">
+저장 공간 분석
+</string>
+    <string name="analyzer_section_top_folders">
+주요 폴더
+</string>
+    <string name="analyzer_section_app_usage">
+앱 저장 공간 사용량
+</string>
+    <string name="analyzer_empty_state_desc">
+이 분석 카테고리에 해당하는 항목이 없습니다.
+</string>
+    <string name="analyzer_action_review">
+검토 및 정리
+</string>
     <string name="analyzer_top_folders">
 크기별 상위 폴더
 </string>
@@ -1273,14 +1345,29 @@ PIN 확인
 영구 삭제
 </string>
 
+    <string name="theme_section_color_palette">
+색상 팔레트
+</string>
+    <string name="theme_section_mode">
+테마 모드
+</string>
     <string name="theme_light">
 라이트
+</string>
+    <string name="theme_light_desc">
+깔끔하고 밝은 인터페이스
 </string>
     <string name="theme_dark">
 다크
 </string>
+    <string name="theme_dark_desc">
+어두운 환경에 편안한 다크 테마
+</string>
     <string name="theme_system">
 시스템 기본값
+</string>
+    <string name="theme_system_desc">
+시스템의 낮/밤 일정에 따라 변경
 </string>
     <string name="theme_amoled">
 AMOLED 블랙
@@ -1323,6 +1410,30 @@ Material You
     <string name="font_size_preview">
 빠른 갈색 여우가 점프한다
 </string>
+    <string name="font_size_small_desc">
+85% • 더 높은 화면 밀도를 위한 작은 크기
+</string>
+    <string name="font_size_normal_desc">
+100% • 기본 권장 글꼴 크기
+</string>
+    <string name="font_size_large_desc">
+115% • 가독성 향상을 위한 확대 크기
+</string>
+    <string name="font_size_preview_title">
+글꼴 실시간 미리보기
+</string>
+    <string name="font_size_preview_sample_heading">
+Ultimate File Manager Pro
+</string>
+    <string name="font_size_preview_sample_body">
+빠른 갈색 여우가 게으른 개를 뛰어넘습니다. Android 및 TV용 고급 사용자를 위한 듀얼 창 파일 관리자.
+</string>
+    <string name="font_size_section_preview">
+실시간 미리보기
+</string>
+    <string name="font_size_section_options">
+텍스트 크기 옵션
+</string>
 
     <!-- Storage Renaming -->
     <string name="settings_storage_rename_title">
@@ -1331,11 +1442,56 @@ Material You
     <string name="settings_storage_rename_subtitle">
 USB 및 로컬 저장소 드라이브 이름 바꾸기
 </string>
+    <string name="storage_rename_section_connected">
+연결된 저장 드라이브
+</string>
+    <string name="storage_rename_section_offline">
+오프라인 / 연결이 끊긴 드라이브
+</string>
+    <string name="storage_rename_original_details">
+원본: %1$s • %2$s
+</string>
+    <string name="storage_rename_info_notice">
+내부 저장소, SD 카드, USB 드라이브에 지정된 사용자 지정 라벨입니다. 드라이브를 눌러 표시 이름을 변경하거나 초기화할 수 있습니다.
+</string>
+    <string name="storage_rename_empty_title">
+저장 드라이브를 찾을 수 없습니다
+</string>
+    <string name="storage_rename_empty_desc">
+연결된 내부 및 외부 저장 드라이브가 여기에 표시되어 사용자 지정 이름을 지정하거나 식별할 수 있습니다.
+</string>
     <string name="rename_drive_dialog_title">
 드라이브 이름 바꾸기
 </string>
+    <string name="storage_rename_dialog_subtitle">
+%1$s의 사용자 지정 이름을 입력하세요.
+</string>
     <string name="custom_name_hint">
 새 드라이브 이름
+</string>
+    <string name="storage_rename_reset_btn">
+기본값으로 초기화
+</string>
+    <string name="storage_rename_save_btn">
+사용자 지정 이름 저장
+</string>
+    <string name="storage_rename_saved_toast">
+드라이브 이름이 \"%1$s\"(으)로 변경되었습니다.
+</string>
+    <string name="storage_rename_reset_toast">
+드라이브 이름이 원래 이름으로 초기화되었습니다
+</string>
+    <string name="storage_rename_clear_all">
+모든 드라이브 이름 초기화
+</string>
+    <string name="storage_rename_clear_all_confirm_title">
+모든 드라이브 이름을 초기화하시겠습니까?
+</string>
+    <string name="storage_rename_clear_all_confirm_message">
+모든 사용자 지정 드라이브 라벨을 기본 시스템 이름으로 초기화하시겠습니까?
+</string>
+    <string name="storage_rename_cleared_all_toast">
+모든 드라이브 이름이 기본값으로 초기화되었습니다
 </string>
     <string name="reset_action">
 초기화
@@ -1428,11 +1584,29 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
     <string name="start_screen_storage_browser">
 주 메뉴 (기본값)
 </string>
+    <string name="start_screen_storage_browser_desc">
+모든 저장소와 빠른 실행 타일이 있는 기본 홈 화면
+</string>
     <string name="start_screen_twin_window">
 이중 창
 </string>
+    <string name="start_screen_twin_window_desc">
+나란히 보이는 듀얼 창 파일 관리자
+</string>
     <string name="start_screen_file_server">
 파일 서버
+</string>
+    <string name="start_screen_file_server_desc">
+HTTP, FTP, WebDAV 파일 서버 제어
+</string>
+    <string name="start_screen_section_main">
+주요 화면
+</string>
+    <string name="start_screen_section_storages">
+직접 열기 드라이브
+</string>
+    <string name="start_screen_storage_desc">
+시작 시 이 드라이브를 직접 엽니다
 </string>
 
     <!-- Analytics Toggle -->
@@ -1507,6 +1681,12 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
 </string>
 
     <!-- Open Source Licenses -->
+    <string name="policy_section_agreements">
+정책 및 약관
+</string>
+    <string name="policy_section_attributions">
+고지 및 라이선스
+</string>
     <string name="policy_licenses_button">
 오픈소스 라이선스
 </string>
@@ -1640,8 +1820,38 @@ APK
     <string name="default_apps_empty">
 설정된 기본 앱이 없습니다.
 </string>
+    <string name="default_apps_empty_title">
+기본 앱이 구성되지 않음
+</string>
+    <string name="default_apps_empty_desc">
+파일을 \"항상\"으로 열면 이곳에 표시되어 파일 연결 규칙을 관리하거나 초기화할 수 있습니다.
+</string>
+    <string name="default_apps_info_notice">
+특정 뷰어나 앱으로 자동 열리도록 설정된 파일 형식입니다. 휴지통 아이콘을 눌러 연결 규칙을 초기화할 수 있습니다.
+</string>
     <string name="default_apps_clear_all">
 모든 기본값 지우기
+</string>
+    <string name="default_apps_clear_all_confirm_title">
+기본 앱 모두 지우기
+</string>
+    <string name="default_apps_clear_all_confirm_message">
+모든 파일 연결 설정을 지우시겠습니까? 파일을 열 때 앱을 선택하라는 메시지가 표시됩니다.
+</string>
+    <string name="default_app_remove_confirm_title">
+.%1$s 연결을 초기화하시겠습니까?
+</string>
+    <string name="default_app_remove_confirm_message">
+.%1$s(%2$s)의 기본 앱을 초기화하시겠습니까? 다음에 이 파일 형식을 열 때 앱을 선택하라는 메시지가 표시됩니다.
+</string>
+    <string name="default_app_remove_btn">
+기본값 초기화
+</string>
+    <string name="default_apps_removed_toast">
+.%1$s의 기본값 초기화
+</string>
+    <string name="default_apps_cleared_all_toast">
+모든 기본 앱 설정이 초기화되었습니다
 </string>
     <string name="default_apps_extension_label">
 파일 형식: %1$s
@@ -1972,6 +2182,15 @@ UFM 슬라이드 쇼
     <string name="all_drives">
 모든 드라이브
 </string>
+    <string name="search_select_location_title">
+검색 위치
+</string>
+    <string name="search_select_location_subtitle">
+검색할 저장 위치를 선택하세요
+</string>
+    <string name="search_all_drives_subtitle">
+연결된 모든 저장소에서 검색
+</string>
 
     <!-- Category detail -->
     <string name="category_files_title">
@@ -2117,6 +2336,9 @@ SMB, FTP 등
     <string name="network_shares_subtitle">
 SMB · FTP
 </string>
+    <string name="network_shares_info_notice">
+로컬 네트워크의 SMB, FTP, SFTP, SCP, NFS 공유에 연결하여 파일을 원활하게 탐색, 전송, 정리할 수 있습니다.
+</string>
     <string name="network_add_share">
 공유 추가
 </string>
@@ -2162,6 +2384,9 @@ DLNA
 </string>
     <string name="network_field_port">
 포트 (기본값은 비워둠)
+</string>
+    <string name="network_section_credentials">
+자격 증명 및 인증
 </string>
     <string name="network_field_username">
 사용자 이름 (비워두면 게스트)
@@ -2681,6 +2906,37 @@ WiFi 전용
 %1$s — %2$s 버전 사용
 </string>
 
+    <string name="configure_sync_folders_schedule">
+폴더 및 동기화 일정 구성
+</string>
+    <string name="sync_section_profile_direction">
+프로필 및 방향
+</string>
+    <string name="sync_section_folders">
+폴더 및 위치
+</string>
+    <string name="sync_section_schedule">
+일정 및 자동화
+</string>
+    <string name="sync_section_conflict">
+충돌 처리 및 삭제
+</string>
+    <string name="sync_section_filtering">
+파일 필터링 및 태그
+</string>
+    <string name="general_settings">
+일반 설정
+</string>
+    <string name="schedule_and_triggers">
+일정 및 트리거
+</string>
+    <string name="schedule_mode">
+일정 모드
+</string>
+    <string name="options">
+옵션
+</string>
+
     <!-- Generic -->
     <string name="cancel">
 취소
@@ -2885,6 +3141,58 @@ NFS 서버 검색
 복원 위치: %1$s
 </string>
 
+    <!-- Add Options Dialog -->
+    <string name="add_menu_options_title">
+새로 만들기
+</string>
+    <string name="add_menu_options_desc">
+주 메뉴에 추가할 항목을 선택하세요.
+</string>
+    <string name="option_create_header_title">
+새 헤더 만들기
+</string>
+    <string name="option_create_header_desc">
+타일을 정리하기 위해 사용자 지정 섹션 헤더를 추가합니다
+</string>
+    <string name="option_create_tile_title">
+사용자 지정 타일 만들기
+</string>
+    <string name="option_create_tile_desc">
+바로가기와 폴더를 그룹화하는 사용자 지정 타일을 추가합니다
+</string>
+
+    <!-- Custom Category Headers -->
+    <string name="custom_header_create_title">
+새 헤더 만들기
+</string>
+    <string name="custom_header_create_desc">
+이 카테고리 헤더의 제목을 입력하세요.
+</string>
+    <string name="custom_header_name_hint">
+헤더 이름 (필수)
+</string>
+    <string name="custom_header_name_required">
+헤더 이름은 필수입니다
+</string>
+    <string name="custom_header_created">
+카테고리 헤더가 생성되었습니다
+</string>
+    <string name="custom_header_add_button">
+헤더 추가
+</string>
+    <string name="custom_header_delete_title">
+카테고리 헤더 삭제
+</string>
+    <string name="custom_header_delete_confirm">
+\"%1$s\"을(를) 삭제하시겠습니까?
+</string>
+    <string name="custom_header_delete_warning">
+내부의 모든 타일은 원래 위치로 이동됩니다.
+</string>
+    <string name="custom_header_deleted">
+카테고리 헤더 \"%1$s\"이(가) 삭제되었습니다.
+</string>
+
     <!-- Custom Tiles -->
     <string name="custom_tile_create_title">
 사용자 타일 만들기
@@ -3032,6 +3340,12 @@ NFS 서버 검색
     <string name="tile_color_message_select">
 선택을 누른 후 타일을 탭하면 색상 선택기가 열립니다.
 </string>
+    <string name="tile_color_tip_title">
+타일 색상 사용자 지정
+</string>
+    <string name="tile_color_tip_desc">
+홈 화면에서 저장 드라이브 또는 기능 타일을 눌러 색상 팔레트를 맞춤 설정하세요.
+</string>
     <string name="tile_color_button_select">
 타일 선택
 </string>
@@ -3148,6 +3462,9 @@ UFM 색상 코드
 </string>
     <string name="storage_indexer_delete_records">
 인덱싱된 레코드 삭제
+</string>
+    <string name="storage_indexer_delete_records_desc">
+이 저장소의 색인 데이터베이스 지우기
 </string>
     <string name="storage_indexer_not_now">
 이 저장소 무시 (나중에)
@@ -3403,14 +3720,41 @@ UFM 색상 코드
     <string name="layout_grid">
 격자
 </string>
+    <string name="layout_list_size_section">
+목록 레이아웃 크기
+</string>
+    <string name="layout_size_large">
+크게
+</string>
+    <string name="layout_size_large_desc">
+넓은 행과 큰 아이콘
+</string>
+    <string name="layout_size_medium">
+보통
+</string>
+    <string name="layout_size_medium_desc">
+표준 균형 행 높이
+</string>
+    <string name="layout_size_small">
+작게
+</string>
+    <string name="layout_size_small_desc">
+높은 밀도의 조밀한 행
+</string>
     <string name="column_count">
 열
 </string>
     <string name="columns_4">
 4열
 </string>
+    <string name="columns_4_desc">
+4열 조밀한 격자 레이아웃
+</string>
     <string name="columns_3">
 3열
+</string>
+    <string name="columns_3_desc">
+3열 넉넉한 격자 레이아웃
 </string>
 
     <!-- Long Press Duration Settings -->
@@ -3426,6 +3770,114 @@ UFM 색상 코드
 </string>
     <string name="settings_toolbar_icons_subtitle">
 선택 작업 표시줄 사용자 지정
+</string>
+    <string name="settings_toolbar_icons_info_notice">
+파일이나 폴더를 선택했을 때 도구 모음에 표시되는 작업 버튼을 사용자 지정할 수 있습니다. 사용하지 않는 작업을 끄면 작업 공간을 깔끔하고 효율적으로 유지할 수 있습니다.
+</string>
+    <string name="settings_toolbar_icons_reset_defaults">
+기본값으로 초기화
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_title">
+도구 모음 아이콘을 초기화하시겠습니까?
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_message">
+선택 도구 모음 아이콘을 모두 기본 활성 상태로 초기화하시겠습니까?
+</string>
+    <string name="settings_toolbar_icons_reset_toast">
+도구 모음 아이콘이 기본값으로 초기화되었습니다
+</string>
+    <string name="toolbar_section_file_operations">
+파일 작업
+</string>
+    <string name="toolbar_section_security">
+보안 및 개인정보
+</string>
+    <string name="toolbar_section_selection_navigation">
+선택 및 즐겨찾기
+</string>
+    <string name="toolbar_section_tools_media">
+아카이브, 미디어 및 유틸리티
+</string>
+    <string name="toolbar_desc_create_new">
+새 파일, 폴더 또는 아카이브 만들기
+</string>
+    <string name="toolbar_desc_copy">
+선택한 항목을 클립보드로 복제
+</string>
+    <string name="toolbar_desc_move">
+이동을 위해 선택한 항목 잘라내기
+</string>
+    <string name="toolbar_desc_rename">
+선택한 파일 또는 폴더 이름 바꾸기
+</string>
+    <string name="toolbar_desc_share">
+시스템 공유 시트로 파일 보내기
+</string>
+    <string name="toolbar_desc_delete">
+항목을 영구 삭제하거나 휴지통으로 이동
+</string>
+    <string name="toolbar_desc_copy_encrypt">
+항목을 암호화하여 복사
+</string>
+    <string name="toolbar_desc_move_encrypt">
+항목을 암호화하여 이동
+</string>
+    <string name="toolbar_desc_protect">
+읽기 전용 또는 보호 플래그 설정
+</string>
+    <string name="toolbar_desc_unprotect">
+보호 잠금 해제
+</string>
+    <string name="toolbar_desc_hide">
+항목을 숨김으로 표시
+</string>
+    <string name="toolbar_desc_unhide">
+숨김 파일 표시
+</string>
+    <string name="toolbar_desc_select_all">
+현재 창의 모든 항목 선택
+</string>
+    <string name="toolbar_desc_invert_selection">
+모든 항목의 선택 상태 전환
+</string>
+    <string name="toolbar_desc_favorite">
+별표 즐겨찾기에 추가 또는 제거
+</string>
+    <string name="toolbar_desc_pin">
+빠른 접근 패널에 항목 고정
+</string>
+    <string name="toolbar_desc_unpin">
+빠른 접근에서 항목 고정 해제
+</string>
+    <string name="toolbar_desc_compress">
+ZIP 또는 7Z 아카이브 만들기
+</string>
+    <string name="toolbar_desc_extract">
+현재 폴더에서 아카이브 압축 풀기
+</string>
+    <string name="toolbar_desc_compress_image">
+이미지 파일 크기 최적화
+</string>
+    <string name="toolbar_desc_retrigger_thumbnails">
+캐시된 이미지 및 동영상 미리보기 다시 만들기
+</string>
+    <string name="toolbar_desc_create_gif">
+이미지를 모아 애니메이션 GIF 만들기
+</string>
+    <string name="toolbar_desc_exif_tools">
+메타데이터 정리 및 사진 일괄 이름 바꾸기
+</string>
+    <string name="toolbar_desc_set_home_wallpaper">
+선택한 이미지를 홈 화면 배경화면으로 설정
+</string>
+    <string name="toolbar_desc_set_lock_wallpaper">
+선택한 이미지를 잠금 화면 배경화면으로 설정
+</string>
+    <string name="toolbar_desc_duplicate_finder">
+중복 파일 검사 및 감지
+</string>
+    <string name="toolbar_desc_large_files_finder">
+과도한 저장 공간을 차지하는 파일 식별
 </string>
     <string name="long_press_duration_seconds">
 %1$.1f초
@@ -3561,6 +4013,54 @@ PIN 사용 (페어링)
     <string name="connect_to_android_device">
 Android 기기에 연결
 </string>
+    <string name="adb_terminal_empty_title">
+ADB 셸 준비됨
+</string>
+    <string name="adb_terminal_empty_subtitle">
+Android 기기 또는 TV에 연결하여 셸 명령을 실행하고, 패키지를 검사하고, 시스템 프로세스를 모니터링하세요.
+</string>
+    <string name="adb_terminal_clear">
+콘솔 지우기
+</string>
+    <string name="adb_terminal_copy">
+출력 복사
+</string>
+    <string name="adb_terminal_cleared">
+터미널 출력이 지워졌습니다.
+</string>
+    <string name="adb_terminal_copied">
+모든 출력이 클립보드에 복사되었습니다.
+</string>
+    <string name="adb_quick_commands">
+빠른 명령
+</string>
+    <string name="adb_host_label">
+대상 기기 IP 주소
+</string>
+    <string name="adb_host_hint">
+192.168.1.50 또는 127.0.0.1
+</string>
+    <string name="adb_pairing_guide_title">
+3단계 무선 페어링 가이드
+</string>
+    <string name="adb_pairing_guide_step1">
+대상 기기에서 개발자 옵션 및 무선 디버깅을 활성화하세요.
+</string>
+    <string name="adb_pairing_guide_step2">
+무선 디버깅 설정에서 “페어링 코드로 기기 페어링”을 탭하세요.
+</string>
+    <string name="adb_pairing_guide_step3">
+아래에 표시된 IP, 페어링 포트, 6자리 PIN 코드를 입력하세요.
+</string>
+    <string name="adb_discovery_title">
+네트워크 기기 자동 검색
+</string>
+    <string name="adb_manual_title">
+대상 IP 및 포트 설정
+</string>
+    <string name="adb_pin_title">
+6자리 페어링 코드
+</string>
     <string name="search_apps">
 앱 검색...
 </string>
@@ -3576,6 +4076,36 @@ TV 연결 관리
     <string name="no_devices_paired_yetntap_to">
 아직 페어링된 기기가 없습니다.\n
 +를 눌러 TV를 연결하세요.
+</string>
+    <string name="link_tv">
+TV 연결
+</string>
+    <string name="link_tv_button">
+새 TV 연결
+</string>
+    <string name="paired_tvs_empty_title">
+아직 연결된 TV가 없습니다.
+</string>
+    <string name="paired_tvs_empty_subtitle">
+UFM이 실행 중인 Android TV에 휴대폰을 연결하여 무선 파일 전송, 저장소 관리, 원격 액세스를 이용하세요.
+</string>
+    <string name="tv_pairing_guide_title">
+3단계 빠른 가이드
+</string>
+    <string name="tv_pairing_guide_step1">
+Android TV에서 UFM을 여세요.
+</string>
+    <string name="tv_pairing_guide_step2">
+TV 기본 메뉴에서 “페어링된 휴대폰”을 선택하세요.
+</string>
+    <string name="tv_pairing_guide_step3">
+TV에서 “모바일 앱 연결”을 선택하여 4자리 PIN을 받으세요.
+</string>
+    <string name="paired_status_connected">
+연결됨
+</string>
+    <string name="paired_status_disconnected">
+연결 끊김
 </string>
     <string name="paired_phones">
 페어링된 휴대폰
@@ -4443,8 +4973,14 @@ USB 디버깅 필요
     <string name="take_screenshot">
 스크린샷 찍기
 </string>
+    <string name="take_screenshot_subtitle">
+현재 TV 화면을 기기로 캡처합니다.
+</string>
     <string name="record_screen">
 화면 녹화
+</string>
+    <string name="record_screen_subtitle">
+오디오 옵션으로 TV 화면 비디오를 녹화합니다.
 </string>
     <string name="record_screen_audio_title">
 TV 오디오
@@ -5626,13 +6162,43 @@ APK 업로드 중…
     <string name="sideload_apk">
 APK 사이드로드
 </string>
+    <string name="sideload_apk_subtitle">
+단일 APK 패키지를 TV에 설치합니다.
+</string>
     <string name="sideload_xapk">
 XAPK 사이드로드
+</string>
+    <string name="sideload_xapk_subtitle">
+번들 XAPK/APKM 앱을 TV에 설치합니다.
+</string>
+    <string name="sideload_dialog_desc_apk">
+기기에 있는 Android 애플리케이션 패키지(.apk)를 페어링된 TV에 설치합니다.
+</string>
+    <string name="sideload_dialog_desc_xapk">
+기기에 있는 번들 애플리케이션 패키지(.xapk / .apkm)를 페어링된 TV에 설치합니다.
+</string>
+    <string name="sideload_step_1_apk">
+1. 기기 저장소에서 .apk 파일을 선택합니다.
+</string>
+    <string name="sideload_step_1_xapk">
+1. 기기 저장소에서 .xapk / .apkm 패키지를 선택합니다.
+</string>
+    <string name="sideload_step_2">
+2. UFM이 패키지를 TV로 무선 전송합니다.
+</string>
+    <string name="sideload_step_3">
+3. TV 화면의 설치 안내를 확인하여 완료합니다.
+</string>
+    <string name="sideload_choose_file">
+파일 선택
 </string>
 
     <!-- Transfer Settings Feature -->
     <string name="transfer_settings">
 설정 전송
+</string>
+    <string name="transfer_settings_action_subtitle">
+설정 및 네트워크 공유를 TV로 전송
 </string>
     <string name="transfer_settings_select_all">
 모두 선택
@@ -6139,6 +6705,9 @@ USB 드라이브 (%1$s)
 </string>
     <string name="smart_sort_tile_subtitle">
 파일을 카테고리로 정리
+</string>
+    <string name="smart_sort_info_notice">
+파일을 유형, 크기, 날짜 또는 사용자 지정 규칙에 따라 구조화된 폴더로 자동 분류하고 정리합니다. 시작하려면 아래에서 저장 드라이브 또는 공유를 선택하세요.
 </string>
     <string name="smart_sort_config">
 스마트 정렬 설정
@@ -6676,6 +7245,9 @@ SMB / FTP 설정
 </string>
     <string name="sync_disabled">
 동기화 비활성화됨
+</string>
+    <string name="sync_delete_profile_confirm_msg">
+%1$s을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
 </string>
     <string name="profile_deleted">
 프로필 삭제됨
@@ -7233,6 +7805,12 @@ APNG4Android (com.github.penfeizhou.android.animation)
     <string name="online_storages_subtitle">
 OneDrive, Google Drive 등
 </string>
+    <string name="online_storages_info_notice">
+OneDrive, Google Drive, Dropbox, Box, AWS S3, WebDAV, RClone 등의 클라우드 저장소 제공업체에 연결하여 파일을 탐색, 전송, 동기화하세요.
+</string>
+    <string name="online_storage_delete_confirm_body">
+%1$s에 대한 연결을 제거하시겠습니까?
+</string>
     <string name="opening_online_storages">
 온라인 저장소 여는 중…
 </string>
@@ -7547,6 +8125,111 @@ UFM이 고급 파일 작업을 수행하려면 권한 부여가 필요합니다.
 </string>
     <string name="shizuku_adb_not_connected">
 ADB가 연결되지 않았습니다. ADB 터미널을 통해 연결하여 고급 접근 권한을 자동으로 활성화하세요.
+</string>
+    <string name="shizuku_header_subtitle">
+Shizuku 및 Shevery 서비스
+</string>
+    <string name="shizuku_status_not_installed_desc">
+Shizuku 또는 Shevery를 설치하여 루트 없이 보호된 Android/data 폴더와 높은 권한 작업을 잠금 해제하세요.
+</string>
+    <string name="shizuku_status_stopped_desc">
+높은 권한 서비스가 설치되어 있지만 현재 실행 중이 아닙니다. 무선 디버깅 또는 관리자 앱을 통해 서비스를 시작하세요.
+</string>
+    <string name="shizuku_status_unauthorized_desc">
+서비스가 실행 중이지만 UFM이 시스템 수준 API에 액세스하려면 인증이 필요합니다.
+</string>
+    <string name="shizuku_status_active_desc">
+높은 권한 서비스가 모든 권한과 함께 활성화되었습니다. 보호된 폴더와 높은 권한 작업이 준비되었습니다.
+</string>
+    <string name="shizuku_badge_unavailable">
+사용 불가
+</string>
+    <string name="shizuku_badge_stopped">
+비활성
+</string>
+    <string name="shizuku_badge_auth_needed">
+인증 필요
+</string>
+    <string name="shizuku_badge_connected">
+연결됨
+</string>
+    <string name="shizuku_section_capabilities">
+높은 권한 기능
+</string>
+    <string name="shizuku_feature_protected_title">
+보호된 폴더
+</string>
+    <string name="shizuku_feature_protected_desc">
+Android/data 및 obb에 대한 전체 읽기/쓰기 액세스
+</string>
+    <string name="shizuku_feature_speed_title">
+고속 작업
+</string>
+    <string name="shizuku_feature_speed_desc">
+루트 없이 직접 시스템 수준 I/O
+</string>
+    <string name="shizuku_feature_security_title">
+루트 불필요 및 안전
+</string>
+    <string name="shizuku_feature_security_desc">
+표준 Android 권한 API 브리지
+</string>
+    <string name="shizuku_section_managers">
+사용 가능한 관리자
+</string>
+    <string name="shizuku_manager_shizuku_title">
+Shizuku
+</string>
+    <string name="shizuku_manager_shizuku_desc">
+GitHub의 표준 높은 권한 서비스
+</string>
+    <string name="shizuku_manager_shevery_title">
+Shevery
+</string>
+    <string name="shizuku_manager_shevery_desc">
+가볍고 빠른 대안
+</string>
+    <string name="shizuku_download_shizuku_apk">
+Shizuku 다운로드 (APK)
+</string>
+    <string name="shizuku_download_shevery_apk">
+Shevery 다운로드 (APK)
+</string>
+    <string name="shizuku_open_manager">
+%1$s 관리자 열기
+</string>
+    <string name="shizuku_section_setup_guide">
+3단계 설정 가이드
+</string>
+    <string name="shizuku_step_1">
+1. APK 설치
+</string>
+    <string name="shizuku_step_2">
+2. 서비스 시작
+</string>
+    <string name="shizuku_step_3">
+3. UFM 인증
+</string>
+    <string name="shizuku_service_info_title">
+서비스 정보
+</string>
+    <string name="shizuku_service_provider_label">
+서비스 제공자
+</string>
+    <string name="shizuku_service_mode_label">
+연결 모드
+</string>
+    <string name="shizuku_service_permission_label">
+권한 수준
+</string>
+    <string name="shizuku_service_mode_adb">
+ADB / 무선 디버깅
+</string>
+    <string name="shizuku_permission_granted_api">
+승인됨 (API v23)
+</string>
+    <string name="shizuku_recheck_status">
+상태 다시 확인
 </string>
     <string name="shizuku_manager_open_error">
 관리자를 열 수 없습니다. Shizuku 또는 Shevery를 먼저 설치하세요.
@@ -8714,6 +9397,21 @@ TXT
     <string name="notes_folder_title">
 내 메모
 </string>
+    <string name="export_txt_desc">
+일반 텍스트 문서 (.txt)
+</string>
+    <string name="export_csv_desc">
+쉼표로 구분된 값 (.csv)
+</string>
+    <string name="export_pdf_desc">
+PDF 문서 (.pdf)
+</string>
+    <string name="notepad_select_format_desc">
+문서에 대한 내보내기 형식을 선택하세요.
+</string>
+    <string name="notepad_destination_label">
+저장 위치
+</string>
     <string name="notepad_select_export_format">
 다른 이름으로 저장
 </string>
@@ -8764,11 +9462,35 @@ TXT
     <string name="settings_apk_extract_title">
 APK / XAPK 추출
 </string>
+    <string name="settings_apk_extract_subtitle">
+앱 추출 및 매니페스트 메타데이터 구성
+</string>
     <string name="settings_apk_extract_subtitle_off">
 표준 추출만
 </string>
     <string name="settings_apk_extract_subtitle_on">
 향상된
+</string>
+    <string name="settings_apk_extract_info_notice">
+설치된 앱에 대한 추출 기본 설정을 구성합니다. 활성화하면 UFM은 추출된 APK 및 XAPK 파일과 함께 앱 아이콘과 JSON 메타데이터를 저장합니다.
+</string>
+    <string name="settings_apk_extract_reset_defaults">
+기본값으로 재설정
+</string>
+    <string name="settings_apk_extract_reset_confirm_title">
+추출 설정을 재설정하시겠습니까?
+</string>
+    <string name="settings_apk_extract_reset_confirm_message">
+모든 APK 및 XAPK 추출 설정과 메타데이터 필드를 기본값으로 재설정하시겠습니까?
+</string>
+    <string name="settings_apk_extract_reset_toast">
+추출 설정이 기본값으로 재설정되었습니다.
+</string>
+    <string name="settings_apk_extract_metadata_header">
+JSON에 포함할 메타데이터 필드
+</string>
+    <string name="settings_apk_extract_section_general">
+추출 기능
 </string>
     <string name="apk_extract_master_title">
 향상된 APK/XAPK 추출
@@ -8794,44 +9516,86 @@ JSON에 포함할 메타데이터 필드
     <string name="field_extracted_date">
 추출 날짜
 </string>
+    <string name="field_extracted_date_desc">
+파일이 추출된 타임스탬프 (extracted_date)
+</string>
     <string name="field_package_name">
 패키지 이름
+</string>
+    <string name="field_package_name_desc">
+고유 Android 애플리케이션 ID (package_name)
 </string>
     <string name="field_version_name">
 버전 이름
 </string>
+    <string name="field_version_name_desc">
+사용자에게 표시되는 버전 문자열 (version_name)
+</string>
     <string name="field_version_code">
 버전 코드
+</string>
+    <string name="field_version_code_desc">
+내부 숫자 버전 정수 (version_code)
 </string>
     <string name="field_label">
 앱 레이블
 </string>
+    <string name="field_label_desc">
+애플리케이션의 표시 이름 (label)
+</string>
     <string name="field_install_time">
 설치 날짜
+</string>
+    <string name="field_install_time_desc">
+기기에서 원래 설치된 타임스탬프 (install_time)
 </string>
     <string name="field_last_update_time">
 마지막 업데이트 날짜
 </string>
+    <string name="field_last_update_time_desc">
+기기에서 마지막 업데이트 타임스탬프 (last_update_time)
+</string>
     <string name="field_target_sdk">
 대상 SDK
+</string>
+    <string name="field_target_sdk_desc">
+대상 Android API 버전 (target_sdk)
 </string>
     <string name="field_min_sdk">
 최소 SDK
 </string>
+    <string name="field_min_sdk_desc">
+최소 요구 Android API 버전 (min_sdk)
+</string>
     <string name="field_app_size">
 앱 크기
+</string>
+    <string name="field_app_size_desc">
+설치된 앱의 전체 크기(바이트) (app_size)
 </string>
     <string name="field_source_dir">
 소스 디렉터리
 </string>
+    <string name="field_source_dir_desc">
+기본 APK의 파일 시스템 디렉터리 경로 (source_dir)
+</string>
     <string name="field_split_apks">
 분할 APK
+</string>
+    <string name="field_split_apks_desc">
+분할 구성 APK 경로 목록 (split_apks)
 </string>
     <string name="field_has_obb">
 OBB 있음
 </string>
+    <string name="field_has_obb_desc">
+OBB 확장 데이터 존재 여부 (has_obb)
+</string>
     <string name="field_permissions">
 권한
+</string>
+    <string name="field_permissions_desc">
+요청된 매니페스트 권한 목록 (permissions)
 </string>
     <string name="extracts_subtitle_files">
 파일(들)
@@ -8980,6 +9744,45 @@ FTP 서버 프로필
 </string>
     <string name="backup_import_details_title">
 가져오기 미리보기
+</string>
+    <string name="backup_restore_notice">
+설정, 사용자 지정 타일, 네트워크 공유를 내보낼 수 있는 백업 파일을 만들거나 이전에 내보낸 백업 아카이브에서 복원하세요.
+</string>
+    <string name="backup_restore_section_actions">
+작업
+</string>
+    <string name="backup_export_notice">
+이 백업 아카이브에 포함할 구성 범주와 구성 요소를 선택하세요.
+</string>
+    <string name="backup_import_notice">
+이 아카이브에서 찾은 구성 범주를 검토하세요. 복원하면 이러한 설정이 적용되고 앱이 다시 시작됩니다.
+</string>
+    <string name="backup_import_password_desc">
+이 백업 파일은 비밀번호로 암호화되어 있습니다. 아래에 비밀번호를 입력하여 내용을 해독하고 검토하세요.
+</string>
+    <string name="backup_password_dialog_desc">
+선택적으로 AES-256 암호화로 백업 파일을 보호하세요. 비밀번호 설정을 건너뛰면 파일이 암호화되지 않은 상태로 저장됩니다.
+</string>
+    <string name="backup_skip_confirm_desc">
+암호화하지 않고 저장하면 백업 파일에 접근할 수 있는 사람이 내보낸 설정과 구성을 읽을 수 있습니다. 비밀번호 없이 계속하시겠습니까?
+</string>
+    <string name="backup_import_guide_title">
+설정 가져오기
+</string>
+    <string name="backup_import_guide_subtitle">
+백업 파일 선택
+</string>
+    <string name="backup_import_guide_msg">
+기기 저장소에서 내보낸 백업 아카이브(.ufmconfig)를 선택하세요. 설정, 네트워크 공유, 사용자 지정 타일, 기본 설정이 복원됩니다.
+</string>
+    <string name="backup_import_guide_format_label">
+지원되는 아카이브 형식
+</string>
+    <string name="backup_import_guide_format_val">
+*.ufmconfig 파일
+</string>
+    <string name="backup_import_guide_btn_browse">
+백업 파일 선택
 </string>
 
     <!-- Auto Backup -->
@@ -9189,6 +9992,9 @@ AMOLED
 </string>
     <string name="category_main_menu_tiles">
 메인 메뉴 타일
+</string>
+    <string name="category_icons_count">
+%1$d 아이콘 포함
 </string>
     <string name="icon_file_generic">
 일반 파일
@@ -9470,6 +10276,12 @@ XML / 마크업
 </string>
     <string name="icon_status_shield_alert">
 방패 경고
+</string>
+    <string name="icon_status_customized">
+사용자 지정됨
+</string>
+    <string name="icon_status_default">
+기본값
 </string>
     <string name="icon_view_grid_small">
 작은 격자
@@ -9858,6 +10670,26 @@ APK 추출 설정
 건너뛰기 (암호화되지 않음)
 </string>
 
+    <!-- Theme pack import instructions -->
+    <string name="theme_import_instructions_title">
+아이콘 팩 가져오기
+</string>
+    <string name="theme_import_instructions_desc">
+이전에 내보낸 .ufmtheme 파일에서 사용자 지정 아이콘과 타일 색상을 가져옵니다.
+</string>
+    <string name="theme_import_step_select">
+저장소에서 .ufmtheme 파일을 찾아 선택하세요.
+</string>
+    <string name="theme_import_step_password">
+팩이 보호된 경우 해독 비밀번호를 입력하세요.
+</string>
+    <string name="theme_import_step_preview">
+포함된 아이콘을 미리 보고 적용을 확인하세요.
+</string>
+    <string name="theme_import_btn_select">
+.ufmtheme 파일 선택
+</string>
+
     <!-- Theme pack import password -->
     <string name="theme_import_password_title">
 테마 팩 암호 입력
@@ -10188,6 +11020,9 @@ PiP(화면 속 화면)
     <string name="settings_skip_length_title">
 건너뛰기 시간
 </string>
+    <string name="settings_skip_length_dialog_desc">
+미디어 재생 중 앞뒤로 이동할 간격을 선택하세요.
+</string>
     <string name="skip_length_option_3s">
 3초
 </string>
@@ -10205,6 +11040,27 @@ PiP(화면 속 화면)
 </string>
     <string name="skip_length_option_disable">
 사용 안 함
+</string>
+    <string name="skip_length_desc_3s">
+3초 건너뛰기
+</string>
+    <string name="skip_length_desc_5s">
+5초 건너뛰기
+</string>
+    <string name="skip_length_desc_10s">
+10초 건너뛰기 (기본값)
+</string>
+    <string name="skip_length_desc_20s">
+20초 건너뛰기
+</string>
+    <string name="skip_length_desc_30s">
+30초 건너뛰기
+</string>
+    <string name="skip_length_desc_disable">
+앞뒤 건너뛰기 버튼 숨기기
+</string>
+    <string name="skip_length_toast_set">
+건너뛰기 간격이 %1$s(으)로 설정되었습니다.
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -10447,6 +11303,51 @@ UFM 스프레드시트 뷰어
     <string name="settings_file_tags_subtitle">
 해시태그 및 태깅 옵션 관리
 </string>
+    <string name="settings_file_tags_info_notice">
+빠른 필터링, 검색, 분류를 위해 파일과 폴더에 할당하는 사용자 지정 태그입니다. 태그의 휴지통 아이콘을 탭하여 전체에서 제거하세요.
+</string>
+    <string name="settings_file_tags_empty_title">
+만든 파일 태그 없음
+</string>
+    <string name="settings_file_tags_empty_desc">
+파일 속성 시트 또는 다중 선택 도구 모음에서 파일이나 폴더에 태그를 지정하여 미디어와 문서를 여기에 정리하세요.
+</string>
+    <string name="settings_file_tags_delete_confirm_title">
+태그를 삭제하시겠습니까?
+</string>
+    <string name="settings_file_tags_delete_confirm_message">
+#%1$s 태그를 삭제하시겠습니까? 태그가 지정된 모든 파일과 폴더에서 제거됩니다.
+</string>
+    <string name="settings_file_tags_delete_btn">
+태그 삭제
+</string>
+    <string name="settings_file_tags_clear_all">
+모든 태그 삭제
+</string>
+    <string name="settings_file_tags_clear_all_confirm_title">
+모든 파일 태그를 삭제하시겠습니까?
+</string>
+    <string name="settings_file_tags_clear_all_confirm_message">
+만든 모든 파일 태그를 영구 삭제하시겠습니까? 모든 파일과 폴더에서 모든 태그가 제거됩니다.
+</string>
+    <string name="settings_file_tags_deleted_toast">
+#%1$s 태그가 삭제되었습니다.
+</string>
+    <string name="settings_file_tags_cleared_all_toast">
+모든 파일 태그가 삭제되었습니다.
+</string>
+    <string name="settings_file_tags_multi_title">
+여러 파일 태그 지정
+</string>
+    <string name="settings_file_tags_multi_desc">
+선택 시 여러 파일에 동시에 태그를 지정할 수 있습니다.
+</string>
+    <string name="settings_file_tags_created_header">
+만든 태그
+</string>
+    <string name="settings_file_tags_empty">
+아직 만든 태그가 없습니다.
+</string>
     <string name="action_tag">
 태그
 </string>
@@ -10523,8 +11424,41 @@ UFM 스프레드시트 뷰어
 \n
 폴더를 열고 정렬 및 필터를 탭한 다음 \"이 폴더\"를 선택하여 재정의를 만드세요.
 </string>
+    <string name="folder_sort_manager_empty_title">
+구성된 정렬 재정의 없음
+</string>
+    <string name="folder_sort_manager_empty_desc">
+‘이 폴더’를 사용하여 특정 폴더의 정렬 순서나 필터를 변경하면 사용자 지정 정렬 규칙을 관리하거나 재설정할 수 있도록 여기에 표시됩니다.
+</string>
+    <string name="folder_sort_manager_info_notice">
+특정 디렉터리에 대해 구성된 사용자 지정 정렬 순서 및 필터입니다. 휴지통 아이콘을 탭하여 폴더를 전역 정렬로 되돌리세요.
+</string>
+    <string name="folder_sort_manager_clear_all">
+모든 재정의 지우기
+</string>
     <string name="folder_sort_manager_clear_confirm">
 모든 폴더별 정렬 재정의를 제거하시겠습니까? 폴더는 전역 정렬 설정으로 되돌아갑니다.
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_title">
+모든 정렬 재정의를 지우시겠습니까?
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_message">
+모든 폴더별 정렬 재정의를 제거하시겠습니까? 모든 폴더가 전역 정렬 및 필터 설정으로 되돌아갑니다.
+</string>
+    <string name="folder_sort_manager_remove_confirm_title">
+폴더 정렬 재정의를 초기화하시겠습니까?
+</string>
+    <string name="folder_sort_manager_remove_confirm_message">
+\\\"%1$s\\\"에 대한 사용자 지정 정렬 재정의를 제거하시겠습니까? 이 폴더는 전역 정렬로 되돌아갑니다.
+</string>
+    <string name="folder_sort_manager_remove_btn">
+재정의 초기화
+</string>
+    <string name="folder_sort_manager_cleared_all_toast">
+모든 폴더 정렬 재정의가 지워졌습니다.
+</string>
+    <string name="folder_sort_manager_deleted">
+%1$s에 대한 재정의가 제거되었습니다.
 </string>
     <string name="folder_sort_network_badge">
 네트워크 / 온라인
@@ -10686,6 +11620,9 @@ UFM 스프레드시트 뷰어
 문제가 발생했습니다. 다시 시도해주세요.
 </string>
     <string name="support_retry">
+다시 시도
+</string>
+    <string name="retry">
 다시 시도
 </string>
     <string name="support_no_internet">
@@ -11225,6 +12162,343 @@ GPS 없음
     <string name="exif_select_destination_folder">
 출력 폴더 선택
 </string>
+
+    <!-- Video Thumbnail Time Modernization -->
+    <string name="vtt_section_options">
+캡처 시점
+</string>
+    <string name="vtt_info_notice">
+앱 전체에서 비디오 썸네일을 생성하는 데 사용되는 타임스탬프를 선택하세요. 백분율로 설정하면 비디오 시작 부분의 빈 프레임, 어두운 프레임 또는 인트로 프레임을 피할 수 있습니다.
+</string>
+    <string name="vtt_percent_0_subtitle">
+비디오의 첫 번째 프레임 캡처(00:00)
+</string>
+    <string name="vtt_percent_10_subtitle">
+권장 기본값 — 검은색 또는 시작 인트로 프레임 건너뜀
+</string>
+    <string name="vtt_percent_25_subtitle">
+비디오 재생 시간의 25% 지점에서 프레임 캡처
+</string>
+    <string name="vtt_percent_50_subtitle">
+비디오의 정확한 중간 지점(50%)에서 프레임 캡처
+</string>
+    <string name="vtt_percent_75_subtitle">
+비디오 재생 시간의 75% 지점에서 프레임 캡처
+</string>
+
+    <!-- Network Thumbnail Settings Modernization -->
+    <string name="nt_section_caching">
+구성
+</string>
+    <string name="nt_section_storage">
+저장소 및 유지 관리
+</string>
+    <string name="nt_info_notice">
+원격 썸네일은 로컬에 캐시되므로 네트워크 공유, SMB, FTP, SFTP 및 클라우드 드라이브에서 파일을 다시 다운로드하지 않고도 빠른 이미지 및 비디오 미리보기를 표시할 수 있습니다.
+</string>
+    <string name="nt_cache_folder_guide_title">
+캐시 위치 선택
+</string>
+    <string name="nt_cache_folder_guide_msg">
+네트워크 썸네일 캐시 파일을 저장할 내부 저장소 또는 SD 카드 디렉터리를 선택하세요.\n
+\n
+저장소 브라우저에서 원하는 디렉터리로 이동한 다음 상단의 \\\"이 폴더 선택\\\"을 탭하세요.
+</string>
+    <string name="nt_cache_folder_btn_browse">
+저장소 찾아보기
+</string>
+    <string name="nt_cache_folder_btn_reset_default">
+기본 위치로 재설정
+</string>
+    <string name="nt_cache_folder_current_label">
+현재 위치:
+</string>
+
+    <!-- Cache Limit Dialog Modernization -->
+    <string name="nt_cache_limit_dialog_desc">
+원격 썸네일을 캐시하는 데 사용되는 최대 디스크 공간을 선택하세요.
+</string>
+    <string name="nt_limit_subtitle_500mb">
+표준 기본값 — 일반 브라우징에 적합
+</string>
+    <string name="nt_limit_subtitle_1gb">
+중간 수준의 네트워크 사용에 권장
+</string>
+    <string name="nt_limit_subtitle_2gb">
+사진 및 비디오 썸네일을 위한 넉넉한 저장 공간
+</string>
+    <string name="nt_limit_subtitle_5gb">
+최대 표준 캐시 용량
+</string>
+    <string name="nt_limit_subtitle_custom">
+사용자 지정 MB 또는 GB 저장 한도 설정
+</string>
+    <string name="nt_custom_limit_dialog_title">
+사용자 지정 캐시 한도
+</string>
+    <string name="nt_custom_limit_dialog_desc">
+MB 또는 GB 단위로 사용자 지정 크기 한도를 입력하세요.
+</string>
+    <string name="nt_custom_presets_label">
+빠른 사전 설정
+</string>
+    <string name="nt_custom_size_label">
+사용자 지정 크기
+</string>
+
+    <!-- File Server System Tiles Modernization -->
+    <string name="file_server_tiles_section_server">
+파일 서버
+</string>
+    <string name="file_server_tiles_section_tiles">
+빠른 설정 타일
+</string>
+    <string name="file_server_tiles_info_notice">
+빠른 설정 타일을 사용하면 앱을 열지 않고도 Android 알림 서랍에서 FTP, SFTP 및 DLNA 미디어 서버를 직접 시작하고 중지할 수 있습니다.
+</string>
+
+    <!-- Storage Indexer Modernization -->
+    <string name="storage_indexer_section_storages">
+감지된 저장소
+</string>
+    <string name="storage_indexer_section_actions">
+유지 관리
+</string>
+    <string name="storage_indexer_info_notice">
+내부 저장소와 이동식 드라이브를 색인하여 기기 전체에서 즉각적인 검색 결과, 중복 감지 및 카테고리 필터링을 제공합니다.
+</string>
+    <string name="storage_indexer_detail_info_notice">
+이 저장소 볼륨이 색인되어 있습니다. 인덱스된 기록은 파일 시스템을 스캔하지 않고도 빠른 다중 조건 검색을 가능하게 합니다.
+</string>
+    <string name="storage_indexer_btn_delete_confirm">
+기록 삭제
+</string>
+
+    <!-- Auto Backup Modernization -->
+    <string name="auto_backup_section_general">
+구성
+</string>
+    <string name="auto_backup_section_schedule">
+일정
+</string>
+    <string name="auto_backup_section_security">
+보안 및 암호화
+</string>
+    <string name="auto_backup_section_location">
+백업 대상
+</string>
+    <string name="auto_backup_info_notice">
+자동 백업은 앱 환경설정, 사용자 지정 테마 및 타일의 암호화된 백업 또는 일반 백업을 주기적으로 생성하여 구성을 잃지 않도록 합니다.
+</string>
+    <string name="auto_backup_folder_guide_title">
+백업 폴더 선택
+</string>
+    <string name="auto_backup_folder_guide_msg">
+자동 백업이 저장될 위치를 선택하세요. 로컬 또는 이동식 폴더로 이동한 다음 저장 버튼을 탭하여 확인하세요.
+</string>
+    <string name="auto_backup_folder_guide_current">
+현재 위치:
+</string>
+    <string name="auto_backup_folder_guide_btn_choose">
+폴더 선택
+</string>
+    <string name="auto_backup_reset_success">
+백업 위치가 기본값으로 재설정되었습니다(Documents/UFM).
+</string>
+
+    <!-- File Server Modernization -->
+    <string name="file_server_section_services">
+서버 서비스
+</string>
+    <string name="file_server_section_profiles">
+인증 및 액세스
+</string>
+    <string name="file_server_info_notice">
+로컬 FTP 및 SFTP 파일 서버를 호스팅하거나 DLNA를 통해 미디어를 스트리밍하세요. 로컬 Wi-Fi 네트워크의 기기에서 연결하여 파일을 탐색, 스트리밍 및 전송할 수 있습니다.
+</string>
+    <string name="file_server_empty_profiles_desc">
+\\\'프로필 추가\\\'를 탭하여 로그인 자격 증명, 액세스 권한 및 공유 디렉터리를 구성하세요.
+</string>
+
+    <!-- DLNA Modernization -->
+    <string name="dlna_section_services">
+DLNA 서비스
+</string>
+    <string name="dlna_section_config">
+구성
+</string>
+    <string name="dlna_section_identification">
+식별
+</string>
+    <string name="dlna_section_shared_folders">
+공유 디렉터리
+</string>
+    <string name="dlna_info_notice">
+로컬 Wi-Fi 네트워크의 스마트 TV 및 DLNA 미디어 플레이어로 사진, 음악, 동영상을 스트리밍하거나 다른 기기에서 이 기기로 미디어를 전송하도록 허용하세요.
+</string>
+    <string name="dlna_settings_info_notice">
+로컬 네트워크에 기기가 표시되는 방식을 구성하고 공유할 디렉터리를 선택하세요. DLNA 미디어 공유는 엄격히 읽기 전용입니다.
+</string>
+    <string name="dlna_empty_shared_folders_desc">
+\\\'폴더 추가\\\'를 탭하여 DLNA를 통해 노출할 내부 저장소, SD 카드 또는 USB 폴더를 선택하세요.
+</string>
+
+    <!-- Smart Sort Modernization -->
+    <string name="smart_sort_empty">
+저장소 드라이브를 찾을 수 없음
+</string>
+    <string name="smart_sort_history_moved">
+이동됨
+</string>
+    <string name="smart_sort_history_skipped">
+건너뜀
+</string>
+    <string name="smart_sort_history_failed">
+실패
+</string>
+
+    <!-- Rate Us Modernization -->
+    <string name="rate_us_section_rate">
+평가 및 피드백
+</string>
+    <string name="rate_us_section_support">
+지원할 수 있는 더 많은 방법
+</string>
+    <string name="rate_us_support_title">
+프로젝트 지원
+</string>
+    <string name="rate_us_support_subtitle">
+프로젝트를 지원하실 수 있다면 팁을 남겨주세요.
+</string>
+    <string name="rate_us_stars_description">
+별점 5개
+</string>
+
+    <!-- Help & Support Modernization -->
+    <string name="support_section_channels">
+연락 채널
+</string>
+    <string name="support_section_direct">
+직접 연락
+</string>
+    <string name="support_direct_email_title">
+support@kilowatch.co.za
+</string>
+    <string name="support_direct_email_subtitle">
+개발 팀에 직접 이메일 보내기
+</string>
+    <string name="support_direct_email_copied">
+지원 이메일이 클립보드에 복사되었습니다.
+</string>
+
+    <!-- About Modernization -->
+    <string name="about_section_app">
+앱 정보
+</string>
+    <string name="about_section_support">
+개발자 및 링크
+</string>
+    <string name="about_section_legal">
+법적 고지 및 정책
+</string>
+    <string name="about_section_acknowledgments">
+감사의 말
+</string>
+    <string name="about_legal_title">
+개인정보 처리방침 및 약관
+</string>
+    <string name="about_legal_subtitle">
+개인정보 처리방침, 서비스 약관 및 라이선스를 검토하세요
+</string>
+    <string name="about_rate_title">
+평가 및 리뷰
+</string>
+    <string name="about_rate_subtitle">
+Google Play에서 경험을 공유하세요
+</string>
+    <string name="about_support_title">
+도움말 및 지원
+</string>
+    <string name="about_support_subtitle">
+문제를 보고하거나 기능을 요청하세요
+</string>
+    <string name="about_email_copied">
+지원 이메일이 클립보드에 복사되었습니다.
+</string>
+
+    <!-- Main Menu Categorized Modernization -->
+    <string name="main_menu_category_storage">
+저장소
+</string>
+    <string name="main_menu_category_connect">
+연결
+</string>
+    <string name="main_menu_category_sync">
+폴더 동기화
+</string>
+    <string name="main_menu_category_organize">
+정리
+</string>
+    <string name="main_menu_category_utilities">
+유틸리티
+</string>
+    <string name="main_menu_category_security">
+보안 및 고급
+</string>
+    <string name="main_menu_category_settings">
+설정 및 더보기
+</string>
+    <string name="main_menu_layout_modern_categorized">
+모던 분류형
+</string>
+    <string name="main_menu_layout_modern_desc">
+펼칠 수 있는 카테고리 섹션으로 구성됨
+</string>
+    <string name="main_menu_layout_classic_grid">
+클래식 그리드
+</string>
+    <string name="main_menu_layout_classic_grid_desc">
+평면 다중 열 그리드(3열 또는 4열)
+</string>
+    <string name="main_menu_layout_classic_list">
+클래식 목록
+</string>
+    <string name="main_menu_layout_classic_list_desc">
+평면 단일 열 목록(크게, 중간, 작게)
+</string>
+    <string name="main_menu_section_items_count">
+%1$d개 항목
+</string>
+    <string name="main_menu_section_item_count_single">
+항목 1개
+</string>
+
+    <!-- Reset Category Layout -->
+    <string name="reset_categorized_layout_section">
+재설정
+</string>
+    <string name="reset_categorized_layout_title">
+카테고리 레이아웃 재설정
+</string>
+    <string name="reset_categorized_layout_desc">
+카테고리 순서, 타일 위치 및 확장 상태를 기본값으로 복원
+</string>
+    <string name="reset_categorized_dialog_title">
+카테고리 레이아웃을 재설정하시겠습니까?
+</string>
+    <string name="reset_categorized_dialog_subtitle">
+기본 배열로 복원
+</string>
+    <string name="reset_categorized_dialog_msg">
+이 작업은 모든 카테고리 헤더, 타일 위치 및 확장 상태를 공장 기본값으로 복원합니다. 사용자 지정 색상 설정은 유지됩니다.
+</string>
+    <string name="reset_categorized_dialog_confirm">
+기본값으로 재설정
+</string>
+    <string name="reset_categorized_success">
+카테고리 레이아웃이 기본값으로 복원되었습니다.
+</string>
 </resources>
+
 
 

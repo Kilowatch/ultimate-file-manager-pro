@@ -50,6 +50,15 @@ Selecionar Idioma
     <string name="language_system_default">
 Padrão do Sistema
 </string>
+    <string name="language_system_default_desc">
+Usar o idioma do sistema
+</string>
+    <string name="language_section_system">
+Preferência do sistema
+</string>
+    <string name="language_section_available">
+Idiomas disponíveis
+</string>
     <string name="settings_list_size_title">
 Tamanho da Linha de Configurações
 </string>
@@ -460,6 +469,36 @@ Você ainda não adicionou nenhum favorito.\n
 \n
 Pressione longamente um arquivo ou pasta e toque no ícone de estrela para adicioná-lo aqui.
 </string>
+    <string name="manage_favorites_empty_title">
+Nenhum favorito marcado
+</string>
+    <string name="manage_favorites_empty_desc">
+Toque no ícone de estrela em qualquer arquivo ou pasta no navegador de arquivos para marcá-lo e acessá-lo instantaneamente aqui.
+</string>
+    <string name="manage_favorites_info_notice">
+Arquivos e pastas marcados aparecem no menu de navegação e nos painéis de acesso rápido para uma navegação rápida. Toque no ícone de lixeira para remover um favorito.
+</string>
+    <string name="manage_favorites_clear_all">
+Limpar todos os favoritos
+</string>
+    <string name="manage_favorites_clear_all_confirm_title">
+Limpar todos os favoritos?
+</string>
+    <string name="manage_favorites_clear_all_confirm_message">
+Tem certeza de que deseja remover todos os itens da sua lista de favoritos? Isso não excluirá os arquivos ou pastas reais.
+</string>
+    <string name="manage_favorites_remove_confirm_title">
+Remover favorito?
+</string>
+    <string name="manage_favorites_remove_confirm_message">
+Tem certeza de que deseja remover \"%1$s\" da sua lista de favoritos?
+</string>
+    <string name="manage_favorites_remove_btn">
+Remover favorito
+</string>
+    <string name="manage_favorites_cleared_all_toast">
+Todos os favoritos removidos
+</string>
     <string name="manage_favorites_removed">
 %1$s removido dos favoritos
 </string>
@@ -650,6 +689,21 @@ Para ativar:\n
 3. Ative \"Depuração USB\"\n
 \n
 Se você não vir as Opções do Desenvolvedor, vá em Sobre e toque em \"Número da Versão\" 7 vezes primeiro.\"
+</string>
+    <string name="adb_enable_desc">
+A depuração USB deve estar ativada na TV para capturar capturas de tela.
+</string>
+    <string name="adb_step_1">
+1. Abra Configurações na sua Android TV
+</string>
+    <string name="adb_step_2">
+2. Vá para Preferências do dispositivo → Opções do desenvolvedor
+</string>
+    <string name="adb_step_3">
+3. Ative a \"Depuração USB\"
+</string>
+    <string name="adb_step_tip">
+Dica: se as Opções do desenvolvedor estiverem ocultas, vá para Configurações → Sobre e toque em \"Número da versão\" 7 vezes.
 </string>
     <string name="adb_pairing_required">
 Emparelhamento ADB Necessário
@@ -1061,6 +1115,24 @@ Sugestões
 economiza %1$s
 </string>
     <!-- Section headers inside Overview -->
+    <string name="analyzer_info_notice">
+Inspecione o uso do disco, explore o detalhamento do armazenamento por categorias e encontre arquivos grandes, duplicados e sugestões de limpeza.
+</string>
+    <string name="analyzer_section_storage_breakdown">
+Detalhamento do armazenamento
+</string>
+    <string name="analyzer_section_top_folders">
+Principais pastas
+</string>
+    <string name="analyzer_section_app_usage">
+Uso de armazenamento dos aplicativos
+</string>
+    <string name="analyzer_empty_state_desc">
+Nenhum item encontrado para esta categoria de análise.
+</string>
+    <string name="analyzer_action_review">
+Revisar e limpar
+</string>
     <string name="analyzer_top_folders">
 Principais Pastas por Tamanho
 </string>
@@ -1273,14 +1345,29 @@ Estes arquivos criptografados serão excluídos permanentemente e não podem ser
 Excluir Permanentemente
 </string>
 
+    <string name="theme_section_color_palette">
+Paleta de cores
+</string>
+    <string name="theme_section_mode">
+Modo de tema
+</string>
     <string name="theme_light">
 Claro
+</string>
+    <string name="theme_light_desc">
+Interface clara e limpa
 </string>
     <string name="theme_dark">
 Escuro
 </string>
+    <string name="theme_dark_desc">
+Tema escuro confortável para pouca luminosidade
+</string>
     <string name="theme_system">
 Padrão do Sistema
+</string>
+    <string name="theme_system_desc">
+Seguir o agendamento de dia/noite do sistema
 </string>
     <string name="theme_amoled">
 Preto AMOLED
@@ -1323,6 +1410,30 @@ Tamanho da fonte aplicado
     <string name="font_size_preview">
 A rápida raposa marrom pula
 </string>
+    <string name="font_size_small_desc">
+85% • Tamanho compacto para maior densidade de tela
+</string>
+    <string name="font_size_normal_desc">
+100% • Tamanho de fonte padrão recomendado
+</string>
+    <string name="font_size_large_desc">
+115% • Tamanho ampliado para melhor legibilidade
+</string>
+    <string name="font_size_preview_title">
+Pré-visualização da fonte em tempo real
+</string>
+    <string name="font_size_preview_sample_heading">
+Ultimate File Manager Pro
+</string>
+    <string name="font_size_preview_sample_body">
+A rápida raposa marrom pula sobre o cão preguiçoso. Gerenciador de arquivos de painel duplo para usuários avançados no Android e na TV.
+</string>
+    <string name="font_size_section_preview">
+Pré-visualização em tempo real
+</string>
+    <string name="font_size_section_options">
+Opções de tamanho do texto
+</string>
 
     <!-- Storage Renaming -->
     <string name="settings_storage_rename_title">
@@ -1331,11 +1442,56 @@ Nomes Personalizados de Unidades
     <string name="settings_storage_rename_subtitle">
 Renomear unidades USB e de armazenamento local
 </string>
+    <string name="storage_rename_section_connected">
+Unidades de armazenamento conectadas
+</string>
+    <string name="storage_rename_section_offline">
+Unidades offline / desconectadas
+</string>
+    <string name="storage_rename_original_details">
+Original: %1$s • %2$s
+</string>
+    <string name="storage_rename_info_notice">
+Rótulos personalizados atribuídos ao armazenamento interno, cartões SD e unidades USB. Toque em qualquer unidade para renomear ou redefinir seu rótulo de exibição.
+</string>
+    <string name="storage_rename_empty_title">
+Nenhuma unidade de armazenamento encontrada
+</string>
+    <string name="storage_rename_empty_desc">
+As unidades de armazenamento internas e externas conectadas aparecerão aqui para nomeação e identificação personalizadas.
+</string>
     <string name="rename_drive_dialog_title">
 Renomear Unidade
 </string>
+    <string name="storage_rename_dialog_subtitle">
+Insira um nome personalizado para %1$s
+</string>
     <string name="custom_name_hint">
 Novo nome da unidade
+</string>
+    <string name="storage_rename_reset_btn">
+Redefinir para o padrão
+</string>
+    <string name="storage_rename_save_btn">
+Salvar nome personalizado
+</string>
+    <string name="storage_rename_saved_toast">
+Unidade renomeada para \"%1$s\"
+</string>
+    <string name="storage_rename_reset_toast">
+Unidade redefinida para o nome original
+</string>
+    <string name="storage_rename_clear_all">
+Redefinir todos os nomes de unidades
+</string>
+    <string name="storage_rename_clear_all_confirm_title">
+Redefinir todos os nomes de unidades?
+</string>
+    <string name="storage_rename_clear_all_confirm_message">
+Tem certeza de que deseja redefinir todos os rótulos personalizados das unidades para os nomes padrão do sistema?
+</string>
+    <string name="storage_rename_cleared_all_toast">
+Todos os nomes de unidades redefinidos para o padrão
 </string>
     <string name="reset_action">
 Redefinir
@@ -1428,11 +1584,29 @@ Escolher qual tela abre na inicialização
     <string name="start_screen_storage_browser">
 Menu Principal (Padrão)
 </string>
+    <string name="start_screen_storage_browser_desc">
+Tela inicial padrão com todos os armazenamentos e blocos rápidos
+</string>
     <string name="start_screen_twin_window">
 Janela Dupla
 </string>
+    <string name="start_screen_twin_window_desc">
+Gerenciador de arquivos de painel duplo lado a lado
+</string>
     <string name="start_screen_file_server">
 Servidor de Arquivos
+</string>
+    <string name="start_screen_file_server_desc">
+Controles do servidor de arquivos HTTP, FTP e WebDAV
+</string>
+    <string name="start_screen_section_main">
+Telas principais
+</string>
+    <string name="start_screen_section_storages">
+Unidades de armazenamento de acesso direto
+</string>
+    <string name="start_screen_storage_desc">
+Abrir diretamente esta unidade na inicialização
 </string>
 
     <!-- Analytics Toggle -->
@@ -1507,6 +1681,12 @@ Desativado — fluxo direto (padrão)
 </string>
 
     <!-- Open Source Licenses -->
+    <string name="policy_section_agreements">
+Políticas e acordos
+</string>
+    <string name="policy_section_attributions">
+Atribuições e licenças
+</string>
     <string name="policy_licenses_button">
 Licenças de Código Aberto
 </string>
@@ -1640,8 +1820,38 @@ Gerenciar aplicativos padrão para tipos de arquivo
     <string name="default_apps_empty">
 Nenhum aplicativo padrão definido.
 </string>
+    <string name="default_apps_empty_title">
+Nenhum aplicativo padrão configurado
+</string>
+    <string name="default_apps_empty_desc">
+Quando você abre um arquivo com \"Sempre\", ele aparecerá aqui para que você possa gerenciar ou redefinir as regras de associação de arquivos.
+</string>
+    <string name="default_apps_info_notice">
+Tipos de arquivo configurados para abrir automaticamente com um visualizador ou aplicativo específico. Toque no ícone de lixeira para redefinir uma regra de associação.
+</string>
     <string name="default_apps_clear_all">
 Limpar Todos os Padrões
+</string>
+    <string name="default_apps_clear_all_confirm_title">
+Limpar todos os aplicativos padrão
+</string>
+    <string name="default_apps_clear_all_confirm_message">
+Tem certeza de que deseja limpar todas as preferências de associação de arquivos? Os arquivos solicitarão a escolha de um aplicativo ao serem abertos.
+</string>
+    <string name="default_app_remove_confirm_title">
+Redefinir a associação de .%1$s?
+</string>
+    <string name="default_app_remove_confirm_message">
+Tem certeza de que deseja redefinir o aplicativo padrão para .%1$s (%2$s)? Você será solicitado a escolher um aplicativo na próxima vez que abrir este tipo de arquivo.
+</string>
+    <string name="default_app_remove_btn">
+Redefinir padrão
+</string>
+    <string name="default_apps_removed_toast">
+Redefinir padrão para .%1$s
+</string>
+    <string name="default_apps_cleared_all_toast">
+Todos os aplicativos padrão foram limpos
 </string>
     <string name="default_apps_extension_label">
 Tipo de arquivo: %1$s
@@ -1972,6 +2182,15 @@ Selecionar unidade
     <string name="all_drives">
 Todas as Unidades
 </string>
+    <string name="search_select_location_title">
+Local de pesquisa
+</string>
+    <string name="search_select_location_subtitle">
+Escolha um local de armazenamento para pesquisar
+</string>
+    <string name="search_all_drives_subtitle">
+Pesquisar em todo o armazenamento conectado
+</string>
 
     <!-- Category detail -->
     <string name="category_files_title">
@@ -2117,6 +2336,9 @@ Compartilhamentos de Rede
     <string name="network_shares_subtitle">
 SMB · FTP
 </string>
+    <string name="network_shares_info_notice">
+Conecte-se a compartilhamentos SMB, FTP, SFTP, SCP e NFS em sua rede local para navegar, transferir e organizar arquivos com facilidade.
+</string>
     <string name="network_add_share">
 Adicionar compartilhamento
 </string>
@@ -2162,6 +2384,9 @@ Host / Endereço IP
 </string>
     <string name="network_field_port">
 Porta (deixe em branco para o padrão)
+</string>
+    <string name="network_section_credentials">
+Credenciais e autenticação
 </string>
     <string name="network_field_username">
 Nome de usuário (em branco = convidado)
@@ -2681,6 +2906,37 @@ Nenhum conflito registrado
 %1$s — usou a versão %2$s
 </string>
 
+    <string name="configure_sync_folders_schedule">
+Configurar pastas e agendamento de sincronização
+</string>
+    <string name="sync_section_profile_direction">
+Perfil e direção
+</string>
+    <string name="sync_section_folders">
+Pastas e locais
+</string>
+    <string name="sync_section_schedule">
+Agendamento e automação
+</string>
+    <string name="sync_section_conflict">
+Tratamento de conflitos e exclusões
+</string>
+    <string name="sync_section_filtering">
+Filtro de arquivos e tags
+</string>
+    <string name="general_settings">
+Configurações gerais
+</string>
+    <string name="schedule_and_triggers">
+Agendamento e gatilhos
+</string>
+    <string name="schedule_mode">
+Modo de agendamento
+</string>
+    <string name="options">
+Opções
+</string>
+
     <!-- Generic -->
     <string name="cancel">
 Cancelar
@@ -2885,6 +3141,58 @@ Restaura para: Menu Principal
 Restaura para: %1$s
 </string>
 
+    <!-- Add Options Dialog -->
+    <string name="add_menu_options_title">
+Criar novo
+</string>
+    <string name="add_menu_options_desc">
+Escolha o que você gostaria de adicionar ao menu principal.
+</string>
+    <string name="option_create_header_title">
+Criar novo cabeçalho
+</string>
+    <string name="option_create_header_desc">
+Adicione um cabeçalho de seção personalizado para organizar seus blocos
+</string>
+    <string name="option_create_tile_title">
+Criar bloco personalizado
+</string>
+    <string name="option_create_tile_desc">
+Adicione um bloco personalizado para agrupar atalhos e pastas
+</string>
+
+    <!-- Custom Category Headers -->
+    <string name="custom_header_create_title">
+Criar novo cabeçalho
+</string>
+    <string name="custom_header_create_desc">
+Insira um título para este cabeçalho de categoria.
+</string>
+    <string name="custom_header_name_hint">
+Nome do cabeçalho (obrigatório)
+</string>
+    <string name="custom_header_name_required">
+O nome do cabeçalho é obrigatório
+</string>
+    <string name="custom_header_created">
+Cabeçalho de categoria criado
+</string>
+    <string name="custom_header_add_button">
+Adicionar cabeçalho
+</string>
+    <string name="custom_header_delete_title">
+Excluir cabeçalho de categoria
+</string>
+    <string name="custom_header_delete_confirm">
+Excluir \"%1$s\"?
+</string>
+    <string name="custom_header_delete_warning">
+Todos os blocos internos serão movidos de volta para o local original.
+</string>
+    <string name="custom_header_deleted">
+Cabeçalho de categoria \"%1$s\" excluído
+</string>
+
     <!-- Custom Tiles -->
     <string name="custom_tile_create_title">
 Criar Bloco Personalizado
@@ -3032,6 +3340,12 @@ Selecione um bloco para colorir
     <string name="tile_color_message_select">
 Toque em um bloco depois de pressionar Selecionar para abrir o seletor de cores.
 </string>
+    <string name="tile_color_tip_title">
+Personalizador de cor do bloco
+</string>
+    <string name="tile_color_tip_desc">
+Toque em qualquer unidade de armazenamento ou bloco de recurso na tela inicial para personalizar sua paleta de cores
+</string>
     <string name="tile_color_button_select">
 Selecionar Bloco
 </string>
@@ -3148,6 +3462,9 @@ Detalhes do Indexador
 </string>
     <string name="storage_indexer_delete_records">
 Excluir Registros Indexados
+</string>
+    <string name="storage_indexer_delete_records_desc">
+Limpar o banco de dados de indexação deste armazenamento
 </string>
     <string name="storage_indexer_not_now">
 Ignorar Este Armazenamento (Agora Não)
@@ -3403,14 +3720,41 @@ Lista
     <string name="layout_grid">
 Grade
 </string>
+    <string name="layout_list_size_section">
+Tamanho do layout da lista
+</string>
+    <string name="layout_size_large">
+Grande
+</string>
+    <string name="layout_size_large_desc">
+Linhas espaçosas com ícones grandes
+</string>
+    <string name="layout_size_medium">
+Médio
+</string>
+    <string name="layout_size_medium_desc">
+Altura de linha padrão e equilibrada
+</string>
+    <string name="layout_size_small">
+Pequeno
+</string>
+    <string name="layout_size_small_desc">
+Linhas compactas com alta densidade
+</string>
     <string name="column_count">
 Colunas
 </string>
     <string name="columns_4">
 4 Colunas
 </string>
+    <string name="columns_4_desc">
+Layout de grade compacta de 4 colunas
+</string>
     <string name="columns_3">
 3 Colunas
+</string>
+    <string name="columns_3_desc">
+Layout de grade espaçoso de 3 colunas
 </string>
 
     <!-- Long Press Duration Settings -->
@@ -3426,6 +3770,114 @@ Quanto tempo segurar um item para entrar no modo de edição
 </string>
     <string name="settings_toolbar_icons_subtitle">
 Personalizar barra de ações de seleção
+</string>
+    <string name="settings_toolbar_icons_info_notice">
+Personalize quais botões de ação aparecem na barra de ferramentas quando arquivos ou pastas são selecionados. Desative as ações que você não usa para manter seu espaço de trabalho limpo e eficiente.
+</string>
+    <string name="settings_toolbar_icons_reset_defaults">
+Redefinir para os padrões
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_title">
+Redefinir ícones da barra de ferramentas?
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_message">
+Tem certeza de que deseja redefinir todos os ícones da barra de ferramentas de seleção para o estado padrão ativado?
+</string>
+    <string name="settings_toolbar_icons_reset_toast">
+Ícones da barra de ferramentas redefinidos para os padrões
+</string>
+    <string name="toolbar_section_file_operations">
+Operações de arquivo
+</string>
+    <string name="toolbar_section_security">
+Segurança e privacidade
+</string>
+    <string name="toolbar_section_selection_navigation">
+Seleção e favoritos
+</string>
+    <string name="toolbar_section_tools_media">
+Arquivos, mídia e utilitários
+</string>
+    <string name="toolbar_desc_create_new">
+Criar novos arquivos, pastas ou arquivos compactados
+</string>
+    <string name="toolbar_desc_copy">
+Duplicar itens selecionados para a área de transferência
+</string>
+    <string name="toolbar_desc_move">
+Recortar itens selecionados para mover
+</string>
+    <string name="toolbar_desc_rename">
+Renomear arquivo ou diretório selecionado
+</string>
+    <string name="toolbar_desc_share">
+Enviar arquivos pela folha de compartilhamento do sistema
+</string>
+    <string name="toolbar_desc_delete">
+Remover permanentemente ou mover para a lixeira
+</string>
+    <string name="toolbar_desc_copy_encrypt">
+Criptografar e copiar itens
+</string>
+    <string name="toolbar_desc_move_encrypt">
+Criptografar e mover itens
+</string>
+    <string name="toolbar_desc_protect">
+Marcar como somente leitura ou protegido
+</string>
+    <string name="toolbar_desc_unprotect">
+Remover bloqueio de proteção
+</string>
+    <string name="toolbar_desc_hide">
+Marcar itens como ocultos
+</string>
+    <string name="toolbar_desc_unhide">
+Revelar arquivos ocultos
+</string>
+    <string name="toolbar_desc_select_all">
+Selecionar todos os itens no painel atual
+</string>
+    <string name="toolbar_desc_invert_selection">
+Alternar o estado de seleção de todos os itens
+</string>
+    <string name="toolbar_desc_favorite">
+Adicionar ou remover dos favoritos com estrela
+</string>
+    <string name="toolbar_desc_pin">
+Fixar item no painel de acesso rápido
+</string>
+    <string name="toolbar_desc_unpin">
+Desafixar item do acesso rápido
+</string>
+    <string name="toolbar_desc_compress">
+Criar arquivo ZIP ou 7Z
+</string>
+    <string name="toolbar_desc_extract">
+Descompactar arquivo na pasta atual
+</string>
+    <string name="toolbar_desc_compress_image">
+Otimizar o tamanho do arquivo de imagem
+</string>
+    <string name="toolbar_desc_retrigger_thumbnails">
+Recriar miniaturas de imagens e vídeos em cache
+</string>
+    <string name="toolbar_desc_create_gif">
+Montar imagens em um GIF animado
+</string>
+    <string name="toolbar_desc_exif_tools">
+Limpar metadados e renomear fotos em lote
+</string>
+    <string name="toolbar_desc_set_home_wallpaper">
+Definir imagem selecionada como papel de parede da tela inicial
+</string>
+    <string name="toolbar_desc_set_lock_wallpaper">
+Definir imagem selecionada como papel de parede da tela de bloqueio
+</string>
+    <string name="toolbar_desc_duplicate_finder">
+Escanear e detectar arquivos duplicados
+</string>
+    <string name="toolbar_desc_large_files_finder">
+Identificar arquivos que consomem armazenamento excessivo
 </string>
     <string name="long_press_duration_seconds">
 %1$.1f segundos
@@ -3561,6 +4013,54 @@ Emparelhar e Conectar
     <string name="connect_to_android_device">
 Conectar ao dispositivo Android
 </string>
+    <string name="adb_terminal_empty_title">
+Shell ADB pronto
+</string>
+    <string name="adb_terminal_empty_subtitle">
+Conecte-se a um dispositivo Android ou TV para executar comandos shell, inspecionar pacotes e monitorar processos do sistema.
+</string>
+    <string name="adb_terminal_clear">
+Limpar Console
+</string>
+    <string name="adb_terminal_copy">
+Copiar Saída
+</string>
+    <string name="adb_terminal_cleared">
+Saída do terminal limpa
+</string>
+    <string name="adb_terminal_copied">
+Toda a saída copiada para a área de transferência
+</string>
+    <string name="adb_quick_commands">
+Comandos Rápidos
+</string>
+    <string name="adb_host_label">
+Endereço IP do Dispositivo Alvo
+</string>
+    <string name="adb_host_hint">
+192.168.1.50 ou 127.0.0.1
+</string>
+    <string name="adb_pairing_guide_title">
+Guia de Emparelhamento Sem Fio em 3 Etapas
+</string>
+    <string name="adb_pairing_guide_step1">
+Ative as Opções do Desenvolvedor e a Depuração Sem Fio no dispositivo alvo
+</string>
+    <string name="adb_pairing_guide_step2">
+Toque em \"Emparelhar dispositivo com código de emparelhamento\" nas configurações de Depuração Sem Fio
+</string>
+    <string name="adb_pairing_guide_step3">
+Insira o IP exibido, a porta de emparelhamento e o código PIN de 6 dígitos abaixo
+</string>
+    <string name="adb_discovery_title">
+Descoberta Automática de Dispositivos na Rede
+</string>
+    <string name="adb_manual_title">
+Configurações de IP e Porta do Alvo
+</string>
+    <string name="adb_pin_title">
+Código de Emparelhamento de 6 Dígitos
+</string>
     <string name="search_apps">
 Pesquisar aplicativos...
 </string>
@@ -3576,6 +4076,36 @@ Gerenciar conexões de TV
     <string name="no_devices_paired_yetntap_to">
 Nenhum dispositivo emparelhado ainda.\n
 Toque em + para vincular uma TV.
+</string>
+    <string name="link_tv">
+Vincular TV
+</string>
+    <string name="link_tv_button">
+Vincular uma Nova TV
+</string>
+    <string name="paired_tvs_empty_title">
+Nenhuma TV Emparelhada Ainda
+</string>
+    <string name="paired_tvs_empty_subtitle">
+Conecte seu telefone a uma Android TV com UFM para transferências de arquivos sem fio, gerenciamento de armazenamento e acesso remoto.
+</string>
+    <string name="tv_pairing_guide_title">
+Guia Rápido em 3 Etapas
+</string>
+    <string name="tv_pairing_guide_step1">
+Abra o UFM na sua Android TV
+</string>
+    <string name="tv_pairing_guide_step2">
+Selecione \"Telefones Emparelhados\" no menu principal da TV
+</string>
+    <string name="tv_pairing_guide_step3">
+Selecione \"Vincular Aplicativo Móvel\" na TV para obter o PIN de 4 dígitos
+</string>
+    <string name="paired_status_connected">
+Conectado
+</string>
+    <string name="paired_status_disconnected">
+Desconectado
 </string>
     <string name="paired_phones">
 Telefones Emparelhados
@@ -4443,8 +4973,14 @@ Depuração USB Necessária
     <string name="take_screenshot">
 Tirar Captura de Tela
 </string>
+    <string name="take_screenshot_subtitle">
+Capture a tela atual da TV no seu dispositivo
+</string>
     <string name="record_screen">
 Gravar tela
+</string>
+    <string name="record_screen_subtitle">
+Grave vídeo da tela da TV com opções de áudio
 </string>
     <string name="record_screen_audio_title">
 Áudio da TV
@@ -5626,13 +6162,43 @@ Erro ao carregar diretório: %1$s
     <string name="sideload_apk">
 Sideload APK
 </string>
+    <string name="sideload_apk_subtitle">
+Instalar pacote APK único na TV
+</string>
     <string name="sideload_xapk">
 Sideload XAPK
+</string>
+    <string name="sideload_xapk_subtitle">
+Instalar aplicativos XAPK / APKM empacotados na TV
+</string>
+    <string name="sideload_dialog_desc_apk">
+Instale um pacote de aplicativo Android (.apk) do seu dispositivo na sua TV emparelhada.
+</string>
+    <string name="sideload_dialog_desc_xapk">
+Instale um pacote de aplicativo empacotado (.xapk / .apkm) do seu dispositivo na sua TV emparelhada.
+</string>
+    <string name="sideload_step_1_apk">
+1. Escolha o arquivo .apk do armazenamento do seu dispositivo
+</string>
+    <string name="sideload_step_1_xapk">
+1. Escolha o pacote .xapk / .apkm do armazenamento do seu dispositivo
+</string>
+    <string name="sideload_step_2">
+2. O UFM transferirá o pacote sem fio para a sua TV
+</string>
+    <string name="sideload_step_3">
+3. Confirme a solicitação de instalação na tela da sua TV para concluir
+</string>
+    <string name="sideload_choose_file">
+Escolher Arquivo
 </string>
 
     <!-- Transfer Settings Feature -->
     <string name="transfer_settings">
 Transferir configurações
+</string>
+    <string name="transfer_settings_action_subtitle">
+Transferir configurações e compartilhamentos de rede para a TV
 </string>
     <string name="transfer_settings_select_all">
 Selecionar tudo
@@ -6139,6 +6705,9 @@ Organização Inteligente
 </string>
     <string name="smart_sort_tile_subtitle">
 Organizar arquivos em categorias
+</string>
+    <string name="smart_sort_info_notice">
+Categorize e organize automaticamente os arquivos em pastas estruturadas por tipo, tamanho, data ou regras personalizadas. Selecione uma unidade de armazenamento ou compartilhamento abaixo para começar.
 </string>
     <string name="smart_sort_config">
 Configuração de Organização Inteligente
@@ -6676,6 +7245,9 @@ Sincronização ativada
 </string>
     <string name="sync_disabled">
 Sincronização desativada
+</string>
+    <string name="sync_delete_profile_confirm_msg">
+Tem certeza de que deseja excluir \"%1$s\"? Esta ação não pode ser desfeita.
 </string>
     <string name="profile_deleted">
 Perfil excluído
@@ -7233,6 +7805,12 @@ Armazenamentos online
     <string name="online_storages_subtitle">
 OneDrive, Google Drive e mais
 </string>
+    <string name="online_storages_info_notice">
+Conecte-se a provedores de armazenamento em nuvem, incluindo OneDrive, Google Drive, Dropbox, Box, AWS S3, WebDAV e RClone para navegar, transferir e sincronizar arquivos.
+</string>
+    <string name="online_storage_delete_confirm_body">
+Tem certeza de que deseja remover a conexão com \"%1$s\"?
+</string>
     <string name="opening_online_storages">
 Abrindo armazenamentos online…
 </string>
@@ -7547,6 +8125,111 @@ O Acesso Elevado está ativado e ativo
 </string>
     <string name="shizuku_adb_not_connected">
 O ADB não está conectado. Conecte-se via Terminal ADB para ativar o Acesso Elevado automaticamente.
+</string>
+    <string name="shizuku_header_subtitle">
+Serviço Shizuku e Shevery
+</string>
+    <string name="shizuku_status_not_installed_desc">
+Instale o Shizuku ou Shevery para desbloquear pastas protegidas de Android/data e operações elevadas sem root.
+</string>
+    <string name="shizuku_status_stopped_desc">
+O serviço elevado está instalado, mas não está em execução no momento. Inicie o serviço via Depuração Sem Fio ou pelo seu aplicativo de gerenciamento.
+</string>
+    <string name="shizuku_status_unauthorized_desc">
+O serviço está em execução, mas o UFM precisa de autorização para acessar APIs de nível de sistema.
+</string>
+    <string name="shizuku_status_active_desc">
+O serviço elevado está ativo com todas as permissões concedidas. Pastas protegidas e operações elevadas estão prontas.
+</string>
+    <string name="shizuku_badge_unavailable">
+INDISPONÍVEL
+</string>
+    <string name="shizuku_badge_stopped">
+INATIVO
+</string>
+    <string name="shizuku_badge_auth_needed">
+AUTORIZAÇÃO NECESSÁRIA
+</string>
+    <string name="shizuku_badge_connected">
+CONECTADO
+</string>
+    <string name="shizuku_section_capabilities">
+Recursos Elevados
+</string>
+    <string name="shizuku_feature_protected_title">
+Pastas Protegidas
+</string>
+    <string name="shizuku_feature_protected_desc">
+Acesso total de leitura/gravação a Android/data e obb
+</string>
+    <string name="shizuku_feature_speed_title">
+Operações de Alta Velocidade
+</string>
+    <string name="shizuku_feature_speed_desc">
+E/S direta no nível do sistema sem root
+</string>
+    <string name="shizuku_feature_security_title">
+Sem Root e Seguro
+</string>
+    <string name="shizuku_feature_security_desc">
+Ponte de API privilegiada padrão do Android
+</string>
+    <string name="shizuku_section_managers">
+Gerenciadores Disponíveis
+</string>
+    <string name="shizuku_manager_shizuku_title">
+Shizuku
+</string>
+    <string name="shizuku_manager_shizuku_desc">
+Serviço elevado padrão do GitHub
+</string>
+    <string name="shizuku_manager_shevery_title">
+Shevery
+</string>
+    <string name="shizuku_manager_shevery_desc">
+Alternativa rápida e leve
+</string>
+    <string name="shizuku_download_shizuku_apk">
+Baixar Shizuku (APK)
+</string>
+    <string name="shizuku_download_shevery_apk">
+Baixar Shevery (APK)
+</string>
+    <string name="shizuku_open_manager">
+Abrir Gerenciador %1$s
+</string>
+    <string name="shizuku_section_setup_guide">
+Guia de Configuração em 3 Etapas
+</string>
+    <string name="shizuku_step_1">
+1. Instale o APK
+</string>
+    <string name="shizuku_step_2">
+2. Inicie o Serviço
+</string>
+    <string name="shizuku_step_3">
+3. Autorize o UFM
+</string>
+    <string name="shizuku_service_info_title">
+Informações do Serviço
+</string>
+    <string name="shizuku_service_provider_label">
+Provedor do Serviço
+</string>
+    <string name="shizuku_service_mode_label">
+Modo de Conexão
+</string>
+    <string name="shizuku_service_permission_label">
+Nível de Permissão
+</string>
+    <string name="shizuku_service_mode_adb">
+ADB / Depuração Sem Fio
+</string>
+    <string name="shizuku_permission_granted_api">
+Concedida (API v23)
+</string>
+    <string name="shizuku_recheck_status">
+Verificar Status Novamente
 </string>
     <string name="shizuku_manager_open_error">
 Não foi possível abrir o gerenciador. Instale o Shizuku ou Shevery primeiro.
@@ -8714,6 +9397,21 @@ A nota está vazia
     <string name="notes_folder_title">
 Minhas Notas
 </string>
+    <string name="export_txt_desc">
+Documento de texto simples (.txt)
+</string>
+    <string name="export_csv_desc">
+Valores separados por vírgula (.csv)
+</string>
+    <string name="export_pdf_desc">
+Formato de Documento Portátil (.pdf)
+</string>
+    <string name="notepad_select_format_desc">
+Escolha o formato de exportação para o seu documento
+</string>
+    <string name="notepad_destination_label">
+Destino de Salvamento
+</string>
     <string name="notepad_select_export_format">
 Salvar como
 </string>
@@ -8764,11 +9462,35 @@ Arquivo salvo
     <string name="settings_apk_extract_title">
 Extrair APK / XAPK
 </string>
+    <string name="settings_apk_extract_subtitle">
+Configurar extração de aplicativos e metadados do manifesto
+</string>
     <string name="settings_apk_extract_subtitle_off">
 Apenas extração padrão
 </string>
     <string name="settings_apk_extract_subtitle_on">
 Avançado
+</string>
+    <string name="settings_apk_extract_info_notice">
+Configure as preferências de extração para aplicativos instalados. Quando ativado, o UFM salva os ícones dos aplicativos e metadados JSON junto com os arquivos APK e XAPK extraídos.
+</string>
+    <string name="settings_apk_extract_reset_defaults">
+Restaurar Padrões
+</string>
+    <string name="settings_apk_extract_reset_confirm_title">
+Restaurar Configurações de Extração?
+</string>
+    <string name="settings_apk_extract_reset_confirm_message">
+Tem certeza de que deseja restaurar todas as configurações de extração de APK e XAPK e os campos de metadados para o padrão?
+</string>
+    <string name="settings_apk_extract_reset_toast">
+Configurações de extração restauradas para o padrão
+</string>
+    <string name="settings_apk_extract_metadata_header">
+Campos de Metadados para Incluir no JSON
+</string>
+    <string name="settings_apk_extract_section_general">
+Recursos de Extração
 </string>
     <string name="apk_extract_master_title">
 Extração Avançada de APK/XAPK
@@ -8794,44 +9516,86 @@ Campos de metadados a incluir no JSON
     <string name="field_extracted_date">
 Data de extração
 </string>
+    <string name="field_extracted_date_desc">
+Carimbo de data/hora quando o arquivo foi extraído (extracted_date)
+</string>
     <string name="field_package_name">
 Nome do pacote
+</string>
+    <string name="field_package_name_desc">
+ID exclusivo do aplicativo Android (package_name)
 </string>
     <string name="field_version_name">
 Nome da versão
 </string>
+    <string name="field_version_name_desc">
+String de versão visível ao usuário (version_name)
+</string>
     <string name="field_version_code">
 Código da versão
+</string>
+    <string name="field_version_code_desc">
+Número inteiro da versão numérica interna (version_code)
 </string>
     <string name="field_label">
 Rótulo do aplicativo
 </string>
+    <string name="field_label_desc">
+Nome de exibição do aplicativo (label)
+</string>
     <string name="field_install_time">
 Data de instalação
+</string>
+    <string name="field_install_time_desc">
+Carimbo de data/hora original da instalação no dispositivo (install_time)
 </string>
     <string name="field_last_update_time">
 Data da última atualização
 </string>
+    <string name="field_last_update_time_desc">
+Carimbo de data/hora da última atualização no dispositivo (last_update_time)
+</string>
     <string name="field_target_sdk">
 SDK de destino
+</string>
+    <string name="field_target_sdk_desc">
+Versão da API Android alvo (target_sdk)
 </string>
     <string name="field_min_sdk">
 SDK mínimo
 </string>
+    <string name="field_min_sdk_desc">
+Versão mínima necessária da API Android (min_sdk)
+</string>
     <string name="field_app_size">
 Tamanho do aplicativo
+</string>
+    <string name="field_app_size_desc">
+Tamanho total do aplicativo instalado em bytes (app_size)
 </string>
     <string name="field_source_dir">
 Diretório de origem
 </string>
+    <string name="field_source_dir_desc">
+Caminho do diretório no sistema de arquivos do APK base (source_dir)
+</string>
     <string name="field_split_apks">
 APKs divididos
+</string>
+    <string name="field_split_apks_desc">
+Lista de caminhos dos APKs divididos (split_apks)
 </string>
     <string name="field_has_obb">
 Possui OBB
 </string>
+    <string name="field_has_obb_desc">
+Indica a presença de dados de expansão OBB (has_obb)
+</string>
     <string name="field_permissions">
 Permissões
+</string>
+    <string name="field_permissions_desc">
+Lista de permissões de manifesto solicitadas (permissions)
 </string>
     <string name="extracts_subtitle_files">
 arquivo(s)
@@ -8980,6 +9744,45 @@ Blocos e Grupos Personalizados
 </string>
     <string name="backup_import_details_title">
 Visualização da Importação
+</string>
+    <string name="backup_restore_notice">
+Crie um arquivo de backup exportável das suas configurações, blocos personalizados e compartilhamentos de rede, ou restaure a partir de um arquivo de backup exportado anteriormente.
+</string>
+    <string name="backup_restore_section_actions">
+Ações
+</string>
+    <string name="backup_export_notice">
+Selecione as categorias de configuração e os componentes que deseja incluir neste arquivo de backup.
+</string>
+    <string name="backup_import_notice">
+Revise as categorias de configuração encontradas neste arquivo. A restauração aplicará essas configurações e reiniciará o aplicativo.
+</string>
+    <string name="backup_import_password_desc">
+Este arquivo de backup está criptografado com uma senha. Digite a senha abaixo para descriptografar e revisar o conteúdo.
+</string>
+    <string name="backup_password_dialog_desc">
+Opcionalmente, proteja seu arquivo de backup com criptografia AES-256. Se você pular a definição de uma senha, o arquivo será salvo sem criptografia.
+</string>
+    <string name="backup_skip_confirm_desc">
+Salvar sem criptografia significa que qualquer pessoa com acesso ao arquivo de backup poderá ler suas configurações e preferências exportadas. Tem certeza de que deseja continuar sem uma senha?
+</string>
+    <string name="backup_import_guide_title">
+Importar Configurações
+</string>
+    <string name="backup_import_guide_subtitle">
+Selecione um Arquivo de Backup
+</string>
+    <string name="backup_import_guide_msg">
+Selecione um arquivo de backup exportado (.ufmconfig) do armazenamento do seu dispositivo. Suas configurações, compartilhamentos de rede, blocos personalizados e preferências serão restaurados.
+</string>
+    <string name="backup_import_guide_format_label">
+Formato de Arquivo Suportado
+</string>
+    <string name="backup_import_guide_format_val">
+Arquivos *.ufmconfig
+</string>
+    <string name="backup_import_guide_btn_browse">
+Selecionar Arquivo de Backup
 </string>
 
     <!-- Auto Backup -->
@@ -9189,6 +9992,9 @@ Configurações e Preferências
 </string>
     <string name="category_main_menu_tiles">
 Blocos do Menu Principal
+</string>
+    <string name="category_icons_count">
+Ícones de %1$d incluídos
 </string>
     <string name="icon_file_generic">
 Arquivo Genérico
@@ -9470,6 +10276,12 @@ Verificação de Escudo
 </string>
     <string name="icon_status_shield_alert">
 Alerta de Escudo
+</string>
+    <string name="icon_status_customized">
+Personalizado
+</string>
+    <string name="icon_status_default">
+Padrão
 </string>
     <string name="icon_view_grid_small">
 Grade Pequena
@@ -9858,6 +10670,26 @@ Criptografar e Exportar
 Pular (sem criptografia)
 </string>
 
+    <!-- Theme pack import instructions -->
+    <string name="theme_import_instructions_title">
+Importar Pacote de Ícones
+</string>
+    <string name="theme_import_instructions_desc">
+Importe ícones personalizados e cores de blocos de um arquivo .ufmtheme exportado anteriormente.
+</string>
+    <string name="theme_import_step_select">
+Localize e selecione um arquivo .ufmtheme no armazenamento
+</string>
+    <string name="theme_import_step_password">
+Digite a senha de descriptografia se o pacote estiver protegido
+</string>
+    <string name="theme_import_step_preview">
+Visualize os ícones incluídos e confirme para aplicar
+</string>
+    <string name="theme_import_btn_select">
+Selecionar Arquivo .ufmtheme
+</string>
+
     <!-- Theme pack import password -->
     <string name="theme_import_password_title">
 Insira a senha do pacote de tema
@@ -10188,6 +11020,9 @@ Permanece pausado após interrupção
     <string name="settings_skip_length_title">
 Duração do salto
 </string>
+    <string name="settings_skip_length_dialog_desc">
+Escolha o intervalo de pulo para frente ou para trás ao buscar em reprodução de mídia.
+</string>
     <string name="skip_length_option_3s">
 3s
 </string>
@@ -10205,6 +11040,27 @@ Duração do salto
 </string>
     <string name="skip_length_option_disable">
 Desativar
+</string>
+    <string name="skip_length_desc_3s">
+Pular 3 segundos
+</string>
+    <string name="skip_length_desc_5s">
+Pular 5 segundos
+</string>
+    <string name="skip_length_desc_10s">
+Pular 10 segundos (Padrão)
+</string>
+    <string name="skip_length_desc_20s">
+Pular 20 segundos
+</string>
+    <string name="skip_length_desc_30s">
+Pular 30 segundos
+</string>
+    <string name="skip_length_desc_disable">
+Ocultar botões de pular para frente e para trás
+</string>
+    <string name="skip_length_toast_set">
+Tamanho do pulo definido para %1$s
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -10447,6 +11303,51 @@ Tags de Arquivo
     <string name="settings_file_tags_subtitle">
 Gerenciar hashtags e opções de marcação
 </string>
+    <string name="settings_file_tags_info_notice">
+Tags personalizadas atribuídas a arquivos e pastas para filtragem, pesquisa e categorização rápidas. Toque no ícone de lixeira em qualquer tag para removê-la globalmente.
+</string>
+    <string name="settings_file_tags_empty_title">
+Nenhuma Tag de Arquivo Criada
+</string>
+    <string name="settings_file_tags_empty_desc">
+Marque qualquer arquivo ou pasta na folha de propriedades do arquivo ou na barra de ferramentas de seleção múltipla para organizar suas mídias e documentos aqui.
+</string>
+    <string name="settings_file_tags_delete_confirm_title">
+Excluir Tag?
+</string>
+    <string name="settings_file_tags_delete_confirm_message">
+Tem certeza de que deseja excluir a tag \"#%1$s\"? Ela será removida de todos os arquivos e pastas marcados.
+</string>
+    <string name="settings_file_tags_delete_btn">
+Excluir Tag
+</string>
+    <string name="settings_file_tags_clear_all">
+Excluir Todas as Tags
+</string>
+    <string name="settings_file_tags_clear_all_confirm_title">
+Excluir Todas as Tags de Arquivo?
+</string>
+    <string name="settings_file_tags_clear_all_confirm_message">
+Tem certeza de que deseja excluir permanentemente todas as tags de arquivo criadas? Isso removerá todas as tags de todos os arquivos e pastas.
+</string>
+    <string name="settings_file_tags_deleted_toast">
+Tag #%1$s excluída
+</string>
+    <string name="settings_file_tags_cleared_all_toast">
+Todas as tags de arquivo excluídas
+</string>
+    <string name="settings_file_tags_multi_title">
+Marcação de Múltiplos Arquivos
+</string>
+    <string name="settings_file_tags_multi_desc">
+Permite marcar vários arquivos simultaneamente quando selecionados
+</string>
+    <string name="settings_file_tags_created_header">
+Tags Criadas
+</string>
+    <string name="settings_file_tags_empty">
+Nenhuma tag criada ainda
+</string>
     <string name="action_tag">
 Marcar
 </string>
@@ -10523,8 +11424,41 @@ Nenhuma configuração de ordenação específica da pasta salva.\n
 \n
 Abra uma pasta, toque em Ordenar &amp; Filtrar e escolha \"Esta Pasta\" para criar uma substituição.
 </string>
+    <string name="folder_sort_manager_empty_title">
+Nenhuma Sobrescrita de Ordenação Configurada
+</string>
+    <string name="folder_sort_manager_empty_desc">
+Quando você alterar a ordem de classificação ou o filtro de uma pasta específica usando \"Esta Pasta\", ela aparecerá aqui para que você possa gerenciar ou redefinir regras de ordenação personalizadas.
+</string>
+    <string name="folder_sort_manager_info_notice">
+Ordens de classificação e filtros personalizados configurados para diretórios específicos. Toque no ícone de lixeira para reverter uma pasta para a classificação global.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Limpar todas as substituições
+</string>
     <string name="folder_sort_manager_clear_confirm">
 Remover todas as substituições de ordenação específicas da pasta? As pastas reverterão para a configuração de ordenação global.
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_title">
+Limpar todas as substituições de classificação?
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_message">
+Tem certeza de que deseja remover todas as substituições de classificação por pasta? Todas as pastas reverterão para suas configurações globais de classificação e filtro.
+</string>
+    <string name="folder_sort_manager_remove_confirm_title">
+Redefinir substituição de classificação da pasta?
+</string>
+    <string name="folder_sort_manager_remove_confirm_message">
+Tem certeza de que deseja remover a substituição de classificação personalizada para \"%1$s\"? Esta pasta reverterá para a classificação global.
+</string>
+    <string name="folder_sort_manager_remove_btn">
+Redefinir substituição
+</string>
+    <string name="folder_sort_manager_cleared_all_toast">
+Todas as substituições de classificação de pastas foram limpas
+</string>
+    <string name="folder_sort_manager_deleted">
+Substituição removida para %1$s
 </string>
     <string name="folder_sort_network_badge">
 Rede / Online
@@ -10687,6 +11621,9 @@ Algo deu errado. Tente novamente.
 </string>
     <string name="support_retry">
 Tentar Novamente
+</string>
+    <string name="retry">
+Tentar novamente
 </string>
     <string name="support_no_internet">
 Sem conexão com a internet. Verifique sua conexão e tente novamente.
@@ -11225,6 +12162,343 @@ Sem GPS
     <string name="exif_select_destination_folder">
 Selecionar Pasta de Saída
 </string>
+
+    <!-- Video Thumbnail Time Modernization -->
+    <string name="vtt_section_options">
+Ponto de captura
+</string>
+    <string name="vtt_info_notice">
+Selecione o timestamp usado para gerar miniaturas de vídeo em todo o aplicativo. Definir uma porcentagem evita quadros em branco, escuros ou de introdução no início dos vídeos.
+</string>
+    <string name="vtt_percent_0_subtitle">
+Capturar o primeiro quadro do vídeo (00:00)
+</string>
+    <string name="vtt_percent_10_subtitle">
+Padrão recomendado — pula quadros pretos ou de introdução
+</string>
+    <string name="vtt_percent_25_subtitle">
+Capturar quadro em 25% da duração do vídeo
+</string>
+    <string name="vtt_percent_50_subtitle">
+Capturar quadro no ponto médio exato (50%) do vídeo
+</string>
+    <string name="vtt_percent_75_subtitle">
+Capturar quadro em 75% da duração do vídeo
+</string>
+
+    <!-- Network Thumbnail Settings Modernization -->
+    <string name="nt_section_caching">
+Configuração
+</string>
+    <string name="nt_section_storage">
+Armazenamento e manutenção
+</string>
+    <string name="nt_info_notice">
+As miniaturas remotas são armazenadas em cache localmente para que compartilhamentos de rede, SMB, FTP, SFTP e drives em nuvem exibam prévias rápidas de imagens e vídeos sem baixar os arquivos novamente.
+</string>
+    <string name="nt_cache_folder_guide_title">
+Selecionar local do cache
+</string>
+    <string name="nt_cache_folder_guide_msg">
+Escolha um diretório no armazenamento interno ou cartão SD para armazenar os arquivos de cache de miniaturas de rede.\n
+\n
+No navegador de armazenamento, navegue até o diretório desejado e toque em \\\"SELECIONAR ESTA PASTA\\\" no topo.
+</string>
+    <string name="nt_cache_folder_btn_browse">
+Navegar pelo armazenamento
+</string>
+    <string name="nt_cache_folder_btn_reset_default">
+Redefinir para local padrão
+</string>
+    <string name="nt_cache_folder_current_label">
+Local atual:
+</string>
+
+    <!-- Cache Limit Dialog Modernization -->
+    <string name="nt_cache_limit_dialog_desc">
+Escolha o espaço máximo em disco usado para armazenar em cache miniaturas remotas.
+</string>
+    <string name="nt_limit_subtitle_500mb">
+Padrão comum — ideal para navegação geral
+</string>
+    <string name="nt_limit_subtitle_1gb">
+Recomendado para uso moderado de rede
+</string>
+    <string name="nt_limit_subtitle_2gb">
+Armazenamento generoso para fotos e miniaturas de vídeo
+</string>
+    <string name="nt_limit_subtitle_5gb">
+Capacidade máxima padrão do cache
+</string>
+    <string name="nt_limit_subtitle_custom">
+Definir um limite personalizado de armazenamento em MB ou GB
+</string>
+    <string name="nt_custom_limit_dialog_title">
+Limite de cache personalizado
+</string>
+    <string name="nt_custom_limit_dialog_desc">
+Insira um limite de tamanho personalizado em MB ou GB
+</string>
+    <string name="nt_custom_presets_label">
+Predefinições rápidas
+</string>
+    <string name="nt_custom_size_label">
+Tamanho personalizado
+</string>
+
+    <!-- File Server System Tiles Modernization -->
+    <string name="file_server_tiles_section_server">
+Servidor de arquivos
+</string>
+    <string name="file_server_tiles_section_tiles">
+Blocos de configurações rápidas
+</string>
+    <string name="file_server_tiles_info_notice">
+Os blocos de configurações rápidas permitem iniciar e parar servidores de mídia FTP, SFTP e DLNA diretamente da gaveta de notificações do Android sem abrir o aplicativo.
+</string>
+
+    <!-- Storage Indexer Modernization -->
+    <string name="storage_indexer_section_storages">
+Armazenamento detectado
+</string>
+    <string name="storage_indexer_section_actions">
+Manutenção
+</string>
+    <string name="storage_indexer_info_notice">
+Indexe o armazenamento interno e unidades removíveis para obter resultados de pesquisa instantâneos, detecção de duplicatas e filtragem por categoria em todo o dispositivo.
+</string>
+    <string name="storage_indexer_detail_info_notice">
+Este volume de armazenamento está indexado. Os registros indexados permitem pesquisa rápida por múltiplos critérios sem verificar o sistema de arquivos.
+</string>
+    <string name="storage_indexer_btn_delete_confirm">
+Excluir registros
+</string>
+
+    <!-- Auto Backup Modernization -->
+    <string name="auto_backup_section_general">
+Configuração
+</string>
+    <string name="auto_backup_section_schedule">
+Agendamento
+</string>
+    <string name="auto_backup_section_security">
+Segurança e criptografia
+</string>
+    <string name="auto_backup_section_location">
+Destino do backup
+</string>
+    <string name="auto_backup_info_notice">
+O backup automático cria periodicamente backups criptografados ou simples das preferências do aplicativo, temas personalizados e blocos, para que você nunca perca sua configuração.
+</string>
+    <string name="auto_backup_folder_guide_title">
+Selecionar pasta de backup
+</string>
+    <string name="auto_backup_folder_guide_msg">
+Escolha onde os backups automáticos serão salvos. Navegue até qualquer pasta local ou removível e toque no botão salvar para confirmar.
+</string>
+    <string name="auto_backup_folder_guide_current">
+Local atual:
+</string>
+    <string name="auto_backup_folder_guide_btn_choose">
+Escolher pasta
+</string>
+    <string name="auto_backup_reset_success">
+Local de backup redefinido para o padrão (Documents/UFM).
+</string>
+
+    <!-- File Server Modernization -->
+    <string name="file_server_section_services">
+Serviços de servidor
+</string>
+    <string name="file_server_section_profiles">
+Autenticação e acesso
+</string>
+    <string name="file_server_info_notice">
+Hospede servidores de arquivos FTP e SFTP locais ou transmita mídia via DLNA. Dispositivos na sua rede Wi-Fi local podem se conectar para navegar, transmitir e transferir arquivos.
+</string>
+    <string name="file_server_empty_profiles_desc">
+Toque em \\\'Adicionar perfil\\\' para configurar credenciais de login, permissões de acesso e diretórios compartilhados.
+</string>
+
+    <!-- DLNA Modernization -->
+    <string name="dlna_section_services">
+Serviços DLNA
+</string>
+    <string name="dlna_section_config">
+Configuração
+</string>
+    <string name="dlna_section_identification">
+Identificação
+</string>
+    <string name="dlna_section_shared_folders">
+Diretórios compartilhados
+</string>
+    <string name="dlna_info_notice">
+Transmita fotos, músicas e vídeos para smart TVs e players de mídia DLNA na sua rede Wi-Fi local ou permita que outros dispositivos transmitam mídia para este dispositivo.
+</string>
+    <string name="dlna_settings_info_notice">
+Configure como seu dispositivo aparece na rede local e escolha diretórios para compartilhar. Os compartilhamentos de mídia DLNA são estritamente somente leitura.
+</string>
+    <string name="dlna_empty_shared_folders_desc">
+Toque em \\\'Adicionar pasta\\\' para selecionar pastas do armazenamento interno, cartão SD ou USB para expor via DLNA.
+</string>
+
+    <!-- Smart Sort Modernization -->
+    <string name="smart_sort_empty">
+Nenhuma unidade de armazenamento encontrada
+</string>
+    <string name="smart_sort_history_moved">
+Movido
+</string>
+    <string name="smart_sort_history_skipped">
+Ignorado
+</string>
+    <string name="smart_sort_history_failed">
+Falhou
+</string>
+
+    <!-- Rate Us Modernization -->
+    <string name="rate_us_section_rate">
+Avaliação e feedback
+</string>
+    <string name="rate_us_section_support">
+Mais formas de apoiar
+</string>
+    <string name="rate_us_support_title">
+Apoie o projeto
+</string>
+    <string name="rate_us_support_subtitle">
+Faça uma doação se puder apoiar o projeto
+</string>
+    <string name="rate_us_stars_description">
+Avaliação de 5 estrelas
+</string>
+
+    <!-- Help & Support Modernization -->
+    <string name="support_section_channels">
+Canais de contato
+</string>
+    <string name="support_section_direct">
+Contato direto
+</string>
+    <string name="support_direct_email_title">
+support@kilowatch.co.za
+</string>
+    <string name="support_direct_email_subtitle">
+Envie um e-mail diretamente para a equipe de desenvolvimento
+</string>
+    <string name="support_direct_email_copied">
+E-mail de suporte copiado para a área de transferência
+</string>
+
+    <!-- About Modernization -->
+    <string name="about_section_app">
+Informações do aplicativo
+</string>
+    <string name="about_section_support">
+Desenvolvedor e links
+</string>
+    <string name="about_section_legal">
+Jurídico e políticas
+</string>
+    <string name="about_section_acknowledgments">
+Agradecimentos
+</string>
+    <string name="about_legal_title">
+Política de privacidade e termos
+</string>
+    <string name="about_legal_subtitle">
+Revise nossa política de privacidade, termos de serviço e licenças
+</string>
+    <string name="about_rate_title">
+Avaliar e comentar
+</string>
+    <string name="about_rate_subtitle">
+Compartilhe sua experiência no Google Play
+</string>
+    <string name="about_support_title">
+Ajuda e suporte
+</string>
+    <string name="about_support_subtitle">
+Relate um problema ou solicite recursos
+</string>
+    <string name="about_email_copied">
+E-mail de suporte copiado para a área de transferência
+</string>
+
+    <!-- Main Menu Categorized Modernization -->
+    <string name="main_menu_category_storage">
+Armazenamento
+</string>
+    <string name="main_menu_category_connect">
+Conectar
+</string>
+    <string name="main_menu_category_sync">
+Sincronização de pastas
+</string>
+    <string name="main_menu_category_organize">
+Organizar
+</string>
+    <string name="main_menu_category_utilities">
+Utilitários
+</string>
+    <string name="main_menu_category_security">
+Segurança e avançado
+</string>
+    <string name="main_menu_category_settings">
+Configurações e mais
+</string>
+    <string name="main_menu_layout_modern_categorized">
+Moderno categorizado
+</string>
+    <string name="main_menu_layout_modern_desc">
+Organizado em seções de categorias expansíveis
+</string>
+    <string name="main_menu_layout_classic_grid">
+Grade clássica
+</string>
+    <string name="main_menu_layout_classic_grid_desc">
+Grade plana de várias colunas (3 ou 4 colunas)
+</string>
+    <string name="main_menu_layout_classic_list">
+Lista clássica
+</string>
+    <string name="main_menu_layout_classic_list_desc">
+Lista plana de coluna única (Grande, Médio, Pequeno)
+</string>
+    <string name="main_menu_section_items_count">
+%1$d itens
+</string>
+    <string name="main_menu_section_item_count_single">
+1 item
+</string>
+
+    <!-- Reset Category Layout -->
+    <string name="reset_categorized_layout_section">
+Redefinir
+</string>
+    <string name="reset_categorized_layout_title">
+Redefinir layout das categorias
+</string>
+    <string name="reset_categorized_layout_desc">
+Restaurar a ordem das categorias, as posições dos blocos e os estados de expansão para o padrão
+</string>
+    <string name="reset_categorized_dialog_title">
+Redefinir layout das categorias?
+</string>
+    <string name="reset_categorized_dialog_subtitle">
+Restaurar organização de fábrica
+</string>
+    <string name="reset_categorized_dialog_msg">
+Isso restaurará todos os cabeçalhos de categorias, posições dos blocos e estados de expansão para os padrões de fábrica. As configurações de cor personalizadas serão preservadas.
+</string>
+    <string name="reset_categorized_dialog_confirm">
+Redefinir para o padrão
+</string>
+    <string name="reset_categorized_success">
+Layout das categorias restaurado para o padrão
+</string>
 </resources>
+
 
 

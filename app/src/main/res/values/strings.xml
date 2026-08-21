@@ -1123,6 +1123,26 @@
     <string name="manage_tiles_restores_to_main">Restores to: Main Menu</string>
     <string name="manage_tiles_restores_to_custom">Restores to: %1$s</string>
 
+    <!-- Add Options Dialog -->
+    <string name="add_menu_options_title">Create New</string>
+    <string name="add_menu_options_desc">Choose what you would like to add to the main menu.</string>
+    <string name="option_create_header_title">Create New Header</string>
+    <string name="option_create_header_desc">Add a custom section header to organize your tiles</string>
+    <string name="option_create_tile_title">Create Custom Tile</string>
+    <string name="option_create_tile_desc">Add a custom tile to group shortcuts and folders</string>
+
+    <!-- Custom Category Headers -->
+    <string name="custom_header_create_title">Create New Header</string>
+    <string name="custom_header_create_desc">Enter a title for this category header.</string>
+    <string name="custom_header_name_hint">Header Name (required)</string>
+    <string name="custom_header_name_required">Header name is required</string>
+    <string name="custom_header_created">Category header created</string>
+    <string name="custom_header_add_button">Add Header</string>
+    <string name="custom_header_delete_title">Delete Category Header</string>
+    <string name="custom_header_delete_confirm">Delete \"%1$s\"?</string>
+    <string name="custom_header_delete_warning">All tiles inside will be moved back to their original location.</string>
+    <string name="custom_header_deleted">Category header \"%1$s\" deleted</string>
+
     <!-- Custom Tiles -->
     <string name="custom_tile_create_title">Create Custom Tile</string>
     <string name="custom_tile_edit_title">Edit Custom Tile</string>
@@ -4354,6 +4374,34 @@
     <string name="about_support_title">Help &amp; Support</string>
     <string name="about_support_subtitle">Report an issue or request features</string>
     <string name="about_email_copied">Support email copied to clipboard</string>
+
+    <!-- Main Menu Categorized Modernization -->
+    <string name="main_menu_category_storage">Storage</string>
+    <string name="main_menu_category_connect">Connect</string>
+    <string name="main_menu_category_sync">Folder Sync</string>
+    <string name="main_menu_category_organize">Organize</string>
+    <string name="main_menu_category_utilities">Utilities</string>
+    <string name="main_menu_category_security">Security &amp; Advanced</string>
+    <string name="main_menu_category_settings">Settings &amp; More</string>
+    <string name="main_menu_layout_modern_categorized">Modern Categorized</string>
+    <string name="main_menu_layout_modern_desc">Organized into expandable category sections</string>
+    <string name="main_menu_layout_classic_grid">Classic Grid</string>
+    <string name="main_menu_layout_classic_grid_desc">Flat multicolumn grid (3 or 4 columns)</string>
+    <string name="main_menu_layout_classic_list">Classic List</string>
+    <string name="main_menu_layout_classic_list_desc">Flat single-column list (Large, Medium, Small)</string>
+    <string name="main_menu_section_items_count">%1$d items</string>
+    <string name="main_menu_section_item_count_single">1 item</string>
+
+    <!-- Reset Category Layout -->
+    <string name="reset_categorized_layout_section">Reset</string>
+    <string name="reset_categorized_layout_title">Reset Category Layout</string>
+    <string name="reset_categorized_layout_desc">Restore category order, tile positions, and expansion states to default</string>
+    <string name="reset_categorized_dialog_title">Reset Category Layout?</string>
+    <string name="reset_categorized_dialog_subtitle">Restore factory arrangement</string>
+    <string name="reset_categorized_dialog_msg">This will restore all category headers, tile positions, and expansion states to their factory defaults. Custom color settings will be preserved.</string>
+    <string name="reset_categorized_dialog_confirm">Reset to Default</string>
+    <string name="reset_categorized_success">Category layout restored to default</string>
 </resources>
+
 
 

@@ -50,6 +50,15 @@
     <string name="language_system_default">
 إعدادات النظام الافتراضية
 </string>
+    <string name="language_system_default_desc">
+مطابقة لغة نظام الجهاز
+</string>
+    <string name="language_section_system">
+تفضيل النظام
+</string>
+    <string name="language_section_available">
+اللغات المتاحة
+</string>
     <string name="settings_list_size_title">
 حجم صف الإعدادات
 </string>
@@ -460,6 +469,36 @@
 \n
 اضغط مطولاً على ملف أو مجلد وانقر على أيقونة النجمة لإضافته هنا.
 </string>
+    <string name="manage_favorites_empty_title">
+لا توجد مفضلات
+</string>
+    <string name="manage_favorites_empty_desc">
+انقر على أيقونة النجمة في أي ملف أو مجلد في متصفح الملفات لإضافته إلى المفضلة للوصول السريع هنا.
+</string>
+    <string name="manage_favorites_info_notice">
+تظهر الملفات والمجلدات المفضلة في قائمة التنقل ولوحات الوصول السريع للتنقل السريع. انقر على أيقونة سلة المهملات لإزالة عنصر مفضل.
+</string>
+    <string name="manage_favorites_clear_all">
+مسح كل المفضلات
+</string>
+    <string name="manage_favorites_clear_all_confirm_title">
+مسح كل المفضلات؟
+</string>
+    <string name="manage_favorites_clear_all_confirm_message">
+هل أنت متأكد من إزالة جميع العناصر من قائمة المفضلة؟ لن يؤدي ذلك إلى حذف الملفات أو المجلدات الفعلية.
+</string>
+    <string name="manage_favorites_remove_confirm_title">
+إزالة المفضلة؟
+</string>
+    <string name="manage_favorites_remove_confirm_message">
+هل أنت متأكد من إزالة \"%1$s\" من قائمة المفضلة؟
+</string>
+    <string name="manage_favorites_remove_btn">
+إزالة المفضلة
+</string>
+    <string name="manage_favorites_cleared_all_toast">
+تمت إزالة جميع المفضلات
+</string>
     <string name="manage_favorites_removed">
 تمت إزالة %1$s من المفضلة
 </string>
@@ -650,6 +689,21 @@ NAS المنزلي
 3. قم بتمكين \\\"تصحيح أخطاء USB\\\"\n
 \n
 إذا لم ترَ خيارات المطورين، فانتقل إلى \\\"حول\\\" وانقر على \\\"رقم البناء\\\" 7 مرات أولاً.\\\"
+</string>
+    <string name="adb_enable_desc">
+يجب تمكين تصحيح أخطاء USB على التلفزيون لالتقاط لقطات الشاشة.
+</string>
+    <string name="adb_step_1">
+1. افتح الإعدادات على تلفزيون أندرويد
+</string>
+    <string name="adb_step_2">
+2. انتقل إلى تفضيلات الجهاز → خيارات المطور
+</string>
+    <string name="adb_step_3">
+3. فعّل \"تصحيح أخطاء USB\"
+</string>
+    <string name="adb_step_tip">
+تلميح: إذا كانت خيارات المطور مخفية، انتقل إلى الإعدادات → حول الجهاز وانقر على \"رقم الإصدار\" 7 مرات.
 </string>
     <string name="adb_pairing_required">
 مطلوب إقران ADB
@@ -1061,6 +1115,24 @@ APK
 يوفر %1$s
 </string>
     <!-- Section headers inside Overview -->
+    <string name="analyzer_info_notice">
+افحص استخدام القرص، واستكشف تقسيم التخزين حسب الفئات، واكتشف الملفات الكبيرة والمكررة واقتراحات التنظيف.
+</string>
+    <string name="analyzer_section_storage_breakdown">
+تقسيم التخزين
+</string>
+    <string name="analyzer_section_top_folders">
+أكبر المجلدات
+</string>
+    <string name="analyzer_section_app_usage">
+استخدام مساحة التطبيقات
+</string>
+    <string name="analyzer_empty_state_desc">
+لا توجد عناصر لهذه الفئة من التحليل.
+</string>
+    <string name="analyzer_action_review">
+مراجعة وتنظيف
+</string>
     <string name="analyzer_top_folders">
 أكبر المجلدات حسب الحجم
 </string>
@@ -1273,14 +1345,29 @@ XXXXXXXXXXXXXXXX
 حذف بشكل دائم
 </string>
 
+    <string name="theme_section_color_palette">
+لوحة الألوان
+</string>
+    <string name="theme_section_mode">
+وضع المظهر
+</string>
     <string name="theme_light">
 فاتح
+</string>
+    <string name="theme_light_desc">
+واجهة نظيفة ومشرقة
 </string>
     <string name="theme_dark">
 داكن
 </string>
+    <string name="theme_dark_desc">
+مظهر داكن مريح للإضاءة المنخفضة
+</string>
     <string name="theme_system">
 إعدادات النظام الافتراضية
+</string>
+    <string name="theme_system_desc">
+اتباع جدول النظام ليلاً/نهارًا
 </string>
     <string name="theme_amoled">
 AMOLED أسود
@@ -1323,6 +1410,30 @@ Material You
     <string name="font_size_preview">
 الثعلب البني السريع يقفز
 </string>
+    <string name="font_size_small_desc">
+85٪ • حجم مضغوط لكثافة شاشة أعلى
+</string>
+    <string name="font_size_normal_desc">
+100٪ • حجم الخط الافتراضي الموصى به
+</string>
+    <string name="font_size_large_desc">
+115٪ • حجم مكبر لتحسين وضوح القراءة
+</string>
+    <string name="font_size_preview_title">
+معاينة الخط المباشرة
+</string>
+    <string name="font_size_preview_sample_heading">
+Ultimate File Manager Pro
+</string>
+    <string name="font_size_preview_sample_body">
+الثعلب البني السريع يقفز فوق الكلب الكسول. مدير ملفات بشاشتين متوازيتين للمستخدمين المحترفين على أندرويد والتلفزيون.
+</string>
+    <string name="font_size_section_preview">
+معاينة مباشرة
+</string>
+    <string name="font_size_section_options">
+خيارات حجم النص
+</string>
 
     <!-- Storage Renaming -->
     <string name="settings_storage_rename_title">
@@ -1331,11 +1442,56 @@ Material You
     <string name="settings_storage_rename_subtitle">
 إعادة تسمية محركات أقراص USB والتخزين المحلي
 </string>
+    <string name="storage_rename_section_connected">
+محركات التخزين المتصلة
+</string>
+    <string name="storage_rename_section_offline">
+محركات غير متصلة / مفصولة
+</string>
+    <string name="storage_rename_original_details">
+الأصلي: %1$s • %2$s
+</string>
+    <string name="storage_rename_info_notice">
+التسميات المخصصة المعينة للتخزين الداخلي وبطاقات SD ومحركات USB. انقر على أي محرك لإعادة تسميته أو إعادة تعيين تسمية العرض الخاصة به.
+</string>
+    <string name="storage_rename_empty_title">
+لم يتم العثور على محركات تخزين
+</string>
+    <string name="storage_rename_empty_desc">
+ستظهر محركات التخزين الداخلية والخارجية المتصلة هنا للتسمية والتعرف المخصص.
+</string>
     <string name="rename_drive_dialog_title">
 إعادة تسمية محرك الأقراص
 </string>
+    <string name="storage_rename_dialog_subtitle">
+أدخل اسمًا مخصصًا لـ %1$s
+</string>
     <string name="custom_name_hint">
 اسم محرك الأقراص الجديد
+</string>
+    <string name="storage_rename_reset_btn">
+إعادة التعيين إلى الافتراضي
+</string>
+    <string name="storage_rename_save_btn">
+حفظ الاسم المخصص
+</string>
+    <string name="storage_rename_saved_toast">
+تمت إعادة تسمية المحرك إلى \"%1$s\"
+</string>
+    <string name="storage_rename_reset_toast">
+تمت إعادة تعيين المحرك إلى الاسم الأصلي
+</string>
+    <string name="storage_rename_clear_all">
+إعادة تعيين جميع أسماء المحركات
+</string>
+    <string name="storage_rename_clear_all_confirm_title">
+إعادة تعيين جميع أسماء المحركات؟
+</string>
+    <string name="storage_rename_clear_all_confirm_message">
+هل أنت متأكد من إعادة تعيين جميع تسميات المحركات المخصصة إلى أسماء النظام الافتراضية؟
+</string>
+    <string name="storage_rename_cleared_all_toast">
+تمت إعادة تعيين جميع أسماء المحركات إلى الافتراضي
 </string>
     <string name="reset_action">
 إعادة تعيين
@@ -1428,11 +1584,29 @@ Material You
     <string name="start_screen_storage_browser">
 القائمة الرئيسية (افتراضي)
 </string>
+    <string name="start_screen_storage_browser_desc">
+الشاشة الرئيسية القياسية مع جميع التخزين والبلاطات السريعة
+</string>
     <string name="start_screen_twin_window">
 نافذة مزدوجة
 </string>
+    <string name="start_screen_twin_window_desc">
+مدير ملفات بشاشتين جنبًا إلى جنب
+</string>
     <string name="start_screen_file_server">
 خادم الملفات
+</string>
+    <string name="start_screen_file_server_desc">
+أدوات التحكم في خادم الملفات HTTP وFTP وWebDAV
+</string>
+    <string name="start_screen_section_main">
+الشاشات الرئيسية
+</string>
+    <string name="start_screen_section_storages">
+محركات التخزين المباشرة
+</string>
+    <string name="start_screen_storage_desc">
+فتح هذا المحرك مباشرة عند الإطلاق
 </string>
 
     <!-- Analytics Toggle -->
@@ -1507,6 +1681,12 @@ Material You
 </string>
 
     <!-- Open Source Licenses -->
+    <string name="policy_section_agreements">
+السياسات والاتفاقيات
+</string>
+    <string name="policy_section_attributions">
+الإسنادات والتراخيص
+</string>
     <string name="policy_licenses_button">
 تراخيص المصدر المفتوح
 </string>
@@ -1640,8 +1820,38 @@ APKs
     <string name="default_apps_empty">
 لم يتم تعيين تطبيقات افتراضية.
 </string>
+    <string name="default_apps_empty_title">
+لا توجد تطبيقات افتراضية مهيأة
+</string>
+    <string name="default_apps_empty_desc">
+عند فتح ملف باستخدام \"دائمًا\"، سيظهر هنا لتتمكن من إدارة أو إعادة تعيين قواعد اقتران الملفات.
+</string>
+    <string name="default_apps_info_notice">
+أنواع الملفات المهيأة للفتح تلقائيًا مع عارض أو تطبيق معين. انقر على أيقونة سلة المهملات لإعادة تعيين قاعدة الاقتران.
+</string>
     <string name="default_apps_clear_all">
 مسح كافة الإعدادات الافتراضية
+</string>
+    <string name="default_apps_clear_all_confirm_title">
+مسح جميع التطبيقات الافتراضية
+</string>
+    <string name="default_apps_clear_all_confirm_message">
+هل أنت متأكد من مسح جميع تفضيلات اقتران الملفات؟ ستظهر مطالبة باختيار تطبيق عند فتح الملفات.
+</string>
+    <string name="default_app_remove_confirm_title">
+إعادة تعيين اقتران .%1$s؟
+</string>
+    <string name="default_app_remove_confirm_message">
+هل أنت متأكد من إعادة تعيين التطبيق الافتراضي لامتداد .%1$s (%2$s)؟ سيُطلب منك اختيار تطبيق في المرة القادمة التي تفتح فيها هذا النوع من الملفات.
+</string>
+    <string name="default_app_remove_btn">
+إعادة تعيين الافتراضي
+</string>
+    <string name="default_apps_removed_toast">
+إعادة تعيين الافتراضي لـ .%1$s
+</string>
+    <string name="default_apps_cleared_all_toast">
+تم مسح جميع التطبيقات الافتراضية
 </string>
     <string name="default_apps_extension_label">
 نوع الملف: %1$s
@@ -1972,6 +2182,15 @@ APKs
     <string name="all_drives">
 جميع محركات الأقراص
 </string>
+    <string name="search_select_location_title">
+موقع البحث
+</string>
+    <string name="search_select_location_subtitle">
+اختر موقع تخزين للبحث داخله
+</string>
+    <string name="search_all_drives_subtitle">
+البحث في جميع وحدات التخزين المتصلة
+</string>
 
     <!-- Category detail -->
     <string name="category_files_title">
@@ -2117,6 +2336,9 @@ SMB, FTP والمزيد
     <string name="network_shares_subtitle">
 SMB · FTP
 </string>
+    <string name="network_shares_info_notice">
+اتصل بمشاركات SMB وFTP وSFTP وSCP وNFS على شبكتك المحلية لتصفح الملفات ونقلها وتنظيمها بسلاسة.
+</string>
     <string name="network_add_share">
 إضافة مشاركة
 </string>
@@ -2162,6 +2384,9 @@ DLNA
 </string>
     <string name="network_field_port">
 المنفذ (اتركه فارغًا للافتراضي)
+</string>
+    <string name="network_section_credentials">
+بيانات الاعتماد والمصادقة
 </string>
     <string name="network_field_username">
 اسم المستخدم (فارغ = ضيف)
@@ -2681,6 +2906,37 @@ jpg, png, mp4
 %1$s — تم استخدام إصدار %2$s
 </string>
 
+    <string name="configure_sync_folders_schedule">
+تكوين المجلدات وجدول المزامنة
+</string>
+    <string name="sync_section_profile_direction">
+الملف الشخصي والاتجاه
+</string>
+    <string name="sync_section_folders">
+المجلدات والمواقع
+</string>
+    <string name="sync_section_schedule">
+الجدولة والأتمتة
+</string>
+    <string name="sync_section_conflict">
+معالجة التعارضات والحذف
+</string>
+    <string name="sync_section_filtering">
+تصفية الملفات والوسوم
+</string>
+    <string name="general_settings">
+الإعدادات العامة
+</string>
+    <string name="schedule_and_triggers">
+الجدولة والمشغلات
+</string>
+    <string name="schedule_mode">
+وضع الجدولة
+</string>
+    <string name="options">
+خيارات
+</string>
+
     <!-- Generic -->
     <string name="cancel">
 إلغاء
@@ -2885,6 +3141,58 @@ NFSv4
 يستعيد إلى: %1$s
 </string>
 
+    <!-- Add Options Dialog -->
+    <string name="add_menu_options_title">
+إنشاء جديد
+</string>
+    <string name="add_menu_options_desc">
+اختر ما تريد إضافته إلى القائمة الرئيسية.
+</string>
+    <string name="option_create_header_title">
+إنشاء ترويسة جديدة
+</string>
+    <string name="option_create_header_desc">
+أضف ترويسة قسم مخصصة لتنظيم البلاطات
+</string>
+    <string name="option_create_tile_title">
+إنشاء بلاطة مخصصة
+</string>
+    <string name="option_create_tile_desc">
+أضف بلاطة مخصصة لتجميع الاختصارات والمجلدات
+</string>
+
+    <!-- Custom Category Headers -->
+    <string name="custom_header_create_title">
+إنشاء ترويسة جديدة
+</string>
+    <string name="custom_header_create_desc">
+أدخل عنوانًا لهذه الترويسة.
+</string>
+    <string name="custom_header_name_hint">
+اسم الترويسة (مطلوب)
+</string>
+    <string name="custom_header_name_required">
+اسم الترويسة مطلوب
+</string>
+    <string name="custom_header_created">
+تم إنشاء ترويسة الفئة
+</string>
+    <string name="custom_header_add_button">
+إضافة ترويسة
+</string>
+    <string name="custom_header_delete_title">
+حذف ترويسة الفئة
+</string>
+    <string name="custom_header_delete_confirm">
+حذف \"%1$s\"؟
+</string>
+    <string name="custom_header_delete_warning">
+سيتم نقل جميع البلاطات داخلها إلى موقعها الأصلي.
+</string>
+    <string name="custom_header_deleted">
+تم حذف ترويسة الفئة \"%1$s\"
+</string>
+
     <!-- Custom Tiles -->
     <string name="custom_tile_create_title">
 إنشاء بلاطة مخصصة
@@ -3032,6 +3340,12 @@ NFSv4
     <string name="tile_color_message_select">
 اضغط على بلاطة بعد الضغط على \\\'تحديد\\\' لفتح منتقي الألوان.
 </string>
+    <string name="tile_color_tip_title">
+مخصص ألوان البلاطات
+</string>
+    <string name="tile_color_tip_desc">
+انقر على أي محرك تخزين أو بلاطة ميزة في الشاشة الرئيسية لتخصيص لوحة الألوان الخاصة بها
+</string>
     <string name="tile_color_button_select">
 تحديد بلاطة
 </string>
@@ -3148,6 +3462,9 @@ NFSv4
 </string>
     <string name="storage_indexer_delete_records">
 حذف السجلات المفهرسة
+</string>
+    <string name="storage_indexer_delete_records_desc">
+مسح قاعدة بيانات الفهرسة لهذا التخزين
 </string>
     <string name="storage_indexer_not_now">
 تجاهل هذا التخزين (ليس الآن)
@@ -3403,14 +3720,41 @@ NFSv4
     <string name="layout_grid">
 شبكة
 </string>
+    <string name="layout_list_size_section">
+حجم تخطيط القائمة
+</string>
+    <string name="layout_size_large">
+كبير
+</string>
+    <string name="layout_size_large_desc">
+صفوف متباعدة مع أيقونات كبيرة
+</string>
+    <string name="layout_size_medium">
+متوسط
+</string>
+    <string name="layout_size_medium_desc">
+ارتفاع صف قياسي متوازن
+</string>
+    <string name="layout_size_small">
+صغير
+</string>
+    <string name="layout_size_small_desc">
+صفوف مضغوطة بكثافة عالية
+</string>
     <string name="column_count">
 الأعمدة
 </string>
     <string name="columns_4">
 4 أعمدة
 </string>
+    <string name="columns_4_desc">
+تخطيط شبكي مضغوط من 4 أعمدة
+</string>
     <string name="columns_3">
 3 أعمدة
+</string>
+    <string name="columns_3_desc">
+تخطيط شبكي واسع من 3 أعمدة
 </string>
 
     <!-- Long Press Duration Settings -->
@@ -3426,6 +3770,114 @@ NFSv4
 </string>
     <string name="settings_toolbar_icons_subtitle">
 تخصيص شريط إجراءات التحديد
+</string>
+    <string name="settings_toolbar_icons_info_notice">
+خصص أزرار الإجراءات التي تظهر في شريط الأدوات عند تحديد الملفات أو المجلدات. قم بإيقاف تشغيل الإجراءات التي لا تستخدمها للحفاظ على مساحة عمل نظيفة وفعالة.
+</string>
+    <string name="settings_toolbar_icons_reset_defaults">
+إعادة التعيين إلى الافتراضي
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_title">
+إعادة تعيين أيقونات شريط الأدوات؟
+</string>
+    <string name="settings_toolbar_icons_reset_confirm_message">
+هل أنت متأكد من إعادة تعيين جميع أيقونات شريط أدوات التحديد إلى حالتها الافتراضية الممكّنة؟
+</string>
+    <string name="settings_toolbar_icons_reset_toast">
+تمت إعادة تعيين أيقونات شريط الأدوات إلى الافتراضي
+</string>
+    <string name="toolbar_section_file_operations">
+عمليات الملفات
+</string>
+    <string name="toolbar_section_security">
+الأمان والخصوصية
+</string>
+    <string name="toolbar_section_selection_navigation">
+التحديد والمفضلة
+</string>
+    <string name="toolbar_section_tools_media">
+الأرشفة والوسائط والأدوات
+</string>
+    <string name="toolbar_desc_create_new">
+إنشاء ملفات أو مجلدات أو أرشيفات جديدة
+</string>
+    <string name="toolbar_desc_copy">
+تكرار العناصر المحددة إلى الحافظة
+</string>
+    <string name="toolbar_desc_move">
+قص العناصر المحددة لنقلها
+</string>
+    <string name="toolbar_desc_rename">
+إعادة تسمية الملف أو المجلد المحدد
+</string>
+    <string name="toolbar_desc_share">
+إرسال الملفات عبر ورقة مشاركة النظام
+</string>
+    <string name="toolbar_desc_delete">
+إزالة العناصر نهائيًا أو نقلها إلى سلة المهملات
+</string>
+    <string name="toolbar_desc_copy_encrypt">
+تشفير العناصر ونسخها
+</string>
+    <string name="toolbar_desc_move_encrypt">
+تشفير العناصر ونقلها
+</string>
+    <string name="toolbar_desc_protect">
+تعيين علامة للقراءة فقط أو محمية
+</string>
+    <string name="toolbar_desc_unprotect">
+إزالة قفل الحماية
+</string>
+    <string name="toolbar_desc_hide">
+وضع علامة على العناصر كمخفية
+</string>
+    <string name="toolbar_desc_unhide">
+إظهار الملفات المخفية
+</string>
+    <string name="toolbar_desc_select_all">
+تحديد جميع العناصر في الجزء الحالي
+</string>
+    <string name="toolbar_desc_invert_selection">
+تبديل حالة تحديد جميع العناصر
+</string>
+    <string name="toolbar_desc_favorite">
+إضافة إلى المفضلة أو إزالتها منها
+</string>
+    <string name="toolbar_desc_pin">
+تثبيت العنصر في لوحة الوصول السريع
+</string>
+    <string name="toolbar_desc_unpin">
+إلغاء تثبيت العنصر من الوصول السريع
+</string>
+    <string name="toolbar_desc_compress">
+إنشاء أرشيف ZIP أو 7Z
+</string>
+    <string name="toolbar_desc_extract">
+فك ضغط الأرشيف في المجلد الحالي
+</string>
+    <string name="toolbar_desc_compress_image">
+تحسين حجم ملف الصورة
+</string>
+    <string name="toolbar_desc_retrigger_thumbnails">
+إعادة بناء الصور المصغرة المخزنة مؤقتًا للصور والفيديوهات
+</string>
+    <string name="toolbar_desc_create_gif">
+تجميع الصور في صورة GIF متحركة
+</string>
+    <string name="toolbar_desc_exif_tools">
+إزالة البيانات الوصفية وإعادة تسمية الصور بشكل جماعي
+</string>
+    <string name="toolbar_desc_set_home_wallpaper">
+تعيين الصورة المحددة كخلفية للشاشة الرئيسية
+</string>
+    <string name="toolbar_desc_set_lock_wallpaper">
+تعيين الصورة المحددة كخلفية لشاشة القفل
+</string>
+    <string name="toolbar_desc_duplicate_finder">
+فحص واكتشاف الملفات المكررة
+</string>
+    <string name="toolbar_desc_large_files_finder">
+تحديد الملفات التي تستهلك مساحة تخزين زائدة
 </string>
     <string name="long_press_duration_seconds">
 %1$.1f ثوانٍ
@@ -3561,6 +4013,54 @@ NFSv4
     <string name="connect_to_android_device">
 الاتصال بجهاز Android
 </string>
+    <string name="adb_terminal_empty_title">
+ADB Shell جاهز
+</string>
+    <string name="adb_terminal_empty_subtitle">
+اتصل بجهاز أندرويد أو تلفزيون لتنفيذ أوامر الصدفة وفحص الحزم ومراقبة عمليات النظام.
+</string>
+    <string name="adb_terminal_clear">
+مسح وحدة التحكم
+</string>
+    <string name="adb_terminal_copy">
+نسخ المخرجات
+</string>
+    <string name="adb_terminal_cleared">
+تم مسح مخرجات الطرفية
+</string>
+    <string name="adb_terminal_copied">
+تم نسخ جميع المخرجات إلى الحافظة
+</string>
+    <string name="adb_quick_commands">
+أوامر سريعة
+</string>
+    <string name="adb_host_label">
+عنوان IP للجهاز الهدف
+</string>
+    <string name="adb_host_hint">
+192.168.1.50 أو 127.0.0.1
+</string>
+    <string name="adb_pairing_guide_title">
+دليل الاقتران اللاسلكي في 3 خطوات
+</string>
+    <string name="adb_pairing_guide_step1">
+فعّل خيارات المطور وتصحيح الأخطاء اللاسلكي على الجهاز الهدف
+</string>
+    <string name="adb_pairing_guide_step2">
+انقر على \"إقران الجهاز برمز الاقتران\" في إعدادات تصحيح الأخطاء اللاسلكي
+</string>
+    <string name="adb_pairing_guide_step3">
+أدخل عنوان IP والمنفذ ورمز PIN المكون من 6 أرقام المعروضة أدناه
+</string>
+    <string name="adb_discovery_title">
+الاكتشاف التلقائي للأجهزة على الشبكة
+</string>
+    <string name="adb_manual_title">
+إعدادات IP والمنفذ الهدف
+</string>
+    <string name="adb_pin_title">
+رمز اقتران من 6 أرقام
+</string>
     <string name="search_apps">
 البحث عن التطبيقات...
 </string>
@@ -3576,6 +4076,36 @@ NFSv4
     <string name="no_devices_paired_yetntap_to">
 لا توجد أجهزة مقترنة بعد.\n
 اضغط على + لربط تلفاز.
+</string>
+    <string name="link_tv">
+ربط التلفزيون
+</string>
+    <string name="link_tv_button">
+ربط تلفزيون جديد
+</string>
+    <string name="paired_tvs_empty_title">
+لا توجد تلفزيونات مقترنة بعد
+</string>
+    <string name="paired_tvs_empty_subtitle">
+اربط هاتفك بتلفزيون أندرويد الذي يعمل بتطبيق UFM لنقل الملفات لاسلكيًا وإدارة التخزين والوصول عن بُعد.
+</string>
+    <string name="tv_pairing_guide_title">
+دليل سريع من 3 خطوات
+</string>
+    <string name="tv_pairing_guide_step1">
+افتح تطبيق UFM على تلفزيون أندرويد الخاص بك
+</string>
+    <string name="tv_pairing_guide_step2">
+اختر \"الهواتف المقترنة\" من القائمة الرئيسية للتلفزيون
+</string>
+    <string name="tv_pairing_guide_step3">
+اختر \"ربط تطبيق الهاتف\" على التلفزيون للحصول على رمز PIN المكون من 4 أرقام
+</string>
+    <string name="paired_status_connected">
+متصل
+</string>
+    <string name="paired_status_disconnected">
+غير متصل
 </string>
     <string name="paired_phones">
 الهواتف المقترنة
@@ -4443,8 +4973,14 @@ ASS
     <string name="take_screenshot">
 التقاط لقطة شاشة
 </string>
+    <string name="take_screenshot_subtitle">
+التقط شاشة التلفزيون الحالية إلى جهازك
+</string>
     <string name="record_screen">
 تسجيل الشاشة
+</string>
+    <string name="record_screen_subtitle">
+سجّل فيديو شاشة التلفزيون مع خيارات الصوت
 </string>
     <string name="record_screen_audio_title">
 صوت التلفاز
@@ -5626,13 +6162,43 @@ ROOT
     <string name="sideload_apk">
 تثبيت APK جانبيًا
 </string>
+    <string name="sideload_apk_subtitle">
+تثبيت حزمة APK واحدة على التلفزيون
+</string>
     <string name="sideload_xapk">
 تثبيت XAPK جانبيًا
+</string>
+    <string name="sideload_xapk_subtitle">
+تثبيت تطبيقات XAPK / APKM المجمعة على التلفزيون
+</string>
+    <string name="sideload_dialog_desc_apk">
+ثبّت حزمة تطبيق أندرويد (.apk) من جهازك على تلفزيونك المقترن.
+</string>
+    <string name="sideload_dialog_desc_xapk">
+ثبّت حزمة تطبيق مجمعة (.xapk / .apkm) من جهازك على تلفزيونك المقترن.
+</string>
+    <string name="sideload_step_1_apk">
+1. اختر ملف .apk من وحدة التخزين على جهازك
+</string>
+    <string name="sideload_step_1_xapk">
+1. اختر حزمة .xapk / .apkm من وحدة التخزين على جهازك
+</string>
+    <string name="sideload_step_2">
+2. سيقوم UFM بنقل الحزمة لاسلكيًا إلى تلفزيونك
+</string>
+    <string name="sideload_step_3">
+3. أكّد مطالبة التثبيت على شاشة التلفزيون لإكمال العملية
+</string>
+    <string name="sideload_choose_file">
+اختر ملف
 </string>
 
     <!-- Transfer Settings Feature -->
     <string name="transfer_settings">
 نقل الإعدادات
+</string>
+    <string name="transfer_settings_action_subtitle">
+نقل الإعدادات والمشاركات الشبكية إلى التلفزيون
 </string>
     <string name="transfer_settings_select_all">
 تحديد الكل
@@ -6141,6 +6707,9 @@ Debloater
 </string>
     <string name="smart_sort_tile_subtitle">
 تكوين الفرز الذكي
+</string>
+    <string name="smart_sort_info_notice">
+صنّف الملفات ونظّمها تلقائيًا في مجلدات منظمة حسب النوع أو الحجم أو التاريخ أو قواعد مخصصة. اختر محرك تخزين أو مشاركة أدناه للبدء.
 </string>
     <string name="smart_sort_config">
 فرز هذا المجلد ذكيًا
@@ -6676,6 +7245,9 @@ Debloater
 </string>
     <string name="sync_disabled">
 المزامنة معطلة
+</string>
+    <string name="sync_delete_profile_confirm_msg">
+هل تريد بالتأكيد حذف \"%1$s\"؟ لا يمكن التراجع عن هذا الإجراء.
 </string>
     <string name="profile_deleted">
 تم حذف الملف الشخصي
@@ -7233,6 +7805,12 @@ APNG4Android (com.github.penfeizhou.android.animation)
     <string name="online_storages_subtitle">
 OneDrive، Google Drive والمزيد
 </string>
+    <string name="online_storages_info_notice">
+اتصل بموفري التخزين السحابي بما في ذلك OneDrive وGoogle Drive وDropbox وBox وAWS S3 وWebDAV وRClone لتصفح الملفات ونقلها ومزامنتها.
+</string>
+    <string name="online_storage_delete_confirm_body">
+هل تريد بالتأكيد إزالة الاتصال بـ \"%1$s\"؟
+</string>
     <string name="opening_online_storages">
 جارٍ فتح التخزين السحابي...
 </string>
@@ -7547,6 +8125,111 @@ Box — انتهت الجلسة
 </string>
     <string name="shizuku_adb_not_connected">
 ADB غير متصل. اتصل عبر محطة ADB لتمكين الوصول الموسع تلقائيًا.
+</string>
+    <string name="shizuku_header_subtitle">
+خدمة Shizuku وShevery
+</string>
+    <string name="shizuku_status_not_installed_desc">
+ثبّت Shizuku أو Shevery لفتح مجلدات Android/data المحمية والعمليات ذات الصلاحيات الموسعة دون الحاجة إلى صلاحيات الروت.
+</string>
+    <string name="shizuku_status_stopped_desc">
+الخدمة الموسعة مثبتة ولكنها لا تعمل حاليًا. ابدأ الخدمة عبر تصحيح الأخطاء اللاسلكي أو تطبيق الإدارة الخاص بك.
+</string>
+    <string name="shizuku_status_unauthorized_desc">
+الخدمة قيد التشغيل، لكن UFM يتطلب إذنًا للوصول إلى واجهات برمجة تطبيقات النظام.
+</string>
+    <string name="shizuku_status_active_desc">
+الخدمة الموسعة نشطة مع منح جميع الأذونات. المجلدات المحمية والعمليات الموسعة جاهزة.
+</string>
+    <string name="shizuku_badge_unavailable">
+غير متاح
+</string>
+    <string name="shizuku_badge_stopped">
+غير نشط
+</string>
+    <string name="shizuku_badge_auth_needed">
+مطلوب إذن
+</string>
+    <string name="shizuku_badge_connected">
+متصل
+</string>
+    <string name="shizuku_section_capabilities">
+إمكانيات موسعة
+</string>
+    <string name="shizuku_feature_protected_title">
+مجلدات محمية
+</string>
+    <string name="shizuku_feature_protected_desc">
+وصول كامل للقراءة والكتابة إلى Android/data وobb
+</string>
+    <string name="shizuku_feature_speed_title">
+عمليات عالية السرعة
+</string>
+    <string name="shizuku_feature_speed_desc">
+إدخال/إخراج مباشر على مستوى النظام بدون روت
+</string>
+    <string name="shizuku_feature_security_title">
+بدون روت وآمن
+</string>
+    <string name="shizuku_feature_security_desc">
+جسر واجهات برمجة تطبيقات أندرويد القياسي ذو الامتيازات
+</string>
+    <string name="shizuku_section_managers">
+التطبيقات الإدارية المتاحة
+</string>
+    <string name="shizuku_manager_shizuku_title">
+Shizuku
+</string>
+    <string name="shizuku_manager_shizuku_desc">
+الخدمة الموسعة القياسية من GitHub
+</string>
+    <string name="shizuku_manager_shevery_title">
+Shevery
+</string>
+    <string name="shizuku_manager_shevery_desc">
+بديل خفيف وسريع
+</string>
+    <string name="shizuku_download_shizuku_apk">
+تنزيل Shizuku (APK)
+</string>
+    <string name="shizuku_download_shevery_apk">
+تنزيل Shevery (APK)
+</string>
+    <string name="shizuku_open_manager">
+فتح تطبيق %1$s الإداري
+</string>
+    <string name="shizuku_section_setup_guide">
+دليل الإعداد في 3 خطوات
+</string>
+    <string name="shizuku_step_1">
+1. ثبّت ملف APK
+</string>
+    <string name="shizuku_step_2">
+2. ابدأ الخدمة
+</string>
+    <string name="shizuku_step_3">
+3. أذِن لـ UFM
+</string>
+    <string name="shizuku_service_info_title">
+معلومات الخدمة
+</string>
+    <string name="shizuku_service_provider_label">
+موفر الخدمة
+</string>
+    <string name="shizuku_service_mode_label">
+وضع الاتصال
+</string>
+    <string name="shizuku_service_permission_label">
+مستوى الصلاحية
+</string>
+    <string name="shizuku_service_mode_adb">
+ADB / تصحيح الأخطاء اللاسلكي
+</string>
+    <string name="shizuku_permission_granted_api">
+ممنوح (API v23)
+</string>
+    <string name="shizuku_recheck_status">
+إعادة التحقق من الحالة
 </string>
     <string name="shizuku_manager_open_error">
 تعذر فتح المدير. يرجى تثبيت شيزوكو أو شيفري أولاً.
@@ -8714,6 +9397,21 @@ TXT
     <string name="notes_folder_title">
 ملاحظاتي
 </string>
+    <string name="export_txt_desc">
+مستند نصي عادي (.txt)
+</string>
+    <string name="export_csv_desc">
+قيم مفصولة بفواصل (.csv)
+</string>
+    <string name="export_pdf_desc">
+تنسيق المستندات المحمولة (.pdf)
+</string>
+    <string name="notepad_select_format_desc">
+اختر تنسيق التصدير لمستندك
+</string>
+    <string name="notepad_destination_label">
+وجهة الحفظ
+</string>
     <string name="notepad_select_export_format">
 حفظ باسم
 </string>
@@ -8764,11 +9462,35 @@ TXT
     <string name="settings_apk_extract_title">
 استخراج APK / XAPK
 </string>
+    <string name="settings_apk_extract_subtitle">
+تكوين استخراج التطبيقات وبيانات البيان الوصفية
+</string>
     <string name="settings_apk_extract_subtitle_off">
 استخراج قياسي فقط
 </string>
     <string name="settings_apk_extract_subtitle_on">
 مُحسَّن
+</string>
+    <string name="settings_apk_extract_info_notice">
+كوّن تفضيلات الاستخراج للتطبيقات المثبتة. عند التفعيل، يحفظ UFM أيقونات التطبيقات وبيانات JSON الوصفية بجانب ملفات APK وXAPK المستخرجة.
+</string>
+    <string name="settings_apk_extract_reset_defaults">
+إعادة التعيين إلى الافتراضي
+</string>
+    <string name="settings_apk_extract_reset_confirm_title">
+إعادة تعيين إعدادات الاستخراج؟
+</string>
+    <string name="settings_apk_extract_reset_confirm_message">
+هل تريد بالتأكيد إعادة تعيين جميع إعدادات استخراج APK وXAPK وحقول البيانات الوصفية إلى الوضع الافتراضي؟
+</string>
+    <string name="settings_apk_extract_reset_toast">
+تمت إعادة تعيين إعدادات الاستخراج إلى الوضع الافتراضي
+</string>
+    <string name="settings_apk_extract_metadata_header">
+حقول البيانات الوصفية التي سيتم تضمينها في JSON
+</string>
+    <string name="settings_apk_extract_section_general">
+ميزات الاستخراج
 </string>
     <string name="apk_extract_master_title">
 استخراج APK/XAPK مُحسَّن
@@ -8794,44 +9516,86 @@ TXT
     <string name="field_extracted_date">
 تاريخ الاستخراج
 </string>
+    <string name="field_extracted_date_desc">
+الطابع الزمني عند استخراج الملف (extracted_date)
+</string>
     <string name="field_package_name">
 اسم الحزمة
+</string>
+    <string name="field_package_name_desc">
+معرّف تطبيق أندرويد الفريد (package_name)
 </string>
     <string name="field_version_name">
 اسم الإصدار
 </string>
+    <string name="field_version_name_desc">
+سلسلة الإصدار الظاهرة للمستخدم (version_name)
+</string>
     <string name="field_version_code">
 رمز الإصدار
+</string>
+    <string name="field_version_code_desc">
+رقم الإصدار الداخلي الصحيح (version_code)
 </string>
     <string name="field_label">
 تسمية التطبيق
 </string>
+    <string name="field_label_desc">
+الاسم المعروض للتطبيق (label)
+</string>
     <string name="field_install_time">
 تاريخ التثبيت
+</string>
+    <string name="field_install_time_desc">
+الطابع الزمني للتثبيت الأصلي على الجهاز (install_time)
 </string>
     <string name="field_last_update_time">
 تاريخ آخر تحديث
 </string>
+    <string name="field_last_update_time_desc">
+الطابع الزمني لآخر تحديث على الجهاز (last_update_time)
+</string>
     <string name="field_target_sdk">
 SDK الهدف
+</string>
+    <string name="field_target_sdk_desc">
+إصدار Android API المستهدف (target_sdk)
 </string>
     <string name="field_min_sdk">
 الحد الأدنى من SDK
 </string>
+    <string name="field_min_sdk_desc">
+الحد الأدنى المطلوب من إصدار Android API (min_sdk)
+</string>
     <string name="field_app_size">
 حجم التطبيق
+</string>
+    <string name="field_app_size_desc">
+إجمالي حجم التطبيق المثبت بالبايت (app_size)
 </string>
     <string name="field_source_dir">
 دليل المصدر
 </string>
+    <string name="field_source_dir_desc">
+مسار مجلد نظام الملفات لحزمة APK الأساسية (source_dir)
+</string>
     <string name="field_split_apks">
 APKs المجزأة
+</string>
+    <string name="field_split_apks_desc">
+قائمة مسارات حزم APK المقسمة (split_apks)
 </string>
     <string name="field_has_obb">
 يحتوي على OBB
 </string>
+    <string name="field_has_obb_desc">
+يشير إلى وجود بيانات توسعة OBB (has_obb)
+</string>
     <string name="field_permissions">
 الأذونات
+</string>
+    <string name="field_permissions_desc">
+قائمة أذونات البيان المطلوبة (permissions)
 </string>
     <string name="extracts_subtitle_files">
 ملف/ملفات
@@ -8980,6 +9744,45 @@ PDF (متعدد الصفحات فقط)
 </string>
     <string name="backup_import_details_title">
 معاينة الاستيراد
+</string>
+    <string name="backup_restore_notice">
+أنشئ ملف نسخة احتياطية قابل للتصدير من إعداداتك والمربعات المخصصة والمشاركات الشبكية، أو استعد من أرشيف نسخة احتياطية تم تصديره مسبقًا.
+</string>
+    <string name="backup_restore_section_actions">
+الإجراءات
+</string>
+    <string name="backup_export_notice">
+حدد فئات ومكونات الإعدادات التي تريد تضمينها في أرشيف النسخة الاحتياطية هذا.
+</string>
+    <string name="backup_import_notice">
+راجع فئات الإعدادات الموجودة في هذا الأرشيف. الاستعادة ستطبق هذه الإعدادات وتعيد تشغيل التطبيق.
+</string>
+    <string name="backup_import_password_desc">
+ملف النسخة الاحتياطية هذا مشفر بكلمة مرور. أدخل كلمة المرور أدناه لفك التشفير ومراجعة محتوياته.
+</string>
+    <string name="backup_password_dialog_desc">
+يمكنك اختياريًا حماية ملف النسخة الاحتياطية بتشفير AES-256. إذا تخطيت تعيين كلمة مرور، سيتم حفظ الملف بدون تشفير.
+</string>
+    <string name="backup_skip_confirm_desc">
+الحفظ بدون تشفير يعني أن أي شخص لديه حق الوصول إلى ملف النسخة الاحتياطية يمكنه قراءة إعداداتك وتكويناتك المُصدَّرة. هل تريد بالتأكيد المتابعة بدون كلمة مرور؟
+</string>
+    <string name="backup_import_guide_title">
+استيراد الإعدادات
+</string>
+    <string name="backup_import_guide_subtitle">
+اختر ملف نسخة احتياطية
+</string>
+    <string name="backup_import_guide_msg">
+اختر أرشيف نسخة احتياطية مُصدَّر (.ufmconfig) من وحدة التخزين على جهازك. سيتم استعادة إعداداتك ومشاركاتك الشبكية والمربعات المخصصة والتفضيلات.
+</string>
+    <string name="backup_import_guide_format_label">
+تنسيق الأرشيف المدعوم
+</string>
+    <string name="backup_import_guide_format_val">
+ملفات *.ufmconfig
+</string>
+    <string name="backup_import_guide_btn_browse">
+اختر ملف النسخة الاحتياطية
 </string>
 
     <!-- Auto Backup -->
@@ -9189,6 +9992,9 @@ AMOLED
 </string>
     <string name="category_main_menu_tiles">
 بلاط القائمة الرئيسية
+</string>
+    <string name="category_icons_count">
+تم تضمين أيقونات %1$d
 </string>
     <string name="icon_file_generic">
 ملف عام
@@ -9470,6 +10276,12 @@ XML / ترميز
 </string>
     <string name="icon_status_shield_alert">
 درع تنبيه
+</string>
+    <string name="icon_status_customized">
+مخصص
+</string>
+    <string name="icon_status_default">
+الافتراضي
 </string>
     <string name="icon_view_grid_small">
 شبكة صغيرة
@@ -9858,6 +10670,26 @@ SAF
 تخطي (بدون تشفير)
 </string>
 
+    <!-- Theme pack import instructions -->
+    <string name="theme_import_instructions_title">
+استيراد حزمة الأيقونات
+</string>
+    <string name="theme_import_instructions_desc">
+استورد الأيقونات المخصصة وألوان المربعات من ملف .ufmtheme تم تصديره مسبقًا.
+</string>
+    <string name="theme_import_step_select">
+حدد موقع ملف .ufmtheme في وحدة التخزين واختره
+</string>
+    <string name="theme_import_step_password">
+أدخل كلمة مرور فك التشفير إذا كانت الحزمة محمية
+</string>
+    <string name="theme_import_step_preview">
+معاينة الأيقونات المضمنة ثم التأكيد للتطبيق
+</string>
+    <string name="theme_import_btn_select">
+اختر ملف .ufmtheme
+</string>
+
     <!-- Theme pack import password -->
     <string name="theme_import_password_title">
 أدخل كلمة مرور حزمة السمة
@@ -10188,6 +11020,9 @@ Box
     <string name="settings_skip_length_title">
 طول التخطي
 </string>
+    <string name="settings_skip_length_dialog_desc">
+اختر مقدار القفز للأمام أو للخلف عند البحث في تشغيل الوسائط.
+</string>
     <string name="skip_length_option_3s">
 3 ثوانٍ
 </string>
@@ -10205,6 +11040,27 @@ Box
 </string>
     <string name="skip_length_option_disable">
 تعطيل
+</string>
+    <string name="skip_length_desc_3s">
+تخطي 3 ثوانٍ
+</string>
+    <string name="skip_length_desc_5s">
+تخطي 5 ثوانٍ
+</string>
+    <string name="skip_length_desc_10s">
+تخطي 10 ثوانٍ (الافتراضي)
+</string>
+    <string name="skip_length_desc_20s">
+تخطي 20 ثانية
+</string>
+    <string name="skip_length_desc_30s">
+تخطي 30 ثانية
+</string>
+    <string name="skip_length_desc_disable">
+إخفاء أزرار التخطي للأمام والخلف
+</string>
+    <string name="skip_length_toast_set">
+تم ضبط مدة التخطي على %1$s
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -10447,6 +11303,51 @@ UFM Spreadsheet Viewer
     <string name="settings_file_tags_subtitle">
 إدارة الهاشتاجات وخيارات الوسم
 </string>
+    <string name="settings_file_tags_info_notice">
+وسوم مخصصة تُسند إلى الملفات والمجلدات للتصفية السريعة والبحث والتصنيف. انقر على أيقونة سلة المهملات على أي وسم لإزالته عالميًا.
+</string>
+    <string name="settings_file_tags_empty_title">
+لا توجد وسوم ملفات منشأة
+</string>
+    <string name="settings_file_tags_empty_desc">
+أضف وسمًا لأي ملف أو مجلد من ورقة خصائص الملف أو شريط أدوات التحديد المتعدد لتنظيم ملفات الوسائط والمستندات هنا.
+</string>
+    <string name="settings_file_tags_delete_confirm_title">
+حذف الوسم؟
+</string>
+    <string name="settings_file_tags_delete_confirm_message">
+هل تريد بالتأكيد حذف الوسم \"#%1$s\"؟ سيتم إزالته من جميع الملفات والمجلدات الموسومة.
+</string>
+    <string name="settings_file_tags_delete_btn">
+حذف الوسم
+</string>
+    <string name="settings_file_tags_clear_all">
+حذف جميع الوسوم
+</string>
+    <string name="settings_file_tags_clear_all_confirm_title">
+حذف جميع وسوم الملفات؟
+</string>
+    <string name="settings_file_tags_clear_all_confirm_message">
+هل تريد بالتأكيد الحذف الدائم لجميع وسوم الملفات المنشأة؟ سيؤدي ذلك إلى إزالة جميع الوسوم من جميع الملفات والمجلدات.
+</string>
+    <string name="settings_file_tags_deleted_toast">
+تم حذف الوسم #%1$s
+</string>
+    <string name="settings_file_tags_cleared_all_toast">
+تم حذف جميع وسوم الملفات
+</string>
+    <string name="settings_file_tags_multi_title">
+وسم ملفات متعددة
+</string>
+    <string name="settings_file_tags_multi_desc">
+يسمح بوسم عدة ملفات في وقت واحد عند تحديدها
+</string>
+    <string name="settings_file_tags_created_header">
+الوسوم المنشأة
+</string>
+    <string name="settings_file_tags_empty">
+لا توجد وسوم منشأة بعد
+</string>
     <string name="action_tag">
 العلامة
 </string>
@@ -10523,8 +11424,41 @@ UFM Spreadsheet Viewer
 \n
 افتح مجلدًا، وانقر على \"فرز وتصفية\" واختر \"هذا المجلد\" لإنشاء تجاوز.
 </string>
+    <string name="folder_sort_manager_empty_title">
+لا توجد تجاوزات فرز مكونة
+</string>
+    <string name="folder_sort_manager_empty_desc">
+عند تغيير ترتيب الفرز أو الفلتر لمجلد معين باستخدام \"هذا المجلد\"، سيظهر هنا حتى تتمكن من إدارة قواعد الفرز المخصصة أو إعادة تعيينها.
+</string>
+    <string name="folder_sort_manager_info_notice">
+ترتيبات ومرشحات فرز مخصصة تم تكوينها لمجلدات محددة. اضغط على أيقونة سلة المهملات لإعادة المجلد إلى الفرز العام.
+</string>
+    <string name="folder_sort_manager_clear_all">
+مسح كل التجاوزات
+</string>
     <string name="folder_sort_manager_clear_confirm">
 إزالة جميع تجاوزات فرز المجلدات؟ ستعود المجلدات إلى إعداد الفرز العام.
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_title">
+مسح كل تجاوزات الفرز؟
+</string>
+    <string name="folder_sort_manager_clear_all_confirm_message">
+هل أنت متأكد من رغبتك في إزالة جميع تجاوزات الفرز لكل مجلد؟ ستعود جميع المجلدات إلى إعدادات الفرز والتصفية العامة.
+</string>
+    <string name="folder_sort_manager_remove_confirm_title">
+إعادة تعيين تجاوز فرز المجلد؟
+</string>
+    <string name="folder_sort_manager_remove_confirm_message">
+هل أنت متأكد من رغبتك في إزالة تجاوز الفرز المخصص لـ \"%1$s\"؟ سيعود هذا المجلد إلى الفرز العام.
+</string>
+    <string name="folder_sort_manager_remove_btn">
+إعادة تعيين التجاوز
+</string>
+    <string name="folder_sort_manager_cleared_all_toast">
+تم مسح جميع تجاوزات فرز المجلدات
+</string>
+    <string name="folder_sort_manager_deleted">
+تمت إزالة التجاوز لـ %1$s
 </string>
     <string name="folder_sort_network_badge">
 الشبكة / الإنترنت
@@ -10686,6 +11620,9 @@ UFM Spreadsheet Viewer
 حدث خطأ ما. يرجى المحاولة مرة أخرى.
 </string>
     <string name="support_retry">
+حاول مرة أخرى
+</string>
+    <string name="retry">
 حاول مرة أخرى
 </string>
     <string name="support_no_internet">
@@ -11225,6 +12162,343 @@ UFM Spreadsheet Viewer
     <string name="exif_select_destination_folder">
 اختر مجلد الإخراج
 </string>
+
+    <!-- Video Thumbnail Time Modernization -->
+    <string name="vtt_section_options">
+نقطة الالتقاط
+</string>
+    <string name="vtt_info_notice">
+حدد الطابع الزمني المستخدم لإنشاء صور مصغرة للفيديو في جميع أنحاء التطبيق. يعمل تعيين نسبة مئوية على تجنب الإطارات الفارغة أو الداكنة أو الإطارات التمهيدية في بداية مقاطع الفيديو.
+</string>
+    <string name="vtt_percent_0_subtitle">
+التقاط أول إطار للفيديو (00:00)
+</string>
+    <string name="vtt_percent_10_subtitle">
+الافتراضي الموصى به — يتخطى الإطارات السوداء أو التمهيدية الافتتاحية
+</string>
+    <string name="vtt_percent_25_subtitle">
+التقاط الإطار عند 25% من مدة الفيديو
+</string>
+    <string name="vtt_percent_50_subtitle">
+التقاط الإطار عند نقطة المنتصف بالضبط (50%) للفيديو
+</string>
+    <string name="vtt_percent_75_subtitle">
+التقاط الإطار عند 75% من مدة الفيديو
+</string>
+
+    <!-- Network Thumbnail Settings Modernization -->
+    <string name="nt_section_caching">
+الإعدادات
+</string>
+    <string name="nt_section_storage">
+التخزين والصيانة
+</string>
+    <string name="nt_info_notice">
+يتم تخزين الصور المصغرة البعيدة محليًا بحيث تعرض مشاركات الشبكة وSMB وFTP وSFTP ومحركات الأقراص السحابية معاينات سريعة للصور والفيديو دون إعادة تنزيل الملفات.
+</string>
+    <string name="nt_cache_folder_guide_title">
+اختر موقع التخزين المؤقت
+</string>
+    <string name="nt_cache_folder_guide_msg">
+اختر مجلد تخزين داخلي أو بطاقة SD لتخزين ملفات ذاكرة التخزين المؤقت للصور المصغرة للشبكة.\n
+\n
+في مستعرض التخزين، انتقل إلى المجلد المطلوب واضغط على \"SELECT THIS FOLDER\" في الأعلى.
+</string>
+    <string name="nt_cache_folder_btn_browse">
+تصفح التخزين
+</string>
+    <string name="nt_cache_folder_btn_reset_default">
+إعادة التعيين إلى الموقع الافتراضي
+</string>
+    <string name="nt_cache_folder_current_label">
+الموقع الحالي:
+</string>
+
+    <!-- Cache Limit Dialog Modernization -->
+    <string name="nt_cache_limit_dialog_desc">
+اختر الحد الأقصى لمساحة القرص المستخدمة لتخزين الصور المصغرة عن بُعد مؤقتًا.
+</string>
+    <string name="nt_limit_subtitle_500mb">
+الافتراضي القياسي — مثالي للتصفح العام
+</string>
+    <string name="nt_limit_subtitle_1gb">
+موصى به للاستخدام المعتدل للشبكة
+</string>
+    <string name="nt_limit_subtitle_2gb">
+تخزين سخي للصور ومصغرات الفيديو
+</string>
+    <string name="nt_limit_subtitle_5gb">
+الحد الأقصى لسعة ذاكرة التخزين المؤقت القياسية
+</string>
+    <string name="nt_limit_subtitle_custom">
+تعيين حد تخزين مخصص بالـ MB أو GB
+</string>
+    <string name="nt_custom_limit_dialog_title">
+حد التخزين المؤقت المخصص
+</string>
+    <string name="nt_custom_limit_dialog_desc">
+أدخل حدًا مخصصًا للحجم بالـ MB أو GB
+</string>
+    <string name="nt_custom_presets_label">
+إعدادات سريعة
+</string>
+    <string name="nt_custom_size_label">
+حجم مخصص
+</string>
+
+    <!-- File Server System Tiles Modernization -->
+    <string name="file_server_tiles_section_server">
+خادم الملفات
+</string>
+    <string name="file_server_tiles_section_tiles">
+بلاطات الإعدادات السريعة
+</string>
+    <string name="file_server_tiles_info_notice">
+تتيح لك بلاطات الإعدادات السريعة تشغيل وإيقاف خوادم الوسائط FTP وSFTP وDLNA مباشرة من درج الإشعارات في Android دون فتح التطبيق.
+</string>
+
+    <!-- Storage Indexer Modernization -->
+    <string name="storage_indexer_section_storages">
+التخزين المكتشف
+</string>
+    <string name="storage_indexer_section_actions">
+الصيانة
+</string>
+    <string name="storage_indexer_info_notice">
+قم بفهرسة التخزين الداخلي ومحركات الأقراص القابلة للإزالة للحصول على نتائج بحث فورية واكتشاف التكرارات وتصفية الفئات عبر جهازك.
+</string>
+    <string name="storage_indexer_detail_info_notice">
+وحدة التخزين هذه مفهرسة. تتيح السجلات المفهرسة البحث السريع متعدد المعايير دون فحص نظام الملفات.
+</string>
+    <string name="storage_indexer_btn_delete_confirm">
+حذف السجلات
+</string>
+
+    <!-- Auto Backup Modernization -->
+    <string name="auto_backup_section_general">
+الإعدادات
+</string>
+    <string name="auto_backup_section_schedule">
+الجدولة
+</string>
+    <string name="auto_backup_section_security">
+الأمان والتشفير
+</string>
+    <string name="auto_backup_section_location">
+وجهة النسخ الاحتياطي
+</string>
+    <string name="auto_backup_info_notice">
+ينشئ النسخ الاحتياطي التلقائي بشكل دوري نسخًا احتياطية مشفرة أو عادية لتفضيلات التطبيق والسمات المخصصة والبلاطات حتى لا تفقد إعداداتك أبدًا.
+</string>
+    <string name="auto_backup_folder_guide_title">
+اختر مجلد النسخ الاحتياطي
+</string>
+    <string name="auto_backup_folder_guide_msg">
+اختر المكان الذي سيتم حفظ النسخ الاحتياطية التلقائية فيه. انتقل إلى أي مجلد محلي أو قابل للإزالة واضغط على زر الحفظ للتأكيد.
+</string>
+    <string name="auto_backup_folder_guide_current">
+الموقع الحالي:
+</string>
+    <string name="auto_backup_folder_guide_btn_choose">
+اختر مجلدًا
+</string>
+    <string name="auto_backup_reset_success">
+تمت إعادة تعيين موقع النسخ الاحتياطي إلى الافتراضي (Documents/UFM).
+</string>
+
+    <!-- File Server Modernization -->
+    <string name="file_server_section_services">
+خدمات الخادم
+</string>
+    <string name="file_server_section_profiles">
+المصادقة والوصول
+</string>
+    <string name="file_server_info_notice">
+استضف خوادم ملفات FTP وSFTP محلية أو قم ببث الوسائط عبر DLNA. يمكن للأجهزة الموجودة على شبكة Wi-Fi المحلية الاتصال للتصفح والبث ونقل الملفات.
+</string>
+    <string name="file_server_empty_profiles_desc">
+اضغط على \\\'Add Profile\\\' لتكوين بيانات اعتماد تسجيل الدخول وأذونات الوصول ومجلدات المشاركة.
+</string>
+
+    <!-- DLNA Modernization -->
+    <string name="dlna_section_services">
+خدمات DLNA
+</string>
+    <string name="dlna_section_config">
+الإعدادات
+</string>
+    <string name="dlna_section_identification">
+التعريف
+</string>
+    <string name="dlna_section_shared_folders">
+مجلدات المشاركة
+</string>
+    <string name="dlna_info_notice">
+قم ببث الصور والموسيقى ومقاطع الفيديو إلى أجهزة التلفزيون الذكية ومشغلات وسائط DLNA على شبكة Wi-Fi المحلية، أو اسمح للأجهزة الأخرى بإرسال الوسائط إلى هذا الجهاز.
+</string>
+    <string name="dlna_settings_info_notice">
+قم بتكوين كيفية ظهور جهازك على الشبكة المحلية واختر المجلدات للمشاركة. مشاركات وسائط DLNA للقراءة فقط بشكل صارم.
+</string>
+    <string name="dlna_empty_shared_folders_desc">
+اضغط على \\\'Add Folder\\\' لتحديد مجلدات التخزين الداخلي أو بطاقة SD أو USB لكشفها عبر DLNA.
+</string>
+
+    <!-- Smart Sort Modernization -->
+    <string name="smart_sort_empty">
+لم يتم العثور على أي محركات أقراص تخزين
+</string>
+    <string name="smart_sort_history_moved">
+تم النقل
+</string>
+    <string name="smart_sort_history_skipped">
+تم التخطي
+</string>
+    <string name="smart_sort_history_failed">
+فشل
+</string>
+
+    <!-- Rate Us Modernization -->
+    <string name="rate_us_section_rate">
+التقييم والتعليقات
+</string>
+    <string name="rate_us_section_support">
+المزيد من طرق الدعم
+</string>
+    <string name="rate_us_support_title">
+ادعم المشروع
+</string>
+    <string name="rate_us_support_subtitle">
+اترك تبرعًا صغيرًا إذا كنت تستطيع دعم المشروع
+</string>
+    <string name="rate_us_stars_description">
+تقييم 5 نجوم
+</string>
+
+    <!-- Help & Support Modernization -->
+    <string name="support_section_channels">
+قنوات الاتصال
+</string>
+    <string name="support_section_direct">
+اتصال مباشر
+</string>
+    <string name="support_direct_email_title">
+support@kilowatch.co.za
+</string>
+    <string name="support_direct_email_subtitle">
+راسل فريق التطوير مباشرة عبر البريد الإلكتروني
+</string>
+    <string name="support_direct_email_copied">
+تم نسخ بريد الدعم إلى الحافظة
+</string>
+
+    <!-- About Modernization -->
+    <string name="about_section_app">
+معلومات التطبيق
+</string>
+    <string name="about_section_support">
+المطور والروابط
+</string>
+    <string name="about_section_legal">
+السياسات القانونية
+</string>
+    <string name="about_section_acknowledgments">
+شكر وتقدير
+</string>
+    <string name="about_legal_title">
+سياسة الخصوصية والشروط
+</string>
+    <string name="about_legal_subtitle">
+راجع سياسة الخصوصية وشروط الخدمة والتراخيص
+</string>
+    <string name="about_rate_title">
+قيّم وراجع
+</string>
+    <string name="about_rate_subtitle">
+شارك تجربتك على Google Play
+</string>
+    <string name="about_support_title">
+المساعدة والدعم
+</string>
+    <string name="about_support_subtitle">
+أبلغ عن مشكلة أو اطلب ميزات
+</string>
+    <string name="about_email_copied">
+تم نسخ بريد الدعم إلى الحافظة
+</string>
+
+    <!-- Main Menu Categorized Modernization -->
+    <string name="main_menu_category_storage">
+التخزين
+</string>
+    <string name="main_menu_category_connect">
+الاتصال
+</string>
+    <string name="main_menu_category_sync">
+مزامنة المجلدات
+</string>
+    <string name="main_menu_category_organize">
+تنظيم
+</string>
+    <string name="main_menu_category_utilities">
+الأدوات المساعدة
+</string>
+    <string name="main_menu_category_security">
+الأمان والإعدادات المتقدمة
+</string>
+    <string name="main_menu_category_settings">
+الإعدادات والمزيد
+</string>
+    <string name="main_menu_layout_modern_categorized">
+حديث مصنف
+</string>
+    <string name="main_menu_layout_modern_desc">
+منظم إلى أقسام فئات قابلة للتوسيع
+</string>
+    <string name="main_menu_layout_classic_grid">
+شبكة كلاسيكية
+</string>
+    <string name="main_menu_layout_classic_grid_desc">
+شبكة مسطحة متعددة الأعمدة (3 أو 4 أعمدة)
+</string>
+    <string name="main_menu_layout_classic_list">
+قائمة كلاسيكية
+</string>
+    <string name="main_menu_layout_classic_list_desc">
+قائمة مسطحة بعمود واحد (كبيرة، متوسطة، صغيرة)
+</string>
+    <string name="main_menu_section_items_count">
+عدد العناصر: %1$d
+</string>
+    <string name="main_menu_section_item_count_single">
+عنصر واحد
+</string>
+
+    <!-- Reset Category Layout -->
+    <string name="reset_categorized_layout_section">
+إعادة تعيين
+</string>
+    <string name="reset_categorized_layout_title">
+إعادة تعيين تخطيط الفئات
+</string>
+    <string name="reset_categorized_layout_desc">
+استعادة ترتيب الفئات ومواضع البلاطات وحالات التوسيع إلى الوضع الافتراضي
+</string>
+    <string name="reset_categorized_dialog_title">
+إعادة تعيين تخطيط الفئات؟
+</string>
+    <string name="reset_categorized_dialog_subtitle">
+استعادة الترتيب الافتراضي
+</string>
+    <string name="reset_categorized_dialog_msg">
+سيؤدي هذا إلى استعادة جميع رؤوس الفئات ومواضع البلاطات وحالات التوسيع إلى إعدادات المصنع الافتراضية. سيتم الحفاظ على إعدادات الألوان المخصصة.
+</string>
+    <string name="reset_categorized_dialog_confirm">
+إعادة التعيين إلى الافتراضي
+</string>
+    <string name="reset_categorized_success">
+تمت استعادة تخطيط الفئات إلى الوضع الافتراضي
+</string>
 </resources>
+
 
 

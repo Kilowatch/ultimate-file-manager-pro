@@ -635,7 +635,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val now = System.currentTimeMillis()
         if (now - lastDevicePingMs >= DEVICE_PING_INTERVAL_MS) {
             lastDevicePingMs = now
-            GlobalScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch(Dispatchers.IO) {
                 val pairingManager = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@StorageBrowserActivity)
                 val devices = pairingManager.getAllPairedDevices()
                 var changed = false
@@ -922,21 +922,29 @@ class StorageBrowserActivity : AppCompatActivity() {
         btnToggleList = findViewById(R.id.btnToggleList)
 
         btnToggleGrid?.setOnClickListener {
-            val currentMode = MainMenuViewModeManager.loadViewMode(this)
-            if (currentMode != MainMenuViewModeManager.ViewMode.GRID) {
-                MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.GRID)
-                applyViewMode()
+            if (isTv) {
+                val currentMode = MainMenuViewModeManager.loadViewMode(this)
+                if (currentMode != MainMenuViewModeManager.ViewMode.GRID) {
+                    MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.GRID)
+                    applyViewMode()
+                }
+                showViewModeOptions(isListView = false)
+            } else {
+                showViewModeOptions(isListView = false)
             }
-            showViewModeOptions(isListView = false)
         }
 
         btnToggleList?.setOnClickListener {
-            val currentMode = MainMenuViewModeManager.loadViewMode(this)
-            if (currentMode != MainMenuViewModeManager.ViewMode.LIST) {
-                MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.LIST)
-                applyViewMode()
+            if (isTv) {
+                val currentMode = MainMenuViewModeManager.loadViewMode(this)
+                if (currentMode != MainMenuViewModeManager.ViewMode.LIST) {
+                    MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.LIST)
+                    applyViewMode()
+                }
+                showViewModeOptions(isListView = true)
+            } else {
+                showViewModeOptions(isListView = true)
             }
-            showViewModeOptions(isListView = true)
         }
 
         if (isTv) {
@@ -1057,20 +1065,20 @@ class StorageBrowserActivity : AppCompatActivity() {
                 setImageResource(R.drawable.ic_add)
                 contentDescription = getString(R.string.custom_tile_add_button)
                 setPadding(pad, pad, pad, pad)
-                setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 setColorFilter(getColor(R.color.mobile_icon_tint))
                 layoutParams = androidx.appcompat.widget.Toolbar.LayoutParams(
                     androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
                     androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
                     android.view.Gravity.END
                 ).apply { this.marginEnd = margin }
-                setOnClickListener { showCreateCustomTileDialog() }
+                setOnClickListener { showAddOptionsDialog() }
             }
             btnSettingsGear = ImageView(this).apply {
                 setImageResource(R.drawable.ic_gear)
                 contentDescription = getString(R.string.settings)
                 setPadding(pad, pad, pad, pad)
-                setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 setColorFilter(getColor(R.color.mobile_icon_tint))
                 layoutParams = androidx.appcompat.widget.Toolbar.LayoutParams(
                     androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
@@ -1152,13 +1160,18 @@ class StorageBrowserActivity : AppCompatActivity() {
             onHideClick = { item -> hideTile(item) }
             onEditModeClick = { item ->
                 if (isSelectingTileForColor) {
-                    // Color-pick mode takes priority â€” even for custom tiles
+                    // Color-pick mode takes priority — even for custom tiles
                     isSelectingTileForColor = false
                     storageAdapter.isColorPickMode = false
                     selectedTileId = item.id
                     showColorPickerForTile(item)
+                } else if (item.isCategoryHeader) {
+                    val catId = item.categoryId
+                    if (catId != null && MainMenuViewModeManager.loadCustomCategories(this@StorageBrowserActivity).containsKey(catId)) {
+                        confirmDeleteCustomHeader(item)
+                    }
                 } else if (item.isCustomTile) {
-                    // Gear icon on custom tile â†’ open Edit/Delete dialog
+                    // Gear icon on custom tile → open Edit/Delete dialog
                     showCustomTileOptionsMenu(item)
                 } else {
                     showPremiumSnackbar(getString(R.string.tile_color_title_select))
@@ -1769,7 +1782,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                  * Shows a toast if initialization fails.
                  */
                 fun launchWithRCloneInit(block: () -> Unit) {
-                    if (isRClone && storage != null) {
+                    if (storage != null && storage.provider == za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE) {
                         lifecycleScope.launch {
                             try {
                                 za.kilowatch.ultimatefilemanager.network.RCloneShareClient.prepareForBrowse(storage)
@@ -2210,9 +2223,6 @@ class StorageBrowserActivity : AppCompatActivity() {
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder
             ): Int {
-                val item = storageAdapter.getItems().getOrNull(viewHolder.bindingAdapterPosition)
-                    ?: return makeMovementFlags(0, 0)
-                // All tiles can be moved
                 return makeMovementFlags(
                     ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0
                 )
@@ -2225,7 +2235,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             ): Boolean {
                 val from = viewHolder.bindingAdapterPosition
                 val to   = target.bindingAdapterPosition
-                // Allow all moves â€” custom tile drop is handled in clearView
+                // Allow all moves — custom tile drop is handled in clearView
                 storageAdapter.moveItem(from, to)
                 return true
             }
@@ -2348,14 +2358,15 @@ class StorageBrowserActivity : AppCompatActivity() {
                     // Cannot nest custom tiles
                     showPremiumSnackbar(getString(R.string.custom_tile_cannot_nest))
                 } else {
-                    // Normal reorder drop â€” persist the new order
-                    val orderedIds = storageAdapter.getItems().map { it.id }
+                    // Normal reorder drop — persist the new order
+                    val orderedIds = storageAdapter.getRawItems().map { it.id }
                     TileOrderManager.save(this@StorageBrowserActivity, orderedIds)
+                    storageAdapter.onDragFinished(this@StorageBrowserActivity)
                     showPremiumSnackbar(getString(R.string.tile_order_saved))
                 }
             }
 
-            /** We manage long-press ourselves â€” disable the system default. */
+            /** We manage long-press ourselves — disable the system default. */
             override fun isLongPressDragEnabled() = false
 
             override fun canDropOver(
@@ -2363,7 +2374,6 @@ class StorageBrowserActivity : AppCompatActivity() {
                 current: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                // All tiles allow drops â€” custom-tile behavior is handled in clearView
                 return true
             }
         }
@@ -2435,7 +2445,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 btnManageTiles.setImageResource(R.drawable.ic_check)
                 btnManageTiles.visibility = View.VISIBLE
                 btnManageTiles.clearColorFilter()
-                btnManageTiles.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                btnManageTiles.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 // Show color button in edit mode
                 btnColorTile?.visibility = View.VISIBLE
                 btnImportColorCode?.visibility = View.VISIBLE
@@ -2454,7 +2464,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 btnManageTiles.setImageResource(R.drawable.ic_tune)
                 btnManageTiles.visibility = if (hiddenCount > 0) View.VISIBLE else View.GONE
                 btnManageTiles.clearColorFilter()
-                btnManageTiles.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                btnManageTiles.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 // Hide color button in normal mode
                 btnColorTile?.visibility = View.GONE
                 btnImportColorCode?.visibility = View.GONE
@@ -2506,6 +2516,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         showPremiumSnackbar(getString(R.string.tile_configuration_saved))
     }
 
+    @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
         if (isEditMode) {
@@ -2658,12 +2669,90 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
     }
 
+    private fun showAddOptionsDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_menu_options, null)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.btnOptionCreateHeader)?.setOnClickListener {
+            dialog.dismiss()
+            showCreateHeaderDialog()
+        }
+
+        dialogView.findViewById<View>(R.id.btnOptionCreateTile)?.setOnClickListener {
+            dialog.dismiss()
+            showCreateCustomTileDialog()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancelOptions)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showCreateHeaderDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_create_custom_header, null)
+        val edtTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtHeaderTitle)
+        val tilTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.tilHeaderTitle)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<View>(R.id.btnCancelHeader)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCreateHeader)?.setOnClickListener {
+            val title = edtTitle?.text?.toString()?.trim() ?: ""
+            if (title.isEmpty()) {
+                tilTitle?.error = getString(R.string.custom_header_name_required)
+                return@setOnClickListener
+            }
+            tilTitle?.error = null
+
+            val catId = "custom_cat_${System.currentTimeMillis()}"
+            MainMenuViewModeManager.saveCustomCategory(this, catId, title)
+
+            val currentOrder = MainMenuViewModeManager.loadCategoryOrder(this).toMutableList()
+            if (catId !in currentOrder) {
+                currentOrder.add(catId)
+                MainMenuViewModeManager.saveCategoryOrder(this, currentOrder)
+            }
+
+            // Ensure Modern Categorized mode so the new header is immediately visible
+            if (MainMenuViewModeManager.loadViewMode(this) != MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED) {
+                MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED)
+                applyViewMode()
+            } else {
+                storageAdapter.refreshDisplayedList(this)
+                storageAdapter.notifyDataSetChanged()
+            }
+
+            showPremiumSnackbar(getString(R.string.custom_header_created))
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
     private fun showCreateCustomTileDialogMobile(isEdit: Boolean, existingData: CustomTileManager.CustomTileData?) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_create_custom_tile, null)
         val imgIcon = dialogView.findViewById<ImageView>(R.id.imgCustomTileIcon)
+        val txtDialogTitle = dialogView.findViewById<TextView>(R.id.txtCustomTileDialogTitle)
         val edtTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileTitle)
+        val tilTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.tilCustomTileTitle)
         val edtSubtitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileSubtitle)
         val switchShowInPicker = dialogView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.switchShowInPicker)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancelCustomTile)
+        val btnSave = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveCustomTile)
+
+        txtDialogTitle?.text = if (isEdit) getString(R.string.custom_tile_edit_title) else getString(R.string.custom_tile_create_title)
+        btnSave?.text = if (isEdit) getString(R.string.save) else getString(R.string.custom_tile_add_button)
 
         if (isEdit && existingData != null) {
             edtTitle.setText(existingData.title)
@@ -2671,22 +2760,29 @@ class StorageBrowserActivity : AppCompatActivity() {
             switchShowInPicker.isChecked = existingData.showInFolderPicker
         }
         imgIcon.setImageResource(selectedCustomTileIconRes)
+        imgIcon.setOnClickListener {
+            showSimpleIconPickerDialog(imgIcon)
+        }
 
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(if (isEdit) getString(R.string.custom_tile_edit_title) else getString(R.string.custom_tile_create_title))
             .setView(dialogView)
-            .setPositiveButton(if (isEdit) R.string.save else R.string.custom_tile_add_button) { d, _ ->
-                val title = edtTitle.text?.toString()?.trim() ?: ""
-                if (title.isEmpty()) {
-                    showPremiumSnackbar(getString(R.string.custom_tile_title_required))
-                    return@setPositiveButton
-                }
-                val subtitle = edtSubtitle.text?.toString()?.trim() ?: ""
-                saveCustomTile(title, subtitle, switchShowInPicker.isChecked)
-                d.dismiss()
-            }
-            .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
             .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+
+        btnSave.setOnClickListener {
+            val title = edtTitle.text?.toString()?.trim() ?: ""
+            if (title.isEmpty()) {
+                tilTitle?.error = getString(R.string.custom_tile_title_required)
+                return@setOnClickListener
+            }
+            tilTitle?.error = null
+            val subtitle = edtSubtitle.text?.toString()?.trim() ?: ""
+            saveCustomTile(title, subtitle, switchShowInPicker.isChecked)
+            dialog.dismiss()
+        }
+
         dialog.show()
     }
 
@@ -2932,6 +3028,23 @@ class StorageBrowserActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun confirmDeleteCustomHeader(item: StorageItem) {
+        val catId = item.categoryId ?: return
+        val headerTitle = item.label
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(getString(R.string.custom_header_delete_title))
+            .setMessage(getString(R.string.custom_header_delete_warning))
+            .setPositiveButton(getString(R.string.delete)) { _, _ ->
+                MainMenuViewModeManager.deleteCustomCategory(this, catId)
+                storageAdapter.refreshDisplayedList(this)
+                storageAdapter.notifyDataSetChanged()
+                showPremiumSnackbar(getString(R.string.custom_header_deleted, headerTitle))
+            }
+            .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
+            .show()
+    }
+
     private fun saveCustomTile(title: String, subtitle: String, showInFolderPicker: Boolean = false) {
         val id = editingCustomTileId ?: CustomTileManager.generateId()
         val data = CustomTileManager.CustomTileData(
@@ -3056,7 +3169,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val capturedIsImageCompressDestPickerMode = isImageCompressDestPickerMode
         val capturedIsGifCreatorDestPickerMode = isGifCreatorDestPickerMode
 
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             val storageManager = getSystemService(Context.STORAGE_SERVICE) as StorageManager
             val volumes = storageManager.storageVolumes
             val storageItems = mutableListOf<StorageItem>()
@@ -3675,7 +3788,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
                 storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
                 storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
-                storageAdapter.submitList(displayItems)
+                storageAdapter.submitList(displayItems, this@StorageBrowserActivity)
                 updateEmptyState(storageItems.isEmpty())
             }
         }
@@ -3970,7 +4083,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             return
         }
 
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val request = Request.Builder()
                     .url("https://www.kilowatch.co.za/UFM/api/progress.php")
@@ -4148,8 +4261,19 @@ class StorageBrowserActivity : AppCompatActivity() {
             if (mode == MainMenuViewModeManager.ViewMode.LIST) {
                 recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                 if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
+            } else if (mode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED) {
+                val gridLayoutManager = GridLayoutManager(this, 1)
+                recyclerStorage.layoutManager = gridLayoutManager
+                if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
             } else {
-                recyclerStorage.layoutManager = GridLayoutManager(this, cols)
+                val gridLayoutManager = GridLayoutManager(this, cols)
+                gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(position: Int): Int {
+                        val item = storageAdapter.getItems().getOrNull(position)
+                        return if (item?.isCategoryHeader == true) cols else 1
+                    }
+                }
+                recyclerStorage.layoutManager = gridLayoutManager
 
                 if (isTv) {
                     recyclerStorage.doOnLayout {
@@ -4234,6 +4358,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         } else {
             val sheet = ViewModeBottomSheet.newInstance(isListView)
             sheet.onSettingsChanged = {
+                loadStorageVolumes()
                 applyViewMode()
             }
             sheet.show(supportFragmentManager, ViewModeBottomSheet.TAG)

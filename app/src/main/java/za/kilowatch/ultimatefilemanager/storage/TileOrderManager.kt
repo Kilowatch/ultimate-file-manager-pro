@@ -37,14 +37,14 @@ object TileOrderManager {
     }
 
     private fun isFeatureTile(item: StorageItem) =
-        item.isAppsTile || item.isRemoteTile || item.isSearchTile ||
+        item.isAppsTile || item.isRemoteTile || item.isTvRemoteTile || item.isSearchTile ||
         item.isAnalyzerTile || item.isVaultTile ||
         item.isLegalTile || item.isRateUsTile || item.isSafTile ||
         item.isNetworkTile || item.isPairedDevicesTile || item.isExtractsTile ||
         item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isTwinWindowTile || item.isShizukuTile || item.isTerminalTile || item.isFileServerTile || item.isSupportTile || item.isAboutTile ||
         item.isNotepadTile || item.isRecycleBinTile || item.isScannerTile ||
         item.isSmartSortTile || item.isOnlineStoragesTile || item.isFavoriteTile ||
-        item.isCustomTile
+        item.isSettingsTile || item.isCustomTile
 
     // ------------------------------------------------------------------ //
     //  Public API                                                          //

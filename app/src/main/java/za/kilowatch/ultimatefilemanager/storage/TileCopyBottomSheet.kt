@@ -181,12 +181,15 @@ class TileCopyBottomSheet : BottomSheetDialogFragment() {
             // Icon background
             val gridIconBg = dialogView.findViewById<FrameLayout>(R.id.confPreviewIconContainer)
             if (sourceConfig.iconBgColor != Color.TRANSPARENT) {
-                val d = GradientDrawable()
-                d.shape = GradientDrawable.OVAL
-                d.setColor(sourceConfig.iconBgColor)
+                val d = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    cornerRadius = 12 * density
+                    setColor(sourceConfig.iconBgColor)
+                    setStroke((1 * density).toInt(), ContextCompat.getColor(ctx, R.color.mobile_glass_stroke))
+                }
                 gridIconBg?.background = d
             } else {
-                gridIconBg?.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                gridIconBg?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
             }
             // Label colour
             val gridLabel    = dialogView.findViewById<TextView>(R.id.confPreviewLabel)
@@ -223,12 +226,15 @@ class TileCopyBottomSheet : BottomSheetDialogFragment() {
                 listIcon?.clearColorFilter()
             val listIconBg = dialogView.findViewById<FrameLayout>(R.id.confListIconContainer)
             if (sourceConfig.iconBgColor != Color.TRANSPARENT) {
-                val d = GradientDrawable()
-                d.shape = GradientDrawable.OVAL
-                d.setColor(sourceConfig.iconBgColor)
+                val d = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    cornerRadius = 12 * density
+                    setColor(sourceConfig.iconBgColor)
+                    setStroke((1 * density).toInt(), ContextCompat.getColor(ctx, R.color.mobile_glass_stroke))
+                }
                 listIconBg?.background = d
             } else {
-                listIconBg?.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                listIconBg?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
             }
             val listLabel    = dialogView.findViewById<TextView>(R.id.confListLabel)
             val listCapacity = dialogView.findViewById<TextView>(R.id.confListCapacity)

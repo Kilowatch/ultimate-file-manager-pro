@@ -5,36 +5,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
 
 class ViewModeBottomSheet : BottomSheetDialogFragment() {
 
     var onSettingsChanged: (() -> Unit)? = null
 
-    private var isListView = true
-
     companion object {
         const val TAG = "ViewModeBottomSheet"
         private const val ARG_IS_LIST_VIEW = "is_list_view"
 
-        fun newInstance(isListView: Boolean): ViewModeBottomSheet {
+        fun newInstance(isListView: Boolean = true): ViewModeBottomSheet {
             return ViewModeBottomSheet().apply {
                 arguments = Bundle().apply {
                     putBoolean(ARG_IS_LIST_VIEW, isListView)
                 }
             }
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        isListView = arguments?.getBoolean(ARG_IS_LIST_VIEW, true) ?: true
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
@@ -59,95 +51,166 @@ class ViewModeBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupViewModeOptions(view)
+        setupListSizeOptions(view)
+        setupColumnCountOptions(view)
+        setupResetCategoryOption(view)
+        updateSubSectionVisibilities(view)
+    }
+
+    private fun setupViewModeOptions(view: View) {
         val context = requireContext()
-        val imgIcon = view.findViewById<ImageView>(R.id.imgSheetIcon)
-        val txtTitle = view.findViewById<TextView>(R.id.txtSheetTitle)
+        val cardModern = view.findViewById<View>(R.id.cardModeModern)
+        val cardList = view.findViewById<View>(R.id.cardModeList)
+        val cardGrid = view.findViewById<View>(R.id.cardModeGrid)
+
+        fun updateUI() {
+            val currentMode = MainMenuViewModeManager.loadViewMode(context)
+            view.findViewById<View>(R.id.checkContainerModeModern)?.visibility =
+                if (currentMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED) View.VISIBLE else View.GONE
+            view.findViewById<View>(R.id.checkContainerModeList)?.visibility =
+                if (currentMode == MainMenuViewModeManager.ViewMode.LIST) View.VISIBLE else View.GONE
+            view.findViewById<View>(R.id.checkContainerModeGrid)?.visibility =
+                if (currentMode == MainMenuViewModeManager.ViewMode.GRID) View.VISIBLE else View.GONE
+
+            val imgIcon = view.findViewById<ImageView>(R.id.imgSheetIcon)
+            when (currentMode) {
+                MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED -> imgIcon?.setImageResource(R.drawable.ic_view_list)
+                MainMenuViewModeManager.ViewMode.LIST -> imgIcon?.setImageResource(R.drawable.ic_list_view_custom)
+                MainMenuViewModeManager.ViewMode.GRID -> imgIcon?.setImageResource(R.drawable.ic_grid_view_custom)
+            }
+            updateSubSectionVisibilities(view)
+        }
+
+        updateUI()
+
+        cardModern.setOnClickListener {
+            MainMenuViewModeManager.saveViewMode(context, MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED)
+            updateUI()
+            onSettingsChanged?.invoke()
+        }
+
+        cardList.setOnClickListener {
+            MainMenuViewModeManager.saveViewMode(context, MainMenuViewModeManager.ViewMode.LIST)
+            updateUI()
+            onSettingsChanged?.invoke()
+        }
+
+        cardGrid.setOnClickListener {
+            MainMenuViewModeManager.saveViewMode(context, MainMenuViewModeManager.ViewMode.GRID)
+            updateUI()
+            onSettingsChanged?.invoke()
+        }
+    }
+
+    private fun updateSubSectionVisibilities(view: View) {
+        val context = requireContext()
+        val currentMode = MainMenuViewModeManager.loadViewMode(context)
         val layoutColumns = view.findViewById<View>(R.id.layoutColumns)
         val layoutListSize = view.findViewById<View>(R.id.layoutListSize)
+        val layoutResetCategories = view.findViewById<View>(R.id.layoutResetCategories)
 
-        if (isListView) {
-            imgIcon.setImageResource(R.drawable.ic_list_view_custom)
-            txtTitle.text = getString(R.string.layout_list)
-            layoutListSize.visibility = View.VISIBLE
-            layoutColumns.visibility = View.GONE
-            setupListSizeOptions(view)
-        } else {
-            imgIcon.setImageResource(R.drawable.ic_grid_view_custom)
-            txtTitle.text = getString(R.string.layout_grid)
-            layoutColumns.visibility = View.VISIBLE
-            layoutListSize.visibility = View.GONE
-            setupColumnCountOptions(view)
+        when (currentMode) {
+            MainMenuViewModeManager.ViewMode.GRID -> {
+                layoutColumns?.visibility = View.VISIBLE
+                layoutListSize?.visibility = View.GONE
+                layoutResetCategories?.visibility = View.GONE
+            }
+            MainMenuViewModeManager.ViewMode.LIST -> {
+                layoutColumns?.visibility = View.GONE
+                layoutListSize?.visibility = View.VISIBLE
+                layoutResetCategories?.visibility = View.GONE
+            }
+            MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED -> {
+                layoutColumns?.visibility = View.GONE
+                layoutListSize?.visibility = View.VISIBLE
+                layoutResetCategories?.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun setupResetCategoryOption(view: View) {
+        val cardReset = view.findViewById<View>(R.id.cardResetCategories) ?: return
+        cardReset.setOnClickListener {
+            val context = requireContext()
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_reset_category_layout_confirm, null)
+            val dialog = MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .create()
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            dialogView.findViewById<View>(R.id.btnResetConfirm).setOnClickListener {
+                MainMenuViewModeManager.resetCategoryLayout(context)
+                onSettingsChanged?.invoke()
+                dialog.dismiss()
+                dismiss()
+            }
+            dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
         }
     }
 
     private fun setupListSizeOptions(view: View) {
         val context = requireContext()
-        val currentSize = MainMenuViewModeManager.loadItemSize(context)
+        val cardLarge = view.findViewById<View>(R.id.cardSizeLarge)
+        val cardMedium = view.findViewById<View>(R.id.cardSizeMedium)
+        val cardSmall = view.findViewById<View>(R.id.cardSizeSmall)
 
-        val cardLarge = view.findViewById<MaterialCardView>(R.id.cardSizeLarge)
-        val cardMedium = view.findViewById<MaterialCardView>(R.id.cardSizeMedium)
-        val cardSmall = view.findViewById<MaterialCardView>(R.id.cardSizeSmall)
+        fun updateUI() {
+            val currentSize = MainMenuViewModeManager.loadItemSize(context)
+            view.findViewById<View>(R.id.checkContainerSizeLarge)?.visibility =
+                if (currentSize == MainMenuViewModeManager.ItemSize.LARGE) View.VISIBLE else View.GONE
+            view.findViewById<View>(R.id.checkContainerSizeMedium)?.visibility =
+                if (currentSize == MainMenuViewModeManager.ItemSize.MEDIUM) View.VISIBLE else View.GONE
+            view.findViewById<View>(R.id.checkContainerSizeSmall)?.visibility =
+                if (currentSize == MainMenuViewModeManager.ItemSize.SMALL) View.VISIBLE else View.GONE
+        }
 
-        val rbLarge = view.findViewById<RadioButton>(R.id.rbSizeLarge)
-        val rbMedium = view.findViewById<RadioButton>(R.id.rbSizeMedium)
-        val rbSmall = view.findViewById<RadioButton>(R.id.rbSizeSmall)
-
-        rbLarge.isChecked = currentSize == MainMenuViewModeManager.ItemSize.LARGE
-        rbMedium.isChecked = currentSize == MainMenuViewModeManager.ItemSize.MEDIUM
-        rbSmall.isChecked = currentSize == MainMenuViewModeManager.ItemSize.SMALL
-
-        val activeColor = context.getColor(R.color.ufm_primary)
-        val inactiveColor = context.getColor(R.color.mobile_glass_stroke)
-
-        cardLarge.strokeColor = if (currentSize == MainMenuViewModeManager.ItemSize.LARGE) activeColor else inactiveColor
-        cardMedium.strokeColor = if (currentSize == MainMenuViewModeManager.ItemSize.MEDIUM) activeColor else inactiveColor
-        cardSmall.strokeColor = if (currentSize == MainMenuViewModeManager.ItemSize.SMALL) activeColor else inactiveColor
+        updateUI()
 
         cardLarge.setOnClickListener {
             MainMenuViewModeManager.saveItemSize(context, MainMenuViewModeManager.ItemSize.LARGE)
+            updateUI()
             onSettingsChanged?.invoke()
-            dismiss()
         }
         cardMedium.setOnClickListener {
             MainMenuViewModeManager.saveItemSize(context, MainMenuViewModeManager.ItemSize.MEDIUM)
+            updateUI()
             onSettingsChanged?.invoke()
-            dismiss()
         }
         cardSmall.setOnClickListener {
             MainMenuViewModeManager.saveItemSize(context, MainMenuViewModeManager.ItemSize.SMALL)
+            updateUI()
             onSettingsChanged?.invoke()
-            dismiss()
         }
     }
 
     private fun setupColumnCountOptions(view: View) {
         val context = requireContext()
-        val currentColCount = MainMenuViewModeManager.loadColumnCount(context)
+        val cardColumns4 = view.findViewById<View>(R.id.cardColumns4)
+        val cardColumns3 = view.findViewById<View>(R.id.cardColumns3)
 
-        val cardColumns4 = view.findViewById<MaterialCardView>(R.id.cardColumns4)
-        val cardColumns3 = view.findViewById<MaterialCardView>(R.id.cardColumns3)
+        fun updateUI() {
+            val currentColCount = MainMenuViewModeManager.loadColumnCount(context)
+            view.findViewById<View>(R.id.checkContainerColumns4)?.visibility =
+                if (currentColCount == 4) View.VISIBLE else View.GONE
+            view.findViewById<View>(R.id.checkContainerColumns3)?.visibility =
+                if (currentColCount == 3) View.VISIBLE else View.GONE
+        }
 
-        val rbColumns4 = view.findViewById<RadioButton>(R.id.rbColumns4)
-        val rbColumns3 = view.findViewById<RadioButton>(R.id.rbColumns3)
-
-        rbColumns4.isChecked = currentColCount == 4
-        rbColumns3.isChecked = currentColCount == 3
-
-        val activeColor = context.getColor(R.color.ufm_primary)
-        val inactiveColor = context.getColor(R.color.mobile_glass_stroke)
-
-        cardColumns4.strokeColor = if (currentColCount == 4) activeColor else inactiveColor
-        cardColumns3.strokeColor = if (currentColCount == 3) activeColor else inactiveColor
+        updateUI()
 
         cardColumns4.setOnClickListener {
             MainMenuViewModeManager.saveColumnCount(context, 4)
+            updateUI()
             onSettingsChanged?.invoke()
-            dismiss()
         }
         cardColumns3.setOnClickListener {
             MainMenuViewModeManager.saveColumnCount(context, 3)
+            updateUI()
             onSettingsChanged?.invoke()
-            dismiss()
         }
     }
 }

@@ -648,11 +648,11 @@ private class ColorSectionAdapter(
                 }
             } else {
                 expandedDotView = null
-                if (adapterPosition == expandedPos || expandedPos == -1) swatchAdapter = null
+                if (bindingAdapterPosition == expandedPos || expandedPos == -1) swatchAdapter = null
             }
 
             header.setOnClickListener {
-                val pos = adapterPosition
+                val pos = bindingAdapterPosition
                 if (pos == RecyclerView.NO_ID.toInt()) return@setOnClickListener
                 val prev = expandedPos
                 expandedPos = if (expandedPos == pos) -1 else pos

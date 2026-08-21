@@ -1,52 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Create / Edit Custom Tile dialog — mobile layout.
-    Used by MaterialAlertDialogBuilder in StorageBrowserActivity.
+    Upgraded to premium glassmorphism styling.
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
 
-    <!-- Icon preview (change via Tile Color palette) -->
+    <!-- Icon preview (change via Tile Color palette or tap) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="@dimen/margin_md">
 
-        <ImageView
-            android:id="@+id/imgCustomTileIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_folder"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@color/mobile_icon_tint"
-            android:contentDescription="@string/tile_icon_title" />
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/imgCustomTileIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_folder_special"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@string/tile_icon_title" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/txtCustomTileDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_tile_create_title"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:textAlignment="center"
+            android:layout_marginTop="12dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/custom_tile_icon_hint"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:layout_marginTop="8dp"
+            android:textColor="@color/mobile_text_secondary"
+            android:layout_marginTop="4dp"
             android:gravity="center" />
 
     </LinearLayout>
 
     <!-- Title input -->
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilCustomTileTitle"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:hint="@string/custom_tile_title_hint"
+        app:boxStrokeColor="?attr/colorPrimary"
         app:counterEnabled="true"
         app:counterMaxLength="50">
 
@@ -54,17 +74,22 @@
             android:id="@+id/edtCustomTileTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="textCapWords"
             android:maxLength="50"
+            android:textColor="@color/mobile_text_primary"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Subtitle input -->
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilCustomTileSubtitle"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:hint="@string/custom_tile_subtitle_hint"
+        app:boxStrokeColor="?attr/colorPrimary"
         app:counterEnabled="true"
         app:counterMaxLength="80">
 
@@ -72,8 +97,9 @@
             android:id="@+id/edtCustomTileSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             android:maxLength="80"
+            android:textColor="@color/mobile_text_primary"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -84,7 +110,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="12dp">
+        android:padding="12dp"
+        android:background="@drawable/bg_reindex_option_card"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/margin_lg">
 
         <TextView
             android:layout_width="0dp"
@@ -92,12 +121,37 @@
             android:layout_weight="1"
             android:text="@string/custom_tile_show_in_picker"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:textColor="?attr/colorOnSurface" />
+            android:textColor="@color/mobile_text_primary" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchShowInPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelCustomTile"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/mobile_text_secondary"
+            android:layout_marginEnd="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSaveCustomTile"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_tile_add_button" />
 
     </LinearLayout>
 

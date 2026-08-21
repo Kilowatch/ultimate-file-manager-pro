@@ -65,7 +65,11 @@ data class StorageItem(
     val favoriteIsNetwork: Boolean = false,
     val colorConfig: TileColorConfig = TileColorConfig(),
     val isCustomTile: Boolean = false,
-    val parentCustomTileId: String? = null
+    val parentCustomTileId: String? = null,
+    val isCategoryHeader: Boolean = false,
+    val categoryId: String? = null,
+    var isCategoryExpanded: Boolean = true,
+    var categoryItemCount: Int = 0
 ) {
     val freeBytes: Long get() = totalBytes - usedBytes
 

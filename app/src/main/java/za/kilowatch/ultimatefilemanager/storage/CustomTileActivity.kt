@@ -298,7 +298,7 @@ class CustomTileActivity : AppCompatActivity() {
     // ── Tile Loading ────────────────────────────────────────────────────────
 
     private fun loadTiles() {
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             val childIds = CustomTileManager.getChildTiles(this@CustomTileActivity, customTileId)
             val savedOrder = CustomTileManager.loadTileOrder(this@CustomTileActivity, customTileId)
 
@@ -523,7 +523,6 @@ class CustomTileActivity : AppCompatActivity() {
             }
             item.isOnlineStorage -> {
                 val storage = item.onlineStorage
-                val isRClone = storage?.provider == za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE
 
                 if (isDrivePicker) {
                     // Drive picker only returns a result — no network I/O here.
@@ -548,7 +547,7 @@ class CustomTileActivity : AppCompatActivity() {
                     if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
                 }
 
-                if (isRClone && storage != null) {
+                if (storage != null && storage.provider == za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE) {
                     lifecycleScope.launch {
                         try {
                             za.kilowatch.ultimatefilemanager.network.RCloneShareClient.prepareForBrowse(storage)
@@ -737,12 +736,21 @@ class CustomTileActivity : AppCompatActivity() {
                 viewHolder.itemView.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
                 viewHolder.itemView.elevation = 0f
 
-                val orderedIds = storageAdapter.getItems().map { it.id }
+                val orderedIds = storageAdapter.getRawItems().map { it.id }
                 CustomTileManager.saveTileOrder(this@CustomTileActivity, customTileId, orderedIds)
+                storageAdapter.onDragFinished(this@CustomTileActivity)
                 showPremiumSnackbar(getString(R.string.tile_order_saved))
             }
 
             override fun isLongPressDragEnabled() = false
+
+            override fun canDropOver(
+                recyclerView: RecyclerView,
+                current: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return true
+            }
         }
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(recyclerStorage)
@@ -880,7 +888,7 @@ class CustomTileActivity : AppCompatActivity() {
             try { tvSnapHelper?.attachToRecyclerView(null) } catch (_: Exception) {}
             tvSnapHelper = null
 
-            if (mode == MainMenuViewModeManager.ViewMode.LIST) {
+            if (mode == MainMenuViewModeManager.ViewMode.LIST || mode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED) {
                 recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                 if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
             } else {
@@ -945,6 +953,7 @@ class CustomTileActivity : AppCompatActivity() {
                         putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, "ico,png")
                         putExtra(StorageBrowserActivity.EXTRA_TILE_ICON_PICKER, true)
                     }
+                    @Suppress("DEPRECATION")
                     startActivityForResult(intent, REQUEST_TILE_ICON_PICKER)
                 }
             sheet.show(supportFragmentManager, "tileColor")
@@ -952,6 +961,7 @@ class CustomTileActivity : AppCompatActivity() {
     }
 
     // Icon picker result handler
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_TILE_ICON_PICKER && resultCode == Activity.RESULT_OK) {
@@ -997,7 +1007,7 @@ class CustomTileActivity : AppCompatActivity() {
                 btnManageTiles.setImageResource(R.drawable.ic_check)
                 btnManageTiles.visibility = View.VISIBLE
                 btnManageTiles.clearColorFilter()
-                btnManageTiles.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                btnManageTiles.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 btnColorTile?.visibility = View.VISIBLE
             }
         } else {
@@ -1023,6 +1033,7 @@ class CustomTileActivity : AppCompatActivity() {
 
     // ── Lifecycle ──────────────────────────────────────────────────────────
 
+    @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
         if (isEditMode) {
