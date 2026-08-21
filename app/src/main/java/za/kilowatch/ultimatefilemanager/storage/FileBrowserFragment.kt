@@ -592,8 +592,11 @@ class FileBrowserFragment : Fragment() {
         }
         if (hideBack) {
             btnBack?.visibility = View.GONE
+            (btnBack?.parent as? android.widget.FrameLayout)?.visibility = View.GONE
             view.findViewById<View>(R.id.spacerHeaderFlex)?.visibility = View.GONE
         } else {
+            btnBack?.visibility = View.VISIBLE
+            (btnBack?.parent as? android.widget.FrameLayout)?.visibility = View.VISIBLE
             btnBack?.setOnClickListener { navigateBack() }
         }
 

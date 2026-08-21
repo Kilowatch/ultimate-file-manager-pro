@@ -35,18 +35,24 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Back Button -->
-            <ImageView
-                android:id="@+id/btnTvBack"
+            <!-- Back Button in 36dp Frosted Squircle -->
+            <FrameLayout
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:padding="8dp"
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@string/cd_back"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/bg_header_action_ripple"
-                app:tint="@color/mobile_icon_tint" />
+                android:background="@drawable/bg_btn_icon_frosted">
+
+                <ImageView
+                    android:id="@+id/btnTvBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="@string/cd_back"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="@color/mobile_icon_tint" />
+            </FrameLayout>
 
             <!-- Storage Badge Pill -->
             <TextView

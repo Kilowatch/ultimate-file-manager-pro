@@ -22,18 +22,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Back Button -->
-        <ImageView
-            android:id="@+id/btnBack"
+        <!-- Back Button in 40dp Frosted Squircle -->
+        <FrameLayout
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/cd_back"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_header_action_ripple"
-            app:tint="@color/mobile_icon_tint" />
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
         <!-- Title + Subtitle -->
         <LinearLayout

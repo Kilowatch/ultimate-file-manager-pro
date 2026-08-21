@@ -20,6 +20,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -30,7 +31,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -103,7 +103,11 @@ class TvRemoteActivity : AppCompatActivity() {
 
     // ── UI references ─────────────────────────────────────────────────────
 
-    private lateinit var toolbar: MaterialToolbar
+    private lateinit var btnBack: ImageView
+    private lateinit var btnPairContainer: FrameLayout
+    private lateinit var btnPairAction: TextView
+    private lateinit var btnDisconnectContainer: FrameLayout
+    private lateinit var btnDisconnectAction: TextView
     private lateinit var coordinatorRoot: View
 
     private lateinit var viewStatusDot: View
@@ -798,8 +802,7 @@ class TvRemoteActivity : AppCompatActivity() {
         btnStatusAction.setOnClickListener {
             showTransportPicker()
         }
-        toolbar.menu.findItem(R.id.action_pair)?.isVisible = false
-        toolbar.menu.findItem(R.id.action_disconnect)?.isVisible = false
+        setToolbarActions(pairVisible = false, disconnectVisible = false)
     }
 
     private fun showCardDisconnected(tvName: String) {
@@ -837,8 +840,7 @@ class TvRemoteActivity : AppCompatActivity() {
                 }
             }
         }
-        toolbar.menu.findItem(R.id.action_pair)?.isVisible = true
-        toolbar.menu.findItem(R.id.action_disconnect)?.isVisible = false
+        setToolbarActions(pairVisible = true, disconnectVisible = false)
     }
 
     /** Connect via Bluetooth with the existing BT flow. */
@@ -873,8 +875,7 @@ class TvRemoteActivity : AppCompatActivity() {
         viewStatusDot.backgroundTintList =
             ContextCompat.getColorStateList(this, R.color.vpn_warning_amber)
         btnStatusAction.visibility = View.GONE
-        toolbar.menu.findItem(R.id.action_pair)?.isVisible = false
-        toolbar.menu.findItem(R.id.action_disconnect)?.isVisible = false
+        setToolbarActions(pairVisible = false, disconnectVisible = false)
     }
 
     private fun showCardConnected(tvName: String) {
@@ -885,8 +886,7 @@ class TvRemoteActivity : AppCompatActivity() {
         viewStatusDot.backgroundTintList =
             ContextCompat.getColorStateList(this, R.color.ufm_success)
         btnStatusAction.visibility = View.GONE
-        toolbar.menu.findItem(R.id.action_pair)?.isVisible = false
-        toolbar.menu.findItem(R.id.action_disconnect)?.isVisible = true
+        setToolbarActions(pairVisible = false, disconnectVisible = true)
     }
 
     private fun showCardBluetoothOff() {
@@ -902,8 +902,7 @@ class TvRemoteActivity : AppCompatActivity() {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivity(enableBtIntent)
         }
-        toolbar.menu.findItem(R.id.action_pair)?.isVisible = false
-        toolbar.menu.findItem(R.id.action_disconnect)?.isVisible = false
+        setToolbarActions(pairVisible = false, disconnectVisible = false)
     }
 
     private fun showCardNoPermission() {
@@ -920,37 +919,30 @@ class TvRemoteActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
-        toolbar.menu.findItem(R.id.action_pair)?.isVisible = false
-        toolbar.menu.findItem(R.id.action_disconnect)?.isVisible = false
+        setToolbarActions(pairVisible = false, disconnectVisible = false)
     }
 
-    // ── Toolbar & Device Selection ────────────────────────────────────────
+    // ── Header Bar & Device Selection ────────────────────────────────────────
+
+    private fun setToolbarActions(pairVisible: Boolean, disconnectVisible: Boolean) {
+        btnPairContainer.visibility = if (pairVisible) View.VISIBLE else View.GONE
+        btnDisconnectContainer.visibility = if (disconnectVisible) View.VISIBLE else View.GONE
+    }
 
     private fun setupToolbar() {
-        toolbar.title = ""
-        toolbar.setNavigationOnClickListener { onBackPressed() }
-        toolbar.inflateMenu(R.menu.menu_tv_remote)
-        updatePairMenuTitle()
-        toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_pair -> {
-                    promptSelectTv()
-                    true
-                }
-                R.id.action_disconnect -> {
-                    currentTransport?.disconnect()
-                    currentTransport = null
-                    transportObserverJob?.cancel()
-                    transportObserverJob = null
-                    true
-                }
-                else -> false
-            }
+        btnBack.setOnClickListener { onBackPressed() }
+        btnPairAction.setOnClickListener { promptSelectTv() }
+        btnDisconnectAction.setOnClickListener {
+            currentTransport?.disconnect()
+            currentTransport = null
+            transportObserverJob?.cancel()
+            transportObserverJob = null
         }
+        updatePairMenuTitle()
     }
 
     /**
-     * Dynamically updates the toolbar menu item title based on how many UFM-saved
+     * Dynamically updates the toolbar action button title based on how many UFM-saved
      * TVs exist. 0 or 1 saved → "Add Device"; 2+ saved → "Add / Select Device".
      */
     private fun updatePairMenuTitle() {
@@ -959,8 +951,7 @@ class TvRemoteActivity : AppCompatActivity() {
         val adbCount = prefs.getRemoteEnabledDeviceIds().size
         val manualCount = prefs.getManualDevices().size
         val totalCount = btCount + adbCount + manualCount
-        val menuItem = toolbar.menu.findItem(R.id.action_pair)
-        menuItem?.title = if (totalCount <= 1) {
+        btnPairAction.text = if (totalCount <= 1) {
             getString(R.string.bt_remote_add_device)
         } else {
             getString(R.string.bt_remote_select_device)
@@ -1260,9 +1251,13 @@ class TvRemoteActivity : AppCompatActivity() {
     // ── Button Setup ──────────────────────────────────────────────────────
 
     private fun bindViews() {
-        coordinatorRoot    = findViewById(R.id.coordinatorRoot)
-        toolbar            = findViewById(R.id.toolbar)
-        viewStatusDot      = findViewById(R.id.viewStatusDot)
+        coordinatorRoot        = findViewById(R.id.coordinatorRoot)
+        btnBack                = findViewById(R.id.btnBack)
+        btnPairContainer       = findViewById(R.id.btnPairContainer)
+        btnPairAction          = findViewById(R.id.btnPairAction)
+        btnDisconnectContainer = findViewById(R.id.btnDisconnectContainer)
+        btnDisconnectAction    = findViewById(R.id.btnDisconnectAction)
+        viewStatusDot          = findViewById(R.id.viewStatusDot)
         txtStatusLabel     = findViewById(R.id.txtStatusLabel)
 
         progressConnecting = findViewById(R.id.progressConnecting)
