@@ -15,106 +15,115 @@
     tools:context=".storage.CustomTileActivity">
 
     <!-- ══════════════════════════════════════════════════
-         HEADER BAR — MaterialToolbar with back arrow
+         HEADER BAR — 56dp Glass Header Standard
          ══════════════════════════════════════════════════ -->
-    <com.google.android.material.appbar.AppBarLayout
+    <LinearLayout
         android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
-        app:liftOnScroll="true"
-        app:liftOnScrollTargetViewId="@id/recyclerStorage"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
-            app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationContentDescription="@string/back">
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
-            <!-- Custom Title inside Toolbar -->
-            <LinearLayout
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <!-- Custom Title inside Toolbar -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/margin_md">
+
+            <TextView
+                android:id="@+id/txtToolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="start">
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="end"
+                tools:text="My Custom Tile" />
 
-                <TextView
-                    android:id="@+id/txtToolbarTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                    android:textColor="@color/mobile_text_primary"
-                    android:fontFamily="sans-serif-black"
-                    android:letterSpacing="0.01"
-                    tools:text="My Custom Tile" />
+            <TextView
+                android:id="@+id/txtToolbarSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:visibility="gone"
+                tools:text="Optional subtitle" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtToolbarSubtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:textColor="@color/mobile_text_secondary"
-                    android:visibility="gone"
-                    tools:text="Optional subtitle" />
+        <!-- Manage Tiles button -->
+        <ImageView
+            android:id="@+id/btnManageTiles"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_tune"
+            android:contentDescription="@string/cd_manage_tiles"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_btn_icon_frosted"
+            app:tint="@color/mobile_icon_tint"
+            android:visibility="gone" />
 
-            </LinearLayout>
+        <!-- Color button — visible only in Edit Mode -->
+        <ImageView
+            android:id="@+id/btnColorTile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_palette"
+            android:contentDescription="@string/tile_color_title"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_btn_icon_frosted"
+            app:tint="@color/mobile_icon_tint"
+            android:visibility="gone" />
 
-            <!-- Manage Tiles button -->
-            <ImageView
-                android:id="@+id/btnManageTiles"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="8dp"
-                android:padding="8dp"
-                android:src="@drawable/ic_tune"
-                android:contentDescription="@string/cd_manage_tiles"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/bg_btn_icon_frosted"
-                app:tint="@color/mobile_icon_tint"
-                android:visibility="gone" />
+        <!-- Import Code button -->
+        <ImageView
+            android:id="@+id/btnImportColorCode"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_import_code"
+            android:contentDescription="@string/tile_color_import"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_btn_icon_frosted"
+            app:tint="@color/mobile_icon_tint"
+            android:visibility="gone" />
 
-            <!-- Color button — visible only in Edit Mode -->
-            <ImageView
-                android:id="@+id/btnColorTile"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="8dp"
-                android:padding="8dp"
-                android:src="@drawable/ic_palette"
-                android:contentDescription="@string/tile_color_title"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/bg_btn_icon_frosted"
-                app:tint="@color/mobile_icon_tint"
-                android:visibility="gone" />
-
-            <!-- Import Code button -->
-            <ImageView
-                android:id="@+id/btnImportColorCode"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="8dp"
-                android:padding="8dp"
-                android:src="@drawable/ic_import_code"
-                android:contentDescription="@string/tile_color_import"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/bg_btn_icon_frosted"
-                app:tint="@color/mobile_icon_tint"
-                android:visibility="gone" />
-
-        </com.google.android.material.appbar.MaterialToolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    </LinearLayout>
 
     <!-- ══════════════════════════════════════════════════
          TILE LIST — vertical full-width cards

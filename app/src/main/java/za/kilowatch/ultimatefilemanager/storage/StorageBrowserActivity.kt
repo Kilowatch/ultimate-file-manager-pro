@@ -2437,7 +2437,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     // Normal reorder drop — persist the new order
                     val orderedIds = storageAdapter.getRawItems().map { it.id }
                     TileOrderManager.save(this@StorageBrowserActivity, orderedIds)
-                    storageAdapter.onDragFinished(this@StorageBrowserActivity)
+                    storageAdapter.onDragFinished(this@StorageBrowserActivity, droppedItem)
                     showPremiumSnackbar(getString(R.string.tile_order_saved))
                 }
             }

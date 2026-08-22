@@ -200,14 +200,28 @@ class FolderLargeFilesFinderActivity : AppCompatActivity() {
         val title = getString(R.string.analyzer_delete_confirm_title, toDelete.size)
         val msg = getString(R.string.analyzer_delete_confirm_msg)
 
-        AlertDialog.Builder(this)
-            .setTitle(title)
-            .setMessage(msg)
-            .setPositiveButton(R.string.delete) { _, _ ->
-                executeDeletion(toDelete)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        val layoutRes = if (isTv) R.layout.dialog_analyzer_delete_confirm_tv else R.layout.dialog_analyzer_delete_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+
+        txtTitle?.text = title
+        txtMessage?.text = "$msg\n(${Formatter.formatFileSize(this, totalBytes)})"
+
+        dialogView.findViewById<View>(R.id.btnDeleteConfirm)?.setOnClickListener {
+            dialog.dismiss()
+            executeDeletion(toDelete)
+        }
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun executeDeletion(targets: List<FileIndex>) {

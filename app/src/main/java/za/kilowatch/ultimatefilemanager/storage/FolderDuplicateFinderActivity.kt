@@ -268,12 +268,28 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
             DuplicateSafetySheet.newInstance(dangerousFiles, onConfirm)
                 .show(supportFragmentManager, DuplicateSafetySheet.TAG)
         } else {
-            AlertDialog.Builder(this)
-                .setTitle(getString(R.string.analyzer_delete_confirm_title, toDelete.size))
-                .setMessage(R.string.analyzer_delete_confirm_msg)
-                .setPositiveButton(R.string.delete) { _, _ -> onConfirm() }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            val layoutRes = if (isTv) R.layout.dialog_analyzer_delete_confirm_tv else R.layout.dialog_analyzer_delete_confirm
+            val dialogView = layoutInflater.inflate(layoutRes, null)
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .create()
+
+            val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+            val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+
+            txtTitle?.text = getString(R.string.analyzer_delete_confirm_title, toDelete.size)
+            txtMessage?.text = getString(R.string.analyzer_delete_confirm_msg)
+
+            dialogView.findViewById<View>(R.id.btnDeleteConfirm)?.setOnClickListener {
+                dialog.dismiss()
+                onConfirm()
+            }
+            dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
     }
 

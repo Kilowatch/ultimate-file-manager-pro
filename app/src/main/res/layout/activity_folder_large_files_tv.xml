@@ -17,23 +17,23 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="24dp"
-        android:background="@drawable/bg_tv_glass_card"
+        android:background="@color/tv_glass_white_10"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
+        <ImageView
             android:id="@+id/btnBack"
-            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/selector_tv_button"
-            android:drawableStart="@drawable/ic_arrow_back"
-            android:drawableTint="@color/tv_button_text"
-            android:paddingStart="12dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
             android:contentDescription="@string/cd_back"
+            android:clickable="true"
             android:focusable="true"
-            android:clickable="true" />
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/selector_tv_icon_tint_yellow" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -49,7 +49,9 @@
                 android:text="@string/folder_large_files_finder_title"
                 android:textColor="@color/tv_text_primary"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/txtSubtitle"
@@ -58,23 +60,27 @@
                 android:textColor="@color/tv_text_secondary"
                 android:textSize="13sp"
                 android:singleLine="true"
-                android:ellipsize="middle"
+                android:ellipsize="end"
                 tools:text="/storage/emulated/0/Download" />
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDeleteLargeFiles"
             android:layout_width="wrap_content"
-            android:layout_height="44dp"
+            android:layout_height="48dp"
             android:background="@drawable/selector_tv_button_yellow"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/analyzer_delete_selected"
-            android:textColor="@color/tv_text_primary"
+            android:textColor="@color/tv_button_focused_yellow_text"
             android:textSize="14sp"
-            android:textStyle="bold"
+            android:fontFamily="sans-serif-bold"
             android:paddingHorizontal="20dp"
             android:visibility="gone"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            style="@style/Widget.Material3.Button" />
     </LinearLayout>
 
     <!-- TV Scope Description Glass Card Bar -->

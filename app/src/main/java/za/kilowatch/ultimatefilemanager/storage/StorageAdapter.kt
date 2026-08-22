@@ -274,7 +274,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
         rawItems.addAll(newRaw)
     }
 
-    fun onDragFinished(context: android.content.Context? = null) {
+    fun onDragFinished(context: android.content.Context? = null, draggedItem: StorageItem? = null) {
         val ctx = context ?: adapterContext
         if (viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED && !isTv && ctx != null) {
             // 1. Extract and save new category header order
@@ -283,17 +283,21 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 MainMenuViewModeManager.saveCategoryOrder(ctx, newCatOrder)
             }
 
-            // 2. Extract and save tile category memberships
-            var currentCat: String? = null
-            val categoryMap = MainMenuViewModeManager.loadAllTileCategories(ctx).toMutableMap()
-            for (item in items) {
-                if (item.isCategoryHeader) {
-                    currentCat = item.categoryId
-                } else if (currentCat != null) {
-                    categoryMap[item.id] = currentCat
+            // 2. Extract and save tile category memberships ONLY when a regular tile was dragged.
+            // When a category header is dragged, we only reorder the categories themselves without
+            // reassigning the category memberships of the tiles under them.
+            if (draggedItem == null || !draggedItem.isCategoryHeader) {
+                var currentCat: String? = null
+                val categoryMap = MainMenuViewModeManager.loadAllTileCategories(ctx).toMutableMap()
+                for (item in items) {
+                    if (item.isCategoryHeader) {
+                        currentCat = item.categoryId
+                    } else if (currentCat != null) {
+                        categoryMap[item.id] = currentCat
+                    }
                 }
+                MainMenuViewModeManager.saveAllTileCategories(ctx, categoryMap)
             }
-            MainMenuViewModeManager.saveAllTileCategories(ctx, categoryMap)
         }
         refreshDisplayedList(ctx)
         notifyDataSetChanged()

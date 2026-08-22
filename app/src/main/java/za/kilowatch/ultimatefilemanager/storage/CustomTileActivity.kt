@@ -223,14 +223,11 @@ class CustomTileActivity : AppCompatActivity() {
         // Attach adapter to RecyclerView
         recyclerStorage.adapter = storageAdapter
 
-        // Mobile toolbar setup
+        // Mobile & TV header setup
+        val btnBack = findViewById<View>(R.id.btnBack)
+        btnBack?.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+
         if (!isTv) {
-            val toolbar = findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbar)
-            toolbar?.let {
-                setSupportActionBar(it)
-                supportActionBar?.setDisplayShowTitleEnabled(false)
-                it.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
-            }
             val txtTitle = findViewById<android.widget.TextView>(R.id.txtToolbarTitle)
             txtTitle?.text = customTileTitle
             val txtSubtitle = findViewById<android.widget.TextView>(R.id.txtToolbarSubtitle)
@@ -241,8 +238,6 @@ class CustomTileActivity : AppCompatActivity() {
         } else {
             val txtTitle = findViewById<android.widget.TextView>(R.id.txtStorageTitle)
             txtTitle?.text = customTileTitle
-            val btnBack = findViewById<ImageView>(R.id.btnBack)
-            btnBack?.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
             val txtSubtitle = findViewById<android.widget.TextView>(R.id.txtStorageSubtitle)
             if (txtSubtitle != null && customTileSubtitle.isNotEmpty()) {
                 txtSubtitle.text = customTileSubtitle

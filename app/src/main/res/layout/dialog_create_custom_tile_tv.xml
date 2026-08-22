@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Create / Edit Custom Tile dialog — TV layout.
-    Full-screen dialog with D-pad navigable fields.
+    Standard UFM TV glass dialog with D-pad navigable fields.
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,9 +10,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="32dp"
+    android:padding="28dp"
     android:gravity="center_horizontal"
-    android:background="@drawable/bg_tv_gradient">
+    android:background="@drawable/bg_dialog_glass">
 
     <TextView
         android:id="@+id/txtDialogTitle"
@@ -20,9 +20,9 @@
         android:layout_height="wrap_content"
         android:text="@string/custom_tile_create_title"
         android:textColor="@color/tv_text_primary"
-        android:textSize="28sp"
+        android:textSize="22sp"
         android:fontFamily="sans-serif-black"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="20dp" />
 
     <!-- Icon picker row -->
     <LinearLayout
@@ -30,15 +30,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="16dp"
         android:focusable="false"
         android:clickable="false">
 
         <ImageView
             android:id="@+id/imgCustomTileIcon"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:padding="8dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:padding="10dp"
             android:src="@drawable/ic_folder"
             android:background="@drawable/selector_tv_button_yellow"
             app:tint="@color/selector_tv_button_text"
@@ -51,8 +51,8 @@
             android:layout_height="wrap_content"
             android:text="@string/custom_tile_icon_hint"
             android:textColor="@color/tv_text_secondary"
-            android:textSize="14sp"
-            android:layout_marginTop="8dp"
+            android:textSize="13sp"
+            android:layout_marginTop="6dp"
             android:gravity="center" />
 
     </LinearLayout>
@@ -61,7 +61,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="14dp"
         android:hint="@string/custom_tile_title_hint"
         app:counterEnabled="true"
         app:counterMaxLength="50">
@@ -73,7 +73,7 @@
             android:inputType="text"
             android:maxLength="50"
             android:singleLine="true"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textColor="@color/tv_text_primary" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -82,7 +82,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="18dp"
         android:hint="@string/custom_tile_subtitle_hint"
         app:counterEnabled="true"
         app:counterMaxLength="80">
@@ -94,7 +94,7 @@
             android:inputType="text"
             android:maxLength="80"
             android:singleLine="true"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textColor="@color/tv_text_primary" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -106,7 +106,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="20dp"
         android:focusable="true"
         android:clickable="true"
         android:nextFocusDown="@+id/btnSave"
@@ -118,14 +118,14 @@
             android:layout_weight="1"
             android:text="@string/custom_tile_show_in_picker"
             android:textColor="@color/tv_text_primary"
-            android:textSize="18sp"
-            android:padding="16dp" />
+            android:textSize="15sp"
+            android:padding="12dp" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchShowInPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="12dp"
             android:focusable="false"
             android:clickable="false"
             android:duplicateParentState="true" />
@@ -141,30 +141,37 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
-            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="56dp"
+            android:layout_height="48dp"
             android:text="@string/cancel"
-            android:textColor="@color/selector_tv_button_text"
-            android:fontFamily="sans-serif-black"
-            android:textSize="18sp"
-            app:backgroundTint="@color/tv_text_hint"
-            app:cornerRadius="16dp"
-            android:layout_marginEnd="12dp" />
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="15sp"
+            android:background="@drawable/selector_tv_button"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:focusable="true"
+            android:textAllCaps="false"
+            android:layout_marginEnd="12dp"
+            style="@style/Widget.Material3.Button" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
-            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="56dp"
+            android:layout_weight="1.2"
+            android:layout_height="48dp"
             android:text="@string/save"
-            android:textColor="@color/selector_tv_button_text"
-            android:fontFamily="sans-serif-black"
-            android:textSize="18sp"
-            app:backgroundTint="@color/selector_tv_button_yellow"
-            app:cornerRadius="16dp" />
+            android:textColor="@color/tv_button_focused_yellow_text"
+            android:fontFamily="sans-serif-bold"
+            android:textSize="15sp"
+            android:background="@drawable/selector_tv_button_yellow"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:focusable="true"
+            android:textAllCaps="false"
+            style="@style/Widget.Material3.Button" />
 
     </LinearLayout>
 
