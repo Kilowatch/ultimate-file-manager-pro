@@ -305,20 +305,27 @@ object FileTagsManager {
             unionTags.addAll(getTags(context, path))
         }
 
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_tags, null)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)
+        val layoutRes = if (isTv) R.layout.dialog_edit_tags_tv else R.layout.dialog_edit_tags
+        val dialogView = LayoutInflater.from(context).inflate(layoutRes, null)
         val edtInput = dialogView.findViewById<TextInputEditText>(R.id.edtTagsInput)
         val txtHeader = dialogView.findViewById<TextView>(R.id.txtCreatedTagsHeader)
         val cgExisting = dialogView.findViewById<ChipGroup>(R.id.cgExistingTags)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+        val btnDone = dialogView.findViewById<View>(R.id.btnDone)
+
+        txtTitle?.setText(R.string.settings_file_tags_multi_title)
 
         val chipsMap = mutableMapOf<String, Chip>()
 
         if (allCreatedTags.isNotEmpty()) {
-            txtHeader.visibility = View.VISIBLE
+            txtHeader?.visibility = View.VISIBLE
             for (tag in allCreatedTags) {
                 val chip = LayoutInflater.from(context)
                     .inflate(R.layout.item_tag_chip, cgExisting, false) as Chip
                 chip.text = "#$tag"
-                cgExisting.addView(chip)
+                cgExisting?.addView(chip)
                 chipsMap[tag] = chip
             }
         }
@@ -329,7 +336,7 @@ object FileTagsManager {
                 chip.setOnCheckedChangeListener(null)
                 chip.isChecked = parsedTags.contains(cleanTag)
                 chip.setOnCheckedChangeListener { _, isChecked ->
-                    val currentText = edtInput.text?.toString() ?: ""
+                    val currentText = edtInput?.text?.toString() ?: ""
                     val tagsList = sanitizeAndSplit(currentText).toMutableList()
                     if (isChecked) {
                         if (!tagsList.contains(cleanTag)) {
@@ -338,18 +345,18 @@ object FileTagsManager {
                     } else {
                         tagsList.remove(cleanTag)
                     }
-                    edtInput.setText(tagsList.joinToString(", "))
-                    edtInput.setSelection(edtInput.text?.length ?: 0)
+                    edtInput?.setText(tagsList.joinToString(", "))
+                    edtInput?.setSelection(edtInput.text?.length ?: 0)
                 }
             }
         }
 
         val initialText = unionTags.joinToString(", ")
-        edtInput.setText(initialText)
-        edtInput.setSelection(edtInput.text?.length ?: 0)
+        edtInput?.setText(initialText)
+        edtInput?.setSelection(edtInput.text?.length ?: 0)
         updateChipsFromInput(initialText)
 
-        edtInput.addTextChangedListener(object : android.text.TextWatcher {
+        edtInput?.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: android.text.Editable?) {
@@ -357,34 +364,41 @@ object FileTagsManager {
             }
         })
 
-        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-
-        MaterialAlertDialogBuilder(context, dialogTheme)
-            .setTitle("Tag Multiple Files")
+        val dialog = MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
             .setView(dialogView)
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Done") { _, _ ->
-                val textInput = edtInput.text?.toString() ?: ""
-                val newTags = sanitizeAndSplit(textInput).toSet()
-                // Batch all files into ONE cache update + ONE background commit() instead of one
-                // apply() per file — a per-file apply() loop would queue N full-file rewrites to
-                // QueuedWork, which the main thread then waits on at the next Activity.onStop().
-                val updated = entries(context).toMutableMap()
-                for (path in filePaths) {
-                    if (newTags.isEmpty()) {
-                        updated.remove(path)
-                    } else {
-                        updated[path] = newTags.joinToString(",")
-                    }
+            .create()
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnDone?.setOnClickListener {
+            val textInput = edtInput?.text?.toString() ?: ""
+            val newTags = sanitizeAndSplit(textInput).toSet()
+            // Batch all files into ONE cache update + ONE background commit() instead of one
+            // apply() per file — a per-file apply() loop would queue N full-file rewrites to
+            // QueuedWork, which the main thread then waits on at the next Activity.onStop().
+            val updated = entries(context).toMutableMap()
+            for (path in filePaths) {
+                if (newTags.isEmpty()) {
+                    updated.remove(path)
+                } else {
+                    updated[path] = newTags.joinToString(",")
                 }
-                cachedEntries = updated
-                persist(context, updated)
-                for (path in filePaths) {
-                    writeExifTags(path, newTags)
-                }
-                onSaved()
             }
-            .show()
+            cachedEntries = updated
+            persist(context, updated)
+            for (path in filePaths) {
+                writeExifTags(path, newTags)
+            }
+            dialog.dismiss()
+            onSaved()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtInput?.requestFocus()
     }
 
     /**

@@ -381,37 +381,46 @@ class TvRemoteActivity : AppCompatActivity() {
      * Shows the transport picker dialog with Bluetooth and WiFi/ADB options.
      */
     private fun showTransportPicker() {
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.remote_transport_picker_title)
-            .setItems(arrayOf(
-                getString(R.string.remote_transport_bt_option),
-                getString(R.string.remote_transport_wifi_option)
-            )) { _, which ->
-                when (which) {
-                    0 -> {
-                        // Bluetooth — ensure permissions, then start the BT flow
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            val needed = arrayOf(
-                                Manifest.permission.BLUETOOTH_CONNECT,
-                                Manifest.permission.BLUETOOTH_ADVERTISE
-                            )
-                            val missing = needed.filter {
-                                ContextCompat.checkSelfPermission(this@TvRemoteActivity, it) != PackageManager.PERMISSION_GRANTED
-                            }
-                            if (missing.isNotEmpty()) {
-                                requestPermissionLauncher.launch(missing.toTypedArray())
-                            } else {
-                                startBluetoothFlow()
-                            }
-                        } else {
-                            startBluetoothFlow()
-                        }
-                    }
-                    1 -> connectViaAdbTransport(directConnect = false)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_remote_transport_picker, null)
+        val cardBt = dialogView.findViewById<View>(R.id.cardOptionBluetooth)
+        val cardWifi = dialogView.findViewById<View>(R.id.cardOptionWifiAdb)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelTransport)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        cardBt.setOnClickListener {
+            dialog.dismiss()
+            // Bluetooth — ensure permissions, then start the BT flow
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val needed = arrayOf(
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.BLUETOOTH_ADVERTISE
+                )
+                val missing = needed.filter {
+                    ContextCompat.checkSelfPermission(this@TvRemoteActivity, it) != PackageManager.PERMISSION_GRANTED
                 }
+                if (missing.isNotEmpty()) {
+                    requestPermissionLauncher.launch(missing.toTypedArray())
+                } else {
+                    startBluetoothFlow()
+                }
+            } else {
+                startBluetoothFlow()
             }
-            .setNegativeButton(R.string.bt_remote_cancel, null)
-            .show()
+        }
+
+        cardWifi.setOnClickListener {
+            dialog.dismiss()
+            connectViaAdbTransport(directConnect = false)
+        }
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     /** Attempt to connect via WiFi ADB using a "Use Remote"-enabled paired TV. */
@@ -456,33 +465,90 @@ class TvRemoteActivity : AppCompatActivity() {
 
         if (allEntries.isEmpty()) {
             // No devices — show guidance with "Add Manually" and "Cancel"
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.remote_transport_no_wifi_tvs_title)
-                .setMessage(R.string.remote_transport_no_wifi_tvs_message)
-                .setPositiveButton(R.string.remote_no_tvs_add_manual_button) { _, _ ->
-                    showManualEntryDialog()
-                }
-                .setNegativeButton(R.string.bt_remote_cancel, null)
-                .show()
+            val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+            val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+            val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+            val btnPositive = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+            val btnNegative = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+
+            txtTitle?.setText(R.string.remote_transport_no_wifi_tvs_title)
+            txtMessage?.setText(R.string.remote_transport_no_wifi_tvs_message)
+            btnPositive?.setText(R.string.remote_no_tvs_add_manual_button)
+            btnNegative?.setText(R.string.bt_remote_cancel)
+            btnNegative?.visibility = View.VISIBLE
+
+            val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            btnPositive?.setOnClickListener {
+                dialog.dismiss()
+                showManualEntryDialog()
+            }
+            btnNegative?.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             return
         }
 
-        val deviceNames = allEntries.map { it.name }.toTypedArray()
+        val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(this)
+        currentBottomSheet = bottomSheet
+        val sheetView = layoutInflater.inflate(R.layout.dialog_remote_device_sheet, null)
+        val txtTitle = sheetView.findViewById<TextView>(R.id.txtSheetTitle)
+        val txtSubtitle = sheetView.findViewById<TextView>(R.id.txtSheetSubtitle)
+        val listView = sheetView.findViewById<android.widget.ListView>(R.id.listDevices)
+        val btnAdd = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSheetAdd)
+        val btnCancel = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSheetCancel)
 
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.remote_transport_picker_title)
-            .setItems(deviceNames) { _, which ->
-                val entry = allEntries[which]
-                when {
-                    entry.paired != null -> doAdbConnect(entry.paired!!, transportPrefs)
-                    entry.manual != null -> doAdbConnectManual(entry.manual!!, transportPrefs)
+        txtTitle?.setText(R.string.remote_transport_wifi_option)
+        txtSubtitle?.setText(R.string.manual_entry_info)
+        btnAdd?.setText(R.string.manual_entry_title)
+
+        val deviceNames = allEntries.map { it.name }.toTypedArray()
+        listView.adapter = object : android.widget.ArrayAdapter<String>(
+            this, R.layout.dialog_remote_device_row, R.id.txtDeviceName, deviceNames
+        ) {
+            override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                val view = super.getView(position, convertView, parent)
+                val txtName = view.findViewById<TextView>(R.id.txtDeviceName)
+                val btnTrash = view.findViewById<ImageView>(R.id.btnTrash)
+                val entry = allEntries.getOrNull(position)
+                txtName.text = getItem(position)
+                if (entry?.manual != null) {
+                    btnTrash.visibility = android.view.View.VISIBLE
+                    btnTrash.setOnClickListener {
+                        bottomSheet.dismiss()
+                        showRemoveManualConfirm(entry.manual!!, transportPrefs)
+                    }
+                } else {
+                    btnTrash.visibility = android.view.View.GONE
+                    btnTrash.setOnClickListener(null)
                 }
+                return view
             }
-            .setNeutralButton(R.string.remote_select_tv_add_manual) { _, _ ->
-                showManualEntryDialog()
+        }
+
+        listView.setOnItemClickListener { _, _, which, _ ->
+            bottomSheet.dismiss()
+            val entry = allEntries.getOrNull(which) ?: return@setOnItemClickListener
+            when {
+                entry.paired != null -> doAdbConnect(entry.paired!!, transportPrefs)
+                entry.manual != null -> doAdbConnectManual(entry.manual!!, transportPrefs)
             }
-            .setNegativeButton(R.string.bt_remote_cancel, null)
-            .show()
+        }
+
+        btnAdd.setOnClickListener {
+            bottomSheet.dismiss()
+            showManualEntryDialog()
+        }
+        btnCancel.setOnClickListener { bottomSheet.dismiss() }
+
+        bottomSheet.setOnDismissListener { currentBottomSheet = null }
+        bottomSheet.setContentView(sheetView)
+        bottomSheet.show()
     }
 
     /** Connect via ADB to a manually-added device. */
@@ -516,11 +582,14 @@ class TvRemoteActivity : AppCompatActivity() {
                     }
                 } else {
                     withContext(kotlinx.coroutines.Dispatchers.Main) {
-                        MaterialAlertDialogBuilder(this@TvRemoteActivity, R.style.UFM_Dialog)
-                            .setTitle(R.string.use_remote_failed_title)
-                            .setMessage(R.string.use_remote_failed_message)
-                            .setPositiveButton(R.string.ok, null)
-                            .show()
+                        val dialogView = layoutInflater.inflate(R.layout.dialog_wifi_remote_failed, null)
+                        val dialog = MaterialAlertDialogBuilder(this@TvRemoteActivity, R.style.UFM_Dialog)
+                            .setView(dialogView)
+                            .setCancelable(true)
+                            .create()
+                        dialogView.findViewById<View>(R.id.btnGotIt)?.setOnClickListener { dialog.dismiss() }
+                        dialog.show()
+                        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                         refreshDisconnectedCard()
                     }
                 }
@@ -534,11 +603,23 @@ class TvRemoteActivity : AppCompatActivity() {
 
     /** Shows a dialog telling the user the IP is already in the list. */
     private fun showAlreadyInListDialog() {
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.manual_entry_duplicate_title)
-            .setMessage(R.string.manual_entry_duplicate_message)
-            .setPositiveButton(R.string.ok, null)
-            .show()
+        val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnGotIt = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+
+        txtTitle?.setText(R.string.manual_entry_duplicate_title)
+        txtMessage?.setText(R.string.manual_entry_duplicate_message)
+        btnGotIt?.setText(R.string.ok)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnGotIt?.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     /**
@@ -549,81 +630,96 @@ class TvRemoteActivity : AppCompatActivity() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_manual_remote_entry, null)
         val etName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etManualName)
         val etIp = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etManualIp)
+        val btnAdd = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnManualAdd)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnManualCancel)
+
+        btnAdd.isEnabled = false
 
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.manual_entry_title)
             .setView(dialogView)
-            .setPositiveButton(R.string.manual_entry_add, null)
-            .setNegativeButton(R.string.bt_remote_cancel, null)
+            .setCancelable(true)
             .create()
 
-        dialog.setOnShowListener {
-            val addButton = dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)
-            addButton.isEnabled = false
+        val ipPattern = Regex(
+            """^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.""" +
+            """(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.""" +
+            """(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.""" +
+            """(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)$"""
+        )
 
-            val ipPattern = Regex(
-                """^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.""" +
-                """(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.""" +
-                """(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)\.""" +
-                """(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)$"""
-            )
+        fun validate() {
+            val name = etName.text?.toString()?.trim() ?: ""
+            val ip = etIp.text?.toString()?.trim() ?: ""
+            btnAdd.isEnabled = name.isNotEmpty() && ipPattern.matches(ip)
+        }
 
-            fun validate() {
-                val name = etName.text?.toString()?.trim() ?: ""
-                val ip = etIp.text?.toString()?.trim() ?: ""
-                addButton.isEnabled = name.isNotEmpty() && ipPattern.matches(ip)
+        etName.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) { validate() }
+        })
+        etIp.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: android.text.Editable?) { validate() }
+        })
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+
+        btnAdd.setOnClickListener {
+            val name = etName.text?.toString()?.trim() ?: ""
+            val ip = etIp.text?.toString()?.trim() ?: ""
+
+            val transportPrefs = RemoteTransportPrefs(this@TvRemoteActivity)
+            // Check manual list
+            if (transportPrefs.isIpInManualList(ip)) {
+                showAlreadyInListDialog()
+                return@setOnClickListener
+            }
+            // Check paired TVs with "Use Remote" enabled
+            val pairingManager = PairingManager.getInstance(this@TvRemoteActivity)
+            val pairedWithSameIp = transportPrefs.getRemoteEnabledDeviceIds()
+                .mapNotNull { pairingManager.getPairedDevice(it) }
+                .find { it.lastIp == ip }
+            if (pairedWithSameIp != null) {
+                showAlreadyInListDialog()
+                return@setOnClickListener
             }
 
-            etName.addTextChangedListener(object : android.text.TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                override fun afterTextChanged(s: android.text.Editable?) { validate() }
-            })
-            etIp.addTextChangedListener(object : android.text.TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                override fun afterTextChanged(s: android.text.Editable?) { validate() }
-            })
-
-            addButton.setOnClickListener {
-                val name = etName.text?.toString()?.trim() ?: ""
-                val ip = etIp.text?.toString()?.trim() ?: ""
-
-                val transportPrefs = RemoteTransportPrefs(this@TvRemoteActivity)
-                // Check manual list
-                if (transportPrefs.isIpInManualList(ip)) {
-                    showAlreadyInListDialog()
-                    return@setOnClickListener
-                }
-                // Check paired TVs with "Use Remote" enabled
-                val pairingManager = PairingManager.getInstance(this@TvRemoteActivity)
-                val pairedWithSameIp = transportPrefs.getRemoteEnabledDeviceIds()
-                    .mapNotNull { pairingManager.getPairedDevice(it) }
-                    .find { it.lastIp == ip }
-                if (pairedWithSameIp != null) {
-                    showAlreadyInListDialog()
-                    return@setOnClickListener
-                }
-
-                dialog.dismiss()
-                val device = ManualDevice(name = name, ip = ip)
-                transportPrefs.addManualDevice(device)
-                // Show guidance — user must accept the RSA prompt on the TV
-                MaterialAlertDialogBuilder(this@TvRemoteActivity, R.style.UFM_Dialog)
-                    .setTitle(R.string.use_remote_auth_title)
-                    .setMessage(getString(R.string.use_remote_auth_message, name))
-                    .setPositiveButton(R.string.ok) { _, _ ->
-                        doAdbConnectManual(device, transportPrefs)
-                    }
-                    .setNegativeButton(R.string.bt_remote_cancel) { _, _ ->
-                        transportPrefs.removeManualDevice(device.deviceId)
-                        refreshDisconnectedCard()
-                    }
-                    .show()
-            }
+            dialog.dismiss()
+            val device = ManualDevice(name = name, ip = ip)
+            transportPrefs.addManualDevice(device)
+            showAdbAuthGuidance(device, transportPrefs)
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+    }
+
+    private fun showAdbAuthGuidance(device: ManualDevice, transportPrefs: RemoteTransportPrefs) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_wifi_remote_auth, null)
+        val txtTarget = dialogView.findViewById<TextView>(R.id.tvRemoteTargetTv)
+        val btnConnect = dialogView.findViewById<View>(R.id.btnConnect)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtTarget?.text = getString(R.string.use_remote_auth_message, device.name)
+
+        val dialog = MaterialAlertDialogBuilder(this@TvRemoteActivity, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnConnect?.setOnClickListener {
+            dialog.dismiss()
+            doAdbConnectManual(device, transportPrefs)
+        }
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+            transportPrefs.removeManualDevice(device.deviceId)
+            refreshDisconnectedCard()
+        }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun doAdbConnect(device: PairedDevice, transportPrefs: RemoteTransportPrefs) {
@@ -1105,75 +1201,42 @@ class TvRemoteActivity : AppCompatActivity() {
 
     /** Shows confirmation then removes a manual device. */
     private fun showRemoveManualConfirm(device: ManualDevice, transportPrefs: RemoteTransportPrefs) {
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.remote_remove_manual_confirm_title)
-            .setMessage(getString(R.string.remote_remove_manual_confirm_message, device.name))
-            .setPositiveButton(R.string.remote_remove_manual_proceed) { _, _ ->
-                transportPrefs.removeManualDevice(device.deviceId)
-                if (transportPrefs.getLastConnectedRemoteDeviceId() == device.deviceId) {
-                    transportPrefs.clearLastConnectedRemoteDevice()
-                }
-                updatePairMenuTitle()
-                refreshDisconnectedCard()
-                // Dismiss old sheet and re-open with fresh data
-                currentBottomSheet?.dismiss()
-                promptSelectTv()
-            }
-            .setNegativeButton(R.string.bt_remote_cancel, null)
-            .show()
-    }
+        val dialogView = layoutInflater.inflate(R.layout.dialog_file_delete_confirm, null)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnConfirm = dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
 
-    /** Shows a sub-dialog to remove a manually-added device. */
-    private fun showRemoveManualDeviceDialog(manualDevices: List<ManualDevice>, transportPrefs: RemoteTransportPrefs) {
-        val names = manualDevices.map { "${it.name}  (${it.ip})" }.toTypedArray()
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.remote_remove_manual_title)
-            .setItems(names) { _, which ->
-                val device = manualDevices[which]
-                MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                    .setTitle(R.string.remote_remove_manual_confirm_title)
-                    .setMessage(getString(R.string.remote_remove_manual_confirm_message, device.name))
-                    .setPositiveButton(R.string.remote_remove_manual_proceed) { _, _ ->
-                        transportPrefs.removeManualDevice(device.deviceId)
-                        if (transportPrefs.getLastConnectedRemoteDeviceId() == device.deviceId) {
-                            transportPrefs.clearLastConnectedRemoteDevice()
-                        }
-                        promptSelectTv() // refresh
-                    }
-                    .setNegativeButton(R.string.bt_remote_cancel, null)
-                    .show()
+        txtTitle?.setText(R.string.remote_remove_manual_confirm_title)
+        txtMessage?.text = getString(R.string.remote_remove_manual_confirm_message, device.name)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnConfirm?.setOnClickListener {
+            dialog.dismiss()
+            transportPrefs.removeManualDevice(device.deviceId)
+            if (transportPrefs.getLastConnectedRemoteDeviceId() == device.deviceId) {
+                transportPrefs.clearLastConnectedRemoteDevice()
             }
-            .setNegativeButton(R.string.bt_remote_cancel, null)
-            .show()
+            updatePairMenuTitle()
+            refreshDisconnectedCard()
+            // Dismiss old sheet and re-open with fresh data
+            currentBottomSheet?.dismiss()
+            promptSelectTv()
+        }
+
+        btnCancel?.setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     /** Shows transport picker: Bluetooth or WiFi ADB. */
     private fun showAddTvOptions() {
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.remote_transport_picker_title)
-            .setItems(arrayOf(
-                getString(R.string.remote_transport_bt_option),
-                getString(R.string.remote_transport_wifi_option)
-            )) { _, which ->
-                when (which) {
-                    0 -> {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            val needed = arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_ADVERTISE)
-                            val missing = needed.filter { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }
-                            if (missing.isNotEmpty()) {
-                                requestPermissionLauncher.launch(missing.toTypedArray())
-                            } else {
-                                startBluetoothFlow()
-                            }
-                        } else {
-                            startBluetoothFlow()
-                        }
-                    }
-                    1 -> connectViaAdbTransport()
-                }
-            }
-            .setNegativeButton(R.string.bt_remote_cancel, null)
-            .show()
+        showTransportPicker()
     }
 
     @SuppressLint("MissingPermission")
@@ -1182,38 +1245,46 @@ class TvRemoteActivity : AppCompatActivity() {
         val defaultLabel = if (isDefault) getString(R.string.bt_remote_remove_default)
                            else getString(R.string.bt_remote_connect_set_default)
 
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(device.name ?: device.address)
-            .setItems(arrayOf(
-                getString(R.string.bt_remote_connect_now),
-                defaultLabel
-            )) { _, which ->
-                when (which) {
-                    0 -> {
-                        // Connect — also save this device as known TV
-                        btManager?.saveTvDevice(device)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            btManager?.connectToDevice(device)
-                        }
-                    }
-                    1 -> {
-                        if (isDefault) {
-                            btManager?.clearDefaultTv()
-                        } else {
-                            // Also save as a known TV so refreshDisconnectedCard()
-                            // can look it up by address and show the correct name.
-                            btManager?.saveTvDevice(device)
-                            btManager?.setDefaultTv(device.address)
-                        }
-                        // Refresh the card whenever not actively connected
-                        if (btManager?.connectionState?.value != BluetoothProfile.STATE_CONNECTED) {
-                            refreshDisconnectedCard()
-                        }
-                    }
-                }
+        val dialogView = layoutInflater.inflate(R.layout.dialog_remote_device_options, null)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDeviceTitle)
+        val cardConnect = dialogView.findViewById<View>(R.id.cardConnectNow)
+        val cardToggle = dialogView.findViewById<View>(R.id.cardToggleDefault)
+        val txtDefaultLabel = dialogView.findViewById<TextView>(R.id.txtDefaultActionLabel)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelOptions)
+
+        txtTitle.text = device.name ?: device.address
+        txtDefaultLabel.text = defaultLabel
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        cardConnect.setOnClickListener {
+            dialog.dismiss()
+            btManager?.saveTvDevice(device)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                btManager?.connectToDevice(device)
             }
-            .setNegativeButton(R.string.bt_remote_cancel, null)
-            .show()
+        }
+
+        cardToggle.setOnClickListener {
+            dialog.dismiss()
+            if (isDefault) {
+                btManager?.clearDefaultTv()
+            } else {
+                btManager?.saveTvDevice(device)
+                btManager?.setDefaultTv(device.address)
+            }
+            if (btManager?.connectionState?.value != BluetoothProfile.STATE_CONNECTED) {
+                refreshDisconnectedCard()
+            }
+        }
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     /**
@@ -1372,16 +1443,22 @@ class TvRemoteActivity : AppCompatActivity() {
                 if (showGuidance) {
                     val dialogView = layoutInflater.inflate(R.layout.dialog_volume_guidance, null)
                     val cbDontShowAgain = dialogView.findViewById<com.google.android.material.checkbox.MaterialCheckBox>(R.id.cbDontShowAgain)
+                    val btnOk = dialogView.findViewById<View>(R.id.btnOk)
                     
-                    MaterialAlertDialogBuilder(this@TvRemoteActivity, R.style.UFM_Dialog)
-                        .setTitle(R.string.bt_remote_volume_guidance_title)
+                    val dialog = MaterialAlertDialogBuilder(this@TvRemoteActivity, R.style.UFM_Dialog)
                         .setView(dialogView)
-                        .setPositiveButton(R.string.ok) { _, _ ->
-                            if (cbDontShowAgain.isChecked) {
-                                prefs.edit().putBoolean("show_volume_guidance", false).apply()
-                            }
+                        .setCancelable(true)
+                        .create()
+
+                    btnOk?.setOnClickListener {
+                        if (cbDontShowAgain?.isChecked == true) {
+                            prefs.edit().putBoolean("show_volume_guidance", false).apply()
                         }
-                        .show()
+                        dialog.dismiss()
+                    }
+
+                    dialog.show()
+                    dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                 }
             }
         }

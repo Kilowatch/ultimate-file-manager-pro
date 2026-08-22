@@ -1,66 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Remote TV Selection Bottom Sheet - UFM Standard -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="12dp"
-    android:paddingBottom="16dp"
+    android:paddingBottom="20dp"
     android:background="@drawable/bg_mobile_gradient">
 
-    <!-- Handle bar -->
+    <!-- Bottom Sheet Handle bar -->
     <View
         android:layout_width="40dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         android:background="@color/mobile_icon_tint"
-        android:alpha="0.4" />
+        android:alpha="0.35" />
 
-    <!-- Title -->
-    <TextView
+    <!-- Title + Subtitle -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/bt_remote_select_device"
-        android:textColor="@color/mobile_text_primary"
-        android:textSize="18sp"
-        android:fontFamily="sans-serif-medium"
+        android:orientation="vertical"
         android:paddingHorizontal="20dp"
-        android:paddingBottom="12dp" />
+        android:paddingBottom="12dp">
 
-    <!-- Device list -->
+        <TextView
+            android:id="@+id/txtSheetTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bt_remote_select_device"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-black" />
+
+        <TextView
+            android:id="@+id/txtSheetSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/remote_tile_subtitle"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12.5sp" />
+    </LinearLayout>
+
+    <!-- Device List -->
     <ListView
         android:id="@+id/listDevices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/mobile_glass_header"
         android:dividerHeight="1dp"
-        android:maxHeight="360dp" />
+        android:maxHeight="360dp"
+        android:layout_marginBottom="12dp" />
 
-    <!-- Buttons -->
+    <!-- Action Buttons Stacked Vertically -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="12dp"
-        android:gravity="end">
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp">
 
+        <!-- Add New TV Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSheetAdd"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/bt_remote_add_tv"
+            android:textColor="@color/white"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
+            app:cornerRadius="12dp"
+            app:backgroundTint="?attr/colorPrimary"
+            android:layout_marginBottom="6dp" />
+
+        <!-- Cancel Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSheetCancel"
             style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
             android:text="@string/bt_remote_cancel"
-            android:textColor="@color/mobile_text_secondary" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSheetAdd"
-            style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/bt_remote_add_tv"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp" />
 
     </LinearLayout>
 

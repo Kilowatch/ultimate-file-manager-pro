@@ -190,7 +190,7 @@ class PremiumShareActivity : AppCompatActivity() {
 
     private fun showPremiumApkActionDialog(device: AdbDevice, apkFile: File) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_premium_share_chooser, null)
-        val dialog = MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
@@ -228,6 +228,7 @@ class PremiumShareActivity : AppCompatActivity() {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun showPremiumConfirmTransferDialog(device: AdbDevice, transferFiles: List<File>, installApk: Boolean) {
@@ -236,14 +237,34 @@ class PremiumShareActivity : AppCompatActivity() {
         val destPath = getString(R.string.default_destination_path)
         val message = getString(R.string.confirm_transfer_message, transferFiles.size, sizeStr, destPath)
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.confirm_transfer_title)
-            .setMessage(message)
-            .setPositiveButton(R.string.btn_continue) { _, _ ->
-                startAdbTransfer(device, transferFiles, installApk)
-            }
-            .setNegativeButton(R.string.delete_cancel, null)
-            .show()
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_support_message, null)
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMsg = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(R.drawable.ic_sync)
+        txtTitle?.setText(R.string.confirm_transfer_title)
+        txtMsg?.text = message
+        btnPositive?.setText(R.string.btn_continue)
+        btnNegative?.visibility = View.VISIBLE
+        btnNegative?.setText(R.string.delete_cancel)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            startAdbTransfer(device, transferFiles, installApk)
+        }
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun startAdbTransfer(device: AdbDevice, transferFiles: List<File>, installApk: Boolean) {

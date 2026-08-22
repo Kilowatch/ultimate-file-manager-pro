@@ -69,12 +69,17 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnScanDevices"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="54dp"
                 android:text="@string/adb_scan_devices"
                 android:focusable="true"
-                style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="@color/tv_button_bg_tint"
-                android:textColor="@color/tv_text_primary"
+                android:background="@drawable/selector_tv_button_yellow"
+                app:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textColor="@color/tv_button_focused_yellow_text"
+                android:textSize="15sp"
+                android:textAllCaps="false"
+                style="@style/Widget.Material3.Button"
                 android:layout_marginBottom="24dp" />
 
             <!-- Scan Progress -->
@@ -218,23 +223,33 @@
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnConnectNoPIN"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
+                            android:layout_height="52dp"
                             android:text="@string/connect_without_pin"
                             android:focusable="true"
-                            style="@style/Widget.MaterialComponents.Button"
-                            app:backgroundTint="@color/tv_button_bg_tint"
-                            android:textColor="@color/tv_text_primary"
+                            android:background="@drawable/selector_tv_button"
+                            app:backgroundTint="@null"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:textColor="@color/tv_button_text_selector"
+                            android:textSize="15sp"
+                            android:textAllCaps="false"
+                            style="@style/Widget.Material3.Button"
                             android:layout_marginBottom="12dp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnTogglePIN"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
+                            android:layout_height="52dp"
                             android:text="@string/use_pin_pairing"
                             android:focusable="true"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
-                            android:textColor="@color/tv_text_primary"
-                            app:backgroundTint="@color/tv_button_bg_tint" />
+                            android:background="@drawable/selector_tv_button"
+                            app:backgroundTint="@null"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:textColor="@color/tv_button_text_selector"
+                            android:textSize="15sp"
+                            android:textAllCaps="false"
+                            style="@style/Widget.Material3.Button" />
                     </LinearLayout>
                                         
                 </LinearLayout>
@@ -299,13 +314,18 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnConnectWithPin"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="54dp"
                         android:layout_marginTop="20dp"
                         android:text="@string/pair_and_connect"
                         android:focusable="true"
-                        style="@style/Widget.MaterialComponents.Button"
-                        app:backgroundTint="@color/tv_button_bg_tint"
-                        android:textColor="@color/tv_text_primary" />
+                        android:background="@drawable/selector_tv_button_yellow"
+                        app:backgroundTint="@null"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:textColor="@color/tv_button_focused_yellow_text"
+                        android:textSize="15sp"
+                        android:textAllCaps="false"
+                        style="@style/Widget.Material3.Button" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

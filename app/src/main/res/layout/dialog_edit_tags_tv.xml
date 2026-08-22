@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Mobile Edit Tags Dialog - UFM Glass Standard
+    TV Edit Tags Dialog - UFM Glass Standard
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="650dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_dialog_glass"
-    android:padding="24dp">
+    android:padding="28dp">
 
     <!-- Header row with icon & title -->
     <LinearLayout
@@ -19,11 +19,11 @@
         android:layout_marginBottom="16dp">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_label"
-            app:tint="?attr/colorPrimary"
-            android:layout_marginEnd="12dp"
+            app:tint="@color/tv_button_focused_yellow"
+            android:layout_marginEnd="14dp"
             android:importantForAccessibility="no" />
 
         <TextView
@@ -32,8 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/edit_tags_title"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="18sp"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="20sp"
             android:fontFamily="sans-serif-black" />
     </LinearLayout>
 
@@ -44,22 +44,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/action_tag"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="16dp"
+        app:boxBackgroundColor="@android:color/transparent"
+        app:boxStrokeColor="@color/tv_button_focused_yellow"
+        app:hintTextColor="@color/tv_text_hint"
         app:boxCornerRadiusTopStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
         app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxStrokeColor="?attr/colorPrimary"
-        app:endIconMode="clear_text">
+        app:boxCornerRadiusBottomEnd="12dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtTagsInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="15sp"
-            android:maxLines="3" />
+            android:textColor="@color/tv_text_primary"
+            android:textSize="16sp"
+            android:maxLines="3"
+            android:focusable="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Subtitle/header for previously created tags -->
@@ -68,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/settings_file_tags_created_header"
-        android:textColor="@color/mobile_text_secondary"
+        android:textColor="@color/tv_text_secondary"
         android:textSize="13sp"
         android:fontFamily="sans-serif-medium"
         android:layout_marginBottom="8dp"
@@ -79,7 +81,7 @@
         android:id="@+id/cgExistingTags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="24dp"
         app:chipSpacingHorizontal="8dp"
         app:chipSpacingVertical="4dp" />
 
@@ -88,30 +90,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
-            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="0dp"
-            android:layout_height="44dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:text="@string/cancel"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="14sp"
+            android:background="@drawable/selector_tv_button"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="15sp"
+            android:focusable="true"
             android:textAllCaps="false"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="12dp"
+            style="@style/Widget.Material3.Button" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDone"
-            style="@style/Widget.Material3.Button"
             android:layout_width="0dp"
-            android:layout_height="44dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:text="@string/action_done"
-            android:textSize="14sp"
+            android:background="@drawable/selector_tv_button_yellow"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="@color/tv_button_focused_yellow_text"
+            android:textSize="15sp"
+            android:focusable="true"
             android:textAllCaps="false"
-            app:cornerRadius="12dp"
-            app:backgroundTint="?attr/colorPrimary" />
+            style="@style/Widget.Material3.Button" />
     </LinearLayout>
 </LinearLayout>

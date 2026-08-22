@@ -1173,7 +1173,7 @@ class FileBrowserActivity : AppCompatActivity() {
             txtSubtitle.text = getString(R.string.clipboard_slots_title, FileClipboard.slots.size, FileClipboard.totalItemCount())
 
             val dialog: android.app.Dialog = if (isOnTv) {
-                MaterialAlertDialogBuilder(this)
+                MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
                     .setView(dialogView)
                     .create()
             } else {
@@ -2766,37 +2766,47 @@ class FileBrowserActivity : AppCompatActivity() {
         }
 
         val recycleEnabled = za.kilowatch.ultimatefilemanager.recycle.RecycleBinManager.isEnabled
+        val isOnTv = DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isOnTv) R.layout.dialog_file_delete_confirm_tv else R.layout.dialog_file_delete_confirm
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtDeleteMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnDeleteConfirm = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
 
         if (recycleEnabled) {
-            MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-                .setTitle(getString(R.string.move_to_bin))
-                .setMessage(getString(R.string.recycle_bin_move_confirm, selected.size))
-                .setIcon(R.drawable.ic_delete)
-                .setNegativeButton(getString(R.string.delete_cancel), null)
-                .setPositiveButton(getString(R.string.move_to_bin)) { _, _ ->
-                    performDelete(selected)
-                }
-                .show()
+            txtTitle?.text = getString(R.string.move_to_bin)
+            txtDeleteMessage?.text = getString(R.string.recycle_bin_move_confirm, selected.size)
+            btnDeleteConfirm?.text = getString(R.string.move_to_bin)
         } else {
             val folders = selected.count { it.isDirectory }
             val files = selected.count { it.isFile }
-
             val message = when {
                 folders > 0 && files > 0 -> getString(R.string.delete_message_mixed, folders, files)
                 folders > 0 -> getString(R.string.delete_message_folders, folders)
                 else -> getString(R.string.delete_message_files, files)
             }
-
-            MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-                .setTitle(getString(R.string.delete_title))
-                .setMessage(message)
-                .setIcon(R.drawable.ic_delete)
-                .setNegativeButton(getString(R.string.delete_cancel), null)
-                .setPositiveButton(getString(R.string.delete_confirm)) { _, _ ->
-                    performDelete(selected)
-                }
-                .show()
+            txtTitle?.text = getString(R.string.delete_title)
+            txtDeleteMessage?.text = message
+            btnDeleteConfirm?.text = getString(R.string.delete_confirm)
         }
+
+        btnDeleteConfirm?.setOnClickListener {
+            dialog.dismiss()
+            performDelete(selected)
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performDelete(filesToDelete: List<File>) {
@@ -2900,131 +2910,108 @@ class FileBrowserActivity : AppCompatActivity() {
     }
 
     private fun showRenameDialog(file: File) {
-        val editText = EditText(this).apply {
-            setText(file.name)
-            selectAll()
-            setPadding(64, 32, 64, 32)
+        val isOnTv = DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isOnTv) R.layout.dialog_file_rename_tv else R.layout.dialog_file_rename
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtOriginalName = dialogView.findViewById<TextView>(R.id.txtOriginalName)
+        val editFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editFileName)
+        val btnSaveRename = dialogView.findViewById<View>(R.id.btnSaveRename)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtOriginalName?.text = file.name
+        editFileName?.setText(file.name)
+        val dotIndex = file.name.lastIndexOf('.')
+        if (!file.isDirectory && dotIndex > 0) {
+            editFileName?.setSelection(0, dotIndex)
+        } else {
+            editFileName?.selectAll()
         }
 
-        MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.rename_title))
-            .setView(editText)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .setPositiveButton(getString(R.string.rename_confirm)) { _, _ ->
-                val newName = editText.text.toString().trim()
-                if (newName.isNotEmpty() && newName != file.name) {
-                    val newFile = File(file.parent, newName)
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        if (file.renameTo(newFile)) {
-                            FileTagsManager.onPathMoved(this@FileBrowserActivity, file.absolutePath, newFile.absolutePath)
-                            // Sync the database index immediately after rename
-                            syncFolderWithIndex(currentDir)
-                            
-                            withContext(Dispatchers.Main) {
-                                fileAdapter.exitSelectionMode()
-                                loadDirectory(currentDir)
-                                showPremiumSnackbar(getString(R.string.rename_success))
-                            }
-                        } else {
-                            withContext(Dispatchers.Main) {
-                                showPremiumSnackbar(getString(R.string.rename_error))
-                            }
+        btnSaveRename?.setOnClickListener {
+            val newName = editFileName?.text?.toString()?.trim().orEmpty()
+            if (newName.isNotEmpty() && newName != file.name) {
+                val newFile = File(file.parent, newName)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    if (file.renameTo(newFile)) {
+                        FileTagsManager.onPathMoved(this@FileBrowserActivity, file.absolutePath, newFile.absolutePath)
+                        syncFolderWithIndex(currentDir)
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            showPremiumSnackbar(getString(R.string.rename_success))
+                            dialog.dismiss()
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            showPremiumSnackbar(getString(R.string.rename_error))
                         }
                     }
                 }
+            } else if (newName == file.name) {
+                dialog.dismiss()
             }
-            .show()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        editFileName?.requestFocus()
     }
     
     private fun showFavoriteDialog(file: File) {
         val isOnTv = DeviceUtils.isTvDevice(this)
-        
-        // Define colors
-        val bgColor = if (isOnTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
-        val textColorPrimary = if (isOnTv) getColor(R.color.tv_text_primary) else getColor(R.color.ufm_text_primary)
-        val textColorHint = if (isOnTv) getColor(R.color.tv_text_hint) else getColor(R.color.ufm_text_hint)
-        val accentColor = if (isOnTv) getColor(R.color.tv_button_focused_yellow) else getColor(R.color.ufm_primary)
+        val layoutRes = if (isOnTv) R.layout.dialog_add_favorite_tv else R.layout.dialog_add_favorite
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
 
-        val container = android.widget.LinearLayout(this).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-            setBackgroundColor(bgColor)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtOriginalName = dialogView.findViewById<TextView>(R.id.txtOriginalName)
+        val edtFavoriteName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFavoriteName)
+        val btnSaveFavorite = dialogView.findViewById<View>(R.id.btnSaveFavorite)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtOriginalName?.text = file.name
+        edtFavoriteName?.setText(file.name)
+        edtFavoriteName?.selectAll()
+
+        btnSaveFavorite?.setOnClickListener {
+            val name = edtFavoriteName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                showPremiumSnackbar(getString(R.string.favorite_name_empty))
+            } else {
+                val favorite = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.FavoriteItem(
+                    id = "fav_${System.currentTimeMillis()}",
+                    path = file.absolutePath,
+                    label = name,
+                    isFolder = file.isDirectory,
+                    isNetwork = false
+                )
+                za.kilowatch.ultimatefilemanager.settings.FavoritesManager.addFavorite(this, favorite)
+                fileAdapter.exitSelectionMode()
+                showPremiumSnackbar(getString(R.string.favorite_added))
+                dialog.dismiss()
+            }
         }
 
-        val editText = android.widget.EditText(this).apply {
-            hint = getString(R.string.favorite_name_hint)
-            setText(file.name)
-            selectAll()
-            setSingleLine(true)
-            setTextColor(textColorPrimary)
-            setHintTextColor(textColorHint)
-            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
-            requestFocus()
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
         }
-        container.addView(editText)
 
-        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-
-        MaterialAlertDialogBuilder(this, dialogTheme)
-            .setTitle(getString(R.string.favorite_name_title))
-            .setIcon(R.drawable.ic_star)
-            .setView(container)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .setPositiveButton(getString(R.string.action_done)) { _, _ ->
-                val name = editText.text.toString().trim()
-                if (name.isEmpty()) {
-                    showPremiumSnackbar(getString(R.string.favorite_name_empty))
-                } else {
-                    val favorite = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.FavoriteItem(
-                        id = "fav_${System.currentTimeMillis()}",
-                        path = file.absolutePath,
-                        label = name,
-                        isFolder = file.isDirectory,
-                        isNetwork = false
-                    )
-                    za.kilowatch.ultimatefilemanager.settings.FavoritesManager.addFavorite(this, favorite)
-                    fileAdapter.exitSelectionMode()
-                    showPremiumSnackbar(getString(R.string.favorite_added))
-                }
-            }
-            .show()
-            .also { dialog ->
-                val titleColor = if (isOnTv) getColor(R.color.tv_text_primary) else getColor(R.color.ufm_text_primary)
-                val titleView = dialog.findViewById<android.widget.TextView>(
-                    com.google.android.material.R.id.alertTitle
-                ) ?: dialog.findViewById(
-                    resources.getIdentifier("alertTitle", "id", "android")
-                )
-                titleView?.setTextColor(titleColor)
-
-                if (isOnTv) {
-                    dialog.window?.setBackgroundDrawable(
-                        android.graphics.drawable.ColorDrawable(getColor(R.color.tv_bg_gradient_end))
-                    )
-
-                    val white = getColor(R.color.tv_text_primary)
-                    val black = getColor(R.color.tv_button_focused_yellow_text)
-                    val yellow = getColor(R.color.tv_button_focused_yellow)
-                    val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
-                    val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-
-                    dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-                        backgroundTintList = yellowCsl
-                        setTextColor(black)
-                    }
-                    dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-                        backgroundTintList = glassCsl
-                        setTextColor(white)
-                        setOnFocusChangeListener { _, hasFocus ->
-                            backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                            setTextColor(if (hasFocus) black else white)
-                        }
-                    }
-                }
-                dialog.window?.setSoftInputMode(
-                    android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-                )
-            }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtFavoriteName?.requestFocus()
     }
 
     /**
@@ -3071,114 +3058,35 @@ class FileBrowserActivity : AppCompatActivity() {
      */
     private fun showCreateTextFileDialog() {
         val isOnTv = DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isOnTv) R.layout.dialog_create_text_file_tv else R.layout.dialog_create_text_file
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val edtFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFileName)
+        edtFileName?.setText(getString(R.string.new_file_default))
+        edtFileName?.selectAll()
 
-        if (!isOnTv) {
-            val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_create_text_file, null)
-            val edtFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFileName)
-            edtFileName?.setText(getString(R.string.new_file_default))
-            edtFileName?.selectAll()
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
-            val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create()
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
 
-            dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
+            val name = edtFileName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                showPremiumSnackbar(getString(R.string.new_file_empty))
+            } else {
                 dialog.dismiss()
+                createTextFile(name)
             }
-
-            dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
-                val name = edtFileName?.text?.toString()?.trim().orEmpty()
-                if (name.isEmpty()) {
-                    showPremiumSnackbar(getString(R.string.new_file_empty))
-                } else {
-                    dialog.dismiss()
-                    createTextFile(name)
-                }
-            }
-
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            edtFileName?.requestFocus()
-            return
         }
 
-        val bgColor = getColor(R.color.tv_bg_gradient_end)
-        val textColorPrimary = getColor(R.color.tv_text_primary)
-        val textColorHint = getColor(R.color.tv_text_hint)
-        val accentColor = getColor(R.color.tv_button_focused_yellow)
-
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-            setBackgroundColor(bgColor)
-        }
-
-        val editText = EditText(this).apply {
-            hint = getString(R.string.new_file_hint)
-            setText(getString(R.string.new_file_default))
-            selectAll()
-            setSingleLine(true)
-            setTextColor(textColorPrimary)
-            setHintTextColor(textColorHint)
-            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
-            requestFocus()
-        }
-        container.addView(editText)
-
-        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-
-        MaterialAlertDialogBuilder(this, dialogTheme)
-            .setTitle(getString(R.string.new_file_title))
-            .setIcon(R.drawable.ic_create_new)
-            .setView(container)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .setPositiveButton(getString(R.string.new_file_create)) { _, _ ->
-                val name = editText.text.toString().trim()
-                when {
-                    name.isEmpty() -> showPremiumSnackbar(getString(R.string.new_file_empty))
-                    else -> {
-                        createTextFile(name)
-                    }
-                }
-            }
-            .show()
-            .also { dialog ->
-                val titleColor = getColor(R.color.tv_text_primary)
-                val titleView = dialog.findViewById<TextView>(
-                    com.google.android.material.R.id.alertTitle
-                ) ?: dialog.findViewById(
-                    resources.getIdentifier("alertTitle", "id", "android")
-                )
-                titleView?.setTextColor(titleColor)
-
-                dialog.window?.setBackgroundDrawable(
-                    android.graphics.drawable.ColorDrawable(getColor(R.color.tv_bg_gradient_end))
-                )
-
-                val white = getColor(R.color.tv_text_primary)
-                val black = getColor(R.color.tv_button_focused_yellow_text)
-                val yellow = getColor(R.color.tv_button_focused_yellow)
-                val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
-                val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-
-                dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-                    backgroundTintList = yellowCsl
-                    setTextColor(black)
-                }
-                dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-                    backgroundTintList = glassCsl
-                    setTextColor(white)
-                    setOnFocusChangeListener { _, hasFocus ->
-                        backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                        setTextColor(if (hasFocus) black else white)
-                    }
-                }
-                dialog.window?.setSoftInputMode(
-                    android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-                )
-            }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtFileName?.requestFocus()
     }
 
     /**
@@ -3237,154 +3145,53 @@ class FileBrowserActivity : AppCompatActivity() {
 
     private fun showCreateFolderDialog() {
         val isOnTv = DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isOnTv) R.layout.dialog_create_folder_tv else R.layout.dialog_create_folder
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val edtFolderName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFolderName)
+        edtFolderName?.setText(getString(R.string.new_menu_new_folder))
+        edtFolderName?.selectAll()
 
-        if (!isOnTv) {
-            val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_create_folder, null)
-            val edtFolderName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFolderName)
-            edtFolderName?.setText(getString(R.string.new_menu_new_folder))
-            edtFolderName?.selectAll()
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
-            val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create()
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
 
-            dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
+            val name = edtFolderName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                showPremiumSnackbar(getString(R.string.new_folder_empty))
+            } else {
                 dialog.dismiss()
-            }
-
-            dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
-                val name = edtFolderName?.text?.toString()?.trim().orEmpty()
-                if (name.isEmpty()) {
-                    showPremiumSnackbar(getString(R.string.new_folder_empty))
+                val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
                 } else {
-                    dialog.dismiss()
-                    val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
-                        za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
-                    } else {
-                        File(currentDir, name)
-                    }
-                    when {
-                        newDir.exists() -> showPremiumSnackbar(getString(R.string.new_folder_exists))
-                        newDir.mkdirs() -> {
-                            try {
-                                val (sid, stype) = za.kilowatch.ultimatefilemanager.indexing
-                                    .IndexingRepository.resolveStorageForPath(newDir.absolutePath)
-                                    .let { it.first to it.second }
-                                UfmApplication.indexingRepository.indexFile(newDir, sid, stype)
-                            } catch (_: Exception) { }
-                            loadDirectory(currentDir)
-                            showPremiumSnackbar(getString(R.string.new_folder_success))
-                        }
-                        else -> showPremiumSnackbar(getString(R.string.new_folder_error))
-                    }
+                    File(currentDir, name)
                 }
-            }
-
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            edtFolderName?.requestFocus()
-            return
-        }
-
-        // Define colors
-        val bgColor = getColor(R.color.tv_bg_gradient_end)
-        val textColorPrimary = getColor(R.color.tv_text_primary)
-        val textColorHint = getColor(R.color.tv_text_hint)
-        val accentColor = getColor(R.color.tv_button_focused_yellow)
-
-        val container = android.widget.LinearLayout(this).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-            setBackgroundColor(bgColor)
-        }
-
-        val editText = android.widget.EditText(this).apply {
-            hint = getString(R.string.new_folder_hint)
-            setText("New Folder")
-            selectAll()
-            setSingleLine(true)
-            setTextColor(textColorPrimary)
-            setHintTextColor(textColorHint)
-            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
-            requestFocus()
-        }
-        container.addView(editText)
-
-        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-
-        MaterialAlertDialogBuilder(this, dialogTheme)
-            .setTitle(getString(R.string.new_folder_title))
-            .setIcon(R.drawable.ic_folder)
-            .setView(container)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .setPositiveButton(getString(R.string.new_folder_create)) { _, _ ->
-                val name = editText.text.toString().trim()
                 when {
-                    name.isEmpty() -> showPremiumSnackbar(getString(R.string.new_folder_empty))
-                    else -> {
-                        val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
-                            za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
-                        } else {
-                            File(currentDir, name)
-                        }
-                        when {
-                            newDir.exists() -> showPremiumSnackbar(getString(R.string.new_folder_exists))
-                            newDir.mkdirs() -> {
-                                // Index the new folder immediately so the database is up to date.
-                                // Resolve the correct storage volume from the actual path so this
-                                // works for both internal storage and SD cards.
-                                try {
-                                    val (sid, stype) = za.kilowatch.ultimatefilemanager.indexing
-                                        .IndexingRepository.resolveStorageForPath(newDir.absolutePath)
-                                        .let { it.first to it.second }
-                                    UfmApplication.indexingRepository.indexFile(newDir, sid, stype)
-                                } catch (_: Exception) { }
-                                loadDirectory(currentDir)
-                                showPremiumSnackbar(getString(R.string.new_folder_success))
-                            }
-                            else -> showPremiumSnackbar(getString(R.string.new_folder_error))
-                        }
+                    newDir.exists() -> showPremiumSnackbar(getString(R.string.new_folder_exists))
+                    newDir.mkdirs() -> {
+                        try {
+                            val (sid, stype) = za.kilowatch.ultimatefilemanager.indexing
+                                .IndexingRepository.resolveStorageForPath(newDir.absolutePath)
+                                .let { it.first to it.second }
+                            UfmApplication.indexingRepository.indexFile(newDir, sid, stype)
+                        } catch (_: Exception) { }
+                        loadDirectory(currentDir)
+                        showPremiumSnackbar(getString(R.string.new_folder_success))
                     }
+                    else -> showPremiumSnackbar(getString(R.string.new_folder_error))
                 }
             }
-            .show()
-            .also { dialog ->
-                val titleColor = getColor(R.color.tv_text_primary)
-                val titleView = dialog.findViewById<TextView>(
-                    com.google.android.material.R.id.alertTitle
-                ) ?: dialog.findViewById(
-                    resources.getIdentifier("alertTitle", "id", "android")
-                )
-                titleView?.setTextColor(titleColor)
+        }
 
-                dialog.window?.setBackgroundDrawable(
-                    android.graphics.drawable.ColorDrawable(getColor(R.color.tv_bg_gradient_end))
-                )
-
-                val white = getColor(R.color.tv_text_primary)
-                val black = getColor(R.color.tv_button_focused_yellow_text)
-                val yellow = getColor(R.color.tv_button_focused_yellow)
-                val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
-                val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-
-                dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-                    backgroundTintList = yellowCsl
-                    setTextColor(black)
-                }
-                dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-                    backgroundTintList = glassCsl
-                    setTextColor(white)
-                    setOnFocusChangeListener { _, hasFocus ->
-                        backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                        setTextColor(if (hasFocus) black else white)
-                    }
-                }
-                dialog.window?.setSoftInputMode(
-                    android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-                )
-            }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtFolderName?.requestFocus()
     }
 
     private fun setupTvShareChooserFocus(
@@ -3447,7 +3254,7 @@ class FileBrowserActivity : AppCompatActivity() {
 
         val layoutRes = if (isTv) R.layout.dialog_premium_share_chooser_tv else R.layout.dialog_premium_share_chooser
         val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
-        val dialog = MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
@@ -3484,6 +3291,7 @@ class FileBrowserActivity : AppCompatActivity() {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performStandardShare(files: List<File>) {
@@ -3516,7 +3324,7 @@ class FileBrowserActivity : AppCompatActivity() {
 
     private fun showTargetChooserDialog(files: List<File>) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_premium_target_chooser, null)
-        val dialog = MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
@@ -3551,6 +3359,7 @@ class FileBrowserActivity : AppCompatActivity() {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun updatePasteFab() {
@@ -4906,68 +4715,45 @@ class FileBrowserActivity : AppCompatActivity() {
      * Yellow confirm button + black text to match design system.
      */
     private fun showFolderEncryptWarning(folders: List<File>, extraFiles: List<File>, isMove: Boolean) {
-        val bgColor   = getColor(R.color.tv_bg_gradient_end)
-        val white     = getColor(R.color.tv_text_primary)
-        val black     = getColor(R.color.tv_button_focused_yellow_text)
-        val yellow    = getColor(R.color.tv_button_focused_yellow)
-        val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
-        val glassCsl  = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-
         val folderNames = folders.joinToString(", ") { it.name }
         val message = getString(R.string.vault_folder_encrypt_warning, folderNames)
+        val isTv = DeviceUtils.isTvDevice(this)
 
-        val dialog = MaterialAlertDialogBuilder(this,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.vault_folder_encrypt_title))
-            .setMessage(message)
-            .setIcon(R.drawable.ic_lock)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(getString(R.string.vault_folder_encrypt_confirm)) { _, _ ->
-                // Encrypt each folder as a new vault entry (always deletes original)
-                folders.forEach { folder ->
-                    encryptFolderToNewVaultEntry(folder)
-                }
-                // If there were also files selected, run them through the vault picker
-                if (extraFiles.isNotEmpty()) {
-                    showVaultPickerForFiles(extraFiles, isMove)
-                }
-            }
+        val layoutRes = if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val imgIcon = dialogView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(R.drawable.ic_lock)
+        txtTitle?.setText(R.string.vault_folder_encrypt_title)
+        txtMessage?.text = message
+        btnPositive?.setText(R.string.vault_folder_encrypt_confirm)
+        btnNegative?.visibility = View.VISIBLE
+        btnNegative?.setText(android.R.string.cancel)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
             .create()
 
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            folders.forEach { folder ->
+                encryptFolderToNewVaultEntry(folder)
+            }
+            if (extraFiles.isNotEmpty()) {
+                showVaultPickerForFiles(extraFiles, isMove)
+            }
+        }
+
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
         dialog.show()
-
-        // Dark window styling
-        dialog.window?.setBackgroundDrawable(
-            android.graphics.drawable.ColorDrawable(bgColor)
-        )
-        val titleView = dialog.findViewById<android.widget.TextView>(
-            com.google.android.material.R.id.alertTitle
-        ) ?: dialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
-        titleView?.setTextColor(white)
-        dialog.findViewById<android.widget.TextView>(android.R.id.message)?.setTextColor(white)
-
-        // Confirm button: yellow bg + black text
-        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-            backgroundTintList = yellowCsl
-            setTextColor(black)
-            if (DeviceUtils.isTvDevice(this@FileBrowserActivity)) {
-                setOnFocusChangeListener { _, hasFocus ->
-                    backgroundTintList = if (hasFocus) yellowCsl else yellowCsl // always yellow
-                    setTextColor(black)
-                }
-            }
-        }
-        // Cancel button: glass default, yellow on TV focus
-        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-            backgroundTintList = glassCsl
-            setTextColor(white)
-            if (DeviceUtils.isTvDevice(this@FileBrowserActivity)) {
-                setOnFocusChangeListener { _, hasFocus ->
-                    backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                    setTextColor(if (hasFocus) black else white)
-                }
-            }
-        }
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     /**
@@ -4981,19 +4767,15 @@ class FileBrowserActivity : AppCompatActivity() {
         val txtProgress = progressView.findViewById<TextView>(R.id.txtVaultProgress)
         val progressBar = progressView.findViewById<android.widget.ProgressBar>(R.id.progressVault)
 
-        val progressDialog = MaterialAlertDialogBuilder(this)
+        val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setTitle(getString(R.string.encrypt_copy_title))
             .setView(progressView)
             .setCancelable(false)
             .create()
         progressDialog.show()
         progressDialog.window?.setBackgroundDrawable(
-            android.graphics.drawable.ColorDrawable(getColor(R.color.tv_bg_gradient_end))
+            android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
         )
-        val titleView = progressDialog.findViewById<android.widget.TextView>(
-            com.google.android.material.R.id.alertTitle
-        ) ?: progressDialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
-        titleView?.setTextColor(getColor(R.color.tv_text_primary))
 
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
             val success = withContext(kotlinx.coroutines.Dispatchers.IO) {
@@ -5097,53 +4879,50 @@ class FileBrowserActivity : AppCompatActivity() {
         val defaultName = if (archives.size == 1) za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archives.first().name) else "Extracted"
         val isOnTv = DeviceUtils.isTvDevice(this)
 
-        val bgColor = if (isOnTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
-        val textColorPrimary = if (isOnTv) getColor(R.color.tv_text_primary) else getColor(R.color.ufm_text_primary)
-        val textColorHint = if (isOnTv) getColor(R.color.tv_text_hint) else getColor(R.color.ufm_text_hint)
-        val accentColor = if (isOnTv) getColor(R.color.tv_button_focused_yellow) else getColor(R.color.ufm_primary)
+        val layoutRes = if (isOnTv) R.layout.dialog_create_folder_tv else R.layout.dialog_create_folder
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val edtFolderName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFolderName)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
 
-        val container = android.widget.LinearLayout(this).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-            setBackgroundColor(bgColor)
+        txtTitle?.setText(R.string.extract_new_folder_title)
+        btnCreate?.setText(R.string.extract_to_new_folder)
+        edtFolderName?.hint = getString(R.string.extract_new_folder_hint)
+        edtFolderName?.setText(defaultName)
+        edtFolderName?.selectAll()
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
         }
 
-        val editText = android.widget.EditText(this).apply {
-            hint = getString(R.string.extract_new_folder_hint)
-            setText(defaultName)
-            selectAll()
-            setSingleLine(true)
-            setTextColor(textColorPrimary)
-            setHintTextColor(textColorHint)
-            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
-            requestFocus()
-        }
-        container.addView(editText)
-
-        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-
-        MaterialAlertDialogBuilder(this, dialogTheme)
-            .setTitle(getString(R.string.extract_new_folder_title))
-            .setIcon(R.drawable.ic_folder)
-            .setView(container)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .setPositiveButton(getString(R.string.extract_to_new_folder)) { _, _ ->
-                val name = editText.text.toString().trim()
-                if (name.isEmpty()) {
-                    showPremiumSnackbar(getString(R.string.new_folder_empty))
-                    return@setPositiveButton
-                }
-                val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
-                    za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
-                } else {
-                    File(currentDir, name)
-                }
-                if (!newDir.exists()) {
-                    newDir.mkdirs()
-                }
-                performExtract(archives, customDestFolder = newDir, isSelectFolderMode = false)
+        btnCreate?.setOnClickListener {
+            val name = edtFolderName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                showPremiumSnackbar(getString(R.string.new_folder_empty))
+                return@setOnClickListener
             }
-            .show()
+            dialog.dismiss()
+            val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
+                za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
+            } else {
+                File(currentDir, name)
+            }
+            if (!newDir.exists()) {
+                newDir.mkdirs()
+            }
+            performExtract(archives, customDestFolder = newDir, isSelectFolderMode = false)
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtFolderName?.requestFocus()
     }
 
     private fun performExtract(archives: List<File>, customDestFolder: File? = null, isSelectFolderMode: Boolean) {
@@ -5152,12 +4931,20 @@ class FileBrowserActivity : AppCompatActivity() {
         fileAdapter.exitSelectionMode()
 
         lifecycleScope.launch(Dispatchers.Main) {
+            val isTv = DeviceUtils.isTvDevice(this@FileBrowserActivity)
+            val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
+            val dialogView = layoutInflater.inflate(layoutRes, null)
+            val txtTitle = dialogView.findViewById<TextView>(R.id.txtProgressTitle)
+            val txtCurrentFile = dialogView.findViewById<TextView>(R.id.txtProgressCurrentFile)
+            txtTitle?.setText(R.string.extract_progress_title)
+            txtCurrentFile?.text = archives.first().name
+
             val progressDialog = MaterialAlertDialogBuilder(this@FileBrowserActivity, R.style.UFM_Dialog)
-                .setTitle(R.string.extract_progress_title)
-                .setMessage(archives.first().name)
+                .setView(dialogView)
                 .setCancelable(false)
                 .create()
             progressDialog.show()
+            progressDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
             var extractedCount = 0
             var lastError: Exception? = null
@@ -5171,7 +4958,7 @@ class FileBrowserActivity : AppCompatActivity() {
                     var success = false
                     var attempts = 0
                     withContext(Dispatchers.Main) {
-                        progressDialog.setMessage(archive.name)
+                        txtCurrentFile?.text = archive.name
                     }
 
                     val targetDest = if (isSelectFolderMode && tempExtractDir != null) {
@@ -5455,33 +5242,22 @@ class FileBrowserActivity : AppCompatActivity() {
     }
 
     private fun performCompression(sourceFiles: List<File>, destDir: File, customFileName: String, format: ArchiveManager.Format, password: String?) {
-        val dialogView = android.widget.LinearLayout(this).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(48, 32, 48, 8)
-        }
-        val statusText = android.widget.TextView(this).apply {
-            text = getString(R.string.compressing_2)
-            textSize = 14f
-        }
-        val dialogProgress = android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
-            isIndeterminate = false
-            max = 100
-            progress = 0
-            layoutParams = android.widget.LinearLayout.LayoutParams(
-                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { topMargin = 16; bottomMargin = 8 }
-        }
-        dialogView.addView(statusText)
-        dialogView.addView(dialogProgress)
+        val isTv = DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtProgressTitle)
+        val txtCurrentFile = dialogView.findViewById<TextView>(R.id.txtProgressCurrentFile)
+        val progressFile = dialogView.findViewById<com.google.android.material.progressindicator.LinearProgressIndicator>(R.id.progressFile)
+        txtTitle?.setText(R.string.compressing_files)
+        txtCurrentFile?.setText(R.string.compressing_2)
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.compressing_files)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .setCancelable(false)
             .setNegativeButton(R.string.cancel, null)
             .create()
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         val fileName = customFileName
         val extension = format.displayName
@@ -5496,7 +5272,8 @@ class FileBrowserActivity : AppCompatActivity() {
             try {
                 ArchiveManager.compress(sourceFiles, destFile, password, format) { progress ->
                     runOnUiThread {
-                        dialogProgress.progress = progress
+                        progressFile?.isIndeterminate = false
+                        progressFile?.progress = progress
                     }
                 }
                 withContext(Dispatchers.Main) {
@@ -5530,43 +5307,38 @@ class FileBrowserActivity : AppCompatActivity() {
         
         if (entries.isEmpty()) {
             // No vaults exist - prompt to create one
-            val noVaultDialog = MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-                .setTitle(getString(R.string.encrypt_no_vaults))
-                .setMessage(getString(R.string.encrypt_create_first))
-                .setIcon(R.drawable.ic_lock)
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(getString(R.string.encrypt_create_vault)) { _, _ ->
-                    // Open VaultActivity to create a vault
-                    val intent = Intent(this, VaultActivity::class.java)
-                    startActivity(intent)
-                }
-                .show()
+            val isTv = DeviceUtils.isTvDevice(this)
+            val layoutRes = if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+            val noVaultView = layoutInflater.inflate(layoutRes, null)
+            val imgIcon = noVaultView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+            val txtTitle = noVaultView.findViewById<TextView>(R.id.txtDialogTitle)
+            val txtMessage = noVaultView.findViewById<TextView>(R.id.txtDialogMessage)
+            val btnPositive = noVaultView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+            val btnNegative = noVaultView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
 
-            // Apply dark-theme styling: white title + message, dark bg, themed buttons
-            val bgColor   = getColor(R.color.tv_bg_gradient_end)
-            val white     = getColor(R.color.tv_text_primary)
-            val black     = getColor(R.color.tv_button_focused_yellow_text)
-            val yellow    = getColor(R.color.tv_button_focused_yellow)
-            val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
-            val glassCsl  = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+            imgIcon?.setImageResource(R.drawable.ic_lock)
+            txtTitle?.setText(R.string.encrypt_no_vaults)
+            txtMessage?.setText(R.string.encrypt_create_first)
+            btnPositive?.setText(R.string.encrypt_create_vault)
+            btnNegative?.visibility = View.VISIBLE
+            btnNegative?.setText(android.R.string.cancel)
 
-            noVaultDialog.window?.setBackgroundDrawable(
-                android.graphics.drawable.ColorDrawable(bgColor)
-            )
-            val titleView = noVaultDialog.findViewById<android.widget.TextView>(
-                com.google.android.material.R.id.alertTitle
-            ) ?: noVaultDialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
-            titleView?.setTextColor(white)
-            noVaultDialog.findViewById<android.widget.TextView>(android.R.id.message)?.setTextColor(white)
+            val noVaultDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(noVaultView)
+                .create()
 
-            noVaultDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-                backgroundTintList = yellowCsl
-                setTextColor(black)
+            btnPositive?.setOnClickListener {
+                noVaultDialog.dismiss()
+                val intent = Intent(this, VaultActivity::class.java)
+                startActivity(intent)
             }
-            noVaultDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-                backgroundTintList = glassCsl
-                setTextColor(white)
+
+            btnNegative?.setOnClickListener {
+                noVaultDialog.dismiss()
             }
+
+            noVaultDialog.show()
+            noVaultDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             return
         }
         
@@ -5659,8 +5431,7 @@ class FileBrowserActivity : AppCompatActivity() {
         // Auto-select if only one vault exists
         var selectedIndex = if (entries.size == 1) 0 else -1
 
-        val dialog = MaterialAlertDialogBuilder(this,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setTitle(title)
             .setView(container)
             .setNegativeButton(android.R.string.cancel, null)
@@ -5691,7 +5462,7 @@ class FileBrowserActivity : AppCompatActivity() {
 
         // Apply dark theme styling after show()
         dialog.window?.setBackgroundDrawable(
-            android.graphics.drawable.ColorDrawable(bgColor)
+            android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
         )
         val titleView = dialog.findViewById<android.widget.TextView>(
             com.google.android.material.R.id.alertTitle
@@ -5739,16 +5510,15 @@ class FileBrowserActivity : AppCompatActivity() {
         val txtProgress = progressView.findViewById<TextView>(R.id.txtVaultProgress)
         val progressBar = progressView.findViewById<android.widget.ProgressBar>(R.id.progressVault)
         
-        val dialog = MaterialAlertDialogBuilder(this)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setTitle(if (isMove) R.string.encrypt_move_title else R.string.encrypt_copy_title)
             .setView(progressView)
             .setCancelable(false)
             .create()
         dialog.show()
 
-        // Dark window + white title to match TV theme
         dialog.window?.setBackgroundDrawable(
-            android.graphics.drawable.ColorDrawable(getColor(R.color.tv_bg_gradient_end))
+            android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
         )
         val titleView = dialog.findViewById<android.widget.TextView>(
             com.google.android.material.R.id.alertTitle

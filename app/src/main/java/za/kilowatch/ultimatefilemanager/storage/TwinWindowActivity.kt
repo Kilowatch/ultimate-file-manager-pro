@@ -510,13 +510,39 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     private fun showAudioConflictDialog(onResult: (muteNew: Boolean) -> Unit) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.audio_conflict_title)
-            .setMessage(R.string.audio_conflict_message)
-            .setPositiveButton(R.string.ok) { _, _ -> onResult(false) }
-            .setNeutralButton(R.string.player_mute) { _, _ -> onResult(true) }
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val imgIcon = dialogView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(R.drawable.ic_audio)
+        txtTitle?.setText(R.string.audio_conflict_title)
+        txtMessage?.setText(R.string.audio_conflict_message)
+        btnPositive?.setText(R.string.ok)
+        btnNegative?.visibility = View.VISIBLE
+        btnNegative?.setText(R.string.player_mute)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
             .setCancelable(false)
-            .show()
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            onResult(false)
+        }
+
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+            onResult(true)
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun replacePaneWithPlayer(index: Int, filePath: String, fileName: String, shareId: String?, provider: String?, startMuted: Boolean, remotePath: String = "") {
@@ -790,15 +816,38 @@ class TwinWindowActivity : AppCompatActivity() {
         val actionLabel = if (isMove) getString(R.string.action_move) else getString(R.string.action_copy)
         val destName = getDestName(target)
         val message = getString(R.string.actionlabel_filessize_items_to_destname, actionLabel, files.size, destName)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle(actionLabel)
-            .setMessage(message)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(actionLabel) { _, _ ->
-                performTransfer(files, target, isMove)
-            }
-            .show()
+        val layoutRes = if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val imgIcon = dialogView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(if (isMove) R.drawable.ic_move else R.drawable.ic_copy)
+        txtTitle?.text = actionLabel
+        txtMessage?.text = message
+        btnPositive?.text = actionLabel
+        btnNegative?.visibility = View.VISIBLE
+        btnNegative?.setText(R.string.cancel)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            performTransfer(files, target, isMove)
+        }
+
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun getDestName(fragment: Fragment): String {
@@ -831,14 +880,33 @@ class TwinWindowActivity : AppCompatActivity() {
             return
         }
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.action_delete)
-            .setMessage(getString(R.string.delete_message_files, files.size))
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.delete_confirm) { _, _ ->
-                performDelete(files, source)
-            }
-            .show()
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_file_delete_confirm_tv else R.layout.dialog_file_delete_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtDeleteMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnDeleteConfirm = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtTitle?.setText(R.string.action_delete)
+        txtDeleteMessage?.text = getString(R.string.delete_message_files, files.size)
+        btnDeleteConfirm?.setText(R.string.delete_confirm)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        btnDeleteConfirm?.setOnClickListener {
+            dialog.dismiss()
+            performDelete(files, source)
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performDelete(items: List<Any>, source: Fragment) {
@@ -859,88 +927,81 @@ class TwinWindowActivity : AppCompatActivity() {
         val progressDialog = za.kilowatch.ultimatefilemanager.indexing.IndexingUiHelper.showDeletionProgressDialog(this, folderName, isIndexing = isIndexed)
 
         lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                var successCount = 0
-                var failedCount = 0
-                val hasProtected = items.any { it is java.io.File && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(it.absolutePath) }
-                val shizukuAuthorized = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isAuthorized()
-
-                items.forEach { item ->
-                    try {
-                        if (item is java.io.File) {
-                            val success = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(item.absolutePath)) {
-                                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(item.absolutePath)
-                            } else if (item.isDirectory) {
-                                item.deleteRecursively()
-                            } else {
-                                item.delete()
-                            }
-                            if (success) {
-                                za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.deleteTreeFromIndex(item.absolutePath)
-                                successCount++
-                            } else {
-                                failedCount++
-                            }
-                        } else if (item is za.kilowatch.ultimatefilemanager.network.NetworkFile && srcShare != null) {
+            var successCount = 0
+            var failCount = 0
+            for (item in items) {
+                if (item is java.io.File) {
+                    val path = item.absolutePath
+                    val deleted = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
+                    } else if (item.isDirectory) {
+                        item.deleteRecursively()
+                    } else {
+                        item.delete()
+                    }
+                    if (deleted) {
+                        UfmApplication.indexingRepository.deleteTreeFromIndex(path)
+                        successCount++
+                    } else {
+                        failCount++
+                    }
+                } else if (item is za.kilowatch.ultimatefilemanager.network.NetworkFile) {
+                    val netShare = (source as? za.kilowatch.ultimatefilemanager.network.NetworkBrowserFragment)?.getShare()
+                    if (netShare != null) {
+                        try {
                             if (item.isDirectory) {
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.deleteNetworkDirRecursively(srcShare, item.path)
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.deleteNetworkDirRecursively(netShare, item.path)
                             } else {
-                                when(srcShare.type) {
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.deleteFile(srcShare, item.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.deleteFile(srcShare, item.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteFile(srcShare, item.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(srcShare, item.path, item.isDirectory)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(srcShare, item.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(srcShare, item.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(srcShare, item.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(srcShare, item.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(srcShare, item.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteFile(srcShare, item.path)
+                                when (netShare.type) {
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.deleteFile(netShare, item.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.deleteFile(netShare, item.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> if (item.isDirectory) za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteDir(netShare, item.path) else za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteFile(netShare, item.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(netShare, item.path, false)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(netShare, item.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(netShare, item.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(netShare, item.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(netShare, item.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> if (item.isDirectory) za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteDir(netShare, item.path) else za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(netShare, item.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> if (item.isDirectory) za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteDir(netShare, item.path) else za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteFile(netShare, item.path)
                                     za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                 }
                             }
                             successCount++
+                        } catch (e: Exception) {
+                            failCount++
                         }
-                    } catch (e: Exception) {
-                        za.kilowatch.ultimatefilemanager.util.GoRoLog.e("TwinWindow", "Delete error: ${e.message}")
-                        failedCount++
                     }
                 }
-                withContext(Dispatchers.Main) {
-                    (source as? FileBrowserFragment) ?: return@withContext
-                    refreshFragment(source)
-                    if (failedCount == 0) {
-                        showPremiumSnackbar(getString(R.string.delete_success, successCount))
-                    } else {
-                        val msg = if (hasProtected && !shizukuAuthorized) {
-                            getString(R.string.delete_error_shizuku_required)
-                        } else {
-                            getString(R.string.delete_error)
-                        }
-                        showPremiumSnackbar(msg)
-                    }
-                }
-            } finally {
-                withContext(Dispatchers.Main) {
-                    progressDialog.dismiss()
-                    (source as? FileBrowserFragment)?.refresh()
+            }
+
+            withContext(Dispatchers.Main) {
+                progressDialog.dismiss()
+                refreshFragment(source)
+                if (failCount == 0) {
+                    showPremiumSnackbar(getString(R.string.delete_success, successCount))
+                } else {
+                    showPremiumSnackbar(getString(R.string.delete_completed_with_errors_failcount_failed, failCount))
                 }
             }
         }
-
     }
 
-    private fun performTransfer(items: List<Any>, target: Fragment, isMove: Boolean) {
+    private fun performTransfer(files: List<Any>, target: Fragment, isMove: Boolean) {
         var isCancelled = false
+        val targetIsLocal = target is FileBrowserFragment
+        val targetIsDir = if (targetIsLocal) (target as FileBrowserFragment).getCurrentDir() else null
+        val targetNetShare = if (!targetIsLocal) (target as NetworkBrowserFragment).getShare() else null
+        val targetNetPath = if (!targetIsLocal) (target as NetworkBrowserFragment).getCurrentPath() else null
         val sourceFragment = if (target === getPane1()) getPane2() else getPane1()
         val srcShare = (sourceFragment as? NetworkBrowserFragment)?.getShare()
-        
-        lifecycleScope.launch(Dispatchers.Main) {
-            val totalFiles = withContext(Dispatchers.IO) { countAllItems(items, srcShare) }
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val totalFiles = files.size
             val fileCounter = IntArray(1) { 0 }
 
-            // Setup Custom Progress Dialog
-            val dialogView = layoutInflater.inflate(R.layout.dialog_transfer_progress, null)
+            val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this@TwinWindowActivity)
+            val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
+            val dialogView = layoutInflater.inflate(layoutRes, null)
             val txtTitle = dialogView.findViewById<TextView>(R.id.txtProgressTitle)
             val txtFiles = dialogView.findViewById<TextView>(R.id.txtProgressFiles)
             val txtCurrentFile = dialogView.findViewById<TextView>(R.id.txtProgressCurrentFile)
@@ -950,7 +1011,7 @@ class TwinWindowActivity : AppCompatActivity() {
             txtTitle.text = if (isMove) getString(R.string.moving_files) else getString(R.string.copying_files_1)
             txtFiles.text = getString(R.string.item_0_totalfiles, totalFiles)
 
-            val dialog = MaterialAlertDialogBuilder(this@TwinWindowActivity)
+            val dialog = MaterialAlertDialogBuilder(this@TwinWindowActivity, R.style.UFM_Dialog)
                 .setView(dialogView)
                 .setCancelable(false)
                 .setNegativeButton(R.string.cancel) { _, _ ->
@@ -958,7 +1019,12 @@ class TwinWindowActivity : AppCompatActivity() {
                     runCatching { currentTransferConnection?.close() }
                     currentTransferConnection = null
                 }
-                .show()
+                .create()
+
+            withContext(Dispatchers.Main) {
+                dialog.show()
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            }
 
             val onProgress: (String, Long, Long, Int, Int) -> Unit = { fileName, copied, total, index, totalCount ->
                 lifecycleScope.launch(Dispatchers.Main) {
@@ -1313,7 +1379,7 @@ class TwinWindowActivity : AppCompatActivity() {
                             }
                         }
 
-                        for (it in items) { 
+                        for (it in files) { 
                             coroutineContext.ensureActive()
                             processItem(it, destDir.absolutePath) 
                         }
@@ -1671,7 +1737,10 @@ class TwinWindowActivity : AppCompatActivity() {
                             }
                         }
                         
-                        items.forEach { processItemNet(it, dstPath) }
+                        for (it in files) {
+                            coroutineContext.ensureActive()
+                            processItemNet(it, dstPath)
+                        }
                     }
                 } finally {
                     withContext(Dispatchers.Main) {
@@ -1875,22 +1944,45 @@ class TwinWindowActivity : AppCompatActivity() {
         val destName = getDestName(targetFragment)
         val message = getString(R.string.actionlabel_filessize_items_to_destname, actionLabel, clipboardItems.size, destName)
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle(actionLabel)
-            .setMessage(message)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(actionLabel) { _, _ ->
-                performTransfer(clipboardItems, targetFragment, isMove = isMove)
-                // Clear clipboard
-                za.kilowatch.ultimatefilemanager.storage.FileClipboard.clear()
-                za.kilowatch.ultimatefilemanager.network.NetworkClipboard.clear()
-                // Update paste fab on both fragments
-                (getPane1() as? FileBrowserFragment)?.updatePasteFab()
-                (getPane1() as? NetworkBrowserFragment)?.updatePasteFab()
-                (getPane2() as? FileBrowserFragment)?.updatePasteFab()
-                (getPane2() as? NetworkBrowserFragment)?.updatePasteFab()
-            }
-            .show()
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val imgIcon = dialogView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(if (isExtract) R.drawable.ic_extract else if (isMove) R.drawable.ic_move else R.drawable.ic_copy)
+        txtTitle?.text = actionLabel
+        txtMessage?.text = message
+        btnPositive?.text = actionLabel
+        btnNegative?.visibility = View.VISIBLE
+        btnNegative?.setText(R.string.cancel)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            performTransfer(clipboardItems, targetFragment, isMove = isMove)
+            // Clear clipboard
+            za.kilowatch.ultimatefilemanager.storage.FileClipboard.clear()
+            za.kilowatch.ultimatefilemanager.network.NetworkClipboard.clear()
+            // Update paste fab on both fragments
+            (getPane1() as? FileBrowserFragment)?.updatePasteFab()
+            (getPane1() as? NetworkBrowserFragment)?.updatePasteFab()
+            (getPane2() as? FileBrowserFragment)?.updatePasteFab()
+            (getPane2() as? NetworkBrowserFragment)?.updatePasteFab()
+        }
+
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun showPremiumSnackbar(message: String) {

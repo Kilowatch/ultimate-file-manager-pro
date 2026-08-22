@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Mobile Transfer / Extraction / Compression Progress Dialog - UFM Glass Standard
+    TV Transfer / Extraction / Compression Progress Dialog - UFM Glass Standard
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="650dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_dialog_glass"
-    android:padding="24dp">
+    android:padding="28dp">
 
     <!-- Title row with hero icon -->
     <LinearLayout
@@ -17,15 +17,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
+        android:layout_marginBottom="14dp">
 
         <ImageView
             android:id="@+id/imgProgressIcon"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_copy"
-            app:tint="?attr/colorPrimary"
-            android:layout_marginEnd="12dp"
+            app:tint="@color/tv_button_focused_yellow"
+            android:layout_marginEnd="14dp"
             android:importantForAccessibility="no" />
 
         <TextView
@@ -34,8 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/copying_files"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="18sp"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="20sp"
             android:fontFamily="sans-serif-black" />
     </LinearLayout>
 
@@ -45,8 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/item_00"
-        android:textColor="@color/mobile_text_secondary"
-        android:textSize="13sp" />
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/txtProgressCurrentFile"
@@ -54,8 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:text="@string/filenameext"
-        android:textColor="@color/mobile_text_primary"
-        android:textSize="14sp"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="15sp"
         android:maxLines="1"
         android:ellipsize="middle" />
 
@@ -63,11 +63,11 @@
         android:id="@+id/progressFile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        app:trackThickness="8dp"
-        app:trackCornerRadius="4dp"
+        android:layout_marginTop="14dp"
+        app:trackThickness="10dp"
+        app:trackCornerRadius="5dp"
         android:progress="0"
-        app:indicatorColor="?attr/colorPrimary" />
+        app:indicatorColor="@color/tv_button_focused_yellow" />
 
     <TextView
         android:id="@+id/txtProgressSize"
@@ -75,8 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="@string/s_0_mb_0_mb_0"
-        android:textColor="@color/mobile_text_secondary"
-        android:textSize="12sp"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="13sp"
         android:gravity="end" />
 
 </LinearLayout>

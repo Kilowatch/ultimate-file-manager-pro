@@ -44,45 +44,28 @@ object ProtectedFilesManager {
      * Shows a premium style warning dialog stating that the item is protected and cannot be deleted.
      */
     fun showProtectedDeleteDialog(context: Context, isTv: Boolean, onDismiss: (() -> Unit)? = null) {
-        val bgColor = context.getColor(R.color.tv_bg_gradient_end)
-        val white = context.getColor(R.color.tv_text_primary)
-        val black = context.getColor(R.color.tv_button_focused_yellow_text)
-        val yellow = context.getColor(R.color.tv_button_focused_yellow)
-        val yellowCsl = ColorStateList.valueOf(yellow)
+        val layoutRes = if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+        val dialogView = android.view.LayoutInflater.from(context).inflate(layoutRes, null)
+        val imgIcon = dialogView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<android.widget.TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<android.widget.TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
 
-        val dialog = MaterialAlertDialogBuilder(context,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(context.getString(R.string.protected_delete_title))
-            .setMessage(context.getString(R.string.protected_delete_message))
-            .setIcon(R.drawable.ic_shield_protected)
-            .setPositiveButton(context.getString(R.string.protected_delete_ok)) { d, _ ->
-                d.dismiss()
-                onDismiss?.invoke()
-            }
+        imgIcon?.setImageResource(R.drawable.ic_shield_protected)
+        txtTitle?.text = context.getString(R.string.protected_delete_title)
+        txtMessage?.text = context.getString(R.string.protected_delete_message)
+        btnPositive?.text = context.getString(R.string.protected_delete_ok)
+
+        val dialog = MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
+            .setView(dialogView)
             .create()
 
-        dialog.show()
-
-        // Dark window styling to make it look premium
-        dialog.window?.setBackgroundDrawable(ColorDrawable(bgColor))
-        
-        val titleView = dialog.findViewById<android.widget.TextView>(
-            com.google.android.material.R.id.alertTitle
-        ) ?: dialog.findViewById(context.resources.getIdentifier("alertTitle", "id", "android"))
-        titleView?.setTextColor(white)
-        
-        dialog.findViewById<android.widget.TextView>(android.R.id.message)?.setTextColor(white)
-
-        // Positive button styling (Yellow confirm button with black text)
-        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-            backgroundTintList = yellowCsl
-            setTextColor(black)
-            if (isTv) {
-                setOnFocusChangeListener { _, hasFocus ->
-                    backgroundTintList = yellowCsl
-                    setTextColor(black)
-                }
-            }
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            onDismiss?.invoke()
         }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 }

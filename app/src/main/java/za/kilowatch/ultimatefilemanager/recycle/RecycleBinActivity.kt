@@ -166,7 +166,6 @@ class RecycleBinActivity : AppCompatActivity() {
                             za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, entry.trashPath)
                             za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, entry.trashPath)
                             za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, entry.trashPath)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, entry.trashPath)
                             za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.listFiles(share, entry.trashPath)
                         }
                         fileCount += netFiles.count { !it.isDirectory }
@@ -285,7 +284,6 @@ class RecycleBinActivity : AppCompatActivity() {
                 za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(share, path).first
                 za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(share, path).first
                 za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, path).first
-                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, path).first
                 za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.openInputStream(share, path)
             }
         } catch (e: Exception) { null }
@@ -294,20 +292,39 @@ class RecycleBinActivity : AppCompatActivity() {
     private fun showClearAllDialog() {
         val count = allEntries.size
         if (count == 0) return
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.recycle_bin_clear_title)
-            .setMessage(getString(R.string.recycle_bin_clear_confirm, count))
-            .setIcon(R.drawable.ic_delete)
-            .setPositiveButton(R.string.recycle_bin_delete_perm) { _, _ ->
-                lifecycleScope.launch {
-                    progressBar.visibility = View.VISIBLE
-                    val deleted = withContext(Dispatchers.IO) { RecycleBinManager.emptyTrash() }
-                    progressBar.visibility = View.GONE
-                    Snackbar.make(recyclerItems, getString(R.string.recycle_bin_cleared, deleted), Snackbar.LENGTH_SHORT).show()
-                }
+
+        val layoutRes = if (isTv) R.layout.dialog_file_delete_confirm_tv else R.layout.dialog_file_delete_confirm
+        val dialogView = android.view.LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnConfirm = dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtTitle?.setText(R.string.recycle_bin_clear_title)
+        txtMessage?.text = getString(R.string.recycle_bin_clear_confirm, count)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnConfirm?.setOnClickListener {
+            dialog.dismiss()
+            lifecycleScope.launch {
+                progressBar.visibility = View.VISIBLE
+                val deleted = withContext(Dispatchers.IO) { RecycleBinManager.emptyTrash() }
+                progressBar.visibility = View.GONE
+                Snackbar.make(recyclerItems, getString(R.string.recycle_bin_cleared, deleted), Snackbar.LENGTH_SHORT).show()
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun restoreSelected() {
@@ -346,20 +363,39 @@ class RecycleBinActivity : AppCompatActivity() {
                 }
             }
         }
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.recycle_bin_delete_perm_title)
-            .setMessage(getString(R.string.recycle_bin_delete_perm_confirm, ids.size))
-            .setIcon(R.drawable.ic_delete)
-            .setPositiveButton(R.string.recycle_bin_delete_perm) { _, _ ->
-                lifecycleScope.launch {
-                    progressBar.visibility = View.VISIBLE
-                    val deleted = withContext(Dispatchers.IO) { RecycleBinManager.permanentDeleteByIds(ids) }
-                    progressBar.visibility = View.GONE
-                    adapter.exitSelectionMode()
-                    Snackbar.make(recyclerItems, getString(R.string.recycle_bin_deleted_count, deleted), Snackbar.LENGTH_SHORT).show()
-                }
+
+        val layoutRes = if (isTv) R.layout.dialog_file_delete_confirm_tv else R.layout.dialog_file_delete_confirm
+        val dialogView = android.view.LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnConfirm = dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtTitle?.setText(R.string.recycle_bin_delete_perm_title)
+        txtMessage?.text = getString(R.string.recycle_bin_delete_perm_confirm, ids.size)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnConfirm?.setOnClickListener {
+            dialog.dismiss()
+            lifecycleScope.launch {
+                progressBar.visibility = View.VISIBLE
+                val deleted = withContext(Dispatchers.IO) { RecycleBinManager.permanentDeleteByIds(ids) }
+                progressBar.visibility = View.GONE
+                adapter.exitSelectionMode()
+                Snackbar.make(recyclerItems, getString(R.string.recycle_bin_deleted_count, deleted), Snackbar.LENGTH_SHORT).show()
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 }

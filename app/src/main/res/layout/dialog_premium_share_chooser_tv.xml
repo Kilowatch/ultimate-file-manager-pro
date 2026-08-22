@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Premium Share Chooser Dialog - UFM TV Glass Standard
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="480dp"
+    android:layout_width="650dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="28dp"
-    android:background="@drawable/bg_glass_card_dark">
+    android:background="@drawable/bg_dialog_glass">
 
     <!-- Header -->
     <LinearLayout
@@ -19,9 +22,9 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_share"
-            app:tint="@color/tv_accent"
-            android:layout_marginEnd="12dp"
-            android:contentDescription="@null" />
+            app:tint="@color/tv_button_focused_yellow"
+            android:layout_marginEnd="14dp"
+            android:importantForAccessibility="no" />
 
         <TextView
             android:id="@+id/share_dialog_title"
@@ -31,7 +34,7 @@
             android:text="@string/share_dialog_title"
             android:textColor="@color/tv_text_primary"
             android:textSize="20sp"
-            android:fontFamily="sans-serif-medium" />
+            android:fontFamily="sans-serif-black" />
     </LinearLayout>
 
     <TextView
@@ -54,7 +57,7 @@
         app:cardBackgroundColor="@color/tv_glass_white_10"
         app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
-        app:strokeWidth="1dp"
+        app:strokeWidth="1.5dp"
         app:strokeColor="@color/tv_glass_border">
 
         <LinearLayout
@@ -68,9 +71,9 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/ic_share"
-                app:tint="@color/tv_accent"
+                app:tint="@color/tv_button_focused_yellow"
                 android:layout_marginEnd="16dp"
-                android:contentDescription="@null" />
+                android:importantForAccessibility="no" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,14 +106,14 @@
         android:id="@+id/cardPremiumShare"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="24dp"
         android:clickable="true"
         android:focusable="true"
         app:cardBackgroundColor="@color/tv_glass_white_10"
         app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
         app:strokeWidth="1.5dp"
-        app:strokeColor="@color/tv_accent">
+        app:strokeColor="@color/tv_glass_border">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -123,9 +126,9 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/ic_copy"
-                app:tint="@color/tv_accent"
+                app:tint="@color/tv_button_focused_yellow"
                 android:layout_marginEnd="16dp"
-                android:contentDescription="@null" />
+                android:importantForAccessibility="no" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -156,10 +159,17 @@
     <!-- Cancel button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancel"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="48dp"
+        android:text="@string/cancel"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="15sp"
         android:focusable="true"
-        android:text="@string/cancel"/>
+        android:textAllCaps="false"
+        style="@style/Widget.Material3.Button" />
 
 </LinearLayout>

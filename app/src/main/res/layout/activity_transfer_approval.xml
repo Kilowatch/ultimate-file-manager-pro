@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Transfer Approval Dialog Screen - UFM TV Glass Standard
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -8,12 +11,11 @@
     android:background="#CC000000">
 
     <LinearLayout
-        android:layout_width="480dp"
+        android:layout_width="650dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/bg_dialog_surface"
-        android:padding="28dp"
-        android:elevation="16dp">
+        android:background="@drawable/bg_dialog_glass"
+        android:padding="28dp">
 
         <!-- Icon -->
         <ImageView
@@ -21,6 +23,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/ic_sync"
+            app:tint="@color/tv_button_focused_yellow"
             android:contentDescription="@string/transfer_settings" />
 
         <!-- Title -->
@@ -29,9 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/transfer_settings"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textColor="@color/tv_text_primary"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif-black"
             android:gravity="center" />
 
         <!-- Source device -->
@@ -40,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textColor="@color/tv_text_secondary"
             android:gravity="center" />
 
@@ -49,8 +52,8 @@
             android:id="@+id/txtSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textSize="14sp"
+            android:layout_marginTop="14dp"
+            android:textSize="15sp"
             android:textColor="@color/tv_text_primary"
             android:gravity="center"
             android:lineSpacingMultiplier="1.3" />
@@ -60,8 +63,8 @@
             android:id="@+id/txtCountdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="12sp"
+            android:layout_marginTop="10dp"
+            android:textSize="13sp"
             android:textColor="@color/tv_text_secondary"
             android:gravity="center" />
 
@@ -78,23 +81,34 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/cancel"
-                android:textSize="14sp"
-                android:textColor="@color/tv_text_primary"
-                style="@style/Widget.Material3Expressive.Button.OutlinedButton" />
+                android:background="@drawable/selector_tv_button"
+                app:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textColor="@color/tv_button_text_selector"
+                android:textSize="15sp"
+                android:focusable="true"
+                android:textAllCaps="false"
+                style="@style/Widget.Material3.Button" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnApprove"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="10dp"
                 android:text="@string/approved"
-                android:textSize="14sp"
-                android:backgroundTint="@color/tv_button_focused_yellow"
+                android:background="@drawable/selector_tv_button_yellow"
+                app:backgroundTint="@null"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 android:textColor="@color/tv_button_focused_yellow_text"
-                style="@style/Widget.Material3Expressive.Button" />
+                android:textSize="15sp"
+                android:focusable="true"
+                android:textAllCaps="false"
+                style="@style/Widget.Material3.Button" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

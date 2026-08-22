@@ -721,8 +721,10 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
     private fun showEditTagsDialog(singlePath: String) {
         val currentTags = FileTagsManager.getTags(requireContext(), singlePath)
         val allCreatedTags = FileTagsManager.getAllCreatedTags(requireContext())
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(requireContext())
 
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_tags, null)
+        val layoutRes = if (isTv) R.layout.dialog_edit_tags_tv else R.layout.dialog_edit_tags
+        val dialogView = LayoutInflater.from(requireContext()).inflate(layoutRes, null)
         val edtInput = dialogView.findViewById<TextInputEditText>(R.id.edtTagsInput)
         val txtHeader = dialogView.findViewById<TextView>(R.id.txtCreatedTagsHeader)
         val cgExisting = dialogView.findViewById<ChipGroup>(R.id.cgExistingTags)
@@ -774,18 +776,26 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             }
         })
 
-        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+        val btnDone = dialogView.findViewById<View>(R.id.btnDone)
 
-        MaterialAlertDialogBuilder(requireContext(), dialogTheme)
-            .setTitle(getString(R.string.edit_tags_title))
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
             .setView(dialogView)
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Done") { _, _ ->
-                val textInput = edtInput.text?.toString() ?: ""
-                val newTags = FileTagsManager.sanitizeAndSplit(textInput).toSet()
-                FileTagsManager.saveTags(requireContext(), singlePath, newTags)
-                loadTags(singlePath)
-            }
-            .show()
+            .create()
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnDone?.setOnClickListener {
+            val textInput = edtInput?.text?.toString() ?: ""
+            val newTags = FileTagsManager.sanitizeAndSplit(textInput).toSet()
+            FileTagsManager.saveTags(requireContext(), singlePath, newTags)
+            loadTags(singlePath)
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 }

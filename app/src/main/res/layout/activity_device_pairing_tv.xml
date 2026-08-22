@@ -51,30 +51,38 @@
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRenameTv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/bg_tv_button_selector"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/selector_tv_button"
+                    app:backgroundTint="@null"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
                     android:focusable="true"
-                    android:paddingHorizontal="32dp"
-                    android:paddingVertical="16dp"
+                    android:paddingHorizontal="20dp"
                     android:text="@string/rename_tv"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="20sp" />
+                    android:textColor="@color/tv_button_text_selector"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    style="@style/Widget.Material3.Button" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddDevice"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_tv_button_selector"
+                    android:layout_height="48dp"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    app:backgroundTint="@null"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
                     android:focusable="true"
-                    android:paddingHorizontal="32dp"
-                    android:paddingVertical="16dp"
+                    android:paddingHorizontal="20dp"
                     android:text="@string/link_mobile_app"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="20sp" />
+                    android:textColor="@color/tv_button_focused_yellow_text"
+                    android:textSize="15sp"
+                    android:textAllCaps="false"
+                    style="@style/Widget.Material3.Button" />
             </LinearLayout>
         </LinearLayout>
 

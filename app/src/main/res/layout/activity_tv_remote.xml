@@ -6,7 +6,7 @@
     android:id="@+id/coordinatorRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient"
+    android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true">
 
     <!-- Modern Glass Header Bar (56dp standard) -->

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Premium Share Chooser Dialog - UFM Mobile Glass Standard
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@color/dialog_glass_bg">
+    android:background="@drawable/bg_dialog_glass">
 
     <!-- Header -->
     <LinearLayout
@@ -134,21 +137,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/share_option_premium"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/share_option_premium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/share_option_premium"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="16sp"
-                        android:fontFamily="sans-serif-bold" />
-                </LinearLayout>
+                    android:text="@string/share_option_premium"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-bold" />
 
                 <TextView
                     android:id="@+id/share_option_premium_desc"

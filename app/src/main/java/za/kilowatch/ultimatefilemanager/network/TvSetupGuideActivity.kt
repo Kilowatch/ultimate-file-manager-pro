@@ -4,15 +4,15 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 class TvSetupGuideActivity : AppCompatActivity() {
 
@@ -21,31 +21,28 @@ class TvSetupGuideActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
-        
-        // Edge-to-edge
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_tv_setup_guide)
 
         val coordinatorRoot = findViewById<android.view.View>(R.id.coordinatorRoot)
         val bottomBar = findViewById<android.view.View>(R.id.bottomBar)
         
-        ViewCompat.setOnApplyWindowInsetsListener(coordinatorRoot) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(coordinatorRoot) { _, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(bars.left, bars.top, bars.right, 0)
-            
-            // Apply bottom padding to the bottom bar
+            coordinatorRoot.setPadding(bars.left, bars.top, bars.right, 0)
             bottomBar.setPadding(
-                bottomBar.paddingLeft, 
-                bottomBar.paddingTop, 
-                bottomBar.paddingRight, 
-                bars.bottom + 16 // 16dp was the original padding
+                16.dpToPx(),
+                16.dpToPx(),
+                16.dpToPx(),
+                bars.bottom + 16.dpToPx()
             )
             insets
         }
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        toolbar.setNavigationOnClickListener {
+        val btnBack = findViewById<ImageView>(R.id.btnBack)
+        btnBack.setOnClickListener {
             finish()
         }
 
@@ -69,4 +66,6 @@ class TvSetupGuideActivity : AppCompatActivity() {
             finish()
         }
     }
+
+    private fun Int.dpToPx(): Int = (this * resources.displayMetrics.density).toInt()
 }

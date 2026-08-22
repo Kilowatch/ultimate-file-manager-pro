@@ -78,8 +78,10 @@ class AdbPairingActivity : AppCompatActivity() {
         var selectedHost = ""
         var selectedPort = 5555
 
-        val deviceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mutableListOf(getString(R.string.no_devices_found)))
-        deviceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val itemRes = if (isTv) R.layout.item_tv_spinner_dropdown else R.layout.item_dropdown_popup
+        val deviceAdapter = ArrayAdapter(this, itemRes, mutableListOf(getString(R.string.no_devices_found)))
+        deviceAdapter.setDropDownViewResource(itemRes)
         spinnerDevices.adapter = deviceAdapter
 
         spinnerDevices.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

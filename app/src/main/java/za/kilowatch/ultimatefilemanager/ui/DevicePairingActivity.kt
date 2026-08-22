@@ -169,82 +169,69 @@ class DevicePairingActivity : AppCompatActivity() {
     }
 
     private fun showRenameDialog(device: PairedDevice) {
-        if (isTvMode) {
-            val input = EditText(this)
-            input.setText(device.name)
-            MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.rename_device)
-                .setView(input)
-                .setPositiveButton(R.string.network_btn_save) { _, _ ->
-                    val newName = input.text.toString()
-                    if (newName.isNotBlank()) {
-                        device.name = newName
-                        pairingManager.addOrUpdateDevice(device)
-                        refreshList()
-                    }
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
-        } else {
-            val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_rename_device, null)
-            val edtName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtDeviceName)
-            edtName.setText(device.name)
-            edtName.setSelection(device.name.length)
+        val layoutRes = if (isTvMode) R.layout.dialog_file_rename_tv else R.layout.dialog_rename_device
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val edtName = dialogView.findViewById<EditText>(R.id.edtDeviceName) 
+            ?: dialogView.findViewById<EditText>(R.id.editFileName)
+        edtName?.setText(device.name)
+        edtName?.setSelection(device.name.length)
 
-            val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create()
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
-            dialogView.findViewById<View>(R.id.btnSaveName).setOnClickListener {
-                val newName = edtName.text?.toString()?.trim() ?: ""
-                if (newName.isNotBlank()) {
-                    device.name = newName
-                    pairingManager.addOrUpdateDevice(device)
-                    refreshList()
-                    dialog.dismiss()
-                }
-            }
+        val btnSave = dialogView.findViewById<View>(R.id.btnSaveName) 
+            ?: dialogView.findViewById<View>(R.id.btnSave)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelName) 
+            ?: dialogView.findViewById<View>(R.id.btnCancel)
 
-            dialogView.findViewById<View>(R.id.btnCancelName).setOnClickListener {
+        btnSave?.setOnClickListener {
+            val newName = edtName?.text?.toString()?.trim() ?: ""
+            if (newName.isNotBlank()) {
+                device.name = newName
+                pairingManager.addOrUpdateDevice(device)
+                refreshList()
                 dialog.dismiss()
             }
-
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun showDeleteConfirmationDialog(device: PairedDevice) {
-        if (isTvMode) {
-            android.app.AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-                .setTitle(R.string.remove_device)
-                .setMessage(getString(R.string.are_you_sure_you_want_to_remove_devicename_from_paired_devices, device.name))
-                .setPositiveButton(R.string.network_delete_confirm_yes) { _, _ -> performDelete(device) }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
-        } else {
-            val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_unpair_device_confirm, null)
-            val txtMsg = dialogView.findViewById<TextView>(R.id.txtConfirmMsg)
-            txtMsg.text = getString(R.string.are_you_sure_you_want_to_remove_devicename_from_paired_devices, device.name)
+        val layoutRes = if (isTvMode) R.layout.dialog_file_delete_confirm_tv else R.layout.dialog_unpair_device_confirm
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val txtMsg = dialogView.findViewById<TextView>(R.id.txtConfirmMsg)
+            ?: dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        txtMsg?.text = getString(R.string.are_you_sure_you_want_to_remove_devicename_from_paired_devices, device.name)
 
-            val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create()
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
-            dialogView.findViewById<View>(R.id.btnUnpairConfirm).setOnClickListener {
-                dialog.dismiss()
-                performDelete(device)
-            }
+        val btnConfirm = dialogView.findViewById<View>(R.id.btnUnpairConfirm)
+            ?: dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelUnpair)
+            ?: dialogView.findViewById<View>(R.id.btnCancel)
 
-            dialogView.findViewById<View>(R.id.btnCancelUnpair).setOnClickListener {
-                dialog.dismiss()
-            }
-
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        btnConfirm?.setOnClickListener {
+            dialog.dismiss()
+            performDelete(device)
         }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performDelete(device: PairedDevice) {
@@ -272,24 +259,31 @@ class DevicePairingActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("UFM_Pairing_Prefs", Context.MODE_PRIVATE)
         val currentName = prefs.getString("my_tv_name", android.os.Build.MODEL ?: getString(R.string.android_tv))
         
-        val input = EditText(this)
-        input.setText(currentName)
-        input.setSingleLine(true)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_file_rename_tv, null)
+        val edtName = dialogView.findViewById<EditText>(R.id.editFileName)
+        edtName?.setText(currentName)
+        edtName?.setSelection(currentName?.length ?: 0)
 
-        val dialog = android.app.AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-            .setTitle(R.string.rename_tv)
-            .setView(input)
-            .setPositiveButton(R.string.network_btn_save) { _, _ ->
-                val newName = input.text.toString()
-                if (newName.isNotBlank()) {
-                    prefs.edit().putString("my_tv_name", newName).apply()
-                    Toast.makeText(this, getString(R.string.tv_renamed_to_newname, newName), Toast.LENGTH_SHORT).show()
-                }
-            }
-            .setNegativeButton(R.string.cancel, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
             .create()
-            
+
+        dialogView.findViewById<View>(R.id.btnSave)?.setOnClickListener {
+            val newName = edtName?.text?.toString()?.trim() ?: ""
+            if (newName.isNotBlank()) {
+                prefs.edit().putString("my_tv_name", newName).apply()
+                Toast.makeText(this, getString(R.string.tv_renamed_to_newname, newName), Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     // --- MOBILE FLOW ---

@@ -523,25 +523,27 @@ class RemoteManageActivity : AppCompatActivity() {
             orientation = android.widget.LinearLayout.HORIZONTAL
             gravity = android.view.Gravity.CENTER_VERTICAL
             val padH = (24 * resources.displayMetrics.density).toInt()
-            val padV = (20 * resources.displayMetrics.density).toInt()
+            val padV = (24 * resources.displayMetrics.density).toInt()
             setPadding(padH, padV, padH, padV)
+            setBackgroundResource(R.drawable.bg_dialog_glass)
             addView(android.widget.ProgressBar(this@RemoteManageActivity).apply {
                 isIndeterminate = true
             })
             addView(TextView(this@RemoteManageActivity).apply {
                 text = getString(R.string.remote_server_starting_msg)
-                textSize = 16f
-                setTextColor(getColor(R.color.tv_text_primary))
+                textSize = 15f
+                setTextColor(getColor(R.color.mobile_text_primary))
                 val textPad = (16 * resources.displayMetrics.density).toInt()
                 setPadding(textPad, 0, 0, 0)
             })
         }
 
-        val startingDialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.remote_server_starting_title)
+        val startingDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(progressContainer)
             .setCancelable(false)
-            .show()
+            .create()
+        startingDialog.show()
+        startingDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         // Offload to a background thread so:
         //  a) The main thread is never blocked (no frame skipping)

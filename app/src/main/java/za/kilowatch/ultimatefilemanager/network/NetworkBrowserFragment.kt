@@ -1304,100 +1304,35 @@ class NetworkBrowserFragment : Fragment() {
     private fun showCreateTextFileDialog() {
         val ctx = requireContext()
         val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val layoutRes = if (isOnTv) R.layout.dialog_create_text_file_tv else R.layout.dialog_create_text_file
+        val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+        val edtFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFileName)
+        edtFileName?.setText(getString(R.string.new_file_default))
+        edtFileName?.selectAll()
 
-        if (!isOnTv) {
-            val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_create_text_file, null)
-            val edtFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFileName)
-            edtFileName?.setText(getString(R.string.new_file_default))
-            edtFileName?.selectAll()
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
-            val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create()
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
 
-            dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
+            val name = edtFileName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                showFragmentSnackbar(getString(R.string.new_file_empty))
+            } else {
                 dialog.dismiss()
+                createNetworkTextFile(name)
             }
-
-            dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
-                val name = edtFileName?.text?.toString()?.trim().orEmpty()
-                if (name.isEmpty()) {
-                    showFragmentSnackbar(getString(R.string.new_file_empty))
-                } else {
-                    dialog.dismiss()
-                    createNetworkTextFile(name)
-                }
-            }
-
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            edtFileName?.requestFocus()
-            return
         }
 
-        val bgColor = ctx.getColor(R.color.tv_bg_gradient_end)
-        val textColorPrimary = ctx.getColor(R.color.tv_text_primary)
-        val textColorHint = ctx.getColor(R.color.tv_text_hint)
-        val accentColor = ctx.getColor(R.color.tv_button_focused_yellow)
-
-        val container = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-            setBackgroundColor(bgColor)
-        }
-        val editText = EditText(ctx).apply {
-            hint = getString(R.string.new_file_hint)
-            setText(getString(R.string.new_file_default))
-            selectAll()
-            setSingleLine(true)
-            setTextColor(textColorPrimary)
-            setHintTextColor(textColorHint)
-            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
-            requestFocus()
-        }
-        container.addView(editText)
-
-        MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.new_file_title))
-            .setIcon(R.drawable.ic_create_new)
-            .setView(container)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .setPositiveButton(getString(R.string.new_file_create)) { _, _ ->
-                val name = editText.text.toString().trim()
-                if (name.isEmpty()) {
-                    showFragmentSnackbar(getString(R.string.new_file_empty))
-                } else {
-                    createNetworkTextFile(name)
-                }
-            }
-            .show()
-            .also { dialog ->
-                if (isOnTv) {
-                    dialog.window?.setBackgroundDrawable(
-                        android.graphics.drawable.ColorDrawable(ctx.getColor(R.color.tv_bg_gradient_end))
-                    )
-                    dialog.findViewById<TextView>(com.google.android.material.R.id.alertTitle)?.setTextColor(textColorPrimary)
-                    val yellowCsl = android.content.res.ColorStateList.valueOf(ctx.getColor(R.color.tv_button_focused_yellow))
-                    val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-                    val white = ctx.getColor(R.color.tv_text_primary)
-                    val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
-                    dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-                        backgroundTintList = yellowCsl; setTextColor(black)
-                    }
-                    dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-                        backgroundTintList = glassCsl; setTextColor(white)
-                        setOnFocusChangeListener { _, hasFocus ->
-                            backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                            setTextColor(if (hasFocus) black else white)
-                        }
-                    }
-                }
-                dialog.window?.setSoftInputMode(
-                    android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-                )
-            }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtFileName?.requestFocus()
     }
 
     /**
@@ -1556,153 +1491,124 @@ class NetworkBrowserFragment : Fragment() {
     private fun showCreateFolderDialog() {
         val ctx = requireContext()
         val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val layoutRes = if (isOnTv) R.layout.dialog_create_folder_tv else R.layout.dialog_create_folder
+        val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+        val edtFolderName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFolderName)
+        edtFolderName?.setText(getString(R.string.new_menu_new_folder))
+        edtFolderName?.selectAll()
 
-        if (!isOnTv) {
-            val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_create_folder, null)
-            val edtFolderName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFolderName)
-            edtFolderName?.setText(getString(R.string.new_menu_new_folder))
-            edtFolderName?.selectAll()
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
-            val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create()
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
 
-            dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
+            val name = edtFolderName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                showFragmentSnackbar(getString(R.string.new_folder_empty))
+            } else {
                 dialog.dismiss()
-            }
-
-            dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
-                val name = edtFolderName?.text?.toString()?.trim().orEmpty()
-                if (name.isEmpty()) {
-                    showFragmentSnackbar(getString(R.string.new_folder_empty))
-                } else {
-                    dialog.dismiss()
-                    val cleanPath = stripSharePrefix(currentPath.trimStart('/'))
-                    val targetPath = if (cleanPath.isEmpty()) name else "$cleanPath/$name"
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        try {
-                            when (share.type) {
-                                ShareType.SMB          -> SmbShareClient.mkdir(share, targetPath)
-                                ShareType.FTP          -> FtpShareClient.mkdir(share, targetPath)
-                                ShareType.TV           -> TvShareClient.mkdir(share, targetPath)
-                                ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, targetPath)
-                                ShareType.NFS          -> NfsShareClient.mkdir(share, targetPath)
-                                ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, targetPath)
-                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, targetPath)
-                                ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, targetPath)
-                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, targetPath)
-                                ShareType.WEBDAV       -> WebDavShareClient.mkdir(share, targetPath)
-                                ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
-                            }
-                            withContext(Dispatchers.Main) { loadDirectory() }
-                        } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { showPremiumSnackbar(getString(R.string.error_emessage, e.message ?: "Unknown error")) }
+                val cleanPath = stripSharePrefix(currentPath.trimStart('/'))
+                val targetPath = if (cleanPath.isEmpty()) name else "$cleanPath/$name"
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        when (share.type) {
+                            ShareType.SMB          -> SmbShareClient.mkdir(share, targetPath)
+                            ShareType.FTP          -> FtpShareClient.mkdir(share, targetPath)
+                            ShareType.TV           -> TvShareClient.mkdir(share, targetPath)
+                            ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, targetPath)
+                            ShareType.NFS          -> NfsShareClient.mkdir(share, targetPath)
+                            ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, targetPath)
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, targetPath)
+                            ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, targetPath)
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, targetPath)
+                            ShareType.WEBDAV       -> WebDavShareClient.mkdir(share, targetPath)
+                            ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
                         }
+                        withContext(Dispatchers.Main) { loadDirectory() }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) { showPremiumSnackbar(getString(R.string.error_emessage, e.message ?: "Unknown error")) }
                     }
                 }
             }
-
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            edtFolderName?.requestFocus()
-            return
         }
 
-        val container = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-        }
-        val editText = EditText(ctx).apply {
-            hint = getString(R.string.new_folder_hint)
-            setText("New Folder")
-            selectAll()
-            setSingleLine(true)
-        }
-        container.addView(editText)
-
-        MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.new_folder_title))
-            .setView(container)
-            .setNegativeButton(R.string.delete_cancel, null)
-            .setPositiveButton(R.string.new_folder_create) { _, _ ->
-                val name = editText.text.toString().trim()
-                if (name.isNotEmpty()) {
-                    val cleanPath = stripSharePrefix(currentPath.trimStart('/'))
-                    val targetPath = if (cleanPath.isEmpty()) name else "$cleanPath/$name"
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        try {
-                            when (share.type) {
-                                ShareType.SMB          -> SmbShareClient.mkdir(share, targetPath)
-                                ShareType.FTP          -> FtpShareClient.mkdir(share, targetPath)
-                                ShareType.TV           -> TvShareClient.mkdir(share, targetPath)
-                                ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, targetPath)
-                                ShareType.NFS          -> NfsShareClient.mkdir(share, targetPath)
-                                ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, targetPath)
-                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, targetPath)
-                                ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, targetPath)
-                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, targetPath)
-                                ShareType.WEBDAV       -> WebDavShareClient.mkdir(share, targetPath)
-                                ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
-                            }
-                            withContext(Dispatchers.Main) { loadDirectory() }
-                        } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { showPremiumSnackbar(getString(R.string.error_emessage, e.message ?: "Unknown error")) }
-                        }
-                    }
-                }
-            }
-            .show()
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtFolderName?.requestFocus()
     }
 
     private fun showRenameDialog(file: NetworkFile) {
-        val container = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-        }
-        val editText = EditText(requireContext()).apply {
-            setText(file.name)
-            selectAll()
-            setSingleLine(true)
-        }
-        container.addView(editText)
+        val ctx = requireContext()
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val layoutRes = if (isOnTv) R.layout.dialog_file_rename_tv else R.layout.dialog_file_rename
+        val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.rename_title)
-            .setView(container)
-            .setNegativeButton(R.string.delete_cancel, null)
-            .setPositiveButton(R.string.rename_confirm) { _, _ ->
-                val newName = editText.text.toString().trim()
-                if (newName.isNotEmpty() && newName != file.name) {
-                    val cleanPath = stripSharePrefix(currentPath.trimStart('/'))
-                    val targetPath = if (cleanPath.isEmpty()) newName else "$cleanPath/$newName"
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        try {
-                            when (share.type) {
-                                ShareType.SMB          -> SmbShareClient.rename(share, file.path, targetPath)
-                                ShareType.FTP          -> FtpShareClient.rename(share, file.path, targetPath)
-                                ShareType.TV           -> TvShareClient.rename(share, file.path, targetPath)
-                                ShareType.SFTP, ShareType.SCP -> SshShareClient.rename(share, file.path, targetPath)
-                                ShareType.NFS          -> NfsShareClient.rename(share, file.path, targetPath)
-                                ShareType.ONEDRIVE     -> OnedriveShareClient.rename(share, file.path, targetPath)
-                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.rename(share, file.path, targetPath)
-                                ShareType.DROPBOX      -> DropboxShareClient.rename(share, file.path, targetPath)
-                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, file.path, targetPath)
-                                ShareType.WEBDAV       -> WebDavShareClient.rename(share, file.path, targetPath, file.isDirectory)
-                                ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
-                            }
-                            withContext(Dispatchers.Main) { 
-                                fileAdapter.exitSelectionMode()
-                                loadDirectory() 
-                            }
-                        } catch (e: Exception) {
-                            withContext(Dispatchers.Main) { showPremiumSnackbar(getString(R.string.error_emessage, e.message ?: "Unknown error")) }
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtOriginalName = dialogView.findViewById<TextView>(R.id.txtOriginalName)
+        val editFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editFileName)
+        val btnSaveRename = dialogView.findViewById<View>(R.id.btnSaveRename)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtOriginalName?.text = file.name
+        editFileName?.setText(file.name)
+        val dotIndex = file.name.lastIndexOf('.')
+        if (!file.isDirectory && dotIndex > 0) {
+            editFileName?.setSelection(0, dotIndex)
+        } else {
+            editFileName?.selectAll()
+        }
+
+        btnSaveRename?.setOnClickListener {
+            val newName = editFileName?.text?.toString()?.trim().orEmpty()
+            if (newName.isNotEmpty() && newName != file.name) {
+                val cleanPath = stripSharePrefix(currentPath.trimStart('/'))
+                val targetPath = if (cleanPath.isEmpty()) newName else "$cleanPath/$newName"
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        when (share.type) {
+                            ShareType.SMB          -> SmbShareClient.rename(share, file.path, targetPath)
+                            ShareType.FTP          -> FtpShareClient.rename(share, file.path, targetPath)
+                            ShareType.TV           -> TvShareClient.rename(share, file.path, targetPath)
+                            ShareType.SFTP, ShareType.SCP -> SshShareClient.rename(share, file.path, targetPath)
+                            ShareType.NFS          -> NfsShareClient.rename(share, file.path, targetPath)
+                            ShareType.ONEDRIVE     -> OnedriveShareClient.rename(share, file.path, targetPath)
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.rename(share, file.path, targetPath)
+                            ShareType.DROPBOX      -> DropboxShareClient.rename(share, file.path, targetPath)
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, file.path, targetPath)
+                            ShareType.WEBDAV       -> WebDavShareClient.rename(share, file.path, targetPath, file.isDirectory)
+                            ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
                         }
+                        withContext(Dispatchers.Main) { 
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory() 
+                            dialog.dismiss()
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) { showPremiumSnackbar(getString(R.string.error_emessage, e.message ?: "Unknown error")) }
                     }
                 }
+            } else if (newName == file.name) {
+                dialog.dismiss()
             }
-            .show()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        editFileName?.requestFocus()
     }
 
     private fun showDeleteConfirmation() {
@@ -1717,37 +1623,64 @@ class NetworkBrowserFragment : Fragment() {
             return
         }
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.delete_title)
-            .setMessage(getString(R.string.delete_message_files, selected.size))
-            .setNegativeButton(R.string.delete_cancel, null)
-            .setPositiveButton(R.string.delete_confirm) { _, _ ->
-                progressBar.visibility = View.VISIBLE
-                lifecycleScope.launch(Dispatchers.IO) {
-                    for (f in selected) {
-                        try {
-                            when (share.type) {
-                                ShareType.SMB          -> if (f.isDirectory) SmbShareClient.deleteDir(share, f.path) else SmbShareClient.deleteFile(share, f.path)
-                                ShareType.FTP          -> if (f.isDirectory) FtpShareClient.deleteDir(share, f.path) else FtpShareClient.deleteFile(share, f.path)
-                                ShareType.TV           -> if (f.isDirectory) TvShareClient.deleteDir(share, f.path) else TvShareClient.deleteFile(share, f.path)
-                                ShareType.SFTP, ShareType.SCP -> SshShareClient.delete(share, f.path, false)
-                                ShareType.NFS          -> if (f.isDirectory) NfsShareClient.deleteDir(share, f.path) else NfsShareClient.deleteFile(share, f.path)
-                                ShareType.ONEDRIVE     -> OnedriveShareClient.deleteFile(share, f.path)
-                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.deleteFile(share, f.path)
-                                ShareType.DROPBOX      -> DropboxShareClient.deleteFile(share, f.path)
-                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.deleteFile(share, f.path)
-                                ShareType.WEBDAV       -> if (f.isDirectory) WebDavShareClient.deleteDir(share, f.path) else WebDavShareClient.deleteFile(share, f.path)
-                                ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
-                            }
-                        } catch (_: Exception) {}
-                    }
-                    withContext(Dispatchers.Main) {
-                        fileAdapter.exitSelectionMode()
-                        loadDirectory()
-                    }
+        val isOnTv = DeviceUtils.isTvDevice(requireContext())
+        val layoutRes = if (isOnTv) R.layout.dialog_file_delete_confirm_tv else R.layout.dialog_file_delete_confirm
+        val dialogView = LayoutInflater.from(requireContext()).inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtDeleteMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnDeleteConfirm = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        val folders = selected.count { it.isDirectory }
+        val files = selected.count { !it.isDirectory }
+        val message = when {
+            folders > 0 && files > 0 -> getString(R.string.delete_message_mixed, folders, files)
+            folders > 0 -> getString(R.string.delete_message_folders, folders)
+            else -> getString(R.string.delete_message_files, files)
+        }
+
+        txtTitle?.text = getString(R.string.delete_title)
+        txtDeleteMessage?.text = message
+        btnDeleteConfirm?.text = getString(R.string.delete_confirm)
+        btnDeleteConfirm?.setOnClickListener {
+            dialog.dismiss()
+            progressBar.visibility = View.VISIBLE
+            lifecycleScope.launch(Dispatchers.IO) {
+                for (f in selected) {
+                    try {
+                        when (share.type) {
+                            ShareType.SMB          -> if (f.isDirectory) SmbShareClient.deleteDir(share, f.path) else SmbShareClient.deleteFile(share, f.path)
+                            ShareType.FTP          -> if (f.isDirectory) FtpShareClient.deleteDir(share, f.path) else FtpShareClient.deleteFile(share, f.path)
+                            ShareType.TV           -> if (f.isDirectory) TvShareClient.deleteDir(share, f.path) else TvShareClient.deleteFile(share, f.path)
+                            ShareType.SFTP, ShareType.SCP -> SshShareClient.delete(share, f.path, false)
+                            ShareType.NFS          -> if (f.isDirectory) NfsShareClient.deleteDir(share, f.path) else NfsShareClient.deleteFile(share, f.path)
+                            ShareType.ONEDRIVE     -> OnedriveShareClient.deleteFile(share, f.path)
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.deleteFile(share, f.path)
+                            ShareType.DROPBOX      -> DropboxShareClient.deleteFile(share, f.path)
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.deleteFile(share, f.path)
+                            ShareType.WEBDAV       -> if (f.isDirectory) WebDavShareClient.deleteDir(share, f.path) else WebDavShareClient.deleteFile(share, f.path)
+                            ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
+                        }
+                    } catch (_: Exception) {}
+                }
+                withContext(Dispatchers.Main) {
+                    fileAdapter.exitSelectionMode()
+                    loadDirectory()
                 }
             }
-            .show()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     fun getSelectedFiles(): List<NetworkFile> = fileAdapter.getSelectedFiles()

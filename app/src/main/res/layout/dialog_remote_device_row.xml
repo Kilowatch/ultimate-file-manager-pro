@@ -1,32 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Remote TV Device Row - UFM Standard -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="14dp"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="12dp"
     android:background="?attr/selectableItemBackground">
 
+    <!-- Frosted Icon Container -->
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginEnd="14dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_tv_remote"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Device Name & Subtext -->
     <TextView
         android:id="@+id/txtDeviceName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="@color/mobile_text_primary"
-        android:textSize="16sp"
+        android:textSize="15.5sp"
+        android:fontFamily="sans-serif-medium"
         android:ellipsize="end"
         android:maxLines="1" />
 
-    <ImageView
-        android:id="@+id/btnTrash"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/ic_delete"
-        android:padding="6dp"
-        android:contentDescription="@string/network_delete_confirm_yes"
-        android:visibility="gone"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:tint="@color/ufm_denied" />
+    <!-- Remove / Delete Button -->
+    <FrameLayout
+        android:id="@+id/btnTrashContainer"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp">
+
+        <ImageView
+            android:id="@+id/btnTrash"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_delete"
+            android:padding="8dp"
+            android:contentDescription="@string/network_delete_confirm_yes"
+            android:visibility="gone"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/ufm_denied" />
+    </FrameLayout>
 
 </LinearLayout>

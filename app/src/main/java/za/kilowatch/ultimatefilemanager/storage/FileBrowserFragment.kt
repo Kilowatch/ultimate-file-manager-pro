@@ -2183,101 +2183,35 @@ class FileBrowserFragment : Fragment() {
     private fun showCreateTextFileDialog() {
         val ctx = requireContext()
         val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val layoutRes = if (isOnTv) R.layout.dialog_create_text_file_tv else R.layout.dialog_create_text_file
+        val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+        val edtFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFileName)
+        edtFileName?.setText(getString(R.string.new_file_default))
+        edtFileName?.selectAll()
 
-        if (!isOnTv) {
-            val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_create_text_file, null)
-            val edtFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFileName)
-            edtFileName?.setText(getString(R.string.new_file_default))
-            edtFileName?.selectAll()
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
-            val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create()
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
 
-            dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
+            val name = edtFileName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_file_empty))
+            } else {
                 dialog.dismiss()
+                createTextFileInFragment(name)
             }
-
-            dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
-                val name = edtFileName?.text?.toString()?.trim().orEmpty()
-                if (name.isEmpty()) {
-                    (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_file_empty))
-                } else {
-                    dialog.dismiss()
-                    createTextFileInFragment(name)
-                }
-            }
-
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            edtFileName?.requestFocus()
-            return
         }
 
-        val bgColor = ctx.getColor(R.color.tv_bg_gradient_end)
-        val textColorPrimary = ctx.getColor(R.color.tv_text_primary)
-        val textColorHint = ctx.getColor(R.color.tv_text_hint)
-        val accentColor = ctx.getColor(R.color.tv_button_focused_yellow)
-
-        val container = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-            setBackgroundColor(bgColor)
-        }
-        val editText = EditText(ctx).apply {
-            hint = getString(R.string.new_file_hint)
-            setText(getString(R.string.new_file_default))
-            selectAll()
-            setSingleLine(true)
-            setTextColor(textColorPrimary)
-            setHintTextColor(textColorHint)
-            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
-            requestFocus()
-        }
-        container.addView(editText)
-
-        MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.new_file_title))
-            .setIcon(R.drawable.ic_create_new)
-            .setView(container)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .setPositiveButton(getString(R.string.new_file_create)) { _, _ ->
-                val name = editText.text.toString().trim()
-                if (name.isEmpty()) {
-                    (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_file_empty))
-                } else {
-                    createTextFileInFragment(name)
-                }
-            }
-            .show()
-            .also { dialog ->
-                if (isOnTv) {
-                    dialog.window?.setBackgroundDrawable(
-                        android.graphics.drawable.ColorDrawable(ctx.getColor(R.color.tv_bg_gradient_end))
-                    )
-                    val titleView = dialog.findViewById<TextView>(com.google.android.material.R.id.alertTitle)
-                    titleView?.setTextColor(textColorPrimary)
-                    val yellowCsl = android.content.res.ColorStateList.valueOf(ctx.getColor(R.color.tv_button_focused_yellow))
-                    val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-                    val white = ctx.getColor(R.color.tv_text_primary)
-                    val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
-                    dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-                        backgroundTintList = yellowCsl; setTextColor(black)
-                    }
-                    dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-                        backgroundTintList = glassCsl; setTextColor(white)
-                        setOnFocusChangeListener { _, hasFocus ->
-                            backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                            setTextColor(if (hasFocus) black else white)
-                        }
-                    }
-                }
-                dialog.window?.setSoftInputMode(
-                    android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-                )
-            }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtFileName?.requestFocus()
     }
 
     private fun createTextFileInFragment(baseName: String) {
@@ -2333,91 +2267,53 @@ class FileBrowserFragment : Fragment() {
     private fun showCreateFolderDialog() {
         val ctx = requireContext()
         val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val layoutRes = if (isOnTv) R.layout.dialog_create_folder_tv else R.layout.dialog_create_folder
+        val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+        val edtFolderName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFolderName)
+        edtFolderName?.setText(getString(R.string.new_menu_new_folder))
+        edtFolderName?.selectAll()
 
-        if (!isOnTv) {
-            val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_create_folder, null)
-            val edtFolderName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFolderName)
-            edtFolderName?.setText(getString(R.string.new_menu_new_folder))
-            edtFolderName?.selectAll()
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
-            val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create()
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
 
-            dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
+            val name = edtFolderName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_empty))
+            } else {
                 dialog.dismiss()
-            }
-
-            dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
-                val name = edtFolderName?.text?.toString()?.trim().orEmpty()
-                if (name.isEmpty()) {
-                    (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_empty))
+                val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
                 } else {
-                    dialog.dismiss()
-                    val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
-                        za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
-                    } else {
-                        File(currentDir, name)
-                    }
-                    when {
-                        newDir.exists() -> (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_exists))
-                        newDir.mkdirs() -> {
-                            try {
-                                val (sid, stype) = za.kilowatch.ultimatefilemanager.indexing
-                                    .IndexingRepository.resolveStorageForPath(newDir.absolutePath)
-                                    .let { it.first to it.second }
-                                UfmApplication.indexingRepository.indexFile(newDir, sid, stype)
-                            } catch (_: Exception) {}
-                            loadDirectory(currentDir)
-                            (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_success))
-                        }
-                        else -> (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_error))
-                    }
+                    File(currentDir, name)
                 }
-            }
-
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            edtFolderName?.requestFocus()
-            return
-        }
-
-        val container = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-        }
-        val editText = EditText(ctx).apply {
-            hint = getString(R.string.new_folder_hint)
-            setText("New Folder")
-            selectAll()
-            requestFocus()
-        }
-        container.addView(editText)
-
-        MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(R.string.new_folder_title)
-            .setIcon(R.drawable.ic_folder)
-            .setView(container)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.new_folder_create) { _, _ ->
-                val name = editText.text.toString().trim()
-                if (name.isNotEmpty()) {
-                    val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
-                        za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
-                    } else {
-                        File(currentDir, name)
-                    }
-                    if (newDir.mkdirs()) {
+                when {
+                    newDir.exists() -> (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_exists))
+                    newDir.mkdirs() -> {
                         try {
-                            UfmApplication.indexingRepository.indexFile(newDir, storageId, storageType)
+                            val (sid, stype) = za.kilowatch.ultimatefilemanager.indexing
+                                .IndexingRepository.resolveStorageForPath(newDir.absolutePath)
+                                .let { it.first to it.second }
+                            UfmApplication.indexingRepository.indexFile(newDir, sid, stype)
                         } catch (_: Exception) {}
                         loadDirectory(currentDir)
+                        (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_success))
                     }
+                    else -> (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_error))
                 }
             }
-            .show()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtFolderName?.requestFocus()
     }
 
     private fun setupTvShareChooserFocus(
@@ -2482,7 +2378,7 @@ class FileBrowserFragment : Fragment() {
 
         val layoutRes = if (isTv) R.layout.dialog_premium_share_chooser_tv else R.layout.dialog_premium_share_chooser
         val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
-        val dialog = MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
@@ -2519,6 +2415,7 @@ class FileBrowserFragment : Fragment() {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performStandardShare(files: List<File>) {
@@ -2546,7 +2443,7 @@ class FileBrowserFragment : Fragment() {
     private fun showTargetChooserDialog(files: List<File>) {
         val ctx = context ?: return
         val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_premium_target_chooser, null)
-        val dialog = MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
@@ -2581,6 +2478,7 @@ class FileBrowserFragment : Fragment() {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun showSortFilterSheet() {
@@ -2712,53 +2610,50 @@ class FileBrowserFragment : Fragment() {
         val defaultName = if (archives.size == 1) za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archives.first().name) else "Extracted"
         val isOnTv = DeviceUtils.isTvDevice(ctx)
 
-        val bgColor = if (isOnTv) ctx.getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
-        val textColorPrimary = if (isOnTv) ctx.getColor(R.color.tv_text_primary) else ctx.getColor(R.color.ufm_text_primary)
-        val textColorHint = if (isOnTv) ctx.getColor(R.color.tv_text_hint) else ctx.getColor(R.color.ufm_text_hint)
-        val accentColor = if (isOnTv) ctx.getColor(R.color.tv_button_focused_yellow) else ctx.getColor(R.color.ufm_primary)
+        val layoutRes = if (isOnTv) R.layout.dialog_create_folder_tv else R.layout.dialog_create_folder
+        val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+        val edtFolderName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFolderName)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val btnCreate = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCreate)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
 
-        val container = android.widget.LinearLayout(ctx).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-            setBackgroundColor(bgColor)
+        txtTitle?.setText(R.string.extract_new_folder_title)
+        btnCreate?.setText(R.string.extract_to_new_folder)
+        edtFolderName?.hint = getString(R.string.extract_new_folder_hint)
+        edtFolderName?.setText(defaultName)
+        edtFolderName?.selectAll()
+
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
         }
 
-        val editText = android.widget.EditText(ctx).apply {
-            hint = getString(R.string.extract_new_folder_hint)
-            setText(defaultName)
-            selectAll()
-            setSingleLine(true)
-            setTextColor(textColorPrimary)
-            setHintTextColor(textColorHint)
-            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
-            requestFocus()
-        }
-        container.addView(editText)
-
-        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-
-        MaterialAlertDialogBuilder(ctx, dialogTheme)
-            .setTitle(getString(R.string.extract_new_folder_title))
-            .setIcon(R.drawable.ic_folder)
-            .setView(container)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .setPositiveButton(getString(R.string.extract_to_new_folder)) { _, _ ->
-                val name = editText.text.toString().trim()
-                if (name.isEmpty()) {
-                    android.widget.Toast.makeText(ctx, getString(R.string.new_folder_empty), android.widget.Toast.LENGTH_SHORT).show()
-                    return@setPositiveButton
-                }
-                val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
-                    za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
-                } else {
-                    File(currentDir, name)
-                }
-                if (!newDir.exists()) {
-                    newDir.mkdirs()
-                }
-                performExtract(archives, customDestFolder = newDir, isSelectFolderMode = false)
+        btnCreate?.setOnClickListener {
+            val name = edtFolderName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                android.widget.Toast.makeText(ctx, getString(R.string.new_folder_empty), android.widget.Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-            .show()
+            dialog.dismiss()
+            val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
+                za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
+            } else {
+                File(currentDir, name)
+            }
+            if (!newDir.exists()) {
+                newDir.mkdirs()
+            }
+            performExtract(archives, customDestFolder = newDir, isSelectFolderMode = false)
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        edtFolderName?.requestFocus()
     }
 
     private fun performExtract(archives: List<File>, customDestFolder: File? = null, isSelectFolderMode: Boolean) {
@@ -2768,12 +2663,21 @@ class FileBrowserFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.Main) {
             val ctx = context ?: return@launch
+            val isTv = DeviceUtils.isTvDevice(ctx)
+            val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
+            val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+            val txtTitle = dialogView.findViewById<TextView>(R.id.txtProgressTitle)
+            val txtCurrentFile = dialogView.findViewById<TextView>(R.id.txtProgressCurrentFile)
+            val progressFile = dialogView.findViewById<com.google.android.material.progressindicator.LinearProgressIndicator>(R.id.progressFile)
+            txtTitle?.setText(R.string.extract_progress_title)
+            txtCurrentFile?.text = archives.first().name
+
             val progressDialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-                .setTitle(R.string.extract_progress_title)
-                .setMessage(archives.first().name)
+                .setView(dialogView)
                 .setCancelable(false)
                 .create()
             progressDialog.show()
+            progressDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
             var extractedCount = 0
             var lastError: Exception? = null
@@ -2787,7 +2691,7 @@ class FileBrowserFragment : Fragment() {
                     var success = false
                     var attempts = 0
                     withContext(Dispatchers.Main) {
-                        progressDialog.setMessage(archive.name)
+                        txtCurrentFile?.text = archive.name
                     }
 
                     val targetDest = if (isSelectFolderMode && tempExtractDir != null) {
@@ -2929,7 +2833,7 @@ class FileBrowserFragment : Fragment() {
         if (drives.isEmpty()) return
 
         val names = drives.map { it.label }.toTypedArray()
-        MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
             .setTitle(R.string.select_drive)
             .setItems(names) { _, which ->
                 val drive = drives[which]
@@ -2940,7 +2844,9 @@ class FileBrowserFragment : Fragment() {
                 storageType = resolved.second
                 loadDirectory(File(rootPath))
             }
-            .show()
+            .create()
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
     private fun toggleSearch() {
         val btnToggle = btnSearchToggle ?: return

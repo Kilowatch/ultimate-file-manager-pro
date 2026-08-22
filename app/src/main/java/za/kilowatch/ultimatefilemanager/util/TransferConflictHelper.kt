@@ -137,18 +137,16 @@ object TransferConflictHelper {
         btnKeepBoth.setOnClickListener   { pick(ConflictAction.KEEP_BOTH)  }
         btnCancel.setOnClickListener     { pick(ConflictAction.CANCEL)     }
 
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(activity)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
             .setView(view)
             .setCancelable(false)
             .create()
 
-        if (isTvMode) {
-            dialog.window?.setBackgroundDrawable(
-                android.graphics.drawable.ColorDrawable(
-                    activity.getColor(R.color.tv_bg_gradient_end)
-                )
+        dialog.window?.setBackgroundDrawable(
+            android.graphics.drawable.ColorDrawable(
+                android.graphics.Color.TRANSPARENT
             )
-        }
+        )
 
         dialog.show()
 
