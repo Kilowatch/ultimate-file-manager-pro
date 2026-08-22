@@ -421,7 +421,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 items.add(StorageItem(id = share.id, label = share.name, iconRes = R.drawable.ic_network, totalBytes = 0, usedBytes = 0, mountPath = share.docIdPrefix, isNetworkRoot = true, networkShare = share))
             }
 
-            // â”€â”€ Paired Devices (individual entries) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            // ── Paired Devices (individual entries) ────────────────────────────
             val pairingManager = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(context)
             for (device in pairingManager.getAllPairedDevices()) {
                 if (device.isConnected) {
@@ -430,10 +430,75 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
 
-            // â”€â”€ Favorites â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            // ── Favorites ──────────────────────────────────────────────────
             val favorites = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavorites(context)
             for (fav in favorites) {
-                items.add(StorageItem(id = fav.id, label = fav.label, iconRes = R.drawable.ic_star, totalBytes = 0, usedBytes = 0, mountPath = "", isFavoriteTile = true, favoritePath = fav.path, favoriteIsFolder = fav.isFolder, favoriteIsNetwork = fav.isNetwork))
+                val netShare: za.kilowatch.ultimatefilemanager.network.NetworkShare? = if (fav.isNetwork && fav.shareId != null) {
+                    if (fav.shareId.startsWith("tv_")) {
+                        val deviceId = fav.shareId.removePrefix("tv_")
+                        val device = pairingManager.getAllPairedDevices().find { it.deviceId == deviceId }
+                        if (device != null) {
+                            za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                                id = device.deviceId,
+                                name = device.name,
+                                type = za.kilowatch.ultimatefilemanager.network.ShareType.TV,
+                                host = device.lastIp,
+                                port = device.lastPort,
+                                readOnly = false
+                            )
+                        } else null
+                    } else {
+                        val net = shareRepo.getById(fav.shareId)
+                        if (net != null) {
+                            net
+                        } else {
+                            val online = onlineRepo.getById(fav.shareId)
+                            if (online != null) {
+                                za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                                    id = online.id,
+                                    name = online.displayName,
+                                    type = when (online.provider) {
+                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
+                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
+                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX
+                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
+                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
+                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
+                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
+                                    },
+                                    host = when (online.provider) {
+                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
+                                        else -> if (online.isWebDavProvider) online.webDavUrl ?: online.email else online.s3Endpoint ?: online.email
+                                    },
+                                    port = 0,
+                                    username = when (online.provider) {
+                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> online.id
+                                        else -> if (online.isWebDavProvider) online.webDavUsername ?: "" else online.s3AccessKey ?: ""
+                                    },
+                                    password = if (online.isWebDavProvider) online.webDavPassword ?: "" else online.s3SecretKey ?: "",
+                                    remotePath = "/",
+                                    readOnly = false
+                                )
+                            } else null
+                        }
+                    }
+                } else null
+
+                items.add(
+                    StorageItem(
+                        id = fav.id,
+                        label = fav.label,
+                        iconRes = R.drawable.ic_star,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "",
+                        isFavoriteTile = true,
+                        favoritePath = fav.path,
+                        favoriteIsFolder = fav.isFolder,
+                        favoriteIsNetwork = fav.isNetwork,
+                        networkShare = netShare
+                    )
+                )
             }
 
             // â”€â”€ Feature shortcut tiles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

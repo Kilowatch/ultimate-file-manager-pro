@@ -84,12 +84,12 @@ class VaultBrowserActivity : AppCompatActivity() {
         val txtProgress = progressView.findViewById<TextView>(R.id.txtVaultProgress)
         val progressBar = progressView.findViewById<ProgressBar>(R.id.progressVault)
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.vault_open)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(progressView)
             .setCancelable(false)
             .create()
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         scope.launch {
             val success = withContext(Dispatchers.IO) {
@@ -134,12 +134,12 @@ class VaultBrowserActivity : AppCompatActivity() {
         val txtProgress = progressView.findViewById<TextView>(R.id.txtVaultProgress)
         val progressBar = progressView.findViewById<ProgressBar>(R.id.progressVault)
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.vault_encrypt)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(progressView)
             .setCancelable(false)
             .create()
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         scope.launch {
             val success = withContext(Dispatchers.IO) {

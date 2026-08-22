@@ -489,14 +489,35 @@ class ZipViewerActivity : AppCompatActivity() {
         } else {
             getString(R.string.selection_count, items.size)
         }
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(R.string.confirm_delete_archive_entry_title)
-            .setMessage(msg)
-            .setPositiveButton(R.string.action_delete) { _, _ ->
-                doDeleteZipItems(items)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(R.drawable.ic_delete)
+        txtTitle?.setText(R.string.confirm_delete_archive_entry_title)
+        txtMessage?.text = msg
+        btnPositive?.setText(R.string.action_delete)
+        btnNegative?.setText(R.string.cancel)
+        btnNegative?.visibility = View.VISIBLE
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            doDeleteZipItems(items)
+        }
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun doDeleteZipItems(items: List<ZipItem>) {
@@ -681,14 +702,35 @@ class ZipViewerActivity : AppCompatActivity() {
     }
 
     private fun confirmDeleteZipItem(item: ZipItem) {
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(R.string.confirm_delete_archive_entry_title)
-            .setMessage(getString(R.string.confirm_delete_archive_entry_msg, item.name))
-            .setPositiveButton(R.string.action_delete) { _, _ ->
-                doDeleteZipItem(item)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(R.drawable.ic_delete)
+        txtTitle?.setText(R.string.confirm_delete_archive_entry_title)
+        txtMessage?.text = getString(R.string.confirm_delete_archive_entry_msg, item.name)
+        btnPositive?.setText(R.string.action_delete)
+        btnNegative?.setText(R.string.cancel)
+        btnNegative?.visibility = View.VISIBLE
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            doDeleteZipItem(item)
+        }
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun doDeleteZipItem(item: ZipItem) {
@@ -833,12 +875,23 @@ class ZipViewerActivity : AppCompatActivity() {
 
             holder.txtName.text = item.name
 
+            val cardView = holder.itemView as? com.google.android.material.card.MaterialCardView
             if (isSelected) {
-                holder.itemView.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
+                if (cardView != null) {
+                    cardView.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
+                    cardView.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.ufm_accent)
+                } else {
+                    holder.itemView.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
+                }
             } else {
-                val typedValue = android.util.TypedValue()
-                context.theme.resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true)
-                holder.itemView.setBackgroundResource(typedValue.resourceId)
+                if (cardView != null) {
+                    cardView.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.mobile_glass_card))
+                    cardView.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.mobile_glass_stroke)
+                } else {
+                    val typedValue = android.util.TypedValue()
+                    context.theme.resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true)
+                    holder.itemView.setBackgroundResource(typedValue.resourceId)
+                }
             }
 
             holder.icon.setOnClickListener {

@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Mobile Extract Location Dialog — BottomSheet style.
-  Background uses bg_bottom_sheet which is ?attr/colorSurface → fully theme-aware.
--->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Mobile Extract Location Dialog - UFM Standard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_bottom_sheet">
+    android:gravity="center_horizontal"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="24dp"
+    android:background="@drawable/bg_bottom_sheet_glass">
 
     <!-- Drag handle -->
     <View
         android:layout_width="40dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/ufm_text_secondary"
-        android:alpha="0.3"
+        android:layout_marginBottom="16dp"
+        android:background="@color/mobile_glass_stroke"
         android:clipToOutline="true" />
 
-    <!-- Icon -->
-    <ImageView
+    <!-- 56dp Frosted Folder Badge -->
+    <FrameLayout
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="12dp"
-        android:src="@drawable/ic_folder"
-        android:tint="?attr/colorPrimary"
-        android:contentDescription="@null" />
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_folder"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
 
     <!-- Title -->
     <TextView
@@ -38,13 +44,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/extract_location_title"
-        android:textColor="@color/ufm_text_primary"
+        android:textColor="@color/mobile_text_primary"
         android:textSize="20sp"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="sans-serif-black"
         android:gravity="center"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:paddingBottom="8dp" />
+        android:layout_marginBottom="8dp" />
 
     <!-- Body -->
     <TextView
@@ -52,40 +56,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/extract_location_body"
-        android:textColor="@color/ufm_text_secondary"
-        android:textSize="14sp"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13.5sp"
         android:gravity="center"
         android:lineSpacingMultiplier="1.3"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
-        android:paddingBottom="24dp" />
+        android:layout_marginBottom="24dp" />
 
     <!-- Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:paddingBottom="24dp">
+        android:orientation="vertical">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSetLocation"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="50dp"
             android:text="@string/extract_set_location"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
             app:cornerRadius="12dp"
-            android:backgroundTint="?attr/colorPrimary"
+            app:backgroundTint="?attr/colorPrimary"
             android:layout_marginBottom="8dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="@string/cancel"
             style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:textColor="@color/ufm_text_secondary" />
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="@string/cancel"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp" />
 
     </LinearLayout>
 

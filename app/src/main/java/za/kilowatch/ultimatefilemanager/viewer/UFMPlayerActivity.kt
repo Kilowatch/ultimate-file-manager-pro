@@ -764,12 +764,11 @@ class UFMPlayerActivity : AppCompatActivity() {
                     pv.setPadding(0, 0, 0, if (isTv) 0 else systemBars.bottom)
                 }
 
-                val btnBack = findViewById<View>(R.id.btnBack)
-                if (btnBack != null) {
-                    val lp = btnBack.layoutParams as android.view.ViewGroup.MarginLayoutParams
-                    lp.topMargin = if (isTv) dp(24) else systemBars.top
-                    lp.leftMargin = if (isTv) dp(24) else systemBars.left
-                    btnBack.layoutParams = lp
+                val topBar = findViewById<View>(R.id.topBar)
+                if (topBar != null) {
+                    val topPadding = if (isTv) dp(12) else (systemBars.top + dp(8))
+                    val sidePadding = if (isTv) dp(24) else (systemBars.left + dp(16))
+                    topBar.setPadding(sidePadding, topPadding, sidePadding, dp(8))
                 }
 
                 val cl = findViewById<View>(R.id.controlsLayout)

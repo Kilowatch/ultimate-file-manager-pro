@@ -54,34 +54,22 @@ class ConvertToPdfDialog : DialogFragment() {
             tilConfirmPassword?.visibility = visibility
         }
 
+        dialogView.findViewById<View>(R.id.btnConvert)?.setOnClickListener {
+            runConversion()
+        }
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dismiss()
+        }
+
         val builder = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
             .setView(dialogView)
-
-        if (!isTv) {
-            // Buttons added via builder — auto-dismiss is overridden in onStart()
-            builder.setPositiveButton(R.string.pdf_convert_btn, null)
-            builder.setNegativeButton(R.string.cancel, null)
-        } else {
-            // TV: button is in the layout; listener set here since onStart override handles mobile only
-            dialogView.findViewById<Button>(R.id.btnConvert)?.setOnClickListener {
-                runConversion()
-            }
-        }
 
         return builder.create()
     }
 
-    /**
-     * Override the positive button click AFTER the dialog is shown to prevent
-     * MaterialAlertDialogBuilder from auto-dismissing on validation failure.
-     */
     override fun onStart() {
         super.onStart()
-        if (!isTv) {
-            (dialog as? AlertDialog)
-                ?.getButton(AlertDialog.BUTTON_POSITIVE)
-                ?.setOnClickListener { runConversion() }
-        }
+        dialog?.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun runConversion() {
@@ -121,11 +109,12 @@ class ConvertToPdfDialog : DialogFragment() {
         progressView.findViewById<android.widget.TextView>(R.id.txtFilename)?.text =
             activity.getString(R.string.pdf_converting_desc, "$filename.pdf")
 
-        val progressDialog = android.app.AlertDialog.Builder(activity)
+        val progressDialog = MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
             .setView(progressView)
             .setCancelable(false)
             .create()
         progressDialog.show()
+        progressDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         // Activity scope survives fragment dismissal
         activity.lifecycleScope.launch {

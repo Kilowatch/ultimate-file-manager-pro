@@ -47,10 +47,32 @@ class ManageFavoritesAdapter(
         private val card: MaterialCardView = itemView.findViewById(R.id.cardFavorite)
 
         fun bind(item: FavoritesManager.FavoriteItem) {
-            txtLabel.text = item.label
-            txtPath.text = item.path
-
             val ctx = itemView.context
+            txtLabel.text = item.label
+
+            val displayPath = if (item.isNetwork && item.shareId != null) {
+                val netRepo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(ctx)
+                val netShare = netRepo.getById(item.shareId)
+                if (netShare != null) {
+                    if (netShare.type == za.kilowatch.ultimatefilemanager.network.ShareType.SMB) {
+                        val cleanPath = item.path.trimStart('/').replace('/', '\\')
+                        "\\\\${netShare.host}\\$cleanPath"
+                    } else {
+                        "${netShare.name}:${item.path}"
+                    }
+                } else {
+                    val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(ctx)
+                    val onlineShare = onlineRepo.getById(item.shareId)
+                    if (onlineShare != null) {
+                        "${onlineShare.displayName}:${item.path}"
+                    } else {
+                        item.path
+                    }
+                }
+            } else {
+                item.path
+            }
+            txtPath.text = displayPath
             val iconTint = if (isTv) ctx.getColor(R.color.tv_accent) else ThemeColors.primary(ctx)
             if (item.isFolder) {
                 imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(ctx, "folder_default", R.drawable.ic_folder))

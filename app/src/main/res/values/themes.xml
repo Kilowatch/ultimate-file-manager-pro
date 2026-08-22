@@ -247,7 +247,7 @@
     </style>
 
     <!-- Player theme: Always black background to avoid glitches and bleed-through -->
-    <style name="Theme.UFM.Player" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.UFM.Player" parent="Theme.UltimateFileManager">
         <item name="android:windowBackground">@android:color/black</item>
         <item name="android:colorBackground">@android:color/black</item>
         <item name="android:windowIsTranslucent">false</item>
@@ -270,7 +270,7 @@
         <item name="android:navigationBarColor">#FF000000</item>
     </style>
 
-    <style name="Theme.UFM.Translucent" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.UFM.Translucent" parent="Theme.UltimateFileManager">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>

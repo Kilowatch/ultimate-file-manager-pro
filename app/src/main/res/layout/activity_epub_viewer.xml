@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Mobile EPUB Viewer -->
+<!-- Mobile EPUB Viewer - UFM Standard -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,46 +7,49 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient"
+    android:background="?android:attr/colorBackground"
     tools:context=".viewer.EpubViewerActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- 56dp Fixed Glass Header Bar -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button in 40dp Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_back"
                 android:contentDescription="@string/cd_back"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
+        <!-- Title -->
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_md"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/mobile_text_primary"
             android:textSize="18sp"
             android:fontFamily="sans-serif-black"
@@ -54,18 +57,24 @@
             android:ellipsize="middle"
             tools:text="My Book Title" />
 
-        <ImageView
-            android:id="@+id/btnToc"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="@dimen/margin_sm"
-            android:padding="10dp"
-            android:src="@drawable/ic_view_list"
-            android:contentDescription="@string/epub_table_of_contents"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:tint="@color/mobile_icon_tint" />
+        <!-- Table of Contents Button -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnToc"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_view_list"
+                android:contentDescription="@string/epub_table_of_contents"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -78,9 +87,7 @@
         android:indeterminate="true"
         android:indeterminateTint="?attr/colorPrimary"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <!-- WebView for chapter content -->
     <WebView
@@ -96,47 +103,61 @@
     <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="48dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/btnPrevChapter"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/epub_prev_chapter"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:tint="@color/mobile_icon_tint" />
+        <FrameLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnPrevChapter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/epub_prev_chapter"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/txtChapterInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="14sp"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13.5sp"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
             tools:text="Chapter 1 of 12" />
 
-        <ImageView
-            android:id="@+id/btnNextChapter"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_arrow_forward"
-            android:contentDescription="@string/epub_next_chapter"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:tint="@color/mobile_icon_tint" />
+        <FrameLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnNextChapter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_forward"
+                android:contentDescription="@string/epub_next_chapter"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
     </LinearLayout>
 

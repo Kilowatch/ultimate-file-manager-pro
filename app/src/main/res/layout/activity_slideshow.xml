@@ -38,7 +38,7 @@
             android:id="@+id/btnBack"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent"
+            android:background="@drawable/bg_btn_icon_frosted"
             android:clickable="true"
             android:focusable="true">
 
@@ -47,7 +47,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="@android:color/white" />
+                app:tint="?attr/colorPrimary" />
         </FrameLayout>
 
         <!-- Title & Info -->

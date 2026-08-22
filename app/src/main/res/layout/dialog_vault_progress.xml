@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Vault Progress Dialog - UFM Standard -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     android:padding="24dp"
-    android:background="@color/tv_bg_gradient_end">
+    android:background="@drawable/bg_dialog_glass">
 
+    <!-- 56dp Frosted Badge -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_lock"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Progress Status Text -->
     <TextView
         android:id="@+id/txtVaultProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/tv_text_primary"
-        android:textSize="@dimen/text_sm"
-        android:text="@string/decrypting_00" />
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="15.5sp"
+        android:fontFamily="sans-serif-bold"
+        android:gravity="center"
+        android:text="@string/decrypting_00"
+        android:layout_marginBottom="16dp" />
 
+    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progressVault"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="6dp"
-        android:layout_marginTop="12dp"
         android:indeterminate="false"
         android:max="100"
-        android:progressTint="@color/tv_button_focused_yellow"
-        android:progressBackgroundTint="#33FFFFFF" />
+        android:progressTint="?attr/colorPrimary"
+        android:progressBackgroundTint="@color/mobile_glass_stroke" />
 
 </LinearLayout>

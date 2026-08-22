@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Mobile ZIP Viewer -->
+<!-- Mobile ZIP Viewer - UFM Standard -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,53 +7,56 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient"
+    android:background="?android:attr/colorBackground"
     tools:context=".viewer.ZipViewerActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- 56dp Fixed Glass Header Bar -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button in 40dp Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_back"
                 android:contentDescription="@string/cd_back"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
+        <!-- Title + Breadcrumb -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="8dp">
 
             <TextView
                 android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:fontFamily="sans-serif-black"
                 android:singleLine="true"
                 android:ellipsize="middle"
@@ -64,19 +67,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_text_secondary"
-                android:textSize="12sp"
+                android:textSize="11.5sp"
                 android:singleLine="true"
                 android:visibility="gone"
                 tools:text="/path/inside/zip/" />
         </LinearLayout>
 
+        <!-- Extract All Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnExtractAll"
+            style="@style/Widget.Material3Expressive.Button.TonalButton"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="36dp"
+            android:minHeight="36dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/extract_all"
+            android:textColor="?attr/colorPrimary"
             android:textSize="12sp"
-            style="@style/Widget.Material3Expressive.Button.TonalButton" />
+            android:fontFamily="sans-serif-bold"
+            app:cornerRadius="10dp"
+            app:icon="@drawable/ic_extract"
+            app:iconTint="?attr/colorPrimary"
+            app:iconSize="16dp"
+            app:iconPadding="4dp" />
     </LinearLayout>
 
     <!-- Loading progress -->
@@ -96,8 +112,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingVertical="@dimen/margin_xs"
-        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        android:paddingVertical="8dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -110,17 +126,33 @@
         android:orientation="vertical"
         android:gravity="center"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginBottom="14dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_file_archive"
+                app:tint="@color/mobile_icon_tint"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_folder"
             android:textColor="@color/mobile_text_secondary"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium" />
     </LinearLayout>
 
     <!-- Archive Tools FAB -->
@@ -128,12 +160,15 @@
         android:id="@+id/fabArchiveTools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_md"
+        android:layout_margin="16dp"
         android:text="@string/action_tools"
-        android:textColor="?attr/colorOnPrimary"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-bold"
         app:icon="@drawable/ic_settings"
-        app:iconTint="?attr/colorOnPrimary"
+        app:iconTint="@color/white"
         app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="16dp"
+        app:elevation="4dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

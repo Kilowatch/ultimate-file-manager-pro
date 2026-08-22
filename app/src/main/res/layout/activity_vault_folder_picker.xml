@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Mobile Vault Folder Picker — premium dark glassmorphism design
-    Same dark-navy theme as activity_welcome: bg_mobile_gradient background,
-    glass header bar with back button and title.
--->
+<!-- Mobile Vault Folder Picker - UFM Standard -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,49 +7,47 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient"
+    android:background="?android:attr/colorBackground"
     tools:context=".storage.VaultFolderPickerActivity">
 
-    <!-- Header Bar -->
+    <!-- 56dp Fixed Glass Header Bar -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="14dp"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Back / Up Button -->
-        <ImageView
-            android:id="@+id/btnPickerBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/cd_back"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@color/mobile_icon_tint" />
+        <!-- Back / Up Button in 40dp Frosted Squircle -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
-        <!-- Accent divider -->
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
+            <ImageView
+                android:id="@+id/btnPickerBack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
         <!-- Title + Subtitle -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="14dp"
             android:orientation="vertical">
 
             <TextView
@@ -61,9 +55,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/vault_select_folder"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black"
-                android:letterSpacing="0.01"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -84,19 +77,21 @@
     <!-- Select This Folder button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSelectCurrent"
+        style="@style/Widget.Material3Expressive.Button"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginHorizontal="@dimen/margin_md"
-        android:layout_marginTop="@dimen/margin_md"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
         android:text="@string/vault_select_current"
-        android:textColor="#FFFFFFFF"
-        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:textSize="14.5sp"
+        android:fontFamily="sans-serif-bold"
         app:icon="@drawable/ic_folder"
-        app:iconTint="#FFFFFFFF"
+        app:iconTint="@color/white"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
         app:backgroundTint="?attr/colorPrimary"
-        app:cornerRadius="26dp"
+        app:cornerRadius="12dp"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -106,13 +101,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingVertical="@dimen/margin_xs"
+        android:paddingVertical="8dp"
         app:layout_constraintTop_toBottomOf="@id/btnSelectCurrent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_vault_folder" />
 
+    <!-- Empty State -->
     <LinearLayout
         android:id="@+id/layoutEmpty"
         android:layout_width="wrap_content"
@@ -125,21 +121,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="@dimen/icon_size_xl"
-            android:layout_height="@dimen/icon_size_xl"
-            android:src="@drawable/ic_folder"
-            android:alpha="0.3"
-            app:tint="@color/mobile_icon_tint"
-            android:contentDescription="@null" />
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginBottom="14dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_folder"
+                app:tint="@color/mobile_icon_tint"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_md"
             android:text="@string/file_empty_folder"
             android:textColor="@color/mobile_text_secondary"
-            android:textSize="16sp" />
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium" />
     </LinearLayout>
 
     <!-- Hidden toolbar stub for compatibility -->

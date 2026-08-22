@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- One-time recovery code display — shown after PIN is set. Cannot be dismissed without tapping Done. -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- One-time recovery code display - UFM Standard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:padding="24dp"
-    android:background="@color/tv_bg_gradient_end">
+    android:background="@drawable/bg_dialog_glass">
 
-    <!-- Lock icon -->
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_lock"
-        android:tint="@color/tv_button_focused_yellow"
-        android:layout_marginBottom="12dp" />
+    <!-- 56dp Frosted Lock Badge -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_lock"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
 
     <!-- Title -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/vault_recovery_code_title"
-        android:textColor="@color/tv_text_primary"
-        android:textSize="18sp"
-        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
         android:gravity="center"
         android:layout_marginBottom="8dp" />
 
@@ -32,35 +43,64 @@
         android:id="@+id/txtRecoveryBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/tv_text_secondary"
+        android:textColor="@color/mobile_text_secondary"
         android:textSize="13sp"
         android:gravity="center"
         android:lineSpacingMultiplier="1.3"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="18dp"
+        tools:text="@string/vault_recovery_code_body" />
 
-    <!-- The code itself — large monospace font -->
-    <TextView
-        android:id="@+id/txtCode"
+    <!-- The code itself — large monospace font with glass card container -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="monospace"
-        android:textSize="22sp"
-        android:textColor="@color/tv_button_focused_yellow"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:letterSpacing="0.12"
-        android:background="#1AFFFFFF"
-        android:padding="12dp"
-        android:layout_marginBottom="12dp" />
+        app:cardBackgroundColor="@color/mobile_glass_card"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/mobile_glass_stroke"
+        android:layout_marginBottom="18dp">
 
-    <!-- Copy button -->
-    <Button
+        <TextView
+            android:id="@+id/txtCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:textColor="?attr/colorPrimary"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:letterSpacing="0.12"
+            android:paddingVertical="14dp"
+            android:paddingHorizontal="8dp"
+            tools:text="ABCD1234EFGH5678" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Vertically Stacked Action Buttons -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCopyCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#26FFFFFF"
-        android:textColor="@color/tv_text_primary"
-        android:textSize="13sp"
-        android:layout_marginBottom="4dp" />
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/vault_recovery_code_copy"
+        android:textColor="@color/white"
+        android:textSize="14.5sp"
+        android:fontFamily="sans-serif-bold"
+        app:icon="@drawable/ic_copy"
+        app:iconTint="@color/white"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        android:layout_marginBottom="6dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDone"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@string/vault_recovery_code_done"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp" />
 
 </LinearLayout>

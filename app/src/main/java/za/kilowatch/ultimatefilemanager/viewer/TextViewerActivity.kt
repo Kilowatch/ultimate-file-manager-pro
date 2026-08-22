@@ -65,7 +65,7 @@ class TextViewerActivity : AppCompatActivity() {
     private lateinit var btnNextPage: ImageView
     private lateinit var txtPageIndicator: TextView
     private lateinit var btnEdit: ImageView
-    private lateinit var btnSave: ImageView
+    private lateinit var btnSave: View
 
     private var textSize = 13f
     private lateinit var scaleDetector: ScaleGestureDetector
@@ -466,8 +466,7 @@ class TextViewerActivity : AppCompatActivity() {
 
         val btnSave = dialogView.findViewById<android.view.View>(R.id.btnConfirmSave)
         val btnCancel = dialogView.findViewById<android.view.View>(R.id.btnCancelSave)
-
-        val dialog = AlertDialog.Builder(this)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
@@ -484,6 +483,7 @@ class TextViewerActivity : AppCompatActivity() {
         btnCancel?.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun saveFile(content: String, fileName: String) {
@@ -494,16 +494,37 @@ class TextViewerActivity : AppCompatActivity() {
 
                 if (targetFile.absolutePath == originalFilePath && targetFile.length() > 0L) {
                     withContext(Dispatchers.Main) {
-                        AlertDialog.Builder(this@TextViewerActivity)
-                            .setTitle(R.string.overwrite_dialog_title)
-                            .setMessage(getString(R.string.overwrite_dialog_message, fileName))
-                            .setPositiveButton(R.string.conflict_overwrite) { _, _ ->
-                                lifecycleScope.launch(Dispatchers.IO) {
-                                    doSave(content, targetFile)
-                                }
+                        val confirmView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+                        val imgIcon = confirmView.findViewById<ImageView>(R.id.imgDialogIcon)
+                        val txtTitle = confirmView.findViewById<TextView>(R.id.txtDialogTitle)
+                        val txtMessage = confirmView.findViewById<TextView>(R.id.txtDialogMessage)
+                        val btnPositive = confirmView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+                        val btnNegative = confirmView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+
+                        imgIcon?.setImageResource(R.drawable.ic_warning)
+                        txtTitle?.setText(R.string.overwrite_dialog_title)
+                        txtMessage?.text = getString(R.string.overwrite_dialog_message, fileName)
+                        btnPositive?.setText(R.string.conflict_overwrite)
+                        btnNegative?.setText(R.string.cancel)
+                        btnNegative?.visibility = View.VISIBLE
+
+                        val confirmDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this@TextViewerActivity, R.style.UFM_Dialog)
+                            .setView(confirmView)
+                            .setCancelable(true)
+                            .create()
+
+                        btnPositive?.setOnClickListener {
+                            confirmDialog.dismiss()
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                doSave(content, targetFile)
                             }
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .show()
+                        }
+                        btnNegative?.setOnClickListener {
+                            confirmDialog.dismiss()
+                        }
+
+                        confirmDialog.show()
+                        confirmDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                     }
                 } else {
                     doSave(content, targetFile)

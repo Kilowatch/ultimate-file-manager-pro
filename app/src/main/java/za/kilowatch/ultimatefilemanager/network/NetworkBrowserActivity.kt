@@ -2199,9 +2199,24 @@ class NetworkBrowserActivity : AppCompatActivity() {
             if (name.isEmpty()) {
                 showPremiumSnackbar(getString(R.string.favorite_name_empty))
             } else {
+                val effectivePath = if (share.type == ShareType.SMB && share.isServerMode) {
+                    val shareName = share.remotePath.trimStart('/')
+                    if (shareName.isNotEmpty() && !file.path.startsWith("/$shareName/") && file.path != "/$shareName") {
+                        val sub = file.path.trimStart('/')
+                        if (sub.isEmpty()) "/$shareName" else "/$shareName/$sub"
+                    } else if (shareName.isEmpty() && currentPath.isNotEmpty() && !file.path.startsWith("/${currentPath.trimStart('/')}")) {
+                        val fullPrefix = currentPath.trimStart('/')
+                        val sub = file.name
+                        if (fullPrefix.isEmpty()) "/$sub" else "/$fullPrefix/$sub"
+                    } else {
+                        file.path
+                    }
+                } else {
+                    file.path
+                }
                 val favorite = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.FavoriteItem(
                     id = "fav_${System.currentTimeMillis()}",
-                    path = file.path,
+                    path = effectivePath,
                     label = name,
                     isFolder = file.isDirectory,
                     isNetwork = true,

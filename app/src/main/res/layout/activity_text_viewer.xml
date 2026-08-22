@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Mobile Text Viewer — premium dark glassmorphism design -->
+<!-- Mobile Text Viewer - UFM Standard -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,111 +7,133 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient"
+    android:background="?android:attr/colorBackground"
     tools:context=".viewer.TextViewerActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- 56dp Fixed Glass Header Bar -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button in 40dp Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_back"
                 android:contentDescription="@string/cd_back"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/btnConvertToPdf"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/bg_icon_circle_accent">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_file_pdf"
-                android:contentDescription="@string/pdf_convert_title"
-                app:tint="@android:color/white" />
-        </FrameLayout>
-
-        <!-- Search in document button -->
-        <ImageView
-            android:id="@+id/btnSearch"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="12dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_search"
-            android:contentDescription="@string/search_in_document"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@color/mobile_icon_tint" />
-
-        <!-- Edit button -->
-        <ImageView
-            android:id="@+id/btnEdit"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_edit"
-            android:contentDescription="@string/btn_edit_toggle"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@android:color/white" />
-
-        <!-- Save button (hidden by default) -->
-        <ImageView
-            android:id="@+id/btnSave"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_save"
-            android:contentDescription="@string/btn_save"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@android:color/white" />
-
+        <!-- Title -->
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_md"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/mobile_text_primary"
             android:textSize="18sp"
             android:fontFamily="sans-serif-black"
             android:singleLine="true"
             android:ellipsize="middle"
             tools:text="document.txt" />
+
+        <!-- Convert to PDF Button -->
+        <FrameLayout
+            android:id="@+id/btnConvertToPdf"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_file_pdf"
+                android:contentDescription="@string/pdf_convert_title"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <!-- Search in document button -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_search"
+                android:contentDescription="@string/search_in_document"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <!-- Edit button -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="@string/btn_edit_toggle"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <!-- Save button (hidden by default) -->
+        <FrameLayout
+            android:id="@+id/btnSave"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_save"
+                android:contentDescription="@string/btn_save"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
     </LinearLayout>
 
     <!-- Search Bar — hidden by default, toggled by btnSearch -->
@@ -121,7 +143,7 @@
         android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -133,30 +155,32 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_search"
-            app:tint="@color/mobile_text_secondary" />
+            app:tint="@color/mobile_text_secondary"
+            android:importantForAccessibility="no" />
 
         <EditText
             android:id="@+id/edtSearchInput"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginHorizontal="8dp"
+            android:layout_marginHorizontal="10dp"
             android:background="@null"
             android:singleLine="true"
             android:gravity="center_vertical"
             android:imeOptions="actionSearch"
             android:inputType="textNoSuggestions"
             android:textColor="@color/mobile_text_primary"
-            android:textColorHint="?attr/colorOnSurfaceVariant"
+            android:textColorHint="@color/mobile_text_secondary"
             android:hint="@string/search_in_document_hint" />
 
         <TextView
             android:id="@+id/txtSearchCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="60dp"
+            android:minWidth="50dp"
             android:gravity="center"
-            android:textSize="13sp"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@color/mobile_text_secondary"
             tools:text="0 of 0" />
 
@@ -164,31 +188,34 @@
             android:id="@+id/btnSearchUp"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:padding="6dp"
+            android:padding="8dp"
             android:src="@drawable/ic_arrow_up"
             android:clickable="true"
             android:focusable="true"
-            app:tint="@color/mobile_text_secondary" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
 
         <ImageView
             android:id="@+id/btnSearchDown"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:padding="6dp"
+            android:padding="8dp"
             android:src="@drawable/ic_arrow_down"
             android:clickable="true"
             android:focusable="true"
-            app:tint="@color/mobile_text_secondary" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
 
         <ImageView
             android:id="@+id/btnSearchClose"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:padding="6dp"
+            android:padding="8dp"
             android:src="@drawable/ic_close"
             android:clickable="true"
             android:focusable="true"
-            app:tint="@color/mobile_text_secondary" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
     </LinearLayout>
 
     <!-- Loading progress -->
@@ -234,9 +261,9 @@
                     android:paddingVertical="12dp"
                     android:fontFamily="monospace"
                     android:textSize="13sp"
-                    android:textColor="#55FFFFFF"
+                    android:textColor="#66FFFFFF"
                     android:gravity="end"
-                    android:background="#10FFFFFF"
+                    android:background="#0AFFFFFF"
                     android:visibility="gone" />
 
                 <!-- File content (EditText for editing) -->
@@ -261,7 +288,7 @@
     <LinearLayout
         android:id="@+id/paginationBar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:orientation="horizontal"
         android:gravity="center"
         android:visibility="gone"
@@ -270,36 +297,51 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/btnPrevPage"
+        <FrameLayout
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/back"
-            android:clickable="true"
-            android:focusable="true"
-            app:tint="@color/mobile_text_secondary" />
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnPrevPage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/txtPageIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="14sp"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13.5sp"
+            android:fontFamily="sans-serif-medium"
             tools:text="Page 1 / 5" />
 
-        <ImageView
-            android:id="@+id/btnNextPage"
+        <FrameLayout
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_arrow_forward"
-            android:contentDescription="@string/cd_back"
-            android:clickable="true"
-            android:focusable="true"
-            app:tint="@color/mobile_text_secondary" />
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnNextPage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_forward"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
     </LinearLayout>
 

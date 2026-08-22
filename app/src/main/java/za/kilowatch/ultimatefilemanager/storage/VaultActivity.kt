@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.Context
@@ -351,67 +353,54 @@ class VaultActivity : AppCompatActivity() {
                 }
 
                 // Step 3: irrecoverable warning
-                val bgColor   = getColor(R.color.tv_bg_gradient_end)
-                val white     = getColor(R.color.tv_text_primary)
-                val black     = getColor(R.color.tv_button_focused_yellow_text)
-                val yellow    = getColor(R.color.tv_button_focused_yellow)
-                val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
-                val glassCsl  = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+                val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+                val imgIcon = dialogView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+                val txtTitle = dialogView.findViewById<android.widget.TextView>(R.id.txtDialogTitle)
+                val txtMessage = dialogView.findViewById<android.widget.TextView>(R.id.txtDialogMessage)
+                val btnPositive = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+                val btnNegative = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
 
-                val warningDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(
-                    this,
-                    com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+                imgIcon?.setImageResource(R.drawable.ic_lock)
+                txtTitle?.setText(R.string.vault_pin_warning_title)
+                txtMessage?.text = getString(
+                    if (generateRecoveryCode) R.string.vault_pin_warning_message
+                    else R.string.vault_pin_warning_message_change
                 )
-                    .setTitle(getString(R.string.vault_pin_warning_title))
-                    .setMessage(getString(
-                        if (generateRecoveryCode) R.string.vault_pin_warning_message
-                        else R.string.vault_pin_warning_message_change
-                    ))
-                    .setIcon(R.drawable.ic_lock)
-                    .setPositiveButton(getString(R.string.vault_pin_warning_confirm), null)
-                    .setNegativeButton(android.R.string.cancel, null)
+                btnPositive?.setText(R.string.vault_pin_warning_confirm)
+                btnNegative?.setText(R.string.cancel)
+                btnNegative?.visibility = View.VISIBLE
+
+                val warningDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .setCancelable(true)
                     .create()
 
-                warningDialog.show()
-                warningDialog.window?.setBackgroundDrawable(
-                    android.graphics.drawable.ColorDrawable(bgColor)
-                )
-                val titleView = warningDialog.findViewById<android.widget.TextView>(
-                    com.google.android.material.R.id.alertTitle
-                ) ?: warningDialog.findViewById(
-                    resources.getIdentifier("alertTitle", "id", "android")
-                )
-                titleView?.setTextColor(white)
-                warningDialog.findViewById<android.widget.TextView>(android.R.id.message)
-                    ?.setTextColor(white)
-                warningDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-                    backgroundTintList = yellowCsl; setTextColor(black)
-                    setOnClickListener {
-                        warningDialog.dismiss()
-                        scope.launch {
-                            // Save PIN with PBKDF2 off main thread
-                            savePinHash(pbkdf2(pin))
-                            onConfirmed?.invoke()
+                btnPositive?.setOnClickListener {
+                    warningDialog.dismiss()
+                    scope.launch {
+                        // Save PIN with PBKDF2 off main thread
+                        savePinHash(pbkdf2(pin))
+                        onConfirmed?.invoke()
 
-                            if (generateRecoveryCode) {
-                                showNewRecoveryCode(bgColor, white, black, yellow, yellowCsl, glassCsl)
-                            }
+                        if (generateRecoveryCode) {
+                            showNewRecoveryCode()
                         }
                     }
                 }
-                warningDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-                    backgroundTintList = glassCsl; setTextColor(white)
+                btnNegative?.setOnClickListener {
+                    warningDialog.dismiss()
                 }
+
+                warningDialog.show()
+                warningDialog.window?.setBackgroundDrawable(
+                    android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+                )
             }
         }
     }
 
     /** Generates, stores, and displays the one-time recovery code. */
-    private fun showNewRecoveryCode(
-        bgColor: Int, white: Int, black: Int, yellow: Int,
-        yellowCsl: android.content.res.ColorStateList,
-        glassCsl: android.content.res.ColorStateList
-    ) {
+    private fun showNewRecoveryCode() {
         scope.launch {
             // Generate 16-char alphanumeric code & store PBKDF2 hash on background thread
             val code = (1..16).map { RECOVERY_CHARS.random() }.joinToString("")
@@ -419,21 +408,20 @@ class VaultActivity : AppCompatActivity() {
             saveRecoveryHash(hash)
 
             // Build a premium one-time display dialog
-            val ctx = this@VaultActivity
             val dialogView = layoutInflater.inflate(R.layout.dialog_recovery_code_display, null)
-            val txtCode   = dialogView.findViewById<android.widget.TextView>(R.id.txtCode)
-            val txtBody   = dialogView.findViewById<android.widget.TextView>(R.id.txtRecoveryBody)
-            val btnCopy   = dialogView.findViewById<android.widget.Button>(R.id.btnCopyCode)
+            val txtCode = dialogView.findViewById<android.widget.TextView>(R.id.txtCode)
+            val txtBody = dialogView.findViewById<android.widget.TextView>(R.id.txtRecoveryBody)
+            val btnCopy = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCopyCode)
+            val btnDone = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDone)
 
             txtCode.text = code
             txtBody.text = getString(R.string.vault_recovery_code_body)
-            btnCopy.text = getString(R.string.vault_recovery_code_copy)
-            btnCopy.backgroundTintList = glassCsl
-            btnCopy.setTextColor(white)
-            btnCopy.setOnFocusChangeListener { _, hasFocus ->
-                btnCopy.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                btnCopy.setTextColor(if (hasFocus) black else white)
-            }
+
+            val codeDialog = MaterialAlertDialogBuilder(this@VaultActivity, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(false)
+                .create()
+
             btnCopy.setOnClickListener {
                 val cm = getSystemService(android.content.ClipboardManager::class.java)
                 cm.setPrimaryClip(android.content.ClipData.newPlainText(
@@ -460,14 +448,9 @@ class VaultActivity : AppCompatActivity() {
                 showSnackbar(getString(R.string.vault_recovery_code_copied_autoclear))
             }
 
-            val codeDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(
-                ctx,
-                com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-            )
-                .setView(dialogView)
-                .setPositiveButton(getString(R.string.vault_recovery_code_done), null)
-                .setCancelable(false)
-                .create()
+            btnDone.setOnClickListener {
+                codeDialog.dismiss()
+            }
 
             codeDialog.setOnDismissListener {
                 clipboardClearRunnable?.let { clipboardClearHandler?.removeCallbacks(it) }
@@ -475,11 +458,8 @@ class VaultActivity : AppCompatActivity() {
             }
             codeDialog.show()
             codeDialog.window?.setBackgroundDrawable(
-                android.graphics.drawable.ColorDrawable(bgColor)
+                android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
             )
-            codeDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-                backgroundTintList = yellowCsl; setTextColor(black)
-            }
         }
     }
 
@@ -490,18 +470,13 @@ class VaultActivity : AppCompatActivity() {
             return
         }
 
-        val bgColor   = getColor(R.color.tv_bg_gradient_end)
-        val white     = getColor(R.color.tv_text_primary)
-        val black     = getColor(R.color.tv_button_focused_yellow_text)
-        val yellow    = getColor(R.color.tv_button_focused_yellow)
-        val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
-        val glassCsl  = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-
         // Build entry dialog
         val entryView = layoutInflater.inflate(R.layout.dialog_recovery_code_entry, null)
-        val etCode    = entryView.findViewById<android.widget.EditText>(R.id.etRecoveryCode)
+        val etCode = entryView.findViewById<android.widget.EditText>(R.id.etRecoveryCode)
         val txtCounter = entryView.findViewById<android.widget.TextView>(R.id.txtCounter)
-        val txtErr    = entryView.findViewById<android.widget.TextView>(R.id.txtRecoveryError)
+        val txtErr = entryView.findViewById<android.widget.TextView>(R.id.txtRecoveryError)
+        val btnConfirm = entryView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnConfirmRecovery)
+        val btnCancel = entryView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancelRecovery)
 
         etCode.filters = arrayOf(android.text.InputFilter.LengthFilter(16))
         etCode.addTextChangedListener(object : android.text.TextWatcher {
@@ -513,68 +488,57 @@ class VaultActivity : AppCompatActivity() {
             }
         })
 
-        val entryDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(
-            this,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-        )
-            .setTitle(getString(R.string.vault_recovery_entry_title))
+        val entryDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(entryView)
-            .setPositiveButton(getString(R.string.vault_recovery_confirm), null)
-            .setNegativeButton(android.R.string.cancel, null)
+            .setCancelable(true)
             .create()
 
-        entryDialog.show()
-        entryDialog.window?.setBackgroundDrawable(
-            android.graphics.drawable.ColorDrawable(bgColor)
-        )
-        val titleView = entryDialog.findViewById<android.widget.TextView>(
-            com.google.android.material.R.id.alertTitle
-        ) ?: entryDialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
-        titleView?.setTextColor(white)
+        btnConfirm?.setOnClickListener {
+            val entered = etCode.text.toString().trim()
+            if (entered.length != 16) {
+                txtErr.setText(R.string.code_must_be_exactly_16)
+                txtErr.visibility = android.view.View.VISIBLE
+                return@setOnClickListener
+            }
 
-        entryDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-            backgroundTintList = yellowCsl; setTextColor(black)
-            setOnClickListener {
-                val entered = etCode.text.toString().trim()
-                if (entered.length != 16) {
-                    txtErr.setText(R.string.code_must_be_exactly_16)
-                    txtErr.visibility = android.view.View.VISIBLE
-                    return@setOnClickListener
+            scope.launch {
+                val isValid = if (isLegacyHash(storedHash)) {
+                    // Legacy SHA-256 recovery code — verify then migrate
+                    val md = java.security.MessageDigest.getInstance("SHA-256")
+                    val enteredHash = md.digest(entered.toByteArray(Charsets.UTF_8))
+                        .joinToString("") { "%02x".format(it) }
+                    if (enteredHash == storedHash) {
+                        if (BuildConfig.DEBUG) Log.i(TAG, "Legacy SHA-256 recovery code hash detected — migrating to PBKDF2")
+                        migrateRecoveryCode(entered)
+                        true
+                    } else false
+                } else {
+                    // PBKDF2 recovery code — verify directly
+                    verifyPbkdf2(entered, storedHash)
                 }
 
-                scope.launch {
-                    val isValid = if (isLegacyHash(storedHash)) {
-                        // Legacy SHA-256 recovery code — verify then migrate
-                        val md = java.security.MessageDigest.getInstance("SHA-256")
-                        val enteredHash = md.digest(entered.toByteArray(Charsets.UTF_8))
-                            .joinToString("") { "%02x".format(it) }
-                        if (enteredHash == storedHash) {
-                            if (BuildConfig.DEBUG) Log.i(TAG, "Legacy SHA-256 recovery code hash detected — migrating to PBKDF2")
-                            migrateRecoveryCode(entered)
-                            true
-                        } else false
-                    } else {
-                        // PBKDF2 recovery code — verify directly
-                        verifyPbkdf2(entered, storedHash)
-                    }
-
-                    if (!isValid) {
-                        txtErr.text = getString(R.string.vault_recovery_invalid)
-                        txtErr.visibility = android.view.View.VISIBLE
-                        return@launch
-                    }
-                    entryDialog.dismiss()
-                    // Correct — let user set a new PIN (and generate new recovery code)
-                    showSetPinFlow(generateRecoveryCode = true) {
-                        isUnlocked = true
-                        showUnlockedUi()
-                    }
+                if (!isValid) {
+                    txtErr.text = getString(R.string.vault_recovery_invalid)
+                    txtErr.visibility = android.view.View.VISIBLE
+                    return@launch
+                }
+                entryDialog.dismiss()
+                // Correct — let user set a new PIN (and generate new recovery code)
+                showSetPinFlow(generateRecoveryCode = true) {
+                    isUnlocked = true
+                    showUnlockedUi()
                 }
             }
         }
-        entryDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-            backgroundTintList = glassCsl; setTextColor(white)
+
+        btnCancel?.setOnClickListener {
+            entryDialog.dismiss()
         }
+
+        entryDialog.show()
+        entryDialog.window?.setBackgroundDrawable(
+            android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+        )
     }
 
     /** PBKDF2-HMAC-SHA256 hash with a random 16-byte salt.
@@ -675,6 +639,7 @@ class VaultActivity : AppCompatActivity() {
 
     /** Initialise EncryptedSharedPreferences on a background thread.
      *  On failure, encryptedPrefs stays null and PIN ops fall back gracefully. */
+    @Suppress("DEPRECATION")
     private fun initSecurePrefs() {
         try {
             val masterKey = MasterKey.Builder(applicationContext)
@@ -807,14 +772,35 @@ class VaultActivity : AppCompatActivity() {
     }
 
     private fun confirmRemove(entry: VaultEntry) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.vault_delete_title)
-            .setMessage(getString(R.string.vault_delete_message))
-            .setPositiveButton(R.string.vault_delete_confirm) { _, _ ->
-                removeEntry(entry)
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+        val imgIcon = dialogView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(R.drawable.ic_delete)
+        txtTitle?.setText(R.string.vault_delete_title)
+        txtMessage?.setText(R.string.vault_delete_message)
+        btnPositive?.setText(R.string.vault_delete_confirm)
+        btnNegative?.setText(R.string.cancel)
+        btnNegative?.visibility = View.VISIBLE
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            removeEntry(entry)
+        }
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun updateEmptyState(isEmpty: Boolean) {
@@ -938,12 +924,12 @@ class VaultActivity : AppCompatActivity() {
         val txtProgress = progressView.findViewById<TextView>(R.id.txtVaultProgress)
         val progressBar = progressView.findViewById<ProgressBar>(R.id.progressVault)
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.vault_decrypt)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(progressView)
             .setCancelable(false)
             .create()
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         val initialTotal = entry.files.size.coerceAtLeast(1)
         txtProgress.text = getString(R.string.vault_decrypting, 0, initialTotal)

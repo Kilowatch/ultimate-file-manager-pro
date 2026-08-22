@@ -1,67 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Mobile Save File Dialog - UFM Standard -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="320dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:background="@drawable/bg_bottom_sheet">
+    android:gravity="center_horizontal"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="24dp"
+    android:background="@drawable/bg_bottom_sheet_glass">
+
+    <!-- 56dp Frosted Save Badge -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_save"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/save_dialog_title"
-        android:textSize="18sp"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="?attr/colorOnSurface"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textColor="@color/mobile_text_primary"
+        android:gravity="center"
         android:layout_marginBottom="16dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilFilename"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/save_dialog_filename_hint"
-        app:endIconMode="clear_text">
+        app:endIconMode="clear_text"
+        android:layout_marginBottom="20dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtFilename"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:textSize="14sp"
-            android:inputType="text" />
+            android:layout_height="wrap_content"
+            android:textSize="14.5sp"
+            android:textColor="@color/mobile_text_primary"
+            android:inputType="text"
+            android:imeOptions="actionDone" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:gravity="end">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCancelSave"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:text="@android:string/cancel"
-            app:cornerRadius="12dp"
-            
-            
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            style="@style/Widget.Material3Expressive.Button.TextButton" />
+        android:orientation="vertical">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConfirmSave"
-            android:layout_width="wrap_content"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/btn_save"
+            android:textColor="@color/white"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
+            app:cornerRadius="12dp"
+            app:backgroundTint="?attr/colorPrimary"
+            android:layout_marginBottom="6dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelSave"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            
-            
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/save"
-            app:cornerRadius="12dp" />
+            android:text="@string/cancel"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp" />
+
     </LinearLayout>
 
 </LinearLayout>

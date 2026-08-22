@@ -305,16 +305,22 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                 
                 // Beautiful capsule background styling
                 val normalBg = GradientDrawable().apply {
-                    cornerRadius = dp(20).toFloat()
-                    setColor(Color.parseColor("#15FFFFFF"))
+                    cornerRadius = dp(12).toFloat()
+                    setColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_glass_card))
+                    setStroke(dp(1), ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_glass_stroke))
                 }
                 val selectedBg = GradientDrawable().apply {
-                    cornerRadius = dp(20).toFloat()
-                    setColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.tv_button_focused_yellow))
+                    cornerRadius = dp(12).toFloat()
+                    val color = if (isTv) {
+                        ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.tv_button_focused_yellow)
+                    } else {
+                        ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.ufm_accent)
+                    }
+                    setColor(color)
                 }
 
                 background = normalBg
-                setTextColor(Color.WHITE)
+                setTextColor(if (isTv) Color.WHITE else ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_text_secondary))
 
                 setOnFocusChangeListener { _, hasFocus ->
                     if (isTv) {
@@ -335,10 +341,10 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                         val child = sheetTabsContainer.getChildAt(i) as TextView
                         if (i == index) {
                             child.background = selectedBg
-                            child.setTextColor(Color.BLACK)
+                            child.setTextColor(if (isTv) Color.BLACK else Color.WHITE)
                         } else {
                             child.background = normalBg
-                            child.setTextColor(Color.WHITE)
+                            child.setTextColor(if (isTv) Color.WHITE else ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_text_secondary))
                         }
                     }
                 }
@@ -346,11 +352,16 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
             
             if (index == currentSheetIndex) {
                 val selectedBg = GradientDrawable().apply {
-                    cornerRadius = dp(20).toFloat()
-                    setColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.tv_button_focused_yellow))
+                    cornerRadius = dp(12).toFloat()
+                    val color = if (isTv) {
+                        ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.tv_button_focused_yellow)
+                    } else {
+                        ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.ufm_accent)
+                    }
+                    setColor(color)
                 }
                 tabView.background = selectedBg
-                tabView.setTextColor(Color.BLACK)
+                tabView.setTextColor(if (isTv) Color.BLACK else Color.WHITE)
             }
 
             val params = LinearLayout.LayoutParams(
@@ -364,18 +375,20 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
     }
 
     private fun displaySheet(index: Int) {
+        if (index !in sheets.indices) return
         currentSheetIndex = index
+        val sheet = sheets[index]
+
         tableLayout.removeAllViews()
         allCellViews.clear()
-        if (index !in sheets.indices) return
-        val sheet = sheets[index]
+
         val rows = sheet.rows
         if (rows.isEmpty()) return
 
         val dp = { px: Int -> (px * resources.displayMetrics.density).toInt() }
-        val currentTextSize = 14f * scaleFactor
         val padH = dp((12 * scaleFactor).toInt())
         val padV = dp((8 * scaleFactor).toInt())
+        val currentTextSize = if (isTv) 15f * scaleFactor else 13f * scaleFactor
 
         // Determine actual maximum columns populated in this sheet
         val maxCols = rows.maxOfOrNull { it.size } ?: 0
@@ -391,7 +404,11 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                 textSize = currentTextSize
                 setPadding(padH, padV, padH, padV)
                 gravity = Gravity.CENTER
-                setBackgroundColor(Color.parseColor("#30FFFFFF"))
+                val headerBg = GradientDrawable().apply {
+                    setColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_glass_card))
+                    setStroke(1, ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_glass_stroke))
+                }
+                background = headerBg
                 typeface = Typeface.DEFAULT_BOLD
             }
             headerRow.addView(topLeftCell)
@@ -402,8 +419,12 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                     textSize = currentTextSize
                     setPadding(padH, padV, padH, padV)
                     gravity = Gravity.CENTER
-                    setTextColor(Color.WHITE)
-                    setBackgroundColor(Color.parseColor("#20FFFFFF"))
+                    setTextColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_text_primary))
+                    val headerBg = GradientDrawable().apply {
+                        setColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_glass_card))
+                        setStroke(1, ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_glass_stroke))
+                    }
+                    background = headerBg
                     typeface = Typeface.DEFAULT_BOLD
                 }
                 headerRow.addView(headerCell)
@@ -422,8 +443,12 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                     textSize = currentTextSize
                     setPadding(padH, padV, padH, padV)
                     gravity = Gravity.CENTER
-                    setTextColor(Color.WHITE)
-                    setBackgroundColor(Color.parseColor("#20FFFFFF"))
+                    setTextColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_text_primary))
+                    val headerBg = GradientDrawable().apply {
+                        setColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_glass_card))
+                        setStroke(1, ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_glass_stroke))
+                    }
+                    background = headerBg
                     typeface = Typeface.DEFAULT_BOLD
                 }
                 tableRow.addView(rowLabelCell)
@@ -436,15 +461,14 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                     text = value
                     textSize = currentTextSize
                     setPadding(padH, padV, padH, padV)
-                    setTextColor(Color.WHITE)
-                    setBackgroundColor(Color.parseColor("#0AFFFFFF"))
+                    setTextColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_text_primary))
                     isClickable = true
                     isFocusable = true
 
                     // Glass grid divider borders
                     val borderDrawable = GradientDrawable().apply {
-                        setColor(Color.parseColor("#0AFFFFFF"))
-                        setStroke(1, Color.parseColor("#15FFFFFF"))
+                        setColor(Color.parseColor("#08FFFFFF"))
+                        setStroke(1, ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_glass_stroke))
                     }
                     background = borderDrawable
 
@@ -461,7 +485,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                             (view as TextView).setTextColor(Color.BLACK)
                         } else {
                             view.background = borderDrawable
-                            (view as TextView).setTextColor(Color.WHITE)
+                            (view as TextView).setTextColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.mobile_text_primary))
                         }
                     }
                 }

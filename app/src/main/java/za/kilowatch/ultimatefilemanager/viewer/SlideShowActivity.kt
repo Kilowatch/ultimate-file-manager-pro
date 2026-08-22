@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.viewer
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
@@ -20,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -996,36 +998,46 @@ class SlideShowActivity : AppCompatActivity() {
                 ProtectedFilesManager.showProtectedDeleteDialog(this, isTv)
                 return
             }
-
-            val recycleEnabled = RecycleBinManager.isEnabled
-            val titleRes = if (recycleEnabled) R.string.move_to_bin else R.string.delete_title
-            val msg = if (recycleEnabled) {
-                getString(R.string.recycle_bin_move_confirm, 1)
-            } else {
-                getString(R.string.delete_single_confirm, fileName)
-            }
-            val btnConfirmRes = if (recycleEnabled) R.string.move_to_bin else R.string.delete_confirm
-
-            MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-                .setTitle(getString(titleRes))
-                .setMessage(msg)
-                .setIcon(R.drawable.ic_delete)
-                .setNegativeButton(getString(R.string.delete_cancel), null)
-                .setPositiveButton(getString(btnConfirmRes)) { _, _ ->
-                    performDeleteLocal(file, position, recycleEnabled)
-                }
-                .show()
-        } else {
-            MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-                .setTitle(getString(R.string.delete_title))
-                .setMessage(getString(R.string.delete_single_confirm, fileName))
-                .setIcon(R.drawable.ic_delete)
-                .setNegativeButton(getString(R.string.delete_cancel), null)
-                .setPositiveButton(getString(R.string.delete_confirm)) { _, _ ->
-                    performDeleteNetwork(path, position)
-                }
-                .show()
         }
+
+        val layoutRes = if (isTv) R.layout.dialog_file_delete_confirm_tv else R.layout.dialog_file_delete_confirm
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtDeleteMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnDeleteConfirm = dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        val recycleEnabled = isLocal && RecycleBinManager.isEnabled
+        if (recycleEnabled) {
+            txtTitle?.text = getString(R.string.move_to_bin)
+            txtDeleteMessage?.text = getString(R.string.recycle_bin_move_confirm, 1)
+            (btnDeleteConfirm as? TextView)?.text = getString(R.string.move_to_bin)
+        } else {
+            txtTitle?.text = getString(R.string.delete_title)
+            txtDeleteMessage?.text = getString(R.string.delete_single_confirm, fileName)
+            (btnDeleteConfirm as? TextView)?.text = getString(R.string.delete_confirm)
+        }
+
+        btnDeleteConfirm?.setOnClickListener {
+            dialog.dismiss()
+            if (isLocal) {
+                performDeleteLocal(file, position, recycleEnabled)
+            } else {
+                performDeleteNetwork(path, position)
+            }
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performDeleteLocal(file: File, position: Int, recycleEnabled: Boolean) {
@@ -1124,32 +1136,48 @@ class SlideShowActivity : AppCompatActivity() {
         val isLocal = shareId.isEmpty() && shareHost.isEmpty()
         val file = File(path)
 
-        val editText = EditText(this).apply {
-            setText(currentFileName)
-            val dotIndex = currentFileName.lastIndexOf('.')
-            if (dotIndex > 0) {
-                setSelection(0, dotIndex)
-            } else {
-                selectAll()
-            }
-            setPadding(64, 32, 64, 32)
+        val layoutRes = if (isTv) R.layout.dialog_file_rename_tv else R.layout.dialog_file_rename
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtOriginalName = dialogView.findViewById<TextView>(R.id.txtOriginalName)
+        val editFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editFileName)
+            ?: dialogView.findViewById<EditText>(R.id.editFileName)
+        val btnSaveRename = dialogView.findViewById<View>(R.id.btnSaveRename)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtOriginalName?.text = currentFileName
+        editFileName?.setText(currentFileName)
+        val dotIndex = currentFileName.lastIndexOf('.')
+        if (dotIndex > 0) {
+            editFileName?.setSelection(0, dotIndex)
+        } else {
+            editFileName?.selectAll()
         }
 
-        MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.rename_title))
-            .setView(editText)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .setPositiveButton(getString(R.string.rename_confirm)) { _, _ ->
-                val newName = editText.text.toString().trim()
-                if (newName.isNotEmpty() && newName != currentFileName) {
-                    if (isLocal) {
-                        performRenameLocal(file, newName, position)
-                    } else {
-                        performRenameNetwork(path, newName, position)
-                    }
+        btnSaveRename?.setOnClickListener {
+            val newName = editFileName?.text?.toString()?.trim().orEmpty()
+            if (newName.isNotEmpty() && newName != currentFileName) {
+                dialog.dismiss()
+                if (isLocal) {
+                    performRenameLocal(file, newName, position)
+                } else {
+                    performRenameNetwork(path, newName, position)
                 }
+            } else if (newName == currentFileName) {
+                dialog.dismiss()
             }
-            .show()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performRenameLocal(file: File, newName: String, position: Int) {
@@ -1226,10 +1254,67 @@ class SlideShowActivity : AppCompatActivity() {
         val speeds = arrayOf("0.5s", "1.0s", "1.5s", "2.0s", "2.5s", "3.0s", "3.5s", "4.0s", "4.5s", "5.0s")
         val currentSelection = slideshowStep.coerceIn(0, 9)
 
-        MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.slideshow_speed_title))
-            .setSingleChoiceItems(speeds, currentSelection) { dialog, which ->
-                slideshowStep = which
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_slideshow_speed, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val container = dialogView.findViewById<LinearLayout>(R.id.speedOptionsContainer)
+        val density = resources.displayMetrics.density
+        val primaryColor = za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this)
+
+        speeds.forEachIndexed { index, speedText ->
+            val isSelected = (index == currentSelection)
+            val row = LinearLayout(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    bottomMargin = (8 * density).toInt()
+                }
+                orientation = LinearLayout.HORIZONTAL
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                setPadding((12 * density).toInt(), (12 * density).toInt(), (12 * density).toInt(), (12 * density).toInt())
+                setBackgroundResource(R.drawable.bg_reindex_option_card)
+                isClickable = true
+                isFocusable = true
+            }
+
+            val iconFrame = FrameLayout(this).apply {
+                layoutParams = LinearLayout.LayoutParams((38 * density).toInt(), (38 * density).toInt()).apply {
+                    marginEnd = (12 * density).toInt()
+                }
+                setBackgroundResource(R.drawable.bg_btn_icon_frosted)
+            }
+            val iconView = ImageView(this).apply {
+                layoutParams = FrameLayout.LayoutParams((20 * density).toInt(), (20 * density).toInt(), android.view.Gravity.CENTER)
+                setImageResource(R.drawable.ic_controls_timeout)
+                setColorFilter(primaryColor)
+            }
+            iconFrame.addView(iconView)
+            row.addView(iconFrame)
+
+            val textView = TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                text = speedText
+                setTextColor(ContextCompat.getColor(this@SlideShowActivity, R.color.mobile_text_primary))
+                textSize = 15f
+                typeface = android.graphics.Typeface.create("sans-serif-medium", android.graphics.Typeface.NORMAL)
+            }
+            row.addView(textView)
+
+            val checkView = ImageView(this).apply {
+                layoutParams = LinearLayout.LayoutParams((22 * density).toInt(), (22 * density).toInt())
+                setImageResource(R.drawable.ic_check_circle)
+                setColorFilter(primaryColor)
+                visibility = if (isSelected) View.VISIBLE else View.GONE
+            }
+            row.addView(checkView)
+
+            row.setOnClickListener {
+                slideshowStep = index
                 val sec = 0.5f + slideshowStep * 0.5f
                 val txtIntervalTv = findViewById<TextView>(R.id.txtSlideshowIntervalTv)
                 txtIntervalTv?.text = String.format(java.util.Locale.US, "%.1fs", sec)
@@ -1240,31 +1325,60 @@ class SlideShowActivity : AppCompatActivity() {
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .show()
+
+            container?.addView(row)
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showOverflowMenu(anchor: View) {
-        val popup = PopupMenu(this, anchor)
+        val popupView = layoutInflater.inflate(R.layout.popup_slideshow_options_menu, null)
+        val popupWindow = android.widget.PopupWindow(
+            popupView,
+            (220 * resources.displayMetrics.density).toInt(),
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            elevation = 16f * resources.displayMetrics.density
+            isOutsideTouchable = true
+            isFocusable = true
+            setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            animationStyle = android.R.style.Animation_Dialog
+        }
+
         val position = viewPager.currentItem
-        val path = playlist.getOrNull(position) ?: return
-        val ext = path.substringAfterLast('.', "").lowercase()
+        val path = playlist.getOrNull(position)
+        val ext = path?.substringAfterLast('.', "")?.lowercase() ?: ""
         val isImage = ext in FileViewerRouter.IMAGE_EXTENSIONS
         val isLocal = shareId.isEmpty() && shareHost.isEmpty()
+        val canConvertToPdf = isImage && isLocal && ext != "gif"
 
-        if (isImage && isLocal && ext != "gif") {
-            popup.menu.add(0, 1, 0, getString(R.string.pdf_convert_title))
-        }
-        popup.menu.add(0, 2, 1, getString(R.string.slideshow_speed_title))
-
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                1 -> showConvertToPdfDialog()
-                2 -> showSlideshowSpeedDialog()
+        val itemPdf = popupView.findViewById<View>(R.id.menuItemConvertToPdf)
+        val dividerPdf = popupView.findViewById<View>(R.id.dividerPdf)
+        if (!canConvertToPdf) {
+            itemPdf?.visibility = View.GONE
+            dividerPdf?.visibility = View.GONE
+        } else {
+            itemPdf?.visibility = View.VISIBLE
+            dividerPdf?.visibility = View.VISIBLE
+            itemPdf?.setOnClickListener {
+                popupWindow.dismiss()
+                showConvertToPdfDialog()
             }
-            true
         }
-        popup.show()
+
+        popupView.findViewById<View>(R.id.menuItemSlideshowSpeed)?.setOnClickListener {
+            popupWindow.dismiss()
+            showSlideshowSpeedDialog()
+        }
+
+        val xOffset = -(220 * resources.displayMetrics.density - anchor.width).toInt()
+        popupWindow.showAsDropDown(anchor, xOffset, (4 * resources.displayMetrics.density).toInt())
     }
 
     private fun resetHideTimer() {
