@@ -129,6 +129,7 @@ class WelcomeActivity : AppCompatActivity() {
             btnContinue.setOnFocusChangeListener { _, hasFocus ->
                 btnContinue.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
                 btnContinue.setTextColor(if (hasFocus) yellowText else whiteText)
+                btnContinue.iconTint = android.content.res.ColorStateList.valueOf(if (hasFocus) yellowText else whiteText)
             }
         }
     }

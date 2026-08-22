@@ -152,14 +152,23 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnContinue"
             style="@style/TvContinueButton"
-            android:layout_width="220dp"
-            android:layout_height="@dimen/tv_button_height"
+            android:layout_width="240dp"
+            android:layout_height="56dp"
             android:text="@string/btn_continue"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-bold"
+            android:letterSpacing="0.02"
             android:enabled="false"
             android:focusable="true"
             android:focusableInTouchMode="false"
             android:insetTop="0dp"
-            android:insetBottom="0dp" />
+            android:insetBottom="0dp"
+            app:cornerRadius="28dp"
+            app:elevation="4dp"
+            app:icon="@drawable/ic_arrow_forward"
+            app:iconGravity="textEnd"
+            app:iconPadding="10dp"
+            app:iconSize="20dp" />
 
     </LinearLayout>
 

@@ -60,6 +60,7 @@
     <!-- Welcome & Language Selection -->
     <string name="welcome_tagline">The ultimate file management experience, built for power users.</string>
     <string name="welcome_select_language">Please select your preferred language</string>
+    <string name="welcome_select_language_subtitle">Choose your preferred language to get started</string>
     <string name="welcome_translation_disclaimer">All translations are based on best effort and may contain errors.</string>
     <string name="welcome_change_later_hint">You can change your language later in Settings -> Languages</string>
     <string name="btn_set_default_language">Set Default Language</string>
@@ -2442,7 +2443,9 @@
     <string name="smart_sort_edit_config">Edit saved configuration</string>
     <string name="smart_sort_save_description">Description</string>
     <string name="smart_sort_save_changes">Save Changes</string>
+    <string name="smart_sort_save_changes_desc">Update and overwrite the saved configuration</string>
     <string name="smart_sort_delete_saved">Delete</string>
+    <string name="smart_sort_delete_saved_desc">Remove this saved configuration</string>
     <string name="smart_sort_delete_saved_confirm_title">Delete "%1$s"?</string>
     <string name="smart_sort_delete_saved_confirm_msg">Are you sure you want to delete the saved configuration "%1$s"?</string>
     <string name="smart_sort_enter_description">Enter a description</string>
@@ -2752,6 +2755,7 @@
     <string name="onedrive_auth_success">Connected as %1$s</string>
     <string name="onedrive_auth_failed">Failed to start authentication: %1$s</string>
     <string name="onedrive_auth_profile_failed">Auth success, but failed to get account details</string>
+    <string name="onedrive_code_copied">Code copied to clipboard!</string>
     <string name="auth_library_loading">Authentication library loading…</string>
 
     <!-- Box Cloud Storage -->
@@ -4133,6 +4137,8 @@
     <string name="action_create_gif">Create GIF</string>
     <string name="gif_creator_title">Create Animated GIF</string>
     <string name="gif_creator_subtitle">%d images selected</string>
+    <string name="gif_creator_frames_reorder">Frames (Drag to reorder)</string>
+    <string name="gif_creator_frames_reorder_tv">Frames (D-Pad reorder)</string>
     <string name="gif_creator_fps_label">Frame rate</string>
     <string name="gif_creator_fps_value">%d fps</string>
     <string name="gif_creator_output_size_label">Resize frames</string>

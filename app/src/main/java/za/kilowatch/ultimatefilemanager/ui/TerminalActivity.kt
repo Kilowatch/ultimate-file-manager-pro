@@ -349,8 +349,10 @@ class TerminalActivity : AppCompatActivity() {
         var selectedHost = "" // Store the selected device host
         
         // Device spinner adapter
-        val deviceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mutableListOf(getString(R.string.no_devices_found)))
-        deviceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val itemRes = if (isTv) R.layout.item_tv_spinner_dropdown else R.layout.item_dropdown_popup
+        val deviceAdapter = ArrayAdapter(this, itemRes, mutableListOf(getString(R.string.no_devices_found)))
+        deviceAdapter.setDropDownViewResource(itemRes)
         spinnerDevices.adapter = deviceAdapter
         
         // Spinner selection listener
@@ -401,7 +403,7 @@ class TerminalActivity : AppCompatActivity() {
                             }
                         } else {
                             deviceAdapter.clear()
-                            deviceAdapter.add("-- No devices found --")
+                            deviceAdapter.add(getString(R.string.no_devices_found))
                             deviceAdapter.notifyDataSetChanged()
                             Toast.makeText(this@TerminalActivity, R.string.no_adb_devices_found_on, Toast.LENGTH_SHORT).show()
                         }

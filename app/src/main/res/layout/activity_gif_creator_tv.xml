@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_tv_gradient"
-    android:orientation="vertical">
+    android:background="@drawable/bg_tv_gradient">
 
-    <!-- TV Header -->
+    <!-- TV Header Bar -->
     <LinearLayout
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:gravity="center_vertical"
+        android:layout_height="72dp"
         android:orientation="horizontal"
-        android:paddingHorizontal="24dp">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/selector_tv_icon_btn"
-            android:contentDescription="Back"
-            android:focusable="true"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/tv_text_primary" />
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/selector_tv_icon_tint_yellow" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/margin_md">
 
             <TextView
                 android:id="@+id/txtTitle"
@@ -40,197 +48,295 @@
                 android:text="@string/gif_creator_title"
                 android:textColor="@color/tv_text_primary"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-black" />
 
             <TextView
                 android:id="@+id/txtSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:text="4 images selected" />
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Content -->
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="12dp">
+            android:paddingHorizontal="@dimen/tv_safe_horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="32dp">
 
-            <!-- Frame Reorder Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Frames (D-Pad Reorder)"
-                android:textColor="@color/tv_text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerFrames"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@drawable/bg_tv_card_glass"
-                android:padding="6dp"
-                android:scrollbars="vertical"/>
-
-            <!-- Slide Interval Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/gif_creator_slide_interval_label"
-                android:textColor="@color/tv_text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
-
-            <LinearLayout
+            <!-- Frame Reorder Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp">
+                android:layout_marginBottom="16dp"
+                android:focusable="false"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
 
-                <SeekBar
-                    android:id="@+id/seekSlideInterval"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:focusable="true"
-                    android:max="9"
-                    android:progress="1"
-                    android:progressDrawable="@drawable/tv_seek_bar_progress" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                <TextView
-                    android:id="@+id/txtSlideIntervalValue"
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="1.0s"
-                    android:textColor="@color/tv_button_focused_yellow"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/gif_creator_frames_reorder_tv"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="10dp" />
 
-            <!-- Resize Section -->
-            <CheckBox
-                android:id="@+id/chkResize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:checked="true"
-                android:focusable="true"
-                android:text="@string/gif_creator_output_size_label"
-                android:textColor="@color/tv_text_primary"
-                android:textSize="16sp" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerFrames"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="@drawable/bg_tv_card_glass"
+                        android:padding="4dp"
+                        android:scrollbars="vertical" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
-                android:id="@+id/layoutResizeFields"
+            <!-- Slide Interval Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp">
+                android:layout_marginBottom="16dp"
+                android:focusable="false"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:boxBackgroundColor="@android:color/transparent"
-                    app:hintTextColor="@color/tv_text_hint"
-                    android:hint="@string/gif_creator_width_hint">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editWidth"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/gif_creator_slide_interval_label"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:inputType="number"
-                        android:textColor="@color/tv_text_primary"
-                        android:text="800" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    app:boxBackgroundColor="@android:color/transparent"
-                    app:hintTextColor="@color/tv_text_hint"
-                    android:hint="@string/gif_creator_height_hint">
+                        <SeekBar
+                            android:id="@+id/seekSlideInterval"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:focusable="true"
+                            android:max="9"
+                            android:progress="1"
+                            android:progressDrawable="@drawable/tv_seek_bar_progress" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editHeight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:inputType="number"
-                        android:textColor="@color/tv_text_primary"
-                        android:text="600" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtSlideIntervalValue"
+                            android:layout_width="64dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:text="1.0s"
+                            android:textColor="@color/tv_button_focused_yellow"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Output Folder Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/gif_creator_output_label"
-                android:textColor="@color/tv_text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
+            <!-- Resize Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginTop="4dp">
+                android:layout_marginBottom="16dp"
+                android:focusable="false"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
 
-                <TextView
-                    android:id="@+id/txtOutputPath"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="middle"
-                    android:maxLines="1"
-                    android:textColor="@color/tv_text_secondary"
-                    android:textSize="14sp" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                <Button
-                    android:id="@+id/btnChangeOutput"
-                    android:layout_width="wrap_content"
+                    <CheckBox
+                        android:id="@+id/chkResize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:focusable="true"
+                        android:text="@string/gif_creator_output_size_label"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layoutResizeFields"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="10dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="10dp"
+                            app:boxBackgroundColor="@android:color/transparent"
+                            app:hintTextColor="@color/tv_text_hint"
+                            android:hint="@string/gif_creator_width_hint">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editWidth"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusable="true"
+                                android:inputType="number"
+                                android:textColor="@color/tv_text_primary"
+                                android:text="800" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="×"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="22sp"
+                            android:layout_marginEnd="10dp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:boxBackgroundColor="@android:color/transparent"
+                            app:hintTextColor="@color/tv_text_hint"
+                            android:hint="@string/gif_creator_height_hint">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editHeight"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusable="true"
+                                android:inputType="number"
+                                android:textColor="@color/tv_text_primary"
+                                android:text="600" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Output Folder Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:focusable="false"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_tv_button"
-                    android:focusable="true"
-                    android:text="@string/action_change"
-                    android:textColor="@color/tv_text_primary" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-            <Button
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/gif_creator_output_label"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:id="@+id/txtOutputPath"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="middle"
+                            android:maxLines="1"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="16sp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnChangeOutput"
+                            style="@style/Widget.MaterialComponents.Button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            app:backgroundTint="@color/selector_tv_button_yellow"
+                            android:textColor="@color/selector_tv_button_text_yellow"
+                            app:cornerRadius="12dp"
+                            android:focusable="true"
+                            android:text="@string/action_change" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Create GIF Button -->
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCreateGif"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="24dp"
-                android:background="@drawable/selector_tv_button_yellow"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:backgroundTint="@color/selector_tv_button_yellow"
+                android:textColor="@color/selector_tv_button_text_yellow"
+                app:cornerRadius="16dp"
                 android:focusable="true"
                 android:text="@string/gif_creator_btn_create"
-                android:textColor="@color/tv_button_focused_yellow_text"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-bold" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,30 +10,31 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="false"
-    android:foreground="@drawable/selector_tv_card"
-    app:cardBackgroundColor="#1AFFFFFF"
-    app:cardCornerRadius="@dimen/card_radius_lg"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="18dp"
     app:cardElevation="0dp"
-    app:strokeWidth="0dp">
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/tv_glass_border">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingHorizontal="24dp"
-        android:paddingVertical="20dp"
+        android:paddingVertical="18dp"
         android:gravity="center_vertical">
 
-        <!-- ── Icon Container ── -->
+        <!-- ── Frosted Icon Container ── -->
         <FrameLayout
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="@drawable/bg_glass_card">
+            android:id="@+id/iconContainer"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_tv_card_glass">
 
             <ImageView
                 android:id="@+id/imgPermIcon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/cd_permission_icon"
                 app:tint="@color/tv_accent"
@@ -61,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/tv_text_primary"
                     android:textSize="20sp"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="sans-serif-bold"
                     tools:text="Storage Access" />
 
                 <!-- Status badge -->
@@ -73,8 +74,8 @@
                     android:background="@drawable/bg_status_badge"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="3dp"
-                    android:textSize="12sp"
-                    android:fontFamily="sans-serif-medium"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-bold"
                     android:textAllCaps="true"
                     android:letterSpacing="0.08"
                     tools:text="Required"
@@ -89,7 +90,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="15sp"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
                 android:lineSpacingMultiplier="1.3"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -102,14 +104,15 @@
             android:id="@+id/btnGrant"
             style="@style/TvGrantButton"
             android:layout_width="140dp"
-            android:layout_height="52dp"
+            android:layout_height="48dp"
             android:text="@string/btn_grant"
-            android:textSize="16sp"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-bold"
             android:focusable="true"
             android:focusableInTouchMode="false"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            app:cornerRadius="26dp" />
+            app:cornerRadius="24dp" />
 
     </LinearLayout>
 

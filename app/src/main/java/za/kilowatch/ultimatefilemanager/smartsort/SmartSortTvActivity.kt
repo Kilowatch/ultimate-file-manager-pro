@@ -726,43 +726,79 @@ private fun buildConfig(): SmartSortConfig {
 }
 private fun onSaveButtonClicked() {
     if (savedConfigId != null) {
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.smart_sort_edit_config)
-            .setIcon(R.drawable.ic_edit)
-            .setPositiveButton(R.string.smart_sort_save_changes) { _, _ -> showSaveDescriptionDialog(true) }
-            .setNeutralButton(R.string.smart_sort_delete_saved) { _, _ ->
-                val dialogView = LayoutInflater.from(this).inflate(
-                    if (isTvDevice) R.layout.dialog_smart_sort_delete_config_confirm_tv else R.layout.dialog_smart_sort_delete_config_confirm,
-                    null
-                )
-                val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                    .setView(dialogView)
-                    .create()
-                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-                dialogView.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
-                    savedConfigId?.let { SmartSortSavedConfigRepository.delete(it) }
-                    savedConfigId = null
-                    updateSaveIcon()
-                    updateSaveButtonState()
-                    dialog.dismiss()
-                }
-                dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
-                    dialog.dismiss()
-                }
-                dialog.show()
+        val isTv = DeviceUtils.isTvDevice(this)
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_smart_sort_edit_config_options_tv else R.layout.dialog_smart_sort_edit_config_options,
+            null
+        )
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val currentSaved = savedConfigId?.let { SmartSortSavedConfigRepository.getById(it) }
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtSubtitle)
+        if (currentSaved != null && currentSaved.description.isNotBlank()) {
+            txtSubtitle?.text = currentSaved.description
+            txtSubtitle?.visibility = View.VISIBLE
+        }
+
+        dialogView.findViewById<View>(R.id.btnOptionSaveChanges).setOnClickListener {
+            dialog.dismiss()
+            showSaveDescriptionDialog(true)
+        }
+
+        dialogView.findViewById<View>(R.id.btnOptionDeleteConfig).setOnClickListener {
+            dialog.dismiss()
+            val delDialogView = LayoutInflater.from(this).inflate(
+                if (isTv) R.layout.dialog_smart_sort_delete_config_confirm_tv else R.layout.dialog_smart_sort_delete_config_confirm,
+                null
+            )
+            val currentSavedForDel = savedConfigId?.let { SmartSortSavedConfigRepository.getById(it) }
+            val txtMessage = delDialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+            if (currentSavedForDel != null) {
+                txtMessage?.text = getString(R.string.smart_sort_delete_saved_confirm_msg, currentSavedForDel.description)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            val delDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(delDialogView)
+                .create()
+            delDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            delDialogView.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
+                savedConfigId?.let { SmartSortSavedConfigRepository.delete(it) }
+                savedConfigId = null
+                updateSaveIcon()
+                updateSaveButtonState()
+                delDialog.dismiss()
+            }
+            delDialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+                delDialog.dismiss()
+            }
+            delDialog.show()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     } else {
         showSaveDescriptionDialog(false)
     }
 }
 private fun showSaveDescriptionDialog(isEdit: Boolean) {
+    val isTv = DeviceUtils.isTvDevice(this)
     val dialogView = LayoutInflater.from(this).inflate(
-        if (isTvDevice) R.layout.dialog_smart_sort_save_description_tv else R.layout.dialog_smart_sort_save_description,
+        if (isTv) R.layout.dialog_smart_sort_save_description_tv else R.layout.dialog_smart_sort_save_description,
         null
     )
     val txtInput = dialogView.findViewById<TextInputEditText>(R.id.txtConfigDescription)
+    if (isEdit) {
+        val currentSaved = savedConfigId?.let { SmartSortSavedConfigRepository.getById(it) }
+        if (currentSaved != null && currentSaved.description.isNotBlank()) {
+            txtInput.setText(currentSaved.description)
+            txtInput.setSelection(currentSaved.description.length)
+        }
+    }
     val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
         .setView(dialogView)
         .create()

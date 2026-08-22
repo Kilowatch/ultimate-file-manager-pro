@@ -103,6 +103,7 @@ class GifCreatorActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        za.kilowatch.ultimatefilemanager.settings.ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         isTv = DeviceUtils.isTvDevice(this)
@@ -242,19 +243,13 @@ class GifCreatorActivity : AppCompatActivity() {
         val progressBar = dialogView.findViewById<ProgressBar>(R.id.progressBar)
         val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtProgressSubtitle)
 
-        val progressDialog = if (isTv) {
-            AlertDialog.Builder(this)
-                .setView(dialogView)
-                .setCancelable(false)
-                .create()
-        } else {
-            MaterialAlertDialogBuilder(this)
-                .setView(dialogView)
-                .setCancelable(false)
-                .create()
-        }
+        val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
 
         progressDialog.show()
+        progressDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         progressBar.max = frames.size
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -451,15 +446,9 @@ class GifCreatorActivity : AppCompatActivity() {
         val formattedSize = Formatter.formatShortFileSize(this, resultFile.length())
         txtDetail.text = "${resultFile.name} · $frameCount frames · ${String.format("%.1fs", intervalSec)}\n\n${resultFile.absolutePath} ($formattedSize)"
 
-        val dialog = if (isTv) {
-            AlertDialog.Builder(this)
-                .setView(dialogView)
-                .create()
-        } else {
-            MaterialAlertDialogBuilder(this)
-                .setView(dialogView)
-                .create()
-        }
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
 
         btnClose.setOnClickListener {
             dialog.dismiss()
@@ -476,5 +465,6 @@ class GifCreatorActivity : AppCompatActivity() {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 }

@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Mobile Permission Card — premium dark-glass design
-    Layout: [AccentCircleIcon] [Title + Badge] [Description] [Grant Button]
-    The card sits on a dark gradient so we use white-glass with visible border.
--->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,7 +11,7 @@
     android:clickable="true"
     android:focusable="true"
     app:cardBackgroundColor="@color/mobile_glass_card"
-    app:cardCornerRadius="20dp"
+    app:cardCornerRadius="18dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
     app:strokeColor="@color/mobile_glass_stroke"
@@ -26,38 +21,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/margin_md">
+        android:padding="16dp">
 
-        <!-- Top row: Icon + Title + Badge + Grant Button -->
+        <!-- Top row: Icon + Title/Badge + Grant Button -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Accent circle icon -->
+            <!-- Frosted Icon Container -->
             <FrameLayout
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_icon_circle_accent">
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_btn_icon_frosted">
 
                 <ImageView
                     android:id="@+id/imgPermIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/cd_permission_icon"
-                    app:tint="@color/mobile_icon_tint"
+                    app:tint="?attr/colorPrimary"
                     tools:src="@drawable/ic_folder" />
             </FrameLayout>
 
-            <!-- Title + badge column -->
+            <!-- Title + Status Badge column -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:layout_marginHorizontal="14dp">
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="10dp">
 
                 <TextView
                     android:id="@+id/txtPermTitle"
@@ -65,12 +61,12 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/mobile_text_primary"
                     android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="sans-serif-bold"
                     android:maxLines="1"
                     android:ellipsize="end"
-                    tools:text="Storage Access" />
+                    tools:text="All Files Access" />
 
-                <!-- Status badge — single line pill, never wraps -->
+                <!-- Status pill badge -->
                 <TextView
                     android:id="@+id/txtPermStatus"
                     android:layout_width="wrap_content"
@@ -80,24 +76,27 @@
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="3dp"
                     android:textSize="10sp"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="sans-serif-bold"
                     android:textAllCaps="true"
                     android:letterSpacing="0.06"
                     android:maxLines="1"
                     android:singleLine="true"
                     tools:text="Required"
-                    tools:textColor="#FFFFCC00" />
+                    tools:textColor="#FFAA00" />
 
             </LinearLayout>
 
-            <!-- Grant Button -->
+            <!-- Grant Action Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGrant"
+                style="@style/Widget.Material3Expressive.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                android:minWidth="90dp"
                 android:text="@string/btn_grant"
                 android:textSize="13sp"
-                android:textColor="@color/mobile_text_primary"
+                android:fontFamily="sans-serif-bold"
+                android:textColor="@android:color/white"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 app:backgroundTint="?attr/colorPrimary"
@@ -105,16 +104,17 @@
 
         </LinearLayout>
 
-        <!-- Description — full width below, no truncation -->
+        <!-- Description — clean, legible text below -->
         <TextView
             android:id="@+id/txtPermDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="62dp"
+            android:layout_marginStart="58dp"
             android:textColor="@color/mobile_card_text_secondary"
             android:textSize="13sp"
-            android:lineSpacingMultiplier="1.4"
+            android:fontFamily="sans-serif"
+            android:lineSpacingMultiplier="1.3"
             android:maxLines="3"
             android:ellipsize="end"
             tools:text="Required to browse, copy, move and manage files on your device storage." />

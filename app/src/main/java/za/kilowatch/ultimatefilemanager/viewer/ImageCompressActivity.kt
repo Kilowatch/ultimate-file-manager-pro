@@ -139,15 +139,6 @@ class ImageCompressActivity : AppCompatActivity() {
         val btnBack = findViewById<android.widget.ImageView>(R.id.btnBack)
         btnBack?.setOnClickListener { finish() }
 
-        if (isTv && btnBack != null) {
-            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
-            btnBack.imageTintList = whiteCsl
-            btnBack.setOnFocusChangeListener { _, hasFocus ->
-                btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
-            }
-        }
-
         layoutImageList = findViewById(R.id.layoutImageList)
         seekQuality = findViewById(R.id.seekQuality)
         txtQualityValue = findViewById(R.id.txtQualityValue)
@@ -323,15 +314,13 @@ class ImageCompressActivity : AppCompatActivity() {
         )
         val txtProgressSubtitle = progressDialogView.findViewById<TextView>(R.id.txtProgressSubtitle)
 
-        val progressDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this,
-            if (isTv) com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-            else 0
-        )
+        val progressDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(progressDialogView)
             .setCancelable(false)
             .create()
 
         progressDialog.show()
+        progressDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         lifecycleScope.launch(Dispatchers.IO) {
             val results = mutableListOf<CompressionResult>()
@@ -442,13 +431,13 @@ class ImageCompressActivity : AppCompatActivity() {
         val layoutResultsView = dialogView.findViewById<LinearLayout>(R.id.layoutResults)
         val btnClose = dialogView.findViewById<View>(R.id.btnClose)
 
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this,
-            if (isTv) com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-            else 0
-        )
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .setCancelable(true)
             .create()
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         btnClose.setOnClickListener { dialog.dismiss() }
 

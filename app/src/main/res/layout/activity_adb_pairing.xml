@@ -316,7 +316,8 @@
                             android:id="@+id/spinnerDevices"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@null" />
+                            android:background="@android:color/transparent"
+                            android:popupBackground="@drawable/bg_dropdown_glass" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

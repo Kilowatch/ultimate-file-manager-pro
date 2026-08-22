@@ -60,8 +60,9 @@ class AdbPairingTvActivity : AppCompatActivity() {
         var selectedHost = ""
         var selectedPort = 5555
 
-        val deviceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mutableListOf("-- No devices found --"))
-        deviceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val itemRes = R.layout.item_tv_spinner_dropdown
+        val deviceAdapter = ArrayAdapter(this, itemRes, mutableListOf(getString(R.string.no_devices_found)))
+        deviceAdapter.setDropDownViewResource(itemRes)
         spinnerDevices.adapter = deviceAdapter
 
         spinnerDevices.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -88,9 +89,9 @@ class AdbPairingTvActivity : AppCompatActivity() {
                     discoveredDevices.clear()
                     val devices = discovery.scanNetwork(5000) { scanned, total, devicesFound ->
                         lifecycleScope.launch(Dispatchers.Main) {
-                            scanProgressText.text = "Scanning... $scanned/$total IPs scanned"
+                            scanProgressText.text = getString(R.string.scanning_scannedtotal_ips_scanned, scanned, total)
                             val deviceWord = if (devicesFound == 1) "device" else "devices"
-                            devicesDetectedText.text = "Devices detected: $devicesFound $deviceWord"
+                            devicesDetectedText.text = getString(R.string.devices_detected_devicesfound_deviceword, devicesFound, deviceWord)
                         }
                     }
 
@@ -109,7 +110,7 @@ class AdbPairingTvActivity : AppCompatActivity() {
                             }
                         } else {
                             deviceAdapter.clear()
-                            deviceAdapter.add("-- No devices found --")
+                            deviceAdapter.add(getString(R.string.no_devices_found))
                             deviceAdapter.notifyDataSetChanged()
                             Toast.makeText(this@AdbPairingTvActivity, R.string.no_adb_devices_found, Toast.LENGTH_SHORT).show()
                         }

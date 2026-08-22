@@ -107,7 +107,7 @@ class GoogleDriveDeviceCodeAuthActivity : AppCompatActivity() {
                 val clipboard = getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
                 val clip = android.content.ClipData.newPlainText("Google Drive Code", code)
                 clipboard.setPrimaryClip(clip)
-                Toast.makeText(this@GoogleDriveDeviceCodeAuthActivity, "Code copied to clipboard!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@GoogleDriveDeviceCodeAuthActivity, getString(R.string.onedrive_code_copied), Toast.LENGTH_SHORT).show()
             }
         }
 

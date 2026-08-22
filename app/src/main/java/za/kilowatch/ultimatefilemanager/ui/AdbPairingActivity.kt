@@ -131,7 +131,7 @@ class AdbPairingActivity : AppCompatActivity() {
                             }
                         } else {
                             deviceAdapter.clear()
-                            deviceAdapter.add("-- No devices found --")
+                            deviceAdapter.add(getString(R.string.no_devices_found))
                             deviceAdapter.notifyDataSetChanged()
                             Toast.makeText(this@AdbPairingActivity, R.string.no_adb_devices_found, Toast.LENGTH_SHORT).show()
                         }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,43 +9,50 @@
     android:background="@drawable/bg_mobile_gradient">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
-            android:paddingTop="64dp"
+            android:paddingTop="52dp"
             android:paddingBottom="32dp"
             android:gravity="center_horizontal">
 
-            <!-- App Icon (Small) -->
+            <!-- Hero App Icon (Clean & Prominent) -->
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:id="@+id/imgAppLogo"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
                 android:src="@mipmap/ic_launcher"
+                android:contentDescription="@string/app_name_1"
                 android:importantForAccessibility="no" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/app_name_1"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/mobile_text_primary"
                 android:textSize="28sp"
                 android:gravity="center"
-                android:fontFamily="sans-serif-black" />
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.01" />
 
             <TextView
                 android:id="@+id/txtTagline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/welcome_tagline"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/mobile_text_secondary"
                 android:textSize="14sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif-medium" />
@@ -52,24 +60,25 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="36dp"
                 android:text="@string/welcome_select_language"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="15sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif-bold" />
 
-            <!-- Premium Language Selection Button -->
+            <!-- Language Selection Dropdown -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardLanguageSelector"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="14dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#22FFFFFF"
+                app:cardBackgroundColor="@color/mobile_glass_card"
                 app:strokeWidth="1dp"
-                app:strokeColor="#44FFFFFF"
+                app:strokeColor="@color/mobile_glass_stroke"
+                app:rippleColor="@color/mobile_glass_ripple"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground">
@@ -78,31 +87,51 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingHorizontal="24dp">
-                    
-                    <ImageView
-                        android:id="@+id/imgSelectedFlag"
-                        android:layout_width="32dp"
-                        android:layout_height="24dp"
-                        android:scaleType="fitCenter" />
-                        
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp">
+
+                    <!-- Frosted Flag Badge in Dropdown -->
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imgSelectedFlag"
+                            android:layout_width="30dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:scaleType="fitCenter"
+                            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraSmall" />
+                    </FrameLayout>
+
                     <TextView
                         android:id="@+id/txtSelectedLanguage"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20sp"
-                        android:fontFamily="sans-serif-medium"
+                        android:layout_weight="1"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="10dp"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="17sp"
+                        android:fontFamily="sans-serif-bold"
                         tools:text="English" />
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="16dp"
-                        android:src="@drawable/ic_arrow_down"
-                        app:tint="#FFFFFF" />
+                    <!-- Frosted Expand Chevron Badge -->
+                    <FrameLayout
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
+
+                        <ImageView
+                            android:id="@+id/imgChevron"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_expand_more"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                 </LinearLayout>
 
@@ -111,26 +140,27 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:minHeight="28dp" />
 
             <!-- Disclaimer & Hint -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/welcome_translation_disclaimer"
-                android:textColor="#BBFFFFFF"
-                android:textSize="14sp"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="13sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:text="@string/welcome_change_later_hint"
-                android:textColor="#BBFFFFFF"
-                android:textSize="14sp"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="13sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif-italic" />
 
@@ -138,26 +168,41 @@
                 android:id="@+id/txtFossLegalNotice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/foss_legal_notice"
-                android:textColor="#BBFFFFFF"
+                android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <!-- Action Button -->
+            <!-- Modern Expressive Pill CTA Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSetDefault"
-                style="@style/ContinueButton"
+                style="@style/Widget.Material3Expressive.Button"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
+                android:layout_height="58dp"
                 android:layout_marginTop="24dp"
-                android:text="@string/btn_set_default_language" />
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/btn_set_default_language"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.02"
+                app:backgroundTint="?attr/colorPrimary"
+                app:cornerRadius="29dp"
+                app:elevation="4dp"
+                app:rippleColor="#33FFFFFF"
+                app:icon="@drawable/ic_arrow_forward"
+                app:iconGravity="textEnd"
+                app:iconPadding="12dp"
+                app:iconSize="20dp"
+                app:iconTint="@android:color/white" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

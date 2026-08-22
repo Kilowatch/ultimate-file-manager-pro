@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,24 +9,30 @@
     android:background="@drawable/bg_tv_gradient">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="64dp"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal"
             android:paddingTop="32dp"
             android:paddingBottom="32dp"
             android:gravity="center_horizontal">
 
-            <!-- App Icon (Small) -->
+            <!-- Hero App Icon (Clean & Prominent) -->
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:id="@+id/imgAppLogo"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:src="@mipmap/ic_launcher"
+                android:contentDescription="@string/app_name_1"
                 android:importantForAccessibility="no" />
 
             <TextView
@@ -33,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/app_name_1"
-                android:textColor="@color/white"
+                android:textColor="@color/tv_text_primary"
                 android:textSize="36sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif-black" />
@@ -44,32 +51,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/welcome_tagline"
-                android:textColor="#DDFFFFFF"
-                android:textSize="14sp"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="16sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif-medium" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="28dp"
                 android:text="@string/welcome_select_language"
-                android:textColor="@color/white"
+                android:textColor="@color/tv_text_primary"
                 android:textSize="18sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif-medium" />
 
-            <!-- Premium Language Selection Button -->
+            <!-- TV Language Selection Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardLanguageSelector"
-                android:layout_width="600dp"
-                android:layout_height="64dp"
-                android:layout_marginTop="24dp"
+                android:layout_width="560dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="16dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#22FFFFFF"
-                app:strokeWidth="2dp"
-                app:strokeColor="#44FFFFFF"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -77,31 +84,53 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingHorizontal="32dp">
-                    
-                    <ImageView
-                        android:id="@+id/imgSelectedFlag"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp">
+
+                    <!-- Frosted Flag Badge in Dropdown -->
+                    <FrameLayout
+                        android:id="@+id/flagContainer"
                         android:layout_width="48dp"
-                        android:layout_height="36dp"
-                        android:scaleType="fitCenter" />
-                        
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imgSelectedFlag"
+                            android:layout_width="34dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:scaleType="fitCenter"
+                            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.ExtraSmall" />
+                    </FrameLayout>
+
                     <TextView
                         android:id="@+id/txtSelectedLanguage"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
-                        android:textColor="#FFFFFF"
-                        android:textSize="24sp"
-                        android:fontFamily="sans-serif-medium"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-bold"
                         tools:text="English" />
 
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginStart="24dp"
-                        android:src="@drawable/ic_arrow_down"
-                        app:tint="#FFFFFF" />
+                    <!-- Frosted Expand Chevron Badge -->
+                    <FrameLayout
+                        android:id="@+id/chevronContainer"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:id="@+id/imgChevron"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_expand_more"
+                            app:tint="@color/tv_text_primary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                 </LinearLayout>
 
@@ -111,9 +140,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/welcome_translation_disclaimer"
-                android:textColor="#BBFFFFFF"
+                android:textColor="@color/tv_text_secondary"
                 android:textSize="14sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif" />
@@ -121,9 +150,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:text="@string/welcome_change_later_hint"
-                android:textColor="#BBFFFFFF"
+                android:textColor="@color/tv_text_secondary"
                 android:textSize="14sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif-italic" />
@@ -132,23 +161,37 @@
                 android:id="@+id/txtFossLegalNotice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/foss_legal_notice"
-                android:textColor="#BBFFFFFF"
+                android:textColor="@color/tv_text_secondary"
                 android:textSize="12sp"
                 android:gravity="center"
                 android:fontFamily="sans-serif"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <!-- Action Button -->
+            <!-- Modern TV Action Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSetDefault"
-                style="@style/TvContinueButton"
-                android:layout_width="400dp"
-                android:layout_height="64dp"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="440dp"
+                android:layout_height="58dp"
                 android:layout_marginTop="24dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:backgroundTint="@color/selector_tv_button_yellow"
+                android:textColor="@color/selector_tv_button_text_yellow"
+                app:cornerRadius="29dp"
+                app:elevation="4dp"
                 android:text="@string/btn_set_default_language"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.02"
+                app:icon="@drawable/ic_arrow_forward"
+                app:iconGravity="textEnd"
+                app:iconPadding="12dp"
+                app:iconSize="22dp"
+                app:iconTint="@color/selector_tv_button_text_yellow"
                 android:focusable="true"
                 android:clickable="true" />
 

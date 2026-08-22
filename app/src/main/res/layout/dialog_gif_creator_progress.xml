@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@drawable/bg_dialog_surface">
+    android:gravity="center"
+    android:background="@drawable/bg_dialog_glass">
+
+    <FrameLayout
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginBottom="16dp">
+
+        <ProgressBar
+            android:id="@+id/progressBarCircle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/bg_premium_progress" />
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_gif"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/txtProgressTitle"
@@ -12,16 +35,18 @@
         android:layout_height="wrap_content"
         android:text="@string/gif_creator_title"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/mobile_card_text_primary" />
+        android:fontFamily="sans-serif-black"
+        android:textColor="@color/mobile_text_primary"
+        android:textAlignment="center" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="6dp"
         android:layout_marginTop="16dp"
         android:indeterminate="false"
+        android:progressTint="?attr/colorPrimary"
         android:max="100" />
 
     <TextView
@@ -29,7 +54,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="@color/mobile_card_text_secondary"
-        android:textSize="14sp" />
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAlignment="center" />
 
 </LinearLayout>

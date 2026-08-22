@@ -31,7 +31,8 @@
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="false"
-            android:background="@drawable/selector_tv_icon_btn" />
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/selector_tv_icon_tint_yellow" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -88,7 +89,7 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#1AFFFFFF">
+                app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:id="@+id/layoutImageList"
@@ -108,7 +109,7 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#1AFFFFFF">
+                app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -163,7 +164,7 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#1AFFFFFF">
+                app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -246,7 +247,7 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#1AFFFFFF">
+                app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -349,7 +350,7 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="#1AFFFFFF">
+                app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"

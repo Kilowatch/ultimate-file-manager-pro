@@ -153,21 +153,16 @@
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
 
-                    <LinearLayout
+                    <Spinner
+                        android:id="@+id/spinnerDevices"
                         android:layout_width="match_parent"
-                        android:layout_height="52dp"
+                        android:layout_height="48dp"
                         android:layout_marginBottom="20dp"
-                        android:background="@drawable/bg_input_field"
-                        android:gravity="center_vertical"
-                        android:paddingHorizontal="4dp">
-
-                        <Spinner
-                            android:id="@+id/spinnerDevices"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:focusable="true"
-                            android:background="@null" />
-                    </LinearLayout>
+                        android:background="@drawable/selector_tv_button_yellow"
+                        android:popupBackground="@color/tv_dialog_background"
+                        android:paddingHorizontal="12dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false" />
 
                     <!-- Port Input -->
                     <TextView

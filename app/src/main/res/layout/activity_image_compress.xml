@@ -12,34 +12,32 @@
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="14dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/cd_back"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@color/mobile_icon_tint" />
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="12dp">
 
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="9dp"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -52,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/compress_image_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black"
                 android:letterSpacing="0.01"
                 android:maxLines="1"
@@ -64,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="1dp"
                 android:maxLines="1"
                 android:ellipsize="middle"
                 tools:text="3 images selected" />

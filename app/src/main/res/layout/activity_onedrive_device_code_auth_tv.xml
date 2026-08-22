@@ -8,50 +8,59 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_tv_gradient">
 
-    <!-- Header Area -->
+    <!-- TV Header Bar (72dp UFMStandard) -->
     <LinearLayout
         android:id="@+id/layerHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="72dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="32dp"
+        android:paddingHorizontal="24dp"
+        android:background="@color/tv_glass_white_10"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="12dp"
+            android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_back"
             android:background="@drawable/selector_tv_icon_btn"
             android:focusable="true"
             android:focusableInTouchMode="false"
             android:clickable="true"
-            app:tint="@color/tv_text_primary" />
+            app:tint="@color/selector_tv_icon_tint_yellow" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="24dp">
+            android:layout_marginStart="16dp">
+
             <TextView
                 android:id="@+id/txtAuthTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_online_storage_auth_onedrive"
                 android:textColor="@color/tv_text_primary"
-                android:textSize="28sp"
-                android:fontFamily="sans-serif-black" />
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
             <TextView
+                android:id="@+id/txtSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/onedrive_device_code_subtitle"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="18sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="13sp"
+                android:singleLine="true"
+                android:ellipsize="end" />
         </LinearLayout>
     </LinearLayout>
 
@@ -61,7 +70,8 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingHorizontal="60dp"
+        android:paddingHorizontal="56dp"
+        android:paddingVertical="16dp"
         app:layout_constraintTop_toBottomOf="@id/layerHeader"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -71,35 +81,34 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.2"
             android:orientation="vertical"
-            android:padding="32dp"
-            android:background="@drawable/bg_tv_card_glass"
-            android:elevation="4dp">
+            android:padding="28dp"
+            android:background="@drawable/bg_tv_card_glass">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/onedrive_device_code_step1"
                 android:textColor="@color/tv_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-medium" />
 
             <TextView
                 android:id="@+id/txtVerificationUrl"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="microsoft.com/devicelogin"
                 android:textColor="@color/tv_accent"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:fontFamily="sans-serif-black"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="20dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/onedrive_device_code_step2"
                 android:textColor="@color/tv_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-medium" />
 
             <TextView
@@ -108,13 +117,13 @@
                 android:layout_height="wrap_content"
                 android:text="---- ----"
                 android:textColor="@color/tv_button_focused_yellow"
-                android:textSize="48sp"
+                android:textSize="42sp"
                 android:fontFamily="sans-serif-black"
                 android:gravity="center"
-                android:letterSpacing="0.1"
+                android:letterSpacing="0.12"
                 android:background="@drawable/bg_tv_card_glass_dark"
-                android:padding="16dp"
-                android:layout_marginTop="12dp" />
+                android:padding="14dp"
+                android:layout_marginTop="10dp" />
 
             <LinearLayout
                 android:id="@+id/layoutPolling"
@@ -122,12 +131,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="32dp">
+                android:layout_marginTop="24dp">
 
                 <ProgressBar
                     android:id="@+id/progressPolling"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:indeterminateTint="@color/tv_accent" />
 
                 <TextView
@@ -137,13 +146,14 @@
                     android:text="@string/onedrive_auth_waiting"
                     android:textColor="@color/tv_text_secondary"
                     android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
                     android:layout_marginStart="12dp" />
             </LinearLayout>
         </LinearLayout>
 
         <!-- Spacer -->
         <View
-            android:layout_width="48dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent" />
 
         <!-- Right Side: QR Code -->
@@ -159,15 +169,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/onedrive_device_code_scan_qr"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="18sp"
-                android:layout_marginBottom="16dp" />
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="14dp" />
 
             <androidx.cardview.widget.CardView
-                android:layout_width="240dp"
-                android:layout_height="240dp"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                android:background="@color/white">
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/white">
 
                 <ImageView
                     android:id="@+id/imgQrCode"
@@ -175,12 +186,13 @@
                     android:layout_height="match_parent"
                     android:padding="12dp"
                     android:scaleType="fitCenter"
+                    android:contentDescription="@null"
                     tools:src="@tools:sample/avatars" />
 
                 <ProgressBar
                     android:id="@+id/progressQr"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
                     android:layout_gravity="center"
                     android:indeterminateTint="@color/tv_accent" />
             </androidx.cardview.widget.CardView>
@@ -192,7 +204,7 @@
                 android:text="Code expires in --:--"
                 android:textColor="@color/tv_text_secondary"
                 android:textSize="14sp"
-                android:layout_marginTop="24dp" />
+                android:layout_marginTop="18dp" />
         </LinearLayout>
     </LinearLayout>
 
