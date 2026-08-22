@@ -962,15 +962,10 @@ class NetworkFileAdapter(
                         // Clear tag because we're showing a static drawable
                         imgIcon.tag = null
                         imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(ext))
-                        if (!isGridMode) {
-                            imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                                if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
-                            )
-                            imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
-                        } else {
-                            imgIcon.imageTintList = null
-                            imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
-                        }
+                        imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
+                            if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                        )
+                        imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                     }
                 } catch (e: Exception) {
                     za.kilowatch.ultimatefilemanager.util.GoRoLog.e("UFM_CACHE", "🚀 [GoRo] Exception in loadThumbnail for ${file.name}", e)

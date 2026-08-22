@@ -1146,14 +1146,20 @@ class FileAdapter(
          * Images load natively; videos use the same frame-extraction path as list view.
          */
         private fun loadThumbnail(file: File) {
+            val context = itemView.context
             val ext = file.extension.lowercase()
             val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
 
             if (!isImage && !isVideo && !isApk) {
-                imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
-                imgIcon.imageTintList = null
+                imgIcon.setImageResource(FileTypeIconProvider.iconForFile(context, file))
+                val tintColor = if (isTv) {
+                    DefaultIconColorManager.getTvIconTint(context)
+                } else {
+                    DefaultIconColorManager.getMobileIconTint(context)
+                }
+                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
                 imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                 return
             }

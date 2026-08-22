@@ -65,9 +65,10 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
 
         // Load current custom colours from preferences
         val ctx = requireContext()
-        lightColor  = DefaultIconColorManager.getCustomColor(ctx, ThemeHelper.THEME_LIGHT)  ?: DefaultIconColorManager.DEFAULT_LIGHT
-        darkColor   = DefaultIconColorManager.getCustomColor(ctx, ThemeHelper.THEME_DARK)   ?: DefaultIconColorManager.DEFAULT_DARK
-        amoledColor = DefaultIconColorManager.getCustomColor(ctx, ThemeHelper.THEME_AMOLED) ?: DefaultIconColorManager.DEFAULT_AMOLED
+        val defaultColor = DefaultIconColorManager.getDefaultColor(ctx)
+        lightColor  = DefaultIconColorManager.getCustomColor(ctx, ThemeHelper.THEME_LIGHT)  ?: defaultColor
+        darkColor   = DefaultIconColorManager.getCustomColor(ctx, ThemeHelper.THEME_DARK)   ?: defaultColor
+        amoledColor = DefaultIconColorManager.getCustomColor(ctx, ThemeHelper.THEME_AMOLED) ?: defaultColor
 
         // Render initial state
         updatePreview()
@@ -95,9 +96,10 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
 
         // Reset all
         view.findViewById<View>(R.id.btnResetAll)?.setOnClickListener {
-            lightColor  = DefaultIconColorManager.DEFAULT_LIGHT
-            darkColor   = DefaultIconColorManager.DEFAULT_DARK
-            amoledColor = DefaultIconColorManager.DEFAULT_AMOLED
+            val default = DefaultIconColorManager.getDefaultColor(requireContext())
+            lightColor  = default
+            darkColor   = default
+            amoledColor = default
             refreshAllSwatches()
             updatePreview()
         }
@@ -105,9 +107,26 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
         // Done
         view.findViewById<View>(R.id.btnDone)?.setOnClickListener {
             val context = requireContext()
-            DefaultIconColorManager.setCustomColor(context, ThemeHelper.THEME_LIGHT,  lightColor)
-            DefaultIconColorManager.setCustomColor(context, ThemeHelper.THEME_DARK,   darkColor)
-            DefaultIconColorManager.setCustomColor(context, ThemeHelper.THEME_AMOLED, amoledColor)
+            val default = DefaultIconColorManager.getDefaultColor(context)
+
+            if (lightColor == default) {
+                DefaultIconColorManager.resetCustomColor(context, ThemeHelper.THEME_LIGHT)
+            } else {
+                DefaultIconColorManager.setCustomColor(context, ThemeHelper.THEME_LIGHT, lightColor)
+            }
+
+            if (darkColor == default) {
+                DefaultIconColorManager.resetCustomColor(context, ThemeHelper.THEME_DARK)
+            } else {
+                DefaultIconColorManager.setCustomColor(context, ThemeHelper.THEME_DARK, darkColor)
+            }
+
+            if (amoledColor == default) {
+                DefaultIconColorManager.resetCustomColor(context, ThemeHelper.THEME_AMOLED)
+            } else {
+                DefaultIconColorManager.setCustomColor(context, ThemeHelper.THEME_AMOLED, amoledColor)
+            }
+
             DefaultIconColorManager.invalidateCache()
             dismiss()
         }
@@ -151,12 +170,7 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
 
         // Reset button
         view.findViewById<View>(btnReset)?.setOnClickListener {
-            val default = when (section) {
-                ThemeHelper.THEME_LIGHT  -> DefaultIconColorManager.DEFAULT_LIGHT
-                ThemeHelper.THEME_DARK   -> DefaultIconColorManager.DEFAULT_DARK
-                ThemeHelper.THEME_AMOLED -> DefaultIconColorManager.DEFAULT_AMOLED
-                else -> DefaultIconColorManager.DEFAULT_DARK
-            }
+            val default = DefaultIconColorManager.getDefaultColor(requireContext())
             setCurrentColor(section, default)
             swatch?.backgroundTintList = ColorStateList.valueOf(default)
             updatePreview()

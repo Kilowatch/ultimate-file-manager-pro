@@ -117,9 +117,10 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
         }
 
         // Load current custom colours
-        lightColor  = DefaultIconColorManager.getCustomColor(this, ThemeHelper.THEME_LIGHT)  ?: DefaultIconColorManager.DEFAULT_LIGHT
-        darkColor   = DefaultIconColorManager.getCustomColor(this, ThemeHelper.THEME_DARK)   ?: DefaultIconColorManager.DEFAULT_DARK
-        amoledColor = DefaultIconColorManager.getCustomColor(this, ThemeHelper.THEME_AMOLED) ?: DefaultIconColorManager.DEFAULT_AMOLED
+        val defaultColor = DefaultIconColorManager.getDefaultColor(this)
+        lightColor  = DefaultIconColorManager.getCustomColor(this, ThemeHelper.THEME_LIGHT)  ?: defaultColor
+        darkColor   = DefaultIconColorManager.getCustomColor(this, ThemeHelper.THEME_DARK)   ?: defaultColor
+        amoledColor = DefaultIconColorManager.getCustomColor(this, ThemeHelper.THEME_AMOLED) ?: defaultColor
 
         tvPreviewIcon = findViewById(R.id.tvPreviewIcon)
         tvPreviewHex  = findViewById(R.id.tvPreviewHex)
@@ -140,9 +141,10 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
 
         // Reset all
         findViewById<MaterialButton>(R.id.btnTvResetAll)?.setOnClickListener {
-            lightColor  = DefaultIconColorManager.DEFAULT_LIGHT
-            darkColor   = DefaultIconColorManager.DEFAULT_DARK
-            amoledColor = DefaultIconColorManager.DEFAULT_AMOLED
+            val default = DefaultIconColorManager.getDefaultColor(this)
+            lightColor  = default
+            darkColor   = default
+            amoledColor = default
             adapter.notifyDataSetChanged()
             updatePreview()
         }
@@ -153,9 +155,26 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
     // ── Save ────────────────────────────────────────────────────────────────
 
     private fun saveAndFinish() {
-        DefaultIconColorManager.setCustomColor(this, ThemeHelper.THEME_LIGHT,  lightColor)
-        DefaultIconColorManager.setCustomColor(this, ThemeHelper.THEME_DARK,   darkColor)
-        DefaultIconColorManager.setCustomColor(this, ThemeHelper.THEME_AMOLED, amoledColor)
+        val default = DefaultIconColorManager.getDefaultColor(this)
+
+        if (lightColor == default) {
+            DefaultIconColorManager.resetCustomColor(this, ThemeHelper.THEME_LIGHT)
+        } else {
+            DefaultIconColorManager.setCustomColor(this, ThemeHelper.THEME_LIGHT,  lightColor)
+        }
+
+        if (darkColor == default) {
+            DefaultIconColorManager.resetCustomColor(this, ThemeHelper.THEME_DARK)
+        } else {
+            DefaultIconColorManager.setCustomColor(this, ThemeHelper.THEME_DARK,   darkColor)
+        }
+
+        if (amoledColor == default) {
+            DefaultIconColorManager.resetCustomColor(this, ThemeHelper.THEME_AMOLED)
+        } else {
+            DefaultIconColorManager.setCustomColor(this, ThemeHelper.THEME_AMOLED, amoledColor)
+        }
+
         DefaultIconColorManager.invalidateCache()
         finish()
     }
@@ -322,9 +341,9 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
     private inner class ThemeSectionAdapter : RecyclerView.Adapter<ThemeSectionAdapter.ViewHolder>() {
 
         private val sections = listOf(
-            SectionData(ThemeHelper.THEME_LIGHT,  R.string.default_icon_color_section_light,  DefaultIconColorManager.DEFAULT_LIGHT),
-            SectionData(ThemeHelper.THEME_DARK,   R.string.default_icon_color_section_dark,   DefaultIconColorManager.DEFAULT_DARK),
-            SectionData(ThemeHelper.THEME_AMOLED, R.string.default_icon_color_section_amoled, DefaultIconColorManager.DEFAULT_AMOLED)
+            SectionData(ThemeHelper.THEME_LIGHT,  R.string.default_icon_color_section_light,  DefaultIconColorManager.getDefaultColor(this@DefaultIconColorTvActivity)),
+            SectionData(ThemeHelper.THEME_DARK,   R.string.default_icon_color_section_dark,   DefaultIconColorManager.getDefaultColor(this@DefaultIconColorTvActivity)),
+            SectionData(ThemeHelper.THEME_AMOLED, R.string.default_icon_color_section_amoled, DefaultIconColorManager.getDefaultColor(this@DefaultIconColorTvActivity))
         )
 
         override fun getItemCount() = sections.size

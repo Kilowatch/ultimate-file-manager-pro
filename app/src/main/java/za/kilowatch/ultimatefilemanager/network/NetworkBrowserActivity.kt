@@ -3289,20 +3289,21 @@ class NetworkBrowserActivity : AppCompatActivity() {
         onStatusUpdate: ((String) -> Unit)? = null
     ): File {
         val localFile = File(localParent, netFile.name)
+        val cleanNetPath = stripSharePrefix(netFile.path)
         if (netFile.isDirectory) {
             localFile.mkdirs()
             val children = when (share.type) {
-                ShareType.SMB -> SmbShareClient.listFiles(share, netFile.path)
-                ShareType.FTP -> FtpShareClient.listFiles(share, netFile.path)
-                ShareType.TV  -> TvShareClient.listFiles(share, netFile.path)
-                ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, netFile.path)
-                ShareType.ONEDRIVE -> OnedriveShareClient.listFiles(share, netFile.path)
-                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, netFile.path)
-                ShareType.DROPBOX -> DropboxShareClient.listFiles(share, netFile.path)
-                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, netFile.path)
-                ShareType.WEBDAV                      -> WebDavShareClient.listFiles(share, netFile.path)
-                ShareType.NFS                         -> NfsShareClient.listFiles(share, netFile.path)
-                ShareType.DLNA                        -> DlnaShareClient.listFiles(share, netFile.path)
+                ShareType.SMB -> SmbShareClient.listFiles(share, cleanNetPath)
+                ShareType.FTP -> FtpShareClient.listFiles(share, cleanNetPath)
+                ShareType.TV  -> TvShareClient.listFiles(share, cleanNetPath)
+                ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, cleanNetPath)
+                ShareType.ONEDRIVE -> OnedriveShareClient.listFiles(share, cleanNetPath)
+                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, cleanNetPath)
+                ShareType.DROPBOX -> DropboxShareClient.listFiles(share, cleanNetPath)
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, cleanNetPath)
+                ShareType.WEBDAV                      -> WebDavShareClient.listFiles(share, cleanNetPath)
+                ShareType.NFS                         -> NfsShareClient.listFiles(share, cleanNetPath)
+                ShareType.DLNA                        -> DlnaShareClient.listFiles(share, cleanNetPath)
             }
             for (child in children) {
                 downloadNetworkEntry(child, localFile, onStatusUpdate)
@@ -3310,17 +3311,17 @@ class NetworkBrowserActivity : AppCompatActivity() {
         } else {
             onStatusUpdate?.invoke(getString(R.string.downloading_netfilename, netFile.name))
             val inStream = when (share.type) {
-                ShareType.SMB -> SmbShareClient.openInputStream(share, netFile.path)
-                ShareType.FTP -> FtpShareClient.openInputStream(share, netFile.path)
-                ShareType.TV  -> TvShareClient.openInputStream(share, netFile.path)
-                ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, netFile.path)
-                ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, netFile.path).first
-                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, netFile.path).first
-                ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, netFile.path).first
-                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, netFile.path).first
-                ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, netFile.path).first
-                ShareType.NFS                         -> NfsShareClient.openInputStream(share, netFile.path)
-                ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, netFile.path)
+                ShareType.SMB -> SmbShareClient.openInputStream(share, cleanNetPath)
+                ShareType.FTP -> FtpShareClient.openInputStream(share, cleanNetPath)
+                ShareType.TV  -> TvShareClient.openInputStream(share, cleanNetPath)
+                ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, cleanNetPath)
+                ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, cleanNetPath).first
+                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, cleanNetPath).first
+                ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, cleanNetPath).first
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, cleanNetPath).first
+                ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, cleanNetPath).first
+                ShareType.NFS                         -> NfsShareClient.openInputStream(share, cleanNetPath)
+                ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, cleanNetPath)
             }
             inStream.use { inp ->
                 FileOutputStream(localFile).use { out ->
@@ -3331,27 +3332,71 @@ class NetworkBrowserActivity : AppCompatActivity() {
         return localFile
     }
 
-    private suspend fun uploadLocalEntryToNetwork(localFile: File, remotePath: String) {
+    private suspend fun uploadLocalEntryToNetwork(localFile: File, rawRemotePath: String) {
+        val cleanRemotePath = stripSharePrefix(rawRemotePath).replace('\\', '/')
         if (localFile.isDirectory) {
+            val segments = cleanRemotePath.split("/").filter { it.isNotEmpty() }
+            var currentSegment = ""
+            for (segment in segments) {
+                currentSegment = if (currentSegment.isEmpty()) segment else "$currentSegment/$segment"
+                try {
+                    when (share.type) {
+                        ShareType.SMB -> SmbShareClient.mkdir(share, currentSegment)
+                        ShareType.FTP -> FtpShareClient.mkdir(share, currentSegment)
+                        ShareType.TV  -> TvShareClient.mkdir(share, currentSegment)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, currentSegment)
+                        ShareType.ONEDRIVE -> OnedriveShareClient.mkdir(share, currentSegment)
+                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, currentSegment)
+                        ShareType.DROPBOX -> DropboxShareClient.mkdir(share, currentSegment)
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, currentSegment)
+                        ShareType.WEBDAV -> WebDavShareClient.mkdir(share, currentSegment)
+                        ShareType.NFS -> NfsShareClient.mkdir(share, currentSegment)
+                        ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                    }
+                } catch (_: Exception) {}
+            }
             val children = localFile.listFiles() ?: return
             for (child in children) {
-                val childRemotePath = if (remotePath.isEmpty()) child.name else "$remotePath/${child.name}"
+                val childRemotePath = if (cleanRemotePath.isEmpty()) child.name else "$cleanRemotePath/${child.name}"
                 uploadLocalEntryToNetwork(child, childRemotePath)
             }
         } else {
+            val parentPath = cleanRemotePath.substringBeforeLast('/', "")
+            if (parentPath.isNotEmpty()) {
+                val segments = parentPath.split("/").filter { it.isNotEmpty() }
+                var currentSegment = ""
+                for (segment in segments) {
+                    currentSegment = if (currentSegment.isEmpty()) segment else "$currentSegment/$segment"
+                    try {
+                        when (share.type) {
+                            ShareType.SMB -> SmbShareClient.mkdir(share, currentSegment)
+                            ShareType.FTP -> FtpShareClient.mkdir(share, currentSegment)
+                            ShareType.TV  -> TvShareClient.mkdir(share, currentSegment)
+                            ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, currentSegment)
+                            ShareType.ONEDRIVE -> OnedriveShareClient.mkdir(share, currentSegment)
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, currentSegment)
+                            ShareType.DROPBOX -> DropboxShareClient.mkdir(share, currentSegment)
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, currentSegment)
+                            ShareType.WEBDAV -> WebDavShareClient.mkdir(share, currentSegment)
+                            ShareType.NFS -> NfsShareClient.mkdir(share, currentSegment)
+                            ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                        }
+                    } catch (_: Exception) {}
+                }
+            }
             val inStream = localFile.inputStream()
             try {
                 when (share.type) {
-                    ShareType.SMB -> SmbShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
-                    ShareType.FTP -> FtpShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
-                    ShareType.TV -> TvShareClient.uploadStream(share, remotePath, inStream, localFile.length())
-                    ShareType.SFTP, ShareType.SCP -> SshShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
-                    ShareType.ONEDRIVE -> OnedriveShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
-                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
-                    ShareType.DROPBOX -> DropboxShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
-                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
-                    ShareType.WEBDAV -> WebDavShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
-                    ShareType.NFS -> NfsShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.SMB -> SmbShareClient.openOutputStream(share, cleanRemotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.FTP -> FtpShareClient.openOutputStream(share, cleanRemotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.TV -> TvShareClient.uploadStream(share, cleanRemotePath, inStream, localFile.length())
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.openOutputStream(share, cleanRemotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.ONEDRIVE -> OnedriveShareClient.openOutputStream(share, cleanRemotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(share, cleanRemotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.DROPBOX -> DropboxShareClient.openOutputStream(share, cleanRemotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openOutputStream(share, cleanRemotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.WEBDAV -> WebDavShareClient.openOutputStream(share, cleanRemotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.NFS -> NfsShareClient.openOutputStream(share, cleanRemotePath).use { out -> inStream.copyTo(out) }
                     ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                 }
             } finally {
@@ -3427,6 +3472,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
         if (archives.isEmpty()) return
         fileAdapter.exitSelectionMode()
 
+        // Ensure effective share remotePath is resolved when in server mode inside a share
+        if (share.type == ShareType.SMB && share.isServerMode && share.remotePath.isEmpty() && currentPath.isNotEmpty()) {
+            val shareName = currentPath.trimStart('/').substringBefore('/')
+            share = share.copy(remotePath = "/$shareName")
+            fileAdapter.share = share
+        }
+
         val isTv = DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
         val dialogView = layoutInflater.inflate(layoutRes, null)
@@ -3448,23 +3500,29 @@ class NetworkBrowserActivity : AppCompatActivity() {
             val tempExtractDir = File(cacheDir, "net_extract_${System.currentTimeMillis()}")
             tempExtractDir.mkdirs()
 
-            suspend fun ensureRemoteDir(path: String) {
-                if (path.isEmpty()) return
-                try {
-                    when(share.type) {
-                        ShareType.SMB          -> SmbShareClient.mkdir(share, path)
-                        ShareType.FTP          -> FtpShareClient.mkdir(share, path)
-                        ShareType.TV           -> TvShareClient.mkdir(share, path)
-                        ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, path)
-                        ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, path)
-                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, path)
-                        ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, path)
-                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, path)
-                        ShareType.WEBDAV       -> WebDavShareClient.mkdir(share, path)
-                        ShareType.NFS          -> NfsShareClient.mkdir(share, path)
-                        ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
-                    }
-                } catch (_: Exception) {}
+            suspend fun ensureRemoteDir(rawPath: String) {
+                val cleanPath = stripSharePrefix(rawPath).replace('\\', '/').trim('/')
+                if (cleanPath.isEmpty()) return
+                val segments = cleanPath.split("/").filter { it.isNotEmpty() }
+                var currentSegment = ""
+                for (segment in segments) {
+                    currentSegment = if (currentSegment.isEmpty()) segment else "$currentSegment/$segment"
+                    try {
+                        when(share.type) {
+                            ShareType.SMB          -> SmbShareClient.mkdir(share, currentSegment)
+                            ShareType.FTP          -> FtpShareClient.mkdir(share, currentSegment)
+                            ShareType.TV           -> TvShareClient.mkdir(share, currentSegment)
+                            ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, currentSegment)
+                            ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, currentSegment)
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, currentSegment)
+                            ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, currentSegment)
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, currentSegment)
+                            ShareType.WEBDAV       -> WebDavShareClient.mkdir(share, currentSegment)
+                            ShareType.NFS          -> NfsShareClient.mkdir(share, currentSegment)
+                            ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
+                        }
+                    } catch (_: Exception) {}
+                }
             }
 
             if (customDestPath != null) {
@@ -3536,6 +3594,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                 ensureRemoteDir(subPath)
                                 subPath
                             } else {
+                                ensureRemoteDir(customDestPath)
                                 customDestPath
                             }
                         } else {
@@ -3676,12 +3735,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
      * (e.g. \\server\docker\docker\_projects), so we strip it here before use.
      */
     private fun stripSharePrefix(path: String): String {
-        if (!share.isServerMode || share.remotePath.isEmpty()) return path
+        val clean = path.trimStart('/')
+        if (!share.isServerMode || share.remotePath.isEmpty()) return clean
         val prefix = share.remotePath.trimStart('/')
         return when {
-            path.startsWith("$prefix/") -> path.removePrefix("$prefix/")
-            path == prefix              -> ""
-            else                        -> path
+            clean.startsWith("$prefix/", ignoreCase = true) -> clean.substring(prefix.length + 1)
+            clean.equals(prefix, ignoreCase = true)         -> ""
+            else                                           -> clean
         }
     }
 
