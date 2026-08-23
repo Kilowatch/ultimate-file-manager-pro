@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.LongPressDurationManager
 import za.kilowatch.ultimatefilemanager.ui.CircularProgressView
 import za.kilowatch.ultimatefilemanager.network.ShareType
@@ -409,6 +410,12 @@ private fun ImageView.safeSetIcon(resId: Int) {
         fun bind(item: StorageItem) {
             val context = itemView.context
             imgIcon.setImageResource(item.iconRes)
+            val iconTint = if (isTv) {
+                DefaultIconColorManager.getTvIconTint(context)
+            } else {
+                DefaultIconColorManager.getMobileIconTint(context)
+            }
+            imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
             txtTitle.text = item.label
             val count = item.categoryItemCount
             txtCount.text = if (count == 1) {
@@ -1105,8 +1112,9 @@ private fun ImageView.safeSetIcon(resId: Int) {
             icon: ImageView,
             label: TextView
         ) {
+            val whiteTint = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, android.R.color.white))
             if (isTv) {
-                icon.setColorFilter(ContextCompat.getColor(context, android.R.color.white))
+                icon.imageTintList = whiteTint
                 // Card background is the glass layer — no inner layout background to reset
                 card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.tv_glass_white_10))
                 card.strokeWidth = 0
@@ -1114,6 +1122,10 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 iconContainer?.setBackgroundResource(R.drawable.bg_glass_card)
             } else {
                 icon.clearColorFilter()
+                // Always restore to white — @color/mobile_icon_tint is #FFF in dark/AMOLED mode
+                icon.imageTintList = android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.mobile_icon_tint)
+                )
                 iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 label.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_primary))
                 card.strokeWidth = 0
@@ -1153,7 +1165,11 @@ private fun ImageView.safeSetIcon(resId: Int) {
             if (config.iconColor != Color.TRANSPARENT) {
                 icon?.setColorFilter(config.iconColor)
             } else {
+                // No per-tile custom icon color — restore to white
                 icon?.clearColorFilter()
+                icon?.imageTintList = android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.mobile_icon_tint)
+                )
             }
 
             // Icon background color

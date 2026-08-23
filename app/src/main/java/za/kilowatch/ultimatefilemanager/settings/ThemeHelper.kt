@@ -49,6 +49,32 @@ object ThemeHelper {
                 /* force = */ true
             )
         }
+
+        // When Material You is off and the user has chosen a custom accent color,
+        // seed the Material3 dynamic palette from that color so all views using
+        // ?attr/colorPrimary (toggle switches, buttons, text highlights, etc.)
+        // automatically reflect the user's color across EVERY activity.
+        // The application-level DynamicColors.applyToActivitiesIfAvailable only runs
+        // when MaterialYouPrefs.isEnabled, so this block is safe (no double-apply).
+        if (context is Activity &&
+            !DeviceUtils.isTvDevice(context) &&
+            !MaterialYouPrefs.isEnabled(context) &&
+            android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
+        ) {
+            val customColor = DefaultIconColorManager.getCustomColor(context, mode)
+            if (customColor != null) {
+                try {
+                    val bitmap = android.graphics.Bitmap.createBitmap(1, 1, android.graphics.Bitmap.Config.ARGB_8888)
+                    bitmap.setPixel(0, 0, customColor)
+                    val options = com.google.android.material.color.DynamicColorsOptions.Builder()
+                        .setContentBasedSource(bitmap)
+                        .build()
+                    com.google.android.material.color.DynamicColors.applyToActivityIfAvailable(
+                        context as Activity, options
+                    )
+                } catch (_: Exception) { }
+            }
+        }
     }
 
     /**

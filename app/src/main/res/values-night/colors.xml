@@ -7,6 +7,12 @@
     <color name="ufm_accent">#FF42A5F5</color>
     <color name="ufm_accent_light">#FF90CAF9</color>
     <color name="ufm_accent_dark">#FF0D47A1</color>
+    <!-- Theme Accent Primary Colors (Matches DefaultIconColorManager) -->
+    <color name="theme_primary">#FF7DAECC</color>
+    <color name="theme_primary_light">#FF1C2B3A</color>
+    <color name="theme_primary_dark">#FF7DAECC</color>
+    <color name="theme_primary_amoled">#FFE8C98A</color>
+
     <!-- Original brand blue — lighter tone for dark backgrounds -->
     <color name="ufm_primary_blue">#FF4DA3FF</color>
     <color name="ufm_on_primary">#FF00345F</color>

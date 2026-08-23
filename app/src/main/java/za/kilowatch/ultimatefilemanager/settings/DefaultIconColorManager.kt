@@ -1,14 +1,22 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 /**
  * Resolves the correct default icon tint color for the current theme.
  *
  * Supports user-customized colors per theme via SharedPreferences.
- * If no custom color is set, it defaults to the Material You dynamic color
- * (ThemeColors.primary(context)).
+ * If no custom color is set:
+ * - When Material You is enabled (mobile Android 12+), defaults to the dynamic
+ *   palette (ThemeColors.primary(context)).
+ * - When Material You is disabled, defaults to built-in constants:
+ *     Light  → 0xFF1C2B3A (dark slate)
+ *     Dark   → 0xFFE8C98A (warm gold/tan)
+ *     AMOLED → 0xFF7DAECC (muted blue-gray)
  *
  * Colors are cached in memory after first load so per-item calls during
  * RecyclerView scrolling incur zero I/O.
@@ -41,23 +49,29 @@ object DefaultIconColorManager {
 
     /**
      * Returns the correct mobile icon tint for the currently active theme,
-     * respecting any user-customized color, or falling back to Material You color.
+     * respecting any user-customized color, or falling back to Material You color / built-in default.
      */
     fun getMobileIconTint(context: Context): Int = resolve(context)
 
     /**
      * Returns the correct TV icon tint for the currently active theme,
-     * respecting any user-customized color, or falling back to Material You color.
+     * respecting any user-customized color, or falling back to Material You color / built-in default.
      */
     fun getTvIconTint(context: Context): Int = resolve(context)
 
     /**
      * Returns the custom color stored for the given theme, or `null` if the
-     * user has not customized it (i.e. the Material You default should be used).
+     * user has not customized it (i.e. the default should be used).
      */
     fun getCustomColor(context: Context, theme: Int): Int? {
+        val effectiveTheme = if (theme == ThemeHelper.THEME_SYSTEM) {
+            val isNight = (context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
+            if (isNight) ThemeHelper.THEME_DARK else ThemeHelper.THEME_LIGHT
+        } else {
+            theme
+        }
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        return when (theme) {
+        return when (effectiveTheme) {
             ThemeHelper.THEME_LIGHT  -> loadOrCached(KEY_LIGHT,  prefs, cachedLight)  { cachedLight  = it }
             ThemeHelper.THEME_DARK   -> loadOrCached(KEY_DARK,   prefs, cachedDark)   { cachedDark   = it }
             ThemeHelper.THEME_AMOLED -> loadOrCached(KEY_AMOLED, prefs, cachedAmoled) { cachedAmoled = it }
@@ -78,8 +92,8 @@ object DefaultIconColorManager {
     }
 
     /**
-     * Remove the custom color for the given theme, reverting to the Material You
-     * default. Updates both SharedPreferences and in-memory cache.
+     * Remove the custom color for the given theme, reverting to the default.
+     * Updates both SharedPreferences and in-memory cache.
      */
     fun resetCustomColor(context: Context, theme: Int) {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -90,8 +104,7 @@ object DefaultIconColorManager {
     }
 
     /**
-     * Remove ALL custom icon colors, reverting every theme to its Material You
-     * default.
+     * Remove ALL custom icon colors, reverting every theme to its default.
      */
     fun resetAllCustomColors(context: Context) {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -104,9 +117,27 @@ object DefaultIconColorManager {
     }
 
     /**
-     * Returns the active Material You / theme primary default color.
+     * Returns the built-in default color for the given [theme].
      */
-    fun getDefaultColor(context: Context): Int = ThemeColors.primary(context)
+    fun getDefaultColor(theme: Int): Int {
+        return when (theme) {
+            ThemeHelper.THEME_LIGHT  -> DEFAULT_LIGHT
+            ThemeHelper.THEME_DARK   -> DEFAULT_DARK
+            ThemeHelper.THEME_AMOLED -> DEFAULT_AMOLED
+            ThemeHelper.THEME_SYSTEM -> {
+                val mode = AppCompatDelegate.getDefaultNightMode()
+                if (mode == AppCompatDelegate.MODE_NIGHT_YES) DEFAULT_DARK else DEFAULT_LIGHT
+            }
+            else -> DEFAULT_DARK
+        }
+    }
+
+    /**
+     * Overload for context callers.
+     */
+    fun getDefaultColor(context: Context, theme: Int = ThemeHelper.getSavedTheme(context)): Int {
+        return getDefaultColor(theme)
+    }
 
     /**
      * Forces the in-memory cache to reload from SharedPreferences on the next
@@ -124,20 +155,31 @@ object DefaultIconColorManager {
 
     /**
      * Resolve the correct color for the current theme.
-     * Order: user custom > Material You color (colorPrimary).
+     * Order: Material You dynamic (if enabled) > user custom (when Material You off) > built-in default.
      */
     private fun resolve(context: Context): Int {
         val theme = ThemeHelper.getSavedTheme(context)
 
-        // 1. Check user custom color (loads + caches from prefs)
+        // 1. Material You: default icon tint follows the active dynamic palette
+        //    (colorPrimary). Mobile/Android 12+ only — TV always keeps the fixed
+        //    per-mode defaults, and the value is cached per theme mode so it
+        //    survives light/dark/AMOLED switches without per-item resolution.
+        if (MaterialYouPrefs.isEnabled(context) &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            !DeviceUtils.isTvDevice(context)
+        ) {
+            if (cachedDynamic == null || cachedDynamicTheme != theme) {
+                cachedDynamic = ThemeColors.primary(context)
+                cachedDynamicTheme = theme
+            }
+            return cachedDynamic!!
+        }
+
+        // 2. Check user custom color (loads + caches from prefs)
         getCustomColor(context, theme)?.let { return it }
 
-        // 2. Default: Material You color (ThemeColors.primary)
-        if (cachedDynamic == null || cachedDynamicTheme != theme) {
-            cachedDynamic = ThemeColors.primary(context)
-            cachedDynamicTheme = theme
-        }
-        return cachedDynamic!!
+        // 3. Fall back to built-in default
+        return getDefaultColor(theme)
     }
 
     private fun prefKey(theme: Int): String = when (theme) {

@@ -56,6 +56,8 @@ import za.kilowatch.ultimatefilemanager.remote.PinDialogHelper
 import za.kilowatch.ultimatefilemanager.remote.RemoteManageActivity
 import za.kilowatch.ultimatefilemanager.remote.VpnWarningHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeActivity
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
+import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
 import za.kilowatch.ultimatefilemanager.billing.SupporterLoyaltyActivity
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupPrefs
@@ -611,6 +613,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
@@ -692,6 +695,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         loadStorageVolumes()
         Log.d(TAG, "onResume: Refreshing storage volumes")
         applyViewMode()
+        applyDynamicThemeColors()
 
         
         // Background check: ping TV devices and refresh UI if online status changes.
@@ -1135,12 +1139,13 @@ class StorageBrowserActivity : AppCompatActivity() {
         if (!isTv) {
             val pad = (8 * density).toInt()
             val margin = (8 * density).toInt()
+            val initialTint = DefaultIconColorManager.getMobileIconTint(this)
             btnAddCustomTile = ImageView(this).apply {
                 setImageResource(R.drawable.ic_add)
                 contentDescription = getString(R.string.custom_tile_add_button)
                 setPadding(pad, pad, pad, pad)
                 setBackgroundResource(R.drawable.bg_btn_icon_frosted)
-                setColorFilter(getColor(R.color.mobile_icon_tint))
+                imageTintList = android.content.res.ColorStateList.valueOf(initialTint)
                 layoutParams = androidx.appcompat.widget.Toolbar.LayoutParams(
                     androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
                     androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
@@ -1316,6 +1321,19 @@ class StorageBrowserActivity : AppCompatActivity() {
 
         // Attach ItemTouchHelper for mobile drag-and-drop (no-op on TV)
         if (!isTv) setupItemTouchHelper()
+
+        applyDynamicThemeColors()
+    }
+
+    private fun applyDynamicThemeColors() {
+        val iconTint = if (isTv) DefaultIconColorManager.getTvIconTint(this) else DefaultIconColorManager.getMobileIconTint(this)
+        findViewById<View?>(R.id.viewSectionUnderline)?.backgroundTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnManageTiles.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnColorTile?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnImportColorCode?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnAddCustomTile?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnSettingsGear?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        updateToggleVisuals()
     }
 
     private var selectedTileId: String? = null
@@ -4472,10 +4490,20 @@ class StorageBrowserActivity : AppCompatActivity() {
     private fun updateToggleVisuals() {
         val currentMode = MainMenuViewModeManager.loadViewMode(this)
         val isGrid = currentMode == MainMenuViewModeManager.ViewMode.GRID
+        val activeColor = if (isTv) getColor(R.color.tv_accent) else DefaultIconColorManager.getMobileIconTint(this)
+
+        fun createActiveDrawable(): android.graphics.drawable.Drawable {
+            val density = resources.displayMetrics.density
+            return android.graphics.drawable.GradientDrawable().apply {
+                shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+                cornerRadius = 9 * density
+                setColor(activeColor)
+            }
+        }
 
         btnToggleGrid?.let { gridBtn ->
             if (isGrid) {
-                gridBtn.setBackgroundResource(R.drawable.bg_view_toggle_item_active)
+                gridBtn.background = createActiveDrawable()
                 gridBtn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.white))
             } else {
                 gridBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT)
@@ -4486,7 +4514,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
         btnToggleList?.let { listBtn ->
             if (!isGrid) {
-                listBtn.setBackgroundResource(R.drawable.bg_view_toggle_item_active)
+                listBtn.background = createActiveDrawable()
                 listBtn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.white))
             } else {
                 listBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT)

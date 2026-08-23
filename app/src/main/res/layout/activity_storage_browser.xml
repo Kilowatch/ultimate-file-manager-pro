@@ -290,6 +290,7 @@
 
             <!-- Accent underline bar — uses ?attr/colorPrimary to honour Dynamic Colors -->
             <View
+                android:id="@+id/viewSectionUnderline"
                 android:layout_width="36dp"
                 android:layout_height="3dp"
                 android:layout_marginTop="6dp"

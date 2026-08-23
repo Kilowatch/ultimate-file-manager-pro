@@ -8,11 +8,11 @@
          Tertiary / error / surface-container / outline roles are intentionally NOT
          set here — the original app left them at Material 3 defaults. -->
     <style name="Base.Theme.UltimateFileManager" parent="Theme.Material3Expressive.DayNight.NoActionBar">
-        <!-- Primary — the original vivid brand blue (#0084FF) -->
-        <item name="colorPrimary">@color/ufm_primary_blue</item>
-        <item name="colorOnPrimary">@color/ufm_on_primary</item>
-        <item name="colorPrimaryContainer">@color/ufm_primary_blue_light</item>
-        <item name="colorOnPrimaryContainer">@color/ufm_primary_blue_dark</item>
+        <!-- Primary — theme default (Light: #1C2B3A, Dark: #E8C98A, AMOLED: #7DAECC) -->
+        <item name="colorPrimary">@color/theme_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/theme_primary</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
 
         <!-- Secondary (replaces deprecated colorAccent in M3) -->
         <item name="colorSecondary">@color/ufm_accent</item>
@@ -268,6 +268,8 @@
         <item name="colorSurfaceVariant">#FF0A0A0A</item>
         <item name="android:statusBarColor">#FF000000</item>
         <item name="android:navigationBarColor">#FF000000</item>
+        <item name="colorPrimary">@color/theme_primary_amoled</item>
+        <item name="colorPrimaryContainer">@color/theme_primary_amoled</item>
     </style>
 
     <style name="Theme.UFM.Translucent" parent="Theme.UltimateFileManager">

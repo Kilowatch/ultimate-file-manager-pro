@@ -33,7 +33,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_storage_internal"
-            app:tint="?attr/colorPrimary"
+            app:tint="@color/mobile_icon_tint"
             android:contentDescription="@null" />
     </FrameLayout>
 
