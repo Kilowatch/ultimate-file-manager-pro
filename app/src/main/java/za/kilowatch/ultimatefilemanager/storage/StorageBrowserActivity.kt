@@ -1053,21 +1053,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                     applyCachedTipJarProgress()
                     fetchTipJarProgress()
 
-                    cardTipJar.setOnClickListener {
-                        if (isAmazon && !BuildConfig.AMAZON_IAP_ENABLED) {
-                            // Tip Jar not yet available on Amazon — show notice and don't open the activity
-                            android.widget.Toast.makeText(
-                                this,
-                                getString(R.string.billing_unavailable_amazon_coming_soon),
-                                android.widget.Toast.LENGTH_LONG
-                            ).show()
-                        } else {
-                            val intent = Intent(this, SupporterLoyaltyActivity::class.java)
-                            startActivity(intent)
-                        }
-                    }
-
-                    handler.postDelayed({
+                    // Named Runnable so both the dismiss button and the auto-timer
+                    // share the same slide-up animation and can cancel each other.
+                    val dismissCard = Runnable {
                         val parent = findViewById<android.view.ViewGroup>(R.id.main)
                         if (parent != null) {
                             val transition = android.transition.TransitionSet().apply {
@@ -1083,7 +1071,33 @@ class StorageBrowserActivity : AppCompatActivity() {
                             android.transition.TransitionManager.beginDelayedTransition(parent, transition)
                             cardTipJar.visibility = View.GONE
                         }
-                    }, 10000)
+                    }
+
+                    // ✕ Dismiss button — immediately slides the card away
+                    findViewById<View>(R.id.btnDismissTipJar)?.setOnClickListener {
+                        handler.removeCallbacks(dismissCard) // cancel the auto-dismiss timer
+                        dismissCard.run()
+                    }
+
+                    // "Fuel it!" chip — navigates to the Supporter Loyalty screen
+                    val navigateToTipJar = {
+                        if (isAmazon && !BuildConfig.AMAZON_IAP_ENABLED) {
+                            android.widget.Toast.makeText(
+                                this,
+                                getString(R.string.billing_unavailable_amazon_coming_soon),
+                                android.widget.Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            startActivity(Intent(this, SupporterLoyaltyActivity::class.java))
+                        }
+                    }
+                    findViewById<View>(R.id.btnFuelIt)?.setOnClickListener { navigateToTipJar() }
+
+                    // Card tap (background area) also navigates
+                    cardTipJar.setOnClickListener { navigateToTipJar() }
+
+                    // Auto-dismiss after 10 seconds if the user doesn't interact
+                    handler.postDelayed(dismissCard, 10000)
                 }
             }
         }
@@ -4217,23 +4231,47 @@ class StorageBrowserActivity : AppCompatActivity() {
         .build()
 
     /**
+     * Abbreviates a full month name at the start of a string to its 3-letter form.
+     * e.g. "August 2026" → "Aug 2026", "January 2025" → "Jan 2025".
+     * Leaves the string unchanged if no full month name is found.
+     */
+    private fun abbreviateMonth(month: String): String {
+        val months = mapOf(
+            "January" to "Jan", "February" to "Feb", "March" to "Mar",
+            "April" to "Apr", "May" to "May", "June" to "Jun",
+            "July" to "Jul", "August" to "Aug", "September" to "Sep",
+            "October" to "Oct", "November" to "Nov", "December" to "Dec"
+        )
+        var result = month
+        for ((full, abbr) in months) {
+            if (result.startsWith(full)) {
+                result = abbr + result.removePrefix(full)
+                break
+            }
+        }
+        return result
+    }
+
+    /**
      * Build a spannable title string with the month highlighted in the accent colour.
      */
     private fun buildTipJarTitleSpan(month: String): CharSequence {
-        val raw = getString(R.string.tip_jar_progress_title_format, month)
+        val shortMonth = abbreviateMonth(month).substringBefore(" ") // "August 2026" → "Aug"
+        val raw = getString(R.string.tip_jar_progress_title_format, shortMonth)
         val spannable = android.text.SpannableString(raw)
         val color = androidx.core.content.ContextCompat.getColor(this, R.color.tile_tip_jar_accent)
-        val start = raw.indexOf(month)
+        val start = raw.indexOf(shortMonth)
         if (start >= 0) {
             spannable.setSpan(
                 android.text.style.ForegroundColorSpan(color),
                 start,
-                start + month.length,
+                start + shortMonth.length,
                 android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
         return spannable
     }
+
 
     // ─── Tip Jar Server Fetch ────────────────────────────────
 

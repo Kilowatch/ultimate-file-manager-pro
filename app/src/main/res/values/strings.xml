@@ -2966,6 +2966,8 @@
     <string name="settings_tip_jar_popup_subtitle_off">Tip jar progress hidden on the main screen</string>
     <string name="tip_jar_thanks_label">Thank you!</string>
     <string name="tip_jar_awesome_label">You\'re awesome!</string>
+    <string name="tip_jar_fuel_it_label">Fuel it!</string>
+    <string name="tip_jar_dismiss_cd">Dismiss tip jar card</string>
     <string name="tip_jar_global_label">Global</string>
     <string name="tip_jar_global_title">Global Progress</string>
     <string name="tip_jar_global_desc">Community contributions this month</string>

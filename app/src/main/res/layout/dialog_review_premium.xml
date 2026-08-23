@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Mobile In-App Review Dialog - Dark glassmorphism with vertical button stack
+    Mobile In-App Review Dialog — UFMStandard glass pattern
+    Header: 48dp frosted icon badge + title/subtitle inline row
+    Body:   Glass MaterialCardView inset
+    Buttons: primary → tonal → text (stacked)
+    Tip jar: Purple-tinted glass banner with coffee icon + chevron
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,169 +13,261 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_dialog_glass"
-    android:padding="24dp"
-    android:gravity="center_horizontal">
+    android:padding="24dp">
 
-    <!-- Hero Star Icon Badge -->
-    <FrameLayout
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="@drawable/bg_btn_icon_frosted"
-        android:layout_marginBottom="14dp">
-
-        <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"
-            android:contentDescription="@null" />
-    </FrameLayout>
-
-    <!-- Title -->
-    <TextView
-        android:id="@+id/txtTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hey_got_a_minute"
-        android:textColor="@color/mobile_text_primary"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif-black"
-        android:textAlignment="center" />
-
-    <!-- 5-Star Visual Accent -->
+    <!-- ── Header Row ── -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="12dp">
+        android:gravity="center_vertical">
 
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"
-            android:layout_marginHorizontal="2dp"
-            android:contentDescription="@null" />
+        <!-- 48dp frosted squircle with star icon -->
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"
-            android:layout_marginHorizontal="2dp"
-            android:contentDescription="@null" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_star"
+                app:tint="#FFD700"
+                android:contentDescription="@null" />
+        </FrameLayout>
 
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"
-            android:layout_marginHorizontal="2dp"
-            android:contentDescription="@null" />
+        <!-- Title + 5-star accent row -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="14dp">
 
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"
-            android:layout_marginHorizontal="2dp"
-            android:contentDescription="@null" />
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hey_got_a_minute"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="end" />
 
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"
-            android:layout_marginHorizontal="2dp"
-            android:contentDescription="@null" />
+            <!-- Inline 5-star accent -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"
+                    android:layout_marginEnd="2dp"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"
+                    android:layout_marginEnd="2dp"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"
+                    android:layout_marginEnd="2dp"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"
+                    android:layout_marginEnd="2dp"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"
+                    android:contentDescription="@null" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Message Body -->
-    <TextView
-        android:id="@+id/txtMessage"
+    <!-- ── Divider ── -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="14dp"
+        android:background="@color/mobile_glass_stroke" />
+
+    <!-- ── Body Card ── -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/youve_been_using_the_app"
-        android:textColor="@color/mobile_text_secondary"
-        android:textSize="13sp"
-        android:lineSpacingMultiplier="1.3"
-        android:textAlignment="center"
-        android:layout_marginBottom="22dp" />
-
-    <!-- Vertical Button Stack (Stacked below each other) -->
-    <!-- 1. Primary Rate Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRate"
-        style="@style/Widget.Material3Expressive.Button"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="@string/rate_the_app"
-        android:textColor="#FFFFFFFF"
-        android:textSize="15sp"
-        android:fontFamily="sans-serif-bold"
-        android:textAllCaps="false"
-        app:backgroundTint="?attr/colorPrimary"
-        app:cornerRadius="12dp"
-        app:icon="@drawable/ic_star"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="#FFFFFFFF" />
-
-    <!-- 2. Maybe Later Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnMaybeLater"
-        style="@style/Widget.Material3Expressive.Button.TonalButton"
-        android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/maybe_later"
-        android:textColor="@color/mobile_text_primary"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif-medium"
-        android:textAllCaps="false"
-        app:backgroundTint="@color/mobile_glass_card"
-        app:cornerRadius="12dp"
+        app:cardBackgroundColor="@color/mobile_glass_card"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/mobile_glass_stroke" />
+        app:strokeColor="@color/mobile_glass_stroke">
 
-    <!-- 3. No Thanks Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnNoThanks"
-        style="@style/Widget.Material3Expressive.Button.TextButton"
+        <TextView
+            android:id="@+id/txtMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/youve_been_using_the_app"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="13sp"
+            android:lineSpacingMultiplier="1.3"
+            android:padding="16dp" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- ── Button Stack ── -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginTop="4dp"
-        android:text="@string/no_thanks"
-        android:textColor="@color/mobile_text_secondary"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif-medium"
-        android:textAllCaps="false" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
 
-    <!-- Divider -->
+        <!-- 1. Primary: Rate the App -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRate"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/rate_the_app"
+            android:textColor="#FFFFFFFF"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-bold"
+            android:textAllCaps="false"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_star"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="#FFFFFFFF" />
+
+        <!-- 2. Maybe Later -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMaybeLater"
+            style="@style/Widget.Material3Expressive.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="10dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/maybe_later"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/mobile_glass_card"
+            app:cornerRadius="12dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke" />
+
+        <!-- 3. No Thanks -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNoThanks"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="4dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/no_thanks"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+    <!-- ── Divider ── -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="12dp"
         android:background="@color/mobile_glass_stroke" />
 
-    <!-- Tip Jar Link Row -->
-    <TextView
+    <!-- ── Tip Jar Banner ── -->
+    <LinearLayout
         android:id="@+id/btnTipLink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:padding="8dp"
-        android:text="@string/theres_also_a_tiny_coffee"
-        android:textColor="@color/tile_tip_jar_accent"
-        android:textSize="13sp"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:fontFamily="sans-serif-medium"
-        android:background="?attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_glass_card_tip_jar"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="12dp"
+        android:clipToOutline="true"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true">
+
+        <!-- Coffee icon -->
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_coffee"
+            app:tint="@color/tile_tip_jar_accent"
+            android:contentDescription="@null"
+            android:scaleType="centerInside" />
+
+        <!-- Title + subtitle -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tip_jar_title"
+                android:textColor="@color/tile_tip_jar_accent"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/theres_also_a_tiny_coffee"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="11.5sp"
+                android:fontFamily="sans-serif"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+        <!-- Chevron -->
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/tile_tip_jar_accent"
+            android:contentDescription="@null"
+            android:scaleType="centerInside" />
+
+    </LinearLayout>
 
 </LinearLayout>

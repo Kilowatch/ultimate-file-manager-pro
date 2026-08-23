@@ -24,7 +24,19 @@ object ReviewPrefs {
         }
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // TEST FLAG — set to true to force the popup on every resume, bypassing all
+    // eligibility checks. Flip back to false (or delete this block) to restore
+    // normal behaviour before shipping.
+    // ─────────────────────────────────────────────────────────────────────────
+    private const val FORCE_REVIEW_POPUP = false
+
     fun shouldShowPopup(context: Context): Boolean {
+        if (FORCE_REVIEW_POPUP) {
+            Log.d(TAG, "shouldShowPopup: FORCE_REVIEW_POPUP=true — bypassing all checks")
+            return true
+        }
+
         val prefs = getPrefs(context)
         val now = System.currentTimeMillis()
         val sevenDays = 7 * 24 * 60 * 60 * 1000L
@@ -52,6 +64,7 @@ object ReviewPrefs {
         Log.d(TAG, "-> True: eligible for popup")
         return true
     }
+
 
     fun onRateUsTapped(context: Context) {
         Log.d(TAG, "onRateUsTapped: marking as rated and never ask again")

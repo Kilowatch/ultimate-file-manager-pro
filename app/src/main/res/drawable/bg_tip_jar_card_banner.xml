@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Gradient banner for the top section of the tip jar progress card.
+    Left-to-right: deep violet (80% opacity) → medium purple (40%) → transparent.
+    The card's own cardCornerRadius clips the top corners naturally.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="0"
+        android:startColor="#CC4C1D95"
+        android:centerColor="#668B2FC9"
+        android:endColor="#008B2FC9" />
+</shape>
