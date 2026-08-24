@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#E61A1A1A" />
-    <corners android:radius="16dp" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Opaque Solid Dark Card Surface -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#F81A1D27" />
+            <stroke android:width="1.5dp" android:color="@color/tv_glass_border" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    <!-- Inner Top Highlight -->
+    <item android:bottom="10dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:endColor="@android:color/transparent"
+                android:startColor="@color/tv_glass_highlight" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</layer-list>

@@ -4,7 +4,7 @@
     android:layout_width="400dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_dialog_glass"
+    android:background="@drawable/bg_tv_dialog_surface"
     android:padding="32dp">
 
     <TextView
@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:text="@string/pdf_convert_encrypt"
         android:textColor="@color/tv_text_primary"
+        android:buttonTint="@color/tv_button_focused_yellow"
         android:focusable="true"
         android:layout_marginBottom="16dp" />
 

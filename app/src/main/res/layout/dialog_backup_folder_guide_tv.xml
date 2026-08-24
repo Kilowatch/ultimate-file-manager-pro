@@ -6,19 +6,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="700dp"
+    android:layout_width="560dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_dialog_glass"
-    android:padding="32dp"
+    android:background="@drawable/bg_tv_dialog_surface"
+    android:padding="28dp"
     android:gravity="center_horizontal">
 
     <!-- Hero Icon Badge -->
     <FrameLayout
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:background="@drawable/bg_btn_icon_frosted"
-        android:layout_marginBottom="16dp">
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_tv_card_glass"
+        android:layout_marginBottom="14dp">
 
         <ImageView
             android:layout_width="32dp"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:text="@string/auto_backup_folder_guide_title"
         android:textColor="@color/tv_text_primary"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:fontFamily="sans-serif-black"
         android:textAlignment="center"
         android:layout_marginBottom="10dp" />
@@ -47,9 +47,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/bg_reindex_option_card"
+        android:background="@drawable/bg_glass_card"
         android:padding="14dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="14dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -67,9 +67,6 @@
             android:textColor="@color/tv_text_primary"
             android:textSize="14sp"
             android:fontFamily="monospace"
-            android:background="@drawable/bg_url_box"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="8dp"
             android:maxLines="2"
             android:ellipsize="middle"
             tools:text="/storage/emulated/0/Documents/UFM/backups" />
@@ -82,44 +79,41 @@
         android:layout_height="wrap_content"
         android:text="@string/auto_backup_folder_guide_msg"
         android:textColor="@color/tv_text_secondary"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:textAlignment="center"
-        android:lineSpacingExtra="3dp"
-        android:layout_marginBottom="24dp" />
+        android:lineSpacingExtra="2dp"
+        android:layout_marginBottom="20dp" />
 
     <!-- Choose Folder Button -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBrowse"
+        style="@style/TvGrantButton"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="48dp"
         android:text="@string/auto_backup_folder_guide_btn_choose"
-        android:background="@drawable/selector_tv_button_yellow"
-        android:textColor="@color/tv_button_focused_yellow_text"
         android:textSize="15sp"
         android:fontFamily="sans-serif-bold"
         android:focusable="true"
         android:layout_marginBottom="10dp" />
 
     <!-- Reset to Default Button (Visible if custom path configured) -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnResetDefault"
+        style="@style/TvContinueButton"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="48dp"
         android:text="@string/auto_backup_reset_default"
-        android:background="@drawable/selector_tv_button"
-        android:textColor="@color/tv_text_primary"
         android:textSize="14sp"
         android:focusable="true"
         android:layout_marginBottom="10dp" />
 
     <!-- Cancel Button -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancel"
+        style="@style/TvContinueButton"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="48dp"
         android:text="@string/cancel"
-        android:background="@drawable/selector_tv_button"
-        android:textColor="@color/tv_text_primary"
         android:textSize="14sp"
         android:focusable="true" />
 

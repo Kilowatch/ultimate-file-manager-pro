@@ -27,13 +27,20 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="16dp">
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_import_code"
-                app:tint="@color/tv_accent"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="@null" />
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_tv_card_glass"
+                android:layout_marginEnd="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_import_code"
+                    app:tint="@color/tv_accent"
+                    android:contentDescription="@null" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="0dp"

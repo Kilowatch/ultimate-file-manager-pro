@@ -245,9 +245,9 @@ class StartScreenPreferenceActivity : AppCompatActivity() {
             val txtSubtitle = card.findViewById<TextView>(R.id.txtSubtitle)
             val rbSelect = card.findViewById<RadioButton>(R.id.rbSelect)
 
-            imgIcon.setImageResource(option.iconRes)
-            txtLabel.text = option.title
-            txtSubtitle.text = option.subtitle
+            imgIcon?.setImageResource(option.iconRes)
+            txtLabel?.text = option.title
+            txtSubtitle?.text = option.subtitle
 
             setupTvCardFocus(card)
 
@@ -302,12 +302,12 @@ class StartScreenPreferenceActivity : AppCompatActivity() {
                 card.setCardBackgroundColor(yellowFill)
                 setCardTextColors(card, blackText, blackText)
                 rb.buttonTintList = ColorStateList.valueOf(blackText)
-                imgIcon.imageTintList = ColorStateList.valueOf(blackText)
+                imgIcon?.imageTintList = ColorStateList.valueOf(blackText)
             } else {
                 card.setCardBackgroundColor(glassColor)
                 setCardTextColors(card, primaryText, secondaryText)
                 rb.buttonTintList = ColorStateList.valueOf(if (isSelected) getColor(R.color.tv_accent) else secondaryText)
-                imgIcon.imageTintList = ColorStateList.valueOf(primaryText)
+                imgIcon?.imageTintList = ColorStateList.valueOf(primaryText)
             }
         }
     }

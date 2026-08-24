@@ -995,57 +995,54 @@ class TwinWindowActivity : AppCompatActivity() {
         val sourceFragment = if (target === getPane1()) getPane2() else getPane1()
         val srcShare = (sourceFragment as? NetworkBrowserFragment)?.getShare()
 
+        val totalFiles = files.size
+        val fileCounter = IntArray(1) { 0 }
+
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this@TwinWindowActivity)
+        val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtProgressTitle)
+        val txtFiles = dialogView.findViewById<TextView>(R.id.txtProgressFiles)
+        val txtCurrentFile = dialogView.findViewById<TextView>(R.id.txtProgressCurrentFile)
+        val txtSize = dialogView.findViewById<TextView>(R.id.txtProgressSize)
+        val progressFile = dialogView.findViewById<LinearProgressIndicator>(R.id.progressFile)
+
+        txtTitle.text = if (isMove) getString(R.string.moving_files) else getString(R.string.copying_files_1)
+        txtFiles.text = getString(R.string.item_0_totalfiles, totalFiles)
+
+        val dialog = MaterialAlertDialogBuilder(this@TwinWindowActivity, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(false)
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                isCancelled = true
+                runCatching { currentTransferConnection?.close() }
+                currentTransferConnection = null
+            }
+            .create()
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val onProgress: (String, Long, Long, Int, Int) -> Unit = { fileName, copied, total, index, totalCount ->
+            runOnUiThread {
+                txtFiles.text = getString(R.string.item_index_totalcount, fileCounter[0], totalFiles)
+                txtCurrentFile.text = fileName
+                if (total > 0) {
+                    val percent = (copied * 100 / total).toInt()
+                    progressFile.isIndeterminate = false
+                    progressFile.progress = percent
+                    val copiedMb = copied / (1024 * 1024)
+                    val totalMb = total / (1024 * 1024)
+                    txtSize.text = getString(R.string.copiedmb_mb_totalmb_mb_percent, copiedMb.toString(), totalMb.toString(), percent)
+                } else {
+                    progressFile.isIndeterminate = true
+                    txtSize.setText(R.string.processing)
+                }
+            }
+        }
+
         lifecycleScope.launch(Dispatchers.IO) {
-            val totalFiles = files.size
-            val fileCounter = IntArray(1) { 0 }
-
-            val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this@TwinWindowActivity)
-            val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
-            val dialogView = layoutInflater.inflate(layoutRes, null)
-            val txtTitle = dialogView.findViewById<TextView>(R.id.txtProgressTitle)
-            val txtFiles = dialogView.findViewById<TextView>(R.id.txtProgressFiles)
-            val txtCurrentFile = dialogView.findViewById<TextView>(R.id.txtProgressCurrentFile)
-            val txtSize = dialogView.findViewById<TextView>(R.id.txtProgressSize)
-            val progressFile = dialogView.findViewById<LinearProgressIndicator>(R.id.progressFile)
-
-            txtTitle.text = if (isMove) getString(R.string.moving_files) else getString(R.string.copying_files_1)
-            txtFiles.text = getString(R.string.item_0_totalfiles, totalFiles)
-
-            val dialog = MaterialAlertDialogBuilder(this@TwinWindowActivity, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(false)
-                .setNegativeButton(R.string.cancel) { _, _ ->
-                    isCancelled = true
-                    runCatching { currentTransferConnection?.close() }
-                    currentTransferConnection = null
-                }
-                .create()
-
-            withContext(Dispatchers.Main) {
-                dialog.show()
-                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            }
-
-            val onProgress: (String, Long, Long, Int, Int) -> Unit = { fileName, copied, total, index, totalCount ->
-                lifecycleScope.launch(Dispatchers.Main) {
-                    txtFiles.text = getString(R.string.item_index_totalcount, fileCounter[0], totalFiles)
-                    txtCurrentFile.text = fileName
-                    if (total > 0) {
-                        val percent = (copied * 100 / total).toInt()
-                        progressFile.isIndeterminate = false
-                        progressFile.progress = percent
-                        val copiedMb = copied / (1024 * 1024)
-                        val totalMb = total / (1024 * 1024)
-                        txtSize.text = getString(R.string.copiedmb_mb_totalmb_mb_percent, copiedMb.toString(), totalMb.toString(), percent)
-                    } else {
-                        progressFile.isIndeterminate = true
-                        txtSize.setText(R.string.processing)
-                    }
-                }
-            }
-
-            withContext(Dispatchers.IO) {
-                try {
+            try {
                     if (target is FileBrowserFragment) {
                         val destDir = target.getCurrentDir()
                         val storageId = target.getStorageId()
@@ -1741,27 +1738,26 @@ class TwinWindowActivity : AppCompatActivity() {
                             coroutineContext.ensureActive()
                             processItemNet(it, dstPath)
                         }
-                    }
-                } finally {
-                    withContext(Dispatchers.Main) {
-                        dialog.dismiss()
-                        refreshFragment(getPane1())
-                        refreshFragment(getPane2())
-                         
-                        // Clear selections
-                        (getPane1() as? FileBrowserFragment)?.exitSelectionMode()
-                        (getPane1() as? NetworkBrowserFragment)?.exitSelectionMode()
-                        (getPane1() as? AppBrowserFragment)?.exitSelectionMode()
-                        (getPane2() as? FileBrowserFragment)?.exitSelectionMode()
-                        (getPane2() as? NetworkBrowserFragment)?.exitSelectionMode()
-                        (getPane2() as? AppBrowserFragment)?.exitSelectionMode()
+                }
+            } finally {
+                withContext(Dispatchers.Main) {
+                    dialog.dismiss()
+                    refreshFragment(getPane1())
+                    refreshFragment(getPane2())
+                     
+                    // Clear selections
+                    (getPane1() as? FileBrowserFragment)?.exitSelectionMode()
+                    (getPane1() as? NetworkBrowserFragment)?.exitSelectionMode()
+                    (getPane1() as? AppBrowserFragment)?.exitSelectionMode()
+                    (getPane2() as? FileBrowserFragment)?.exitSelectionMode()
+                    (getPane2() as? NetworkBrowserFragment)?.exitSelectionMode()
+                    (getPane2() as? AppBrowserFragment)?.exitSelectionMode()
 
-                        if (!isCancelled) {
-                            (target as? FileBrowserFragment)?.getCurrentDir()?.let { destDir ->
-                                za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher.notifyDirectoryChanged(this@TwinWindowActivity, destDir.absolutePath)
-                            }
-                            showPremiumSnackbar(if (isMove) getString(R.string.move_complete) else getString(R.string.copy_complete))
+                    if (!isCancelled) {
+                        (target as? FileBrowserFragment)?.getCurrentDir()?.let { destDir ->
+                            za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher.notifyDirectoryChanged(this@TwinWindowActivity, destDir.absolutePath)
                         }
+                        showPremiumSnackbar(if (isMove) getString(R.string.move_complete) else getString(R.string.copy_complete))
                     }
                 }
             }

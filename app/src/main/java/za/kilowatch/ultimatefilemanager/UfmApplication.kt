@@ -299,7 +299,7 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
 
             // On Android TV, if paired devices exist and setting is enabled, start background foreground service
             if (DeviceUtils.isTvDevice(this@UfmApplication)) {
-                za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.start(this@UfmApplication)
+                za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.start(this@UfmApplication, delayMs = 2500L)
             }
         }.apply { name = "ufm-pairing-init"; isDaemon = true; start() }
 

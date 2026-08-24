@@ -5,21 +5,28 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="500dp"
+    android:layout_width="520dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_tv_glass_card"
+    android:background="@drawable/bg_dialog_glass"
     android:padding="24dp"
     android:gravity="center_horizontal">
 
-    <!-- Success Badge -->
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_success"
-        app:tint="@color/ufm_progress_fill"
-        android:layout_marginBottom="12dp"
-        android:contentDescription="@null" />
+    <!-- Success Badge in Frosted Squircle -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/bg_tv_card_glass">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_success"
+            app:tint="@color/ufm_progress_fill"
+            android:contentDescription="@null" />
+    </FrameLayout>
 
     <!-- Title -->
     <TextView
@@ -37,8 +44,8 @@
         android:id="@+id/txtDialogMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="22dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/support_success_message"
         android:textColor="@color/tv_text_secondary"
         android:textSize="14sp"
@@ -48,15 +55,18 @@
     <!-- TV OK Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDialogOk"
-        style="@style/TvContinueButton"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="48dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:backgroundTint="@color/selector_tv_button_yellow"
+        android:textColor="@color/selector_tv_button_text_yellow"
+        app:cornerRadius="24dp"
         android:text="@android:string/ok"
         android:textSize="15sp"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="sans-serif-bold"
         android:focusable="true"
-        android:clickable="true"
-        android:insetTop="0dp"
-        android:insetBottom="0dp" />
+        android:clickable="true" />
 
 </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Auto Backup Activity — TV Standard
+    Auto Backup Activity — UFM TV Standard
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,7 +12,7 @@
     android:background="@drawable/bg_tv_gradient"
     tools:context=".settings.AutoBackupActivity">
 
-    <!-- TV Header Bar (72dp standard) -->
+    <!-- TV Header Bar (72dp Glass standard) -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
@@ -31,18 +31,18 @@
             android:layout_height="48dp"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/back"
-            android:clickable="true"
+            android:background="@drawable/selector_tv_icon_btn"
             android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:background="@drawable/selector_tv_icon_btn" />
+            android:clickable="true"
+            android:contentDescription="@string/back"
+            app:tint="@color/tv_text_primary" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginHorizontal="@dimen/margin_md">
+            android:layout_marginStart="@dimen/margin_md">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,23 +57,27 @@
                 android:layout_height="wrap_content"
                 android:text="@string/auto_backup_subtitle"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:layout_marginTop="2dp" />
         </LinearLayout>
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
         android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="48dp"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="16dp"
-            android:paddingBottom="48dp">
+            android:orientation="vertical">
 
             <!-- Top Guidance Notice Card -->
             <LinearLayout
@@ -86,12 +90,19 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/bg_glass_card">
 
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_cloud"
-                    app:tint="@color/tv_button_focused_yellow"
-                    android:importantForAccessibility="no" />
+                <FrameLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_tv_card_glass">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_cloud"
+                        app:tint="@color/tv_button_focused_yellow"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
 
                 <TextView
                     android:layout_width="0dp"
@@ -110,51 +121,58 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/auto_backup_section_general"
-                android:textColor="@color/tv_text_secondary"
-                android:textSize="14sp"
+                android:textColor="@color/tv_accent"
+                android:textSize="13sp"
                 android:fontFamily="sans-serif-black"
-                android:textAllCaps="true"
-                android:letterSpacing="0.05"
-                android:paddingBottom="10dp" />
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="12dp" />
 
             <!-- Enable Auto Backup Toggle Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAutoBackupEnable"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
                 android:foreground="@drawable/selector_tv_card"
-                app:cardBackgroundColor="#1AFFFFFF"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
                 app:cardCornerRadius="@dimen/card_radius_lg"
                 app:cardElevation="0dp"
-                app:strokeWidth="2dp"
+                app:strokeWidth="1.5dp"
                 app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/margin_xl"
+                    android:padding="16dp"
                     android:background="@drawable/bg_glass_card">
 
-                    <ImageView
-                        android:id="@+id/imgEnableIcon"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_cloud"
-                        android:layout_marginEnd="@dimen/margin_lg"
-                        app:tint="@color/tv_button_focused_yellow"
-                        android:importantForAccessibility="no" />
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:id="@+id/imgEnableIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_cloud"
+                            app:tint="@color/tv_button_focused_yellow"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
 
                         <TextView
                             android:id="@+id/txtEnableTitle"
@@ -162,7 +180,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/auto_backup_enable"
                             android:textColor="@color/tv_text_primary"
-                            android:textSize="18sp"
+                            android:textSize="17sp"
                             android:fontFamily="sans-serif-bold" />
 
                         <TextView
@@ -171,7 +189,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/auto_backup_enable_desc"
                             android:textColor="@color/tv_text_secondary"
-                            android:textSize="13sp" />
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -180,7 +199,8 @@
                         android:layout_height="wrap_content"
                         android:checked="false"
                         android:clickable="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        app:thumbTint="@color/tv_button_focused_yellow" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -188,40 +208,48 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAutoBackupSettings"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
                 android:foreground="@drawable/selector_tv_card"
-                app:cardBackgroundColor="#1AFFFFFF"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
                 app:cardCornerRadius="@dimen/card_radius_lg"
                 app:cardElevation="0dp"
-                app:strokeWidth="2dp"
+                app:strokeWidth="1.5dp"
                 app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/margin_xl"
+                    android:padding="16dp"
                     android:background="@drawable/bg_glass_card">
 
-                    <ImageView
-                        android:id="@+id/imgSettingsIcon"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_export"
-                        android:layout_marginEnd="@dimen/margin_lg"
-                        app:tint="@color/tv_button_focused_yellow"
-                        android:importantForAccessibility="no" />
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:id="@+id/imgSettingsIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_export"
+                            app:tint="@color/tv_accent"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
 
                         <TextView
                             android:id="@+id/txtSettingsTitle"
@@ -229,7 +257,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/auto_backup_settings_label"
                             android:textColor="@color/tv_text_primary"
-                            android:textSize="18sp"
+                            android:textSize="17sp"
                             android:fontFamily="sans-serif-bold" />
 
                         <TextView
@@ -238,7 +266,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/auto_backup_settings_desc"
                             android:textColor="@color/tv_text_secondary"
-                            android:textSize="13sp" />
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
 
                     <CheckBox
@@ -256,40 +285,48 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAutoBackupTheme"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
                 android:foreground="@drawable/selector_tv_card"
-                app:cardBackgroundColor="#1AFFFFFF"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
                 app:cardCornerRadius="@dimen/card_radius_lg"
                 app:cardElevation="0dp"
-                app:strokeWidth="2dp"
+                app:strokeWidth="1.5dp"
                 app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/margin_xl"
+                    android:padding="16dp"
                     android:background="@drawable/bg_glass_card">
 
-                    <ImageView
-                        android:id="@+id/imgThemeIcon"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_palette"
-                        android:layout_marginEnd="@dimen/margin_lg"
-                        app:tint="@color/tv_button_focused_yellow"
-                        android:importantForAccessibility="no" />
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:id="@+id/imgThemeIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_palette"
+                            app:tint="@color/tv_accent"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
 
                         <TextView
                             android:id="@+id/txtThemeTitle"
@@ -297,7 +334,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/auto_backup_theme_label"
                             android:textColor="@color/tv_text_primary"
-                            android:textSize="18sp"
+                            android:textSize="17sp"
                             android:fontFamily="sans-serif-bold" />
 
                         <TextView
@@ -306,7 +343,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/auto_backup_theme_desc"
                             android:textColor="@color/tv_text_secondary"
-                            android:textSize="13sp" />
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
 
                     <CheckBox
@@ -326,29 +364,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/auto_backup_section_schedule"
-                android:textColor="@color/tv_text_secondary"
-                android:textSize="14sp"
+                android:textColor="@color/tv_accent"
+                android:textSize="13sp"
                 android:fontFamily="sans-serif-black"
-                android:textAllCaps="true"
-                android:letterSpacing="0.05"
-                android:paddingBottom="10dp" />
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="12dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSchedule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#1AFFFFFF"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
                 app:cardCornerRadius="@dimen/card_radius_lg"
                 app:cardElevation="0dp"
-                app:strokeWidth="2dp"
+                app:strokeWidth="1.5dp"
                 app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/margin_xl"
+                    android:padding="16dp"
                     android:background="@drawable/bg_glass_card">
 
                     <TextView
@@ -356,7 +393,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/auto_backup_schedule_label"
                         android:textColor="@color/tv_text_primary"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:fontFamily="sans-serif-bold"
                         android:layout_marginBottom="14dp" />
 
@@ -370,34 +407,34 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDaily"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/TvContinueButton"
                             android:layout_width="0dp"
                             android:layout_height="48dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_schedule_daily"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:fontFamily="sans-serif-bold"
                             android:focusable="true" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnWeekly"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/TvContinueButton"
                             android:layout_width="0dp"
                             android:layout_height="48dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_schedule_weekly"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:fontFamily="sans-serif-bold"
                             android:focusable="true" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnMonthly"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/TvContinueButton"
                             android:layout_width="0dp"
                             android:layout_height="48dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_schedule_monthly"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:fontFamily="sans-serif-bold"
                             android:focusable="true" />
                     </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -410,50 +447,57 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/auto_backup_section_security"
-                android:textColor="@color/tv_text_secondary"
-                android:textSize="14sp"
+                android:textColor="@color/tv_accent"
+                android:textSize="13sp"
                 android:fontFamily="sans-serif-black"
-                android:textAllCaps="true"
-                android:letterSpacing="0.05"
-                android:paddingBottom="10dp" />
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="12dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAutoBackupPassword"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
                 android:foreground="@drawable/selector_tv_card"
-                app:cardBackgroundColor="#1AFFFFFF"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
                 app:cardCornerRadius="@dimen/card_radius_lg"
                 app:cardElevation="0dp"
-                app:strokeWidth="2dp"
+                app:strokeWidth="1.5dp"
                 app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/margin_xl"
+                    android:padding="16dp"
                     android:background="@drawable/bg_glass_card">
 
-                    <ImageView
-                        android:id="@+id/imgPasswordIcon"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_lock"
-                        android:layout_marginEnd="@dimen/margin_lg"
-                        app:tint="@color/tv_button_focused_yellow"
-                        android:importantForAccessibility="no" />
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:id="@+id/imgPasswordIcon"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_lock"
+                            app:tint="@color/tv_button_focused_yellow"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
 
                         <TextView
                             android:id="@+id/txtPasswordTitle"
@@ -461,7 +505,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/auto_backup_password_set"
                             android:textColor="@color/tv_text_primary"
-                            android:textSize="18sp"
+                            android:textSize="17sp"
                             android:fontFamily="sans-serif-bold" />
 
                         <TextView
@@ -470,13 +514,14 @@
                             android:layout_height="wrap_content"
                             android:text="@string/auto_backup_password_status_none"
                             android:textColor="@color/tv_text_secondary"
-                            android:textSize="13sp" />
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
 
                     <ImageView
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:src="@drawable/ic_chevron_right"
+                        android:src="@drawable/ic_arrow_forward"
                         app:tint="@color/tv_text_secondary"
                         android:importantForAccessibility="no" />
                 </LinearLayout>
@@ -488,29 +533,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/auto_backup_section_location"
-                android:textColor="@color/tv_text_secondary"
-                android:textSize="14sp"
+                android:textColor="@color/tv_accent"
+                android:textSize="13sp"
                 android:fontFamily="sans-serif-black"
-                android:textAllCaps="true"
-                android:letterSpacing="0.05"
-                android:paddingBottom="10dp" />
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="12dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAutoBackupLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#1AFFFFFF"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
                 app:cardCornerRadius="@dimen/card_radius_lg"
                 app:cardElevation="0dp"
-                app:strokeWidth="2dp"
+                app:strokeWidth="1.5dp"
                 app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/margin_xl"
+                    android:padding="16dp"
                     android:background="@drawable/bg_glass_card">
 
                     <TextView
@@ -518,7 +562,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/auto_backup_save_location"
                         android:textColor="@color/tv_text_primary"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:fontFamily="sans-serif-bold"
                         android:layout_marginBottom="14dp" />
 
@@ -533,23 +577,23 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnLocationDefault"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/TvContinueButton"
                             android:layout_width="0dp"
                             android:layout_height="48dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_location_default"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:fontFamily="sans-serif-bold"
                             android:focusable="true" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnLocationCustom"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/TvContinueButton"
                             android:layout_width="0dp"
                             android:layout_height="48dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_location_custom"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             android:fontFamily="sans-serif-bold"
                             android:focusable="true" />
                     </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -570,32 +614,32 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/auto_backup_location_unavailable"
-                        android:textColor="@color/status_error"
+                        android:textColor="@color/tv_error_red"
                         android:textSize="14sp"
                         android:layout_marginBottom="10dp"
                         android:visibility="gone" />
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSelectFolder"
+                        style="@style/TvGrantButton"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:text="@string/auto_backup_select_folder_btn"
                         android:textSize="15sp"
-                        android:textColor="@android:color/white"
+                        android:fontFamily="sans-serif-bold"
                         android:visibility="gone"
                         android:focusable="true"
-                        android:background="@drawable/selector_tv_button_yellow"
                         android:layout_marginBottom="8dp" />
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnResetLocation"
+                        style="@style/TvContinueButton"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:text="@string/auto_backup_reset_default"
                         android:textSize="15sp"
                         android:visibility="gone"
-                        android:focusable="true"
-                        android:background="@drawable/selector_tv_button" />
+                        android:focusable="true" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -614,16 +658,16 @@
                 tools:text="Auto backup is ON — Settings and Theme — Weekly — No password" />
 
             <!-- Backup Now Button -->
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnBackupNow"
+                style="@style/TvGrantButton"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="52dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/auto_backup_now"
-                android:textSize="18sp"
-                android:textColor="@android:color/white"
-                android:focusable="true"
-                android:background="@drawable/selector_tv_button_yellow" />
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-bold"
+                android:focusable="true" />
 
             <!-- Progress Bar -->
             <ProgressBar

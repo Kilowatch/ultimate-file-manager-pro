@@ -189,6 +189,10 @@ class CustomTileActivity : AppCompatActivity() {
         layoutEmptyStorage = findViewById(R.id.layoutEmptyStorage)
 
         // Initialize StorageAdapter
+        val initMode = MainMenuViewModeManager.loadViewMode(this)
+        val initCols = MainMenuViewModeManager.loadColumnCount(this)
+        val initSize = MainMenuViewModeManager.loadItemSize(this)
+
         storageAdapter = StorageAdapter(
             isTv = isTv,
             onStorageClick = { item -> onTileClicked(item) },
@@ -218,8 +222,13 @@ class CustomTileActivity : AppCompatActivity() {
                     showPremiumSnackbar(getString(R.string.tile_color_select_tile))
                 }
             }
-        )
+        ).apply {
+            viewMode = initMode
+            gridColumnCount = initCols
+            itemSize = initSize
+        }
 
+        applyViewMode(animate = false)
         // Attach adapter to RecyclerView
         recyclerStorage.adapter = storageAdapter
 
@@ -868,7 +877,7 @@ class CustomTileActivity : AppCompatActivity() {
 
     // ── View Mode ──────────────────────────────────────────────────────────
 
-    private fun applyViewMode() {
+    private fun applyViewMode(animate: Boolean = false) {
         val updateLayout = {
             val mode = MainMenuViewModeManager.loadViewMode(this)
             val cols = MainMenuViewModeManager.loadColumnCount(this)
@@ -891,7 +900,7 @@ class CustomTileActivity : AppCompatActivity() {
             }
         }
 
-        if (::recyclerStorage.isInitialized) {
+        if (animate && ::recyclerStorage.isInitialized) {
             za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateViewModeSwitch(recyclerStorage) {
                 updateLayout()
             }

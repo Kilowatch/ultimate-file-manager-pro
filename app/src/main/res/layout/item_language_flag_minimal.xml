@@ -6,9 +6,9 @@
     android:id="@+id/cardLanguageItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="14dp"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="3dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
     app:cardBackgroundColor="@color/mobile_glass_card"
     app:strokeWidth="1dp"
@@ -23,19 +23,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="10dp">
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
 
         <!-- Frosted Flag Badge -->
         <FrameLayout
             android:id="@+id/flagContainer"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_btn_icon_frosted">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imgFlag"
-                android:layout_width="30dp"
+                android:layout_width="28dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:scaleType="fitCenter"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="12dp"
             android:layout_marginEnd="8dp">
 
             <TextView
@@ -58,6 +58,8 @@
                 android:textColor="@color/mobile_text_primary"
                 android:textSize="15sp"
                 android:fontFamily="sans-serif-bold"
+                android:singleLine="true"
+                android:ellipsize="end"
                 tools:text="German" />
 
             <TextView
@@ -68,22 +70,24 @@
                 android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp"
                 android:fontFamily="sans-serif-medium"
+                android:singleLine="true"
+                android:ellipsize="end"
                 tools:text="Deutsch" />
         </LinearLayout>
 
         <!-- Frosted Check Indicator on Right -->
         <FrameLayout
             android:id="@+id/checkContainer"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@drawable/bg_btn_icon_frosted"
             android:visibility="gone"
             tools:visibility="visible">
 
             <ImageView
                 android:id="@+id/imgCheck"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_check"
                 app:tint="?attr/colorPrimary"

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="32dp"
-    android:background="@color/tv_bg_gradient_end">
+    android:background="@drawable/bg_tv_dialog_surface">
 
     <TextView
         android:id="@+id/txtFilterTextTitle"

@@ -13,17 +13,24 @@
     android:layout_width="520dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_tv_glass_card"
-    android:padding="20dp"
+    android:background="@drawable/bg_tv_dialog_surface"
+    android:padding="24dp"
     android:gravity="center_horizontal">
 
     <!-- ── Hero Star Icon ── -->
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_star"
-        app:tint="@color/tv_button_focused_yellow"
-        android:contentDescription="@null" />
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_tv_card_glass">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_star"
+            app:tint="@color/tv_button_focused_yellow"
+            android:contentDescription="@null" />
+    </FrameLayout>
 
     <!-- ── Title ── -->
     <TextView

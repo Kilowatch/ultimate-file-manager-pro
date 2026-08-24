@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    FOSS TV About Activity - TV glass card with vertically stacked buttons and yellow focus states
+    FOSS TV About Activity - UFM TV Glassmorphism Standard
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,7 +12,7 @@
     android:background="@drawable/bg_tv_gradient"
     tools:context=".settings.AboutActivity">
 
-    <!-- TV Header Bar (Solid dark) -->
+    <!-- TV Header Bar (72dp Glass standard) -->
     <LinearLayout
         android:id="@+id/layerHeader"
         android:layout_width="match_parent"
@@ -62,16 +62,18 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- TV Centered Content Container -->
+    <!-- TV Content ScrollView -->
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="720dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
         android:isScrollContainer="true"
         android:clipToPadding="false"
         android:overScrollMode="never"
-        android:paddingBottom="24dp"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingTop="20dp"
+        android:paddingBottom="36dp"
         app:layout_constraintTop_toBottomOf="@id/layerHeader"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,23 +82,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp"
-            android:background="@drawable/bg_tv_glass_card">
+            android:orientation="vertical">
 
-            <!-- Hero App Branding -->
+            <!-- Hero App Branding Card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:layout_marginBottom="16dp">
+                android:padding="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/bg_glass_card">
 
-                <ImageView
+                <FrameLayout
                     android:layout_width="72dp"
                     android:layout_height="72dp"
-                    android:src="@drawable/ic_storage_browser_logo"
-                    android:contentDescription="@null" />
+                    android:background="@drawable/bg_tv_card_glass">
+
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_storage_browser_logo"
+                        android:contentDescription="@null" />
+                </FrameLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -106,7 +115,7 @@
                     android:textSize="22sp"
                     android:fontFamily="sans-serif-black"
                     android:gravity="center"
-                    android:layout_marginTop="10dp" />
+                    android:layout_marginTop="12dp" />
 
                 <TextView
                     android:id="@+id/txtVersion"
@@ -130,203 +139,286 @@
                     android:layout_marginTop="10dp" />
             </LinearLayout>
 
-            <!-- 1. Support & Inquiries Row -->
-            <LinearLayout
+            <!-- Section Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="ABOUT &amp; SUPPORT"
+                android:textColor="@color/tv_accent"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.08" />
+
+            <!-- 1. Support & Inquiries Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSupportEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="14dp"
-                android:layout_marginBottom="10dp"
-                android:focusable="true"
+                android:layout_marginBottom="12dp"
                 android:clickable="true"
-                android:background="@drawable/selector_tv_button">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_support"
-                    app:tint="@color/tv_text_primary"
-                    android:contentDescription="@null" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_more_info_title"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_email"
-                        android:textColor="@color/tv_text_secondary"
-                        android:textSize="13sp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/tv_text_secondary"
-                    android:contentDescription="@null" />
-            </LinearLayout>
-
-            <!-- 2. Help & Support Row -->
-            <LinearLayout
-                android:id="@+id/cardHelpSupport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="14dp"
-                android:layout_marginBottom="10dp"
                 android:focusable="true"
-                android:clickable="true"
-                android:background="@drawable/selector_tv_button">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_message"
-                    app:tint="@color/tv_text_primary"
-                    android:contentDescription="@null" />
+                android:focusableInTouchMode="false"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_support_title"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_support_subtitle"
-                        android:textColor="@color/tv_text_secondary"
-                        android:textSize="13sp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/tv_text_secondary"
-                    android:contentDescription="@null" />
-            </LinearLayout>
-
-            <!-- 3. Rate & Review Row -->
-            <LinearLayout
-                android:id="@+id/cardRateUs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="14dp"
-                android:layout_marginBottom="10dp"
-                android:focusable="true"
-                android:clickable="true"
-                android:background="@drawable/selector_tv_button">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_star"
-                    app:tint="@color/tv_text_primary"
-                    android:contentDescription="@null" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_rate_title"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_rate_subtitle"
-                        android:textColor="@color/tv_text_secondary"
-                        android:textSize="13sp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/tv_text_secondary"
-                    android:contentDescription="@null" />
-            </LinearLayout>
-
-            <!-- 4. Open Source Links (Vertically Stacked TV Buttons) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="10dp">
-
-                <!-- Source Code Row / Button -->
-                <LinearLayout
-                    android:id="@+id/btnSourceCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp"
-                    android:focusable="true"
-                    android:clickable="true"
-                    android:background="@drawable/selector_tv_button">
+                    android:padding="16dp"
+                    android:background="@drawable/bg_glass_card">
 
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_file_code"
-                        app:tint="@color/tv_text_primary"
-                        android:contentDescription="@null" />
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_support"
+                            app:tint="@color/tv_accent"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:layout_marginStart="16dp">
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_more_info_title"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="17sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_email"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/tv_text_secondary"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 2. Help & Support Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardHelpSupport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_message"
+                            app:tint="@color/tv_accent"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_support_title"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="17sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_support_subtitle"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/tv_text_secondary"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 3. Rate & Review Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardRateUs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_star"
+                            app:tint="@color/tv_accent"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_rate_title"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="17sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_rate_subtitle"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/tv_text_secondary"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 4. Source Code Card (FOSS) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSourceCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_file_code"
+                            app:tint="@color/tv_accent"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/about_source_code"
                             android:textColor="@color/tv_text_primary"
-                            android:textSize="16sp"
-                            android:fontFamily="sans-serif-medium" />
+                            android:textSize="17sp"
+                            android:fontFamily="sans-serif-bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -334,7 +426,7 @@
                             android:text="View repository on GitHub"
                             android:textColor="@color/tv_text_secondary"
                             android:textSize="13sp"
-                            android:layout_marginTop="2dp" />
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
 
                     <ImageView
@@ -344,41 +436,61 @@
                         app:tint="@color/tv_text_secondary"
                         android:contentDescription="@null" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <!-- Report Bug Row / Button -->
+            <!-- 5. Report a Bug Card (FOSS) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnReportBug"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/tv_glass_border">
+
                 <LinearLayout
-                    android:id="@+id/btnReportBug"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="14dp"
-                    android:layout_marginBottom="10dp"
-                    android:focusable="true"
-                    android:clickable="true"
-                    android:background="@drawable/selector_tv_button">
+                    android:padding="16dp"
+                    android:background="@drawable/bg_glass_card">
 
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_bug_report"
-                        app:tint="@color/tv_text_primary"
-                        android:contentDescription="@null" />
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_bug_report"
+                            app:tint="@color/tv_accent"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:layout_marginStart="16dp">
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/about_report_bug"
                             android:textColor="@color/tv_text_primary"
-                            android:textSize="16sp"
-                            android:fontFamily="sans-serif-medium" />
+                            android:textSize="17sp"
+                            android:fontFamily="sans-serif-bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -386,7 +498,7 @@
                             android:text="Open issues &amp; tracker"
                             android:textColor="@color/tv_text_secondary"
                             android:textSize="13sp"
-                            android:layout_marginTop="2dp" />
+                            android:layout_marginTop="3dp" />
                     </LinearLayout>
 
                     <ImageView
@@ -396,70 +508,91 @@
                         app:tint="@color/tv_text_secondary"
                         android:contentDescription="@null" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <!-- GPL License Text Notice -->
-                <TextView
-                    android:id="@+id/txtFossLicense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="12dp"
-                    android:background="@color/tv_glass_white_05"
-                    android:textColor="@color/tv_text_secondary"
-                    android:textSize="12sp"
-                    android:lineSpacingMultiplier="1.2" />
-            </LinearLayout>
+            <!-- 6. GPL License Notice Card (FOSS) -->
+            <TextView
+                android:id="@+id/txtFossLicense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_glass_card"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                android:lineSpacingMultiplier="1.2" />
 
-            <!-- 5. Legal & Policies Row -->
-            <LinearLayout
+            <!-- 7. Legal & Policies Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardLegal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="14dp"
-                android:layout_marginBottom="10dp"
-                android:focusable="true"
+                android:layout_marginBottom="12dp"
                 android:clickable="true"
-                android:background="@drawable/selector_tv_button">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_policy"
-                    app:tint="@color/tv_text_primary"
-                    android:contentDescription="@null" />
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/bg_glass_card">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_legal_title"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium" />
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tv_card_glass">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_policy"
+                            app:tint="@color/tv_accent"
+                            android:contentDescription="@null" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/about_legal_subtitle"
-                        android:textColor="@color/tv_text_secondary"
-                        android:textSize="13sp"
-                        android:layout_marginTop="2dp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_legal_title"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="17sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_legal_subtitle"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/tv_text_secondary"
+                        android:contentDescription="@null" />
                 </LinearLayout>
-
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/tv_text_secondary"
-                    android:contentDescription="@null" />
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>

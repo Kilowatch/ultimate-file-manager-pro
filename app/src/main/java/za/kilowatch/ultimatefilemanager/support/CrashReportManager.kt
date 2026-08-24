@@ -15,6 +15,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 /**
  * CrashReportManager
@@ -171,6 +172,14 @@ object CrashReportManager {
     fun install(app: Application) {
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            // Suppress ART's FinalizerWatchdogDaemon TimeoutException (e.g. android.content.res.ApkAssets.finalize() timed out after 10 seconds).
+            // This is a known ART VM limitation when low-end TV/OEM devices sleep, throttle, or perform heavy GC.
+            // Suppressing it prevents process crashes from internal finalizer delays.
+            if (isFinalizerTimeoutException(thread, throwable)) {
+                Log.w(TAG, "Suppressed FinalizerWatchdogDaemon TimeoutException: ${throwable.message}")
+                return@setDefaultUncaughtExceptionHandler
+            }
+
             if (isEnabled(app)) {
                 try {
                     writeCrashReport(app, thread, throwable)
@@ -181,6 +190,27 @@ object CrashReportManager {
             defaultHandler?.uncaughtException(thread, throwable)
         }
         Log.d(TAG, "Crash handler installed")
+    }
+
+    /**
+     * Identifies Android runtime (ART) FinalizerWatchdogDaemon TimeoutExceptions.
+     * ART monitors native object finalizers (e.g. ApkAssets, AssetManager, Cursor) and throws
+     * an uncaught TimeoutException if a finalizer takes > 10 seconds (frequently triggered on
+     * slow devices, TV set-top boxes, CPU throttling, or sleep/wake transitions).
+     */
+    private fun isFinalizerTimeoutException(thread: Thread, throwable: Throwable): Boolean {
+        if (thread.name == "FinalizerWatchdogDaemon") return true
+        if (throwable is TimeoutException) {
+            val msg = throwable.message.orEmpty()
+            if (msg.contains("finalize() timed out") || msg.contains("FinalizerDaemon")) {
+                return true
+            }
+            val trace = throwable.stackTrace
+            if (trace.any { it.className.contains("FinalizerDaemon") || it.className.contains("FinalizerWatchdogDaemon") }) {
+                return true
+            }
+        }
+        return false
     }
 
     /**

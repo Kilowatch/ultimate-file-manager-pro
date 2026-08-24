@@ -5,6 +5,27 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] — 2026-08-24
+
+### Fixed
+- **File Transfer Progress Dialog (`TwinWindowActivity`)**:
+  - Fixed an `android.view.InflateException` caused by inflating `dialog_transfer_progress` with a `LinearProgressIndicator` inside a background IO coroutine, which threw `Animators may only be run on Looper threads`. Dialog inflation and display are now dispatched on the Main UI thread before starting the background transfer.
+- **TV Background Server Foreground Service (`TvServerForegroundService`)**:
+  - Fixed an `android.app.ForegroundServiceDidNotStartInTimeException` on Android TV (SDK 31) caused by cold-start main-thread contention exceeding the 5-second foreground service timeout window.
+  - Added a cold-start delay during app initialization so UI rendering finishes before the service start timer begins.
+  - Ensured thread-safe start/stop request cancellation, guaranteed non-null fallback notifications, and robust `startForeground()` lifecycle compliance.
+- **SAF Network Documents Provider Memory Optimization (`UfmDocumentsProvider`)**:
+  - Fixed an `OutOfMemoryError` caused by eager 2 MB byte array allocations in `ProxyFileDescriptorCallback` constructors when external apps or media players opened network documents via SAF.
+  - Replaced eager 2 MB allocations with lazily allocated 256 KB read-ahead buffers, dynamic size-capping, and multi-tier OOM fallback to direct unbuffered reads.
+  - Cleaned up duplicate `when` branch warnings for `ShareType.WEBDAV`.
+- **Media Player Background Playback Service (`UFMPlaybackService`)**:
+  - Fixed an `android.app.ForegroundServiceStartNotAllowedException` on Android 15 (SDK 35) when audio focus changed or progress tickers updated while backgrounded.
+  - Added active foreground state tracking so notification updates and 1-second progress ticks use `NotificationManager.notify()` instead of triggering redundant `Service.startForeground()` IPCs.
+  - Wrapped `ServiceCompat.startForeground` with graceful fallback handling for background state restrictions.
+- **ART Finalizer Watchdog Timeout Suppression (`CrashReportManager`)**:
+  - Fixed false-positive crashes caused by `java.util.concurrent.TimeoutException: android.content.res.ApkAssets.finalize() timed out after 10 seconds` on the `FinalizerWatchdogDaemon` thread on slow TV / set-top box hardware.
+  - Enhanced the global uncaught exception handler to safely intercept and suppress ART finalizer watchdog timeouts without terminating the application process.
+
 ## [1.9.0] — 2026-08-20
 
 ### Changed

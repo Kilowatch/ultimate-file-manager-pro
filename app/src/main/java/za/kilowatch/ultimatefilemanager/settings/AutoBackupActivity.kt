@@ -171,51 +171,18 @@ class AutoBackupActivity : AppCompatActivity() {
             findViewById<TextView?>(R.id.labelSectionSchedule)?.setTextColor(primaryColor)
             findViewById<TextView?>(R.id.labelSectionSecurity)?.setTextColor(primaryColor)
             findViewById<TextView?>(R.id.labelSectionLocation)?.setTextColor(primaryColor)
-
-            // Setup single-selection toggle button styling
-            val glassBgColor = getColor(R.color.mobile_glass_white_10)
-            val textPrimaryColor = getColor(R.color.mobile_card_text_primary)
-            val toggleBgCsl = ColorStateList(
-                arrayOf(
-                    intArrayOf(android.R.attr.state_checked),
-                    intArrayOf(-android.R.attr.state_checked)
-                ),
-                intArrayOf(
-                    primaryColor,
-                    glassBgColor
-                )
-            )
-            val toggleTextCsl = ColorStateList(
-                arrayOf(
-                    intArrayOf(android.R.attr.state_checked),
-                    intArrayOf(-android.R.attr.state_checked)
-                ),
-                intArrayOf(
-                    onPrimaryColor,
-                    textPrimaryColor
-                )
-            )
-
-            val toggleButtons = listOf(btnDaily, btnWeekly, btnMonthly, btnLocationDefault, btnLocationCustom)
-            for (btn in toggleButtons) {
-                btn.backgroundTintList = toggleBgCsl
-                btn.setTextColor(toggleTextCsl)
-            }
         }
+
+        setupToggleButtons()
 
         // ── Back button ──────────────────────────────────────────────────
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
-                btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
-                if (hasFocus) {
-                    btnBack.setBackgroundResource(R.drawable.bg_icon_circle_focused)
-                } else {
-                    btnBack.setBackgroundResource(R.drawable.bg_icon_circle_accent)
-                }
+                btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
             }
         }
         btnBack?.setOnClickListener { finish() }
@@ -279,15 +246,8 @@ class AutoBackupActivity : AppCompatActivity() {
         // ── Backup Now button ────────────────────────────────────────────
         btnBackupNow.setOnClickListener { performBackupNow() }
 
-        // ── TV focus handling ────────────────────────────────────────────
         if (isTv) {
-            (cardEnable as? MaterialCardView)?.let { setupTvCardFocus(it) }
-            (cardSettings as? MaterialCardView)?.let { setupTvCardFocus(it) }
-            (cardTheme as? MaterialCardView)?.let { setupTvCardFocus(it) }
-            (cardPassword as? MaterialCardView)?.let { setupTvCardFocus(it) }
-            val cardLocation = findViewById<MaterialCardView?>(R.id.cardAutoBackupLocation)
-            cardLocation?.let { setupTvCardFocus(it) }
-            setupTvButtonFocus(btnBackupNow)
+            cardEnable.requestFocus()
         }
     }
 
@@ -344,23 +304,40 @@ class AutoBackupActivity : AppCompatActivity() {
     }
 
     private fun setControlsEnabled(enabled: Boolean) {
+        val alpha = if (enabled) 1.0f else 0.45f
         chkBackupSettings.isEnabled = enabled
         chkBackupTheme.isEnabled = enabled
         toggleSchedule.isEnabled = enabled
         btnDaily.isEnabled = enabled
         btnWeekly.isEnabled = enabled
         btnMonthly.isEnabled = enabled
-        findViewById<View?>(R.id.cardAutoBackupSettings)?.isEnabled = enabled
-        findViewById<View?>(R.id.cardAutoBackupTheme)?.isEnabled = enabled
-        findViewById<View?>(R.id.cardSchedule)?.isEnabled = enabled
-        findViewById<View?>(R.id.cardAutoBackupPassword)?.isEnabled = enabled
-        findViewById<View?>(R.id.cardAutoBackupLocation)?.isEnabled = enabled
+        findViewById<View?>(R.id.cardAutoBackupSettings)?.apply {
+            isEnabled = enabled
+            this.alpha = alpha
+        }
+        findViewById<View?>(R.id.cardAutoBackupTheme)?.apply {
+            isEnabled = enabled
+            this.alpha = alpha
+        }
+        findViewById<View?>(R.id.cardSchedule)?.apply {
+            isEnabled = enabled
+            this.alpha = alpha
+        }
+        findViewById<View?>(R.id.cardAutoBackupPassword)?.apply {
+            isEnabled = enabled
+            this.alpha = alpha
+        }
+        findViewById<View?>(R.id.cardAutoBackupLocation)?.apply {
+            isEnabled = enabled
+            this.alpha = alpha
+        }
         toggleLocation.isEnabled = enabled
         btnLocationDefault.isEnabled = enabled
         btnLocationCustom.isEnabled = enabled
         btnSelectFolder.isEnabled = enabled
         btnResetLocation.isEnabled = enabled
         btnBackupNow.isEnabled = enabled
+        btnBackupNow.alpha = alpha
     }
 
     // ── Password dialog ────────────────────────────────────────────────────
@@ -444,10 +421,11 @@ class AutoBackupActivity : AppCompatActivity() {
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val btnSaveUnencrypted = dialogView.findViewById<Button>(R.id.btnSaveUnencrypted)
+        val btnConfirmSkip = dialogView.findViewById<Button>(R.id.btnConfirmSkip)
+            ?: dialogView.findViewById(R.id.btnSaveUnencrypted)
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
 
-        btnSaveUnencrypted.setOnClickListener {
+        btnConfirmSkip?.setOnClickListener {
             AutoBackupPrefs.setPassword(this, null)
             AutoBackupPrefs.setUsePassword(this, false)
             updatePasswordStatus()
@@ -455,7 +433,7 @@ class AutoBackupActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        btnCancel.setOnClickListener {
+        btnCancel?.setOnClickListener {
             dialog.dismiss()
         }
 
@@ -618,63 +596,90 @@ class AutoBackupActivity : AppCompatActivity() {
         }, 1500)
     }
 
-    // ── TV helpers ─────────────────────────────────────────────────────────
+    private fun setupToggleButtons() {
+        val toggleButtons = listOf(btnDaily, btnWeekly, btnMonthly, btnLocationDefault, btnLocationCustom)
+        if (isTv) {
+            val yellowBg = getColor(R.color.tv_button_focused_yellow)
+            val glassBg = getColor(R.color.tv_glass_white_10)
+            val blackText = getColor(R.color.tv_button_focused_yellow_text)
+            val whiteText = getColor(R.color.tv_text_primary)
+            val strokeColor = getColor(R.color.tv_glass_border)
 
-    private fun setupTvCardFocus(card: MaterialCardView) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
-        val glassColor = getColor(R.color.tv_glass_white_10)
-        val primaryText = getColor(R.color.tv_text_primary)
-        val secondText = getColor(R.color.tv_text_secondary)
+            val tvBgCsl = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_focused),
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf()
+                ),
+                intArrayOf(
+                    yellowBg,
+                    yellowBg,
+                    glassBg
+                )
+            )
+            val tvTextCsl = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_focused),
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf()
+                ),
+                intArrayOf(
+                    blackText,
+                    blackText,
+                    whiteText
+                )
+            )
+            val tvStrokeCsl = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_focused),
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf()
+                ),
+                intArrayOf(
+                    yellowBg,
+                    yellowBg,
+                    strokeColor
+                )
+            )
 
-        card.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                card.setCardBackgroundColor(yellowFill)
-                setChildTextColors(card, blackText)
-            } else {
-                card.setCardBackgroundColor(glassColor)
-                setChildTextColorsTwo(card, primaryText, secondText)
+            for (btn in toggleButtons) {
+                btn.backgroundTintList = tvBgCsl
+                btn.setTextColor(tvTextCsl)
+                btn.strokeColor = tvStrokeCsl
+                btn.strokeWidth = (1.5f * resources.displayMetrics.density).toInt()
+                btn.isFocusable = true
+                btn.isClickable = true
             }
-        }
-    }
+        } else {
+            val primaryColor = ThemeColors.primary(this)
+            val onPrimaryColor = ThemeColors.onPrimary(this)
+            val glassBgColor = getColor(R.color.mobile_glass_white_10)
+            val textPrimaryColor = getColor(R.color.mobile_card_text_primary)
 
-    private fun setupTvButtonFocus(btn: View) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
-        val defaultBg = getColor(R.color.btn_save_bg_tint)
-        val defaultText = getColor(android.R.color.white)
+            val toggleBgCsl = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf(-android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    primaryColor,
+                    glassBgColor
+                )
+            )
+            val toggleTextCsl = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf(-android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    onPrimaryColor,
+                    textPrimaryColor
+                )
+            )
 
-        btn.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                btn.backgroundTintList = ColorStateList.valueOf(yellowFill)
-                if (btn is Button) btn.setTextColor(blackText)
-            } else {
-                btn.backgroundTintList = ColorStateList.valueOf(defaultBg)
-                if (btn is Button) btn.setTextColor(defaultText)
-            }
-        }
-    }
-
-    private fun setChildTextColors(view: View, color: Int) {
-        if (view is TextView) {
-            view.setTextColor(color)
-            return
-        }
-        if (view is ViewGroup) {
-            for (i in 0 until view.childCount) {
-                setChildTextColors(view.getChildAt(i), color)
-            }
-        }
-    }
-
-    private fun setChildTextColorsTwo(view: View, primary: Int, secondary: Int) {
-        if (view is TextView) {
-            view.setTextColor(if (view.textSize > resources.displayMetrics.density * 16) primary else secondary)
-            return
-        }
-        if (view is ViewGroup) {
-            for (i in 0 until view.childCount) {
-                setChildTextColorsTwo(view.getChildAt(i), primary, secondary)
+            for (btn in toggleButtons) {
+                btn.backgroundTintList = toggleBgCsl
+                btn.setTextColor(toggleTextCsl)
             }
         }
     }

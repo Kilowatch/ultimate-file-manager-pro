@@ -206,6 +206,20 @@ class LanguageWelcomeActivity : AppCompatActivity() {
         rvDialogLanguages?.adapter = adapter
         
         dialog.show()
+
+        if (isTv) {
+            val widthPx = (520 * resources.displayMetrics.density).toInt()
+            val screenWidth = resources.displayMetrics.widthPixels
+            val finalWidth = minOf(widthPx, (screenWidth * 0.85).toInt())
+            dialog.window?.setLayout(finalWidth, android.view.WindowManager.LayoutParams.WRAP_CONTENT)
+
+            val selectedIndex = languages.indexOfFirst { it.code.equals(selectedLocale, ignoreCase = true) }.coerceAtLeast(0)
+            rvDialogLanguages?.scrollToPosition(selectedIndex)
+            rvDialogLanguages?.post {
+                rvDialogLanguages.findViewHolderForAdapterPosition(selectedIndex)?.itemView?.findViewById<View>(R.id.cardLanguageItem)?.requestFocus()
+                    ?: rvDialogLanguages.getChildAt(0)?.findViewById<View>(R.id.cardLanguageItem)?.requestFocus()
+            }
+        }
     }
 
     private fun setupTvFocus() {

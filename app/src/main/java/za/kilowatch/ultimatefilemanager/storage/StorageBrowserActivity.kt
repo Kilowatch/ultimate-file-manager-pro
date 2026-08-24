@@ -1004,7 +1004,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 val currentMode = MainMenuViewModeManager.loadViewMode(this)
                 if (currentMode != MainMenuViewModeManager.ViewMode.GRID) {
                     MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.GRID)
-                    applyViewMode()
+                    applyViewMode(animate = true)
                 }
                 showViewModeOptions(isListView = false)
             } else {
@@ -1017,7 +1017,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 val currentMode = MainMenuViewModeManager.loadViewMode(this)
                 if (currentMode != MainMenuViewModeManager.ViewMode.LIST) {
                     MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.LIST)
-                    applyViewMode()
+                    applyViewMode(animate = true)
                 }
                 showViewModeOptions(isListView = true)
             } else {
@@ -1229,6 +1229,10 @@ class StorageBrowserActivity : AppCompatActivity() {
 
         updateHiddenBadge()
 
+        val initMode = MainMenuViewModeManager.loadViewMode(this)
+        val initCols = MainMenuViewModeManager.loadColumnCount(this)
+        val initSize = MainMenuViewModeManager.loadItemSize(this)
+
         storageAdapter = StorageAdapter(
             isTv = isTv,
             onStorageClick = { item -> onStorageTileClicked(item) },
@@ -1250,6 +1254,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
         ).apply {
+            viewMode = initMode
+            gridColumnCount = initCols
+            itemSize = initSize
             onHideClick = { item -> hideTile(item) }
             onEditModeClick = { item ->
                 if (isSelectingTileForColor) {
@@ -1272,7 +1279,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
         }
 
-        applyViewMode()
+        applyViewMode(animate = false)
         recyclerStorage.adapter = storageAdapter
 
         // Load custom tile colors and icons
@@ -4453,7 +4460,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
     }
 
-    private fun applyViewMode() {
+    private fun applyViewMode(animate: Boolean = false) {
         val updateLayout = {
             val mode = MainMenuViewModeManager.loadViewMode(this)
             val cols = MainMenuViewModeManager.loadColumnCount(this)
@@ -4516,7 +4523,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
         }
 
-        if (::recyclerStorage.isInitialized) {
+        if (animate && ::recyclerStorage.isInitialized) {
             za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateViewModeSwitch(recyclerStorage) {
                 updateLayout()
             }
@@ -4632,17 +4639,17 @@ class StorageBrowserActivity : AppCompatActivity() {
 
             cardLarge.setOnClickListener {
                 MainMenuViewModeManager.saveItemSize(this, MainMenuViewModeManager.ItemSize.LARGE)
-                applyViewMode()
+                applyViewMode(animate = true)
                 dialog.dismiss()
             }
             cardMedium.setOnClickListener {
                 MainMenuViewModeManager.saveItemSize(this, MainMenuViewModeManager.ItemSize.MEDIUM)
-                applyViewMode()
+                applyViewMode(animate = true)
                 dialog.dismiss()
             }
             cardSmall.setOnClickListener {
                 MainMenuViewModeManager.saveItemSize(this, MainMenuViewModeManager.ItemSize.SMALL)
-                applyViewMode()
+                applyViewMode(animate = true)
                 dialog.dismiss()
             }
         } else {
@@ -4672,12 +4679,12 @@ class StorageBrowserActivity : AppCompatActivity() {
 
             cardColumns4.setOnClickListener {
                 MainMenuViewModeManager.saveColumnCount(this, 4)
-                applyViewMode()
+                applyViewMode(animate = true)
                 dialog.dismiss()
             }
             cardColumns3.setOnClickListener {
                 MainMenuViewModeManager.saveColumnCount(this, 3)
-                applyViewMode()
+                applyViewMode(animate = true)
                 dialog.dismiss()
             }
         }

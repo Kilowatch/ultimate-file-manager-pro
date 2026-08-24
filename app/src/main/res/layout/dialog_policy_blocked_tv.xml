@@ -7,19 +7,26 @@
     android:layout_width="500dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_tv_glass_card"
-    android:padding="24dp">
+    android:background="@drawable/bg_tv_dialog_surface"
+    android:padding="28dp">
 
     <!-- Header Icon -->
-    <ImageView
-        android:id="@+id/imgPolicyIcon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_lock"
-        app:tint="@color/tv_button_focused_yellow"
-        android:contentDescription="@null"
-        android:layout_marginBottom="12dp" />
+        android:background="@drawable/bg_tv_card_glass"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:id="@+id/imgPolicyIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_lock"
+            app:tint="@color/tv_button_focused_yellow"
+            android:contentDescription="@null" />
+    </FrameLayout>
 
     <!-- Title -->
     <TextView
@@ -70,18 +77,13 @@
     <!-- OK Button (TV focusable) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPolicyOk"
+        style="@style/TvContinueButton"
         android:layout_width="180dp"
-        android:layout_height="44dp"
+        android:layout_height="48dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/btn_ok"
-        android:textColor="@color/tv_text_primary"
         android:textSize="15sp"
         android:fontFamily="sans-serif-medium"
-        app:backgroundTint="@color/tv_glass_white_10"
-        app:cornerRadius="12dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        app:elevation="0dp"
         android:focusable="true" />
 
 </LinearLayout>

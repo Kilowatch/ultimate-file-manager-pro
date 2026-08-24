@@ -8,21 +8,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_dialog_surface"
+    android:background="@drawable/bg_tv_dialog_surface"
     android:clipToOutline="true"
     android:padding="0dp">
 
     <!-- Amber accent top bar -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="4dp"
         android:background="#FFFFA726" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="24dp">
 
         <!-- Icon + Title row -->
         <LinearLayout
@@ -36,13 +36,14 @@
             <FrameLayout
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_warning_circle"
+                android:background="@drawable/bg_tv_card_glass"
                 android:layout_marginEnd="14dp">
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_vpn_warning"
+                    app:tint="#FFFFA726"
                     android:contentDescription="@null" />
             </FrameLayout>
 

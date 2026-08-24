@@ -343,14 +343,23 @@ class UfmDocumentsProvider : DocumentsProvider() {
         val canUseProxy = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
             supportsRandomAccess && (!isStrictlyWrite || isSmb)
         
-        return if (canUseProxy) {
-            openNetworkDocumentWithProxy(share, path, isWriteAction)
-        } else if (isStrictlyWrite) {
-            // Strictly Write-only fallback
-            openNetworkDocumentForWrite(share, path)
-        } else {
-            // Sequential pipe fallback for FTP/TV (downgrades 'rw' to 'r' — pipes are unidirectional)
-            openNetworkDocumentForRead(share, path)
+        return try {
+            if (canUseProxy) {
+                openNetworkDocumentWithProxy(share, path, isWriteAction)
+            } else if (isStrictlyWrite) {
+                // Strictly Write-only fallback
+                openNetworkDocumentForWrite(share, path)
+            } else {
+                // Sequential pipe fallback for FTP/TV (downgrades 'rw' to 'r' — pipes are unidirectional)
+                openNetworkDocumentForRead(share, path)
+            }
+        } catch (oom: OutOfMemoryError) {
+            GoRoLog.e("openNetworkDocument: OOM in proxy fd, falling back to sequential pipe", oom)
+            if (isStrictlyWrite) {
+                openNetworkDocumentForWrite(share, path)
+            } else {
+                openNetworkDocumentForRead(share, path)
+            }
         }
     }
 
@@ -394,11 +403,29 @@ class UfmDocumentsProvider : DocumentsProvider() {
         }
 
         val callback = object : ProxyFileDescriptorCallback() {
-            // 2 MB cache buffer for read-ahead to minimize network IO calls from Android FUSE
-            private val CACHE_SIZE = 2 * 1024 * 1024
-            private val cacheBuffer = ByteArray(CACHE_SIZE)
+            // 256 KB cache buffer for read-ahead to minimize network IO calls from Android FUSE.
+            // Lazily allocated on first onRead() to prevent OOM when multiple proxies are opened.
+            private val DEFAULT_CACHE_SIZE = 256 * 1024
+            private var cacheBuffer: ByteArray? = null
             private var cacheStartPos = -1L
             private var cacheEndPos = -1L
+
+            private fun getOrCreateCacheBuffer(fileSize: Long): ByteArray? {
+                if (cacheBuffer != null) return cacheBuffer
+                val targetSize = minOf(DEFAULT_CACHE_SIZE.toLong(), maxOf(64 * 1024L, fileSize)).toInt()
+                return try {
+                    ByteArray(targetSize).also { cacheBuffer = it }
+                } catch (oom: OutOfMemoryError) {
+                    GoRoLog.w("ProxyFileDescriptor: OOM allocating ${targetSize}B read cache, trying 64KB fallback")
+                    try {
+                        ByteArray(64 * 1024).also { cacheBuffer = it }
+                    } catch (_: OutOfMemoryError) {
+                        GoRoLog.w("ProxyFileDescriptor: OOM allocating fallback cache, using direct unbuffered reads")
+                        null
+                    }
+                }
+            }
+
             override fun onGetSize(): Long {
                 return try {
                     getOrOpenHandle().size
@@ -411,33 +438,43 @@ class UfmDocumentsProvider : DocumentsProvider() {
             override fun onRead(offset: Long, size: Int, data: ByteArray): Int {
                 return try {
                     val handleObj = getOrOpenHandle()
-                    if (offset >= handleObj.size) return 0
+                    val fileSize = handleObj.size
+                    if (offset >= fileSize) return 0
 
                     val bytesToRead = size
                     if (bytesToRead <= 0) return 0
 
-                    // Fast path: fulfill from cache
-                    if (offset >= cacheStartPos && offset < cacheEndPos) {
-                        val availableInCache = (cacheEndPos - offset).toInt()
-                        val toCopy = minOf(bytesToRead, availableInCache)
-                        System.arraycopy(cacheBuffer, (offset - cacheStartPos).toInt(), data, 0, toCopy)
+                    val buf = getOrCreateCacheBuffer(fileSize)
+                    if (buf != null) {
+                        // Fast path: fulfill from cache
+                        if (offset >= cacheStartPos && offset < cacheEndPos) {
+                            val availableInCache = (cacheEndPos - offset).toInt()
+                            val toCopy = minOf(bytesToRead, availableInCache)
+                            System.arraycopy(buf, (offset - cacheStartPos).toInt(), data, 0, toCopy)
+                            return toCopy
+                        }
+
+                        // Cache miss: Load chunk block from network into cache
+                        val fetchSize = minOf(buf.size.toLong(), fileSize - offset).toInt()
+                        if (fetchSize <= 0) return 0
+
+                        val readLength = handleObj.read(offset, buf, fetchSize)
+                        if (readLength <= 0) return 0
+
+                        cacheStartPos = offset
+                        cacheEndPos = offset + readLength
+
+                        // Immediately fulfill after caching
+                        val toCopy = minOf(bytesToRead, readLength)
+                        System.arraycopy(buf, 0, data, 0, toCopy)
                         return toCopy
+                    } else {
+                        // Direct unbuffered read fallback (when memory is extremely constrained)
+                        val toRead = minOf(bytesToRead.toLong(), fileSize - offset).toInt()
+                        if (toRead <= 0) return 0
+                        val readLength = handleObj.read(offset, data, toRead)
+                        return maxOf(0, readLength)
                     }
-
-                    // Cache miss: Load large chunk block from network into cache
-                    val fetchSize = minOf(CACHE_SIZE.toLong(), handleObj.size - offset).toInt()
-                    if (fetchSize <= 0) return 0
-
-                    val readLength = handleObj.read(offset, cacheBuffer, fetchSize)
-                    if (readLength <= 0) return 0
-
-                    cacheStartPos = offset
-                    cacheEndPos = offset + readLength
-
-                    // Immediately fulfill after caching
-                    val toCopy = minOf(bytesToRead, readLength)
-                    System.arraycopy(cacheBuffer, 0, data, 0, toCopy)
-                    return toCopy
                 } catch (e: Exception) {
                     GoRoLog.e("ProxyFileDescriptor error reading", e)
                     throw ErrnoException("onRead", OsConstants.EIO)
@@ -456,6 +493,9 @@ class UfmDocumentsProvider : DocumentsProvider() {
 
             override fun onRelease() {
                 try {
+                    cacheBuffer = null
+                    cacheStartPos = -1L
+                    cacheEndPos = -1L
                     handle?.close()
                 } catch (e: Exception) {
                     GoRoLog.e("ProxyFileDescriptor error closing", e)
@@ -502,7 +542,6 @@ class UfmDocumentsProvider : DocumentsProvider() {
                             ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, path).first
                             ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, path).first
                             ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, path).first
-                            ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, path).first
                             ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, path).first
                             ShareType.NFS -> NfsShareClient.openInputStream(share, path)
                             ShareType.DLNA -> DlnaShareClient.openInputStream(share, path)
@@ -723,7 +762,6 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         ShareType.DROPBOX -> DropboxShareClient.mkdir(share, newPath)
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, newPath)
                         ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.mkdir(share, newPath)
-                        ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.mkdir(share, newPath)
                         ShareType.NFS -> NfsShareClient.mkdir(share, newPath)
                         ShareType.DLNA -> DlnaShareClient.mkdir(share, newPath)
                     }
@@ -742,7 +780,6 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(share, newPath).close()
                         ShareType.DROPBOX -> DropboxShareClient.openOutputStream(share, newPath).close()
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> { S3ShareClient.openOutputStream(share, newPath).close() }
-                        ShareType.WEBDAV -> { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, newPath).close() }
                         ShareType.WEBDAV -> { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, newPath).close() }
                         ShareType.NFS -> NfsShareClient.openOutputStream(share, newPath).close()
                         ShareType.DLNA -> DlnaShareClient.openOutputStream(share, newPath).close()
@@ -776,7 +813,6 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         ShareType.DROPBOX -> DropboxShareClient.deleteFile(share, path)
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.deleteFile(share, path)
                         ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
-                        ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
                         ShareType.NFS -> NfsShareClient.deleteFile(share, path)
                         ShareType.DLNA -> DlnaShareClient.deleteFile(share, path)
                     }
@@ -790,7 +826,6 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.deleteFile(share, path)
                         ShareType.DROPBOX -> DropboxShareClient.deleteFile(share, path)
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.deleteFile(share, path)
-                        ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
                         ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
                         ShareType.NFS -> NfsShareClient.deleteDir(share, path)
                         ShareType.DLNA -> DlnaShareClient.deleteDir(share, path)
@@ -825,7 +860,6 @@ class UfmDocumentsProvider : DocumentsProvider() {
                     ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.rename(share, path, newPath)
                     ShareType.DROPBOX -> DropboxShareClient.rename(share, path, newPath)
                     ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, path, newPath)
-                    ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(share, path, newPath)
                     ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(share, path, newPath)
                     ShareType.NFS -> NfsShareClient.rename(share, path, newPath)
                     ShareType.DLNA -> DlnaShareClient.rename(share, path, newPath)
@@ -941,8 +975,6 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, path)
                     za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 ->
                         za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, path)
-                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
-                        za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
                     za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
                         za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
                     za.kilowatch.ultimatefilemanager.network.ShareType.NFS ->

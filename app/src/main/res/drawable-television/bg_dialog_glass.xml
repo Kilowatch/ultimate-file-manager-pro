@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Solid dark surface for TV dialogs -->
+<!--
+    Android TV Dialog Background - Solid Opaque Dark Surface (#F81A1D27)
+    Automatically loaded on Android TV devices via 'television' qualifier.
+-->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Opaque Solid Dark Dialog Surface -->
+    <!-- Opaque Solid Dark Surface -->
     <item>
         <shape android:shape="rectangle">
             <solid android:color="#F81A1D27" />

@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Storage Indexer Premium Dialog - UFM TV Standard (Solid Opaque Surface)
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="520dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/margin_xl"
-    android:background="@drawable/bg_glass_card"
-    android:gravity="center">
+    android:padding="28dp"
+    android:background="@drawable/bg_tv_dialog_surface"
+    android:gravity="center_horizontal">
 
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_lightning"
-        android:layout_marginBottom="@dimen/margin_md" />
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_tv_card_glass"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_lightning"
+            app:tint="@color/tv_button_focused_yellow"
+            android:contentDescription="@null" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/txtTitle"
@@ -21,45 +34,48 @@
         android:layout_height="wrap_content"
         android:text="@string/storage_indexer_premium_title"
         android:textColor="@color/tv_text_primary"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:fontFamily="sans-serif-black"
         android:textAlignment="center" />
 
     <TextView
         android:id="@+id/txtMessage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_sm"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/storage_indexer_premium_message"
         android:textColor="@color/tv_text_secondary"
-        android:textSize="18sp"
+        android:textSize="14sp"
+        android:lineSpacingExtra="2dp"
         android:textAlignment="center" />
 
+    <!-- Action Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/margin_xl"
         android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnExit"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TvContinueButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
             android:text="@string/storage_indexer_btn_exit"
             android:textColor="@color/tv_text_secondary"
             android:focusable="true"
-            android:layout_marginEnd="@dimen/margin_md" />
+            android:layout_marginEnd="12dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnContinue"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TvGrantButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1.2"
             android:text="@string/storage_indexer_btn_continue"
-            app:backgroundTint="@color/tv_button_focused_yellow"
-            android:textColor="@color/tv_button_focused_yellow_text"
+            android:fontFamily="sans-serif-bold"
             android:focusable="true" />
     </LinearLayout>
 </LinearLayout>

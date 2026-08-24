@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo
 import android.media.AudioManager
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -18,6 +19,7 @@ import android.os.PowerManager
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.ServiceCompat
 // MediaStyle requires a system MediaSession token to render progress — using standard NotificationCompat instead
 import androidx.core.app.NotificationCompat.BigTextStyle
 import androidx.media3.common.MediaItem
@@ -77,6 +79,59 @@ class UFMPlaybackService : Service() {
     // ── Notification ────────────────────────────────────────────────
     private val notificationManager by lazy { NotificationManagerCompat.from(this) }
     private var currentNotificationMetadata: MediaMetadata? = null
+    @Volatile
+    private var isForegroundService: Boolean = false
+
+    private fun safeStartForeground(notification: Notification) {
+        if (isForegroundService) {
+            try {
+                notificationManager.notify(NOTIFICATION_ID, notification)
+            } catch (e: Exception) {
+                GoRoLog.e("UFMPlaybackService", "Failed to update notification via notify", e)
+            }
+            return
+        }
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                ServiceCompat.startForeground(
+                    this,
+                    NOTIFICATION_ID,
+                    notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
+                )
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+            isForegroundService = true
+        } catch (e: Exception) {
+            // Catches ForegroundServiceStartNotAllowedException on Android 12+ (SDK 31+) if resumed/started from background
+            GoRoLog.e("UFMPlaybackService", "startForeground failed (likely background start restriction): ${e.message}", e)
+            try {
+                notificationManager.notify(NOTIFICATION_ID, notification)
+            } catch (t: Throwable) {
+                GoRoLog.e("UFMPlaybackService", "Fallback notification post failed", t)
+            }
+        }
+    }
+
+    private fun safeStopForeground(removeNotification: Boolean) {
+        try {
+            if (isForegroundService) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    stopForeground(if (removeNotification) STOP_FOREGROUND_REMOVE else STOP_FOREGROUND_DETACH)
+                } else {
+                    @Suppress("DEPRECATION")
+                    stopForeground(removeNotification)
+                }
+                isForegroundService = false
+            } else if (removeNotification) {
+                notificationManager.cancel(NOTIFICATION_ID)
+            }
+        } catch (e: Exception) {
+            GoRoLog.e("UFMPlaybackService", "safeStopForeground failed", e)
+        }
+    }
 
     companion object {
         const val NOTIFICATION_ID = 7003
@@ -188,7 +243,7 @@ class UFMPlaybackService : Service() {
 
         // If media is playing, show sticky notification
         if (player?.isPlaying == true) {
-            startForeground(NOTIFICATION_ID, buildNotification())
+            safeStartForeground(buildNotification())
         }
 
         return START_STICKY
@@ -207,6 +262,7 @@ class UFMPlaybackService : Service() {
         super.onDestroy()
         alive.set(false)
         stopNotificationUpdates()
+        safeStopForeground(true)
         metadataThread?.interrupt()
         unregisterHeadsetPlugReceiver()
         releaseWakeLock()
@@ -282,7 +338,7 @@ class UFMPlaybackService : Service() {
     fun play() {
         player?.play()
         requestAudioFocus()
-        startForeground(NOTIFICATION_ID, buildNotification())
+        safeStartForeground(buildNotification())
         acquireWakeLock()
         updateNotification()
         startNotificationUpdates()
@@ -444,7 +500,7 @@ class UFMPlaybackService : Service() {
         extractMetadata(item)
 
         // Build & show notification
-        startForeground(NOTIFICATION_ID, buildNotification())
+        safeStartForeground(buildNotification())
         acquireWakeLock()
         startNotificationUpdates()
 
@@ -472,7 +528,7 @@ class UFMPlaybackService : Service() {
                         // Cancel was tapped earlier — stop here
                         skipAutoplayOnce = false
                         pause()
-                        stopForeground(STOP_FOREGROUND_REMOVE)
+                        safeStopForeground(true)
                         PlayerStateManager.saveState(
                             this@UFMPlaybackService,
                             queueManager.queue,
@@ -485,7 +541,7 @@ class UFMPlaybackService : Service() {
                     } else {
                         // Last item and no autoplay
                         pause()
-                        stopForeground(STOP_FOREGROUND_REMOVE)
+                        safeStopForeground(true)
                     }
                 }
             }
@@ -503,7 +559,7 @@ class UFMPlaybackService : Service() {
             playbackCallback?.onPlaybackStateChanged(isPlaying, player?.playbackState ?: Player.STATE_IDLE, isCurrentLocal)
             if (isPlaying) {
                 acquireWakeLock()
-                startForeground(NOTIFICATION_ID, buildNotification())
+                safeStartForeground(buildNotification())
             } else {
                 releaseWakeLock()
             }
@@ -672,7 +728,16 @@ class UFMPlaybackService : Service() {
 
     private fun updateNotification() {
         if (player != null) {
-            startForeground(NOTIFICATION_ID, buildNotification())
+            val notification = buildNotification()
+            if (isForegroundService) {
+                try {
+                    notificationManager.notify(NOTIFICATION_ID, notification)
+                } catch (e: Exception) {
+                    GoRoLog.e("UFMPlaybackService", "updateNotification failed", e)
+                }
+            } else {
+                safeStartForeground(notification)
+            }
         }
     }
 
@@ -978,7 +1043,11 @@ class UFMPlaybackService : Service() {
     private val notificationUpdater = object : Runnable {
         override fun run() {
             if (player?.isPlaying == true) {
-                startForeground(NOTIFICATION_ID, buildNotification())
+                try {
+                    notificationManager.notify(NOTIFICATION_ID, buildNotification())
+                } catch (e: Exception) {
+                    GoRoLog.e("UFMPlaybackService", "notificationUpdater error", e)
+                }
                 handler.postDelayed(this, 1000) // Update every 1 second
             }
         }

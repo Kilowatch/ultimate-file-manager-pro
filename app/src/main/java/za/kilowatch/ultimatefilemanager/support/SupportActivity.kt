@@ -130,29 +130,20 @@ class SupportActivity : AppCompatActivity() {
         }
 
         // Send button
-        val btnSend = if (isTv) {
-            findViewById<Button>(R.id.btnSend)
-        } else {
-            findViewById<MaterialButton>(R.id.btnSend)
-        }
+        val btnSend = findViewById<MaterialButton>(R.id.btnSend)
         btnSend.setOnClickListener { submitForm() }
 
         // Apply TV focus to Send button on TV
         if (isTv) {
-            val sendBtn = findViewById<Button>(R.id.btnSend)
-            val yellowCsl = android.content.res.ColorStateList.valueOf(
-                getColor(R.color.tv_button_focused_yellow_text)
-            )
-            val defaultCsl = android.content.res.ColorStateList.valueOf(
-                getColor(R.color.tv_text_primary)
-            )
-            sendBtn.setTextColor(defaultCsl)
-            sendBtn.setOnFocusChangeListener { _, hasFocus ->
-                sendBtn.setTextColor(if (hasFocus) yellowCsl else defaultCsl)
-                sendBtn.setBackgroundResource(
-                    if (hasFocus) R.drawable.selector_tv_button_yellow
-                    else R.drawable.selector_tv_button
-                )
+            val yellowFill = getColor(R.color.tv_button_focused_yellow)
+            val blackText = getColor(R.color.tv_button_focused_yellow_text)
+            val defaultBg = getColor(R.color.tv_accent)
+            val defaultText = getColor(R.color.tv_text_primary)
+
+            btnSend.setOnFocusChangeListener { _, hasFocus ->
+                btnSend.backgroundTintList = android.content.res.ColorStateList.valueOf(if (hasFocus) yellowFill else defaultBg)
+                btnSend.setTextColor(if (hasFocus) blackText else defaultText)
+                btnSend.iconTint = android.content.res.ColorStateList.valueOf(if (hasFocus) blackText else defaultText)
             }
         }
         val scrollView = findViewById<View?>(R.id.scrollView)
@@ -185,16 +176,9 @@ class SupportActivity : AppCompatActivity() {
             }
         }
 
-        if (isTv) {
-            val yellowCsl = android.content.res.ColorStateList.valueOf(
-                getColor(R.color.tv_button_focused_yellow_text)
-            )
-            val defaultCsl = android.content.res.ColorStateList.valueOf(
-                getColor(R.color.tv_text_primary)
-            )
-            chkRememberEmail.setOnFocusChangeListener { _, hasFocus ->
-                chkRememberEmail.setTextColor(if (hasFocus) yellowCsl else defaultCsl)
-            }
+        // TV Card click toggles checkbox
+        findViewById<View?>(R.id.cardRememberEmail)?.setOnClickListener {
+            chkRememberEmail.isChecked = !chkRememberEmail.isChecked
         }
 
         // Direct email card
@@ -219,12 +203,12 @@ class SupportActivity : AppCompatActivity() {
             val whiteCsl = android.content.res.ColorStateList.valueOf(
                 getColor(R.color.tv_text_primary)
             )
-            val yellowCsl = android.content.res.ColorStateList.valueOf(
+            val blackCsl = android.content.res.ColorStateList.valueOf(
                 getColor(R.color.tv_button_focused_yellow_text)
             )
             btnBack.imageTintList = whiteCsl
             btnBack.setOnFocusChangeListener { _, hasFocus ->
-                btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
+                btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
             }
         }
     }
@@ -276,6 +260,10 @@ class SupportActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.layoutForm).visibility = View.GONE
         findViewById<View>(R.id.layoutOptions).visibility = View.VISIBLE
+
+        if (isTv) {
+            findViewById<View>(R.id.cardReportBug)?.requestFocus()
+        }
     }
 
     // ─── Field Management ───────────────────────────────────────

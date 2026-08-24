@@ -8,19 +8,26 @@
     android:layout_width="500dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_tv_glass_card"
-    android:padding="24dp"
+    android:background="@drawable/bg_tv_dialog_surface"
+    android:padding="28dp"
     android:gravity="center_horizontal">
 
     <!-- Icon Badge -->
-    <ImageView
-        android:id="@+id/imgCrashIcon"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:src="@drawable/ic_crash_report"
-        app:tint="@color/ufm_progress_critical"
-        android:layout_marginBottom="12dp"
-        android:contentDescription="@null" />
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_tv_card_glass"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:id="@+id/imgCrashIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_crash_report"
+            app:tint="@color/ufm_progress_critical"
+            android:contentDescription="@null" />
+    </FrameLayout>
 
     <!-- Dialog Title -->
     <TextView

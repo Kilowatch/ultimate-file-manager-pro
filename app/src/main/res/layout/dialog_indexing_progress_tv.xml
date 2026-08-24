@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="32dp"
-    android:background="@drawable/bg_dialog_glass"
+    android:background="@drawable/bg_tv_dialog_surface"
     android:gravity="center"
     android:layout_gravity="center">
 

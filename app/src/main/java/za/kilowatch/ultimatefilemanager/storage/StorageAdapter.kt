@@ -807,8 +807,10 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 val imgIcon = itemView.findViewById<ImageView>(R.id.imgStorageIcon)
                 
                 // Scale inner content for 3 vs 4 columns on TV so text doesn't overly wrap
+                val marginParams = card.layoutParams as? ViewGroup.MarginLayoutParams
                 if (gridColumnCount == 4) {
-                    innerLayout?.setPadding((8 * density).toInt(), (12 * density).toInt(), (8 * density).toInt(), (12 * density).toInt())
+                    marginParams?.setMargins((6 * density).toInt(), (6 * density).toInt(), (6 * density).toInt(), (6 * density).toInt())
+                    innerLayout?.setPadding((8 * density).toInt(), (10 * density).toInt(), (8 * density).toInt(), (10 * density).toInt())
 
                     // Container (circle background) is larger than the icon inside it.
                     // Use setLayoutParams() (not direct field mutation) so requestLayout() fires.
@@ -843,6 +845,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                     }
                 } else {
                     // Default 3 columns (large readable standard)
+                    marginParams?.setMargins((12 * density).toInt(), (12 * density).toInt(), (12 * density).toInt(), (12 * density).toInt())
                     innerLayout?.setPadding((16 * density).toInt(), (20 * density).toInt(), (16 * density).toInt(), (20 * density).toInt())
 
                     // Container (circle background) is larger than the icon inside it.
