@@ -34,6 +34,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.*
 import za.kilowatch.ultimatefilemanager.settings.PlayerPreferencesManager
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
+import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -476,9 +477,17 @@ class UFMPlaybackService : Service() {
             androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
                 .createMediaSource(MediaItem.fromUri(Uri.parse("ufm://${item.path.replace(" ", "%20")}")))
         } else {
-            // Local file
-            val localUri = Uri.parse(item.path)
-            GoRoLog.i("UFMPlaybackService", "playCurrent: local file uri=$localUri")
+            // Local / SAF file
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(item.path) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, item.path)
+            val localUri = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this, item.path) ?: Uri.parse(item.path)
+            } else if (item.path.startsWith("/")) {
+                Uri.fromFile(File(item.path))
+            } else {
+                Uri.parse(item.path)
+            }
+            GoRoLog.i("UFMPlaybackService", "playCurrent: local file uri=$localUri, isSaf=$isSaf")
             val extractorsFactory = za.kilowatch.ultimatefilemanager.media.UfmExtractorsFactory()
             val dataSourceFactory = DefaultDataSource.Factory(this)
             androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)

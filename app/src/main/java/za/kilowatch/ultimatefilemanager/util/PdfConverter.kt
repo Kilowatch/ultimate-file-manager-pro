@@ -37,13 +37,36 @@ class PdfConverter(private val context: Context) {
         PDFBoxResourceLoader.init(context)
     }
 
+    private fun openInput(path: String): java.io.InputStream? {
+        return if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path)) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, path)
+        } else {
+            try { File(path).inputStream() } catch (_: Exception) { null }
+        }
+    }
+
+    private fun openOutput(path: String): java.io.OutputStream? {
+        return if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path)) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(context, path)
+        } else {
+            try { File(path).outputStream() } catch (_: Exception) { null }
+        }
+    }
+
     fun convertImageToPdf(imageFile: File, outputFile: File, password: String?): Boolean {
+        return convertImageToPdf(imageFile.absolutePath, outputFile.absolutePath, password)
+    }
+
+    fun convertImageToPdf(sourcePath: String, outputPath: String, password: String?): Boolean {
         return try {
             // ── Step 1: measure raw dimensions without allocating the full bitmap ──
             val boundsOpts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            BitmapFactory.decodeFile(imageFile.absolutePath, boundsOpts)
+            openInput(sourcePath)?.use { stream ->
+                BitmapFactory.decodeStream(stream, null, boundsOpts)
+            }
             val rawWidth  = boundsOpts.outWidth
             val rawHeight = boundsOpts.outHeight
+            if (rawWidth <= 0 || rawHeight <= 0) return false
 
             // ── Step 2: calculate inSampleSize to cap longest side at MAX_DIM ──────
             var inSampleSize = 1
@@ -52,21 +75,22 @@ class PdfConverter(private val context: Context) {
             }
 
             // ── Step 3: decode downsampled bitmap ────────────────────────────────
-            val ext = imageFile.extension.lowercase()
+            val ext = sourcePath.substringAfterLast('.', "").lowercase()
             val raw: Bitmap = if (ext == "jxl") {
                 // BitmapFactory cannot decode JXL — use JxlCoder.decodeSampled()
                 try {
-                    val bytes = imageFile.readBytes()
+                    val bytes = openInput(sourcePath)?.use { it.readBytes() } ?: return false
                     com.awxkee.jxlcoder.JxlCoder.decodeSampled(bytes, MAX_DIM, MAX_DIM)
                 } catch (_: Exception) { return false }
             } else {
                 val decodeOpts = BitmapFactory.Options().apply { this.inSampleSize = inSampleSize }
-                BitmapFactory.decodeFile(imageFile.absolutePath, decodeOpts)
-                    ?: return false
+                openInput(sourcePath)?.use { stream ->
+                    BitmapFactory.decodeStream(stream, null, decodeOpts)
+                } ?: return false
             }
 
             // ── Step 4: apply EXIF orientation so the PDF is always upright ──────
-            val rotation = readExifRotation(imageFile)
+            val rotation = readExifRotation(sourcePath)
             val bitmap = if (rotation != 0) {
                 val matrix = Matrix().apply { postRotate(rotation.toFloat()) }
                 Bitmap.createBitmap(raw, 0, 0, raw.width, raw.height, matrix, true)
@@ -98,7 +122,10 @@ class PdfConverter(private val context: Context) {
                 document.protect(spp)
             }
 
-            document.save(outputFile)
+            val out = openOutput(outputPath) ?: return false
+            out.use { stream ->
+                document.save(stream)
+            }
             document.close()
             true
         } catch (e: Exception) {
@@ -112,9 +139,13 @@ class PdfConverter(private val context: Context) {
      * or 0 if the orientation is normal / unreadable.
      * Uses [android.media.ExifInterface] (built-in, no extra dependency, minSdk 26+).
      */
-    private fun readExifRotation(imageFile: File): Int {
+    private fun readExifRotation(sourcePath: String): Int {
         return try {
-            val exif = ExifInterface(imageFile.absolutePath)
+            val exif = if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(sourcePath)) {
+                openInput(sourcePath)?.use { ExifInterface(it) } ?: return 0
+            } else {
+                ExifInterface(sourcePath)
+            }
             when (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
                 ExifInterface.ORIENTATION_ROTATE_90  -> 90
                 ExifInterface.ORIENTATION_ROTATE_180 -> 180
@@ -127,9 +158,19 @@ class PdfConverter(private val context: Context) {
     }
 
     fun convertTextToPdf(textFile: File, outputFile: File, password: String?): Boolean {
+        return convertTextToPdf(textFile.absolutePath, outputFile.absolutePath, password)
+    }
+
+    fun convertTextToPdf(sourcePath: String, outputPath: String, password: String?): Boolean {
         return try {
             PDFBoxResourceLoader.init(context)
-            val content = try { textFile.readText() } catch (_: Exception) { textFile.readText(Charsets.ISO_8859_1) }
+            val content = openInput(sourcePath)?.use { stream ->
+                try {
+                    stream.bufferedReader(Charsets.UTF_8).readText()
+                } catch (_: Exception) {
+                    openInput(sourcePath)?.use { s2 -> s2.bufferedReader(Charsets.ISO_8859_1).readText() } ?: ""
+                }
+            } ?: return false
 
             val document = PDDocument()
             val font     = PDType1Font.HELVETICA
@@ -144,7 +185,7 @@ class PdfConverter(private val context: Context) {
             val marginBot  = 40f
             val usableWidth = pageWidth - 2 * marginX
 
-            // Approximate chars per line (Helvetica 10pt ≈ 5.6 pts/char average)
+            // Approximate chars per line (Helvetica 10pt â‰ˆ 5.6 pts/char average)
             val charsPerLine = (usableWidth / (fontSize * 0.56f)).toInt().coerceAtLeast(40)
 
             // Word-wrap all lines
@@ -203,7 +244,10 @@ class PdfConverter(private val context: Context) {
                 document.protect(spp)
             }
 
-            document.save(outputFile)
+            val out = openOutput(outputPath) ?: return false
+            out.use { stream ->
+                document.save(stream)
+            }
             document.close()
             true
         } catch (e: Exception) {

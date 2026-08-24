@@ -217,9 +217,20 @@ class ImageViewerActivity : AppCompatActivity() {
             try {
                 val drawingBmp = drawingOverlay.getDrawingBitmap()
                 val cropRect = drawingOverlay.computeCropRect()
+
+                val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
+                val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)
+                val dataToLoad: Any = if (contentUriStr != null) {
+                    android.net.Uri.parse(contentUriStr)
+                } else if (isSaf) {
+                    (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this@ImageViewerActivity, file.absolutePath) ?: file
+                } else {
+                    file
+                }
+
                 val srcBmp = coilLoader.execute(
                     ImageRequest.Builder(this@ImageViewerActivity)
-                        .data(file)
+                        .data(dataToLoad)
                         .allowHardware(false)
                         .build()
                 ).image?.asDrawable(resources)?.let {
@@ -255,8 +266,20 @@ class ImageViewerActivity : AppCompatActivity() {
                 } else resultBmp
 
                 val ext = file.extension.ifEmpty { "png" }
-                val saveFile = File(file.parentFile, "${file.nameWithoutExtension}_edited.$ext")
-                FileOutputStream(saveFile).use { out ->
+                val editedName = "${file.nameWithoutExtension}_edited.$ext"
+                val outSafOrLocalPath = if (isSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(file.parentFile?.absolutePath ?: "", editedName)
+                } else {
+                    File(file.parentFile, editedName).absolutePath
+                }
+
+                val outStream = if (isSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(this@ImageViewerActivity, outSafOrLocalPath)
+                } else {
+                    FileOutputStream(File(outSafOrLocalPath))
+                }
+
+                outStream?.use { out ->
                     when (ext.lowercase()) {
                         "jpg", "jpeg" -> finalBmp.compress(Bitmap.CompressFormat.JPEG, 95, out)
                         "png" -> finalBmp.compress(Bitmap.CompressFormat.PNG, 100, out)
@@ -279,7 +302,7 @@ class ImageViewerActivity : AppCompatActivity() {
 
                 runOnUiThread {
                     Toast.makeText(this@ImageViewerActivity,
-                        getString(R.string.image_saved, saveFile.name), Toast.LENGTH_SHORT).show()
+                        getString(R.string.image_saved, editedName), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 runOnUiThread {
@@ -446,8 +469,18 @@ class ImageViewerActivity : AppCompatActivity() {
     private fun loadImage(file: File) {
         progressBar.visibility = View.VISIBLE
 
+        val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)
+        val dataToLoad: Any = if (contentUriStr != null) {
+            android.net.Uri.parse(contentUriStr)
+        } else if (isSaf) {
+            (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this, file.absolutePath) ?: file
+        } else {
+            file
+        }
+
         val request = ImageRequest.Builder(this)
-            .data(file)
+            .data(dataToLoad)
             .allowHardware(false)
             .listener(
                 onError = { _, result ->

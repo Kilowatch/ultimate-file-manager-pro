@@ -1,4 +1,4 @@
-﻿package za.kilowatch.ultimatefilemanager.viewer
+package za.kilowatch.ultimatefilemanager.viewer
 
 import android.util.Xml
 import org.xmlpull.v1.XmlPullParser
@@ -56,9 +56,9 @@ object EpubParser {
      * @return          Parsed [EpubBook] ready for display.
      * @throws EpubParseException if the file is not a valid EPUB.
      */
-    fun parse(epubFile: File, destDir: File): EpubBook {
+    fun parse(epubFile: File, destDir: File, context: android.content.Context? = null): EpubBook {
         // 1. Extract all entries from the ZIP
-        extractZip(epubFile, destDir)
+        extractZip(epubFile, destDir, context)
 
         // 2. Find OPF rootfile via META-INF/container.xml
         val containerFile = File(destDir, "META-INF/container.xml")
@@ -81,9 +81,18 @@ object EpubParser {
 
     // ── ZIP extraction ───────────────────────────────────────────────────────
 
-    private fun extractZip(epubFile: File, destDir: File) {
+    private fun extractZip(epubFile: File, destDir: File, context: android.content.Context? = null) {
         destDir.mkdirs()
-        ZipInputStream(FileInputStream(epubFile).buffered()).use { zin ->
+        val isSaf = epubFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(epubFile.absolutePath) ||
+                    (context != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, epubFile.absolutePath))
+        val inStream = if (isSaf && context != null) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, epubFile.absolutePath)
+        } else {
+            try { FileInputStream(epubFile) } catch (_: Exception) { null }
+        } ?: throw EpubParseException("Cannot open EPUB stream: ${epubFile.name}")
+
+        ZipInputStream(inStream.buffered()).use { zin ->
             var entry = zin.nextEntry
             while (entry != null) {
                 if (!entry.isDirectory) {

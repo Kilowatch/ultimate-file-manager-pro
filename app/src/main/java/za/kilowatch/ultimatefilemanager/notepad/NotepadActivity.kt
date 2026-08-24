@@ -516,14 +516,23 @@ class NotepadActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val ext = file.extension.lowercase()
+                val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@NotepadActivity, file.absolutePath)
                 if (ext == "pdf") {
                     val tempTxt = File(cacheDir, "pdf_temp_${System.currentTimeMillis()}.txt")
                     tempTxt.writeText(text, Charsets.UTF_8)
                     val converter = PdfConverter(this@NotepadActivity)
-                    converter.convertTextToPdf(tempTxt, file, null)
+                    val ok = converter.convertTextToPdf(tempTxt.absolutePath, file.absolutePath, null)
                     tempTxt.delete()
+                    if (!ok) throw java.io.IOException("Failed to convert note to PDF")
                 } else {
-                    file.writeText(text, Charsets.UTF_8)
+                    val outStream = if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(this@NotepadActivity, file.absolutePath)
+                    } else {
+                        java.io.FileOutputStream(file)
+                    } ?: throw java.io.IOException("Cannot open output stream for ${file.absolutePath}")
+                    outStream.use { it.write(text.toByteArray(Charsets.UTF_8)) }
                 }
                 withContext(Dispatchers.Main) {
                     isModified = false
@@ -541,27 +550,43 @@ class NotepadActivity : AppCompatActivity() {
     private fun doSave(content: String, targetFile: File, extension: String, isNewSave: Boolean) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                val isSaf = targetFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(targetFile.absolutePath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@NotepadActivity, targetFile.absolutePath)
+                val targetName = "${targetFile.nameWithoutExtension}.$extension"
+                val outPath = if (isSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(targetFile.parentFile?.absolutePath ?: "", targetName)
+                } else {
+                    File(targetFile.parentFile, targetName).absolutePath
+                }
+                val resultFile = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(outPath) else File(outPath)
+
                 when (extension) {
                     "pdf" -> {
-                        val pdfFile = File(targetFile.parentFile, "${targetFile.nameWithoutExtension}.pdf")
                         val tempTxt = File(cacheDir, "pdf_temp_${System.currentTimeMillis()}.txt")
                         tempTxt.writeText(content, Charsets.UTF_8)
                         val converter = PdfConverter(this@NotepadActivity)
-                        converter.convertTextToPdf(tempTxt, pdfFile, null)
+                        val ok = converter.convertTextToPdf(tempTxt.absolutePath, outPath, null)
                         tempTxt.delete()
+                        if (!ok) throw java.io.IOException("Failed to convert note to PDF")
                         withContext(Dispatchers.Main) {
-                            currentFile = pdfFile
-                            fileName = pdfFile.name
-                            txtTitle.text = pdfFile.name
+                            currentFile = resultFile
+                            fileName = resultFile.name
+                            txtTitle.text = resultFile.name
                         }
                     }
                     else -> {
-                        val extFile = File(targetFile.parentFile, "${targetFile.nameWithoutExtension}.$extension")
-                        extFile.writeText(content, Charsets.UTF_8)
+                        val outStream = if (isSaf) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(this@NotepadActivity, outPath)
+                        } else {
+                            resultFile.parentFile?.mkdirs()
+                            java.io.FileOutputStream(resultFile)
+                        } ?: throw java.io.IOException("Cannot open output stream for $outPath")
+                        outStream.use { it.write(content.toByteArray(Charsets.UTF_8)) }
                         withContext(Dispatchers.Main) {
-                            currentFile = extFile
-                            fileName = extFile.name
-                            txtTitle.text = extFile.name
+                            currentFile = resultFile
+                            fileName = resultFile.name
+                            txtTitle.text = resultFile.name
                         }
                     }
                 }

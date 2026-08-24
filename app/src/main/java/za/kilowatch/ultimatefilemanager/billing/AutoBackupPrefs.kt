@@ -282,6 +282,11 @@ object AutoBackupPrefs {
         if (type == "local") {
             val customPath = getCustomLocalPath(context)
             if (customPath.isNotEmpty()) {
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(customPath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, customPath)
+                if (isSaf) {
+                    return za.kilowatch.ultimatefilemanager.storage.SafFile(customPath, isDir = true)
+                }
                 val dir = File(customPath)
                 if (dir.exists() || dir.mkdirs()) {
                     return dir

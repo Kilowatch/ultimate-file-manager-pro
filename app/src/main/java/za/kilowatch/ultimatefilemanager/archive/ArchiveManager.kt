@@ -234,20 +234,104 @@ object ArchiveManager {
         password: String? = null,
         format: Format = Format.ZIP,
         onProgress: (Int) -> Unit = {}
+    ): Result<Unit> = compress(
+        context = null,
+        sourceFiles = sourceFiles,
+        destFile = destFile,
+        password = password,
+        format = format,
+        onProgress = onProgress
+    )
+
+    suspend fun compress(
+        context: Context? = null,
+        sourceFiles: List<File>,
+        destFile: File,
+        password: String? = null,
+        format: Format = Format.ZIP,
+        onProgress: (Int) -> Unit = {}
     ): Result<Unit> = withContext(Dispatchers.IO) {
+        val isDestSaf = context != null && (destFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destFile.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, destFile.absolutePath))
+
+        val anySourceSaf = context != null && sourceFiles.any {
+            it is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(it.absolutePath) ||
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, it.absolutePath)
+        }
+
+        var tempDestFile: File? = null
+        var tempSourceDir: File? = null
+
         try {
+            val effectiveDest = if (isDestSaf && context != null) {
+                tempDestFile = File(context.cacheDir, "comp_${System.currentTimeMillis()}_${destFile.name}")
+                tempDestFile
+            } else {
+                destFile
+            }
+
+            val effectiveSources = if (anySourceSaf && context != null) {
+                tempSourceDir = File(context.cacheDir, "stage_comp_src_${System.currentTimeMillis()}").apply { mkdirs() }
+                sourceFiles.map { sf ->
+                    val isSfSaf = sf is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                  za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(sf.absolutePath) ||
+                                  za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, sf.absolutePath)
+                    if (isSfSaf) {
+                        val staged = File(tempSourceDir, sf.name)
+                        val isDir = (sf as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.isDirectory() == true ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isDirectory(context, sf.absolutePath)
+                        if (isDir) {
+                            staged.mkdirs()
+                            val children = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.walkSafTopDown(context, sf.absolutePath)
+                            for (child in children) {
+                                val rel = child.absolutePath.removePrefix(sf.absolutePath).trimStart('/')
+                                if (rel.isEmpty()) continue
+                                val destChild = File(staged, rel)
+                                if (child.isDirectory) {
+                                    destChild.mkdirs()
+                                } else {
+                                    destChild.parentFile?.mkdirs()
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, child.absolutePath)?.use { inStream ->
+                                        destChild.outputStream().use { outStream -> inStream.copyTo(outStream) }
+                                    }
+                                }
+                            }
+                        } else {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, sf.absolutePath)?.use { inStream ->
+                                staged.outputStream().use { outStream -> inStream.copyTo(outStream) }
+                            }
+                        }
+                        staged
+                    } else {
+                        sf
+                    }
+                }
+            } else {
+                sourceFiles
+            }
+
             when (format) {
-                Format.ZIP -> compressZip(sourceFiles, destFile, password, onProgress)
-                Format.SEVEN_Z -> compress7z(sourceFiles, destFile, password, onProgress)
-                Format.TAR -> compressTarStream(sourceFiles, destFile, CompressorStream.NONE, onProgress)
-                Format.TAR_GZ -> compressTarStream(sourceFiles, destFile, CompressorStream.GZIP, onProgress)
-                Format.TAR_BZ2 -> compressTarStream(sourceFiles, destFile, CompressorStream.BZIP2, onProgress)
-                Format.TAR_XZ -> compressTarStream(sourceFiles, destFile, CompressorStream.XZ, onProgress)
-                Format.TAR_ZST -> compressTarStream(sourceFiles, destFile, CompressorStream.ZSTD, onProgress)
-                Format.GZ -> compressTarStream(sourceFiles, destFile, CompressorStream.GZIP, onProgress)
-                Format.BZ2 -> compressTarStream(sourceFiles, destFile, CompressorStream.BZIP2, onProgress)
-                Format.XZ -> compressTarStream(sourceFiles, destFile, CompressorStream.XZ, onProgress)
-                Format.ZST -> compressTarStream(sourceFiles, destFile, CompressorStream.ZSTD, onProgress)
+                Format.ZIP -> compressZip(effectiveSources, effectiveDest, password, onProgress)
+                Format.SEVEN_Z -> compress7z(effectiveSources, effectiveDest, password, onProgress)
+                Format.TAR -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.NONE, onProgress)
+                Format.TAR_GZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.GZIP, onProgress)
+                Format.TAR_BZ2 -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.BZIP2, onProgress)
+                Format.TAR_XZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.XZ, onProgress)
+                Format.TAR_ZST -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.ZSTD, onProgress)
+                Format.GZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.GZIP, onProgress)
+                Format.BZ2 -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.BZIP2, onProgress)
+                Format.XZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.XZ, onProgress)
+                Format.ZST -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.ZSTD, onProgress)
+            }
+
+            if (isDestSaf && tempDestFile != null && context != null) {
+                TransferConflictHelper.copyLocalToLocalAtomic(
+                    tempDestFile,
+                    destFile,
+                    TransferConflictHelper.ConflictAction.OVERWRITE
+                )
             }
             Result.success(Unit)
         } catch (e: OutOfMemoryError) {
@@ -258,6 +342,9 @@ object ArchiveManager {
             Result.failure(e)
         } catch (e: Exception) {
             Result.failure(e)
+        } finally {
+            tempDestFile?.delete()
+            tempSourceDir?.deleteRecursively()
         }
     }
 
@@ -375,34 +462,81 @@ object ArchiveManager {
         onProgress: (Int) -> Unit = {},
         onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ): Result<Unit> = withContext(Dispatchers.IO) {
+        val isSourceSaf = archiveFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                          za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(archiveFile.absolutePath) ||
+                          za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, archiveFile.absolutePath)
+        val isDestSaf = destDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destDir.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, destDir.absolutePath)
+
+        var tempArchive: File? = null
+        var tempExtractDir: File? = null
+
         try {
-            val name = archiveFile.name.lowercase()
-            when {
-                name.endsWith(".tar.gz") || name.endsWith(".tgz") -> extractTarStream(archiveFile, destDir, CompressorStream.GZIP, onProgress, onConflict)
-                name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") -> extractTarStream(archiveFile, destDir, CompressorStream.BZIP2, onProgress, onConflict)
-                name.endsWith(".tar.xz") || name.endsWith(".txz") -> extractTarStream(archiveFile, destDir, CompressorStream.XZ, onProgress, onConflict)
-                name.endsWith(".tar.zst") || name.endsWith(".tzst") -> extractTarStream(archiveFile, destDir, CompressorStream.ZSTD, onProgress, onConflict)
-                name.endsWith(".tar") -> extractTarStream(archiveFile, destDir, CompressorStream.NONE, onProgress, onConflict)
-                name.endsWith(".rar") -> extractRar(archiveFile, destDir, password, onProgress, onConflict)
-                name.endsWith(".gz") -> extractSingleStreamOrTar(archiveFile, destDir, CompressorStream.GZIP, onProgress, onConflict)
-                name.endsWith(".bz2") -> extractSingleStreamOrTar(archiveFile, destDir, CompressorStream.BZIP2, onProgress, onConflict)
-                name.endsWith(".xz") -> extractSingleStreamOrTar(archiveFile, destDir, CompressorStream.XZ, onProgress, onConflict)
-                name.endsWith(".zst") -> extractSingleStreamOrTar(archiveFile, destDir, CompressorStream.ZSTD, onProgress, onConflict)
-                archiveFile.extension.lowercase() == "zip" -> extractZip(context, archiveFile, destDir, password, onProgress, onConflict)
-                archiveFile.extension.lowercase() == "7z" -> extract7z(context, archiveFile, destDir, password, onProgress, onConflict)
-                else -> throw IllegalArgumentException(context.getString(R.string.unsupported_archive_format_extension, archiveFile.extension))
+            val effectiveArchive = if (isSourceSaf) {
+                tempArchive = File(context.cacheDir, "source_archive_${System.currentTimeMillis()}_${archiveFile.name}")
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, archiveFile.absolutePath)?.use { input ->
+                    tempArchive.outputStream().use { output -> input.copyTo(output) }
+                } ?: throw java.io.FileNotFoundException("Cannot open archive ${archiveFile.name}")
+                tempArchive
+            } else {
+                archiveFile
             }
+
+            val effectiveDest = if (isDestSaf) {
+                tempExtractDir = File(context.cacheDir, "extracted_${System.currentTimeMillis()}").apply { mkdirs() }
+                tempExtractDir
+            } else {
+                destDir
+            }
+
+            val name = effectiveArchive.name.lowercase()
+            when {
+                name.endsWith(".tar.gz") || name.endsWith(".tgz") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.GZIP, onProgress, onConflict)
+                name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.BZIP2, onProgress, onConflict)
+                name.endsWith(".tar.xz") || name.endsWith(".txz") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.XZ, onProgress, onConflict)
+                name.endsWith(".tar.zst") || name.endsWith(".tzst") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.ZSTD, onProgress, onConflict)
+                name.endsWith(".tar") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.NONE, onProgress, onConflict)
+                name.endsWith(".rar") -> extractRar(effectiveArchive, effectiveDest, password, onProgress, onConflict)
+                name.endsWith(".gz") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.GZIP, onProgress, onConflict)
+                name.endsWith(".bz2") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.BZIP2, onProgress, onConflict)
+                name.endsWith(".xz") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.XZ, onProgress, onConflict)
+                name.endsWith(".zst") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.ZSTD, onProgress, onConflict)
+                effectiveArchive.extension.lowercase() == "zip" -> extractZip(context, effectiveArchive, effectiveDest, password, onProgress, onConflict)
+                effectiveArchive.extension.lowercase() == "7z" -> extract7z(context, effectiveArchive, effectiveDest, password, onProgress, onConflict)
+                else -> throw IllegalArgumentException(context.getString(R.string.unsupported_archive_format_extension, effectiveArchive.extension))
+            }
+
+            if (isDestSaf && tempExtractDir != null) {
+                for (subFile in tempExtractDir.walkTopDown()) {
+                    val rel = subFile.relativeTo(tempExtractDir).path
+                    if (rel.isEmpty()) continue
+                    val targetSafPath = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destDir.absolutePath, rel)
+                    if (subFile.isDirectory) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFolder(context, targetSafPath)
+                    } else {
+                        val targetDestFile = za.kilowatch.ultimatefilemanager.storage.SafFile(targetSafPath)
+                        TransferConflictHelper.copyLocalToLocalAtomic(
+                            src = subFile,
+                            dest = targetDestFile,
+                            action = TransferConflictHelper.ConflictAction.OVERWRITE
+                        )
+                    }
+                }
+            }
+
             Result.success(Unit)
         } catch (e: OutOfMemoryError) {
             Result.failure(Exception(context.getString(R.string.error_not_enough_memory), e))
         } catch (e: org.apache.commons.compress.MemoryLimitException) {
             Result.failure(Exception(context.getString(R.string.error_not_enough_memory), e))
         } catch (e: LinkageError) {
-            // Native codec (e.g. zstd-jni for .zst) missing on this device — fail the
-            // operation instead of crashing the app with an UnsatisfiedLinkError.
             Result.failure(e)
         } catch (e: Exception) {
             Result.failure(e)
+        } finally {
+            tempArchive?.delete()
+            tempExtractDir?.deleteRecursively()
         }
     }
 
@@ -797,15 +931,42 @@ object ArchiveManager {
         archiveFile: File,
         entryPath: String,
         destDir: File,
-        password: String? = null
+        password: String? = null,
+        context: Context? = null
     ): Result<Unit> = withContext(Dispatchers.IO) {
+        val isDestSaf = destDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destDir.absolutePath) ||
+                        (context != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, destDir.absolutePath))
+        val isArchiveSaf = archiveFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                           za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(archiveFile.absolutePath) ||
+                           (context != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, archiveFile.absolutePath))
+
+        var tempArchiveFile: File? = null
+        var tempStagingDir: File? = null
         try {
-            val zipFile = ZipFile(archiveFile)
+            val effectiveArchive = if (isArchiveSaf && context != null) {
+                tempArchiveFile = File(context.cacheDir, "stage_entry_zip_${System.currentTimeMillis()}_${archiveFile.name}")
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, archiveFile.absolutePath)?.use { inStream ->
+                    tempArchiveFile.outputStream().use { outStream -> inStream.copyTo(outStream) }
+                }
+                tempArchiveFile
+            } else {
+                archiveFile
+            }
+
+            val effectiveDest = if (isDestSaf && context != null) {
+                tempStagingDir = File(context.cacheDir, "stage_entry_dest_${System.currentTimeMillis()}").apply { mkdirs() }
+                tempStagingDir
+            } else {
+                destDir
+            }
+
+            val zipFile = ZipFile(effectiveArchive)
             if (zipFile.isEncrypted && password != null) {
                 zipFile.setPassword(password.toCharArray())
             }
-            destDir.mkdirs()
-            val canonicalDest = destDir.canonicalPath
+            effectiveDest.mkdirs()
+            val canonicalDest = effectiveDest.canonicalPath
             val headers = zipFile.fileHeaders.filter { 
                 it.fileName == entryPath || it.fileName == "$entryPath/" || it.fileName.startsWith("$entryPath/")
             }
@@ -820,7 +981,7 @@ object ArchiveManager {
                 } else {
                     header.fileName.substringAfterLast("/")
                 }
-                val outFile = File(destDir, relativePath)
+                val outFile = File(effectiveDest, relativePath)
                 val canonicalOut = outFile.canonicalPath
                 if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
                     Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${header.fileName}")
@@ -837,9 +998,30 @@ object ArchiveManager {
                     }
                 }
             }
+
+            if (isDestSaf && tempStagingDir != null && context != null) {
+                val stagedFiles = tempStagingDir.walkTopDown().toList()
+                for (sf in stagedFiles) {
+                    if (sf == tempStagingDir) continue
+                    val relPath = sf.relativeTo(tempStagingDir).path.replace('\\', '/')
+                    val destChild = File(destDir, relPath)
+                    if (sf.isDirectory) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFolder(context, destChild.absolutePath)
+                    } else {
+                        TransferConflictHelper.copyLocalToLocalAtomic(
+                            sf,
+                            destChild,
+                            TransferConflictHelper.ConflictAction.OVERWRITE
+                        )
+                    }
+                }
+            }
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
+        } finally {
+            tempArchiveFile?.delete()
+            tempStagingDir?.deleteRecursively()
         }
     }
 
@@ -875,9 +1057,10 @@ object ArchiveManager {
         archiveFile: File,
         entryPath: String,
         destDir: File,
-        password: String? = null
+        password: String? = null,
+        context: Context? = null
     ): Result<Unit> = withContext(Dispatchers.IO) {
-        val extractRes = extractZipEntry(archiveFile, entryPath, destDir, password)
+        val extractRes = extractZipEntry(archiveFile, entryPath, destDir, password, context)
         if (extractRes.isFailure) return@withContext extractRes
         deleteZipEntry(archiveFile, entryPath, password)
     }
@@ -1009,25 +1192,92 @@ object ArchiveManager {
         archiveFile: File,
         entryPath: String,
         destDir: File,
-        password: String? = null
+        password: String? = null,
+        context: Context? = null
     ): Result<Unit> = withContext(Dispatchers.IO) {
-        val ext = archiveFile.name.lowercase()
-        when {
-            ext.endsWith(".tar.gz") || ext.endsWith(".tgz") -> extractTarEntry(archiveFile, entryPath, destDir, CompressorStream.GZIP)
-            ext.endsWith(".tar.bz2") || ext.endsWith(".tbz2") || ext.endsWith(".tbz") -> extractTarEntry(archiveFile, entryPath, destDir, CompressorStream.BZIP2)
-            ext.endsWith(".tar.xz") || ext.endsWith(".txz") -> extractTarEntry(archiveFile, entryPath, destDir, CompressorStream.XZ)
-            ext.endsWith(".tar.zst") || ext.endsWith(".tzst") -> extractTarEntry(archiveFile, entryPath, destDir, CompressorStream.ZSTD)
-            ext.endsWith(".tar") -> extractTarEntry(archiveFile, entryPath, destDir, CompressorStream.NONE)
-            ext.endsWith(".rar") -> extractRarEntry(archiveFile, entryPath, destDir, password)
-            ext.endsWith(".gz") -> extractTarEntry(archiveFile, entryPath, destDir, CompressorStream.GZIP)
-            ext.endsWith(".bz2") -> extractTarEntry(archiveFile, entryPath, destDir, CompressorStream.BZIP2)
-            ext.endsWith(".xz") -> extractTarEntry(archiveFile, entryPath, destDir, CompressorStream.XZ)
-            ext.endsWith(".zst") -> extractTarEntry(archiveFile, entryPath, destDir, CompressorStream.ZSTD)
-            archiveFile.extension.lowercase() == "zip" -> extractZipEntry(archiveFile, entryPath, destDir, password)
-            archiveFile.extension.lowercase() == "7z" -> extract7zEntry(archiveFile, entryPath, destDir, password)
-            else -> Result.failure<Unit>(IllegalArgumentException("Unsupported archive format"))
+        val isDestSaf = destDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destDir.absolutePath) ||
+                        (context != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, destDir.absolutePath))
+        val isArchiveSaf = archiveFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                           za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(archiveFile.absolutePath) ||
+                           (context != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, archiveFile.absolutePath))
+
+        var tempArchiveFile: File? = null
+        var tempStagingDir: File? = null
+        try {
+            val effectiveArchive = if (isArchiveSaf && context != null) {
+                tempArchiveFile = File(context.cacheDir, "stage_entry_arc_${System.currentTimeMillis()}_${archiveFile.name}")
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, archiveFile.absolutePath)?.use { inStream ->
+                    tempArchiveFile.outputStream().use { outStream -> inStream.copyTo(outStream) }
+                }
+                tempArchiveFile
+            } else {
+                archiveFile
+            }
+
+            val effectiveDest = if (isDestSaf && context != null) {
+                tempStagingDir = File(context.cacheDir, "stage_entry_dest_${System.currentTimeMillis()}").apply { mkdirs() }
+                tempStagingDir
+            } else {
+                destDir
+            }
+
+            val ext = effectiveArchive.name.lowercase()
+            val res = when {
+                ext.endsWith(".tar.gz") || ext.endsWith(".tgz") -> extractTarEntry(effectiveArchive, entryPath, effectiveDest, CompressorStream.GZIP)
+                ext.endsWith(".tar.bz2") || ext.endsWith(".tbz2") || ext.endsWith(".tbz") -> extractTarEntry(effectiveArchive, entryPath, effectiveDest, CompressorStream.BZIP2)
+                ext.endsWith(".tar.xz") || ext.endsWith(".txz") -> extractTarEntry(effectiveArchive, entryPath, effectiveDest, CompressorStream.XZ)
+                ext.endsWith(".tar.zst") || ext.endsWith(".tzst") -> extractTarEntry(effectiveArchive, entryPath, effectiveDest, CompressorStream.ZSTD)
+                ext.endsWith(".tar") -> extractTarEntry(effectiveArchive, entryPath, effectiveDest, CompressorStream.NONE)
+                ext.endsWith(".rar") -> extractRarEntry(effectiveArchive, entryPath, effectiveDest, password)
+                ext.endsWith(".gz") -> extractTarEntry(effectiveArchive, entryPath, effectiveDest, CompressorStream.GZIP)
+                ext.endsWith(".bz2") -> extractTarEntry(effectiveArchive, entryPath, effectiveDest, CompressorStream.BZIP2)
+                ext.endsWith(".xz") -> extractTarEntry(effectiveArchive, entryPath, effectiveDest, CompressorStream.XZ)
+                ext.endsWith(".zst") -> extractTarEntry(effectiveArchive, entryPath, effectiveDest, CompressorStream.ZSTD)
+                effectiveArchive.extension.lowercase() == "zip" -> extractZipEntry(effectiveArchive, entryPath, effectiveDest, password)
+                effectiveArchive.extension.lowercase() == "7z" -> extract7zEntry(effectiveArchive, entryPath, effectiveDest, password)
+                else -> Result.failure<Unit>(IllegalArgumentException("Unsupported archive format"))
+            }
+
+            if (res.isSuccess && isDestSaf && tempStagingDir != null && context != null) {
+                val stagedFiles = tempStagingDir.walkTopDown().toList()
+                for (sf in stagedFiles) {
+                    if (sf == tempStagingDir) continue
+                    val relPath = sf.relativeTo(tempStagingDir).path.replace('\\', '/')
+                    val destChild = File(destDir, relPath)
+                    if (sf.isDirectory) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFolder(context, destChild.absolutePath)
+                    } else {
+                        TransferConflictHelper.copyLocalToLocalAtomic(
+                            sf,
+                            destChild,
+                            TransferConflictHelper.ConflictAction.OVERWRITE
+                        )
+                    }
+                }
+            }
+            res
+        } finally {
+            tempArchiveFile?.delete()
+            tempStagingDir?.deleteRecursively()
         }
     }
+
+    /**
+     * Moves a single entry (or directory) out of an archive of any format: extracts to destDir then removes from archive.
+     */
+    suspend fun moveArchiveEntry(
+        archiveFile: File,
+        entryPath: String,
+        destDir: File,
+        password: String? = null,
+        context: Context? = null
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        val extractRes = extractArchiveEntry(archiveFile, entryPath, destDir, password, context)
+        if (extractRes.isFailure) return@withContext extractRes
+        deleteArchiveEntry(archiveFile, entryPath, password)
+    }
+
 
     private fun getCompressedOutputStream(file: File, compressor: CompressorStream): OutputStream {
         val rawOut = BufferedOutputStream(file.outputStream())

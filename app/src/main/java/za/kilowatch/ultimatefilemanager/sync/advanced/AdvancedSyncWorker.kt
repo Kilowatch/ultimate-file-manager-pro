@@ -67,9 +67,19 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         // ── Local destination path ──────────────────────────────────────────────
         if (profile.destLocalUri.isNotEmpty()) {
             Log.d(TAG, "Using local destination: ${profile.destLocalUri}")
-            val localDir = File(profile.localUri)
-            val destDir = File(profile.destLocalUri)
-            if (!localDir.exists() || !localDir.isDirectory || !localDir.canRead()) {
+            val isSrcSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(profile.localUri) ||
+                           za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(applicationContext, profile.localUri)
+            val isDestSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(profile.destLocalUri) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(applicationContext, profile.destLocalUri)
+
+            val localValid = if (isSrcSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(applicationContext, profile.localUri) &&
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isDirectory(applicationContext, profile.localUri)
+            } else {
+                val localDir = File(profile.localUri)
+                localDir.exists() && localDir.isDirectory && localDir.canRead()
+            }
+            if (!localValid) {
                 if (profile.notificationsEnabled) {
                     showErrorNotification(
                         applicationContext.getString(R.string.cannot_read_local_folder_for_profilename, profile.name),
@@ -78,8 +88,19 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 }
                 return Result.failure()
             }
-            if (!destDir.exists()) destDir.mkdirs()
-            if (!destDir.exists() || !destDir.isDirectory) {
+
+            val destValid = if (isDestSaf) {
+                if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(applicationContext, profile.destLocalUri)) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFolder(applicationContext, profile.destLocalUri)
+                }
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(applicationContext, profile.destLocalUri) &&
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isDirectory(applicationContext, profile.destLocalUri)
+            } else {
+                val destDir = File(profile.destLocalUri)
+                if (!destDir.exists()) destDir.mkdirs()
+                destDir.exists() && destDir.isDirectory
+            }
+            if (!destValid) {
                 Log.w(TAG, "Cannot access destination directory: ${profile.destLocalUri}")
                 if (profile.notificationsEnabled) {
                     showErrorNotification(
@@ -89,6 +110,8 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 }
                 return Result.failure()
             }
+            val localDir = if (isSrcSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(profile.localUri, isDir = true) else File(profile.localUri)
+            val destDir = if (isDestSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(profile.destLocalUri, isDir = true) else File(profile.destLocalUri)
             try {
                 when (profile.direction) {
                     "upload" -> doLocalUpload(profile, localDir, destDir, notificationId)
@@ -518,16 +541,36 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         profile.lastSyncFileCount = toUpload.size + toDownload.size
     }
 
-    // ── Local copy: source → dest (both local) ─────────────────────────────────
+    private fun listLocalOrSafFiles(dir: File): List<File> {
+        val isSaf = dir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dir.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(applicationContext, dir.absolutePath)
+        return if (isSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(applicationContext, dir.absolutePath)
+        } else {
+            dir.listFiles()?.toList() ?: emptyList()
+        }
+    }
 
     private suspend fun doLocalUpload(
         profile: AdvancedSyncProfile, srcDir: File, destDir: File, notificationId: Int
     ) {
-        val destFiles = destDir.list()?.map { it to File(destDir, it) }?.toMap() ?: emptyMap()
-        val destSizes = destFiles.mapValues { it.value.length() }
+        val isDestSaf = destDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destDir.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(applicationContext, destDir.absolutePath)
+        val isSrcSaf = srcDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                       za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(srcDir.absolutePath) ||
+                       za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(applicationContext, srcDir.absolutePath)
+
+        val rawDestFiles = listLocalOrSafFiles(destDir)
+        val destFiles = rawDestFiles.associateBy { it.name }
+        val destSizes = destFiles.mapValues {
+            if (isDestSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(applicationContext, it.value.absolutePath) else it.value.length()
+        }
         val destTimestamps = destFiles.mapValues { it.value.lastModified() }
 
-        val srcFiles = (srcDir.list()?.map { File(srcDir, it) } ?: emptyList())
+        val rawSrcFiles = listLocalOrSafFiles(srcDir)
+        val srcFiles = rawSrcFiles
             .filter { passesFilters(it.name, profile, it.absolutePath) }
             .filter { passesSizeAgeFilters(it, profile) }
         Log.d(TAG, "doLocalUpload: ${srcFiles.size} files after filter in '${srcDir.path}'")
@@ -535,9 +578,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         val filesToCopy = srcFiles.filter { file ->
             if (file.isDirectory) return@filter false
             val destFile = destFiles[file.name]
+            val srcLength = if (isSrcSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(applicationContext, file.absolutePath) else file.length()
+            val destLength = destSizes[file.name]
             destFile == null
-                || destFile.length() != file.length()
-                || (destFile.lastModified() < file.lastModified() && file.lastModified() > 0L)
+                || destLength != srcLength
+                || (destTimestamps[file.name]?.let { it < file.lastModified() && file.lastModified() > 0L } ?: false)
         }
 
         var syncedCount = 0
@@ -548,24 +593,18 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 notifyProgress(profile.name, index + 1, filesToCopy.size, notificationId)
             }
             try {
-                val destFile = File(destDir, file.name)
-                val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
-                    sourceName = file.name,
-                    sourceSize = file.length(),
-                    verifyDestSize = { destFile.length() },
-                    doCopy = {
-                        FileInputStream(file).use { input ->
-                            destFile.outputStream().use { output ->
-                                za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(input, output, file.length())
-                            }
-                        }
-                    }
-                )
-                if (success) {
-                    destFile.setLastModified(file.lastModified())
-                    syncedCount++
-                    copiedFiles.add(file)
+                val destFile = if (isDestSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destDir.absolutePath, file.name))
+                } else {
+                    File(destDir, file.name)
                 }
+                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(
+                    src = file,
+                    dest = destFile,
+                    action = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE
+                )
+                syncedCount++
+                copiedFiles.add(file)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to copy '${file.name}' locally", e)
             }
@@ -574,12 +613,13 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         // Move files: delete source after successful copy
         if (profile.moveFiles) {
             for (file in copiedFiles) {
-                val destFile = File(destDir, file.name)
-                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                        destFile.length(), file.length(), file.name) && file.delete()) {
-                    Log.d(TAG, "Moved (deleted source): ${file.name}")
-                    notifyLocalFileDeleted(file)
+                if (isSrcSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(applicationContext, file.absolutePath)
+                } else {
+                    file.delete()
                 }
+                Log.d(TAG, "Moved (deleted source): ${file.name}")
+                notifyLocalFileDeleted(file)
             }
         }
 
@@ -591,13 +631,17 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 }
             } catch (e: Exception) { emptySet() }
             if (previousHashes.isNotEmpty()) {
-                val currentSrcNames = srcDir.list()?.toSet() ?: emptySet()
-                for (destFileName in destDir.list() ?: emptyArray()) {
-                    val destFile = File(destDir, destFileName)
+                val currentSrcNames = rawSrcFiles.map { it.name }.toSet()
+                for (destFile in rawDestFiles) {
                     if (destFile.isDirectory) continue
-                    val hash = sha256(destFileName)
-                    if (hash in previousHashes && destFileName !in currentSrcNames && destFile.delete()) {
-                        Log.d(TAG, "Local deletion: removed '${destFileName}' from destination")
+                    val hash = sha256(destFile.name)
+                    if (hash in previousHashes && destFile.name !in currentSrcNames) {
+                        if (isDestSaf) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(applicationContext, destFile.absolutePath)
+                        } else {
+                            destFile.delete()
+                        }
+                        Log.d(TAG, "Local deletion: removed '${destFile.name}' from destination")
                         notifyLocalFileDeleted(destFile)
                     }
                 }
@@ -605,9 +649,9 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         }
 
         // Persist hash tracking
-        val currentHashes = (srcDir.list()?.toSet() ?: emptySet())
-            .filter { !File(srcDir, it).isDirectory }
-            .map { sha256(it) }
+        val currentHashes = rawSrcFiles
+            .filter { !it.isDirectory }
+            .map { sha256(it.name) }
             .toSet()
         profile.syncedFileHashes = org.json.JSONArray(currentHashes.toList()).toString()
         val repo = AdvancedSyncProfileRepository.getInstance(applicationContext)
@@ -913,17 +957,26 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             }
 
             try {
+                val isSrcSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(applicationContext, file.absolutePath)
+                val sourceSize = if (isSrcSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(applicationContext, file.absolutePath) else file.length()
                 val remoteFilePath = if (remotePath.isEmpty()) name else "${remotePath.trimEnd('/')}/$name"
                 val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
                     sourceName = name,
-                    sourceSize = file.length(),
+                    sourceSize = sourceSize,
                     verifyDestSize = { za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(share, remoteFilePath) },
                     doCopy = {
-                        val inStream = FileInputStream(file)
+                        val inStream = if (isSrcSaf) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(applicationContext, file.absolutePath)
+                                ?: throw java.io.FileNotFoundException("Cannot open SAF input stream for ${file.absolutePath}")
+                        } else {
+                            FileInputStream(file)
+                        }
                         val outStream = openOutputStreamForType(share, remoteFilePath)
                         inStream.use { input ->
                             outStream.use { output ->
-                                CopyHelper.copy(input, output, file.length())
+                                CopyHelper.copy(input, output, sourceSize)
                             }
                         }
                     }
@@ -944,12 +997,21 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         // Only files in uploadedFiles (confirmed successful) are eligible for deletion.
         if (profile.moveFiles && uploadedFiles.isNotEmpty()) {
             for (file in uploadedFiles) {
+                val isSrcSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(applicationContext, file.absolutePath)
+                val sourceSize = if (isSrcSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(applicationContext, file.absolutePath) else file.length()
                 val remoteSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(
                     share, if (remotePath.isEmpty()) file.name else "${remotePath.trimEnd('/')}/${file.name}"
                 )
                 if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                        remoteSize, file.length(), file.name
-                    ) && file.delete()) {
+                        remoteSize, sourceSize, file.name
+                    )) {
+                    if (isSrcSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(applicationContext, file.absolutePath)
+                    } else {
+                        file.delete()
+                    }
                     Log.d(TAG, "Moved (deleted source): ${file.name}")
                     notifyLocalFileDeleted(file)
                 }
@@ -995,6 +1057,10 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         remotePath: String
     ) {
         var syncedCount = 0
+        val isLocalSaf = localDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(localDir.absolutePath) ||
+                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(applicationContext, localDir.absolutePath)
+
         for ((index, remoteFile) in files.withIndex()) {
             val name = remoteFile.name
             if (profile.notificationsEnabled) {
@@ -1018,23 +1084,42 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 val remoteFilePath = if (remoteFile.path.isNotEmpty() && remoteFile.path != remoteFile.name)
                     remoteFile.path else if (remotePath.isEmpty()) name else "${remotePath.trimEnd('/')}/$name"
                 // Preserve subdirectory structure when downloadSubfolders is enabled
-                val localFile = if (profile.downloadSubfolders && remoteFile.path.length > name.length) {
-                    // Extract relative subdirectory from the path
-                    val relativePath = remoteFile.path.removePrefix(remotePath.trimEnd('/')).trimStart('/')
-                    val targetFile = File(localDir, relativePath)
-                    targetFile.parentFile?.mkdirs()
-                    targetFile
+                val targetPath = if (isLocalSaf) {
+                    if (profile.downloadSubfolders && remoteFile.path.length > name.length) {
+                        val relativePath = remoteFile.path.removePrefix(remotePath.trimEnd('/')).trimStart('/')
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(localDir.absolutePath, relativePath)
+                    } else {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(localDir.absolutePath, name)
+                    }
                 } else {
-                    File(localDir, name)
+                    if (profile.downloadSubfolders && remoteFile.path.length > name.length) {
+                        val relativePath = remoteFile.path.removePrefix(remotePath.trimEnd('/')).trimStart('/')
+                        val targetFile = File(localDir, relativePath)
+                        targetFile.parentFile?.mkdirs()
+                        targetFile.absolutePath
+                    } else {
+                        File(localDir, name).absolutePath
+                    }
                 }
+                val localFile = if (isLocalSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(targetPath) else File(targetPath)
+
                 val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
                     sourceName = name,
                     sourceSize = remoteFile.size,
-                    verifyDestSize = { localFile.length() },
+                    verifyDestSize = {
+                        if (isLocalSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(applicationContext, targetPath)
+                        else localFile.length()
+                    },
                     doCopy = {
                         val inStream = openInputStreamForType(share, remoteFilePath)
+                        val outStream = if (isLocalSaf) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(applicationContext, targetPath)
+                                ?: throw java.io.IOException("Cannot open SAF output stream for $targetPath")
+                        } else {
+                            localFile.outputStream()
+                        }
                         inStream.use { input ->
-                            localFile.outputStream().use { output ->
+                            outStream.use { output ->
                                 CopyHelper.copy(input, output, remoteFile.size)
                             }
                         }
@@ -1042,7 +1127,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 )
                 if (success) {
                     // Preserve remote modification timestamp
-                    if (remoteFile.lastModified > 0L) {
+                    if (remoteFile.lastModified > 0L && !isLocalSaf) {
                         localFile.setLastModified(remoteFile.lastModified)
                     }
                     syncedCount++

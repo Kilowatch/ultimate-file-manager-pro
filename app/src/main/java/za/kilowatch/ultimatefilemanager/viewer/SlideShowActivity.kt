@@ -643,10 +643,12 @@ class SlideShowActivity : AppCompatActivity() {
             try {
                 val extractorsFactory = za.kilowatch.ultimatefilemanager.media.UfmExtractorsFactory()
                 val mediaSource = if (isLocal) {
-                    val localFile = File(path)
+                    val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, path)
+                    val docUri = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, path) ?: Uri.parse(path) else Uri.fromFile(File(path))
                     val dataSourceFactory = DefaultDataSource.Factory(context)
                     DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
-                        .createMediaSource(MediaItem.fromUri(Uri.fromFile(localFile)))
+                        .createMediaSource(MediaItem.fromUri(docUri))
                 } else {
                     var share = NetworkShareRepository.getInstance(context).getById(shareId)
                         ?: NetworkShare(
@@ -814,9 +816,14 @@ class SlideShowActivity : AppCompatActivity() {
             try {
                 val drawingBmp = drawingOverlay.getDrawingBitmap()
                 val cropRect = drawingOverlay.computeCropRect()
+
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path)
+                val docUri = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this@SlideShowActivity, path) ?: Uri.parse(path) else null
+                val dataObj: Any = if (isSaf && docUri != null) docUri else file
+
                 val srcBmp = coilLoader.execute(
                     ImageRequest.Builder(this@SlideShowActivity)
-                        .data(file)
+                        .data(dataObj)
                         .allowHardware(false)
                         .build()
                 ).image?.asDrawable(resources)?.let {
@@ -852,8 +859,20 @@ class SlideShowActivity : AppCompatActivity() {
                 } else resultBmp
 
                 val ext = file.extension.ifEmpty { "png" }
-                val saveFile = File(file.parentFile, "${file.nameWithoutExtension}_edited.$ext")
-                FileOutputStream(saveFile).use { out ->
+                val editedName = "${file.nameWithoutExtension}_edited.$ext"
+                val outSafOrLocalPath = if (isSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(file.parentFile?.absolutePath ?: "", editedName)
+                } else {
+                    File(file.parentFile, editedName).absolutePath
+                }
+
+                val outStream = if (isSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(this@SlideShowActivity, outSafOrLocalPath)
+                } else {
+                    FileOutputStream(File(outSafOrLocalPath))
+                }
+
+                outStream?.use { out ->
                     when (ext.lowercase()) {
                         "jpg", "jpeg" -> finalBmp.compress(Bitmap.CompressFormat.JPEG, 95, out)
                         "png" -> finalBmp.compress(Bitmap.CompressFormat.PNG, 100, out)
@@ -877,8 +896,8 @@ class SlideShowActivity : AppCompatActivity() {
                 runOnUiThread {
                     holder.progressBar.visibility = View.GONE
                     Toast.makeText(this@SlideShowActivity,
-                        getString(R.string.image_saved, saveFile.name), Toast.LENGTH_SHORT).show()
-                    holder.loadImage(saveFile)
+                        getString(R.string.image_saved, editedName), Toast.LENGTH_SHORT).show()
+                    holder.loadImage(outSafOrLocalPath)
                     
                     drawingOverlay.clearDrawing()
                     drawingOverlay.isDrawingMode = false
@@ -1043,8 +1062,13 @@ class SlideShowActivity : AppCompatActivity() {
     private fun performDeleteLocal(file: File, position: Int, recycleEnabled: Boolean) {
         val fileName = file.name
         val filePath = file.absolutePath
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(filePath)
+        val shouldRecycle = !isSaf && recycleEnabled
+
         lifecycleScope.launch(Dispatchers.IO) {
-            val success = if (recycleEnabled) {
+            val success = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@SlideShowActivity, filePath)
+            } else if (shouldRecycle) {
                 val (storageId, storageType, _) = IndexingRepository.resolveStorageForPath(filePath)
                 RecycleBinManager.moveToTrash(this@SlideShowActivity, file, storageType, storageId, storageId)
             } else {
@@ -1057,7 +1081,7 @@ class SlideShowActivity : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 if (success) {
-                    val feedback = if (recycleEnabled) {
+                    val feedback = if (shouldRecycle) {
                         getString(R.string.item_moved_to_recycle_bin, fileName)
                     } else {
                         getString(R.string.item_deleted, fileName)
@@ -1181,22 +1205,33 @@ class SlideShowActivity : AppCompatActivity() {
     }
 
     private fun performRenameLocal(file: File, newName: String, position: Int) {
-        val newFile = File(file.parent, newName)
-        if (newFile.exists()) {
-            Toast.makeText(this, R.string.rename_error, Toast.LENGTH_SHORT).show()
-            return
-        }
-
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)
         lifecycleScope.launch(Dispatchers.IO) {
-            val success = file.renameTo(newFile)
+            val (success, targetPath) = if (isSaf) {
+                val renamed = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(this@SlideShowActivity, file.absolutePath, newName)
+                val parent = file.parentFile?.absolutePath ?: ""
+                val newChildPath = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(parent, newName)
+                Pair(renamed, newChildPath)
+            } else {
+                val newFile = File(file.parent, newName)
+                if (newFile.exists()) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@SlideShowActivity, R.string.rename_error, Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+                val renamed = file.renameTo(newFile)
+                Pair(renamed, newFile.absolutePath)
+            }
+
             if (success) {
-                FileTagsManager.onPathMoved(this@SlideShowActivity, file.absolutePath, newFile.absolutePath)
+                FileTagsManager.onPathMoved(this@SlideShowActivity, file.absolutePath, targetPath)
                 UfmApplication.indexingRepository.deleteTreeFromIndex(file.absolutePath)
             }
             withContext(Dispatchers.Main) {
                 if (success) {
                     val adapter = viewPager.adapter as? SlideShowAdapter
-                    adapter?.updateItem(position, newFile.absolutePath)
+                    adapter?.updateItem(position, targetPath)
                     txtTitle.text = newName
                     Toast.makeText(this@SlideShowActivity, R.string.rename_success, Toast.LENGTH_SHORT).show()
                 } else {
@@ -1779,17 +1814,17 @@ class SlideShowAdapter(
 
             val isLocal = shareId.isEmpty() && shareHost.isEmpty()
             if (isLocal) {
-                loadImage(File(path))
+                loadImage(path)
             } else {
                 val cacheFile = File(itemView.context.cacheDir, "ufm_slideshow_${path.hashCode()}.${File(path).extension}")
                 if (cacheFile.exists()) {
-                    loadImage(cacheFile)
+                    loadImage(cacheFile.absolutePath)
                 } else {
                     progressBar.visibility = View.VISIBLE
                     downloadNetworkFile(itemView.context, shareId, shareHost, shareName, provider, remotePath, path, cacheFile) { success ->
                         progressBar.visibility = View.GONE
                         if (success) {
-                            loadImage(cacheFile)
+                            loadImage(cacheFile.absolutePath)
                         } else {
                             Toast.makeText(itemView.context, "Failed to load network image: ${File(path).name}", Toast.LENGTH_SHORT).show()
                         }
@@ -1798,9 +1833,14 @@ class SlideShowAdapter(
             }
         }
 
-        fun loadImage(file: File) {
+        fun loadImage(path: String) {
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(itemView.context, path)
+            val docUri = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(itemView.context, path) ?: Uri.parse(path) else null
+            val dataObj: Any = if (isSaf && docUri != null) docUri else File(path)
+
             val request = ImageRequest.Builder(itemView.context)
-                .data(file)
+                .data(dataObj)
                 .allowHardware(false)
                 .target(
                     onStart = { progressBar.visibility = View.VISIBLE },
@@ -1820,12 +1860,19 @@ class SlideShowAdapter(
                     onError = {
                         CoroutineScope(Dispatchers.IO).launch {
                             val bmp = try {
-                                val exif = android.media.ExifInterface(file.absolutePath)
-                                exif.thumbnailBitmap ?: exif.thumbnailBytes?.let { bytes ->
-                                    android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                                } ?: za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(file.absolutePath, 0, 1920, 1080)
+                                if (isSaf) {
+                                    val inStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(itemView.context, path)
+                                    inStream?.use { s ->
+                                        android.graphics.BitmapFactory.decodeStream(s)
+                                    }
+                                } else {
+                                    val exif = android.media.ExifInterface(path)
+                                    exif.thumbnailBitmap ?: exif.thumbnailBytes?.let { bytes ->
+                                        android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                                    } ?: za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(path, 0, 1920, 1080)
+                                }
                             } catch (_: Throwable) {
-                                za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(file.absolutePath, 0, 1920, 1080)
+                                za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(path, 0, 1920, 1080)
                             }
                             withContext(Dispatchers.Main) {
                                 progressBar.visibility = View.GONE

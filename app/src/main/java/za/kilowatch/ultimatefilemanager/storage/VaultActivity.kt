@@ -818,7 +818,12 @@ class VaultActivity : AppCompatActivity() {
     private fun vaultBaseDir(): File = File(filesDir, "vault")
 
     private fun encryptFolder(root: File) {
-        if (!root.exists() || !root.isDirectory) return
+        val isSaf = root is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(root.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, root.absolutePath)
+        val exists = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this, root.absolutePath) else (root.exists() && root.isDirectory)
+        if (!exists) return
+
         scope.launch {
             val success = withContext(Dispatchers.IO) {
                 try {
@@ -827,25 +832,47 @@ class VaultActivity : AppCompatActivity() {
                     entryDir.mkdirs()
 
                     // Filter out system files and hidden files
-                    val files = root.walkTopDown()
-                        .filter { it.isFile }
-                        .filter { !isSystemFile(it) }
-                        .filter { !isHiddenFile(it) }
-                        .toList()
+                    val files = if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.walkSafTopDown(this@VaultActivity, root.absolutePath)
+                            .filter { !it.isDirectory }
+                            .filter { !isSystemFile(it) }
+                            .filter { !isHiddenFile(it) }
+                    } else {
+                        root.walkTopDown()
+                            .filter { it.isFile }
+                            .filter { !isSystemFile(it) }
+                            .filter { !isHiddenFile(it) }
+                            .toList()
+                    }
                     val relativeList = mutableListOf<String>()
 
                     files.forEach { file ->
-                        val relative = file.relativeTo(root).path
+                        val relative = if (isSaf) {
+                            val normRoot = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.normalizePath(root.absolutePath)
+                            val normFile = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.normalizePath(file.absolutePath)
+                            normFile.removePrefix(normRoot).removePrefix("/")
+                        } else {
+                            file.relativeTo(root).path
+                        }
                         val encryptedFile = File(entryDir, "$relative.enc")
-                        VaultCrypto.encryptFile(file, encryptedFile)
+                        encryptedFile.parentFile?.mkdirs()
+                        VaultCrypto.encryptFile(this@VaultActivity, file, encryptedFile)
                         relativeList.add(relative)
-                        file.delete()
+                        if (isSaf) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@VaultActivity, file.absolutePath)
+                        } else {
+                            file.delete()
+                        }
                     }
 
                     // Clean empty directories after encryption
-                    root.walkBottomUp().forEach { dir ->
-                        if (dir.isDirectory && dir.listFiles()?.isEmpty() == true) {
-                            dir.delete()
+                    if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@VaultActivity, root.absolutePath)
+                    } else {
+                        root.walkBottomUp().forEach { dir ->
+                            if (dir.isDirectory && dir.listFiles()?.isEmpty() == true) {
+                                dir.delete()
+                            }
                         }
                     }
 
@@ -940,6 +967,9 @@ class VaultActivity : AppCompatActivity() {
                 try {
                     val entryDir = File(vaultBaseDir(), entry.id)
                     val originalRoot = File(entry.originalRoot)
+                    val isDestSaf = originalRoot is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(originalRoot.absolutePath) ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@VaultActivity, originalRoot.absolutePath)
                     val total = entry.files.size.coerceAtLeast(1)
                     runOnUiThread {
                         txtProgress.text = getString(R.string.vault_decrypting, 0, total)
@@ -947,8 +977,22 @@ class VaultActivity : AppCompatActivity() {
                     }
                     entry.files.forEachIndexed { index, relative ->
                         val encryptedFile = File(entryDir, "$relative.enc")
-                        val outputFile = File(originalRoot, relative)
-                        VaultCrypto.decryptFile(encryptedFile, outputFile)
+                        if (isDestSaf) {
+                            val tempDecrypted = File(cacheDir, "vault_dec_${System.currentTimeMillis()}_${relative.substringAfterLast('/')}")
+                            VaultCrypto.decryptFile(encryptedFile, tempDecrypted)
+                            val targetSafFile = za.kilowatch.ultimatefilemanager.storage.SafFile(
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(originalRoot.absolutePath, relative)
+                            )
+                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(
+                                tempDecrypted,
+                                targetSafFile,
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE
+                            )
+                            tempDecrypted.delete()
+                        } else {
+                            val outputFile = File(originalRoot, relative)
+                            VaultCrypto.decryptFile(encryptedFile, outputFile)
+                        }
                         encryptedFile.delete()
 
                         val current = index + 1

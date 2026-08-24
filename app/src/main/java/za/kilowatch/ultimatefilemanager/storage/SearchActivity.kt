@@ -589,16 +589,23 @@ class SearchActivity : AppCompatActivity() {
 
                     val unindexedDeferreds = if (append) emptyList() else unindexedRoots.map { root ->
                         async(Dispatchers.IO) {
-                            val lowerQuery = query.lowercase()
-                            val found = mutableListOf<File>()
-                            try {
-                                root.walkTopDown()
-                                    .onEnter { isActive }
-                                    .filter { it.name.lowercase().contains(lowerQuery) }
-                                    .take(PAGE_SIZE)
-                                    .forEach { found.add(it) }
-                            } catch (_: Exception) {}
-                            found
+                            val isSaf = root is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(root.absolutePath) ||
+                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@SearchActivity, root.absolutePath)
+                            if (isSaf) {
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.searchSaf(this@SearchActivity, root.absolutePath, query, maxResults = PAGE_SIZE)
+                            } else {
+                                val lowerQuery = query.lowercase()
+                                val found = mutableListOf<File>()
+                                try {
+                                    root.walkTopDown()
+                                        .onEnter { isActive }
+                                        .filter { it.name.lowercase().contains(lowerQuery) }
+                                        .take(PAGE_SIZE)
+                                        .forEach { found.add(it) }
+                                } catch (_: Exception) {}
+                                found
+                            }
                         }
                     }
 
@@ -938,7 +945,15 @@ class SearchActivity : AppCompatActivity() {
             val newName = editFileName.text?.toString()?.trim().orEmpty()
             if (newName.isNotEmpty() && newName != file.name) {
                 val target = File(file.parentFile, newName)
-                if (file.renameTo(target)) {
+                val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, file.absolutePath)
+                val success = if (isSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(this, file.absolutePath, newName)
+                } else {
+                    file.renameTo(target)
+                }
+                if (success) {
                     val oldPath = file.absolutePath
                     val newPath = target.absolutePath
                     val isDir = target.isDirectory
@@ -1041,9 +1056,14 @@ class SearchActivity : AppCompatActivity() {
                     return@setPositiveButton
                 }
                 val parent = file.parentFile ?: filesDir
-                val newDir = File(parent, name)
-                if (!newDir.exists()) {
-                    newDir.mkdirs()
+                val isParentSaf = parent is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(parent.absolutePath) ||
+                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@SearchActivity, parent.absolutePath)
+                val newDir = if (isParentSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(this@SearchActivity, parent.absolutePath, name)
+                    za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(parent.absolutePath, name), isDir = true)
+                } else {
+                    File(parent, name).apply { if (!exists()) mkdirs() }
                 }
                 performExtract(file, customDestFolder = newDir, isSelectFolderMode = false)
             }
@@ -1188,7 +1208,12 @@ class SearchActivity : AppCompatActivity() {
             // IO dispatcher: on slow or busy storage a single delete can exceed the
             // 5 s ANR watchdog threshold and freeze the main thread.
             scope.launch(Dispatchers.IO) {
-                val deleted = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@SearchActivity, path)
+                val deleted = if (isSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@SearchActivity, path)
+                } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
                 } else if (isDir) {
                     file.deleteRecursively()

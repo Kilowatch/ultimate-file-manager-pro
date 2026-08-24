@@ -149,9 +149,19 @@ object ExifPrivacyManager {
     /**
      * Read complete EXIF metadata details from a photo file.
      */
-    fun readFullDetails(file: File): ExifMetadataDetails {
+    fun readFullDetails(context: Context? = null, file: File): ExifMetadataDetails {
         return try {
-            val exif = ExifInterface(file.absolutePath)
+            val isSaf = context != null && (file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath))
+
+            val exif = if (isSaf && context != null) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, file.absolutePath)?.use { inStream ->
+                    ExifInterface(inStream)
+                } ?: ExifInterface(file.absolutePath)
+            } else {
+                ExifInterface(file.absolutePath)
+            }
 
             val latLong = exif.latLong
             val hasGps = latLong != null
@@ -181,7 +191,13 @@ object ExifPrivacyManager {
 
             if (width == 0 || height == 0) {
                 val opts = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                android.graphics.BitmapFactory.decodeFile(file.absolutePath, opts)
+                if (isSaf && context != null) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, file.absolutePath)?.use { inStream ->
+                        android.graphics.BitmapFactory.decodeStream(inStream, null, opts)
+                    }
+                } else {
+                    android.graphics.BitmapFactory.decodeFile(file.absolutePath, opts)
+                }
                 width = opts.outWidth
                 height = opts.outHeight
             }
@@ -226,7 +242,40 @@ object ExifPrivacyManager {
     /**
      * Remove GPS geotags only from a single file in-place.
      */
-    fun removeGpsOnly(file: File): Boolean {
+    fun removeGpsOnly(context: Context? = null, file: File): Boolean {
+        val isSaf = context != null && (file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath))
+
+        if (isSaf && context != null) {
+            var tempFile: File? = null
+            return try {
+                tempFile = File(context.cacheDir, "exif_gps_${System.currentTimeMillis()}_${file.name}")
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, file.absolutePath)?.use { input ->
+                    tempFile.outputStream().use { output -> input.copyTo(output) }
+                } ?: return false
+
+                val exif = ExifInterface(tempFile.absolutePath)
+                for (attr in GPS_ATTRIBUTES) {
+                    exif.setAttribute(attr, null)
+                }
+                exif.saveAttributes()
+
+                val outStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(context, file.absolutePath)
+                    ?: return false
+                outStream.use { out ->
+                    tempFile.inputStream().use { inp ->
+                        inp.copyTo(out)
+                    }
+                }
+                true
+            } catch (_: Exception) {
+                false
+            } finally {
+                tempFile?.delete()
+            }
+        }
+
         return try {
             val exif = ExifInterface(file.absolutePath)
             for (attr in GPS_ATTRIBUTES) {
@@ -243,7 +292,81 @@ object ExifPrivacyManager {
      * Strip metadata from source file according to privacy options.
      * Can write in-place if destination equals source, or create a cleaned copy.
      */
-    fun stripMetadata(sourceFile: File, destinationFile: File, options: ExifPrivacyOptions): Boolean {
+    fun stripMetadata(context: Context? = null, sourceFile: File, destinationFile: File, options: ExifPrivacyOptions): Boolean {
+        val isSaf = context != null && (sourceFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    destinationFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(sourceFile.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destinationFile.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, sourceFile.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, destinationFile.absolutePath))
+
+        if (isSaf && context != null) {
+            var tempFile: File? = null
+            return try {
+                tempFile = File(context.cacheDir, "exif_strip_${System.currentTimeMillis()}_${sourceFile.name}")
+                if (sourceFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(sourceFile.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, sourceFile.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, sourceFile.absolutePath)?.use { input ->
+                        tempFile.outputStream().use { output -> input.copyTo(output) }
+                    } ?: return false
+                } else {
+                    sourceFile.copyTo(tempFile, overwrite = true)
+                }
+
+                val exif = ExifInterface(tempFile.absolutePath)
+                val currentOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION)
+
+                if (options.stripGps) {
+                    for (attr in GPS_ATTRIBUTES) exif.setAttribute(attr, null)
+                }
+                if (options.stripDevice) {
+                    for (attr in DEVICE_ATTRIBUTES) exif.setAttribute(attr, null)
+                }
+                if (options.stripAuthor) {
+                    for (attr in AUTHOR_ATTRIBUTES) exif.setAttribute(attr, null)
+                }
+                if (options.stripDates) {
+                    for (attr in DATE_ATTRIBUTES) exif.setAttribute(attr, null)
+                }
+                if (options.stripCameraSettings) {
+                    for (attr in CAMERA_SETTINGS_ATTRIBUTES) exif.setAttribute(attr, null)
+                }
+
+                if (currentOrientation != null) {
+                    exif.setAttribute(ExifInterface.TAG_ORIENTATION, currentOrientation)
+                }
+
+                exif.saveAttributes()
+
+                val isDestSaf = destinationFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destinationFile.absolutePath) ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, destinationFile.absolutePath)
+                if (isDestSaf) {
+                    if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(context, destinationFile.absolutePath)) {
+                        if (sourceFile.absolutePath != destinationFile.absolutePath) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(context, destinationFile.absolutePath)
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFile(context, destinationFile.parent ?: "", destinationFile.name)
+                        }
+                    } else {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFile(context, destinationFile.parent ?: "", destinationFile.name)
+                    }
+                    val outStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(context, destinationFile.absolutePath)
+                        ?: return false
+                    outStream.use { out ->
+                        tempFile.inputStream().use { inp -> inp.copyTo(out) }
+                    }
+                } else {
+                    tempFile.copyTo(destinationFile, overwrite = true)
+                }
+                true
+            } catch (_: Exception) {
+                false
+            } finally {
+                tempFile?.delete()
+            }
+        }
+
         return try {
             val target = if (sourceFile.absolutePath == destinationFile.absolutePath) {
                 sourceFile
@@ -286,6 +409,7 @@ object ExifPrivacyManager {
      * Batch clean a list of files with progress reporting.
      */
     fun batchStripMetadata(
+        context: Context? = null,
         files: List<File>,
         options: ExifPrivacyOptions,
         outputDir: File?,
@@ -300,10 +424,17 @@ object ExifPrivacyManager {
                 val destFile = if (outputDir == null) {
                     file // In-place overwrite
                 } else {
-                    File(outputDir, file.name)
+                    val isDestSaf = context != null && (outputDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(outputDir.absolutePath) ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, outputDir.absolutePath))
+                    if (isDestSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(outputDir.absolutePath, file.name))
+                    } else {
+                        File(outputDir, file.name)
+                    }
                 }
 
-                if (stripMetadata(file, destFile, options)) {
+                if (stripMetadata(context, file, destFile, options)) {
                     successCount++
                 } else {
                     errors.add(file.name)

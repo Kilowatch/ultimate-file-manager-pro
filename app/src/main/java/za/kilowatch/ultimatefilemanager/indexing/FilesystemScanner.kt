@@ -49,11 +49,20 @@ class FilesystemScanner(private val context: Context) {
         currentDepth: Int = 0
     ) {
         if (maxDepth >= 0 && currentDepth >= maxDepth) return
-        if (!dir.canRead()) return
+        val isSafDir = dir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                       za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dir.absolutePath) ||
+                       za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, dir.absolutePath)
+        if (!isSafDir && !dir.canRead()) return
 
         try {
             val dao = UfmIndexingDatabase.getInstance(context).fileIndexDao()
-            dir.listFiles()?.forEach { file ->
+            val children = if (isSafDir) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, dir.absolutePath)
+            } else {
+                dir.listFiles()?.toList()
+            }
+
+            children?.forEach { file ->
                 if (shouldExclude(file, excludePaths)) return@forEach
 
                 try {
@@ -100,44 +109,53 @@ class FilesystemScanner(private val context: Context) {
             MediaStore.Files.getContentUri("external")
         )
 
-        val projection = arrayOf(
-            MediaStore.MediaColumns.DATA,
-            MediaStore.MediaColumns.DATE_MODIFIED,
-            MediaStore.MediaColumns.DATE_ADDED
-        )
-        val selection = "(${MediaStore.MediaColumns.DATE_MODIFIED} > ? OR ${MediaStore.MediaColumns.DATE_ADDED} > ?)"
-        val sinceSeconds = (sinceMillis / 1000).toString()
-        val selectionArgs = arrayOf(sinceSeconds, sinceSeconds)
+        for (sourceUri in mediaSources) {
+            val projection = arrayOf(
+                MediaStore.MediaColumns._ID,
+                MediaStore.MediaColumns.DATA,
+                MediaStore.MediaColumns.DISPLAY_NAME,
+                MediaStore.MediaColumns.SIZE,
+                MediaStore.MediaColumns.DATE_MODIFIED,
+                MediaStore.MediaColumns.MIME_TYPE
+            )
 
-        mediaSources.forEach { uri: Uri ->
-            var cursor: Cursor? = null
+            // MediaStore DATE_MODIFIED is in seconds
+            val sinceSeconds = sinceMillis / 1000L
+            val selection = "${MediaStore.MediaColumns.DATE_MODIFIED} > ?"
+            val selectionArgs = arrayOf(sinceSeconds.toString())
+
             try {
-                cursor = cr.query(uri, projection, selection, selectionArgs, null)
-                cursor?.use { c ->
-                    val dataIdx = c.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)
-                    while (c.moveToNext()) {
+                cr.query(sourceUri, projection, selection, selectionArgs, null)?.use { cursor ->
+                    val dataCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATA)
+                    val sizeCol = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE)
+                    val modCol  = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED)
+                    val mimeCol = cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE)
+
+                    while (cursor.moveToNext()) {
+                        val path = if (dataCol >= 0) cursor.getString(dataCol) else null
+                        if (path == null || !path.startsWith(volumePrefix)) continue
+
+                        val file = File(path)
+                        if (shouldExclude(file, DEFAULT_EXCLUDE_PATHS)) continue
+
+                        val size = if (sizeCol >= 0) cursor.getLong(sizeCol) else file.length()
+                        val modSec = if (modCol >= 0) cursor.getLong(modCol) else 0L
+                        val lastModified = if (modSec > 0) modSec * 1000L else file.lastModified()
+                        val mimeType = if (mimeCol >= 0) cursor.getString(mimeCol) else null
+
                         try {
-                            val rawPath = c.getString(dataIdx) ?: continue
-                            // FUSE paths are case-insensitive. Canonicalize to avoid duplication if external apps write to "download" instead of "Download".
-                            val path = try { File(rawPath).canonicalPath } catch (e: Exception) { rawPath }
-                            // ── Volume filter ──────────────────────────────────────────────────
-                            // Only index files that physically live on this storage volume.
-                            // Without this check, a scan for "sdcard_7DE2-1219" would pick up
-                            // internal storage files and store them under the wrong storageId,
-                            // causing deletion reconcile to false-delete them next startup.
-                            if (!path.startsWith(volumePrefix)) continue
-                            // ──────────────────────────────────────────────────────────────────
-                            val file = File(path)
-                            if (!file.exists()) continue
-                            if (shouldExclude(file, DEFAULT_EXCLUDE_PATHS)) continue
-                            emit(metadataExtractor.extractMetadata(file, storageId, storageType))
-                        } catch (_: Exception) { /* skip malformed rows */ }
+                            val fileIndex = metadataExtractor.extractMetadata(file, storageId, storageType)
+                            val finalIndex = if (mimeType != null && mimeType.isNotEmpty()) {
+                                fileIndex.copy(mimeType = mimeType, size = size, lastModified = lastModified)
+                            } else {
+                                fileIndex.copy(size = size, lastModified = lastModified)
+                            }
+                            emit(finalIndex)
+                        } catch (_: Exception) { }
                     }
                 }
             } catch (e: Exception) {
-                GoRoLog.e(TAG, "Error querying MediaStore since $uri: ${e.message}")
-            } finally {
-                cursor?.close()
+                GoRoLog.e(TAG, "Error querying MediaStore uri=$sourceUri: ${e.message}")
             }
         }
     }
@@ -149,10 +167,6 @@ class FilesystemScanner(private val context: Context) {
      *
      * Android's MediaStore does not index directories, so this supplemental scan ensures that
      * newly created folders are picked up at startup reconciliation time.
-     *
-     * The walk is bounded efficiently: a directory is only recursed into when its own
-     * [File.lastModified] timestamp is after [sinceMillis], meaning an entire untouched subtree
-     * is skipped in O(1). This makes the scan extremely fast after a short app-close period.
      */
     fun scanNewDirectoriesSince(
         root: File,
@@ -163,6 +177,32 @@ class FilesystemScanner(private val context: Context) {
         scanDirsRecursive(root, storageId, storageType, sinceMillis, this)
     }
 
+    // ============ PERIODIC / RESCAN ============
+
+    /**
+     * Rescan for modified folders under [storagePath] since [sinceMillis].
+     *
+     * Uses a two-level strategy:
+     * 1. MediaStore query (fast) for files modified since [sinceMillis].
+     * 2. Lightweight directory traversal — checks [File.lastModified] of folders (which updates
+     *    when children are added/deleted) so non-media files copied via USB/SAF/SMB are also picked up.
+     */
+    fun rescanModifiedSince(
+        storageId: String,
+        storageType: String,
+        sinceMillis: Long,
+        storagePath: String
+    ): Flow<FileIndex> = flow {
+        // Phase 1: MediaStore query (captures new camera photos, downloads, etc.)
+        scanMediaStoreSince(storageId, storageType, sinceMillis, storagePath).collect { emit(it) }
+
+        // Phase 2: Directory timestamp check (captures non-media files in modified folders)
+        val root = File(storagePath)
+        if (root.exists() && root.isDirectory) {
+            scanDirsRecursive(root, storageId, storageType, sinceMillis, this)
+        }
+    }
+
     private suspend fun scanDirsRecursive(
         dir: File,
         storageId: String,
@@ -170,9 +210,18 @@ class FilesystemScanner(private val context: Context) {
         sinceMillis: Long,
         collector: kotlinx.coroutines.flow.FlowCollector<FileIndex>
     ) {
-        if (!dir.canRead()) return
+        val isSaf = dir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dir.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, dir.absolutePath)
+        if (!isSaf && !dir.canRead()) return
         try {
-            dir.listFiles()?.forEach { file ->
+            val children = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, dir.absolutePath)
+            } else {
+                dir.listFiles()?.toList()
+            }
+
+            children?.forEach { file ->
                 if (!file.isDirectory) return@forEach
                 if (shouldExclude(file, DEFAULT_EXCLUDE_PATHS)) return@forEach
 
@@ -202,7 +251,13 @@ class FilesystemScanner(private val context: Context) {
                         emptySet()
                     }
 
-                    file.listFiles()?.forEach { child ->
+                    val subChildren = if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, file.absolutePath)
+                    } else {
+                        file.listFiles()?.toList()
+                    }
+
+                    subChildren?.forEach { child ->
                         if (child.isFile && !shouldExclude(child, DEFAULT_EXCLUDE_PATHS)) {
                             // If new dir, index everything. If existing dir, check if file is new to us.
                             if (isNewDir || !existingPaths.contains(child.absolutePath)) {
@@ -234,12 +289,20 @@ class FilesystemScanner(private val context: Context) {
         storageId: String,
         storageType: String
     ): Flow<FileIndex> = flow {
-        val folder = File(folderPath)
-        if (!folder.exists() || !folder.isDirectory) return@flow
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(folderPath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, folderPath)
+        val folder = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(folderPath, true) else File(folderPath)
+        if (!isSaf && (!folder.exists() || !folder.isDirectory)) return@flow
 
         try {
             val dao = UfmIndexingDatabase.getInstance(context).fileIndexDao()
-            folder.listFiles()?.forEach { file ->
+            val children = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, folderPath)
+            } else {
+                folder.listFiles()?.toList()
+            }
+
+            children?.forEach { file ->
                 if (shouldExclude(file, DEFAULT_EXCLUDE_PATHS)) return@forEach
                 try {
                     val existing = dao.getByPath(file.absolutePath)
@@ -266,7 +329,11 @@ class FilesystemScanner(private val context: Context) {
         storageId: String,
         storageType: String
     ): FileIndex? {
-        return if (file.exists() && !shouldExclude(file, DEFAULT_EXCLUDE_PATHS)) {
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+        val exists = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(context, file.absolutePath) else file.exists()
+        return if (exists && !shouldExclude(file, DEFAULT_EXCLUDE_PATHS)) {
             metadataExtractor.extractMetadata(file, storageId, storageType)
         } else {
             null

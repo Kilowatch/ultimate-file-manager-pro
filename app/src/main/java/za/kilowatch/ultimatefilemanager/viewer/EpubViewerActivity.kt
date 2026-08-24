@@ -1,4 +1,4 @@
-﻿package za.kilowatch.ultimatefilemanager.viewer
+package za.kilowatch.ultimatefilemanager.viewer
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -151,7 +151,7 @@ class EpubViewerActivity : AppCompatActivity() {
                     // Always re-extract to keep temp dir fresh
                     dir.deleteRecursively()
                     tempDir = dir
-                    EpubParser.parse(epubFile, dir)
+                    EpubParser.parse(epubFile, dir, this@EpubViewerActivity)
                 }
             }
 

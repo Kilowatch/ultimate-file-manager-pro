@@ -466,9 +466,18 @@ class DocumentScannerActivity : AppCompatActivity() {
                     } else {
                         // Use copy instead of renameTo — renameTo fails across
                         // filesystem boundaries (internal ↔ SD card).
-                        targetFile.parentFile?.mkdirs()
+                        val isSaf = targetFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(targetFile.absolutePath) ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@DocumentScannerActivity, targetFile.absolutePath)
+                        val outStream = if (isSaf) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(this@DocumentScannerActivity, targetFile.absolutePath)
+                        } else {
+                            targetFile.parentFile?.mkdirs()
+                            java.io.FileOutputStream(targetFile)
+                        } ?: throw java.io.IOException("Cannot open output stream for ${targetFile.absolutePath}")
+
                         java.io.FileInputStream(tempFile).use { inp ->
-                            java.io.FileOutputStream(targetFile).use { out ->
+                            outStream.use { out ->
                                 inp.copyTo(out)
                             }
                         }

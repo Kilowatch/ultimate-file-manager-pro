@@ -531,12 +531,24 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
         return sb.toString()
     }
 
+    private fun openInputStream(file: File): java.io.InputStream? {
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, file.absolutePath)
+        return if (isSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, file.absolutePath)
+        } else {
+            try { FileInputStream(file) } catch (_: Exception) { null }
+        }
+    }
+
     private fun loadCsv(file: File): List<Spreadsheet> {
         val rows = mutableListOf<List<String>>()
         var truncated = false
         var rowCount = 0
 
-        file.bufferedReader().useLines { lines ->
+        val inStream = openInputStream(file) ?: throw java.io.FileNotFoundException("Cannot open ${file.name}")
+        inStream.bufferedReader().useLines { lines ->
             for (line in lines) {
                 if (rowCount >= MAX_ROWS_PER_SHEET) {
                     truncated = true
@@ -574,7 +586,8 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
 
     private fun loadXls(file: File): List<Spreadsheet> {
         val result = mutableListOf<Spreadsheet>()
-        FileInputStream(file).use { fis ->
+        val inStream = openInputStream(file) ?: throw java.io.FileNotFoundException("Cannot open ${file.name}")
+        inStream.use { fis ->
             HSSFWorkbook(fis).use { wb ->
                 val formatter = DataFormatter()
                 for (i in 0 until wb.numberOfSheets) {
@@ -605,8 +618,23 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
     }
 
     private fun loadXlsx(file: File): List<Spreadsheet> {
-        val result = mutableListOf<Spreadsheet>()
-        ZipFile(file).use { zip ->
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, file.absolutePath)
+        var tempFile: File? = null
+        val targetFile = if (isSaf) {
+            tempFile = File(cacheDir, "temp_sheet_${System.currentTimeMillis()}.xlsx")
+            openInputStream(file)?.use { input ->
+                tempFile.outputStream().use { output -> input.copyTo(output) }
+            }
+            tempFile
+        } else {
+            file
+        }
+
+        try {
+            val result = mutableListOf<Spreadsheet>()
+            ZipFile(targetFile).use { zip ->
             // 1. Read shared strings definitions
             val sharedStrings = mutableListOf<String>()
             val ssEntry = zip.getEntry("xl/sharedStrings.xml")
@@ -694,8 +722,11 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                 val sheetName = sheetNames.getOrNull(sheetIdx) ?: (getString(R.string.spreadsheet_viewer_fallback_title) + " ${sheetIdx + 1}")
                 result.add(Spreadsheet(sheetName, rows, truncated))
             }
+            }
+            return result
+        } finally {
+            tempFile?.delete()
         }
-        return result
     }
 
     private fun excelColToIndex(colStr: String): Int {

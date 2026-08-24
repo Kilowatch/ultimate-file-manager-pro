@@ -540,31 +540,32 @@ class TextViewerActivity : AppCompatActivity() {
 
     private suspend fun doSave(content: String, targetFile: File) {
         try {
-            when (fileExtension) {
-                "docx", "docm", "dotx", "dotm" -> saveAsDocx(content, targetFile)
-                "xlsx", "xlsm", "xltx", "xltm" -> saveAsXlsx(content, targetFile)
-                "pptx", "pptm", "ppsx", "potx", "potm" -> saveAsPptx(content, targetFile)
-                "doc", "dot" -> targetFile.writeText(content, Charsets.UTF_8)
-                "xls", "xlt", "xlsb" -> saveAsXls(content, targetFile)
-                "ppt", "pps", "pot" -> targetFile.writeText(content, Charsets.UTF_8)
-                else -> targetFile.writeText(content, Charsets.UTF_8)
+            val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
+            val isSaf = targetFile is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(targetFile.absolutePath)
+            val safUri = if (contentUriStr != null && targetFile.absolutePath == originalFilePath) {
+                android.net.Uri.parse(contentUriStr)
+            } else if (isSaf) {
+                (targetFile as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this, targetFile.absolutePath)
+            } else null
+
+            if (safUri != null) {
+                contentResolver.openOutputStream(safUri, "wt")?.use { outStream ->
+                    outStream.write(content.toByteArray(Charsets.UTF_8))
+                }
+            } else {
+                when (fileExtension) {
+                    "docx", "docm", "dotx", "dotm" -> saveAsDocx(content, targetFile)
+                    "xlsx", "xlsm", "xltx", "xltm" -> saveAsXlsx(content, targetFile)
+                    "pptx", "pptm", "ppsx", "potx", "potm" -> saveAsPptx(content, targetFile)
+                    "doc", "dot" -> targetFile.writeText(content, Charsets.UTF_8)
+                    "xls", "xlt", "xlsb" -> saveAsXls(content, targetFile)
+                    "ppt", "pps", "pot" -> targetFile.writeText(content, Charsets.UTF_8)
+                    else -> targetFile.writeText(content, Charsets.UTF_8)
+                }
             }
             // If this file was opened from a network share, upload the saved content back
             // (the bridge callback handles its own threading — runs the upload on IO internally)
             runCatching { NetworkSaveBridge.onFileSaved?.invoke(targetFile) }
-
-            // If this file was opened from an external content provider URI, write changes back
-            val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
-            if (contentUriStr != null && targetFile.absolutePath == originalFilePath) {
-                runCatching {
-                    val uri = android.net.Uri.parse(contentUriStr)
-                    contentResolver.openOutputStream(uri, "wt")?.use { outStream ->
-                        targetFile.inputStream().use { inputStream ->
-                            inputStream.copyTo(outStream)
-                        }
-                    }
-                }
-            }
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@TextViewerActivity,
                     getString(R.string.file_saved, targetFile.name), Toast.LENGTH_SHORT).show()
@@ -1001,6 +1002,24 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     private fun readPlainText(file: File, charset: java.nio.charset.Charset = Charsets.UTF_8): String {
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, file.absolutePath)
+        if (isSaf) {
+            val inStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, file.absolutePath)
+                ?: throw java.io.FileNotFoundException("Cannot open stream for ${file.name}")
+            return inStream.use { stream ->
+                val maxBytes = 1 * 1024 * 1024
+                val bytes = stream.readBytes()
+                if (bytes.size > maxBytes) {
+                    val truncated = bytes.copyOf(maxBytes)
+                    String(truncated, charset) + "\n\n... [File too large, showing first 1MB]"
+                } else {
+                    String(bytes, charset)
+                }
+            }
+        }
+
         val maxBytes = 1 * 1024 * 1024L
         if (file.length() > maxBytes) {
             val bytes = ByteArray(maxBytes.toInt())
@@ -1008,6 +1027,18 @@ class TextViewerActivity : AppCompatActivity() {
             return String(bytes, charset) + "\n\n... [File too large, showing first 1MB]"
         }
         return file.readText(charset)
+    }
+
+    private fun stageSafFileIfNeeded(file: File): Pair<File, File?> {
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, file.absolutePath)
+        if (!isSaf) return Pair(file, null)
+        val temp = File(cacheDir, "temp_txt_view_${System.currentTimeMillis()}.${file.extension}")
+        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, file.absolutePath)?.use { input ->
+            temp.outputStream().use { output -> input.copyTo(output) }
+        }
+        return Pair(temp, temp)
     }
 
     private fun extractRtf(file: File): String {
@@ -1068,9 +1099,10 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     private fun extractWord(file: File, ext: String): String {
+        val (effectiveFile, tempFile) = stageSafFileIfNeeded(file)
         return try {
             if (ext in OFFICE_WORD_LEGACY) {
-                val fis = FileInputStream(file)
+                val fis = FileInputStream(effectiveFile)
                 val doc = org.apache.poi.hwpf.HWPFDocument(fis)
                 val extractor = org.apache.poi.hwpf.extractor.WordExtractor(doc)
                 val text = extractor.text
@@ -1079,10 +1111,12 @@ class TextViewerActivity : AppCompatActivity() {
                 fis.close()
                 text
             } else {
-                extractDocxViaZip(file)
+                extractDocxViaZip(effectiveFile)
             }
         } catch (e: Exception) {
             "Error extracting Word content:\n${e.message}"
+        } finally {
+            tempFile?.delete()
         }
     }
 
@@ -1106,19 +1140,22 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     private fun extractExcel(file: File, ext: String): String {
+        val (effectiveFile, tempFile) = stageSafFileIfNeeded(file)
         return try {
             if (ext in OFFICE_EXCEL_LEGACY) {
-                val fis = FileInputStream(file)
+                val fis = FileInputStream(effectiveFile)
                 val wb = org.apache.poi.hssf.usermodel.HSSFWorkbook(fis)
                 val sb = buildExcelText(wb)
                 wb.close()
                 fis.close()
                 sb
             } else {
-                extractXlsxViaZip(file)
+                extractXlsxViaZip(effectiveFile)
             }
         } catch (e: Exception) {
             "Error extracting Excel content:\n${e.message}"
+        } finally {
+            tempFile?.delete()
         }
     }
 
@@ -1190,9 +1227,10 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     private fun extractPowerPoint(file: File, ext: String): String {
+        val (effectiveFile, tempFile) = stageSafFileIfNeeded(file)
         return try {
             if (ext in OFFICE_PPT_LEGACY) {
-                val fis = FileInputStream(file)
+                val fis = FileInputStream(effectiveFile)
                 val ppt = org.apache.poi.hslf.usermodel.HSLFSlideShow(fis)
                 val sb = StringBuilder()
                 for ((idx, slide) in ppt.slides.withIndex()) {
@@ -1208,10 +1246,12 @@ class TextViewerActivity : AppCompatActivity() {
                 fis.close()
                 sb.toString()
             } else {
-                extractPptxViaZip(file)
+                extractPptxViaZip(effectiveFile)
             }
         } catch (e: Exception) {
             "Error extracting PowerPoint content:\n${e.message}"
+        } finally {
+            tempFile?.delete()
         }
     }
 
@@ -1243,8 +1283,9 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     private fun extractVisio(file: File): String {
+        val (effectiveFile, tempFile) = stageSafFileIfNeeded(file)
         return try {
-            val zip = java.util.zip.ZipFile(file)
+            val zip = java.util.zip.ZipFile(effectiveFile)
             val sb = StringBuilder()
             for (entry in zip.entries()) {
                 if (entry.name.contains("page") && entry.name.endsWith(".xml")) {
@@ -1260,6 +1301,8 @@ class TextViewerActivity : AppCompatActivity() {
             if (sb.isEmpty()) getString(R.string.no_text_content_found_in_visio_file) else sb.toString()
         } catch (e: Exception) {
             "Error extracting Visio content:\n${e.message}"
+        } finally {
+            tempFile?.delete()
         }
     }
 

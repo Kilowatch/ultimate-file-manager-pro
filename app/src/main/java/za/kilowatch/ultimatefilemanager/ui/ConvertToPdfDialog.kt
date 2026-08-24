@@ -96,11 +96,18 @@ class ConvertToPdfDialog : DialogFragment() {
         val activity = requireActivity()
         dismiss()
 
-        val sourceFile = File(sourcePath)
-        val outputDir  = sourceFile.parentFile
-            ?: activity.getExternalFilesDir(null)
-            ?: activity.filesDir
-        val outputFile = File(outputDir, "$filename.pdf")
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(sourcePath)
+        val sourceFile = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(sourcePath) else File(sourcePath)
+        val parentPath = sourceFile.parentFile?.absolutePath ?: ""
+        val outputPdfName = "$filename.pdf"
+        val outputSafOrLocalPath = if (isSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(parentPath, outputPdfName)
+        } else {
+            val outputDir = sourceFile.parentFile
+                ?: activity.getExternalFilesDir(null)
+                ?: activity.filesDir
+            File(outputDir, outputPdfName).absolutePath
+        }
 
         // Non-cancellable premium progress dialog
         val progressLayoutRes = if (isTv) R.layout.dialog_pdf_converting_tv
@@ -121,16 +128,17 @@ class ConvertToPdfDialog : DialogFragment() {
             val converter = PdfConverter(activity)
             val success = withContext(Dispatchers.IO) {
                 if (imagePath != null) {
-                    converter.convertImageToPdf(sourceFile, outputFile, password)
+                    converter.convertImageToPdf(sourcePath, outputSafOrLocalPath, password)
                 } else {
-                    converter.convertTextToPdf(sourceFile, outputFile, password)
+                    converter.convertTextToPdf(sourcePath, outputSafOrLocalPath, password)
                 }
             }
             progressDialog.dismiss()
             if (success) {
+                val displayMsg = if (isSaf) outputPdfName else outputSafOrLocalPath
                 Toast.makeText(
                     activity,
-                    activity.getString(R.string.pdf_convert_success, outputFile.absolutePath),
+                    activity.getString(R.string.pdf_convert_success, displayMsg),
                     Toast.LENGTH_LONG
                 ).show()
             } else {

@@ -84,6 +84,8 @@ class NetworkFileAdapter(
     var isSelectionMode = false
         private set
 
+    var focusedPath: String? = null
+
     /**
      * Tracks the adapter position of the last long-pressed item for range selection.
      * When a second long press occurs while in selection mode, all file entries
@@ -244,6 +246,16 @@ class NetworkFileAdapter(
         }
     }
     
+    fun getItemAt(position: Int): za.kilowatch.ultimatefilemanager.storage.ListItem? = items.getOrNull(position)
+    fun getAllItems(): List<za.kilowatch.ultimatefilemanager.storage.ListItem> = items.toList()
+
+    fun findPosition(path: String?): Int {
+        if (path == null) return -1
+        return items.indexOfFirst {
+            it is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry && it.file.path == path
+        }
+    }
+
     fun getSelectedFiles(): List<NetworkFile> = files.filter { it in selectedFiles }
 
     fun hasAnySelectedProtected(context: Context, shareId: String): Boolean = selectedFiles.any { za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, it.path, shareId) }

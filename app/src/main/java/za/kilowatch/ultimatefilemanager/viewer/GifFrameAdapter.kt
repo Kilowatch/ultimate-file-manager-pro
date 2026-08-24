@@ -35,13 +35,21 @@ class GifFrameAdapter(
 
     override fun onBindViewHolder(holder: FrameViewHolder, position: Int) {
         val path = framePaths[position]
-        val file = File(path)
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(holder.itemView.context, path)
+        val file = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(path) else File(path)
+        val sizeBytes = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(holder.itemView.context, path) else file.length()
+        val imageModel: Any = if (isSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(holder.itemView.context, path) ?: file
+        } else {
+            file
+        }
 
         holder.txtSeqNum.text = "#${position + 1}"
         holder.txtFileName.text = file.name
-        holder.txtFileSize.text = Formatter.formatShortFileSize(holder.itemView.context, file.length())
+        holder.txtFileSize.text = Formatter.formatShortFileSize(holder.itemView.context, sizeBytes)
 
-        holder.imgThumbnail.load(file)
+        holder.imgThumbnail.load(imageModel)
 
         holder.imgDragHandle.setOnTouchListener { _, _ ->
             onStartDrag?.invoke(holder)

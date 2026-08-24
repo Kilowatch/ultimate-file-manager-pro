@@ -78,13 +78,18 @@ object BatchRenameExecutor {
                 }
                 val newFile = File(localFile.parent, newFullName)
 
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(localFile.absolutePath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, localFile.absolutePath)
+
                 // On case-insensitive filesystems (FAT32, exFAT, NTFS, sdcardfs),
                 // renaming "PHOTO.JPG" -> "photo.jpg" directly fails because File.renameTo()
                 // considers the target destination to be the existing file.
                 // We perform a 2-step intermediate rename when only letter casing changes.
                 val isCaseOnlyChange = localFile.name.equals(newFile.name, ignoreCase = true) && localFile.name != newFile.name
 
-                val ok = if (isCaseOnlyChange) {
+                val ok = if (isSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(context, localFile.absolutePath, newFullName)
+                } else if (isCaseOnlyChange) {
                     val tempFile = File(localFile.parent, "${newFullName}.ufm_tmp_${System.currentTimeMillis()}")
                     if (localFile.renameTo(tempFile)) {
                         val step2Ok = tempFile.renameTo(newFile)

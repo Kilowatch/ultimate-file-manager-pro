@@ -42,6 +42,10 @@ object VaultCrypto {
     }
 
     fun encryptFile(input: File, output: File) {
+        encryptFile(context = null, input = input, output = output)
+    }
+
+    fun encryptFile(context: android.content.Context? = null, input: File, output: File) {
         val key = getOrCreateKey()
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, key)
@@ -52,7 +56,16 @@ object VaultCrypto {
             fileOut.write(iv.size)
             fileOut.write(iv)
             CipherOutputStream(fileOut, cipher).use { cipherOut ->
-                FileInputStream(input).use { inputStream ->
+                val isSaf = context != null && (input is SafFile ||
+                            SafTreeManager.isSafPath(input.absolutePath) ||
+                            SafTreeManager.hasTreePermissionForPath(context, input.absolutePath))
+                val inStream = if (isSaf && context != null) {
+                    SafTreeManager.openInputStream(context, input.absolutePath)
+                } else {
+                    FileInputStream(input)
+                } ?: throw java.io.FileNotFoundException("Cannot read ${input.absolutePath}")
+
+                inStream.use { inputStream ->
                     val buffer = ByteArray(1024 * 64)
                     var read: Int
                     while (inputStream.read(buffer).also { read = it } > 0) {

@@ -219,12 +219,29 @@ class SevenZipViewerActivity : AppCompatActivity() {
         }
     }
 
+    private var tempStagedFile: File? = null
+
     private fun load7z(file: File) {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                if (file.extension.lowercase(Locale.ROOT) == "7z") {
-                    val szf = createSevenZFile(file, archivePassword)
+                val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@SevenZipViewerActivity, file.absolutePath)
+                val targetFile = if (isSaf) {
+                    val temp = File(cacheDir, "view_7z_${System.currentTimeMillis()}.${file.extension}")
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this@SevenZipViewerActivity, file.absolutePath)?.use { input ->
+                        temp.outputStream().use { output -> input.copyTo(output) }
+                    } ?: throw java.io.FileNotFoundException("Cannot open ${file.name}")
+                    tempStagedFile = temp
+                    temp
+                } else {
+                    file
+                }
+                sourceFile = targetFile
+
+                if (targetFile.extension.lowercase(Locale.ROOT) == "7z") {
+                    val szf = createSevenZFile(targetFile, archivePassword)
                     val entries = szf.entries.toList()
                     
                     if (archivePassword == null) {
@@ -467,7 +484,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
             try {
                 for (item in items) {
                     val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                    val res = ArchiveManager.extractArchiveEntry(file, entryPath, destDir, archivePassword)
+                    val res = ArchiveManager.extractArchiveEntry(file, entryPath, destDir, archivePassword, this@SevenZipViewerActivity)
                     if (res.isSuccess) successCount++
                 }
                 withContext(Dispatchers.Main) {
@@ -497,7 +514,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
             try {
                 for (item in items) {
                     val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                    val res = ArchiveManager.moveArchiveEntry(file, entryPath, destDir, archivePassword)
+                    val res = ArchiveManager.moveArchiveEntry(file, entryPath, destDir, archivePassword, this@SevenZipViewerActivity)
                     if (res.isSuccess) successCount++
                 }
                 withContext(Dispatchers.Main) {
@@ -696,7 +713,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                val res = ArchiveManager.extractArchiveEntry(file, entryPath, destDir, archivePassword)
+                val res = ArchiveManager.extractArchiveEntry(file, entryPath, destDir, archivePassword, this@SevenZipViewerActivity)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     if (res.isSuccess) {
@@ -721,7 +738,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                val res = ArchiveManager.moveArchiveEntry(file, entryPath, destDir, archivePassword)
+                val res = ArchiveManager.moveArchiveEntry(file, entryPath, destDir, archivePassword, this@SevenZipViewerActivity)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     if (res.isSuccess) {
@@ -867,6 +884,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
         super.onDestroy()
         try { sevenZipFile?.close() } catch (_: Exception) {}
         ArchivePreviewCache.purgeSession()
+        tempStagedFile?.delete()
     }
 
     private fun showSnackbar(message: String) {

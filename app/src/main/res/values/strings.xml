@@ -3694,6 +3694,8 @@
     <string name="backup_pref_tile_icons">Tile Custom Icons</string>
     <string name="backup_pref_icon_customization">File Type Icon Overrides</string>
     <string name="backup_pref_loyalty">Tip Jar Loyalty Data</string>
+    <string name="backup_pref_keyboard_shortcuts">Keyboard Shortcuts &amp; Navigation</string>
+    <string name="backup_pref_saf_locations">Custom Storage Locations (SAF)</string>
     <string name="backup_format_type_host">%1$s - %2$s</string>
     <string name="backup_format_location">Location: %1$s</string>
     <string name="backup_format_original">Original: %1$s</string>
@@ -4417,7 +4419,97 @@
     <string name="indexing_offer_benefit_speed">Faster folder and file loading</string>
     <string name="indexing_offer_benefit_duplicates">Duplicate and large file detection</string>
     <string name="auto_restore_offer_subtitle">Auto-Restore Detected</string>
+
+    <!-- Keyboard Shortcuts & Keybinds -->
+    <string name="settings_keyboard_shortcuts_title">Keyboard Shortcuts</string>
+    <string name="settings_keyboard_shortcuts_subtitle">Configure keyboard navigation &amp; key bindings</string>
+    <string name="keyboard_shortcuts_master_enable">Enable Keyboard Shortcuts</string>
+    <string name="keyboard_shortcuts_master_enable_desc">Allow navigation and file actions via hardware or Bluetooth keyboard</string>
+    <string name="keyboard_shortcuts_vim_mode">Vim Navigation Keys</string>
+    <string name="keyboard_shortcuts_vim_mode_desc">Use j/k/h/l, gg/G, and single-letter action keys (y/x/p/d/r/n/g)</string>
+    <string name="keyboard_shortcuts_dual_pane_switch">Dual-Pane Fast Switch</string>
+    <string name="keyboard_shortcuts_dual_pane_switch_desc">Use Tab, Ctrl+W, or 1/2 to switch active pane in Twin Window</string>
+    <string name="keyboard_shortcuts_reset_defaults">Reset Defaults</string>
+    <string name="keyboard_shortcuts_reset_confirm">Reset all key bindings to factory defaults?</string>
+    <string name="keyboard_shortcuts_section_nav">Navigation</string>
+    <string name="keyboard_shortcuts_section_file_ops">File Operations</string>
+    <string name="keyboard_shortcuts_section_selection">Selection</string>
+    <string name="keyboard_shortcuts_section_dual_pane">Dual-Pane</string>
+    <string name="keyboard_shortcuts_section_general">General</string>
+    <string name="keyboard_shortcuts_help_title">Keyboard Shortcuts Guide</string>
+    <string name="keyboard_shortcuts_help_subtitle">Quick reference for keyboard navigation</string>
+    <string name="keyboard_action_move_down">Move Down</string>
+    <string name="keyboard_action_move_down_desc">Highlight next item in file list</string>
+    <string name="keyboard_action_move_up">Move Up</string>
+    <string name="keyboard_action_move_up_desc">Highlight previous item in file list</string>
+    <string name="keyboard_action_parent_dir">Parent Directory</string>
+    <string name="keyboard_action_parent_dir_desc">Go up one directory level</string>
+    <string name="keyboard_action_open">Open / Enter</string>
+    <string name="keyboard_action_open_desc">Open selected file or folder</string>
+    <string name="keyboard_action_jump_top">Jump to Top</string>
+    <string name="keyboard_action_jump_top_desc">Scroll to the first item in listing</string>
+    <string name="keyboard_action_jump_bottom">Jump to Bottom</string>
+    <string name="keyboard_action_jump_bottom_desc">Scroll to the last item in listing</string>
+    <string name="keyboard_action_go_to">Go To Path</string>
+    <string name="keyboard_action_go_to_desc">Open direct path jump dialog</string>
+    <string name="keyboard_action_toggle_select">Toggle Selection</string>
+    <string name="keyboard_action_toggle_select_desc">Select or deselect currently highlighted item</string>
+    <string name="keyboard_action_select_all">Select / Deselect All</string>
+    <string name="keyboard_action_select_all_desc">Toggle selecting all items in current folder</string>
+    <string name="keyboard_action_copy">Copy</string>
+    <string name="keyboard_action_copy_desc">Copy selected item(s) to clipboard</string>
+    <string name="keyboard_action_cut">Cut (Move)</string>
+    <string name="keyboard_action_cut_desc">Cut selected item(s) to clipboard</string>
+    <string name="keyboard_action_paste">Paste</string>
+    <string name="keyboard_action_paste_desc">Paste clipboard files into current folder</string>
+    <string name="keyboard_action_delete">Delete</string>
+    <string name="keyboard_action_delete_desc">Delete selected item(s) with confirmation</string>
+    <string name="keyboard_action_rename">Rename</string>
+    <string name="keyboard_action_rename_desc">Rename selected item or open batch rename</string>
+    <string name="keyboard_action_new_folder">New Folder</string>
+    <string name="keyboard_action_new_folder_desc">Create a new folder in current directory</string>
+    <string name="keyboard_action_search">Find / Search</string>
+    <string name="keyboard_action_search_desc">Focus search filter input</string>
+    <string name="keyboard_action_toggle_hidden">Toggle Hidden Files</string>
+    <string name="keyboard_action_toggle_hidden_desc">Show or hide dotfiles</string>
+    <string name="keyboard_action_refresh">Refresh</string>
+    <string name="keyboard_action_refresh_desc">Reload current folder contents</string>
+    <string name="keyboard_action_switch_pane">Switch Pane</string>
+    <string name="keyboard_action_switch_pane_desc">Switch between Left/Top and Right/Bottom pane</string>
+    <string name="keyboard_action_focus_pane_1">Focus Pane 1</string>
+    <string name="keyboard_action_focus_pane_1_desc">Focus Left or Top pane directly</string>
+    <string name="keyboard_action_focus_pane_2">Focus Pane 2</string>
+    <string name="keyboard_action_focus_pane_2_desc">Focus Right or Bottom pane directly</string>
+    <string name="keyboard_action_cheatsheet">Shortcuts Cheatsheet</string>
+    <string name="keyboard_action_cheatsheet_desc">Show interactive shortcut overlay guide</string>
+    <string name="keyboard_rebind_title">Rebind Key</string>
+    <string name="keyboard_rebind_prompt">Press any key on your keyboard to assign, or select a preset below.</string>
+    <string name="keyboard_rebind_current">Current Key: %1$s</string>
+    <string name="keyboard_rebind_success">Key assigned: %1$s</string>
+    <string name="go_to_path_title">Go To Path</string>
+    <string name="go_to_path_hint">Enter directory path</string>
+    <string name="go_to_path_action">Go</string>
+    <string name="go_to_path_invalid">Directory does not exist or is inaccessible</string>
+
+    <!-- Custom Storage Locations (SAF / DocumentsProvider) -->
+    <string name="add_storage_location_title">Add Storage Location</string>
+    <string name="add_storage_location_subtitle">Mount Termux, Document Providers, SD/USB or Custom Folders</string>
+    <string name="add_storage_location_desc">Select any folder or provider exposed through the Android system picker to grant persistent access.</string>
+    <string name="add_storage_dialog_title">New Storage Location</string>
+    <string name="add_storage_dialog_name_hint">Location Display Name</string>
+    <string name="add_storage_dialog_confirm">Add Location</string>
+    <string name="add_storage_success">Storage location \"%1$s\" added successfully</string>
+    <string name="add_storage_failed">Failed to add storage location: %1$s</string>
+    <string name="remove_storage_location_title">Remove Storage Location?</string>
+    <string name="remove_storage_location_msg">Remove \"%1$s\" from storage locations? This unmounts access from UFM without deleting any files.</string>
+    <string name="remove_storage_location_confirm">Remove Location</string>
+    <string name="storage_location_removed">Storage location removed</string>
+    <string name="storage_location_termux_default_name">Termux Home</string>
+    <string name="storage_location_saf_default_name">Document Location</string>
+    <string name="storage_location_inaccessible">Location is no longer accessible. Please re-grant access.</string>
+    <string name="saf_storage">SAF Storage</string>
 </resources>
+
 
 
 

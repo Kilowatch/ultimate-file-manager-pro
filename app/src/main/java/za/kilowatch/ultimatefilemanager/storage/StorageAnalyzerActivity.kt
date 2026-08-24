@@ -754,7 +754,11 @@ class StorageAnalyzerActivity : AppCompatActivity() {
                 var hasProtectedFailed = false
                 for (path in paths) {
                     val f = File(path)
-                    val success = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                    val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@StorageAnalyzerActivity, path)
+                    val success = if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@StorageAnalyzerActivity, path)
+                    } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
                         za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
                     } else {
                         f.exists() && f.delete()

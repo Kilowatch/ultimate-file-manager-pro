@@ -436,7 +436,16 @@ class StorageAnalyzerEngine(private val context: Context) {
     private fun computeFullHash(file: File): String {
         val md = MessageDigest.getInstance("MD5")
         val buffer = ByteArray(65_536)  // 64 KB read buffer
-        file.inputStream().use { input ->
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+        val inStream = if (isSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, file.absolutePath)
+                ?: return ""
+        } else {
+            file.inputStream()
+        }
+        inStream.use { input ->
             var len: Int
             while (input.read(buffer).also { len = it } != -1) {
                 md.update(buffer, 0, len)

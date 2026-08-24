@@ -293,6 +293,8 @@ object SettingsBackupManager {
         add("ufm_file_tags",             context.getString(R.string.backup_pref_file_tags))
         add("analytics_prefs",           context.getString(R.string.backup_pref_analytics))
         add("icon_tap_edit_mode_prefs",  context.getString(R.string.backup_pref_icon_tap_edit_mode))
+        add("ufm_keyboard_shortcuts_prefs", context.getString(R.string.backup_pref_keyboard_shortcuts))
+        add("ufm_saf_locations_prefs",   context.getString(R.string.backup_pref_saf_locations))
         if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
             add("ufm_tv_server_prefs",   context.getString(R.string.backup_pref_tv_server))
         }
@@ -532,8 +534,18 @@ object SettingsBackupManager {
                 encryptBackupPlain(jsonString)
             }
 
-            targetFile.parentFile?.mkdirs()
-            FileOutputStream(targetFile).use { out ->
+            val isSaf = targetFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(targetFile.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, targetFile.absolutePath)
+
+            val outStream = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(context, targetFile.absolutePath)
+            } else {
+                targetFile.parentFile?.mkdirs()
+                FileOutputStream(targetFile)
+            } ?: return false
+
+            outStream.use { out ->
                 out.write(encryptedData)
             }
             return true
@@ -591,6 +603,8 @@ object SettingsBackupManager {
                 "ufm_file_tags"             to R.string.backup_pref_file_tags,
                 "analytics_prefs"           to R.string.backup_pref_analytics,
                 "icon_tap_edit_mode_prefs"  to R.string.backup_pref_icon_tap_edit_mode,
+                "ufm_keyboard_shortcuts_prefs" to R.string.backup_pref_keyboard_shortcuts,
+                "ufm_saf_locations_prefs"   to R.string.backup_pref_saf_locations,
                 "ufm_tv_server_prefs"       to R.string.backup_pref_tv_server
             )
             while (keys.hasNext()) {

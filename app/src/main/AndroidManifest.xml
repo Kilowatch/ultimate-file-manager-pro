@@ -328,6 +328,11 @@
             android:name=".settings.ControlsTimeoutActivity"
             android:exported="false" />
 
+        <!-- Keyboard Shortcuts & Keybinds -->
+        <activity
+            android:name=".settings.KeyboardShortcutsActivity"
+            android:exported="false" />
+
         <!-- Toolbar Icons -->
         <activity
             android:name=".settings.ToolbarIconsActivity"

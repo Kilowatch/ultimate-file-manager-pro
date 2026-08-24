@@ -295,24 +295,39 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                 if (!isNetwork && ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif", "avif", "jxl", "bmp", "gif")) {
                     rowDimensions.visibility = View.VISIBLE
                     txtDimensionsValue.text = "…"
+                    val ctx = context?.applicationContext
                     viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                         try {
+                            val isSaf = ctx != null && (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, path))
                             val width: Int
                             val height: Int
                             if (ext == "jxl") {
                                 // BitmapFactory cannot read JXL headers; JxlCoder has no getSize().
                                 // Decode at thumbnail size — decodeSampled returns proportional dims.
                                 val (w, h) = try {
-                                    val bytes = java.io.File(path).readBytes()
-                                    val thumb = com.awxkee.jxlcoder.JxlCoder.decodeSampled(bytes, 256, 256)
-                                    val dims = thumb.width to thumb.height
-                                    thumb.recycle()
-                                    dims
+                                    val bytes = if (isSaf && ctx != null) {
+                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(ctx, path)?.use { it.readBytes() }
+                                    } else {
+                                        java.io.File(path).readBytes()
+                                    }
+                                    if (bytes != null) {
+                                        val thumb = com.awxkee.jxlcoder.JxlCoder.decodeSampled(bytes, 256, 256)
+                                        val dims = thumb.width to thumb.height
+                                        thumb.recycle()
+                                        dims
+                                    } else -1 to -1
                                 } catch (_: Exception) { -1 to -1 }
                                 width = w; height = h
                             } else {
                                 val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                                BitmapFactory.decodeFile(path, options)
+                                if (isSaf && ctx != null) {
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(ctx, path)?.use { inStream ->
+                                        BitmapFactory.decodeStream(inStream, null, options)
+                                    }
+                                } else {
+                                    BitmapFactory.decodeFile(path, options)
+                                }
                                 width = options.outWidth
                                 height = options.outHeight
                             }
@@ -352,23 +367,41 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                     txtSizeValue.text = getString(R.string.properties_calculating_size)
                     txtContainsValue.text = getString(R.string.properties_calculating_size)
                     calcJob?.cancel()
+                    val ctx = context?.applicationContext
                     calcJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                         var totalBytes = 0L
                         var totalFiles = 0
                         var totalFolders = 0
-                        val folder = File(path)
-                        if (folder.exists() && folder.isDirectory) {
-                            folder.walkTopDown().onEnter { true }.forEach { sub ->
-                                if (sub != folder) {
-                                    if (sub.isDirectory) {
-                                        totalFolders++
-                                    } else if (sub.isFile) {
-                                        totalFiles++
-                                        totalBytes += sub.length()
+
+                        val isSaf = ctx != null && (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, path))
+
+                        if (isSaf && ctx != null) {
+                            val items = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.walkSafTopDown(ctx, path)
+                            for (item in items) {
+                                if (item.isDirectory) {
+                                    totalFolders++
+                                } else {
+                                    totalFiles++
+                                    totalBytes += item.length()
+                                }
+                            }
+                        } else {
+                            val folder = File(path)
+                            if (folder.exists() && folder.isDirectory) {
+                                folder.walkTopDown().onEnter { true }.forEach { sub ->
+                                    if (sub != folder) {
+                                        if (sub.isDirectory) {
+                                            totalFolders++
+                                        } else if (sub.isFile) {
+                                            totalFiles++
+                                            totalBytes += sub.length()
+                                        }
                                     }
                                 }
                             }
                         }
+
                         withContext(Dispatchers.Main) {
                             if (!isAdded) return@withContext
                             txtSizeValue.text = formatWindowsSize(totalBytes)
@@ -441,6 +474,7 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             } else {
                 txtSizeValue.text = getString(R.string.properties_calculating_size)
                 calcJob?.cancel()
+                val ctx = context?.applicationContext
                 calcJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                     var totalBytes = 0L
                     var totalFiles = 0
@@ -449,24 +483,45 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                     for (i in filePaths.indices) {
                         val p = filePaths[i]
                         val isD = isDirList.getOrNull(i) ?: false
-                        val f = File(p)
-                        if (!f.exists()) continue
+                        val isSaf = ctx != null && (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(p) ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, p))
 
-                        if (isD || f.isDirectory) {
-                            totalFolders++
-                            f.walkTopDown().onEnter { true }.forEach { sub ->
-                                if (sub != f) {
-                                    if (sub.isDirectory) {
+                        if (isSaf && ctx != null) {
+                            if (isD) {
+                                totalFolders++
+                                val items = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.walkSafTopDown(ctx, p)
+                                for (item in items) {
+                                    if (item.isDirectory) {
                                         totalFolders++
-                                    } else if (sub.isFile) {
+                                    } else {
                                         totalFiles++
-                                        totalBytes += sub.length()
+                                        totalBytes += item.length()
                                     }
                                 }
+                            } else {
+                                totalFiles++
+                                totalBytes += za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, p).coerceAtLeast(0L)
                             }
                         } else {
-                            totalFiles++
-                            totalBytes += f.length()
+                            val f = File(p)
+                            if (!f.exists()) continue
+
+                            if (isD || f.isDirectory) {
+                                totalFolders++
+                                f.walkTopDown().onEnter { true }.forEach { sub ->
+                                    if (sub != f) {
+                                        if (sub.isDirectory) {
+                                            totalFolders++
+                                        } else if (sub.isFile) {
+                                            totalFiles++
+                                            totalBytes += sub.length()
+                                        }
+                                    }
+                                }
+                            } else {
+                                totalFiles++
+                                totalBytes += f.length()
+                            }
                         }
                     }
 

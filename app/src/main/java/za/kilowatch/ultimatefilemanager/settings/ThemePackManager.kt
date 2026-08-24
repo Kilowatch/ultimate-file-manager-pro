@@ -285,8 +285,18 @@ object ThemePackManager {
             } else {
                 encryptPackPlain(jsonString)
             }
-            targetFile.parentFile?.mkdirs()
-            FileOutputStream(targetFile).use { out ->
+            val isSaf = targetFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(targetFile.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, targetFile.absolutePath)
+
+            val outStream = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(context, targetFile.absolutePath)
+            } else {
+                targetFile.parentFile?.mkdirs()
+                FileOutputStream(targetFile)
+            } ?: return false
+
+            outStream.use { out ->
                 out.write(encryptedData)
             }
             return true

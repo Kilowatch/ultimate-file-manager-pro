@@ -14,6 +14,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.webkit.MimeTypeMap
@@ -70,6 +71,8 @@ import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 import za.kilowatch.ultimatefilemanager.archive.ArchiveOptionsDialog
 import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
 import za.kilowatch.ultimatefilemanager.remote.RemoteTransportPrefs
+import za.kilowatch.ultimatefilemanager.util.KeyboardShortcutHandler
+import za.kilowatch.ultimatefilemanager.ui.KeyboardShortcutDialog
 import kotlin.coroutines.cancellation.CancellationException
 
 object NetworkClipboard {
@@ -249,6 +252,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
     private var lastLoadedPath: String? = null
+    private lateinit var keyboardShortcutHandler: KeyboardShortcutHandler
 
     // TV-only: inline clipboard panel (avoids BottomSheetDialog clipping on TV)
     private var tvClipboardPanel: View? = null
@@ -1053,7 +1057,148 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         recyclerFiles.adapter = fileAdapter
         fileAdapter.isGroupedByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(this)
-        
+
+        keyboardShortcutHandler = KeyboardShortcutHandler(this, object : KeyboardShortcutHandler.KeyboardActionListener {
+            override fun onMoveDown() {
+                val currentPos = fileAdapter.findPosition(fileAdapter.focusedPath)
+                val nextPos = if (currentPos == -1) 0 else (currentPos + 1).coerceAtMost(fileAdapter.itemCount - 1)
+                val item = fileAdapter.getItemAt(nextPos) as? za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry
+                if (item != null) {
+                    fileAdapter.focusedPath = item.file.path
+                    recyclerFiles.scrollToPosition(nextPos)
+                }
+            }
+
+            override fun onMoveUp() {
+                val currentPos = fileAdapter.findPosition(fileAdapter.focusedPath)
+                val prevPos = if (currentPos == -1) 0 else (currentPos - 1).coerceAtLeast(0)
+                val item = fileAdapter.getItemAt(prevPos) as? za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry
+                if (item != null) {
+                    fileAdapter.focusedPath = item.file.path
+                    recyclerFiles.scrollToPosition(prevPos)
+                }
+            }
+
+            override fun onOpen() {
+                val path = fileAdapter.focusedPath
+                if (path != null) {
+                    val file = currentFiles.firstOrNull { it.path == path }
+                    if (file != null) {
+                        if (file.isDirectory) {
+                            if (share.type == ShareType.TV && initialRootPath == null) {
+                                initialRootPath = file.path
+                            }
+                            currentPath = if (share.type == ShareType.TV || share.type == ShareType.DLNA || share.type == ShareType.SFTP || share.type == ShareType.SCP) file.path else if (currentPath.isEmpty()) file.name else "$currentPath/${file.name}"
+                            loadDirectory()
+                        } else {
+                            openNetworkFile(file)
+                        }
+                    }
+                }
+            }
+
+            override fun onParentDir() {
+                if (currentPath.isNotEmpty()) {
+                    navigateBack()
+                } else {
+                    finish()
+                }
+            }
+
+            override fun onJumpTop() {
+                if (fileAdapter.itemCount > 0) {
+                    val item = fileAdapter.getItemAt(0) as? za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry
+                    if (item != null) {
+                        fileAdapter.focusedPath = item.file.path
+                        recyclerFiles.scrollToPosition(0)
+                    }
+                }
+            }
+
+            override fun onJumpBottom() {
+                if (fileAdapter.itemCount > 0) {
+                    val lastIdx = fileAdapter.itemCount - 1
+                    val item = fileAdapter.getItemAt(lastIdx) as? za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry
+                    if (item != null) {
+                        fileAdapter.focusedPath = item.file.path
+                        recyclerFiles.scrollToPosition(lastIdx)
+                    }
+                }
+            }
+
+            override fun onToggleSelect() {
+                val path = fileAdapter.focusedPath
+                if (path != null) {
+                    val pos = fileAdapter.findPosition(path)
+                    if (pos != -1) fileAdapter.enterSelectionModeAt(pos)
+                }
+            }
+
+            override fun onSelectAll() {
+                if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
+            }
+
+            override fun onCopy() {
+                val selected = fileAdapter.getSelectedFiles()
+                if (selected.isNotEmpty()) {
+                    handleNetworkCopyOrCut(selected, isMove = false)
+                }
+            }
+
+            override fun onCut() {
+                val selected = fileAdapter.getSelectedFiles()
+                if (selected.isNotEmpty()) {
+                    handleNetworkCopyOrCut(selected, isMove = true)
+                }
+            }
+
+            override fun onPaste() {
+                if (za.kilowatch.ultimatefilemanager.storage.FileClipboard.hasItems()) {
+                    fabPaste.performClick()
+                }
+            }
+
+            override fun onDelete() {
+                findViewById<View?>(R.id.btnDelete)?.performClick()
+            }
+
+            override fun onRename() {
+                findViewById<View?>(R.id.btnRename)?.performClick()
+            }
+
+            override fun onNewFolder() {
+                if (!share.readOnly) {
+                    findViewById<View?>(R.id.btnCreateNew)?.performClick()
+                }
+            }
+
+            override fun onSearch() {
+                btnSearchToggle.performClick()
+            }
+
+            override fun onToggleHidden() {
+                za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled =
+                    !za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                loadDirectory()
+            }
+
+            override fun onRefresh() {
+                loadDirectory()
+            }
+
+            override fun onCheatsheet() {
+                KeyboardShortcutDialog.show(this@NetworkBrowserActivity)
+            }
+
+            override fun onEscape() {
+                if (fileAdapter.isSelectionMode) {
+                    fileAdapter.exitSelectionMode()
+                } else {
+                    finish()
+                }
+            }
+        })
+
         // Load and apply initial view mode
         val initialMode = ViewModeManager.load(this)
         applyViewMode(initialMode)
@@ -7355,5 +7500,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
         scroll.post {
             scroll.fullScroll(View.FOCUS_RIGHT)
         }
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (::keyboardShortcutHandler.isInitialized && keyboardShortcutHandler.handleKeyEvent(event)) {
+            return true
+        }
+        return super.dispatchKeyEvent(event)
     }
 }

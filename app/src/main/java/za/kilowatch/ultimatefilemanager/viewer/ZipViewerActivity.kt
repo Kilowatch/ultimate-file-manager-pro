@@ -226,12 +226,28 @@ class ZipViewerActivity : AppCompatActivity() {
         }
     }
 
+    private var tempStagedFile: File? = null
+
     private fun loadZip(file: File) {
         progressBar.visibility = View.VISIBLE
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val zf = ZipFile(file)
+                val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@ZipViewerActivity, file.absolutePath)
+                val targetFile = if (isSaf) {
+                    val temp = File(cacheDir, "view_zip_${System.currentTimeMillis()}.${file.extension}")
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this@ZipViewerActivity, file.absolutePath)?.use { input ->
+                        temp.outputStream().use { output -> input.copyTo(output) }
+                    } ?: throw java.io.FileNotFoundException("Cannot open ${file.name}")
+                    tempStagedFile = temp
+                    temp
+                } else {
+                    file
+                }
+                sourceFile = targetFile
+                val zf = ZipFile(targetFile)
                 val isEncrypted = zf.isEncrypted || zf.fileHeaders.any { it.isEncrypted }
                 
                 if (isEncrypted && archivePassword == null) {
@@ -430,7 +446,7 @@ class ZipViewerActivity : AppCompatActivity() {
             try {
                 for (item in items) {
                     val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                    val res = ArchiveManager.extractZipEntry(file, entryPath, destDir, archivePassword)
+                    val res = ArchiveManager.extractZipEntry(file, entryPath, destDir, archivePassword, this@ZipViewerActivity)
                     if (res.isSuccess) successCount++
                 }
                 withContext(Dispatchers.Main) {
@@ -460,7 +476,7 @@ class ZipViewerActivity : AppCompatActivity() {
             try {
                 for (item in items) {
                     val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                    val res = ArchiveManager.moveZipEntry(file, entryPath, destDir, archivePassword)
+                    val res = ArchiveManager.moveZipEntry(file, entryPath, destDir, archivePassword, this@ZipViewerActivity)
                     if (res.isSuccess) successCount++
                 }
                 withContext(Dispatchers.Main) {
@@ -657,7 +673,7 @@ class ZipViewerActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                val res = ArchiveManager.extractZipEntry(file, entryPath, destDir, archivePassword)
+                val res = ArchiveManager.extractZipEntry(file, entryPath, destDir, archivePassword, this@ZipViewerActivity)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     if (res.isSuccess) {
@@ -682,7 +698,7 @@ class ZipViewerActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                val res = ArchiveManager.moveZipEntry(file, entryPath, destDir, archivePassword)
+                val res = ArchiveManager.moveZipEntry(file, entryPath, destDir, archivePassword, this@ZipViewerActivity)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     if (res.isSuccess) {
@@ -833,6 +849,7 @@ class ZipViewerActivity : AppCompatActivity() {
         super.onDestroy()
         try { zipFile?.close() } catch (_: Exception) { }
         ArchivePreviewCache.purgeSession()
+        tempStagedFile?.delete()
     }
 
     private fun showSnackbar(message: String) {

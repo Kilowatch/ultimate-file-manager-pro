@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Add / Rename Storage Location dialog — Mobile layout.
+    Upgraded to premium glassmorphism styling following UFMStandard.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Icon preview & Dialog Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/margin_md">
+
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/imgStorageLocationIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_folder"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@string/add_storage_dialog_title" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/txtStorageLocationDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_storage_dialog_title"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:textAlignment="center"
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:id="@+id/txtStorageLocationDialogSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_storage_location_subtitle"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            android:textColor="@color/mobile_text_secondary"
+            android:layout_marginTop="4dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Name input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilStorageLocationName"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:hint="@string/add_storage_dialog_name_hint"
+        app:boxStrokeColor="?attr/colorPrimary"
+        app:counterEnabled="true"
+        app:counterMaxLength="50">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtStorageLocationName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:maxLength="50"
+            android:textColor="@color/mobile_text_primary"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelStorageLocation"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/mobile_text_secondary"
+            android:layout_marginEnd="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSaveStorageLocation"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_storage_dialog_confirm" />
+
+    </LinearLayout>
+
+</LinearLayout>

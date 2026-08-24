@@ -307,7 +307,11 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
 
                 for (path in paths) {
                     val f = File(path)
-                    val success = if (ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                    val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FolderDuplicateFinderActivity, path)
+                    val success = if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@FolderDuplicateFinderActivity, path)
+                    } else if (ShizukuShellWrapper.canUseShizukuForPath(path)) {
                         ShizukuShellWrapper.delete(path)
                     } else {
                         f.exists() && f.delete()

@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.9.1] — 2026-08-24
 
+### Added
+- **Keyboard Shortcuts & Vim Navigation System (`KeyboardShortcutsActivity`, `KeyboardShortcutHandler`, `KeyboardPreferenceManager`)**:
+  - Full hardware and Bluetooth keyboard shortcut support across file browsers, dual-pane twin window, viewers, and editors.
+  - Configurable master enable toggle, dual-pane fast switching (`Tab`, `Ctrl+W`, `1`/`2`), and customizable key remapping with an interactive rebind dialog (`dialog_keyboard_rebind.xml` / `_tv.xml`).
+  - Vim navigation mode supporting `h`/`j`/`k`/`l` movement, `gg` / `G` top/bottom jumping, and single-letter operations (`y` copy, `x` cut, `p` paste, `d` delete, `r` rename, `n` new folder, `g` go to path) with search and text input field typing protection.
+  - In-app interactive shortcuts reference cheatsheet dialog (`dialog_keyboard_shortcuts.xml` / `_tv.xml`) triggered by pressing `?`.
+  - Polished settings screen matching the UFMStandard dark glassmorphism design language (`@color/mobile_glass_card`, `@color/mobile_glass_stroke`, `@color/tv_glass_white_10`, `@color/tv_glass_border`, frosted icon badges, and theme-accented section headers).
+- **Custom Storage Locations via Storage Access Framework (SAF / Termux / External Drives)**:
+  - Added "Add Storage Location" flow with UFMStandard glassmorphic dialogs (`dialog_add_storage_location.xml` / `_tv.xml`), supporting Termux home, USB drives, SD cards, and document providers.
+  - Custom storage tiles integrate directly into the Storage Browser volume list, positioned above Settings with human-readable resolved subtitle paths.
+  - Permanent storage location removal dialog (`dialog_remove_storage_location_confirm.xml` / `_tv.xml`) with persistable URI permission release.
+
 ### Fixed
 - **File Transfer Progress Dialog (`TwinWindowActivity`)**:
   - Fixed an `android.view.InflateException` caused by inflating `dialog_transfer_progress` with a `LinearProgressIndicator` inside a background IO coroutine, which threw `Animators may only be run on Looper threads`. Dialog inflation and display are now dispatched on the Main UI thread before starting the background transfer.

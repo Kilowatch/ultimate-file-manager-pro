@@ -53,6 +53,9 @@ data class StorageItem(
     val isScannerTile: Boolean = false,
     val isSmartSortTile: Boolean = false,
     val isSupportTile: Boolean = false,
+    val isAddStorageLocationTile: Boolean = false,
+    val isSafCustomLocation: Boolean = false,
+    val safLocation: SafLocation? = null,
     val networkShare: za.kilowatch.ultimatefilemanager.network.NetworkShare? = null,
     val onlineStorage: za.kilowatch.ultimatefilemanager.network.OnlineStorage? = null,
     val subtitle: String? = null,   // Optional override shown instead of auto-generated subtitle
@@ -94,9 +97,10 @@ data class StorageItem(
          isVaultTile || isTvRemoteTile || isSafTile || isNetworkTile ||
          isPairedDevicesTile || isExtractsTile || isSyncTile || isAdvancedSyncTile || isSettingsTile ||
          isFavoriteTile || isTwinWindowTile || isTerminalTile || isShizukuTile ||
-          isOnlineStoragesTile || isFileServerTile || isAboutTile ||
-            isRecycleBinTile || isLegalTile || isRateUsTile || isTipJarTile ||
-            isNotepadTile || isScannerTile || isSmartSortTile || isSupportTile))
+         isOnlineStoragesTile || isFileServerTile || isAboutTile ||
+         isRecycleBinTile || isLegalTile || isRateUsTile || isTipJarTile ||
+         isNotepadTile || isScannerTile || isSmartSortTile || isSupportTile ||
+         isAddStorageLocationTile || isSafCustomLocation))
 
 
     val usagePercent: Int get() {

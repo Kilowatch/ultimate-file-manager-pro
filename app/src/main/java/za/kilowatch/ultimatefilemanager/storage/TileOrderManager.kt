@@ -44,7 +44,7 @@ object TileOrderManager {
         item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isTwinWindowTile || item.isShizukuTile || item.isTerminalTile || item.isFileServerTile || item.isSupportTile || item.isAboutTile ||
         item.isNotepadTile || item.isRecycleBinTile || item.isScannerTile ||
         item.isSmartSortTile || item.isOnlineStoragesTile || item.isFavoriteTile ||
-        item.isSettingsTile || item.isCustomTile
+        item.isSettingsTile || item.isCustomTile || item.isAddStorageLocationTile
 
     // ------------------------------------------------------------------ //
     //  Public API                                                          //

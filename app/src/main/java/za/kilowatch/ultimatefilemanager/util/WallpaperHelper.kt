@@ -63,11 +63,20 @@ object WallpaperHelper {
      * @return true if wallpaper was successfully applied, false on failure
      */
     fun setWallpaper(context: Context, file: File, flag: Int): Boolean {
-        if (!file.exists() || !file.isFile) return false
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+        val exists = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(context, file.absolutePath) else (file.exists() && file.isFile)
+        if (!exists) return false
         return try {
             val wallpaperManager = WallpaperManager.getInstance(context)
-            FileInputStream(file).use { inputStream ->
-                wallpaperManager.setStream(inputStream, null, true, flag)
+            val inputStream = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, file.absolutePath)
+            } else {
+                FileInputStream(file)
+            } ?: return false
+            inputStream.use { stream ->
+                wallpaperManager.setStream(stream, null, true, flag)
             }
             true
         } catch (e: Exception) {

@@ -41,6 +41,7 @@ object FFmpegThumbnailHelper {
      */
     fun extractVideoFrame(videoPath: String, timePercent: Int, width: Int = 256, height: Int = 256): Bitmap? {
         za.kilowatch.ultimatefilemanager.util.GoRoLog.i(TAG, "extractVideoFrame: path='$videoPath', pct=$timePercent, width=$width, height=$height")
+
         if (!isLoaded) {
             za.kilowatch.ultimatefilemanager.util.GoRoLog.e(TAG, "extractVideoFrame failed: ffmpeg_jni library not loaded")
             return null

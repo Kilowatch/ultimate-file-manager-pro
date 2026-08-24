@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -304,6 +305,25 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
 
+            // Add Custom SAF Storage Locations (Termux, Document Providers, USB/Custom Folders)
+            val safLocations = SafLocationRepository.getLocations(context)
+            for (loc in safLocations) {
+                val iconRes = if (loc.iconType == "terminal" || loc.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
+
+                storageItems.add(StorageItem(
+                    id = "saf_location_${loc.id}",
+                    label = loc.displayName,
+                    iconRes = iconRes,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "saf://${loc.id}",
+                    isSafCustomLocation = true,
+                    safLocation = loc,
+                    colorConfig = TileColorConfig(),
+                    subtitle = context.getString(R.string.saf_storage)
+                ))
+            }
+
             return storageItems
         }
 
@@ -542,12 +562,32 @@ class StorageBrowserActivity : AppCompatActivity() {
                 items.add(StorageItem(id = "advanced_sync_tile", label = context.getString(R.string.advanced_sync_title), iconRes = R.drawable.ic_sync_advanced, totalBytes = 0, usedBytes = 0, mountPath = "", isAdvancedSyncTile = true))
             }
             items.add(StorageItem(id = "file_server_tile", label = context.getString(R.string.file_server_title), iconRes = R.drawable.ic_file_server, totalBytes = 0, usedBytes = 0, mountPath = "", isFileServerTile = true))
+            items.add(StorageItem(id = "add_storage_location_tile", label = context.getString(R.string.add_storage_location_title), iconRes = R.drawable.ic_folder, totalBytes = 0, usedBytes = 0, mountPath = "", isAddStorageLocationTile = true, subtitle = context.getString(R.string.add_storage_location_subtitle)))
             items.add(StorageItem(id = "settings_tile", label = context.getString(R.string.font_size_title), iconRes = R.drawable.ic_font_size, totalBytes = 0, usedBytes = 0, mountPath = "", isSettingsTile = true))
             items.add(StorageItem(id = "legal_tile", label = context.getString(R.string.policy_selection_title), iconRes = R.drawable.ic_policy, totalBytes = 0, usedBytes = 0, mountPath = "", isLegalTile = true))
             items.add(StorageItem(id = "rate_us_tile", label = context.getString(R.string.rate_us_title), iconRes = R.drawable.ic_star, totalBytes = 0, usedBytes = 0, mountPath = "", isRateUsTile = true))
             items.add(StorageItem(id = "tip_jar_tile", label = context.getString(R.string.tip_jar_title), iconRes = R.drawable.ic_coffee, totalBytes = 0, usedBytes = 0, mountPath = "", isTipJarTile = true))
             items.add(StorageItem(id = "support_tile", label = context.getString(R.string.support_title), iconRes = R.drawable.ic_support, totalBytes = 0, usedBytes = 0, mountPath = "", isSupportTile = true))
             items.add(StorageItem(id = "about_tile", label = context.getString(R.string.about_title), iconRes = R.drawable.ic_about, totalBytes = 0, usedBytes = 0, mountPath = "", isAboutTile = true))
+
+            val safLocations = SafLocationRepository.getLocations(context)
+            for (loc in safLocations) {
+                val iconRes = if (loc.iconType == "terminal" || loc.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
+
+                items.add(StorageItem(
+                    id = "saf_location_${loc.id}",
+                    label = loc.displayName,
+                    iconRes = iconRes,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "saf://${loc.id}",
+                    isSafCustomLocation = true,
+                    safLocation = loc,
+                    colorConfig = TileColorConfig(),
+                    subtitle = context.getString(R.string.saf_storage)
+                ))
+            }
+
             return items
         }
     }
@@ -602,9 +642,172 @@ class StorageBrowserActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 storageAdapter.setTileColors(TileColorManager.loadTileColors(this))
                 storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this))
-        storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
+                storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
             }
         }
+
+    private val addStorageLocationLauncher =
+        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.OpenDocumentTree()) { uri: Uri? ->
+            if (uri != null) {
+                handleSafLocationPickerResult(uri)
+            }
+        }
+
+    private fun handleSafLocationPickerResult(uri: Uri) {
+        val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        try {
+            contentResolver.takePersistableUriPermission(uri, flags)
+        } catch (e: Exception) {
+            za.kilowatch.ultimatefilemanager.util.GoRoLog.w("StorageBrowser", "Failed to take persistable permission: ${e.message}")
+        }
+
+        val authority = uri.authority ?: ""
+        val isTermux = authority.contains("termux")
+        val defaultName = when {
+            isTermux -> getString(R.string.storage_location_termux_default_name)
+            else -> {
+                val doc = androidx.documentfile.provider.DocumentFile.fromTreeUri(this, uri)
+                doc?.name ?: getString(R.string.storage_location_saf_default_name)
+            }
+        }
+        val defaultIcon = if (isTermux) "terminal" else "folder"
+
+        showAddStorageLocationNameDialog(uri, authority, defaultName, defaultIcon)
+    }
+
+    private fun showAddStorageLocationNameDialog(uri: Uri, authority: String, defaultName: String, defaultIcon: String) {
+        val layoutRes = if (isTv) R.layout.dialog_add_storage_location_tv else R.layout.dialog_add_storage_location
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgStorageLocationIcon)
+        val edtName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtStorageLocationName)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelStorageLocation)
+        val btnSave = dialogView.findViewById<View>(R.id.btnSaveStorageLocation)
+
+        val iconRes = if (defaultIcon == "terminal" || authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
+        imgIcon?.setImageResource(iconRes)
+        edtName?.setText(defaultName)
+        edtName?.selectAll()
+
+        btnCancel?.setOnClickListener { dialog.dismiss() }
+        btnSave?.setOnClickListener {
+            val name = edtName?.text?.toString()?.trim().orEmpty().ifEmpty { defaultName }
+            val docId = try {
+                android.provider.DocumentsContract.getTreeDocumentId(uri)
+            } catch (_: Exception) { "" }
+
+            val newLocation = SafLocation(
+                displayName = name,
+                treeUriString = uri.toString(),
+                authority = authority,
+                rootDocId = docId,
+                iconType = defaultIcon
+            )
+
+            val success = SafLocationRepository.addLocation(this, newLocation)
+            dialog.dismiss()
+            if (success) {
+                showPremiumSnackbar(getString(R.string.add_storage_success, name))
+                loadStorageVolumes()
+            } else {
+                showPremiumSnackbar(getString(R.string.add_storage_failed, name))
+            }
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        edtName?.requestFocus()
+    }
+
+    private fun showRenameStorageLocationDialog(item: StorageItem) {
+        val location = item.safLocation ?: return
+        val layoutRes = if (isTv) R.layout.dialog_add_storage_location_tv else R.layout.dialog_add_storage_location
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtStorageLocationDialogTitle)
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtStorageLocationDialogSubtitle)
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgStorageLocationIcon)
+        val edtName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtStorageLocationName)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelStorageLocation)
+        val btnSave = dialogView.findViewById<android.widget.TextView>(R.id.btnSaveStorageLocation)
+
+        txtTitle?.setText(R.string.rename_title)
+        txtSubtitle?.visibility = View.GONE
+        val iconRes = if (location.iconType == "terminal" || location.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
+        imgIcon?.setImageResource(iconRes)
+        edtName?.setText(location.displayName)
+        edtName?.selectAll()
+        btnSave?.setText(R.string.save)
+
+        btnCancel?.setOnClickListener { dialog.dismiss() }
+        btnSave?.setOnClickListener {
+            val name = edtName?.text?.toString()?.trim().orEmpty()
+            if (name.isNotEmpty()) {
+                location.displayName = name
+                SafLocationRepository.updateLocation(this, location)
+                loadStorageVolumes()
+            }
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        edtName?.requestFocus()
+    }
+
+    private fun showRemoveStorageLocationDialog(item: StorageItem) {
+        val location = item.safLocation ?: return
+        val layoutRes = if (isTv) R.layout.dialog_remove_storage_location_confirm_tv else R.layout.dialog_remove_storage_location_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val txtDeleteMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnDeleteConfirm = dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtDeleteMessage?.text = getString(R.string.remove_storage_location_msg, location.displayName)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        btnDeleteConfirm?.setOnClickListener {
+            dialog.dismiss()
+            SafLocationRepository.removeLocation(this, location.id)
+            try {
+                contentResolver.releasePersistableUriPermission(
+                    android.net.Uri.parse(location.treeUriString),
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            } catch (_: Exception) {}
+
+            val hidden = TileOrderManager.loadHidden(this).toMutableSet()
+            hidden.remove(item.id)
+            val parentMap = TileOrderManager.loadHiddenParents(this).toMutableMap()
+            parentMap.remove(item.id)
+            TileOrderManager.saveHidden(this, hidden, parentMap)
+            val order = TileOrderManager.load(this).toMutableList()
+            order.remove(item.id)
+            TileOrderManager.save(this, order)
+
+            showPremiumSnackbar(getString(R.string.storage_location_removed))
+            loadStorageVolumes()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
     
     private var lottieEmptyStorage: com.airbnb.lottie.LottieAnimationView? = null
 
@@ -1257,7 +1460,13 @@ class StorageBrowserActivity : AppCompatActivity() {
             viewMode = initMode
             gridColumnCount = initCols
             itemSize = initSize
-            onHideClick = { item -> hideTile(item) }
+            onHideClick = { item ->
+                if (item.isSafCustomLocation) {
+                    showRemoveStorageLocationDialog(item)
+                } else {
+                    hideTile(item)
+                }
+            }
             onEditModeClick = { item ->
                 if (isSelectingTileForColor) {
                     // Color-pick mode takes priority — even for custom tiles
@@ -1584,6 +1793,69 @@ class StorageBrowserActivity : AppCompatActivity() {
                     pickerLauncher.launch(intent)
                 } else {
                     startActivity(intent)
+                }
+            }
+            item.isAddStorageLocationTile -> {
+                addStorageLocationLauncher.launch(null)
+            }
+            item.isSafCustomLocation -> {
+                za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SafStorage", "Storage tile clicked: label=${item.label}, mountPath=${item.mountPath}, safLocation=${item.safLocation}")
+                if (isDrivePicker) {
+                    val data = Intent().apply {
+                        putExtra("is_network", false)
+                        putExtra("is_saf_custom", true)
+                        putExtra("saf_location_id", item.safLocation?.id)
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    }
+                    setResult(RESULT_OK, data)
+                    finish()
+                } else {
+                    val isAnyPickerActive = isPickerMode || isLocationPickerMode || isSyncFolderPickerMode ||
+                        isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode ||
+                        isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode ||
+                        isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode ||
+                        isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker ||
+                        isSupportAttachmentPicker || isKeyfilePickerMode || isCertPickerMode
+
+                    val intent = Intent(this, FileBrowserActivity::class.java).apply {
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
+                        putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, item.mountPath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, item.id)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, "saf_custom")
+                        if (isPickerMode) {
+                            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                            putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
+                        }
+                        if (isLocationPickerMode) putExtra(FileBrowserActivity.EXTRA_LOCATION_PICKER, true)
+                        if (isSyncFolderPickerMode) putExtra(FileBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, true)
+                        if (isAdvancedSyncFolderPickerMode) putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_FOLDER_PICKER, true)
+                        if (isAdvancedSyncDestPickerMode) putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_DEST_PICKER, true)
+                        if (isCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+                        if (isImageCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+                        if (isGifCreatorDestPickerMode) putExtra(FileBrowserActivity.EXTRA_GIF_CREATOR_DEST_PICKER, true)
+                        if (isExtractDestPickerMode) putExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
+                        if (isNetworkCachePickerMode) putExtra(FileBrowserActivity.EXTRA_NETWORK_CACHE_PICKER, true)
+                        if (isQuickTransferPickerMode) {
+                            putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
+                            putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP, this@StorageBrowserActivity.intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
+                        }
+                        if (isShareDestPickerMode) putExtra(FileBrowserActivity.EXTRA_SHARE_DEST_PICKER, true)
+                        if (isNotepadFolderPicker) putExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, true)
+                        if (isScannerFolderPicker) putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+                        if (isAutoBackupFolderPicker) putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
+                        if (isSupportAttachmentPicker) putExtra(FileBrowserActivity.EXTRA_SUPPORT_ATTACHMENT_PICKER, true)
+                        if (isKeyfilePickerMode) putExtra(FileBrowserActivity.EXTRA_KEYFILE_PICKER, true)
+                        if (isCertPickerMode) putExtra(FileBrowserActivity.EXTRA_CERT_PICKER, true)
+                    }
+
+                    if (isAnyPickerActive) {
+                        pickerLauncher.launch(intent)
+                    } else {
+                        za.kilowatch.ultimatefilemanager.util.AnimationHelper.startActivityWithTransition(this, intent)
+                        showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+                    }
                 }
             }
             item.isTwinWindowTile -> {
@@ -2266,6 +2538,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                 putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
                 putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
             }
+            if (isLocationPickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_LOCATION_PICKER, true)
+            }
             if (isSyncFolderPickerMode) {
                 putExtra(FileBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, true)
             }
@@ -2311,7 +2586,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 putExtra(FileBrowserActivity.EXTRA_SUPPORT_ATTACHMENT_PICKER, true)
             }
         }
-        if (isPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker) {
+        if (isPickerMode || isLocationPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker) {
             pickerLauncher.launch(intent)
         } else {
             za.kilowatch.ultimatefilemanager.util.AnimationHelper.startActivityWithTransition(this, intent)
@@ -2508,6 +2783,10 @@ class StorageBrowserActivity : AppCompatActivity() {
      *    preventing focus from jumping to the Done button.
      */
     private fun hideTile(item: StorageItem) {
+        if (item.isSafCustomLocation) {
+            showRemoveStorageLocationDialog(item)
+            return
+        }
         // Remember the current focused position so we can restore focus after the list refreshes.
         val currentPos = storageAdapter.getItems().indexOfFirst { it.id == item.id }
 
@@ -3095,12 +3374,17 @@ class StorageBrowserActivity : AppCompatActivity() {
         if (customTiles.isNotEmpty() && !item.isCustomTile) {
             options.add(getString(R.string.move_to_custom_tile))
         }
+        if (item.isSafCustomLocation) {
+            options.add(getString(R.string.remove_storage_location_confirm))
+        }
         com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setTitle(item.label)
             .setItems(options.toTypedArray()) { _, which ->
-                when (which) {
-                    0 -> enterTvReorderMode(item)
-                    1 -> showMoveToCustomTileDialogTv(item)
+                val selected = options[which]
+                when {
+                    which == 0 -> enterTvReorderMode(item)
+                    selected == getString(R.string.move_to_custom_tile) -> showMoveToCustomTileDialogTv(item)
+                    selected == getString(R.string.remove_storage_location_confirm) -> showRemoveStorageLocationDialog(item)
                 }
             }
             .setNegativeButton(R.string.cancel, null)
@@ -3452,6 +3736,24 @@ class StorageBrowserActivity : AppCompatActivity() {
                     mountPath = "",
                     isShizukuTile = true,
                     subtitle = getString(R.string.shizuku_usb_access_subtitle)
+                ))
+            }
+
+            // Add Custom SAF Storage Locations (Termux, Document Providers, USB/Custom Folders)
+            val safLocations = SafLocationRepository.getLocations(this@StorageBrowserActivity)
+            for (loc in safLocations) {
+                val iconRes = if (loc.iconType == "terminal" || loc.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
+
+                storageItems.add(StorageItem(
+                    id = "saf_location_${loc.id}",
+                    label = loc.displayName,
+                    iconRes = iconRes,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "saf://${loc.id}",
+                    isSafCustomLocation = true,
+                    safLocation = loc,
+                    subtitle = getString(R.string.saf_storage)
                 ))
             }
 
@@ -3889,6 +4191,18 @@ class StorageBrowserActivity : AppCompatActivity() {
                         isAdvancedSyncTile = true
                     ))
                 }
+
+                // Add the Add Storage Location action tile
+                storageItems.add(StorageItem(
+                    id = "add_storage_location_tile",
+                    label = getString(R.string.add_storage_location_title),
+                    iconRes = R.drawable.ic_folder,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isAddStorageLocationTile = true,
+                    subtitle = getString(R.string.add_storage_location_subtitle)
+                ))
 
                 // Add the Settings tile (Font Size etc.) â€” just above Legal
                 storageItems.add(StorageItem(

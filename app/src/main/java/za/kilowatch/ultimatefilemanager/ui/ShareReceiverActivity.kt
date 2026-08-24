@@ -296,20 +296,41 @@ class ShareReceiverActivity : AppCompatActivity() {
     }
 
     private fun saveToLocal(uri: Uri, destDirPath: String) {
-        val dir = File(destDirPath)
-        if (!dir.exists()) dir.mkdirs()
-        val destFile = File(dir, sharedFileName)
-        var uniqueFile = destFile
-        var counter = 1
-        while (uniqueFile.exists()) {
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destDirPath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, destDirPath)
+        if (isSaf) {
             val nameWithoutExt = sharedFileName.substringBeforeLast('.')
             val ext = sharedFileName.substringAfterLast('.', "")
-            uniqueFile = File(dir, if (ext.isEmpty()) "${nameWithoutExt}_($counter)" else "${nameWithoutExt}_($counter).$ext")
-            counter++
-        }
-        contentResolver.openInputStream(uri)?.use { input ->
-            FileOutputStream(uniqueFile).use { output ->
-                input.copyTo(output)
+            var finalName = sharedFileName
+            var counter = 1
+            while (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this, za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destDirPath, finalName))) {
+                finalName = if (ext.isEmpty()) "${nameWithoutExt}_($counter)" else "${nameWithoutExt}_($counter).$ext"
+                counter++
+            }
+            val targetSafPath = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destDirPath, finalName)
+            val outStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(this, targetSafPath)
+                ?: throw java.io.IOException("Cannot open SAF output stream for $targetSafPath")
+            contentResolver.openInputStream(uri)?.use { input ->
+                outStream.use { output ->
+                    input.copyTo(output)
+                }
+            }
+        } else {
+            val dir = File(destDirPath)
+            if (!dir.exists()) dir.mkdirs()
+            val destFile = File(dir, sharedFileName)
+            var uniqueFile = destFile
+            var counter = 1
+            while (uniqueFile.exists()) {
+                val nameWithoutExt = sharedFileName.substringBeforeLast('.')
+                val ext = sharedFileName.substringAfterLast('.', "")
+                uniqueFile = File(dir, if (ext.isEmpty()) "${nameWithoutExt}_($counter)" else "${nameWithoutExt}_($counter).$ext")
+                counter++
+            }
+            contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(uniqueFile).use { output ->
+                    input.copyTo(output)
+                }
             }
         }
     }

@@ -28,7 +28,27 @@ interface SmartSortStorage {
 }
 
 class LocalSmartSortStorage : SmartSortStorage {
+    private val ctx get() = za.kilowatch.ultimatefilemanager.UfmApplication.instance
+
+    private fun isSaf(path: String): Boolean {
+        return za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, path)
+    }
+
     override suspend fun listFiles(path: String): List<SmartSortFileEntry> = withContext(Dispatchers.IO) {
+        if (isSaf(path)) {
+            val list = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(ctx, path)
+            return@withContext list.mapNotNull { file ->
+                if (file.name.startsWith(".UFM_")) return@mapNotNull null
+                SmartSortFileEntry(
+                    name = file.name,
+                    path = file.absolutePath,
+                    isDirectory = file.isDirectory,
+                    size = if (file.isFile) file.length() else 0L,
+                    lastModified = file.lastModified()
+                )
+            }
+        }
         val dir = File(path)
         if (!dir.exists() || !dir.isDirectory) return@withContext emptyList()
         dir.listFiles()?.mapNotNull { file ->
@@ -44,10 +64,17 @@ class LocalSmartSortStorage : SmartSortStorage {
     }
 
     override suspend fun mkdirs(path: String): Boolean = withContext(Dispatchers.IO) {
+        if (isSaf(path)) {
+            return@withContext za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFolder(ctx, path)
+        }
         File(path).mkdirs()
     }
 
     override suspend fun rename(from: String, to: String): Boolean = withContext(Dispatchers.IO) {
+        if (isSaf(from) || isSaf(to)) {
+            val name = to.substringAfterLast('/')
+            return@withContext za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(ctx, from, name)
+        }
         val src = File(from)
         val dst = File(to)
         if (dst.exists()) return@withContext false
@@ -60,17 +87,28 @@ class LocalSmartSortStorage : SmartSortStorage {
     }
 
     override suspend fun exists(path: String): Boolean = withContext(Dispatchers.IO) {
+        if (isSaf(path)) {
+            return@withContext za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, path)
+        }
         File(path).exists()
     }
 
     override suspend fun writeStream(path: String, input: java.io.InputStream, size: Long): Boolean = withContext(Dispatchers.IO) {
         try {
-            File(path).outputStream().use { out -> input.copyTo(out, bufferSize = STREAM_BUFFER_BYTES) }
+            val out = if (isSaf(path)) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(ctx, path)
+            } else {
+                File(path).outputStream()
+            } ?: return@withContext false
+            out.use { input.copyTo(it, bufferSize = STREAM_BUFFER_BYTES) }
             true
         } catch (_: Exception) { false }
     }
 
     override suspend fun delete(path: String): Boolean = withContext(Dispatchers.IO) {
+        if (isSaf(path)) {
+            return@withContext za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(ctx, path)
+        }
         try {
             File(path).delete()
         } catch (_: Exception) { false }
@@ -458,11 +496,16 @@ class SmartSortEngine {
         return try {
             val copied = when (srcStorage) {
                 is LocalSmartSortStorage -> {
-                    val srcFile = File(srcPath)
-                    if (!srcFile.isFile) return false
-                    srcFile.inputStream().use { input ->
-                        dstStorage.writeStream(dstPath, input, srcFile.length())
+                    val isSrcSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(srcPath) ||
+                                   za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(za.kilowatch.ultimatefilemanager.UfmApplication.instance, srcPath)
+                    val input = if (isSrcSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(za.kilowatch.ultimatefilemanager.UfmApplication.instance, srcPath)
+                    } else {
+                        val srcFile = File(srcPath)
+                        if (!srcFile.isFile) null else srcFile.inputStream()
                     }
+                    if (input == null) false
+                    else input.use { dstStorage.writeStream(dstPath, it, srcSize) }
                 }
                 is NetworkSmartSortStorage -> {
                     val input = openNetworkInputStream(srcStorage, srcPath)
@@ -475,7 +518,7 @@ class SmartSortEngine {
                 // Zero-byte guard: verify destination has data before deleting source
                 val destSize = getSmartSortDestSize(dstStorage, dstPath)
                 if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                        destSize, srcSize, File(srcPath).name)) {
+                        destSize, srcSize, srcPath.substringAfterLast('/'))) {
                     srcStorage.delete(srcPath)
                     return true
                 }
@@ -490,7 +533,15 @@ class SmartSortEngine {
      */
     private suspend fun getSmartSortDestSize(storage: SmartSortStorage, path: String): Long {
         return when (storage) {
-            is LocalSmartSortStorage -> try { File(path).length() } catch (_: Exception) { -1L }
+            is LocalSmartSortStorage -> {
+                val ctx = za.kilowatch.ultimatefilemanager.UfmApplication.instance
+                if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, path)) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, path)
+                } else {
+                    try { File(path).length() } catch (_: Exception) { -1L }
+                }
+            }
             is NetworkSmartSortStorage -> {
                 val (effectiveShare, cleanPath) = storage.getEffectiveShareAndPath(path)
                 try {

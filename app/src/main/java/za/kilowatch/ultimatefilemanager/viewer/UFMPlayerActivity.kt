@@ -498,9 +498,18 @@ class UFMPlayerActivity : AppCompatActivity() {
 
             lifecycleScope.launch(Dispatchers.IO) {
                 val isLocal = shareId.isEmpty() && shareHost.isEmpty() && provider.isEmpty()
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(initialPath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@UFMPlayerActivity, initialPath) ||
+                            intent.data != null || intent.hasExtra(FileViewerRouter.EXTRA_CONTENT_URI)
                 val ds: za.kilowatch.ultimatefilemanager.media.MjpegDataSource? = if (isLocal) {
-                    val f = File(initialPath)
-                    if (f.exists()) za.kilowatch.ultimatefilemanager.media.FileMjpegDataSource(f) else null
+                    if (isSaf) {
+                        val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
+                        val uri = if (contentUriStr != null) android.net.Uri.parse(contentUriStr) else intent.data
+                        za.kilowatch.ultimatefilemanager.media.SafMjpegDataSource(this@UFMPlayerActivity, initialPath, uri)
+                    } else {
+                        val f = File(initialPath)
+                        if (f.exists()) za.kilowatch.ultimatefilemanager.media.FileMjpegDataSource(f) else null
+                    }
                 } else {
                     val isServerMode = intent.getBooleanExtra("isServerMode", false)
                     val rawShare = buildPlaybackNetworkShare(shareId, shareHost, shareUsername, shareName, provider, remotePathExtra, isServerMode)

@@ -191,8 +191,10 @@ class ImageCompressActivity : AppCompatActivity() {
         val imageExtensions = FileViewerRouter.IMAGE_EXTENSIONS
         originalFiles.clear()
         for (p in paths) {
-            val f = File(p)
-            if (f.exists() && f.extension.lowercase() in imageExtensions) {
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(p) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, p)
+            val f = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(p) else File(p)
+            val exists = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this, p) else f.exists()
+            if (exists && f.extension.lowercase() in imageExtensions) {
                 originalFiles.add(f)
             }
         }
@@ -232,8 +234,10 @@ class ImageCompressActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             sizeLp.leftMargin = 16
+            val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, file.absolutePath)
+            val fileLen = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this, file.absolutePath) else file.length()
             val sizeText = TextView(this).apply {
-                text = formatSize(file.length())
+                text = formatSize(fileLen)
                 setTextColor(secondaryColor)
                 textSize = if (isTv) 14f else 12f
                 layoutParams = sizeLp
@@ -339,6 +343,9 @@ class ImageCompressActivity : AppCompatActivity() {
                         Bitmap.CompressFormat.WEBP_LOSSLESS -> "webp"
                     }
 
+                    val isSourceSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                      za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                                      za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@ImageCompressActivity, file.absolutePath)
                     val rotation = readExifRotation(file)
 
                     // Decode bitmap with optional resize via inSampleSize
@@ -348,13 +355,25 @@ class ImageCompressActivity : AppCompatActivity() {
                     }
                     if (resizeW != null && resizeH != null) {
                         val boundsOpts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                        BitmapFactory.decodeFile(file.absolutePath, boundsOpts)
+                        if (isSourceSaf) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this@ImageCompressActivity, file.absolutePath)?.use { inStream ->
+                                BitmapFactory.decodeStream(inStream, null, boundsOpts)
+                            }
+                        } else {
+                            BitmapFactory.decodeFile(file.absolutePath, boundsOpts)
+                        }
                         val targetW = if (rotation == 90 || rotation == 270) resizeH else resizeW
                         val targetH = if (rotation == 90 || rotation == 270) resizeW else resizeH
                         opts.inSampleSize = calculateInSampleSize(boundsOpts, targetW, targetH)
                     }
-                    val decodedBitmap = BitmapFactory.decodeFile(file.absolutePath, opts)
-                        ?: throw Exception("Failed to decode image")
+                    val decodedBitmap = if (isSourceSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this@ImageCompressActivity, file.absolutePath)?.use { inStream ->
+                            BitmapFactory.decodeStream(inStream, null, opts)
+                        } ?: throw Exception("Failed to decode image from SAF")
+                    } else {
+                        BitmapFactory.decodeFile(file.absolutePath, opts)
+                            ?: throw Exception("Failed to decode image")
+                    }
 
                     // Rotate bitmap upright if needed
                     val rotatedBitmap = if (rotation != 0) {
@@ -382,13 +401,16 @@ class ImageCompressActivity : AppCompatActivity() {
                     }
 
                     val outName = "${file.nameWithoutExtension}_compressed.$ext"
+                    val outDir = customOutputDir ?: file.parentFile
+                    val isDestSaf = outDir != null && (outDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(outDir.absolutePath) ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@ImageCompressActivity, outDir.absolutePath))
 
-                    // Use temp file for network upload, otherwise write directly to output dir
+                    // Use temp file for network upload or SAF destination, otherwise write directly to output dir
                     val useNetwork = networkShareId != null
-                    val outFile = if (useNetwork) {
+                    val outFile = if (useNetwork || isDestSaf) {
                         File(cacheDir, "img_upload_${System.currentTimeMillis()}_$outName")
                     } else {
-                        val outDir = customOutputDir ?: file.parentFile
                         File(outDir, outName)
                     }
 
@@ -400,15 +422,24 @@ class ImageCompressActivity : AppCompatActivity() {
 
                     if (useNetwork) {
                         uploadCompressedFile(outFile, outName)
+                    } else if (isDestSaf && outDir != null) {
+                        val targetSafFile = za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(outDir.absolutePath, outName))
+                        za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(
+                            outFile,
+                            targetSafFile,
+                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE
+                        )
+                        outFile.delete()
                     }
 
                     finalBitmap.recycle()
 
-                    val savedPercent = if (file.length() > 0) {
-                        ((1.0 - compressedSize.toDouble() / file.length()) * 100).toInt()
+                    val sourceLength = if (isSourceSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this@ImageCompressActivity, file.absolutePath) else file.length()
+                    val savedPercent = if (sourceLength > 0) {
+                        ((1.0 - compressedSize.toDouble() / sourceLength) * 100).toInt()
                     } else 0
 
-                    results.add(CompressionResult(file.name, file.length(), compressedSize, savedPercent))
+                    results.add(CompressionResult(file.name, sourceLength, compressedSize, savedPercent))
                 } catch (e: Exception) {
                     results.add(CompressionResult(file.name, 0L, 0L, 0, getString(R.string.compress_image_error, file.name, e.message ?: "")))
                 }
@@ -554,7 +585,16 @@ class ImageCompressActivity : AppCompatActivity() {
 
     private fun readExifRotation(imageFile: File): Int {
         return try {
-            val exif = ExifInterface(imageFile.absolutePath)
+            val isSaf = imageFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(imageFile.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, imageFile.absolutePath)
+            val exif = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, imageFile.absolutePath)?.use { input ->
+                    ExifInterface(input)
+                } ?: return 0
+            } else {
+                ExifInterface(imageFile.absolutePath)
+            }
             when (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
                 ExifInterface.ORIENTATION_ROTATE_90  -> 90
                 ExifInterface.ORIENTATION_ROTATE_180 -> 180

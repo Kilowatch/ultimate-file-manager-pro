@@ -210,7 +210,15 @@ class ExifToolsActivity : AppCompatActivity() {
     private fun loadInputFiles() {
         val paths = intent.getStringArrayListExtra(EXTRA_FILE_PATHS) ?: emptyList()
         files.clear()
-        files.addAll(paths.map { File(it) }.filter { it.exists() && it.isFile })
+        for (p in paths) {
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(p) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, p)
+            val f = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(p) else File(p)
+            val exists = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this, p) else (f.exists() && f.isFile)
+            if (exists) {
+                files.add(f)
+            }
+        }
 
         if (files.isEmpty()) {
             Toast.makeText(this, R.string.compress_image_no_images, Toast.LENGTH_SHORT).show()
@@ -264,7 +272,7 @@ class ExifToolsActivity : AppCompatActivity() {
         val currentFile = files[selectedIndex]
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val details = ExifPrivacyManager.readFullDetails(currentFile)
+            val details = ExifPrivacyManager.readFullDetails(this@ExifToolsActivity, currentFile)
             val modifiedDateStr = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(currentFile.lastModified()))
 
             withContext(Dispatchers.Main) {
@@ -287,7 +295,7 @@ class ExifToolsActivity : AppCompatActivity() {
 
                     btnRemoveGpsSingle.setOnClickListener {
                         lifecycleScope.launch(Dispatchers.IO) {
-                            val success = ExifPrivacyManager.removeGpsOnly(currentFile)
+                            val success = ExifPrivacyManager.removeGpsOnly(this@ExifToolsActivity, currentFile)
                             withContext(Dispatchers.Main) {
                                 if (success) {
                                     Toast.makeText(this@ExifToolsActivity, getString(R.string.exif_single_photo_cleaned, currentFile.name), Toast.LENGTH_SHORT).show()
@@ -364,7 +372,7 @@ class ExifToolsActivity : AppCompatActivity() {
                             stripDates = false,
                             stripCameraSettings = false
                         )
-                        val success = ExifPrivacyManager.stripMetadata(target, target, options)
+                        val success = ExifPrivacyManager.stripMetadata(this@ExifToolsActivity, target, target, options)
                         withContext(Dispatchers.Main) {
                             if (success) {
                                 Toast.makeText(this@ExifToolsActivity, getString(R.string.exif_single_photo_cleaned, target.name), Toast.LENGTH_SHORT).show()
@@ -451,7 +459,7 @@ class ExifToolsActivity : AppCompatActivity() {
         progressDialog.show()
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val (successCount, errors) = ExifPrivacyManager.batchStripMetadata(files, options, outputDir) { current, total ->
+            val (successCount, errors) = ExifPrivacyManager.batchStripMetadata(this@ExifToolsActivity, files, options, outputDir) { current, total ->
                 lifecycleScope.launch(Dispatchers.Main) {
                     progressDialog.setMessage(getString(R.string.exif_cleaning_progress, current, total))
                 }
@@ -583,7 +591,15 @@ class ExifToolsActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: ThumbViewHolder, position: Int) {
             val file = list[position]
-            holder.imgThumb.load(file)
+            val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@ExifToolsActivity, file.absolutePath)
+            val model: Any = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this@ExifToolsActivity, file.absolutePath) ?: file
+            } else {
+                file
+            }
+            holder.imgThumb.load(model)
 
             val isSelected = position == selectedPos
             holder.cardThumb.strokeWidth = if (isSelected) (3 * resources.displayMetrics.density).toInt() else 0
@@ -591,8 +607,14 @@ class ExifToolsActivity : AppCompatActivity() {
             // Check GPS asynchronously or via fast tag inspection
             lifecycleScope.launch(Dispatchers.IO) {
                 val hasGps = try {
-                    val exif = androidx.exifinterface.media.ExifInterface(file.absolutePath)
-                    exif.latLong != null
+                    val exif = if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this@ExifToolsActivity, file.absolutePath)?.use { inStream ->
+                            androidx.exifinterface.media.ExifInterface(inStream)
+                        }
+                    } else {
+                        androidx.exifinterface.media.ExifInterface(file.absolutePath)
+                    }
+                    exif?.latLong != null
                 } catch (_: Exception) { false }
 
                 withContext(Dispatchers.Main) {
@@ -630,7 +652,16 @@ class ExifToolsActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: PreviewViewHolder, position: Int) {
             val item = items[position]
-            holder.imgItemThumb.load(item.originalFile)
+            val orig = item.originalFile
+            val isSaf = orig is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(orig.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(holder.itemView.context, orig.absolutePath)
+            val model: Any = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(holder.itemView.context, orig.absolutePath) ?: orig
+            } else {
+                orig
+            }
+            holder.imgItemThumb.load(model)
             holder.txtOriginalName.text = item.originalName
             holder.txtNewName.text = item.newName
 

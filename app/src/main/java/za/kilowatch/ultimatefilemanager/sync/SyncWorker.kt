@@ -88,9 +88,17 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             }
 
             // Resolve local folder — stored as a raw absolute path
-            val localDir = File(profile.localUri)
+            val isLocalSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(profile.localUri) ||
+                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(applicationContext, profile.localUri)
+            val localValid = if (isLocalSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(applicationContext, profile.localUri) &&
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isDirectory(applicationContext, profile.localUri)
+            } else {
+                val localDir = File(profile.localUri)
+                localDir.exists() && localDir.isDirectory && localDir.canRead()
+            }
             
-            if (!localDir.exists() || !localDir.isDirectory || !localDir.canRead()) {
+            if (!localValid) {
                 if (profile.notificationsEnabled) {
                     showErrorNotification(applicationContext.getString(R.string.cannot_read_local_folder_for_profilename), profile.id.hashCode() + 10)
                 }
@@ -142,12 +150,21 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             val remoteSizes = finalRemoteFiles.associate { it.name to it.size }
 
             // 2. Get local files
-            val localFiles = localDir.listFiles()?.filter { it.isFile } ?: emptyList()
+            val localFiles = if (isLocalSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(applicationContext, profile.localUri).filter { !it.isDirectory }
+            } else {
+                File(profile.localUri).listFiles()?.filter { it.isFile } ?: emptyList()
+            }
             val filesToUpload = mutableListOf<File>()
 
             for (localFile in localFiles) {
                 val name = localFile.name
                 val remoteSize = remoteSizes[name]
+                val localSize = if (isLocalSaf) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(applicationContext, localFile.absolutePath)
+                } else {
+                    localFile.length()
+                }
 
                 var resolvedRemoteSize: Long? = remoteSize
 
@@ -161,7 +178,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                     }
                 }
 
-                if (resolvedRemoteSize == null || resolvedRemoteSize != localFile.length()) {
+                if (resolvedRemoteSize == null || resolvedRemoteSize != localSize) {
                     filesToUpload.add(localFile)
                 }
             }
@@ -190,13 +207,23 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 }
 
                 try {
+                    val sourceSize = if (isLocalSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(applicationContext, fileToUpload.absolutePath)
+                    } else {
+                        fileToUpload.length()
+                    }
                     val remoteFilePath = "${profile.remotePath.trimEnd('/')}/$name"
                     val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
                         sourceName = name,
-                        sourceSize = fileToUpload.length(),
+                        sourceSize = sourceSize,
                         verifyDestSize = { za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(effectiveShare, remoteFilePath) },
                         doCopy = {
-                            val inStream = FileInputStream(fileToUpload)
+                            val inStream = if (isLocalSaf) {
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(applicationContext, fileToUpload.absolutePath)
+                                    ?: throw java.io.FileNotFoundException("Cannot open SAF input stream for ${fileToUpload.absolutePath}")
+                            } else {
+                                FileInputStream(fileToUpload)
+                            }
                             val outStream: OutputStream = when (effectiveShare.type) {
                                 ShareType.SMB -> SmbShareClient.openOutputStream(effectiveShare, remoteFilePath)
                                 ShareType.NFS -> NfsShareClient.openOutputStream(effectiveShare, remoteFilePath)
@@ -205,7 +232,7 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                             }
                             inStream.use { input ->
                                 outStream.use { output ->
-                                    za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(input, output, fileToUpload.length())
+                                    za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(input, output, sourceSize)
                                 }
                             }
                         }

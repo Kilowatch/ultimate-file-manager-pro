@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Add / Rename Storage Location dialog — TV layout.
+    Standard UFM TV glass dialog with D-pad navigable fields.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="28dp"
+    android:gravity="center_horizontal"
+    android:background="@drawable/bg_dialog_glass">
+
+    <TextView
+        android:id="@+id/txtStorageLocationDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_storage_dialog_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-black"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Icon preview -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/imgStorageLocationIcon"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_folder"
+            android:background="@drawable/bg_btn_icon_frosted"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@string/add_storage_dialog_title" />
+
+        <TextView
+            android:id="@+id/txtStorageLocationDialogSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_storage_location_subtitle"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="13sp"
+            android:layout_marginTop="6dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Name input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilStorageLocationName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:hint="@string/add_storage_dialog_name_hint"
+        app:counterEnabled="true"
+        app:counterMaxLength="50">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtStorageLocationName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLength="50"
+            android:singleLine="true"
+            android:textSize="16sp"
+            android:textColor="@color/tv_text_primary" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelStorageLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/cancel"
+            android:textColor="@color/selector_tv_button_text"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:layout_marginEnd="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSaveStorageLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/add_storage_dialog_confirm"
+            android:textColor="@color/selector_tv_button_text"
+            android:background="@drawable/selector_tv_button_yellow" />
+
+    </LinearLayout>
+
+</LinearLayout>

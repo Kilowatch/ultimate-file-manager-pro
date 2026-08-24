@@ -58,13 +58,23 @@ object RecycleBinManager {
 
             val uniqueName = uniqueTrashName(file.name)
             val trashFile = File(trashDir, uniqueName)
-            val fileSize = if (file.isDirectory) 0L else file.length()
+            val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+            val isDir = if (isSaf) {
+                (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.isDirectory() == true ||
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isDirectory(context, file.absolutePath)
+            } else file.isDirectory
+
+            val fileSize = if (isDir) 0L else if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(context, file.absolutePath).coerceAtLeast(0L)
+            } else file.length()
+
             val ext = file.extension.lowercase()
             val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
             val origPath = file.absolutePath
             val parentFolder = file.parent ?: ""
             val fileName = file.name
-            val isDir = file.isDirectory
 
             val success = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(file.absolutePath)) {
                 if (isDir) {
@@ -73,6 +83,45 @@ object RecycleBinManager {
                 } else {
                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.copy(file.absolutePath, trashFile.absolutePath) &&
                             za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(file.absolutePath)
+                }
+            } else if (isSaf) {
+                if (isDir) {
+                    trashFile.mkdirs()
+                    val children = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.walkSafTopDown(context, file.absolutePath)
+                    var copyAllOk = true
+                    for (child in children) {
+                        val rel = child.absolutePath.removePrefix(file.absolutePath).trimStart('/')
+                        if (rel.isEmpty()) continue
+                        val destChild = File(trashFile, rel)
+                        if (child.isDirectory) {
+                            destChild.mkdirs()
+                        } else {
+                            destChild.parentFile?.mkdirs()
+                            val inStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, child.absolutePath)
+                            if (inStream != null) {
+                                inStream.use { input ->
+                                    destChild.outputStream().use { output -> input.copyTo(output) }
+                                }
+                            } else {
+                                copyAllOk = false
+                            }
+                        }
+                    }
+                    copyAllOk && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(context, file.absolutePath)
+                } else {
+                    val inStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, file.absolutePath)
+                    if (inStream != null) {
+                        var copyOk = false
+                        try {
+                            inStream.use { input ->
+                                trashFile.outputStream().use { output ->
+                                    input.copyTo(output)
+                                    copyOk = true
+                                }
+                            }
+                        } catch (_: Exception) {}
+                        copyOk && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(context, file.absolutePath)
+                    } else false
                 }
             } else {
                 if (isDir) {
@@ -191,9 +240,37 @@ object RecycleBinManager {
             dao.delete(entity.id)
             return false
         }
-        val originalFile = File(entity.originalPath)
-        originalFile.parentFile?.mkdirs()
-        val success = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(entity.originalPath)) {
+        val isSafDest = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(entity.originalPath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(appContext, entity.originalPath)
+        val success = if (isSafDest) {
+            if (entity.isDirectory) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFolder(appContext, entity.originalPath)
+                for (subFile in trashFile.walkTopDown()) {
+                    val rel = subFile.relativeTo(trashFile).path
+                    if (rel.isEmpty()) continue
+                    val targetSafPath = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(entity.originalPath, rel)
+                    if (subFile.isDirectory) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFolder(appContext, targetSafPath)
+                    } else {
+                        val targetSafFile = za.kilowatch.ultimatefilemanager.storage.SafFile(targetSafPath)
+                        za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(
+                            subFile, targetSafFile, za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE
+                        )
+                    }
+                }
+                trashFile.deleteRecursively()
+                true
+            } else {
+                val targetSafFile = za.kilowatch.ultimatefilemanager.storage.SafFile(entity.originalPath)
+                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(
+                    trashFile, targetSafFile, za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE
+                )
+                trashFile.delete()
+                true
+            }
+        } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(entity.originalPath)) {
+            val originalFile = File(entity.originalPath)
+            originalFile.parentFile?.mkdirs()
             if (entity.isDirectory) {
                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.move(trashFile.absolutePath, entity.originalPath)
             } else {
@@ -201,6 +278,8 @@ object RecycleBinManager {
                         za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(trashFile.absolutePath)
             }
         } else {
+            val originalFile = File(entity.originalPath)
+            originalFile.parentFile?.mkdirs()
             if (entity.isDirectory) {
                 trashFile.renameTo(originalFile)
             } else {

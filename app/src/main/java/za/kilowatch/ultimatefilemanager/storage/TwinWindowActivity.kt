@@ -328,9 +328,11 @@ class TwinWindowActivity : AppCompatActivity() {
         val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
         val internalLabel = getString(R.string.storage_internal)
 
-        val validPath = if (path.isNotEmpty() && java.io.File(path).exists()) path else internalPath
-        val validLabel = if (path.isNotEmpty() && java.io.File(path).exists()) label else internalLabel
-        val validInit = if (initialPath.isNotEmpty() && java.io.File(initialPath).exists()) initialPath else ""
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, path)
+        val validPath = if (path.isNotEmpty() && (java.io.File(path).exists() || isSaf)) path else internalPath
+        val validLabel = if (path.isNotEmpty() && (java.io.File(path).exists() || isSaf)) label else internalLabel
+        val isSafInit = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(initialPath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, initialPath)
+        val validInit = if (initialPath.isNotEmpty() && (java.io.File(initialPath).exists() || isSafInit)) initialPath else ""
 
         // Both panes show their back button so the user can navigate/exit from either side.
         val fragment = FileBrowserFragment.newInstance(validPath, validLabel, isTwinWindow = true, hideBack = false, initialPath = validInit, requestInitialFocus = requestInitialFocus)
@@ -932,7 +934,12 @@ class TwinWindowActivity : AppCompatActivity() {
             for (item in items) {
                 if (item is java.io.File) {
                     val path = item.absolutePath
-                    val deleted = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                    val isSaf = item is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@TwinWindowActivity, path)
+                    val deleted = if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@TwinWindowActivity, path)
+                    } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
                         za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
                     } else if (item.isDirectory) {
                         item.deleteRecursively()
@@ -1067,7 +1074,19 @@ class TwinWindowActivity : AppCompatActivity() {
                             val itemName = itemBaseName(item)
                             val actualItem = if (item is AppItem) File(item.sourceDir) else item
                             
-                            val destBase = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDestPath)) {
+                            val isDestSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDestPath) ||
+                                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@TwinWindowActivity, currentDestPath)
+                            val isSrcSaf = actualItem is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                           (actualItem is File && (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(actualItem.absolutePath) ||
+                                           za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@TwinWindowActivity, actualItem.absolutePath)))
+
+                            val destBase = if (isDestSaf) {
+                                za.kilowatch.ultimatefilemanager.storage.SafFile(
+                                    currentDestPath,
+                                    itemName,
+                                    (actualItem as? File)?.isDirectory ?: (actualItem as? NetworkFile)?.isDirectory ?: false
+                                )
+                            } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDestPath)) {
                                 za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDestPath, itemName, true)
                             } else {
                                 File(currentDestPath, itemName)
@@ -1082,7 +1101,7 @@ class TwinWindowActivity : AppCompatActivity() {
                                 // with their raw system filenames.
                                 if (item is AppItem) {
                                     val useXapk = item.splitSourceDirs.isNotEmpty() || item.hasObb
-                                    val finalDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(File(currentDestPath), itemName)
+                                    val finalDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(File(currentDestPath), itemName, this@TwinWindowActivity)
 
                                     fileCounter[0]++
                                     try {
@@ -1107,7 +1126,14 @@ class TwinWindowActivity : AppCompatActivity() {
                                         } else {
                                             // ── XAPK: zip base.apk + splits + OBBs + manifest ────────
                                             withContext(Dispatchers.IO) {
-                                                java.util.zip.ZipOutputStream(java.io.FileOutputStream(finalDest)).use { zip ->
+                                                val outStream = if (isDestSaf) {
+                                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFile(this@TwinWindowActivity, currentDestPath, finalDest.name)
+                                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(this@TwinWindowActivity, finalDest.absolutePath)
+                                                        ?: throw java.io.IOException("Cannot open SAF output stream for ${finalDest.absolutePath}")
+                                                } else {
+                                                    java.io.FileOutputStream(finalDest)
+                                                }
+                                                java.util.zip.ZipOutputStream(outStream).use { zip ->
                                                     fun addEntry(src: File, entryName: String) {
                                                         if (!src.exists()) return
                                                         zip.putNextEntry(java.util.zip.ZipEntry(entryName))
@@ -1173,9 +1199,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                 }
                                 // ── Generic File handling (non-AppItem) ────────────────────────
                                 if (actualItem.isDirectory) {
-                                    val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
-                                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
-                                    else destBase.exists()
+                                    val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
+                                        File(currentDestPath), itemName, this@TwinWindowActivity
+                                    )
 
                                     var effectiveDest = destBase
                                     if (hasConflict) {
@@ -1191,7 +1217,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                             }
                                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> return
                                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
-                                                effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(File(currentDestPath), itemName)
+                                                effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
+                                                    File(currentDestPath), itemName, this@TwinWindowActivity
+                                                )
                                             }
                                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
                                                 effectiveDest = destBase
@@ -1199,13 +1227,28 @@ class TwinWindowActivity : AppCompatActivity() {
                                         }
                                     }
 
-                                    effectiveDest.mkdirs()
+                                    if (isDestSaf) {
+                                        if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@TwinWindowActivity, effectiveDest.absolutePath)) {
+                                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(this@TwinWindowActivity, currentDestPath, effectiveDest.name)
+                                        }
+                                    } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(effectiveDest.absolutePath)) {
+                                        if (!za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(effectiveDest.absolutePath)) {
+                                            za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.mkdir(effectiveDest.absolutePath)
+                                        }
+                                    } else {
+                                        effectiveDest.mkdirs()
+                                    }
+
                                     // Index the new folder immediately
                                     if (storageId.isNotEmpty() && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
                                         pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor.HashAlgorithm.NONE))
                                         if (pendingIndices.size >= 50) flushIndices()
                                     }
-                                    val children = actualItem.listFiles()
+                                    val children = if (isSrcSaf) {
+                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@TwinWindowActivity, actualItem.absolutePath)
+                                    } else {
+                                        actualItem.listFiles()?.toList()
+                                    }
                                     if (children != null) {
                                         for (child in children) { 
                                             if (isCancelled) break
@@ -1214,7 +1257,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                     }
                                     if (isMove && !isCancelled && item !is AppItem) { 
                                         try { 
-                                            if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
+                                            if (isSrcSaf) {
+                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@TwinWindowActivity, actualItem.absolutePath)
+                                            } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
                                                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(actualItem.absolutePath)
                                             } else {
                                                 actualItem.delete() 
@@ -1226,11 +1271,16 @@ class TwinWindowActivity : AppCompatActivity() {
                                         FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, effectiveDest.absolutePath)
                                     }
                                 } else {
-                                    val hasConflict = destBase.exists()
+                                    val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
+                                        File(currentDestPath), itemName, this@TwinWindowActivity
+                                    )
                                     val resolvedAction = if (hasConflict) {
+                                        val destSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileSize(
+                                            File(currentDestPath), itemName, this@TwinWindowActivity
+                                        )
                                         globalAction ?: withContext(Dispatchers.Main) {
                                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                                this@TwinWindowActivity, itemName, false, destBase.length(), applyToAllRef
+                                                this@TwinWindowActivity, itemName, false, destSize, applyToAllRef
                                             ).also { if (applyToAllRef[0]) globalAction = it }
                                         }
                                     } else za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH
@@ -1242,14 +1292,16 @@ class TwinWindowActivity : AppCompatActivity() {
                                     if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP) return
 
                                     val finalDest = if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH)
-                                        za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(File(currentDestPath), itemName)
+                                        za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(File(currentDestPath), itemName, this@TwinWindowActivity)
                                     else destBase
 
                                     fileCounter[0]++
                                     try {
                                         val writtenFile = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(actualItem, finalDest, resolvedAction) { c, t -> onProgress(itemName, c, t, fileCounter[0], totalFiles) }
                                         if (isMove && item !is AppItem) {
-                                            if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
+                                            if (isSrcSaf) {
+                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@TwinWindowActivity, actualItem.absolutePath)
+                                            } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
                                                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(actualItem.absolutePath)
                                             } else {
                                                 actualItem.delete()
@@ -1272,9 +1324,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                 }
                             } else if (actualItem is NetworkFile && srcShare != null) {
                                 if (actualItem.isDirectory) {
-                                    val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
-                                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
-                                    else destBase.exists()
+                                    val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
+                                        File(currentDestPath), itemName, this@TwinWindowActivity
+                                    )
 
                                     var effectiveDest = destBase
                                     if (hasConflict) {
@@ -1290,7 +1342,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                             }
                                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> return
                                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
-                                                effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(File(currentDestPath), itemName)
+                                                effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
+                                                    File(currentDestPath), itemName, this@TwinWindowActivity
+                                                )
                                             }
                                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
                                                 effectiveDest = destBase
@@ -1298,7 +1352,18 @@ class TwinWindowActivity : AppCompatActivity() {
                                         }
                                     }
 
-                                    effectiveDest.mkdirs()
+                                    if (isDestSaf) {
+                                        if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@TwinWindowActivity, effectiveDest.absolutePath)) {
+                                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(this@TwinWindowActivity, currentDestPath, effectiveDest.name)
+                                        }
+                                    } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(effectiveDest.absolutePath)) {
+                                        if (!za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(effectiveDest.absolutePath)) {
+                                            za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.mkdir(effectiveDest.absolutePath)
+                                        }
+                                    } else {
+                                        effectiveDest.mkdirs()
+                                    }
+
                                     if (storageId.isNotEmpty() && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
                                         pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor.HashAlgorithm.NONE))
                                         if (pendingIndices.size >= 50) flushIndices()
@@ -1323,11 +1388,16 @@ class TwinWindowActivity : AppCompatActivity() {
                                     if (isMove && !isCancelled) { try { TransferConflictHelper.deleteNetworkDirRecursively(srcShare, actualItem.path) } catch (_: Exception) {} }
                                     FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, effectiveDest.absolutePath)
                                 } else {
-                                    val hasConflict = destBase.exists()
+                                    val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
+                                        File(currentDestPath), itemName, this@TwinWindowActivity
+                                    )
                                     val resolvedAction = if (hasConflict) {
+                                        val destSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileSize(
+                                            File(currentDestPath), itemName, this@TwinWindowActivity
+                                        )
                                         globalAction ?: withContext(Dispatchers.Main) {
                                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                                this@TwinWindowActivity, itemName, false, destBase.length(), applyToAllRef
+                                                this@TwinWindowActivity, itemName, false, destSize, applyToAllRef
                                             ).also { if (applyToAllRef[0]) globalAction = it }
                                         }
                                     } else za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH
@@ -1339,7 +1409,7 @@ class TwinWindowActivity : AppCompatActivity() {
                                     if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP) return
 
                                     val finalDest = if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH)
-                                        za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(File(currentDestPath), itemName)
+                                        za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(File(currentDestPath), itemName, this@TwinWindowActivity)
                                     else destBase
 
                                     fileCounter[0]++
@@ -1396,6 +1466,10 @@ class TwinWindowActivity : AppCompatActivity() {
                             val targetPath = if (currentDestPath.isEmpty() || currentDestPath == "/") itemName else "${currentDestPath.trimEnd('/')}/$itemName"
 
                             if (actualItem is File) {
+                                val isSrcSaf = actualItem is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(actualItem.absolutePath) ||
+                                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@TwinWindowActivity, actualItem.absolutePath)
+
                                 if (actualItem.isDirectory) {
                                     val conflictData = try {
                                         val list = when(dstShare.type) {
@@ -1456,7 +1530,11 @@ class TwinWindowActivity : AppCompatActivity() {
                                     } catch(e: Exception) {
                                         za.kilowatch.ultimatefilemanager.util.GoRoLog.e("TwinWindow", "mkdir failed for effectiveDest=$effectiveDest: ${e.message}", e)
                                     }
-                                    val children = actualItem.listFiles()
+                                    val children = if (isSrcSaf) {
+                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@TwinWindowActivity, actualItem.absolutePath)
+                                    } else {
+                                        actualItem.listFiles()?.toList()
+                                    }
                                     if (children != null) {
                                         for (child in children) { 
                                             if (isCancelled) break
@@ -1466,7 +1544,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                     }
                                     if (isMove && !isCancelled && item !is AppItem) {
                                         try {
-                                            if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
+                                            if (isSrcSaf) {
+                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@TwinWindowActivity, actualItem.absolutePath)
+                                            } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
                                                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(actualItem.absolutePath)
                                             } else {
                                                 actualItem.delete()
@@ -1525,7 +1605,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                         )
                                         currentTransferConnection = null
                                         if (isMove && item !is AppItem) {
-                                            if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
+                                            if (isSrcSaf) {
+                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@TwinWindowActivity, actualItem.absolutePath)
+                                            } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
                                                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(actualItem.absolutePath)
                                             } else {
                                                 actualItem.delete()
@@ -1843,7 +1925,55 @@ class TwinWindowActivity : AppCompatActivity() {
         return supportFragmentManager.findFragmentById(id) ?: pane2
     }
 
+    private fun switchActivePane() {
+        val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
+        val p1Id = if (isVerticalSplit) R.id.paneLeft else R.id.paneTop
+        val p2Id = if (isVerticalSplit) R.id.paneRight else R.id.paneBottom
+        val inPane1 = findViewById<View>(p1Id)?.hasFocus() == true
+        val targetFragment = if (inPane1) getPane2() else getPane1()
+        targetFragment?.view?.findViewById<View>(R.id.recyclerFiles)?.requestFocus()
+            ?: findViewById<View>(if (inPane1) p2Id else p1Id)?.requestFocus()
+    }
+
+    private fun focusPane(paneNumber: Int) {
+        val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
+        val p1Id = if (isVerticalSplit) R.id.paneLeft else R.id.paneTop
+        val p2Id = if (isVerticalSplit) R.id.paneRight else R.id.paneBottom
+        val targetFragment = if (paneNumber == 1) getPane1() else getPane2()
+        val targetContainerId = if (paneNumber == 1) p1Id else p2Id
+        targetFragment?.view?.findViewById<View>(R.id.recyclerFiles)?.requestFocus()
+            ?: findViewById<View>(targetContainerId)?.requestFocus()
+    }
+
     override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (za.kilowatch.ultimatefilemanager.settings.KeyboardPreferenceManager.isMasterEnabled(this)) {
+            val keyCode = event.keyCode
+            val isDualPaneEnabled = za.kilowatch.ultimatefilemanager.settings.KeyboardPreferenceManager.isDualPaneSwitchEnabled(this)
+            val isInputFocused = currentFocus is android.widget.EditText
+
+            if (!isInputFocused && event.action == android.view.KeyEvent.ACTION_DOWN) {
+                if (isDualPaneEnabled) {
+                    if (keyCode == android.view.KeyEvent.KEYCODE_TAB || (event.isCtrlPressed && keyCode == android.view.KeyEvent.KEYCODE_W)) {
+                        switchActivePane()
+                        return true
+                    }
+                    if (keyCode == android.view.KeyEvent.KEYCODE_1 && !event.isCtrlPressed && !event.isAltPressed && !event.isShiftPressed) {
+                        focusPane(1)
+                        return true
+                    }
+                    if (keyCode == android.view.KeyEvent.KEYCODE_2 && !event.isCtrlPressed && !event.isAltPressed && !event.isShiftPressed) {
+                        focusPane(2)
+                        return true
+                    }
+                }
+            }
+
+            val focusedFrag = getFocusedFragment()
+            if (focusedFrag is FileBrowserFragment && focusedFrag.handleKeyEvent(event)) {
+                return true
+            }
+        }
+
         if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)) {
             val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
             if (!isVerticalSplit) {

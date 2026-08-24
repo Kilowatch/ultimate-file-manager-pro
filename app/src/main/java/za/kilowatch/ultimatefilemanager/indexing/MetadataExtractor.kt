@@ -161,7 +161,17 @@ class MetadataExtractor(private val context: Context) {
         val buffer = ByteArray(8192)
         var bytesRead = 0L
 
-        file.inputStream().use { input ->
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+        val inStream = if (isSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, file.absolutePath)
+                ?: return ""
+        } else {
+            file.inputStream()
+        }
+
+        inStream.use { input ->
             var len: Int
             while (input.read(buffer).also { len = it } != -1) {
                 val toWrite = if (maxBytes != null && bytesRead + len > maxBytes) {

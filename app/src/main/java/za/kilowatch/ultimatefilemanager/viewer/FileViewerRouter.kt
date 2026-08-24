@@ -254,9 +254,12 @@ object FileViewerRouter {
     ) {
         val ext = file.extension.lowercase()
         val isImage = ext in IMAGE_EXTENSIONS
+        val effectiveContentUri = contentUri ?: if (file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)) {
+            (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, file.absolutePath)
+        } else null
 
         if (ext in AUDIO_EXTENSIONS || ext in VIDEO_EXTENSIONS) {
-            openInPlayer(context, file, contentUri, isExternal)
+            openInPlayer(context, file, effectiveContentUri, isExternal)
             return
         }
 
@@ -283,8 +286,8 @@ object FileViewerRouter {
         }
         intent.putExtra(EXTRA_FILE_PATH, file.absolutePath)
         intent.putExtra(EXTRA_FILE_NAME, file.name)
-        if (contentUri != null) {
-            intent.putExtra(EXTRA_CONTENT_URI, contentUri.toString())
+        if (effectiveContentUri != null) {
+            intent.putExtra(EXTRA_CONTENT_URI, effectiveContentUri.toString())
         }
         if (startInEditMode) {
             intent.putExtra(EXTRA_START_IN_EDIT_MODE, true)
@@ -333,10 +336,21 @@ object FileViewerRouter {
         }
         val comparator = SortFilterPreferenceManager.getFileComparator(sortState, context)
 
-        val mediaFiles = parentDir?.listFiles { f ->
-            val e = f.extension.lowercase()
-            e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS
-        }?.sortedWith(comparator)
+        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+        val parentPath = file.parent ?: ""
+        val mediaFiles = if (isSaf && parentPath.isNotEmpty()) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, parentPath).filter { f ->
+                val e = f.extension.lowercase()
+                e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS
+            }.sortedWith(comparator)
+        } else {
+            parentDir?.listFiles { f ->
+                val e = f.extension.lowercase()
+                e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS
+            }?.sortedWith(comparator)
+        }
 
         val paths: List<String> = mediaFiles?.map { it.absolutePath }
             ?: listOf(file.absolutePath)
@@ -385,14 +399,18 @@ object FileViewerRouter {
         return try {
             val ext = file.extension.lowercase()
             val mimeType = MimeTypeHelper.getOrFallback(ext)
-            val uri: Uri = FileProvider.getUriForFile(
-                context,
-                "${context.packageName}.fileprovider",
-                file
-            )
+            val uri: Uri = if (file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)) {
+                (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, file.absolutePath) ?: Uri.parse(file.absolutePath)
+            } else {
+                FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.fileprovider",
+                    file
+                )
+            }
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, mimeType)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             }
             val activities = context.packageManager.queryIntentActivities(
                 intent, PackageManager.MATCH_DEFAULT_ONLY
@@ -510,17 +528,25 @@ object FileViewerRouter {
             ).apply { bottomMargin = dp(12) })
         }
 
-        // ── UFM Slide Show (only shown for Images on local storage) ──
+        // ── UFM Slide Show (shown for Images on local and SAF storage) ──
         if (isImage && !isNetwork) {
-            val parentDir = file.parentFile
-            val files = parentDir?.listFiles() ?: emptyArray()
-            val filesToConsider = files.filter { it.isFile && !it.name.startsWith(".") }
-            val onlyImagesOrVideos = filesToConsider.isNotEmpty() && filesToConsider.all { f ->
+            val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+            val parentPath = file.parent ?: ""
+            val filesToConsider: List<File> = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, parentPath)
+                    .filter { !it.name.startsWith(".") }
+            } else {
+                val parentDir = file.parentFile
+                parentDir?.listFiles()?.filter { it.isFile && !it.name.startsWith(".") } ?: emptyList()
+            }
+            val imageOrVideoFiles = filesToConsider.filter { f ->
                 val e = f.extension.lowercase()
                 e in IMAGE_EXTENSIONS || e in VIDEO_EXTENSIONS
             }
 
-            if (onlyImagesOrVideos) {
+            if (imageOrVideoFiles.isNotEmpty()) {
                 val slideShowBtn = createChoiceButton(
                     context, dp,
                     icon = "🖼️",
@@ -535,7 +561,7 @@ object FileViewerRouter {
                         DefaultOpenManager.setDefaultAction(context, ext, isNetwork = isNetwork, DefaultOpenManager.Action.SLIDESHOW)
                     }
                     dialog.dismiss()
-                    openInSlideShow(context, file, filesToConsider)
+                    openInSlideShow(context, file, imageOrVideoFiles)
                 }
                 root.addView(slideShowBtn, LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -716,7 +742,11 @@ object FileViewerRouter {
         val uri: Uri
         try {
             mimeType = MimeTypeHelper.getOrFallback(ext)
-            uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+            uri = if (file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)) {
+                (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, file.absolutePath) ?: Uri.parse(file.absolutePath)
+            } else {
+                FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+            }
             android.util.Log.d(tag, "  uri=$uri  mime=$mimeType")
         } catch (e: Exception) {
             android.util.Log.e(tag, "  Failed to build URI: ${e.message}", e)

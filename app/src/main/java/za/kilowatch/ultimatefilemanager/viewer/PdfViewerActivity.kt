@@ -253,7 +253,19 @@ class PdfViewerActivity : AppCompatActivity() {
                     file
                 }
 
-                fileDescriptor = ParcelFileDescriptor.open(renderFile, ParcelFileDescriptor.MODE_READ_ONLY)
+                val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
+                val isSaf = renderFile is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(renderFile.absolutePath)
+                val safUri = if (contentUriStr != null) {
+                    android.net.Uri.parse(contentUriStr)
+                } else if (isSaf) {
+                    (renderFile as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this@PdfViewerActivity, renderFile.absolutePath)
+                } else null
+
+                fileDescriptor = if (safUri != null) {
+                    contentResolver.openFileDescriptor(safUri, "r")
+                } else {
+                    ParcelFileDescriptor.open(renderFile, ParcelFileDescriptor.MODE_READ_ONLY)
+                }
                 pdfRenderer = PdfRenderer(fileDescriptor!!)
                 val pageCount = pdfRenderer!!.pageCount
 

@@ -140,7 +140,15 @@ class GifCreatorActivity : AppCompatActivity() {
         sourceShareId = intent.getLongExtra(EXTRA_SOURCE_SHARE_ID, -1)
 
         if (sourcePaths.isNotEmpty()) {
-            outputDir = File(sourcePaths.first()).parentFile
+            val firstPath = sourcePaths.first()
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(firstPath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, firstPath)
+            outputDir = if (isSaf) {
+                val parent = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.normalizePath(firstPath).substringBeforeLast('/', "")
+                za.kilowatch.ultimatefilemanager.storage.SafFile(parent, isDir = true)
+            } else {
+                File(firstPath).parentFile
+            }
         }
     }
 
@@ -304,17 +312,32 @@ class GifCreatorActivity : AppCompatActivity() {
                 encoder.finishEncoding()
                 fos.close()
 
-                // Output handling (Local or Network)
+                // Output handling (Local, SAF, or Network)
                 val finalFile: File = if (networkShareId != -1L && networkPath != null) {
                     uploadGifFile(tempOutputFile, networkShareId, networkPath!!)
                     tempOutputFile
                 } else {
                     val destDir = outputDir ?: cacheDir
-                    if (!destDir.exists()) destDir.mkdirs()
-                    val targetFile = File(destDir, "Animated_${System.currentTimeMillis()}.gif")
-                    tempOutputFile.copyTo(targetFile, overwrite = true)
-                    tempOutputFile.delete()
-                    targetFile
+                    val isDestSaf = destDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destDir.absolutePath) ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@GifCreatorActivity, destDir.absolutePath)
+                    if (isDestSaf) {
+                        val fileName = "Animated_${System.currentTimeMillis()}.gif"
+                        val targetFile = za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destDir.absolutePath, fileName))
+                        za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(
+                            tempOutputFile,
+                            targetFile,
+                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE
+                        )
+                        tempOutputFile.delete()
+                        targetFile
+                    } else {
+                        if (!destDir.exists()) destDir.mkdirs()
+                        val targetFile = File(destDir, "Animated_${System.currentTimeMillis()}.gif")
+                        tempOutputFile.copyTo(targetFile, overwrite = true)
+                        tempOutputFile.delete()
+                        targetFile
+                    }
                 }
 
                 withContext(Dispatchers.Main) {
@@ -338,8 +361,16 @@ class GifCreatorActivity : AppCompatActivity() {
 
     private fun getImageDimensions(path: String): Pair<Int, Int> {
         return try {
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, path)
             val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            BitmapFactory.decodeFile(path, options)
+            if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, path)?.use { inStream ->
+                    BitmapFactory.decodeStream(inStream, null, options)
+                }
+            } else {
+                BitmapFactory.decodeFile(path, options)
+            }
             val orientation = getExifOrientation(path)
             if (orientation == 90 || orientation == 270) {
                 options.outHeight to options.outWidth
@@ -352,10 +383,18 @@ class GifCreatorActivity : AppCompatActivity() {
     }
 
     private fun decodeBitmap(path: String, reqWidth: Int, reqHeight: Int): Bitmap {
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, path)
         val options = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
-        BitmapFactory.decodeFile(path, options)
+        if (isSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, path)?.use { inStream ->
+                BitmapFactory.decodeStream(inStream, null, options)
+            }
+        } else {
+            BitmapFactory.decodeFile(path, options)
+        }
 
         if (reqWidth > 0 && reqHeight > 0) {
             options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
@@ -363,7 +402,13 @@ class GifCreatorActivity : AppCompatActivity() {
         options.inJustDecodeBounds = false
         options.inPreferredConfig = Bitmap.Config.ARGB_8888
 
-        var bitmap = BitmapFactory.decodeFile(path, options) ?: throw IllegalStateException("Cannot decode image: $path")
+        var bitmap = if (isSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, path)?.use { inStream ->
+                BitmapFactory.decodeStream(inStream, null, options)
+            } ?: throw IllegalStateException("Cannot decode image from SAF: $path")
+        } else {
+            BitmapFactory.decodeFile(path, options) ?: throw IllegalStateException("Cannot decode image: $path")
+        }
 
         val orientation = getExifOrientation(path)
         if (orientation != 0) {
@@ -397,7 +442,15 @@ class GifCreatorActivity : AppCompatActivity() {
 
     private fun getExifOrientation(path: String): Int {
         return try {
-            val exif = ExifInterface(path)
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, path)
+            val exif = if (isSaf) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, path)?.use { inStream ->
+                    ExifInterface(inStream)
+                } ?: return 0
+            } else {
+                ExifInterface(path)
+            }
             when (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
                 ExifInterface.ORIENTATION_ROTATE_90 -> 90
                 ExifInterface.ORIENTATION_ROTATE_180 -> 180
@@ -443,7 +496,11 @@ class GifCreatorActivity : AppCompatActivity() {
         val btnClose = dialogView.findViewById<View>(R.id.btnClose)
         val btnViewGif = dialogView.findViewById<View>(R.id.btnViewGif)
 
-        val formattedSize = Formatter.formatShortFileSize(this, resultFile.length())
+        val isSaf = resultFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(resultFile.absolutePath) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, resultFile.absolutePath)
+        val fileLen = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this, resultFile.absolutePath) else resultFile.length()
+        val formattedSize = Formatter.formatShortFileSize(this, fileLen)
         txtDetail.text = "${resultFile.name} · $frameCount frames · ${String.format("%.1fs", intervalSec)}\n\n${resultFile.absolutePath} ($formattedSize)"
 
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
