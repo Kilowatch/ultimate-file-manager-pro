@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Vim navigation mode supporting `h`/`j`/`k`/`l` movement, `gg` / `G` top/bottom jumping, and single-letter operations (`y` copy, `x` cut, `p` paste, `d` delete, `r` rename, `n` new folder, `g` go to path) with search and text input field typing protection.
   - In-app interactive shortcuts reference cheatsheet dialog (`dialog_keyboard_shortcuts.xml` / `_tv.xml`) triggered by pressing `?`.
   - Polished settings screen matching the UFMStandard dark glassmorphism design language (`@color/mobile_glass_card`, `@color/mobile_glass_stroke`, `@color/tv_glass_white_10`, `@color/tv_glass_border`, frosted icon badges, and theme-accented section headers).
+- **Granular Date Range & Size Range Filters (`SortFilterSheet`, `SortFilterPreferenceManager`)**:
+  - Added granular Date range filters (Any, Today, Yesterday, This Week, Previous Week, This Month, Previous Month, This Year, Previous Year) to the Sort & Filter bottom sheet.
+  - Added granular Size range filters (Any, Empty 0 B, Tiny 0–10 KB, Small 10 KB–1 MB, Medium 1–10 MB, Big 10–100 MB, Large 100 MB–1 GB, Huge >1 GB).
+  - Added Archives category filter and categorized File Type sorting priority order (Images → Videos → Audio → Documents → Archives → APKs → Other).
 - **Custom Storage Locations via Storage Access Framework (SAF / Termux / External Drives)**:
   - Added "Add Storage Location" flow with UFMStandard glassmorphic dialogs (`dialog_add_storage_location.xml` / `_tv.xml`), supporting Termux home, USB drives, SD cards, and document providers.
   - Custom storage tiles integrate directly into the Storage Browser volume list, positioned above Settings with human-readable resolved subtitle paths.
@@ -33,6 +37,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enforced zero-leakage mirror security with strict cleanup on exit and activity destruction.
 
 ### Fixed
+- **Search Results Sort & Filter Persistence (`FileBrowserActivity`, `FileBrowserFragment`, `NetworkBrowserActivity`, `NetworkBrowserFragment`)**:
+  - Fixed an issue where applying Sort & Filter on search results exited search mode and returned to the previous directory.
+  - Sorting and filtering are now applied directly in-place to active search results across SAF, Local, Network, and Cloud storages.
+- **Path-Aware Batch Rename Duplicate Detection (`BatchRenameConflictDetector`, `BatchRenameViewModel`)**:
+  - Fixed an issue where Batch Rename falsely flagged duplicate conflicts for files sharing identical target names across different subdirectories in search results.
+  - Conflict checking is now strictly directory-aware, allowing identically named targets across distinct parent folders.
+  - Completing batch rename in search results now refreshes the dataset in-place.
 - **Folder Scroll Position Restoration Across All Storages (`FileBrowserActivity`, `FileBrowserFragment`, `NetworkBrowserActivity`, `NetworkBrowserFragment`, `FolderScrollState`)**:
   - Fixed an issue where the file list reset to the top when navigating back to a parent folder instead of restoring the previous scroll position.
   - Implemented folder scroll state tracking and restoration across SAF, Local, Network (SMB, SFTP, FTP, NFS, DLNA), and Online (Google Drive, OneDrive, Dropbox, Box, S3, WebDAV) storages in both single-pane and dual-pane twin window modes.

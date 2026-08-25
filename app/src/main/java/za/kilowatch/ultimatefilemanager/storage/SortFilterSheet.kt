@@ -26,12 +26,20 @@ class SortFilterSheet : BottomSheetDialogFragment() {
 
     enum class SortMode { NAME, SIZE, DATE, TYPE }
     enum class SortOrder { ASC, DESC }
-    enum class FilterType { ALL, IMAGES, VIDEOS, AUDIO, DOCUMENTS, APKS, OTHER }
+    enum class FilterType { ALL, IMAGES, VIDEOS, AUDIO, DOCUMENTS, ARCHIVES, APKS, OTHER }
+    enum class DateFilter {
+        ANY, TODAY, YESTERDAY, THIS_WEEK, PREVIOUS_WEEK, THIS_MONTH, PREVIOUS_MONTH, THIS_YEAR, PREVIOUS_YEAR
+    }
+    enum class SizeFilter {
+        ANY, EMPTY, TINY, SMALL, MEDIUM, BIG, LARGE, HUGE
+    }
     enum class Scope { GLOBAL, FOLDER }
 
     var currentSortMode = SortMode.NAME
     var currentSortOrder = SortOrder.ASC
     var currentFilterType = FilterType.ALL
+    var currentDateFilter = DateFilter.ANY
+    var currentSizeFilter = SizeFilter.ANY
     var currentShowHidden = false
     var currentGroupByDate = false
     var activeTags: Set<String> = emptySet()
@@ -41,8 +49,21 @@ class SortFilterSheet : BottomSheetDialogFragment() {
     var currentScope: Scope = Scope.GLOBAL
     var currentIsRecursive = false
     var currentViewMode: ViewModeManager.ViewMode? = null
+    var isSearchMode: Boolean = false
 
-    var onApply: ((SortMode, SortOrder, FilterType, Boolean, Boolean, Set<String>, Scope, ViewModeManager.ViewMode, Boolean) -> Unit)? = null
+    var onApply: ((
+        mode: SortMode,
+        order: SortOrder,
+        filter: FilterType,
+        dateFilter: DateFilter,
+        sizeFilter: SizeFilter,
+        showHidden: Boolean,
+        groupByDate: Boolean,
+        tags: Set<String>,
+        scope: Scope,
+        viewMode: ViewModeManager.ViewMode,
+        isRecursive: Boolean
+    ) -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -73,7 +94,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         val chipScopeGlobal = view.findViewById<com.google.android.material.chip.Chip?>(R.id.chipScopeGlobal)
         val chipScopeFolder = view.findViewById<com.google.android.material.chip.Chip?>(R.id.chipScopeFolder)
 
-        if (currentFolderKey != null && layoutScopeRow != null) {
+        if (currentFolderKey != null && !isSearchMode && layoutScopeRow != null) {
             layoutScopeRow.visibility = android.view.View.VISIBLE
             when (currentScope) {
                 Scope.FOLDER -> chipScopeFolder?.isChecked = true
@@ -118,16 +139,19 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         }
 
         fun updateFolderOptionsVisibility(scope: Scope) {
-            layoutViewModeSection?.visibility = if (scope == Scope.FOLDER) android.view.View.VISIBLE else android.view.View.GONE
-            layoutFolderModeSection?.visibility = if (scope == Scope.FOLDER) android.view.View.VISIBLE else android.view.View.GONE
+            val show = !isSearchMode && scope == Scope.FOLDER
+            layoutViewModeSection?.visibility = if (show) android.view.View.VISIBLE else android.view.View.GONE
+            layoutFolderModeSection?.visibility = if (show) android.view.View.VISIBLE else android.view.View.GONE
         }
 
-        if (currentFolderKey != null) {
+        if (currentFolderKey != null && !isSearchMode) {
             updateFolderOptionsVisibility(currentScope)
             cgScope?.setOnCheckedStateChangeListener { _, checkedIds ->
                 val scope = if (checkedIds.contains(R.id.chipScopeFolder)) Scope.FOLDER else Scope.GLOBAL
                 updateFolderOptionsVisibility(scope)
             }
+        } else {
+            updateFolderOptionsVisibility(Scope.GLOBAL)
         }
 
         // Sort mode chips
@@ -149,6 +173,40 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         val chipAsc = view.findViewById<Chip>(R.id.chipAscending)
         val chipDesc = view.findViewById<Chip>(R.id.chipDescending)
 
+        fun updateOrderChipLabels(mode: SortMode) {
+            when (mode) {
+                SortMode.NAME -> {
+                    chipAsc.text = getString(R.string.sort_order_a_to_z)
+                    chipDesc.text = getString(R.string.sort_order_z_to_a)
+                }
+                SortMode.SIZE -> {
+                    chipAsc.text = getString(R.string.sort_order_small_to_large)
+                    chipDesc.text = getString(R.string.sort_order_large_to_small)
+                }
+                SortMode.DATE -> {
+                    chipAsc.text = getString(R.string.sort_order_oldest_first)
+                    chipDesc.text = getString(R.string.sort_order_newest_first)
+                }
+                SortMode.TYPE -> {
+                    chipAsc.text = getString(R.string.sort_order_a_to_z)
+                    chipDesc.text = getString(R.string.sort_order_z_to_a)
+                }
+            }
+        }
+
+        updateOrderChipLabels(currentSortMode)
+
+        cgSort.setOnCheckedStateChangeListener { _, checkedIds ->
+            val mode = when {
+                checkedIds.contains(R.id.chipSortName) -> SortMode.NAME
+                checkedIds.contains(R.id.chipSortSize) -> SortMode.SIZE
+                checkedIds.contains(R.id.chipSortDate) -> SortMode.DATE
+                checkedIds.contains(R.id.chipSortType) -> SortMode.TYPE
+                else -> SortMode.NAME
+            }
+            updateOrderChipLabels(mode)
+        }
+
         when (currentSortOrder) {
             SortOrder.ASC -> chipAsc.isChecked = true
             SortOrder.DESC -> chipDesc.isChecked = true
@@ -161,6 +219,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         val chipVideos = view.findViewById<Chip>(R.id.chipVideos)
         val chipAudio = view.findViewById<Chip>(R.id.chipAudio)
         val chipDocs = view.findViewById<Chip>(R.id.chipDocuments)
+        val chipArchives = view.findViewById<Chip?>(R.id.chipArchives)
         val chipApks = view.findViewById<Chip>(R.id.chipApks)
 
         when (currentFilterType) {
@@ -169,8 +228,55 @@ class SortFilterSheet : BottomSheetDialogFragment() {
             FilterType.VIDEOS -> chipVideos.isChecked = true
             FilterType.AUDIO -> chipAudio.isChecked = true
             FilterType.DOCUMENTS -> chipDocs.isChecked = true
+            FilterType.ARCHIVES -> chipArchives?.isChecked = true
             FilterType.APKS -> chipApks.isChecked = true
-            FilterType.OTHER -> { /* No specific chip for Other in this sheet yet */ }
+            FilterType.OTHER -> { /* No specific chip for Other */ }
+        }
+
+        // Date filter chips
+        val cgDate = view.findViewById<ChipGroup?>(R.id.cgDateFilter)
+        val chipDateAny = view.findViewById<Chip?>(R.id.chipDateAny)
+        val chipDateToday = view.findViewById<Chip?>(R.id.chipDateToday)
+        val chipDateYesterday = view.findViewById<Chip?>(R.id.chipDateYesterday)
+        val chipDateThisWeek = view.findViewById<Chip?>(R.id.chipDateThisWeek)
+        val chipDatePrevWeek = view.findViewById<Chip?>(R.id.chipDatePrevWeek)
+        val chipDateThisMonth = view.findViewById<Chip?>(R.id.chipDateThisMonth)
+        val chipDatePrevMonth = view.findViewById<Chip?>(R.id.chipDatePrevMonth)
+        val chipDateThisYear = view.findViewById<Chip?>(R.id.chipDateThisYear)
+        val chipDatePrevYear = view.findViewById<Chip?>(R.id.chipDatePrevYear)
+
+        when (currentDateFilter) {
+            DateFilter.ANY -> chipDateAny?.isChecked = true
+            DateFilter.TODAY -> chipDateToday?.isChecked = true
+            DateFilter.YESTERDAY -> chipDateYesterday?.isChecked = true
+            DateFilter.THIS_WEEK -> chipDateThisWeek?.isChecked = true
+            DateFilter.PREVIOUS_WEEK -> chipDatePrevWeek?.isChecked = true
+            DateFilter.THIS_MONTH -> chipDateThisMonth?.isChecked = true
+            DateFilter.PREVIOUS_MONTH -> chipDatePrevMonth?.isChecked = true
+            DateFilter.THIS_YEAR -> chipDateThisYear?.isChecked = true
+            DateFilter.PREVIOUS_YEAR -> chipDatePrevYear?.isChecked = true
+        }
+
+        // Size filter chips
+        val cgSize = view.findViewById<ChipGroup?>(R.id.cgSizeFilter)
+        val chipSizeAny = view.findViewById<Chip?>(R.id.chipSizeAny)
+        val chipSizeEmpty = view.findViewById<Chip?>(R.id.chipSizeEmpty)
+        val chipSizeTiny = view.findViewById<Chip?>(R.id.chipSizeTiny)
+        val chipSizeSmall = view.findViewById<Chip?>(R.id.chipSizeSmall)
+        val chipSizeMedium = view.findViewById<Chip?>(R.id.chipSizeMedium)
+        val chipSizeBig = view.findViewById<Chip?>(R.id.chipSizeBig)
+        val chipSizeLarge = view.findViewById<Chip?>(R.id.chipSizeLarge)
+        val chipSizeHuge = view.findViewById<Chip?>(R.id.chipSizeHuge)
+
+        when (currentSizeFilter) {
+            SizeFilter.ANY -> chipSizeAny?.isChecked = true
+            SizeFilter.EMPTY -> chipSizeEmpty?.isChecked = true
+            SizeFilter.TINY -> chipSizeTiny?.isChecked = true
+            SizeFilter.SMALL -> chipSizeSmall?.isChecked = true
+            SizeFilter.MEDIUM -> chipSizeMedium?.isChecked = true
+            SizeFilter.BIG -> chipSizeBig?.isChecked = true
+            SizeFilter.LARGE -> chipSizeLarge?.isChecked = true
+            SizeFilter.HUGE -> chipSizeHuge?.isChecked = true
         }
 
         // Show hidden files chips
@@ -234,8 +340,30 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                 R.id.chipVideos -> FilterType.VIDEOS
                 R.id.chipAudio -> FilterType.AUDIO
                 R.id.chipDocuments -> FilterType.DOCUMENTS
+                R.id.chipArchives -> FilterType.ARCHIVES
                 R.id.chipApks -> FilterType.APKS
                 else -> FilterType.ALL
+            }
+            val dateFilter = when (cgDate?.checkedChipId) {
+                R.id.chipDateToday -> DateFilter.TODAY
+                R.id.chipDateYesterday -> DateFilter.YESTERDAY
+                R.id.chipDateThisWeek -> DateFilter.THIS_WEEK
+                R.id.chipDatePrevWeek -> DateFilter.PREVIOUS_WEEK
+                R.id.chipDateThisMonth -> DateFilter.THIS_MONTH
+                R.id.chipDatePrevMonth -> DateFilter.PREVIOUS_MONTH
+                R.id.chipDateThisYear -> DateFilter.THIS_YEAR
+                R.id.chipDatePrevYear -> DateFilter.PREVIOUS_YEAR
+                else -> DateFilter.ANY
+            }
+            val sizeFilter = when (cgSize?.checkedChipId) {
+                R.id.chipSizeEmpty -> SizeFilter.EMPTY
+                R.id.chipSizeTiny -> SizeFilter.TINY
+                R.id.chipSizeSmall -> SizeFilter.SMALL
+                R.id.chipSizeMedium -> SizeFilter.MEDIUM
+                R.id.chipSizeBig -> SizeFilter.BIG
+                R.id.chipSizeLarge -> SizeFilter.LARGE
+                R.id.chipSizeHuge -> SizeFilter.HUGE
+                else -> SizeFilter.ANY
             }
             val showHidden = when (cgHidden.checkedChipId) {
                 R.id.chipHiddenEnabled -> true
@@ -258,9 +386,13 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                     }
                 }
             }
-            val scope = when (cgScope?.checkedChipId) {
-                R.id.chipScopeFolder -> Scope.FOLDER
-                else -> Scope.GLOBAL
+            val scope = if (isSearchMode) {
+                Scope.GLOBAL
+            } else {
+                when (cgScope?.checkedChipId) {
+                    R.id.chipScopeFolder -> Scope.FOLDER
+                    else -> Scope.GLOBAL
+                }
             }
             val isRecursiveSelected = when (cgFolderMode?.checkedChipId) {
                 R.id.chipFolderModeRecursive -> true
@@ -276,7 +408,10 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                 R.id.chipViewGridLarge -> ViewModeManager.ViewMode.GRID_LARGE
                 else -> ViewModeManager.load(requireContext())
             }
-            onApply?.invoke(sortMode, sortOrder, filterType, showHidden, groupByDate, selectedTags, scope, selectedViewMode, isRecursiveSelected)
+            onApply?.invoke(
+                sortMode, sortOrder, filterType, dateFilter, sizeFilter,
+                showHidden, groupByDate, selectedTags, scope, selectedViewMode, isRecursiveSelected
+            )
             dismiss()
         }
         
@@ -290,13 +425,10 @@ class SortFilterSheet : BottomSheetDialogFragment() {
 
     private fun setupTvFocus(view: View) {
         val yellowBg = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_button_focused_yellow))
-        val glassBg = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_glass_white_10))
         val yellowText = requireContext().getColor(R.color.tv_button_focused_yellow_text)
         val whiteText = requireContext().getColor(R.color.tv_text_primary)
         val accentText = requireContext().getColor(R.color.tv_accent)
 
-        // For RadioButtons and Chips, we want yellow background + black text when focused.
-        // When unfocused, they should look default.
         fun applyFocusListener(v: View, defaultBgTint: android.content.res.ColorStateList? = null, defaultTextColor: Int? = null) {
             v.setOnFocusChangeListener { _, hasFocus ->
                 if (v is RadioButton) {
@@ -312,8 +444,6 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                         v.chipBackgroundColor = yellowBg
                         v.setTextColor(yellowText)
                     } else {
-                        // The default chip background depends on checked state. We let the style handle it by restoring default behavior,
-                        // or we can set it back to the default glass. Usually for chips, we can just clear the explicit tint.
                         v.chipBackgroundColor = null // fall back to style
                         v.setTextColor(whiteText)
                     }
@@ -329,24 +459,26 @@ class SortFilterSheet : BottomSheetDialogFragment() {
             }
         }
 
-        // Apply to Chips (including scope chips when visible)
-        val folderModeChips = if (currentFolderKey != null) listOf(R.id.chipFolderModeRoot, R.id.chipFolderModeRecursive) else emptyList()
-        val scopeChips = if (currentFolderKey != null) listOf(R.id.chipScopeGlobal, R.id.chipScopeFolder) else emptyList()
+        val folderModeChips = if (currentFolderKey != null && !isSearchMode) listOf(R.id.chipFolderModeRoot, R.id.chipFolderModeRecursive) else emptyList()
+        val scopeChips = if (currentFolderKey != null && !isSearchMode) listOf(R.id.chipScopeGlobal, R.id.chipScopeFolder) else emptyList()
         val chips = listOf(
             R.id.chipSortName, R.id.chipSortSize, R.id.chipSortDate, R.id.chipSortType,
             R.id.chipAscending, R.id.chipDescending,
-            R.id.chipAll, R.id.chipImages, R.id.chipVideos, R.id.chipAudio, R.id.chipDocuments, R.id.chipApks,
+            R.id.chipAll, R.id.chipImages, R.id.chipVideos, R.id.chipAudio, R.id.chipDocuments, R.id.chipArchives, R.id.chipApks,
+            R.id.chipDateAny, R.id.chipDateToday, R.id.chipDateYesterday, R.id.chipDateThisWeek, R.id.chipDatePrevWeek,
+            R.id.chipDateThisMonth, R.id.chipDatePrevMonth, R.id.chipDateThisYear, R.id.chipDatePrevYear,
+            R.id.chipSizeAny, R.id.chipSizeEmpty, R.id.chipSizeTiny, R.id.chipSizeSmall, R.id.chipSizeMedium,
+            R.id.chipSizeBig, R.id.chipSizeLarge, R.id.chipSizeHuge,
             R.id.chipHiddenEnabled, R.id.chipHiddenDisabled,
             R.id.chipGroupDateEnabled, R.id.chipGroupDateDisabled,
             R.id.chipViewListSmall, R.id.chipViewListMedium, R.id.chipViewListLarge, R.id.chipViewListXLarge,
             R.id.chipViewGridSmall, R.id.chipViewGridMedium, R.id.chipViewGridLarge
         ) + scopeChips + folderModeChips
         for (id in chips) {
-            val chip = view.findViewById<Chip>(id)
+            val chip = view.findViewById<Chip?>(id) ?: continue
             applyFocusListener(chip, defaultTextColor = whiteText)
         }
 
-        // Apply to Apply Button
         val btnApply = view.findViewById<MaterialButton>(R.id.btnApplySort)
         val defaultBtnBg = btnApply.backgroundTintList
         applyFocusListener(btnApply, defaultBgTint = defaultBtnBg, defaultTextColor = whiteText)
@@ -371,30 +503,115 @@ class SortFilterSheet : BottomSheetDialogFragment() {
             "sh", "bat", "py", "js", "html", "css", "java", "kt", "c", "cpp", "h",
             "sql", "gradle", "properties", "csv", "rtf", "m3u", "m3u8"
         )
-        val ARCHIVE_EXTENSIONS = setOf("zip")
+        val ARCHIVE_EXTENSIONS = setOf(
+            "zip", "rar", "7z", "tar", "gz", "bz2", "xz", "iso", "tgz", "tbz2", "zst", "cab", "lzma", "lzh", "arj"
+        )
 
         fun matchesExtension(ext: String, filter: FilterType): Boolean {
             if (filter == FilterType.ALL) return true
-            val lower = ext.lowercase()
+            val lower = ext.lowercase().trimStart('.')
             return when (filter) {
                 FilterType.IMAGES -> lower in IMAGE_EXTENSIONS
                 FilterType.VIDEOS -> lower in VIDEO_EXTENSIONS
                 FilterType.AUDIO -> lower in AUDIO_EXTENSIONS
                 FilterType.DOCUMENTS -> lower in DOCUMENT_EXTENSIONS
+                FilterType.ARCHIVES -> lower in ARCHIVE_EXTENSIONS
                 FilterType.APKS -> lower in APK_EXTENSIONS
                 FilterType.OTHER -> {
                     lower !in IMAGE_EXTENSIONS && lower !in VIDEO_EXTENSIONS &&
                     lower !in AUDIO_EXTENSIONS && lower !in DOCUMENT_EXTENSIONS &&
-                    lower !in APK_EXTENSIONS
+                    lower !in ARCHIVE_EXTENSIONS && lower !in APK_EXTENSIONS
                 }
                 else -> true
             }
         }
 
-        fun matchesFilter(file: java.io.File, filter: FilterType): Boolean {
-            if (filter == FilterType.ALL) return true
-            if (file.isDirectory) return true // Always show folders
-            return matchesExtension(file.extension, filter)
+        fun matchesDate(lastModified: Long, dateFilter: DateFilter): Boolean {
+            if (dateFilter == DateFilter.ANY) return true
+            if (lastModified <= 0L) return false
+
+            val cal = java.util.Calendar.getInstance()
+            cal.set(java.util.Calendar.HOUR_OF_DAY, 0)
+            cal.set(java.util.Calendar.MINUTE, 0)
+            cal.set(java.util.Calendar.SECOND, 0)
+            cal.set(java.util.Calendar.MILLISECOND, 0)
+            val startOfToday = cal.timeInMillis
+
+            return when (dateFilter) {
+                DateFilter.ANY -> true
+                DateFilter.TODAY -> lastModified >= startOfToday
+                DateFilter.YESTERDAY -> {
+                    cal.add(java.util.Calendar.DAY_OF_YEAR, -1)
+                    val startOfYesterday = cal.timeInMillis
+                    lastModified in startOfYesterday until startOfToday
+                }
+                DateFilter.THIS_WEEK -> {
+                    cal.set(java.util.Calendar.DAY_OF_WEEK, cal.firstDayOfWeek)
+                    val startOfThisWeek = cal.timeInMillis
+                    lastModified >= startOfThisWeek
+                }
+                DateFilter.PREVIOUS_WEEK -> {
+                    cal.set(java.util.Calendar.DAY_OF_WEEK, cal.firstDayOfWeek)
+                    val startOfThisWeek = cal.timeInMillis
+                    cal.add(java.util.Calendar.WEEK_OF_YEAR, -1)
+                    val startOfPrevWeek = cal.timeInMillis
+                    lastModified in startOfPrevWeek until startOfThisWeek
+                }
+                DateFilter.THIS_MONTH -> {
+                    cal.set(java.util.Calendar.DAY_OF_MONTH, 1)
+                    val startOfThisMonth = cal.timeInMillis
+                    lastModified >= startOfThisMonth
+                }
+                DateFilter.PREVIOUS_MONTH -> {
+                    cal.set(java.util.Calendar.DAY_OF_MONTH, 1)
+                    val startOfThisMonth = cal.timeInMillis
+                    cal.add(java.util.Calendar.MONTH, -1)
+                    val startOfPrevMonth = cal.timeInMillis
+                    lastModified in startOfPrevMonth until startOfThisMonth
+                }
+                DateFilter.THIS_YEAR -> {
+                    cal.set(java.util.Calendar.DAY_OF_YEAR, 1)
+                    val startOfThisYear = cal.timeInMillis
+                    lastModified >= startOfThisYear
+                }
+                DateFilter.PREVIOUS_YEAR -> {
+                    cal.set(java.util.Calendar.DAY_OF_YEAR, 1)
+                    val startOfThisYear = cal.timeInMillis
+                    cal.add(java.util.Calendar.YEAR, -1)
+                    val startOfPrevYear = cal.timeInMillis
+                    lastModified in startOfPrevYear until startOfThisYear
+                }
+            }
+        }
+
+        fun matchesSize(size: Long, isDirectory: Boolean, sizeFilter: SizeFilter): Boolean {
+            if (sizeFilter == SizeFilter.ANY) return true
+            if (isDirectory) return true // Folders pass size filter
+            val kb = 1024L
+            val mb = 1024L * 1024L
+            val gb = 1024L * 1024L * 1024L
+            return when (sizeFilter) {
+                SizeFilter.ANY -> true
+                SizeFilter.EMPTY -> size == 0L
+                SizeFilter.TINY -> size in 1..(10 * kb)
+                SizeFilter.SMALL -> size in (10 * kb + 1)..(1 * mb)
+                SizeFilter.MEDIUM -> size in (1 * mb + 1)..(10 * mb)
+                SizeFilter.BIG -> size in (10 * mb + 1)..(100 * mb)
+                SizeFilter.LARGE -> size in (100 * mb + 1)..(1 * gb)
+                SizeFilter.HUGE -> size > 1 * gb
+            }
+        }
+
+        fun matchesFilter(
+            file: java.io.File,
+            filter: FilterType = FilterType.ALL,
+            dateFilter: DateFilter = DateFilter.ANY,
+            sizeFilter: SizeFilter = SizeFilter.ANY
+        ): Boolean {
+            if (!matchesExtension(file.extension, filter)) return false
+            if (!matchesDate(file.lastModified(), dateFilter)) return false
+            if (!matchesSize(if (file.isDirectory) 0L else file.length(), file.isDirectory, sizeFilter)) return false
+            return true
         }
     }
 }

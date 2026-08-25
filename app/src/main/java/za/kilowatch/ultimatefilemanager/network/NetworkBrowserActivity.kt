@@ -291,8 +291,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            fileAdapter.exitSelectionMode()
-            loadDirectory()
+            onBatchRenameCompleted()
         }
     }
     
@@ -300,6 +299,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var sortMode = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME
     private var sortOrder = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder.ASC
     private var filterType = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL
+    private var currentDateFilter = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.DateFilter.ANY
+    private var currentSizeFilter = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SizeFilter.ANY
+    private var isSearchActive = false
     private var activeTagsFilter: Set<String> = emptySet()
     
     private lateinit var fileAdapter: NetworkFileAdapter
@@ -1326,8 +1328,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 } else {
                     val dialog = BatchRenameDialogFragment.newInstance(items)
                     dialog.setOnCompleteListener { _, _ ->
-                        fileAdapter.exitSelectionMode()
-                        loadDirectory()
+                        onBatchRenameCompleted()
                     }
                     dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
                 }
@@ -1547,8 +1548,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         } else {
                             val dialog = BatchRenameDialogFragment.newInstance(items)
                             dialog.setOnCompleteListener { _, _ ->
-                                fileAdapter.exitSelectionMode()
-                                loadDirectory()
+                                onBatchRenameCompleted()
                             }
                             dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
                         }
@@ -1934,18 +1934,43 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }
     }
 
+    private fun onBatchRenameCompleted() {
+        fileAdapter.exitSelectionMode()
+        val query = edtSearch.text?.toString()?.trim().orEmpty()
+        if (isSearchActive && query.isNotEmpty()) {
+            performSearch(query)
+        } else {
+            loadDirectory()
+        }
+    }
+
     private fun performSearch(query: String) {
         if (query.isEmpty()) {
+            isSearchActive = false
             applyData()
             return
         }
 
+        isSearchActive = true
         // Cancel any in-flight async applyData() so its full listing cannot overwrite
         // the filtered search result when it completes.
         applyDataJob?.cancel()
-        val filtered = currentFiles.filter { it.name.contains(query, ignoreCase = true) }
-        fileAdapter.submitList(filtered)
-        updateEmptyState(filtered.isEmpty())
+        val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        val queryMatching = currentFiles.filter { it.name.contains(query, ignoreCase = true) }
+        val processed = computeDisplayFiles(
+            snapshot = queryMatching,
+            showHidden = showHidden,
+            filterTypeNow = filterType,
+            dateFilterNow = currentDateFilter,
+            sizeFilterNow = currentSizeFilter,
+            activeTagsNow = activeTagsFilter,
+            sortModeNow = sortMode,
+            sortOrderNow = sortOrder,
+            shareNow = share,
+            isTvRoot = isTv && currentPath.isEmpty()
+        )
+        fileAdapter.submitList(processed)
+        updateEmptyState(processed.isEmpty())
     }
 
     private fun updateEmptyState(isEmpty: Boolean) {
@@ -2670,6 +2695,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 sortMode  = state.sortMode
                 sortOrder = state.sortOrder
                 filterType = state.filterType
+                currentDateFilter = state.dateFilter
+                currentSizeFilter = state.sizeFilter
                 activeTagsFilter = state.activeTags
                 updateSortBadge(hasFolderOverride)
                 if (fileAdapter.viewMode != viewModeToApply) {
@@ -2888,6 +2915,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val snapshot = currentFiles
         val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
         val filterTypeNow = filterType
+        val dateFilterNow = currentDateFilter
+        val sizeFilterNow = currentSizeFilter
         val activeTagsNow = activeTagsFilter
         val sortModeNow = sortMode
         val sortOrderNow = sortOrder
@@ -2901,6 +2930,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     snapshot = snapshot,
                     showHidden = showHidden,
                     filterTypeNow = filterTypeNow,
+                    dateFilterNow = dateFilterNow,
+                    sizeFilterNow = sizeFilterNow,
                     activeTagsNow = activeTagsNow,
                     sortModeNow = sortModeNow,
                     sortOrderNow = sortOrderNow,
@@ -2922,6 +2953,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         snapshot: List<NetworkFile>,
         showHidden: Boolean,
         filterTypeNow: za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType,
+        dateFilterNow: za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.DateFilter = currentDateFilter,
+        sizeFilterNow: za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SizeFilter = currentSizeFilter,
         activeTagsNow: Set<String>,
         sortModeNow: za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode,
         sortOrderNow: za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder,
@@ -2931,21 +2964,17 @@ class NetworkBrowserActivity : AppCompatActivity() {
         // Apply hidden files filter
         val withoutHidden = snapshot.filter { isNetworkFileVisible(it, showHidden) }
 
-        // Apply filter
+        // Apply category, date, and size filters
         val filtered = withoutHidden.filter {
-            if (filterTypeNow == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL) true
+            val ext = if (it.name.contains(".")) it.name.substringAfterLast(".").lowercase() else ""
+            val matchesCategory = if (filterTypeNow == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL) true
             else if (it.isDirectory) true
-            else {
-                val ext = if (it.name.contains(".")) it.name.substringAfterLast(".").lowercase() else ""
-                when (filterTypeNow) {
-                    za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.IMAGES -> ext in za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.IMAGE_EXTENSIONS
-                    za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.VIDEOS -> ext in za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.VIDEO_EXTENSIONS
-                    za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.AUDIO -> ext in za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.AUDIO_EXTENSIONS
-                    za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.DOCUMENTS -> ext in za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.DOCUMENT_EXTENSIONS
-                    za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.APKS -> ext in za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.APK_EXTENSIONS
-                    else -> true
-                }
-            }
+            else za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.matchesExtension(ext, filterTypeNow)
+
+            val matchesDate = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.matchesDate(it.lastModified, dateFilterNow)
+            val matchesSize = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.matchesSize(it.size, it.isDirectory, sizeFilterNow)
+
+            matchesCategory && matchesDate && matchesSize
         }
 
         val tagFiltered = if (activeTagsNow.isNotEmpty()) {
@@ -2954,39 +2983,23 @@ class NetworkBrowserActivity : AppCompatActivity() {
             filtered
         }
 
-        // Apply sort — folders first, then sort within groups
-        val secondaryComparator: java.util.Comparator<NetworkFile> = when (sortModeNow) {
-            za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { it.name }
-            za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.SIZE -> compareBy { if (it.isDirectory) 0L else it.size }
-            za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.DATE -> compareBy { it.lastModified }
-            za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { if (it.name.contains(".")) it.name.substringAfterLast(".") else "" }
-        }
-        val orderedComparator = if (sortOrderNow == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder.DESC) {
-            secondaryComparator.reversed()
-        } else {
-            secondaryComparator
-        }
-
-        val customComparator = Comparator<NetworkFile> { f1, f2 ->
-            val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f1.path, shareNow.id)
-            val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f2.path, shareNow.id)
-            if (p1 && p2) {
-                NaturalSort.naturalCompare(f1.name, f2.name)
-            } else if (p1) {
-                -1
-            } else if (p2) {
-                1
-            } else {
-                val dir1 = f1.isDirectory
-                val dir2 = f2.isDirectory
-                if (dir1 != dir2) {
-                    if (dir1) -1 else 1
-                } else {
-                    orderedComparator.compare(f1, f2)
-                }
-            }
-        }
-        val sortedFiles = tagFiltered.sortedWith(customComparator)
+        val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.SortFilterState(
+            sortMode = sortModeNow,
+            sortOrder = sortOrderNow,
+            filterType = filterTypeNow,
+            showHidden = showHidden,
+            groupByDate = false,
+            activeTags = activeTagsNow,
+            dateFilter = dateFilterNow,
+            sizeFilter = sizeFilterNow
+        )
+        val fileComparator = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.getNetworkFileComparator(
+            state = state,
+            context = this,
+            shareId = shareNow.id,
+            directoriesFirst = true
+        )
+        val sortedFiles = tagFiltered.sortedWith(fileComparator)
 
         // Append action items at TV root (mobile only)
         return if (isTvRoot) {
@@ -3237,6 +3250,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
         sheet.currentSortMode = sortMode
         sheet.currentSortOrder = sortOrder
         sheet.currentFilterType = filterType
+        sheet.currentDateFilter = currentDateFilter
+        sheet.currentSizeFilter = currentSizeFilter
+        sheet.isSearchMode = isSearchActive
         sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(this)
         sheet.activeTags = activeTagsFilter
 
@@ -3261,33 +3277,39 @@ class NetworkBrowserActivity : AppCompatActivity() {
         sheet.currentViewMode = activeState?.viewMode
         sheet.currentIsRecursive = activeState?.isRecursive ?: false
 
-        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags, scope, selectedViewMode, isRecursive ->
+        sheet.onApply = { mode, order, filter, dateFilter, sizeFilter, showHidden, groupByDate, tags, scope, selectedViewMode, isRecursive ->
             sortMode = mode
             sortOrder = order
             filterType = filter
+            currentDateFilter = dateFilter
+            currentSizeFilter = sizeFilter
             activeTagsFilter = tags
             if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.GLOBAL) {
                 za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
             }
 
-            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.SortFilterState(
-                mode, order, filter, showHidden, groupByDate, tags,
-                viewMode = if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) selectedViewMode else null,
-                isRecursive = if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) isRecursive else false
-            )
-            lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) {
-                    za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.saveFolderSpecific(
-                        this@NetworkBrowserActivity, folderKey,
-                        "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath", state, isNetwork = true)
-                } else {
-                    za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.saveGlobal(this@NetworkBrowserActivity, state)
-                    ViewModeManager.save(this@NetworkBrowserActivity, selectedViewMode)
-                    za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.clearFolderSpecific(this@NetworkBrowserActivity, folderKey)
-                }
-                val hasFolderOverrideNow = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(this@NetworkBrowserActivity, currentPath, share.id)
-                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                    updateSortBadge(hasFolderOverrideNow)
+            if (!isSearchActive) {
+                val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.SortFilterState(
+                    mode, order, filter, showHidden, groupByDate, tags,
+                    viewMode = if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) selectedViewMode else null,
+                    isRecursive = if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) isRecursive else false,
+                    dateFilter = dateFilter,
+                    sizeFilter = sizeFilter
+                )
+                lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) {
+                        za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.saveFolderSpecific(
+                            this@NetworkBrowserActivity, folderKey,
+                            "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath", state, isNetwork = true)
+                    } else {
+                        za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.saveGlobal(this@NetworkBrowserActivity, state)
+                        ViewModeManager.save(this@NetworkBrowserActivity, selectedViewMode)
+                        za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.clearFolderSpecific(this@NetworkBrowserActivity, folderKey)
+                    }
+                    val hasFolderOverrideNow = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(this@NetworkBrowserActivity, currentPath, share.id)
+                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                        updateSortBadge(hasFolderOverrideNow)
+                    }
                 }
             }
 
@@ -3296,7 +3318,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 fileAdapter.isGroupedByDate = groupByDate
             }
             applyViewMode(selectedViewMode)
-            applyData()
+            if (isSearchActive && !edtSearch.text.isNullOrEmpty()) {
+                performSearch(edtSearch.text.toString().trim())
+            } else {
+                applyData()
+            }
         }
         sheet.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.TAG)
     }

@@ -251,7 +251,7 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
             ).ifEmpty { "" }
         }
 
-        val nameConflicts = BatchRenameConflictDetector.nameConflicts(resolvedNames)
+        val nameConflicts = BatchRenameConflictDetector.nameConflicts(s.items, resolvedNames)
 
         val previews = s.items.mapIndexed { index, item ->
             PreviewItem(

@@ -445,11 +445,187 @@
                         android:text="@string/filter_documents"
                         android:focusable="true" />
                     <com.google.android.material.chip.Chip
+                        android:id="@+id/chipArchives"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_archives"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
                         android:id="@+id/chipApks"
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/filter_apks"
+                        android:focusable="true" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+
+            <!-- Modified Date filter -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_date_title"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgDateFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDateAny"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_date_any"
+                        android:checked="true"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDateToday"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_date_today"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDateYesterday"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_date_yesterday"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDateThisWeek"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_date_this_week"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDatePrevWeek"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_date_previous_week"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDateThisMonth"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_date_this_month"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDatePrevMonth"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_date_previous_month"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDateThisYear"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_date_this_year"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDatePrevYear"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_date_previous_year"
+                        android:focusable="true" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+
+            <!-- File Size filter -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_size_title"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgSizeFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSizeAny"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_size_any"
+                        android:checked="true"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSizeEmpty"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_size_empty"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSizeTiny"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_size_tiny"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSizeSmall"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_size_small"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSizeMedium"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_size_medium"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSizeBig"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_size_big"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSizeLarge"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_size_large"
+                        android:focusable="true" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSizeHuge"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_size_huge"
                         android:focusable="true" />
                 </com.google.android.material.chip.ChipGroup>
             </LinearLayout>

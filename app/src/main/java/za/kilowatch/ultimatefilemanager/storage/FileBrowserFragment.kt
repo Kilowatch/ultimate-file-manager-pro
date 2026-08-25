@@ -103,8 +103,7 @@ class FileBrowserFragment : Fragment() {
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == android.app.Activity.RESULT_OK) {
-            fileAdapter.exitSelectionMode()
-            refresh()
+            onBatchRenameCompleted()
         }
     }
 
@@ -184,7 +183,13 @@ class FileBrowserFragment : Fragment() {
     private var sortMode = SortFilterSheet.SortMode.NAME
     private var sortOrder = SortFilterSheet.SortOrder.ASC
     private var filterType = SortFilterSheet.FilterType.ALL
+    private var currentDateFilter = SortFilterSheet.DateFilter.ANY
+    private var currentSizeFilter = SortFilterSheet.SizeFilter.ANY
     private var activeTagsFilter: Set<String> = emptySet()
+
+    private var rawSearchResults: List<File>? = null
+    private var isSearchActive: Boolean = false
+    private var isSearchIndexed: Boolean = false
 
     private var isPickerMode = false
     var onStoragePickerRequested: (() -> Unit)? = null
@@ -1001,8 +1006,7 @@ class FileBrowserFragment : Fragment() {
                 } else {
                     val dialog = BatchRenameDialogFragment.newInstance(items)
                     dialog.setOnCompleteListener { _, _ ->
-                        fileAdapter.exitSelectionMode()
-                        refresh()
+                        onBatchRenameCompleted()
                     }
                     dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
                 }
@@ -1235,8 +1239,7 @@ class FileBrowserFragment : Fragment() {
                         } else {
                             val dialog = BatchRenameDialogFragment.newInstance(items)
                             dialog.setOnCompleteListener { _, _ ->
-                                fileAdapter.exitSelectionMode()
-                                refresh()
+                                onBatchRenameCompleted()
                             }
                             dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
                         }
@@ -1888,6 +1891,8 @@ class FileBrowserFragment : Fragment() {
                 sortMode  = state.sortMode
                 sortOrder = state.sortOrder
                 filterType = state.filterType
+                currentDateFilter = state.dateFilter
+                currentSizeFilter = state.sizeFilter
                 activeTagsFilter = state.activeTags
                 // Badge: tint the sort button to signal a folder-specific override is active
                 updateSortBadge(hasFolderOverride)
@@ -2195,43 +2200,58 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
+    private fun onBatchRenameCompleted() {
+        fileAdapter.exitSelectionMode()
+        val query = edtSearch?.text?.toString()?.trim().orEmpty()
+        if (isSearchActive && query.isNotEmpty()) {
+            performSearch(query)
+        } else {
+            refresh()
+        }
+    }
+
     private fun sortAndFilterFiles(files: List<File>): List<File> {
-        val filtered = files.filter { SortFilterSheet.matchesFilter(it, filterType) }
+        val filtered = files.filter { SortFilterSheet.matchesFilter(it, filterType, currentDateFilter, currentSizeFilter) }
         val tagFiltered = if (activeTagsFilter.isNotEmpty()) {
             val ctx = context ?: return filtered
             filtered.filter { it.isDirectory || FileTagsManager.getTags(ctx, it.absolutePath).any { t -> t in activeTagsFilter } }
         } else {
             filtered
         }
-        val secondaryComparator: Comparator<File> = when (sortMode) {
-            SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { f: File -> f.name }
-            SortFilterSheet.SortMode.SIZE -> compareBy { f: File -> if (f.isDirectory) 0L else f.length() }
-            SortFilterSheet.SortMode.DATE -> compareBy { f: File -> f.lastModified() }
-            SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: File -> f.extension }
-        }
-        val orderedComparator = if (sortOrder == SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
-        
-        val customComparator = Comparator<File> { f1, f2 ->
-            val ctx = context ?: return@Comparator NaturalSort.naturalCompare(f1.name, f2.name)
-            val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(ctx.applicationContext, f1.absolutePath)
-            val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(ctx.applicationContext, f2.absolutePath)
-            if (p1 && p2) {
-                NaturalSort.naturalCompare(f1.name, f2.name)
-            } else if (p1) {
-                -1
-            } else if (p2) {
-                1
+        val state = SortFilterPreferenceManager.SortFilterState(
+            sortMode = sortMode,
+            sortOrder = sortOrder,
+            filterType = filterType,
+            showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled,
+            groupByDate = false,
+            activeTags = activeTagsFilter,
+            dateFilter = currentDateFilter,
+            sizeFilter = currentSizeFilter
+        )
+        val fileComparator = SortFilterPreferenceManager.getFileComparator(state, context, directoriesFirst = true)
+        return tagFiltered.sortedWith(fileComparator)
+    }
+
+    private fun applySearchResultsFilterAndSort() {
+        val raw = rawSearchResults ?: return
+        lifecycleScope.launch(Dispatchers.Default) {
+            val processed = sortAndFilterFiles(raw)
+            val ctx = context?.applicationContext
+            val hiddenPaths = if (ctx != null) {
+                za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(ctx).hiddenFileDao().getAllPaths().toSet()
             } else {
-                val dir1 = f1.isDirectory
-                val dir2 = f2.isDirectory
-                if (dir1 != dir2) {
-                    if (dir1) -1 else 1
-                } else {
-                    orderedComparator.compare(f1, f2)
-                }
+                emptySet()
+            }
+            withContext(Dispatchers.Main) {
+                fileAdapter.submitList(
+                    newFiles = processed,
+                    showAllAsIndexed = isSearchIndexed,
+                    hiddenPaths = hiddenPaths,
+                    searchBasePath = currentDir.absolutePath
+                )
+                updateEmptyState(processed.isEmpty())
             }
         }
-        return tagFiltered.sortedWith(customComparator)
     }
 
     private fun openFile(file: File, transitionView: View? = null) {
@@ -2747,6 +2767,9 @@ class FileBrowserFragment : Fragment() {
         sheet.currentSortMode = sortMode
         sheet.currentSortOrder = sortOrder
         sheet.currentFilterType = filterType
+        sheet.currentDateFilter = currentDateFilter
+        sheet.currentSizeFilter = currentSizeFilter
+        sheet.isSearchMode = isSearchActive
         sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(ctx)
         sheet.activeTags = activeTagsFilter
 
@@ -2769,33 +2792,39 @@ class FileBrowserFragment : Fragment() {
         sheet.currentViewMode = activeState?.viewMode
         sheet.currentIsRecursive = activeState?.isRecursive ?: false
 
-        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags, scope, selectedViewMode, isRecursive ->
+        sheet.onApply = { mode, order, filter, dateFilter, sizeFilter, showHidden, groupByDate, tags, scope, selectedViewMode, isRecursive ->
             sortMode = mode
             sortOrder = order
             filterType = filter
+            currentDateFilter = dateFilter
+            currentSizeFilter = sizeFilter
             activeTagsFilter = tags
             if (scope == SortFilterSheet.Scope.GLOBAL) {
                 za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
             }
 
-            val state = SortFilterPreferenceManager.SortFilterState(
-                mode, order, filter, showHidden, groupByDate, tags,
-                viewMode = if (scope == SortFilterSheet.Scope.FOLDER) selectedViewMode else null,
-                isRecursive = if (scope == SortFilterSheet.Scope.FOLDER) isRecursive else false
-            )
-            lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                if (scope == SortFilterSheet.Scope.FOLDER) {
-                    SortFilterPreferenceManager.saveFolderSpecific(
-                        ctx, folderKey, currentDir.absolutePath, state, isNetwork = false)
-                } else {
-                    SortFilterPreferenceManager.saveGlobal(ctx, state)
-                    ViewModeManager.save(ctx, selectedViewMode)
-                    // When switching to global, remove any existing folder override
-                    SortFilterPreferenceManager.clearFolderSpecific(ctx, folderKey)
-                }
-                val hasFolderOverrideNow = SortFilterPreferenceManager.hasFolderOverride(ctx, currentDir.absolutePath)
-                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                    updateSortBadge(hasFolderOverrideNow)
+            if (!isSearchActive) {
+                val state = SortFilterPreferenceManager.SortFilterState(
+                    mode, order, filter, showHidden, groupByDate, tags,
+                    viewMode = if (scope == SortFilterSheet.Scope.FOLDER) selectedViewMode else null,
+                    isRecursive = if (scope == SortFilterSheet.Scope.FOLDER) isRecursive else false,
+                    dateFilter = dateFilter,
+                    sizeFilter = sizeFilter
+                )
+                lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    if (scope == SortFilterSheet.Scope.FOLDER) {
+                        SortFilterPreferenceManager.saveFolderSpecific(
+                            ctx, folderKey, currentDir.absolutePath, state, isNetwork = false)
+                    } else {
+                        SortFilterPreferenceManager.saveGlobal(ctx, state)
+                        ViewModeManager.save(ctx, selectedViewMode)
+                        // When switching to global, remove any existing folder override
+                        SortFilterPreferenceManager.clearFolderSpecific(ctx, folderKey)
+                    }
+                    val hasFolderOverrideNow = SortFilterPreferenceManager.hasFolderOverride(ctx, currentDir.absolutePath)
+                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                        updateSortBadge(hasFolderOverrideNow)
+                    }
                 }
             }
 
@@ -2804,7 +2833,11 @@ class FileBrowserFragment : Fragment() {
                 fileAdapter.isGroupedByDate = groupByDate
             }
             applyViewMode(selectedViewMode)
-            loadDirectory(currentDir)
+            if (isSearchActive && rawSearchResults != null) {
+                applySearchResultsFilterAndSort()
+            } else {
+                loadDirectory(currentDir)
+            }
         }
         sheet.show(parentFragmentManager, SortFilterSheet.TAG)
     }
@@ -3137,20 +3170,26 @@ class FileBrowserFragment : Fragment() {
             searchEdit.setText("")
             val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
             imm.hideSoftInputFromWindow(searchEdit.windowToken, 0)
+            isSearchActive = false
+            rawSearchResults = null
             loadDirectory(currentDir)
         }
     }
 
     private fun performSearch(query: String) {
         if (query.isEmpty()) {
+            isSearchActive = false
+            rawSearchResults = null
             loadDirectory(currentDir)
             return
         }
 
+        isSearchActive = true
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val indexingRepository = UfmApplication.indexingRepository
                 val isIndexed = indexingRepository.isStorageFullyIndexed(storageId)
+                isSearchIndexed = isIndexed
 
                 val files = if (isIndexed) {
                     val results = indexingRepository.searchSmart(
@@ -3162,7 +3201,7 @@ class FileBrowserFragment : Fragment() {
                 } else {
                     val isSaf = currentDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) ||
-                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(requireContext(), currentDir.absolutePath)
+                                (context != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(requireContext(), currentDir.absolutePath))
                     if (isSaf) {
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.searchSaf(requireContext(), currentDir.absolutePath, query, maxResults = 200)
                     } else {
@@ -3178,17 +3217,10 @@ class FileBrowserFragment : Fragment() {
                         found
                     }
                 }
-                
-                val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(requireContext().applicationContext).hiddenFileDao().getAllPaths().toSet()
+                rawSearchResults = files
 
                 withContext(Dispatchers.Main) {
-                    fileAdapter.submitList(
-                        newFiles = files,
-                        showAllAsIndexed = isIndexed,
-                        hiddenPaths = hiddenPaths,
-                        searchBasePath = currentDir.absolutePath
-                    )
-                    updateEmptyState(files.isEmpty())
+                    applySearchResultsFilterAndSort()
                 }
             } catch (e: Exception) {
                 Log.e("FileBrowser", "Search failed: ${e.message}")

@@ -37,28 +37,49 @@ object BatchRenameConflictDetector {
 
     /**
      * Detect name-based conflicts synchronously.
+     * Path-aware: checks duplicates within the same parent folder instead of globally across disparate folders.
      *
      * @return Map of item index → conflict, containing only conflicting rows.
      */
     fun nameConflicts(
+        items: List<BatchRenameItem>,
         resolvedNames: List<String>
     ): Map<Int, PreviewConflict> {
         val result = mutableMapOf<Int, PreviewConflict>()
 
-        // Group non-empty result names (case-insensitive) to find duplicates.
-        val byName = resolvedNames.withIndex()
+        fun getParentKey(index: Int): String {
+            val item = items.getOrNull(index) ?: return ""
+            return if (item.isLocal) {
+                item.localFile?.parentFile?.absolutePath ?: ""
+            } else {
+                "${item.networkShare?.id ?: ""}:${parentRemotePath(item.networkFile?.path ?: "")}"
+            }
+        }
+
+        // Group non-empty result names (case-insensitive) by parent directory to find duplicates.
+        val byParentAndName = resolvedNames.withIndex()
             .filter { it.value.isNotEmpty() }
-            .groupBy { it.value.lowercase() }
+            .groupBy { (index, name) ->
+                getParentKey(index) to name.lowercase()
+            }
 
         resolvedNames.forEachIndexed { index, name ->
+            val parentKey = getParentKey(index)
             when {
                 isInvalidName(name) -> result[index] = PreviewConflict.INVALID_CHARS
-                (byName[name.lowercase()]?.size ?: 0) > 1 -> result[index] = PreviewConflict.DUPLICATE
+                (byParentAndName[parentKey to name.lowercase()]?.size ?: 0) > 1 -> result[index] = PreviewConflict.DUPLICATE
             }
         }
 
         return result
     }
+
+    /**
+     * Backward-compatible overload for flat lists with no parent folder context.
+     */
+    fun nameConflicts(
+        resolvedNames: List<String>
+    ): Map<Int, PreviewConflict> = nameConflicts(emptyList(), resolvedNames)
 
     /**
      * Detect collisions with existing sibling files (best-effort, async).

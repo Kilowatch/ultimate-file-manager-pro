@@ -78,6 +78,7 @@ class FolderSortManagerAdapter(
                 za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.VIDEOS    -> ctx.getString(R.string.filter_videos)
                 za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.AUDIO     -> ctx.getString(R.string.filter_audio)
                 za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.DOCUMENTS -> ctx.getString(R.string.filter_documents)
+                za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ARCHIVES  -> ctx.getString(R.string.filter_archives)
                 za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.APKS      -> ctx.getString(R.string.filter_apks)
                 else -> ctx.getString(R.string.filter_all)
             }

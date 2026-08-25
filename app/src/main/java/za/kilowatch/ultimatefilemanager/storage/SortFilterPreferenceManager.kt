@@ -37,6 +37,8 @@ object SortFilterPreferenceManager {
     // filter_type, show_hidden, group_by_date, active_tags were not previously persisted globally
     // via this manager — they are now included for completeness, but their keys are new.
     private const val KEY_FILTER_TYPE   = "global_filter_type"
+    private const val KEY_DATE_FILTER   = "global_date_filter"
+    private const val KEY_SIZE_FILTER   = "global_size_filter"
     private const val KEY_SHOW_HIDDEN   = "global_show_hidden"
     private const val KEY_GROUP_BY_DATE = "global_group_by_date"
     private const val KEY_ACTIVE_TAGS   = "global_active_tags"
@@ -47,6 +49,8 @@ object SortFilterPreferenceManager {
     private const val SUFFIX_SORT_MODE   = "_sort_mode"
     private const val SUFFIX_SORT_ORDER  = "_sort_order"
     private const val SUFFIX_FILTER_TYPE = "_filter_type"
+    private const val SUFFIX_DATE_FILTER = "_date_filter"
+    private const val SUFFIX_SIZE_FILTER = "_size_filter"
     private const val SUFFIX_SHOW_HIDDEN = "_show_hidden"
     private const val SUFFIX_GROUP_DATE  = "_group_by_date"
     private const val SUFFIX_TAGS        = "_tags"
@@ -115,6 +119,12 @@ object SortFilterPreferenceManager {
         val filterType = SortFilterSheet.FilterType.entries.getOrElse(
             prefs.getInt(KEY_FILTER_TYPE, 0)
         ) { SortFilterSheet.FilterType.ALL }
+        val dateFilter = SortFilterSheet.DateFilter.entries.getOrElse(
+            prefs.getInt(KEY_DATE_FILTER, 0)
+        ) { SortFilterSheet.DateFilter.ANY }
+        val sizeFilter = SortFilterSheet.SizeFilter.entries.getOrElse(
+            prefs.getInt(KEY_SIZE_FILTER, 0)
+        ) { SortFilterSheet.SizeFilter.ANY }
         val showHidden = prefs.getBoolean(KEY_SHOW_HIDDEN,
             za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled)
         val groupByDate = prefs.getBoolean(KEY_GROUP_BY_DATE,
@@ -122,7 +132,7 @@ object SortFilterPreferenceManager {
         val tagsRaw = prefs.getString(KEY_ACTIVE_TAGS, "") ?: ""
         val activeTags = if (tagsRaw.isEmpty()) emptySet()
         else tagsRaw.split(",").filter { it.isNotEmpty() }.toSet()
-        return SortFilterState(sortMode, sortOrder, filterType, showHidden, groupByDate, activeTags)
+        return SortFilterState(sortMode, sortOrder, filterType, showHidden, groupByDate, activeTags, dateFilter = dateFilter, sizeFilter = sizeFilter)
     }
 
     /**
@@ -134,6 +144,8 @@ object SortFilterPreferenceManager {
             .putInt(KEY_SORT_MODE, state.sortMode.ordinal)
             .putInt(KEY_SORT_ORDER, state.sortOrder.ordinal)
             .putInt(KEY_FILTER_TYPE, state.filterType.ordinal)
+            .putInt(KEY_DATE_FILTER, state.dateFilter.ordinal)
+            .putInt(KEY_SIZE_FILTER, state.sizeFilter.ordinal)
             .putBoolean(KEY_SHOW_HIDDEN, state.showHidden)
             .putBoolean(KEY_GROUP_BY_DATE, state.groupByDate)
             .putString(KEY_ACTIVE_TAGS, state.activeTags.joinToString(","))
@@ -168,6 +180,12 @@ object SortFilterPreferenceManager {
         val filterType = SortFilterSheet.FilterType.entries.getOrElse(
             prefs.getInt(key + SUFFIX_FILTER_TYPE, 0)
         ) { SortFilterSheet.FilterType.ALL }
+        val dateFilter = SortFilterSheet.DateFilter.entries.getOrElse(
+            prefs.getInt(key + SUFFIX_DATE_FILTER, 0)
+        ) { SortFilterSheet.DateFilter.ANY }
+        val sizeFilter = SortFilterSheet.SizeFilter.entries.getOrElse(
+            prefs.getInt(key + SUFFIX_SIZE_FILTER, 0)
+        ) { SortFilterSheet.SizeFilter.ANY }
         val showHidden = prefs.getBoolean(key + SUFFIX_SHOW_HIDDEN, false)
         val groupByDate = prefs.getBoolean(key + SUFFIX_GROUP_DATE, false)
         val tagsRaw = prefs.getString(key + SUFFIX_TAGS, "") ?: ""
@@ -178,7 +196,7 @@ object SortFilterPreferenceManager {
             try { ViewModeManager.ViewMode.valueOf(it) } catch (e: Exception) { null }
         }
         val isRecursive = prefs.getBoolean(key + SUFFIX_IS_RECURSIVE, false)
-        return SortFilterState(sortMode, sortOrder, filterType, showHidden, groupByDate, activeTags, viewMode, isRecursive)
+        return SortFilterState(sortMode, sortOrder, filterType, showHidden, groupByDate, activeTags, viewMode, isRecursive, dateFilter, sizeFilter)
     }
 
     /**
@@ -207,6 +225,8 @@ object SortFilterPreferenceManager {
             .putInt(key + SUFFIX_SORT_MODE, state.sortMode.ordinal)
             .putInt(key + SUFFIX_SORT_ORDER, state.sortOrder.ordinal)
             .putInt(key + SUFFIX_FILTER_TYPE, state.filterType.ordinal)
+            .putInt(key + SUFFIX_DATE_FILTER, state.dateFilter.ordinal)
+            .putInt(key + SUFFIX_SIZE_FILTER, state.sizeFilter.ordinal)
             .putBoolean(key + SUFFIX_SHOW_HIDDEN, state.showHidden)
             .putBoolean(key + SUFFIX_GROUP_DATE, state.groupByDate)
             .putString(key + SUFFIX_TAGS, state.activeTags.joinToString(","))
@@ -233,6 +253,8 @@ object SortFilterPreferenceManager {
             .remove(key + SUFFIX_SORT_MODE)
             .remove(key + SUFFIX_SORT_ORDER)
             .remove(key + SUFFIX_FILTER_TYPE)
+            .remove(key + SUFFIX_DATE_FILTER)
+            .remove(key + SUFFIX_SIZE_FILTER)
             .remove(key + SUFFIX_SHOW_HIDDEN)
             .remove(key + SUFFIX_GROUP_DATE)
             .remove(key + SUFFIX_TAGS)
@@ -354,14 +376,16 @@ object SortFilterPreferenceManager {
      * Immutable snapshot of all sort & filter settings for one folder (or global).
      */
     data class SortFilterState(
-        val sortMode: SortFilterSheet.SortMode,
-        val sortOrder: SortFilterSheet.SortOrder,
-        val filterType: SortFilterSheet.FilterType,
-        val showHidden: Boolean,
-        val groupByDate: Boolean,
-        val activeTags: Set<String>,
+        val sortMode: SortFilterSheet.SortMode = SortFilterSheet.SortMode.NAME,
+        val sortOrder: SortFilterSheet.SortOrder = SortFilterSheet.SortOrder.ASC,
+        val filterType: SortFilterSheet.FilterType = SortFilterSheet.FilterType.ALL,
+        val showHidden: Boolean = false,
+        val groupByDate: Boolean = false,
+        val activeTags: Set<String> = emptySet(),
         val viewMode: ViewModeManager.ViewMode? = null,
-        val isRecursive: Boolean = false
+        val isRecursive: Boolean = false,
+        val dateFilter: SortFilterSheet.DateFilter = SortFilterSheet.DateFilter.ANY,
+        val sizeFilter: SortFilterSheet.SizeFilter = SortFilterSheet.SizeFilter.ANY
     )
 
     /**
@@ -380,6 +404,19 @@ object SortFilterPreferenceManager {
 
     // ── Comparators ────────────────────────────────────────────────────────────
 
+    private fun getFileTypeCategoryRank(ext: String): Int {
+        val lower = ext.lowercase().trimStart('.')
+        return when {
+            lower in SortFilterSheet.IMAGE_EXTENSIONS -> 1
+            lower in SortFilterSheet.VIDEO_EXTENSIONS -> 2
+            lower in SortFilterSheet.AUDIO_EXTENSIONS -> 3
+            lower in SortFilterSheet.DOCUMENT_EXTENSIONS -> 4
+            lower in SortFilterSheet.ARCHIVE_EXTENSIONS -> 5
+            lower in SortFilterSheet.APK_EXTENSIONS -> 6
+            else -> 7
+        }
+    }
+
     /**
      * Creates a comparator for java.io.File objects using the specified sort mode & order,
      * optional context for pinned files, and optionally grouping directories first.
@@ -393,7 +430,9 @@ object SortFilterPreferenceManager {
             SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { f: java.io.File -> f.name }
             SortFilterSheet.SortMode.SIZE -> compareBy { f: java.io.File -> if (f.isDirectory) 0L else f.length() }
             SortFilterSheet.SortMode.DATE -> compareBy { f: java.io.File -> f.lastModified() }
-            SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: java.io.File -> f.extension }
+            SortFilterSheet.SortMode.TYPE -> compareBy<java.io.File> { getFileTypeCategoryRank(it.extension) }
+                .thenBy(String.CASE_INSENSITIVE_ORDER) { it.extension }
+                .thenBy(NaturalSort.order) { it.name }
         }
         val orderedComparator = if (state.sortOrder == SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
 
@@ -445,7 +484,12 @@ object SortFilterPreferenceManager {
             SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { it.name }
             SortFilterSheet.SortMode.SIZE -> compareBy { if (it.isDirectory) 0L else it.size }
             SortFilterSheet.SortMode.DATE -> compareBy { it.lastModified }
-            SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { if (it.name.contains(".")) it.name.substringAfterLast(".") else "" }
+            SortFilterSheet.SortMode.TYPE -> compareBy<za.kilowatch.ultimatefilemanager.network.NetworkFile> {
+                val ext = if (it.name.contains('.')) it.name.substringAfterLast('.') else ""
+                getFileTypeCategoryRank(ext)
+            }.thenBy(String.CASE_INSENSITIVE_ORDER) {
+                if (it.name.contains('.')) it.name.substringAfterLast('.') else ""
+            }.thenBy(NaturalSort.order) { it.name }
         }
         val orderedComparator = if (state.sortOrder == SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
 

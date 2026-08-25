@@ -43,4 +43,28 @@ class BatchRenameConflictDetectorTest {
         val conflicts = BatchRenameConflictDetector.nameConflicts(listOf(""))
         assertTrue(conflicts.isEmpty())
     }
+
+    @Test
+    fun identicalNamesInDifferentSubfoldersProduceNoConflicts() {
+        val item1 = BatchRenameItem.fromLocalFile(java.io.File("/storage/emulated/0/Video/A/1/Episode-1.mp4"))
+        val item2 = BatchRenameItem.fromLocalFile(java.io.File("/storage/emulated/0/Video/A/2/Episode-2.mp4"))
+        val item3 = BatchRenameItem.fromLocalFile(java.io.File("/storage/emulated/0/Video/A/3/Episode-3.mp4"))
+        val items = listOf(item1, item2, item3)
+        val resolvedNames = listOf("Episode.mp4", "Episode.mp4", "Episode.mp4")
+
+        val conflicts = BatchRenameConflictDetector.nameConflicts(items, resolvedNames)
+        assertTrue("Different subfolders with same target name should not conflict", conflicts.isEmpty())
+    }
+
+    @Test
+    fun identicalNamesInSameSubfolderProduceDuplicateConflict() {
+        val item1 = BatchRenameItem.fromLocalFile(java.io.File("/storage/emulated/0/Video/A/1/Episode-1.mp4"))
+        val item2 = BatchRenameItem.fromLocalFile(java.io.File("/storage/emulated/0/Video/A/1/Episode-2.mp4"))
+        val items = listOf(item1, item2)
+        val resolvedNames = listOf("Episode.mp4", "Episode.mp4")
+
+        val conflicts = BatchRenameConflictDetector.nameConflicts(items, resolvedNames)
+        assertEquals(PreviewConflict.DUPLICATE, conflicts[0])
+        assertEquals(PreviewConflict.DUPLICATE, conflicts[1])
+    }
 }
