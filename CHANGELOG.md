@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enforced zero-leakage mirror security with strict cleanup on exit and activity destruction.
 
 ### Fixed
+- **Folder Scroll Position Restoration Across All Storages (`FileBrowserActivity`, `FileBrowserFragment`, `NetworkBrowserActivity`, `NetworkBrowserFragment`, `FolderScrollState`)**:
+  - Fixed an issue where the file list reset to the top when navigating back to a parent folder instead of restoring the previous scroll position.
+  - Implemented folder scroll state tracking and restoration across SAF, Local, Network (SMB, SFTP, FTP, NFS, DLNA), and Online (Google Drive, OneDrive, Dropbox, Box, S3, WebDAV) storages in both single-pane and dual-pane twin window modes.
+  - Preserves exact visual scroll offset on mobile/tablet and focused item on Android TV, while ensuring forward navigation into new folders starts cleanly at the top.
 - **File Transfer Progress Dialog (`TwinWindowActivity`)**:
   - Fixed an `android.view.InflateException` caused by inflating `dialog_transfer_progress` with a `LinearProgressIndicator` inside a background IO coroutine, which threw `Animators may only be run on Looper threads`. Dialog inflation and display are now dispatched on the Main UI thread before starting the background transfer.
 - **TV Background Server Foreground Service (`TvServerForegroundService`)**:

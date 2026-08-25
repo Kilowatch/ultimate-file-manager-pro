@@ -47,6 +47,7 @@ import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
 import java.io.File
 import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
+import za.kilowatch.ultimatefilemanager.util.FolderScrollState
 import za.kilowatch.ultimatefilemanager.util.KeyboardShortcutHandler
 import za.kilowatch.ultimatefilemanager.ui.KeyboardShortcutDialog
 
@@ -248,6 +249,9 @@ class FileBrowserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        savedInstanceState?.getBundle("KEY_FOLDER_SCROLL_STATES")?.let { bundle ->
+            folderScrollStates.putAll(FolderScrollState.fromBundle(bundle))
+        }
         
         val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
         val internalLabel = getString(R.string.storage_internal)
@@ -375,6 +379,12 @@ class FileBrowserFragment : Fragment() {
                 ctx.unregisterReceiver(folderChangedReceiver)
             } catch (_: Exception) {}
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        saveCurrentFolderScroll()
+        outState.putBundle("KEY_FOLDER_SCROLL_STATES", FolderScrollState.toBundle(folderScrollStates))
     }
 
     fun updateFabPositions() {
@@ -745,6 +755,8 @@ class FileBrowserFragment : Fragment() {
             isCompact = isCompactMode,
             onItemClick = { file, transitionView ->
                 if (file.isDirectory) {
+                    saveCurrentFolderScroll(targetChildPath = file.absolutePath)
+                    folderScrollStates.remove(file.absolutePath)
                     loadDirectory(file)
                 } else {
                     openFile(file, transitionView)
@@ -783,7 +795,11 @@ class FileBrowserFragment : Fragment() {
                 val path = fileAdapter.focusedPath
                 if (path != null) {
                     val file = File(path)
-                    if (file.isDirectory) loadDirectory(file) else openFile(file, null)
+                    if (file.isDirectory) {
+                        saveCurrentFolderScroll(targetChildPath = file.absolutePath)
+                        folderScrollStates.remove(file.absolutePath)
+                        loadDirectory(file)
+                    } else openFile(file, null)
                 }
             }
 
@@ -2008,6 +2024,15 @@ class FileBrowserFragment : Fragment() {
     }
 
     private var lastLoadedPath: String? = null
+    private val folderScrollStates = mutableMapOf<String, FolderScrollState>()
+
+    private fun saveCurrentFolderScroll(targetChildPath: String? = null) {
+        if (!::recyclerFiles.isInitialized || !::currentDir.isInitialized) return
+        val state = FolderScrollState.capture(recyclerFiles, targetChildPath)
+        if (state != null) {
+            folderScrollStates[currentDir.absolutePath] = state
+        }
+    }
 
     private fun submitAdapterList(sorted: List<File>, showAllAsIndexed: Boolean?, hiddenPaths: Set<String>) {
         val safeContext = context ?: return
@@ -2018,14 +2043,34 @@ class FileBrowserFragment : Fragment() {
 
         val isTv = DeviceUtils.isTvDevice(safeContext)
 
-        // Capture scroll position before reload so we can restore it after the
-        // notifyDataSetChanged() that fires inside updateAdapter. Only for same-folder
-        // refreshes on mobile (TV has its own scrollToPosition/requestFocus logic).
+        // 1. Capture scroll position for same-folder reloads
         val lm = if (!isNavigatingFolder && !isTv) recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager else null
-        val savedPosition = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
-        val savedOffset = if (savedPosition != RecyclerView.NO_POSITION) {
-            lm?.findViewByPosition(savedPosition)?.top ?: 0
+        val sameFolderPosition = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
+        val sameFolderOffset = if (sameFolderPosition != RecyclerView.NO_POSITION) {
+            lm?.findViewByPosition(sameFolderPosition)?.top ?: 0
         } else 0
+
+        // 2. Lookup saved scroll state if returning to a previously visited folder
+        val restoredFolderState = if (isNavigatingFolder) folderScrollStates[currentPath] else null
+
+        val restoreScroll = {
+            if (!isNavigatingFolder && sameFolderPosition != RecyclerView.NO_POSITION) {
+                recyclerFiles.post {
+                    (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
+                        ?.scrollToPositionWithOffset(sameFolderPosition, sameFolderOffset)
+                }
+            } else if (restoredFolderState != null && !isTv) {
+                recyclerFiles.post {
+                    (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
+                        ?.scrollToPositionWithOffset(restoredFolderState.position, restoredFolderState.offset)
+                }
+            } else if (isNavigatingFolder && !isTv) {
+                recyclerFiles.post {
+                    (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
+                        ?.scrollToPositionWithOffset(0, 0)
+                }
+            }
+        }
 
         val updateAdapter = {
             if (isAdded) {
@@ -2036,13 +2081,7 @@ class FileBrowserFragment : Fragment() {
                 }
                 updateEmptyState(sorted.isEmpty())
                 updatePasteFab()
-                // Restore scroll position after the data change (mobile same-folder only)
-                if (savedPosition != RecyclerView.NO_POSITION) {
-                    recyclerFiles.post {
-                        (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
-                            ?.scrollToPositionWithOffset(savedPosition, savedOffset)
-                    }
-                }
+                restoreScroll()
             }
         }
 
@@ -2056,20 +2095,24 @@ class FileBrowserFragment : Fragment() {
         }
 
         if (isTv) {
-            val requestFocus = shouldRestoreFocus || arguments?.getBoolean(ARG_REQUEST_INITIAL_FOCUS, false) == true
+            val requestFocus = shouldRestoreFocus || arguments?.getBoolean(ARG_REQUEST_INITIAL_FOCUS, false) == true || (isNavigatingFolder && restoredFolderState != null)
             arguments?.putBoolean(ARG_REQUEST_INITIAL_FOCUS, false)
             shouldRestoreFocus = false
             
             if (requestFocus) {
                 recyclerFiles.post {
                     var focusPos = 0
-                    val exitedDir = lastExitedDir
+                    val exitedDir = lastExitedDir ?: (restoredFolderState?.targetChildPath?.let { File(it) })
                     if (exitedDir != null) {
                         val index = fileAdapter.findPosition(exitedDir.absolutePath)
                         if (index != -1) {
                             focusPos = index
+                        } else if (restoredFolderState != null) {
+                            focusPos = restoredFolderState.position.coerceIn(0, (fileAdapter.itemCount - 1).coerceAtLeast(0))
                         }
                         lastExitedDir = null
+                    } else if (restoredFolderState != null) {
+                        focusPos = restoredFolderState.position.coerceIn(0, (fileAdapter.itemCount - 1).coerceAtLeast(0))
                     }
                     if (fileAdapter.itemCount > 0) {
                         recyclerFiles.scrollToPosition(focusPos)
@@ -2310,6 +2353,7 @@ class FileBrowserFragment : Fragment() {
         if (currentDir.absolutePath != rootPath) {
             val parent = currentDir.parentFile ?: return false
             lastExitedDir = currentDir
+            shouldRestoreFocus = true
             loadDirectory(parent)
             return true
         }
