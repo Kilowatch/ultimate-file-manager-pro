@@ -413,6 +413,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar
+        android:id="@+id/floatingQuickBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Empty State -->
     <LinearLayout
         android:id="@+id/layoutEmpty"

@@ -151,6 +151,76 @@ class ToolbarIconsActivity : AppCompatActivity() {
         )
     }
 
+    private data class QuickActionDef(
+        val actionId: String,
+        val nameResId: Int,
+        val iconResId: Int,
+        val customIconKey: String? = null
+    )
+
+    private fun getQuickActionDef(actionId: String): QuickActionDef {
+        val pm = ToolbarIconsPreferenceManager
+        return when (actionId) {
+            pm.ACTION_DELETE -> QuickActionDef(pm.ACTION_DELETE, R.string.action_delete, R.drawable.ic_delete, "toolbar_delete")
+            pm.ACTION_COMPRESS -> QuickActionDef(pm.ACTION_COMPRESS, R.string.action_compress, R.drawable.ic_compress, "toolbar_compress")
+            pm.ACTION_MOVE -> QuickActionDef(pm.ACTION_MOVE, R.string.action_move, R.drawable.ic_move, "toolbar_move")
+            pm.ACTION_COPY -> QuickActionDef(pm.ACTION_COPY, R.string.action_copy, R.drawable.ic_copy, "toolbar_copy")
+            pm.ACTION_RENAME -> QuickActionDef(pm.ACTION_RENAME, R.string.action_rename, R.drawable.ic_edit, "toolbar_rename")
+            pm.ACTION_SHARE -> QuickActionDef(pm.ACTION_SHARE, R.string.action_share, R.drawable.ic_share, "toolbar_share")
+            pm.ACTION_PROTECT_UNPROTECT -> QuickActionDef(pm.ACTION_PROTECT_UNPROTECT, R.string.quick_bar_action_protect_unprotect, R.drawable.ic_shield_protected, "toolbar_protect")
+            pm.ACTION_HIDE_UNHIDE -> QuickActionDef(pm.ACTION_HIDE_UNHIDE, R.string.quick_bar_action_hide_unhide, R.drawable.ic_eye_off, "toolbar_hide")
+            pm.ACTION_PIN_UNPIN -> QuickActionDef(pm.ACTION_PIN_UNPIN, R.string.quick_bar_action_pin_unpin, R.drawable.ic_paperclip, "toolbar_pin")
+            pm.ACTION_FAVORITE -> QuickActionDef(pm.ACTION_FAVORITE, R.string.action_favorite, R.drawable.ic_star, "toolbar_favorite")
+            pm.ACTION_SELECT_ALL -> QuickActionDef(pm.ACTION_SELECT_ALL, R.string.action_select_all, R.drawable.ic_select_all, "toolbar_select_all")
+            pm.ACTION_INVERT_SELECTION -> QuickActionDef(pm.ACTION_INVERT_SELECTION, R.string.action_invert_selection, R.drawable.ic_invert_selection, "toolbar_invert_selection")
+            pm.ACTION_EXTRACT -> QuickActionDef(pm.ACTION_EXTRACT, R.string.action_extract_here, R.drawable.ic_extract)
+            pm.ACTION_IMAGE_COMPRESS -> QuickActionDef(pm.ACTION_IMAGE_COMPRESS, R.string.action_compress_image, R.drawable.ic_compress_image, "toolbar_image_compress")
+            pm.ACTION_CREATE_GIF -> QuickActionDef(pm.ACTION_CREATE_GIF, R.string.action_create_gif, R.drawable.ic_gif, "toolbar_create_gif")
+            pm.ACTION_EXIF_TOOLS -> QuickActionDef(pm.ACTION_EXIF_TOOLS, R.string.action_exif_cleaner_renamer, R.drawable.ic_exif_cleaner, "toolbar_exif_cleaner")
+            pm.ACTION_SET_HOME_WALLPAPER -> QuickActionDef(pm.ACTION_SET_HOME_WALLPAPER, R.string.action_set_home_wallpaper, R.drawable.ic_wallpaper_home, "toolbar_set_home_wallpaper")
+            pm.ACTION_SET_LOCK_WALLPAPER -> QuickActionDef(pm.ACTION_SET_LOCK_WALLPAPER, R.string.action_set_lock_wallpaper, R.drawable.ic_wallpaper_lock, "toolbar_set_lock_wallpaper")
+            pm.ACTION_DUPLICATE_FINDER -> QuickActionDef(pm.ACTION_DUPLICATE_FINDER, R.string.action_duplicate_finder, R.drawable.ic_duplicate_finder, "toolbar_duplicate_finder")
+            pm.ACTION_LARGE_FILES_FINDER -> QuickActionDef(pm.ACTION_LARGE_FILES_FINDER, R.string.action_large_files_finder, R.drawable.ic_folder_large_files, "toolbar_large_files_finder")
+            pm.ACTION_CREATE_NEW -> QuickActionDef(pm.ACTION_CREATE_NEW, R.string.cd_create_new, R.drawable.ic_create_new, "toolbar_create_new")
+            pm.ACTION_RETRIGGER_THUMBNAILS -> QuickActionDef(pm.ACTION_RETRIGGER_THUMBNAILS, R.string.action_retrigger_thumbnails, R.drawable.ic_photo_video, "toolbar_retrigger_thumbnails")
+            pm.ACTION_COPY_ENCRYPT -> QuickActionDef(pm.ACTION_COPY_ENCRYPT, R.string.action_copy_encrypt, R.drawable.ic_copy_encrypt, "toolbar_copy_encrypt")
+            pm.ACTION_MOVE_ENCRYPT -> QuickActionDef(pm.ACTION_MOVE_ENCRYPT, R.string.action_move_encrypt, R.drawable.ic_move_encrypt, "toolbar_move_encrypt")
+            pm.ACTION_MORE -> QuickActionDef(pm.ACTION_MORE, R.string.quick_bar_action_more, R.drawable.ic_arrow_forward)
+            else -> QuickActionDef(actionId, R.string.quick_bar_action_more, R.drawable.ic_more)
+        }
+    }
+
+    private fun mapPrefKeyToQuickAction(prefKey: String): String {
+        val pm = ToolbarIconsPreferenceManager
+        return when (prefKey) {
+            pm.KEY_CREATE_NEW -> pm.ACTION_CREATE_NEW
+            pm.KEY_COPY -> pm.ACTION_COPY
+            pm.KEY_MOVE -> pm.ACTION_MOVE
+            pm.KEY_RENAME -> pm.ACTION_RENAME
+            pm.KEY_SHARE -> pm.ACTION_SHARE
+            pm.KEY_DELETE -> pm.ACTION_DELETE
+            pm.KEY_COPY_ENCRYPT -> pm.ACTION_COPY_ENCRYPT
+            pm.KEY_MOVE_ENCRYPT -> pm.ACTION_MOVE_ENCRYPT
+            pm.KEY_PROTECT, pm.KEY_UNPROTECT -> pm.ACTION_PROTECT_UNPROTECT
+            pm.KEY_HIDE, pm.KEY_UNHIDE -> pm.ACTION_HIDE_UNHIDE
+            pm.KEY_PIN, pm.KEY_UNPIN -> pm.ACTION_PIN_UNPIN
+            pm.KEY_SELECT_ALL -> pm.ACTION_SELECT_ALL
+            pm.KEY_INVERT_SELECTION -> pm.ACTION_INVERT_SELECTION
+            pm.KEY_FAVORITE -> pm.ACTION_FAVORITE
+            pm.KEY_COMPRESS -> pm.ACTION_COMPRESS
+            pm.KEY_EXTRACT -> pm.ACTION_EXTRACT
+            pm.KEY_IMAGE_COMPRESS -> pm.ACTION_IMAGE_COMPRESS
+            pm.KEY_RETRIGGER_THUMBNAILS -> pm.ACTION_RETRIGGER_THUMBNAILS
+            pm.KEY_CREATE_GIF -> pm.ACTION_CREATE_GIF
+            pm.KEY_EXIF_TOOLS -> pm.ACTION_EXIF_TOOLS
+            pm.KEY_SET_HOME_WALLPAPER -> pm.ACTION_SET_HOME_WALLPAPER
+            pm.KEY_SET_LOCK_WALLPAPER -> pm.ACTION_SET_LOCK_WALLPAPER
+            pm.KEY_DUPLICATE_FINDER -> pm.ACTION_DUPLICATE_FINDER
+            pm.KEY_LARGE_FILES_FINDER -> pm.ACTION_LARGE_FILES_FINDER
+            else -> prefKey
+        }
+    }
+
     private fun buildLayout() {
         val count = contentLayout.childCount
         if (count > 1) {
@@ -166,6 +236,118 @@ class ToolbarIconsActivity : AppCompatActivity() {
 
     private fun buildMobileLayout() {
         val inflater = LayoutInflater.from(this)
+        val pm = ToolbarIconsPreferenceManager
+
+        // ── 1. Master Floating Quick Bar Toggle Card ─────────────────────────
+        val masterCard = createGlassCard()
+        val masterRow = inflater.inflate(R.layout.item_toolbar_icon_row, masterCard, false)
+        val imgMasterIcon = masterRow.findViewById<ImageView>(R.id.imgIcon)
+        val txtMasterName = masterRow.findViewById<TextView>(R.id.txtName)
+        val txtMasterSubtitle = masterRow.findViewById<TextView>(R.id.txtSubtitle)
+        val switchMaster = masterRow.findViewById<SwitchMaterial>(R.id.switchToggle)
+        val btnMasterQuickToggle = masterRow.findViewById<View>(R.id.btnQuickBarToggle)
+
+        btnMasterQuickToggle.visibility = View.GONE
+        imgMasterIcon.setImageResource(R.drawable.ic_long_press)
+        txtMasterName.setText(R.string.quick_bar_title)
+        txtMasterSubtitle.setText(R.string.quick_bar_subtitle)
+
+        val isQuickBarOn = pm.isQuickBarEnabled(this)
+        switchMaster.isChecked = isQuickBarOn
+
+        masterCard.addView(masterRow)
+        contentLayout.addView(masterCard)
+
+        // ── 2. Active Quick Bar Slots & Reorder Card ────────────────────────
+        val activeSlotsCard = createGlassCard()
+        val activeSlotsContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            val density = resources.displayMetrics.density
+            setPadding((14 * density).toInt(), (14 * density).toInt(), (14 * density).toInt(), (14 * density).toInt())
+        }
+
+        val txtSlotsTitle = TextView(this).apply {
+            setText(R.string.quick_bar_active_slots_title)
+            setTextColor(getColor(R.color.mobile_card_text_primary))
+            textSize = 15.5f
+            typeface = Typeface.create("sans-serif-bold", Typeface.NORMAL)
+        }
+        val txtSlotsSubtitle = TextView(this).apply {
+            setText(R.string.quick_bar_active_slots_subtitle)
+            setTextColor(getColor(R.color.mobile_text_secondary))
+            textSize = 12f
+            val density = resources.displayMetrics.density
+            setPadding(0, (2 * density).toInt(), 0, (10 * density).toInt())
+        }
+
+        val rvReorder = androidx.recyclerview.widget.RecyclerView(this).apply {
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@ToolbarIconsActivity)
+            isNestedScrollingEnabled = false
+        }
+
+        val currentQuickItems = pm.getQuickBarItems(this).toMutableList()
+        val quickDefs = currentQuickItems.map { getQuickActionDef(it) }.toMutableList()
+
+        var reorderAdapter: QuickBarReorderAdapter? = null
+        val itemTouchHelper = androidx.recyclerview.widget.ItemTouchHelper(object : androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback(
+            androidx.recyclerview.widget.ItemTouchHelper.UP or androidx.recyclerview.widget.ItemTouchHelper.DOWN, 0
+        ) {
+            override fun onMove(
+                recyclerView: androidx.recyclerview.widget.RecyclerView,
+                viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                target: androidx.recyclerview.widget.RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPos = viewHolder.bindingAdapterPosition
+                val toPos = target.bindingAdapterPosition
+                if (fromPos == androidx.recyclerview.widget.RecyclerView.NO_POSITION || toPos == androidx.recyclerview.widget.RecyclerView.NO_POSITION) return false
+
+                java.util.Collections.swap(quickDefs, fromPos, toPos)
+                reorderAdapter?.notifyItemMoved(fromPos, toPos)
+                val min = minOf(fromPos, toPos)
+                val count = kotlin.math.abs(fromPos - toPos) + 1
+                reorderAdapter?.notifyItemRangeChanged(min, count)
+
+                pm.setQuickBarItems(this@ToolbarIconsActivity, quickDefs.map { it.actionId })
+                refreshCategoryQuickBarChips()
+                return true
+            }
+
+            override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int) {}
+        })
+        itemTouchHelper.attachToRecyclerView(rvReorder)
+
+        reorderAdapter = QuickBarReorderAdapter(
+            quickDefs,
+            onRemove = { pos ->
+                if (pos in quickDefs.indices) {
+                    quickDefs.removeAt(pos)
+                    reorderAdapter?.notifyItemRemoved(pos)
+                    reorderAdapter?.notifyItemRangeChanged(pos, quickDefs.size - pos)
+                    pm.setQuickBarItems(this@ToolbarIconsActivity, quickDefs.map { it.actionId })
+                    refreshCategoryQuickBarChips()
+                }
+            },
+            onStartDrag = { holder ->
+                itemTouchHelper.startDrag(holder)
+            }
+        )
+        rvReorder.adapter = reorderAdapter
+
+        activeSlotsContainer.addView(txtSlotsTitle)
+        activeSlotsContainer.addView(txtSlotsSubtitle)
+        activeSlotsContainer.addView(rvReorder)
+        activeSlotsCard.addView(activeSlotsContainer)
+
+        contentLayout.addView(activeSlotsCard)
+        activeSlotsCard.visibility = if (isQuickBarOn) View.VISIBLE else View.GONE
+
+        switchMaster.setOnCheckedChangeListener { _, isChecked ->
+            pm.setQuickBarEnabled(this, isChecked)
+            activeSlotsCard.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+        masterRow.setOnClickListener { switchMaster.isChecked = !switchMaster.isChecked }
+
+        // ── 3. Categorized Action Sections ───────────────────────────────────
         val sections = getSections()
 
         for (section in sections) {
@@ -182,6 +364,8 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 val txtName = row.findViewById<TextView>(R.id.txtName)
                 val txtSubtitle = row.findViewById<TextView>(R.id.txtSubtitle)
                 val switchToggle = row.findViewById<SwitchMaterial>(R.id.switchToggle)
+                val btnQuickBarToggle = row.findViewById<View>(R.id.btnQuickBarToggle)
+                val txtQuickBarStatus = row.findViewById<TextView>(R.id.txtQuickBarStatus)
 
                 imgIcon.setImageResource(item.iconResId)
                 if (item.customIconKey != null) {
@@ -191,12 +375,79 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 txtName.setText(item.nameResId)
                 txtSubtitle.setText(item.descResId)
 
-                val isEnabled = ToolbarIconsPreferenceManager.isIconEnabled(this, item.prefKey)
+                val isEnabled = pm.isIconEnabled(this, item.prefKey)
                 switchToggle.isChecked = isEnabled
 
+                val targetActionId = mapPrefKeyToQuickAction(item.prefKey)
+
                 switchToggle.setOnCheckedChangeListener { _, isChecked ->
-                    ToolbarIconsPreferenceManager.setIconEnabled(this, item.prefKey, isChecked)
+                    pm.setIconEnabled(this, item.prefKey, isChecked)
+                    if (!isChecked) {
+                        val shouldRemove = when (targetActionId) {
+                            pm.ACTION_PROTECT_UNPROTECT -> !pm.isIconEnabled(this, pm.KEY_PROTECT) && !pm.isIconEnabled(this, pm.KEY_UNPROTECT)
+                            pm.ACTION_HIDE_UNHIDE -> !pm.isIconEnabled(this, pm.KEY_HIDE) && !pm.isIconEnabled(this, pm.KEY_UNHIDE)
+                            pm.ACTION_PIN_UNPIN -> !pm.isIconEnabled(this, pm.KEY_PIN) && !pm.isIconEnabled(this, pm.KEY_UNPIN)
+                            else -> true
+                        }
+                        if (shouldRemove) {
+                            val activeItems = pm.getQuickBarItems(this).toMutableList()
+                            val idx = activeItems.indexOf(targetActionId)
+                            if (idx >= 0) {
+                                activeItems.removeAt(idx)
+                                pm.setQuickBarItems(this, activeItems)
+                                quickDefs.clear()
+                                quickDefs.addAll(activeItems.map { getQuickActionDef(it) })
+                                reorderAdapter?.notifyDataSetChanged()
+                                refreshCategoryQuickBarChips()
+                            }
+                        }
+                    }
                 }
+
+                val updateChipStatus = {
+                    val activeItems = pm.getQuickBarItems(this)
+                    val idx = activeItems.indexOf(targetActionId)
+                    if (idx >= 0) {
+                        txtQuickBarStatus.text = getString(R.string.quick_bar_in_quick_bar, idx + 1)
+                        btnQuickBarToggle.background = getDrawable(R.drawable.bg_chip_selected)
+                        txtQuickBarStatus.setTextColor(getColor(R.color.black))
+                    } else {
+                        txtQuickBarStatus.setText(R.string.quick_bar_add_to_quick_bar)
+                        btnQuickBarToggle.background = getDrawable(R.drawable.bg_btn_icon_frosted)
+                        txtQuickBarStatus.setTextColor(getColor(R.color.mobile_text_secondary))
+                    }
+                }
+                updateChipStatus()
+                row.setTag(R.id.btnQuickBarToggle, updateChipStatus)
+
+                btnQuickBarToggle.setOnClickListener {
+                    val activeItems = pm.getQuickBarItems(this).toMutableList()
+                    val idx = activeItems.indexOf(targetActionId)
+                    if (idx >= 0) {
+                        activeItems.removeAt(idx)
+                        pm.setQuickBarItems(this, activeItems)
+                        quickDefs.clear()
+                        quickDefs.addAll(activeItems.map { getQuickActionDef(it) })
+                        reorderAdapter?.notifyDataSetChanged()
+                        refreshCategoryQuickBarChips()
+                    } else {
+                        if (activeItems.size >= ToolbarIconsPreferenceManager.MAX_QUICK_BAR_ITEMS) {
+                            Toast.makeText(this, R.string.quick_bar_max_limit_reached, Toast.LENGTH_SHORT).show()
+                        } else {
+                            if (!switchToggle.isChecked) {
+                                switchToggle.isChecked = true
+                                pm.setIconEnabled(this, item.prefKey, true)
+                            }
+                            activeItems.add(targetActionId)
+                            pm.setQuickBarItems(this, activeItems)
+                            quickDefs.clear()
+                            quickDefs.addAll(activeItems.map { getQuickActionDef(it) })
+                            reorderAdapter?.notifyDataSetChanged()
+                            refreshCategoryQuickBarChips()
+                        }
+                    }
+                }
+
                 row.setOnClickListener { switchToggle.isChecked = !switchToggle.isChecked }
 
                 container.addView(row)
@@ -210,6 +461,71 @@ class ToolbarIconsActivity : AppCompatActivity() {
             contentLayout.addView(glassCard)
         }
     }
+
+    private fun refreshCategoryQuickBarChips() {
+        for (i in 0 until contentLayout.childCount) {
+            val child = contentLayout.getChildAt(i)
+            if (child is MaterialCardView) {
+                val container = child.getChildAt(0)
+                if (container is LinearLayout) {
+                    for (j in 0 until container.childCount) {
+                        val row = container.getChildAt(j)
+                        val updater = row.getTag(R.id.btnQuickBarToggle) as? (() -> Unit)
+                        updater?.invoke()
+                    }
+                }
+            }
+        }
+    }
+
+    private class QuickBarReorderAdapter(
+        private val items: List<QuickActionDef>,
+        private val onRemove: (position: Int) -> Unit,
+        private val onStartDrag: (holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) -> Unit
+    ) : androidx.recyclerview.widget.RecyclerView.Adapter<QuickBarReorderAdapter.SlotViewHolder>() {
+
+        inner class SlotViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+            val txtSlotPosition: TextView = view.findViewById(R.id.txtSlotPosition)
+            val imgSlotIcon: ImageView = view.findViewById(R.id.imgSlotIcon)
+            val txtSlotName: TextView = view.findViewById(R.id.txtSlotName)
+            val btnRemoveSlot: View = view.findViewById(R.id.btnRemoveSlot)
+            val btnDragHandle: View = view.findViewById(R.id.btnDragHandle)
+        }
+
+        override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): SlotViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_quick_bar_reorder_slot, parent, false)
+            return SlotViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: SlotViewHolder, position: Int) {
+            val item = items[position]
+            val context = holder.itemView.context
+
+            holder.txtSlotPosition.text = (position + 1).toString()
+            holder.imgSlotIcon.setImageResource(item.iconResId)
+            if (item.customIconKey != null) {
+                IconCustomizationManager.applyToView(context, holder.imgSlotIcon, item.customIconKey, item.iconResId)
+            }
+            holder.txtSlotName.setText(item.nameResId)
+
+            holder.btnRemoveSlot.setOnClickListener {
+                val pos = holder.bindingAdapterPosition
+                if (pos != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                    onRemove(pos)
+                }
+            }
+
+            holder.btnDragHandle.setOnTouchListener { _, event ->
+                if (event.actionMasked == android.view.MotionEvent.ACTION_DOWN) {
+                    onStartDrag(holder)
+                }
+                false
+            }
+        }
+
+        override fun getItemCount(): Int = items.size
+    }
+
 
     private fun buildTvLayout() {
         val inflater = LayoutInflater.from(this)

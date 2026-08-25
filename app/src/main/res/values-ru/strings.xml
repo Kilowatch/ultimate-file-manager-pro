@@ -12887,6 +12887,49 @@ support@kilowatch.co.za
     <string name="saf_storage">
 Хранилище SAF
 </string>
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <string name="quick_bar_title">
+Плавающая панель быстрых действий
+</string>
+    <string name="quick_bar_subtitle">
+Показывать плавающую панель быстрых действий внизу при выборе файлов
+</string>
+    <string name="quick_bar_active_slots_title">
+Кнопки быстрых действий (макс. 5)
+</string>
+    <string name="quick_bar_active_slots_subtitle">
+Перетащите, чтобы изменить порядок слева направо
+</string>
+    <string name="quick_bar_max_limit_reached">
+Максимум 5 кнопок быстрых действий
+</string>
+    <string name="quick_bar_action_protect_unprotect">
+Защитить / Снять защиту
+</string>
+    <string name="quick_bar_action_hide_unhide">
+Скрыть / Показать
+</string>
+    <string name="quick_bar_action_pin_unpin">
+Закрепить / Открепить
+</string>
+    <string name="quick_bar_action_more">
+Ещё
+</string>
+    <string name="quick_bar_add_to_quick_bar">
+Добавить в панель быстрых действий
+</string>
+    <string name="quick_bar_in_quick_bar">
+В панели быстрых действий (#%1$d)
+</string>
+    <string name="quick_bar_remove_from_quick_bar">
+Удалить из панели быстрых действий
+</string>
+    <string name="cd_drag_handle">
+Перетащите, чтобы изменить порядок
+</string>
+    <string name="cd_remove_action">
+Удалить действие
+</string>
 </resources>
 
 

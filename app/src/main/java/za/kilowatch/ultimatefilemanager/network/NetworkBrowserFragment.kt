@@ -122,6 +122,7 @@ class NetworkBrowserFragment : Fragment() {
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
     private var fabSelectAll: ExtendedFloatingActionButton? = null
+    private var floatingQuickBar: za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar? = null
     private lateinit var cacheManager: za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
     private var btnOptionsToggle: View? = null
     private var layoutOptionsRow: LinearLayout? = null
@@ -246,6 +247,7 @@ class NetworkBrowserFragment : Fragment() {
     fun updateFabPositions() {
         val ctx = context ?: return
         val isToolsVisible = fabTools?.visibility == View.VISIBLE
+        val isQuickBarVisible = floatingQuickBar?.visibility == View.VISIBLE
         val isPasteVisible = fabPaste?.visibility == View.VISIBLE
 
         if (isCompactMode) {
@@ -269,6 +271,9 @@ class NetworkBrowserFragment : Fragment() {
                 lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
                 if (isToolsVisible) {
                     lp.bottomToTop = R.id.fabTools
+                    lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                } else if (isQuickBarVisible) {
+                    lp.bottomToTop = R.id.floatingQuickBar
                     lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
                 } else {
                     lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
@@ -331,6 +336,9 @@ class NetworkBrowserFragment : Fragment() {
                 if (isToolsVisible) {
                     lp.bottomToTop = R.id.fabTools
                     lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                } else if (isQuickBarVisible) {
+                    lp.bottomToTop = R.id.floatingQuickBar
+                    lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
                 } else {
                     lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                     lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
@@ -341,6 +349,10 @@ class NetworkBrowserFragment : Fragment() {
         }
 
         val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(ctx)
+        val isSelectionMode = fileAdapter.isSelectionMode
+        val density = resources.displayMetrics.density
+        val baseMargin = (16 * density).toInt()
+        val selectionLeftMargin = (56 * density).toInt()
 
         fabTools?.let { fab ->
             val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
@@ -350,9 +362,13 @@ class NetworkBrowserFragment : Fragment() {
             if (isLeftHanded) {
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginStart = if (isSelectionMode) selectionLeftMargin else baseMargin
+                lp.marginEnd = baseMargin
             } else {
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginStart = baseMargin
+                lp.marginEnd = baseMargin
             }
             fab.layoutParams = lp
         }
@@ -363,6 +379,9 @@ class NetworkBrowserFragment : Fragment() {
             if (isToolsVisible) {
                 lp.bottomToTop = R.id.fabTools
                 lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            } else if (isQuickBarVisible) {
+                lp.bottomToTop = R.id.floatingQuickBar
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
             } else {
                 lp.bottomToTop = R.id.layoutActionPillsScroll
                 lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
@@ -370,9 +389,13 @@ class NetworkBrowserFragment : Fragment() {
             if (isLeftHanded) {
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginStart = if (isSelectionMode) selectionLeftMargin else baseMargin
+                lp.marginEnd = baseMargin
             } else {
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginStart = baseMargin
+                lp.marginEnd = baseMargin
             }
             fab.layoutParams = lp
         }
@@ -417,6 +440,10 @@ class NetworkBrowserFragment : Fragment() {
         layoutEmpty = view.findViewById(R.id.layoutEmpty)
         fabPaste = view.findViewById(R.id.fabPaste)
         fabTools = view.findViewById(R.id.fabTools)
+        floatingQuickBar = view.findViewById(R.id.floatingQuickBar)
+        floatingQuickBar?.setOnActionClickListener { actionId ->
+            handleQuickActionClick(actionId)
+        }
         fabSelectAll = view.findViewById(R.id.fabSelectAll)
         fabSelectAll?.setOnClickListener {
             if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
@@ -663,10 +690,11 @@ class NetworkBrowserFragment : Fragment() {
                 })
             }
 
-            if (list.isNotEmpty()) {
+            val displayList = pm.filterItemsForBottomSheet(context, list)
+            if (displayList.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
-                val sheet = FileToolsBottomSheet.newInstance(list, title, subtitle)
+                val sheet = FileToolsBottomSheet.newInstance(displayList, title, subtitle)
                 sheet.show(parentFragmentManager, FileToolsBottomSheet.TAG)
             }
         }
@@ -1110,6 +1138,80 @@ class NetworkBrowserFragment : Fragment() {
         }
     }
 
+    private fun handleQuickActionClick(actionId: String) {
+        val selected = fileAdapter.getSelectedFiles()
+        val count = selected.size
+        val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+
+        when (actionId) {
+            pm.ACTION_DELETE -> {
+                if (!share.readOnly) {
+                    if (isTwinWindow) {
+                        onActionRequested?.invoke("delete")
+                    } else {
+                        showDeleteConfirmation()
+                    }
+                    fileAdapter.exitSelectionMode()
+                }
+            }
+            pm.ACTION_COPY -> {
+                if (isTwinWindow) {
+                    onActionRequested?.invoke("copy")
+                } else {
+                    (activity as? NetworkBrowserActivity)?.handleNetworkCopyOrCut(selected, isMove = false)
+                }
+                fileAdapter.exitSelectionMode()
+            }
+            pm.ACTION_MOVE -> {
+                if (!share.readOnly) {
+                    if (isTwinWindow) {
+                        onActionRequested?.invoke("move")
+                    } else {
+                        (activity as? NetworkBrowserActivity)?.handleNetworkCopyOrCut(selected, isMove = true)
+                    }
+                    fileAdapter.exitSelectionMode()
+                }
+            }
+            pm.ACTION_RENAME -> {
+                if (selected.size == 1) {
+                    showRenameDialog(selected.first())
+                } else if (selected.size > 1) {
+                    val items = selected.map { za.kilowatch.ultimatefilemanager.storage.BatchRenameItem.fromNetworkFile(it, share) }
+                    val dialog = za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.newInstance(items)
+                    dialog.setOnCompleteListener { _, _ -> onBatchRenameCompleted() }
+                    dialog.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.TAG)
+                }
+            }
+            pm.ACTION_SHARE -> {
+                val shareable = selected.filter { !it.isDirectory }
+                if (shareable.isNotEmpty()) {
+                    (activity as? NetworkBrowserActivity)?.shareNetworkFiles(shareable)
+                }
+            }
+            pm.ACTION_COMPRESS -> {
+                (activity as? NetworkBrowserActivity)?.showArchiveOptions(selected)
+            }
+            pm.ACTION_EXTRACT -> {
+                val archives = selected.filter { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchiveExtension(it.name.substringAfterLast('.')) }
+                if (archives.isNotEmpty()) {
+                    (activity as? NetworkBrowserActivity)?.performNetworkExtractHere(archives)
+                }
+            }
+            pm.ACTION_FAVORITE -> {
+                if (count == 1) {
+                    (activity as? NetworkBrowserActivity)?.showFavoriteDialog(selected.first())
+                }
+            }
+            pm.ACTION_SELECT_ALL -> {
+                if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
+            }
+            pm.ACTION_INVERT_SELECTION -> fileAdapter.invertSelection()
+            pm.ACTION_MORE -> {
+                fabTools?.performClick()
+            }
+        }
+    }
+
     private fun updateSelectionUI(count: Int) {
         val showSelection = fileAdapter.isSelectionMode
         val isTv = DeviceUtils.isTvDevice(requireContext())
@@ -1117,6 +1219,8 @@ class NetworkBrowserFragment : Fragment() {
             val layoutHeaderNormal = view?.findViewById<View>(R.id.layoutHeaderNormal)
             val layoutHeaderSelection = view?.findViewById<View>(R.id.layoutHeaderSelection)
             val btnSelectAll = view?.findViewById<View>(R.id.btnSelectAll)
+            val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+            val isQuickBarOn = pm.isQuickBarEnabled(requireContext())
 
             if (showSelection) {
                 val showActions = count > 0
@@ -1135,7 +1239,19 @@ class NetworkBrowserFragment : Fragment() {
                     btnSelectAll.text = if (isAll) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
                 }
 
-                fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
+                if (isQuickBarOn && showActions) {
+                    val state = za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar.SelectionState(
+                        selectedCount = count,
+                        isAllSelected = isAll
+                    )
+                    floatingQuickBar?.bindSelection(state)
+                    floatingQuickBar?.showAnimated { updateFabPositions() }
+                    fabTools?.visibility = View.GONE
+                } else {
+                    floatingQuickBar?.hideAnimated { updateFabPositions() }
+                    fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
+                }
+
                 fabProperties?.visibility = View.GONE
                 fabSelectAll?.visibility = View.GONE
                 updatePasteFab()
@@ -1148,6 +1264,7 @@ class NetworkBrowserFragment : Fragment() {
                 fabProperties?.visibility = View.GONE
                 fabTools?.visibility = View.GONE
                 fabSelectAll?.visibility = View.GONE
+                floatingQuickBar?.hideAnimated { updateFabPositions() }
                 updatePasteFab()
             }
             return

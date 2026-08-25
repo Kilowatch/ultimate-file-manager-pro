@@ -12887,6 +12887,49 @@ Android सिस्टम पिकर के माध्यम से उप�
     <string name="saf_storage">
 SAF स्टोरेज
 </string>
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <string name="quick_bar_title">
+फ्लोटिंग क्विक एक्शन बार
+</string>
+    <string name="quick_bar_subtitle">
+फाइल चयन के दौरान नीचे एक फ्लोटिंग क्विक एक्शन बार दिखाएँ
+</string>
+    <string name="quick_bar_active_slots_title">
+क्विक एक्शन बटन (अधिकतम 5)
+</string>
+    <string name="quick_bar_active_slots_subtitle">
+बाएँ से दाएँ क्रम बदलने के लिए खींचें
+</string>
+    <string name="quick_bar_max_limit_reached">
+अधिकतम 5 क्विक एक्शन बटन की अनुमति है
+</string>
+    <string name="quick_bar_action_protect_unprotect">
+सुरक्षित करें / असुरक्षित करें
+</string>
+    <string name="quick_bar_action_hide_unhide">
+छिपाएँ / दिखाएँ
+</string>
+    <string name="quick_bar_action_pin_unpin">
+पिन करें / अनपिन करें
+</string>
+    <string name="quick_bar_action_more">
+अधिक
+</string>
+    <string name="quick_bar_add_to_quick_bar">
+क्विक बार में जोड़ें
+</string>
+    <string name="quick_bar_in_quick_bar">
+क्विक बार में (#%1$d)
+</string>
+    <string name="quick_bar_remove_from_quick_bar">
+क्विक बार से हटाएँ
+</string>
+    <string name="cd_drag_handle">
+क्रम बदलने के लिए खींचें
+</string>
+    <string name="cd_remove_action">
+क्रिया हटाएँ
+</string>
 </resources>
 
 

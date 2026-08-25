@@ -4534,6 +4534,21 @@
     <string name="storage_location_saf_default_name">Document Location</string>
     <string name="storage_location_inaccessible">Location is no longer accessible. Please re-grant access.</string>
     <string name="saf_storage">SAF Storage</string>
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <string name="quick_bar_title">Floating Quick Action Bar</string>
+    <string name="quick_bar_subtitle">Show a floating quick action bar at the bottom during file selection</string>
+    <string name="quick_bar_active_slots_title">Quick Action Buttons (Max 5)</string>
+    <string name="quick_bar_active_slots_subtitle">Drag to reorder position from left to right</string>
+    <string name="quick_bar_max_limit_reached">Maximum 5 quick action buttons allowed</string>
+    <string name="quick_bar_action_protect_unprotect">Protect / Unprotect</string>
+    <string name="quick_bar_action_hide_unhide">Hide / Unhide</string>
+    <string name="quick_bar_action_pin_unpin">Pin / Unpin</string>
+    <string name="quick_bar_action_more">More</string>
+    <string name="quick_bar_add_to_quick_bar">Add to Quick Bar</string>
+    <string name="quick_bar_in_quick_bar">In Quick Bar (#%1$d)</string>
+    <string name="quick_bar_remove_from_quick_bar">Remove from Quick Bar</string>
+    <string name="cd_drag_handle">Drag to reorder</string>
+    <string name="cd_remove_action">Remove action</string>
 </resources>
 
 

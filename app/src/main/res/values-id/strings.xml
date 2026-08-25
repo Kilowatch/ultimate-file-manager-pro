@@ -12887,6 +12887,49 @@ Lokasi sudah tidak dapat diakses. Harap berikan kembali akses.
     <string name="saf_storage">
 Penyimpanan SAF
 </string>
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <string name="quick_bar_title">
+Bilah Aksi Cepat Mengambang
+</string>
+    <string name="quick_bar_subtitle">
+Tampilkan bilah aksi cepat mengambang di bagian bawah saat memilih file
+</string>
+    <string name="quick_bar_active_slots_title">
+Tombol Aksi Cepat (Maks 5)
+</string>
+    <string name="quick_bar_active_slots_subtitle">
+Seret untuk mengubah urutan posisi dari kiri ke kanan
+</string>
+    <string name="quick_bar_max_limit_reached">
+Maksimal 5 tombol aksi cepat yang diizinkan
+</string>
+    <string name="quick_bar_action_protect_unprotect">
+Lindungi / Buka Proteksi
+</string>
+    <string name="quick_bar_action_hide_unhide">
+Sembunyikan / Tampilkan
+</string>
+    <string name="quick_bar_action_pin_unpin">
+Sematkan / Lepas Sematan
+</string>
+    <string name="quick_bar_action_more">
+Lainnya
+</string>
+    <string name="quick_bar_add_to_quick_bar">
+Tambahkan ke Bilah Cepat
+</string>
+    <string name="quick_bar_in_quick_bar">
+Di Bilah Cepat (#%1$d)
+</string>
+    <string name="quick_bar_remove_from_quick_bar">
+Hapus dari Bilah Cepat
+</string>
+    <string name="cd_drag_handle">
+Seret untuk mengurutkan ulang
+</string>
+    <string name="cd_remove_action">
+Hapus aksi
+</string>
 </resources>
 
 

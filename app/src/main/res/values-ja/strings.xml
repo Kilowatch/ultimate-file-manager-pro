@@ -12887,6 +12887,49 @@ Termuxホーム
     <string name="saf_storage">
 SAFストレージ
 </string>
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <string name="quick_bar_title">
+フローティング クイックアクションバー
+</string>
+    <string name="quick_bar_subtitle">
+ファイル選択中に画面下部にフローティング クイックアクションバーを表示します
+</string>
+    <string name="quick_bar_active_slots_title">
+クイックアクションボタン（最大5個）
+</string>
+    <string name="quick_bar_active_slots_subtitle">
+ドラッグして左から右への順序を並べ替えます
+</string>
+    <string name="quick_bar_max_limit_reached">
+クイックアクションボタンは最大5個までです
+</string>
+    <string name="quick_bar_action_protect_unprotect">
+保護 / 保護解除
+</string>
+    <string name="quick_bar_action_hide_unhide">
+非表示 / 再表示
+</string>
+    <string name="quick_bar_action_pin_unpin">
+ピン留め / ピン留め解除
+</string>
+    <string name="quick_bar_action_more">
+その他
+</string>
+    <string name="quick_bar_add_to_quick_bar">
+クイックバーに追加
+</string>
+    <string name="quick_bar_in_quick_bar">
+クイックバー内 (#%1$d)
+</string>
+    <string name="quick_bar_remove_from_quick_bar">
+クイックバーから削除
+</string>
+    <string name="cd_drag_handle">
+ドラッグして並べ替え
+</string>
+    <string name="cd_remove_action">
+アクションを削除
+</string>
 </resources>
 
 

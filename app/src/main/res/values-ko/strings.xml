@@ -12887,6 +12887,49 @@ Termux 홈
     <string name="saf_storage">
 SAF 저장소
 </string>
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <string name="quick_bar_title">
+플로팅 빠른 작업 표시줄
+</string>
+    <string name="quick_bar_subtitle">
+파일 선택 중 하단에 플로팅 빠른 작업 표시줄을 표시합니다.
+</string>
+    <string name="quick_bar_active_slots_title">
+빠른 작업 버튼 (최대 5개)
+</string>
+    <string name="quick_bar_active_slots_subtitle">
+드래그하여 왼쪽에서 오른쪽으로 순서를 변경하세요.
+</string>
+    <string name="quick_bar_max_limit_reached">
+빠른 작업 버튼은 최대 5개까지 허용됩니다.
+</string>
+    <string name="quick_bar_action_protect_unprotect">
+보호 / 보호 해제
+</string>
+    <string name="quick_bar_action_hide_unhide">
+숨기기 / 숨기기 취소
+</string>
+    <string name="quick_bar_action_pin_unpin">
+고정 / 고정 해제
+</string>
+    <string name="quick_bar_action_more">
+더보기
+</string>
+    <string name="quick_bar_add_to_quick_bar">
+빠른 표시줄에 추가
+</string>
+    <string name="quick_bar_in_quick_bar">
+빠른 표시줄에 있음 (#%1$d)
+</string>
+    <string name="quick_bar_remove_from_quick_bar">
+빠른 표시줄에서 제거
+</string>
+    <string name="cd_drag_handle">
+드래그하여 순서 변경
+</string>
+    <string name="cd_remove_action">
+작업 제거
+</string>
 </resources>
 
 

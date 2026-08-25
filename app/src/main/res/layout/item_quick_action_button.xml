@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btnQuickActionRoot"
+    android:layout_width="wrap_content"
+    android:minWidth="52dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="6dp"
+    android:paddingVertical="4dp"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/imgQuickActionIcon"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:scaleType="fitCenter"
+        android:importantForAccessibility="no"
+        app:tint="@color/quick_bar_icon_tint"
+        tools:src="@drawable/ic_delete" />
+
+    <TextView
+        android:id="@+id/txtQuickActionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/quick_bar_icon_tint"
+        android:textSize="10sp"
+        android:fontFamily="sans-serif-medium"
+        tools:text="Delete" />
+
+</LinearLayout>

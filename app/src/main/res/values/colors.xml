@@ -137,6 +137,10 @@
     <color name="mobile_glass_card_thick">#EEFFFFFF</color>
     <!-- Card stroke / border: subtle gray edge -->
     <color name="mobile_glass_stroke">#26000000</color>
+    <!-- Floating Quick Action Bar — Solid light grey pill background -->
+    <color name="quick_bar_bg">#FFE5E7EB</color>
+    <color name="quick_bar_stroke">#26000000</color>
+    <color name="quick_bar_icon_tint">#FF1F2937</color>
     <!-- Primary text: slate/ink (toolbar sits on light gradient) -->
     <color name="mobile_text_primary">#FF1C2B3A</color>
     <!-- Secondary text: slate (on light background) -->

@@ -12887,6 +12887,49 @@ support@kilowatch.co.za
     <string name="saf_storage">
 Сховище SAF
 </string>
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <string name="quick_bar_title">
+Плаваюча панель швидких дій
+</string>
+    <string name="quick_bar_subtitle">
+Показувати плаваючу панель швидких дій внизу під час вибору файлів
+</string>
+    <string name="quick_bar_active_slots_title">
+Кнопки швидких дій (максимум 5)
+</string>
+    <string name="quick_bar_active_slots_subtitle">
+Перетягніть, щоб змінити порядок зліва направо
+</string>
+    <string name="quick_bar_max_limit_reached">
+Дозволено максимум 5 кнопок швидких дій
+</string>
+    <string name="quick_bar_action_protect_unprotect">
+Захистити / Зняти захист
+</string>
+    <string name="quick_bar_action_hide_unhide">
+Сховати / Показати
+</string>
+    <string name="quick_bar_action_pin_unpin">
+Закріпити / Відкріпити
+</string>
+    <string name="quick_bar_action_more">
+Більше
+</string>
+    <string name="quick_bar_add_to_quick_bar">
+Додати до панелі швидких дій
+</string>
+    <string name="quick_bar_in_quick_bar">
+На панелі швидких дій (#%1$d)
+</string>
+    <string name="quick_bar_remove_from_quick_bar">
+Видалити з панелі швидких дій
+</string>
+    <string name="cd_drag_handle">
+Перетягніть, щоб змінити порядок
+</string>
+    <string name="cd_remove_action">
+Видалити дію
+</string>
 </resources>
 
 

@@ -112,6 +112,10 @@
     <color name="tv_bg_card_dark">#22FFFFFF</color>
     <color name="mobile_glass_card_thick">#26FFFFFF</color>
     <color name="mobile_glass_stroke">#33FFFFFF</color>
+    <!-- Floating Quick Action Bar — Light grey slate pill background for dark mode -->
+    <color name="quick_bar_bg">#FF374151</color>
+    <color name="quick_bar_stroke">#33FFFFFF</color>
+    <color name="quick_bar_icon_tint">#FFFFFFFF</color>
     <color name="mobile_text_primary">#FFFFFFFF</color>
     <color name="mobile_text_secondary">#99FFFFFF</color>
     <color name="mobile_icon_tint">#FFFFFFFF</color>

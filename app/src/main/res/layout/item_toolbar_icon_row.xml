@@ -58,6 +58,28 @@
             tools:text="Duplicate selected items to clipboard" />
     </LinearLayout>
 
+    <!-- Quick Bar Add / Position Chip Button -->
+    <FrameLayout
+        android:id="@+id/btnQuickBarToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginEnd="10dp"
+        android:paddingHorizontal="10dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/txtQuickBarStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="11.5sp"
+            android:fontFamily="sans-serif-bold"
+            tools:text="+ Quick Bar" />
+    </FrameLayout>
+
     <!-- Switch -->
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switchToggle"

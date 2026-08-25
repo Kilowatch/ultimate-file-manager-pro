@@ -12887,6 +12887,49 @@ support@kilowatch.co.za
     <string name="saf_storage">
 تخزين SAF
 </string>
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <string name="quick_bar_title">
+شريط الإجراءات السريعة العائم
+</string>
+    <string name="quick_bar_subtitle">
+إظهار شريط إجراءات سريع عائم في الأسفل أثناء تحديد الملفات
+</string>
+    <string name="quick_bar_active_slots_title">
+أزرار الإجراءات السريعة (الحد الأقصى 5)
+</string>
+    <string name="quick_bar_active_slots_subtitle">
+اسحب لإعادة الترتيب من اليسار إلى اليمين
+</string>
+    <string name="quick_bar_max_limit_reached">
+يُسمح بحد أقصى 5 أزرار إجراءات سريعة
+</string>
+    <string name="quick_bar_action_protect_unprotect">
+حماية / إلغاء الحماية
+</string>
+    <string name="quick_bar_action_hide_unhide">
+إخفاء / إظهار
+</string>
+    <string name="quick_bar_action_pin_unpin">
+تثبيت / إلغاء التثبيت
+</string>
+    <string name="quick_bar_action_more">
+المزيد
+</string>
+    <string name="quick_bar_add_to_quick_bar">
+إضافة إلى الشريط السريع
+</string>
+    <string name="quick_bar_in_quick_bar">
+في الشريط السريع (#%1$d)
+</string>
+    <string name="quick_bar_remove_from_quick_bar">
+إزالة من الشريط السريع
+</string>
+    <string name="cd_drag_handle">
+اسحب لإعادة الترتيب
+</string>
+    <string name="cd_remove_action">
+إزالة الإجراء
+</string>
 </resources>
 
 

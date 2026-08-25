@@ -12899,6 +12899,49 @@ La ubicación ya no es accesible. Vuelve a otorgar el acceso.
     <string name="saf_storage">
 Almacenamiento SAF
 </string>
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <string name="quick_bar_title">
+Barra de acciones rápidas flotante
+</string>
+    <string name="quick_bar_subtitle">
+Mostrar una barra de acciones rápidas flotante en la parte inferior durante la selección de archivos
+</string>
+    <string name="quick_bar_active_slots_title">
+Botones de acciones rápidas (máximo 5)
+</string>
+    <string name="quick_bar_active_slots_subtitle">
+Arrastra para reordenar la posición de izquierda a derecha
+</string>
+    <string name="quick_bar_max_limit_reached">
+Máximo 5 botones de acciones rápidas permitidos
+</string>
+    <string name="quick_bar_action_protect_unprotect">
+Proteger / Desproteger
+</string>
+    <string name="quick_bar_action_hide_unhide">
+Ocultar / Mostrar
+</string>
+    <string name="quick_bar_action_pin_unpin">
+Anclar / Desanclar
+</string>
+    <string name="quick_bar_action_more">
+Más
+</string>
+    <string name="quick_bar_add_to_quick_bar">
+Añadir a la barra de acciones rápidas
+</string>
+    <string name="quick_bar_in_quick_bar">
+En la barra de acciones rápidas (#%1$d)
+</string>
+    <string name="quick_bar_remove_from_quick_bar">
+Quitar de la barra de acciones rápidas
+</string>
+    <string name="cd_drag_handle">
+Arrastra para reordenar
+</string>
+    <string name="cd_remove_action">
+Quitar acción
+</string>
 </resources>
 
 

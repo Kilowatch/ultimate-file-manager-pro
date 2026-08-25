@@ -5,6 +5,17 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.2] — 2026-08-25
+
+### Added
+- **Floating Quick Action Bar for Mobile File Selection (`FloatingQuickActionBar`, `ToolbarIconsActivity`)**:
+  - Added an elevated floating quick action bar (pill bar) anchored at the bottom center during multi-selection mode on mobile devices, featuring a frosted glass container, subtle elevation, and smooth slide enter/exit animations.
+  - Supports up to 6 customizable quick action slots with live drag-and-drop reordering (left-to-right positions 1 to 6) in **Settings → Long Press Toolbar Icons**.
+  - Grouped dynamic toggle slots for **Protect / Unprotect**, **Hide / Unhide**, and **Pin / UnPin** into 1 slot each, automatically adapting icon and action label based on active file selection state.
+  - Configured default 6 action slots: 1. Copy, 2. Move, 3. Delete, 4. Rename, 5. Compress, 6. More (`>`).
+  - Trailing `>` (*More*) button triggers `FileToolsBottomSheet`, automatically filtering out tools already present on the floating Quick Bar across Local, SAF, Network (SMB, SFTP, FTP, WebDAV, NFS), and Online/Cloud storages.
+  - Master enable/disable toggle switch in Toolbar Icons settings.
+
 ## [1.9.1] — 2026-08-24
 
 ### Added

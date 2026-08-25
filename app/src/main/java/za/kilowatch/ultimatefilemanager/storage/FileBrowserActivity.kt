@@ -123,6 +123,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private lateinit var fabPaste: ExtendedFloatingActionButton
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
+    private var floatingQuickBar: za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar? = null
     private lateinit var fileAdapter: FileAdapter
     private var layoutBreadcrumbsScroll: android.widget.HorizontalScrollView? = null
     private var layoutBreadcrumbs: android.widget.LinearLayout? = null
@@ -560,6 +561,10 @@ class FileBrowserActivity : AppCompatActivity() {
         if (!::fabPaste.isInitialized) return
         val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(this)
         val isToolsVisible = fabTools?.visibility == View.VISIBLE
+        val isSelectionMode = fileAdapter.isSelectionMode
+        val density = resources.displayMetrics.density
+        val baseMargin = (16 * density).toInt()
+        val selectionLeftMargin = (56 * density).toInt()
 
         fabTools?.let { tools ->
             val lp = tools.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
@@ -568,17 +573,26 @@ class FileBrowserActivity : AppCompatActivity() {
             if (isLeftHanded) {
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginStart = if (isSelectionMode) selectionLeftMargin else baseMargin
+                lp.marginEnd = baseMargin
             } else {
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginStart = baseMargin
+                lp.marginEnd = baseMargin
             }
             tools.layoutParams = lp
         }
+
+        val isQuickBarVisible = floatingQuickBar?.visibility == View.VISIBLE
 
         val pasteLp = fabPaste.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
         if (pasteLp != null) {
             if (isToolsVisible) {
                 pasteLp.bottomToTop = R.id.fabTools
+                pasteLp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            } else if (isQuickBarVisible) {
+                pasteLp.bottomToTop = R.id.floatingQuickBar
                 pasteLp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
             } else {
                 pasteLp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
@@ -587,9 +601,13 @@ class FileBrowserActivity : AppCompatActivity() {
             if (isLeftHanded) {
                 pasteLp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 pasteLp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                pasteLp.marginStart = if (isSelectionMode) selectionLeftMargin else baseMargin
+                pasteLp.marginEnd = baseMargin
             } else {
                 pasteLp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 pasteLp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                pasteLp.marginStart = baseMargin
+                pasteLp.marginEnd = baseMargin
             }
             fabPaste.layoutParams = pasteLp
         }
@@ -1590,8 +1608,11 @@ class FileBrowserActivity : AppCompatActivity() {
         btnDuplicateFinder = findViewById(R.id.btnDuplicateFinder)
         btnLargeFilesFinder = findViewById(R.id.btnLargeFilesFinder)
         fabPaste = findViewById(R.id.fabPaste)
-
         fabTools = findViewById(R.id.fabTools)
+        floatingQuickBar = findViewById(R.id.floatingQuickBar)
+        floatingQuickBar?.setOnActionClickListener { actionId ->
+            handleQuickActionClick(actionId)
+        }
 
         // Apply custom toolbar action icons
         applyCustomToolbarIcons()
@@ -2677,10 +2698,11 @@ class FileBrowserActivity : AppCompatActivity() {
                 }
             }
 
-            if (list.isNotEmpty()) {
+            val displayList = pm.filterItemsForBottomSheet(this, list)
+            if (displayList.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
-                val sheet = FileToolsBottomSheet.newInstance(list, title, subtitle)
+                val sheet = FileToolsBottomSheet.newInstance(displayList, title, subtitle)
                 sheet.show(supportFragmentManager, FileToolsBottomSheet.TAG)
             }
         }
@@ -2802,6 +2824,193 @@ class FileBrowserActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleQuickActionClick(actionId: String) {
+        val selected = fileAdapter.getSelectedFiles()
+        val count = selected.size
+        val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+
+        when (actionId) {
+            pm.ACTION_DELETE -> showDeleteConfirmation()
+            pm.ACTION_COPY -> handleCopyOrCut(selected, isMove = false)
+            pm.ACTION_MOVE -> handleCopyOrCut(selected, isMove = true)
+            pm.ACTION_RENAME -> {
+                if (selected.size == 1) {
+                    showRenameDialog(selected.first())
+                } else if (selected.size > 1) {
+                    val items = selected.map { BatchRenameItem.fromLocalFile(it) }
+                    val dialog = BatchRenameDialogFragment.newInstance(items)
+                    dialog.setOnCompleteListener { _, _ -> onBatchRenameCompleted() }
+                    dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
+                }
+            }
+            pm.ACTION_SHARE -> {
+                val shareable = selected.filter { it.isFile }
+                if (shareable.isNotEmpty()) shareFiles(shareable)
+            }
+            pm.ACTION_COMPRESS -> showArchiveOptions(selected)
+            pm.ACTION_EXTRACT -> performExtractHere(selected)
+            pm.ACTION_FAVORITE -> {
+                if (count == 1) showFavoriteDialog(selected.first())
+            }
+            pm.ACTION_SELECT_ALL -> {
+                if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
+            }
+            pm.ACTION_INVERT_SELECTION -> fileAdapter.invertSelection()
+            "protect", pm.ACTION_PROTECT_UNPROTECT -> {
+                val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this)
+                val targetProtect = hasUnprotected
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@FileBrowserActivity, file.absolutePath, protected = targetProtect)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        val msg = if (targetProtect) getString(R.string.toast_protected_success, selected.size) else getString(R.string.toast_unprotected_success, selected.size)
+                        showPremiumSnackbar(msg)
+                    }
+                }
+            }
+            "unprotect" -> {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@FileBrowserActivity, file.absolutePath, protected = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        showPremiumSnackbar(getString(R.string.toast_unprotected_success, selected.size))
+                    }
+                }
+            }
+            "hide", pm.ACTION_HIDE_UNHIDE -> {
+                val hasVisible = fileAdapter.hasAnySelectedVisible()
+                val targetHide = hasVisible
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        if (targetHide) {
+                            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.hide(file.absolutePath)
+                        } else {
+                            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.unhide(file.absolutePath)
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        val msg = if (targetHide) getString(R.string.toast_hidden_success, selected.size) else getString(R.string.toast_unhidden_success, selected.size)
+                        showPremiumSnackbar(msg)
+                    }
+                }
+            }
+            "unhide" -> {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.unhide(file.absolutePath)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        showPremiumSnackbar(getString(R.string.toast_unhidden_success, selected.size))
+                    }
+                }
+            }
+            "pin", pm.ACTION_PIN_UNPIN -> {
+                val hasUnpinned = fileAdapter.hasAnySelectedUnpinned(this)
+                val targetPin = hasUnpinned
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@FileBrowserActivity, file.absolutePath, pinned = targetPin)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        val msg = if (targetPin) getString(R.string.toast_pinned_success, selected.size) else getString(R.string.toast_unpinned_success, selected.size)
+                        showPremiumSnackbar(msg)
+                    }
+                }
+            }
+            "unpin" -> {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@FileBrowserActivity, file.absolutePath, pinned = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        showPremiumSnackbar(getString(R.string.toast_unpinned_success, selected.size))
+                    }
+                }
+            }
+            pm.ACTION_COPY_ENCRYPT -> showVaultPickerForEncrypt(selected, isMove = false)
+            pm.ACTION_MOVE_ENCRYPT -> showVaultPickerForEncrypt(selected, isMove = true)
+            pm.ACTION_IMAGE_COMPRESS -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity::class.java).apply {
+                    putStringArrayListExtra(
+                        za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity.EXTRA_FILE_PATHS,
+                        ArrayList(selected.map { it.absolutePath })
+                    )
+                })
+            }
+            pm.ACTION_CREATE_GIF -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity::class.java).apply {
+                    putStringArrayListExtra(
+                        za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity.EXTRA_FILE_PATHS,
+                        ArrayList(selected.map { it.absolutePath })
+                    )
+                })
+            }
+            pm.ACTION_EXIF_TOOLS -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity::class.java).apply {
+                    putStringArrayListExtra(
+                        za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity.EXTRA_FILE_PATHS,
+                        ArrayList(selected.map { it.absolutePath })
+                    )
+                })
+            }
+            pm.ACTION_SET_HOME_WALLPAPER -> {
+                if (count == 1 && selected.first().isFile) {
+                    val imageFile = selected.first()
+                    za.kilowatch.ultimatefilemanager.util.WallpaperHelper.showConfirmDialog(
+                        this, imageFile.name, android.app.WallpaperManager.FLAG_SYSTEM
+                    ) {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            val success = za.kilowatch.ultimatefilemanager.util.WallpaperHelper.setWallpaper(
+                                this@FileBrowserActivity, imageFile, android.app.WallpaperManager.FLAG_SYSTEM
+                            )
+                            withContext(Dispatchers.Main) {
+                                fileAdapter.exitSelectionMode()
+                                val msg = if (success) getString(R.string.toast_wallpaper_set_home_success) else getString(R.string.toast_wallpaper_set_failed)
+                                showPremiumSnackbar(msg)
+                            }
+                        }
+                    }
+                }
+            }
+            pm.ACTION_SET_LOCK_WALLPAPER -> {
+                if (count == 1 && selected.first().isFile) {
+                    val imageFile = selected.first()
+                    za.kilowatch.ultimatefilemanager.util.WallpaperHelper.showConfirmDialog(
+                        this, imageFile.name, android.app.WallpaperManager.FLAG_LOCK
+                    ) {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            val success = za.kilowatch.ultimatefilemanager.util.WallpaperHelper.setWallpaper(
+                                this@FileBrowserActivity, imageFile, android.app.WallpaperManager.FLAG_LOCK
+                            )
+                            withContext(Dispatchers.Main) {
+                                fileAdapter.exitSelectionMode()
+                                val msg = if (success) getString(R.string.toast_wallpaper_set_lock_success) else getString(R.string.toast_wallpaper_set_failed)
+                                showPremiumSnackbar(msg)
+                            }
+                        }
+                    }
+                }
+            }
+            pm.ACTION_MORE -> {
+                fabTools?.performClick()
+            }
+        }
+    }
+
     private fun updateSelectionBar(count: Int) {
         val showSelection = fileAdapter.isSelectionMode
         val isTv = DeviceUtils.isTvDevice(this)
@@ -2809,6 +3018,8 @@ class FileBrowserActivity : AppCompatActivity() {
         if (!isTv) {
             val layoutHeaderNormal = findViewById<View>(R.id.layoutHeaderNormal)
             val layoutHeaderSelection = findViewById<View>(R.id.layoutHeaderSelection)
+            val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+            val isQuickBarOn = pm.isQuickBarEnabled(this)
 
             if (showSelection) {
                 val showActions = count > 0
@@ -2825,7 +3036,30 @@ class FileBrowserActivity : AppCompatActivity() {
                     (btnSelectAll as MaterialButton).text = if (isAll) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
                 }
 
-                fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
+                if (isQuickBarOn && showActions) {
+                    val imgFiles = fileAdapter.getSelectedFiles()
+                    val state = za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar.SelectionState(
+                        selectedCount = count,
+                        isAllSelected = isAll,
+                        hasHidden = fileAdapter.hasAnySelectedHidden(),
+                        hasVisible = fileAdapter.hasAnySelectedVisible(),
+                        hasProtected = fileAdapter.hasAnySelectedProtected(this),
+                        hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this),
+                        hasPinned = fileAdapter.hasAnySelectedPinned(this),
+                        hasUnpinned = fileAdapter.hasAnySelectedUnpinned(this),
+                        hasArchiveSelected = imgFiles.isNotEmpty() && imgFiles.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) },
+                        allImagesSelected = imgFiles.isNotEmpty() && imgFiles.all {
+                            it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                        }
+                    )
+                    floatingQuickBar?.bindSelection(state)
+                    floatingQuickBar?.showAnimated { updateFabPositions() }
+                    fabTools?.visibility = View.GONE
+                } else {
+                    floatingQuickBar?.hideAnimated { updateFabPositions() }
+                    fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
+                }
+
                 fabProperties?.visibility = View.GONE
                 updatePasteFab()
             } else {
@@ -2834,6 +3068,7 @@ class FileBrowserActivity : AppCompatActivity() {
                 layoutSelectionBar.visibility = View.GONE
                 fabProperties?.visibility = View.GONE
                 fabTools?.visibility = View.GONE
+                floatingQuickBar?.hideAnimated { updateFabPositions() }
                 updatePasteFab()
             }
             return
@@ -3143,7 +3378,7 @@ class FileBrowserActivity : AppCompatActivity() {
         }
     }
     
-    private fun showFavoriteDialog(file: File) {
+    fun showFavoriteDialog(file: File) {
         val isOnTv = DeviceUtils.isTvDevice(this)
         val layoutRes = if (isOnTv) R.layout.dialog_add_favorite_tv else R.layout.dialog_add_favorite
         val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
@@ -5019,7 +5254,7 @@ class FileBrowserActivity : AppCompatActivity() {
      * - Folders: always auto-create a new vault entry (original always deleted). Show warning first.
      * - Files: existing vault picker dialog (copy keeps original, move deletes).
      */
-    private fun showVaultPickerForEncrypt(files: List<File>, isMove: Boolean) {
+    fun showVaultPickerForEncrypt(files: List<File>, isMove: Boolean) {
         val folders = files.filter { it.isDirectory }
         val fileItems = files.filter { it.isFile }
 
@@ -5446,7 +5681,7 @@ class FileBrowserActivity : AppCompatActivity() {
      * Shows vault picker dialog for encrypting files (files only, not folders).
      * If no vaults exist, prompts user to create one first.
      */
-    private fun showArchiveOptions(files: List<File>) {
+    fun showArchiveOptions(files: List<File>) {
         val dialog = ArchiveOptionsDialog()
         dialog.setOnConfirm { filename, format, password, useCurrentFolder ->
             if (useCurrentFolder) {
