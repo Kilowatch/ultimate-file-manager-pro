@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.1] — 2026-08-24
 
 ### Added
+- Added Cancel button support and back-cancellation to the initial "Set Vault PIN" and confirmation flows in `VaultActivity` on both mobile and TV, cleanly closing the activity if cancelled before PIN setup completes.
 - **Automatic Dialog Focus, Soft Keyboard Display, and Enter Key Action (`DialogInputHelper`)**:
   - Automatically focuses input text fields and displays the software keyboard when opening name/input dialogs (Rename, Compress, Extract to New Folder, Create Folder, Create Text File, Save As, Device Pairing, Tags, Custom Tiles, and SmartSort).
   - Preserves native D-pad navigation focus on Android TV devices.
@@ -37,6 +38,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enforced zero-leakage mirror security with strict cleanup on exit and activity destruction.
 
 ### Fixed
+- **Twin Window File Transfer Stability & NFS Copying (`TwinWindowActivity`, `TransferConflictHelper`, `LibNfsClient`)**:
+  - Fixed a crash when copying or moving files from an NFS network share to Internal Storage in Twin Window (dual-pane) mode.
+  - Added fallback `NetworkShare` resolution via `NetworkShareRepository` for network items in dual-pane transfers.
+  - Secured `onProgress` and `LinearProgressIndicator` UI updates against detached or finishing activity states with bounded progress calculations.
+  - Guarded progress dialog dismissal against destroyed activity state to avoid window manager detachment exceptions.
+  - Corrected non-conflict action resolution to prevent double unique path generation on standard transfers.
+  - Fixed directory tag mapping during folder copying to preserve tags via `onPathCopied` instead of `onPathMoved`.
+  - Added immediate database metadata indexing for downloaded network files in Twin Window mode.
+  - Hardened `LibNfsClient` native stream wrappers (`NfsNativeInputStream`, `NfsNativeOutputStream`) with context and handle validation on stream close.
 - **Search Results Sort & Filter Persistence (`FileBrowserActivity`, `FileBrowserFragment`, `NetworkBrowserActivity`, `NetworkBrowserFragment`)**:
   - Fixed an issue where applying Sort & Filter on search results exited search mode and returned to the previous directory.
   - Sorting and filtering are now applied directly in-place to active search results across SAF, Local, Network, and Cloud storages.

@@ -170,6 +170,9 @@
     <string name="welcome_select_language">
 يرجى اختيار لغتك المفضلة
 </string>
+    <string name="welcome_select_language_subtitle">
+اختر لغتك المفضلة للبدء
+</string>
     <string name="welcome_translation_disclaimer">
 جميع الترجمات مبنية على أساس الجهد المبذول وقد تحتوي على أخطاء.
 </string>
@@ -1723,6 +1726,24 @@ Ultimate File Manager Pro
     <string name="sort_descending">
 تنازلي
 </string>
+    <string name="sort_order_a_to_z">
+أ → ي
+</string>
+    <string name="sort_order_z_to_a">
+ي → أ
+</string>
+    <string name="sort_order_small_to_large">
+صغير → كبير
+</string>
+    <string name="sort_order_large_to_small">
+كبير → صغير
+</string>
+    <string name="sort_order_newest_first">
+الأحدث أولاً
+</string>
+    <string name="sort_order_oldest_first">
+الأقدم أولاً
+</string>
     <string name="filter_all">
 الكل
 </string>
@@ -1738,8 +1759,68 @@ Ultimate File Manager Pro
     <string name="filter_documents">
 المستندات
 </string>
+    <string name="filter_archives">
+الأرشيفات
+</string>
     <string name="filter_apks">
 APKs
+</string>
+    <string name="filter_date_title">
+تاريخ التعديل
+</string>
+    <string name="filter_date_any">
+الكل
+</string>
+    <string name="filter_date_today">
+اليوم
+</string>
+    <string name="filter_date_yesterday">
+أمس
+</string>
+    <string name="filter_date_this_week">
+هذا الأسبوع
+</string>
+    <string name="filter_date_previous_week">
+الأسبوع الماضي
+</string>
+    <string name="filter_date_this_month">
+هذا الشهر
+</string>
+    <string name="filter_date_previous_month">
+الشهر الماضي
+</string>
+    <string name="filter_date_this_year">
+هذا العام
+</string>
+    <string name="filter_date_previous_year">
+العام الماضي
+</string>
+    <string name="filter_size_title">
+حجم الملف
+</string>
+    <string name="filter_size_any">
+الكل
+</string>
+    <string name="filter_size_empty">
+فارغ (0 بايت)
+</string>
+    <string name="filter_size_tiny">
+ضئيل (0–10 كيلوبايت)
+</string>
+    <string name="filter_size_small">
+صغير (10 كيلوبايت–1 ميجابايت)
+</string>
+    <string name="filter_size_medium">
+متوسط (1–10 ميجابايت)
+</string>
+    <string name="filter_size_big">
+كبير (10–100 ميجابايت)
+</string>
+    <string name="filter_size_large">
+كبير جداً (100 ميجابايت–1 جيجابايت)
+</string>
+    <string name="filter_size_huge">
+هائل (>1 جيجابايت)
 </string>
     <string name="group_by_date">
 تجميع حسب التاريخ
@@ -7009,8 +7090,14 @@ Debloater
     <string name="smart_sort_save_changes">
 حفظ التغييرات
 </string>
+    <string name="smart_sort_save_changes_desc">
+تحديث واستبدال الإعداد المحفوظ
+</string>
     <string name="smart_sort_delete_saved">
 حذف
+</string>
+    <string name="smart_sort_delete_saved_desc">
+إزالة هذا الإعداد المحفوظ
 </string>
     <string name="smart_sort_delete_saved_confirm_title">
 حذف \\\"%1$s\\\"؟
@@ -7972,6 +8059,9 @@ Box — انتهت الجلسة
     <string name="onedrive_auth_profile_failed">
 نجاح التوثيق، لكن فشل في الحصول على تفاصيل الحساب
 </string>
+    <string name="onedrive_code_copied">
+تم نسخ الرمز إلى الحافظة!
+</string>
     <string name="auth_library_loading">
 جارٍ تحميل مكتبة التوثيق...
 </string>
@@ -8572,6 +8662,12 @@ DLNA
 </string>
     <string name="tip_jar_awesome_label">
 أنت رائع!
+</string>
+    <string name="tip_jar_fuel_it_label">
+ادعمنا!
+</string>
+    <string name="tip_jar_dismiss_cd">
+إخفاء بطاقة الدعم
 </string>
     <string name="tip_jar_global_label">
 عالمي
@@ -10569,6 +10665,12 @@ SAF
     <string name="backup_pref_loyalty">
 بيانات ولاء صندوق الإكراميات
 </string>
+    <string name="backup_pref_keyboard_shortcuts">
+اختصارات لوحة المفاتيح والتنقل
+</string>
+    <string name="backup_pref_saf_locations">
+مواقع التخزين المخصصة (SAF)
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>
@@ -11770,6 +11872,12 @@ UFM Spreadsheet Viewer
     <string name="gif_creator_subtitle">
 تم تحديد %d صور
 </string>
+    <string name="gif_creator_frames_reorder">
+الإطارات (اسحب لإعادة الترتيب)
+</string>
+    <string name="gif_creator_frames_reorder_tv">
+الإطارات (إعادة الترتيب باستخدام لوحة الاتجاهات)
+</string>
     <string name="gif_creator_fps_label">
 معدل الإطارات
 </string>
@@ -12498,7 +12606,289 @@ support@kilowatch.co.za
     <string name="reset_categorized_success">
 تمت استعادة تخطيط الفئات إلى الوضع الافتراضي
 </string>
+
+    <string name="option_edit_custom_tile_desc">
+تغيير تسمية البلاطة أو أيقونتها أو ظهورها
+</string>
+    <string name="option_delete_custom_tile_desc">
+إزالة هذه البلاطة واستعادة محتوياتها
+</string>
+    <string name="custom_tile_select_icon_desc">
+اختر رمزًا مدمجًا أو تصفح الرموز الخاصة بك
+</string>
+    <string name="indexing_offer_benefit_search">
+بحث فوري في جميع الملفات
+</string>
+    <string name="indexing_offer_benefit_speed">
+تحميل أسرع للمجلدات والملفات
+</string>
+    <string name="indexing_offer_benefit_duplicates">
+اكتشاف الملفات المكررة والكبيرة
+</string>
+    <string name="auto_restore_offer_subtitle">
+تم اكتشاف الاستعادة التلقائية
+</string>
+
+    <!-- Keyboard Shortcuts & Keybinds -->
+    <string name="settings_keyboard_shortcuts_title">
+اختصارات لوحة المفاتيح
+</string>
+    <string name="settings_keyboard_shortcuts_subtitle">
+تخصيص التنقل بلوحة المفاتيح وربط المفاتيح
+</string>
+    <string name="keyboard_shortcuts_master_enable">
+تمكين اختصارات لوحة المفاتيح
+</string>
+    <string name="keyboard_shortcuts_master_enable_desc">
+السماح بالتنقل وإجراءات الملفات عبر لوحة مفاتيح مادية أو بلوتوث
+</string>
+    <string name="keyboard_shortcuts_vim_mode">
+مفاتيح تنقل Vim
+</string>
+    <string name="keyboard_shortcuts_vim_mode_desc">
+استخدم j/k/h/l و gg/G ومفاتيح الإجراءات ذات الحرف الواحد (y/x/p/d/r/n/g)
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch">
+التبديل السريع بين اللوحين
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch_desc">
+استخدم Tab أو Ctrl+W أو 1/2 للتبديل بين اللوحين في النافذة المزدوجة
+</string>
+    <string name="keyboard_shortcuts_reset_defaults">
+استعادة الافتراضيات
+</string>
+    <string name="keyboard_shortcuts_reset_confirm">
+إعادة تعيين جميع ارتباطات المفاتيح إلى الافتراضيات الأصلية؟
+</string>
+    <string name="keyboard_shortcuts_section_nav">
+التنقل
+</string>
+    <string name="keyboard_shortcuts_section_file_ops">
+عمليات الملفات
+</string>
+    <string name="keyboard_shortcuts_section_selection">
+التحديد
+</string>
+    <string name="keyboard_shortcuts_section_dual_pane">
+اللوحان
+</string>
+    <string name="keyboard_shortcuts_section_general">
+عام
+</string>
+    <string name="keyboard_shortcuts_help_title">
+دليل اختصارات لوحة المفاتيح
+</string>
+    <string name="keyboard_shortcuts_help_subtitle">
+مرجع سريع للتنقل بلوحة المفاتيح
+</string>
+    <string name="keyboard_action_move_down">
+الانتقال لأسفل
+</string>
+    <string name="keyboard_action_move_down_desc">
+تمييز العنصر التالي في قائمة الملفات
+</string>
+    <string name="keyboard_action_move_up">
+الانتقال لأعلى
+</string>
+    <string name="keyboard_action_move_up_desc">
+تمييز العنصر السابق في قائمة الملفات
+</string>
+    <string name="keyboard_action_parent_dir">
+المجلد الأب
+</string>
+    <string name="keyboard_action_parent_dir_desc">
+الانتقال إلى المستوى الأعلى من الدليل
+</string>
+    <string name="keyboard_action_open">
+فتح / دخول
+</string>
+    <string name="keyboard_action_open_desc">
+فتح الملف أو المجلد المحدد
+</string>
+    <string name="keyboard_action_jump_top">
+الانتقال إلى الأعلى
+</string>
+    <string name="keyboard_action_jump_top_desc">
+التمرير إلى أول عنصر في القائمة
+</string>
+    <string name="keyboard_action_jump_bottom">
+الانتقال إلى الأسفل
+</string>
+    <string name="keyboard_action_jump_bottom_desc">
+التمرير إلى آخر عنصر في القائمة
+</string>
+    <string name="keyboard_action_go_to">
+الانتقال إلى المسار
+</string>
+    <string name="keyboard_action_go_to_desc">
+فتح مربع حوار الانتقال المباشر إلى المسار
+</string>
+    <string name="keyboard_action_toggle_select">
+تبديل التحديد
+</string>
+    <string name="keyboard_action_toggle_select_desc">
+تحديد أو إلغاء تحديد العنصر المميز حالياً
+</string>
+    <string name="keyboard_action_select_all">
+تحديد / إلغاء تحديد الكل
+</string>
+    <string name="keyboard_action_select_all_desc">
+تبديل تحديد جميع العناصر في المجلد الحالي
+</string>
+    <string name="keyboard_action_copy">
+نسخ
+</string>
+    <string name="keyboard_action_copy_desc">
+نسخ العناصر المحددة إلى الحافظة
+</string>
+    <string name="keyboard_action_cut">
+قص (نقل)
+</string>
+    <string name="keyboard_action_cut_desc">
+قص العناصر المحددة إلى الحافظة
+</string>
+    <string name="keyboard_action_paste">
+لصق
+</string>
+    <string name="keyboard_action_paste_desc">
+لصق الملفات من الحافظة إلى المجلد الحالي
+</string>
+    <string name="keyboard_action_delete">
+حذف
+</string>
+    <string name="keyboard_action_delete_desc">
+حذف العناصر المحددة مع التأكيد
+</string>
+    <string name="keyboard_action_rename">
+إعادة تسمية
+</string>
+    <string name="keyboard_action_rename_desc">
+إعادة تسمية العنصر المحدد أو فتح إعادة التسمية الجماعية
+</string>
+    <string name="keyboard_action_new_folder">
+مجلد جديد
+</string>
+    <string name="keyboard_action_new_folder_desc">
+إنشاء مجلد جديد في الدليل الحالي
+</string>
+    <string name="keyboard_action_search">
+بحث
+</string>
+    <string name="keyboard_action_search_desc">
+التركيز على حقل البحث
+</string>
+    <string name="keyboard_action_toggle_hidden">
+تبديل إظهار الملفات المخفية
+</string>
+    <string name="keyboard_action_toggle_hidden_desc">
+إظهار أو إخفاء ملفات النقطة
+</string>
+    <string name="keyboard_action_refresh">
+تحديث
+</string>
+    <string name="keyboard_action_refresh_desc">
+إعادة تحميل محتويات المجلد الحالي
+</string>
+    <string name="keyboard_action_switch_pane">
+تبديل اللوح
+</string>
+    <string name="keyboard_action_switch_pane_desc">
+التبديل بين اللوح الأيسر/العلوي واللوح الأيمن/السفلي
+</string>
+    <string name="keyboard_action_focus_pane_1">
+التركيز على اللوح 1
+</string>
+    <string name="keyboard_action_focus_pane_1_desc">
+التركيز مباشرة على اللوح الأيسر أو العلوي
+</string>
+    <string name="keyboard_action_focus_pane_2">
+التركيز على اللوح 2
+</string>
+    <string name="keyboard_action_focus_pane_2_desc">
+التركيز مباشرة على اللوح الأيمن أو السفلي
+</string>
+    <string name="keyboard_action_cheatsheet">
+مرجع الاختصارات
+</string>
+    <string name="keyboard_action_cheatsheet_desc">
+إظهار دليل الاختصارات التفاعلي المتراكب
+</string>
+    <string name="keyboard_rebind_title">
+إعادة ربط المفتاح
+</string>
+    <string name="keyboard_rebind_prompt">
+اضغط أي مفتاح على لوحة المفاتيح لتعيينه، أو اختر أحد الإعدادات المسبقة أدناه.
+</string>
+    <string name="keyboard_rebind_current">
+المفتاح الحالي: %1$s
+</string>
+    <string name="keyboard_rebind_success">
+تم تعيين المفتاح: %1$s
+</string>
+    <string name="go_to_path_title">
+الانتقال إلى المسار
+</string>
+    <string name="go_to_path_hint">
+أدخل مسار الدليل
+</string>
+    <string name="go_to_path_action">
+انتقال
+</string>
+    <string name="go_to_path_invalid">
+الدليل غير موجود أو لا يمكن الوصول إليه
+</string>
+
+    <!-- Custom Storage Locations (SAF / DocumentsProvider) -->
+    <string name="add_storage_location_title">
+إضافة موقع تخزين
+</string>
+    <string name="add_storage_location_subtitle">
+تركيب Termux أو موفري المستندات أو بطاقة SD/USB أو مجلدات مخصصة
+</string>
+    <string name="add_storage_location_desc">
+اختر أي مجلد أو موفر يظهر عبر منتقي نظام Android لمنح وصول دائم.
+</string>
+    <string name="add_storage_dialog_title">
+موقع تخزين جديد
+</string>
+    <string name="add_storage_dialog_name_hint">
+اسم الموقع المعروض
+</string>
+    <string name="add_storage_dialog_confirm">
+إضافة موقع
+</string>
+    <string name="add_storage_success">
+تمت إضافة موقع التخزين \"%1$s\" بنجاح
+</string>
+    <string name="add_storage_failed">
+فشل إضافة موقع التخزين: %1$s
+</string>
+    <string name="remove_storage_location_title">
+إزالة موقع التخزين؟
+</string>
+    <string name="remove_storage_location_msg">
+إزالة \"%1$s\" من مواقع التخزين؟ سيؤدي هذا إلى إلغاء الوصول من UFM دون حذف أي ملفات.
+</string>
+    <string name="remove_storage_location_confirm">
+إزالة الموقع
+</string>
+    <string name="storage_location_removed">
+تمت إزالة موقع التخزين
+</string>
+    <string name="storage_location_termux_default_name">
+مجلد Termux الرئيسي
+</string>
+    <string name="storage_location_saf_default_name">
+موقع المستندات
+</string>
+    <string name="storage_location_inaccessible">
+لم يعد الموقع قابلاً للوصول. يرجى منح الوصول مرة أخرى.
+</string>
+    <string name="saf_storage">
+تخزين SAF
+</string>
 </resources>
+
 
 
 

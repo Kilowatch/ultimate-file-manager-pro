@@ -170,6 +170,9 @@ Pengalaman manajemen file terbaik, dirancang untuk pengguna tingkat lanjut.
     <string name="welcome_select_language">
 Silakan pilih bahasa yang Anda inginkan
 </string>
+    <string name="welcome_select_language_subtitle">
+Pilih bahasa pilihan Anda untuk memulai
+</string>
     <string name="welcome_translation_disclaimer">
 Semua terjemahan didasarkan pada upaya terbaik dan mungkin mengandung kesalahan.
 </string>
@@ -1723,6 +1726,24 @@ Menaik
     <string name="sort_descending">
 Menurun
 </string>
+    <string name="sort_order_a_to_z">
+A → Z
+</string>
+    <string name="sort_order_z_to_a">
+Z → A
+</string>
+    <string name="sort_order_small_to_large">
+Kecil → Besar
+</string>
+    <string name="sort_order_large_to_small">
+Besar → Kecil
+</string>
+    <string name="sort_order_newest_first">
+Terbaru dulu
+</string>
+    <string name="sort_order_oldest_first">
+Terlama dulu
+</string>
     <string name="filter_all">
 Semua
 </string>
@@ -1738,8 +1759,68 @@ Audio
     <string name="filter_documents">
 Dokumen
 </string>
+    <string name="filter_archives">
+Arsip
+</string>
     <string name="filter_apks">
 APK
+</string>
+    <string name="filter_date_title">
+Tanggal Dimodifikasi
+</string>
+    <string name="filter_date_any">
+Semua
+</string>
+    <string name="filter_date_today">
+Hari Ini
+</string>
+    <string name="filter_date_yesterday">
+Kemarin
+</string>
+    <string name="filter_date_this_week">
+Minggu Ini
+</string>
+    <string name="filter_date_previous_week">
+Minggu Lalu
+</string>
+    <string name="filter_date_this_month">
+Bulan Ini
+</string>
+    <string name="filter_date_previous_month">
+Bulan Lalu
+</string>
+    <string name="filter_date_this_year">
+Tahun Ini
+</string>
+    <string name="filter_date_previous_year">
+Tahun Lalu
+</string>
+    <string name="filter_size_title">
+Ukuran File
+</string>
+    <string name="filter_size_any">
+Semua
+</string>
+    <string name="filter_size_empty">
+Kosong (0 B)
+</string>
+    <string name="filter_size_tiny">
+Sangat Kecil (0–10 KB)
+</string>
+    <string name="filter_size_small">
+Kecil (10 KB–1 MB)
+</string>
+    <string name="filter_size_medium">
+Sedang (1–10 MB)
+</string>
+    <string name="filter_size_big">
+Besar (10–100 MB)
+</string>
+    <string name="filter_size_large">
+Sangat Besar (100 MB–1 GB)
+</string>
+    <string name="filter_size_huge">
+Raksasa (>1 GB)
 </string>
     <string name="group_by_date">
 Kelompokkan berdasarkan Tanggal
@@ -7009,8 +7090,14 @@ Deskripsi
     <string name="smart_sort_save_changes">
 Simpan Perubahan
 </string>
+    <string name="smart_sort_save_changes_desc">
+Perbarui dan timpa konfigurasi yang tersimpan
+</string>
     <string name="smart_sort_delete_saved">
 Hapus
+</string>
+    <string name="smart_sort_delete_saved_desc">
+Hapus konfigurasi tersimpan ini
 </string>
     <string name="smart_sort_delete_saved_confirm_title">
 Hapus \"%1$s\"?
@@ -7972,6 +8059,9 @@ Gagal memulai autentikasi: %1$s
     <string name="onedrive_auth_profile_failed">
 Autentikasi berhasil, tetapi gagal mendapatkan detail akun
 </string>
+    <string name="onedrive_code_copied">
+Kode disalin ke clipboard!
+</string>
     <string name="auth_library_loading">
 Memuat pustaka autentikasi…
 </string>
@@ -8572,6 +8662,12 @@ Terima kasih!
 </string>
     <string name="tip_jar_awesome_label">
 Anda luar biasa!
+</string>
+    <string name="tip_jar_fuel_it_label">
+Dukung kami!
+</string>
+    <string name="tip_jar_dismiss_cd">
+Tutup kartu tip
 </string>
     <string name="tip_jar_global_label">
 Global
@@ -10569,6 +10665,12 @@ Penggantian Ikon Jenis File
     <string name="backup_pref_loyalty">
 Data Loyalitas Tip Jar
 </string>
+    <string name="backup_pref_keyboard_shortcuts">
+Pintasan Keyboard &amp; Navigasi
+</string>
+    <string name="backup_pref_saf_locations">
+Lokasi Penyimpanan Kustom (SAF)
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>
@@ -11770,6 +11872,12 @@ Buat GIF Animasi
     <string name="gif_creator_subtitle">
 %d gambar dipilih
 </string>
+    <string name="gif_creator_frames_reorder">
+Bingkai (Seret untuk mengurutkan ulang)
+</string>
+    <string name="gif_creator_frames_reorder_tv">
+Bingkai (Susun ulang dengan D-Pad)
+</string>
     <string name="gif_creator_fps_label">
 Kecepatan bingkai
 </string>
@@ -12498,7 +12606,289 @@ Atur Ulang ke Bawaan
     <string name="reset_categorized_success">
 Tata letak kategori dipulihkan ke bawaan
 </string>
+
+    <string name="option_edit_custom_tile_desc">
+Ubah label, ikon, atau visibilitas ubin
+</string>
+    <string name="option_delete_custom_tile_desc">
+Hapus ubin ini dan pulihkan isinya
+</string>
+    <string name="custom_tile_select_icon_desc">
+Pilih ikon bawaan atau jelajahi ikon Anda sendiri
+</string>
+    <string name="indexing_offer_benefit_search">
+Pencarian instan di semua file
+</string>
+    <string name="indexing_offer_benefit_speed">
+Pemuatan folder dan file lebih cepat
+</string>
+    <string name="indexing_offer_benefit_duplicates">
+Deteksi file duplikat dan file besar
+</string>
+    <string name="auto_restore_offer_subtitle">
+Pemulihan Otomatis Terdeteksi
+</string>
+
+    <!-- Keyboard Shortcuts & Keybinds -->
+    <string name="settings_keyboard_shortcuts_title">
+Pintasan Keyboard
+</string>
+    <string name="settings_keyboard_shortcuts_subtitle">
+Konfigurasi navigasi keyboard &amp; penyesuaian tombol
+</string>
+    <string name="keyboard_shortcuts_master_enable">
+Aktifkan Pintasan Keyboard
+</string>
+    <string name="keyboard_shortcuts_master_enable_desc">
+Izinkan navigasi dan aksi file melalui keyboard fisik atau Bluetooth
+</string>
+    <string name="keyboard_shortcuts_vim_mode">
+Tombol Navigasi Vim
+</string>
+    <string name="keyboard_shortcuts_vim_mode_desc">
+Gunakan j/k/h/l, gg/G, dan tombol aksi satu huruf (y/x/p/d/r/n/g)
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch">
+Peralihan Cepat Panel Ganda
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch_desc">
+Gunakan Tab, Ctrl+W, atau 1/2 untuk berpindah panel aktif di Jendela Kembar
+</string>
+    <string name="keyboard_shortcuts_reset_defaults">
+Setel Ulang Default
+</string>
+    <string name="keyboard_shortcuts_reset_confirm">
+Setel ulang semua penyesuaian tombol ke default pabrik?
+</string>
+    <string name="keyboard_shortcuts_section_nav">
+Navigasi
+</string>
+    <string name="keyboard_shortcuts_section_file_ops">
+Operasi File
+</string>
+    <string name="keyboard_shortcuts_section_selection">
+Seleksi
+</string>
+    <string name="keyboard_shortcuts_section_dual_pane">
+Panel Ganda
+</string>
+    <string name="keyboard_shortcuts_section_general">
+Umum
+</string>
+    <string name="keyboard_shortcuts_help_title">
+Panduan Pintasan Keyboard
+</string>
+    <string name="keyboard_shortcuts_help_subtitle">
+Referensi cepat untuk navigasi keyboard
+</string>
+    <string name="keyboard_action_move_down">
+Pindah ke Bawah
+</string>
+    <string name="keyboard_action_move_down_desc">
+Sorot item berikutnya di daftar file
+</string>
+    <string name="keyboard_action_move_up">
+Pindah ke Atas
+</string>
+    <string name="keyboard_action_move_up_desc">
+Sorot item sebelumnya di daftar file
+</string>
+    <string name="keyboard_action_parent_dir">
+Direktori Induk
+</string>
+    <string name="keyboard_action_parent_dir_desc">
+Naik satu tingkat direktori
+</string>
+    <string name="keyboard_action_open">
+Buka / Masuk
+</string>
+    <string name="keyboard_action_open_desc">
+Buka file atau folder yang dipilih
+</string>
+    <string name="keyboard_action_jump_top">
+Lompat ke Atas
+</string>
+    <string name="keyboard_action_jump_top_desc">
+Gulir ke item pertama dalam daftar
+</string>
+    <string name="keyboard_action_jump_bottom">
+Lompat ke Bawah
+</string>
+    <string name="keyboard_action_jump_bottom_desc">
+Gulir ke item terakhir dalam daftar
+</string>
+    <string name="keyboard_action_go_to">
+Pergi ke Jalur
+</string>
+    <string name="keyboard_action_go_to_desc">
+Buka dialog lompat jalur langsung
+</string>
+    <string name="keyboard_action_toggle_select">
+Alihkan Seleksi
+</string>
+    <string name="keyboard_action_toggle_select_desc">
+Pilih atau batalkan pilih item yang sedang disorot
+</string>
+    <string name="keyboard_action_select_all">
+Pilih / Batalkan Semua
+</string>
+    <string name="keyboard_action_select_all_desc">
+Alihkan pemilihan semua item di folder saat ini
+</string>
+    <string name="keyboard_action_copy">
+Salin
+</string>
+    <string name="keyboard_action_copy_desc">
+Salin item yang dipilih ke clipboard
+</string>
+    <string name="keyboard_action_cut">
+Potong (Pindahkan)
+</string>
+    <string name="keyboard_action_cut_desc">
+Potong item yang dipilih ke clipboard
+</string>
+    <string name="keyboard_action_paste">
+Tempel
+</string>
+    <string name="keyboard_action_paste_desc">
+Tempel file dari clipboard ke folder saat ini
+</string>
+    <string name="keyboard_action_delete">
+Hapus
+</string>
+    <string name="keyboard_action_delete_desc">
+Hapus item yang dipilih dengan konfirmasi
+</string>
+    <string name="keyboard_action_rename">
+Ganti Nama
+</string>
+    <string name="keyboard_action_rename_desc">
+Ganti nama item yang dipilih atau buka ganti nama massal
+</string>
+    <string name="keyboard_action_new_folder">
+Folder Baru
+</string>
+    <string name="keyboard_action_new_folder_desc">
+Buat folder baru di direktori saat ini
+</string>
+    <string name="keyboard_action_search">
+Temukan / Cari
+</string>
+    <string name="keyboard_action_search_desc">
+Fokuskan input filter pencarian
+</string>
+    <string name="keyboard_action_toggle_hidden">
+Alihkan File Tersembunyi
+</string>
+    <string name="keyboard_action_toggle_hidden_desc">
+Tampilkan atau sembunyikan dotfiles
+</string>
+    <string name="keyboard_action_refresh">
+Muat Ulang
+</string>
+    <string name="keyboard_action_refresh_desc">
+Muat ulang isi folder saat ini
+</string>
+    <string name="keyboard_action_switch_pane">
+Ganti Panel
+</string>
+    <string name="keyboard_action_switch_pane_desc">
+Beralih antara panel Kiri/Atas dan Kanan/Bawah
+</string>
+    <string name="keyboard_action_focus_pane_1">
+Fokus Panel 1
+</string>
+    <string name="keyboard_action_focus_pane_1_desc">
+Fokus panel Kiri atau Atas secara langsung
+</string>
+    <string name="keyboard_action_focus_pane_2">
+Fokus Panel 2
+</string>
+    <string name="keyboard_action_focus_pane_2_desc">
+Fokus panel Kanan atau Bawah secara langsung
+</string>
+    <string name="keyboard_action_cheatsheet">
+Lembar Panduan Pintasan
+</string>
+    <string name="keyboard_action_cheatsheet_desc">
+Tampilkan panduan overlay pintasan interaktif
+</string>
+    <string name="keyboard_rebind_title">
+Tetapkan Ulang Tombol
+</string>
+    <string name="keyboard_rebind_prompt">
+Tekan sembarang tombol pada keyboard Anda untuk menetapkan, atau pilih preset di bawah.
+</string>
+    <string name="keyboard_rebind_current">
+Tombol Saat Ini: %1$s
+</string>
+    <string name="keyboard_rebind_success">
+Tombol ditetapkan: %1$s
+</string>
+    <string name="go_to_path_title">
+Pergi ke Jalur
+</string>
+    <string name="go_to_path_hint">
+Masukkan jalur direktori
+</string>
+    <string name="go_to_path_action">
+Buka
+</string>
+    <string name="go_to_path_invalid">
+Direktori tidak ada atau tidak dapat diakses
+</string>
+
+    <!-- Custom Storage Locations (SAF / DocumentsProvider) -->
+    <string name="add_storage_location_title">
+Tambah Lokasi Penyimpanan
+</string>
+    <string name="add_storage_location_subtitle">
+Pasang Termux, Penyedia Dokumen, SD/USB, atau Folder Kustom
+</string>
+    <string name="add_storage_location_desc">
+Pilih folder atau penyedia apa pun yang tersedia melalui pemilih sistem Android untuk memberikan akses persisten.
+</string>
+    <string name="add_storage_dialog_title">
+Lokasi Penyimpanan Baru
+</string>
+    <string name="add_storage_dialog_name_hint">
+Nama Tampilan Lokasi
+</string>
+    <string name="add_storage_dialog_confirm">
+Tambah Lokasi
+</string>
+    <string name="add_storage_success">
+Lokasi penyimpanan \"%1$s\" berhasil ditambahkan
+</string>
+    <string name="add_storage_failed">
+Gagal menambahkan lokasi penyimpanan: %1$s
+</string>
+    <string name="remove_storage_location_title">
+Hapus Lokasi Penyimpanan?
+</string>
+    <string name="remove_storage_location_msg">
+Hapus \"%1$s\" dari lokasi penyimpanan? Ini akan melepas akses dari UFM tanpa menghapus file apa pun.
+</string>
+    <string name="remove_storage_location_confirm">
+Hapus Lokasi
+</string>
+    <string name="storage_location_removed">
+Lokasi penyimpanan dihapus
+</string>
+    <string name="storage_location_termux_default_name">
+Beranda Termux
+</string>
+    <string name="storage_location_saf_default_name">
+Lokasi Dokumen
+</string>
+    <string name="storage_location_inaccessible">
+Lokasi tidak lagi dapat diakses. Silakan berikan kembali akses.
+</string>
+    <string name="saf_storage">
+Penyimpanan SAF
+</string>
 </resources>
+
 
 
 

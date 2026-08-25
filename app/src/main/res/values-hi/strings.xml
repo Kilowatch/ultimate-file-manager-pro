@@ -170,6 +170,9 @@
     <string name="welcome_select_language">
 कृपया अपनी पसंदीदा भाषा चुनें
 </string>
+    <string name="welcome_select_language_subtitle">
+आरंभ करने के लिए अपनी पसंदीदा भाषा चुनें
+</string>
     <string name="welcome_translation_disclaimer">
 सभी अनुवाद सर्वोत्तम प्रयास पर आधारित हैं और इनमें त्रुटियाँ हो सकती हैं।
 </string>
@@ -1723,6 +1726,24 @@ HTTP, FTP और WebDAV फ़ाइल सर्वर नियंत्रण
     <string name="sort_descending">
 अवरोही
 </string>
+    <string name="sort_order_a_to_z">
+A → Z
+</string>
+    <string name="sort_order_z_to_a">
+Z → A
+</string>
+    <string name="sort_order_small_to_large">
+छोटा → बड़ा
+</string>
+    <string name="sort_order_large_to_small">
+बड़ा → छोटा
+</string>
+    <string name="sort_order_newest_first">
+नए पहले
+</string>
+    <string name="sort_order_oldest_first">
+पुराने पहले
+</string>
     <string name="filter_all">
 सभी
 </string>
@@ -1738,8 +1759,68 @@ HTTP, FTP और WebDAV फ़ाइल सर्वर नियंत्रण
     <string name="filter_documents">
 दस्तावेज़
 </string>
+    <string name="filter_archives">
+संग्रह
+</string>
     <string name="filter_apks">
 APKs
+</string>
+    <string name="filter_date_title">
+संशोधित तिथि
+</string>
+    <string name="filter_date_any">
+कोई भी
+</string>
+    <string name="filter_date_today">
+आज
+</string>
+    <string name="filter_date_yesterday">
+कल
+</string>
+    <string name="filter_date_this_week">
+इस सप्ताह
+</string>
+    <string name="filter_date_previous_week">
+पिछला सप्ताह
+</string>
+    <string name="filter_date_this_month">
+इस महीने
+</string>
+    <string name="filter_date_previous_month">
+पिछला महीना
+</string>
+    <string name="filter_date_this_year">
+इस वर्ष
+</string>
+    <string name="filter_date_previous_year">
+पिछला वर्ष
+</string>
+    <string name="filter_size_title">
+फ़ाइल आकार
+</string>
+    <string name="filter_size_any">
+कोई भी
+</string>
+    <string name="filter_size_empty">
+खाली (0 B)
+</string>
+    <string name="filter_size_tiny">
+अति छोटी (0–10 KB)
+</string>
+    <string name="filter_size_small">
+छोटी (10 KB–1 MB)
+</string>
+    <string name="filter_size_medium">
+मध्यम (1–10 MB)
+</string>
+    <string name="filter_size_big">
+बड़ी (10–100 MB)
+</string>
+    <string name="filter_size_large">
+विशाल (100 MB–1 GB)
+</string>
+    <string name="filter_size_huge">
+अत्यधिक बड़ी (>1 GB)
 </string>
     <string name="group_by_date">
 दिनांक के अनुसार समूहित करें
@@ -7009,8 +7090,14 @@ USB ड्राइव (%1$s)
     <string name="smart_sort_save_changes">
 परिवर्तन सहेजें
 </string>
+    <string name="smart_sort_save_changes_desc">
+सहेजे गए कॉन्फ़िगरेशन को अपडेट करें और अधिलेखित करें
+</string>
     <string name="smart_sort_delete_saved">
 हटाएं
+</string>
+    <string name="smart_sort_delete_saved_desc">
+इस सहेजे गए कॉन्फ़िगरेशन को हटाएं
 </string>
     <string name="smart_sort_delete_saved_confirm_title">
 \"%1$s\" हटाएं?
@@ -7972,6 +8059,9 @@ Box — सत्र समाप्त
     <string name="onedrive_auth_profile_failed">
 प्रमाणीकरण सफल, लेकिन खाता विवरण प्राप्त करने में विफल
 </string>
+    <string name="onedrive_code_copied">
+कोड क्लिपबोर्ड पर कॉपी कर दिया गया है!
+</string>
     <string name="auth_library_loading">
 प्रमाणीकरण लाइब्रेरी लोड हो रही है…
 </string>
@@ -8572,6 +8662,12 @@ USB ड्राइव
 </string>
     <string name="tip_jar_awesome_label">
 आप कमाल हैं!
+</string>
+    <string name="tip_jar_fuel_it_label">
+सहयोग करें!
+</string>
+    <string name="tip_jar_dismiss_cd">
+टिप जार कार्ड हटाएं
 </string>
     <string name="tip_jar_global_label">
 वैश्विक
@@ -10569,6 +10665,12 @@ APK निष्कर्षण सेटिंग्स
     <string name="backup_pref_loyalty">
 टिप जार लॉयल्टी डेटा
 </string>
+    <string name="backup_pref_keyboard_shortcuts">
+कीबोर्ड शॉर्टकट और नेविगेशन
+</string>
+    <string name="backup_pref_saf_locations">
+कस्टम स्टोरेज स्थान (SAF)
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>
@@ -11770,6 +11872,12 @@ GIF बनाएं
     <string name="gif_creator_subtitle">
 %d छवियाँ चयनित
 </string>
+    <string name="gif_creator_frames_reorder">
+फ़्रेम (पुनः क्रमबद्ध करने के लिए खींचें)
+</string>
+    <string name="gif_creator_frames_reorder_tv">
+फ़्रेम (D-Pad से क्रम बदलें)
+</string>
     <string name="gif_creator_fps_label">
 फ़्रेम दर
 </string>
@@ -12498,7 +12606,289 @@ Google Play पर अपना अनुभव साझा करें
     <string name="reset_categorized_success">
 श्रेणी लेआउट डिफ़ॉल्ट पर पुनर्स्थापित किया गया
 </string>
+
+    <string name="option_edit_custom_tile_desc">
+टाइल का लेबल, आइकन या दृश्यता बदलें
+</string>
+    <string name="option_delete_custom_tile_desc">
+इस टाइल को हटाएं और इसकी सामग्री को पुनर्स्थापित करें
+</string>
+    <string name="custom_tile_select_icon_desc">
+अंतर्निहित आइकन चुनें या अपना खुद का ब्राउज़ करें
+</string>
+    <string name="indexing_offer_benefit_search">
+सभी फ़ाइलों में त्वरित खोज
+</string>
+    <string name="indexing_offer_benefit_speed">
+फ़ोल्डर और फ़ाइलों की तेज़ लोडिंग
+</string>
+    <string name="indexing_offer_benefit_duplicates">
+डुप्लिकेट और बड़ी फ़ाइलों की पहचान
+</string>
+    <string name="auto_restore_offer_subtitle">
+स्वतः पुनर्स्थापना का पता चला
+</string>
+
+    <!-- Keyboard Shortcuts & Keybinds -->
+    <string name="settings_keyboard_shortcuts_title">
+कीबोर्ड शॉर्टकट
+</string>
+    <string name="settings_keyboard_shortcuts_subtitle">
+कीबोर्ड नेविगेशन और कुंजी बाइंडिंग कॉन्फ़िगर करें
+</string>
+    <string name="keyboard_shortcuts_master_enable">
+कीबोर्ड शॉर्टकट सक्षम करें
+</string>
+    <string name="keyboard_shortcuts_master_enable_desc">
+हार्डवेयर या ब्लूटूथ कीबोर्ड के माध्यम से नेविगेशन और फ़ाइल क्रियाओं की अनुमति दें
+</string>
+    <string name="keyboard_shortcuts_vim_mode">
+Vim नेविगेशन कुंजियाँ
+</string>
+    <string name="keyboard_shortcuts_vim_mode_desc">
+j/k/h/l, gg/G, और एकल-अक्षर क्रिया कुंजियाँ (y/x/p/d/r/n/g) उपयोग करें
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch">
+दोहरे फलक त्वरित स्विच
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch_desc">
+ट्विन विंडो में सक्रिय फलक बदलने के लिए Tab, Ctrl+W, या 1/2 उपयोग करें
+</string>
+    <string name="keyboard_shortcuts_reset_defaults">
+डिफ़ॉल्ट रीसेट करें
+</string>
+    <string name="keyboard_shortcuts_reset_confirm">
+सभी कुंजी बाइंडिंग को फ़ैक्टरी डिफ़ॉल्ट पर रीसेट करें?
+</string>
+    <string name="keyboard_shortcuts_section_nav">
+नेविगेशन
+</string>
+    <string name="keyboard_shortcuts_section_file_ops">
+फ़ाइल संचालन
+</string>
+    <string name="keyboard_shortcuts_section_selection">
+चयन
+</string>
+    <string name="keyboard_shortcuts_section_dual_pane">
+दोहरा फलक
+</string>
+    <string name="keyboard_shortcuts_section_general">
+सामान्य
+</string>
+    <string name="keyboard_shortcuts_help_title">
+कीबोर्ड शॉर्टकट गाइड
+</string>
+    <string name="keyboard_shortcuts_help_subtitle">
+कीबोर्ड नेविगेशन के लिए त्वरित संदर्भ
+</string>
+    <string name="keyboard_action_move_down">
+नीचे जाएं
+</string>
+    <string name="keyboard_action_move_down_desc">
+फ़ाइल सूची में अगली वस्तु को हाइलाइट करें
+</string>
+    <string name="keyboard_action_move_up">
+ऊपर जाएं
+</string>
+    <string name="keyboard_action_move_up_desc">
+फ़ाइल सूची में पिछली वस्तु को हाइलाइट करें
+</string>
+    <string name="keyboard_action_parent_dir">
+मूल निर्देशिका
+</string>
+    <string name="keyboard_action_parent_dir_desc">
+एक निर्देशिका स्तर ऊपर जाएं
+</string>
+    <string name="keyboard_action_open">
+खोलें / एंटर
+</string>
+    <string name="keyboard_action_open_desc">
+चयनित फ़ाइल या फ़ोल्डर खोलें
+</string>
+    <string name="keyboard_action_jump_top">
+शीर्ष पर जाएं
+</string>
+    <string name="keyboard_action_jump_top_desc">
+सूची में पहली वस्तु पर स्क्रॉल करें
+</string>
+    <string name="keyboard_action_jump_bottom">
+सबसे नीचे जाएं
+</string>
+    <string name="keyboard_action_jump_bottom_desc">
+सूची में अंतिम वस्तु पर स्क्रॉल करें
+</string>
+    <string name="keyboard_action_go_to">
+पथ पर जाएं
+</string>
+    <string name="keyboard_action_go_to_desc">
+सीधा पथ जंप संवाद खोलें
+</string>
+    <string name="keyboard_action_toggle_select">
+चयन टॉगल करें
+</string>
+    <string name="keyboard_action_toggle_select_desc">
+वर्तमान में हाइलाइट की गई वस्तु को चुनें या अचयनित करें
+</string>
+    <string name="keyboard_action_select_all">
+सभी चुनें / अचयनित करें
+</string>
+    <string name="keyboard_action_select_all_desc">
+वर्तमान फ़ोल्डर में सभी वस्तुओं के चयन को टॉगल करें
+</string>
+    <string name="keyboard_action_copy">
+कॉपी करें
+</string>
+    <string name="keyboard_action_copy_desc">
+चयनित वस्तु(ओं) को क्लिपबोर्ड पर कॉपी करें
+</string>
+    <string name="keyboard_action_cut">
+कट करें (स्थानांतरित करें)
+</string>
+    <string name="keyboard_action_cut_desc">
+चयनित वस्तु(ओं) को क्लिपबोर्ड पर कट करें
+</string>
+    <string name="keyboard_action_paste">
+पेस्ट करें
+</string>
+    <string name="keyboard_action_paste_desc">
+क्लिपबोर्ड की फ़ाइलों को वर्तमान फ़ोल्डर में पेस्ट करें
+</string>
+    <string name="keyboard_action_delete">
+हटाएं
+</string>
+    <string name="keyboard_action_delete_desc">
+चयनित वस्तु(ओं) को पुष्टि के साथ हटाएं
+</string>
+    <string name="keyboard_action_rename">
+नाम बदलें
+</string>
+    <string name="keyboard_action_rename_desc">
+चयनित वस्तु का नाम बदलें या बैच नाम बदलें खोलें
+</string>
+    <string name="keyboard_action_new_folder">
+नया फ़ोल्डर
+</string>
+    <string name="keyboard_action_new_folder_desc">
+वर्तमान निर्देशिका में नया फ़ोल्डर बनाएं
+</string>
+    <string name="keyboard_action_search">
+खोजें
+</string>
+    <string name="keyboard_action_search_desc">
+खोज फ़िल्टर इनपुट पर फ़ोकस करें
+</string>
+    <string name="keyboard_action_toggle_hidden">
+छिपी फ़ाइलें टॉगल करें
+</string>
+    <string name="keyboard_action_toggle_hidden_desc">
+डॉट फ़ाइलें दिखाएं या छिपाएं
+</string>
+    <string name="keyboard_action_refresh">
+रीफ्रेश करें
+</string>
+    <string name="keyboard_action_refresh_desc">
+वर्तमान फ़ोल्डर की सामग्री पुनः लोड करें
+</string>
+    <string name="keyboard_action_switch_pane">
+फलक बदलें
+</string>
+    <string name="keyboard_action_switch_pane_desc">
+बाएं/ऊपर और दाएं/नीचे के फलक के बीच स्विच करें
+</string>
+    <string name="keyboard_action_focus_pane_1">
+फलक 1 पर फ़ोकस करें
+</string>
+    <string name="keyboard_action_focus_pane_1_desc">
+सीधे बाएं या ऊपर के फलक पर फ़ोकस करें
+</string>
+    <string name="keyboard_action_focus_pane_2">
+फलक 2 पर फ़ोकस करें
+</string>
+    <string name="keyboard_action_focus_pane_2_desc">
+सीधे दाएं या नीचे के फलक पर फ़ोकस करें
+</string>
+    <string name="keyboard_action_cheatsheet">
+शॉर्टकट चीटशीट
+</string>
+    <string name="keyboard_action_cheatsheet_desc">
+इंटरैक्टिव शॉर्टकट ओवरले गाइड दिखाएं
+</string>
+    <string name="keyboard_rebind_title">
+कुंजी पुनः बाइंड करें
+</string>
+    <string name="keyboard_rebind_prompt">
+निर्धारित करने के लिए अपने कीबोर्ड पर कोई भी कुंजी दबाएं, या नीचे से एक प्रीसेट चुनें।
+</string>
+    <string name="keyboard_rebind_current">
+वर्तमान कुंजी: %1$s
+</string>
+    <string name="keyboard_rebind_success">
+कुंजी निर्धारित: %1$s
+</string>
+    <string name="go_to_path_title">
+पथ पर जाएं
+</string>
+    <string name="go_to_path_hint">
+निर्देशिका पथ दर्ज करें
+</string>
+    <string name="go_to_path_action">
+जाएं
+</string>
+    <string name="go_to_path_invalid">
+निर्देशिका मौजूद नहीं है या दुर्गम है
+</string>
+
+    <!-- Custom Storage Locations (SAF / DocumentsProvider) -->
+    <string name="add_storage_location_title">
+स्टोरेज स्थान जोड़ें
+</string>
+    <string name="add_storage_location_subtitle">
+टर्मक्स, डॉक्यूमेंट प्रोवाइडर, SD/USB या कस्टम फ़ोल्डर माउंट करें
+</string>
+    <string name="add_storage_location_desc">
+Android सिस्टम पिकर के माध्यम से उपलब्ध किसी भी फ़ोल्डर या प्रोवाइडर का चयन करें, स्थायी पहुंच प्रदान करने के लिए।
+</string>
+    <string name="add_storage_dialog_title">
+नया स्टोरेज स्थान
+</string>
+    <string name="add_storage_dialog_name_hint">
+स्थान प्रदर्शन नाम
+</string>
+    <string name="add_storage_dialog_confirm">
+स्थान जोड़ें
+</string>
+    <string name="add_storage_success">
+स्टोरेज स्थान \"%1$s\" सफलतापूर्वक जोड़ा गया
+</string>
+    <string name="add_storage_failed">
+स्टोरेज स्थान जोड़ने में विफल: %1$s
+</string>
+    <string name="remove_storage_location_title">
+स्टोरेज स्थान हटाएं?
+</string>
+    <string name="remove_storage_location_msg">
+स्टोरेज स्थानों से \"%1$s\" हटाएं? यह बिना किसी फ़ाइल को हटाए UFM से पहुंच अनमाउंट कर देता है।
+</string>
+    <string name="remove_storage_location_confirm">
+स्थान हटाएं
+</string>
+    <string name="storage_location_removed">
+स्टोरेज स्थान हटा दिया गया
+</string>
+    <string name="storage_location_termux_default_name">
+टर्मक्स होम
+</string>
+    <string name="storage_location_saf_default_name">
+दस्तावेज़ स्थान
+</string>
+    <string name="storage_location_inaccessible">
+स्थान अब सुलभ नहीं है। कृपया पुनः पहुंच प्रदान करें।
+</string>
+    <string name="saf_storage">
+SAF स्टोरेज
+</string>
 </resources>
+
 
 
 

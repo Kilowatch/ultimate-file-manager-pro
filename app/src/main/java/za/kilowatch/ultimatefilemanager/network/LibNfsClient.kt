@@ -643,8 +643,12 @@ object LibNfsClient {
         override fun close() {
             if (!closed) {
                 closed = true
-                LibNfsBridge.nfsClose(ctxHandle, fileHandle)
-                LibNfsBridge.nfsDestroy(ctxHandle)
+                if (ctxHandle != 0L && fileHandle != 0L) {
+                    LibNfsBridge.nfsClose(ctxHandle, fileHandle)
+                }
+                if (ctxHandle != 0L) {
+                    LibNfsBridge.nfsDestroy(ctxHandle)
+                }
             }
         }
     }
@@ -674,8 +678,12 @@ object LibNfsClient {
         override fun close() {
             if (!closed) {
                 closed = true
-                LibNfsBridge.nfsClose(ctxHandle, fileHandle)
-                LibNfsBridge.nfsDestroy(ctxHandle)
+                if (ctxHandle != 0L && fileHandle != 0L) {
+                    LibNfsBridge.nfsClose(ctxHandle, fileHandle)
+                }
+                if (ctxHandle != 0L) {
+                    LibNfsBridge.nfsDestroy(ctxHandle)
+                }
             }
         }
     }

@@ -170,6 +170,9 @@ Ultimate File Manager Pro
     <string name="welcome_select_language">
 원하는 언어를 선택하세요
 </string>
+    <string name="welcome_select_language_subtitle">
+시작하려면 원하는 언어를 선택하세요
+</string>
     <string name="welcome_translation_disclaimer">
 모든 번역은 최선을 다해 제공되며 오류가 있을 수 있습니다.
 </string>
@@ -1723,6 +1726,24 @@ HTTP, FTP, WebDAV 파일 서버 제어
     <string name="sort_descending">
 내림차순
 </string>
+    <string name="sort_order_a_to_z">
+A → Z
+</string>
+    <string name="sort_order_z_to_a">
+Z → A
+</string>
+    <string name="sort_order_small_to_large">
+작은 것 → 큰 것
+</string>
+    <string name="sort_order_large_to_small">
+큰 것 → 작은 것
+</string>
+    <string name="sort_order_newest_first">
+최신순
+</string>
+    <string name="sort_order_oldest_first">
+오래된순
+</string>
     <string name="filter_all">
 전체
 </string>
@@ -1738,8 +1759,68 @@ HTTP, FTP, WebDAV 파일 서버 제어
     <string name="filter_documents">
 문서
 </string>
+    <string name="filter_archives">
+압축 파일
+</string>
     <string name="filter_apks">
 APK
+</string>
+    <string name="filter_date_title">
+수정 날짜
+</string>
+    <string name="filter_date_any">
+전체
+</string>
+    <string name="filter_date_today">
+오늘
+</string>
+    <string name="filter_date_yesterday">
+어제
+</string>
+    <string name="filter_date_this_week">
+이번 주
+</string>
+    <string name="filter_date_previous_week">
+지난주
+</string>
+    <string name="filter_date_this_month">
+이번 달
+</string>
+    <string name="filter_date_previous_month">
+지난달
+</string>
+    <string name="filter_date_this_year">
+올해
+</string>
+    <string name="filter_date_previous_year">
+작년
+</string>
+    <string name="filter_size_title">
+파일 크기
+</string>
+    <string name="filter_size_any">
+전체
+</string>
+    <string name="filter_size_empty">
+비어 있음 (0 B)
+</string>
+    <string name="filter_size_tiny">
+초소형 (0–10 KB)
+</string>
+    <string name="filter_size_small">
+소형 (10 KB–1 MB)
+</string>
+    <string name="filter_size_medium">
+중형 (1–10 MB)
+</string>
+    <string name="filter_size_big">
+대형 (10–100 MB)
+</string>
+    <string name="filter_size_large">
+특대형 (100 MB–1 GB)
+</string>
+    <string name="filter_size_huge">
+거대형 (>1 GB)
 </string>
     <string name="group_by_date">
 날짜별 그룹화
@@ -7009,8 +7090,14 @@ USB 드라이브 (%1$s)
     <string name="smart_sort_save_changes">
 변경사항 저장
 </string>
+    <string name="smart_sort_save_changes_desc">
+저장된 구성 업데이트 및 덮어쓰기
+</string>
     <string name="smart_sort_delete_saved">
 삭제
+</string>
+    <string name="smart_sort_delete_saved_desc">
+이 저장된 구성 제거
 </string>
     <string name="smart_sort_delete_saved_confirm_title">
 \\\"%1$s\\\"을(를) 삭제하시겠습니까?
@@ -7972,6 +8059,9 @@ Box.com 세션이 만료되어 자동으로 갱신할 수 없습니다.\n
     <string name="onedrive_auth_profile_failed">
 인증 성공했지만 계정 정보를 가져오지 못했습니다.
 </string>
+    <string name="onedrive_code_copied">
+클립보드에 코드가 복사되었습니다!
+</string>
     <string name="auth_library_loading">
 인증 라이브러리 로딩 중…
 </string>
@@ -8572,6 +8662,12 @@ USB 드라이브
 </string>
     <string name="tip_jar_awesome_label">
 멋져요!
+</string>
+    <string name="tip_jar_fuel_it_label">
+후원하기!
+</string>
+    <string name="tip_jar_dismiss_cd">
+후원 카드 닫기
 </string>
     <string name="tip_jar_global_label">
 전체
@@ -10569,6 +10665,12 @@ APK 추출 설정
     <string name="backup_pref_loyalty">
 팁 자 충성도 데이터
 </string>
+    <string name="backup_pref_keyboard_shortcuts">
+키보드 단축키 및 탐색
+</string>
+    <string name="backup_pref_saf_locations">
+사용자 지정 저장 위치 (SAF)
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>
@@ -11770,6 +11872,12 @@ GIF 만들기
     <string name="gif_creator_subtitle">
 이미지 %d개 선택됨
 </string>
+    <string name="gif_creator_frames_reorder">
+프레임 (드래그하여 순서 변경)
+</string>
+    <string name="gif_creator_frames_reorder_tv">
+프레임 (D-Pad로 순서 변경)
+</string>
     <string name="gif_creator_fps_label">
 프레임 속도
 </string>
@@ -12498,7 +12606,289 @@ Google Play에서 경험을 공유하세요
     <string name="reset_categorized_success">
 카테고리 레이아웃이 기본값으로 복원되었습니다.
 </string>
+
+    <string name="option_edit_custom_tile_desc">
+타일 라벨, 아이콘 또는 표시 여부 변경
+</string>
+    <string name="option_delete_custom_tile_desc">
+이 타일을 제거하고 내용 복원
+</string>
+    <string name="custom_tile_select_icon_desc">
+기본 아이콘 선택 또는 직접 탐색
+</string>
+    <string name="indexing_offer_benefit_search">
+모든 파일 즉시 검색
+</string>
+    <string name="indexing_offer_benefit_speed">
+폴더 및 파일 로딩 속도 향상
+</string>
+    <string name="indexing_offer_benefit_duplicates">
+중복 및 대용량 파일 감지
+</string>
+    <string name="auto_restore_offer_subtitle">
+자동 복원 감지됨
+</string>
+
+    <!-- Keyboard Shortcuts & Keybinds -->
+    <string name="settings_keyboard_shortcuts_title">
+키보드 단축키
+</string>
+    <string name="settings_keyboard_shortcuts_subtitle">
+키보드 탐색 및 키 바인딩 구성
+</string>
+    <string name="keyboard_shortcuts_master_enable">
+키보드 단축키 활성화
+</string>
+    <string name="keyboard_shortcuts_master_enable_desc">
+하드웨어 또는 Bluetooth 키보드를 통한 탐색 및 파일 작업 허용
+</string>
+    <string name="keyboard_shortcuts_vim_mode">
+Vim 탐색 키
+</string>
+    <string name="keyboard_shortcuts_vim_mode_desc">
+j/k/h/l, gg/G 및 단일 문자 동작 키(y/x/p/d/r/n/g) 사용
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch">
+듀얼 창 빠른 전환
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch_desc">
+Twin Window에서 Tab, Ctrl+W 또는 1/2를 눌러 활성 창 전환
+</string>
+    <string name="keyboard_shortcuts_reset_defaults">
+기본값으로 재설정
+</string>
+    <string name="keyboard_shortcuts_reset_confirm">
+모든 키 바인딩을 초기 기본값으로 재설정하시겠습니까?
+</string>
+    <string name="keyboard_shortcuts_section_nav">
+탐색
+</string>
+    <string name="keyboard_shortcuts_section_file_ops">
+파일 작업
+</string>
+    <string name="keyboard_shortcuts_section_selection">
+선택
+</string>
+    <string name="keyboard_shortcuts_section_dual_pane">
+듀얼 창
+</string>
+    <string name="keyboard_shortcuts_section_general">
+일반
+</string>
+    <string name="keyboard_shortcuts_help_title">
+키보드 단축키 가이드
+</string>
+    <string name="keyboard_shortcuts_help_subtitle">
+키보드 탐색 빠른 참조
+</string>
+    <string name="keyboard_action_move_down">
+아래로 이동
+</string>
+    <string name="keyboard_action_move_down_desc">
+파일 목록에서 다음 항목 강조
+</string>
+    <string name="keyboard_action_move_up">
+위로 이동
+</string>
+    <string name="keyboard_action_move_up_desc">
+파일 목록에서 이전 항목 강조
+</string>
+    <string name="keyboard_action_parent_dir">
+상위 디렉터리
+</string>
+    <string name="keyboard_action_parent_dir_desc">
+한 단계 위 디렉터리로 이동
+</string>
+    <string name="keyboard_action_open">
+열기 / Enter
+</string>
+    <string name="keyboard_action_open_desc">
+선택한 파일 또는 폴더 열기
+</string>
+    <string name="keyboard_action_jump_top">
+맨 위로 이동
+</string>
+    <string name="keyboard_action_jump_top_desc">
+목록의 첫 번째 항목으로 스크롤
+</string>
+    <string name="keyboard_action_jump_bottom">
+맨 아래로 이동
+</string>
+    <string name="keyboard_action_jump_bottom_desc">
+목록의 마지막 항목으로 스크롤
+</string>
+    <string name="keyboard_action_go_to">
+경로로 이동
+</string>
+    <string name="keyboard_action_go_to_desc">
+직접 경로 이동 대화상자 열기
+</string>
+    <string name="keyboard_action_toggle_select">
+선택 전환
+</string>
+    <string name="keyboard_action_toggle_select_desc">
+현재 강조된 항목 선택 또는 선택 해제
+</string>
+    <string name="keyboard_action_select_all">
+전체 선택 / 선택 해제
+</string>
+    <string name="keyboard_action_select_all_desc">
+현재 폴더의 모든 항목 선택 전환
+</string>
+    <string name="keyboard_action_copy">
+복사
+</string>
+    <string name="keyboard_action_copy_desc">
+선택한 항목을 클립보드에 복사
+</string>
+    <string name="keyboard_action_cut">
+잘라내기 (이동)
+</string>
+    <string name="keyboard_action_cut_desc">
+선택한 항목을 클립보드에 잘라내기
+</string>
+    <string name="keyboard_action_paste">
+붙여넣기
+</string>
+    <string name="keyboard_action_paste_desc">
+클립보드 파일을 현재 폴더에 붙여넣기
+</string>
+    <string name="keyboard_action_delete">
+삭제
+</string>
+    <string name="keyboard_action_delete_desc">
+확인 후 선택한 항목 삭제
+</string>
+    <string name="keyboard_action_rename">
+이름 바꾸기
+</string>
+    <string name="keyboard_action_rename_desc">
+선택한 항목 이름 바꾸기 또는 일괄 이름 바꾸기
+</string>
+    <string name="keyboard_action_new_folder">
+새 폴더
+</string>
+    <string name="keyboard_action_new_folder_desc">
+현재 디렉터리에 새 폴더 만들기
+</string>
+    <string name="keyboard_action_search">
+찾기 / 검색
+</string>
+    <string name="keyboard_action_search_desc">
+검색 필터 입력란에 포커스
+</string>
+    <string name="keyboard_action_toggle_hidden">
+숨김 파일 표시 전환
+</string>
+    <string name="keyboard_action_toggle_hidden_desc">
+숨김 파일 표시 또는 숨기기
+</string>
+    <string name="keyboard_action_refresh">
+새로고침
+</string>
+    <string name="keyboard_action_refresh_desc">
+현재 폴더 내용 다시 불러오기
+</string>
+    <string name="keyboard_action_switch_pane">
+창 전환
+</string>
+    <string name="keyboard_action_switch_pane_desc">
+왼쪽/위쪽과 오른쪽/아래쪽 창 사이 전환
+</string>
+    <string name="keyboard_action_focus_pane_1">
+창 1에 포커스
+</string>
+    <string name="keyboard_action_focus_pane_1_desc">
+왼쪽 또는 위쪽 창에 직접 포커스
+</string>
+    <string name="keyboard_action_focus_pane_2">
+창 2에 포커스
+</string>
+    <string name="keyboard_action_focus_pane_2_desc">
+오른쪽 또는 아래쪽 창에 직접 포커스
+</string>
+    <string name="keyboard_action_cheatsheet">
+단축키 요약표
+</string>
+    <string name="keyboard_action_cheatsheet_desc">
+대화형 단축키 오버레이 가이드 표시
+</string>
+    <string name="keyboard_rebind_title">
+키 다시 지정
+</string>
+    <string name="keyboard_rebind_prompt">
+키보드에서 아무 키를 눌러 지정하거나 아래에서 사전 설정을 선택하세요.
+</string>
+    <string name="keyboard_rebind_current">
+현재 키: %1$s
+</string>
+    <string name="keyboard_rebind_success">
+지정된 키: %1$s
+</string>
+    <string name="go_to_path_title">
+경로로 이동
+</string>
+    <string name="go_to_path_hint">
+디렉터리 경로 입력
+</string>
+    <string name="go_to_path_action">
+이동
+</string>
+    <string name="go_to_path_invalid">
+디렉터리가 존재하지 않거나 액세스할 수 없습니다
+</string>
+
+    <!-- Custom Storage Locations (SAF / DocumentsProvider) -->
+    <string name="add_storage_location_title">
+저장 위치 추가
+</string>
+    <string name="add_storage_location_subtitle">
+Termux, 문서 제공자, SD/USB 또는 사용자 지정 폴더 마운트
+</string>
+    <string name="add_storage_location_desc">
+Android 시스템 선택기에 표시되는 폴더 또는 공급자를 선택하여 지속적인 액세스 권한을 부여하세요.
+</string>
+    <string name="add_storage_dialog_title">
+새 저장 위치
+</string>
+    <string name="add_storage_dialog_name_hint">
+위치 표시 이름
+</string>
+    <string name="add_storage_dialog_confirm">
+위치 추가
+</string>
+    <string name="add_storage_success">
+저장 위치 \"%1$s\"이(가) 추가되었습니다
+</string>
+    <string name="add_storage_failed">
+저장 위치를 추가하지 못했습니다: %1$s
+</string>
+    <string name="remove_storage_location_title">
+저장 위치를 제거하시겠습니까?
+</string>
+    <string name="remove_storage_location_msg">
+저장 위치에서 \"%1$s\"을(를) 제거하시겠습니까? 파일은 삭제되지 않으며 UFM의 액세스만 해제됩니다.
+</string>
+    <string name="remove_storage_location_confirm">
+위치 제거
+</string>
+    <string name="storage_location_removed">
+저장 위치가 제거되었습니다
+</string>
+    <string name="storage_location_termux_default_name">
+Termux 홈
+</string>
+    <string name="storage_location_saf_default_name">
+문서 위치
+</string>
+    <string name="storage_location_inaccessible">
+저장 위치에 더 이상 액세스할 수 없습니다. 액세스 권한을 다시 부여해 주세요.
+</string>
+    <string name="saf_storage">
+SAF 저장소
+</string>
 </resources>
+
 
 
 

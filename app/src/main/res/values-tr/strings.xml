@@ -170,6 +170,9 @@ Güç kullanıcıları için tasarlanmış nihai dosya yönetimi deneyimi.
     <string name="welcome_select_language">
 Lütfen tercih ettiğiniz dili seçin
 </string>
+    <string name="welcome_select_language_subtitle">
+Başlamak için tercih ettiğiniz dili seçin
+</string>
     <string name="welcome_translation_disclaimer">
 Tüm çeviriler en iyi çabayla yapılmıştır ve hatalar içerebilir.
 </string>
@@ -1723,6 +1726,24 @@ Artan
     <string name="sort_descending">
 Azalan
 </string>
+    <string name="sort_order_a_to_z">
+A → Z
+</string>
+    <string name="sort_order_z_to_a">
+Z → A
+</string>
+    <string name="sort_order_small_to_large">
+Küçük → Büyük
+</string>
+    <string name="sort_order_large_to_small">
+Büyük → Küçük
+</string>
+    <string name="sort_order_newest_first">
+Yeniden eskiye
+</string>
+    <string name="sort_order_oldest_first">
+Eskiden yeniye
+</string>
     <string name="filter_all">
 Tümü
 </string>
@@ -1738,8 +1759,68 @@ Ses
     <string name="filter_documents">
 Belgeler
 </string>
+    <string name="filter_archives">
+Arşivler
+</string>
     <string name="filter_apks">
 APK\'lar
+</string>
+    <string name="filter_date_title">
+Değiştirilme Tarihi
+</string>
+    <string name="filter_date_any">
+Herhangi
+</string>
+    <string name="filter_date_today">
+Bugün
+</string>
+    <string name="filter_date_yesterday">
+Dün
+</string>
+    <string name="filter_date_this_week">
+Bu Hafta
+</string>
+    <string name="filter_date_previous_week">
+Geçen Hafta
+</string>
+    <string name="filter_date_this_month">
+Bu Ay
+</string>
+    <string name="filter_date_previous_month">
+Geçen Ay
+</string>
+    <string name="filter_date_this_year">
+Bu Yıl
+</string>
+    <string name="filter_date_previous_year">
+Geçen Yıl
+</string>
+    <string name="filter_size_title">
+Dosya Boyutu
+</string>
+    <string name="filter_size_any">
+Herhangi
+</string>
+    <string name="filter_size_empty">
+Boş (0 B)
+</string>
+    <string name="filter_size_tiny">
+Minik (0–10 KB)
+</string>
+    <string name="filter_size_small">
+Küçük (10 KB–1 MB)
+</string>
+    <string name="filter_size_medium">
+Orta (1–10 MB)
+</string>
+    <string name="filter_size_big">
+Büyük (10–100 MB)
+</string>
+    <string name="filter_size_large">
+Çok Büyük (100 MB–1 GB)
+</string>
+    <string name="filter_size_huge">
+Dev (>1 GB)
 </string>
     <string name="group_by_date">
 Tarihe Göre Grupla
@@ -7009,8 +7090,14 @@ Açıklama
     <string name="smart_sort_save_changes">
 Değişiklikleri Kaydet
 </string>
+    <string name="smart_sort_save_changes_desc">
+Kayıtlı yapılandırmayı güncelle ve üzerine yaz
+</string>
     <string name="smart_sort_delete_saved">
 Sil
+</string>
+    <string name="smart_sort_delete_saved_desc">
+Bu kayıtlı yapılandırmayı kaldır
 </string>
     <string name="smart_sort_delete_saved_confirm_title">
 \"%1$s\" silinsin mi?
@@ -7972,6 +8059,9 @@ Doğrulama başlatılamadı: %1$s
     <string name="onedrive_auth_profile_failed">
 Doğrulama başarılı, ancak hesap ayrıntıları alınamadı
 </string>
+    <string name="onedrive_code_copied">
+Kod panoya kopyalandı!
+</string>
     <string name="auth_library_loading">
 Doğrulama kütüphanesi yükleniyor…
 </string>
@@ -8572,6 +8662,12 @@ Teşekkürler!
 </string>
     <string name="tip_jar_awesome_label">
 Harikasın!
+</string>
+    <string name="tip_jar_fuel_it_label">
+Destek Ol!
+</string>
+    <string name="tip_jar_dismiss_cd">
+Bağış kartını kapat
 </string>
     <string name="tip_jar_global_label">
 Global
@@ -10569,6 +10665,12 @@ Dosya Türü Simge Geçersiz Kılmaları
     <string name="backup_pref_loyalty">
 Bahşiş Kavanozu Sadakat Verileri
 </string>
+    <string name="backup_pref_keyboard_shortcuts">
+Klavye Kısayolları ve Gezinme
+</string>
+    <string name="backup_pref_saf_locations">
+Özel Depolama Konumları (SAF)
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>
@@ -11770,6 +11872,12 @@ Animasyonlu GIF Oluştur
     <string name="gif_creator_subtitle">
 %d görsel seçildi
 </string>
+    <string name="gif_creator_frames_reorder">
+Çerçeveler (Sürükleyerek yeniden sırala)
+</string>
+    <string name="gif_creator_frames_reorder_tv">
+Çerçeveler (D-Pad ile yeniden sırala)
+</string>
     <string name="gif_creator_fps_label">
 Kare hızı
 </string>
@@ -12498,7 +12606,289 @@ Varsayılana Sıfırla
     <string name="reset_categorized_success">
 Kategori düzeni varsayılana geri yüklendi
 </string>
+
+    <string name="option_edit_custom_tile_desc">
+Döşeme etiketini, simgesini veya görünürlüğünü değiştir
+</string>
+    <string name="option_delete_custom_tile_desc">
+Bu döşemeyi kaldır ve içeriğini geri yükle
+</string>
+    <string name="custom_tile_select_icon_desc">
+Yerleşik bir simge seç veya kendi simgene göz at
+</string>
+    <string name="indexing_offer_benefit_search">
+Tüm dosyalarda anında arama
+</string>
+    <string name="indexing_offer_benefit_speed">
+Daha hızlı klasör ve dosya yükleme
+</string>
+    <string name="indexing_offer_benefit_duplicates">
+Yinelenen ve büyük dosya algılama
+</string>
+    <string name="auto_restore_offer_subtitle">
+Otomatik Geri Yükleme Algılandı
+</string>
+
+    <!-- Keyboard Shortcuts & Keybinds -->
+    <string name="settings_keyboard_shortcuts_title">
+Klavye Kısayolları
+</string>
+    <string name="settings_keyboard_shortcuts_subtitle">
+Klavye gezinmesini ve tuş atamalarını yapılandır
+</string>
+    <string name="keyboard_shortcuts_master_enable">
+Klavye Kısayollarını Etkinleştir
+</string>
+    <string name="keyboard_shortcuts_master_enable_desc">
+Donanım veya Bluetooth klavye ile gezinme ve dosya işlemlerine izin ver
+</string>
+    <string name="keyboard_shortcuts_vim_mode">
+Vim Gezinme Tuşları
+</string>
+    <string name="keyboard_shortcuts_vim_mode_desc">
+j/k/h/l, gg/G ve tek harfli işlem tuşlarını kullan (y/x/p/d/r/n/g)
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch">
+Çift Bölmeli Hızlı Geçiş
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch_desc">
+İkili Pencerede etkin bölmeyi değiştirmek için Tab, Ctrl+W veya 1/2 kullan
+</string>
+    <string name="keyboard_shortcuts_reset_defaults">
+Varsayılanlara Sıfırla
+</string>
+    <string name="keyboard_shortcuts_reset_confirm">
+Tüm tuş atamaları fabrika varsayılanlarına sıfırlansın mı?
+</string>
+    <string name="keyboard_shortcuts_section_nav">
+Gezinme
+</string>
+    <string name="keyboard_shortcuts_section_file_ops">
+Dosya İşlemleri
+</string>
+    <string name="keyboard_shortcuts_section_selection">
+Seçim
+</string>
+    <string name="keyboard_shortcuts_section_dual_pane">
+Çift Bölme
+</string>
+    <string name="keyboard_shortcuts_section_general">
+Genel
+</string>
+    <string name="keyboard_shortcuts_help_title">
+Klavye Kısayolları Rehberi
+</string>
+    <string name="keyboard_shortcuts_help_subtitle">
+Klavye gezinmesi için hızlı başvuru
+</string>
+    <string name="keyboard_action_move_down">
+Aşağı Git
+</string>
+    <string name="keyboard_action_move_down_desc">
+Dosya listesinde sonraki öğeyi vurgula
+</string>
+    <string name="keyboard_action_move_up">
+Yukarı Git
+</string>
+    <string name="keyboard_action_move_up_desc">
+Dosya listesinde önceki öğeyi vurgula
+</string>
+    <string name="keyboard_action_parent_dir">
+Üst Dizin
+</string>
+    <string name="keyboard_action_parent_dir_desc">
+Bir dizin seviyesi yukarı çık
+</string>
+    <string name="keyboard_action_open">
+Aç / Enter
+</string>
+    <string name="keyboard_action_open_desc">
+Seçili dosyayı veya klasörü aç
+</string>
+    <string name="keyboard_action_jump_top">
+En Üste Git
+</string>
+    <string name="keyboard_action_jump_top_desc">
+Listedeki ilk öğeye kaydır
+</string>
+    <string name="keyboard_action_jump_bottom">
+En Alta Git
+</string>
+    <string name="keyboard_action_jump_bottom_desc">
+Listedeki son öğeye kaydır
+</string>
+    <string name="keyboard_action_go_to">
+Yola Git
+</string>
+    <string name="keyboard_action_go_to_desc">
+Doğrudan yol atlama iletişim kutusunu aç
+</string>
+    <string name="keyboard_action_toggle_select">
+Seçimi Değiştir
+</string>
+    <string name="keyboard_action_toggle_select_desc">
+Geçerli vurgulanan öğeyi seç veya seçimden çıkar
+</string>
+    <string name="keyboard_action_select_all">
+Tümünü Seç / Seçimi Kaldır
+</string>
+    <string name="keyboard_action_select_all_desc">
+Geçerli klasördeki tüm öğeleri seçmeyi aç/kapat
+</string>
+    <string name="keyboard_action_copy">
+Kopyala
+</string>
+    <string name="keyboard_action_copy_desc">
+Seçili öğeleri panoya kopyala
+</string>
+    <string name="keyboard_action_cut">
+Kes (Taşı)
+</string>
+    <string name="keyboard_action_cut_desc">
+Seçili öğeleri panoya kes
+</string>
+    <string name="keyboard_action_paste">
+Yapıştır
+</string>
+    <string name="keyboard_action_paste_desc">
+Panodaki dosyaları geçerli klasöre yapıştır
+</string>
+    <string name="keyboard_action_delete">
+Sil
+</string>
+    <string name="keyboard_action_delete_desc">
+Seçili öğeleri onayla sil
+</string>
+    <string name="keyboard_action_rename">
+Yeniden Adlandır
+</string>
+    <string name="keyboard_action_rename_desc">
+Seçili öğeyi yeniden adlandır veya toplu yeniden adlandırmayı aç
+</string>
+    <string name="keyboard_action_new_folder">
+Yeni Klasör
+</string>
+    <string name="keyboard_action_new_folder_desc">
+Geçerli dizinde yeni bir klasör oluştur
+</string>
+    <string name="keyboard_action_search">
+Bul / Ara
+</string>
+    <string name="keyboard_action_search_desc">
+Arama filtresi girişine odaklan
+</string>
+    <string name="keyboard_action_toggle_hidden">
+Gizli Dosyaları Aç/Kapat
+</string>
+    <string name="keyboard_action_toggle_hidden_desc">
+Nokta dosyalarını göster veya gizle
+</string>
+    <string name="keyboard_action_refresh">
+Yenile
+</string>
+    <string name="keyboard_action_refresh_desc">
+Geçerli klasör içeriğini yeniden yükle
+</string>
+    <string name="keyboard_action_switch_pane">
+Bölmeyi Değiştir
+</string>
+    <string name="keyboard_action_switch_pane_desc">
+Sol/Üst ve Sağ/Alt bölme arasında geçiş yap
+</string>
+    <string name="keyboard_action_focus_pane_1">
+Bölme 1\'e Odaklan
+</string>
+    <string name="keyboard_action_focus_pane_1_desc">
+Doğrudan Sol veya Üst bölmeye odaklan
+</string>
+    <string name="keyboard_action_focus_pane_2">
+Bölme 2\'ye Odaklan
+</string>
+    <string name="keyboard_action_focus_pane_2_desc">
+Doğrudan Sağ veya Alt bölmeye odaklan
+</string>
+    <string name="keyboard_action_cheatsheet">
+Kısayol Kartı
+</string>
+    <string name="keyboard_action_cheatsheet_desc">
+Etkileşimli kısayol kaplaması rehberini göster
+</string>
+    <string name="keyboard_rebind_title">
+Tuşu Yeniden Ata
+</string>
+    <string name="keyboard_rebind_prompt">
+Atamak için klavyenizde herhangi bir tuşa basın veya aşağıdan bir hazır ayar seçin.
+</string>
+    <string name="keyboard_rebind_current">
+Geçerli Tuş: %1$s
+</string>
+    <string name="keyboard_rebind_success">
+Tuş atandı: %1$s
+</string>
+    <string name="go_to_path_title">
+Yola Git
+</string>
+    <string name="go_to_path_hint">
+Dizin yolunu girin
+</string>
+    <string name="go_to_path_action">
+Git
+</string>
+    <string name="go_to_path_invalid">
+Dizin mevcut değil veya erişilemiyor
+</string>
+
+    <!-- Custom Storage Locations (SAF / DocumentsProvider) -->
+    <string name="add_storage_location_title">
+Depolama Konumu Ekle
+</string>
+    <string name="add_storage_location_subtitle">
+Termux, Belge Sağlayıcıları, SD/USB veya Özel Klasörleri Bağla
+</string>
+    <string name="add_storage_location_desc">
+Kalıcı erişim sağlamak için Android sistem seçicisi tarafından sunulan herhangi bir klasörü veya sağlayıcıyı seçin.
+</string>
+    <string name="add_storage_dialog_title">
+Yeni Depolama Konumu
+</string>
+    <string name="add_storage_dialog_name_hint">
+Konum Görünen Adı
+</string>
+    <string name="add_storage_dialog_confirm">
+Konum Ekle
+</string>
+    <string name="add_storage_success">
+\"%1$s\" depolama konumu başarıyla eklendi
+</string>
+    <string name="add_storage_failed">
+Depolama konumu eklenemedi: %1$s
+</string>
+    <string name="remove_storage_location_title">
+Depolama Konumu Kaldırılsın mı?
+</string>
+    <string name="remove_storage_location_msg">
+\"%1$s\" depolama konumlarından kaldırılsın mı? Bu, UFM erişimini kaldırır ancak hiçbir dosyayı silmez.
+</string>
+    <string name="remove_storage_location_confirm">
+Konumu Kaldır
+</string>
+    <string name="storage_location_removed">
+Depolama konumu kaldırıldı
+</string>
+    <string name="storage_location_termux_default_name">
+Termux Ana Dizini
+</string>
+    <string name="storage_location_saf_default_name">
+Belge Konumu
+</string>
+    <string name="storage_location_inaccessible">
+Konum artık erişilebilir değil. Lütfen erişimi yeniden verin.
+</string>
+    <string name="saf_storage">
+SAF Depolama
+</string>
 </resources>
+
 
 
 

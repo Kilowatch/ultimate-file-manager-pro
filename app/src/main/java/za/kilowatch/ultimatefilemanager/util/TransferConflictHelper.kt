@@ -493,7 +493,10 @@ object TransferConflictHelper {
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, dest.absolutePath)
 
         val actualDest = when (action) {
-            ConflictAction.KEEP_BOTH -> uniqueLocalFile(dest.parentFile ?: File(dest.parent ?: ""), srcFile.name)
+            ConflictAction.KEEP_BOTH -> {
+                val parentDir = dest.parentFile ?: (if (!dest.parent.isNullOrEmpty()) File(dest.parent!!) else File(ctx.filesDir.absolutePath))
+                uniqueLocalFile(parentDir, srcFile.name, ctx)
+            }
             else -> dest
         }
 
@@ -549,7 +552,8 @@ object TransferConflictHelper {
             val cacheDir = ctx.externalCacheDir ?: ctx.cacheDir
             File.createTempFile("ufm_dl_", ".tmp", cacheDir)
         } else if (useCacheCopy) {
-            File(actualDest.parent, "${actualDest.name}.ufm_tmp")
+            val parentDir = actualDest.parentFile ?: (if (!actualDest.parent.isNullOrEmpty()) File(actualDest.parent!!) else ctx.cacheDir)
+            File(parentDir, "${actualDest.name}.ufm_tmp")
         } else {
             actualDest
         }

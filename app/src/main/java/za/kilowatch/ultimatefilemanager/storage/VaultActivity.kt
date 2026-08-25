@@ -237,7 +237,7 @@ class VaultActivity : AppCompatActivity() {
     private fun unlockVault() {
         val stored = readPinHash()
         if (stored == null) {
-            showSetPinFlow(generateRecoveryCode = true) {
+            showSetPinFlow(generateRecoveryCode = true, onCancel = { finish() }) {
                 showSnackbar(getString(R.string.vault_pin_saved))
                 isUnlocked = true
                 showUnlockedUi()
@@ -323,7 +323,7 @@ class VaultActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                showSetPinFlow(generateRecoveryCode = false) {
+                showSetPinFlow(generateRecoveryCode = false, onCancel = {}) {
                     showSnackbar(getString(R.string.vault_pin_saved))
                 }
             }
@@ -335,13 +335,17 @@ class VaultActivity : AppCompatActivity() {
      * If [generateRecoveryCode] is true, generates a new 16-char recovery code,
      * hashes + stores it, and shows it once after saving.
      */
-    private fun showSetPinFlow(generateRecoveryCode: Boolean, onConfirmed: (() -> Unit)? = null) {
+    private fun showSetPinFlow(
+        generateRecoveryCode: Boolean,
+        onCancel: (() -> Unit)? = null,
+        onConfirmed: (() -> Unit)? = null
+    ) {
         PinDialogHelper.showPinDialog(
             context = this,
             title = getString(R.string.vault_set_pin_title),
             subtitle = getString(R.string.vault_set_pin_subtitle),
             confirmText = getString(R.string.vault_set_pin_title),
-            onCancel = null
+            onCancel = onCancel
         ) { pin ->
             // Step 2: confirm PIN
             PinDialogHelper.showPinDialog(
@@ -349,16 +353,18 @@ class VaultActivity : AppCompatActivity() {
                 title = getString(R.string.vault_confirm_pin_title),
                 subtitle = getString(R.string.vault_confirm_pin_subtitle),
                 confirmText = getString(R.string.vault_confirm_pin_title),
-                onCancel = null
+                onCancel = onCancel
             ) { confirmedPin ->
                 if (pin != confirmedPin) {
                     showSnackbar(getString(R.string.vault_pin_mismatch))
-                    showSetPinFlow(generateRecoveryCode, onConfirmed)  // restart
+                    showSetPinFlow(generateRecoveryCode, onCancel, onConfirmed)  // restart
                     return@showPinDialog
                 }
 
                 // Step 3: irrecoverable warning
-                val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+                val isTv = DeviceUtils.isTvDevice(this)
+                val layoutRes = if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+                val dialogView = layoutInflater.inflate(layoutRes, null)
                 val imgIcon = dialogView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
                 val txtTitle = dialogView.findViewById<android.widget.TextView>(R.id.txtDialogTitle)
                 val txtMessage = dialogView.findViewById<android.widget.TextView>(R.id.txtDialogMessage)
@@ -394,6 +400,11 @@ class VaultActivity : AppCompatActivity() {
                 }
                 btnNegative?.setOnClickListener {
                     warningDialog.dismiss()
+                    onCancel?.invoke()
+                }
+
+                warningDialog.setOnCancelListener {
+                    onCancel?.invoke()
                 }
 
                 warningDialog.show()
@@ -529,7 +540,7 @@ class VaultActivity : AppCompatActivity() {
                 }
                 entryDialog.dismiss()
                 // Correct — let user set a new PIN (and generate new recovery code)
-                showSetPinFlow(generateRecoveryCode = true) {
+                showSetPinFlow(generateRecoveryCode = true, onCancel = { finish() }) {
                     isUnlocked = true
                     showUnlockedUi()
                 }
@@ -538,6 +549,11 @@ class VaultActivity : AppCompatActivity() {
 
         btnCancel?.setOnClickListener {
             entryDialog.dismiss()
+            unlockVault()
+        }
+
+        entryDialog.setOnCancelListener {
+            unlockVault()
         }
 
         entryDialog.show()

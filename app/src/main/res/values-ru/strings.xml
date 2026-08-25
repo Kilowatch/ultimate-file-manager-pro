@@ -170,6 +170,9 @@ Ultimate File Manager Pro
     <string name="welcome_select_language">
 Пожалуйста, выберите предпочитаемый язык
 </string>
+    <string name="welcome_select_language_subtitle">
+Выберите предпочтительный язык для начала работы
+</string>
     <string name="welcome_translation_disclaimer">
 Все переводы выполнены по мере возможности и могут содержать ошибки.
 </string>
@@ -1723,6 +1726,24 @@ Ultimate File Manager Pro
     <string name="sort_descending">
 По убыванию
 </string>
+    <string name="sort_order_a_to_z">
+A → Z
+</string>
+    <string name="sort_order_z_to_a">
+Z → A
+</string>
+    <string name="sort_order_small_to_large">
+Маленькие → Большие
+</string>
+    <string name="sort_order_large_to_small">
+Большие → Маленькие
+</string>
+    <string name="sort_order_newest_first">
+Сначала новые
+</string>
+    <string name="sort_order_oldest_first">
+Сначала старые
+</string>
     <string name="filter_all">
 Все
 </string>
@@ -1738,8 +1759,68 @@ Ultimate File Manager Pro
     <string name="filter_documents">
 Документы
 </string>
+    <string name="filter_archives">
+Архивы
+</string>
     <string name="filter_apks">
 APK-файлы
+</string>
+    <string name="filter_date_title">
+Дата изменения
+</string>
+    <string name="filter_date_any">
+Любая
+</string>
+    <string name="filter_date_today">
+Сегодня
+</string>
+    <string name="filter_date_yesterday">
+Вчера
+</string>
+    <string name="filter_date_this_week">
+На этой неделе
+</string>
+    <string name="filter_date_previous_week">
+На прошлой неделе
+</string>
+    <string name="filter_date_this_month">
+В этом месяце
+</string>
+    <string name="filter_date_previous_month">
+В прошлом месяце
+</string>
+    <string name="filter_date_this_year">
+В этом году
+</string>
+    <string name="filter_date_previous_year">
+В прошлом году
+</string>
+    <string name="filter_size_title">
+Размер файла
+</string>
+    <string name="filter_size_any">
+Любой
+</string>
+    <string name="filter_size_empty">
+Пусто (0 Б)
+</string>
+    <string name="filter_size_tiny">
+Крошечный (0–10 КБ)
+</string>
+    <string name="filter_size_small">
+Маленький (10 КБ–1 МБ)
+</string>
+    <string name="filter_size_medium">
+Средний (1–10 МБ)
+</string>
+    <string name="filter_size_big">
+Большой (10–100 МБ)
+</string>
+    <string name="filter_size_large">
+Крупный (100 МБ–1 ГБ)
+</string>
+    <string name="filter_size_huge">
+Огромный (>1 ГБ)
 </string>
     <string name="group_by_date">
 Группировать по дате
@@ -7009,8 +7090,14 @@ USB-накопитель (%1$s)
     <string name="smart_sort_save_changes">
 Сохранить изменения
 </string>
+    <string name="smart_sort_save_changes_desc">
+Обновить и перезаписать сохранённую конфигурацию
+</string>
     <string name="smart_sort_delete_saved">
 Удалить
+</string>
+    <string name="smart_sort_delete_saved_desc">
+Удалить эту сохранённую конфигурацию
 </string>
     <string name="smart_sort_delete_saved_confirm_title">
 Удалить \\\"%1$s\\\"?
@@ -7972,6 +8059,9 @@ Box — сессия истекла
     <string name="onedrive_auth_profile_failed">
 Авторизация прошла успешно, но не удалось получить данные аккаунта
 </string>
+    <string name="onedrive_code_copied">
+Код скопирован в буфер обмена!
+</string>
     <string name="auth_library_loading">
 Загрузка библиотеки авторизации…
 </string>
@@ -8572,6 +8662,12 @@ USB-накопитель
 </string>
     <string name="tip_jar_awesome_label">
 Вы классные!
+</string>
+    <string name="tip_jar_fuel_it_label">
+Поддержите проект!
+</string>
+    <string name="tip_jar_dismiss_cd">
+Скрыть карточку поддержки
 </string>
     <string name="tip_jar_global_label">
 Глобальный
@@ -10569,6 +10665,12 @@ SAF
     <string name="backup_pref_loyalty">
 Данные лояльности Tip Jar
 </string>
+    <string name="backup_pref_keyboard_shortcuts">
+Сочетания клавиш и навигация
+</string>
+    <string name="backup_pref_saf_locations">
+Пользовательские расположения хранилища (SAF)
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>
@@ -11770,6 +11872,12 @@ UFM перестал отвечать во время вашего послед�
     <string name="gif_creator_subtitle">
 Выбрано изображений: %d
 </string>
+    <string name="gif_creator_frames_reorder">
+Блоки (перетащите для изменения порядка)
+</string>
+    <string name="gif_creator_frames_reorder_tv">
+Блоки (изменение порядка с помощью D-Pad)
+</string>
     <string name="gif_creator_fps_label">
 Частота кадров
 </string>
@@ -12498,7 +12606,289 @@ support@kilowatch.co.za
     <string name="reset_categorized_success">
 Макет категорий восстановлен по умолчанию
 </string>
+
+    <string name="option_edit_custom_tile_desc">
+Изменить метку, значок или видимость плитки
+</string>
+    <string name="option_delete_custom_tile_desc">
+Удалить эту плитку и восстановить её содержимое
+</string>
+    <string name="custom_tile_select_icon_desc">
+Выберите встроенный значок или загрузите свой
+</string>
+    <string name="indexing_offer_benefit_search">
+Мгновенный поиск по всем файлам
+</string>
+    <string name="indexing_offer_benefit_speed">
+Более быстрая загрузка папок и файлов
+</string>
+    <string name="indexing_offer_benefit_duplicates">
+Обнаружение дубликатов и больших файлов
+</string>
+    <string name="auto_restore_offer_subtitle">
+Обнаружено автоматическое восстановление
+</string>
+
+    <!-- Keyboard Shortcuts & Keybinds -->
+    <string name="settings_keyboard_shortcuts_title">
+Сочетания клавиш
+</string>
+    <string name="settings_keyboard_shortcuts_subtitle">
+Настройте навигацию с клавиатуры и привязку клавиш
+</string>
+    <string name="keyboard_shortcuts_master_enable">
+Включить сочетания клавиш
+</string>
+    <string name="keyboard_shortcuts_master_enable_desc">
+Разрешить навигацию и действия с файлами с помощью аппаратной или Bluetooth-клавиатуры
+</string>
+    <string name="keyboard_shortcuts_vim_mode">
+Клавиши навигации Vim
+</string>
+    <string name="keyboard_shortcuts_vim_mode_desc">
+Используйте j/k/h/l, gg/G и одиночные клавиши действий (y/x/p/d/r/n/g)
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch">
+Быстрое переключение двухпанельного режима
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch_desc">
+Используйте Tab, Ctrl+W или 1/2 для переключения активной панели в режиме двойного окна
+</string>
+    <string name="keyboard_shortcuts_reset_defaults">
+Сбросить настройки по умолчанию
+</string>
+    <string name="keyboard_shortcuts_reset_confirm">
+Сбросить все привязки клавиш к заводским настройкам?
+</string>
+    <string name="keyboard_shortcuts_section_nav">
+Навигация
+</string>
+    <string name="keyboard_shortcuts_section_file_ops">
+Операции с файлами
+</string>
+    <string name="keyboard_shortcuts_section_selection">
+Выделение
+</string>
+    <string name="keyboard_shortcuts_section_dual_pane">
+Двухпанельный режим
+</string>
+    <string name="keyboard_shortcuts_section_general">
+Общие
+</string>
+    <string name="keyboard_shortcuts_help_title">
+Справочник по сочетаниям клавиш
+</string>
+    <string name="keyboard_shortcuts_help_subtitle">
+Краткий справочник по навигации с клавиатуры
+</string>
+    <string name="keyboard_action_move_down">
+Переместиться вниз
+</string>
+    <string name="keyboard_action_move_down_desc">
+Выделить следующий элемент в списке файлов
+</string>
+    <string name="keyboard_action_move_up">
+Переместиться вверх
+</string>
+    <string name="keyboard_action_move_up_desc">
+Выделить предыдущий элемент в списке файлов
+</string>
+    <string name="keyboard_action_parent_dir">
+Родительский каталог
+</string>
+    <string name="keyboard_action_parent_dir_desc">
+Перейти на один уровень вверх
+</string>
+    <string name="keyboard_action_open">
+Открыть / Ввод
+</string>
+    <string name="keyboard_action_open_desc">
+Открыть выбранный файл или папку
+</string>
+    <string name="keyboard_action_jump_top">
+Перейти в начало
+</string>
+    <string name="keyboard_action_jump_top_desc">
+Прокрутить к первому элементу списка
+</string>
+    <string name="keyboard_action_jump_bottom">
+Перейти в конец
+</string>
+    <string name="keyboard_action_jump_bottom_desc">
+Прокрутить к последнему элементу списка
+</string>
+    <string name="keyboard_action_go_to">
+Перейти к пути
+</string>
+    <string name="keyboard_action_go_to_desc">
+Открыть диалог быстрого перехода по пути
+</string>
+    <string name="keyboard_action_toggle_select">
+Переключить выделение
+</string>
+    <string name="keyboard_action_toggle_select_desc">
+Выделить или снять выделение с текущего элемента
+</string>
+    <string name="keyboard_action_select_all">
+Выделить все / Снять выделение
+</string>
+    <string name="keyboard_action_select_all_desc">
+Переключить выделение всех элементов в текущей папке
+</string>
+    <string name="keyboard_action_copy">
+Копировать
+</string>
+    <string name="keyboard_action_copy_desc">
+Скопировать выбранные элементы в буфер обмена
+</string>
+    <string name="keyboard_action_cut">
+Вырезать (переместить)
+</string>
+    <string name="keyboard_action_cut_desc">
+Вырезать выбранные элементы в буфер обмена
+</string>
+    <string name="keyboard_action_paste">
+Вставить
+</string>
+    <string name="keyboard_action_paste_desc">
+Вставить файлы из буфера обмена в текущую папку
+</string>
+    <string name="keyboard_action_delete">
+Удалить
+</string>
+    <string name="keyboard_action_delete_desc">
+Удалить выбранные элементы с подтверждением
+</string>
+    <string name="keyboard_action_rename">
+Переименовать
+</string>
+    <string name="keyboard_action_rename_desc">
+Переименовать выбранный элемент или открыть пакетное переименование
+</string>
+    <string name="keyboard_action_new_folder">
+Новая папка
+</string>
+    <string name="keyboard_action_new_folder_desc">
+Создать новую папку в текущем каталоге
+</string>
+    <string name="keyboard_action_search">
+Найти / Поиск
+</string>
+    <string name="keyboard_action_search_desc">
+Перейти к полю поиска/фильтра
+</string>
+    <string name="keyboard_action_toggle_hidden">
+Переключить отображение скрытых файлов
+</string>
+    <string name="keyboard_action_toggle_hidden_desc">
+Показать или скрыть файлы, начинающиеся с точки
+</string>
+    <string name="keyboard_action_refresh">
+Обновить
+</string>
+    <string name="keyboard_action_refresh_desc">
+Перезагрузить содержимое текущей папки
+</string>
+    <string name="keyboard_action_switch_pane">
+Переключить панель
+</string>
+    <string name="keyboard_action_switch_pane_desc">
+Переключение между левой/верхней и правой/нижней панелью
+</string>
+    <string name="keyboard_action_focus_pane_1">
+Фокус на панель 1
+</string>
+    <string name="keyboard_action_focus_pane_1_desc">
+Перевести фокус непосредственно на левую/верхнюю панель
+</string>
+    <string name="keyboard_action_focus_pane_2">
+Фокус на панель 2
+</string>
+    <string name="keyboard_action_focus_pane_2_desc">
+Перевести фокус непосредственно на правую/нижнюю панель
+</string>
+    <string name="keyboard_action_cheatsheet">
+Шпаргалка по сочетаниям клавиш
+</string>
+    <string name="keyboard_action_cheatsheet_desc">
+Показать интерактивный справочник по сочетаниям клавиш
+</string>
+    <string name="keyboard_rebind_title">
+Переназначить клавишу
+</string>
+    <string name="keyboard_rebind_prompt">
+Нажмите любую клавишу на клавиатуре для назначения или выберите готовый вариант ниже.
+</string>
+    <string name="keyboard_rebind_current">
+Текущая клавиша: %1$s
+</string>
+    <string name="keyboard_rebind_success">
+Назначена клавиша: %1$s
+</string>
+    <string name="go_to_path_title">
+Перейти к пути
+</string>
+    <string name="go_to_path_hint">
+Введите путь к каталогу
+</string>
+    <string name="go_to_path_action">
+Перейти
+</string>
+    <string name="go_to_path_invalid">
+Каталог не существует или недоступен
+</string>
+
+    <!-- Custom Storage Locations (SAF / DocumentsProvider) -->
+    <string name="add_storage_location_title">
+Добавить расположение хранилища
+</string>
+    <string name="add_storage_location_subtitle">
+Подключить Termux, поставщиков документов, SD/USB или пользовательские папки
+</string>
+    <string name="add_storage_location_desc">
+Выберите любую папку или поставщика, доступного через системное окно выбора Android, чтобы предоставить постоянный доступ.
+</string>
+    <string name="add_storage_dialog_title">
+Новое расположение хранилища
+</string>
+    <string name="add_storage_dialog_name_hint">
+Отображаемое имя расположения
+</string>
+    <string name="add_storage_dialog_confirm">
+Добавить расположение
+</string>
+    <string name="add_storage_success">
+Расположение хранилища «%1$s» успешно добавлено
+</string>
+    <string name="add_storage_failed">
+Не удалось добавить расположение хранилища: %1$s
+</string>
+    <string name="remove_storage_location_title">
+Удалить расположение хранилища?
+</string>
+    <string name="remove_storage_location_msg">
+Удалить «%1$s» из расположений хранилища? Это отключит доступ UFM к этому расположению без удаления каких-либо файлов.
+</string>
+    <string name="remove_storage_location_confirm">
+Удалить расположение
+</string>
+    <string name="storage_location_removed">
+Расположение хранилища удалено
+</string>
+    <string name="storage_location_termux_default_name">
+Домашний каталог Termux
+</string>
+    <string name="storage_location_saf_default_name">
+Расположение документов
+</string>
+    <string name="storage_location_inaccessible">
+Расположение больше недоступно. Пожалуйста, предоставьте доступ повторно.
+</string>
+    <string name="saf_storage">
+Хранилище SAF
+</string>
 </resources>
+
 
 
 

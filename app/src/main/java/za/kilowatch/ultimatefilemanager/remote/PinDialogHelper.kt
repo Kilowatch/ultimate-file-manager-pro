@@ -11,8 +11,10 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
  * Shows a premium 4-digit PIN entry dialog.
@@ -91,10 +93,21 @@ object PinDialogHelper {
         })
 
         val btnConfirm = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPinConfirm)
-        val btnCancel = dialogView.findViewById<View>(R.id.btnPinCancel)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPinCancel)
 
         btnConfirm.text = resolvedConfirmText
         btnCancel.visibility = if (onCancel != null) View.VISIBLE else View.GONE
+
+        if (DeviceUtils.isTvDevice(context)) {
+            val yellowBg = ContextCompat.getColorStateList(context, R.color.selector_tv_button_yellow)
+            val yellowText = ContextCompat.getColorStateList(context, R.color.selector_tv_button_text_yellow)
+            btnConfirm.backgroundTintList = yellowBg
+            btnConfirm.setTextColor(yellowText)
+            btnConfirm.iconTint = yellowText
+            btnCancel.backgroundTintList = yellowBg
+            btnCancel.setTextColor(yellowText)
+            btnCancel.cornerRadius = btnConfirm.cornerRadius
+        }
 
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 

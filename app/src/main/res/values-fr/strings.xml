@@ -170,6 +170,9 @@ L\'expérience ultime de gestion de fichiers, conçue pour les utilisateurs avan
     <string name="welcome_select_language">
 Veuillez sélectionner votre langue préférée
 </string>
+    <string name="welcome_select_language_subtitle">
+Choisissez votre langue préférée pour commencer
+</string>
     <string name="welcome_translation_disclaimer">
 Toutes les traductions sont fournies au mieux et peuvent contenir des erreurs.
 </string>
@@ -1723,6 +1726,24 @@ Croissant
     <string name="sort_descending">
 Décroissant
 </string>
+    <string name="sort_order_a_to_z">
+A → Z
+</string>
+    <string name="sort_order_z_to_a">
+Z → A
+</string>
+    <string name="sort_order_small_to_large">
+Petit → Grand
+</string>
+    <string name="sort_order_large_to_small">
+Grand → Petit
+</string>
+    <string name="sort_order_newest_first">
+Plus récents d\\\'abord
+</string>
+    <string name="sort_order_oldest_first">
+Plus anciens d\\\'abord
+</string>
     <string name="filter_all">
 Tout
 </string>
@@ -1738,8 +1759,68 @@ Audio
     <string name="filter_documents">
 Documents
 </string>
+    <string name="filter_archives">
+Archives
+</string>
     <string name="filter_apks">
 APK
+</string>
+    <string name="filter_date_title">
+Date de modification
+</string>
+    <string name="filter_date_any">
+Tous
+</string>
+    <string name="filter_date_today">
+Aujourd\\\'hui
+</string>
+    <string name="filter_date_yesterday">
+Hier
+</string>
+    <string name="filter_date_this_week">
+Cette semaine
+</string>
+    <string name="filter_date_previous_week">
+Semaine dernière
+</string>
+    <string name="filter_date_this_month">
+Ce mois-ci
+</string>
+    <string name="filter_date_previous_month">
+Mois dernier
+</string>
+    <string name="filter_date_this_year">
+Cette année
+</string>
+    <string name="filter_date_previous_year">
+L\\\'année dernière
+</string>
+    <string name="filter_size_title">
+Taille du fichier
+</string>
+    <string name="filter_size_any">
+Tous
+</string>
+    <string name="filter_size_empty">
+Vide (0 o)
+</string>
+    <string name="filter_size_tiny">
+Minuscule (0–10 Ko)
+</string>
+    <string name="filter_size_small">
+Petit (10 Ko–1 Mo)
+</string>
+    <string name="filter_size_medium">
+Moyen (1–10 Mo)
+</string>
+    <string name="filter_size_big">
+Grand (10–100 Mo)
+</string>
+    <string name="filter_size_large">
+Très grand (100 Mo–1 Go)
+</string>
+    <string name="filter_size_huge">
+Énorme (>1 Go)
 </string>
     <string name="group_by_date">
 Grouper par date
@@ -7009,8 +7090,14 @@ Description
     <string name="smart_sort_save_changes">
 Enregistrer les modifications
 </string>
+    <string name="smart_sort_save_changes_desc">
+Mettre à jour et remplacer la configuration enregistrée
+</string>
     <string name="smart_sort_delete_saved">
 Supprimer
+</string>
+    <string name="smart_sort_delete_saved_desc">
+Supprimer cette configuration enregistrée
 </string>
     <string name="smart_sort_delete_saved_confirm_title">
 Supprimer \"%1$s\" ?
@@ -7972,6 +8059,9 @@ Connecté en tant que %1$s
     <string name="onedrive_auth_profile_failed">
 Authentification réussie, mais échec de l\\\'obtention des détails du compte
 </string>
+    <string name="onedrive_code_copied">
+Code copié dans le presse-papiers !
+</string>
     <string name="auth_library_loading">
 Chargement de la bibliothèque d\\\'authentification…
 </string>
@@ -8572,6 +8662,12 @@ Merci !
 </string>
     <string name="tip_jar_awesome_label">
 Vous êtes génial !
+</string>
+    <string name="tip_jar_fuel_it_label">
+Soutenez-nous !
+</string>
+    <string name="tip_jar_dismiss_cd">
+Fermer la carte de pourboire
 </string>
     <string name="tip_jar_global_label">
 Global
@@ -10569,6 +10665,12 @@ Remplacements d\'icônes par type de fichier
     <string name="backup_pref_loyalty">
 Données de fidélité Tip Jar
 </string>
+    <string name="backup_pref_keyboard_shortcuts">
+Raccourcis clavier et navigation
+</string>
+    <string name="backup_pref_saf_locations">
+Emplacements de stockage personnalisés (SAF)
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>
@@ -11770,6 +11872,12 @@ Créer un GIF animé
     <string name="gif_creator_subtitle">
 %d images sélectionnées
 </string>
+    <string name="gif_creator_frames_reorder">
+Panneaux (glisser pour réorganiser)
+</string>
+    <string name="gif_creator_frames_reorder_tv">
+Panneaux (réorganisation au pavé directionnel)
+</string>
     <string name="gif_creator_fps_label">
 Cadence d\\\'images
 </string>
@@ -12498,7 +12606,289 @@ Rétablir les valeurs par défaut
     <string name="reset_categorized_success">
 Disposition des catégories rétablie par défaut
 </string>
+
+    <string name="option_edit_custom_tile_desc">
+Modifier le libellé, l\\\'icône ou la visibilité de la tuile
+</string>
+    <string name="option_delete_custom_tile_desc">
+Supprimer cette tuile et restaurer son contenu
+</string>
+    <string name="custom_tile_select_icon_desc">
+Choisissez une icône intégrée ou parcourez les vôtres
+</string>
+    <string name="indexing_offer_benefit_search">
+Recherche instantanée dans tous les fichiers
+</string>
+    <string name="indexing_offer_benefit_speed">
+Chargement plus rapide des dossiers et fichiers
+</string>
+    <string name="indexing_offer_benefit_duplicates">
+Détection des fichiers en double et volumineux
+</string>
+    <string name="auto_restore_offer_subtitle">
+Restauration automatique détectée
+</string>
+
+    <!-- Keyboard Shortcuts & Keybinds -->
+    <string name="settings_keyboard_shortcuts_title">
+Raccourcis clavier
+</string>
+    <string name="settings_keyboard_shortcuts_subtitle">
+Configurer la navigation au clavier et les associations de touches
+</string>
+    <string name="keyboard_shortcuts_master_enable">
+Activer les raccourcis clavier
+</string>
+    <string name="keyboard_shortcuts_master_enable_desc">
+Autoriser la navigation et les actions sur les fichiers via un clavier physique ou Bluetooth
+</string>
+    <string name="keyboard_shortcuts_vim_mode">
+Touches de navigation Vim
+</string>
+    <string name="keyboard_shortcuts_vim_mode_desc">
+Utiliser j/k/h/l, gg/G et les touches d\\\'action à une lettre (y/x/p/d/r/n/g)
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch">
+Bascule rapide des volets
+</string>
+    <string name="keyboard_shortcuts_dual_pane_switch_desc">
+Utiliser Tab, Ctrl+W ou 1/2 pour changer de volet actif dans la fenêtre double
+</string>
+    <string name="keyboard_shortcuts_reset_defaults">
+Rétablir les valeurs par défaut
+</string>
+    <string name="keyboard_shortcuts_reset_confirm">
+Réinitialiser toutes les associations de touches aux valeurs d\\\'usine ?
+</string>
+    <string name="keyboard_shortcuts_section_nav">
+Navigation
+</string>
+    <string name="keyboard_shortcuts_section_file_ops">
+Opérations sur les fichiers
+</string>
+    <string name="keyboard_shortcuts_section_selection">
+Sélection
+</string>
+    <string name="keyboard_shortcuts_section_dual_pane">
+Double volet
+</string>
+    <string name="keyboard_shortcuts_section_general">
+Général
+</string>
+    <string name="keyboard_shortcuts_help_title">
+Guide des raccourcis clavier
+</string>
+    <string name="keyboard_shortcuts_help_subtitle">
+Référence rapide pour la navigation au clavier
+</string>
+    <string name="keyboard_action_move_down">
+Descendre
+</string>
+    <string name="keyboard_action_move_down_desc">
+Mettre en surbrillance l\\\'élément suivant dans la liste des fichiers
+</string>
+    <string name="keyboard_action_move_up">
+Monter
+</string>
+    <string name="keyboard_action_move_up_desc">
+Mettre en surbrillance l\\\'élément précédent dans la liste des fichiers
+</string>
+    <string name="keyboard_action_parent_dir">
+Dossier parent
+</string>
+    <string name="keyboard_action_parent_dir_desc">
+Remonter d\\\'un niveau de répertoire
+</string>
+    <string name="keyboard_action_open">
+Ouvrir / Entrée
+</string>
+    <string name="keyboard_action_open_desc">
+Ouvrir le fichier ou dossier sélectionné
+</string>
+    <string name="keyboard_action_jump_top">
+Aller en haut
+</string>
+    <string name="keyboard_action_jump_top_desc">
+Faire défiler jusqu\\\'au premier élément de la liste
+</string>
+    <string name="keyboard_action_jump_bottom">
+Aller en bas
+</string>
+    <string name="keyboard_action_jump_bottom_desc">
+Faire défiler jusqu\\\'au dernier élément de la liste
+</string>
+    <string name="keyboard_action_go_to">
+Aller au chemin
+</string>
+    <string name="keyboard_action_go_to_desc">
+Ouvrir la boîte de dialogue de saut vers un chemin
+</string>
+    <string name="keyboard_action_toggle_select">
+Basculer la sélection
+</string>
+    <string name="keyboard_action_toggle_select_desc">
+Sélectionner ou désélectionner l\\\'élément actuellement en surbrillance
+</string>
+    <string name="keyboard_action_select_all">
+Tout sélectionner / Tout désélectionner
+</string>
+    <string name="keyboard_action_select_all_desc">
+Activer/désactiver la sélection de tous les éléments du dossier actuel
+</string>
+    <string name="keyboard_action_copy">
+Copier
+</string>
+    <string name="keyboard_action_copy_desc">
+Copier le(s) élément(s) sélectionné(s) dans le presse-papiers
+</string>
+    <string name="keyboard_action_cut">
+Couper (Déplacer)
+</string>
+    <string name="keyboard_action_cut_desc">
+Couper le(s) élément(s) sélectionné(s) vers le presse-papiers
+</string>
+    <string name="keyboard_action_paste">
+Coller
+</string>
+    <string name="keyboard_action_paste_desc">
+Coller les fichiers du presse-papiers dans le dossier actuel
+</string>
+    <string name="keyboard_action_delete">
+Supprimer
+</string>
+    <string name="keyboard_action_delete_desc">
+Supprimer le(s) élément(s) sélectionné(s) après confirmation
+</string>
+    <string name="keyboard_action_rename">
+Renommer
+</string>
+    <string name="keyboard_action_rename_desc">
+Renommer l\\\'élément sélectionné ou ouvrir le renommage en masse
+</string>
+    <string name="keyboard_action_new_folder">
+Nouveau dossier
+</string>
+    <string name="keyboard_action_new_folder_desc">
+Créer un nouveau dossier dans le répertoire actuel
+</string>
+    <string name="keyboard_action_search">
+Rechercher
+</string>
+    <string name="keyboard_action_search_desc">
+Mettre le focus sur le champ de recherche
+</string>
+    <string name="keyboard_action_toggle_hidden">
+Afficher/masquer les fichiers cachés
+</string>
+    <string name="keyboard_action_toggle_hidden_desc">
+Afficher ou masquer les fichiers point
+</string>
+    <string name="keyboard_action_refresh">
+Actualiser
+</string>
+    <string name="keyboard_action_refresh_desc">
+Recharger le contenu du dossier actuel
+</string>
+    <string name="keyboard_action_switch_pane">
+Changer de volet
+</string>
+    <string name="keyboard_action_switch_pane_desc">
+Basculer entre le volet gauche/haut et le volet droit/bas
+</string>
+    <string name="keyboard_action_focus_pane_1">
+Mettre le focus sur le volet 1
+</string>
+    <string name="keyboard_action_focus_pane_1_desc">
+Mettre le focus directement sur le volet gauche ou haut
+</string>
+    <string name="keyboard_action_focus_pane_2">
+Mettre le focus sur le volet 2
+</string>
+    <string name="keyboard_action_focus_pane_2_desc">
+Mettre le focus directement sur le volet droit ou bas
+</string>
+    <string name="keyboard_action_cheatsheet">
+Aide-mémoire des raccourcis
+</string>
+    <string name="keyboard_action_cheatsheet_desc">
+Afficher le guide interactif des raccourcis en superposition
+</string>
+    <string name="keyboard_rebind_title">
+Réaffecter la touche
+</string>
+    <string name="keyboard_rebind_prompt">
+Appuyez sur n\\\'importe quelle touche de votre clavier pour l\\\'affecter ou sélectionnez un préréglage ci-dessous.
+</string>
+    <string name="keyboard_rebind_current">
+Touche actuelle : %1$s
+</string>
+    <string name="keyboard_rebind_success">
+Touche affectée : %1$s
+</string>
+    <string name="go_to_path_title">
+Aller au chemin
+</string>
+    <string name="go_to_path_hint">
+Saisissez le chemin du répertoire
+</string>
+    <string name="go_to_path_action">
+Aller
+</string>
+    <string name="go_to_path_invalid">
+Le répertoire n\\\'existe pas ou est inaccessible
+</string>
+
+    <!-- Custom Storage Locations (SAF / DocumentsProvider) -->
+    <string name="add_storage_location_title">
+Ajouter un emplacement de stockage
+</string>
+    <string name="add_storage_location_subtitle">
+Monter Termux, les fournisseurs de documents, SD/USB ou des dossiers personnalisés
+</string>
+    <string name="add_storage_location_desc">
+Sélectionnez n\\\'importe quel dossier ou fournisseur proposé par le sélecteur Android pour accorder un accès persistant.
+</string>
+    <string name="add_storage_dialog_title">
+Nouvel emplacement de stockage
+</string>
+    <string name="add_storage_dialog_name_hint">
+Nom affiché de l\\\'emplacement
+</string>
+    <string name="add_storage_dialog_confirm">
+Ajouter un emplacement
+</string>
+    <string name="add_storage_success">
+Emplacement de stockage \"%1$s\" ajouté avec succès
+</string>
+    <string name="add_storage_failed">
+Échec de l\\\'ajout de l\\\'emplacement de stockage : %1$s
+</string>
+    <string name="remove_storage_location_title">
+Supprimer l\\\'emplacement de stockage ?
+</string>
+    <string name="remove_storage_location_msg">
+Supprimer \"%1$s\" des emplacements de stockage ? Cela démonte l\\\'accès depuis UFM sans supprimer aucun fichier.
+</string>
+    <string name="remove_storage_location_confirm">
+Supprimer l\\\'emplacement
+</string>
+    <string name="storage_location_removed">
+Emplacement de stockage supprimé
+</string>
+    <string name="storage_location_termux_default_name">
+Termux Home
+</string>
+    <string name="storage_location_saf_default_name">
+Emplacement du document
+</string>
+    <string name="storage_location_inaccessible">
+L\\\'emplacement n\\\'est plus accessible. Veuillez réautoriser l\\\'accès.
+</string>
+    <string name="saf_storage">
+Stockage SAF
+</string>
 </resources>
+
 
 
 

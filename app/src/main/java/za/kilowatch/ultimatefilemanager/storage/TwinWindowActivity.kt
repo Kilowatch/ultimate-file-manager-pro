@@ -1001,6 +1001,13 @@ class TwinWindowActivity : AppCompatActivity() {
         val targetNetPath = if (!targetIsLocal) (target as NetworkBrowserFragment).getCurrentPath() else null
         val sourceFragment = if (target === getPane1()) getPane2() else getPane1()
         val srcShare = (sourceFragment as? NetworkBrowserFragment)?.getShare()
+            ?: (files.firstOrNull() as? NetworkFile)?.let {
+                val shareId = (sourceFragment as? NetworkBrowserFragment)?.arguments?.getString("share_id")
+                    ?: za.kilowatch.ultimatefilemanager.network.NetworkClipboard.sourceShareId
+                if (shareId.isNotEmpty()) {
+                    za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this@TwinWindowActivity).getById(shareId)
+                } else null
+            }
 
         val totalFiles = files.size
         val fileCounter = IntArray(1) { 0 }
@@ -1032,18 +1039,21 @@ class TwinWindowActivity : AppCompatActivity() {
 
         val onProgress: (String, Long, Long, Int, Int) -> Unit = { fileName, copied, total, index, totalCount ->
             runOnUiThread {
-                txtFiles.text = getString(R.string.item_index_totalcount, fileCounter[0], totalFiles)
-                txtCurrentFile.text = fileName
-                if (total > 0) {
-                    val percent = (copied * 100 / total).toInt()
-                    progressFile.isIndeterminate = false
-                    progressFile.progress = percent
-                    val copiedMb = copied / (1024 * 1024)
-                    val totalMb = total / (1024 * 1024)
-                    txtSize.text = getString(R.string.copiedmb_mb_totalmb_mb_percent, copiedMb.toString(), totalMb.toString(), percent)
-                } else {
-                    progressFile.isIndeterminate = true
-                    txtSize.setText(R.string.processing)
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                runCatching {
+                    txtFiles.text = getString(R.string.item_index_totalcount, fileCounter[0], totalFiles)
+                    txtCurrentFile.text = fileName
+                    if (total > 0) {
+                        val percent = ((copied * 100L) / total).toInt().coerceIn(0, 100)
+                        progressFile.isIndeterminate = false
+                        progressFile.progress = percent
+                        val copiedMb = copied / (1024 * 1024)
+                        val totalMb = total / (1024 * 1024)
+                        txtSize.text = getString(R.string.copiedmb_mb_totalmb_mb_percent, copiedMb.toString(), totalMb.toString(), percent)
+                    } else {
+                        progressFile.isIndeterminate = true
+                        txtSize.setText(R.string.processing)
+                    }
                 }
             }
         }
@@ -1385,8 +1395,12 @@ class TwinWindowActivity : AppCompatActivity() {
                                         if (isCancelled) break
                                         processItem(child, effectiveDest.absolutePath) 
                                     }
-                                    if (isMove && !isCancelled) { try { TransferConflictHelper.deleteNetworkDirRecursively(srcShare, actualItem.path) } catch (_: Exception) {} }
-                                    FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, effectiveDest.absolutePath)
+                                    if (isMove && !isCancelled) {
+                                        try { TransferConflictHelper.deleteNetworkDirRecursively(srcShare, actualItem.path) } catch (_: Exception) {}
+                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, effectiveDest.absolutePath)
+                                    } else {
+                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.path, effectiveDest.absolutePath)
+                                    }
                                 } else {
                                     val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
                                         File(currentDestPath), itemName, this@TwinWindowActivity
@@ -1400,7 +1414,7 @@ class TwinWindowActivity : AppCompatActivity() {
                                                 this@TwinWindowActivity, itemName, false, destSize, applyToAllRef
                                             ).also { if (applyToAllRef[0]) globalAction = it }
                                         }
-                                    } else za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH
+                                    } else za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE
 
                                     if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL) {
                                         isCancelled = true
@@ -1414,12 +1428,18 @@ class TwinWindowActivity : AppCompatActivity() {
 
                                     fileCounter[0]++
                                     try {
-                                        za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.downloadNetworkToLocalAtomic(
+                                        val writtenDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.downloadNetworkToLocalAtomic(
                                             srcShare, actualItem, finalDest, resolvedAction,
                                             onProgress = { c, t -> onProgress(itemName, c, t, fileCounter[0], totalFiles) },
                                             onConnectionReady = { conn -> currentTransferConnection = conn }
                                         )
                                         currentTransferConnection = null
+
+                                        if (storageId.isNotEmpty() && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
+                                            pendingIndices.add(metadataExtractor.extractMetadata(writtenDest, storageId, storageType, za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor.HashAlgorithm.NONE))
+                                            if (pendingIndices.size >= 50) flushIndices()
+                                        }
+
                                         if (isMove) {
                                             when(srcShare.type) {
                                                 ShareType.SMB -> SmbShareClient.deleteFile(srcShare, actualItem.path)
@@ -1434,9 +1454,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                                 ShareType.NFS -> NfsShareClient.deleteFile(srcShare, actualItem.path)
                                                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                             }
-                                            FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, finalDest.absolutePath)
+                                            FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, writtenDest.absolutePath)
                                         } else {
-                                            FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.path, finalDest.absolutePath)
+                                            FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.path, writtenDest.absolutePath)
                                         }
                                     } catch (e: Exception) {
                                         if (isCancelled) throw CancellationException()
@@ -1823,7 +1843,9 @@ class TwinWindowActivity : AppCompatActivity() {
                 }
             } finally {
                 withContext(Dispatchers.Main) {
-                    dialog.dismiss()
+                    if (!isFinishing && !isDestroyed) {
+                        runCatching { dialog.dismiss() }
+                    }
                     refreshFragment(getPane1())
                     refreshFragment(getPane2())
                      
