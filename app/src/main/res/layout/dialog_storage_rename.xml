@@ -70,7 +70,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapWords"
+            android:singleLine="true"
             android:maxLines="1"
+            android:imeOptions="actionDone"
             android:textColor="@color/mobile_text_primary"
             android:textSize="15sp" />
     </com.google.android.material.textfield.TextInputLayout>

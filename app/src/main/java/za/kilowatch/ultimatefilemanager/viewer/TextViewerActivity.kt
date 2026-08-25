@@ -484,6 +484,9 @@ class TextViewerActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtInput) {
+            btnSave?.performClick()
+        }
     }
 
     private fun saveFile(content: String, fileName: String) {

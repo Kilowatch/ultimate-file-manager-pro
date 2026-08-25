@@ -42,6 +42,7 @@ import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor
 import za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
 import java.io.File
@@ -2381,8 +2382,9 @@ class FileBrowserFragment : Fragment() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFileName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFileName) {
+            dialogView.findViewById<View>(R.id.btnCreate)?.performClick()
+        }
     }
 
     private fun showFeedback(message: String) {
@@ -2525,8 +2527,9 @@ class FileBrowserFragment : Fragment() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFolderName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFolderName) {
+            dialogView.findViewById<View>(R.id.btnCreate)?.performClick()
+        }
     }
 
     private fun setupTvShareChooserFocus(
@@ -2868,8 +2871,9 @@ class FileBrowserFragment : Fragment() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFolderName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFolderName) {
+            btnCreate?.performClick()
+        }
     }
 
     private fun performExtract(archives: List<File>, customDestFolder: File? = null, isSelectFolderMode: Boolean) {

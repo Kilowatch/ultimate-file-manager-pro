@@ -58,6 +58,7 @@ import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity
 import za.kilowatch.ultimatefilemanager.storage.FileToolsBottomSheet
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
@@ -3609,8 +3610,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFolderName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFolderName) {
+            btnCreate?.performClick()
+        }
     }
 
     private fun performNetworkExtract(archives: List<NetworkFile>, customDestPath: String? = null, isSelectFolderMode: Boolean) {
@@ -3868,8 +3870,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFileName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFileName) {
+            dialogView.findViewById<View>(R.id.btnCreate)?.performClick()
+        }
     }
 
     /**
@@ -4078,8 +4081,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFolderName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFolderName) {
+            dialogView.findViewById<View>(R.id.btnCreate)?.performClick()
+        }
     }
 
     private fun showRenameDialog(file: NetworkFile?) {
@@ -4147,8 +4151,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        editFileName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, editFileName) {
+            btnSaveRename?.performClick()
+        }
     }
 
     private fun showDeleteConfirmation() {
@@ -5241,18 +5246,32 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun readVaultEntry(dir: File): za.kilowatch.ultimatefilemanager.storage.VaultEntry? {
         val metaFile = File(dir, "metadata.json")
-        if (!metaFile.exists()) return null
+        val fileToRead = if (metaFile.exists()) metaFile else File(dir, "metadata.json.bak")
+        if (!fileToRead.exists()) return null
         return try {
-            val json = org.json.JSONObject(metaFile.readText())
-            val filesArray = json.optJSONArray("files") ?: org.json.JSONArray()
-            val filesList = mutableListOf<String>()
-            for (i in 0 until filesArray.length()) {
-                filesList.add(filesArray.getString(i))
+            val json = org.json.JSONObject(fileToRead.readText())
+            val rawName = json.getString("displayName")
+            val displayName = if (rawName.startsWith("enc:")) za.kilowatch.ultimatefilemanager.storage.VaultCrypto.decryptString(rawName.removePrefix("enc:")) else rawName
+            val rawRoot = json.optString("originalRoot", "")
+            val originalRoot = if (rawRoot.startsWith("enc:")) za.kilowatch.ultimatefilemanager.storage.VaultCrypto.decryptString(rawRoot.removePrefix("enc:")) else rawRoot
+
+            val filesList = if (json.has("filesPayload")) {
+                za.kilowatch.ultimatefilemanager.storage.VaultCrypto.decryptStrings(json.getString("filesPayload"))
+            } else if (json.has("files")) {
+                val filesArray = json.optJSONArray("files") ?: org.json.JSONArray()
+                val list = ArrayList<String>(filesArray.length())
+                for (i in 0 until filesArray.length()) {
+                    val rawF = filesArray.getString(i)
+                    list.add(if (rawF.startsWith("enc:")) za.kilowatch.ultimatefilemanager.storage.VaultCrypto.decryptString(rawF.removePrefix("enc:")) else rawF)
+                }
+                list
+            } else {
+                emptyList()
             }
             za.kilowatch.ultimatefilemanager.storage.VaultEntry(
                 id = json.getString("id"),
-                displayName = json.getString("displayName"),
-                originalRoot = json.optString("originalRoot", ""),
+                displayName = displayName,
+                originalRoot = originalRoot,
                 files = filesList
             )
         } catch (_: Exception) { null }

@@ -70,6 +70,12 @@ class ConvertToPdfDialog : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogFragmentInput(this, edtFilename) {
+            runConversion()
+        }
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDoneAction(edtConfirmPassword) {
+            runConversion()
+        }
     }
 
     private fun runConversion() {

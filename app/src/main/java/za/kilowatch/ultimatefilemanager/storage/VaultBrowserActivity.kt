@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -13,18 +14,20 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import za.kilowatch.ultimatefilemanager.R
-import android.util.Log
 import za.kilowatch.ultimatefilemanager.BuildConfig
-import za.kilowatch.ultimatefilemanager.storage.VaultCrypto
+import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
-import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
-import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import java.util.concurrent.atomic.AtomicInteger
 
 class VaultBrowserActivity : AppCompatActivity() {
 
@@ -39,6 +42,7 @@ class VaultBrowserActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_ENTRY_ID = "vault_entry_id"
         private const val META_FILE = "metadata.json"
+        private const val TAG = "VaultBrowser"
     }
 
     private lateinit var entryDir: File
@@ -79,6 +83,17 @@ class VaultBrowserActivity : AppCompatActivity() {
         decryptToMirrorAndOpen()
     }
 
+    override fun onDestroy() {
+        // SEC-§8.12: Ensure decrypted mirror files never linger in private storage
+        try {
+            if (::mirrorDir.isInitialized && mirrorDir.exists()) {
+                mirrorDir.deleteRecursively()
+            }
+        } catch (_: Exception) {}
+        scope.cancel()
+        super.onDestroy()
+    }
+
     private fun decryptToMirrorAndOpen() {
         val progressView = layoutInflater.inflate(R.layout.dialog_vault_progress, null)
         val txtProgress = progressView.findViewById<TextView>(R.id.txtVaultProgress)
@@ -94,22 +109,48 @@ class VaultBrowserActivity : AppCompatActivity() {
         scope.launch {
             val success = withContext(Dispatchers.IO) {
                 try {
-                    mirrorDir.deleteRecursively()
                     mirrorDir.mkdirs()
                     val total = entry.files.size.coerceAtLeast(1)
-                    entry.files.forEachIndexed { index, relative ->
-                        val encryptedFile = File(entryDir, "$relative.enc")
-                        val outputFile = File(mirrorDir, relative)
-                        VaultCrypto.decryptFile(encryptedFile, outputFile)
-                        val current = index + 1
-                        val percent = ((current.toFloat() / total.toFloat()) * 100).toInt()
-                        runOnUiThread {
-                            txtProgress.text = getString(R.string.vault_opening, current, total)
-                            progressBar.progress = percent
-                        }
+                    val completed = AtomicInteger(0)
+                    var lastProgressUpdate = 0L
+
+                    // Utilize multi-core parallel worker pool
+                    val numWorkers = Runtime.getRuntime().availableProcessors().coerceIn(2, 8)
+                    val dispatcher = Dispatchers.IO.limitedParallelism(numWorkers)
+
+                    coroutineScope {
+                        entry.files.map { relative ->
+                            async(dispatcher) {
+                                val encryptedFile = File(entryDir, "$relative.enc")
+                                val outputFile = File(mirrorDir, relative)
+
+                                // Smart incremental sync: only decrypt if missing, empty, or outdated
+                                val needsDecryption = !outputFile.exists() ||
+                                        outputFile.length() == 0L ||
+                                        outputFile.lastModified() < encryptedFile.lastModified()
+
+                                if (needsDecryption && encryptedFile.exists()) {
+                                    outputFile.parentFile?.mkdirs()
+                                    VaultCrypto.decryptFile(encryptedFile, outputFile)
+                                    outputFile.setLastModified(encryptedFile.lastModified())
+                                }
+
+                                val current = completed.incrementAndGet()
+                                val now = System.currentTimeMillis()
+                                if (now - lastProgressUpdate > 50 || current == total) {
+                                    lastProgressUpdate = now
+                                    val percent = ((current.toFloat() / total.toFloat()) * 100).toInt()
+                                    runOnUiThread {
+                                        txtProgress.text = getString(R.string.vault_opening, current, total)
+                                        progressBar.progress = percent
+                                    }
+                                }
+                            }
+                        }.awaitAll()
                     }
                     true
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    if (BuildConfig.DEBUG) Log.e(TAG, "Decryption failed", e)
                     false
                 }
             }
@@ -144,44 +185,94 @@ class VaultBrowserActivity : AppCompatActivity() {
         scope.launch {
             val success = withContext(Dispatchers.IO) {
                 try {
-                    // Don't delete entryDir first - we need to preserve existing encrypted files
-                    // in case re-encryption fails. Instead, we'll update files incrementally.
-                    
                     // Filter out system files and hidden files
-                    val files = mirrorDir.walkTopDown()
-                        .filter { it.isFile }
-                        .filter { !isSystemFile(it) }
-                        .filter { !isHiddenFile(it) }
-                        .toList()
-                    val relativeList = mutableListOf<String>()
-                    val total = files.size.coerceAtLeast(1)
+                    val mirrorFiles = if (mirrorDir.exists()) {
+                        mirrorDir.walkTopDown()
+                            .filter { it.isFile }
+                            .filter { !isSystemFile(it) }
+                            .filter { !isHiddenFile(it) }
+                            .toList()
+                    } else emptyList()
 
-                    files.forEachIndexed { index, file ->
-                        val relative = file.relativeTo(mirrorDir).path
-                        val encryptedFile = File(entryDir, "$relative.enc")
-                        // Ensure parent directory exists
-                        encryptedFile.parentFile?.mkdirs()
-                        VaultCrypto.encryptFile(file, encryptedFile)
-                        relativeList.add(relative)
-                        val current = index + 1
-                        val percent = ((current.toFloat() / total.toFloat()) * 100).toInt()
-                        runOnUiThread {
-                            txtProgress.text = getString(R.string.vault_reencrypting, current, total)
-                            progressBar.progress = percent
+                    val relativeList = java.util.Collections.synchronizedList(mutableListOf<String>())
+                    val currentMirrorRelatives = java.util.Collections.synchronizedSet(HashSet<String>())
+                    val total = mirrorFiles.size.coerceAtLeast(1)
+                    val completed = AtomicInteger(0)
+                    var lastProgressUpdate = 0L
+
+                    val numWorkers = Runtime.getRuntime().availableProcessors().coerceIn(2, 8)
+                    val dispatcher = Dispatchers.IO.limitedParallelism(numWorkers)
+
+                    coroutineScope {
+                        mirrorFiles.map { file ->
+                            val relative = file.relativeTo(mirrorDir).path
+                            currentMirrorRelatives.add(relative)
+                            relativeList.add(relative)
+                            async(dispatcher) {
+                                val encryptedFile = File(entryDir, "$relative.enc")
+                                // Smart incremental check: only re-encrypt if changed or missing
+                                val needsReEncryption = !encryptedFile.exists() ||
+                                        file.lastModified() > encryptedFile.lastModified() ||
+                                        file.length() == 0L
+
+                                if (needsReEncryption) {
+                                    val tempEncrypted = File(entryDir, "$relative.enc.tmp")
+                                    tempEncrypted.parentFile?.mkdirs()
+                                    VaultCrypto.encryptFile(file, tempEncrypted)
+                                    if (tempEncrypted.exists()) {
+                                        encryptedFile.delete()
+                                        tempEncrypted.renameTo(encryptedFile)
+                                    }
+                                }
+
+                                val current = completed.incrementAndGet()
+                                val now = System.currentTimeMillis()
+                                if (now - lastProgressUpdate > 50 || current == total) {
+                                    lastProgressUpdate = now
+                                    val percent = ((current.toFloat() / total.toFloat()) * 100).toInt()
+                                    runOnUiThread {
+                                        txtProgress.text = getString(R.string.vault_reencrypting, current, total)
+                                        progressBar.progress = percent
+                                    }
+                                }
+                            }
+                        }.awaitAll()
+                    }
+
+                    // Delete encrypted files whose source in mirror was removed
+                    entry.files.forEach { oldRelative ->
+                        if (!currentMirrorRelatives.contains(oldRelative)) {
+                            File(entryDir, "$oldRelative.enc").delete()
                         }
                     }
 
+                    // Clean empty directories in entryDir
+                    entryDir.walkBottomUp().forEach { dir ->
+                        if (dir.isDirectory && dir != entryDir && dir.listFiles()?.isEmpty() == true) {
+                            dir.delete()
+                        }
+                    }
+
+                    // Crash-safe atomic metadata write with bulk payload + legacy fallback
+                    val sortedRelatives = relativeList.toList()
                     val metadata = JSONObject().apply {
                         put("id", entry.id)
                         put("displayName", encryptField(entry.displayName))
                         put("originalRoot", encryptField(entry.originalRoot))
-                        put("files", JSONArray(relativeList.map { encryptField(it) }))
+                        put("filesPayload", VaultCrypto.encryptStrings(sortedRelatives))
+                        put("files", JSONArray(sortedRelatives.map { encryptField(it) }))
                     }
-                    File(entryDir, META_FILE).writeText(metadata.toString())
+                    val tempMeta = File(entryDir, "$META_FILE.tmp")
+                    tempMeta.writeText(metadata.toString())
+                    val finalMeta = File(entryDir, META_FILE)
+                    finalMeta.delete()
+                    tempMeta.renameTo(finalMeta)
 
+                    // SEC-§8.12: Cleanly wipe mirror directory so decrypted content never persists at rest
                     mirrorDir.deleteRecursively()
                     true
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    if (BuildConfig.DEBUG) Log.e(TAG, "Re-encryption failed", e)
                     false
                 }
             }
@@ -244,7 +335,7 @@ class VaultBrowserActivity : AppCompatActivity() {
         return try {
             "enc:" + VaultCrypto.encryptString(plain)
         } catch (e: Exception) {
-            if (BuildConfig.DEBUG) Log.w("VaultBrowser", "encryptField failed", e)
+            if (BuildConfig.DEBUG) Log.w(TAG, "encryptField failed", e)
             plain
         }
     }
@@ -255,29 +346,45 @@ class VaultBrowserActivity : AppCompatActivity() {
         return try {
             VaultCrypto.decryptString(encrypted.removePrefix("enc:"))
         } catch (e: Exception) {
-            if (BuildConfig.DEBUG) Log.w("VaultBrowser", "decryptField failed — using fallback", e)
+            if (BuildConfig.DEBUG) Log.w(TAG, "decryptField failed — using fallback", e)
             encrypted
         }
     }
 
     private fun readEntry(dir: File): VaultEntry? {
+        val metadataFile = File(dir, META_FILE)
+        val fileToRead = if (metadataFile.exists()) metadataFile else File(dir, "$META_FILE.bak")
+        if (!fileToRead.exists()) return null
         return try {
-            val metadataFile = File(dir, META_FILE)
-            if (!metadataFile.exists()) return null
-            val json = JSONObject(metadataFile.readText())
-            val filesJson = json.getJSONArray("files")
-            val files = mutableListOf<String>()
-            for (i in 0 until filesJson.length()) {
-                files.add(decryptField(filesJson.getString(i)))
+            val json = JSONObject(fileToRead.readText())
+            val id = json.getString("id")
+            val displayName = decryptField(json.getString("displayName"))
+            val originalRoot = decryptField(json.optString("originalRoot", ""))
+
+            val files: List<String> = if (json.has("filesPayload")) {
+                val payload = json.getString("filesPayload")
+                VaultCrypto.decryptStrings(payload)
+            } else if (json.has("files")) {
+                val filesJson = json.getJSONArray("files")
+                val list = ArrayList<String>(filesJson.length())
+                for (i in 0 until filesJson.length()) {
+                    list.add(decryptField(filesJson.getString(i)))
+                }
+                list
+            } else {
+                emptyList()
             }
+
             VaultEntry(
-                id = json.getString("id"),
-                displayName = decryptField(json.getString("displayName")),
-                originalRoot = decryptField(json.getString("originalRoot")),
+                id = id,
+                displayName = displayName,
+                originalRoot = originalRoot,
                 files = files
             )
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) Log.w(TAG, "readEntry failed", e)
             null
         }
     }
 }
+

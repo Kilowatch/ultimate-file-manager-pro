@@ -360,6 +360,9 @@ class DocumentScannerActivity : AppCompatActivity() {
         btnCancel.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtFilename) {
+            btnConfirm.performClick()
+        }
     }
 
     private fun showSelectFolderGuide() {

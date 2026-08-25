@@ -38,6 +38,7 @@ import kotlin.coroutines.resume
 import kotlinx.coroutines.*
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.indexing.FileSearchEngine
@@ -997,6 +998,9 @@ class SearchActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        DialogInputHelper.setupDialogInput(dialog, editFileName) {
+            btnSaveRename.performClick()
+        }
     }
 
     private fun performExtractHere(file: File) {
@@ -1042,9 +1046,7 @@ class SearchActivity : AppCompatActivity() {
         }
         container.addView(editText)
 
-        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-
-        MaterialAlertDialogBuilder(this, dialogTheme)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setTitle(getString(R.string.extract_new_folder_title))
             .setIcon(R.drawable.ic_folder)
             .setView(container)
@@ -1067,7 +1069,12 @@ class SearchActivity : AppCompatActivity() {
                 }
                 performExtract(file, customDestFolder = newDir, isSelectFolderMode = false)
             }
-            .show()
+            .create()
+
+        dialog.show()
+        DialogInputHelper.setupDialogInput(dialog, editText) {
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)?.performClick()
+        }
     }
 
     private fun performExtract(file: File, customDestFolder: File? = null, isSelectFolderMode: Boolean) {

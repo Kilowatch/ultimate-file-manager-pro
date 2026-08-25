@@ -32,7 +32,7 @@ class BatchRenameDiffTest {
     @Test
     fun commonPrefixAndSuffixNarrowTheHighlight() {
         val h = BatchRenameDiff.compute("report_draft.pdf", "report_final.pdf")
-        assertEquals(BatchRenameDiff.Highlight(7, 13), h)
+        assertEquals(BatchRenameDiff.Highlight(7, 12), h)
     }
 
     @Test
@@ -44,6 +44,6 @@ class BatchRenameDiffTest {
     @Test
     fun caseOnlyChangeHighlightsWholeName() {
         val h = BatchRenameDiff.compute("PHOTO.JPG", "photo.jpg")
-        assertEquals(BatchRenameDiff.Highlight(0, 10), h)
+        assertEquals(BatchRenameDiff.Highlight(0, 9), h)
     }
 }

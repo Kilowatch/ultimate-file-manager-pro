@@ -397,8 +397,9 @@ object FileTagsManager {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtInput?.requestFocus()
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtInput) {
+            btnDone?.performClick()
+        }
     }
 
     /**

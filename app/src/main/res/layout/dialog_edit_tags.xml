@@ -57,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:imeOptions="actionDone"
             android:textColor="@color/mobile_text_primary"
             android:textSize="15sp"
             android:maxLines="3" />

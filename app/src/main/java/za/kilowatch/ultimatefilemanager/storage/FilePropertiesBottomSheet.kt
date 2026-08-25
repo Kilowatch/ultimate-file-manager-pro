@@ -852,5 +852,8 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtInput) {
+            btnDone?.performClick()
+        }
     }
 }

@@ -58,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:imeOptions="actionDone"
             android:textColor="@color/tv_text_primary"
             android:textSize="16sp"
             android:maxLines="3"

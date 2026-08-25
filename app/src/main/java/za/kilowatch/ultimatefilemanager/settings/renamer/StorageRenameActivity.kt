@@ -492,9 +492,8 @@ class StorageRenameActivity : AppCompatActivity() {
         }
 
         dialog.show()
-
-        if (isTv) {
-            edtDriveName.requestFocus()
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtDriveName) {
+            btnSaveRename.performClick()
         }
     }
 

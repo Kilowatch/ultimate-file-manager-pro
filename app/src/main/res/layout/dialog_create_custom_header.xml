@@ -69,7 +69,9 @@
             android:inputType="textCapWords"
             android:maxLength="50"
             android:textColor="@color/mobile_text_primary"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:maxLines="1"
+            android:imeOptions="actionDone" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

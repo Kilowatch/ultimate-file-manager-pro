@@ -47,6 +47,7 @@ import za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor
 import za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase
 import za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
@@ -3062,8 +3063,9 @@ class FileBrowserActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        editFileName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, editFileName) {
+            btnSaveRename?.performClick()
+        }
     }
     
     private fun showFavoriteDialog(file: File) {
@@ -3109,8 +3111,9 @@ class FileBrowserActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFavoriteName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFavoriteName) {
+            btnSaveFavorite?.performClick()
+        }
     }
 
     /**
@@ -3184,8 +3187,9 @@ class FileBrowserActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFileName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFileName) {
+            dialogView.findViewById<View>(R.id.btnCreate)?.performClick()
+        }
     }
 
     /**
@@ -3321,8 +3325,9 @@ class FileBrowserActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFolderName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFolderName) {
+            dialogView.findViewById<View>(R.id.btnCreate)?.performClick()
+        }
     }
 
     private fun setupTvShareChooserFocus(
@@ -5081,13 +5086,19 @@ class FileBrowserActivity : AppCompatActivity() {
                         }
                     }
 
+                    val sortedRelatives = relativeList.toList()
                     val metadata = org.json.JSONObject().apply {
                         put("id", entryId)
-                        put("displayName", root.name)
-                        put("originalRoot", root.absolutePath)
-                        put("files", org.json.JSONArray(relativeList))
+                        put("displayName", "enc:" + VaultCrypto.encryptString(root.name))
+                        put("originalRoot", "enc:" + VaultCrypto.encryptString(root.absolutePath))
+                        put("filesPayload", VaultCrypto.encryptStrings(sortedRelatives))
+                        put("files", org.json.JSONArray(sortedRelatives.map { "enc:" + VaultCrypto.encryptString(it) }))
                     }
-                    File(entryDir, "metadata.json").writeText(metadata.toString())
+                    val tempMeta = File(entryDir, "metadata.json.tmp")
+                    tempMeta.writeText(metadata.toString())
+                    val finalMeta = File(entryDir, "metadata.json")
+                    finalMeta.delete()
+                    tempMeta.renameTo(finalMeta)
                     true
                 } catch (_: Exception) { false }
             }
@@ -5175,8 +5186,9 @@ class FileBrowserActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        edtFolderName?.requestFocus()
+        DialogInputHelper.setupDialogInput(dialog, edtFolderName) {
+            btnCreate?.performClick()
+        }
     }
 
     private fun performExtract(archives: List<File>, customDestFolder: File? = null, isSelectFolderMode: Boolean) {
@@ -5830,11 +5842,16 @@ class FileBrowserActivity : AppCompatActivity() {
                     
                     val metadata = org.json.JSONObject().apply {
                         put("id", entry.id)
-                        put("displayName", entry.displayName)
-                        put("originalRoot", entry.originalRoot)
-                        put("files", org.json.JSONArray(existingFiles))
+                        put("displayName", "enc:" + VaultCrypto.encryptString(entry.displayName))
+                        put("originalRoot", "enc:" + VaultCrypto.encryptString(entry.originalRoot))
+                        put("filesPayload", VaultCrypto.encryptStrings(existingFiles))
+                        put("files", org.json.JSONArray(existingFiles.map { "enc:" + VaultCrypto.encryptString(it) }))
                     }
-                    File(entryDir, "metadata.json").writeText(metadata.toString())
+                    val tempMeta = File(entryDir, "metadata.json.tmp")
+                    tempMeta.writeText(metadata.toString())
+                    val finalMeta = File(entryDir, "metadata.json")
+                    finalMeta.delete()
+                    tempMeta.renameTo(finalMeta)
                     
                     // If move, delete originals
                     if (isMove) {
@@ -5891,19 +5908,33 @@ class FileBrowserActivity : AppCompatActivity() {
      * Reads a vault entry from its directory.
      */
     private fun readVaultEntry(dir: File): VaultEntry? {
+        val metadataFile = File(dir, "metadata.json")
+        val fileToRead = if (metadataFile.exists()) metadataFile else File(dir, "metadata.json.bak")
+        if (!fileToRead.exists()) return null
         return try {
-            val metadataFile = File(dir, "metadata.json")
-            if (!metadataFile.exists()) return null
-            val json = org.json.JSONObject(metadataFile.readText())
-            val filesJson = json.getJSONArray("files")
-            val files = mutableListOf<String>()
-            for (i in 0 until filesJson.length()) {
-                files.add(filesJson.getString(i))
+            val json = org.json.JSONObject(fileToRead.readText())
+            val rawName = json.getString("displayName")
+            val displayName = if (rawName.startsWith("enc:")) VaultCrypto.decryptString(rawName.removePrefix("enc:")) else rawName
+            val rawRoot = json.optString("originalRoot", "")
+            val originalRoot = if (rawRoot.startsWith("enc:")) VaultCrypto.decryptString(rawRoot.removePrefix("enc:")) else rawRoot
+
+            val files: List<String> = if (json.has("filesPayload")) {
+                VaultCrypto.decryptStrings(json.getString("filesPayload"))
+            } else if (json.has("files")) {
+                val filesJson = json.getJSONArray("files")
+                val list = ArrayList<String>(filesJson.length())
+                for (i in 0 until filesJson.length()) {
+                    val rawF = filesJson.getString(i)
+                    list.add(if (rawF.startsWith("enc:")) VaultCrypto.decryptString(rawF.removePrefix("enc:")) else rawF)
+                }
+                list
+            } else {
+                emptyList()
             }
             VaultEntry(
                 id = json.getString("id"),
-                displayName = json.getString("displayName"),
-                originalRoot = json.getString("originalRoot"),
+                displayName = displayName,
+                originalRoot = originalRoot,
                 files = files
             )
         } catch (e: Exception) {

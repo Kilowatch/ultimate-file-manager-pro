@@ -3132,6 +3132,9 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
 
         dialog.show()
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtTitle) {
+            dialogView.findViewById<View>(R.id.btnCreateHeader)?.performClick()
+        }
     }
 
     private fun showCreateCustomTileDialogMobile(isEdit: Boolean, existingData: CustomTileManager.CustomTileData?) {
@@ -3178,6 +3181,12 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
 
         dialog.show()
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtTitle) {
+            btnSave.performClick()
+        }
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDoneAction(edtSubtitle) {
+            btnSave.performClick()
+        }
     }
 
     /** Shows the full built-in icon picker dialog (same icon set as Tile Color -> Icons). */
@@ -3306,6 +3315,12 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
         btnCancel.setOnClickListener { dialog.dismiss() }
         dialog.show()
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtTitle) {
+            btnSave.performClick()
+        }
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDoneAction(edtSubtitle) {
+            btnSave.performClick()
+        }
     }
 
     private fun showCustomTileOptionsMenu(item: StorageItem) {

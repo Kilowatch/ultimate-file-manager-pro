@@ -76,7 +76,9 @@
             android:textColor="@color/mobile_text_primary"
             android:fontFamily="sans-serif-medium"
             android:inputType="text"
-            android:maxLines="1" />
+            android:singleLine="true"
+            android:maxLines="1"
+            android:imeOptions="actionDone" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Destination Folder Selector Card -->

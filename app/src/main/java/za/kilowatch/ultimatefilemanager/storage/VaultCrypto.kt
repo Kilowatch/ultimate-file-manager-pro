@@ -2,6 +2,9 @@ package za.kilowatch.ultimatefilemanager.storage
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import org.json.JSONArray
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -19,26 +22,44 @@ object VaultCrypto {
     private const val TRANSFORMATION = "AES/GCM/NoPadding"
     private const val IV_SIZE = 12
     private const val TAG_SIZE = 128
+    private const val BUFFER_SIZE = 1024 * 128 // 128 KB high-throughput buffer
+
+    @Volatile
+    private var cachedKey: SecretKey? = null
 
     private fun getOrCreateKey(): SecretKey {
-        val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
-        val existing = keyStore.getKey(KEY_ALIAS, null) as? SecretKey
-        if (existing != null) return existing
+        cachedKey?.let { return it }
+        return synchronized(this) {
+            cachedKey?.let { return it }
+            val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
+            val existing = keyStore.getKey(KEY_ALIAS, null) as? SecretKey
+            if (existing != null) {
+                cachedKey = existing
+                return existing
+            }
 
-        val keyGenerator = KeyGenerator.getInstance(
-            KeyProperties.KEY_ALGORITHM_AES,
-            ANDROID_KEYSTORE
-        )
-        val spec = KeyGenParameterSpec.Builder(
-            KEY_ALIAS,
-            KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-        )
-            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-            .setKeySize(256)
-            .build()
-        keyGenerator.init(spec)
-        return keyGenerator.generateKey()
+            val keyGenerator = KeyGenerator.getInstance(
+                KeyProperties.KEY_ALGORITHM_AES,
+                ANDROID_KEYSTORE
+            )
+            val spec = KeyGenParameterSpec.Builder(
+                KEY_ALIAS,
+                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+            )
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .setKeySize(256)
+                .build()
+            keyGenerator.init(spec)
+            val newKey = keyGenerator.generateKey()
+            cachedKey = newKey
+            newKey
+        }
+    }
+
+    /** Clears the cached KeyStore SecretKey reference from memory. */
+    fun clearKeyCache() {
+        cachedKey = null
     }
 
     fun encryptFile(input: File, output: File) {
@@ -52,21 +73,21 @@ object VaultCrypto {
         val iv = cipher.iv
 
         output.parentFile?.mkdirs()
-        FileOutputStream(output).use { fileOut ->
+        BufferedOutputStream(FileOutputStream(output), BUFFER_SIZE).use { fileOut ->
             fileOut.write(iv.size)
             fileOut.write(iv)
             CipherOutputStream(fileOut, cipher).use { cipherOut ->
                 val isSaf = context != null && (input is SafFile ||
                             SafTreeManager.isSafPath(input.absolutePath) ||
                             SafTreeManager.hasTreePermissionForPath(context, input.absolutePath))
-                val inStream = if (isSaf && context != null) {
-                    SafTreeManager.openInputStream(context, input.absolutePath)
+                val rawInStream = if (isSaf) {
+                    SafTreeManager.openInputStream(context!!, input.absolutePath)
                 } else {
                     FileInputStream(input)
                 } ?: throw java.io.FileNotFoundException("Cannot read ${input.absolutePath}")
 
-                inStream.use { inputStream ->
-                    val buffer = ByteArray(1024 * 64)
+                BufferedInputStream(rawInStream, BUFFER_SIZE).use { inputStream ->
+                    val buffer = ByteArray(BUFFER_SIZE)
                     var read: Int
                     while (inputStream.read(buffer).also { read = it } > 0) {
                         cipherOut.write(buffer, 0, read)
@@ -78,19 +99,24 @@ object VaultCrypto {
 
     fun decryptFile(input: File, output: File) {
         val key = getOrCreateKey()
-        FileInputStream(input).use { fileIn ->
+        BufferedInputStream(FileInputStream(input), BUFFER_SIZE).use { fileIn ->
             val ivLength = fileIn.read()
             if (ivLength <= 0 || ivLength > 32) return
             val iv = ByteArray(ivLength)
-            fileIn.read(iv)
+            var bytesRead = 0
+            while (bytesRead < ivLength) {
+                val read = fileIn.read(iv, bytesRead, ivLength - bytesRead)
+                if (read < 0) return
+                bytesRead += read
+            }
 
             val cipher = Cipher.getInstance(TRANSFORMATION)
             cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(TAG_SIZE, iv))
 
             output.parentFile?.mkdirs()
-            FileOutputStream(output).use { fileOut ->
+            BufferedOutputStream(FileOutputStream(output), BUFFER_SIZE).use { fileOut ->
                 CipherInputStream(fileIn, cipher).use { cipherIn ->
-                    val buffer = ByteArray(1024 * 64)
+                    val buffer = ByteArray(BUFFER_SIZE)
                     var read: Int
                     while (cipherIn.read(buffer).also { read = it } > 0) {
                         fileOut.write(buffer, 0, read)
@@ -136,4 +162,23 @@ object VaultCrypto {
         
         return String(plainTextBytes, Charsets.UTF_8)
     }
+
+    /** Encrypts a list of strings into a single encrypted Base64 payload. */
+    fun encryptStrings(list: List<String>): String {
+        val jsonArray = JSONArray()
+        list.forEach { jsonArray.put(it) }
+        return encryptString(jsonArray.toString())
+    }
+
+    /** Decrypts a Base64 payload containing a JSON array of strings. */
+    fun decryptStrings(encryptedBlob: String): List<String> {
+        val jsonString = decryptString(encryptedBlob)
+        val jsonArray = JSONArray(jsonString)
+        val list = ArrayList<String>(jsonArray.length())
+        for (i in 0 until jsonArray.length()) {
+            list.add(jsonArray.getString(i))
+        }
+        return list
+    }
 }
+

@@ -68,7 +68,9 @@
             android:textColor="@color/mobile_text_primary"
             android:textSize="15sp"
             android:inputType="textNoSuggestions"
-            android:maxLines="1" />
+            android:singleLine="true"
+            android:maxLines="1"
+            android:imeOptions="actionDone" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Error message text -->

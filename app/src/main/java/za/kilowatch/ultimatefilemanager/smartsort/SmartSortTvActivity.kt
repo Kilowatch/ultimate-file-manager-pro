@@ -559,6 +559,9 @@ private fun showAddRuleDialog(ruleContainer: LinearLayout?, emptyText: TextView?
         dialog.dismiss()
     }
     dialog.show()
+    za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, txtInput) {
+        dialogView.findViewById<View>(R.id.btnConfirm).performClick()
+    }
 }
 
 private fun showEditRuleDialog(index: Int, container: LinearLayout?, emptyText: TextView?) {
@@ -591,6 +594,9 @@ private fun showEditRuleDialog(index: Int, container: LinearLayout?, emptyText: 
         dialog.dismiss()
     }
     dialog.show()
+    za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, txtInput) {
+        dialogView.findViewById<View>(R.id.btnConfirm).performClick()
+    }
 }
 
 private fun showAddExtensionDialog(ruleIndex: Int) {
@@ -628,6 +634,9 @@ private fun showAddExtensionDialog(ruleIndex: Int) {
         dialog.dismiss()
     }
     dialog.show()
+    za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, txtInput) {
+        dialogView.findViewById<View>(R.id.btnConfirm).performClick()
+    }
 }
 private fun showRemoveExtensionsDialog(ruleIndex: Int) {
     val rule = customRules[ruleIndex]
@@ -817,6 +826,9 @@ private fun showSaveDescriptionDialog(isEdit: Boolean) {
         dialog.dismiss()
     }
     dialog.show()
+    za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, txtInput) {
+        dialogView.findViewById<View>(R.id.btnSaveConfirm).performClick()
+    }
 }
 private fun saveCurrentConfig(description: String) {
     val cfg = buildConfig(); val json = serializeConfigToJson(cfg)

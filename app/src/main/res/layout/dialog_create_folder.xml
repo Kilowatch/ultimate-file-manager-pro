@@ -57,6 +57,8 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:singleLine="true"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
             android:textColor="@color/mobile_text_primary"
             android:textColorHint="@color/mobile_text_secondary"
             android:textSize="15sp" />

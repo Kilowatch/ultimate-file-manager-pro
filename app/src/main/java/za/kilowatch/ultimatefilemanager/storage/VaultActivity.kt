@@ -28,7 +28,10 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.widget.ProgressBar
@@ -39,6 +42,7 @@ import za.kilowatch.ultimatefilemanager.remote.PinDialogHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicInteger
 import org.json.JSONArray
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -192,6 +196,7 @@ class VaultActivity : AppCompatActivity() {
         clipboardClearRunnable = null
         clipboardClearHandler = null
         if (BuildConfig.DEBUG) Log.i(TAG, "LOW-4: Clipboard auto-clear cancelled (activity destroyed)")
+        VaultCrypto.clearKeyCache()
         scope.cancel()
         super.onDestroy()
     }
@@ -658,7 +663,7 @@ class VaultActivity : AppCompatActivity() {
     }
 
     /** Scan all existing vault entries and re-encrypt any that still have
-     *  plaintext metadata fields. Creates a .bak backup before overwriting,
+     *  plaintext metadata fields or lack the fast bulk payload. Creates a .bak backup before overwriting,
      *  verifies the encrypted file reads back correctly, then removes the backup. */
     private fun migrateMetadataEncryption() {
         val base = vaultBaseDir()
@@ -673,28 +678,47 @@ class VaultActivity : AppCompatActivity() {
             try {
                 val json = JSONObject(metaFile.readText())
 
-                // Skip if already encrypted
+                // Check if already in new format
                 val displayName = json.optString("displayName", "")
                 val originalRoot = json.optString("originalRoot", "")
-                if (displayName.startsWith("enc:") || originalRoot.startsWith("enc:")) return@forEach
+                val hasBulkPayload = json.has("filesPayload")
 
-                // Plaintext detected — back up
+                if (displayName.startsWith("enc:") && originalRoot.startsWith("enc:") && hasBulkPayload) {
+                    return@forEach
+                }
+
                 val entryId = json.optString("id", "unknown")
-                if (BuildConfig.DEBUG) Log.i(TAG, "MED-4: Re-encrypting metadata for entry $entryId…")
+                if (BuildConfig.DEBUG) Log.i(TAG, "MED-4: Upgrading metadata encryption for entry $entryId…")
 
                 val bakFile = File(entryDir, "$META_FILE.bak")
                 metaFile.copyTo(bakFile, overwrite = true)
 
-                // Encrypt fields
-                json.put("displayName", encryptField(displayName))
-                json.put("originalRoot", encryptField(originalRoot))
-                val filesArr = json.getJSONArray("files")
-                val encryptedFiles = JSONArray()
-                for (i in 0 until filesArr.length()) {
-                    encryptedFiles.put(encryptField(filesArr.getString(i)))
+                // Decrypt existing values to plaintext
+                val plainDisplayName = decryptField(displayName)
+                val plainOriginalRoot = decryptField(originalRoot)
+                val plainFiles = mutableListOf<String>()
+
+                if (json.has("filesPayload")) {
+                    plainFiles.addAll(VaultCrypto.decryptStrings(json.getString("filesPayload")))
+                } else if (json.has("files")) {
+                    val filesArr = json.getJSONArray("files")
+                    for (i in 0 until filesArr.length()) {
+                        plainFiles.add(decryptField(filesArr.getString(i)))
+                    }
                 }
-                json.put("files", encryptedFiles)
-                metaFile.writeText(json.toString())
+
+                // Re-encode in modern bulk + backwards compatible format
+                val newJson = JSONObject().apply {
+                    put("id", entryId)
+                    put("displayName", encryptField(plainDisplayName))
+                    put("originalRoot", encryptField(plainOriginalRoot))
+                    put("filesPayload", VaultCrypto.encryptStrings(plainFiles))
+                    put("files", JSONArray(plainFiles.map { encryptField(it) }))
+                }
+
+                val tempFile = File(entryDir, "$META_FILE.tmp")
+                tempFile.writeText(newJson.toString())
+                tempFile.renameTo(metaFile)
 
                 // Verify the encrypted version can be read back
                 val verifyJson = JSONObject(metaFile.readText())
@@ -706,18 +730,14 @@ class VaultActivity : AppCompatActivity() {
                 }
 
                 bakFile.delete()
-                if (BuildConfig.DEBUG) Log.i(TAG, "MED-4: Backup verified — deleted metadata.json.bak")
                 migratedCount++
-
-                // Re-load vault adapter to show decrypted names on main thread
-                runOnUiThread { loadVault() }
             } catch (_: Exception) {
                 // Failed to process this entry — skip it
             }
         }
 
         if (migratedCount > 0 && BuildConfig.DEBUG) {
-            Log.i(TAG, "MED-4: Migration complete — $migratedCount entries re-encrypted")
+            Log.i(TAG, "MED-4: Metadata upgrade complete — $migratedCount entries upgraded")
         }
     }
 
@@ -844,25 +864,31 @@ class VaultActivity : AppCompatActivity() {
                             .filter { !isHiddenFile(it) }
                             .toList()
                     }
-                    val relativeList = mutableListOf<String>()
+                    val relativeList = java.util.Collections.synchronizedList(mutableListOf<String>())
+                    val numWorkers = Runtime.getRuntime().availableProcessors().coerceIn(2, 8)
+                    val dispatcher = Dispatchers.IO.limitedParallelism(numWorkers)
 
-                    files.forEach { file ->
-                        val relative = if (isSaf) {
-                            val normRoot = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.normalizePath(root.absolutePath)
-                            val normFile = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.normalizePath(file.absolutePath)
-                            normFile.removePrefix(normRoot).removePrefix("/")
-                        } else {
-                            file.relativeTo(root).path
-                        }
-                        val encryptedFile = File(entryDir, "$relative.enc")
-                        encryptedFile.parentFile?.mkdirs()
-                        VaultCrypto.encryptFile(this@VaultActivity, file, encryptedFile)
-                        relativeList.add(relative)
-                        if (isSaf) {
-                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@VaultActivity, file.absolutePath)
-                        } else {
-                            file.delete()
-                        }
+                    coroutineScope {
+                        files.map { file ->
+                            val relative = if (isSaf) {
+                                val normRoot = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.normalizePath(root.absolutePath)
+                                val normFile = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.normalizePath(file.absolutePath)
+                                normFile.removePrefix(normRoot).removePrefix("/")
+                            } else {
+                                file.relativeTo(root).path
+                            }
+                            relativeList.add(relative)
+                            async(dispatcher) {
+                                val encryptedFile = File(entryDir, "$relative.enc")
+                                encryptedFile.parentFile?.mkdirs()
+                                VaultCrypto.encryptFile(this@VaultActivity, file, encryptedFile)
+                                if (isSaf) {
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@VaultActivity, file.absolutePath)
+                                } else {
+                                    file.delete()
+                                }
+                            }
+                        }.awaitAll()
                     }
 
                     // Clean empty directories after encryption
@@ -876,15 +902,22 @@ class VaultActivity : AppCompatActivity() {
                         }
                     }
 
+                    val sortedRelatives = relativeList.toList()
                     val metadata = JSONObject().apply {
                         put("id", entryId)
                         put("displayName", encryptField(root.name))
                         put("originalRoot", encryptField(root.absolutePath))
-                        put("files", JSONArray(relativeList.map { encryptField(it) }))
+                        put("filesPayload", VaultCrypto.encryptStrings(sortedRelatives))
+                        put("files", JSONArray(sortedRelatives.map { encryptField(it) }))
                     }
-                    File(entryDir, META_FILE).writeText(metadata.toString())
+                    val tempMeta = File(entryDir, "$META_FILE.tmp")
+                    tempMeta.writeText(metadata.toString())
+                    val finalMeta = File(entryDir, META_FILE)
+                    finalMeta.delete()
+                    tempMeta.renameTo(finalMeta)
                     true
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    if (BuildConfig.DEBUG) Log.e(TAG, "encryptFolder failed", e)
                     false
                 }
             }
@@ -892,19 +925,7 @@ class VaultActivity : AppCompatActivity() {
             if (!success) {
                 showSnackbar(getString(R.string.vault_encryption_failed))
             }
-            // Refresh the adapter directly — don't use loadVault() because its
-            // isUnlocked guard may fail if the folder picker recreated the activity.
-            // Reading entries from disk is safe (only shows what's on disk).
-            val currentEntries = readEntries()
-            if (currentEntries.isNotEmpty()) {
-                val sorted = currentEntries.sortedBy { it.displayName.lowercase() }
-                adapter.submitList(sorted)
-                updateEmptyState(false)
-                layoutEmpty.visibility = View.GONE
-                recyclerVault.visibility = View.VISIBLE
-            } else {
-                loadVault()
-            }
+            loadVault()
         }
     }
 
@@ -958,8 +979,8 @@ class VaultActivity : AppCompatActivity() {
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
-        val initialTotal = entry.files.size.coerceAtLeast(1)
-        txtProgress.text = getString(R.string.vault_decrypting, 0, initialTotal)
+        val total = entry.files.size.coerceAtLeast(1)
+        txtProgress.text = getString(R.string.vault_decrypting, 0, total)
         progressBar.progress = 0
 
         scope.launch {
@@ -970,41 +991,55 @@ class VaultActivity : AppCompatActivity() {
                     val isDestSaf = originalRoot is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(originalRoot.absolutePath) ||
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@VaultActivity, originalRoot.absolutePath)
-                    val total = entry.files.size.coerceAtLeast(1)
-                    runOnUiThread {
-                        txtProgress.text = getString(R.string.vault_decrypting, 0, total)
-                        progressBar.progress = 0
-                    }
-                    entry.files.forEachIndexed { index, relative ->
-                        val encryptedFile = File(entryDir, "$relative.enc")
-                        if (isDestSaf) {
-                            val tempDecrypted = File(cacheDir, "vault_dec_${System.currentTimeMillis()}_${relative.substringAfterLast('/')}")
-                            VaultCrypto.decryptFile(encryptedFile, tempDecrypted)
-                            val targetSafFile = za.kilowatch.ultimatefilemanager.storage.SafFile(
-                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(originalRoot.absolutePath, relative)
-                            )
-                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(
-                                tempDecrypted,
-                                targetSafFile,
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE
-                            )
-                            tempDecrypted.delete()
-                        } else {
-                            val outputFile = File(originalRoot, relative)
-                            VaultCrypto.decryptFile(encryptedFile, outputFile)
-                        }
-                        encryptedFile.delete()
 
-                        val current = index + 1
-                        val percent = ((current.toFloat() / total.toFloat()) * 100).toInt()
-                        runOnUiThread {
-                            txtProgress.text = getString(R.string.vault_decrypting, current, total)
-                            progressBar.progress = percent
-                        }
+                    val completed = AtomicInteger(0)
+                    var lastProgressUpdate = 0L
+
+                    val numWorkers = Runtime.getRuntime().availableProcessors().coerceIn(2, 8)
+                    val dispatcher = Dispatchers.IO.limitedParallelism(numWorkers)
+
+                    coroutineScope {
+                        entry.files.map { relative ->
+                            async(dispatcher) {
+                                val encryptedFile = File(entryDir, "$relative.enc")
+                                if (encryptedFile.exists()) {
+                                    if (isDestSaf) {
+                                        val tempDecrypted = File(cacheDir, "vault_dec_${System.currentTimeMillis()}_${Thread.currentThread().id}_${relative.substringAfterLast('/')}")
+                                        VaultCrypto.decryptFile(encryptedFile, tempDecrypted)
+                                        val targetSafFile = za.kilowatch.ultimatefilemanager.storage.SafFile(
+                                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(originalRoot.absolutePath, relative)
+                                        )
+                                        za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(
+                                            tempDecrypted,
+                                            targetSafFile,
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE
+                                        )
+                                        tempDecrypted.delete()
+                                    } else {
+                                        val outputFile = File(originalRoot, relative)
+                                        outputFile.parentFile?.mkdirs()
+                                        VaultCrypto.decryptFile(encryptedFile, outputFile)
+                                    }
+                                    encryptedFile.delete()
+                                }
+
+                                val current = completed.incrementAndGet()
+                                val now = System.currentTimeMillis()
+                                if (now - lastProgressUpdate > 50 || current == total) {
+                                    lastProgressUpdate = now
+                                    val percent = ((current.toFloat() / total.toFloat()) * 100).toInt()
+                                    runOnUiThread {
+                                        txtProgress.text = getString(R.string.vault_decrypting, current, total)
+                                        progressBar.progress = percent
+                                    }
+                                }
+                            }
+                        }.awaitAll()
                     }
                     entryDir.deleteRecursively()
                     true
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    if (BuildConfig.DEBUG) Log.e(TAG, "decryptEntry failed", e)
                     false
                 }
             }
@@ -1039,41 +1074,39 @@ class VaultActivity : AppCompatActivity() {
         if (!base.exists()) return emptyList()
 
         return base.listFiles()?.mapNotNull { dir ->
+            if (!dir.isDirectory) return@mapNotNull null
             try {
                 val metadataFile = File(dir, META_FILE)
-                if (!metadataFile.exists()) return@mapNotNull null
-                val json = JSONObject(metadataFile.readText())
-                val filesJson = json.getJSONArray("files")
-                val files = mutableListOf<String>()
-                for (i in 0 until filesJson.length()) {
-                    files.add(decryptField(filesJson.getString(i)))
+                val fileToRead = if (metadataFile.exists()) metadataFile else File(dir, "$META_FILE.bak")
+                if (!fileToRead.exists()) return@mapNotNull null
+                val json = JSONObject(fileToRead.readText())
+                val id = json.getString("id")
+                val displayName = decryptField(json.getString("displayName"))
+                val originalRoot = decryptField(json.optString("originalRoot", ""))
+
+                val files: List<String> = if (json.has("filesPayload")) {
+                    val payload = json.getString("filesPayload")
+                    VaultCrypto.decryptStrings(payload)
+                } else if (json.has("files")) {
+                    val filesJson = json.getJSONArray("files")
+                    val list = ArrayList<String>(filesJson.length())
+                    for (i in 0 until filesJson.length()) {
+                        list.add(decryptField(filesJson.getString(i)))
+                    }
+                    list
+                } else {
+                    emptyList()
                 }
+
                 VaultEntry(
-                    id = json.getString("id"),
-                    displayName = decryptField(json.getString("displayName")),
-                    originalRoot = decryptField(json.getString("originalRoot")),
+                    id = id,
+                    displayName = displayName,
+                    originalRoot = originalRoot,
                     files = files
                 )
-            } catch (_: Exception) {
-                // Try backup file if main metadata.json failed
-                try {
-                    val bakFile = File(dir, "$META_FILE.bak")
-                    if (!bakFile.exists()) return@mapNotNull null
-                    val json = JSONObject(bakFile.readText())
-                    val filesJson = json.getJSONArray("files")
-                    val files = mutableListOf<String>()
-                    for (i in 0 until filesJson.length()) {
-                        files.add(decryptField(filesJson.getString(i)))
-                    }
-                    VaultEntry(
-                        id = json.getString("id"),
-                        displayName = decryptField(json.getString("displayName")),
-                        originalRoot = decryptField(json.getString("originalRoot")),
-                        files = files
-                    )
-                } catch (_: Exception) {
-                    null
-                }
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) Log.w(TAG, "readEntries failed for dir ${dir.name}", e)
+                null
             }
         } ?: emptyList()
     }

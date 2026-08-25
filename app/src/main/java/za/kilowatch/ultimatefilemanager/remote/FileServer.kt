@@ -1449,17 +1449,31 @@ class FileServer(
         return try {
             val entryDir = File(vaultBaseDir(), entryId)
             val metadataFile = File(entryDir, "metadata.json")
-            if (!metadataFile.exists()) return null
-            val json = JSONObject(metadataFile.readText())
-            val filesJson = json.getJSONArray("files")
-            val files = mutableListOf<String>()
-            for (i in 0 until filesJson.length()) {
-                files.add(filesJson.getString(i))
+            val fileToRead = if (metadataFile.exists()) metadataFile else File(entryDir, "metadata.json.bak")
+            if (!fileToRead.exists()) return null
+            val json = JSONObject(fileToRead.readText())
+            val rawName = json.getString("displayName")
+            val displayName = if (rawName.startsWith("enc:")) VaultCrypto.decryptString(rawName.removePrefix("enc:")) else rawName
+            val rawRoot = json.optString("originalRoot", "")
+            val originalRoot = if (rawRoot.startsWith("enc:")) VaultCrypto.decryptString(rawRoot.removePrefix("enc:")) else rawRoot
+
+            val files: List<String> = if (json.has("filesPayload")) {
+                VaultCrypto.decryptStrings(json.getString("filesPayload"))
+            } else if (json.has("files")) {
+                val filesJson = json.getJSONArray("files")
+                val list = ArrayList<String>(filesJson.length())
+                for (i in 0 until filesJson.length()) {
+                    val rawF = filesJson.getString(i)
+                    list.add(if (rawF.startsWith("enc:")) VaultCrypto.decryptString(rawF.removePrefix("enc:")) else rawF)
+                }
+                list
+            } else {
+                emptyList()
             }
             VaultEntry(
                 id = json.getString("id"),
-                displayName = json.getString("displayName"),
-                originalRoot = json.getString("originalRoot"),
+                displayName = displayName,
+                originalRoot = originalRoot,
                 files = files
             )
         } catch (_: Exception) {

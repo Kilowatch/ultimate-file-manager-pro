@@ -202,6 +202,9 @@ class DevicePairingActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtName) {
+            btnSave?.performClick()
+        }
     }
 
     private fun showDeleteConfirmationDialog(device: PairedDevice) {

@@ -402,6 +402,9 @@ class NotepadActivity : AppCompatActivity() {
         if (!isTv) {
             dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtFilename) {
+            btnConfirm?.performClick()
+        }
     }
 
     private fun onNewDocumentPressed() {

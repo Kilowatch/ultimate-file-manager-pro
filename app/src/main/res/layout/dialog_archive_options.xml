@@ -75,7 +75,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/mobile_text_primary"
                     android:inputType="text"
-                    android:imeOptions="actionNext" />
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:imeOptions="actionDone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView

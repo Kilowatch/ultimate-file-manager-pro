@@ -156,6 +156,13 @@ class ArchiveOptionsDialog : DialogFragment() {
             onConfirm?.invoke(filename, selectedFormat, password, useCurrentFolder)
             dismiss()
         }
+
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogFragmentInput(this, edtFilename) {
+            btnStart.performClick()
+        }
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDoneAction(edtConfirmPassword) {
+            btnStart.performClick()
+        }
     }
 
     companion object {

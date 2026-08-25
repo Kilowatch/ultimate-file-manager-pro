@@ -645,6 +645,9 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         }
         dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, txtInput) {
+            dialogView.findViewById<View>(R.id.btnConfirm).performClick()
+        }
     }
 
     private fun showSheetEditRuleDialog(view: View, index: Int) {
@@ -672,6 +675,9 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         }
         dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, txtInput) {
+            dialogView.findViewById<View>(R.id.btnConfirm).performClick()
+        }
     }
 
     private fun showSheetAddExtensionDialog(view: View, ruleIndex: Int) {
@@ -704,6 +710,9 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         }
         dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, txtInput) {
+            dialogView.findViewById<View>(R.id.btnConfirm).performClick()
+        }
     }
 
         private fun showSheetRemoveExtensionsDialog(view: View, ruleIndex: Int) {

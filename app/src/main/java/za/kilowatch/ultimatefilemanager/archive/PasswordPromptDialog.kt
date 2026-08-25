@@ -59,6 +59,10 @@ class PasswordPromptDialog : DialogFragment() {
             onConfirm?.invoke(password)
             dismiss()
         }
+
+        za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogFragmentInput(this, edtPassword) {
+            btnUnlock.performClick()
+        }
     }
 
     companion object {
