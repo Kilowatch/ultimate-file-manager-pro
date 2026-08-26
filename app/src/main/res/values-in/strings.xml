@@ -11090,8 +11090,31 @@ URL Server
     <string name="rclone_field_koofr_password_hint">
 Gunakan kata sandi aplikasi yang dibuat di pengaturan akun Koofr Anda, bukan kata sandi masuk Anda
 </string>
-
-    <!-- UFM Media Player — Settings -->
+    <string name="rclone_provider_protondrive">
+Proton Drive
+</string>
+    <string name="rclone_field_username">
+Nama pengguna atau Email
+</string>
+    <string name="rclone_field_2fa">
+Kode 2FA (Opsional)
+</string>
+    <string name="rclone_field_2fa_hint">
+Kode autentikasi dua faktor dari aplikasi autentikator Anda
+</string>
+    <string name="rclone_field_otp_secret_key">
+Kunci Rahasia 2FA (Opsional)
+</string>
+    <string name="rclone_field_otp_secret_key_hint">
+Kunci rahasia Base32 dari pengaturan 2FA Proton untuk menghasilkan kode secara otomatis
+</string>
+    <string name="rclone_field_mailbox_password">
+Kata Sandi Mailbox (Opsional)
+</string>
+    <string name="rclone_field_mailbox_password_hint">
+Hanya untuk akun Proton lawas dengan dua kata sandi
+</string>
+<!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 Mode video latar belakang
 </string>

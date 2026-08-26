@@ -175,6 +175,47 @@ val ALL_RCLONE_PROVIDERS: List<RCloneProviderInfo> = buildList {
             )
         )
     )
+    add(
+        RCloneProviderInfo(
+            id = "protondrive",
+            nameResId = R.string.rclone_provider_protondrive,
+            iconResId = R.drawable.ic_rclone,
+            typeName = "protondrive",
+            fields = listOf(
+                RCloneProviderField(
+                    key = "username",
+                    labelResId = R.string.rclone_field_username,
+                    inputType = FieldType.TEXT
+                ),
+                RCloneProviderField(
+                    key = "password",
+                    labelResId = R.string.rclone_field_password,
+                    inputType = FieldType.PASSWORD
+                ),
+                RCloneProviderField(
+                    key = "2fa",
+                    labelResId = R.string.rclone_field_2fa,
+                    inputType = FieldType.TEXT,
+                    required = false,
+                    helperTextResId = R.string.rclone_field_2fa_hint
+                ),
+                RCloneProviderField(
+                    key = "otp_secret_key",
+                    labelResId = R.string.rclone_field_otp_secret_key,
+                    inputType = FieldType.PASSWORD,
+                    required = false,
+                    helperTextResId = R.string.rclone_field_otp_secret_key_hint
+                ),
+                RCloneProviderField(
+                    key = "mailbox_password",
+                    labelResId = R.string.rclone_field_mailbox_password,
+                    inputType = FieldType.PASSWORD,
+                    required = false,
+                    helperTextResId = R.string.rclone_field_mailbox_password_hint
+                )
+            )
+        )
+    )
     if (BuildConfig.BOX_ENABLED) {
         add(
             RCloneProviderInfo(

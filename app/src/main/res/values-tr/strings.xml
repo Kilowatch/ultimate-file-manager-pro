@@ -11090,8 +11090,31 @@ Sunucu URL\\\'si
     <string name="rclone_field_koofr_password_hint">
 Oturum açma şifrenizi değil, Koofr hesap ayarlarınızda oluşturulan bir uygulama şifresi kullanın
 </string>
-
-    <!-- UFM Media Player — Settings -->
+    <string name="rclone_provider_protondrive">
+Proton Drive
+</string>
+    <string name="rclone_field_username">
+Kullanıcı adı veya e-posta
+</string>
+    <string name="rclone_field_2fa">
+2FA Kodu (İsteğe bağlı)
+</string>
+    <string name="rclone_field_2fa_hint">
+Doğrulayıcı uygulamanızdan iki faktörlü doğrulama kodu
+</string>
+    <string name="rclone_field_otp_secret_key">
+2FA Gizli Anahtarı (İsteğe bağlı)
+</string>
+    <string name="rclone_field_otp_secret_key_hint">
+Proton 2FA kurulumundan kodları otomatik oluşturmak için Base32 gizli anahtarı
+</string>
+    <string name="rclone_field_mailbox_password">
+Posta Kutusu Parolası (İsteğe bağlı)
+</string>
+    <string name="rclone_field_mailbox_password_hint">
+Yalnızca eski iki parolalı Proton hesapları için
+</string>
+<!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 Arka plan video modu
 </string>

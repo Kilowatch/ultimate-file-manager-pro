@@ -11090,8 +11090,31 @@ Box
     <string name="rclone_field_koofr_password_hint">
 अपने Koofr खाता सेटिंग्स में उत्पन्न ऐप पासवर्ड का उपयोग करें, अपने लॉगिन पासवर्ड का नहीं
 </string>
-
-    <!-- UFM Media Player — Settings -->
+    <string name="rclone_provider_protondrive">
+Proton Drive
+</string>
+    <string name="rclone_field_username">
+उपयोगकर्ता नाम या ईमेल
+</string>
+    <string name="rclone_field_2fa">
+2FA कोड (वैकल्पिक)
+</string>
+    <string name="rclone_field_2fa_hint">
+आपके प्रमाणक ऐप से दो-कारक प्रमाणीकरण कोड
+</string>
+    <string name="rclone_field_otp_secret_key">
+2FA गुप्त कुंजी (वैकल्पिक)
+</string>
+    <string name="rclone_field_otp_secret_key_hint">
+कोड स्वतः उत्पन्न करने के लिए Proton 2FA सेटअप से Base32 गुप्त कुंजी
+</string>
+    <string name="rclone_field_mailbox_password">
+मेलबॉक्स पासवर्ड (वैकल्पिक)
+</string>
+    <string name="rclone_field_mailbox_password_hint">
+केवल पुराने दो-पासवर्ड Proton खातों के लिए
+</string>
+<!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 पृष्ठभूमि वीडियो मोड
 </string>

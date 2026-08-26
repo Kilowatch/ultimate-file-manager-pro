@@ -11090,8 +11090,31 @@ Box
     <string name="rclone_field_koofr_password_hint">
 استخدم كلمة مرور التطبيق التي تم إنشاؤها في إعدادات حساب Koofr، وليس كلمة مرور تسجيل الدخول الخاصة بك
 </string>
-
-    <!-- UFM Media Player — Settings -->
+    <string name="rclone_provider_protondrive">
+Proton Drive
+</string>
+    <string name="rclone_field_username">
+اسم المستخدم أو البريد الإلكتروني
+</string>
+    <string name="rclone_field_2fa">
+رمز التحقق الثنائي (اختياري)
+</string>
+    <string name="rclone_field_2fa_hint">
+رمز المصادقة الثنائية من تطبيق المصادقة الخاص بك
+</string>
+    <string name="rclone_field_otp_secret_key">
+المفتاح السري للمصادقة الثنائية (اختياري)
+</string>
+    <string name="rclone_field_otp_secret_key_hint">
+المفتاح السري Base32 من إعداد Proton للمصادقة الثنائية لتوليد الرموز تلقائيًا
+</string>
+    <string name="rclone_field_mailbox_password">
+كلمة مرور صندوق البريد (اختياري)
+</string>
+    <string name="rclone_field_mailbox_password_hint">
+لحسابات Proton القديمة ذات كلمتي مرور فقط
+</string>
+<!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 وضع الفيديو في الخلفية
 </string>

@@ -795,7 +795,7 @@ class RCloneProviderActivity : AppCompatActivity() {
 
                 // Save the OnlineStorage FIRST to get a unique storage ID,
                 // then use that ID as the config key so launchRCloneBrowse can look it up.
-                val label = configMap["email"] ?: configMap["user"] ?: displayName
+                val label = configMap["email"] ?: configMap["user"] ?: configMap["username"] ?: displayName
                 val storage = OnlineStorage(
                     provider = OnlineStorageProvider.RCLONE,
                     email = label,

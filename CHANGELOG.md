@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.2] — 2026-08-25
 
 ### Added
+- **Proton Drive Cloud Storage (`RCloneProviderActivity`, `RCloneConfig`, `RCloneProviderData`)**:
+  - Added RClone provider support for Proton Drive cloud storage with single/two-password authentication and 2FA TOTP secret key support.
+  - End-to-end encrypted browsing, uploading, downloading, folder management, and media streaming via `librclone`.
 - **Selection Mode Empty Buffer Rows (`FileAdapter`, `NetworkFileAdapter`)**:
   - Added 2 empty buffer rows at the bottom of file lists/grids when in edit/selection mode on Mobile to prevent the bottom selection bar from obscuring items across SAF, local, network, and cloud storage.
 - **Floating Quick Action Bar for Mobile File Selection (`FloatingQuickActionBar`, `ToolbarIconsActivity`)**:

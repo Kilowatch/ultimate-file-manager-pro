@@ -11090,8 +11090,31 @@ Box
     <string name="rclone_field_koofr_password_hint">
 ログインパスワードではなく、Koofrアカウント設定で生成されたアプリパスワードを使用してください
 </string>
-
-    <!-- UFM Media Player — Settings -->
+    <string name="rclone_provider_protondrive">
+Proton Drive
+</string>
+    <string name="rclone_field_username">
+ユーザー名またはメールアドレス
+</string>
+    <string name="rclone_field_2fa">
+2FAコード（任意）
+</string>
+    <string name="rclone_field_2fa_hint">
+認証アプリから取得した2要素認証コード
+</string>
+    <string name="rclone_field_otp_secret_key">
+2FAシークレットキー（任意）
+</string>
+    <string name="rclone_field_otp_secret_key_hint">
+Proton 2FA設定のBase32シークレットキー（コード自動生成用）
+</string>
+    <string name="rclone_field_mailbox_password">
+メールボックスパスワード（任意）
+</string>
+    <string name="rclone_field_mailbox_password_hint">
+レガシー2パスワードProtonアカウントのみ対象
+</string>
+<!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 バックグラウンド動画モード
 </string>

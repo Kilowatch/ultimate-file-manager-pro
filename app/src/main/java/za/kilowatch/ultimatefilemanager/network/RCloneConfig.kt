@@ -114,6 +114,45 @@ object RCloneConfig {
         return map
     }
 
+    /**
+     * Builds the rclone.conf section for a Proton Drive remote.
+     *
+     * Proton Drive authenticates via username and password.
+     * Supports optional 2FA code, OTP secret key (for automatic TOTP code generation),
+     * and mailbox password (for legacy two-password Proton accounts).
+     *
+     * Passwords and keys must be obscured via rclone's `core/obscure` RC method.
+     *
+     * @param username The Proton account username or email address.
+     * @param password The Proton account password (obscured via core/obscure).
+     * @param twoFA Optional 2FA code (e.g. "123456").
+     * @param otpSecretKey Optional OTP secret key (obscured via core/obscure) for 2FA.
+     * @param mailboxPassword Optional mailbox password (obscured via core/obscure) for two-password accounts.
+     */
+    fun protonDriveConfig(
+        username: String,
+        password: String,
+        twoFA: String? = null,
+        otpSecretKey: String? = null,
+        mailboxPassword: String? = null
+    ): Map<String, String> {
+        val map = mutableMapOf(
+            "type" to "protondrive",
+            "username" to username,
+            "password" to password
+        )
+        if (!twoFA.isNullOrBlank()) {
+            map["2fa"] = twoFA
+        }
+        if (!otpSecretKey.isNullOrBlank()) {
+            map["otp_secret_key"] = otpSecretKey
+        }
+        if (!mailboxPassword.isNullOrBlank()) {
+            map["mailbox_password"] = mailboxPassword
+        }
+        return map
+    }
+
     // ─────────────────────────────────────────────
     // Core writer — builds rclone.conf from a map
     // (public for testing / one-off use, but prefer saveEncrypted for production)

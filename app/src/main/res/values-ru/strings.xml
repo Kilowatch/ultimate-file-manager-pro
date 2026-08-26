@@ -11090,8 +11090,31 @@ URL сервера
     <string name="rclone_field_koofr_password_hint">
 Используйте пароль приложения, созданный в настройках вашей учётной записи Koofr, а не пароль для входа
 </string>
-
-    <!-- UFM Media Player — Settings -->
+    <string name="rclone_provider_protondrive">
+Proton Drive
+</string>
+    <string name="rclone_field_username">
+Имя пользователя или Email
+</string>
+    <string name="rclone_field_2fa">
+2FA-код (необязательно)
+</string>
+    <string name="rclone_field_2fa_hint">
+Код двухфакторной аутентификации из вашего приложения-аутентификатора
+</string>
+    <string name="rclone_field_otp_secret_key">
+Секретный ключ 2FA (необязательно)
+</string>
+    <string name="rclone_field_otp_secret_key_hint">
+Секретный ключ Base32 из настройки Proton 2FA для автоматической генерации кодов
+</string>
+    <string name="rclone_field_mailbox_password">
+Пароль почтового ящика (необязательно)
+</string>
+    <string name="rclone_field_mailbox_password_hint">
+Только для старых аккаунтов Proton с двумя паролями
+</string>
+<!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 Фоновый режим видео
 </string>

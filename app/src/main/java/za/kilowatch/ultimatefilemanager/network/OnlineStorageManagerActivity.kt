@@ -208,9 +208,8 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
                 // used in the encrypted config file, so the temp .conf and the
                 // in-memory RC remote are always in sync.
                 val providerType = providerJson.optString("type", providerId)
-                // premiumizeme's Config callback always returns OAuth state,
-                // which deadlocks on Android.  Bypass it by relying on the config
-                // file that decryptToTempFile already wrote — rclone reads lazily.
+                // premiumizeme and box bypass config/create to rely on the config
+                // file that decryptToTempFile already wrote (avoids OAuth wizard prompts).
                 if (providerType != "premiumizeme" && providerType != "box") {
                     val createParams = org.json.JSONObject().apply {
                         put("name", storage.id)

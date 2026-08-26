@@ -11090,8 +11090,31 @@ Server-URL
     <string name="rclone_field_koofr_password_hint">
 Verwenden Sie ein App-Passwort, das in Ihren Koofr-Kontoeinstellungen generiert wurde, nicht Ihr Anmeldepasswort
 </string>
-
-    <!-- UFM Media Player — Settings -->
+    <string name="rclone_provider_protondrive">
+Proton Drive
+</string>
+    <string name="rclone_field_username">
+Benutzername oder E-Mail
+</string>
+    <string name="rclone_field_2fa">
+2FA-Code (optional)
+</string>
+    <string name="rclone_field_2fa_hint">
+Zwei-Faktor-Authentifizierungscode aus Ihrer Authenticator-App
+</string>
+    <string name="rclone_field_otp_secret_key">
+2FA-Geheimschlüssel (optional)
+</string>
+    <string name="rclone_field_otp_secret_key_hint">
+Base32-Geheimschlüssel aus der Proton-2FA-Einrichtung zur automatischen Generierung von Codes
+</string>
+    <string name="rclone_field_mailbox_password">
+Postfach-Passwort (optional)
+</string>
+    <string name="rclone_field_mailbox_password_hint">
+Nur für ältere Proton-Konten mit zwei Passwörtern
+</string>
+<!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 Hintergrundvideomodus
 </string>
