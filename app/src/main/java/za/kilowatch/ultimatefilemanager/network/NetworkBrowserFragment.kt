@@ -2171,7 +2171,8 @@ class NetworkBrowserFragment : Fragment() {
                     ).apply {
                         spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
                             override fun getSpanSize(position: Int): Int {
-                                return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+                                val vt = fileAdapter.getItemViewType(position)
+                                return if (vt == 3 || vt == 4) spanCount else 1
                             }
                         }
                     }

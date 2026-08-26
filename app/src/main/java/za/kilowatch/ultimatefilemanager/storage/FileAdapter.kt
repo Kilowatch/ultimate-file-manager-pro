@@ -44,6 +44,7 @@ sealed class ListItem {
     data class Header(val year: Int, val month: Int, val count: Int, val isCollapsed: Boolean = false) : ListItem()
     data class FileEntry(val javaFile: java.io.File) : ListItem()
     data class NetworkEntry(val file: za.kilowatch.ultimatefilemanager.network.NetworkFile) : ListItem()
+    data object EmptyBuffer : ListItem()
 }
 
 /**
@@ -142,6 +143,19 @@ class FileAdapter(
      */
     var longPressAnchorIndex: Int = RecyclerView.NO_POSITION
 
+    private fun addBufferRows() {
+        if (!isTv && items.isNotEmpty() && items.none { it is ListItem.EmptyBuffer }) {
+            items.add(ListItem.EmptyBuffer)
+            items.add(ListItem.EmptyBuffer)
+        }
+    }
+
+    private fun removeBufferRows() {
+        if (!isTv) {
+            items.removeAll { it is ListItem.EmptyBuffer }
+        }
+    }
+
     fun submitList(
         newFiles: List<File>, 
         indexedPaths: Set<String> = emptySet(), 
@@ -208,6 +222,11 @@ class FileAdapter(
             items.addAll(filesCopy.map { ListItem.FileEntry(it) })
         }
 
+        if (!isTv && isSelectionMode && items.isNotEmpty()) {
+            items.add(ListItem.EmptyBuffer)
+            items.add(ListItem.EmptyBuffer)
+        }
+
         notifyDataSetChanged()
 
         // Re-apply selection by stable identifier after the fresh listing lands, and
@@ -221,6 +240,7 @@ class FileAdapter(
             if (selectedPaths.isEmpty()) {
                 isSelectionMode = false
                 longPressAnchorIndex = RecyclerView.NO_POSITION
+                removeBufferRows()
             }
             onSelectionChanged(selectedPaths.size)
         }
@@ -281,7 +301,6 @@ class FileAdapter(
      */
     fun appendList(newFiles: List<File>) {
         if (newFiles.isEmpty()) return
-        val startPos = items.size
         files.addAll(newFiles)
         // The appended files aren't in the metadata cache yet — snapshot them so the
         // bind path doesn't fall back to File.stat() on the main thread.
@@ -292,8 +311,18 @@ class FileAdapter(
             // For grouped mode, rebuild the full list (rare in category mode, but safe)
             submitList(files.toList(), indexedPaths.toSet(), hiddenPaths.toSet(), showAllAsIndexed, storageLabels.toMap(), searchBasePath)
         } else {
+            if (!isTv) {
+                items.removeAll { it is ListItem.EmptyBuffer }
+            }
+            val startPos = items.size
             items.addAll(newFiles.map { ListItem.FileEntry(it) })
-            notifyItemRangeInserted(startPos, newFiles.size)
+            if (!isTv && isSelectionMode && items.isNotEmpty()) {
+                items.add(ListItem.EmptyBuffer)
+                items.add(ListItem.EmptyBuffer)
+                notifyDataSetChanged()
+            } else {
+                notifyItemRangeInserted(startPos, newFiles.size)
+            }
         }
     }
 
@@ -335,11 +364,15 @@ class FileAdapter(
 
     /** Select all items in the current list. */
     fun selectAll() {
+        val wasSelectionMode = isSelectionMode
         isSelectionMode = true
         selectedPaths.clear()
         longPressAnchorIndex = RecyclerView.NO_POSITION
         files.forEach { selectedPaths.add(it.absolutePath) }
-        notifyItemRangeChanged(0, itemCount)
+        if (!isTv && !wasSelectionMode) {
+            addBufferRows()
+        }
+        notifyDataSetChanged()
         onSelectionChanged(selectedPaths.size)
     }
 
@@ -356,8 +389,13 @@ class FileAdapter(
             exitSelectionMode()
             return
         }
+        val wasSelectionMode = isSelectionMode
+        isSelectionMode = true
         longPressAnchorIndex = RecyclerView.NO_POSITION
-        notifyItemRangeChanged(0, itemCount)
+        if (!isTv && !wasSelectionMode) {
+            addBufferRows()
+        }
+        notifyDataSetChanged()
         onSelectionChanged(selectedPaths.size)
     }
 
@@ -368,10 +406,14 @@ class FileAdapter(
 
     /** Clear all selections and exit selection mode. */
     fun exitSelectionMode() {
+        val wasSelectionMode = isSelectionMode
         selectedPaths.clear()
         isSelectionMode = false
         longPressAnchorIndex = RecyclerView.NO_POSITION
-        notifyItemRangeChanged(0, itemCount)
+        if (!isTv && wasSelectionMode) {
+            removeBufferRows()
+        }
+        notifyDataSetChanged()
         onSelectionChanged(0)
     }
 
@@ -389,10 +431,14 @@ class FileAdapter(
         if (position < 0 || position >= items.size) return
         val item = items[position] as? ListItem.FileEntry ?: return
         val file = item.javaFile
+        val wasSelectionMode = isSelectionMode
         if (!isSelectionMode) {
             isSelectionMode = true
             longPressAnchorIndex = position
             selectedPaths.add(file.absolutePath)
+            if (!isTv) {
+                addBufferRows()
+            }
         } else if (longPressAnchorIndex == RecyclerView.NO_POSITION) {
             // Already in selection mode but no anchor (e.g. after selectAll/deselectAll)
             longPressAnchorIndex = position
@@ -402,7 +448,7 @@ class FileAdapter(
             selectRange(longPressAnchorIndex, position)
             longPressAnchorIndex = position
         }
-        notifyItemRangeChanged(0, itemCount)
+        notifyDataSetChanged()
         onSelectionChanged(selectedPaths.size)
     }
 
@@ -439,6 +485,7 @@ class FileAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val item = items[position]
+        if (item is ListItem.EmptyBuffer) return 4
         if (item is ListItem.Header) return 3
         val isGrid = ViewModeManager.isGrid(viewMode)
         return when {
@@ -449,6 +496,15 @@ class FileAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (viewType == 4) {
+            val view = View(parent.context).apply {
+                layoutParams = RecyclerView.LayoutParams(
+                    RecyclerView.LayoutParams.MATCH_PARENT,
+                    0
+                )
+            }
+            return EmptyBufferViewHolder(view)
+        }
         if (viewType == 3) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_date_group_header, parent, false)
             return HeaderViewHolder(view)
@@ -465,7 +521,9 @@ class FileAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
-        if (holder is HeaderViewHolder && item is ListItem.Header) {
+        if (holder is EmptyBufferViewHolder) {
+            holder.bind()
+        } else if (holder is HeaderViewHolder && item is ListItem.Header) {
             holder.bind(item)
         } else if (holder is FileViewHolder && item is ListItem.FileEntry) {
             holder.bind(item.javaFile)
@@ -473,6 +531,38 @@ class FileAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    inner class EmptyBufferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind() {
+            val context = itemView.context
+            val isGrid = ViewModeManager.isGrid(viewMode)
+            val density = context.resources.displayMetrics.density
+            val heightPx = if (isGrid) {
+                val spanCount = ViewModeManager.spanCount(context, viewMode)
+                val parentWidth = (itemView.parent as? View)?.width.takeIf { it != null && it > 0 }
+                    ?: context.resources.displayMetrics.widthPixels
+                val cellWidth = parentWidth / maxOf(1, spanCount)
+                cellWidth + (10 * density).toInt()
+            } else {
+                val heightDp = when (viewMode) {
+                    ViewModeManager.ViewMode.LIST_SMALL -> 48
+                    ViewModeManager.ViewMode.LIST_MEDIUM -> 64
+                    ViewModeManager.ViewMode.LIST_LARGE -> 80
+                    ViewModeManager.ViewMode.LIST_XLARGE -> 96
+                    else -> if (isCompact) 44 else 64
+                }
+                (heightDp * density).toInt()
+            }
+            val lp = itemView.layoutParams as? RecyclerView.LayoutParams
+                ?: RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, heightPx)
+            lp.width = RecyclerView.LayoutParams.MATCH_PARENT
+            lp.height = heightPx
+            itemView.layoutParams = lp
+            itemView.isClickable = false
+            itemView.isFocusable = false
+            itemView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }
+    }
 
     inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val txtYear: TextView = itemView.findViewById(R.id.txtYear)
@@ -814,7 +904,10 @@ class FileAdapter(
                                 isSelectionMode = true
                                 longPressAnchorIndex = pos
                                 selectedPaths.add(currentFile.absolutePath)
-                                notifyItemRangeChanged(0, itemCount)
+                                if (!isTv) {
+                                    addBufferRows()
+                                }
+                                notifyDataSetChanged()
                                 onSelectionChanged(selectedPaths.size)
                             } else {
                                 val wasSelected = currentFile.absolutePath in selectedPaths
@@ -876,7 +969,10 @@ class FileAdapter(
                             isSelectionMode = true
                             longPressAnchorIndex = pos
                             selectedPaths.add(currentFile.absolutePath)
-                            notifyItemRangeChanged(0, itemCount)
+                            if (!isTv) {
+                                addBufferRows()
+                            }
+                            notifyDataSetChanged()
                             onSelectionChanged(selectedPaths.size)
                         } else if (longPressAnchorIndex == RecyclerView.NO_POSITION) {
                             // Already in selection mode but no anchor (e.g. after selectAll/deselectAll)

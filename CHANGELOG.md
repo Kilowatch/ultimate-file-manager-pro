@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.2] — 2026-08-25
 
 ### Added
+- **Selection Mode Empty Buffer Rows (`FileAdapter`, `NetworkFileAdapter`)**:
+  - Added 2 empty buffer rows at the bottom of file lists/grids when in edit/selection mode on Mobile to prevent the bottom selection bar from obscuring items across SAF, local, network, and cloud storage.
 - **Floating Quick Action Bar for Mobile File Selection (`FloatingQuickActionBar`, `ToolbarIconsActivity`)**:
   - Added an elevated floating quick action bar (pill bar) anchored at the bottom center during multi-selection mode on mobile devices, featuring a frosted glass container, subtle elevation, and smooth slide enter/exit animations.
   - Supports up to 6 customizable quick action slots with live drag-and-drop reordering (left-to-right positions 1 to 6) in **Settings → Long Press Toolbar Icons**.

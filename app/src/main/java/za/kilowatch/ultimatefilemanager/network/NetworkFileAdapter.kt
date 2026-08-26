@@ -94,6 +94,19 @@ class NetworkFileAdapter(
      */
     var longPressAnchorIndex: Int = RecyclerView.NO_POSITION
 
+    private fun addBufferRows() {
+        if (!isTv && items.isNotEmpty() && items.none { it is za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer }) {
+            items.add(za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer)
+            items.add(za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer)
+        }
+    }
+
+    private fun removeBufferRows() {
+        if (!isTv) {
+            items.removeAll { it is za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer }
+        }
+    }
+
     private var searchBasePath: String? = null
 
     private val childCountCache = mutableMapOf<String, Int>()
@@ -156,6 +169,10 @@ class NetworkFileAdapter(
         if (selectedFiles.size != prevSelectionSize) {
             onSelectionChanged(selectedFiles.size)
         }
+        if (selectedFiles.isEmpty() && isSelectionMode) {
+            isSelectionMode = false
+            removeBufferRows()
+        }
         longPressAnchorIndex = RecyclerView.NO_POSITION
 
         items.clear()
@@ -189,6 +206,11 @@ class NetworkFileAdapter(
             items.addAll(newFiles.map { za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry(it) })
         }
         
+        if (!isTv && isSelectionMode && items.isNotEmpty()) {
+            items.add(za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer)
+            items.add(za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer)
+        }
+
         notifyDataSetChanged()
 
         // Pre-compute directory child counts off the main thread
@@ -265,9 +287,14 @@ class NetworkFileAdapter(
     fun hasAnySelectedUnpinned(context: Context, shareId: String): Boolean = selectedFiles.any { !za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context, it.path, shareId) }
     
     fun selectAll() {
+        val wasSelectionMode = isSelectionMode
+        isSelectionMode = true
         selectedFiles.addAll(files)
         longPressAnchorIndex = RecyclerView.NO_POSITION
-        notifyItemRangeChanged(0, itemCount)
+        if (!isTv && !wasSelectionMode) {
+            addBufferRows()
+        }
+        notifyDataSetChanged()
         onSelectionChanged(selectedFiles.size)
     }
 
@@ -279,8 +306,13 @@ class NetworkFileAdapter(
             exitSelectionMode()
             return
         }
+        val wasSelectionMode = isSelectionMode
+        isSelectionMode = true
         longPressAnchorIndex = RecyclerView.NO_POSITION
-        notifyItemRangeChanged(0, itemCount)
+        if (!isTv && !wasSelectionMode) {
+            addBufferRows()
+        }
+        notifyDataSetChanged()
         onSelectionChanged(selectedFiles.size)
     }
 
@@ -291,10 +323,14 @@ class NetworkFileAdapter(
     fun isAllSelected(): Boolean = selectedFiles.size == files.size && files.isNotEmpty()
 
     fun exitSelectionMode() {
+        val wasSelectionMode = isSelectionMode
         isSelectionMode = false
         selectedFiles.clear()
         longPressAnchorIndex = RecyclerView.NO_POSITION
-        notifyItemRangeChanged(0, itemCount)
+        if (!isTv && wasSelectionMode) {
+            removeBufferRows()
+        }
+        notifyDataSetChanged()
         onSelectionChanged(0)
     }
 
@@ -312,10 +348,14 @@ class NetworkFileAdapter(
         if (position < 0 || position >= items.size) return
         val item = items[position] as? za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry ?: return
         val file = item.file
+        val wasSelectionMode = isSelectionMode
         if (!isSelectionMode) {
             isSelectionMode = true
             longPressAnchorIndex = position
             selectedFiles.add(file)
+            if (!isTv) {
+                addBufferRows()
+            }
         } else if (longPressAnchorIndex == RecyclerView.NO_POSITION) {
             // Already in selection mode but no anchor (e.g. after selectAll/deselectAll)
             longPressAnchorIndex = position
@@ -325,7 +365,7 @@ class NetworkFileAdapter(
             selectRange(longPressAnchorIndex, position)
             longPressAnchorIndex = position
         }
-        notifyItemRangeChanged(0, itemCount)
+        notifyDataSetChanged()
         onSelectionChanged(selectedFiles.size)
     }
 
@@ -348,6 +388,7 @@ class NetworkFileAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val item = items[position]
+        if (item is za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer) return 4
         if (item is za.kilowatch.ultimatefilemanager.storage.ListItem.Header) return 3
         val isGrid = ViewModeManager.isGrid(viewMode)
         return when {
@@ -358,6 +399,15 @@ class NetworkFileAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (viewType == 4) {
+            val view = View(parent.context).apply {
+                layoutParams = RecyclerView.LayoutParams(
+                    RecyclerView.LayoutParams.MATCH_PARENT,
+                    0
+                )
+            }
+            return EmptyBufferViewHolder(view)
+        }
         if (viewType == 3) {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_date_group_header, parent, false)
             return HeaderViewHolder(view)
@@ -374,7 +424,9 @@ class NetworkFileAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
-        if (holder is HeaderViewHolder && item is za.kilowatch.ultimatefilemanager.storage.ListItem.Header) {
+        if (holder is EmptyBufferViewHolder) {
+            holder.bind()
+        } else if (holder is HeaderViewHolder && item is za.kilowatch.ultimatefilemanager.storage.ListItem.Header) {
             holder.bind(item)
         } else if (holder is ViewHolder && item is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry) {
             holder.bind(item.file)
@@ -382,6 +434,37 @@ class NetworkFileAdapter(
     }
 
     override fun getItemCount() = items.size
+
+    inner class EmptyBufferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind() {
+            val isGrid = ViewModeManager.isGrid(viewMode)
+            val density = context.resources.displayMetrics.density
+            val heightPx = if (isGrid) {
+                val spanCount = ViewModeManager.spanCount(context, viewMode)
+                val parentWidth = (itemView.parent as? View)?.width.takeIf { it != null && it > 0 }
+                    ?: context.resources.displayMetrics.widthPixels
+                val cellWidth = parentWidth / maxOf(1, spanCount)
+                cellWidth + (10 * density).toInt()
+            } else {
+                val heightDp = when (viewMode) {
+                    ViewModeManager.ViewMode.LIST_SMALL -> 48
+                    ViewModeManager.ViewMode.LIST_MEDIUM -> 64
+                    ViewModeManager.ViewMode.LIST_LARGE -> 80
+                    ViewModeManager.ViewMode.LIST_XLARGE -> 96
+                    else -> if (isCompact) 44 else 64
+                }
+                (heightDp * density).toInt()
+            }
+            val lp = itemView.layoutParams as? RecyclerView.LayoutParams
+                ?: RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, heightPx)
+            lp.width = RecyclerView.LayoutParams.MATCH_PARENT
+            lp.height = heightPx
+            itemView.layoutParams = lp
+            itemView.isClickable = false
+            itemView.isFocusable = false
+            itemView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }
+    }
 
     inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val txtYear: TextView = itemView.findViewById(R.id.txtYear)
@@ -467,7 +550,10 @@ class NetworkFileAdapter(
                             isSelectionMode = true
                             longPressAnchorIndex = pos
                             selectedFiles.add(file)
-                            notifyItemRangeChanged(0, itemCount)
+                            if (!isTv) {
+                                addBufferRows()
+                            }
+                            notifyDataSetChanged()
                             onSelectionChanged(selectedFiles.size)
                         } else if (longPressAnchorIndex == RecyclerView.NO_POSITION) {
                             // Already in selection mode but no anchor (e.g. after selectAll/deselectAll)
