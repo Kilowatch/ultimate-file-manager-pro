@@ -13047,6 +13047,26 @@ Arrastra para reordenar
     <string name="cd_remove_action">
 Quitar acción
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+Sesión del BAD
+</string>
+    <string name="adb_session_notification_channel_desc">
+Mantiene la conexión ADB activa en segundo plano.
+</string>
+    <string name="adb_session_notification_title">
+BAsD conectado
+</string>
+    <string name="adb_session_notification_desc">
+Conectado a %1$s:%2$d
+</string>
+    <string name="backup_pref_adb_settings">
+Configuración de conexión ADB
+</string>
+    <string name="invalid_ip_or_port">
+Ingrese una dirección IP y un puerto válidos (1-65535)
+</string>
 </resources>
 
 

@@ -135,9 +135,15 @@ class DevicePairingActivity : AppCompatActivity() {
     private fun refreshList() {
         val devices = pairingManager.getAllPairedDevices()
         adapter.setDevices(devices)
-        findViewById<View>(R.id.layoutEmptyState)?.visibility = if (devices.isEmpty()) View.VISIBLE else View.GONE
-        findViewById<View>(R.id.recyclerPairedDevices)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
-        findViewById<View>(R.id.btnAddDevice)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
+        if (isTvMode) {
+            findViewById<View>(R.id.txtEmptyState)?.visibility = if (devices.isEmpty()) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.recyclerPairedDevices)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
+            findViewById<View>(R.id.btnAddDevice)?.visibility = View.VISIBLE
+        } else {
+            findViewById<View>(R.id.layoutEmptyState)?.visibility = if (devices.isEmpty()) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.recyclerPairedDevices)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
+            findViewById<View>(R.id.btnAddDevice)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
+        }
 
         // Asynchronously verify connected devices are still reachable
         lifecycleScope.launch {

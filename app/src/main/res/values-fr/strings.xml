@@ -13035,6 +13035,26 @@ Glisser pour réordonner
     <string name="cd_remove_action">
 Supprimer l\\\'action
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+Session BAD
+</string>
+    <string name="adb_session_notification_channel_desc">
+Maintient la connexion ADB active en arrière-plan
+</string>
+    <string name="adb_session_notification_title">
+BAD connectée
+</string>
+    <string name="adb_session_notification_desc">
+Connecté à %1$s :%2$d
+</string>
+    <string name="backup_pref_adb_settings">
+Paramètres de connexion BAD
+</string>
+    <string name="invalid_ip_or_port">
+Veuillez saisir une adresse IP et un port valides (1-65535)
+</string>
 </resources>
 
 

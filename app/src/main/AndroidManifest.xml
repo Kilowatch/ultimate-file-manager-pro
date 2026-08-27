@@ -1032,6 +1032,15 @@
             android:foregroundServiceType="connectedDevice"
             android:exported="false" />
 
+        <service
+            android:name=".network.AdbSessionForegroundService"
+            android:foregroundServiceType="connectedDevice"
+            android:exported="false" />
+
+        <receiver
+            android:name=".network.AdbDisconnectReceiver"
+            android:exported="false" />
+
         <!-- Quick Settings Tiles for FTP and SFTP (enabled programmatically via Settings) -->
         <service
             android:name=".widget.FtpTileService"

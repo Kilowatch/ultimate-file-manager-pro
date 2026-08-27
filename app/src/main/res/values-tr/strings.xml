@@ -13035,6 +13035,26 @@ Yeniden sıralamak için sürükleyin
     <string name="cd_remove_action">
 Eylemi Kaldır
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+ADB Oturumu
+</string>
+    <string name="adb_session_notification_channel_desc">
+Arka planda aktif ADB bağlantısını korur
+</string>
+    <string name="adb_session_notification_title">
+ADB\'ye Bağlı
+</string>
+    <string name="adb_session_notification_desc">
+%1$s cihazına bağlanıldı:%2$d
+</string>
+    <string name="backup_pref_adb_settings">
+ADB Bağlantı Ayarları
+</string>
+    <string name="invalid_ip_or_port">
+Lütfen geçerli bir IP adresi ve bağlantı noktası girin (1-65535)
+</string>
 </resources>
 
 

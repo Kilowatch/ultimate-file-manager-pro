@@ -13035,6 +13035,26 @@ SAF 저장소
     <string name="cd_remove_action">
 작업 제거
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+ADB 세션
+</string>
+    <string name="adb_session_notification_channel_desc">
+백그라운드에서 활성 ADB 연결을 유지합니다.
+</string>
+    <string name="adb_session_notification_title">
+ADB 연결됨
+</string>
+    <string name="adb_session_notification_desc">
+%1$s:%2$d에 연결됨
+</string>
+    <string name="backup_pref_adb_settings">
+ADB 연결 설정
+</string>
+    <string name="invalid_ip_or_port">
+유효한 IP 주소와 포트(1-65535)를 입력하세요.
+</string>
 </resources>
 
 

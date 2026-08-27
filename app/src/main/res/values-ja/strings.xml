@@ -13035,6 +13035,26 @@ SAFストレージ
     <string name="cd_remove_action">
 アクションを削除
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+ADBセッション
+</string>
+    <string name="adb_session_notification_channel_desc">
+バックグラウンドでアクティブな ADB 接続を維持します
+</string>
+    <string name="adb_session_notification_title">
+ADB接続済み
+</string>
+    <string name="adb_session_notification_desc">
+%1$s:%2$d に接続しました
+</string>
+    <string name="backup_pref_adb_settings">
+ADB接続設定
+</string>
+    <string name="invalid_ip_or_port">
+有効な IP アドレスとポート (1 ～ 65535) を入力してください
+</string>
 </resources>
 
 

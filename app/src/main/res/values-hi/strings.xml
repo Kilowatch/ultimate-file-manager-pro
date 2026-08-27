@@ -13035,6 +13035,26 @@ SAF स्टोरेज
     <string name="cd_remove_action">
 क्रिया हटाएँ
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+एडीबी सत्र
+</string>
+    <string name="adb_session_notification_channel_desc">
+पृष्ठभूमि में सक्रिय ADB कनेक्शन बनाए रखता है
+</string>
+    <string name="adb_session_notification_title">
+एडीबी कनेक्टेड
+</string>
+    <string name="adb_session_notification_desc">
+%1$s से कनेक्ट:%2$d
+</string>
+    <string name="backup_pref_adb_settings">
+एडीबी कनेक्शन सेटिंग्स
+</string>
+    <string name="invalid_ip_or_port">
+कृपया एक वैध आईपी पता और पोर्ट दर्ज करें (1-65535)
+</string>
 </resources>
 
 

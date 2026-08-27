@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.2] — 2026-08-25
 
 ### Added
+- **ADB Target IP & Port Persistence (`AdbPreferenceManager`)**:
+  - Automatically remembers and validates the last used ADB target IP address and port across Mobile and Android TV.
+  - Registered in `SettingsBackupManager` (`adb_preferences`) for backup export and restore.
+- **ADB Background Session Persistence (`AdbSessionForegroundService`)**:
+  - Maintains active ADB shell sessions alive in the background using a foreground service with an ongoing notification and an instant one-tap 'Disconnect' action.
+- **TLS SPAKE2 Pairing Support (`AdbManager`)**:
+  - Integrated cryptographic pairing via `PairingConnectionCtx` from `libadb-android` for Android 11+ Wi-Fi debugging.
+- **Android TV Target IP Input (`AdbPairingTvActivity`, `activity_adb_pairing_tv.xml`)**:
+  - Added a dedicated Host/IP input field (`editAdbHost`) to the TV pairing screen.
 - **Configurable Search Results Limit & Progressive Pagination (`SearchResultsLimitManager`, `SearchActivity`, `FileBrowserActivity`, `FileBrowserFragment`)**:
   - Added a configurable search results batch limit setting (200, 500 [default], 1000, 2000) under **Settings → File Management** with dark glassmorphic dialogs on Mobile and Android TV.
   - Implemented progressive infinite-scroll pagination across both global and in-folder searches, automatically streaming subsequent result batches on scroll until all results are loaded.
@@ -38,6 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Master enable/disable toggle switch in Toolbar Icons settings.
 
 ### Changed
+- **Decoupled Terminal Session Lifecycle (`TerminalActivity`, `AdbManager`)**:
+  - Preserved the active ADB connection and buffered output history when switching apps, windows, or rotating the screen.
 - **Back Navigation from Search Results (`FileBrowserActivity`)**:
   - Opening a folder or choosing "Open Folder Location" from search results now configures the system Back button/gesture to return directly to the search results, while the header arrow back button continues to navigate up parent directories.
 - **Disabled Player Button Feedback Toasts by Default (`PlayerToastHelper`, `PlayerPreferencesManager`, `SettingsActivity`)**:
@@ -47,12 +58,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disabled "Enable Keyboard Shortcuts" by default on mobile.
 
 ### Fixed
+- **Search Results Limit Dialog (TV & Mobile)**: Fixed Search Results Limit dialog not being scrollable on Android TV, ensuring all limit options (200, 500, 1000, 2000) and the Cancel button are fully accessible and scrollable via D-pad navigation.
 - **Folder Sort & Filter Persistence & Backup/Restore**: Fixed an issue where folder-specific sort and filter settings could not be set and reverted to global settings after restoring from backup.
 - **Encrypted Preferences Self-Healing**: Added automatic self-healing recovery for corrupted `ufm_folder_sort_prefs` files, and enabled seamless backup export and restore with hardware Keystore re-encryption.
 - **SMB Server-Mode Path Hierarchy & Normalization**: Resolved subfolder path construction in `NetworkBrowserFragment` for SMB server shares and normalized folder keys with backward-compatibility fallbacks.
 - Fixed TV D-Pad Right navigation issue caused by keyboard shortcuts interception.
 - Preserved search results view and in-memory list after single or batch rename operations on both Mobile and TV instead of refreshing and navigating back to the previous folder.
 - Synchronized Room search index and media scanner for batch renamed files.
+
+### Security
+- Enforced strict ephemeral handling for Wi-Fi pairing PINs (PIN codes are never persisted to disk and are immediately cleared from memory upon connection failure).
 
 ## [1.9.1] — 2026-08-24
 

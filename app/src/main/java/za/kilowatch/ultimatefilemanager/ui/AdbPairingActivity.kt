@@ -23,12 +23,14 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.AdbDevice
 import za.kilowatch.ultimatefilemanager.network.AdbDeviceDiscovery
 import za.kilowatch.ultimatefilemanager.network.AdbManager
+import za.kilowatch.ultimatefilemanager.settings.AdbPreferenceManager
 import android.util.Log
 
 class AdbPairingActivity : AppCompatActivity() {
 
     private lateinit var adbManager: AdbManager
     private var currentConnectionJob: kotlinx.coroutines.Job? = null
+    private var pins: List<EditText> = emptyList()
 
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -66,17 +68,20 @@ class AdbPairingActivity : AppCompatActivity() {
         val txtHeaderStatus = findViewById<TextView>(R.id.txtHeaderStatus)
         val btnBack = findViewById<ImageView>(R.id.btnBack)
 
-        editHost?.setText("127.0.0.1")
+        val savedHost = AdbPreferenceManager.getLastTargetHost(this)
+        val savedPort = AdbPreferenceManager.getLastTargetPort(this)
+        editHost?.setText(savedHost)
+        editPort?.setText(savedPort.toString())
 
-        val pins = listOf(
+        pins = listOf(
             findViewById<EditText>(R.id.pin_1), findViewById(R.id.pin_2), findViewById(R.id.pin_3),
             findViewById(R.id.pin_4), findViewById(R.id.pin_5), findViewById(R.id.pin_6)
         )
 
         val discovery = AdbDeviceDiscovery(this)
         val discoveredDevices = mutableListOf<AdbDevice>()
-        var selectedHost = ""
-        var selectedPort = 5555
+        var selectedHost = savedHost
+        var selectedPort = savedPort
 
         val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
         val itemRes = if (isTv) R.layout.item_tv_spinner_dropdown else R.layout.item_dropdown_popup
@@ -151,14 +156,22 @@ class AdbPairingActivity : AppCompatActivity() {
         }
 
         btnConnectNoPIN.setOnClickListener {
-            val host = editHost.text.toString().trim().ifEmpty { selectedHost.ifEmpty { "127.0.0.1" } }
-            val port = editPort.text.toString().toIntOrNull() ?: 5555
+            val host = editHost.text.toString().trim().ifEmpty { selectedHost.ifEmpty { AdbPreferenceManager.DEFAULT_HOST } }
+            val port = editPort.text.toString().toIntOrNull() ?: AdbPreferenceManager.DEFAULT_PORT
+            if (!AdbPreferenceManager.isValidHost(host) || !AdbPreferenceManager.isValidPort(port)) {
+                Toast.makeText(this, R.string.invalid_ip_or_port, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             attemptConnection(host, port, "", txtAdbStatus, txtHeaderStatus, btnConnectNoPIN, btnConnectWithPin)
         }
 
         btnConnectWithPin.setOnClickListener {
-            val host = editHost.text.toString().trim().ifEmpty { selectedHost.ifEmpty { "127.0.0.1" } }
-            val port = editPort.text.toString().toIntOrNull() ?: 5555
+            val host = editHost.text.toString().trim().ifEmpty { selectedHost.ifEmpty { AdbPreferenceManager.DEFAULT_HOST } }
+            val port = editPort.text.toString().toIntOrNull() ?: AdbPreferenceManager.DEFAULT_PORT
+            if (!AdbPreferenceManager.isValidHost(host) || !AdbPreferenceManager.isValidPort(port)) {
+                Toast.makeText(this, R.string.invalid_ip_or_port, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val pin = pins.joinToString("") { it.text.toString() }
             if (pin.length == 6) {
                 attemptConnection(host, port, pin, txtAdbStatus, txtHeaderStatus, btnConnectNoPIN, btnConnectWithPin)
@@ -197,7 +210,6 @@ class AdbPairingActivity : AppCompatActivity() {
 
     private fun disconnectAndFinish() {
         currentConnectionJob?.cancel()
-        adbManager.disconnectExplicit()
         finish()
     }
 
@@ -251,6 +263,7 @@ class AdbPairingActivity : AppCompatActivity() {
 
                 if (success) {
                     connectionSuccess = true
+                    AdbPreferenceManager.saveTarget(this@AdbPairingActivity, host, port)
                     statusText.apply {
                         clearAnimation()
                         text = getString(R.string.adb_status_approved)
@@ -265,6 +278,8 @@ class AdbPairingActivity : AppCompatActivity() {
                 Log.e("AdbPairingActivity", "Unexpected error: ${e.message}", e)
             } finally {
                 if (!connectionSuccess) {
+                    // SEC: Clear transient PIN boxes on failure so sensitive PIN is not left in memory/UI
+                    pins.forEach { it.text?.clear() }
                     statusText.clearAnimation()
                     statusText.text = getString(R.string.adb_status_denied)
                     statusText.setTextColor(getColor(R.color.ufm_error))

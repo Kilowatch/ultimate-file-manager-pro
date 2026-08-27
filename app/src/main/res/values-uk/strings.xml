@@ -13035,6 +13035,26 @@ support@kilowatch.co.za
     <string name="cd_remove_action">
 Видалити дію
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+Сесія ADB
+</string>
+    <string name="adb_session_notification_channel_desc">
+Підтримує активне з\'єднання ADB у фоновому режимі
+</string>
+    <string name="adb_session_notification_title">
+ADB підключено
+</string>
+    <string name="adb_session_notification_desc">
+Підключено до %1$s:%2$d
+</string>
+    <string name="backup_pref_adb_settings">
+Параметри підключення ADB
+</string>
+    <string name="invalid_ip_or_port">
+Введіть дійсну IP-адресу та порт (1-65535)
+</string>
 </resources>
 
 

@@ -10,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import io.github.muntashirakon.adb.AdbConnection
 import io.github.muntashirakon.adb.AdbStream
+import io.github.muntashirakon.adb.PairingConnectionCtx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -69,6 +70,22 @@ class AdbManager private constructor() {
      */
     @Volatile
     var activeRemoteDeviceId: String? = null
+
+    @Volatile
+    var connectedHost: String? = null
+        private set
+
+    @Volatile
+    var connectedPort: Int = 5555
+        private set
+
+    // Terminal session & history buffer (max 500 lines)
+    private val terminalHistory = ArrayDeque<String>()
+    private val MAX_TERMINAL_LINES = 500
+    private var terminalLineListener: ((String) -> Unit)? = null
+    private var terminalJob: Job? = null
+    private var terminalShellStream: AdbStream? = null
+    private var terminalShellWriter: java.io.OutputStream? = null
 
     companion object {
         @Volatile
@@ -309,14 +326,23 @@ class AdbManager private constructor() {
             Thread {
                 try {
                     newConnection.connect()
+                    connectedHost = host
+                    connectedPort = port
                     resetActivityTimer()
                     Log.i(TAG, "Connected to $host:$port")
                     lastError = null
+                    if (!isRemoteMode) {
+                        AdbSessionForegroundService.start(host, port)
+                        startTerminalSession()
+                    }
+                    notifyConnectionState(true)
                     if (cont.isActive) cont.resume(true)
                 } catch (e: Exception) {
                     Log.e(TAG, "Connection failed: ${e.toString()}")
                     lastError = e.toString()
+                    connectedHost = null
                     if (connection === newConnection) connection = null
+                    notifyConnectionState(false)
                     if (cont.isActive) cont.resume(false)
                 }
             }.start()
@@ -327,10 +353,27 @@ class AdbManager private constructor() {
         mutex.withLock {
             try {
                 if (BuildConfig.DEBUG) {
-                    Log.i(TAG, "Pairing with code: $pairingCode")
+                    Log.i(TAG, "Pairing with $host:$port using code: $pairingCode")
                 }
-                true
+                val pairingCtx = PairingConnectionCtx(
+                    host,
+                    port,
+                    pairingCode.toByteArray(Charsets.UTF_8),
+                    keyPair.private,
+                    cert,
+                    "UltimateFM"
+                )
+                try {
+                    pairingCtx.start()
+                    Log.i(TAG, "Pairing succeeded for $host:$port")
+                    lastError = null
+                    true
+                } finally {
+                    try { pairingCtx.close() } catch (_: Exception) {}
+                }
             } catch (e: Exception) {
+                Log.e(TAG, "Pairing failed: ${e.message}", e)
+                lastError = "Pairing failed: ${e.message}"
                 false
             }
         }
@@ -343,6 +386,15 @@ class AdbManager private constructor() {
         try {
             inactivityJob?.cancel()
             inactivityJob = null
+
+            connectedHost = null
+            connectedPort = 5555
+
+            if (!isRemoteMode) {
+                AdbSessionForegroundService.stop()
+            }
+
+            closeTerminalSession()
             
             try { persistentShellWriter?.close() } catch (_: Exception) {}
             try { persistentShellStream?.close() } catch (_: Exception) {}
@@ -352,8 +404,10 @@ class AdbManager private constructor() {
             connection?.close()
             connection = null
             Log.d(TAG, "Disconnected")
+            notifyConnectionState(false)
         } catch (e: Exception) {
             Log.w(TAG, "Disconnect: ${e.message}")
+            notifyConnectionState(false)
         }
     }
 
@@ -362,6 +416,115 @@ class AdbManager private constructor() {
      */
     fun disconnectExplicit() {
         disconnect()
+    }
+
+    // ── Connection State Listeners ────────────────────────────────────────────
+
+    private val connectionListeners = java.util.concurrent.CopyOnWriteArrayList<(Boolean) -> Unit>()
+
+    fun addConnectionListener(listener: (Boolean) -> Unit) {
+        connectionListeners.add(listener)
+        listener.invoke(isConnected())
+    }
+
+    fun removeConnectionListener(listener: (Boolean) -> Unit) {
+        connectionListeners.remove(listener)
+    }
+
+    private fun notifyConnectionState(connected: Boolean) {
+        Handler(Looper.getMainLooper()).post {
+            connectionListeners.forEach { it.invoke(connected) }
+        }
+    }
+
+    // ── Terminal Session & Line Buffering ─────────────────────────────────────
+
+    fun getTerminalHistory(): List<String> = synchronized(terminalHistory) {
+        terminalHistory.toList()
+    }
+
+    fun addTerminalLine(line: String) {
+        synchronized(terminalHistory) {
+            terminalHistory.addLast(line)
+            if (terminalHistory.size > MAX_TERMINAL_LINES) {
+                terminalHistory.removeFirst()
+            }
+        }
+        Handler(Looper.getMainLooper()).post {
+            terminalLineListener?.invoke(line)
+        }
+    }
+
+    fun clearTerminalHistory() {
+        synchronized(terminalHistory) {
+            terminalHistory.clear()
+        }
+    }
+
+    fun setTerminalLineListener(listener: ((String) -> Unit)?) {
+        terminalLineListener = listener
+    }
+
+    fun startTerminalSession() {
+        if (!isConnected()) return
+        if (terminalJob?.isActive == true && terminalShellStream != null && !terminalShellStream!!.isClosed) {
+            return
+        }
+
+        terminalJob?.cancel()
+        terminalJob = GlobalScope.launch(Dispatchers.IO) {
+            val stream = try {
+                openShell()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to open terminal shell: ${e.message}")
+                null
+            } ?: return@launch
+
+            terminalShellStream = stream
+            terminalShellWriter = stream.openOutputStream()
+            val reader = java.io.BufferedReader(java.io.InputStreamReader(stream.openInputStream()))
+
+            try {
+                while (true) {
+                    val line = reader.readLine() ?: break
+                    resetActivityTimer()
+                    addTerminalLine(line)
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Terminal shell stream exception: ${e.message}")
+            } finally {
+                try { terminalShellWriter?.close() } catch (_: Exception) {}
+                try { stream.close() } catch (_: Exception) {}
+                terminalShellWriter = null
+                terminalShellStream = null
+            }
+        }
+    }
+
+    fun sendTerminalCommand(command: String) {
+        resetActivityTimer()
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                if (terminalShellWriter == null || terminalShellStream == null || terminalShellStream!!.isClosed) {
+                    startTerminalSession()
+                    delay(200)
+                }
+                terminalShellWriter?.write((command + "\n").toByteArray(Charsets.UTF_8))
+                terminalShellWriter?.flush()
+            } catch (e: Exception) {
+                Log.e(TAG, "sendTerminalCommand error: ${e.message}")
+                addTerminalLine("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun closeTerminalSession() {
+        terminalJob?.cancel()
+        terminalJob = null
+        try { terminalShellWriter?.close() } catch (_: Exception) {}
+        try { terminalShellStream?.close() } catch (_: Exception) {}
+        terminalShellWriter = null
+        terminalShellStream = null
     }
 
     fun isConnected(): Boolean = try {

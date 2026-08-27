@@ -164,6 +164,39 @@
                         android:focusable="true"
                         android:focusableInTouchMode="false" />
 
+                    <!-- Host / IP Input -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/adb_host_label"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        app:hintEnabled="false"
+                        app:boxBackgroundMode="none">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editAdbHost"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="52dp"
+                            android:hint="@string/adb_host_hint"
+                            android:background="@drawable/bg_input_field"
+                            android:paddingHorizontal="24dp"
+                            android:paddingVertical="8dp"
+                            android:inputType="textUri"
+                            android:singleLine="true"
+                            android:fontFamily="monospace"
+                            android:focusable="true"
+                            android:textColor="@color/tv_text_primary"
+                            android:textColorHint="@color/tv_text_hint" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                     <!-- Port Input -->
                     <TextView
                         android:layout_width="wrap_content"

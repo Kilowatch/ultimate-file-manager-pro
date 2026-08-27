@@ -13035,6 +13035,26 @@ Zum Neuanordnen ziehen
     <string name="cd_remove_action">
 Aktion entfernen
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+ADB-Sitzung
+</string>
+    <string name="adb_session_notification_channel_desc">
+Hält die aktive ADB-Verbindung im Hintergrund aufrecht
+</string>
+    <string name="adb_session_notification_title">
+ADB verbunden
+</string>
+    <string name="adb_session_notification_desc">
+Verbunden mit %1$s:%2$d
+</string>
+    <string name="backup_pref_adb_settings">
+ADB-Verbindungseinstellungen
+</string>
+    <string name="invalid_ip_or_port">
+Bitte geben Sie eine gültige IP-Adresse und einen gültigen Port ein (1-65535).
+</string>
 </resources>
 
 

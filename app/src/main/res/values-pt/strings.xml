@@ -13035,6 +13035,26 @@ Arraste para reordenar
     <string name="cd_remove_action">
 Remover ação
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+Sessão ADB
+</string>
+    <string name="adb_session_notification_channel_desc">
+Mantém conexão ADB ativa em segundo plano
+</string>
+    <string name="adb_session_notification_title">
+ADB conectado
+</string>
+    <string name="adb_session_notification_desc">
+Conectado a %1$s:%2$d
+</string>
+    <string name="backup_pref_adb_settings">
+Configurações de conexão ADB
+</string>
+    <string name="invalid_ip_or_port">
+Insira um endereço IP e porta válidos (1-65535)
+</string>
 </resources>
 
 

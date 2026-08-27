@@ -55,15 +55,16 @@ class TerminalActivity : AppCompatActivity() {
     private lateinit var adbManager: AdbManager
     private lateinit var adapter: TerminalAdapter
     private var isTv = false
-    private var shellJob: Job? = null
-    private var shellOutput: OutputStream? = null
     private var connectionJob: Job? = null
     private var adbSessionVersion = 0
 
-    // registerForActivityResult() MUST be called before the Activity is STARTED.
-    // We register eagerly here and wire up the callback body in onCreate() before
-    // any coroutine is launched, so the lifecycle contract is never violated.
     private lateinit var pairingLauncher: androidx.activity.result.ActivityResultLauncher<android.content.Intent>
+
+    private val connectionListener: (Boolean) -> Unit = { _ ->
+        runOnUiThread {
+            updateButtonState()
+        }
+    }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -121,7 +122,7 @@ class TerminalActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        findViewById<View>(R.id.btnBack).setOnClickListener { disconnectAndFinish() }
+        findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
         val recycler = findViewById<RecyclerView>(R.id.recyclerTerminal)
         adapter = TerminalAdapter()
@@ -197,18 +198,34 @@ class TerminalActivity : AppCompatActivity() {
 
         btnDisconnect.setOnClickListener {
             adbManager.disconnectExplicit()
-            shellJob?.cancel()
             adbWarningShown = false  // SEC-§8.9: reset so warning fires on next connection
             updateStatus(getString(R.string.adb_terminal_status_disconnected))
             adapter.addLine(getString(R.string.disconnected_from_adb))
             updateButtonState()
         }
 
-        // Try auto-connect to default local ADB port if possible (history could be used here)
-        lifecycleScope.launch {
-            adapter.addLine(getString(R.string.welcome_to_ufm_adb_shell))
-            updateButtonState()
+        adbManager.setTerminalLineListener { line ->
+            runOnUiThread {
+                adapter.addLine(line)
+            }
         }
+
+        val isConnected = adbManager.isConnected()
+        if (isConnected) {
+            val history = adbManager.getTerminalHistory()
+            if (history.isNotEmpty()) {
+                adapter.setLines(history)
+            } else {
+                adapter.addLine(getString(R.string.welcome_to_ufm_adb_shell))
+            }
+            updateStatus(getString(R.string.adb_terminal_status_connected))
+            adbManager.startTerminalSession()
+        } else {
+            adapter.addLine(getString(R.string.welcome_to_ufm_adb_shell))
+            updateStatus(getString(R.string.adb_terminal_status_disconnected))
+        }
+        updateButtonState()
+        adbManager.addConnectionListener(connectionListener)
     }
 
     private fun copyAllOutputToClipboard() {
@@ -268,9 +285,31 @@ class TerminalActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Guard against the rare race where onResume fires before the async
-        // AdbManager init coroutine in onCreate() has completed.
-        if (::adbManager.isInitialized) updateButtonState()
+        if (::adbManager.isInitialized) {
+            updateButtonState()
+            adbManager.setTerminalLineListener { line ->
+                runOnUiThread {
+                    adapter.addLine(line)
+                }
+            }
+            if (adbManager.isConnected()) {
+                val history = adbManager.getTerminalHistory()
+                if (history.isNotEmpty()) {
+                    adapter.setLines(history)
+                }
+                updateStatus(getString(R.string.adb_terminal_status_connected))
+                adbManager.startTerminalSession()
+            } else {
+                updateStatus(getString(R.string.adb_terminal_status_disconnected))
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (::adbManager.isInitialized) {
+            adbManager.setTerminalLineListener(null)
+        }
     }
 
     private fun handlePairingResult(result: androidx.activity.result.ActivityResult) {
@@ -307,16 +346,7 @@ class TerminalActivity : AppCompatActivity() {
         adapter.addLine("> $cmd")
         edit.text.clear()
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                shellOutput?.write((cmd + "\n").toByteArray())
-                shellOutput?.flush()
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    adapter.addLine("Error: ${e.message}")
-                }
-            }
-        }
+        adbManager.sendTerminalCommand(cmd)
     }
 
     private fun showConnectDialog(onConnectionStateChanged: (() -> Unit)? = null) {
@@ -694,54 +724,20 @@ class TerminalActivity : AppCompatActivity() {
     }
 
     private fun startShellReader() {
-        shellJob?.cancel()
-        shellJob = lifecycleScope.launch(Dispatchers.IO) {
-            val stream = adbManager.openShell() ?: return@launch
-            shellOutput = stream.openOutputStream()
-            val reader = BufferedReader(InputStreamReader(stream.openInputStream()))
-            
-            try {
-                while (true) {
-                    val line = reader.readLine() ?: break
-                    // Reset inactivity timer - activity on shell means connection is in use
-                    adbManager.resetActivityTimer()
-                    withContext(Dispatchers.Main) {
-                        adapter.addLine(line)
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    adapter.addLine(getString(R.string.adb_shell_closed, e.message ?: getString(R.string.unknown_error)))
-                }
-            } finally {
-                withContext(Dispatchers.Main) {
-                    updateStatus(getString(R.string.adb_terminal_status_disconnected))
-                    adbManager.disconnectExplicit()
-                }
-            }
-        }
-    }
-
-    private fun disconnectAndFinish() {
-        shellJob?.cancel()
-        connectionJob?.cancel()
-        if (::adbManager.isInitialized) {
-            adbManager.disconnectExplicit()
-        }
-        finish()
+        adbManager.startTerminalSession()
+        showAdbSecurityWarningIfNeeded()
     }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        disconnectAndFinish()
+        finish()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        shellJob?.cancel()
-        connectionJob?.cancel()
         if (::adbManager.isInitialized) {
-            adbManager.disconnectExplicit()
+            adbManager.setTerminalLineListener(null)
+            adbManager.removeConnectionListener(connectionListener)
         }
     }
 
@@ -750,6 +746,13 @@ class TerminalActivity : AppCompatActivity() {
         // ArrayDeque gives O(1) removal from the front (vs ArrayList's O(n) element shift)
         private val lines = ArrayDeque<String>()
         private var recyclerView: RecyclerView? = null
+
+        fun setLines(newLines: List<String>) {
+            lines.clear()
+            lines.addAll(newLines.takeLast(MAX_LINES))
+            notifyDataSetChanged()
+            recyclerView?.scrollToPosition((lines.size - 1).coerceAtLeast(0))
+        }
 
         override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
             super.onAttachedToRecyclerView(recyclerView)

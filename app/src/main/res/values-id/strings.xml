@@ -13035,6 +13035,26 @@ Seret untuk mengurutkan ulang
     <string name="cd_remove_action">
 Hapus aksi
 </string>
+
+    <!-- ADB Session & Preferences -->
+    <string name="adb_session_notification_channel_name">
+Sesi ADB
+</string>
+    <string name="adb_session_notification_channel_desc">
+Mempertahankan koneksi ADB aktif di latar belakang
+</string>
+    <string name="adb_session_notification_title">
+ADB Terhubung
+</string>
+    <string name="adb_session_notification_desc">
+Terhubung ke %1$s:%2$d
+</string>
+    <string name="backup_pref_adb_settings">
+Pengaturan Koneksi ADB
+</string>
+    <string name="invalid_ip_or_port">
+Silakan masukkan alamat IP dan port yang valid (1-65535)
+</string>
 </resources>
 
 

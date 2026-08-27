@@ -54,10 +54,18 @@
         android:textSize="14sp"
         android:textAlignment="center" />
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:scrollbarThumbVertical="@color/tv_glass_white_10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <!-- 200 Results -->
         <com.google.android.material.card.MaterialCardView
@@ -322,7 +330,8 @@
                     tools:visibility="visible" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-    </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- TV Cancel Button -->
     <Button
