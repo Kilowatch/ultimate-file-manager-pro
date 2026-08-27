@@ -45,6 +45,7 @@ class LanguageWelcomeActivity : AppCompatActivity() {
         LanguageItem(LocaleHelper.LOCALE_DE, "German", "Deutsch", "de.svg"),
         LanguageItem(LocaleHelper.LOCALE_ES, "Spanish", "Español", "es.svg"),
         LanguageItem(LocaleHelper.LOCALE_FR, "French", "Français", "fr.svg"),
+        LanguageItem(LocaleHelper.LOCALE_IT, "Italian", "Italiano", "it.svg"),
         LanguageItem(LocaleHelper.LOCALE_PT, "Portuguese", "Português", "br.svg"),
         LanguageItem(LocaleHelper.LOCALE_RU, "Russian", "Русский", "ru.svg"),
         LanguageItem(LocaleHelper.LOCALE_TR, "Turkish", "Türkçe", "tr.svg"),

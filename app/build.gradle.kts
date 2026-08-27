@@ -118,7 +118,7 @@ android {
         
         // Explicitly define supported languages to exclude invalid language resources 
         // (like 'tv') introduced by local folders or third-party libraries.
-        resourceConfigurations += setOf("en", "ar", "de", "es", "fr", "hi", "id", "in", "ja", "ko", "pt", "ru", "tr", "uk")
+        resourceConfigurations += setOf("en", "ar", "de", "es", "fr", "hi", "id", "in", "it", "ja", "ko", "pt", "ru", "tr", "uk")
         
         buildConfigField("Boolean", "IS_FOSS", "false")
     }

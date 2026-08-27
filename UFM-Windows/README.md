@@ -38,7 +38,7 @@ The Ultimate File Manager Pro Companion allows power users to establish a secure
 * Implements dynamic backdrop-filter blurs, smooth linear gradients, micro-animations, and interactive layouts.
 
 ### 🌐 Zero-Dependency Flag Dictionary & Localization
-* Supports 13 major international languages (English, Arabic, German, Spanish, French, Hindi, Indonesian, Japanese, Korean, Portuguese, Russian, Turkish, and Ukrainian) with 100% localized application elements.
+* Supports 14 major international languages (English, Arabic, German, Spanish, French, Hindi, Indonesian, Italian, Japanese, Korean, Portuguese, Russian, Turkish, and Ukrainian) with 100% localized application elements.
 * Bypasses the native Windows OS flag emoji rendering limitation (which renders flags as country code letters rather than graphic flags) by embedding high-quality offline Base64 PNG assets directly inside the CSP-compliant translation layer.
 
 ### 📡 Multi-NIC Subnet LAN Auto-Discovery

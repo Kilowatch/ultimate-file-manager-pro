@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.2] — 2026-08-25
 
 ### Added
+- **Italian (Italiano) Language Support**:
+  - Added complete Italian translation across the application (`values-it/strings.xml` and `values-it/strings_policy.xml`).
+  - Added official Italian flag vector SVG (`it.svg`) to assets.
+  - Added Italian (`LOCALE_IT`) to `LocaleHelper` and registered in `build.gradle.kts` (`resourceConfigurations`).
+  - Integrated Italian into the first-screen onboarding flow (`LanguageWelcomeActivity`) with automatic device system language detection and selection.
+  - Added Italian option to `LanguageActivity` (Mobile & TV) and active language subtitle in `SettingsActivity`.
+  - Added Italian language selector item and JS mapping to the Remote File Server desktop web UI (`remote/index.html`).
+  - Added Italian language option and flag to the Web Share portal (`WebShareServer`).
+  - Added Italian language, Base64 flag, and complete localized UI strings to the Windows Companion Console (`UFM-Windows/src/hooks/translations.ts`).
 - **ADB Target IP & Port Persistence (`AdbPreferenceManager`)**:
   - Automatically remembers and validates the last used ADB target IP address and port across Mobile and Android TV.
   - Registered in `SettingsBackupManager` (`adb_preferences`) for backup export and restore.
