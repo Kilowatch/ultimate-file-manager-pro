@@ -2282,6 +2282,59 @@ New File.txt
     <string name="action_open_folder">
 フォルダの場所を開く
 </string>
+    <string name="search_choose_specific_folder">
+特定のフォルダーを選択してください…
+</string>
+    <string name="search_choose_specific_folder_desc">
+特定のディレクトリ内を検索する
+</string>
+    <string name="search_custom_folder_scope">
+フォルダ: %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d が選択されました • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+検索結果の制限
+</string>
+    <string name="settings_search_limit_subtitle">
+ページあたり %1$d 件の結果
+</string>
+    <string name="settings_search_limit_dialog_title">
+検索結果の制限
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+スクロールするときにページごとに読み込む結果の数を選択します
+</string>
+    <string name="settings_search_limit_200">
+200件の結果
+</string>
+    <string name="settings_search_limit_200_desc">
+最小限 · 古いデバイスでは高速
+</string>
+    <string name="settings_search_limit_500">
+500件の結果
+</string>
+    <string name="settings_search_limit_500_desc">
+おすすめ・スピード＆バランスのとれたカバレッジ
+</string>
+    <string name="settings_search_limit_1000">
+1,000件の結果
+</string>
+    <string name="settings_search_limit_1000_desc">
+拡張 · 大規模なコレクションの場合
+</string>
+    <string name="settings_search_limit_2000">
+2,000 件の結果
+</string>
+    <string name="settings_search_limit_2000_desc">
+最大・広範な検索バッチ
+</string>
+    <string name="settings_search_limit_toast">
+検索結果の制限が %1$d に設定されました
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

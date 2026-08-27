@@ -2282,6 +2282,59 @@ APKs
     <string name="action_open_folder">
 فتح موقع المجلد
 </string>
+    <string name="search_choose_specific_folder">
+اختر مجلدًا محددًا...
+</string>
+    <string name="search_choose_specific_folder_desc">
+البحث داخل دليل محدد
+</string>
+    <string name="search_custom_folder_scope">
+المجلد: %1$s
+</string>
+    <string name="search_selection_summary">
+تم تحديد %1$d • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+حدود نتائج البحث
+</string>
+    <string name="settings_search_limit_subtitle">
+%1$d النتائج لكل صفحة
+</string>
+    <string name="settings_search_limit_dialog_title">
+حدود نتائج البحث
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+اختر عدد النتائج التي يتم تحميلها لكل صفحة أثناء التمرير
+</string>
+    <string name="settings_search_limit_200">
+200 نتيجة
+</string>
+    <string name="settings_search_limit_200_desc">
+الحد الأدنى · أسرع على الأجهزة القديمة
+</string>
+    <string name="settings_search_limit_500">
+500 نتيجة
+</string>
+    <string name="settings_search_limit_500_desc">
+موصى به · سرعة متوازنة &amp; التغطية
+</string>
+    <string name="settings_search_limit_1000">
+1000 نتيجة
+</string>
+    <string name="settings_search_limit_1000_desc">
+ممتد · للمجموعات الكبيرة
+</string>
+    <string name="settings_search_limit_2000">
+2000 نتيجة
+</string>
+    <string name="settings_search_limit_2000_desc">
+الحد الأقصى · دفعات بحث واسعة النطاق
+</string>
+    <string name="settings_search_limit_toast">
+تم ضبط حد نتائج البحث على %1$d
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

@@ -2282,6 +2282,59 @@ Bağlı tüm depolama alanlarında ara
     <string name="action_open_folder">
 Klasör Konumunu Aç
 </string>
+    <string name="search_choose_specific_folder">
+Belirli Klasörü Seçin…
+</string>
+    <string name="search_choose_specific_folder_desc">
+Belirli bir dizinde arama yapın
+</string>
+    <string name="search_custom_folder_scope">
+Klasör: %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d seçildi • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+Arama Sonuçları Sınırı
+</string>
+    <string name="settings_search_limit_subtitle">
+Sayfa başına %1$d sonuç
+</string>
+    <string name="settings_search_limit_dialog_title">
+Arama Sonuçları Sınırı
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+Kaydırdıkça sayfa başına kaç sonucun yükleneceğini seçin
+</string>
+    <string name="settings_search_limit_200">
+200 sonuç
+</string>
+    <string name="settings_search_limit_200_desc">
+Minimal · Eski cihazlarda daha hızlı
+</string>
+    <string name="settings_search_limit_500">
+500 sonuç
+</string>
+    <string name="settings_search_limit_500_desc">
+Önerilen · Dengeli hız ve amp; kapsama
+</string>
+    <string name="settings_search_limit_1000">
+1.000 sonuç
+</string>
+    <string name="settings_search_limit_1000_desc">
+Genişletilmiş · Büyük koleksiyonlar için
+</string>
+    <string name="settings_search_limit_2000">
+2.000 sonuç
+</string>
+    <string name="settings_search_limit_2000_desc">
+Maksimum · Kapsamlı arama grupları
+</string>
+    <string name="settings_search_limit_toast">
+Arama sonuçları sınırı %1$d olarak ayarlandı
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

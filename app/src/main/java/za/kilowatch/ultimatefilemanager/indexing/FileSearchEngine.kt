@@ -62,10 +62,10 @@ class FileSearchEngine(
         query: String,
         storageId: String = "",
         folderScope: String? = null,
-        limit: Int = 200,
+        limit: Int = 500,
         offset: Int = 0
     ): List<FileIndex> {
-        val rawKey = "$query|$storageId|$folderScope|$offset"
+        val rawKey = "$query|$storageId|$folderScope|$offset|$limit"
 
         // --- cache read ---
         cache.get(rawKey)?.let { (results, ts) ->

@@ -730,7 +730,7 @@ object SafTreeManager {
     }
 
 
-    fun searchSaf(context: Context, rootPath: String, query: String, maxResults: Int = 200): List<File> {
+    fun searchSaf(context: Context, rootPath: String, query: String, maxResults: Int = 500): List<File> {
         val result = mutableListOf<File>()
         val lowerQuery = query.lowercase()
         fun searchRecursively(currentPath: String) {

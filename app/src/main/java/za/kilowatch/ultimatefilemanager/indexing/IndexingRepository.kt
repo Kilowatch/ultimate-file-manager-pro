@@ -312,7 +312,7 @@ class IndexingRepository(
         query: String,
         storageId: String = "",
         folderScope: String? = null,
-        limit: Int = 200,
+        limit: Int = 500,
         offset: Int = 0
     ): List<FileIndex> = searchEngine.searchSmart(query, storageId, folderScope, limit, offset)
 

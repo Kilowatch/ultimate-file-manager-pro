@@ -2282,6 +2282,59 @@ UFM 슬라이드 쇼
     <string name="action_open_folder">
 폴더 위치 열기
 </string>
+    <string name="search_choose_specific_folder">
+특정 폴더 선택…
+</string>
+    <string name="search_choose_specific_folder_desc">
+특정 디렉토리 내부 검색
+</string>
+    <string name="search_custom_folder_scope">
+폴더: %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d 선택됨 • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+검색 결과 제한
+</string>
+    <string name="settings_search_limit_subtitle">
+페이지당 %1$d개의 결과
+</string>
+    <string name="settings_search_limit_dialog_title">
+검색 결과 제한
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+스크롤할 때 페이지당 로드되는 결과 수를 선택하세요.
+</string>
+    <string name="settings_search_limit_200">
+결과 200개
+</string>
+    <string name="settings_search_limit_200_desc">
+최소 · 구형 장치에서는 더 빠름
+</string>
+    <string name="settings_search_limit_500">
+결과 500개
+</string>
+    <string name="settings_search_limit_500_desc">
+권장 · 균형 잡힌 속도 &amp; 적용 범위
+</string>
+    <string name="settings_search_limit_1000">
+결과 1,000개
+</string>
+    <string name="settings_search_limit_1000_desc">
+확장됨 · 대규모 컬렉션용
+</string>
+    <string name="settings_search_limit_2000">
+결과 2,000개
+</string>
+    <string name="settings_search_limit_2000_desc">
+최대 · 광범위한 검색 배치
+</string>
+    <string name="settings_search_limit_toast">
+검색 결과 제한이 %1$d(으)로 설정되었습니다.
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

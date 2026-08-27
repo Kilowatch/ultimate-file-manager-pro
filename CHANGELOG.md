@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.2] — 2026-08-25
 
 ### Added
+- **Configurable Search Results Limit & Progressive Pagination (`SearchResultsLimitManager`, `SearchActivity`, `FileBrowserActivity`, `FileBrowserFragment`)**:
+  - Added a configurable search results batch limit setting (200, 500 [default], 1000, 2000) under **Settings → File Management** with dark glassmorphic dialogs on Mobile and Android TV.
+  - Implemented progressive infinite-scroll pagination across both global and in-folder searches, automatically streaming subsequent result batches on scroll until all results are loaded.
+  - Raised default search limit from 200 to 500 across indexed search, Room FTS queries, and SAF tree scans.
+- **Custom Folder Search Scope (`SearchActivity`, `dialog_search_drive_select.xml`)**:
+  - Added a "Choose Specific Folder…" option to the search scope selector on both Mobile and Android TV, allowing users to target file searches to any specific folder on device or external storage.
+- **Search Results Multi-Selection & Selection Summary (`SearchActivity`, `FloatingQuickActionBar`)**:
+  - Enabled multi-item selection directly from search results via long-press on Mobile and TV.
+  - Added contextual selection header displaying the total count and cumulative formatted file size of all selected items.
+  - Integrated full file management operations (Copy, Move, Delete with Room index synchronization, Share, Rename, and multi-item Properties sheet via `FilePropertiesBottomSheet`).
 - **Video Player Gesture Controls for Mobile (`PlayerGestureOverlayView`, `PlayerGestureController`, `UFMPlayerActivity`)**:
   - Added vertical swipe on the left side of the screen to increase/decrease screen brightness with live Brightness HUD feedback.
   - Added vertical swipe on the right side of the screen to increase/decrease media volume with live Volume HUD feedback.
@@ -28,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Master enable/disable toggle switch in Toolbar Icons settings.
 
 ### Changed
+- **Back Navigation from Search Results (`FileBrowserActivity`)**:
+  - Opening a folder or choosing "Open Folder Location" from search results now configures the system Back button/gesture to return directly to the search results, while the header arrow back button continues to navigate up parent directories.
 - **Disabled Player Button Feedback Toasts by Default (`PlayerToastHelper`, `PlayerPreferencesManager`, `SettingsActivity`)**:
   - Disabled the pop-up toaster pills when pressing playback buttons (Previous, Next, Skip, Play/Pause, Shuffle, Repeat, etc.) during video playback by default on both Mobile and TV.
   - Added a "Button Feedback Toasts" toggle switch under Media Player in Settings for both Mobile and Android TV.

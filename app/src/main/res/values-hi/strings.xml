@@ -2282,6 +2282,59 @@ New File.txt
     <string name="action_open_folder">
 फ़ोल्डर स्थान खोलें
 </string>
+    <string name="search_choose_specific_folder">
+विशिष्ट फ़ोल्डर चुनें…
+</string>
+    <string name="search_choose_specific_folder_desc">
+किसी विशिष्ट निर्देशिका के अंदर खोजें
+</string>
+    <string name="search_custom_folder_scope">
+फ़ोल्डर: %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d चयनित • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+खोज परिणाम सीमा
+</string>
+    <string name="settings_search_limit_subtitle">
+%1$d प्रति पृष्ठ परिणाम
+</string>
+    <string name="settings_search_limit_dialog_title">
+खोज परिणाम सीमा
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+चुनें कि स्क्रॉल करते समय प्रति पृष्ठ कितने परिणाम लोड होते हैं
+</string>
+    <string name="settings_search_limit_200">
+200 परिणाम
+</string>
+    <string name="settings_search_limit_200_desc">
+न्यूनतम · पुराने उपकरणों पर तेज़
+</string>
+    <string name="settings_search_limit_500">
+500 परिणाम
+</string>
+    <string name="settings_search_limit_500_desc">
+अनुशंसित · संतुलित गति और amp; कवरेज
+</string>
+    <string name="settings_search_limit_1000">
+1,000 परिणाम
+</string>
+    <string name="settings_search_limit_1000_desc">
+विस्तारित · बड़े संग्रह के लिए
+</string>
+    <string name="settings_search_limit_2000">
+2,000 परिणाम
+</string>
+    <string name="settings_search_limit_2000_desc">
+अधिकतम · व्यापक खोज बैच
+</string>
+    <string name="settings_search_limit_toast">
+खोज परिणाम सीमा %1$d पर सेट की गई
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

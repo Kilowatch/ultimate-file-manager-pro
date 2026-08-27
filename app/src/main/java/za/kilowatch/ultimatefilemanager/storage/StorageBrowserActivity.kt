@@ -108,6 +108,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     private var isGifCreatorDestPickerMode = false
     private var isDrivePicker = false
     private var isLocationPickerMode = false
+    private var isSearchFolderPicker = false
     private var isNetworkCachePickerMode = false
     private var isQuickTransferPickerMode = false
     private var isShareDestPickerMode = false
@@ -209,6 +210,8 @@ class StorageBrowserActivity : AppCompatActivity() {
         const val EXTRA_TILE_ICON_PICKER = "extra_tile_icon_picker"
         /** When true, the user is picking a full location (URI, label, type, meta) */
         const val EXTRA_LOCATION_PICKER = "extra_location_picker"
+        /** When true, the user is picking a folder specifically for Search scope (local storage only) */
+        const val EXTRA_SEARCH_FOLDER_PICKER = "extra_search_folder_picker"
         /** When true, the user is picking a local folder for network thumbnail caching */
         const val EXTRA_NETWORK_CACHE_PICKER = "extra_network_cache_picker"
         /** When true, the user is picking a public key file for SSH authentication */
@@ -848,6 +851,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         isGifCreatorDestPickerMode = intent.getBooleanExtra(EXTRA_GIF_CREATOR_DEST_PICKER, false)
         isDrivePicker = intent.getBooleanExtra(EXTRA_DRIVE_PICKER, false)
         isLocationPickerMode = intent.getBooleanExtra(EXTRA_LOCATION_PICKER, false)
+        isSearchFolderPicker = intent.getBooleanExtra(EXTRA_SEARCH_FOLDER_PICKER, false)
         isNetworkCachePickerMode = intent.getBooleanExtra(EXTRA_NETWORK_CACHE_PICKER, false)
         isQuickTransferPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, false)
         isShareDestPickerMode = intent.getBooleanExtra(EXTRA_SHARE_DEST_PICKER, false)
@@ -3649,6 +3653,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val capturedIsPickerMode = isPickerMode
         val capturedIsCompressDestPickerMode = isCompressDestPickerMode
         val capturedIsLocationPickerMode = isLocationPickerMode
+        val capturedIsSearchFolderPicker = isSearchFolderPicker
         val capturedIsNetworkCachePickerMode = isNetworkCachePickerMode
         val capturedIsQuickTransferPickerMode = isQuickTransferPickerMode
         val capturedIsShareDestPickerMode = isShareDestPickerMode
@@ -3689,7 +3694,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             // Composite flag: feature tiles are suppressed in any picker mode
-            val showFeatureTiles = !capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsAutoBackupFolderPicker && !capturedIsSupportAttachmentPicker && !capturedIsImageCompressDestPickerMode && !capturedIsGifCreatorDestPickerMode && !capturedIsPickerMode && !capturedIsCompressDestPickerMode && !capturedIsExtractDestPickerMode && !capturedIsLocationPickerMode && !capturedIsSyncFolderPickerMode && !capturedIsAdvancedSyncFolderPickerMode && !capturedIsAdvancedSyncDestPickerMode && !capturedIsNetworkCachePickerMode
+            val showFeatureTiles = !capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsAutoBackupFolderPicker && !capturedIsSupportAttachmentPicker && !capturedIsImageCompressDestPickerMode && !capturedIsGifCreatorDestPickerMode && !capturedIsPickerMode && !capturedIsCompressDestPickerMode && !capturedIsExtractDestPickerMode && !capturedIsLocationPickerMode && !capturedIsSyncFolderPickerMode && !capturedIsAdvancedSyncFolderPickerMode && !capturedIsAdvancedSyncDestPickerMode && !capturedIsNetworkCachePickerMode && !capturedIsSearchFolderPicker
 
             // Add Twin Window tile at the very top (first in list)
             if (showFeatureTiles) {
@@ -3755,25 +3760,27 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             // Add Custom SAF Storage Locations (Termux, Document Providers, USB/Custom Folders)
-            val safLocations = SafLocationRepository.getLocations(this@StorageBrowserActivity)
-            for (loc in safLocations) {
-                val iconRes = if (loc.iconType == "terminal" || loc.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
+            if (!capturedIsSearchFolderPicker) {
+                val safLocations = SafLocationRepository.getLocations(this@StorageBrowserActivity)
+                for (loc in safLocations) {
+                    val iconRes = if (loc.iconType == "terminal" || loc.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
 
-                storageItems.add(StorageItem(
-                    id = "saf_location_${loc.id}",
-                    label = loc.displayName,
-                    iconRes = iconRes,
-                    totalBytes = 0,
-                    usedBytes = 0,
-                    mountPath = "saf://${loc.id}",
-                    isSafCustomLocation = true,
-                    safLocation = loc,
-                    subtitle = getString(R.string.saf_storage)
-                ))
+                    storageItems.add(StorageItem(
+                        id = "saf_location_${loc.id}",
+                        label = loc.displayName,
+                        iconRes = iconRes,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "saf://${loc.id}",
+                        isSafCustomLocation = true,
+                        safLocation = loc,
+                        subtitle = getString(R.string.saf_storage)
+                    ))
+                }
             }
 
-            // In sync/notepad/network-cache folder picker mode only show local device storage â€” no network shares or tiles
-            if (capturedIsSyncFolderPickerMode || capturedIsAdvancedSyncFolderPickerMode || capturedIsNotepadFolderPicker || capturedIsNetworkCachePickerMode) {
+            // In sync/notepad/network-cache/search folder picker mode only show local device storage
+            if (capturedIsSyncFolderPickerMode || capturedIsAdvancedSyncFolderPickerMode || capturedIsNotepadFolderPicker || capturedIsNetworkCachePickerMode || capturedIsSearchFolderPicker) {
                 removeCustomTileChildrenAndAddContainers(storageItems, showFeatureTiles)
                 withContext(Dispatchers.Main) {
                     knownMountPaths.clear()

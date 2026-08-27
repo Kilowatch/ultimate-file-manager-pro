@@ -55,6 +55,7 @@ import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
 import java.io.File
+import za.kilowatch.ultimatefilemanager.settings.SearchResultsLimitManager
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
@@ -344,8 +345,11 @@ class FileBrowserActivity : AppCompatActivity() {
 
         /** When true, the user is picking a file to attach to a support request */
         const val EXTRA_SUPPORT_ATTACHMENT_PICKER = "extra_support_attachment_picker"
+        /** When true, opened from SearchActivity ("Open Folder Location" or folder click) */
+        const val EXTRA_FROM_SEARCH = "extra_from_search"
     }
     
+    private var isFromSearch = false
     private var isLocationPickerMode = false
 
     private var isPickerMode = false
@@ -364,6 +368,11 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isAutoBackupFolderPicker = false
     private var isSupportAttachmentPicker = false
     private var isSmartSortPickerMode = false
+
+    private var searchOffset = 0
+    private var hasMoreSearchResults = false
+    private var isLoadingMoreSearch = false
+    private var currentSearchQuery = ""
 
     // (Removed Saf directory permission launchers)
 
@@ -466,6 +475,9 @@ class FileBrowserActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // Search navigation origin
+        isFromSearch = intent.getBooleanExtra(EXTRA_FROM_SEARCH, false)
 
         // Picker mode
         isPickerMode = intent.getBooleanExtra(EXTRA_PICKER_MODE, false)
@@ -1641,6 +1653,19 @@ class FileBrowserActivity : AppCompatActivity() {
                     showPremiumSnackbar(getString(R.string.please_wait_for_the_transfer_to_finish_or_press_cancel_on_the_dialog))
                     return
                 }
+                if (isFromSearch) {
+                    if (fileAdapter.isSelectionMode) {
+                        fileAdapter.exitSelectionMode()
+                        return
+                    }
+                    if (isSearchVisible || isSearchActive) {
+                        toggleSearch()
+                        return
+                    }
+                    finish()
+                    za.kilowatch.ultimatefilemanager.util.AnimationHelper.applyActivityCloseTransition(this@FileBrowserActivity)
+                    return
+                }
                 navigateBack()
             }
         })
@@ -1874,6 +1899,17 @@ class FileBrowserActivity : AppCompatActivity() {
         )
 
         recyclerFiles.adapter = fileAdapter
+        recyclerFiles.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(rv: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                if (dy <= 0 || !isSearchActive || isLoadingMoreSearch || !hasMoreSearchResults) return
+                val lm = rv.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager ?: return
+                val lastVisible = lm.findLastVisibleItemPosition()
+                val total = rv.adapter?.itemCount ?: return
+                if (total > 0 && lastVisible >= total - 5) {
+                    loadMoreSearchResults()
+                }
+            }
+        })
         fileAdapter.isGroupedByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(this)
 
         if (!isTv) {
@@ -6435,15 +6471,34 @@ class FileBrowserActivity : AppCompatActivity() {
         }
     }
 
-    private fun performSearch(query: String) {
+    private fun loadMoreSearchResults() {
+        if (!isSearchActive || isLoadingMoreSearch || !hasMoreSearchResults || currentSearchQuery.isEmpty()) return
+        val batchSize = SearchResultsLimitManager.getSearchLimit(this)
+        searchOffset += batchSize
+        isLoadingMoreSearch = true
+        performSearch(currentSearchQuery, offset = searchOffset, append = true)
+    }
+
+    private fun performSearch(query: String, offset: Int = 0, append: Boolean = false) {
         if (query.isEmpty()) {
             isSearchActive = false
+            hasMoreSearchResults = false
+            isLoadingMoreSearch = false
+            searchOffset = 0
+            currentSearchQuery = ""
             rawSearchResults = null
             loadDirectory(currentDir)
             return
         }
 
         isSearchActive = true
+        if (!append) {
+            searchOffset = 0
+            currentSearchQuery = query
+            hasMoreSearchResults = false
+        }
+        val batchSize = SearchResultsLimitManager.getSearchLimit(this)
+
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val indexingRepository = UfmApplication.indexingRepository
@@ -6454,15 +6509,22 @@ class FileBrowserActivity : AppCompatActivity() {
                     val results = indexingRepository.searchSmart(
                         query = query,
                         storageId = storageId,
-                        folderScope = currentDir.absolutePath
+                        folderScope = currentDir.absolutePath,
+                        limit = batchSize,
+                        offset = offset
                     )
+                    hasMoreSearchResults = results.size >= batchSize
                     results.map { File(it.path) }.filter { it.exists() }
                 } else {
                     val isSaf = currentDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) ||
                                 (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, currentDir.absolutePath))
                     if (isSaf) {
-                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.searchSaf(this@FileBrowserActivity, currentDir.absolutePath, query, maxResults = 200)
+                        val safResults = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.searchSaf(
+                            this@FileBrowserActivity, currentDir.absolutePath, query, maxResults = batchSize * (offset / batchSize + 1)
+                        )
+                        hasMoreSearchResults = safResults.size >= batchSize * (offset / batchSize + 1)
+                        if (append) safResults.drop(offset) else safResults
                     } else {
                         val lowerQuery = query.lowercase()
                         val found = mutableListOf<File>()
@@ -6470,19 +6532,31 @@ class FileBrowserActivity : AppCompatActivity() {
                             currentDir.walkTopDown()
                                 .onEnter { isActive }
                                 .filter { it.name.lowercase().contains(lowerQuery) }
-                                .take(200)
+                                .drop(offset)
+                                .take(batchSize)
                                 .forEach { found.add(it) }
                         } catch (_: Exception) {}
+                        hasMoreSearchResults = found.size >= batchSize
                         found
                     }
                 }
-                rawSearchResults = files
+
+                if (append) {
+                    val prev = rawSearchResults ?: emptyList()
+                    rawSearchResults = prev + files
+                } else {
+                    rawSearchResults = files
+                }
 
                 withContext(Dispatchers.Main) {
+                    isLoadingMoreSearch = false
                     applySearchResultsFilterAndSort()
                 }
             } catch (e: Exception) {
                 Log.e("FileBrowser", "Search failed: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    isLoadingMoreSearch = false
+                }
             }
         }
     }

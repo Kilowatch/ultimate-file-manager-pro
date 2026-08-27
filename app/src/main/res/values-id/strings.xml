@@ -2282,6 +2282,59 @@ Cari di semua penyimpanan yang terhubung
     <string name="action_open_folder">
 Buka Lokasi Folder
 </string>
+    <string name="search_choose_specific_folder">
+Pilih Folder Tertentu…
+</string>
+    <string name="search_choose_specific_folder_desc">
+Cari di dalam direktori tertentu
+</string>
+    <string name="search_custom_folder_scope">
+Map: %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d dipilih • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+Batas Hasil Pencarian
+</string>
+    <string name="settings_search_limit_subtitle">
+%1$d hasil per halaman
+</string>
+    <string name="settings_search_limit_dialog_title">
+Batas Hasil Pencarian
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+Pilih berapa banyak hasil yang dimuat per halaman saat Anda menggulir
+</string>
+    <string name="settings_search_limit_200">
+200 hasil
+</string>
+    <string name="settings_search_limit_200_desc">
+Minimal · Lebih cepat pada perangkat lama
+</string>
+    <string name="settings_search_limit_500">
+500 hasil
+</string>
+    <string name="settings_search_limit_500_desc">
+Direkomendasikan · Kecepatan &amp; cakupan
+</string>
+    <string name="settings_search_limit_1000">
+1.000 hasil
+</string>
+    <string name="settings_search_limit_1000_desc">
+Diperluas · Untuk koleksi besar
+</string>
+    <string name="settings_search_limit_2000">
+2.000 hasil
+</string>
+    <string name="settings_search_limit_2000_desc">
+Maksimum · Kumpulan pencarian ekstensif
+</string>
+    <string name="settings_search_limit_toast">
+Batas hasil penelusuran ditetapkan ke %1$d
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

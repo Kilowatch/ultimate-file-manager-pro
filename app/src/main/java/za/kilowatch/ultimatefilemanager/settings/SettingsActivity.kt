@@ -104,6 +104,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var cardNetworkThumbnails: View
     private lateinit var txtVideoThumbnailTimeSubtitle: TextView
     private lateinit var txtApkExtractSubtitle: TextView
+    private lateinit var txtSearchResultsLimitSubtitle: TextView
 
     private var cardSearchContainer: MaterialCardView? = null
     private var edtSettingsSearch: EditText? = null
@@ -605,6 +606,14 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, ExtractApkSettingsActivity::class.java))
         }
 
+        // Search Results Limit row
+        val cardSearchResultsLimit = findViewById<View>(R.id.cardSearchResultsLimit)
+        txtSearchResultsLimitSubtitle = findViewById(R.id.txtSearchResultsLimitSubtitle)
+        updateSearchResultsLimitSubtitle()
+        cardSearchResultsLimit?.setOnClickListener {
+            showSearchResultsLimitDialog()
+        }
+
         // TV focus highlight
         if (isTv) {
             setupTvCardFocus(cardFontSize)
@@ -642,6 +651,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<View>(R.id.cardAppearance)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardDefaultIconColors)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardApkExtract)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardSearchResultsLimit)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardBackupRestore)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardAutoBackup)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
@@ -860,6 +870,11 @@ class SettingsActivity : AppCompatActivity() {
         // Refresh video thumbnail time subtitle
         if (::txtVideoThumbnailTimeSubtitle.isInitialized) {
             updateVideoThumbnailTimeSubtitle()
+        }
+
+        // Refresh search results limit subtitle
+        if (::txtSearchResultsLimitSubtitle.isInitialized) {
+            updateSearchResultsLimitSubtitle()
         }
 
         // Refresh cache copying subtitle
@@ -1165,6 +1180,69 @@ class SettingsActivity : AppCompatActivity() {
     private fun updateVideoThumbnailTimeSubtitle() {
         val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(this)
         txtVideoThumbnailTimeSubtitle.text = VideoThumbnailTimePreferenceManager.formatPercent(this, pct)
+    }
+
+    private fun updateSearchResultsLimitSubtitle() {
+        if (::txtSearchResultsLimitSubtitle.isInitialized) {
+            txtSearchResultsLimitSubtitle.text = SearchResultsLimitManager.getLimitSubtitle(this)
+        }
+    }
+
+    private fun showSearchResultsLimitDialog() {
+        val layoutRes = if (isTv) R.layout.dialog_search_results_limit_tv else R.layout.dialog_search_results_limit
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val currentLimit = SearchResultsLimitManager.getSearchLimit(this)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val options = listOf(
+            Triple(R.id.btnLimit200, R.id.checkLimit200, SearchResultsLimitManager.LIMIT_200),
+            Triple(R.id.btnLimit500, R.id.checkLimit500, SearchResultsLimitManager.LIMIT_500),
+            Triple(R.id.btnLimit1000, R.id.checkLimit1000, SearchResultsLimitManager.LIMIT_1000),
+            Triple(R.id.btnLimit2000, R.id.checkLimit2000, SearchResultsLimitManager.LIMIT_2000)
+        )
+
+        var defaultFocusView: View? = null
+
+        options.forEach { (btnId, checkId, limit) ->
+            val btn = dialogView.findViewById<View>(btnId)
+            val check = dialogView.findViewById<ImageView>(checkId)
+            val isSelected = currentLimit == limit
+            check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+            if (isSelected) {
+                defaultFocusView = btn
+            }
+
+            btn?.setOnClickListener {
+                dialog.dismiss()
+                SearchResultsLimitManager.setSearchLimit(this, limit)
+                updateSearchResultsLimitSubtitle()
+                android.widget.Toast.makeText(
+                    this,
+                    getString(R.string.settings_search_limit_toast, limit),
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            if (isTv && btn != null) {
+                setupTvCardFocus(btn)
+            }
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            (defaultFocusView ?: dialogView.findViewById(R.id.btnLimit500))?.requestFocus()
+        }
     }
 
     private fun toggleCacheCopy() {
@@ -1601,6 +1679,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardMainMenuViewMode, "settings_main_menu_layout", R.drawable.ic_view_list),
             CardIcon(R.id.cardFontSize, "settings_font_size", R.drawable.ic_font_size),
             CardIcon(R.id.cardApkExtract, "settings_apk_extract", R.drawable.ic_file_apk),
+            CardIcon(R.id.cardSearchResultsLimit, "settings_search_limit", R.drawable.ic_search),
             CardIcon(R.id.cardLongPressDuration, "settings_long_press", R.drawable.ic_long_press),
             CardIcon(R.id.cardControlsTimeout, "settings_controls_timeout", R.drawable.ic_controls_timeout),
             CardIcon(R.id.cardToolbarIcons, "settings_toolbar_icons", R.drawable.ic_star),

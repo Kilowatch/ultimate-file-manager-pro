@@ -2282,6 +2282,59 @@ UFM Slide Show
     <string name="action_open_folder">
 Відкрити розташування папки
 </string>
+    <string name="search_choose_specific_folder">
+Виберіть конкретну папку…
+</string>
+    <string name="search_choose_specific_folder_desc">
+Пошук у певному каталозі
+</string>
+    <string name="search_custom_folder_scope">
+Папка: %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d вибрано • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+Ліміт результатів пошуку
+</string>
+    <string name="settings_search_limit_subtitle">
+%1$d результатів на сторінку
+</string>
+    <string name="settings_search_limit_dialog_title">
+Ліміт результатів пошуку
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+Виберіть, скільки результатів завантажувати на сторінку під час прокручування
+</string>
+    <string name="settings_search_limit_200">
+200 результатів
+</string>
+    <string name="settings_search_limit_200_desc">
+Мінімальний · Швидше на старих пристроях
+</string>
+    <string name="settings_search_limit_500">
+500 результатів
+</string>
+    <string name="settings_search_limit_500_desc">
+Рекомендовано · Збалансована швидкість &amp; покриття
+</string>
+    <string name="settings_search_limit_1000">
+1000 результатів
+</string>
+    <string name="settings_search_limit_1000_desc">
+Розширений · Для великих колекцій
+</string>
+    <string name="settings_search_limit_2000">
+2000 результатів
+</string>
+    <string name="settings_search_limit_2000_desc">
+Максимум · Розширені пакети пошуку
+</string>
+    <string name="settings_search_limit_toast">
+Ліміт результатів пошуку встановлено на %1$d
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

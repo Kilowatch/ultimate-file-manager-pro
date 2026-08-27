@@ -807,6 +807,25 @@
 
     <!-- Search long-press -->
     <string name="action_open_folder">Open Folder Location</string>
+    <string name="search_choose_specific_folder">Choose Specific Folder…</string>
+    <string name="search_choose_specific_folder_desc">Search inside a specific directory</string>
+    <string name="search_custom_folder_scope">Folder: %1$s</string>
+    <string name="search_selection_summary">%1$d selected • %2$s</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">Search Results Limit</string>
+    <string name="settings_search_limit_subtitle">%1$d results per page</string>
+    <string name="settings_search_limit_dialog_title">Search Results Limit</string>
+    <string name="settings_search_limit_dialog_subtitle">Choose how many results load per page as you scroll</string>
+    <string name="settings_search_limit_200">200 results</string>
+    <string name="settings_search_limit_200_desc">Minimal · Faster on older devices</string>
+    <string name="settings_search_limit_500">500 results</string>
+    <string name="settings_search_limit_500_desc">Recommended · Balanced speed &amp; coverage</string>
+    <string name="settings_search_limit_1000">1,000 results</string>
+    <string name="settings_search_limit_1000_desc">Extended · For large collections</string>
+    <string name="settings_search_limit_2000">2,000 results</string>
+    <string name="settings_search_limit_2000_desc">Maximum · Extensive search batches</string>
+    <string name="settings_search_limit_toast">Search results limit set to %1$d</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">Legal</string>

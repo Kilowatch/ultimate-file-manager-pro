@@ -10,68 +10,175 @@
     tools:context=".storage.SearchActivity">
 
     <!-- Header Bar: Refined with Title and Drive Spinner inline -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="24dp"
         android:background="@color/tv_glass_white_10"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/btnSearchBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/back"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:background="@drawable/selector_tv_icon_btn"
-            app:tint="@color/selector_tv_icon_tint_yellow" />
-
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="16dp"
-            android:orientation="vertical">
+            android:id="@+id/layoutHeaderNormal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/search_title"
-                android:textColor="@color/tv_text_primary"
-                android:textSize="22sp"
-                android:fontFamily="sans-serif-black" />
+            <ImageView
+                android:id="@+id/btnSearchBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/back"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
 
-            <!-- Dynamic Subtitle/Context hint -->
-            <TextView
-                android:id="@+id/txtSearchSubtitle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/internal_storage"
-                android:textColor="@color/tv_text_secondary"
-                android:textSize="13sp" />
+                android:layout_weight="1"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_title"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="22sp"
+                    android:fontFamily="sans-serif-black" />
+
+                <!-- Dynamic Subtitle/Context hint -->
+                <TextView
+                    android:id="@+id/txtSearchSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/internal_storage"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- Drive Spinner inline in header -->
+            <Spinner
+                android:id="@+id/spinnerDrive"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:background="@drawable/selector_tv_button_yellow"
+                android:paddingHorizontal="12dp"
+                android:popupBackground="@color/tv_dialog_background"
+                android:focusable="true"
+                android:focusableInTouchMode="false" />
+
         </LinearLayout>
 
-        <!-- Drive Spinner inline in header -->
-        <Spinner
-            android:id="@+id/spinnerDrive"
-            android:layout_width="220dp"
-            android:layout_height="44dp"
-            android:background="@drawable/selector_tv_button_yellow"
-            android:paddingHorizontal="12dp"
-            android:popupBackground="@color/tv_dialog_background"
-            android:focusable="true"
-            android:focusableInTouchMode="false" />
+        <!-- TV Contextual Selection Header -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderSelection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp"
+            android:visibility="gone">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/action_clear_selection"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+
+            <TextView
+                android:id="@+id/txtSelectionCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-bold"
+                tools:text="1 selected • 42.8 MB" />
+
+            <!-- TV Action Buttons -->
+            <ImageView
+                android:id="@+id/btnSelectAll"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_select_all"
+                android:contentDescription="@string/action_select_all"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+
+            <ImageView
+                android:id="@+id/btnTvSelectionCopy"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_copy"
+                android:contentDescription="@string/action_copy"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+
+            <ImageView
+                android:id="@+id/btnTvSelectionMove"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_move"
+                android:contentDescription="@string/action_move"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+
+            <ImageView
+                android:id="@+id/btnTvSelectionDelete"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_delete"
+                android:contentDescription="@string/action_delete"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+
+            <ImageView
+                android:id="@+id/btnSelectionProperties"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_about"
+                android:contentDescription="@string/action_properties"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+        </LinearLayout>
+
+    </FrameLayout>
 
     <!-- Hidden toolbar stub for code compatibility -->
     <com.google.android.material.appbar.MaterialToolbar

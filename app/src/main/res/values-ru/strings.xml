@@ -2282,6 +2282,59 @@ New File.txt
     <string name="action_open_folder">
 Открыть расположение папки
 </string>
+    <string name="search_choose_specific_folder">
+Выберите конкретную папку…
+</string>
+    <string name="search_choose_specific_folder_desc">
+Поиск внутри определенного каталога
+</string>
+    <string name="search_custom_folder_scope">
+Папка: %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d выбрано • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+Ограничение результатов поиска
+</string>
+    <string name="settings_search_limit_subtitle">
+%1$d результатов на странице
+</string>
+    <string name="settings_search_limit_dialog_title">
+Ограничение результатов поиска
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+Выберите, сколько результатов загружается на страницу при прокрутке
+</string>
+    <string name="settings_search_limit_200">
+200 результатов
+</string>
+    <string name="settings_search_limit_200_desc">
+Минимальный · Быстрее на старых устройствах
+</string>
+    <string name="settings_search_limit_500">
+500 результатов
+</string>
+    <string name="settings_search_limit_500_desc">
+Рекомендуется · Сбалансированная скорость и усиление; покрытие
+</string>
+    <string name="settings_search_limit_1000">
+1000 результатов
+</string>
+    <string name="settings_search_limit_1000_desc">
+Расширенный · Для больших коллекций
+</string>
+    <string name="settings_search_limit_2000">
+2000 результатов
+</string>
+    <string name="settings_search_limit_2000_desc">
+Максимум · Обширные пакеты поиска
+</string>
+    <string name="settings_search_limit_toast">
+Ограничение результатов поиска установлено на %1$d
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

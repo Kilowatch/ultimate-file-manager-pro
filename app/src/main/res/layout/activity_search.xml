@@ -14,67 +14,136 @@
     tools:context=".storage.SearchActivity">
 
     <!-- Fixed 56dp Glass Header Bar -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Back Button in Frosted Squircle -->
-        <FrameLayout
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_btn_icon_frosted">
-
-            <ImageView
-                android:id="@+id/btnSearchBack"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@string/cd_back"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
-                app:tint="@color/mobile_icon_tint" />
-        </FrameLayout>
-
-        <!-- Title + Subtitle -->
+        <!-- Normal Header Bar -->
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="14dp"
-            android:orientation="vertical">
+            android:id="@+id/layoutHeaderNormal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/search_title"
-                android:textColor="@color/mobile_text_primary"
-                android:textSize="18sp"
-                android:fontFamily="sans-serif-black"
-                android:maxLines="1"
-                android:ellipsize="end" />
+            <!-- Back Button in Frosted Squircle -->
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted">
 
-            <TextView
-                android:id="@+id/txtHeaderSubtitle"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/btnSearchBack"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="@string/cd_back"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    app:tint="@color/mobile_icon_tint" />
+            </FrameLayout>
+
+            <!-- Title + Subtitle -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/search_hint"
-                android:textColor="@color/mobile_text_secondary"
-                android:textSize="12sp"
-                android:maxLines="1"
-                android:ellipsize="end" />
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_title"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-black"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/txtHeaderSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_hint"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+            </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+        <!-- Contextual Selection Header -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderSelection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:visibility="gone">
+
+            <!-- Close Selection Button (X) -->
+            <ImageView
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/action_clear_selection"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Dynamic Selection Count + Size -->
+            <TextView
+                android:id="@+id/txtSelectionCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="1 selected • 42.8 MB" />
+
+            <!-- Properties button -->
+            <ImageView
+                android:id="@+id/btnSelectionProperties"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_about"
+                android:contentDescription="@string/action_properties"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Select All / Deselect All Toggle Icon -->
+            <ImageView
+                android:id="@+id/btnSelectAll"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_select_all"
+                android:contentDescription="@string/action_select_all"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+        </LinearLayout>
+    </FrameLayout>
 
     <!-- Hidden toolbar stub for code compatibility -->
     <com.google.android.material.appbar.MaterialToolbar
@@ -441,5 +510,16 @@
             android:textSize="15sp"
             android:fontFamily="sans-serif-medium" />
     </LinearLayout>
+
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar
+        android:id="@+id/floatingQuickBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

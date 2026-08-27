@@ -46,6 +46,12 @@ import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.indexing.SearchSuggestion
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
+import android.app.Activity
+import android.text.format.Formatter
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import za.kilowatch.ultimatefilemanager.settings.SearchResultsLimitManager
+import za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
@@ -76,7 +82,8 @@ class SearchActivity : AppCompatActivity() {
     private var currentOffset = 0
     private var currentQuery = ""
     private var isLoadingMore = false
-    private val PAGE_SIZE = 200
+    private val pageSize: Int
+        get() = SearchResultsLimitManager.getSearchLimit(this)
     /** Accumulates pages of results for load-more pagination. */
     private val currentResults = mutableListOf<File>()
     /** Cumulative metadata maps — grow across load-more pages so every item keeps its badge/label. */
@@ -144,7 +151,9 @@ class SearchActivity : AppCompatActivity() {
         val path: File?,
         val subtitle: String = "",
         val iconRes: Int = R.drawable.ic_storage_internal,
-        val isIndexed: Boolean = false
+        val isIndexed: Boolean = false,
+        val isCustomFolder: Boolean = false,
+        val isChooseFolderAction: Boolean = false
     ) {
         override fun toString(): String = label
     }
@@ -152,6 +161,32 @@ class SearchActivity : AppCompatActivity() {
     private val driveEntries = mutableListOf<DriveEntry>()
     private var selectedDriveIndex = 0
     private var selectedDrivePath: File? = null  // null = all drives
+
+    private val folderPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+            val data = result.data!!
+            val selectedPath = data.getStringExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
+                ?: data.getStringExtra("result_selected_path")
+                ?: data.getStringExtra(FileBrowserActivity.EXTRA_MOUNT_PATH)
+                ?: data.data?.path
+            if (!selectedPath.isNullOrEmpty()) {
+                val folder = File(selectedPath)
+                if (folder.exists() && folder.isDirectory) {
+                    setCustomFolderScope(folder)
+                }
+            }
+        }
+    }
+
+    private fun launchFolderPicker() {
+        val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+            putExtra(StorageBrowserActivity.EXTRA_LOCATION_PICKER, true)
+            putExtra(StorageBrowserActivity.EXTRA_SEARCH_FOLDER_PICKER, true)
+        }
+        folderPickerLauncher.launch(intent)
+    }
 
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -216,9 +251,81 @@ class SearchActivity : AppCompatActivity() {
         }
         // Mobile: tint is set via app:tint in XML, no override needed
         
-        btnBack?.setOnClickListener { finish() }
+        btnBack?.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-        toolbar.setNavigationOnClickListener { finish() }
+        toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (fileAdapter.isSelectionMode) {
+                    fileAdapter.exitSelectionMode()
+                    return
+                }
+                finish()
+                za.kilowatch.ultimatefilemanager.util.AnimationHelper.applyActivityCloseTransition(this@SearchActivity)
+            }
+        })
+
+        // Selection header controls
+        findViewById<View>(R.id.btnCloseSelection)?.setOnClickListener {
+            fileAdapter.exitSelectionMode()
+        }
+
+        findViewById<View>(R.id.btnSelectAll)?.setOnClickListener {
+            if (fileAdapter.isAllSelected()) {
+                fileAdapter.deselectAll()
+            } else {
+                fileAdapter.selectAll()
+            }
+        }
+
+        findViewById<View>(R.id.btnSelectionProperties)?.setOnClickListener {
+            val selectedFiles = fileAdapter.getSelectedFiles()
+            if (selectedFiles.isNotEmpty()) {
+                FilePropertiesBottomSheet.newInstanceForLocalFiles(selectedFiles)
+                    .show(supportFragmentManager, FilePropertiesBottomSheet.TAG)
+            }
+        }
+
+        if (isTv) {
+            findViewById<View>(R.id.btnTvSelectionCopy)?.setOnClickListener {
+                handleCopyOrCut(fileAdapter.getSelectedFiles(), isMove = false)
+            }
+            findViewById<View>(R.id.btnTvSelectionMove)?.setOnClickListener {
+                handleCopyOrCut(fileAdapter.getSelectedFiles(), isMove = true)
+            }
+            findViewById<View>(R.id.btnTvSelectionDelete)?.setOnClickListener {
+                handleDeleteFiles(fileAdapter.getSelectedFiles())
+            }
+        } else {
+            val floatingQuickBar = findViewById<FloatingQuickActionBar>(R.id.floatingQuickBar)
+            floatingQuickBar?.setOnActionClickListener { actionId ->
+                val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+                val selectedFiles = fileAdapter.getSelectedFiles()
+                if (selectedFiles.isEmpty()) return@setOnActionClickListener
+                when (actionId) {
+                    pm.ACTION_COPY -> handleCopyOrCut(selectedFiles, isMove = false)
+                    pm.ACTION_MOVE -> handleCopyOrCut(selectedFiles, isMove = true)
+                    pm.ACTION_DELETE -> handleDeleteFiles(selectedFiles)
+                    pm.ACTION_SHARE -> handleShareFiles(selectedFiles)
+                    pm.ACTION_RENAME -> {
+                        if (selectedFiles.size == 1) {
+                            showRenameDialog(selectedFiles.first())
+                        } else {
+                            Toast.makeText(this@SearchActivity, R.string.rename_single_only, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    pm.ACTION_SELECT_ALL -> {
+                        if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
+                    }
+                    pm.ACTION_INVERT_SELECTION -> fileAdapter.invertSelection()
+                    pm.ACTION_MORE -> {
+                        FilePropertiesBottomSheet.newInstanceForLocalFiles(selectedFiles)
+                            .show(supportFragmentManager, FilePropertiesBottomSheet.TAG)
+                    }
+                }
+            }
+        }
 
         // --- Clear button ---
         val btnClear = findViewById<ImageView>(R.id.btnSearchClear)
@@ -261,7 +368,7 @@ class SearchActivity : AppCompatActivity() {
         // --- Drive Picker ---
         setupDrivePicker()
 
-        // --- File Adapter with click and long-press ---
+        // --- File Adapter with click and selection mode ---
         fileAdapter = FileAdapter(
             isTv = isTv,
             onItemClick = { file, _ ->
@@ -273,14 +380,17 @@ class SearchActivity : AppCompatActivity() {
                         putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, file.name)
                         putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
                         putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
+                        putExtra(FileBrowserActivity.EXTRA_FROM_SEARCH, true)
                     }
                     startActivity(intent)
                 } else {
                     openFile(file)
                 }
             },
-            onSelectionChanged = { /* handled via long-press popup, not selection mode */ },
-            onItemLongClick = { file -> showFileContextMenu(file) }
+            onSelectionChanged = { count ->
+                updateSelectionBar(count)
+            },
+            onItemLongClick = null
         )
 
         recyclerResults.layoutManager = LinearLayoutManager(this)
@@ -420,6 +530,11 @@ class SearchActivity : AppCompatActivity() {
             dlg.dismiss()
         }
 
+        view.findViewById<View>(R.id.btnChooseSpecificFolder)?.setOnClickListener {
+            dlg.dismiss()
+            launchFolderPicker()
+        }
+
         layoutOptions.removeAllViews()
         for ((index, entry) in driveEntries.withIndex()) {
             val isSelected = (index == selectedDriveIndex)
@@ -470,6 +585,20 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setupTvDriveSpinner() {
         val spinner = spinnerDrive ?: return
+        val chooseFolderLabel = getString(R.string.search_choose_specific_folder)
+        if (driveEntries.none { it.isChooseFolderAction }) {
+            driveEntries.add(
+                DriveEntry(
+                    label = chooseFolderLabel,
+                    path = null,
+                    subtitle = "",
+                    iconRes = R.drawable.ic_folder,
+                    isIndexed = false,
+                    isChooseFolderAction = true
+                )
+            )
+        }
+
         val adapter = object : ArrayAdapter<DriveEntry>(this, R.layout.item_drive_spinner_selected, driveEntries) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val v = convertView ?: layoutInflater.inflate(R.layout.item_drive_spinner_selected, parent, false)
@@ -502,8 +631,14 @@ class SearchActivity : AppCompatActivity() {
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                selectedDriveIndex = position
                 val entry = driveEntries[position]
+                if (entry.isChooseFolderAction) {
+                    launchFolderPicker()
+                    spinner.setSelection(selectedDriveIndex)
+                    return
+                }
+
+                selectedDriveIndex = position
                 selectedDrivePath = entry.path
 
                 // Update subtitle for TV
@@ -527,6 +662,50 @@ class SearchActivity : AppCompatActivity() {
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    private fun setCustomFolderScope(folder: File) {
+        val (storageId, _, _) = IndexingRepository.resolveStorageForPath(folder.absolutePath)
+        val isIndexed = IndexingRepository.getInstance(this).isStorageFullyIndexed(storageId)
+        val customEntry = DriveEntry(
+            label = folder.name.ifEmpty { folder.absolutePath },
+            path = folder,
+            subtitle = folder.absolutePath,
+            iconRes = R.drawable.ic_folder,
+            isIndexed = isIndexed,
+            isCustomFolder = true
+        )
+
+        val actionEntry = driveEntries.firstOrNull { it.isChooseFolderAction }
+        driveEntries.removeAll { it.isCustomFolder || it.isChooseFolderAction }
+        driveEntries.add(customEntry)
+        if (actionEntry != null) {
+            driveEntries.add(actionEntry)
+        }
+
+        selectedDriveIndex = driveEntries.indexOf(customEntry)
+        selectedDrivePath = folder
+
+        if (isTv) {
+            setupTvDriveSpinner()
+            spinnerDrive?.setSelection(selectedDriveIndex)
+            findViewById<TextView>(R.id.txtSearchSubtitle)?.text = customEntry.label
+        } else {
+            updateMobileDriveCardUI()
+        }
+
+        updateIndexingBanner()
+
+        if (!isIndexed && !activeFilters.isEmpty()) {
+            activeFilters.minBytes  = null
+            activeFilters.maxBytes  = null
+            activeFilters.mimeTypes.clear()
+            activeFilters.extension = null
+            activeFilters.dateDays  = null
+            updateFilterPillState()
+        }
+
+        triggerFilteredSearch()
     }
 
     private fun updateIndexingBanner() {
@@ -573,6 +752,9 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
 
+                val isCustomFolderScope = (selectedDrivePath != null && driveEntries.getOrNull(selectedDriveIndex)?.isCustomFolder == true)
+                val folderScope = if (isCustomFolderScope && selectedDrivePath != null) selectedDrivePath!!.absolutePath else null
+
                 coroutineScope {
                     val indexedDeferred = async(Dispatchers.IO) {
                         if (indexedRoots.isEmpty()) return@async emptyList<File>()
@@ -581,20 +763,24 @@ class SearchActivity : AppCompatActivity() {
 
                         // Use searchSmart for indexed storages
                         searchEngine.searchSmart(
-                            query     = query,
-                            storageId = sid,
-                            limit     = PAGE_SIZE,
-                            offset    = offset
+                            query       = query,
+                            storageId   = sid,
+                            folderScope = folderScope,
+                            limit       = pageSize,
+                            offset      = offset
                         ).map { File(it.path) }.filter { it.exists() }
                     }
 
-                    val unindexedDeferreds = if (append) emptyList() else unindexedRoots.map { root ->
+                    val unindexedDeferreds = unindexedRoots.map { root ->
                         async(Dispatchers.IO) {
                             val isSaf = root is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(root.absolutePath) ||
                                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@SearchActivity, root.absolutePath)
                             if (isSaf) {
-                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.searchSaf(this@SearchActivity, root.absolutePath, query, maxResults = PAGE_SIZE)
+                                val safResults = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.searchSaf(
+                                    this@SearchActivity, root.absolutePath, query, maxResults = pageSize * (offset / pageSize + 1)
+                                )
+                                if (append) safResults.drop(offset) else safResults
                             } else {
                                 val lowerQuery = query.lowercase()
                                 val found = mutableListOf<File>()
@@ -602,7 +788,8 @@ class SearchActivity : AppCompatActivity() {
                                     root.walkTopDown()
                                         .onEnter { isActive }
                                         .filter { it.name.lowercase().contains(lowerQuery) }
-                                        .take(PAGE_SIZE)
+                                        .drop(offset)
+                                        .take(pageSize)
                                         .forEach { found.add(it) }
                                 } catch (_: Exception) {}
                                 found
@@ -616,7 +803,7 @@ class SearchActivity : AppCompatActivity() {
                     (indexedResults + unindexedResults)
                         .distinctBy { it.absolutePath }
                         .sortedWith(NaturalSort.byName { it.name })
-                        .take(PAGE_SIZE)
+                        .take(pageSize)
                 }
             } catch (e: Exception) {
                 Log.e("SearchActivity", "Error during indexed search: ${e.message}", e)
@@ -672,7 +859,7 @@ class SearchActivity : AppCompatActivity() {
                         storageLabels = cumulativeStorageLabels.toMap()
                     )
                     val shown = fileAdapter.itemCount
-                    val hasMore = results.size >= PAGE_SIZE
+                    val hasMore = results.size >= pageSize
                     txtStatus.text = if (hasMore)
                         getString(R.string.showing_shown_results_scroll_for_more, shown)
                     else
@@ -700,7 +887,7 @@ class SearchActivity : AppCompatActivity() {
                     root.walkTopDown()
                         .onEnter { isActive }
                         .filter { it.name.lowercase().contains(lowerQuery) }
-                        .take(200)
+                        .take(pageSize)
                         .forEach { found.add(it) }
                 } catch (_: Exception) { }
             }
@@ -754,6 +941,7 @@ class SearchActivity : AppCompatActivity() {
                 putExtra(FileBrowserActivity.EXTRA_FOCUS_PATH, file.absolutePath)
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
+                putExtra(FileBrowserActivity.EXTRA_FROM_SEARCH, true)
             }
             startActivity(intent)
         }
@@ -817,11 +1005,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun handleCopyOrCut(file: File, isMove: Boolean) {
+        handleCopyOrCut(listOf(file), isMove)
+    }
+
+    private fun handleCopyOrCut(files: List<File>, isMove: Boolean) {
+        if (files.isEmpty()) return
         val op = if (isMove) FileClipboard.Operation.MOVE else FileClipboard.Operation.COPY
+        val parentPath = files.firstOrNull()?.parent ?: ""
+        val count = files.size
         val recentSlot = FileClipboard.getRecentSlot()
         if (recentSlot == null) {
-            FileClipboard.pushLocalSlot(listOf(file), op, file.parent ?: "")
-            showSnackbar(getString(if (isMove) R.string.clipboard_cut else R.string.clipboard_copied, 1))
+            FileClipboard.pushLocalSlot(files, op, parentPath)
+            showSnackbar(getString(if (isMove) R.string.clipboard_cut else R.string.clipboard_copied, count))
+            if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
         } else {
             val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
             val layoutRes = if (isTv) R.layout.dialog_clipboard_add_or_new_tv else R.layout.dialog_clipboard_add_or_new
@@ -881,8 +1077,9 @@ class SearchActivity : AppCompatActivity() {
 
                     holder.card.setOnClickListener {
                         dialog.dismiss()
-                        FileClipboard.addLocalToSlot(slot.id, listOf(file), op)
-                        showSnackbar(getString(if (isMove) R.string.clipboard_cut else R.string.clipboard_copied, 1))
+                        FileClipboard.addLocalToSlot(slot.id, files, op)
+                        showSnackbar(getString(if (isMove) R.string.clipboard_cut else R.string.clipboard_copied, count))
+                        if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
                     }
                 }
             }
@@ -892,21 +1089,16 @@ class SearchActivity : AppCompatActivity() {
                 if (FileClipboard.isFull) {
                     android.widget.Toast.makeText(this, R.string.clipboard_full_paste_first, android.widget.Toast.LENGTH_SHORT).show()
                 } else {
-                    FileClipboard.pushLocalSlot(listOf(file), op, file.parent ?: "")
+                    FileClipboard.pushLocalSlot(files, op, parentPath)
                     if (FileClipboard.slots.size == 9) {
                         android.widget.Toast.makeText(this, R.string.clipboard_warning_one_slot_left, android.widget.Toast.LENGTH_SHORT).show()
                     }
-                    showSnackbar(getString(R.string.clipboard_slot_created, 1, FileClipboard.slots.size))
+                    showSnackbar(getString(R.string.clipboard_slot_created, count, FileClipboard.slots.size))
+                    if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
                 }
             }
 
-            btnCancel.setOnClickListener {
-                dialog.dismiss()
-            }
-
-            if (isTv) {
-                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            }
+            btnCancel.setOnClickListener { dialog.dismiss() }
             dialog.show()
         }
     }
@@ -1721,11 +1913,174 @@ class SearchActivity : AppCompatActivity() {
         dlg.show()
     }
 
+    private fun handleDeleteFiles(files: List<File>) {
+        if (files.isEmpty()) return
+        if (files.size == 1) {
+            confirmDelete(files.first())
+            return
+        }
+        val layoutRes = if (isTv) R.layout.dialog_search_delete_confirm_tv else R.layout.dialog_search_delete_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtDeleteMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+        val btnDeleteConfirm = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
+
+        val folders = files.count { it.isDirectory }
+        val nonDirFiles = files.count { it.isFile }
+        val message = when {
+            folders > 0 && nonDirFiles > 0 -> getString(R.string.delete_message_mixed, folders, nonDirFiles)
+            folders > 0 -> getString(R.string.delete_message_folders, folders)
+            else -> getString(R.string.delete_message_files, nonDirFiles)
+        }
+        txtDeleteMessage.text = message
+
+        btnDeleteConfirm.setOnClickListener {
+            dialog.dismiss()
+            scope.launch(Dispatchers.IO) {
+                val deletedPaths = mutableListOf<String>()
+                for (file in files) {
+                    val path = file.absolutePath
+                    val isDir = file.isDirectory
+                    val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@SearchActivity, path)
+                    val deleted = if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@SearchActivity, path)
+                    } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
+                    } else if (isDir) {
+                        file.deleteRecursively()
+                    } else {
+                        file.delete()
+                    }
+                    if (deleted) {
+                        deletedPaths.add(path)
+                        try {
+                            val repo = UfmApplication.indexingRepository
+                            if (isDir) repo.deleteTreeFromIndex(path)
+                            else repo.deleteFromIndex(path)
+                        } catch (_: Exception) {}
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    if (fileAdapter.isSelectionMode) {
+                        fileAdapter.exitSelectionMode()
+                    }
+                    val query = editSearch.text?.toString()?.trim() ?: ""
+                    if (query.isNotEmpty()) {
+                        performSearch(query, offset = 0, append = false)
+                    }
+                    showSnackbar(getString(R.string.delete_success, deletedPaths.size))
+                }
+            }
+        }
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+    }
+
+    private fun handleShareFiles(files: List<File>) {
+        val nonDirFiles = files.filter { it.isFile }
+        if (nonDirFiles.isEmpty()) {
+            showSnackbar(getString(R.string.share_error))
+            return
+        }
+        if (nonDirFiles.size == 1) {
+            shareFile(nonDirFiles.first())
+            return
+        }
+        try {
+            val uris = nonDirFiles.map {
+                FileProvider.getUriForFile(
+                    this,
+                    "${packageName}.fileprovider",
+                    it
+                )
+            }
+            val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                type = "*/*"
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
+        } catch (e: Exception) {
+            showSnackbar(getString(R.string.share_error))
+        }
+    }
+
+    private fun updateSelectionBar(count: Int) {
+        val showSelection = fileAdapter.isSelectionMode
+        val layoutHeaderNormal = findViewById<View>(R.id.layoutHeaderNormal)
+        val layoutHeaderSelection = findViewById<View>(R.id.layoutHeaderSelection)
+        val txtSelectionCount = findViewById<TextView>(R.id.txtSelectionCount)
+        val btnSelectAll = findViewById<ImageView>(R.id.btnSelectAll)
+
+        if (!isTv) {
+            val floatingQuickBar = findViewById<FloatingQuickActionBar>(R.id.floatingQuickBar)
+            if (showSelection) {
+                layoutHeaderNormal?.visibility = View.GONE
+                layoutHeaderSelection?.visibility = View.VISIBLE
+
+                val selectedFiles = fileAdapter.getSelectedFiles()
+                val isAll = fileAdapter.isAllSelected()
+                btnSelectAll?.setImageResource(if (isAll) R.drawable.ic_deselect_all else R.drawable.ic_select_all)
+
+                val totalBytes = selectedFiles.sumOf { if (it.isFile) it.length() else 0L }
+                val formattedSize = Formatter.formatFileSize(this, totalBytes)
+                txtSelectionCount?.text = if (count == 0) {
+                    getString(R.string.selection_prompt_select_item)
+                } else {
+                    getString(R.string.search_selection_summary, count, formattedSize)
+                }
+
+                if (count > 0) {
+                    val state = FloatingQuickActionBar.SelectionState(
+                        selectedCount = count,
+                        isAllSelected = isAll
+                    )
+                    floatingQuickBar?.bindSelection(state)
+                    floatingQuickBar?.showAnimated()
+                } else {
+                    floatingQuickBar?.hideAnimated()
+                }
+            } else {
+                layoutHeaderNormal?.visibility = View.VISIBLE
+                layoutHeaderSelection?.visibility = View.GONE
+                floatingQuickBar?.hideAnimated()
+            }
+        } else {
+            if (showSelection) {
+                layoutHeaderNormal?.visibility = View.GONE
+                layoutHeaderSelection?.visibility = View.VISIBLE
+
+                val selectedFiles = fileAdapter.getSelectedFiles()
+                val isAll = fileAdapter.isAllSelected()
+                btnSelectAll?.setImageResource(if (isAll) R.drawable.ic_deselect_all else R.drawable.ic_select_all)
+
+                val totalBytes = selectedFiles.sumOf { if (it.isFile) it.length() else 0L }
+                val formattedSize = Formatter.formatFileSize(this, totalBytes)
+                txtSelectionCount?.text = if (count == 0) {
+                    getString(R.string.selection_prompt_select_item)
+                } else {
+                    getString(R.string.search_selection_summary, count, formattedSize)
+                }
+            } else {
+                layoutHeaderNormal?.visibility = View.VISIBLE
+                layoutHeaderSelection?.visibility = View.GONE
+            }
+        }
+    }
+
     // ============ PAGINATION ============
 
     private fun loadMore() {
         if (currentQuery.length < 2) return
-        currentOffset += PAGE_SIZE
+        currentOffset += pageSize
         searchJob?.cancel()
         searchJob = scope.launch {
             performSearch(currentQuery, offset = currentOffset, append = true)

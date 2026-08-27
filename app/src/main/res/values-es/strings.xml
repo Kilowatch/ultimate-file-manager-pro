@@ -2282,6 +2282,59 @@ Buscar en todo el almacenamiento conectado
     <string name="action_open_folder">
 Abrir ubicación de la carpeta
 </string>
+    <string name="search_choose_specific_folder">
+Elija una carpeta específica...
+</string>
+    <string name="search_choose_specific_folder_desc">
+Buscar dentro de un directorio específico
+</string>
+    <string name="search_custom_folder_scope">
+Carpeta: %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d seleccionado • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+Límite de resultados de búsqueda
+</string>
+    <string name="settings_search_limit_subtitle">
+%1$d resultados por página
+</string>
+    <string name="settings_search_limit_dialog_title">
+Límite de resultados de búsqueda
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+Elija cuántos resultados se cargan por página a medida que se desplaza
+</string>
+    <string name="settings_search_limit_200">
+200 resultados
+</string>
+    <string name="settings_search_limit_200_desc">
+Mínimo · Más rápido en dispositivos más antiguos
+</string>
+    <string name="settings_search_limit_500">
+500 resultados
+</string>
+    <string name="settings_search_limit_500_desc">
+Recomendado · Velocidad y potencia equilibradas cobertura
+</string>
+    <string name="settings_search_limit_1000">
+1.000 resultados
+</string>
+    <string name="settings_search_limit_1000_desc">
+Ampliado · Para colecciones grandes
+</string>
+    <string name="settings_search_limit_2000">
+2.000 resultados
+</string>
+    <string name="settings_search_limit_2000_desc">
+Máximo · Lotes de búsqueda extensa
+</string>
+    <string name="settings_search_limit_toast">
+Límite de resultados de búsqueda establecido en %1$d
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

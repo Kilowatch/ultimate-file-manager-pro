@@ -46,6 +46,7 @@ import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
 import java.io.File
+import za.kilowatch.ultimatefilemanager.settings.SearchResultsLimitManager
 import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 import za.kilowatch.ultimatefilemanager.util.FolderScrollState
 import za.kilowatch.ultimatefilemanager.util.KeyboardShortcutHandler
@@ -198,6 +199,10 @@ class FileBrowserFragment : Fragment() {
     private var rawSearchResults: List<File>? = null
     private var isSearchActive: Boolean = false
     private var isSearchIndexed: Boolean = false
+    private var searchOffset = 0
+    private var hasMoreSearchResults = false
+    private var isLoadingMoreSearch = false
+    private var currentSearchQuery = ""
 
     private var isPickerMode = false
     var onStoragePickerRequested: (() -> Unit)? = null
@@ -805,8 +810,18 @@ class FileBrowserFragment : Fragment() {
             }
         )
 
-        fileAdapter.isGroupedByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(requireContext())
         recyclerFiles.adapter = fileAdapter
+        recyclerFiles.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(rv: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                if (dy <= 0 || !isSearchActive || isLoadingMoreSearch || !hasMoreSearchResults) return
+                val lm = rv.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager ?: return
+                val lastVisible = lm.findLastVisibleItemPosition()
+                val total = rv.adapter?.itemCount ?: return
+                if (total > 0 && lastVisible >= total - 5) {
+                    loadMoreSearchResults()
+                }
+            }
+        })
 
         if (!isTv) {
         keyboardShortcutHandler = KeyboardShortcutHandler(requireActivity(), object : KeyboardShortcutHandler.KeyboardActionListener {
@@ -3572,15 +3587,36 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
-    private fun performSearch(query: String) {
+    private fun loadMoreSearchResults() {
+        val ctx = context ?: return
+        if (!isSearchActive || isLoadingMoreSearch || !hasMoreSearchResults || currentSearchQuery.isEmpty()) return
+        val batchSize = SearchResultsLimitManager.getSearchLimit(ctx)
+        searchOffset += batchSize
+        isLoadingMoreSearch = true
+        performSearch(currentSearchQuery, offset = searchOffset, append = true)
+    }
+
+    private fun performSearch(query: String, offset: Int = 0, append: Boolean = false) {
         if (query.isEmpty()) {
             isSearchActive = false
+            hasMoreSearchResults = false
+            isLoadingMoreSearch = false
+            searchOffset = 0
+            currentSearchQuery = ""
             rawSearchResults = null
             loadDirectory(currentDir)
             return
         }
 
         isSearchActive = true
+        if (!append) {
+            searchOffset = 0
+            currentSearchQuery = query
+            hasMoreSearchResults = false
+        }
+        val ctx = context ?: return
+        val batchSize = SearchResultsLimitManager.getSearchLimit(ctx)
+
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val indexingRepository = UfmApplication.indexingRepository
@@ -3591,15 +3627,22 @@ class FileBrowserFragment : Fragment() {
                     val results = indexingRepository.searchSmart(
                         query = query,
                         storageId = storageId,
-                        folderScope = currentDir.absolutePath
+                        folderScope = currentDir.absolutePath,
+                        limit = batchSize,
+                        offset = offset
                     )
+                    hasMoreSearchResults = results.size >= batchSize
                     results.map { File(it.path) }.filter { it.exists() }
                 } else {
                     val isSaf = currentDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) ||
                                 (context != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(requireContext(), currentDir.absolutePath))
                     if (isSaf) {
-                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.searchSaf(requireContext(), currentDir.absolutePath, query, maxResults = 200)
+                        val safResults = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.searchSaf(
+                            requireContext(), currentDir.absolutePath, query, maxResults = batchSize * (offset / batchSize + 1)
+                        )
+                        hasMoreSearchResults = safResults.size >= batchSize * (offset / batchSize + 1)
+                        if (append) safResults.drop(offset) else safResults
                     } else {
                         val lowerQuery = query.lowercase()
                         val found = mutableListOf<File>()
@@ -3607,19 +3650,31 @@ class FileBrowserFragment : Fragment() {
                             currentDir.walkTopDown()
                                 .onEnter { isActive }
                                 .filter { it.name.lowercase().contains(lowerQuery) }
-                                .take(200)
+                                .drop(offset)
+                                .take(batchSize)
                                 .forEach { found.add(it) }
                         } catch (_: Exception) {}
+                        hasMoreSearchResults = found.size >= batchSize
                         found
                     }
                 }
-                rawSearchResults = files
+
+                if (append) {
+                    val prev = rawSearchResults ?: emptyList()
+                    rawSearchResults = prev + files
+                } else {
+                    rawSearchResults = files
+                }
 
                 withContext(Dispatchers.Main) {
+                    isLoadingMoreSearch = false
                     applySearchResultsFilterAndSort()
                 }
             } catch (e: Exception) {
                 Log.e("FileBrowser", "Search failed: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    isLoadingMoreSearch = false
+                }
             }
         }
     }

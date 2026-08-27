@@ -2282,6 +2282,59 @@ Fichiers %1$s
     <string name="action_open_folder">
 Ouvrir l\\\'emplacement du dossier
 </string>
+    <string name="search_choose_specific_folder">
+Choisissez un dossier spécifique…
+</string>
+    <string name="search_choose_specific_folder_desc">
+Rechercher dans un répertoire spécifique
+</string>
+    <string name="search_custom_folder_scope">
+Dossier : %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d sélectionné • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+Limite des résultats de recherche
+</string>
+    <string name="settings_search_limit_subtitle">
+%1$d résultats par page
+</string>
+    <string name="settings_search_limit_dialog_title">
+Limite des résultats de recherche
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+Choisissez le nombre de résultats chargés par page lorsque vous faites défiler
+</string>
+    <string name="settings_search_limit_200">
+200 résultats
+</string>
+    <string name="settings_search_limit_200_desc">
+Minimal · Plus rapide sur les appareils plus anciens
+</string>
+    <string name="settings_search_limit_500">
+500 résultats
+</string>
+    <string name="settings_search_limit_500_desc">
+Recommandé · Vitesse et amp; couverture
+</string>
+    <string name="settings_search_limit_1000">
+1 000 résultats
+</string>
+    <string name="settings_search_limit_1000_desc">
+Étendu · Pour les grandes collections
+</string>
+    <string name="settings_search_limit_2000">
+2 000 résultats
+</string>
+    <string name="settings_search_limit_2000_desc">
+Maximum · Lots de recherche étendus
+</string>
+    <string name="settings_search_limit_toast">
+Limite des résultats de recherche définie sur %1$d
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">

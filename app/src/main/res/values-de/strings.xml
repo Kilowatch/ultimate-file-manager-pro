@@ -2282,6 +2282,59 @@ In allen verbundenen Speichern suchen
     <string name="action_open_folder">
 Ordnerpfad öffnen
 </string>
+    <string name="search_choose_specific_folder">
+Wählen Sie einen bestimmten Ordner…
+</string>
+    <string name="search_choose_specific_folder_desc">
+Suchen Sie in einem bestimmten Verzeichnis
+</string>
+    <string name="search_custom_folder_scope">
+Ordner: %1$s
+</string>
+    <string name="search_selection_summary">
+%1$d ausgewählt • %2$s
+</string>
+
+    <!-- Search Limit Settings -->
+    <string name="settings_search_limit_title">
+Beschränkung der Suchergebnisse
+</string>
+    <string name="settings_search_limit_subtitle">
+%1$d Ergebnisse pro Seite
+</string>
+    <string name="settings_search_limit_dialog_title">
+Beschränkung der Suchergebnisse
+</string>
+    <string name="settings_search_limit_dialog_subtitle">
+Wählen Sie aus, wie viele Ergebnisse beim Scrollen pro Seite geladen werden sollen
+</string>
+    <string name="settings_search_limit_200">
+200 Ergebnisse
+</string>
+    <string name="settings_search_limit_200_desc">
+Minimal · Schneller auf älteren Geräten
+</string>
+    <string name="settings_search_limit_500">
+500 Ergebnisse
+</string>
+    <string name="settings_search_limit_500_desc">
+Empfohlen · Ausgewogene Geschwindigkeit und Geschwindigkeit Abdeckung
+</string>
+    <string name="settings_search_limit_1000">
+1.000 Ergebnisse
+</string>
+    <string name="settings_search_limit_1000_desc">
+Erweitert · Für große Sammlungen
+</string>
+    <string name="settings_search_limit_2000">
+2.000 Ergebnisse
+</string>
+    <string name="settings_search_limit_2000_desc">
+Maximal · Umfangreiche Suchbatches
+</string>
+    <string name="settings_search_limit_toast">
+Suchergebnisse-Limit auf %1$d festgelegt
+</string>
 
     <!-- Policy Selection -->
     <string name="policy_selection_title">
