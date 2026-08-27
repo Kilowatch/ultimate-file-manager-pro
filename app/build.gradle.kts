@@ -93,8 +93,8 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 244          // Mobile versionCode; TV = this + 1
-val appVersionName = "1.9.2"      // Shown in Play Store listing
+val appVersionCode = 246          // Mobile versionCode; TV = this + 1
+val appVersionName = "1.9.3"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
 
@@ -118,7 +118,7 @@ android {
         
         // Explicitly define supported languages to exclude invalid language resources 
         // (like 'tv') introduced by local folders or third-party libraries.
-        resourceConfigurations += setOf("en", "ar", "de", "es", "fr", "hi", "id", "in", "it", "ja", "ko", "pt", "ru", "tr", "uk")
+        resourceConfigurations += setOf("en", "ar", "de", "es", "fr", "hi", "id", "in", "it", "ja", "ko", "nl", "pt", "ru", "tr", "uk")
         
         buildConfigField("Boolean", "IS_FOSS", "false")
     }

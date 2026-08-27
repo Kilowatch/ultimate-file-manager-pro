@@ -44,6 +44,12 @@ Türkçe (Türkçe)
     <string name="language_ukrainian">
 Ukraynaca (українська)
 </string>
+    <string name="language_italian">
+İtalyanca (İtalyanca)
+</string>
+    <string name="language_dutch">
+Felemenkçe (Hollanda)
+</string>
     <string name="select_language">
 Dil Seçin
 </string>

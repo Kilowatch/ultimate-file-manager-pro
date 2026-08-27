@@ -44,6 +44,12 @@
     <string name="language_ukrainian">
 यूक्रेनियाई (українська)
 </string>
+    <string name="language_italian">
+इटालियन (इतालवी)
+</string>
+    <string name="language_dutch">
+डच (नीदरलैंड्स)
+</string>
     <string name="select_language">
 भाषा चुनें
 </string>

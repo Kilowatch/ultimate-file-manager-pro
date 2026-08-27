@@ -100,6 +100,7 @@ class LanguageActivity : AppCompatActivity() {
             LanguageItem(LocaleHelper.LOCALE_ES, R.string.language_spanish, "Español", "es.svg"),
             LanguageItem(LocaleHelper.LOCALE_FR, R.string.language_french, "Français", "fr.svg"),
             LanguageItem(LocaleHelper.LOCALE_IT, R.string.language_italian, "Italiano", "it.svg"),
+            LanguageItem(LocaleHelper.LOCALE_NL, R.string.language_dutch, "Nederlands", "nl.svg"),
             LanguageItem(LocaleHelper.LOCALE_HI, R.string.language_hindi, "हिन्दी", "in.svg"),
             LanguageItem(LocaleHelper.LOCALE_ID, R.string.language_indonesian, "Bahasa Indonesia", "id.svg"),
             LanguageItem(LocaleHelper.LOCALE_KO, R.string.language_korean, "한국어", "kr.svg"),

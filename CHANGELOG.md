@@ -5,9 +5,18 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.9.2] — 2026-08-25
+## [1.9.3] — 2026-08-27
 
 ### Added
+- **Dutch (Nederlands) Language Support**:
+  - Added complete Dutch translation across the application (`values-nl/strings.xml` and `values-nl/strings_policy.xml`).
+  - Added official Netherlands flag vector SVG (`nl.svg`) to assets.
+  - Added Dutch (`LOCALE_NL`) to `LocaleHelper` and registered in `build.gradle.kts` (`resourceConfigurations`).
+  - Integrated Dutch into the first-screen onboarding flow (`LanguageWelcomeActivity`) with automatic device system language detection and selection.
+  - Added Dutch option to `LanguageActivity` (Mobile & TV) and active language subtitle in `SettingsActivity`.
+  - Added Dutch language selector item and JS mapping to the Remote File Server desktop web UI (`remote/index.html`).
+  - Added Dutch language option and flag to the Web Share portal (`WebShareServer`).
+  - Added Dutch language, Base64 flag, and complete localized UI strings to the Windows Companion Console (`UFM-Windows/src/hooks/translations.ts`).
 - **Italian (Italiano) Language Support**:
   - Added complete Italian translation across the application (`values-it/strings.xml` and `values-it/strings_policy.xml`).
   - Added official Italian flag vector SVG (`it.svg`) to assets.
@@ -17,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added Italian language selector item and JS mapping to the Remote File Server desktop web UI (`remote/index.html`).
   - Added Italian language option and flag to the Web Share portal (`WebShareServer`).
   - Added Italian language, Base64 flag, and complete localized UI strings to the Windows Companion Console (`UFM-Windows/src/hooks/translations.ts`).
+
+## [1.9.2] — 2026-08-25
+
+### Added
 - **ADB Target IP & Port Persistence (`AdbPreferenceManager`)**:
   - Automatically remembers and validates the last used ADB target IP address and port across Mobile and Android TV.
   - Registered in `SettingsBackupManager` (`adb_preferences`) for backup export and restore.

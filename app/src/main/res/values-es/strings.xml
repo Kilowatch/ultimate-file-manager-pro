@@ -44,6 +44,12 @@ Turco (Türkçe)
     <string name="language_ukrainian">
 Ucraniano (українська)
 </string>
+    <string name="language_italian">
+italiano (italiano)
+</string>
+    <string name="language_dutch">
+Holandés (Países Bajos)
+</string>
     <string name="select_language">
 Seleccionar idioma
 </string>

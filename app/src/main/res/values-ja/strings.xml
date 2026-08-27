@@ -44,6 +44,12 @@ Ultimate File Manager Pro
     <string name="language_ukrainian">
 ウクライナ語
 </string>
+    <string name="language_italian">
+イタリア語 (イタリア語)
+</string>
+    <string name="language_dutch">
+オランダ語 (オランダ)
+</string>
     <string name="select_language">
 言語を選択
 </string>

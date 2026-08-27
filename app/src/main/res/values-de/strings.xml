@@ -44,6 +44,12 @@ Türkisch (Türkçe)
     <string name="language_ukrainian">
 Ukrainisch (українська)
 </string>
+    <string name="language_italian">
+Italienisch (Italiano)
+</string>
+    <string name="language_dutch">
+Niederländisch (Niederlande)
+</string>
     <string name="select_language">
 Sprache auswählen
 </string>

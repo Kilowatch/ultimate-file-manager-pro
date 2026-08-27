@@ -44,6 +44,12 @@ Turki (Türkçe)
     <string name="language_ukrainian">
 Ukraina (українська)
 </string>
+    <string name="language_italian">
+Italia (Italia)
+</string>
+    <string name="language_dutch">
+Belanda (Nederland)
+</string>
     <string name="select_language">
 Pilih Bahasa
 </string>

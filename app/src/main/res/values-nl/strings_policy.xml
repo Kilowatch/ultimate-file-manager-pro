@@ -1,0 +1,1646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SHARED
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="policy_app_name">
+Ultimate File Manager Pro
+</string>
+    <string name="policy_company">
+KiloWatch
+</string>
+    <string name="policy_last_updated">
+Laatst bijgewerkt: augustus 2026
+</string>
+    <string name="policy_play_store_url">
+https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
+</string>
+    <string name="policy_contact_email">
+support@kilowatch.co.za
+</string>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TERMS AND CONDITIONS
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="tc_screen_title">
+Algemene voorwaarden
+</string>
+    <string name="tc_summary">
+Door Ultimate File Manager Pro te downloaden of te gebruiken, accepteert u deze Voorwaarden. We hebben ze zo duidelijk en jargonvrij mogelijk geschreven.
+</string>
+
+    <!-- Section titles -->
+    <string name="tc_s1_title">
+1. Waar u mee akkoord gaat
+</string>
+    <string name="tc_s2_title">
+2. Wat de app doet
+</string>
+    <string name="tc_s3_title">
+3. Risico en aansprakelijkheid – de eerlijke waarheid
+</string>
+    <string name="tc_s3a_title">
+3a. In-app aankopen en facturering
+</string>
+    <string name="tc_s3b_title">
+3b. RClone Cloud-integratie
+</string>
+    <string name="tc_s4_title">
+4. Jouw verantwoordelijkheden
+</string>
+    <string name="tc_s5_title">
+5. Machtigingen die we nodig hebben en waarom
+</string>
+    <string name="tc_s6_title">
+6. Wie is eigenaar van wat
+</string>
+    <string name="tc_s7_title">
+7. Open-sourcecomponenten die we gebruiken
+</string>
+    <string name="tc_s8_title">
+8. Wijzigingen in deze voorwaarden
+</string>
+    <string name="tc_s9_title">
+9. Als er iets misgaat
+</string>
+    <string name="tc_s10_title">
+10. Toepasselijk recht
+</string>
+    <string name="tc_s11_title">
+11. Vragen? Neem contact op
+</string>
+
+    <!-- Section body text -->
+    <string name="tc_s1_body">
+Door Ultimate File Manager Pro te downloaden of te openen vanuit de Google Play Store, accepteert u deze Voorwaarden. Als u ze liever niet accepteert, installeer of gebruik de app dan gewoon niet.
+</string>
+
+    <string name="tc_s2_body">
+Ultimate File Manager Pro is een gratis Android-app – beschikbaar op zowel telefoons als Android TV – boordevol tools om uw bestanden georganiseerd en veilig te houden.
+</string>
+
+    <string name="tc_s3_body">
+We hebben deze app met zorg gebouwd, maar hier zijn enkele belangrijke feiten die u moet weten voordat u deze gebruikt.
+</string>
+
+    <string name="tc_s3a_body">
+De app biedt een optionele \'Fuel the Developer\'-fooipot: drie eenmalige vrijwillige aankopen die de ontwikkeling ondersteunen. Tips geven je geen extra functies; de app is altijd volledig gratis.
+</string>
+    <string name="tc_s3a_payment">
+Alle transacties verlopen via Google Play Billing. Wij zien nooit uw kaart- of bankgegevens.
+</string>
+    <string name="tc_s3a_refunds">
+Fooiaankopen zijn vrijwillig en worden verwerkt door Google Play. Terugbetalingsverzoeken worden rechtstreeks door Google Play afgehandeld in overeenstemming met het teruggavebeleid en de toepasselijke wetgeving, waaronder de South African Consumer Protection Act. KiloWatch verwerkt restituties niet zelfstandig.
+</string>
+    <string name="tc_s3a_recurring">
+Er zijn geen abonnementen. Elke fooi is een eenmalige aankoop van verbruiksartikelen. Er worden nooit automatisch kosten in rekening gebracht.
+</string>
+    <string name="tc_s3a_no_obligation">
+Een fooi geven is geheel optioneel. Alle functies blijven voor altijd kosteloos beschikbaar.
+</string>
+
+    <string name="tc_s3b_body">
+De app ondersteunt verbinding met een breed scala aan externe cloudopslagproviders met behulp van de geïntegreerde RClone-backend. Wanneer u deze functie gebruikt, zijn de volgende voorwaarden van toepassing:
+</string>
+    <string-array name="tc_rclone_labels">
+        <item>
+Directe API-communicatie
+</item>
+        <item>
+Beveiliging van legitimatie
+</item>
+        <item>
+Voorwaarden van derden
+</item>
+        <item>
+Geen verbindingsgarantie
+</item>
+    </string-array>
+    <string-array name="tc_rclone_details">
+        <item>
+Alle netwerkverzoeken aan RClone-opslagproviders (zoals Filen, Mega en anderen) worden rechtstreeks vanaf uw apparaat naar de eindpunten van de betreffende provider uitgevoerd. Er gaan geen gegevens door de KiloWatch-servers.
+</item>
+        <item>
+Uw RClone-configuratieprofielen en wachtwoorden worden op het apparaat gecodeerd via de RClone RC-backend en lokaal opgeslagen als rclone_encrypted.json in de privéopslag van de app. U bent als enige verantwoordelijk voor het beveiligen van uw apparaat om dit bestand te beschermen.
+</item>
+        <item>
+Op uw gebruik van RClone-geïntegreerde cloudopslag zijn de servicevoorwaarden en het privacybeleid van de betreffende cloudprovider van toepassing. U moet zich aan hun voorwaarden houden als u via deze app toegang krijgt tot bestanden.
+</item>
+        <item>
+Omdat API\'s en eindpunten van cloudproviders zonder voorafgaande kennisgeving kunnen worden gewijzigd, kunnen we niet garanderen dat een specifieke RClone-provider toegankelijk blijft of ononderbroken blijft functioneren.
+</item>
+    </string-array>
+    <string name="tc_s3b_summary">
+Verbinding maken met clouddrives via RClone gebeurt rechtstreeks vanaf uw telefoon of tv. We zien nooit uw cloudbestanden of wachtwoorden. Uw wachtwoorden worden gecodeerd op uw telefoon en u bent onderworpen aan de voorwaarden van welke cloudprovider u ook configureert.
+</string>
+
+    <string name="tc_s4_body">
+Het gebruik van deze app brengt een paar eenvoudige verantwoordelijkheden met zich mee.
+</string>
+
+    <string name="tc_s5_body">
+De app vraagt ​​om bepaalde Android-machtigingen om goed te kunnen werken. Hier is precies waar elk voor is.
+</string>
+
+    <string name="tc_s6_body">
+U bent van harte welkom om de app vrij te gebruiken; je mag het alleen niet kopiëren, herdistribueren of verkopen.
+</string>
+
+    <string name="tc_s7_body">
+We hebben voortgebouwd op de schouders van een aantal geweldige open-sourceprojecten. Voor elke bibliotheek geldt een eigen licentie. U kunt de volledige licentietekst voor elke bibliotheek in de app bekijken via Instellingen → Juridisch → Open Source-licenties.
+</string>
+
+    <string name="tc_s8_body">
+We kunnen deze Voorwaarden van tijd tot tijd bijwerken. Wanneer we dat doen, werken we de datum bovenaan dit document bij. Als u de app blijft gebruiken na eventuele wijzigingen, betekent dit dat u de bijgewerkte voorwaarden accepteert.
+</string>
+
+    <string name="tc_s9_body">
+We behouden ons het recht voor om de toegang tot de app op te schorten of te beëindigen als deze Voorwaarden worden geschonden, bijvoorbeeld als de app wordt gebruikt voor illegale activiteiten of om zonder toestemming toegang te krijgen tot het apparaat van iemand anders.
+</string>
+
+    <string name="tc_s10_body">
+Op deze Voorwaarden is de wetgeving van Zuid-Afrika van toepassing. Eventuele geschillen zullen worden beslecht onder de Zuid-Afrikaanse jurisdictie, zonder rekening te houden met conflicterende wettelijke bepalingen.
+</string>
+
+    <string name="tc_s11_body">
+Als er iets onduidelijk is of als u vragen heeft over uw rechten, neem dan contact met ons op.
+</string>
+
+    <string name="tc_footer">
+Door Ultimate File Manager Pro te gebruiken, bevestigt u dat u deze Algemene voorwaarden heeft gelezen en begrepen.
+</string>
+
+    <!-- Feature list (Section 2) -->
+    <string-array name="tc_features">
+        <item>
+Bestandsbrowser: blader, kopieer, verplaats, hernoem en verwijder bestanden waar dan ook op uw apparaat.
+</item>
+        <item>
+Gecodeerde kluis: vergrendel gevoelige bestanden achter AES-256-GCM-codering met uw eigen pincode.
+</item>
+        <item>
+Bestandsserver — host een FTP- of beveiligde SFTP-server rechtstreeks op uw apparaat om bestanden via uw lokale netwerk te delen.
+</item>
+        <item>
+Beheer op afstand – beheer bestanden via uw lokale Wi-Fi via een ingebouwde HTTP-server die het op afstand uploaden, downloaden en installeren van APK\'s ondersteunt.
+</item>
+        <item>
+Netwerkshares: maak verbinding met SMB-, FTP- en NFS-servers op uw lokale netwerk om externe bestanden te doorzoeken, downloaden en beheren.
+</item>
+        <item>
+Mapsynchronisatie: maak automatisch een back-up van lokale telefoonmappen naar een SMB- of FTP-netwerkshare volgens een door u gekozen schema (interval of specifieke tijd dagelijks, wekelijks of maandelijks).
+</item>
+        <item>
+Apparaat koppelen: koppel uw mobiele telefoon en Android TV via lokale Wi-Fi om bestanden over te dragen en te installeren.
+</item>
+        <item>
+ADB Terminal — maak verbinding met Android-apparaten in ontwikkelaarsmodus via uw lokale Wi-Fi met behulp van ADB (Android Debug Bridge) voor directe shell-toegang en geavanceerde probleemoplossing.
+</item>
+        <item>
+Ingebouwde viewers: bekijk tekstbestanden, pdf\'s, geanimeerde afbeeldingen (APNG, GIF, geanimeerde WebP, AVIF, SVG en meer), archieven en andere formaten rechtstreeks in de app.
+</item>
+        <item>
+Geavanceerde ZIP-ondersteuning — creëer en extraheer met een wachtwoord beveiligde en AES-gecodeerde ZIP-archieven.
+</item>
+        <item>
+Externe screenshots: leg het scherm van uw gekoppelde Android TV vast via lokale Wi-Fi via ADB en sla dit rechtstreeks op in de opslag van uw telefoon.
+</item>
+        <item>
+Ondersteuning voor 7Z-archief — extraheer 7Z-archieven met LZMA/LZMA2-compressie.
+</item>
+        <item>
+Bestanden zoeken: vind snel bestanden en mappen op uw apparaatopslag.
+</item>
+        <item>
+Storage Analyzer: bekijk een visueel overzicht van wat uw opslagruimte gebruikt.
+</item>
+        <item>
+App Manager — bekijk en beheer alle apps die op uw apparaat zijn geïnstalleerd, met debloat-aanbevelingen voor vooraf geïnstalleerde apps.
+</item>
+        <item>
+APK-installatieprogramma: installeer Android-apps en splits APK\'s (XAPK) rechtstreeks vanuit lokaal opgeslagen bestanden.
+</item>
+        <item>
+Verhoogde toegang (Shizuku, Shevery &amp; ADB) — verkrijg root-achtige toegang om systeembestanden en beperkte mappen te beheren zonder uw apparaat daadwerkelijk te rooten.
+</item>
+        <item>
+Storage Indexer — maak een lokale index van bestandsmetagegevens voor direct zoeken en razendsnel browsen.
+</item>
+        <item>
+Storage Access Framework — andere apps hebben toegang tot uw bestanden via de documentprovider van UFM.
+</item>
+        <item>
+Fooienpot — optionele eenmalige aankopen om de ontwikkelaar te ondersteunen; de app is altijd gratis zonder fooi.
+</item>
+        <item>
+UFM Media Player — speel audio- en videobestanden af ​​met afspelen op de achtergrond, bedieningselementen voor meldingen, Picture-in-Picture-modus en beheer van afspeellijsten.
+</item>
+        <item>
+GIF Creator — maak geanimeerde GIF-bestanden van geselecteerde afbeeldingen met een aangepaste framesnelheid, opties voor het wijzigen van de grootte en het opnieuw ordenen van frames via slepen en neerzetten.
+</item>
+        <item>
+Foto-EXIF-tools — inspecteer EXIF- en GPS-metagegevens van foto\'s, wis privé-geotags en apparaatinformatie en hernoem foto\'s in batch met behulp van vastgelegde tijdstempels en camera-metagegevens.
+</item>
+    </string-array>
+
+    <!-- Risk table (Section 3) — label|detail pairs -->
+    <string-array name="tc_risk_labels">
+        <item>
+Gegevensverlies
+</item>
+        <item>
+Kluis-pincode
+</item>
+        <item>
+APK-bestanden
+</item>
+        <item>
+Beveiliging van bestandsservers
+</item>
+        <item>
+Referenties voor netwerkshares
+</item>
+        <item>
+Mapsynchronisatie
+</item>
+        <item>
+Systeemapp verwijderen
+</item>
+        <item>
+ADB-koppeling
+</item>
+        <item>
+Shizuku, Shevery en verhoogde toegang
+</item>
+        <item>
+TV-screenshots
+</item>
+        <item>
+Nauwkeurigheid van de indexeerder
+</item>
+        <item>
+Bugs en fouten
+</item>
+        <item>
+Onze aansprakelijkheid
+</item>
+    </string-array>
+    <string-array name="tc_risk_details">
+        <item>
+We kunnen geen gegevensverlies garanderen. Maak altijd back-ups van bestanden die voor u belangrijk zijn.
+</item>
+        <item>
+Als u uw pincode en herstelcode vergeet, kunnen uw gecodeerde bestanden door niemand worden hersteld.
+</item>
+        <item>
+Het installeren van APK\'s van onbekende bronnen brengt veiligheidsrisico\'s met zich mee. U neemt de volledige verantwoordelijkheid voor alle APK-bestanden die u installeert.
+</item>
+        <item>
+Bij het hosten van een bestandsserver verzenden FTP-verbindingen gegevens en inloggegevens in platte tekst. Gebruik altijd SFTP als u veilige, gecodeerde overdrachten nodig heeft.
+</item>
+        <item>
+De inloggegevens voor uw netwerkshare (host, gebruikersnaam, wachtwoord) worden lokaal op uw apparaat opgeslagen. U bent verantwoordelijk voor het veilig houden van uw apparaat.
+</item>
+        <item>
+Synchronisatiebewerkingen worden op de achtergrond uitgevoerd en kunnen batterij en gegevens verbruiken. Controleer altijd uw externe pad voordat u synchronisatie inschakelt. Als u naar een onjuiste map synchroniseert, kunnen bestanden op uw netwerkshare worden overschreven.
+</item>
+        <item>
+Het verwijderen van systeem-apps op basis van debloat-aanbevelingen kan de stabiliteit van het apparaat beïnvloeden. Ga voorzichtig te werk.
+</item>
+        <item>
+Voor ADB-koppeling is het uitwisselen van certificaten tussen uw apparaat en het doelapparaat via uw lokale Wi-Fi vereist. Maak alleen verbinding met apparaten waarvan u de eigenaar bent of waarvoor u toegangsrechten heeft. Iedereen in uw netwerk die uw koppelingspincode vastlegt, heeft toegang tot uw apparaat. Houd deze pincode privé.
+</item>
+        <item>
+Door Shizuku, Shevery of ADB te gebruiken voor verhoogde toegang kan de app door het systeem beveiligde bestanden wijzigen. Misbruik van deze functies kan de stabiliteit of veiligheid van het apparaat beïnvloeden. Wees voorzichtig en verleen alleen toegang tot deze app.
+</item>
+        <item>
+Schermafbeeldingen van gekoppelde tv\'s worden via ADB via uw lokale netwerk vastgelegd en rechtstreeks in de opslag van uw telefoon opgeslagen. We verzenden, bekijken of uploaden uw schermafbeeldingen niet. Zorg ervoor dat u alleen schermen vastlegt op apparaten waarvan u de eigenaar bent of waartoe u toestemming heeft.
+</item>
+        <item>
+De index geeft de staat van uw opslag weer op het moment van scannen. Mogelijk moet u de index vernieuwen als bestanden door andere apps worden gewijzigd.
+</item>
+        <item>
+Geen enkele software is perfect. We kunnen niet beloven dat de app altijd foutloos of ononderbroken zal zijn.
+</item>
+        <item>
+Onze totale aansprakelijkheid is beperkt tot het totale bedrag dat u in de 30 dagen voorafgaand aan een claim voor in-app-aankopen heeft betaald. Wij zijn niet aansprakelijk voor gegevensverlies, apparaatschade of winstderving als gevolg van gratis functies.
+</item>
+    </string-array>
+
+    <!-- Responsibilities list (Section 4) -->
+    <string-array name="tc_responsibilities">
+        <item>
+Maak regelmatig back-ups van belangrijke bestanden voordat u bulkbewerkingen uitvoert.
+</item>
+        <item>
+Bewaar uw kluispincode en herstelcode op een veilige plek. Wij kunnen deze niet voor u ophalen.
+</item>
+        <item>
+Houd uw pincode privé. Iedereen die dit weet, heeft toegang tot uw kluis.
+</item>
+        <item>
+Houd de inloggegevens voor uw netwerkshare veilig; deze worden lokaal op uw apparaat opgeslagen.
+</item>
+        <item>
+Controleer de externe paden voor mapsynchronisatie zorgvuldig: bij synchronisatie met een onjuiste netwerkmap kunnen bestaande bestanden worden overschreven.
+</item>
+        <item>
+Wees voorzichtig bij het verwijderen van systeem-apps op basis van debloat-aanbevelingen.
+</item>
+        <item>
+Maak alleen via ADB Terminal verbinding met apparaten waarvan u de eigenaar bent of waarvoor u expliciete toestemming heeft. Gebruik ADB Terminal niet om ongeautoriseerde toegang te krijgen tot welk apparaat dan ook.
+</item>
+        <item>
+Houd eventuele ADB-, Shizuku- of Shevery-koppelingspincodes privé. Deel deze alleen met mensen waarvan u vertrouwt dat ze toegang hebben tot uw apparaat.
+</item>
+        <item>
+Beveilig uw Shizuku- of Shevery-manager: door UFM verhoogde toegang te verlenen via Shizuku of Shevery krijgt deze macht over beperkte bestanden. Verleen deze toegang alleen als u de app vertrouwt.
+</item>
+        <item>
+Gebruik de app alleen voor legale doeleinden. Bewaar, deel of verspreid geen illegale inhoud.
+</item>
+        <item>
+Gebruik Extern beheer niet om zonder toestemming toegang te krijgen tot het apparaat van iemand anders.
+</item>
+        <item>
+Probeer de app niet te reverse-engineeren, decompileren of ermee te knoeien.
+</item>
+        <item>
+Beheer uw geïndexeerde records op verantwoorde wijze: u kunt op elk gewenst moment records verwijderen of specifieke schijven negeren via Instellingen -> Storage Indexer.
+</item>
+        <item>
+Controleer de authenticiteit en veiligheid van eventuele APK-bestanden voordat u ze installeert.
+</item>
+    </string-array>
+
+    <!-- Permissions table (Section 5) — label|detail pairs -->
+    <string-array name="tc_permission_labels">
+        <item>
+Toegang tot alle bestanden
+</item>
+        <item>
+Mediatoegang
+</item>
+        <item>
+Meldingen
+</item>
+        <item>
+Netwerk / Wi-Fi
+</item>
+        <item>
+Multicast
+</item>
+        <item>
+Netwerkstatus
+</item>
+        <item>
+Pakketquery
+</item>
+        <item>
+Pakketten installeren
+</item>
+        <item>
+Facturering
+</item>
+        <item>
+ADB-foutopsporingsbrug
+</item>
+        <item>
+Verhoogde toegang (Shizuku en Shevery)
+</item>
+        <item>
+Opstarten
+</item>
+        <item>
+Batterij-optimalisatie
+</item>
+        <item>
+Voorgronddienst
+</item>
+        <item>
+Wake-Lock
+</item>
+        <item>
+Opslagindexer
+</item>
+        <item>
+Bluetooth
+</item>
+        <item>
+Trillen
+</item>
+    </string-array>
+    <string-array name="tc_permission_details">
+        <item>
+Essentieel voor het bladeren, kopiëren, verplaatsen en verwijderen van bestanden in al uw opslagruimte.
+</item>
+        <item>
+Nodig om uw foto\'s, video\'s en audiobestanden te ordenen en beheren.
+</item>
+        <item>
+Wordt gebruikt om u te waarschuwen wanneer de bestandsbewerkingen zijn voltooid of wanneer de opslagruimte bijna op is.
+</item>
+        <item>
+Maakt extern bestandsbeheer, toegang tot netwerkshares (SMB/FTP/SFTP/SCP/NFS), mapsynchronisatie, apparaatkoppeling en ADB-terminaltoegang op uw lokale netwerk mogelijk. Netwerkdetectie scant apparaten op uw lokale subnet (tot 254 IP\'s) op ADB-poorten 5555, 5037 en 5038 om apparaten te vinden die geschikt zijn voor ADB.
+</item>
+        <item>
+Wordt gebruikt voor detectie van lokale netwerkapparaten (NSD/mDNS) bij het koppelen van apparaten.
+</item>
+        <item>
+Detecteert VPN-verbindingen tijdens extern beheer en toegang tot netwerkshares.
+</item>
+        <item>
+Laat App Manager alle apps opsommen die op uw apparaat zijn geïnstalleerd. De toegankelijke gegevens omvatten: app-naam, pakket-ID, versie, APK-grootte, tijdstempels voor installatie en updates, en of elke app een systeem- of door de gebruiker geïnstalleerde app is. Deze informatie wordt uitsluitend op het apparaat gebruikt om App Manager weer te geven, de opslag per app te berekenen en pakketnamen te vergelijken met een openbaar beschikbare debloat-referentielijst die lokaal wordt gedownload en in de cache wordt opgeslagen. Er worden nooit geïnstalleerde applicatiegegevens verzonden naar de servers van KiloWatch of een derde partij.
+</item>
+        <item>
+Vereist om APK-bestanden te installeren die u vanuit de lokale opslag wilt uitvoeren.
+</item>
+        <item>
+Verwerkt optionele Tip Jar-aankopen via Google Play.
+</item>
+        <item>
+Maakt een veilige verbinding met Android-apparaten mogelijk voor geavanceerde shell-toegang. Genereert een uniek RSA-certificaat op uw apparaat om te koppelen; er worden geen certificaten verzonden naar externe servers.
+</item>
+        <item>
+Hiermee kan de app de Shizuku/Shevery API (inclusief Veilige instellingen) gebruiken voor het beheren van bestanden in beperkte systeemmappen zonder te rooten.
+</item>
+        <item>
+Zorgt ervoor dat Shizuku- en Shevery-services automatisch starten wanneer uw apparaat opstart, zodat onmiddellijke beschikbaarheid wordt gegarandeerd.
+</item>
+        <item>
+Hiermee kunt u ervoor kiezen om de Shizuku- en Shevery-services op de achtergrond actief te houden voor betrouwbare prestaties.
+</item>
+        <item>
+Vereist om mapsynchronisatie en bestandsoverdracht als voorgrondservice uit te voeren, zodat deze betrouwbaar worden uitgevoerd, zelfs als het scherm is uitgeschakeld.
+</item>
+        <item>
+Houdt de CPU en Wi-Fi actief tijdens de overdracht van grote bestanden, zodat deze betrouwbaar worden voltooid, zelfs als het scherm wordt uitgeschakeld.
+</item>
+        <item>
+Gebruikt opslagrechten om metagegevens van bestanden te scannen en te indexeren voor prestaties – beheerd via Instellingen -> Storage Indexer.
+</item>
+        <item>
+Maakt verbinding met uw gekoppelde Android TV en fungeert als Bluetooth-toetsenbord en -muis voor afstandsbediening.
+</item>
+        <item>
+Biedt haptische feedback bij het indrukken van knoppen op de afstandsbediening van de tv.
+</item>
+    </string-array>
+
+    <!-- Open-source list (Section 7) -->
+    <string-array name="tc_opensource">
+        <item>
+NanoHTTPD — lichtgewicht HTTP-server die extern beheer mogelijk maakt. (BSD-3-clausule)
+</item>
+        <item>
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+</item>
+        <item>
+smbj (hierynomus/smbj) — SMB2/SMB3 Java-implementatie gebruikt voor toegang tot netwerkshares. (Apache-2.0)
+</item>
+        <item>
+EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3-clientbibliotheek voor toegang tot netwerkshares. (Apache-2.0)
+</item>
+        <item>
+libnfs (sahlberg/libnfs) — native NFS-clientbibliotheek die NFSv2, NFSv3 en NFSv4 ondersteunt. (LGPL-2.1 / BSD-2-clausule)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) - uitgebreide SSHD core-, SFTP- en SCP-clientbibliotheek voor veilige toegang tot netwerkshares en hosting. (Apache-2.0)
+</item>
+        <item>
+Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP-server. (Apache-2.0)
+</item>
+        <item>
+Apache POI — documentverwerkingsbibliotheek voor het bekijken van Office-bestanden. (Apache-2.0)
+</item>
+        <item>
+Firebase Analytics: het analyseplatform van Google dat ons helpt het app-gebruik te begrijpen. (Apache-2.0)
+</item>
+        <item>
+AndroidX-bibliotheken (incl. Leanback voor Android TV) - Jetpack-componenten van Google voor moderne Android-ontwikkeling. (Apache-2.0)
+</item>
+        <item>
+Material Design Components: de UI-bibliotheek van Google voor een overzichtelijke, consistente interface. (Apache-2.0)
+</item>
+        <item>
+Room Persistence Library — SQLite-abstractielaag voor lokale metadata-indexering. (Apache-2.0)
+</item>
+        <item>
+zip4j (net.lingala.zip4j) — geavanceerde ZIP-bibliotheek voor met een wachtwoord beveiligde en AES-gecodeerde archieven. (Apache-2.0)
+</item>
+        <item>
+Apache Commons Compress - bibliotheek voor het lezen en schrijven van verschillende archiefformaten (7z, zip, tar, enz.). (Apache-2.0)
+</item>
+        <item>
+XZ voor Java (org.tukaani.xz) - implementatie van XZ- en LZMA-compressie. (Publiek domein)
+</item>
+        <item>
+zstd-jni (com.github.luben:zstd-jni) - JNI-bindingen voor Zstandard-compressie- en extractiebibliotheek. (BSD-2-clausule)
+</item>
+        <item>
+Junrar (com.github.junrar:junrar) - Java RAR-extractiebibliotheek. (BSD-3-clausule)
+</item>
+        <item>
+libadb-android (com.github.MuntashirAkon) - Android Debug Bridge-bibliotheek die veilige verbindingen mogelijk maakt met ADB-compatibele apparaten voor externe shell-toegang en op certificaten gebaseerde koppeling. (Apache-2.0)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — uitgebreide SSHD core-, SFTP- en SCP-clientbibliotheek voor veilige toegang tot netwerkshares. (Apache-2.0)
+</item>
+        <item>
+EdDSA voor Java (net.i2p.crypto:eddsa) - implementatie van EdDSA (Edwards-curve Digital Signature Algorithm) voor Ed25519 SSH-sleutels. (CC0-1.0)
+</item>
+        <item>
+SLF4J Android (uk.uuid.slf4j:slf4j-android) - logboekbinding voor Android gebruikt door de SSHD-bibliotheek. (MIT)
+</item>
+        <item>
+BouncyCastle (org.bouncycastle) — cryptografiebibliotheek voor het genereren van RSA/EdDSA-sleutelparen en het maken van X.509-certificaten; versie 1.83. (MIT-stijl licentie)
+</item>
+        <item>
+Google Play Billing Library - verwerkt optionele in-app-fooiaankopen; valt onder het privacybeleid van Google Play. (Apache-2.0)
+</item>
+        <item>
+Google Play Review-bibliotheek: zorgt voor de in-app beoordelings- en beoordelingsfunctionaliteit van de app. (Apache-2.0)
+</item>
+        <item>
+Coil (io.coil-kt.coil3) — bibliotheek voor het laden van afbeeldingen die de weergave van geanimeerde afbeeldingen mogelijk maakt (APNG, GIF, geanimeerde WebP, AVIF, JXL, SVG) in de ingebouwde afbeeldingsviewer. (Apache-2.0)
+</item>
+        <item>
+avif-coder (io.github.awxkee) - AVIF-beelddecoderingsbibliotheek die native AVIF-ondersteuning biedt op Android API 24–30; API 31+ maakt gebruik van de ingebouwde ImageDecoder. (Apache-2.0)
+</item>
+        <item>
+jxl-coder (io.github.awxkee) - JPEG XL-bibliotheek voor het decoderen en coderen van afbeeldingen die native JXL-ondersteuning biedt op Android API 21+. (Apache-2.0 / BSD-3-clausule)
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) - kernbibliotheek voor het decoderen en weergeven van geanimeerde PNG-bestanden op Android. (Apache-2.0)
+</item>
+        <item>
+Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — bibliotheken die verhoogde toegang tot het bestandssysteem mogelijk maken via Shizuku- of Shevery Manager-apps. (Apache-2.0)
+</item>
+        <item>
+ViewPager2 — Android-bibliotheek voor het schakelen tussen fragmenten en lay-outs. (Apache-2.0)
+</item>
+        <item>
+Lottie (com.airbnb.android:lottie) v6.3.0 — animatiebibliotheek voor het native weergeven van Adobe After Effects-animaties op Android, gebruikt voor vloeiende UI-animaties in de hele app. (Apache-2.0)
+</item>
+        <item>
+Ktor (io.ktor) — lichtgewicht webframework dat wordt gebruikt om de lokale bestandsserver van stroom te voorzien. (Apache-2.0)
+</item>
+        <item>
+PDFBox-Android (com.tom-roush:pdfbox-android) — bibliotheek voor het native weergeven en bekijken van PDF-documenten. (Apache-2.0)
+</item>
+        <item>
+ExoPlayer / Media3 (androidx.media3) — geavanceerde mediaspeler voor robuuste video- en audioweergave. (Apache-2.0)
+</item>
+        <item>
+Microsoft Authentication Library (MSAL) — verwerkt de OneDrive API-authenticatie native. (MIT)
+</item>
+        <item>
+OkHttp (com.squareup.okhttp3) – robuuste HTTP- en HTTP/2-client voor netwerkverzoeken voor cloudopslag. (Apache-2.0)
+</item>
+        <item>
+Gson (com.google.code.gson) - JSON-verwerkingsbibliotheek gebruikt voor integratie van cloudopslag. (Apache-2.0)
+</item>
+        <item>
+AndroidX Browser (androidx.browser) - Ondersteuning voor aangepaste Chrome-tabbladen voor Google Drive API-authenticatie. (Apache-2.0)
+</item>
+        <item>
+ZXing (com.google.zxing:core) - bibliotheek voor beeldverwerking van streepjescodes. (Apache-2.0)
+</item>
+        <item>
+gifencoder (com.squareup:gifencoder) — pure Java GIF-coderingsbibliotheek voor het maken van geanimeerde GIF-bestanden van geselecteerde afbeeldingen. (Apache-2.0)
+</item>
+        <item>
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) - bibliotheek voor het lezen, schrijven en strippen van EXIF- en GPS-metagegevens in JPEG-, PNG-, WebP-, HEIF- en DNG-beeldformaten. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK - verwerkt optionele in-app-tipaankopen op Amazon-apparaten. (eigendom)
+</item>
+    </string-array>
+
+    <!-- Contact items (Section 11) -->
+    <string-array name="tc_contact_labels">
+        <item>
+E-mail
+</item>
+    </string-array>
+    <string-array name="tc_contact_values">
+        <item>
+support@kilowatch.co.za
+</item>
+    </string-array>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PRIVACY POLICY
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="pp_screen_title">
+Privacybeleid
+</string>
+    <string name="pp_summary">
+Uw bestanden blijven op uw apparaat staan; we zien ze nooit. Met uw toestemming verzamelen we via Firebase anonieme gebruiksanalyses om de app te verbeteren. Geen advertenties, geen gegevensverkoop, geen grappige zaken.
+</string>
+
+    <!-- Section titles -->
+    <string name="pp_s1_title">
+1. Inleiding
+</string>
+    <string name="pp_s2_title">
+2. Informatie die we verzamelen
+</string>
+    <string name="pp_s3_title">
+3. Hoe wij uw gegevens gebruiken
+</string>
+    <string name="pp_s4_title">
+4. Machtigingen en waarom we ze nodig hebben
+</string>
+    <string name="pp_s5_title">
+5. Gegevensbeveiliging
+</string>
+    <string name="pp_s6_title">
+6. Google API-services – Beperkte openbaarmaking van gebruik
+</string>
+    <string name="pp_s6b_title">
+6b. RClone Cloud-integratie — Privacy en naleving
+</string>
+    <string name="pp_s7_title">
+7. Gegevens delen en derden
+</string>
+    <string name="pp_s8_title">
+8. Hoe lang we gegevens bewaren
+</string>
+    <string name="pp_s9_title">
+9. Uw rechten
+</string>
+    <string name="pp_s10_title">
+10. Privacy van kinderen
+</string>
+    <string name="pp_s11_title">
+11. Internationale gebruikers
+</string>
+    <string name="pp_s12_title">
+12. Wijzigingen in dit privacybeleid
+</string>
+    <string name="pp_s13_title">
+13. Naleving van het Google Play-beleid
+</string>
+    <string name="pp_s13b_title">
+13b. Prominente openbaarmaking: informatie over geïnstalleerde applicaties
+</string>
+    <string name="pd_dialog_title">
+Prominente openbaarmaking: informatie over geïnstalleerde applicaties
+</string>
+    <string name="pd_dialog_body">
+Ultimate File Manager Pro heeft toegang tot de lijst met geïnstalleerde applicaties op uw apparaat via de machtiging QUERY_ALL_PACKAGES om de App Manager-weergave, Debloater-functies en extern beheer van Remote File Server te bieden. Deze informatie wordt lokaal op uw apparaat verwerkt en opgeslagen. Wanneer de externe bestandsserver is ingeschakeld, kunnen de geïnstalleerde app-lijst en metagegevens via uw lokale netwerk worden verzonden naar geverifieerde apparaten via een TLS-gecodeerde HTTPS-verbinding. Voor volledige details verwijzen wij u naar Sectie 13b van ons Privacybeleid.
+</string>
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
+    <string name="pd_remote_apps_title">
+Toegang tot externe apps
+</string>
+    <string name="pd_remote_apps_body">
+Deze app kan de lijst met geïnstalleerde applicaties op uw apparaat weergeven via het lokale netwerk wanneer de functie Extern beheer (bestandsserver) actief is. Wanneer u de server inschakelt, heeft elk geverifieerd apparaat op uw lokale netwerk toegang tot de app-lijst en metagegevens (inclusief app-namen, pakket-ID\'s, versies, groottes, installatiedatums en app-pictogrammen) via de REST API van de bestandsserver. Deze verbinding is TLS-gecodeerd en vereist authenticatie. U kunt dit op elk moment uitschakelen door de bestandsserver te stoppen. Voor volledige details, zie Sectie 13b van ons Privacybeleid.
+</string>
+    <string name="pd_remote_apps_accept">
+Schakel Apps-toegang in
+</string>
+    <string name="pd_remote_apps_decline">
+Blijf uitgeschakeld
+</string>
+    <string name="pp_s14_title">
+14. Neem contact met ons op
+</string>
+
+    <!-- Section body text -->
+    <string name="pp_s1_body">
+Ultimate File Manager Pro is een onafhankelijke Android-applicatie en is niet gelieerd aan, geautoriseerd, gesponsord of onderschreven door het Ultimate File Manager-project voor Windows (ultimatefilemanager.pl) of enig ander product met een vergelijkbare naam. Alle andere productnamen en handelsmerken zijn eigendom van hun respectievelijke eigenaren.\n
+\n
+Dit privacybeleid legt uit welke informatie we verzamelen wanneer u Ultimate File Manager Pro gebruikt, hoe we deze gebruiken en hoe we deze veilig houden. Door de app te gebruiken, gaat u akkoord met de hier beschreven praktijken.
+</string>
+
+    <string name="pp_s2_local_heading">
+Alleen lokaal op uw apparaat opgeslagen
+</string>
+    <string name="pp_s2_local_body">
+De volgende gegevens worden op uw apparaat opgeslagen en verlaten dit nooit. Wij hebben hier geen toegang toe.
+</string>
+    <string name="pp_s2_local_alert">
+We hebben nooit toegang tot uw pincode, herstelcode, coderingssleutels of bestanden die in uw kluis zijn opgeslagen.
+</string>
+
+    <string name="pp_s2_analytics_heading">
+Verzameld via Firebase Analytics (anoniem)
+</string>
+    <string name="pp_s2_analytics_body">
+We gebruiken Google Firebase Analytics om anonieme gebruiksgegevens te verzamelen om de app te verbeteren. Analytics-gegevens worden nooit gekoppeld aan uw persoonlijke identiteit. De schakelaar Gebruiksanalyse in de instellingen van de app (of de instellingen van uw Android-apparaat) is de toestemmingscontrole: deze is standaard ingeschakeld, en als u deze uitschakelt, wordt uw toestemming ingetrokken en wordt het verzamelen op elk gewenst moment stopgezet. Voor gebruikers in de Europese Economische Ruimte, het Verenigd Koninkrijk en Zwitserland volgt dit het EU-beleid inzake toestemming van gebruikers en de toepasselijke wetgeving inzake gegevensbescherming.
+</string>
+
+    <string name="pp_s2_billing_heading">
+Verwerkt via Google Play Billing (alleen optionele tips)
+</string>
+    <string name="pp_s2_billing_body">
+Wanneer u een optionele Fooienpot-aankoop doet, verwerkt Google Play de transactie. Wij zien nooit uw kaart- of bankgegevens. We ontvangen tijdelijk een aankooptoken en de product-ID; beide worden alleen op het apparaat verwerkt en nooit op onze servers opgeslagen.
+</string>
+    <string name="pp_s2_billing_note">
+Anonieme aankooptokens van Google Play Billing worden tijdelijk op het apparaat verwerkt om uw fooi te bevestigen. Ze worden nooit door ons opgeslagen en zijn niet gekoppeld aan uw identiteit.
+</string>
+
+    <string name="pp_s2_crash_heading">
+Crash- en ANR-rapportage (diagnostiek)
+</string>
+    <string name="pp_s2_crash_body">
+UFM kan diagnostische informatie vastleggen wanneer het crasht of vastloopt, zodat we het probleem kunnen oplossen. Dit omvat de app-versie, Android-versie, apparaatmodel en fabrikant, het uitzonderingstype en -bericht en de stacktrace. Het bevat nooit uw bestanden, namen, e-mailadressen of accountinformatie.\n
+\n
+Er wordt niets automatisch verzonden: na een crash of vastlopen wordt u gevraagd of u het rapport naar KiloWatch (kilowatch.co.za) wilt sturen. Als u \'Nee, bedankt\' kiest, wordt het lokaal verwijderd. U kunt crash- en bevriezingsdetectie op elk moment uitschakelen via Instellingen → Crash- en ANR-rapportage; Als u dit uitschakelt, worden ook alle openstaande rapporten verwijderd.
+</string>
+
+    <string name="pp_s2_nocollect_heading">
+Wat we nooit verzamelen
+</string>
+
+    <string name="pp_s3_local_heading">
+Lokale gegevens worden gebruikt
+</string>
+    <string name="pp_s3_analytics_heading">
+Analytics-gegevens worden gebruikt
+</string>
+
+    <string name="pp_s4_storage_heading">
+Opslagrechten
+</string>
+    <string name="pp_s4_network_heading">
+Netwerkmachtigingen
+</string>
+    <string name="pp_s4_network_alert">
+De Remote Management-server, File Server-hosting, SMB/FTP/SFTP/SCP-netwerkshareverbindingen, mapsynchronisatie, apparaatkoppeling en ADB Terminal-verbindingen werken allemaal alleen op uw lokale Wi-Fi-netwerk. Extern beheer en FTP-servers gebruiken niet-gecodeerde protocollen; SFTP- en ADB-terminalverbindingen maken gebruik van veilige, gecodeerde protocollen. API\'s voor cloudopslag (Google Drive, OneDrive, Dropbox, S3-compatibel) communiceren veilig met hun respectievelijke servers via gecodeerde HTTPS. Er worden geen andere gegevens naar externe servers verzonden.
+</string>
+    <string name="pp_s4_other_heading">
+Andere machtigingen
+</string>
+
+    <string name="pp_s5_vault_heading">
+Kluisversleuteling
+</string>
+    <string name="pp_s5_vault_body">
+De gecodeerde kluis maakt gebruik van codering op militair niveau om uw bestanden te beschermen.
+</string>
+    <string name="pp_s5_vault_alert">
+Als u zowel uw pincode als de herstelcode vergeet, zijn uw gecodeerde gegevens permanent ontoegankelijk; zelfs wij kunnen deze niet herstellen. Bewaar deze op een veilige plek.
+</string>
+    <string name="pp_s5_local_heading">
+Lokale gegevensbescherming
+</string>
+    <string name="pp_s5_remote_heading">
+Beveiliging op afstand
+</string>
+
+    <!-- Section 6 — Google API Limited Use -->
+    <string name="pp_s6_compliance_banner">
+Het gebruik door Ultimate File Manager Pro van informatie ontvangen van Google API\'s is in overeenstemming met het Gebruikersgegevensbeleid van Google API Services, inclusief de vereisten voor beperkt gebruik.
+</string>
+    <string name="pp_s6_intro">
+Wanneer u uw Google Drive-account koppelt, heeft de app alleen toegang tot uw Google-gebruikersgegevens om de bestandsbeheerfuncties te bieden die u rechtstreeks in de app gebruikt.
+</string>
+    <string name="pp_s6_google_data_heading">
+Google-gebruikersgegevens — Google Drive API
+</string>
+    <string name="pp_s6_google_never_heading">
+Waartoe we nooit toegang hebben via uw Google-account
+</string>
+    <string name="pp_s6_google_never">
+We hebben geen toegang tot uw Gmail, Google Contacten, Google Agenda, Google Foto\'s (buiten Drive) of andere Google-servicegegevens. Er wordt altijd toegang verkregen tot de minimale Drive-bestandsgegevens die nodig zijn voor de door u gevraagde actie.
+</string>
+    <string name="pp_s6_permitted_heading">
+Toegestaan ​​gebruik van Google-gebruikersgegevens
+</string>
+    <string name="pp_s6_prohibited_heading">
+Verboden gebruik: we gebruiken nooit gebruikersgegevens van Google
+</string>
+    <string name="pp_s6_minimum_access">
+Ultimate File Manager Pro vraagt ​​alleen de minimale Google Drive-machtigingen die nodig zijn om de door u gekozen bestandsbeheeracties uit te voeren. We vragen nooit toegang tot uw Gmail-, Google Contacten-, Google Agenda- of andere Google-servicegegevens.
+</string>
+    <!-- Section 6b — RClone Integration -->
+    <string name="pp_s6b_compliance_banner">
+Ultimate File Manager Pro integreert de RClone-backend om verbinding met meer dan 100 cloudopslagproviders te ondersteunen. Alle configuraties en inloggegevens worden rechtstreeks op uw apparaat beheerd.
+</string>
+    <string name="pp_s6b_intro">
+Wanneer u de RClone-opslagintegratie in Ultimate File Manager Pro gebruikt, verwerkt de app uw cloudopslaggegevens en bestandsmetagegevens lokaal. De app communiceert rechtstreeks met het API-eindpunt van uw gekozen cloudopslagprovider. We bemiddelen niet in deze verbinding en we verzamelen, bewaren of verzenden nooit uw cloudgegevens of bestanden naar onze servers.
+</string>
+    <string name="pp_s6b_local_heading">
+Lokale legitimatieversleuteling
+</string>
+    <string name="pp_s6b_local_body">
+Alle wachtwoorden, tokens of API-sleutels die worden ingevoerd voor RClone-opslagconfiguraties worden verborgen en gecodeerd met behulp van cryptografie op het apparaat via de RClone RC-backend en veilig opgeslagen als rclone_encrypted.json in de privémap van de app. Dit bestand is niet toegankelijk voor andere applicaties en wordt permanent verwijderd wanneer u de app verwijdert.
+</string>
+    <string name="pp_s6b_permitted_heading">
+Toegestaan ​​gebruik van cloudgegevens
+</string>
+    <string-array name="pp_s6b_permitted">
+        <item>
+Remote Browsing: mapstructuren en bestandsmetagegevens ophalen om de inhoud van uw externe cloudopslag weer te geven.
+</item>
+        <item>
+Bestandsbewerkingen: het uploaden, downloaden, hernoemen, kopiëren, verplaatsen of verwijderen van bestanden op uw externe opslag op uw expliciete verzoek.
+</item>
+    </string-array>
+    <!-- Section 7 — Data Sharing -->
+    <string name="pp_s7_nosell_alert">
+We verkopen, verhuren, verhandelen, overdragen of maken uw persoonlijke gegevens of Google-gebruikersgegevens niet bekend aan derden voor enig doel dat niet direct verband houdt met het leveren van de bestandsbeheerfuncties van Ultimate File Manager Pro - punt uit.
+</string>
+    <string name="pp_s7_third_heading">
+Diensten van derden die wij gebruiken
+</string>
+    <string name="pp_s7_saf_note">
+Wanneer u ervoor kiest een bestand te openen of te delen met een andere app (ook via de documentprovider Storage Access Framework (SAF)) bepaalt het eigen privacybeleid van die app wat deze met het bestand doet.
+</string>
+    <string name="pp_s7_legal_note">
+We kunnen ook informatie openbaar maken indien dit vereist is door de wet, een gerechtelijk bevel of een verzoek van de overheid, voor zover toegestaan ​​door de toepasselijke wetgeving. We dragen uw persoonlijke gegevens of Google-gebruikersgegevens niet over aan derden of maken deze niet bekend voor andere doeleinden dan die beschreven in dit privacybeleid.
+</string>
+
+    <string name="pp_s9_body">
+U heeft de controle over uw gegevens. Hier leest u wat u op elk gewenst moment kunt doen.
+</string>
+    <string name="pp_s9_delete_heading">
+Hoe u alle app-gegevens verwijdert
+</string>
+    <string name="pp_s9_delete_alert">
+Als u gegevens wist of de installatie ongedaan maakt, worden uw kluispincode, herstelcode en coderingssleutels verwijderd, waardoor de inhoud van de kluis permanent ontoegankelijk wordt. Decodeer eerst alles wat u wilt bewaren.
+</string>
+
+    <string name="pp_s10_body">
+Ultimate File Manager Pro is niet bedoeld voor kinderen jonger dan 13 jaar. We verzamelen niet bewust persoonlijke gegevens van kinderen jonger dan 13 jaar. Als u een ouder of voogd bent en denkt dat uw kind persoonlijke gegevens heeft verstrekt, neem dan contact met ons op.
+</string>
+
+    <string name="pp_s11_body">
+Ultimate File Manager Pro is ontwikkeld in Zuid-Afrika. Als u de app vanuit een ander land gebruikt, houd er dan rekening mee dat alle informatie kan worden verwerkt in Zuid-Afrika of in landen waar onze externe dienstverleners (zoals Google) actief zijn.
+</string>
+
+    <string name="pp_s12_body">
+We kunnen dit privacybeleid van tijd tot tijd bijwerken. Als we dat doen, werken we de datum bovenaan bij. Bij belangrijke wijzigingen informeren wij u ook in de app. Als u de app na wijzigingen blijft gebruiken, betekent dit dat u het bijgewerkte beleid accepteert.
+</string>
+
+    <string name="pp_s13_body">
+Deze app is gebouwd om te voldoen aan de normen van Google Play. Alle gevraagde machtigingen zijn vereist voor de kernfunctionaliteit van de app. Voordat gevoelige toestemming wordt gevraagd, legt de app duidelijk uit waarom deze nodig is en hoe deze zal worden gebruikt. Wat betreft de updates van het foto- en videobeleid van oktober 2024: brede toegang is noodzakelijk omdat dit een uitgebreide bestandsbeheerder is die is ontworpen voor bulkbewerkingen (verplaatsen, hernoemen en synchroniseren) op alle opslagvolumes, wat niet efficiënt kan worden uitgevoerd met standaard systeemkiezers.
+</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">
+Ultimate File Manager Pro heeft toegang tot de volledige lijst met geïnstalleerde applicaties op uw apparaat via de toestemming QUERY_ALL_PACKAGES om de functies App Manager, Debloater en Remote File Server te bieden. In deze openbaarmaking wordt precies uitgelegd welke gegevens worden geopend, waarom en waar deze blijven.
+</string>
+    <string name="pp_s13b_data_heading">
+Welke gegevens zijn toegankelijk
+</string>
+    <string-array name="pp_s13b_data_items">
+        <item>
+App-naam en pakket-ID (pakket-ID)
+</item>
+        <item>
+Versienaam en versiecode
+</item>
+        <item>
+APK-bestandsgrootte
+</item>
+        <item>
+Eerste installatietijd en laatste updatetijd
+</item>
+        <item>
+Classificatie van systeemapps versus door de gebruiker geïnstalleerde app
+</item>
+        <item>
+Aanwezigheid van OBB-uitbreidingsbestanden
+</item>
+        <item>
+App-pictogram (verzonden als base64 wanneer Remote File Server actief is)
+</item>
+        <item>
+Metagegevens van APK-/OBB-uitbreidingsbestanden splitsen
+</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">
+Waarom deze gegevens worden geopend
+</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>
+App Manager: Weergave van de volledige lijst met geïnstalleerde apps met hun details (naam, versie, grootte, installatiedatum), zodat u vanaf één plek door uw applicaties kunt bladeren, zoeken en beheren.
+</item>
+        <item>
+Berekening van opslag per app: het lezen van de APK-bestandsgrootte en de grootte van de gegevensmap (best effort) om te laten zien hoeveel opslagruimte elke app gebruikt.
+</item>
+        <item>
+Debloater: Vergelijking van geïnstalleerde pakketnamen met een openbaar beschikbare debloat-referentielijst (lokaal gedownload en in de cache op uw apparaat) om vooraf geïnstalleerde systeem-apps te identificeren die veilig kunnen worden verwijderd of uitgeschakeld.
+</item>
+        <item>
+Externe bestandsserver: het beschikbaar stellen van de geïnstalleerde app-lijst en metagegevens via de REST API via het lokale netwerk aan geverifieerde apparaten voor extern beheer wanneer de bestandsserver is ingeschakeld.
+</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">
+Waar deze gegevens blijven
+</string>
+    <string name="pp_s13b_location_body">
+<b>Op uw apparaat en lokaal netwerk.</b> Alle geïnstalleerde applicatiegegevens worden lokaal verwerkt en opgeslagen in de privéopslag van de app. Het wordt nooit geüpload naar de servers van KiloWatch, nooit gedeeld met derden en nooit gebruikt voor advertenties, profilering, analyses en AI-training. Wanneer de functie Externe bestandsserver is ingeschakeld, kunnen de geïnstalleerde app-lijst en metagegevens via uw lokale netwerk worden verzonden naar geverifieerde apparaten via een TLS-gecodeerde HTTPS-verbinding. De server accepteert alleen verbindingen van apparaten op hetzelfde lokale netwerk en voor alle verzoeken is authenticatie vereist.
+</string>
+
+    <string name="pp_s14_body">
+Als u vragen of opmerkingen heeft over dit privacybeleid, neem dan contact met ons op.
+</string>
+
+    <string name="pp_footer">
+Door Ultimate File Manager Pro te gebruiken, bevestigt u dat u dit privacybeleid hebt gelezen en begrepen.
+</string>
+
+    <!-- Local storage table (Section 2) -->
+    <string-array name="pp_local_data_labels">
+        <item>
+Kluispincode (gehasht)
+</item>
+        <item>
+Herstelcode (gehasht)
+</item>
+        <item>
+Metagegevens van de kluis
+</item>
+        <item>
+Encryptiesleutels
+</item>
+        <item>
+App-voorkeuren
+</item>
+        <item>
+Bestandsserverprofielen
+</item>
+        <item>
+Referenties voor netwerkshares
+</item>
+        <item>
+Gekoppelde apparaatinfo
+</item>
+        <item>
+ADB-authenticatiesleutels
+</item>
+        <item>
+Shizuku / Shevery-autorisatiestaat
+</item>
+        <item>
+TV-screenshots
+</item>
+        <item>
+Synchroniseer profielen
+</item>
+        <item>
+Cloudopslagtokens (Google Drive, OneDrive, Dropbox)
+</item>
+        <item>
+S3 / S3-compatibele opslagreferenties (AWS S3, MiniIO, IDrive E2, enz.)
+</item>
+        <item>
+Metagegevens van geïndexeerde bestanden (SQLite/Room)
+</item>
+        <item>
+Taalkeuze (Cookie)
+</item>
+        <item>
+Media-afspeelstatus
+</item>
+    </string-array>
+    <string-array name="pp_local_data_details">
+        <item>
+Veilige toegang tot gecodeerde bestanden · Android SharedPreferences
+</item>
+        <item>
+Accountherstel als pincode vergeten is · Android SharedPreferences
+</item>
+        <item>
+Lijst met uw gecodeerde mappen en bestanden · Privéopslag van app
+</item>
+        <item>
+AES-256-GCM-codering voor de kluis · Android Keystore (hardwareondersteund)
+</item>
+        <item>
+Thema, sorteerinstellingen, bekijk voorkeuren · Android SharedPreferences
+</item>
+        <item>
+Configuraties (gebruikersnaam, directory, gehasht wachtwoord) voor de gehoste bestandsserver · App-privéopslag
+</item>
+        <item>
+Verbinding maken met uw SMB/FTP-shares (host, gebruikersnaam, wachtwoord) · Privéopslag van app
+</item>
+        <item>
+Apparaatnaam, ID en IP voor apparaatkoppeling · Privéopslag van app
+</item>
+        <item>
+RSA-sleutels en certificaten gegenereerd voor veilige ADB-verbindingen · Privéopslag van app
+</item>
+        <item>
+Status van de verhoogde toegangsverlening van de Shizuku- of Shevery Manager-app · Privéopslag van de app
+</item>
+        <item>
+Schermafbeeldingen gemaakt vanaf een gekoppelde tv via ADB · De lokale map Afbeeldingen/Screenshots van uw telefoon
+</item>
+        <item>
+Lokale map-URI en extern pad voor elk synchronisatieprofiel · Privéopslag van app
+</item>
+        <item>
+OAuth-tokens voor toegang tot Google Drive, OneDrive en Dropbox · Privéopslag van app
+</item>
+        <item>
+Toegangssleutel-ID en geheime toegangssleutel voor verbinding met S3-buckets · Privéopslag van app
+</item>
+        <item>
+Metagegevens van bestanden (namen, groottes, datums) voor snel bladeren en zoeken, opgeslagen in een lokale SQLite/Room-database - kunnen worden beheerd via Instellingen -> Opslagindexer · Privéopslag van app
+</item>
+        <item>
+Huidige wachtrij, afspeelpositie en spelerinstellingen om verder te gaan waar je was gebleven · Android SharedPreferences
+</item>
+        <item>
+Een cookie (ufm_lang) onthoudt uw taalkeuze tijdens de sessie en bij het opnieuw opstarten van de browser. · Opslag van de webbrowser
+</item>
+    </string-array>
+
+    <!-- Analytics table (Section 2) -->
+    <string-array name="pp_analytics_labels">
+        <item>
+Apparaatinformatie
+</item>
+        <item>
+App-gebruiksgegevens
+</item>
+        <item>
+Algemene locatie
+</item>
+    </string-array>
+    <string-array name="pp_analytics_details">
+        <item>
+Apparaatmodel, besturingssysteemversie, schermgrootte
+</item>
+        <item>
+Gebruikte functies, sessieduur
+</item>
+        <item>
+Land/regio op basis van IP – niet uw exacte locatie
+</item>
+    </string-array>
+
+    <!-- What we never collect (Section 2) -->
+    <string-array name="pp_never_collect">
+        <item>
+Uw bestanden, documenten, foto\'s, video\'s of andere media
+</item>
+        <item>
+Uw kluisinhoud of coderingssleutels
+</item>
+        <item>
+Uw pincode of herstelcode
+</item>
+        <item>
+Uw exacte locatie
+</item>
+        <item>
+Uw contacten, berichten of oproeplogboeken
+</item>
+        <item>
+Persoonlijke identificatiegegevens (naam, e-mailadres, telefoonnummer)
+</item>
+        <item>
+Alle Google-accountgegevens die verder gaan dan waar u expliciet om vraagt ​​in de bestandsbrowser
+</item>
+    </string-array>
+
+    <!-- How we use data (Section 3) -->
+    <string-array name="pp_use_local">
+        <item>
+Authenticeer de toegang tot de gecodeerde kluis
+</item>
+        <item>
+Versleutel en decodeer uw privébestanden
+</item>
+        <item>
+Onthoud uw voorkeuren en instellingen
+</item>
+        <item>
+Gebruik verhoogde toegang (Shizuku/Shevery/ADB) voor het beheren van door het systeem beveiligde bestanden in beperkte mappen
+</item>
+        <item>
+Bestandsindexering maken en onderhouden voor snel browsen en zoeken (beheerbaar via Instellingen -> Storage Indexer)
+</item>
+        <item>
+Bied kernapp-functionaliteit aan
+</item>
+    </string-array>
+    <string-array name="pp_use_analytics">
+        <item>
+Begrijp hoe functies worden gebruikt
+</item>
+        <item>
+Identificeer en repareer bugs en crashes
+</item>
+        <item>
+Verbeter functies en gebruikerservaring
+</item>
+        <item>
+Neem weloverwogen ontwikkelingsbeslissingen
+</item>
+    </string-array>
+
+    <!-- Storage permissions (Section 4) -->
+    <string-array name="pp_storage_perm_labels">
+        <item>
+BEHEER_EXTERNAL_STORAGE
+</item>
+        <item>
+LEES_EXTERNAL_STORAGE
+</item>
+        <item>
+SCHRIJF_EXTERNAL_STORAGE
+</item>
+    </string-array>
+    <string-array name="pp_storage_perm_details">
+        <item>
+API 30+ · Volledig bestandsbeheer voor alle opslag
+</item>
+        <item>
+Hieronder API 33 · Toegang tot oudere bestanden op oudere apparaten
+</item>
+        <item>
+Hieronder API 29 · Wijziging van verouderde bestanden op oudere apparaten
+</item>
+    </string-array>
+
+    <!-- Network permissions (Section 4) -->
+    <string-array name="pp_network_perm_labels">
+        <item>
+INTERNET
+</item>
+        <item>
+TOEGANG_WIFI_STATE
+</item>
+        <item>
+ACCESS_NETWORK_STATE
+</item>
+        <item>
+CHANGE_WIFI_MULTICAST_STATE
+</item>
+    </string-array>
+    <string-array name="pp_network_perm_details">
+        <item>
+Maakt extern bestandsbeheer mogelijk, host lokale bestandsservers, SMB/FTP/SFTP/SCP/NFS netwerksharetoegang en apparaatkoppeling
+</item>
+        <item>
+Toont uw lokale IP-adres voor externe toegang
+</item>
+        <item>
+Detecteert actieve netwerk- en VPN-status voor extern beheer en netwerkshares
+</item>
+        <item>
+Schakelt detectie van lokale netwerkapparaten (NSD/mDNS) in voor het koppelen van apparaten
+</item>
+    </string-array>
+
+    <!-- Other permissions (Section 4) -->
+    <string-array name="pp_other_perm_labels">
+        <item>
+POST_NOTIFICATIES
+</item>
+        <item>
+moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+</item>
+        <item>
+RECEIVE_BOOT_COMPLETED
+</item>
+        <item>
+REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+</item>
+        <item>
+REQUEST_INSTALL_PAKKETTEN
+</item>
+        <item>
+QUERY_ALL_PAKKETTEN
+</item>
+        <item>
+FOREGROUND_SERVICE / FOREGROUND_SERVICE_DATA_SYNC
+</item>
+        <item>
+WAKE_LOCK
+</item>
+    </string-array>
+    <string-array name="pp_other_perm_details">
+        <item>
+Waarschuwt u wanneer de bestandsbewerkingen zijn voltooid of er weinig opslagruimte is
+</item>
+        <item>
+Maakt communicatie mogelijk met de Shizuku- of Shevery Manager voor verhoogde bestandstoegang
+</item>
+        <item>
+Hiermee kunnen Shizuku- of Shevery-services automatisch starten bij het opstarten voor onmiddellijke beschikbaarheid
+</item>
+        <item>
+Hiermee kunt u ervoor kiezen om Shizuku of Shevery op de achtergrond actief te houden voor betrouwbare prestaties
+</item>
+        <item>
+Staat de installatie toe van APK-bestanden die u kiest
+</item>
+        <item>
+Vereist voor de App Manager- en Debloater-functies. Leest: app-naam, pakket-ID, versie, APK-grootte, tijdstempels voor installatie en updates, en systeem versus gebruiker-app-markering - volledig verwerkt op het apparaat. Het tabblad Debloater downloadt een openbaar beschikbare debloat-referentielijst en vergelijkt deze lokaal met geïnstalleerde pakketnamen. Er worden nooit geïnstalleerde applicatiegegevens extern verzonden.
+</item>
+        <item>
+Voert mapsynchronisatie, bestandsoverdracht en het afspelen van media uit als voorgrondservice, zodat ze betrouwbaar worden voltooid en blijven spelen, zelfs als het scherm is uitgeschakeld of als u andere apps gebruikt
+</item>
+        <item>
+Houdt de CPU en Wi-Fi actief tijdens de overdracht van grote bestanden en het afspelen van media, zodat deze betrouwbaar worden voltooid, zelfs wanneer het scherm wordt uitgeschakeld
+</item>
+    </string-array>
+
+    <!-- Encryption spec (Section 5) -->
+    <string-array name="pp_encryption_labels">
+        <item>
+Algoritme
+</item>
+        <item>
+Sleutelopslag
+</item>
+        <item>
+Sleutelgrootte
+</item>
+        <item>
+Authenticatie
+</item>
+    </string-array>
+    <string-array name="pp_encryption_details">
+        <item>
+AES-256-GCM (geavanceerde coderingsstandaard met Galois/tellermodus)
+</item>
+        <item>
+Android Keystore: door hardware ondersteunde veilige opslag
+</item>
+        <item>
+256-bits
+</item>
+        <item>
+Door de gebruiker gedefinieerde pincode
+</item>
+    </string-array>
+
+    <!-- Local data protection (Section 5) -->
+    <string-array name="pp_local_protection">
+        <item>
+Alle lokale gegevens worden opgeslagen in de privéopslag van de app; andere apps hebben er geen toegang toe.
+</item>
+        <item>
+Uw pincode wordt gehasht voordat deze wordt opgeslagen; we zien deze nooit in platte tekst.
+</item>
+        <item>
+Inloggegevens voor netwerkshares worden opgeslagen in de privéopslag van de app en worden nooit extern verzonden.
+</item>
+        <item>
+OAuth-tokens voor Google Drive, OneDrive en Dropbox worden opgeslagen in de privéopslag van de app en worden nooit verzonden naar onze servers of derden.
+</item>
+        <item>
+S3/S3-compatibele toegangsgegevens (Access Key ID en Secret Access Key) worden opgeslagen in de privéopslag van de app en worden uitsluitend gebruikt om verzoeken aan uw geconfigureerde eindpunt te authenticeren; ze worden nooit naar onze servers verzonden.
+</item>
+        <item>
+Er zijn beveiligingsprocedures ingesteld om de vertrouwelijkheid van alle lokaal opgeslagen gegevens te beschermen.
+</item>
+        <item>
+Alle gegevens worden automatisch verwijderd wanneer u de app verwijdert.
+</item>
+    </string-array>
+
+    <!-- Remote security (Section 5) -->
+    <string-array name="pp_remote_security">
+        <item>
+Toegang met pincode: alleen mensen die u autoriseert, kunnen verbinding maken.
+</item>
+        <item>
+Sessiegebaseerde authenticatie op elke verbinding.
+</item>
+        <item>
+Werkt alleen op uw lokale netwerk - geen externe internettoegang.
+</item>
+        <item>
+De server wordt automatisch uitgeschakeld wanneer u het scherm Extern beheer verlaat.
+</item>
+        <item>
+Belangrijk: Beheer op afstand maakt gebruik van niet-gecodeerde HTTP. Toegang tot de kluis via beheer op afstand (inclusief pincode-invoer) wordt onversleuteld verzonden via uw lokale netwerk. Gebruik alleen op netwerken die u vertrouwt, zoals uw Wi-Fi-thuisnetwerk.
+</item>
+    </string-array>
+
+    <!-- Google Drive user data table (Section 6) -->
+    <string-array name="pp_google_data_labels">
+        <item>
+Metagegevens van bestanden en mappen (naam, grootte, MIME-type, wijzigingsdatum, Drive-ID)
+</item>
+        <item>
+Bestand binaire inhoud
+</item>
+        <item>
+OAuth-toegangstoken en vernieuwingstoken
+</item>
+    </string-array>
+    <string-array name="pp_google_data_when">
+        <item>
+Wanneer u in de app door uw Google Drive bladert
+</item>
+        <item>
+Alleen als u een bestand expliciet opent, downloadt, uploadt, kopieert, verplaatst of synchroniseert
+</item>
+        <item>
+Lokaal opgeslagen nadat u zich heeft aangemeld bij Google Drive
+</item>
+    </string-array>
+    <string-array name="pp_google_data_purposes">
+        <item>
+Uw Drive-inhoud weergeven in de bestandsbrowser
+</item>
+        <item>
+Het uitvoeren van de specifieke bestandsbewerking die u hebt aangevraagd
+</item>
+        <item>
+Uw geverifieerde sessie behouden zonder herhaalde aanmeldingen
+</item>
+    </string-array>
+    <!-- Permitted uses of Google data (Section 6) -->
+    <string-array name="pp_google_permitted">
+        <item>
+Bladeren door uw Drive: Metagegevens van bestanden en mappen ophalen om uw Drive-inhoud weer te geven.
+</item>
+        <item>
+Bestanden uploaden: een lokaal bestand naar uw Drive verzenden wanneer u hier expliciet om vraagt.
+</item>
+        <item>
+Bestanden downloaden: een Drive-bestand ophalen naar uw apparaat wanneer u hier expliciet om vraagt.
+</item>
+        <item>
+Bestanden verplaatsen en kopiëren: het uitvoeren van bestandsbewerkingen aan de schijfzijde die u expliciet initieert.
+</item>
+        <item>
+Bestanden verwijderen: Drive-bestanden verwijderen die u expliciet hebt geselecteerd voor verwijdering.
+</item>
+        <item>
+Mapsynchronisatie: Synchroniseren van een lokale map met een Drive-map volgens het synchronisatieprofiel dat u hebt geconfigureerd.
+</item>
+    </string-array>
+    <!-- Prohibited uses of Google data (Section 6) -->
+    <string-array name="pp_google_prohibited">
+        <item>
+Gerichte, gepersonaliseerde, retargeted of op interesses gebaseerde advertenties
+</item>
+        <item>
+Verkopen aan datamakelaars of verstrekken aan wederverkopers van informatie
+</item>
+        <item>
+Bepalen van de kredietwaardigheid of voor kredietdoeleinden
+</item>
+        <item>
+Training van kunstmatige intelligentie of machine learning-modellen
+</item>
+        <item>
+Het creëren van gebruikersdatabases of profielen die geen verband houden met bestandsbeheer
+</item>
+        <item>
+Elke datamining, scraping of aggregatie voor externe doeleinden
+</item>
+        <item>
+Het overdragen van Google-gebruikersgegevens aan derden om een ​​andere reden dan het leveren of verbeteren van de bestandsbeheerfuncties van de app, of zoals vereist door de wet
+</item>
+    </string-array>
+    <!-- Third parties (Section 7) -->
+    <string-array name="pp_third_party_names">
+        <item>
+Firebase-analyse
+</item>
+        <item>
+Google Play-services
+</item>
+        <item>
+Google Play-facturering
+</item>
+        <item>
+Microsoft OneDrive-API
+</item>
+        <item>
+Google Drive-API
+</item>
+        <item>
+Dropbox-API
+</item>
+        <item>
+AWS S3 / S3-compatibele API\'s (bijv. AWS S3, MiniIO, IDrive E2)
+</item>
+    </string-array>
+    <string-array name="pp_third_party_providers">
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Microsoft Corporation
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Dropbox, Inc.
+</item>
+        <item>
+Amazon Web Services en compatibele providers
+</item>
+    </string-array>
+    <string-array name="pp_third_party_purposes">
+        <item>
+Anonieme gebruiksanalyses
+</item>
+        <item>
+App-distributie, updates en in-app-recensies
+</item>
+        <item>
+Verwerkt optionele in-app-tipaankopen (alleen aankooptokens, op apparaat)
+</item>
+        <item>
+Authenticeert en verwerkt gebruikersverzoeken voor Microsoft OneDrive-integratie
+</item>
+        <item>
+Authenticeert en verwerkt door gebruikers geïnitieerde bestandsbeheerverzoeken voor Google Drive-integratie
+</item>
+        <item>
+Authenticeert en verwerkt gebruikersverzoeken voor Dropbox-integratie
+</item>
+        <item>
+Authenticeert en verwerkt door de gebruiker geïnitieerde bestandsbeheerverzoeken voor S3-compatibele cloudopslag via het eindpunt dat u configureert
+</item>
+    </string-array>
+
+    <!-- Data retention (Section 8) -->
+    <string-array name="pp_retention_labels">
+        <item>
+Lokale app-gegevens
+</item>
+        <item>
+Kluisversleutelingssleutels
+</item>
+        <item>
+Geïndexeerde bestandsmetagegevens
+</item>
+        <item>
+Google Drive / OneDrive / Dropbox OAuth-tokens
+</item>
+        <item>
+S3 / S3-compatibele toegangsgegevens
+</item>
+        <item>
+Firebase Analytics-gegevens
+</item>
+    </string-array>
+    <string-array name="pp_retention_details">
+        <item>
+Totdat u de app verwijdert
+</item>
+        <item>
+Totdat u de app verwijdert
+</item>
+        <item>
+Totdat het wordt verwijderd via Instellingen -> Storage Indexer, of tot het verwijderen van de app
+</item>
+        <item>
+Totdat je de verbinding met het account verbreekt in Instellingen, of tot het verwijderen van de app
+</item>
+        <item>
+Totdat u het S3-profiel verwijdert in Instellingen, of tot het verwijderen van de app
+</item>
+        <item>
+14 maanden (de standaard bewaartermijn van Google)
+</item>
+    </string-array>
+
+    <!-- Your rights (Section 9) -->
+    <string-array name="pp_rights">
+        <item>
+Krijg rechtstreeks toegang tot uw lokaal opgeslagen gegevens via de app.
+</item>
+        <item>
+Verwijder kluisgegevens door items uit de kluis te verwijderen.
+</item>
+        <item>
+Beheer en verwijder geïndexeerde bestandsmetagegevens via Instellingen -> Storage Indexer.
+</item>
+        <item>
+Ontkoppel uw Google Drive-, OneDrive- of Dropbox-account op elk gewenst moment om de toegang in te trekken en opgeslagen OAuth-tokens te verwijderen.
+</item>
+        <item>
+Verwijder uw S3/S3-compatibele opslagprofielen op elk gewenst moment via Instellingen om de opgeslagen toegangsgegevens te verwijderen.
+</item>
+        <item>
+Exporteer uw bestanden met behulp van de functies voor delen of kopiëren.
+</item>
+        <item>
+Geef op elk gewenst moment toestemming aan Firebase Analytics of trek deze in via Instellingen → Gebruiksanalyse binnen de app; U kunt ook de instellingen van uw Android-apparaat gebruiken.
+</item>
+    </string-array>
+
+    <!-- Delete steps (Section 8) -->
+    <string-array name="pp_delete_steps">
+        <item>
+Open Android-instellingen en ga naar Apps.
+</item>
+        <item>
+Zoek en tik op Ultimate File Manager Pro.
+</item>
+        <item>
+Tik op Opslag → Gegevens wissen of verwijder eenvoudigweg de app.
+</item>
+    </string-array>
+
+    <!-- Play Store compliance table (Section 12) -->
+    <string-array name="pp_compliance_labels">
+        <item>
+Opslagrechten
+</item>
+        <item>
+Netwerkmachtigingen
+</item>
+        <item>
+Netwerkstatus
+</item>
+        <item>
+Multicast
+</item>
+        <item>
+Meldingen
+</item>
+        <item>
+Pakketten installeren
+</item>
+        <item>
+Verhoogde toegang (Shizuku)
+</item>
+        <item>
+Opslagindexer
+</item>
+        <item>
+Querypakketten
+</item>
+        <item>
+In-app-recensies
+</item>
+        <item>
+AVIF-beeldondersteuning
+</item>
+        <item>
+Lottie-animaties
+</item>
+    </string-array>
+    <string-array name="pp_compliance_details">
+        <item>
+Bladeren en beheren van bestanden
+</item>
+        <item>
+Bestandsbeheer op afstand, SMB/FTP/SFTP/SCP/NFS-netwerkshares en apparaatkoppeling via lokale Wi-Fi
+</item>
+        <item>
+VPN-detectie voor extern beheer en netwerkshare-connectiviteit
+</item>
+        <item>
+Detectie van lokale netwerkapparaten (NSD/mDNS) voor het koppelen van apparaten
+</item>
+        <item>
+Waarschuwingen voor voltooiing van de bewerking en opslagwaarschuwingen
+</item>
+        <item>
+APK-installatie vanuit lokale opslag
+</item>
+        <item>
+Geavanceerd bestandsbeheer in beperkte systeemmappen via de Shizuku API
+</item>
+        <item>
+Indexeert bestandsmetagegevens lokaal voor snel zoeken
+</item>
+        <item>
+App Manager- en Debloater-functies: leest geïnstalleerde pakketnamen, versies, grootten en systeem-/gebruikersvlaggen alleen op het apparaat. Niet geüpload of gedeeld. De Debloater-kruisverwijzingen naar pakketnamen lokaal tegen een openbaar beschikbare debloat-referentielijst.
+</item>
+        <item>
+Google Play In-App Review API voor het verzamelen van gebruikersfeedback
+</item>
+        <item>
+Decodeert en toont AVIF-afbeeldingen in de ingebouwde viewer via avif-coder (io.github.awxkee) op API 24–30; API 31+ maakt gebruik van de ingebouwde ImageDecoder
+</item>
+        <item>
+Geeft vloeiende UI-animaties weer in de hele app via de Lottie-bibliotheek v6.3.0 (com.airbnb.android:lottie)
+</item>
+    </string-array>
+
+
+    <!-- Contact (Section 14) -->
+    <string-array name="pp_contact_labels">
+        <item>
+E-mail
+</item>
+    </string-array>
+    <string-array name="pp_contact_values">
+        <item>
+support@kilowatch.co.za
+</item>
+    </string-array>
+
+</resources>
