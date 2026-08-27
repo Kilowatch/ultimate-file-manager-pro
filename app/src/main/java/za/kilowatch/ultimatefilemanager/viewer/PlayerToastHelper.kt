@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.PlayerPreferencesManager
 
 /**
  * Renders a professional pill-style toast for player control feedback.
@@ -17,7 +18,10 @@ import za.kilowatch.ultimatefilemanager.R
  */
 object PlayerToastHelper {
 
-    fun show(context: Context, message: String) {
+    fun show(context: Context, message: String, force: Boolean = false) {
+        if (!force && !PlayerPreferencesManager.isButtonToastsEnabled(context)) {
+            return
+        }
         val density = context.resources.displayMetrics.density
         val toastView = LayoutInflater.from(context).inflate(R.layout.view_player_toast, null, false)
         toastView.findViewById<TextView>(R.id.toastText).text = message

@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.2] — 2026-08-25
 
 ### Added
+- **Video Player Gesture Controls for Mobile (`PlayerGestureOverlayView`, `PlayerGestureController`, `UFMPlayerActivity`)**:
+  - Added vertical swipe on the left side of the screen to increase/decrease screen brightness with live Brightness HUD feedback.
+  - Added vertical swipe on the right side of the screen to increase/decrease media volume with live Volume HUD feedback.
+  - Added horizontal swipe anywhere on the video to scrub/seek with Seek HUD displaying scrub direction, time delta (+/- time), and target timestamp.
+  - Added double-tap on the left side to seek backward and right side to seek forward (default 10s or user-configured skip length) with animated indicator and cumulative increments for rapid successive taps.
+  - Added "Player Gestures" toggle switch under Media Player settings in `SettingsActivity` on mobile devices.
 - **Proton Drive Cloud Storage (`RCloneProviderActivity`, `RCloneConfig`, `RCloneProviderData`)**:
   - Added RClone provider support for Proton Drive cloud storage with single/two-password authentication and 2FA TOTP secret key support.
   - End-to-end encrypted browsing, uploading, downloading, folder management, and media streaming via `librclone`.
@@ -22,11 +28,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Master enable/disable toggle switch in Toolbar Icons settings.
 
 ### Changed
+- **Disabled Player Button Feedback Toasts by Default (`PlayerToastHelper`, `PlayerPreferencesManager`, `SettingsActivity`)**:
+  - Disabled the pop-up toaster pills when pressing playback buttons (Previous, Next, Skip, Play/Pause, Shuffle, Repeat, etc.) during video playback by default on both Mobile and TV.
+  - Added a "Button Feedback Toasts" toggle switch under Media Player in Settings for both Mobile and Android TV.
 - Restricted keyboard shortcuts exclusively to mobile devices, removing all TV layouts and handling code.
 - Disabled "Enable Keyboard Shortcuts" by default on mobile.
 
 ### Fixed
+- **Folder Sort & Filter Persistence & Backup/Restore**: Fixed an issue where folder-specific sort and filter settings could not be set and reverted to global settings after restoring from backup.
+- **Encrypted Preferences Self-Healing**: Added automatic self-healing recovery for corrupted `ufm_folder_sort_prefs` files, and enabled seamless backup export and restore with hardware Keystore re-encryption.
+- **SMB Server-Mode Path Hierarchy & Normalization**: Resolved subfolder path construction in `NetworkBrowserFragment` for SMB server shares and normalized folder keys with backward-compatibility fallbacks.
 - Fixed TV D-Pad Right navigation issue caused by keyboard shortcuts interception.
+- Preserved search results view and in-memory list after single or batch rename operations on both Mobile and TV instead of refreshing and navigating back to the previous folder.
+- Synchronized Room search index and media scanner for batch renamed files.
 
 ## [1.9.1] — 2026-08-24
 

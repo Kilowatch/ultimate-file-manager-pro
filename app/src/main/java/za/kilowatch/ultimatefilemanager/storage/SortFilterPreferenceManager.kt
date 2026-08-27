@@ -70,10 +70,16 @@ object SortFilterPreferenceManager {
     }
 
     private fun buildEncryptedPrefs(context: Context): SharedPreferences? {
-        return try {
-            val masterKey = MasterKey.Builder(context)
+        val masterKey = try {
+            MasterKey.Builder(context)
                 .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                 .build()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to create master key — falling back to private prefs", e)
+            return context.getSharedPreferences(PREFS_FOLDER, Context.MODE_PRIVATE)
+        }
+
+        return try {
             EncryptedSharedPreferences.create(
                 context,
                 PREFS_FOLDER,
@@ -82,19 +88,116 @@ object SortFilterPreferenceManager {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             ).also { Log.d(TAG, "Encrypted folder sort prefs initialised") }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialise encrypted folder sort prefs — folder settings will not persist", e)
-            null
+            Log.w(TAG, "Failed to initialise encrypted folder sort prefs, attempting self-healing recovery", e)
+            try {
+                // Check if there were plain / unencrypted keys in the existing file (e.g. from an old plain restore)
+                val plainPrefs = context.getSharedPreferences(PREFS_FOLDER, Context.MODE_PRIVATE)
+                val plainAll = plainPrefs.all
+                val rescuedEntries = mutableMapOf<String, Any?>()
+                for ((k, v) in plainAll) {
+                    if (!k.startsWith("__androidx_security_crypto_")) {
+                        rescuedEntries[k] = v
+                    }
+                }
+
+                // Delete the corrupted file so Tink can re-create a clean Keystore-backed file
+                val dataDir = context.applicationInfo.dataDir
+                val prefsFile = java.io.File(dataDir, "shared_prefs/$PREFS_FOLDER.xml")
+                if (prefsFile.exists()) {
+                    prefsFile.delete()
+                }
+
+                val recovered = EncryptedSharedPreferences.create(
+                    context,
+                    PREFS_FOLDER,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+
+                if (rescuedEntries.isNotEmpty()) {
+                    val editor = recovered.edit()
+                    for ((k, v) in rescuedEntries) {
+                        when (v) {
+                            is Int -> editor.putInt(k, v)
+                            is Boolean -> editor.putBoolean(k, v)
+                            is Long -> editor.putLong(k, v)
+                            is Float -> editor.putFloat(k, v)
+                            is String -> editor.putString(k, v)
+                        }
+                    }
+                    editor.commit()
+                    Log.i(TAG, "Rescued and re-encrypted ${rescuedEntries.size} folder sort entries")
+                }
+                Log.i(TAG, "Encrypted folder sort prefs recovered successfully")
+                recovered
+            } catch (e2: Exception) {
+                Log.e(TAG, "Failed to recreate encrypted prefs, falling back to secure private SharedPreferences", e2)
+                context.getSharedPreferences(PREFS_FOLDER, Context.MODE_PRIVATE)
+            }
         }
+    }
+
+    // ── Backup & Restore Helpers ──────────────────────────────────────────────
+
+    /**
+     * Retrieves all decrypted folder sort entries for backup export.
+     * Must be called from a background thread (Dispatchers.IO).
+     */
+    fun getAllEntriesForBackup(context: Context): Map<String, Any?> {
+        val prefs = getEncryptedPrefs(context) ?: return emptyMap()
+        return prefs.all.filterKeys { !it.startsWith("__androidx_security_crypto_") }
+    }
+
+    /**
+     * Restores folder sort entries from backup into the device's encrypted store.
+     * Must be called from a background thread (Dispatchers.IO).
+     */
+    fun restoreEntriesFromBackup(context: Context, entries: Map<String, Any?>) {
+        val prefs = getEncryptedPrefs(context) ?: return
+        val editor = prefs.edit()
+        for ((k, v) in entries) {
+            if (k.startsWith("__androidx_security_crypto_")) continue
+            when (v) {
+                is Int -> editor.putInt(k, v)
+                is Boolean -> editor.putBoolean(k, v)
+                is Long -> editor.putLong(k, v)
+                is Float -> editor.putFloat(k, v)
+                is Double -> editor.putFloat(k, v.toFloat())
+                is String -> editor.putString(k, v)
+            }
+        }
+        editor.commit()
     }
 
     // ── Folder key helpers ────────────────────────────────────────────────────
 
-    /** Key for a local folder path. */
-    fun folderKey(localPath: String): String =
+    /**
+     * Key for a local folder path.
+     * Normalizes trailing slashes so paths like "/storage/emulated/0/Download" and
+     * "/storage/emulated/0/Download/" produce identical keys.
+     */
+    fun folderKey(localPath: String): String {
+        val clean = if (localPath == "/" || localPath.isEmpty()) localPath else localPath.trimEnd('/')
+        return "local_" + sha256(clean).take(40)
+    }
+
+    /** Legacy unnormalized key helper for backward compatibility lookup. */
+    fun legacyFolderKey(localPath: String): String =
         "local_" + sha256(localPath).take(40)
 
-    /** Key for a network/online remote path within a specific share. */
-    fun folderKey(shareId: String, remotePath: String): String =
+    /**
+     * Key for a network/online remote path within a specific share.
+     * Normalizes leading and trailing slashes so paths like "docker", "/docker",
+     * "docker/", and "/docker/" produce identical keys.
+     */
+    fun folderKey(shareId: String, remotePath: String): String {
+        val clean = remotePath.trim().trim('/')
+        return "net_" + sha256("$shareId:$clean").take(40)
+    }
+
+    /** Legacy unnormalized key helper for backward compatibility lookup. */
+    fun legacyFolderKey(shareId: String, remotePath: String): String =
         "net_" + sha256("$shareId:$remotePath").take(40)
 
     private fun sha256(input: String): String {
@@ -275,12 +378,20 @@ object SortFilterPreferenceManager {
 
     /**
      * Load sort/filter state for a local path, resolving recursive overrides from parent folders.
+     * Backward-compatible with legacy keys that had trailing slashes.
      */
     fun loadForLocalPath(context: Context, localPath: String): SortFilterState? {
         val exactKey = folderKey(localPath)
         val exactState = loadForFolder(context, exactKey)
         if (exactState != null) {
             return exactState
+        }
+
+        // Backward compatibility fallback for legacy unnormalized key
+        val legacyKey = legacyFolderKey(localPath)
+        if (legacyKey != exactKey) {
+            val legacyState = loadForFolder(context, legacyKey)
+            if (legacyState != null) return legacyState
         }
 
         // Walk up parents
@@ -292,6 +403,13 @@ object SortFilterPreferenceManager {
             if (parentState != null && parentState.isRecursive) {
                 return parentState
             }
+            val legParentKey = legacyFolderKey(parentPath)
+            if (legParentKey != parentKey) {
+                val legParentState = loadForFolder(context, legParentKey)
+                if (legParentState != null && legParentState.isRecursive) {
+                    return legParentState
+                }
+            }
             file = file.parentFile
         }
         return null
@@ -299,16 +417,35 @@ object SortFilterPreferenceManager {
 
     /**
      * Load sort/filter state for a network/remote path, resolving recursive overrides from parent folders.
+     * Handles canonical normalized keys, legacy unnormalized keys, and subpaths for server-mode SMB shares.
      */
     fun loadForNetworkPath(context: Context, shareId: String, remotePath: String): SortFilterState? {
-        val exactKey = folderKey(shareId, remotePath)
+        val cleanPath = remotePath.trim().trim('/')
+        val exactKey = folderKey(shareId, cleanPath)
         val exactState = loadForFolder(context, exactKey)
         if (exactState != null) {
             return exactState
         }
 
-        // Walk up parents of remotePath
-        var path = remotePath.trim('/')
+        // Backward compatibility check for legacy unnormalized key (e.g. if saved with leading slash "/docker")
+        val legacyKey = legacyFolderKey(shareId, remotePath)
+        if (legacyKey != exactKey) {
+            val legacyState = loadForFolder(context, legacyKey)
+            if (legacyState != null) return legacyState
+        }
+
+        // Backward compatibility for server-mode SMB subpaths (e.g. if saved as "subfolder" instead of "share/subfolder")
+        if (cleanPath.contains('/')) {
+            val subPath = cleanPath.substringAfter('/')
+            val subKey = folderKey(shareId, subPath)
+            if (subKey != exactKey) {
+                val subState = loadForFolder(context, subKey)
+                if (subState != null) return subState
+            }
+        }
+
+        // Walk up parents of cleanPath (e.g. "docker/projects/src" -> "docker/projects" -> "docker")
+        var path = cleanPath
         while (path.isNotEmpty() && path.contains('/')) {
             val idx = path.lastIndexOf('/')
             if (idx == -1) break
@@ -318,13 +455,21 @@ object SortFilterPreferenceManager {
             if (parentState != null && parentState.isRecursive) {
                 return parentState
             }
+            val legParentKey = legacyFolderKey(shareId, path)
+            if (legParentKey != parentKey) {
+                val legParentState = loadForFolder(context, legParentKey)
+                if (legParentState != null && legParentState.isRecursive) {
+                    return legParentState
+                }
+            }
         }
-        // Check root ("") of the share if remotePath wasn't already root
-        if (remotePath.trim('/').isNotEmpty()) {
-            val parentKey = folderKey(shareId, "")
-            val parentState = loadForFolder(context, parentKey)
-            if (parentState != null && parentState.isRecursive) {
-                return parentState
+
+        // Check share root / server root ("") if cleanPath wasn't already root
+        if (cleanPath.isNotEmpty()) {
+            val rootKey = folderKey(shareId, "")
+            val rootState = loadForFolder(context, rootKey)
+            if (rootState != null && rootState.isRecursive) {
+                return rootState
             }
         }
         return null

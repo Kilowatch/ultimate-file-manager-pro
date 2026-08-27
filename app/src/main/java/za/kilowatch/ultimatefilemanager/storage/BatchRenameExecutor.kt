@@ -31,7 +31,8 @@ object BatchRenameExecutor {
     data class RenameResult(
         val successCount: Int,
         val failureCount: Int,
-        val failures: List<Pair<BatchRenameItem, String>>
+        val failures: List<Pair<BatchRenameItem, String>>,
+        val renamedMap: Map<String, String> = emptyMap()
     )
 
     /**
@@ -50,6 +51,7 @@ object BatchRenameExecutor {
     ): RenameResult = withContext(Dispatchers.IO) {
         var successCount = 0
         val failures = mutableListOf<Pair<BatchRenameItem, String>>()
+        val renamedMap = mutableMapOf<String, String>()
 
         // Separate local and network items
         val localItems = mutableListOf<Pair<Int, BatchRenameItem>>()   // (index, item)
@@ -107,6 +109,7 @@ object BatchRenameExecutor {
                 if (ok) {
                     successCount++
                     FileTagsManager.onPathMoved(context, localFile.absolutePath, newFile.absolutePath)
+                    renamedMap[localFile.absolutePath] = newFile.absolutePath
                     scannedOldPaths.add(localFile.absolutePath)
                     scannedNewPaths.add(newFile.absolutePath)
                 } else {
@@ -122,6 +125,27 @@ object BatchRenameExecutor {
         }
         if (scannedNewPaths.isNotEmpty()) {
             MediaScannerNotifier.scanFiles(context, scannedNewPaths)
+        }
+
+        // Sync Room search index for local items
+        if (renamedMap.isNotEmpty()) {
+            try {
+                val indexingRepo = za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository
+                for ((oldPath, newPath) in renamedMap) {
+                    val f = File(newPath)
+                    if (f.exists()) {
+                        if (f.isDirectory) {
+                            indexingRepo.deleteTreeFromIndex(oldPath)
+                            val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newPath)
+                            indexingRepo.indexFolder(newPath, sid, stype)
+                        } else {
+                            indexingRepo.deleteFromIndex(oldPath)
+                            val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newPath)
+                            indexingRepo.indexFile(f, sid, stype)
+                        }
+                    }
+                }
+            } catch (_: Exception) {}
         }
 
         // ── Network items (group by ShareType) ────────────────────────────
@@ -175,6 +199,7 @@ object BatchRenameExecutor {
                     }
                     successCount++
                     FileTagsManager.onPathMoved(context, nf.path, targetPath)
+                    renamedMap[nf.path] = targetPath
                 } catch (e: Exception) {
                     failures.add(item to (e.message ?: "Unknown error"))
                 }
@@ -184,7 +209,8 @@ object BatchRenameExecutor {
         RenameResult(
             successCount = successCount,
             failureCount = failures.size,
-            failures = failures
+            failures = failures,
+            renamedMap = renamedMap
         )
     }
 

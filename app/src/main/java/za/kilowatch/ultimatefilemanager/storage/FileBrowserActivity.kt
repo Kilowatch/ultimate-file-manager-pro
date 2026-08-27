@@ -48,6 +48,7 @@ import za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase
 import za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
+import za.kilowatch.ultimatefilemanager.util.MediaScannerNotifier
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
@@ -132,7 +133,10 @@ class FileBrowserActivity : AppCompatActivity() {
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            onBatchRenameCompleted()
+            val oldPaths = result.data?.getStringArrayListExtra(BatchRenameTvActivity.EXTRA_RENAMED_OLD_PATHS) ?: emptyList()
+            val newPaths = result.data?.getStringArrayListExtra(BatchRenameTvActivity.EXTRA_RENAMED_NEW_PATHS) ?: emptyList()
+            val renamedMap = oldPaths.zip(newPaths).toMap()
+            onBatchRenameCompleted(renamedMap)
         }
     }
 
@@ -529,7 +533,7 @@ class FileBrowserActivity : AppCompatActivity() {
         applyToolbarIconVisibility()
         // Refresh file list so files created/modified in child activities
         // (image viewer, text viewer, etc.) appear immediately on return
-        if (::currentDir.isInitialized) {
+        if (::currentDir.isInitialized && !isSearchActive) {
             loadDirectory(currentDir, preserveSelection = true)
         }
         // Show/hide paste FAB based on clipboard state or picker modes
@@ -1477,6 +1481,10 @@ class FileBrowserActivity : AppCompatActivity() {
             fileAdapter.exitSelectionMode()
             return
         }
+        if (isSearchVisible || isSearchActive) {
+            toggleSearch()
+            return
+        }
         if (currentDir.absolutePath != rootPath) {
             currentDir.parentFile?.let { parent ->
                 loadDirectory(parent)
@@ -2092,8 +2100,8 @@ class FileBrowserActivity : AppCompatActivity() {
                     batchRenameTvLauncher.launch(intent)
                 } else {
                     val dialog = BatchRenameDialogFragment.newInstance(items)
-                    dialog.setOnCompleteListener { _, _ ->
-                        onBatchRenameCompleted()
+                    dialog.setOnCompleteListener { _, _, renamedMap ->
+                        onBatchRenameCompleted(renamedMap)
                     }
                     dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
                 }
@@ -2369,8 +2377,8 @@ class FileBrowserActivity : AppCompatActivity() {
                             batchRenameTvLauncher.launch(intent)
                         } else {
                             val dialog = BatchRenameDialogFragment.newInstance(items)
-                            dialog.setOnCompleteListener { _, _ ->
-                                onBatchRenameCompleted()
+                            dialog.setOnCompleteListener { _, _, renamedMap ->
+                                onBatchRenameCompleted(renamedMap)
                             }
                             dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
                         }
@@ -2840,9 +2848,16 @@ class FileBrowserActivity : AppCompatActivity() {
                     showRenameDialog(selected.first())
                 } else if (selected.size > 1) {
                     val items = selected.map { BatchRenameItem.fromLocalFile(it) }
-                    val dialog = BatchRenameDialogFragment.newInstance(items)
-                    dialog.setOnCompleteListener { _, _ -> onBatchRenameCompleted() }
-                    dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
+                    if (DeviceUtils.isTvDevice(this)) {
+                        val intent = Intent(this, BatchRenameTvActivity::class.java).apply {
+                            putParcelableArrayListExtra("items", ArrayList(items))
+                        }
+                        batchRenameTvLauncher.launch(intent)
+                    } else {
+                        val dialog = BatchRenameDialogFragment.newInstance(items)
+                        dialog.setOnCompleteListener { _, _, renamedMap -> onBatchRenameCompleted(renamedMap) }
+                        dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
+                    }
                 }
             }
             pm.ACTION_SHARE -> {
@@ -3351,10 +3366,43 @@ class FileBrowserActivity : AppCompatActivity() {
                     }
                     if (success) {
                         FileTagsManager.onPathMoved(this@FileBrowserActivity, file.absolutePath, newFile.absolutePath)
-                        syncFolderWithIndex(currentDir)
+                        MediaScannerNotifier.scanFiles(this@FileBrowserActivity, listOf(file.absolutePath, newFile.absolutePath))
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            try {
+                                val repo = UfmApplication.indexingRepository
+                                if (file.isDirectory) {
+                                    repo.deleteTreeFromIndex(file.absolutePath)
+                                    val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newFile.absolutePath)
+                                    repo.indexFolder(newFile.absolutePath, sid, stype)
+                                } else {
+                                    repo.deleteFromIndex(file.absolutePath)
+                                    val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newFile.absolutePath)
+                                    repo.indexFile(newFile, sid, stype)
+                                }
+                            } catch (e: Exception) {
+                                Log.e("FileBrowser", "Index update failed for rename: ${e.message}")
+                            }
+                        }
                         withContext(Dispatchers.Main) {
                             fileAdapter.exitSelectionMode()
-                            loadDirectory(currentDir)
+                            if (isSearchActive && rawSearchResults != null) {
+                                val oldPath = file.absolutePath
+                                val newPath = newFile.absolutePath
+                                val oldPrefix = if (file.isDirectory) "$oldPath/" else ""
+                                val newPrefix = if (file.isDirectory) "$newPath/" else ""
+                                rawSearchResults = rawSearchResults?.map { f ->
+                                    if (f.absolutePath == oldPath) {
+                                        newFile
+                                    } else if (file.isDirectory && f.absolutePath.startsWith(oldPrefix)) {
+                                        File(newPrefix + f.absolutePath.removePrefix(oldPrefix))
+                                    } else {
+                                        f
+                                    }
+                                }
+                                applySearchResultsFilterAndSort()
+                            } else {
+                                loadDirectory(currentDir)
+                            }
                             showPremiumSnackbar(getString(R.string.rename_success))
                             dialog.dismiss()
                         }
@@ -5138,13 +5186,23 @@ class FileBrowserActivity : AppCompatActivity() {
         return showHidden || (!HiddenFilesManager.isJunkOrHidden(file.name) && file.absolutePath !in hiddenPaths)
     }
 
-    private fun onBatchRenameCompleted() {
+    private fun onBatchRenameCompleted(renamedMap: Map<String, String> = emptyMap()) {
         fileAdapter.exitSelectionMode()
-        val query = edtSearch.text?.toString()?.trim().orEmpty()
-        if (isSearchActive && query.isNotEmpty()) {
-            performSearch(query)
+        if (isSearchActive && rawSearchResults != null) {
+            if (renamedMap.isNotEmpty()) {
+                rawSearchResults = rawSearchResults?.map { f ->
+                    val newPath = renamedMap[f.absolutePath]
+                    if (newPath != null) File(newPath) else f
+                }
+            }
+            applySearchResultsFilterAndSort()
         } else {
-            loadDirectory(currentDir)
+            val query = edtSearch.text?.toString()?.trim().orEmpty()
+            if (isSearchActive && query.isNotEmpty()) {
+                performSearch(query)
+            } else {
+                loadDirectory(currentDir)
+            }
         }
     }
 

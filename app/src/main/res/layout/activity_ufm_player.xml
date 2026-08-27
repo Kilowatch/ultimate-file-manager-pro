@@ -50,6 +50,12 @@
         android:layout_marginBottom="100dp"
         android:visibility="gone" />
 
+    <!-- Gesture Overlay (Mobile video gesture controls) -->
+    <za.kilowatch.ultimatefilemanager.viewer.PlayerGestureOverlayView
+        android:id="@+id/gestureOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <!-- Top Bar -->
     <LinearLayout
         android:id="@+id/topBar"

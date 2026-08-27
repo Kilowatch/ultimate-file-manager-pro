@@ -292,7 +292,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            onBatchRenameCompleted()
+            val oldPaths = result.data?.getStringArrayListExtra(za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity.EXTRA_RENAMED_OLD_PATHS) ?: emptyList()
+            val newPaths = result.data?.getStringArrayListExtra(za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity.EXTRA_RENAMED_NEW_PATHS) ?: emptyList()
+            val renamedMap = oldPaths.zip(newPaths).toMap()
+            onBatchRenameCompleted(renamedMap)
         }
     }
     
@@ -1351,8 +1354,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     batchRenameTvLauncher.launch(intent)
                 } else {
                     val dialog = BatchRenameDialogFragment.newInstance(items)
-                    dialog.setOnCompleteListener { _, _ ->
-                        onBatchRenameCompleted()
+                    dialog.setOnCompleteListener { _, _, renamedMap ->
+                        onBatchRenameCompleted(renamedMap)
                     }
                     dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
                 }
@@ -1571,8 +1574,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             batchRenameTvLauncher.launch(intent)
                         } else {
                             val dialog = BatchRenameDialogFragment.newInstance(items)
-                            dialog.setOnCompleteListener { _, _ ->
-                                onBatchRenameCompleted()
+                            dialog.setOnCompleteListener { _, _, renamedMap ->
+                                onBatchRenameCompleted(renamedMap)
                             }
                             dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
                         }
@@ -1959,11 +1962,22 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }
     }
 
-    private fun onBatchRenameCompleted() {
+    private fun onBatchRenameCompleted(renamedMap: Map<String, String> = emptyMap()) {
         fileAdapter.exitSelectionMode()
-        val query = edtSearch.text?.toString()?.trim().orEmpty()
-        if (isSearchActive && query.isNotEmpty()) {
-            performSearch(query)
+        if (isSearchActive) {
+            if (renamedMap.isNotEmpty()) {
+                currentFiles = currentFiles.map { nf ->
+                    val newPath = renamedMap[nf.path]
+                    if (newPath != null) {
+                        val newName = newPath.substringAfterLast('/')
+                        nf.copy(name = newName, path = newPath)
+                    } else nf
+                }
+            }
+            val query = edtSearch.text?.toString()?.trim().orEmpty()
+            if (query.isNotEmpty()) {
+                performSearch(query)
+            }
         } else {
             loadDirectory()
         }
@@ -2562,9 +2576,16 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     showRenameDialog(selected.first())
                 } else if (selected.size > 1) {
                     val items = selected.map { za.kilowatch.ultimatefilemanager.storage.BatchRenameItem.fromNetworkFile(it, share) }
-                    val dialog = za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.newInstance(items)
-                    dialog.setOnCompleteListener { _, _ -> onBatchRenameCompleted() }
-                    dialog.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.TAG)
+                    if (DeviceUtils.isTvDevice(this)) {
+                        val intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity::class.java).apply {
+                            putParcelableArrayListExtra("items", ArrayList(items))
+                        }
+                        batchRenameTvLauncher.launch(intent)
+                    } else {
+                        val dialog = za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.newInstance(items)
+                        dialog.setOnCompleteListener { _, _, renamedMap -> onBatchRenameCompleted(renamedMap) }
+                        dialog.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.TAG)
+                    }
                 }
             }
             pm.ACTION_SHARE -> {
@@ -4302,7 +4323,19 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         }
                         withContext(Dispatchers.Main) {
                             fileAdapter.exitSelectionMode()
-                            loadDirectory()
+                            if (isSearchActive) {
+                                currentFiles = currentFiles.map { nf ->
+                                    if (nf.path == file.path) {
+                                        nf.copy(name = newName, path = targetPath)
+                                    } else nf
+                                }
+                                val query = edtSearch.text?.toString()?.trim().orEmpty()
+                                if (query.isNotEmpty()) {
+                                    performSearch(query)
+                                }
+                            } else {
+                                loadDirectory()
+                            }
                             showPremiumSnackbar(getString(R.string.rename_success))
                             dialog.dismiss()
                         }

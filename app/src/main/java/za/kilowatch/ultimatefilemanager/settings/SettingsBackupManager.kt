@@ -358,16 +358,30 @@ object SettingsBackupManager {
             val prefsObj = JSONObject()
             for (item in selectedItems) {
                 if (item.category == "shared_preferences" && item.isSelected) {
-                    val prefs = context.getSharedPreferences(item.id, Context.MODE_PRIVATE)
                     val fileObj = JSONObject()
-                    for ((k, v) in prefs.all) {
-                        when (v) {
-                            is Int -> fileObj.put(k, v)
-                            is Boolean -> fileObj.put(k, v)
-                            is Long -> fileObj.put(k, v)
-                            is Float -> fileObj.put(k, v.toDouble())
-                            is Double -> fileObj.put(k, v)
-                            is String -> fileObj.put(k, v)
+                    if (item.id == "ufm_folder_sort_prefs") {
+                        val entries = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.getAllEntriesForBackup(context)
+                        for ((k, v) in entries) {
+                            when (v) {
+                                is Int -> fileObj.put(k, v)
+                                is Boolean -> fileObj.put(k, v)
+                                is Long -> fileObj.put(k, v)
+                                is Float -> fileObj.put(k, v.toDouble())
+                                is Double -> fileObj.put(k, v)
+                                is String -> fileObj.put(k, v)
+                            }
+                        }
+                    } else {
+                        val prefs = context.getSharedPreferences(item.id, Context.MODE_PRIVATE)
+                        for ((k, v) in prefs.all) {
+                            when (v) {
+                                is Int -> fileObj.put(k, v)
+                                is Boolean -> fileObj.put(k, v)
+                                is Long -> fileObj.put(k, v)
+                                is Float -> fileObj.put(k, v.toDouble())
+                                is Double -> fileObj.put(k, v)
+                                is String -> fileObj.put(k, v)
+                            }
                         }
                     }
                     prefsObj.put(item.id, fileObj)
@@ -565,8 +579,6 @@ object SettingsBackupManager {
             val prefsMapping = mapOf(
                 "tile_colors_prefs"         to R.string.backup_pref_tile_colors,
                 "ufm_prefs"                 to R.string.backup_pref_theme_sort,
-                // Note: ufm_folder_sort_prefs uses EncryptedSharedPreferences — plain XML
-                // backup/restore is not supported. The entry is listed for UI completeness.
                 "ufm_folder_sort_prefs"     to R.string.backup_pref_folder_sort,
                 "ufm_hidden_files_prefs"    to R.string.backup_pref_hidden_files,
                 "ufm_protected_files_prefs" to R.string.backup_pref_protected_files,
@@ -696,21 +708,32 @@ object SettingsBackupManager {
                     while (keys.hasNext()) {
                         val prefsName = keys.next()
                         val fileObj = prefsObj.getJSONObject(prefsName)
-                        val prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
-                        val editor = prefs.edit()
-                        editor.clear()
-                        val valKeys = fileObj.keys()
-                        while (valKeys.hasNext()) {
-                            val k = valKeys.next()
-                            when (val v = fileObj.get(k)) {
-                                is Int -> editor.putInt(k, v)
-                                is Boolean -> editor.putBoolean(k, v)
-                                is Long -> editor.putLong(k, v)
-                                is Double -> editor.putFloat(k, v.toFloat())
-                                is String -> editor.putString(k, v)
+                        if (prefsName == "ufm_folder_sort_prefs") {
+                            val map = mutableMapOf<String, Any?>()
+                            val valKeys = fileObj.keys()
+                            while (valKeys.hasNext()) {
+                                val k = valKeys.next()
+                                if (k.startsWith("__androidx_security_crypto_")) continue
+                                map[k] = fileObj.get(k)
                             }
+                            za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.restoreEntriesFromBackup(context, map)
+                        } else {
+                            val prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+                            val editor = prefs.edit()
+                            editor.clear()
+                            val valKeys = fileObj.keys()
+                            while (valKeys.hasNext()) {
+                                val k = valKeys.next()
+                                when (val v = fileObj.get(k)) {
+                                    is Int -> editor.putInt(k, v)
+                                    is Boolean -> editor.putBoolean(k, v)
+                                    is Long -> editor.putLong(k, v)
+                                    is Double -> editor.putFloat(k, v.toFloat())
+                                    is String -> editor.putString(k, v)
+                                }
+                            }
+                            editor.commit()
                         }
-                        editor.commit()
                     }
                     // FileTagsManager keeps an in-memory mirror of ufm_file_tags; drop it so the
                     // next read reloads the restored file instead of serving stale pre-restore data.

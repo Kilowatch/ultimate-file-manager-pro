@@ -11114,7 +11114,8 @@ Proton 2FA 설정에서 받은 Base32 비밀 키 (코드 자동 생성용)
     <string name="rclone_field_mailbox_password_hint">
 레거시 이중 비밀번호 Proton 계정에만 해당
 </string>
-<!-- UFM Media Player — Settings -->
+
+    <!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 배경 동영상 모드
 </string>
@@ -11248,6 +11249,34 @@ PiP(화면 속 화면)
 </string>
     <string name="player_skip_forward_content_desc">
 앞으로 건너뛰기
+</string>
+
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">
+플레이어 제스처
+</string>
+    <string name="pref_player_gestures_summary">
+볼륨, 밝기 및 탐색을 위해 스와이프하세요. 검색하려면 두 번 탭하세요.
+</string>
+    <string name="player_gesture_brightness">
+명도
+</string>
+    <string name="player_gesture_volume">
+용량
+</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">
+버튼 피드백 토스트
+</string>
+    <string name="pref_player_button_toasts_summary">
+플레이어 컨트롤을 누르면 팝업 메시지 표시
+</string>
+    <string name="settings_player_toasts_subtitle_on">
+~에
+</string>
+    <string name="settings_player_toasts_subtitle_off">
+끄다
 </string>
 
     <!-- UFM Media Player — Mini-Player -->

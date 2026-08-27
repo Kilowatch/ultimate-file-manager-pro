@@ -121,6 +121,11 @@ class UFMPlayerActivity : AppCompatActivity() {
     private lateinit var trackSheetList: LinearLayout
     private lateinit var trackSheetTitle: TextView
 
+    // ── Gesture Controls ────────────────────────────────────────────
+    private lateinit var gestureOverlay: PlayerGestureOverlayView
+    private var gestureController: PlayerGestureController? = null
+    private var currentTrackInfo: QueueItem? = null
+
     // ── Next-Track Overlay ──────────────────────────────────────────
     private lateinit var nextTrackOverlay: NextTrackOverlayView
     private var hasPendingNextTrack = false
@@ -262,6 +267,7 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         override fun onTrackChanged(trackInfo: QueueItem?) {
             runOnUiThread {
+                currentTrackInfo = trackInfo
                 hasPendingNextTrack = false
                 nextTrackOverlay.hideImmediately()
                 if (trackInfo != null) {
@@ -719,10 +725,17 @@ class UFMPlayerActivity : AppCompatActivity() {
             // Just hide the UI controls that are irrelevant in PiP mode
             controlsLayout.visibility = GONE
             topBar.visibility = GONE
+            if (::gestureOverlay.isInitialized) {
+                gestureOverlay.hideAll(true)
+                gestureOverlay.visibility = GONE
+            }
         } else {
             // Returned from PiP — player is already attached, just restore UI
             controlsLayout.visibility = VISIBLE
             topBar.visibility = VISIBLE
+            if (::gestureOverlay.isInitialized) {
+                gestureOverlay.visibility = VISIBLE
+            }
         }
     }
 
@@ -756,6 +769,64 @@ class UFMPlayerActivity : AppCompatActivity() {
         trackSheetLayout = findViewById(R.id.trackSheetLayout)
         trackSheetList = findViewById(R.id.trackSheetList)
         trackSheetTitle = findViewById(R.id.trackSheetTitle)
+        gestureOverlay = findViewById(R.id.gestureOverlay)
+
+        if (!DeviceUtils.isTvDevice(this)) {
+            gestureController = PlayerGestureController(
+                activity = this,
+                overlayView = gestureOverlay,
+                topBar = topBar,
+                controlsLayout = controlsLayout,
+                isGesturesEnabled = {
+                    PlayerPreferencesManager.isGesturesEnabled(this) && !isPiP
+                },
+                isVideoPlaying = {
+                    val isVid = currentTrackInfo?.isVideo ?: (playerView.visibility == View.VISIBLE)
+                    isVid
+                },
+                getCurrentPosition = {
+                    mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
+                },
+                getDuration = {
+                    mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+                },
+                onSeekTo = { pos ->
+                    if (mjpegPlayer != null) {
+                        mjpegPlayer?.seekTo(pos, audioPoster)
+                    } else {
+                        playbackService?.seekTo(pos)
+                    }
+                },
+                onSingleTap = {
+                    toggleControls()
+                },
+                onLongPress = {
+                    showSpeedSheet()
+                },
+                hideControls = {
+                    hideControls()
+                },
+                resetHideTimer = {
+                    resetHideTimer()
+                }
+            )
+
+            gestureOverlay.setOnTouchListener { _, event ->
+                if (isShowingSheet) {
+                    if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+                        val sheetRect = android.graphics.Rect()
+                        trackSheetLayout.getGlobalVisibleRect(sheetRect)
+                        val touchX = event.rawX.toInt()
+                        val touchY = event.rawY.toInt()
+                        if (!sheetRect.contains(touchX, touchY)) {
+                            dismissTrackSheet()
+                            return@setOnTouchListener true
+                        }
+                    }
+                }
+                gestureController?.handleTouchEvent(event) ?: false
+            }
+        }
 
         subtitleView.visibility = View.GONE
 
@@ -969,6 +1040,27 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     // ── UI Helpers ──────────────────────────────────────────────────
 
+    private fun toggleControls() {
+        if (controlsLayout.visibility == View.VISIBLE) {
+            hideControls()
+        } else {
+            resetHideTimer()
+        }
+    }
+
+    private fun hideControls() {
+        handler.removeCallbacks(hideControlsRunnable)
+        if (!isDestroyed && !isFinishing && !isShowingSheet) {
+            controlsLayout.animate().alpha(0f).setDuration(250).withEndAction {
+                controlsLayout.visibility = View.GONE
+                subtitleView.setPadding(0, 0, 0, dp(16))
+            }
+            topBar.animate().alpha(0f).setDuration(250).withEndAction {
+                topBar.visibility = View.GONE
+            }
+        }
+    }
+
     private fun resetHideTimer() {
         handler.removeCallbacks(hideControlsRunnable)
         controlsLayout.visibility = View.VISIBLE
@@ -1035,6 +1127,9 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     private fun stopPlaybackAndFinish() {
+        if (::gestureOverlay.isInitialized) {
+            gestureOverlay.hideAll(true)
+        }
         mjpegPlayer?.release()
         mjpegPlayer = null
         if (bound) {
@@ -1157,6 +1252,9 @@ class UFMPlayerActivity : AppCompatActivity() {
                 }
             }
             resetHideTimer()
+        }
+        if (event != null && gestureController?.handleTouchEvent(event) == true) {
+            return true
         }
         event?.let { speedGestureDetector.onTouchEvent(it) }
         return super.onTouchEvent(event)

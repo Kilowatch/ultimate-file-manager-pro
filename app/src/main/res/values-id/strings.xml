@@ -11114,7 +11114,8 @@ Kata Sandi Kotak Surat (Opsional)
     <string name="rclone_field_mailbox_password_hint">
 Hanya untuk akun Proton lama dengan dua kata sandi
 </string>
-<!-- UFM Media Player — Settings -->
+
+    <!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 Mode video latar belakang
 </string>
@@ -11248,6 +11249,34 @@ Lompat mundur
 </string>
     <string name="player_skip_forward_content_desc">
 Lompat maju
+</string>
+
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">
+Gerakan Pemain
+</string>
+    <string name="pref_player_gestures_summary">
+Gesek untuk volume, kecerahan, dan pencarian. Ketuk dua kali untuk mencari.
+</string>
+    <string name="player_gesture_brightness">
+Kecerahan
+</string>
+    <string name="player_gesture_volume">
+Volume
+</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">
+Tombol Umpan Balik Bersulang
+</string>
+    <string name="pref_player_button_toasts_summary">
+Tampilkan pesan pop-up saat menekan kontrol pemutar
+</string>
+    <string name="settings_player_toasts_subtitle_on">
+Pada
+</string>
+    <string name="settings_player_toasts_subtitle_off">
+Mati
 </string>
 
     <!-- UFM Media Player — Mini-Player -->

@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.storage
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
@@ -37,6 +38,11 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
  * preview on the right. Optimized for D-pad navigation.
  */
 class BatchRenameTvActivity : AppCompatActivity() {
+
+    companion object {
+        const val EXTRA_RENAMED_OLD_PATHS = "renamed_old_paths"
+        const val EXTRA_RENAMED_NEW_PATHS = "renamed_new_paths"
+    }
 
     private lateinit var viewModel: BatchRenameViewModel
     private var suppressTextWatcher = false
@@ -488,7 +494,11 @@ class BatchRenameTvActivity : AppCompatActivity() {
                 }
 
                 Toast.makeText(this@BatchRenameTvActivity, message, Toast.LENGTH_LONG).show()
-                setResult(Activity.RESULT_OK)
+                val resultIntent = Intent().apply {
+                    putStringArrayListExtra(EXTRA_RENAMED_OLD_PATHS, ArrayList(result.renamedMap.keys))
+                    putStringArrayListExtra(EXTRA_RENAMED_NEW_PATHS, ArrayList(result.renamedMap.values))
+                }
+                setResult(Activity.RESULT_OK, resultIntent)
                 finish()
             }
         }

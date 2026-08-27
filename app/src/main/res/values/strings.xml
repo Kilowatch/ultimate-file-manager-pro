@@ -3934,6 +3934,18 @@
     <string name="player_skip_back_content_desc">Skip back</string>
     <string name="player_skip_forward_content_desc">Skip forward</string>
 
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">Player Gestures</string>
+    <string name="pref_player_gestures_summary">Swipe for volume, brightness, and seeking. Double-tap to seek.</string>
+    <string name="player_gesture_brightness">Brightness</string>
+    <string name="player_gesture_volume">Volume</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">Button Feedback Toasts</string>
+    <string name="pref_player_button_toasts_summary">Show pop-up message when pressing player controls</string>
+    <string name="settings_player_toasts_subtitle_on">On</string>
+    <string name="settings_player_toasts_subtitle_off">Off</string>
+
     <!-- UFM Media Player — Mini-Player -->
     <string name="mini_player_play_content_desc">Play</string>
     <string name="mini_player_pause_content_desc">Pause</string>

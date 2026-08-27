@@ -1716,6 +1716,62 @@
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
                         <LinearLayout
+                            android:id="@+id/cardPlayerButtonToasts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_notifications"
+                                android:layout_marginEnd="@dimen/margin_lg"
+                                app:tint="@color/tv_icon_tint"
+                                android:contentDescription="@string/pref_player_button_toasts_title" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/pref_player_button_toasts_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="22sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtPlayerButtonToastsSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_player_toasts_subtitle_off"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchPlayerButtonToasts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:clickable="false"
+                                android:focusable="false" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+                        <LinearLayout
                             android:id="@+id/cardSkipLength"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

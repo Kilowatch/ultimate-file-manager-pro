@@ -25,6 +25,8 @@ object PlayerPreferencesManager {
     private const val KEY_MINI_PLAYER_ENABLED = "mini_player_enabled"
     private const val KEY_RESUME_AFTER_INTERRUPTION = "resume_after_interruption"
     private const val KEY_SKIP_LENGTH = "skip_length_seconds"
+    private const val KEY_GESTURES_ENABLED = "player_gestures_enabled"
+    private const val KEY_PLAYER_BUTTON_TOASTS = "player_button_toasts_enabled"
 
     // ── Background Video Mode ───────────────────────────────────────
 
@@ -135,5 +137,33 @@ object PlayerPreferencesManager {
             else -> R.string.skip_length_option_10s
         }
         return context.getString(res)
+    }
+
+    // ── Gestures ────────────────────────────────────────────────────
+
+    fun isGesturesEnabled(context: Context): Boolean {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getBoolean(KEY_GESTURES_ENABLED, true)
+    }
+
+    fun setGesturesEnabled(context: Context, enabled: Boolean) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_GESTURES_ENABLED, enabled)
+            .apply()
+    }
+
+    // ── Player Button Toasts ────────────────────────────────────────
+
+    fun isButtonToastsEnabled(context: Context): Boolean {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getBoolean(KEY_PLAYER_BUTTON_TOASTS, false)
+    }
+
+    fun setButtonToastsEnabled(context: Context, enabled: Boolean) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_PLAYER_BUTTON_TOASTS, enabled)
+            .apply()
     }
 }

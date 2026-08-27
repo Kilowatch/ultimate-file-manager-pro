@@ -132,7 +132,10 @@ class NetworkBrowserFragment : Fragment() {
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == android.app.Activity.RESULT_OK) {
-            onBatchRenameCompleted()
+            val oldPaths = result.data?.getStringArrayListExtra(za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity.EXTRA_RENAMED_OLD_PATHS) ?: emptyList()
+            val newPaths = result.data?.getStringArrayListExtra(za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity.EXTRA_RENAMED_NEW_PATHS) ?: emptyList()
+            val renamedMap = oldPaths.zip(newPaths).toMap()
+            onBatchRenameCompleted(renamedMap)
         }
     }
 
@@ -521,8 +524,8 @@ class NetworkBrowserFragment : Fragment() {
                             batchRenameTvLauncher.launch(intent)
                         } else {
                             val dialog = BatchRenameDialogFragment.newInstance(items)
-                            dialog.setOnCompleteListener { _, _ ->
-                                onBatchRenameCompleted()
+                            dialog.setOnCompleteListener { _, _, renamedMap ->
+                                onBatchRenameCompleted(renamedMap)
                             }
                             dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
                         }
@@ -901,8 +904,8 @@ class NetworkBrowserFragment : Fragment() {
                     batchRenameTvLauncher.launch(intent)
                 } else {
                     val dialog = BatchRenameDialogFragment.newInstance(items)
-                    dialog.setOnCompleteListener { _, _ ->
-                        onBatchRenameCompleted()
+                    dialog.setOnCompleteListener { _, _, renamedMap ->
+                        onBatchRenameCompleted(renamedMap)
                     }
                     dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
                 }
@@ -917,8 +920,15 @@ class NetworkBrowserFragment : Fragment() {
             onItemClick = { file ->
                 if (file.isDirectory) {
                     saveCurrentFolderScroll(targetChildPath = file.path)
-                    folderScrollStates.remove(file.path)
-                    currentPath = file.path
+                    val nextPath = if (share.type == ShareType.TV || share.type == ShareType.DLNA || share.type == ShareType.SFTP || share.type == ShareType.SCP) {
+                        file.path
+                    } else if (currentPath.isEmpty() || currentPath == "/") {
+                        file.name
+                    } else {
+                        "${currentPath.trimEnd('/')}/${file.name}"
+                    }
+                    folderScrollStates.remove(nextPath)
+                    currentPath = nextPath
                     loadDirectory()
                 } else {
                     val ext = file.name.substringAfterLast(".").lowercase()
@@ -1177,9 +1187,16 @@ class NetworkBrowserFragment : Fragment() {
                     showRenameDialog(selected.first())
                 } else if (selected.size > 1) {
                     val items = selected.map { za.kilowatch.ultimatefilemanager.storage.BatchRenameItem.fromNetworkFile(it, share) }
-                    val dialog = za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.newInstance(items)
-                    dialog.setOnCompleteListener { _, _ -> onBatchRenameCompleted() }
-                    dialog.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.TAG)
+                    if (DeviceUtils.isTvDevice(requireContext())) {
+                        val intent = android.content.Intent(requireContext(), BatchRenameTvActivity::class.java).apply {
+                            putParcelableArrayListExtra("items", java.util.ArrayList(items))
+                        }
+                        batchRenameTvLauncher.launch(intent)
+                    } else {
+                        val dialog = za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.newInstance(items)
+                        dialog.setOnCompleteListener { _, _, renamedMap -> onBatchRenameCompleted(renamedMap) }
+                        dialog.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment.TAG)
+                    }
                 }
             }
             pm.ACTION_SHARE -> {
@@ -1372,27 +1389,18 @@ class NetworkBrowserFragment : Fragment() {
             return false
         }
 
-        val lastSlash = currentPath.lastIndexOf('/')
+        val clean = currentPath.trimStart('/')
+        val lastSlash = clean.lastIndexOf('/')
         lastExitedPath = currentPath
         currentPath = if (lastSlash <= 0) {
-            // Going back from the last path segment.
-            val trimmedPath = currentPath.trimStart('/')
-            val shareName = share.remotePath.trimStart('/')
-            if (share.isServerMode && shareName.isNotEmpty() && trimmedPath != shareName) {
-                // At a subfolder level — go to share root (show share's contents).
-                // Use share name so loadDirectory enters the already-navigated branch
-                // instead of the "discover shares" root path.
-                "/$shareName"
-            } else {
-                // At share root or non-server mode — go back to root (server root or empty).
-                if (share.isServerMode) {
-                    share = share.copy(remotePath = originalRemotePath)
-                    fileAdapter.share = share
-                }
-                ""
+            // Reset share path when returning to server root in server-mode SMB
+            if (share.isServerMode) {
+                share = share.copy(remotePath = originalRemotePath)
+                fileAdapter.share = share
             }
+            ""
         } else {
-            currentPath.substring(0, lastSlash)
+            clean.substring(0, lastSlash)
         }
         loadDirectory()
         return true
@@ -1728,7 +1736,19 @@ class NetworkBrowserFragment : Fragment() {
                         }
                         withContext(Dispatchers.Main) { 
                             fileAdapter.exitSelectionMode()
-                            loadDirectory() 
+                            if (isSearchActive) {
+                                currentFiles = currentFiles.map { nf ->
+                                    if (nf.path == file.path) {
+                                        nf.copy(name = newName, path = targetPath)
+                                    } else nf
+                                }
+                                val query = edtSearch?.text?.toString()?.trim().orEmpty()
+                                if (query.isNotEmpty()) {
+                                    performSearch(query)
+                                }
+                            } else {
+                                loadDirectory()
+                            }
                             dialog.dismiss()
                         }
                     } catch (e: Exception) {
@@ -2016,11 +2036,22 @@ class NetworkBrowserFragment : Fragment() {
         }
     }
 
-    private fun onBatchRenameCompleted() {
+    private fun onBatchRenameCompleted(renamedMap: Map<String, String> = emptyMap()) {
         fileAdapter.exitSelectionMode()
-        val query = edtSearch?.text?.toString()?.trim().orEmpty()
-        if (isSearchActive && query.isNotEmpty()) {
-            performSearch(query)
+        if (isSearchActive) {
+            if (renamedMap.isNotEmpty()) {
+                currentFiles = currentFiles.map { nf ->
+                    val newPath = renamedMap[nf.path]
+                    if (newPath != null) {
+                        val newName = newPath.substringAfterLast('/')
+                        nf.copy(name = newName, path = newPath)
+                    } else nf
+                }
+            }
+            val query = edtSearch?.text?.toString()?.trim().orEmpty()
+            if (query.isNotEmpty()) {
+                performSearch(query)
+            }
         } else {
             loadDirectory()
         }

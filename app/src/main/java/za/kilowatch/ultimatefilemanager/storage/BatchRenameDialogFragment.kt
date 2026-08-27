@@ -632,6 +632,11 @@ class BatchRenameDialogFragment : DialogFragment() {
         return this
     }
 
+    fun setOnCompleteListener(listener: (Int, Int) -> Unit): BatchRenameDialogFragment {
+        onCompleteListener = OnBatchRenameCompleteListener { s, f, _ -> listener(s, f) }
+        return this
+    }
+
     private fun executeRename(state: BatchRenameState) {
         val resolvedNames = state.previewItems.map { it.resultingName }
         val context = requireContext()  // capture before dismiss
@@ -655,7 +660,7 @@ class BatchRenameDialogFragment : DialogFragment() {
                 }
 
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-                listener?.onBatchRenameComplete(result.successCount, result.failureCount)
+                listener?.onBatchRenameComplete(result.successCount, result.failureCount, result.renamedMap)
             }
         }
     }
@@ -796,6 +801,6 @@ class BatchRenameDialogFragment : DialogFragment() {
     // ── Callback interface ───────────────────────────────────────────────────
 
     fun interface OnBatchRenameCompleteListener {
-        fun onBatchRenameComplete(successCount: Int, failureCount: Int)
+        fun onBatchRenameComplete(successCount: Int, failureCount: Int, renamedMap: Map<String, String>)
     }
 }

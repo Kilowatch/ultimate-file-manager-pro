@@ -978,11 +978,17 @@ class SearchActivity : AppCompatActivity() {
                     }
 
                     showSnackbar(getString(R.string.renamed_to_newname, newName))
-                    val query = editSearch.text?.toString()?.trim() ?: ""
-                    if (query.length >= 2) {
-                        searchJob?.cancel()
-                        searchJob = scope.launch { performSearch(query) }
+                    val oldPrefix = if (isDir) "$oldPath/" else ""
+                    val newPrefix = if (isDir) "$newPath/" else ""
+                    for (i in currentResults.indices) {
+                        val f = currentResults[i]
+                        if (f.absolutePath == oldPath) {
+                            currentResults[i] = target
+                        } else if (isDir && f.absolutePath.startsWith(oldPrefix)) {
+                            currentResults[i] = File(newPrefix + f.absolutePath.removePrefix(oldPrefix))
+                        }
                     }
+                    fileAdapter.submitList(currentResults.toList())
                     dialog.dismiss()
                 } else {
                     showSnackbar(getString(R.string.rename_error))

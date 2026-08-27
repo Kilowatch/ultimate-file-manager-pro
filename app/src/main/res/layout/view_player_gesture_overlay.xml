@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Brightness HUD (Left vertical swipe) -->
+    <LinearLayout
+        android:id="@+id/brightnessOverlay"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_player_gesture_hud"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        android:elevation="8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgBrightnessIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_brightness_high"
+            app:tint="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/progressBrightness"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="6dp"
+                android:layout_weight="1"
+                android:max="100"
+                android:progressDrawable="@drawable/progress_player_gesture" />
+
+            <TextView
+                android:id="@+id/txtBrightness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="72%" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Volume HUD (Right vertical swipe) -->
+    <LinearLayout
+        android:id="@+id/volumeOverlay"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_player_gesture_hud"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        android:elevation="8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgVolumeIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_volume_up"
+            app:tint="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/progressVolume"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="6dp"
+                android:layout_weight="1"
+                android:max="100"
+                android:progressDrawable="@drawable/progress_player_gesture" />
+
+            <TextView
+                android:id="@+id/txtVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="85%" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Seek Scrub HUD (Horizontal swipe anywhere) -->
+    <LinearLayout
+        android:id="@+id/seekOverlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:minWidth="220dp"
+        android:background="@drawable/bg_player_gesture_hud"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="16dp"
+        android:elevation="8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgSeekIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_skip_forward"
+            app:tint="@android:color/white" />
+
+        <TextView
+            android:id="@+id/txtSeekDelta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="#4CAF50"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="+00:30" />
+
+        <TextView
+            android:id="@+id/txtSeekTargetTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:text="00:15:30 / 01:42:15" />
+
+        <ProgressBar
+            android:id="@+id/progressSeek"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_marginTop="10dp"
+            android:max="1000"
+            android:progressDrawable="@drawable/progress_player_gesture" />
+    </LinearLayout>
+
+    <!-- Left Double-Tap Indicator (Rewind) -->
+    <LinearLayout
+        android:id="@+id/doubleTapLeftOverlay"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginStart="48dp"
+        android:background="@drawable/bg_player_double_tap"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:elevation="8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_skip_back"
+            app:tint="@android:color/white" />
+
+        <TextView
+            android:id="@+id/txtDoubleTapLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:text="-10s" />
+    </LinearLayout>
+
+    <!-- Right Double-Tap Indicator (Fast-forward) -->
+    <LinearLayout
+        android:id="@+id/doubleTapRightOverlay"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="48dp"
+        android:background="@drawable/bg_player_double_tap"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:elevation="8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_skip_forward"
+            app:tint="@android:color/white" />
+
+        <TextView
+            android:id="@+id/txtDoubleTapRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:text="+10s" />
+    </LinearLayout>
+
+</FrameLayout>

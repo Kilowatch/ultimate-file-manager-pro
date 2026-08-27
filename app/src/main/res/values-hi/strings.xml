@@ -11114,7 +11114,8 @@ Proton Drive
     <string name="rclone_field_mailbox_password_hint">
 केवल पुराने दो-पासवर्ड Proton खातों के लिए
 </string>
-<!-- UFM Media Player — Settings -->
+
+    <!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 पृष्ठभूमि वीडियो मोड
 </string>
@@ -11248,6 +11249,34 @@ Proton Drive
 </string>
     <string name="player_skip_forward_content_desc">
 आगे जाएं
+</string>
+
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">
+खिलाड़ी के इशारे
+</string>
+    <string name="pref_player_gestures_summary">
+वॉल्यूम, चमक और तलाश के लिए स्वाइप करें। खोजने के लिए डबल-टैप करें।
+</string>
+    <string name="player_gesture_brightness">
+चमक
+</string>
+    <string name="player_gesture_volume">
+आयतन
+</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">
+बटन फीडबैक टोस्ट
+</string>
+    <string name="pref_player_button_toasts_summary">
+प्लेयर नियंत्रण दबाने पर पॉप-अप संदेश दिखाएं
+</string>
+    <string name="settings_player_toasts_subtitle_on">
+पर
+</string>
+    <string name="settings_player_toasts_subtitle_off">
+बंद
 </string>
 
     <!-- UFM Media Player — Mini-Player -->

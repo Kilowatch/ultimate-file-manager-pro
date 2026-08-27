@@ -11114,7 +11114,8 @@ Proton Drive
     <string name="rclone_field_mailbox_password_hint">
 Только для старых аккаунтов Proton с двумя паролями
 </string>
-<!-- UFM Media Player — Settings -->
+
+    <!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 Фоновый режим видео
 </string>
@@ -11248,6 +11249,34 @@ Proton Drive
 </string>
     <string name="player_skip_forward_content_desc">
 Перемотка вперёд
+</string>
+
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">
+Жесты игрока
+</string>
+    <string name="pref_player_gestures_summary">
+Проведите пальцем по экрану для регулировки громкости, яркости и поиска. Дважды нажмите, чтобы найти.
+</string>
+    <string name="player_gesture_brightness">
+Яркость
+</string>
+    <string name="player_gesture_volume">
+Объем
+</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">
+Кнопка обратной связи
+</string>
+    <string name="pref_player_button_toasts_summary">
+Показывать всплывающее сообщение при нажатии элементов управления плеером
+</string>
+    <string name="settings_player_toasts_subtitle_on">
+На
+</string>
+    <string name="settings_player_toasts_subtitle_off">
+Выключенный
 </string>
 
     <!-- UFM Media Player — Mini-Player -->

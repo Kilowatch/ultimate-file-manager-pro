@@ -11114,7 +11114,8 @@ Proton 2FA設定のBase32シークレットキー（コード自動生成用）
     <string name="rclone_field_mailbox_password_hint">
 レガシー2パスワードProtonアカウントのみ対象
 </string>
-<!-- UFM Media Player — Settings -->
+
+    <!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 バックグラウンド動画モード
 </string>
@@ -11248,6 +11249,34 @@ Proton 2FA設定のBase32シークレットキー（コード自動生成用）
 </string>
     <string name="player_skip_forward_content_desc">
 スキップフォワード
+</string>
+
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">
+プレイヤーのジェスチャー
+</string>
+    <string name="pref_player_gestures_summary">
+スワイプして音量、明るさ、シークを調整します。ダブルタップして検索します。
+</string>
+    <string name="player_gesture_brightness">
+輝度
+</string>
+    <string name="player_gesture_volume">
+音量
+</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">
+ボタンフィードバックトースト
+</string>
+    <string name="pref_player_button_toasts_summary">
+プレーヤーのコントロールを押したときにポップアップメッセージを表示する
+</string>
+    <string name="settings_player_toasts_subtitle_on">
+の上
+</string>
+    <string name="settings_player_toasts_subtitle_off">
+オフ
 </string>
 
     <!-- UFM Media Player — Mini-Player -->

@@ -11114,7 +11114,8 @@ Mot de passe de la boîte aux lettres (facultatif)
     <string name="rclone_field_mailbox_password_hint">
 Uniquement pour les anciens comptes Proton à deux mots de passe
 </string>
-<!-- UFM Media Player — Settings -->
+
+    <!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 Mode vidéo en arrière-plan
 </string>
@@ -11248,6 +11249,34 @@ Reculer
 </string>
     <string name="player_skip_forward_content_desc">
 Avancer
+</string>
+
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">
+Gestes du joueur
+</string>
+    <string name="pref_player_gestures_summary">
+Faites glisser votre doigt pour le volume, la luminosité et la recherche. Appuyez deux fois pour rechercher.
+</string>
+    <string name="player_gesture_brightness">
+Luminosité
+</string>
+    <string name="player_gesture_volume">
+Volume
+</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">
+Toasts de commentaires sur les boutons
+</string>
+    <string name="pref_player_button_toasts_summary">
+Afficher un message contextuel lorsque vous appuyez sur les commandes du lecteur
+</string>
+    <string name="settings_player_toasts_subtitle_on">
+Sur
+</string>
+    <string name="settings_player_toasts_subtitle_off">
+Désactivé
 </string>
 
     <!-- UFM Media Player — Mini-Player -->

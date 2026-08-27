@@ -11114,7 +11114,8 @@ Proton Drive
     <string name="rclone_field_mailbox_password_hint">
 لحسابات Proton القديمة ذات كلمتي مرور فقط
 </string>
-<!-- UFM Media Player — Settings -->
+
+    <!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 وضع الفيديو في الخلفية
 </string>
@@ -11248,6 +11249,34 @@ Proton Drive
 </string>
     <string name="player_skip_forward_content_desc">
 تخطي للأمام
+</string>
+
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">
+إيماءات اللاعب
+</string>
+    <string name="pref_player_gestures_summary">
+اسحب للحصول على الحجم والسطوع والبحث. انقر نقرًا مزدوجًا للبحث.
+</string>
+    <string name="player_gesture_brightness">
+سطوع
+</string>
+    <string name="player_gesture_volume">
+مقدار
+</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">
+زر ردود الفعل الخبز المحمص
+</string>
+    <string name="pref_player_button_toasts_summary">
+إظهار الرسالة المنبثقة عند الضغط على عناصر تحكم المشغل
+</string>
+    <string name="settings_player_toasts_subtitle_on">
+على
+</string>
+    <string name="settings_player_toasts_subtitle_off">
+عن
 </string>
 
     <!-- UFM Media Player — Mini-Player -->

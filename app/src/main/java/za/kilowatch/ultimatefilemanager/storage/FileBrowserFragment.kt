@@ -50,12 +50,16 @@ import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 import za.kilowatch.ultimatefilemanager.util.FolderScrollState
 import za.kilowatch.ultimatefilemanager.util.KeyboardShortcutHandler
 import za.kilowatch.ultimatefilemanager.ui.KeyboardShortcutDialog
+import za.kilowatch.ultimatefilemanager.util.MediaScannerNotifier
 
 /**
  * Reusable Fragment for browsing files.
  * Extracted from FileBrowserActivity to support Twin Window (dual-pane) mode.
  */
 class FileBrowserFragment : Fragment() {
+
+    private val isTv: Boolean
+        get() = context?.let { DeviceUtils.isTvDevice(it) } ?: false
 
     private lateinit var keyboardShortcutHandler: KeyboardShortcutHandler
 
@@ -104,7 +108,10 @@ class FileBrowserFragment : Fragment() {
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == android.app.Activity.RESULT_OK) {
-            onBatchRenameCompleted()
+            val oldPaths = result.data?.getStringArrayListExtra(BatchRenameTvActivity.EXTRA_RENAMED_OLD_PATHS) ?: emptyList()
+            val newPaths = result.data?.getStringArrayListExtra(BatchRenameTvActivity.EXTRA_RENAMED_NEW_PATHS) ?: emptyList()
+            val renamedMap = oldPaths.zip(newPaths).toMap()
+            onBatchRenameCompleted(renamedMap)
         }
     }
 
@@ -363,7 +370,7 @@ class FileBrowserFragment : Fragment() {
         applyToolbarIconVisibility()
         updatePasteFab()
         // Refresh file list on return from child activities (e.g. Settings toggle)
-        if (::currentDir.isInitialized) {
+        if (::currentDir.isInitialized && !isSearchActive) {
             loadDirectory(currentDir)
         }
         context?.let { ctx ->
@@ -583,7 +590,6 @@ class FileBrowserFragment : Fragment() {
     }
 
     private fun setupViews(view: View) {
-        val isTv = DeviceUtils.isTvDevice(requireContext())
         recyclerFiles = view.findViewById(R.id.recyclerFiles)
         layoutEmpty = view.findViewById(R.id.layoutEmpty)
         lottieEmptyFolder = view.findViewById(R.id.lottieEmptyFolder)
@@ -1024,7 +1030,7 @@ class FileBrowserFragment : Fragment() {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.isEmpty()) return@setOnClickListener
             if (selected.size == 1) {
-                (activity as? FileOperationsListener)?.onRenameRequested(this, selected.first())
+                showRenameDialog(selected.first())
             } else {
                 val items = selected.map { BatchRenameItem.fromLocalFile(it) }
                 if (DeviceUtils.isTvDevice(requireContext())) {
@@ -1034,8 +1040,8 @@ class FileBrowserFragment : Fragment() {
                     batchRenameTvLauncher.launch(intent)
                 } else {
                     val dialog = BatchRenameDialogFragment.newInstance(items)
-                    dialog.setOnCompleteListener { _, _ ->
-                        onBatchRenameCompleted()
+                    dialog.setOnCompleteListener { _, _, renamedMap ->
+                        onBatchRenameCompleted(renamedMap)
                     }
                     dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
                 }
@@ -1257,7 +1263,7 @@ class FileBrowserFragment : Fragment() {
             if (pm.isIconEnabled(context, pm.KEY_RENAME)) {
                 list.add(FileToolsBottomSheet.ActionItem("rename", getString(R.string.action_rename), R.drawable.ic_edit, "toolbar_rename") {
                     if (selected.size == 1) {
-                        (activity as? FileOperationsListener)?.onRenameRequested(this@FileBrowserFragment, selected.first())
+                        showRenameDialog(selected.first())
                     } else {
                         val items = selected.map { BatchRenameItem.fromLocalFile(it) }
                         if (DeviceUtils.isTvDevice(requireContext())) {
@@ -1267,8 +1273,8 @@ class FileBrowserFragment : Fragment() {
                             batchRenameTvLauncher.launch(intent)
                         } else {
                             val dialog = BatchRenameDialogFragment.newInstance(items)
-                            dialog.setOnCompleteListener { _, _ ->
-                                onBatchRenameCompleted()
+                            dialog.setOnCompleteListener { _, _, renamedMap ->
+                                onBatchRenameCompleted(renamedMap)
                             }
                             dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
                         }
@@ -1761,12 +1767,19 @@ class FileBrowserFragment : Fragment() {
             }
             pm.ACTION_RENAME -> {
                 if (selected.size == 1) {
-                    (activity as? FileOperationsListener)?.onRenameRequested(this, selected.first())
+                    showRenameDialog(selected.first())
                 } else if (selected.size > 1) {
                     val items = selected.map { BatchRenameItem.fromLocalFile(it) }
-                    val dialog = BatchRenameDialogFragment.newInstance(items)
-                    dialog.setOnCompleteListener { _, _ -> onBatchRenameCompleted() }
-                    dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
+                    if (DeviceUtils.isTvDevice(requireContext())) {
+                        val intent = android.content.Intent(requireContext(), BatchRenameTvActivity::class.java).apply {
+                            putParcelableArrayListExtra("items", java.util.ArrayList(items))
+                        }
+                        batchRenameTvLauncher.launch(intent)
+                    } else {
+                        val dialog = BatchRenameDialogFragment.newInstance(items)
+                        dialog.setOnCompleteListener { _, _, renamedMap -> onBatchRenameCompleted(renamedMap) }
+                        dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
+                    }
                 }
             }
             pm.ACTION_SHARE -> {
@@ -2472,13 +2485,23 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
-    private fun onBatchRenameCompleted() {
+    private fun onBatchRenameCompleted(renamedMap: Map<String, String> = emptyMap()) {
         fileAdapter.exitSelectionMode()
-        val query = edtSearch?.text?.toString()?.trim().orEmpty()
-        if (isSearchActive && query.isNotEmpty()) {
-            performSearch(query)
+        if (isSearchActive && rawSearchResults != null) {
+            if (renamedMap.isNotEmpty()) {
+                rawSearchResults = rawSearchResults?.map { f ->
+                    val newPath = renamedMap[f.absolutePath]
+                    if (newPath != null) File(newPath) else f
+                }
+            }
+            applySearchResultsFilterAndSort()
         } else {
-            refresh()
+            val query = edtSearch?.text?.toString()?.trim().orEmpty()
+            if (isSearchActive && query.isNotEmpty()) {
+                performSearch(query)
+            } else {
+                refresh()
+            }
         }
     }
 
@@ -2642,6 +2665,10 @@ class FileBrowserFragment : Fragment() {
             fileAdapter.exitSelectionMode()
             return true
         }
+        if (isSearchVisible || isSearchActive) {
+            toggleSearch()
+            return true
+        }
         if (currentDir.absolutePath != rootPath) {
             val parent = currentDir.parentFile ?: return false
             lastExitedDir = currentDir
@@ -2720,6 +2747,103 @@ class FileBrowserFragment : Fragment() {
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         DialogInputHelper.setupDialogInput(dialog, edtFileName) {
             dialogView.findViewById<View>(R.id.btnCreate)?.performClick()
+        }
+    }
+
+    private fun showRenameDialog(file: File) {
+        val ctx = context ?: return
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val layoutRes = if (isOnTv) R.layout.dialog_file_rename_tv else R.layout.dialog_file_rename
+        val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtOriginalName = dialogView.findViewById<android.widget.TextView>(R.id.txtOriginalName)
+        val editFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editFileName)
+        val btnSaveRename = dialogView.findViewById<View>(R.id.btnSaveRename)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtOriginalName?.text = file.name
+        editFileName?.setText(file.name)
+        val dotIndex = file.name.lastIndexOf('.')
+        if (!file.isDirectory && dotIndex > 0) {
+            editFileName?.setSelection(0, dotIndex)
+        } else {
+            editFileName?.selectAll()
+        }
+
+        btnSaveRename?.setOnClickListener {
+            val newName = editFileName?.text?.toString()?.trim().orEmpty()
+            if (newName.isNotEmpty() && newName != file.name) {
+                val newFile = File(file.parent, newName)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, file.absolutePath)
+                    val success = if (isSaf) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(ctx, file.absolutePath, newName)
+                    } else {
+                        file.renameTo(newFile)
+                    }
+                    if (success) {
+                        FileTagsManager.onPathMoved(ctx, file.absolutePath, newFile.absolutePath)
+                        MediaScannerNotifier.scanFiles(ctx, listOf(file.absolutePath, newFile.absolutePath))
+                        try {
+                            val repo = UfmApplication.indexingRepository
+                            if (file.isDirectory) {
+                                repo.deleteTreeFromIndex(file.absolutePath)
+                                val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newFile.absolutePath)
+                                repo.indexFolder(newFile.absolutePath, sid, stype)
+                            } else {
+                                repo.deleteFromIndex(file.absolutePath)
+                                val (sid, stype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(newFile.absolutePath)
+                                repo.indexFile(newFile, sid, stype)
+                            }
+                        } catch (e: Exception) {
+                            Log.e("FileBrowserFragment", "Index update failed for rename: ${e.message}")
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            if (isSearchActive && rawSearchResults != null) {
+                                val oldPath = file.absolutePath
+                                val newPath = newFile.absolutePath
+                                val oldPrefix = if (file.isDirectory) "$oldPath/" else ""
+                                val newPrefix = if (file.isDirectory) "$newPath/" else ""
+                                rawSearchResults = rawSearchResults?.map { f ->
+                                    if (f.absolutePath == oldPath) {
+                                        newFile
+                                    } else if (file.isDirectory && f.absolutePath.startsWith(oldPrefix)) {
+                                        File(newPrefix + f.absolutePath.removePrefix(oldPrefix))
+                                    } else {
+                                        f
+                                    }
+                                }
+                                applySearchResultsFilterAndSort()
+                            } else {
+                                loadDirectory(currentDir)
+                            }
+                            showFeedback(getString(R.string.rename_success))
+                            dialog.dismiss()
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            showFeedback(getString(R.string.rename_error))
+                        }
+                    }
+                }
+            } else if (newName == file.name) {
+                dialog.dismiss()
+            }
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        DialogInputHelper.setupDialogInput(dialog, editFileName) {
+            btnSaveRename?.performClick()
         }
     }
 

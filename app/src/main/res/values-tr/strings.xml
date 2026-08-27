@@ -11114,7 +11114,8 @@ Posta Kutusu Parolası (İsteğe bağlı)
     <string name="rclone_field_mailbox_password_hint">
 Yalnızca eski iki parolalı Proton hesapları için
 </string>
-<!-- UFM Media Player — Settings -->
+
+    <!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 Arka plan video modu
 </string>
@@ -11248,6 +11249,34 @@ Geri atla
 </string>
     <string name="player_skip_forward_content_desc">
 İleri atla
+</string>
+
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">
+Oyuncu Hareketleri
+</string>
+    <string name="pref_player_gestures_summary">
+Ses seviyesi, parlaklık ve arama için kaydırın. Aramak için iki kez dokunun.
+</string>
+    <string name="player_gesture_brightness">
+Parlaklık
+</string>
+    <string name="player_gesture_volume">
+Hacim
+</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">
+Düğme Geri Bildirim Tostları
+</string>
+    <string name="pref_player_button_toasts_summary">
+Oynatıcı kontrollerine basıldığında açılan mesajı göster
+</string>
+    <string name="settings_player_toasts_subtitle_on">
+Açık
+</string>
+    <string name="settings_player_toasts_subtitle_off">
+Kapalı
 </string>
 
     <!-- UFM Media Player — Mini-Player -->

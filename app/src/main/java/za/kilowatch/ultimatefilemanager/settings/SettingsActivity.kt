@@ -76,6 +76,9 @@ class SettingsActivity : AppCompatActivity() {
     private var txtMiniPlayerSubtitle: TextView? = null
     private var switchResumeAfterInterruption: SwitchMaterial? = null
     private var txtResumeAfterInterruptionSubtitle: TextView? = null
+    private var switchPlayerGestures: SwitchMaterial? = null
+    private var switchPlayerButtonToasts: SwitchMaterial? = null
+    private var txtPlayerButtonToastsSubtitle: TextView? = null
 
     private var switchBreadcrumbs: SwitchMaterial? = null
     private var txtBreadcrumbsSubtitle: TextView? = null
@@ -409,6 +412,28 @@ class SettingsActivity : AppCompatActivity() {
             switchResumeAfterInterruption?.setOnCheckedChangeListener(null)
         }
 
+        // Player Gestures toggle (mobile only)
+        val cardPlayerGestures = findViewById<View>(R.id.cardPlayerGestures)
+        if (cardPlayerGestures != null) {
+            switchPlayerGestures = findViewById(R.id.switchPlayerGestures)
+            val gesturesEnabled = PlayerPreferencesManager.isGesturesEnabled(this)
+            switchPlayerGestures?.isChecked = gesturesEnabled
+            cardPlayerGestures.setOnClickListener { togglePlayerGestures() }
+            switchPlayerGestures?.setOnCheckedChangeListener(null)
+        }
+
+        // Player Button Toasts toggle (mobile & TV)
+        val cardPlayerButtonToasts = findViewById<View>(R.id.cardPlayerButtonToasts)
+        if (cardPlayerButtonToasts != null) {
+            switchPlayerButtonToasts = findViewById(R.id.switchPlayerButtonToasts)
+            txtPlayerButtonToastsSubtitle = findViewById(R.id.txtPlayerButtonToastsSubtitle)
+            val toastsEnabled = PlayerPreferencesManager.isButtonToastsEnabled(this)
+            switchPlayerButtonToasts?.isChecked = toastsEnabled
+            updatePlayerButtonToastsSubtitle(toastsEnabled)
+            cardPlayerButtonToasts.setOnClickListener { togglePlayerButtonToasts() }
+            switchPlayerButtonToasts?.setOnCheckedChangeListener(null)
+        }
+
         // Skip Length (forward/back seek)
         val cardSkipLength = findViewById<View>(R.id.cardSkipLength)
         if (cardSkipLength != null) {
@@ -603,6 +628,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<View>(R.id.cardSkipLength)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardMiniPlayer)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardResumeAfterInterruption)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardPlayerButtonToasts)?.let { setupTvCardFocus(it) }
             cardBreadcrumbs?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardFavorites)
             cardFolderSort?.let { setupTvCardFocus(it) }
@@ -914,6 +940,14 @@ class SettingsActivity : AppCompatActivity() {
             val enabled = PlayerPreferencesManager.isResumeAfterInterruption(this)
             sw.isChecked = enabled
             updateResumeAfterInterruptionSubtitle(enabled)
+        }
+        switchPlayerGestures?.let { sw ->
+            sw.isChecked = PlayerPreferencesManager.isGesturesEnabled(this)
+        }
+        switchPlayerButtonToasts?.let { sw ->
+            val enabled = PlayerPreferencesManager.isButtonToastsEnabled(this)
+            sw.isChecked = enabled
+            updatePlayerButtonToastsSubtitle(enabled)
         }
         updateSkipLengthSubtitle()
 
@@ -1375,6 +1409,29 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.settings_resume_playback_subtitle_on)
         } else {
             getString(R.string.settings_resume_playback_subtitle_off)
+        }
+    }
+
+    private fun togglePlayerGestures() {
+        val sw = switchPlayerGestures ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        PlayerPreferencesManager.setGesturesEnabled(this, newValue)
+    }
+
+    private fun togglePlayerButtonToasts() {
+        val sw = switchPlayerButtonToasts ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        PlayerPreferencesManager.setButtonToastsEnabled(this, newValue)
+        updatePlayerButtonToastsSubtitle(newValue)
+    }
+
+    private fun updatePlayerButtonToastsSubtitle(enabled: Boolean) {
+        txtPlayerButtonToastsSubtitle?.text = if (enabled) {
+            getString(R.string.settings_player_toasts_subtitle_on)
+        } else {
+            getString(R.string.settings_player_toasts_subtitle_off)
         }
     }
 

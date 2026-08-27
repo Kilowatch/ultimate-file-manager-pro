@@ -11114,7 +11114,8 @@ Postfach-Passwort (optional)
     <string name="rclone_field_mailbox_password_hint">
 Nur für ältere Proton-Konten mit zwei Passwörtern
 </string>
-<!-- UFM Media Player — Settings -->
+
+    <!-- UFM Media Player — Settings -->
     <string name="settings_background_video_title">
 Hintergrundvideomodus
 </string>
@@ -11248,6 +11249,34 @@ Zurückspringen
 </string>
     <string name="player_skip_forward_content_desc">
 Vorspringen
+</string>
+
+    <!-- UFM Media Player — Gesture Controls -->
+    <string name="pref_player_gestures_title">
+Spielergesten
+</string>
+    <string name="pref_player_gestures_summary">
+Wischen Sie für Lautstärke, Helligkeit und Suche. Doppeltippen, um zu suchen.
+</string>
+    <string name="player_gesture_brightness">
+Helligkeit
+</string>
+    <string name="player_gesture_volume">
+Volumen
+</string>
+
+    <!-- UFM Media Player — Button Feedback Toasts -->
+    <string name="pref_player_button_toasts_title">
+Button-Feedback-Toasts
+</string>
+    <string name="pref_player_button_toasts_summary">
+Beim Drücken der Player-Steuerelemente wird eine Popup-Meldung angezeigt
+</string>
+    <string name="settings_player_toasts_subtitle_on">
+An
+</string>
+    <string name="settings_player_toasts_subtitle_off">
+Aus
 </string>
 
     <!-- UFM Media Player — Mini-Player -->
