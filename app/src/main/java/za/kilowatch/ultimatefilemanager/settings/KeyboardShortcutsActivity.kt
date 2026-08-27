@@ -24,11 +24,10 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 /**
  * Settings activity to configure hardware / Bluetooth keyboard shortcuts,
  * master enable/disable toggle, Vim navigation mode, and individual key allocations.
- * Follows UFMStandard for Mobile and TV.
+ * Available only on Mobile devices.
  */
 class KeyboardShortcutsActivity : AppCompatActivity() {
 
-    private var isTv = false
     private lateinit var switchMasterEnable: SwitchMaterial
     private lateinit var switchVimMode: SwitchMaterial
     private lateinit var switchDualPane: SwitchMaterial
@@ -42,18 +41,21 @@ class KeyboardShortcutsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
-        isTv = DeviceUtils.isTvDevice(this)
-        setContentView(if (isTv) R.layout.activity_keyboard_shortcuts_tv else R.layout.activity_keyboard_shortcuts)
+        if (DeviceUtils.isTvDevice(this)) {
+            finish()
+            return
+        }
+
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_keyboard_shortcuts)
 
         val rootView = findViewById<View>(R.id.main)
         ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val tvPad = if (isTv) (27 * resources.displayMetrics.density).toInt() else 0
             v.setPadding(
-                systemBars.left + tvPad, systemBars.top + tvPad,
-                systemBars.right + tvPad, systemBars.bottom + tvPad
+                systemBars.left, systemBars.top,
+                systemBars.right, systemBars.bottom
             )
             insets
         }
@@ -135,17 +137,14 @@ class KeyboardShortcutsActivity : AppCompatActivity() {
             // Category Section Title
             val sectionTitle = TextView(this).apply {
                 setText(categoryResId)
-                textSize = if (isTv) 14f else 12f
+                textSize = 12f
                 typeface = android.graphics.Typeface.create("sans-serif-bold", android.graphics.Typeface.BOLD)
                 letterSpacing = 0.08f
                 isAllCaps = true
-                if (isTv) {
-                    setTextColor(getColor(R.color.tv_text_secondary))
-                } else {
-                    val typedValue = android.util.TypedValue()
-                    theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
-                    setTextColor(typedValue.data)
-                }
+                val typedValue = android.util.TypedValue()
+                theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
+                setTextColor(typedValue.data)
+
                 val dp8 = (8 * resources.displayMetrics.density).toInt()
                 val dp16 = (16 * resources.displayMetrics.density).toInt()
                 layoutParams = LinearLayout.LayoutParams(
@@ -161,14 +160,9 @@ class KeyboardShortcutsActivity : AppCompatActivity() {
             val card = MaterialCardView(this).apply {
                 radius = (16 * resources.displayMetrics.density)
                 cardElevation = 0f
-                strokeWidth = if (isTv) (2 * resources.displayMetrics.density).toInt() else (1 * resources.displayMetrics.density).toInt()
-                if (isTv) {
-                    setStrokeColor(android.content.res.ColorStateList.valueOf(getColor(R.color.tv_glass_border)))
-                    setCardBackgroundColor(getColor(R.color.tv_glass_white_10))
-                } else {
-                    setStrokeColor(android.content.res.ColorStateList.valueOf(getColor(R.color.mobile_glass_stroke)))
-                    setCardBackgroundColor(getColor(R.color.mobile_glass_card))
-                }
+                strokeWidth = (1 * resources.displayMetrics.density).toInt()
+                setStrokeColor(android.content.res.ColorStateList.valueOf(getColor(R.color.mobile_glass_stroke)))
+                setCardBackgroundColor(getColor(R.color.mobile_glass_card))
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -193,15 +187,8 @@ class KeyboardShortcutsActivity : AppCompatActivity() {
                 txtDesc.setText(binding.descResId)
                 txtKeyBadge.text = KeyboardPreferenceManager.getCustomBindingDisplay(this, binding.actionId)
 
-                if (isTv) {
-                    txtTitle.setTextColor(getColor(R.color.tv_text_primary))
-                    txtDesc.setTextColor(getColor(R.color.tv_text_secondary))
-                    rowView.isFocusable = true
-                    rowView.setBackgroundResource(R.drawable.selector_tv_button)
-                } else {
-                    txtTitle.setTextColor(getColor(R.color.mobile_card_text_primary))
-                    txtDesc.setTextColor(getColor(R.color.mobile_text_secondary))
-                }
+                txtTitle.setTextColor(getColor(R.color.mobile_card_text_primary))
+                txtDesc.setTextColor(getColor(R.color.mobile_text_secondary))
 
                 rowView.setOnClickListener {
                     if (KeyboardPreferenceManager.isMasterEnabled(this)) {
@@ -218,9 +205,10 @@ class KeyboardShortcutsActivity : AppCompatActivity() {
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             (1 * resources.displayMetrics.density).toInt()
                         ).apply {
-                            setMargins(dp16, 0, dp16, 0)
+                            marginStart = dp16
+                            marginEnd = dp16
                         }
-                        setBackgroundColor(if (isTv) getColor(R.color.tv_glass_white_10) else getColor(R.color.mobile_glass_stroke))
+                        setBackgroundColor(getColor(R.color.mobile_glass_stroke))
                     }
                     cardInner.addView(divider)
                 }
@@ -233,8 +221,7 @@ class KeyboardShortcutsActivity : AppCompatActivity() {
 
     private fun showRebindDialog(binding: KeyboardPreferenceManager.KeyBinding) {
         val currentDisplay = KeyboardPreferenceManager.getCustomBindingDisplay(this, binding.actionId)
-        val layoutRes = if (isTv) R.layout.dialog_keyboard_rebind_tv else R.layout.dialog_keyboard_rebind
-        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_keyboard_rebind, null)
 
         val txtActionName = dialogView.findViewById<TextView>(R.id.txtActionName)
         val txtCurrentKey = dialogView.findViewById<TextView>(R.id.txtCurrentKey)
@@ -278,20 +265,10 @@ class KeyboardShortcutsActivity : AppCompatActivity() {
         }
 
         dialog.show()
-
-        if (isTv) {
-            btnCancel.requestFocus()
-        }
     }
 
     private fun showResetConfirmDialog() {
-        val layoutRes = if (isTv) {
-            R.layout.dialog_keyboard_shortcuts_reset_confirm_tv
-        } else {
-            R.layout.dialog_keyboard_shortcuts_reset_confirm
-        }
-
-        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_keyboard_shortcuts_reset_confirm, null)
         val btnResetConfirm = dialogView.findViewById<View>(R.id.btnResetConfirm)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
 
@@ -314,9 +291,5 @@ class KeyboardShortcutsActivity : AppCompatActivity() {
         }
 
         dialog.show()
-
-        if (isTv) {
-            btnCancel.requestFocus()
-        }
     }
 }

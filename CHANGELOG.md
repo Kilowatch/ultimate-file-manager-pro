@@ -21,6 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Trailing `>` (*More*) button triggers `FileToolsBottomSheet`, automatically filtering out tools already present on the floating Quick Bar across Local, SAF, Network (SMB, SFTP, FTP, WebDAV, NFS), and Online/Cloud storages.
   - Master enable/disable toggle switch in Toolbar Icons settings.
 
+### Changed
+- Restricted keyboard shortcuts exclusively to mobile devices, removing all TV layouts and handling code.
+- Disabled "Enable Keyboard Shortcuts" by default on mobile.
+
+### Fixed
+- Fixed TV D-Pad Right navigation issue caused by keyboard shortcuts interception.
+
 ## [1.9.1] — 2026-08-24
 
 ### Added

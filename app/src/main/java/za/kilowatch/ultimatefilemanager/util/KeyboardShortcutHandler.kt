@@ -56,6 +56,7 @@ class KeyboardShortcutHandler(
      * @return true if the shortcut was consumed, false to allow default handling.
      */
     fun handleKeyEvent(event: KeyEvent): Boolean {
+        if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(activity)) return false
         if (!KeyboardPreferenceManager.isMasterEnabled(activity)) return false
         if (event.action != KeyEvent.ACTION_DOWN) return false
 

@@ -565,10 +565,12 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, ToolbarIconsActivity::class.java))
         }
 
-        // Keyboard Shortcuts row
-        val cardKeyboardShortcuts = findViewById<View>(R.id.cardKeyboardShortcuts)
-        cardKeyboardShortcuts?.setOnClickListener {
-            startActivity(Intent(this, KeyboardShortcutsActivity::class.java))
+        // Keyboard Shortcuts row (Mobile only)
+        if (!isTv) {
+            val cardKeyboardShortcuts = findViewById<View>(R.id.cardKeyboardShortcuts)
+            cardKeyboardShortcuts?.setOnClickListener {
+                startActivity(Intent(this, KeyboardShortcutsActivity::class.java))
+            }
         }
 
         // APK / XAPK Extract row
@@ -604,7 +606,6 @@ class SettingsActivity : AppCompatActivity() {
             cardBreadcrumbs?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardFavorites)
             cardFolderSort?.let { setupTvCardFocus(it) }
-            findViewById<View>(R.id.cardKeyboardShortcuts)?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardDefaultApps)
             setupTvCardFocus(cardLongPressDuration)
             findViewById<View>(R.id.cardControlsTimeout)?.let { setupTvCardFocus(it) }

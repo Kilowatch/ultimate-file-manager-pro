@@ -90,7 +90,8 @@ object KeyboardPreferenceManager {
     }
 
     fun isMasterEnabled(context: Context): Boolean {
-        return getPrefs(context).getBoolean(KEY_MASTER_ENABLED, true)
+        if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) return false
+        return getPrefs(context).getBoolean(KEY_MASTER_ENABLED, false)
     }
 
     fun setMasterEnabled(context: Context, enabled: Boolean) {
@@ -137,7 +138,7 @@ object KeyboardPreferenceManager {
 
     fun resetToDefaults(context: Context) {
         getPrefs(context).edit()
-            .putBoolean(KEY_MASTER_ENABLED, true)
+            .putBoolean(KEY_MASTER_ENABLED, false)
             .putBoolean(KEY_VIM_MODE_ENABLED, true)
             .putBoolean(KEY_DUAL_PANE_SWITCH_ENABLED, true)
             .remove(KEY_CUSTOM_BINDINGS_JSON)

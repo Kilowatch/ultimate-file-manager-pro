@@ -802,6 +802,7 @@ class FileBrowserFragment : Fragment() {
         fileAdapter.isGroupedByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(requireContext())
         recyclerFiles.adapter = fileAdapter
 
+        if (!isTv) {
         keyboardShortcutHandler = KeyboardShortcutHandler(requireActivity(), object : KeyboardShortcutHandler.KeyboardActionListener {
             override fun onMoveDown() {
                 val currentPos = fileAdapter.findPosition(fileAdapter.focusedPath)
@@ -956,6 +957,7 @@ class FileBrowserFragment : Fragment() {
                 }
             }
         })
+        }
 
         val initialMode = ViewModeManager.load(requireContext())
         applyViewMode(initialMode)
@@ -3569,7 +3571,7 @@ class FileBrowserFragment : Fragment() {
     }
 
     fun handleKeyEvent(event: KeyEvent): Boolean {
-        if (::keyboardShortcutHandler.isInitialized && keyboardShortcutHandler.handleKeyEvent(event)) {
+        if (!isTv && ::keyboardShortcutHandler.isInitialized && keyboardShortcutHandler.handleKeyEvent(event)) {
             return true
         }
         return false

@@ -1968,7 +1968,8 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
-        if (za.kilowatch.ultimatefilemanager.settings.KeyboardPreferenceManager.isMasterEnabled(this)) {
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        if (!isTv && za.kilowatch.ultimatefilemanager.settings.KeyboardPreferenceManager.isMasterEnabled(this)) {
             val keyCode = event.keyCode
             val isDualPaneEnabled = za.kilowatch.ultimatefilemanager.settings.KeyboardPreferenceManager.isDualPaneSwitchEnabled(this)
             val isInputFocused = currentFocus is android.widget.EditText
@@ -1996,7 +1997,7 @@ class TwinWindowActivity : AppCompatActivity() {
             }
         }
 
-        if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)) {
+        if (isTv) {
             val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
             if (!isVerticalSplit) {
                 val isLeftOrRight = event.keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT || event.keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT

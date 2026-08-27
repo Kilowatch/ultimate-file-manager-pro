@@ -1359,60 +1359,7 @@
                                                     android:src="@drawable/ic_arrow_down"
                                                     app:tint="@color/tv_icon_tint" />
                         </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardKeyboardShortcuts"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:src="@drawable/ic_terminal"
-                                android:layout_marginEnd="@dimen/margin_lg"
-                                android:contentDescription="@string/settings_keyboard_shortcuts_title" />
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/settings_keyboard_shortcuts_title"
-                                    android:textColor="@color/tv_text_primary"
-                                    android:textSize="22sp"
-                                    android:fontFamily="sans-serif-medium" />
-
-                                <TextView
-                                    android:id="@+id/txtKeyboardShortcutsSubtitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/settings_keyboard_shortcuts_subtitle"
-                                    android:textColor="@color/tv_text_secondary"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_arrow_down"
-                                android:rotation="-90"
-                                android:contentDescription="@null" />
-                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>

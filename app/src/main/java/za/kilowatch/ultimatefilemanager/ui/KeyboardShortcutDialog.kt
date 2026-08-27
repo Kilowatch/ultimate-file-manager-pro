@@ -17,9 +17,8 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 object KeyboardShortcutDialog {
 
     fun show(activity: Activity) {
-        val isTv = DeviceUtils.isTvDevice(activity)
-        val layoutRes = if (isTv) R.layout.dialog_keyboard_shortcuts_tv else R.layout.dialog_keyboard_shortcuts
-        val dialogView = activity.layoutInflater.inflate(layoutRes, null)
+        if (DeviceUtils.isTvDevice(activity)) return
+        val dialogView = activity.layoutInflater.inflate(R.layout.dialog_keyboard_shortcuts, null)
 
         val recycler = dialogView.findViewById<RecyclerView>(R.id.recyclerShortcuts)
         val btnClose = dialogView.findViewById<View>(R.id.btnCloseDialog)
