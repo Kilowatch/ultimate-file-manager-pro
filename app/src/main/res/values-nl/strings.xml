@@ -13061,6 +13061,111 @@ ADB-verbindingsinstellingen
     <string name="invalid_ip_or_port">
 Voer een geldig IP-adres en poort in (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Toegang tot opslag
+</string>
+    <string name="perm_storage_access_desc">
+Kies Geselecteerde mappen voor privacy of verleen toegang tot alle bestanden voor onbeperkt apparaatbeheer.
+</string>
+    <string name="perm_choice_dialog_title">
+Toegang tot opslag
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Kies hoe UFM toegang krijgt tot uw opslag. Je kunt dit op elk moment wijzigen in Instellingen.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Geselecteerde mappen (aanbevolen)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Kies alleen de mappen waartoe UFM toegang heeft. Houdt uw andere bestanden privé.
+</string>
+    <string name="perm_choice_all_files_title">
+Toegang tot alle bestanden (geavanceerd)
+</string>
+    <string name="perm_choice_all_files_desc">
+Onbeperkte toegang tot alle bestanden op het apparaat voor volledig bestandsbeheer.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Selecteer Opslagmappen
+</string>
+    <string name="dialog_setup_folders_desc">
+Kies de mappen op uw apparaat die UFM mag openen en beheren.
+</string>
+    <string name="btn_add_another_folder">
++ Map / bestand toevoegen
+</string>
+    <string name="selected_folders_count">
+%1$d map(pen) geselecteerd
+</string>
+    <string name="no_folders_selected_hint">
+Er zijn nog geen mappen toegevoegd. Tik op \"+ Map/bestand toevoegen\" om mappen te kiezen.
+</string>
+    <string name="btn_done">
+Klaar
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Map / bestand toevoegen
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Verleen toegang tot een map of bestand in deze opslag
+</string>
+    <string name="restricted_storage_empty_title">
+Nog geen mappen toegevoegd
+</string>
+    <string name="restricted_storage_empty_desc">
+U gebruikt de modus voor geselecteerde mappen. Voeg mappen toe om ze hier te openen en te beheren.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Schakel toegang tot alle bestanden in Instellingen in
+</string>
+    <string name="storage_selected_folders_mode">
+Geselecteerde mappen (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Toegang tot alle bestanden
+</string>
+    <string name="settings_all_files_access_enabled">
+Volledige apparaatbrede opslagtoegang ingeschakeld
+</string>
+    <string name="settings_all_files_access_disabled">
+Geselecteerde mappenmodus actief (beperkte toegang)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+Toegang tot alle bestanden vereist
+</string>
+    <string name="restricted_feature_dialog_desc">
+Deze functie vereist onbeperkte opslagtoegang op het hele apparaat. U kunt toegang tot alle bestanden verlenen in Instellingen of geselecteerde mappen blijven gebruiken.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Maptoegang verwijderen?
+</string>
+    <string name="unmount_folder_confirm">
+Toegang tot \'%1$s\' uit deze opslag verwijderen? Er worden geen fysieke bestanden verwijderd.
+</string>
+    <string name="unmount_folder_action">
+Toegang verwijderen
+</string>
+    <string name="folder_access_removed">
+Maptoegang verwijderd
+</string>
+    <string name="indexing_saf_folder_started">
+Indexeren van %1$s...
+</string>
+    <string name="btn_manage">
+Beheren
+</string>
 </resources>
 
 

@@ -13073,6 +13073,111 @@ Configuración de conexión ADB
     <string name="invalid_ip_or_port">
 Ingrese una dirección IP y un puerto válidos (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Acceso al almacenamiento
+</string>
+    <string name="perm_storage_access_desc">
+Elija Carpetas seleccionadas para mayor privacidad u otorgue acceso a todos los archivos para una administración de dispositivos sin restricciones.
+</string>
+    <string name="perm_choice_dialog_title">
+Acceso al almacenamiento
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Elija cómo UFM accede a su almacenamiento. Puedes cambiar esto en cualquier momento en Configuración.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Carpetas seleccionadas (recomendado)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Elija solo las carpetas a las que UFM puede acceder. Mantiene sus otros archivos privados.
+</string>
+    <string name="perm_choice_all_files_title">
+Acceso a todos los archivos (avanzado)
+</string>
+    <string name="perm_choice_all_files_desc">
+Acceso sin restricciones a todos los archivos del dispositivo para una gestión completa de los archivos.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Seleccionar carpetas de almacenamiento
+</string>
+    <string name="dialog_setup_folders_desc">
+Elija las carpetas en su dispositivo a las que UFM puede acceder y administrar.
+</string>
+    <string name="btn_add_another_folder">
++ Agregar carpeta/archivo
+</string>
+    <string name="selected_folders_count">
+%1$d carpeta(s) seleccionada(s)
+</string>
+    <string name="no_folders_selected_hint">
+Aún no se han agregado carpetas. Toque \"+ Agregar carpeta/archivo\" para elegir carpetas.
+</string>
+    <string name="btn_done">
+Hecho
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Agregar carpeta/archivo
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Conceder acceso a una carpeta o archivo en este almacenamiento
+</string>
+    <string name="restricted_storage_empty_title">
+Aún no se han agregado carpetas
+</string>
+    <string name="restricted_storage_empty_desc">
+Estás utilizando el modo de carpetas seleccionadas. Agregue carpetas para acceder a ellas y administrarlas aquí.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Habilitar el acceso a todos los archivos en la configuración
+</string>
+    <string name="storage_selected_folders_mode">
+Carpetas seleccionadas (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Acceso a todos los archivos
+</string>
+    <string name="settings_all_files_access_enabled">
+Acceso completo al almacenamiento en todo el dispositivo habilitado
+</string>
+    <string name="settings_all_files_access_disabled">
+Modo carpetas seleccionadas activo (acceso restringido)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+Se requiere acceso a todos los archivos
+</string>
+    <string name="restricted_feature_dialog_desc">
+Esta función requiere acceso al almacenamiento sin restricciones en todo el dispositivo. Puede otorgar acceso a todos los archivos en Configuración o continuar usando las carpetas seleccionadas.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+¿Eliminar el acceso a la carpeta?
+</string>
+    <string name="unmount_folder_confirm">
+¿Eliminar el acceso a \"%1$s\" de este almacenamiento? No se eliminarán archivos físicos.
+</string>
+    <string name="unmount_folder_action">
+Eliminar acceso
+</string>
+    <string name="folder_access_removed">
+Se eliminó el acceso a la carpeta
+</string>
+    <string name="indexing_saf_folder_started">
+Indexando %1$s...
+</string>
+    <string name="btn_manage">
+Administrar
+</string>
 </resources>
 
 

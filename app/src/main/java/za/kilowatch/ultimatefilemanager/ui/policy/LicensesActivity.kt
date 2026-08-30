@@ -192,7 +192,7 @@ class LicensesActivity : AppCompatActivity() {
             }
 
             if (list.none { it.name.contains("zstd", ignoreCase = true) }) {
-                list.add(LibInfo("zstd-jni (com.github.luben:zstd-jni)", "1.5.7-1", "BSD-2-Clause", "https://github.com/luben/zstd-jni"))
+                list.add(LibInfo("zstd-jni (com.github.luben:zstd-jni)", "1.5.7-16", "BSD-2-Clause", "https://github.com/luben/zstd-jni"))
             }
             if (list.none { it.name.contains("junrar", ignoreCase = true) }) {
                 list.add(LibInfo("Junrar (com.github.junrar:junrar)", "7.5.5", "BSD-3-Clause", "https://github.com/junrar/junrar"))
@@ -211,7 +211,7 @@ class LicensesActivity : AppCompatActivity() {
         LibInfo(getString(R.string.apache_commons_compress), "1.26.1", "Apache-2.0", "https://commons.apache.org/proper/commons-compress/"),
         LibInfo(getString(R.string.zip4j_netlingalazip4j), "2.11.5", "Apache-2.0", "https://github.com/svenkubiak/zip4j"),
         LibInfo(getString(R.string.xz_for_java_orgtukaanixz), "1.9", getString(R.string.public_domain), "https://tukaani.org/xz/java.html"),
-        LibInfo("zstd-jni (com.github.luben:zstd-jni)", "1.5.7-1", "BSD-2-Clause", "https://github.com/luben/zstd-jni"),
+        LibInfo("zstd-jni (com.github.luben:zstd-jni)", "1.5.7-16", "BSD-2-Clause", "https://github.com/luben/zstd-jni"),
         LibInfo("Junrar (com.github.junrar:junrar)", "7.5.5", "BSD-3-Clause", "https://github.com/junrar/junrar"),
         LibInfo(getString(R.string.apache_poi), "3.17", "Apache-2.0", "https://poi.apache.org/"),
         LibInfo(getString(R.string.nanohttpd), "2.3.1", "BSD-3-Clause", "https://github.com/NanoHttpd/nanohttpd"),

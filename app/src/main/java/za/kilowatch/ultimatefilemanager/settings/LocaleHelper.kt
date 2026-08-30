@@ -27,6 +27,8 @@ object LocaleHelper {
     const val LOCALE_UK = "uk"
     const val LOCALE_IT = "it"
     const val LOCALE_NL = "nl"
+    const val LOCALE_ZH = "zh"
+    const val LOCALE_SV = "sv"
     const val LOCALE_DEFAULT = "system"
 
     /**

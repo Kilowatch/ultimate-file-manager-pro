@@ -35,6 +35,11 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchCrashReport: SwitchMaterial
     private lateinit var txtCrashReportSubtitle: TextView
 
+    private var cardAllFilesAccess: View? = null
+    private var dividerAllFilesAccess: View? = null
+    private var switchAllFilesAccess: SwitchMaterial? = null
+    private var txtAllFilesAccessSubtitle: TextView? = null
+
     private lateinit var switchHiddenFiles: SwitchMaterial
     private lateinit var txtHiddenFilesSubtitle: TextView
 
@@ -216,6 +221,23 @@ class SettingsActivity : AppCompatActivity() {
 
         cardCrashReport.setOnClickListener { toggleCrashReport() }
         switchCrashReport.setOnCheckedChangeListener(null)
+
+        // All Files Access toggle (Mobile API 30+)
+        cardAllFilesAccess = findViewById(R.id.cardAllFilesAccess)
+        dividerAllFilesAccess = findViewById(R.id.dividerAllFilesAccess)
+        switchAllFilesAccess = findViewById(R.id.switchAllFilesAccess)
+        txtAllFilesAccessSubtitle = findViewById(R.id.txtAllFilesAccessSubtitle)
+
+        if (!isTv && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            cardAllFilesAccess?.visibility = View.VISIBLE
+            dividerAllFilesAccess?.visibility = View.VISIBLE
+            cardAllFilesAccess?.setOnClickListener {
+                launchAllFilesAccessSettings()
+            }
+        } else {
+            cardAllFilesAccess?.visibility = View.GONE
+            dividerAllFilesAccess?.visibility = View.GONE
+        }
 
         // Hidden Files toggle
         val cardHiddenFiles = findViewById<View>(R.id.cardHiddenFiles)
@@ -838,6 +860,8 @@ class SettingsActivity : AppCompatActivity() {
             LocaleHelper.LOCALE_UK -> getString(R.string.language_ukrainian)
             LocaleHelper.LOCALE_IT -> getString(R.string.language_italian)
             LocaleHelper.LOCALE_NL -> getString(R.string.language_dutch)
+            LocaleHelper.LOCALE_ZH -> getString(R.string.language_chinese)
+            LocaleHelper.LOCALE_SV -> getString(R.string.language_swedish)
             else                   -> getString(R.string.language_system_default)
         }
 
@@ -861,6 +885,9 @@ class SettingsActivity : AppCompatActivity() {
             switchHiddenFiles.isChecked = enabled
             updateHiddenFilesSubtitle(enabled)
         }
+
+        // Refresh All Files Access status (Mobile API 30+)
+        syncAllFilesAccessStatus()
 
         // Refresh media thumbnails subtitle
         if (::switchMediaThumbnails.isInitialized) {
@@ -1130,6 +1157,35 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.settings_crash_report_subtitle_on)
         } else {
             getString(R.string.settings_crash_report_subtitle_off)
+        }
+    }
+
+    private fun syncAllFilesAccessStatus() {
+        if (!isTv && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            val isGranted = android.os.Environment.isExternalStorageManager()
+            switchAllFilesAccess?.isChecked = isGranted
+            txtAllFilesAccessSubtitle?.text = if (isGranted) {
+                getString(R.string.settings_all_files_access_enabled)
+            } else {
+                getString(R.string.settings_all_files_access_disabled)
+            }
+        }
+    }
+
+    private fun launchAllFilesAccessSettings() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            try {
+                val intent = Intent(
+                    android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                    android.net.Uri.parse("package:$packageName")
+                )
+                startActivity(intent)
+            } catch (_: Exception) {
+                try {
+                    val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, android.net.Uri.parse("package:$packageName"))
+                    startActivity(intent)
+                } catch (_: Exception) {}
+            }
         }
     }
 

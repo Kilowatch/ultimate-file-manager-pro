@@ -13061,6 +13061,111 @@ ADB Connection Settings
     <string name="invalid_ip_or_port">
 Please enter a valid IP address and port (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Storage Access
+</string>
+    <string name="perm_storage_access_desc">
+Choose Selected Folders for privacy, or grant All Files Access for unrestricted device management.
+</string>
+    <string name="perm_choice_dialog_title">
+Storage Access
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Choose how UFM accesses your storage. You can change this at any time in Settings.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Selected Folders (Recommended)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Choose only the folders UFM is allowed to access. Keeps your other files private.
+</string>
+    <string name="perm_choice_all_files_title">
+All Files Access (Advanced)
+</string>
+    <string name="perm_choice_all_files_desc">
+Unrestricted access to all files on the device for complete file management.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Select Storage Folders
+</string>
+    <string name="dialog_setup_folders_desc">
+Choose the folders on your device UFM is allowed to access and manage.
+</string>
+    <string name="btn_add_another_folder">
++ Add Folder / File
+</string>
+    <string name="selected_folders_count">
+%1$d folder(s) selected
+</string>
+    <string name="no_folders_selected_hint">
+No folders added yet. Tap \"+ Add Folder / File\" to choose folders.
+</string>
+    <string name="btn_done">
+Done
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Add Folder / File
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Grant access to a folder or file in this storage
+</string>
+    <string name="restricted_storage_empty_title">
+No Folders Added Yet
+</string>
+    <string name="restricted_storage_empty_desc">
+You are using selected folders mode. Add folders to access and manage them here.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Enable All Files Access in Settings
+</string>
+    <string name="storage_selected_folders_mode">
+Selected Folders (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+All Files Access
+</string>
+    <string name="settings_all_files_access_enabled">
+Full device-wide storage access enabled
+</string>
+    <string name="settings_all_files_access_disabled">
+Selected folders mode active (restricted access)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+All Files Access Required
+</string>
+    <string name="restricted_feature_dialog_desc">
+This feature requires unrestricted device-wide storage access. You can grant All Files Access in Settings or continue using selected folders.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Remove Folder Access?
+</string>
+    <string name="unmount_folder_confirm">
+Remove access to \"%1$s\" from this storage? No physical files will be deleted.
+</string>
+    <string name="unmount_folder_action">
+Remove Access
+</string>
+    <string name="folder_access_removed">
+Folder access removed
+</string>
+    <string name="indexing_saf_folder_started">
+Indexing %1$s...
+</string>
+    <string name="btn_manage">
+Manage
+</string>
 </resources>
 
 

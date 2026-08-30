@@ -13061,6 +13061,111 @@ Pengaturan Koneksi ADB
     <string name="invalid_ip_or_port">
 Silakan masukkan alamat IP dan port yang valid (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Akses Penyimpanan
+</string>
+    <string name="perm_storage_access_desc">
+Pilih Folder Terpilih untuk privasi, atau berikan Akses Semua File untuk pengelolaan perangkat tanpa batas.
+</string>
+    <string name="perm_choice_dialog_title">
+Akses Penyimpanan
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Pilih bagaimana UFM mengakses penyimpanan Anda. Anda dapat mengubahnya kapan saja di Pengaturan.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Folder yang Dipilih (Disarankan)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Pilih hanya folder yang boleh diakses oleh UFM. Menjaga privasi file Anda yang lain.
+</string>
+    <string name="perm_choice_all_files_title">
+Akses Semua File (Lanjutan)
+</string>
+    <string name="perm_choice_all_files_desc">
+Akses tidak terbatas ke semua file di perangkat untuk manajemen file lengkap.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Pilih Folder Penyimpanan
+</string>
+    <string name="dialog_setup_folders_desc">
+Pilih folder di perangkat Anda yang boleh diakses dan dikelola oleh UFM.
+</string>
+    <string name="btn_add_another_folder">
++ Tambahkan Folder / File
+</string>
+    <string name="selected_folders_count">
+%1$d folder dipilih
+</string>
+    <string name="no_folders_selected_hint">
+Belum ada folder yang ditambahkan. Ketuk \"+ Tambahkan Folder / File\" untuk memilih folder.
+</string>
+    <string name="btn_done">
+Selesai
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Tambahkan Folder / File
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Berikan akses ke folder atau file di penyimpanan ini
+</string>
+    <string name="restricted_storage_empty_title">
+Belum Ada Folder yang Ditambahkan
+</string>
+    <string name="restricted_storage_empty_desc">
+Anda menggunakan mode folder yang dipilih. Tambahkan folder untuk mengakses dan mengelolanya di sini.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Aktifkan Akses Semua File di Pengaturan
+</string>
+    <string name="storage_selected_folders_mode">
+Folder Terpilih (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Akses Semua File
+</string>
+    <string name="settings_all_files_access_enabled">
+Akses penyimpanan penuh di seluruh perangkat diaktifkan
+</string>
+    <string name="settings_all_files_access_disabled">
+Mode folder yang dipilih aktif (akses terbatas)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+Semua Akses File Diperlukan
+</string>
+    <string name="restricted_feature_dialog_desc">
+Fitur ini memerlukan akses penyimpanan seluruh perangkat yang tidak dibatasi. Anda dapat memberikan Akses Semua File di Pengaturan atau terus menggunakan folder yang dipilih.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Hapus Akses Folder?
+</string>
+    <string name="unmount_folder_confirm">
+Hapus akses ke \"%1$s\" dari penyimpanan ini? Tidak ada file fisik yang akan dihapus.
+</string>
+    <string name="unmount_folder_action">
+Hapus Akses
+</string>
+    <string name="folder_access_removed">
+Akses folder dihapus
+</string>
+    <string name="indexing_saf_folder_started">
+Mengindeks %1$s...
+</string>
+    <string name="btn_manage">
+Mengelola
+</string>
 </resources>
 
 

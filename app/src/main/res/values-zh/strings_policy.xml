@@ -1,0 +1,1646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SHARED
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="policy_app_name">
+Ultimate File Manager Pro
+</string>
+    <string name="policy_company">
+基洛手表
+</string>
+    <string name="policy_last_updated">
+最后更新时间：2026 年 8 月
+</string>
+    <string name="policy_play_store_url">
+https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
+</string>
+    <string name="policy_contact_email">
+支持@kilowatch.co.za
+</string>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TERMS AND CONDITIONS
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="tc_screen_title">
+条款及条件
+</string>
+    <string name="tc_summary">
+下载或使用 Ultimate File Manager Pro 即表示您接受这些条款。我们将它们写得尽可能清晰且没有行话。
+</string>
+
+    <!-- Section titles -->
+    <string name="tc_s1_title">
+1. 您同意什么
+</string>
+    <string name="tc_s2_title">
+2. 该应用程序的用途
+</string>
+    <string name="tc_s3_title">
+3. 风险与责任——诚实的事实
+</string>
+    <string name="tc_s3a_title">
+3a.应用内购买和计费
+</string>
+    <string name="tc_s3b_title">
+3b. RClone云集成
+</string>
+    <string name="tc_s4_title">
+4. 您的责任
+</string>
+    <string name="tc_s5_title">
+5. 我们需要的权限以及原因
+</string>
+    <string name="tc_s6_title">
+6. 谁拥有什么
+</string>
+    <string name="tc_s7_title">
+7. 我们使用的开源组件
+</string>
+    <string name="tc_s8_title">
+8. 这些条款的变更
+</string>
+    <string name="tc_s9_title">
+9. 如果出现问题
+</string>
+    <string name="tc_s10_title">
+10. 适用法律
+</string>
+    <string name="tc_s11_title">
+11. 有疑问吗？联系我们
+</string>
+
+    <!-- Section body text -->
+    <string name="tc_s1_body">
+从 Google Play 商店下载或打开 Ultimate File Manager Pro，即表示您接受这些条款。如果您不想接受它们，只需不要安装或使用该应用程序即可。
+</string>
+
+    <string name="tc_s2_body">
+Ultimate File Manager Pro 是一款免费的 Android 应用程序（可在手机和 Android TV 上使用），其中包含可让您的文件井然有序且安全的工具。
+</string>
+
+    <string name="tc_s3_body">
+我们精心构建了这个应用程序，但在使用它之前您应该了解一些重要的事实。
+</string>
+
+    <string name="tc_s3a_body">
+该应用程序提供了一个可选的“Fuel the Developer”提示罐——三个支持开发的一次性自愿购买。提示不会给您带来额外的功能；该应用程序始终完全免费。
+</string>
+    <string name="tc_s3a_payment">
+所有交易均通过 Google Play 结算进行。我们永远不会看到您的卡或银行详细信息。
+</string>
+    <string name="tc_s3a_refunds">
+小费购买是自愿的，由 Google Play 处理。退款请求由 Google Play 根据其退款政策和适用法律（包括《南非消费者保护法》）直接处理。 KiloWatch 不独立处理退款。
+</string>
+    <string name="tc_s3a_recurring">
+没有任何订阅。每次打赏都是一次性消耗型购买。您绝不会被自动扣款。
+</string>
+    <string name="tc_s3a_no_obligation">
+小费完全是可选的。所有功能都可以永久免费使用。
+</string>
+
+    <string name="tc_s3b_body">
+该应用支持使用内置的 RClone 后端连接到各种第三方云存储提供商。使用此功能时，适用以下条款：
+</string>
+    <string-array name="tc_rclone_labels">
+        <item>
+直接API通信
+</item>
+        <item>
+凭证安全
+</item>
+        <item>
+第三方条款
+</item>
+        <item>
+无连接保证
+</item>
+    </string-array>
+    <string-array name="tc_rclone_details">
+        <item>
+对 RClone 存储提供商（例如 Filen、Mega 等）的所有网络请求都直接从您的设备向相应提供商的端点执行。没有数据通过 KiloWatch 服务器。
+</item>
+        <item>
+您的 RClone 配置文件和密码通过 RClone RC 后端在设备上进行加密，并以 rclone_encrypted.json 的形式本地存储在应用程序的私有存储中。您全权负责保护您的设备以保护此文件。
+</item>
+        <item>
+您对任何 RClone 集成云存储的使用均受相应云提供商的服务条款和隐私政策的约束。通过此应用程序访问文件时，您必须遵守他们的条款。
+</item>
+        <item>
+由于云提供商 API 和端点可能会在不发出通知的情况下发生更改，因此我们无法保证任何特定的 RClone 提供商将保持可访问性或功能不间断。
+</item>
+    </string-array>
+    <string name="tc_s3b_summary">
+Connecting to cloud drives via RClone is done directly from your phone or TV. We never see your cloud files or passwords. Your passwords are encrypted on your phone, and you are subject to the terms of whatever cloud provider you configure.
+</string>
+
+    <string name="tc_s4_body">
+使用本应用时，您需要承担一些简单的责任。
+</string>
+
+    <string name="tc_s5_body">
+该应用需要请求某些 Android 权限才能正常运行。以下是每项权限的具体用途。
+</string>
+
+    <string name="tc_s6_body">
+您可以自由使用本应用；但不允许复制、再分发或出售它。
+</string>
+
+    <string name="tc_s7_body">
+我们的开发建立在一些优秀开源项目的基础之上。每个项目均受其自身许可证约束 — 您可以在应用内的“设置”→“法律”→“开源许可证”中查看每个库的完整许可证文本。
+</string>
+
+    <string name="tc_s8_body">
+我们可能会不时更新这些条款。更新时，我们会更新本文档顶部的日期。在任何变更后继续使用本应用即表示您接受更新后的条款。
+</string>
+
+    <string name="tc_s9_body">
+如果这些条款被违反 — 例如该应用被用于非法活动，或在未经同意的情况下访问他人设备 — 我们保留暂停或终止应用访问权限的权利。
+</string>
+
+    <string name="tc_s10_body">
+这些条款受南非法律管辖。任何争议将根据南非司法管辖权解决，不考虑法律冲突条款。
+</string>
+
+    <string name="tc_s11_body">
+如果本文中有任何不清楚的地方，或您对自己的权利有任何疑问，请与我们联系。
+</string>
+
+    <string name="tc_footer">
+使用 Ultimate File Manager Pro 即表示您确认已阅读并理解这些条款和条件。
+</string>
+
+    <!-- Feature list (Section 2) -->
+    <string-array name="tc_features">
+        <item>
+文件浏览器 — 浏览、复制、移动、重命名和删除设备上任意位置的文件。
+</item>
+        <item>
+加密保管库 — 使用您自己的 PIN 将敏感文件锁定在 AES-256-GCM 加密后。
+</item>
+        <item>
+文件服务器 — 直接在您的设备上托管 FTP 或安全 SFTP 服务器，以便在本地网络上共享文件。
+</item>
+        <item>
+远程管理 — 通过支持远程上传、下载和安装 APK 的内置 HTTP 服务器，通过本地 Wi-Fi 管理文件。
+</item>
+        <item>
+网络共享 — 连接到本地网络上的 SMB、FTP 和 NFS 服务器以浏览、下载和管理远程文件。
+</item>
+        <item>
+文件夹同步 — 按照您选择的时间表（每日、每周或每月的间隔或特定时间）自动将本地手机文件夹备份到 SMB 或 FTP 网络共享。
+</item>
+        <item>
+设备配对 — 通过本地 Wi-Fi 将您的手机和 Android TV 配对以传输和安装文件。
+</item>
+        <item>
+ADB 终端 — 使用 ADB（Android 调试桥）通过本地 Wi-Fi 以开发者模式连接到 Android 设备，以进行直接 shell 访问和高级故障排除。
+</item>
+        <item>
+内置查看器 — 直接在应用程序内查看文本文件、PDF、动画图像（APNG、GIF、动画 WebP、AVIF、SVG 等）、档案和其他格式。
+</item>
+        <item>
+高级 ZIP 支持 — 创建和提取受密码保护和 AES 加密的 ZIP 存档。
+</item>
+        <item>
+远程屏幕截图 — 通过 ADB 通过本地 Wi-Fi 捕获配对 Android TV 的屏幕，并将其直接保存到手机存储中。
+</item>
+        <item>
+7Z 存档支持 — 使用 LZMA/LZMA2 压缩提取 7Z 存档。
+</item>
+        <item>
+文件搜索 — 在设备存储中快速查找文件和文件夹。
+</item>
+        <item>
+存储分析器 — 查看存储空间使用情况的可视化细分。
+</item>
+        <item>
+应用程序管理器 — 查看和管理设备上安装的所有应用程序，以及针对预安装应用程序的去膨胀建议。
+</item>
+        <item>
+APK 安装程序 — 安装 Android 应用程序并直接从本地保存的文件中拆分 APK (XAPK)。
+</item>
+        <item>
+提升访问权限（Shizuku、Shevery 和 ADB）— 获得类似 root 的访问权限来管理系统文件和受限目录，而无需实际 root 设备。
+</item>
+        <item>
+存储索引器 — 创建文件元数据的本地索引，以进行即时搜索和超快浏览。
+</item>
+        <item>
+存储访问框架 - 其他应用程序可以通过 UFM 的文档提供程序访问您的文件。
+</item>
+        <item>
+Tip Jar — 可选的一次性购买以支持开发人员；该应用程序始终免费，无需小费。
+</item>
+        <item>
+UFM 媒体播放器 — 通过后台播放、通知控件、画中画模式和播放列表管理来播放音频和视频文件。
+</item>
+        <item>
+GIF Creator — 使用自定义帧速率、调整大小选项和拖放帧重新排序功能从选定的图像创建动画 GIF 文件。
+</item>
+        <item>
+照片 EXIF 工具 — 检查照片 EXIF 和 GPS 元数据、清除私人地理标签和设备信息，以及使用拍摄时间戳和相机元数据批量重命名照片。
+</item>
+    </string-array>
+
+    <!-- Risk table (Section 3) — label|detail pairs -->
+    <string-array name="tc_risk_labels">
+        <item>
+数据丢失
+</item>
+        <item>
+保管库密码
+</item>
+        <item>
+APK文件
+</item>
+        <item>
+文件服务器安全
+</item>
+        <item>
+网络共享凭证
+</item>
+        <item>
+文件夹同步
+</item>
+        <item>
+系统应用程序删除
+</item>
+        <item>
+亚行配对
+</item>
+        <item>
+雫、Shevery 和高架通道
+</item>
+        <item>
+电视截图
+</item>
+        <item>
+分度器精度
+</item>
+        <item>
+缺陷和错误
+</item>
+        <item>
+我们的责任
+</item>
+    </string-array>
+    <string-array name="tc_risk_details">
+        <item>
+我们不能保证零数据丢失。始终保留对您重要的文件的备份。
+</item>
+        <item>
+如果您忘记了 PIN 码和恢复代码，任何人都无法恢复您的加密文件。
+</item>
+        <item>
+安装未知来源的 APK 会带来安全风险。您对您安装的任何 APK 文件承担全部责任。
+</item>
+        <item>
+托管文件服务器时，FTP 连接以纯文本形式传输数据和凭据。如果您需要安全、加密的传输，请始终使用 SFTP。
+</item>
+        <item>
+您的网络共享凭据（主机、用户名、密码）存储在您的设备本地。您有责任确保您的设备安全。
+</item>
+        <item>
+同步操作在后台运行，可能会消耗电池和数据。在启用同步之前，请务必验证您的远程路径 - 同步到不正确的文件夹可能会覆盖网络共享上的文件。
+</item>
+        <item>
+根据 debloat 建议删除系统应用程序可能会影响设备稳定性。谨慎行事。
+</item>
+        <item>
+ADB 配对需要通过本地 Wi-Fi 在您的设备和目标设备之间交换证书。仅连接到您拥有或有权访问的设备。您网络上捕获您的配对 PIN 码的任何人都可以访问您的设备 - 请将此 PIN 码保密。
+</item>
+        <item>
+使用 Shizuku、Shevery 或 ADB 进行提升访问允许应用程序修改受系统保护的文件。滥用这些功能可能会影响设备的稳定性或安全性。请谨慎使用，仅授予对此应用程序的访问权限。
+</item>
+        <item>
+配对电视的屏幕截图是通过本地网络上的 ADB 捕获的，并直接保存到手机的存储中。我们不会传输、查看或上传您的屏幕截图。确保仅在您拥有或有权访问的设备上捕获屏幕。
+</item>
+        <item>
+该索引反映了扫描时存储的状态。如果其他应用程序更改了文件，您可能需要刷新索引。
+</item>
+        <item>
+没有软件是完美的。我们不能保证该应用程序将始终没有错误或不间断。
+</item>
+        <item>
+我们的总责任上限为您在提出索赔前 30 天内为应用内购买支付的总金额。对于因免费功能而导致的数据丢失、设备损坏或利润损失，我们不承担任何责任。
+</item>
+    </string-array>
+
+    <!-- Responsibilities list (Section 4) -->
+    <string-array name="tc_responsibilities">
+        <item>
+在执行批量操作之前定期备份重要文件。
+</item>
+        <item>
+将您的保管库 PIN 码和恢复代码存储在安全的地方 - 我们无法为您检索它们。
+</item>
+        <item>
+将您的 PIN 码保密。任何知道的人都可以访问您的保管库。
+</item>
+        <item>
+确保您的网络共享凭据安全 - 它们存储在您的设备本地。
+</item>
+        <item>
+仔细检查您的文件夹同步远程路径 - 同步到不正确的网络文件夹可能会覆盖现有文件。
+</item>
+        <item>
+根据 debloat 建议删除系统应用程序时请务必小心。
+</item>
+        <item>
+仅通过 ADB 终端连接到您拥有或具有明确访问权限的设备。请勿使用 ADB 终端未经授权访问任何设备。
+</item>
+        <item>
+将任何 ADB、Shizuku 或 Shevery 配对 PIN 码保密 — 仅与您信任且有权访问您设备的人共享这些密码。
+</item>
+        <item>
+保护您的 Shizuku 或 Shevery Manager — 通过 Shizuku 或 Shevery 授予 UFM 更高的访问权限，使其有权访问受限制的文件。仅当您信任该应用程序时才授予此访问权限。
+</item>
+        <item>
+仅将应用程序用于合法目的。请勿存储、共享或分发非法内容。
+</item>
+        <item>
+未经他人许可，请勿使用远程管理访问他人的设备。
+</item>
+        <item>
+请勿尝试对应用程序进行逆向工程、反编译或篡改。
+</item>
+        <item>
+负责任地管理您的索引记录 - 您可以随时通过“设置”->“存储索引器”删除记录或忽略特定驱动器。
+</item>
+        <item>
+在安装任何 APK 文件之前验证其真实性和安全性。
+</item>
+    </string-array>
+
+    <!-- Permissions table (Section 5) — label|detail pairs -->
+    <string-array name="tc_permission_labels">
+        <item>
+所有文件访问
+</item>
+        <item>
+媒体访问
+</item>
+        <item>
+通知
+</item>
+        <item>
+网络/无线网络
+</item>
+        <item>
+Multicast
+</item>
+        <item>
+Network State
+</item>
+        <item>
+Package Query
+</item>
+        <item>
+Install Packages
+</item>
+        <item>
+Billing
+</item>
+        <item>
+ADB Debug Bridge
+</item>
+        <item>
+Elevated Access (Shizuku &amp; Shevery)
+</item>
+        <item>
+Boot Start
+</item>
+        <item>
+Battery Optimization
+</item>
+        <item>
+Foreground Service
+</item>
+        <item>
+Wake Lock
+</item>
+        <item>
+Storage Indexer
+</item>
+        <item>
+Bluetooth
+</item>
+        <item>
+Vibrate
+</item>
+    </string-array>
+    <string-array name="tc_permission_details">
+        <item>
+Essential for browsing, copying, moving, and deleting files across all your storage.
+</item>
+        <item>
+Needed to organise and manage your photos, videos, and audio files.
+</item>
+        <item>
+Used to alert you when file operations complete or when storage is running low.
+</item>
+        <item>
+Powers remote file management, network share access (SMB/FTP/SFTP/SCP/NFS), folder sync, device pairing, and ADB terminal access on your local network. Network discovery scans devices on your local subnet (up to 254 IPs) on ADB ports 5555, 5037, and 5038 to find ADB-enabled devices.
+</item>
+        <item>
+用于设备配对时本地网络设备发现 (NSD/mDNS)。
+</item>
+        <item>
+在远程管理和网络共享访问期间检测 VPN 连接。
+</item>
+        <item>
+让应用程序管理器枚举您设备上安装的所有应用程序。访问的数据包括：应用程序名称、包 ID、版本、APK 大小、安装和更新时间戳以及每个应用程序是系统应用程序还是用户安装的应用程序。此信息专门在设备上使用，用于显示应用程序管理器、计算每个应用程序的存储空间，以及根据本地下载和缓存的公开可用的 debloat 引用列表交叉引用包名称。任何已安装的应用程序数据都不会传输到 KiloWatch 服务器或任何第三方。
+</item>
+        <item>
+安装您选择从本地存储运行的 APK 文件时需要。
+</item>
+        <item>
+处理通过 Google Play 购买的可选 Tip Jar。
+</item>
+        <item>
+允许安全连接到 Android 设备以进行高级 shell 访问。在您的设备上生成唯一的 RSA 证书以进行配对；没有证书传输到外部服务器。
+</item>
+        <item>
+Allows the app to use the Shizuku / Shevery API (including Secure Settings) for managing files in restricted system directories without rooting.
+</item>
+        <item>
+允许 Shizuku 和 Shevery 服务在您的设备启动时自动启动，以确保立即可用。
+</item>
+        <item>
+Allows you to opt-in to keeping Shizuku and Shevery services active in the background for reliable performance.
+</item>
+        <item>
+Required to run Folder Sync and file transfers as a foreground service so they complete reliably even when the screen is off.
+</item>
+        <item>
+Keeps the CPU and Wi-Fi active during large file transfers so they complete reliably even when the screen turns off.
+</item>
+        <item>
+使用存储权限扫描文件元数据并为其建立索引以提高性能 - 通过“设置”->“存储索引器”进行管理。
+</item>
+        <item>
+连接到配对的 Android TV，充当蓝牙键盘和鼠标进行远程控制。
+</item>
+        <item>
+按下电视遥控器上的按钮时提供触觉反馈。
+</item>
+    </string-array>
+
+    <!-- Open-source list (Section 7) -->
+    <string-array name="tc_opensource">
+        <item>
+NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+</item>
+        <item>
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — 用于网络共享浏览和文件夹同步的 SMB2/SMB3 客户端库。 (LGPL-2.1)
+</item>
+        <item>
+smbj (hierynomus/smbj) — 用于网络共享访问的 SMB2/SMB3 Java 实现。 （阿帕奇-2.0）
+</item>
+        <item>
+EMC ECS NFS 客户端 (com.emc.ecs:nfs-client) — 用于网络共享访问的 NFS v3 客户端库。 （阿帕奇-2.0）
+</item>
+        <item>
+libnfs (sahlberg/libnfs) — 支持 NFSv2、NFSv3 和 NFSv4 的本机 NFS 客户端库。 （LGPL-2.1 / BSD-2 条款）
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — 用于安全网络共享访问和托管的综合 SSHD 核心、SFTP 和 SCP 客户端库。 （阿帕奇-2.0）
+</item>
+        <item>
+Apache FtpServer (org.apache.ftpserver) — 100% 纯 Java FTP 服务器。 （阿帕奇-2.0）
+</item>
+        <item>
+Apache POI — 用于查看 Office 文件的文档处理库。 （阿帕奇-2.0）
+</item>
+        <item>
+Firebase Analytics — Google 的分析平台，可帮助我们了解应用的使用情况。 （阿帕奇-2.0）
+</item>
+        <item>
+AndroidX 库（包括适用于 Android TV 的 Leanback）— 用于现代 Android 开发的 Google Jetpack 组件。 （阿帕奇-2.0）
+</item>
+        <item>
+Material Design Components — Google 的 UI 库，提供干净、一致的界面。 （阿帕奇-2.0）
+</item>
+        <item>
+Room Persistence Library — 用于本地元数据索引的 SQLite 抽象层。 （阿帕奇-2.0）
+</item>
+        <item>
+zip4j (net.lingala.zip4j) — 用于受密码保护和 AES 加密存档的高级 ZIP 库。 （阿帕奇-2.0）
+</item>
+        <item>
+Apache Commons Compress — 用于读取和写入各种存档格式（7z、zip、tar 等）的库。 （阿帕奇-2.0）
+</item>
+        <item>
+XZ for Java (org.tukaani.xz) — XZ 和 LZMA 压缩的实现。 （公共领域）
+</item>
+        <item>
+zstd-jni (com.github.luben:zstd-jni) — Zstandard 压缩和提取库的 JNI 绑定。 （BSD-2 条款）
+</item>
+        <item>
+Junrar (com.github.junrar:junrar) — Java RAR 提取库。 （BSD-3 条款）
+</item>
+        <item>
+libadb-android (com.github.MuntashirAkon) — Android 调试桥库，可安全连接到支持 ADB 的设备，以进行远程 shell 访问和基于证书的配对。 （阿帕奇-2.0）
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — 用于安全网络共享访问的综合 SSHD 核心、SFTP 和 SCP 客户端库。 （阿帕奇-2.0）
+</item>
+        <item>
+EdDSA for Java (net.i2p.crypto:eddsa) — Ed25519 SSH 密钥的 EdDSA（爱德华曲线数字签名算法）的实现。 (CC0-1.0)
+</item>
+        <item>
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHD 库使用的 Android 日志记录绑定。 （麻省理工学院）
+</item>
+        <item>
+BouncyCastle (org.bouncycastle) — 用于生成 RSA/EdDSA 密钥对和创建 X.509 证书的加密库；版本 1.83。 （麻省理工学院风格的许可证）
+</item>
+        <item>
+Google Play Billing Library — 处理可选的应用内小费购买；受 Google Play 隐私政策管辖。 （阿帕奇-2.0）
+</item>
+        <item>
+Google Play 评论库 — 为应用程序的应用内评分和评论功能提供支持。 （阿帕奇-2.0）
+</item>
+        <item>
+Coil (io.coil-kt.coil3) — 图像加载库，支持内置图像查看器中的动画图像渲染（APNG、GIF、动画 WebP、AVIF、JXL、SVG）。 （阿帕奇-2.0）
+</item>
+        <item>
+avif-coder (io.github.awxkee) — AVIF 图像解码库，在 Android API 24–30 上提供本机 AVIF 支持； API 31+ 使用内置的 ImageDecoder。 （阿帕奇-2.0）
+</item>
+        <item>
+jxl-coder (io.github.awxkee) — JPEG XL 图像解码和编码库，在 Android API 21+ 上提供本机 JXL 支持。 （Apache-2.0 / BSD-3 条款）
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) — 用于在 Android 上解码和渲染动画 PNG 文件的核心库。 （阿帕奇-2.0）
+</item>
+        <item>
+Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp;provider / com.hamondev.shevery) — 通过 Shizuku 或 Shevery Manager 应用程序实现提升文件系统访问权限的库。 （阿帕奇-2.0）
+</item>
+        <item>
+ViewPager2 — 用于在片段和布局之间滑动的 Android 库。 （阿帕奇-2.0）
+</item>
+        <item>
+Lottie (com.airbnb.android:lottie) v6.3.0 — 用于在 Android 上原生渲染 Adob​​e After Effects 动画的动画库，用于在整个应用程序中提供流畅的 UI 动画。 （阿帕奇-2.0）
+</item>
+        <item>
+Ktor (io.ktor) — 用于为本地文件服务器提供支持的轻量级 Web 框架。 （阿帕奇-2.0）
+</item>
+        <item>
+PDFBox-Android (com.tom-roush:pdfbox-android) — 用于原生渲染和查看 PDF 文档的库。 （阿帕奇-2.0）
+</item>
+        <item>
+ExoPlayer / Media3 (androidx.media3) — 高级媒体播放器，可实现强大的视频和音频播放。 （阿帕奇-2.0）
+</item>
+        <item>
+Microsoft 身份验证库 (MSAL) — 本地处理 OneDrive API 身份验证。 （麻省理工学院）
+</item>
+        <item>
+OkHttp (com.squareup.okhttp3) — 用于云存储网络请求的强大 HTTP 和 HTTP/2 客户端。 （阿帕奇-2.0）
+</item>
+        <item>
+Gson (com.google.code.gson) — 用于云存储集成的 JSON 处理库。 （阿帕奇-2.0）
+</item>
+        <item>
+AndroidX 浏览器 (androidx.browser) — Chrome 自定义选项卡支持 Google Drive API 身份验证。 （阿帕奇-2.0）
+</item>
+        <item>
+ZXing (com.google.zxing:core) — 条形码图像处理库。 （阿帕奇-2.0）
+</item>
+        <item>
+gifencoder (com.squareup:gifencoder) — 纯 Java GIF 编码库，用于从选定的图像创建动画 GIF 文件。 （阿帕奇-2.0）
+</item>
+        <item>
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — 用于跨 JPEG、PNG、WebP、HEIF 和 DNG 图像格式读取、写入和剥离 EXIF 和 GPS 元数据的库。 （阿帕奇-2.0）
+</item>
+        <item>
+Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+</item>
+    </string-array>
+
+    <!-- Contact items (Section 11) -->
+    <string-array name="tc_contact_labels">
+        <item>
+电子邮件
+</item>
+    </string-array>
+    <string-array name="tc_contact_values">
+        <item>
+支持@kilowatch.co.za
+</item>
+    </string-array>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PRIVACY POLICY
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="pp_screen_title">
+Privacy Policy
+</string>
+    <string name="pp_summary">
+您的文件保留在您的设备上 — 我们永远不会看到它们。在您同意的情况下，我们会通过 Firebase 收集匿名使用分析数据，以改进应用。没有广告，不出售数据，绝无猫腻。
+</string>
+
+    <!-- Section titles -->
+    <string name="pp_s1_title">
+1. 简介
+</string>
+    <string name="pp_s2_title">
+2. 我们收集的信息
+</string>
+    <string name="pp_s3_title">
+3. 我们如何使用您的信息
+</string>
+    <string name="pp_s4_title">
+4. 权限以及为什么我们需要它们
+</string>
+    <string name="pp_s5_title">
+5. 数据安全
+</string>
+    <string name="pp_s6_title">
+6. Google API 服务 — 有限使用披露
+</string>
+    <string name="pp_s6b_title">
+6b. RClone 云集成 — 隐私与合规性
+</string>
+    <string name="pp_s7_title">
+7. 数据共享和第三方
+</string>
+    <string name="pp_s8_title">
+8. 我们保留数据多长时间
+</string>
+    <string name="pp_s9_title">
+9. 您的权利
+</string>
+    <string name="pp_s10_title">
+10. 儿童隐私
+</string>
+    <string name="pp_s11_title">
+11. 国际用户
+</string>
+    <string name="pp_s12_title">
+12. 本隐私政策的变更
+</string>
+    <string name="pp_s13_title">
+13. Google Play 政策合规性
+</string>
+    <string name="pp_s13b_title">
+13b.显着披露 - 已安装的应用程序信息
+</string>
+    <string name="pd_dialog_title">
+显着披露 - 已安装的应用程序信息
+</string>
+    <string name="pd_dialog_body">
+Ultimate File Manager Pro 通过 QUERY_ALL_PACKAGES 权限访问设备上已安装应用程序的列表，以提供应用程序管理器显示、Debloater 功能和远程文件服务器远程管理。该信息在您的设备本地进行处理和存储。启用远程文件服务器后，已安装的应用程序列表和元数据可能会通过 TLS 加密的 HTTPS 连接通过本地网络传输到经过身份验证的设备。如需了解完整详情，请参阅我们的隐私政策第 13b 条。
+</string>
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
+    <string name="pd_remote_apps_title">
+远程应用程序访问
+</string>
+    <string name="pd_remote_apps_body">
+当远程管理（文件服务器）功能处于活动状态时，此应用程序可以通过本地网络公开设备上已安装应用程序的列表。启用服务器后，本地网络上任何经过身份验证的设备都可以通过文件服务器的 REST API 访问应用程序列表和元数据，包括应用程序名称、包 ID、版本、大小、安装日期和应用程序图标。此连接经过 TLS 加密并需要身份验证。您可以随时通过停止文件服务器来禁用此功能。有关完整详细信息，请参阅我们的隐私政策第 13b 节。
+</string>
+    <string name="pd_remote_apps_accept">
+启用应用程序访问
+</string>
+    <string name="pd_remote_apps_decline">
+保持禁用状态
+</string>
+    <string name="pp_s14_title">
+14. 联系我们
+</string>
+
+    <!-- Section body text -->
+    <string name="pp_s1_body">
+Ultimate File Manager Pro 是一款独立的 Android 应用程序，不隶属于 Windows 版 Ultimate File Manager 项目 (ultimatefilemanager.pl) 或使用类似名称的任何其他产品，也不受其授权、赞助或认可。所有其他产品名称和商标均为其各自所有者的财产。\n
+\n
+本隐私政策解释了当您使用 Ultimate File Manager Pro 时我们收集哪些信息、我们如何使用它以及我们如何保证它的安全。使用该应用程序即表示您同意此处描述的做法。
+</string>
+
+    <string name="pp_s2_local_heading">
+仅本地存储在您的设备上
+</string>
+    <string name="pp_s2_local_body">
+以下数据保存在您的设备上并且永远不会离开。我们对这些的访问权限为零。
+</string>
+    <string name="pp_s2_local_alert">
+我们永远无法访问您的 PIN、恢复代码、加密密钥或存储在您保管库中的任何文件。
+</string>
+
+    <string name="pp_s2_analytics_heading">
+通过 Firebase Analytics（匿名）收集
+</string>
+    <string name="pp_s2_analytics_body">
+我们使用 Google Firebase Analytics 收集匿名使用数据以改进应用程序。分析数据永远不会与您的个人身份相关联。应用程序设置（或您的 Android 设备设置）中的使用情况分析开关是同意控件：默认情况下处于打开状态，将其关闭会撤回您的同意并随时停止收集。对于欧洲经济区、英国和瑞士的用户，这遵循欧盟用户同意政策和适用的数据保护法。
+</string>
+
+    <string name="pp_s2_billing_heading">
+通过 Google Play 结算进行处理（仅限可选提示）
+</string>
+    <string name="pp_s2_billing_body">
+当您购买可选的小费罐时，Google Play 会处理该交易。我们永远不会看到您的卡或银行详细信息。我们暂时收到购买令牌和产品 ID——两者仅在设备上处理，从未存储在我们的服务器上。
+</string>
+    <string name="pp_s2_billing_note">
+来自 Google Play Billing 的匿名购买令牌会在设备上进行临时处理，以确认您的小费 - 我们绝不会存储这些令牌，也不会与您的身份关联。
+</string>
+
+    <string name="pp_s2_crash_heading">
+崩溃和 ANR 报告（诊断）
+</string>
+    <string name="pp_s2_crash_body">
+UFM 可以在崩溃或冻结时捕获诊断信息，以便我们解决问题。这包括应用程序版本、Android 版本、设备型号和制造商、异常类型和消息以及堆栈跟踪。它从不包含您的文件、姓名、电子邮件地址或帐户信息。\n
+\n
+不会自动发送任何内容：崩溃或冻结后，会出现提示询问您是否要将报告发送到 KiloWatch (kilowatch.co.za)。选择“不，谢谢”会在本地删除它。您可以随时通过“设置”→“崩溃和 ANR 报告”禁用崩溃和冻结检测；禁用它还会删除任何待处理的报告。
+</string>
+
+    <string name="pp_s2_nocollect_heading">
+我们从不收集什么
+</string>
+
+    <string name="pp_s3_local_heading">
+本地数据用于
+</string>
+    <string name="pp_s3_analytics_heading">
+分析数据用于
+</string>
+
+    <string name="pp_s4_storage_heading">
+存储权限
+</string>
+    <string name="pp_s4_network_heading">
+网络权限
+</string>
+    <string name="pp_s4_network_alert">
+远程管理服务器、文件服务器托管、SMB/FTP/SFTP/SCP 网络共享连接、文件夹同步、设备配对和 ADB 终端连接都仅在本地 Wi-Fi 网络上运行。远程管理和FTP服务器使用未加密的协议； SFTP 和 ADB 终端连接使用安全、加密的协议。云存储 API（Google Drive、OneDrive、Dropbox、S3 兼容）通过加密的 HTTPS 与其各自的服务器安全地通信。没有其他数据传输到外部服务器。
+</string>
+    <string name="pp_s4_other_heading">
+其他权限
+</string>
+
+    <string name="pp_s5_vault_heading">
+保险库加密
+</string>
+    <string name="pp_s5_vault_body">
+加密保管库使用军用级加密来保护您的文件。
+</string>
+    <string name="pp_s5_vault_alert">
+如果您忘记了 PIN 码和恢复码，您的加密数据将永久无法访问 — 即使我们也无法恢复。请将它们存放在安全的地方。
+</string>
+    <string name="pp_s5_local_heading">
+本地数据保护
+</string>
+    <string name="pp_s5_remote_heading">
+远程管理安全
+</string>
+
+    <!-- Section 6 — Google API Limited Use -->
+    <string name="pp_s6_compliance_banner">
+Ultimate File Manager Pro 对从 Google API 接收的信息的使用遵守 Google API 服务用户数据政策，包括限制使用要求。
+</string>
+    <string name="pp_s6_intro">
+当您连接 Google 云端硬盘帐户时，该应用程序只会访问您的 Google 用户数据，以提供您直接在应用程序中使用的文件管理功能。
+</string>
+    <string name="pp_s6_google_data_heading">
+Google 用户数据 - Google Drive API
+</string>
+    <string name="pp_s6_google_never_heading">
+我们永远不会从您的 Google 帐户访问哪些内容
+</string>
+    <string name="pp_s6_google_never">
+我们不会访问您的 Gmail、Google 通讯录、Google 日历、Google 照片（云端硬盘之外）或任何其他 Google 服务数据。仅访问您请求的操作所需的最少云端硬盘文件数据。
+</string>
+    <string name="pp_s6_permitted_heading">
+Google 用户数据的允许用途
+</string>
+    <string name="pp_s6_prohibited_heading">
+禁止用途 — 我们绝不会将 Google 用户数据用于以下用途
+</string>
+    <string name="pp_s6_minimum_access">
+Ultimate File Manager Pro 仅请求执行您选择的文件管理操作所需的最低 Google 云端硬盘权限。我们绝不会请求访问您的 Gmail、Google 通讯录、Google 日历或任何其他 Google 服务数据。
+</string>
+    <!-- Section 6b — RClone Integration -->
+    <string name="pp_s6b_compliance_banner">
+Ultimate File Manager Pro 集成了 RClone 后端，支持连接到 100 多个云存储提供商。所有配置和凭据都直接在您的设备上管理。
+</string>
+    <string name="pp_s6b_intro">
+当您在 Ultimate File Manager Pro 中使用 RClone 存储集成时，该应用程序会在本地处理您的云存储凭据和文件元数据。该应用程序直接与您选择的云存储提供商的 API 端点进行通信。我们不会介入此连接，也绝不会收集、存储您的云凭据或文件或将其传输到我们的服务器。
+</string>
+    <string name="pp_s6b_local_heading">
+本地凭证加密
+</string>
+    <string name="pp_s6b_local_body">
+为 RClone 存储配置输入的任何密码、令牌或 API 密钥都会通过 RClone RC 后端使用设备上加密技术进行隐藏和加密，并以 rclone_encrypted.json 的形式安全存储在应用程序的私有目录中。其他应用程序无法访问此文件，并且在您卸载该应用程序时将永久删除该文件。
+</string>
+    <string name="pp_s6b_permitted_heading">
+云数据的允许用途
+</string>
+    <string-array name="pp_s6b_permitted">
+        <item>
+远程浏览：检索文件夹结构和文件元数据以显示远程云存储内容。
+</item>
+        <item>
+文件操作：根据您的明确请求上传、下载、重命名、复制、移动或删除远程存储上的文件。
+</item>
+    </string-array>
+    <!-- Section 7 — Data Sharing -->
+    <string name="pp_s7_nosell_alert">
+我们不会出于与提供 Ultimate File Manager Pro 的文件管理功能不直接相关的任何目的向任何第三方出售、出租、交易、转让或披露您的个人信息或 Google 用户数据（句号）。
+</string>
+    <string name="pp_s7_third_heading">
+我们使用的第三方服务
+</string>
+    <string name="pp_s7_saf_note">
+当您选择打开或与其他应用程序共享文件时（包括通过存储访问框架 (SAF) 文档提供程序），该应用程序自己的隐私策略将控制它对文件的处理方式。
+</string>
+    <string name="pp_s7_legal_note">
+如果法律、法院命令或政府要求要求，我们也可能在适用法律允许的范围内披露信息。我们不会出于本隐私政策所述目的以外的目的向第三方转让或披露您的个人信息或 Google 用户数据。
+</string>
+
+    <string name="pp_s9_body">
+您的数据由您掌控。您可以随时执行以下操作。
+</string>
+    <string name="pp_s9_delete_heading">
+如何删除所有应用程序数据
+</string>
+    <string name="pp_s9_delete_alert">
+清除数据或卸载将删除您的保管库 PIN、恢复代码和加密密钥，从而使任何保管库内容永久无法访问。首先解密您想要保留的所有内容。
+</string>
+
+    <string name="pp_s10_body">
+Ultimate File Manager Pro 不适合 13 岁以下的儿童。我们不会故意收集 13 岁以下儿童的个人信息。如果您是父母或监护人，并且认为您的孩子已提供个人信息，请与我们联系。
+</string>
+
+    <string name="pp_s11_body">
+Ultimate File Manager Pro 在南非开发。如果您在其他国家/地区使用该应用，请注意，任何信息都可能在南非或我们的第三方服务提供商（例如 Google）运营的国家/地区进行处理。
+</string>
+
+    <string name="pp_s12_body">
+我们可能会不时更新本隐私政策。当我们这样做时，我们将更新顶部的日期。对于重大更改，我们还会在应用内通知您。更改后继续使用该应用程序意味着您接受更新后的政策。
+</string>
+
+    <string name="pp_s13_body">
+此应用程序专为满足 Google Play 的标准而构建。核心应用程序功能需要所有请求的权限。在请求任何敏感权限之前，该应用程序会清楚地解释为什么需要它以及如何使用它。关于 2024 年 10 月照片和视频政策更新：广泛的访问是必要的，因为这是一个综合文件管理器，专为跨所有存储卷进行批量操作（移动、重命名和同步）而设计，而使用标准系统选择器无法有效执行这些操作。
+</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">
+Ultimate File Manager Pro 通过 QUERY_ALL_PACKAGES 权限访问设备上已安装应用程序的完整列表，以提供应用程序管理器、Debloater 和远程文件服务器功能。此披露准确地解释了哪些数据被访问、为什么以及数据存放在哪里。
+</string>
+    <string name="pp_s13b_data_heading">
+访问哪些数据
+</string>
+    <string-array name="pp_s13b_data_items">
+        <item>
+应用程序名称和包标识符（包 ID）
+</item>
+        <item>
+版本名称和版本代码
+</item>
+        <item>
+APK 文件大小
+</item>
+        <item>
+首次安装时间和最后更新时间
+</item>
+        <item>
+系统应用程序与用户安装的应用程序分类
+</item>
+        <item>
+OBB 扩展文件的存在
+</item>
+        <item>
+应用程序图标（当远程文件服务器处于活动状态时以 base64 传输）
+</item>
+        <item>
+拆分 APK/OBB 扩展文件元数据
+</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">
+为什么访问这些数据
+</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>
+应用程序管理器：显示已安装应用程序的完整列表及其详细信息（名称、版本、大小、安装日期），以便您可以从一个位置浏览、搜索和管理您的应用程序。
+</item>
+        <item>
+每个应用程序的存储计算：读取 APK 文件大小和数据目录大小（尽力）以显示每个应用程序使用了多少存储空间。
+</item>
+        <item>
+Debloater：根据公开可用的 debloat 参考列表（在设备本地下载并缓存）交叉引用已安装的软件包名称，以识别可以安全删除或禁用的预安装系统应用程序。
+</item>
+        <item>
+远程文件服务器：启用文件服务器后，通过本地网络上的 REST API 将已安装的应用程序列表和元数据公开给经过身份验证的设备，以进行远程管理。
+</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">
+这些数据保存在哪里
+</string>
+    <string name="pp_s13b_location_body">
+<b>在您的设备和本地网络上。</b> 所有已安装的应用程序数据都会在应用程序的私有存储中进行本地处理和存储。它永远不会上传到 KiloWatch 服务器，永远不会与任何第三方共享，也永远不会用于广告、分析、分析、人工智能培训。启用远程文件服务器功能后，已安装的应用程序列表和元数据可能会通过 TLS 加密的 HTTPS 连接通过本地网络传输到经过身份验证的设备。服务器仅接受来自同一本地网络上的设备的连接，并且所有请求都需要身份验证。
+</string>
+
+    <string name="pp_s14_body">
+如果您对本隐私政策有任何疑问或疑虑，请联系我们。
+</string>
+
+    <string name="pp_footer">
+使用 Ultimate File Manager Pro 即表示您确认已阅读并理解本隐私政策。
+</string>
+
+    <!-- Local storage table (Section 2) -->
+    <string-array name="pp_local_data_labels">
+        <item>
+保管库 PIN（散列）
+</item>
+        <item>
+恢复代码（散列）
+</item>
+        <item>
+保管库元数据
+</item>
+        <item>
+加密密钥
+</item>
+        <item>
+应用程序偏好设置
+</item>
+        <item>
+文件服务器配置文件
+</item>
+        <item>
+网络共享凭证
+</item>
+        <item>
+配对设备信息
+</item>
+        <item>
+ADB 身份验证密钥
+</item>
+        <item>
+Shizuku / Shevery 授权状态
+</item>
+        <item>
+电视截图
+</item>
+        <item>
+同步配置文件
+</item>
+        <item>
+云存储令牌（Google Drive、OneDrive、Dropbox）
+</item>
+        <item>
+S3 / S3兼容的存储凭证（AWS S3、MinIO、IDrive E2等）
+</item>
+        <item>
+索引文件元数据 (SQLite/Room)
+</item>
+        <item>
+语言选择（Cookie）
+</item>
+        <item>
+媒体播放状态
+</item>
+    </string-array>
+    <string-array name="pp_local_data_details">
+        <item>
+安全访问加密文件·Android SharedPreferences
+</item>
+        <item>
+忘记 PIN 码时的账户恢复 · Android SharedPreferences
+</item>
+        <item>
+您加密的文件夹和文件列表 · 应用私有存储
+</item>
+        <item>
+保管库的 AES-256-GCM 加密 · Android Keystore（硬件支持）
+</item>
+        <item>
+主题、排序设置、查看偏好 · Android SharedPreferences
+</item>
+        <item>
+托管文件服务器的配置（用户名、目录、哈希密码）· 应用私有存储
+</item>
+        <item>
+连接到您的 SMB/FTP 共享（主机、用户名、密码） · 应用程序私有存储
+</item>
+        <item>
+用于设备配对的设备名称、ID 和 IP · 应用私有存储
+</item>
+        <item>
+为安全 ADB 连接生成的 RSA 密钥和证书 · 应用私有存储
+</item>
+        <item>
+Shizuku 或 Shevery Manager 应用程序的提升访问授权的状态 · 应用程序私有存储
+</item>
+        <item>
+通过 ADB 从已配对电视捕获的屏幕截图 · 您手机本地的 图片/截图 文件夹
+</item>
+        <item>
+每个同步配置文件的本地文件夹 URI 和远程路径 · 应用程序私有存储
+</item>
+        <item>
+用于访问 Google Drive、OneDrive 和 Dropbox · 应用程序私有存储的 OAuth 令牌
+</item>
+        <item>
+用于连接 S3 存储桶的访问密钥 ID 和秘密访问密钥 · 应用程序私有存储
+</item>
+        <item>
+文件元数据（名称、大小、日期）存储在本地 SQLite/Room 数据库中，用于快速浏览和搜索 — 可以通过设置 -> 存储索引器 · 应用程序私有存储进行管理
+</item>
+        <item>
+当前队列、播放位置以及用于从上次中断处恢复的播放器设置 · Android SharedPreferences
+</item>
+        <item>
+cookie (ufm_lang) 会在整个会话期间和跨浏览器重新启动时记住您的语言选择 · Web 浏览器存储
+</item>
+    </string-array>
+
+    <!-- Analytics table (Section 2) -->
+    <string-array name="pp_analytics_labels">
+        <item>
+设备信息
+</item>
+        <item>
+应用程序使用数据
+</item>
+        <item>
+一般位置
+</item>
+    </string-array>
+    <string-array name="pp_analytics_details">
+        <item>
+设备型号、操作系统版本、屏幕尺寸
+</item>
+        <item>
+使用的功能、会话时长
+</item>
+        <item>
+基于 IP 的国家/地区 — 而非您的精确位置
+</item>
+    </string-array>
+
+    <!-- What we never collect (Section 2) -->
+    <string-array name="pp_never_collect">
+        <item>
+您的文件、文档、照片、视频或任何媒体
+</item>
+        <item>
+您的保管库内容或加密密钥
+</item>
+        <item>
+您的 PIN 码或恢复代码
+</item>
+        <item>
+您的精确位置
+</item>
+        <item>
+您的联系人、消息或通话记录
+</item>
+        <item>
+个人身份信息（姓名、电子邮件、电话号码）
+</item>
+        <item>
+超出您在文件浏览器中明确请求的任何 Google 帐户数据
+</item>
+    </string-array>
+
+    <!-- How we use data (Section 3) -->
+    <string-array name="pp_use_local">
+        <item>
+验证对加密保管库的访问
+</item>
+        <item>
+加密和解密您的私人文件
+</item>
+        <item>
+记住您的偏好和设置
+</item>
+        <item>
+使用提升的访问权限 (Shizuku/Shevery/ADB) 管理受限目录中受系统保护的文件
+</item>
+        <item>
+创建和维护文件索引以实现快速浏览和搜索（可通过“设置”->“存储索引器”进行管理）
+</item>
+        <item>
+提供核心应用功能
+</item>
+    </string-array>
+    <string-array name="pp_use_analytics">
+        <item>
+了解如何使用功能
+</item>
+        <item>
+识别并修复错误和崩溃
+</item>
+        <item>
+改进功能和用户体验
+</item>
+        <item>
+做出明智的开发决策
+</item>
+    </string-array>
+
+    <!-- Storage permissions (Section 4) -->
+    <string-array name="pp_storage_perm_labels">
+        <item>
+管理外部存储
+</item>
+        <item>
+读外部存储
+</item>
+        <item>
+写外部存储
+</item>
+    </string-array>
+    <string-array name="pp_storage_perm_details">
+        <item>
+API 30+ · 跨所有存储的完整文件管理
+</item>
+        <item>
+低于 API 33 · 旧设备上的旧文件访问
+</item>
+        <item>
+低于 API 29 · 旧设备上的旧文件修改
+</item>
+    </string-array>
+
+    <!-- Network permissions (Section 4) -->
+    <string-array name="pp_network_perm_labels">
+        <item>
+互联网
+</item>
+        <item>
+ACCESS_WIFI_STATE
+</item>
+        <item>
+访问网络状态
+</item>
+        <item>
+CHANGE_WIFI_MULTICAST_STATE
+</item>
+    </string-array>
+    <string-array name="pp_network_perm_details">
+        <item>
+启用远程文件管理、托管本地文件服务器、SMB/FTP/SFTP/SCP/NFS 网络共享访问和设备配对
+</item>
+        <item>
+显示您的本地 IP 地址以进行远程访问
+</item>
+        <item>
+检测远程管理和网络共享的活动网络和 VPN 状态
+</item>
+        <item>
+启用本地网络设备发现 (NSD/mDNS) 以进行设备配对
+</item>
+    </string-array>
+
+    <!-- Other permissions (Section 4) -->
+    <string-array name="pp_other_perm_labels">
+        <item>
+POST_通知
+</item>
+        <item>
+moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+</item>
+        <item>
+接收_启动_完成
+</item>
+        <item>
+请求忽略电池优化
+</item>
+        <item>
+请求安装包
+</item>
+        <item>
+QUERY_ALL_PACKAGES 个
+</item>
+        <item>
+FOREGROUND_SERVICE / FOREGROUND_SERVICE_DATA_SYNC
+</item>
+        <item>
+唤醒锁定
+</item>
+    </string-array>
+    <string-array name="pp_other_perm_details">
+        <item>
+当文件操作完成或存储空间不足时提醒您
+</item>
+        <item>
+允许与 Shizuku 或 Shevery Manager 通信以提升文件访问权限
+</item>
+        <item>
+允许 Shizuku 或 Shevery 服务在启动时自动启动以立即可用
+</item>
+        <item>
+允许您选择让 Shizuku 或 Shevery 在后台保持活动状态以获得可靠的性能
+</item>
+        <item>
+允许安装您选择的 APK 文件
+</item>
+        <item>
+应用程序管理器和 Debloater 功能所需。读取：应用名称、包 ID、版本、APK 大小、安装和更新时间戳以及系统与用户应用标志 — 完全在设备上处理。 Debloater 选项卡下载公开可用的 debloat 参考列表，并将其与已安装的软件包名称在本地交叉引用。任何已安装的应用程序数据都不会向外传输。
+</item>
+        <item>
+将文件夹同步、文件传输和媒体播放作为前台服务运行，这样即使屏幕关闭或您正在使用其他应用程序，它们也能可靠地完成并继续播放
+</item>
+        <item>
+在大文件传输和媒体播放期间保持 CPU 和 Wi-Fi 处于活动状态，以便即使屏幕关闭也能可靠地完成
+</item>
+    </string-array>
+
+    <!-- Encryption spec (Section 5) -->
+    <string-array name="pp_encryption_labels">
+        <item>
+算法
+</item>
+        <item>
+密钥存储
+</item>
+        <item>
+钥匙尺寸
+</item>
+        <item>
+验证
+</item>
+    </string-array>
+    <string-array name="pp_encryption_details">
+        <item>
+AES-256-GCM（带伽罗瓦/计数器模式的高级加密标准）
+</item>
+        <item>
+Android 密钥库 — 硬件支持的安全存储
+</item>
+        <item>
+256位
+</item>
+        <item>
+用户定义的 PIN
+</item>
+    </string-array>
+
+    <!-- Local data protection (Section 5) -->
+    <string-array name="pp_local_protection">
+        <item>
+所有本地数据都存储在应用程序的私有存储区域中 - 其他应用程序无法访问它。
+</item>
+        <item>
+您的 PIN 在存储之前会经过哈希处理 - 我们永远不会以纯文本形式看到它。
+</item>
+        <item>
+网络共享凭据存储在应用程序的私有存储中，并且永远不会向外部传输。
+</item>
+        <item>
+Google Drive、OneDrive 和 Dropbox 的 OAuth 令牌存储在应用程序的私人存储中，并且绝不会传输到我们的服务器或任何第三方。
+</item>
+        <item>
+S3 / S3 兼容的访问凭据（访问密钥 ID 和秘密访问密钥）存储在应用程序的私有存储中，专门用于验证对您配置的端点的请求 - 它们永远不会传输到我们的服务器。
+</item>
+        <item>
+已制定安全程序来保护所有本地存储数据的机密性。
+</item>
+        <item>
+卸载应用程序时，所有数据都会自动删除。
+</item>
+    </string-array>
+
+    <!-- Remote security (Section 5) -->
+    <string-array name="pp_remote_security">
+        <item>
+受 PIN 码保护的访问 — 只有您授权的人才能连接。
+</item>
+        <item>
+每个连接上基于会话的身份验证。
+</item>
+        <item>
+仅在您的本地网络上运行 - 无法访问外部互联网。
+</item>
+        <item>
+当您退出远程管理屏幕时，服务器会自动关闭。
+</item>
+        <item>
+重要提示：远程管理使用未加密的 HTTP。通过远程管理（包括 PIN 输入）进行的保管库访问在您的本地网络上以未加密的方式传输。仅在您信任的网络上使用，例如您的家庭 Wi-Fi。
+</item>
+    </string-array>
+
+    <!-- Google Drive user data table (Section 6) -->
+    <string-array name="pp_google_data_labels">
+        <item>
+文件和文件夹元数据（名称、大小、MIME 类型、修改日期、驱动器 ID）
+</item>
+        <item>
+文件二进制内容
+</item>
+        <item>
+OAuth 访问令牌和刷新令牌
+</item>
+    </string-array>
+    <string-array name="pp_google_data_when">
+        <item>
+当您在应用程序中浏览 Google 云端硬盘时
+</item>
+        <item>
+仅当您明确打开、下载、上传、复制、移动或同步文件时
+</item>
+        <item>
+登录 Google 云端硬盘后存储在本地
+</item>
+    </string-array>
+    <string-array name="pp_google_data_purposes">
+        <item>
+在文件浏览器中显示云端硬盘内容
+</item>
+        <item>
+执行您请求的特定文件操作
+</item>
+        <item>
+维护经过身份验证的会话，无需重复登录
+</item>
+    </string-array>
+    <!-- Permitted uses of Google data (Section 6) -->
+    <string-array name="pp_google_permitted">
+        <item>
+浏览您的云端硬盘：获取文件和文件夹元数据以显示您的云端硬盘内容。
+</item>
+        <item>
+上传文件：当您明确请求时，将本地文件发送到您的云端硬盘。
+</item>
+        <item>
+下载文件：当您明确请求时，将云端硬盘文件检索到您的设备。
+</item>
+        <item>
+移动和复制文件：执行您明确启动的驱动器端文件操作。
+</item>
+        <item>
+删除文件：删除您明确选择要删除的云端硬盘文件。
+</item>
+        <item>
+文件夹同步：根据您配置的同步配置文件将本地文件夹与云端硬盘文件夹同步。
+</item>
+    </string-array>
+    <!-- Prohibited uses of Google data (Section 6) -->
+    <string-array name="pp_google_prohibited">
+        <item>
+有针对性、个性化、重定向或基于兴趣的广告
+</item>
+        <item>
+出售给数据经纪人或提供给信息经销商
+</item>
+        <item>
+确定信用度或用于任何贷款目的
+</item>
+        <item>
+训练人工智能或机器学习模型
+</item>
+        <item>
+创建与文件管理无关的用户数据库或配置文件
+</item>
+        <item>
+出于外部目的的任何数据挖掘、抓取或聚合
+</item>
+        <item>
+出于提供或改进应用的文件管理功能或法律要求之外的任何原因将 Google 用户数据传输给任何第三方
+</item>
+    </string-array>
+    <!-- Third parties (Section 7) -->
+    <string-array name="pp_third_party_names">
+        <item>
+Firebase 分析
+</item>
+        <item>
+谷歌播放服务
+</item>
+        <item>
+Google Play 结算
+</item>
+        <item>
+微软 OneDrive API
+</item>
+        <item>
+谷歌云端硬盘API
+</item>
+        <item>
+Dropbox API
+</item>
+        <item>
+AWS S3 / S3 兼容 API（例如 AWS S3、MinIO、IDrive E2）
+</item>
+    </string-array>
+    <string-array name="pp_third_party_providers">
+        <item>
+谷歌有限责任公司
+</item>
+        <item>
+谷歌有限责任公司
+</item>
+        <item>
+谷歌有限责任公司
+</item>
+        <item>
+微软公司
+</item>
+        <item>
+谷歌有限责任公司
+</item>
+        <item>
+Dropbox 公司
+</item>
+        <item>
+Amazon Web Services 和兼容提供商
+</item>
+    </string-array>
+    <string-array name="pp_third_party_purposes">
+        <item>
+匿名使用分析
+</item>
+        <item>
+应用分发、更新和应用内评论
+</item>
+        <item>
+处理可选的应用内小费购买（仅在设备上购买代币）
+</item>
+        <item>
+验证并处理 Microsoft OneDrive 集成的用户请求
+</item>
+        <item>
+验证并处理用户发起的 Google Drive 集成文件管理请求
+</item>
+        <item>
+验证并处理 Dropbox 集成的用户请求
+</item>
+        <item>
+通过您配置的端点验证并处理用户发起的对 S3 兼容云存储的文件管理请求
+</item>
+    </string-array>
+
+    <!-- Data retention (Section 8) -->
+    <string-array name="pp_retention_labels">
+        <item>
+本地应用程序数据
+</item>
+        <item>
+保管库加密密钥
+</item>
+        <item>
+索引文件元数据
+</item>
+        <item>
+Google Drive / OneDrive / Dropbox OAuth 令牌
+</item>
+        <item>
+S3/S3 兼容的访问凭证
+</item>
+        <item>
+Firebase 分析数据
+</item>
+    </string-array>
+    <string-array name="pp_retention_details">
+        <item>
+直到您卸载该应用程序
+</item>
+        <item>
+直到您卸载该应用程序
+</item>
+        <item>
+直到通过“设置”->“存储索引器”删除，或者直到应用程序卸载
+</item>
+        <item>
+直到您在“设置”中断开帐户连接，或直到卸载应用程序
+</item>
+        <item>
+直到您在“设置”中删除 S3 配置文件，或者直到卸载应用程序
+</item>
+        <item>
+14 个月（Google 的默认保留期）
+</item>
+    </string-array>
+
+    <!-- Your rights (Section 9) -->
+    <string-array name="pp_rights">
+        <item>
+直接通过应用程序访问本地存储的数据。
+</item>
+        <item>
+通过从 Vault 中删除项目来删除 Vault 数据。
+</item>
+        <item>
+通过设置 -> 存储索引器管理和删除索引文件元数据。
+</item>
+        <item>
+随时断开您的 Google Drive、OneDrive 或 Dropbox 帐户，以撤销访问权限并删除存储的 OAuth 令牌。
+</item>
+        <item>
+随时通过“设置”删除您的 S3/S3 兼容存储配置文件，以删除存储的访问凭据。
+</item>
+        <item>
+使用共享或复制功能导出文件。
+</item>
+        <item>
+通过应用内的“设置”→“使用情况分析”随时授予或撤回对 Firebase Analytics 的同意；或者，使用您的 Android 设备设置。
+</item>
+    </string-array>
+
+    <!-- Delete steps (Section 8) -->
+    <string-array name="pp_delete_steps">
+        <item>
+打开 Android 设置并转到应用程序。
+</item>
+        <item>
+找到并点按Ultimate File Manager Pro。
+</item>
+        <item>
+点击存储 → 清除数据，或直接卸载该应用程序。
+</item>
+    </string-array>
+
+    <!-- Play Store compliance table (Section 12) -->
+    <string-array name="pp_compliance_labels">
+        <item>
+存储权限
+</item>
+        <item>
+网络权限
+</item>
+        <item>
+网络状态
+</item>
+        <item>
+组播
+</item>
+        <item>
+通知
+</item>
+        <item>
+安装包
+</item>
+        <item>
+高架通道（雫）
+</item>
+        <item>
+存储索引器
+</item>
+        <item>
+查询套餐
+</item>
+        <item>
+应用内评论
+</item>
+        <item>
+AVIF 图像支持
+</item>
+        <item>
+洛蒂动画
+</item>
+    </string-array>
+    <string-array name="pp_compliance_details">
+        <item>
+文件浏览和管理
+</item>
+        <item>
+远程文件管理、SMB/FTP/SFTP/SCP/NFS 网络共享以及通过本地 Wi-Fi 进行设备配对
+</item>
+        <item>
+用于远程管理和网络共享连接的 VPN 检测
+</item>
+        <item>
+用于设备配对的本地网络设备发现 (NSD/mDNS)
+</item>
+        <item>
+操作完成警报和存储警告
+</item>
+        <item>
+从本地存储安装 APK
+</item>
+        <item>
+通过 Shizuku API 在受限系统目录中进行高级文件管理
+</item>
+        <item>
+在本地索引文件元数据以进行快速搜索
+</item>
+        <item>
+应用程序管理器和 Debloater 功能 - 仅读取设备上已安装的软件包名称、版本、大小和系统/用户标志。未上传或共享。 Debloater 在本地根据公开可用的 debloat 引用列表交叉引用包名称。
+</item>
+        <item>
+用于收集用户反馈的 Google Play 应用内评论 API
+</item>
+        <item>
+通过 API 24-30 上的 avif-coder (io.github.awxkee) 在内置查看器中解码并显示 AVIF 图像； API 31+ 使用内置 ImageDecoder
+</item>
+        <item>
+通过 Lottie 库 v6.3.0 (com.airbnb.android:lottie) 在整个应用程序中呈现流畅的 UI 动画
+</item>
+    </string-array>
+
+
+    <!-- Contact (Section 14) -->
+    <string-array name="pp_contact_labels">
+        <item>
+电子邮件
+</item>
+    </string-array>
+    <string-array name="pp_contact_values">
+        <item>
+支持@kilowatch.co.za
+</item>
+    </string-array>
+
+</resources>

@@ -265,9 +265,35 @@ class FileBrowserActivity : AppCompatActivity() {
                         android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                     )
                     contentResolver.takePersistableUriPermission(uri, flagsToUse)
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(this, currentDir.absolutePath, uri)
+
+                    val authority = uri.authority ?: ""
+                    val doc = androidx.documentfile.provider.DocumentFile.fromTreeUri(this, uri)
+                    val defaultName = doc?.name ?: getString(R.string.storage_location_saf_default_name)
+                    val docId = try {
+                        android.provider.DocumentsContract.getTreeDocumentId(uri)
+                    } catch (_: Exception) { "" }
+
+                    val newLocation = za.kilowatch.ultimatefilemanager.storage.SafLocation(
+                        displayName = defaultName,
+                        treeUriString = uri.toString(),
+                        authority = authority,
+                        rootDocId = docId,
+                        iconType = "folder"
+                    )
+                    za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.addLocation(this, newLocation)
+                    val resolvedPath = newLocation.getDisplayPath()
+                    if (resolvedPath.isNotEmpty()) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(this, resolvedPath, uri)
+                        val storageIdToUse = if (resolvedPath.startsWith("/storage/emulated/0")) "internal" else "external"
+                        za.kilowatch.ultimatefilemanager.indexing.FileIndexingService.getInstance(this).startFirstTimeIndex(storageIdToUse, resolvedPath, storageIdToUse)
+                    } else if (::currentDir.isInitialized) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(this, currentDir.absolutePath, uri)
+                    }
+
                     android.widget.Toast.makeText(this, R.string.protected_folder_saf_success, android.widget.Toast.LENGTH_SHORT).show()
-                    loadDirectory(currentDir)
+                    if (::currentDir.isInitialized) {
+                        loadDirectory(currentDir)
+                    }
                 } catch (e: Exception) {
                     android.util.Log.e("FileBrowser", "Failed to persist SAF tree uri: ${e.message}")
                 }
@@ -283,6 +309,38 @@ class FileBrowserActivity : AppCompatActivity() {
             safTreeLauncher.launch(intent)
         } catch (e: Exception) {
             android.widget.Toast.makeText(this, "Could not launch folder picker: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun launchAddFolderPicker() {
+        val rootToUse = if (::currentDir.isInitialized) currentDir.absolutePath else rootPath
+        try {
+            val intent = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createDocumentTreeIntent(rootToUse)
+            safTreeLauncher.launch(intent)
+        } catch (_: Exception) {
+            try {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                safTreeLauncher.launch(intent)
+            } catch (e: Exception) {
+                android.widget.Toast.makeText(this, "Could not launch folder picker: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun launchAllFilesSettings() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            try {
+                val intent = Intent(
+                    android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                    Uri.parse("package:$packageName")
+                )
+                startActivity(intent)
+            } catch (_: Exception) {
+                try {
+                    val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
+                    startActivity(intent)
+                } catch (_: Exception) {}
+            }
         }
     }
 
@@ -1632,6 +1690,10 @@ class FileBrowserActivity : AppCompatActivity() {
         floatingQuickBar = findViewById(R.id.floatingQuickBar)
         floatingQuickBar?.setOnActionClickListener { actionId ->
             handleQuickActionClick(actionId)
+        }
+
+        findViewById<View>(R.id.btnRestrictedAddFolder)?.setOnClickListener {
+            launchAddFolderPicker()
         }
 
         // Apply custom toolbar action icons
@@ -4922,9 +4984,17 @@ class FileBrowserActivity : AppCompatActivity() {
         val title = if (isCategoryMode) (categoryName ?: storageLabel) else {
              if (targetDir.absolutePath == rootPath) storageLabel else targetDir.name
         }
-        toolbar.title = title
+        val isRestrictedRoot = !isTv &&
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R &&
+                !android.os.Environment.isExternalStorageManager() &&
+                targetDir.absolutePath == rootPath
+
         val subtitleText = if (isCategoryMode) {
             getString(R.string.files_on_storagelabel, storageLabel)
+        } else if (isRestrictedRoot) {
+            val count = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationsForStorage(this, targetDir.absolutePath).size +
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getGrantedPathsForStorage(this, targetDir.absolutePath).size
+            getString(R.string.storage_selected_folders_mode, count)
         } else if (targetDir.absolutePath == rootPath) {
             if (SafTreeManager.isSafPath(targetDir.absolutePath)) {
                 getString(R.string.saf_storage)
@@ -4953,6 +5023,8 @@ class FileBrowserActivity : AppCompatActivity() {
         findViewById<android.widget.TextView>(R.id.txtTvSubtitle)?.text = subtitleText
         findViewById<android.widget.TextView>(R.id.txtSubtitle)?.text = subtitleText
 
+        findViewById<View>(R.id.layoutRestrictedAddFolder)?.visibility = if (isRestrictedRoot) View.VISIBLE else View.GONE
+
         val badgeStorage = findViewById<android.widget.TextView>(R.id.badgeStorageType)
         if (badgeStorage != null && !isTv) {
             badgeStorage.visibility = View.VISIBLE
@@ -4970,6 +5042,48 @@ class FileBrowserActivity : AppCompatActivity() {
             findViewById<View>(R.id.btnCreateNew)?.visibility = View.GONE
             findViewById<View>(R.id.btnViewToggle)?.visibility = View.GONE
             updatePasteFab() // This will check isCategoryMode
+        }
+
+        // In restricted mode at the storage root, list granted SAF folders directly
+        if (isRestrictedRoot) {
+            folderFlowJob?.cancel()
+            folderFlowJob = lifecycleScope.launch(Dispatchers.IO) {
+                val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
+
+                val locations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationsForStorage(this@FileBrowserActivity, targetDir.absolutePath)
+                val grantedPaths = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getGrantedPathsForStorage(this@FileBrowserActivity, targetDir.absolutePath)
+
+                val fileList = mutableListOf<File>()
+                val seenPaths = mutableSetOf<String>()
+
+                for (loc in locations) {
+                    val p = if (loc.getDisplayPath().isNotEmpty()) loc.getDisplayPath() else "saf://${loc.id}"
+                    if (seenPaths.add(p)) {
+                        val safFile = za.kilowatch.ultimatefilemanager.storage.SafFile(pathname = p, isDir = true)
+                        fileList.add(safFile)
+                    }
+                }
+
+                for (path in grantedPaths) {
+                    if (seenPaths.add(path)) {
+                        val safFile = za.kilowatch.ultimatefilemanager.storage.SafFile(pathname = path, isDir = true)
+                        fileList.add(safFile)
+                    }
+                }
+
+                val visibleFiles = fileList.filter { isFileVisible(it, showHidden, hiddenPaths) }
+                val sorted = sortAndFilterFiles(visibleFiles)
+
+                withContext(Dispatchers.Main) {
+                    submitAdapterList {
+                        fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
+                        updateEmptyState(sorted.isEmpty())
+                        applyFileFocus()
+                    }
+                }
+            }
+            return
         }
 
         // Show files: 
@@ -6367,22 +6481,53 @@ class FileBrowserActivity : AppCompatActivity() {
             recyclerFiles.visibility = View.GONE
             lottieEmptyFolder?.playAnimation()
 
+            val isRestrictedRoot = !isTv &&
+                    android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R &&
+                    !android.os.Environment.isExternalStorageManager() &&
+                    currentDir.absolutePath == rootPath
+
             val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(currentDir.absolutePath)
             val canUseShizuku = isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)
             val hasSaf = (isProtected || currentDir.absolutePath.startsWith("saf://")) && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, currentDir.absolutePath)
 
             val layoutProtected = findViewById<View>(R.id.layoutProtectedPrompt)
-            val txtEmptyFolder = findViewById<View>(R.id.txtEmptyFolder)
-            if (isProtected && !canUseShizuku && !hasSaf) {
+            val txtEmptyFolder = findViewById<TextView>(R.id.txtEmptyFolder)
+            val txtProtectedTitle = findViewById<TextView>(R.id.txtProtectedTitle)
+            val txtProtectedDesc = findViewById<TextView>(R.id.txtProtectedDesc)
+            val btnEnableElevated = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnEnableElevated)
+            val btnGrantSaf = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnGrantSaf)
+
+            if (isRestrictedRoot) {
                 layoutProtected?.visibility = View.VISIBLE
                 txtEmptyFolder?.visibility = View.GONE
-                findViewById<View>(R.id.btnEnableElevated)?.setOnClickListener {
+                txtProtectedTitle?.text = getString(R.string.restricted_storage_empty_title)
+                txtProtectedDesc?.text = getString(R.string.restricted_storage_empty_desc)
+                btnEnableElevated?.text = getString(R.string.action_add_folder_to_storage)
+                btnEnableElevated?.setIconResource(R.drawable.ic_add)
+                btnEnableElevated?.setOnClickListener {
+                    launchAddFolderPicker()
+                }
+                btnGrantSaf?.text = getString(R.string.restricted_storage_grant_all_files)
+                btnGrantSaf?.setIconResource(R.drawable.ic_shield_protected)
+                btnGrantSaf?.setOnClickListener {
+                    launchAllFilesSettings()
+                }
+            } else if (isProtected && !canUseShizuku && !hasSaf) {
+                layoutProtected?.visibility = View.VISIBLE
+                txtEmptyFolder?.visibility = View.GONE
+                txtProtectedTitle?.text = getString(R.string.protected_folder_title)
+                txtProtectedDesc?.text = getString(R.string.protected_folder_desc)
+                btnEnableElevated?.text = getString(R.string.protected_folder_btn_shizuku)
+                btnEnableElevated?.setIconResource(R.drawable.ic_shield_protected)
+                btnEnableElevated?.setOnClickListener {
                     val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
                     val intent = if (isTv) Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuTvActivity::class.java)
                                  else Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuActivity::class.java)
                     startActivity(intent)
                 }
-                findViewById<View>(R.id.btnGrantSaf)?.setOnClickListener {
+                btnGrantSaf?.text = getString(R.string.protected_folder_btn_saf)
+                btnGrantSaf?.setIconResource(R.drawable.ic_folder)
+                btnGrantSaf?.setOnClickListener {
                     launchSafTreePicker(currentDir.absolutePath)
                 }
             } else {

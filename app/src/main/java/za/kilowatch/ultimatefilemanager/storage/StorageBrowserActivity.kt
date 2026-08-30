@@ -1933,8 +1933,12 @@ class StorageBrowserActivity : AppCompatActivity() {
                 showPremiumSnackbar(getString(R.string.opening_search))
             }
             item.isAnalyzerTile -> {
-                startActivity(Intent(this, StorageAnalyzerActivity::class.java))
-                showPremiumSnackbar(getString(R.string.opening_storage_analyzer))
+                if (!isTv && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R && !android.os.Environment.isExternalStorageManager()) {
+                    showRestrictedFeatureGuidanceDialog()
+                } else {
+                    startActivity(Intent(this, StorageAnalyzerActivity::class.java))
+                    showPremiumSnackbar(getString(R.string.opening_storage_analyzer))
+                }
             }
             item.isSmartSortTile -> {
                 startActivity(Intent(this, SmartSortActivity::class.java))
@@ -2481,11 +2485,40 @@ class StorageBrowserActivity : AppCompatActivity() {
         val storageType = IndexingRepository.resolveStorageForPath(item.mountPath).second
         val repo = IndexingRepository.getInstance(this)
 
-        if (repo.isStorageFullyIndexed(storageId) || repo.hasUserDeclinedIndexing(storageId)) {
+        val isRestricted = !isTv &&
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R &&
+                !android.os.Environment.isExternalStorageManager()
+
+        if (isRestricted || repo.isStorageFullyIndexed(storageId) || repo.hasUserDeclinedIndexing(storageId)) {
             navigateToFileBrowser(item, storageId, storageType)
         } else {
             showIndexingOfferDialog(item, storageId, storageType)
         }
+    }
+
+    private fun showRestrictedFeatureGuidanceDialog() {
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.restricted_feature_dialog_title)
+            .setMessage(R.string.restricted_feature_dialog_desc)
+            .setPositiveButton(R.string.btn_open_settings) { _, _ ->
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                    try {
+                        val intent = Intent(
+                            android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                            Uri.parse("package:$packageName")
+                        )
+                        startActivity(intent)
+                    } catch (_: Exception) {
+                        try {
+                            val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
+                            startActivity(intent)
+                        } catch (_: Exception) {}
+                    }
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+        dialog.show()
     }
 
     /**

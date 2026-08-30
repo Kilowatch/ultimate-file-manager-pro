@@ -13061,6 +13061,111 @@ support@kilowatch.co.za
     <string name="invalid_ip_or_port">
 Пожалуйста, введите действительный IP-адрес и порт (1-65535).
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Доступ к хранилищу
+</string>
+    <string name="perm_storage_access_desc">
+Выберите «Выбранные папки» для обеспечения конфиденциальности или предоставьте доступ ко всем файлам для неограниченного управления устройством.
+</string>
+    <string name="perm_choice_dialog_title">
+Доступ к хранилищу
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Выберите, как UFM получит доступ к вашему хранилищу. Вы можете изменить это в любое время в настройках.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Выбранные папки (рекомендуется)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Выбирайте только те папки, к которым UFM разрешен доступ. Сохраняет конфиденциальность других ваших файлов.
+</string>
+    <string name="perm_choice_all_files_title">
+Доступ ко всем файлам (расширенный)
+</string>
+    <string name="perm_choice_all_files_desc">
+Неограниченный доступ ко всем файлам на устройстве для полного управления файлами.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Выберите папки хранения
+</string>
+    <string name="dialog_setup_folders_desc">
+Выберите папки на вашем устройстве, к которым UFM разрешен доступ и которыми можно управлять.
+</string>
+    <string name="btn_add_another_folder">
++ Добавить папку/файл
+</string>
+    <string name="selected_folders_count">
+Выбраны папки %1$d
+</string>
+    <string name="no_folders_selected_hint">
+Папки пока не добавлены. Нажмите «+ Добавить папку/файл», чтобы выбрать папки.
+</string>
+    <string name="btn_done">
+Сделанный
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Добавить папку/файл
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Предоставить доступ к папке или файлу в этом хранилище
+</string>
+    <string name="restricted_storage_empty_title">
+Папки пока не добавлены
+</string>
+    <string name="restricted_storage_empty_desc">
+Вы используете режим выбранных папок. Добавляйте папки для доступа и управления ими здесь.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Включить доступ ко всем файлам в настройках
+</string>
+    <string name="storage_selected_folders_mode">
+Выбранные папки (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Доступ ко всем файлам
+</string>
+    <string name="settings_all_files_access_enabled">
+Полный доступ к хранилищу на всем устройстве включен.
+</string>
+    <string name="settings_all_files_access_disabled">
+Активен режим выбранных папок (ограниченный доступ)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+Требуется доступ ко всем файлам
+</string>
+    <string name="restricted_feature_dialog_desc">
+Эта функция требует неограниченного доступа к хранилищу всего устройства. Вы можете предоставить доступ ко всем файлам в настройках или продолжить использование выбранных папок.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Удалить доступ к папке?
+</string>
+    <string name="unmount_folder_confirm">
+Удалить доступ к \"%1$s\" из этого хранилища? Никакие физические файлы не будут удалены.
+</string>
+    <string name="unmount_folder_action">
+Удалить доступ
+</string>
+    <string name="folder_access_removed">
+Доступ к папке удален
+</string>
+    <string name="indexing_saf_folder_started">
+Индексирование %1$s...
+</string>
+    <string name="btn_manage">
+Управлять
+</string>
 </resources>
 
 

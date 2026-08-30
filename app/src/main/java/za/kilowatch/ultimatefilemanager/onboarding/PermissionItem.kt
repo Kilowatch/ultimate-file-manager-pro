@@ -55,17 +55,31 @@ object PermissionItemFactory {
 
         // 2. Storage permissions — API-dependent
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // API 30+: All Files Access supersedes all media permissions
-            items.add(
-                PermissionItem(
-                    id = "all_files",
-                    titleRes = R.string.perm_all_files_title,
-                    descRes = R.string.perm_all_files_desc,
-                    iconRes = R.drawable.ic_folder,
-                    permissions = listOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE),
-                    isSpecialAccess = true
+            if (!isTv) {
+                // Mobile API 30+: Storage Access allows Selected Folders or All Files Access
+                items.add(
+                    PermissionItem(
+                        id = "storage_access",
+                        titleRes = R.string.perm_storage_access_title,
+                        descRes = R.string.perm_storage_access_desc,
+                        iconRes = R.drawable.ic_folder,
+                        permissions = listOf(),
+                        isSpecialAccess = true
+                    )
                 )
-            )
+            } else {
+                // TV API 30+: All Files Access supersedes all media permissions
+                items.add(
+                    PermissionItem(
+                        id = "all_files",
+                        titleRes = R.string.perm_all_files_title,
+                        descRes = R.string.perm_all_files_desc,
+                        iconRes = R.drawable.ic_folder,
+                        permissions = listOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE),
+                        isSpecialAccess = true
+                    )
+                )
+            }
         } else {
             // Pre-30: no MANAGE_EXTERNAL_STORAGE, use legacy storage permission
             items.add(

@@ -13061,6 +13061,111 @@ Configurações de conexão ADB
     <string name="invalid_ip_or_port">
 Insira um endereço IP e porta válidos (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Acesso ao armazenamento
+</string>
+    <string name="perm_storage_access_desc">
+Escolha Pastas selecionadas para privacidade ou conceda acesso a todos os arquivos para gerenciamento irrestrito do dispositivo.
+</string>
+    <string name="perm_choice_dialog_title">
+Acesso ao armazenamento
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Escolha como o UFM acessa seu armazenamento. Você pode alterar isso a qualquer momento nas Configurações.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Pastas selecionadas (recomendado)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Escolha apenas as pastas que o UFM tem permissão para acessar. Mantém seus outros arquivos privados.
+</string>
+    <string name="perm_choice_all_files_title">
+Acesso a todos os arquivos (avançado)
+</string>
+    <string name="perm_choice_all_files_desc">
+Acesso irrestrito a todos os arquivos do dispositivo para gerenciamento completo de arquivos.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Selecione pastas de armazenamento
+</string>
+    <string name="dialog_setup_folders_desc">
+Escolha as pastas em seu dispositivo que o UFM tem permissão para acessar e gerenciar.
+</string>
+    <string name="btn_add_another_folder">
++ Adicionar pasta/arquivo
+</string>
+    <string name="selected_folders_count">
+%1$d pasta(s) selecionada(s)
+</string>
+    <string name="no_folders_selected_hint">
+Nenhuma pasta adicionada ainda. Toque em \"+ Adicionar pasta/arquivo\" para escolher as pastas.
+</string>
+    <string name="btn_done">
+Feito
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Adicionar pasta/arquivo
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Conceda acesso a uma pasta ou arquivo neste armazenamento
+</string>
+    <string name="restricted_storage_empty_title">
+Nenhuma pasta adicionada ainda
+</string>
+    <string name="restricted_storage_empty_desc">
+Você está usando o modo de pastas selecionadas. Adicione pastas para acessá-las e gerenciá-las aqui.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Habilite o acesso a todos os arquivos nas configurações
+</string>
+    <string name="storage_selected_folders_mode">
+Pastas selecionadas (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Acesso a todos os arquivos
+</string>
+    <string name="settings_all_files_access_enabled">
+Acesso total ao armazenamento em todo o dispositivo ativado
+</string>
+    <string name="settings_all_files_access_disabled">
+Modo de pastas selecionadas ativo (acesso restrito)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+Acesso a todos os arquivos necessário
+</string>
+    <string name="restricted_feature_dialog_desc">
+Este recurso requer acesso irrestrito ao armazenamento em todo o dispositivo. Você pode conceder acesso a todos os arquivos nas configurações ou continuar usando as pastas selecionadas.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Remover o acesso à pasta?
+</string>
+    <string name="unmount_folder_confirm">
+Remover o acesso a \"%1$s\" deste armazenamento? Nenhum arquivo físico será excluído.
+</string>
+    <string name="unmount_folder_action">
+Remover acesso
+</string>
+    <string name="folder_access_removed">
+Acesso à pasta removido
+</string>
+    <string name="indexing_saf_folder_started">
+Indexando %1$s...
+</string>
+    <string name="btn_manage">
+Gerenciar
+</string>
 </resources>
 
 

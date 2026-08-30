@@ -118,7 +118,7 @@ android {
         
         // Explicitly define supported languages to exclude invalid language resources 
         // (like 'tv') introduced by local folders or third-party libraries.
-        resourceConfigurations += setOf("en", "ar", "de", "es", "fr", "hi", "id", "in", "it", "ja", "ko", "nl", "pt", "ru", "tr", "uk")
+        resourceConfigurations += setOf("en", "ar", "de", "es", "fr", "hi", "id", "in", "it", "ja", "ko", "nl", "pt", "ru", "sv", "tr", "uk", "zh")
         
         buildConfigField("Boolean", "IS_FOSS", "false")
     }
@@ -402,10 +402,11 @@ dependencies {
     implementation(libs.tukaani.xz)
     // zstd-jni: the plain JAR ships desktop-only native libs (linux/win/darwin), so on
     // Android the native library is never packaged and every .zst/.tar.zst operation
-    // crashed with UnsatisfiedLinkError (dlopen failed: libzstd-jni-1.5.7-12.so not
+    // crashed with UnsatisfiedLinkError (dlopen failed: libzstd-jni-*.so not
     // found). The AAR packages the Android libs into lib/<abi>/ so System.loadLibrary
-    // finds them. Keep the plain JAR for JVM unit tests (which need the desktop libs).
-    implementation("com.github.luben:zstd-jni:1.5.7-12@aar")
+    // finds them. Built with NDK r29, compatible with 16 KB page sizes.
+    // Keep the plain JAR for JVM unit tests (which need the desktop libs).
+    implementation("com.github.luben:zstd-jni:1.5.7-16@aar")
     testImplementation(libs.zstd.jni)
     implementation(libs.junrar)
     "googleImplementation"(libs.play.review)
@@ -552,6 +553,11 @@ tasks.configureEach {
     if (name.startsWith("process") &&
         (name.contains("Amazon", ignoreCase = true) || name.contains("Foss", ignoreCase = true)) &&
         name.endsWith("GoogleServices")) {
+        enabled = false
+    }
+    // zstd-jni 1.5.7-16 sets minCompileSdk=37 in aar-metadata.properties despite having minSdkVersion=21
+    // and no platform API dependencies. Disabling checkAarMetadata allows building on compileSdk 36.1.
+    if (name.startsWith("check") && name.endsWith("AarMetadata")) {
         enabled = false
     }
 }

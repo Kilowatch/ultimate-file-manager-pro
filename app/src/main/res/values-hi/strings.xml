@@ -13061,6 +13061,111 @@ SAF स्टोरेज
     <string name="invalid_ip_or_port">
 कृपया एक वैध आईपी पता और पोर्ट दर्ज करें (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+भंडारण पहुंच
+</string>
+    <string name="perm_storage_access_desc">
+गोपनीयता के लिए चयनित फ़ोल्डर चुनें, या अप्रतिबंधित डिवाइस प्रबंधन के लिए सभी फ़ाइलों तक पहुंच प्रदान करें।
+</string>
+    <string name="perm_choice_dialog_title">
+भंडारण पहुंच
+</string>
+    <string name="perm_choice_dialog_subtitle">
+चुनें कि UFM आपके स्टोरेज तक कैसे पहुंचता है। आप इसे सेटिंग में किसी भी समय बदल सकते हैं.
+</string>
+    <string name="perm_choice_selected_folders_title">
+चयनित फ़ोल्डर (अनुशंसित)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+केवल वे फ़ोल्डर चुनें जिन्हें UFM तक पहुंचने की अनुमति है। आपकी अन्य फ़ाइलों को निजी रखता है.
+</string>
+    <string name="perm_choice_all_files_title">
+सभी फ़ाइलें एक्सेस (उन्नत)
+</string>
+    <string name="perm_choice_all_files_desc">
+संपूर्ण फ़ाइल प्रबंधन के लिए डिवाइस पर सभी फ़ाइलों तक अप्रतिबंधित पहुंच।
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+स्टोरेज फोल्डर का चयन करें
+</string>
+    <string name="dialog_setup_folders_desc">
+अपने डिवाइस पर फ़ोल्डर चुनें यूएफएम को एक्सेस और प्रबंधन करने की अनुमति है।
+</string>
+    <string name="btn_add_another_folder">
++फ़ोल्डर/फ़ाइल जोड़ें
+</string>
+    <string name="selected_folders_count">
+%1$d फ़ोल्डर चयनित
+</string>
+    <string name="no_folders_selected_hint">
+अभी तक कोई फ़ोल्डर नहीं जोड़ा गया. फ़ोल्डर चुनने के लिए \"+फ़ोल्डर/फ़ाइल जोड़ें\" पर टैप करें।
+</string>
+    <string name="btn_done">
+हो गया
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++फ़ोल्डर/फ़ाइल जोड़ें
+</string>
+    <string name="action_add_folder_to_storage_desc">
+इस संग्रहण में किसी फ़ोल्डर या फ़ाइल तक पहुंच प्रदान करें
+</string>
+    <string name="restricted_storage_empty_title">
+अभी तक कोई फ़ोल्डर नहीं जोड़ा गया
+</string>
+    <string name="restricted_storage_empty_desc">
+आप चयनित फ़ोल्डर मोड का उपयोग कर रहे हैं. यहां उन तक पहुंचने और उन्हें प्रबंधित करने के लिए फ़ोल्डर जोड़ें।
+</string>
+    <string name="restricted_storage_grant_all_files">
+सेटिंग्स में सभी फ़ाइलों तक पहुंच सक्षम करें
+</string>
+    <string name="storage_selected_folders_mode">
+चयनित फ़ोल्डर (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+सभी फ़ाइलें एक्सेस
+</string>
+    <string name="settings_all_files_access_enabled">
+संपूर्ण डिवाइस-व्यापी संग्रहण पहुंच सक्षम
+</string>
+    <string name="settings_all_files_access_disabled">
+चयनित फ़ोल्डर मोड सक्रिय (प्रतिबंधित पहुंच)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+सभी फ़ाइलों तक पहुंच आवश्यक है
+</string>
+    <string name="restricted_feature_dialog_desc">
+इस सुविधा के लिए अप्रतिबंधित डिवाइस-व्यापी संग्रहण पहुंच की आवश्यकता होती है। आप सेटिंग्स में सभी फ़ाइलों तक पहुंच प्रदान कर सकते हैं या चयनित फ़ोल्डरों का उपयोग जारी रख सकते हैं।
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+फ़ोल्डर एक्सेस हटाएं?
+</string>
+    <string name="unmount_folder_confirm">
+इस संग्रहण से \"%1$s\" तक पहुंच हटाएं? कोई भी भौतिक फ़ाइल हटाई नहीं जाएगी.
+</string>
+    <string name="unmount_folder_action">
+पहुंच हटाएं
+</string>
+    <string name="folder_access_removed">
+फ़ोल्डर पहुंच हटा दी गई
+</string>
+    <string name="indexing_saf_folder_started">
+अनुक्रमणिका %1$s...
+</string>
+    <string name="btn_manage">
+प्रबंधित करना
+</string>
 </resources>
 
 

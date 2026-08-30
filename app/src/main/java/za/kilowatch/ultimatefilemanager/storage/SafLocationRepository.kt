@@ -103,6 +103,14 @@ object SafLocationRepository {
         return getLocations(context).any { it.treeUriString == uriStr }
     }
 
+    fun getLocationsForStorage(context: Context, storageMountPath: String): List<SafLocation> {
+        val cleanRoot = storageMountPath.trimEnd('/')
+        return getLocations(context).filter { loc ->
+            val displayPath = loc.getDisplayPath().trimEnd('/')
+            displayPath == cleanRoot || displayPath.startsWith("$cleanRoot/")
+        }
+    }
+
     private fun saveLocations(context: Context, locations: List<SafLocation>) {
         val jsonArray = JSONArray()
         for (loc in locations) {

@@ -1077,6 +1077,8 @@ object WebShareServer {
             Triple("tr", "Türkçe", "tr"),
             Triple("ja", "日本語", "jp"),
             Triple("ko", "한국어", "kr"),
+            Triple("zh", "中文", "cn"),
+            Triple("sv", "Svenska", "se"),
             Triple("uk", "Українська", "ua")
         )
         val currentOption = options.find { it.first == currentLang } ?: options.first()

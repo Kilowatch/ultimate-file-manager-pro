@@ -149,9 +149,35 @@ class FileBrowserFragment : Fragment() {
                         android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                     )
                     ctx.contentResolver.takePersistableUriPermission(uri, flagsToUse)
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(ctx, currentDir.absolutePath, uri)
+
+                    val authority = uri.authority ?: ""
+                    val doc = androidx.documentfile.provider.DocumentFile.fromTreeUri(ctx, uri)
+                    val defaultName = doc?.name ?: getString(R.string.storage_location_saf_default_name)
+                    val docId = try {
+                        android.provider.DocumentsContract.getTreeDocumentId(uri)
+                    } catch (_: Exception) { "" }
+
+                    val newLocation = za.kilowatch.ultimatefilemanager.storage.SafLocation(
+                        displayName = defaultName,
+                        treeUriString = uri.toString(),
+                        authority = authority,
+                        rootDocId = docId,
+                        iconType = "folder"
+                    )
+                    za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.addLocation(ctx, newLocation)
+                    val resolvedPath = newLocation.getDisplayPath()
+                    if (resolvedPath.isNotEmpty()) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(ctx, resolvedPath, uri)
+                        val storageIdToUse = if (resolvedPath.startsWith("/storage/emulated/0")) "internal" else "external"
+                        za.kilowatch.ultimatefilemanager.indexing.FileIndexingService.getInstance(ctx).startFirstTimeIndex(storageIdToUse, resolvedPath, storageIdToUse)
+                    } else if (::currentDir.isInitialized) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(ctx, currentDir.absolutePath, uri)
+                    }
+
                     android.widget.Toast.makeText(ctx, R.string.protected_folder_saf_success, android.widget.Toast.LENGTH_SHORT).show()
-                    loadDirectory(currentDir)
+                    if (::currentDir.isInitialized) {
+                        loadDirectory(currentDir)
+                    }
                 } catch (e: Exception) {
                     android.util.Log.e("FileBrowserFragment", "Failed to persist SAF tree uri: ${e.message}")
                 }
@@ -167,6 +193,21 @@ class FileBrowserFragment : Fragment() {
             safTreeLauncher.launch(intent)
         } catch (e: Exception) {
             context?.let { android.widget.Toast.makeText(it, "Could not launch folder picker: ${e.message}", android.widget.Toast.LENGTH_LONG).show() }
+        }
+    }
+
+    private fun launchAddFolderPicker() {
+        val rootToUse = if (::currentDir.isInitialized) currentDir.absolutePath else rootPath
+        try {
+            val intent = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createDocumentTreeIntent(rootToUse)
+            safTreeLauncher.launch(intent)
+        } catch (_: Exception) {
+            try {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                safTreeLauncher.launch(intent)
+            } catch (e: Exception) {
+                context?.let { android.widget.Toast.makeText(it, "Could not launch folder picker: ${e.message}", android.widget.Toast.LENGTH_LONG).show() }
+            }
         }
     }
 
@@ -2238,7 +2279,52 @@ class FileBrowserFragment : Fragment() {
             }
         }
 
+        val isRestrictedRoot = !isTv &&
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R &&
+                !android.os.Environment.isExternalStorageManager() &&
+                targetDir.absolutePath == rootPath
+
+        view?.findViewById<View>(R.id.layoutRestrictedAddFolder)?.visibility = if (isRestrictedRoot) View.VISIBLE else View.GONE
+        view?.findViewById<View>(R.id.btnRestrictedAddFolder)?.setOnClickListener {
+            launchAddFolderPicker()
+        }
+
         if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
+
+        // In restricted mode at the storage root, list granted SAF folders directly
+        if (isRestrictedRoot) {
+            folderFlowJob?.cancel()
+            lifecycleScope.launch(Dispatchers.IO) {
+                val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(requireContext().applicationContext).hiddenFileDao().getAllPaths().toSet()
+
+                val locations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationsForStorage(requireContext(), targetDir.absolutePath)
+                val grantedPaths = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getGrantedPathsForStorage(requireContext(), targetDir.absolutePath)
+
+                val fileList = mutableListOf<File>()
+                val seenPaths = mutableSetOf<String>()
+
+                for (loc in locations) {
+                    val p = if (loc.getDisplayPath().isNotEmpty()) loc.getDisplayPath() else "saf://${loc.id}"
+                    if (seenPaths.add(p)) {
+                        fileList.add(za.kilowatch.ultimatefilemanager.storage.SafFile(pathname = p, isDir = true))
+                    }
+                }
+
+                for (path in grantedPaths) {
+                    if (seenPaths.add(path)) {
+                        fileList.add(za.kilowatch.ultimatefilemanager.storage.SafFile(pathname = path, isDir = true))
+                    }
+                }
+
+                val visibleFiles = fileList.filter { isFileVisible(it, showHidden, hiddenPaths) }
+                val sorted = sortAndFilterFiles(visibleFiles)
+                withContext(Dispatchers.Main) {
+                    submitAdapterList(sorted, false, hiddenPaths)
+                }
+            }
+            return
+        }
 
         folderFlowJob?.cancel()
         val hasDeclined = UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)

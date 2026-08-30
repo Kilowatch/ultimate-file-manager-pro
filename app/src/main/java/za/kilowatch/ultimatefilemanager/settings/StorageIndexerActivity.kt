@@ -145,6 +145,29 @@ class StorageIndexerActivity : AppCompatActivity() {
                         ))
                     }
                 }
+
+                // 2. Granted SAF Folders (Local, SD card, USB)
+                val safLocations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this@StorageIndexerActivity)
+                val addedPaths = mutableSetOf<String>()
+                for (loc in safLocations) {
+                    val p = loc.getDisplayPath()
+                    if (p.isNotEmpty() && addedPaths.add(p)) {
+                        val storageId = IndexingRepository.resolveStorageForPath(p).first
+                        val isIndexed = repo.isStorageFullyIndexed(storageId) || repo.getFileCount(storageId) > 0
+                        val count = repo.getFileCount(storageId)
+                        items.add(StorageItem(
+                            id = storageId,
+                            label = loc.displayName.ifEmpty { p.substringAfterLast('/') },
+                            iconRes = R.drawable.ic_folder,
+                            totalBytes = 0,
+                            usedBytes = 0,
+                            mountPath = p,
+                            isIndexed = isIndexed,
+                            indexedFileCount = count
+                        ))
+                    }
+                }
+
                 items
             }
 

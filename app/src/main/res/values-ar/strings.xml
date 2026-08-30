@@ -13061,6 +13061,111 @@ support@kilowatch.co.za
     <string name="invalid_ip_or_port">
 الرجاء إدخال عنوان IP ومنفذ صالحين (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+الوصول إلى التخزين
+</string>
+    <string name="perm_storage_access_desc">
+اختر المجلدات المحددة للخصوصية، أو امنح حق الوصول إلى جميع الملفات لإدارة الجهاز غير المقيدة.
+</string>
+    <string name="perm_choice_dialog_title">
+الوصول إلى التخزين
+</string>
+    <string name="perm_choice_dialog_subtitle">
+اختر كيفية وصول UFM إلى مساحة التخزين الخاصة بك. يمكنك تغيير هذا في أي وقت في الإعدادات.
+</string>
+    <string name="perm_choice_selected_folders_title">
+المجلدات المحددة (مستحسن)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+اختر فقط المجلدات التي يُسمح لـ UFM بالوصول إليها. يحافظ على خصوصية ملفاتك الأخرى.
+</string>
+    <string name="perm_choice_all_files_title">
+الوصول إلى كافة الملفات (متقدم)
+</string>
+    <string name="perm_choice_all_files_desc">
+وصول غير مقيد إلى جميع الملفات الموجودة على الجهاز لإدارة الملفات بشكل كامل.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+حدد مجلدات التخزين
+</string>
+    <string name="dialog_setup_folders_desc">
+اختر المجلدات الموجودة على جهازك والتي يُسمح لـ UFM بالوصول إليها وإدارتها.
+</string>
+    <string name="btn_add_another_folder">
++ إضافة مجلد / ملف
+</string>
+    <string name="selected_folders_count">
+تم تحديد %1$d المجلد (المجلدات).
+</string>
+    <string name="no_folders_selected_hint">
+لم تتم إضافة أي مجلدات حتى الآن. اضغط على \"+ إضافة مجلد / ملف\" لاختيار المجلدات.
+</string>
+    <string name="btn_done">
+منتهي
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ إضافة مجلد / ملف
+</string>
+    <string name="action_add_folder_to_storage_desc">
+منح الوصول إلى مجلد أو ملف في وحدة التخزين هذه
+</string>
+    <string name="restricted_storage_empty_title">
+لم تتم إضافة أي مجلدات حتى الآن
+</string>
+    <string name="restricted_storage_empty_desc">
+أنت تستخدم وضع المجلدات المحددة. أضف مجلدات للوصول إليها وإدارتها هنا.
+</string>
+    <string name="restricted_storage_grant_all_files">
+تمكين الوصول إلى كافة الملفات في الإعدادات
+</string>
+    <string name="storage_selected_folders_mode">
+المجلدات المحددة (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+الوصول إلى كافة الملفات
+</string>
+    <string name="settings_all_files_access_enabled">
+تم تمكين الوصول الكامل إلى مساحة التخزين على مستوى الجهاز
+</string>
+    <string name="settings_all_files_access_disabled">
+وضع المجلدات المحددة نشط (وصول مقيد)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+مطلوب الوصول إلى كافة الملفات
+</string>
+    <string name="restricted_feature_dialog_desc">
+تتطلب هذه الميزة وصولاً غير مقيد إلى مساحة التخزين على مستوى الجهاز. يمكنك منح حق الوصول إلى جميع الملفات في الإعدادات أو الاستمرار في استخدام المجلدات المحددة.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+هل ترغب في إزالة الوصول إلى المجلد؟
+</string>
+    <string name="unmount_folder_confirm">
+هل تريد إزالة الوصول إلى \"%1$s\" من وحدة التخزين هذه؟ لن يتم حذف أي ملفات فعلية.
+</string>
+    <string name="unmount_folder_action">
+إزالة الوصول
+</string>
+    <string name="folder_access_removed">
+تمت إزالة الوصول إلى المجلد
+</string>
+    <string name="indexing_saf_folder_started">
+الفهرسة %1$s...
+</string>
+    <string name="btn_manage">
+يدير
+</string>
 </resources>
 
 

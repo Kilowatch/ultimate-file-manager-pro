@@ -1,0 +1,1646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SHARED
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="policy_app_name">
+Ultimate File Manager Pro
+</string>
+    <string name="policy_company">
+KiloWatch
+</string>
+    <string name="policy_last_updated">
+Senast uppdaterad: augusti 2026
+</string>
+    <string name="policy_play_store_url">
+https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
+</string>
+    <string name="policy_contact_email">
+support@kilowatch.co.za
+</string>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TERMS AND CONDITIONS
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="tc_screen_title">
+Allmänna villkor
+</string>
+    <string name="tc_summary">
+Genom att ladda ner eller använda Ultimate File Manager Pro accepterar du dessa villkor. Vi har skrivit dem för att vara så tydliga och jargongfria som möjligt.
+</string>
+
+    <!-- Section titles -->
+    <string name="tc_s1_title">
+1. Vad du samtycker till
+</string>
+    <string name="tc_s2_title">
+2. Vad appen gör
+</string>
+    <string name="tc_s3_title">
+3. Risk och ansvar — Den ärliga sanningen
+</string>
+    <string name="tc_s3a_title">
+3a. In-App-köp och fakturering
+</string>
+    <string name="tc_s3b_title">
+3b. RClone Cloud Integration
+</string>
+    <string name="tc_s4_title">
+4. Ditt ansvar
+</string>
+    <string name="tc_s5_title">
+5. Behörigheter vi behöver och varför
+</string>
+    <string name="tc_s6_title">
+6. Vem äger vad
+</string>
+    <string name="tc_s7_title">
+7. Öppen källkod-komponenter vi använder
+</string>
+    <string name="tc_s8_title">
+8. Ändringar av dessa villkor
+</string>
+    <string name="tc_s9_title">
+9. Om det går fel
+</string>
+    <string name="tc_s10_title">
+10. Tillämplig lag
+</string>
+    <string name="tc_s11_title">
+11. Frågor? Hör av dig
+</string>
+
+    <!-- Section body text -->
+    <string name="tc_s1_body">
+Genom att ladda ner eller öppna Ultimate File Manager Pro från Google Play Butik accepterar du dessa villkor. Om du föredrar att inte acceptera dem, installera eller använd helt enkelt inte appen.
+</string>
+
+    <string name="tc_s2_body">
+Ultimate File Manager Pro is a free Android app — available on both phones and Android TV — packed with tools to keep your files organised and secure.
+</string>
+
+    <string name="tc_s3_body">
+We\'ve built this app with care, but here are some important realities you should know before using it.
+</string>
+
+    <string name="tc_s3a_body">
+Appen erbjuder en valfri \"Fuel the Developer\" Tips Jar - tre frivilliga engångsköp som stöder utveckling. Tips ger dig inga extra funktioner; appen är alltid helt gratis.
+</string>
+    <string name="tc_s3a_payment">
+Alla transaktioner går via Google Play Billing. Vi ser aldrig dina kort- eller bankuppgifter.
+</string>
+    <string name="tc_s3a_refunds">
+Tip purchases are voluntary and processed by Google Play. Refund requests are handled directly by Google Play in accordance with their refund policy and applicable law, including the South African Consumer Protection Act. KiloWatch does not process refunds independently.
+</string>
+    <string name="tc_s3a_recurring">
+Det finns inga prenumerationer. Varje dricks är ett engångsköp. Du kommer aldrig att debiteras automatiskt.
+</string>
+    <string name="tc_s3a_no_obligation">
+Dricks är helt frivilligt. Alla funktioner förblir tillgängliga kostnadsfritt, för alltid.
+</string>
+
+    <string name="tc_s3b_body">
+The app supports connecting to a wide range of third-party cloud storage providers using the integrated RClone backend. When you use this feature, the following conditions apply:
+</string>
+    <string-array name="tc_rclone_labels">
+        <item>
+Direkt API-kommunikation
+</item>
+        <item>
+Credential Security
+</item>
+        <item>
+Tredjepartsvillkor
+</item>
+        <item>
+Ingen anslutningsgaranti
+</item>
+    </string-array>
+    <string-array name="tc_rclone_details">
+        <item>
+Alla nätverksbegäranden till RClone-lagringsleverantörer (som Filen, Mega och andra) utförs direkt från din enhet till respektive leverantörs slutpunkter. Ingen data passerar genom KiloWatch-servrar.
+</item>
+        <item>
+Dina RClone-konfigurationsprofiler och lösenord krypteras på enheten via RClone RC-backend och lagras lokalt som rclone_encrypted.json i appens privata lagring. Du är ensam ansvarig för att säkra din enhet för att skydda denna fil.
+</item>
+        <item>
+Din användning av RClone-integrerad molnlagring styrs av tjänstevillkoren och sekretesspolicyn för respektive molnleverantör. Du måste följa deras villkor när du kommer åt filer via den här appen.
+</item>
+        <item>
+Eftersom molnleverantörens API:er och slutpunkter kan ändras utan föregående meddelande kan vi inte garantera att någon specifik RClone-leverantör förblir tillgänglig eller fungerar utan avbrott.
+</item>
+    </string-array>
+    <string name="tc_s3b_summary">
+Anslutning till molnenheter via RClone sker direkt från din telefon eller TV. Vi ser aldrig dina molnfiler eller lösenord. Dina lösenord krypteras på din telefon, och du omfattas av villkoren för den molnleverantör du konfigurerar.
+</string>
+
+    <string name="tc_s4_body">
+Using this app comes with a few simple responsibilities on your side.
+</string>
+
+    <string name="tc_s5_body">
+The app requests certain Android permissions to work properly. Here\'s exactly what each one is for.
+</string>
+
+    <string name="tc_s6_body">
+You\'re welcome to use the app freely; you\'re just not permitted to copy, redistribute, or sell it.
+</string>
+
+    <string name="tc_s7_body">
+We built on the shoulders of some great open-source projects. Each is governed by its own licence — you can view the full licence text for each library inside the app at Settings → Legal → Open Source Licenses.
+</string>
+
+    <string name="tc_s8_body">
+We may update these Terms from time to time. When we do, we\'ll update the date at the top of this document. Continuing to use the app after any changes means you accept the updated Terms.
+</string>
+
+    <string name="tc_s9_body">
+We reserve the right to suspend or terminate access to the app if these Terms are violated — for example, if the app is used for illegal activity, or to access another person\'s device without consent.
+</string>
+
+    <string name="tc_s10_body">
+Dessa villkor styrs av lagarna i Sydafrika. Eventuella tvister löses under sydafrikansk jurisdiktion, utan hänsyn till lagvalsregler.
+</string>
+
+    <string name="tc_s11_body">
+Om något här är oklart eller du har frågor om dina rättigheter, vänligen kontakta oss.
+</string>
+
+    <string name="tc_footer">
+Genom att använda Ultimate File Manager Pro bekräftar du att du har läst och förstått dessa villkor.
+</string>
+
+    <!-- Feature list (Section 2) -->
+    <string-array name="tc_features">
+        <item>
+Filläsare – bläddra, kopiera, flytta, byt namn på och ta bort filer var som helst på din enhet.
+</item>
+        <item>
+Krypterat valv — lås känsliga filer bakom AES-256-GCM-kryptering med din egen PIN-kod.
+</item>
+        <item>
+Filserver — värd för en FTP- eller säker SFTP-server direkt på din enhet för att dela filer över ditt lokala nätverk.
+</item>
+        <item>
+Fjärrhantering – hantera filer över ditt lokala Wi-Fi via en inbyggd HTTP-server som stöder uppladdning, nedladdning och fjärrinstallation av APK-filer.
+</item>
+        <item>
+Nätverksresurser — anslut till SMB-, FTP- och NFS-servrar på ditt lokala nätverk för att bläddra, ladda ner och hantera fjärrfiler.
+</item>
+        <item>
+Mappsynkronisering — säkerhetskopiera automatiskt lokala telefonmappar till en SMB- eller FTP-nätverksresurs enligt ett schema du väljer (intervall eller specifik tid dagligen, veckovis eller månadsvis).
+</item>
+        <item>
+Enhetsparning — koppla ihop din mobiltelefon och Android TV via lokalt Wi-Fi för att överföra och installera filer.
+</item>
+        <item>
+ADB-terminal — anslut till Android-enheter i utvecklarläge över ditt lokala Wi-Fi med ADB (Android Debug Bridge) för direkt åtkomst till skalet och avancerad felsökning.
+</item>
+        <item>
+Inbyggda tittare — visa textfiler, PDF-filer, animerade bilder (APNG, GIF, animerad WebP, AVIF, SVG och mer), arkiv och andra format direkt i appen.
+</item>
+        <item>
+Avancerat ZIP-stöd — skapa och extrahera lösenordsskyddade och AES-krypterade ZIP-arkiv.
+</item>
+        <item>
+Fjärrskärmsbilder — fånga skärmen på din parade Android TV över lokalt Wi-Fi via ADB och spara den direkt i telefonens lagring.
+</item>
+        <item>
+7Z Archive Support — extrahera 7Z-arkiv med LZMA/LZMA2-komprimering.
+</item>
+        <item>
+Filsökning – hitta snabbt filer och mappar på din enhetslagring.
+</item>
+        <item>
+Storage Analyzer — se en visuell uppdelning av vad som använder ditt lagringsutrymme.
+</item>
+        <item>
+Apphanterare – visa och hantera alla appar som är installerade på din enhet, med rekommendationer om debloat för förinstallerade appar.
+</item>
+        <item>
+APK Installer - installera Android-appar och dela APK-filer (XAPK) direkt från filer som sparats lokalt.
+</item>
+        <item>
+Förhöjd åtkomst (Shizuku, Shevery &amp; ADB) – få root-liknande åtkomst för att hantera systemfiler och begränsade kataloger utan att faktiskt rota din enhet.
+</item>
+        <item>
+Storage Indexer — skapa ett lokalt index av filmetadata för omedelbar sökning och blixtsnabb surfning.
+</item>
+        <item>
+Storage Access Framework — andra appar kan komma åt dina filer via UFM:s dokumentleverantör.
+</item>
+        <item>
+Tips Jar — valfria engångsköp för att stödja utvecklaren; appen är alltid gratis utan att dricka.
+</item>
+        <item>
+UFM Media Player — spela upp ljud- och videofiler med bakgrundsuppspelning, aviseringskontroller, bild-i-bild-läge och spellisthantering.
+</item>
+        <item>
+GIF Creator — skapa animerade GIF-filer från utvalda bilder med anpassad bildhastighet, alternativ för storleksändring och dra-och-släpp-omordning av ramar.
+</item>
+        <item>
+Foto EXIF-verktyg — inspektera foto EXIF- och GPS-metadata, skrubba bort privata geotaggar och enhetsinformation och byt namn på bilder i grupp med hjälp av tidsstämplar och kamerametadata.
+</item>
+    </string-array>
+
+    <!-- Risk table (Section 3) — label|detail pairs -->
+    <string-array name="tc_risk_labels">
+        <item>
+Dataförlust
+</item>
+        <item>
+Vault PIN
+</item>
+        <item>
+APK-filer
+</item>
+        <item>
+Filserversäkerhet
+</item>
+        <item>
+Inloggningsuppgifter för nätverksdelning
+</item>
+        <item>
+Mappsynkronisering
+</item>
+        <item>
+Borttagning av systemapp
+</item>
+        <item>
+ADB-parning
+</item>
+        <item>
+Shizuku, Shevery och förhöjd åtkomst
+</item>
+        <item>
+TV-skärmdumpar
+</item>
+        <item>
+Indexeringsnoggrannhet
+</item>
+        <item>
+Buggar och fel
+</item>
+        <item>
+Vårt ansvar
+</item>
+    </string-array>
+    <string-array name="tc_risk_details">
+        <item>
+Vi kan inte garantera noll dataförlust. Håll alltid säkerhetskopior av filer som är viktiga för dig.
+</item>
+        <item>
+Om du glömmer din PIN-kod och återställningskod kan dina krypterade filer inte återställas – av vem som helst.
+</item>
+        <item>
+Att installera APK-filer från okända källor medför säkerhetsrisker. Du tar fullt ansvar för alla APK-filer du installerar.
+</item>
+        <item>
+När du är värd för en filserver överför FTP-anslutningar data och autentiseringsuppgifter i vanlig text. Använd alltid SFTP om du behöver säkra, krypterade överföringar.
+</item>
+        <item>
+Dina användaruppgifter för nätverksdelning (värd, användarnamn, lösenord) lagras lokalt på din enhet. Du är ansvarig för att hålla din enhet säker.
+</item>
+        <item>
+Synkroniseringar körs i bakgrunden och kan förbruka batteri och data. Verifiera alltid din fjärrsökväg innan du aktiverar synkronisering – synkronisering till en felaktig mapp kan skriva över filer på din nätverksresurs.
+</item>
+        <item>
+Att ta bort systemappar baserade på rekommendationer för debloat kan påverka enhetens stabilitet. Fortsätt med försiktighet.
+</item>
+        <item>
+ADB-parning kräver utbyte av certifikat mellan din enhet och målenheten över ditt lokala Wi-Fi. Anslut bara till enheter du äger eller har behörighet att komma åt. Alla i ditt nätverk som registrerar din kopplings-PIN kan komma åt din enhet – håll denna PIN-kod privat.
+</item>
+        <item>
+Genom att använda Shizuku, Shevery eller ADB för förhöjd åtkomst kan appen modifiera systemskyddade filer. Missbruk av dessa funktioner kan påverka enhetens stabilitet eller säkerhet. Använd med försiktighet och ge endast åtkomst till denna app.
+</item>
+        <item>
+Skärmdumpar av parade TV-apparater fångas via ADB över ditt lokala nätverk och sparas direkt i telefonens lagring. Vi överför, visar eller laddar inte upp dina skärmdumpar. Se till att du bara fångar skärmar på enheter du äger eller har behörighet att komma åt.
+</item>
+        <item>
+Indexet återspeglar tillståndet för din lagring vid tidpunkten för skanning. Du kan behöva uppdatera indexet om filer ändras av andra appar.
+</item>
+        <item>
+Ingen programvara är perfekt. Vi kan inte lova att appen alltid kommer att vara felfri eller oavbruten.
+</item>
+        <item>
+Vårt totala ansvar är begränsat till det totala beloppet du betalade för köp i appen under de 30 dagarna före eventuella anspråk. Vi är inte ansvariga för dataförlust, enhetsskada eller förlorad vinst som härrör från gratisfunktioner.
+</item>
+    </string-array>
+
+    <!-- Responsibilities list (Section 4) -->
+    <string-array name="tc_responsibilities">
+        <item>
+Håll regelbundna säkerhetskopior av viktiga filer innan du utför massåtgärder.
+</item>
+        <item>
+Förvara din Vault-PIN och återställningskod på ett säkert ställe – vi kan inte hämta dem åt dig.
+</item>
+        <item>
+Håll din PIN-kod privat. Alla som känner till det kan komma åt ditt valv.
+</item>
+        <item>
+Håll dina nätverksdelningsuppgifter säkra – de lagras lokalt på din enhet.
+</item>
+        <item>
+Granska dina mappsynkroniseringsvägar noggrant — synkronisering till en felaktig nätverksmapp kan skriva över befintliga filer.
+</item>
+        <item>
+Var försiktig när du tar bort systemappar baserat på rekommendationer för debloat.
+</item>
+        <item>
+Anslut endast via ADB Terminal till enheter du äger eller har uttrycklig behörighet att komma åt. Använd inte ADB Terminal för att få obehörig åtkomst till någon enhet.
+</item>
+        <item>
+Håll eventuella ADB-, Shizuku- eller Shevery-PIN-koder privata – dela dessa endast med personer som du litar på har tillgång till din enhet.
+</item>
+        <item>
+Säkra din Shizuku eller Shevery Manager – genom att ge UFM förhöjd åtkomst via Shizuku eller Shevery ger den makt över begränsade filer. Ge endast denna åtkomst om du litar på appen.
+</item>
+        <item>
+Använd endast appen för lagliga ändamål. Lagra, dela eller distribuera inte olagligt innehåll.
+</item>
+        <item>
+Använd inte fjärrhantering för att komma åt en annan persons enhet utan deras tillåtelse.
+</item>
+        <item>
+Försök inte att bakåtkonstruera, dekompilera eller manipulera appen.
+</item>
+        <item>
+Hantera dina indexerade poster på ett ansvarsfullt sätt - du kan ta bort poster eller ignorera specifika enheter när som helst via Inställningar -> Lagringsindexerare.
+</item>
+        <item>
+Verifiera äktheten och säkerheten för eventuella APK-filer innan du installerar dem.
+</item>
+    </string-array>
+
+    <!-- Permissions table (Section 5) — label|detail pairs -->
+    <string-array name="tc_permission_labels">
+        <item>
+Tillgång till alla filer
+</item>
+        <item>
+Media Access
+</item>
+        <item>
+Aviseringar
+</item>
+        <item>
+Nätverk / Wi-Fi
+</item>
+        <item>
+Multicast
+</item>
+        <item>
+Nätverksstat
+</item>
+        <item>
+Paketfråga
+</item>
+        <item>
+Installera paket
+</item>
+        <item>
+Fakturering
+</item>
+        <item>
+ADB Debug Bridge
+</item>
+        <item>
+Förhöjd åtkomst (Shizuku &amp; Shevery)
+</item>
+        <item>
+Starta start
+</item>
+        <item>
+Batterioptimering
+</item>
+        <item>
+Förgrundsservice
+</item>
+        <item>
+Wake Lock
+</item>
+        <item>
+Förvaringsindexerare
+</item>
+        <item>
+Bluetooth
+</item>
+        <item>
+Vibrera
+</item>
+    </string-array>
+    <string-array name="tc_permission_details">
+        <item>
+Viktigt för att bläddra, kopiera, flytta och ta bort filer över hela ditt lagringsutrymme.
+</item>
+        <item>
+Behövs för att organisera och hantera dina foton, videor och ljudfiler.
+</item>
+        <item>
+Används för att varna dig när filhanteringen är klar eller när lagringsutrymmet börjar ta slut.
+</item>
+        <item>
+Ger fjärrfilhantering, nätverksdelningsåtkomst (SMB/FTP/SFTP/SCP/NFS), mappsynkronisering, enhetsparning och ADB-terminalåtkomst på ditt lokala nätverk. Nätverksupptäckt skannar enheter på ditt lokala undernät (upp till 254 IP-adresser) på ADB-portarna 5555, 5037 och 5038 för att hitta ADB-aktiverade enheter.
+</item>
+        <item>
+Används för lokal nätverksenhetsidentifiering (NSD/mDNS) vid ihopparning av enheter.
+</item>
+        <item>
+Upptäcker VPN-anslutningar under fjärrhantering och nätverksdelning.
+</item>
+        <item>
+Låter App Manager räkna upp alla appar som är installerade på din enhet. Data som nås inkluderar: appnamn, paket-ID, version, APK-storlek, installation och uppdatering av tidsstämplar och om varje app är en system- eller användarinstallerad app. Denna information används uteslutande på enheten för att visa App Manager, beräkna lagring per app och korsreferens paketnamn mot en allmänt tillgänglig referenslista för debloat som laddas ner och cachelagras lokalt. Ingen installerad applikationsdata överförs någonsin till KiloWatch-servrar eller någon tredje part.
+</item>
+        <item>
+Krävs för att installera APK-filer som du väljer att köra från lokal lagring.
+</item>
+        <item>
+Behandlar valfria Tips Jar-köp via Google Play.
+</item>
+        <item>
+Tillåter säker anslutning till Android-enheter för avancerad skalåtkomst. Genererar ett unikt RSA-certifikat på din enhet för ihopparning; inga certifikat överförs till externa servrar.
+</item>
+        <item>
+Tillåter att appen använder Shizuku / Shevery API (inklusive Secure Settings) för att hantera filer i begränsade systemkataloger utan att rota.
+</item>
+        <item>
+Tillåter Shizuku- och Shevery-tjänster att starta automatiskt när din enhet startar för att säkerställa omedelbar tillgänglighet.
+</item>
+        <item>
+Låter dig välja att hålla Shizuku och Shevery-tjänster aktiva i bakgrunden för pålitlig prestanda.
+</item>
+        <item>
+Krävs för att köra mappsynkronisering och filöverföringar som en förgrundstjänst så att de slutförs tillförlitligt även när skärmen är avstängd.
+</item>
+        <item>
+Håller CPU och Wi-Fi aktiva under stora filöverföringar så att de slutförs tillförlitligt även när skärmen stängs av.
+</item>
+        <item>
+Använder lagringsbehörigheter för att skanna och indexera filmetadata för prestanda – hanteras via Inställningar -> Lagringsindexerare.
+</item>
+        <item>
+Ansluts till din parade Android TV för att fungera som ett Bluetooth-tangentbord och en mus för fjärrkontroll.
+</item>
+        <item>
+Ger haptisk feedback när du trycker på knappar på TV-fjärrkontrollen.
+</item>
+    </string-array>
+
+    <!-- Open-source list (Section 7) -->
+    <string-array name="tc_opensource">
+        <item>
+NanoHTTPD — lätt HTTP-server som driver fjärrhantering. (BSD-3-klausul)
+</item>
+        <item>
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3-klientbibliotek för nätverksdelning och mappsynkronisering. (LGPL-2.1)
+</item>
+        <item>
+smbj (hierynomus/smbj) — SMB2/SMB3 Java-implementering som används för nätverksdelning. (Apache-2.0)
+</item>
+        <item>
+EMC ECS NFS-klient (com.emc.ecs:nfs-client) — NFS v3-klientbibliotek för nätverksdelning. (Apache-2.0)
+</item>
+        <item>
+libnfs (sahlberg/libnfs) — inbyggt NFS-klientbibliotek som stöder NFSv2, NFSv3 och NFSv4. (LGPL-2.1 / BSD-2-klausul)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — omfattande SSHD-kärna-, SFTP- och SCP-klientbibliotek för säker nätverksdelning och värdskap. (Apache-2.0)
+</item>
+        <item>
+Apache FtpServer (org.apache.ftpserver) — 100 % ren Java FTP-server. (Apache-2.0)
+</item>
+        <item>
+Apache POI — dokumentbehandlingsbibliotek för visning av kontorsfiler. (Apache-2.0)
+</item>
+        <item>
+Firebase Analytics — Googles analysplattform som hjälper oss att förstå appanvändning. (Apache-2.0)
+</item>
+        <item>
+AndroidX Libraries (inkl. Leanback för Android TV) — Googles Jetpack-komponenter för modern Android-utveckling. (Apache-2.0)
+</item>
+        <item>
+Material Design Components — Googles UI-bibliotek för ett rent, konsekvent gränssnitt. (Apache-2.0)
+</item>
+        <item>
+Room Persistence Library — SQLite abstraktionslager för lokal metadataindexering. (Apache-2.0)
+</item>
+        <item>
+zip4j (net.lingala.zip4j) — avancerat ZIP-bibliotek för lösenordsskyddade och AES-krypterade arkiv. (Apache-2.0)
+</item>
+        <item>
+Apache Commons Compress — bibliotek för att läsa och skriva olika arkivformat (7z, zip, tar, etc). (Apache-2.0)
+</item>
+        <item>
+XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+</item>
+        <item>
+zstd-jni (com.github.luben:zstd-jni) — JNI-bindningar för Zstandard-komprimerings- och extraktionsbibliotek. (BSD-2-klausul)
+</item>
+        <item>
+Junrar (com.github.junrar:junrar) — Java RAR-extraktionsbibliotek. (BSD-3-klausul)
+</item>
+        <item>
+libadb-android (com.github.MuntashirAkon) — Android Debug Bridge-bibliotek som möjliggör säkra anslutningar till ADB-aktiverade enheter för fjärråtkomst av skal och certifikatbaserad parning. (Apache-2.0)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — omfattande SSHD-kärna-, SFTP- och SCP-klientbibliotek för säker nätverksdelning. (Apache-2.0)
+</item>
+        <item>
+EdDSA för Java (net.i2p.crypto:eddsa) — implementering av EdDSA (Edwards-curve Digital Signature Algorithm) för Ed25519 SSH-nycklar. (CC0-1.0)
+</item>
+        <item>
+SLF4J Android (se.uuid.slf4j:slf4j-android) — loggningsbindning för Android som används av SSHD-biblioteket. (MIT)
+</item>
+        <item>
+BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+</item>
+        <item>
+Google Play Billing Library – behandlar valfria tipsköp i appar; styrs av Google Plays sekretesspolicy. (Apache-2.0)
+</item>
+        <item>
+Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+</item>
+        <item>
+Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+</item>
+        <item>
+avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+</item>
+        <item>
+jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+</item>
+        <item>
+Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — libraries enabling elevated file system access via Shizuku or Shevery Manager apps. (Apache-2.0)
+</item>
+        <item>
+ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+</item>
+        <item>
+Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+</item>
+        <item>
+Ktor (io.ktor) — lätt webbramverk som används för att driva den lokala filservern. (Apache-2.0)
+</item>
+        <item>
+PDFBox-Android (com.tom-roush:pdfbox-android) — bibliotek för att rendera och visa PDF-dokument inbyggt. (Apache-2.0)
+</item>
+        <item>
+ExoPlayer / Media3 (androidx.media3) — avancerad mediaspelare för robust video- och ljuduppspelning. (Apache-2.0)
+</item>
+        <item>
+Microsoft Authentication Library (MSAL) — hanterar OneDrive API-autentisering inbyggt. (MIT)
+</item>
+        <item>
+OkHttp (com.squareup.okhttp3) — robust HTTP- och HTTP/2-klient för förfrågningar om molnlagringsnätverk. (Apache-2.0)
+</item>
+        <item>
+Gson (com.google.code.gson) — JSON-bearbetningsbibliotek som används för molnlagringsintegrering. (Apache-2.0)
+</item>
+        <item>
+AndroidX Browser (androidx.browser) — Chrome Custom Tabs-stöd för Google Drive API-autentisering. (Apache-2.0)
+</item>
+        <item>
+ZXing (com.google.zxing:core) — streckkodsbildbehandlingsbibliotek. (Apache-2.0)
+</item>
+        <item>
+gifencoder (com.squareup:gifencoder) — rent Java GIF-kodningsbibliotek för att skapa animerade GIF-filer från utvalda bilder. (Apache-2.0)
+</item>
+        <item>
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — bibliotek för att läsa, skriva och ta bort EXIF- och GPS-metadata i JPEG-, PNG-, WebP-, HEIF- och DNG-bildformat. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — behandlar valfria tipsköp i appen på Amazon-enheter. (Egendomsskyddad)
+</item>
+    </string-array>
+
+    <!-- Contact items (Section 11) -->
+    <string-array name="tc_contact_labels">
+        <item>
+E-post
+</item>
+    </string-array>
+    <string-array name="tc_contact_values">
+        <item>
+support@kilowatch.co.za
+</item>
+    </string-array>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PRIVACY POLICY
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="pp_screen_title">
+Privacy Policy
+</string>
+    <string name="pp_summary">
+Your files stay on your device — we never see them. With your consent, we collect anonymous usage analytics via Firebase to make the app better. No ads, no data selling, no funny business.
+</string>
+
+    <!-- Section titles -->
+    <string name="pp_s1_title">
+1. Introduction
+</string>
+    <string name="pp_s2_title">
+2. Information We Collect
+</string>
+    <string name="pp_s3_title">
+3. How We Use Your Information
+</string>
+    <string name="pp_s4_title">
+4. Permissions &amp; Why We Need Them
+</string>
+    <string name="pp_s5_title">
+5. Data Security
+</string>
+    <string name="pp_s6_title">
+6. Google API-tjänster — Redovisning av begränsad användning
+</string>
+    <string name="pp_s6b_title">
+6b. RClone-molnintegration — Sekretess &amp; efterlevnad
+</string>
+    <string name="pp_s7_title">
+7. Datadelning och tredje part
+</string>
+    <string name="pp_s8_title">
+8. Hur länge vi sparar data
+</string>
+    <string name="pp_s9_title">
+9. Dina rättigheter
+</string>
+    <string name="pp_s10_title">
+10. Barns integritet
+</string>
+    <string name="pp_s11_title">
+11. Internationella användare
+</string>
+    <string name="pp_s12_title">
+12. Ändringar av denna integritetspolicy
+</string>
+    <string name="pp_s13_title">
+13. Efterlevnad av Google Plays policy
+</string>
+    <string name="pp_s13b_title">
+13b. Framträdande avslöjande — Information om installerad applikation
+</string>
+    <string name="pd_dialog_title">
+Framträdande avslöjande — Information om installerad applikation
+</string>
+    <string name="pd_dialog_body">
+Ultimate File Manager Pro kommer åt listan över installerade applikationer på din enhet via QUERY_ALL_PACKAGES-behörigheten för att tillhandahålla App Manager-skärmen, Debloater-funktioner och fjärrhantering av filserver. Denna information bearbetas och lagras lokalt på din enhet. När fjärrfilservern är aktiverad kan listan över installerade appar och metadata överföras över ditt lokala nätverk till autentiserade enheter via en TLS-krypterad HTTPS-anslutning. För fullständig information, se avsnitt 13b i vår sekretesspolicy.
+</string>
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
+    <string name="pd_remote_apps_title">
+Tillgång till fjärrappar
+</string>
+    <string name="pd_remote_apps_body">
+Den här appen kan visa listan över installerade applikationer på din enhet över det lokala nätverket när funktionen för fjärrhantering (filserver) är aktiv. När du aktiverar servern kan alla autentiserade enheter i ditt lokala nätverk komma åt applistan och metadata – inklusive appnamn, paket-ID:n, versioner, storlekar, installationsdatum och appikoner – via filserverns REST API. Den här anslutningen är TLS-krypterad och kräver autentisering. Du kan inaktivera detta när som helst genom att stoppa filservern. För fullständig information, se avsnitt 13b i vår integritetspolicy.
+</string>
+    <string name="pd_remote_apps_accept">
+Aktivera appåtkomst
+</string>
+    <string name="pd_remote_apps_decline">
+Håll inaktiverad
+</string>
+    <string name="pp_s14_title">
+14. Kontakta oss
+</string>
+
+    <!-- Section body text -->
+    <string name="pp_s1_body">
+Ultimate File Manager Pro är en oberoende Android-applikation och är inte ansluten till, auktoriserad, sponsrad eller godkänd av Ultimate File Manager-projektet för Windows (ultimatefilemanager.pl) eller någon annan produkt som använder ett liknande namn. Alla andra produktnamn och varumärken tillhör deras respektive ägare.\n
+\n
+Denna sekretesspolicy förklarar vilken information vi samlar in när du använder Ultimate File Manager Pro, hur vi använder den och hur vi håller den säker. Genom att använda appen godkänner du den praxis som beskrivs här.
+</string>
+
+    <string name="pp_s2_local_heading">
+Endast lagrad lokalt på din enhet
+</string>
+    <string name="pp_s2_local_body">
+Följande data sparas på din enhet och lämnar den aldrig. Vi har noll tillgång till något av detta.
+</string>
+    <string name="pp_s2_local_alert">
+Vi har ingen tillgång till din PIN-kod, återställningskod, krypteringsnycklar eller några filer som lagras i ditt valv – någonsin.
+</string>
+
+    <string name="pp_s2_analytics_heading">
+Samlas in via Firebase Analytics (anonym)
+</string>
+    <string name="pp_s2_analytics_body">
+Vi använder Google Firebase Analytics för att samla in anonym användningsdata för att förbättra appen. Analytics-data kopplas aldrig till din personliga identitet. Användningsanalysväxlingen i appens inställningar (eller inställningarna för din Android-enhet) är samtyckeskontrollen: den är på som standard och om du stänger av den drar du tillbaka ditt samtycke och stoppar insamlingen när som helst. För användare i Europeiska ekonomiska samarbetsområdet, Storbritannien och Schweiz följer detta EU:s policy för användarsamtycke och tillämplig lag om dataskydd.
+</string>
+
+    <string name="pp_s2_billing_heading">
+Behandlas via Google Play Billing (endast valfria tips)
+</string>
+    <string name="pp_s2_billing_body">
+När du gör ett valfritt köp med tipsburkar behandlar Google Play transaktionen. Vi ser aldrig dina kort- eller bankuppgifter. Vi får tillfälligt en köptoken och produkt-ID – båda hanteras endast på enheten och lagras aldrig på våra servrar.
+</string>
+    <string name="pp_s2_billing_note">
+Anonyma köptokens från Google Play Billing behandlas tillfälligt på enheten för att bekräfta ditt tips – de lagras aldrig av oss och är inte kopplade till din identitet.
+</string>
+
+    <string name="pp_s2_crash_heading">
+Krasch- och ANR-rapportering (diagnostik)
+</string>
+    <string name="pp_s2_crash_body">
+UFM kan fånga diagnostisk information när den kraschar eller fryser så att vi kan åtgärda problemet. Detta inkluderar appversionen, Android-versionen, enhetsmodellen och tillverkaren, undantagstypen och meddelandet och stackspårningen. Den innehåller aldrig dina filer, namn, e-postadresser eller kontoinformation.\n
+\n
+Inget skickas automatiskt: efter en krasch eller frysning frågar en uppmaning om du vill skicka rapporten till KiloWatch (kilowatch.co.za). Om du väljer \"Nej tack\" raderas den lokalt. Du kan inaktivera krasch- och frysdetektering när som helst via Inställningar → Krasch- och ANR-rapportering; Om du inaktiverar den raderas även alla väntande rapporter.
+</string>
+
+    <string name="pp_s2_nocollect_heading">
+Vad vi aldrig samlar in
+</string>
+
+    <string name="pp_s3_local_heading">
+Lokal data är van vid
+</string>
+    <string name="pp_s3_analytics_heading">
+Analytics-data är vana vid
+</string>
+
+    <string name="pp_s4_storage_heading">
+Lagringsbehörigheter
+</string>
+    <string name="pp_s4_network_heading">
+Nätverksbehörigheter
+</string>
+    <string name="pp_s4_network_alert">
+Fjärrhanteringsservern, filserverhosting, SMB/FTP/SFTP/SCP-nätverksdelningsanslutningar, mappsynkronisering, enhetsparning och ADB-terminalanslutningar fungerar bara på ditt lokala Wi-Fi-nätverk. Fjärrhantering och FTP-servrar använder okrypterade protokoll; SFTP- och ADB-terminalanslutningar använder säkra, krypterade protokoll. Molnlagrings-API:er (Google Drive, OneDrive, Dropbox, S3-kompatibla) kommunicerar säkert med sina respektive servrar över krypterad HTTPS. Ingen annan data överförs till externa servrar.
+</string>
+    <string name="pp_s4_other_heading">
+Andra behörigheter
+</string>
+
+    <string name="pp_s5_vault_heading">
+Valvkryptering
+</string>
+    <string name="pp_s5_vault_body">
+Det krypterade valvet använder kryptering av militär kvalitet för att skydda dina filer.
+</string>
+    <string name="pp_s5_vault_alert">
+Om du glömmer både din PIN-kod och återställningskod är din krypterade data permanent otillgänglig – inte ens vi kan återställa den. Förvara dessa på ett säkert ställe.
+</string>
+    <string name="pp_s5_local_heading">
+Lokalt dataskydd
+</string>
+    <string name="pp_s5_remote_heading">
+Säkerhet för fjärrhantering
+</string>
+
+    <!-- Section 6 — Google API Limited Use -->
+    <string name="pp_s6_compliance_banner">
+Ultimate File Manager Pros användning av information som tas emot från Googles API:er följer användardatapolicyn för Google API-tjänster, inklusive kraven för begränsad användning.
+</string>
+    <string name="pp_s6_intro">
+När du ansluter ditt Google Drive-konto får appen åtkomst till dina Google-användardata endast för att tillhandahålla de filhanteringsfunktioner du använder direkt i appen.
+</string>
+    <string name="pp_s6_google_data_heading">
+Google User Data — Google Drive API
+</string>
+    <string name="pp_s6_google_never_heading">
+Vad vi aldrig kommer åt från ditt Google-konto
+</string>
+    <string name="pp_s6_google_never">
+Vi har inte åtkomst till din Gmail, Google Kontakter, Google Kalender, Google Foton (utanför Drive) eller någon annan Google-tjänstdata. Endast den minsta Drive-fildata som krävs för din begärda åtgärd nås någonsin.
+</string>
+    <string name="pp_s6_permitted_heading">
+Tillåten användning av Googles användardata
+</string>
+    <string name="pp_s6_prohibited_heading">
+Förbjuden användning – vi använder aldrig Googles användardata för
+</string>
+    <string name="pp_s6_minimum_access">
+Ultimate File Manager Pro begär endast de minsta Google Drive-behörigheter som krävs för att utföra de filhanteringsåtgärder du väljer. Vi begär aldrig åtkomst till din Gmail, Google Kontakter, Google Kalender eller någon annan Google-tjänstdata.
+</string>
+    <!-- Section 6b — RClone Integration -->
+    <string name="pp_s6b_compliance_banner">
+Ultimate File Manager Pro integrerar RClone-backend för att stödja anslutning till över 100 molnlagringsleverantörer. Alla konfigurationer och referenser hanteras direkt på din enhet.
+</string>
+    <string name="pp_s6b_intro">
+När du använder RClone-lagringsintegrationen i Ultimate File Manager Pro bearbetar appen dina autentiseringsuppgifter för molnlagring och filmetadata lokalt. Appen kommunicerar direkt med din valda molnlagringsleverantörs API-slutpunkt. Vi förmedlar inte denna anslutning och vi samlar aldrig in, lagrar eller överför dina molnuppgifter eller filer till våra servrar.
+</string>
+    <string name="pp_s6b_local_heading">
+Lokal Credential Encryption
+</string>
+    <string name="pp_s6b_local_body">
+Alla lösenord, tokens eller API-nycklar som angetts för RClone-lagringskonfigurationer döljs och krypteras med hjälp av kryptografi på enheten via RClone RC-backend och lagras säkert som rclone_encrypted.json i appens privata katalog. Den här filen är otillgänglig för andra applikationer och raderas permanent när du avinstallerar appen.
+</string>
+    <string name="pp_s6b_permitted_heading">
+Tillåten användning av molndata
+</string>
+    <string-array name="pp_s6b_permitted">
+        <item>
+Fjärrsurfning: Hämtar mappstrukturer och filmetadata för att visa ditt molnlagringsinnehåll.
+</item>
+        <item>
+Filåtgärder: Ladda upp, ladda ner, döpa om, kopiera, flytta eller ta bort filer på din fjärrlagring på din uttryckliga begäran.
+</item>
+    </string-array>
+    <!-- Section 7 — Data Sharing -->
+    <string name="pp_s7_nosell_alert">
+Vi säljer, hyr ut, byter, överför eller avslöjar inte din personliga information eller Googles användardata till någon tredje part i något syfte som inte är direkt relaterat till att tillhandahålla Ultimate File Manager Pros filhanteringsfunktioner – punkt.
+</string>
+    <string name="pp_s7_third_heading">
+Tredjepartstjänster vi använder
+</string>
+    <string name="pp_s7_saf_note">
+När du väljer att öppna eller dela en fil med en annan app – inklusive via dokumentleverantören Storage Access Framework (SAF) – styr den appens egen integritetspolicy vad den gör med filen.
+</string>
+    <string name="pp_s7_legal_note">
+Vi kan också avslöja information om det krävs enligt lag, domstolsbeslut eller begäran från myndigheter, i den utsträckning det är tillåtet enligt tillämplig lag. Vi överför eller avslöjar inte din personliga information eller Googles användardata till tredje part för andra ändamål än de som beskrivs i denna sekretesspolicy.
+</string>
+
+    <string name="pp_s9_body">
+Du har kontroll över din data. Här är vad du kan göra när som helst.
+</string>
+    <string name="pp_s9_delete_heading">
+Hur man tar bort all appdata
+</string>
+    <string name="pp_s9_delete_alert">
+Om du rensar data eller avinstallerar raderas din Vault-PIN, återställningskod och krypteringsnycklar – vilket gör allt Vault-innehåll permanent oåtkomligt. Dekryptera allt du vill behålla först.
+</string>
+
+    <string name="pp_s10_body">
+Ultimate File Manager Pro är inte avsedd för barn under 13 år. Vi samlar inte medvetet in personlig information från barn under 13. Om du är förälder eller vårdnadshavare och tror att ditt barn har lämnat personlig information, vänligen kontakta oss.
+</string>
+
+    <string name="pp_s11_body">
+Ultimate File Manager Pro är utvecklad i Sydafrika. Om du använder appen från ett annat land, observera att all information kan bearbetas i Sydafrika eller i länder där våra tredjepartsleverantörer (som Google) är verksamma.
+</string>
+
+    <string name="pp_s12_body">
+Vi kan uppdatera denna integritetspolicy då och då. När vi gör det uppdaterar vi datumet högst upp. För betydande ändringar kommer vi också att meddela dig i appen. Att fortsätta använda appen efter ändringar innebär att du accepterar den uppdaterade policyn.
+</string>
+
+    <string name="pp_s13_body">
+Den här appen är byggd för att uppfylla Google Plays standarder. Alla begärda behörigheter krävs för grundläggande appfunktioner. Innan du begär något känsligt tillstånd förklarar appen tydligt varför det behövs och hur det kommer att användas. Angående uppdateringarna av foto- och videopolicyn från oktober 2024: bred åtkomst är nödvändig eftersom detta är en omfattande filhanterare designad för bulkoperationer (flytta, byta namn och synkronisera) över alla lagringsvolymer, som inte kan utföras effektivt med standardsystemväljare.
+</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">
+Ultimate File Manager Pro får tillgång till hela listan över installerade applikationer på din enhet via QUERY_ALL_PACKAGES-tillståndet för att tillhandahålla funktionerna App Manager, Debloater och Remote File Server. Detta avslöjande förklarar exakt vilken data som används, varför och var den stannar.
+</string>
+    <string name="pp_s13b_data_heading">
+Vilken data som nås
+</string>
+    <string-array name="pp_s13b_data_items">
+        <item>
+Appnamn och paketidentifierare (paket-ID)
+</item>
+        <item>
+Versionsnamn och versionskod
+</item>
+        <item>
+APK-filstorlek
+</item>
+        <item>
+Första installationstid och senaste uppdateringstid
+</item>
+        <item>
+Klassificering av systemapp kontra användarinstallerad app
+</item>
+        <item>
+Förekomst av OBB-expansionsfiler
+</item>
+        <item>
+Appikon (sänds som base64 när Remote File Server är aktiv)
+</item>
+        <item>
+Dela APK / OBB expansion fil metadata
+</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">
+Varför denna data används
+</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>
+Apphanterare: Visar hela listan över installerade appar med deras detaljer (namn, version, storlek, installationsdatum) så att du kan bläddra, söka och hantera dina applikationer från ett ställe.
+</item>
+        <item>
+Beräkning av lagring per app: Läser APK-filstorlek och datakatalogstorlek (bästa ansträngning) för att visa hur mycket lagringsutrymme varje app använder.
+</item>
+        <item>
+Debloater: Korsreferenser installerade paketnamn mot en allmänt tillgänglig referenslista för debloat (nedladdad och cachad lokalt på din enhet) för att identifiera förinstallerade systemappar som säkert kan tas bort eller inaktiveras.
+</item>
+        <item>
+Fjärrfilserver: Exponering av installerad applista och metadata via REST API över det lokala nätverket för autentiserade enheter för fjärrhantering när filservern är aktiverad.
+</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">
+Var denna data finns
+</string>
+    <string name="pp_s13b_location_body">
+<b>På din enhet och lokala nätverk.</b> All installerad applikationsdata bearbetas och lagras lokalt inom appens privata lagring. Den laddas aldrig upp till KiloWatch-servrar, delas aldrig med någon tredje part och används aldrig för reklam, profilering, analys, AI-träning. När funktionen Remote File Server är aktiverad kan listan över installerade appar och metadata överföras över ditt lokala nätverk till autentiserade enheter via en TLS-krypterad HTTPS-anslutning. Servern accepterar endast anslutningar från enheter på samma lokala nätverk, och alla förfrågningar kräver autentisering.
+</string>
+
+    <string name="pp_s14_body">
+Om du har några frågor eller funderingar om denna sekretesspolicy, vänligen kontakta.
+</string>
+
+    <string name="pp_footer">
+Genom att använda Ultimate File Manager Pro bekräftar du att du har läst och förstått denna integritetspolicy.
+</string>
+
+    <!-- Local storage table (Section 2) -->
+    <string-array name="pp_local_data_labels">
+        <item>
+Arkiv-PIN (hashat)
+</item>
+        <item>
+Återställningskod (hashat)
+</item>
+        <item>
+Arkivmetadata
+</item>
+        <item>
+Krypteringsnycklar
+</item>
+        <item>
+Appinställningar
+</item>
+        <item>
+Filserverprofiler
+</item>
+        <item>
+Inloggningsuppgifter för nätverksdelning
+</item>
+        <item>
+Information om kopplad enhet
+</item>
+        <item>
+ADB-autentiseringsnycklar
+</item>
+        <item>
+Shizuku / Shevery Authorization State
+</item>
+        <item>
+TV-skärmdumpar
+</item>
+        <item>
+Synkronisera profiler
+</item>
+        <item>
+Cloud Storage Tokens (Google Drive, OneDrive, Dropbox)
+</item>
+        <item>
+S3 / S3-kompatibla lagringsuppgifter (AWS S3, MinIO, IDrive E2, etc.)
+</item>
+        <item>
+Indexerad filmetadata (SQLite/rum)
+</item>
+        <item>
+Språkval (cookie)
+</item>
+        <item>
+Mediauppspelningstillstånd
+</item>
+    </string-array>
+    <string-array name="pp_local_data_details">
+        <item>
+Säker åtkomst till krypterade filer · Android SharedPreferences
+</item>
+        <item>
+Kontoåterställning om PIN-koden glöms bort · Android SharedPreferences
+</item>
+        <item>
+Lista över dina krypterade mappar och filer · Appens privata lagring
+</item>
+        <item>
+AES-256-GCM-kryptering för valvet · Android Keystore (hårdvarustödd)
+</item>
+        <item>
+Tema, sorteringsinställningar, visningsinställningar · Android SharedPreferences
+</item>
+        <item>
+Konfigurationer (användarnamn, katalog, hashat lösenord) för den värdbaserade filservern · Appens privata lagring
+</item>
+        <item>
+Ansluter till dina SMB/FTP-resurser (värd, användarnamn, lösenord) · App privat lagring
+</item>
+        <item>
+Enhetsnamn, ID och IP för enhetsparning · Appens privata lagring
+</item>
+        <item>
+RSA-nycklar och certifikat genererade för säkra ADB-anslutningar · App privat lagring
+</item>
+        <item>
+Status för den förhöjda åtkomstbeviljanden från Shizuku eller Shevery Manager-appen · Appens privata lagring
+</item>
+        <item>
+Skärmdumpar tagna från en parad TV via ADB · Din telefons lokala bilder/skärmdumpar-mapp
+</item>
+        <item>
+Lokal mapp-URI och fjärrsökväg för varje synkprofil · App privat lagring
+</item>
+        <item>
+OAuth-tokens för åtkomst till Google Drive, OneDrive och Dropbox · Privat lagring av appen
+</item>
+        <item>
+Åtkomstnyckel-ID och hemlig åtkomstnyckel för att ansluta till S3-hinkar · Appens privata lagring
+</item>
+        <item>
+Filmetadata (namn, storlekar, datum) för snabb bläddring och sökning lagrad i en lokal SQLite/Room-databas — kan hanteras via Inställningar -> Lagringsindexerare · App privat lagring
+</item>
+        <item>
+Aktuell kö, uppspelningsposition och spelarinställningar för att fortsätta där du slutade · Android Shared Preferences
+</item>
+        <item>
+En cookie (ufm_lang) kommer ihåg ditt språkval under hela sessionen och över omstarter av webbläsare · Webbläsarlagring
+</item>
+    </string-array>
+
+    <!-- Analytics table (Section 2) -->
+    <string-array name="pp_analytics_labels">
+        <item>
+Enhetsinformation
+</item>
+        <item>
+Appanvändningsdata
+</item>
+        <item>
+Allmänt läge
+</item>
+    </string-array>
+    <string-array name="pp_analytics_details">
+        <item>
+Enhetsmodell, OS-version, skärmstorlek
+</item>
+        <item>
+Funktioner som används, sessionslängd
+</item>
+        <item>
+Land/region baserat på IP – inte din exakta plats
+</item>
+    </string-array>
+
+    <!-- What we never collect (Section 2) -->
+    <string-array name="pp_never_collect">
+        <item>
+Dina filer, dokument, foton, videor eller andra media
+</item>
+        <item>
+Innehållet i ditt valv eller krypteringsnycklar
+</item>
+        <item>
+Din PIN- eller återställningskod
+</item>
+        <item>
+Din exakta plats
+</item>
+        <item>
+Dina kontakter, meddelanden eller samtalsloggar
+</item>
+        <item>
+Personlig identifieringsinformation (namn, e-post, telefonnummer)
+</item>
+        <item>
+Alla Google-kontodata utöver vad du uttryckligen begär i filläsaren
+</item>
+    </string-array>
+
+    <!-- How we use data (Section 3) -->
+    <string-array name="pp_use_local">
+        <item>
+Autentisera åtkomst till det krypterade valvet
+</item>
+        <item>
+Kryptera och dekryptera dina privata filer
+</item>
+        <item>
+Kom ihåg dina preferenser och inställningar
+</item>
+        <item>
+Använd förhöjd åtkomst (Shizuku/Shevery/ADB) för att hantera systemskyddade filer i begränsade kataloger
+</item>
+        <item>
+Skapa och underhåll filindexering för snabb bläddring och sökning (kan hanteras via Inställningar -> Lagringsindexerare)
+</item>
+        <item>
+Tillhandahåll grundläggande appfunktioner
+</item>
+    </string-array>
+    <string-array name="pp_use_analytics">
+        <item>
+Förstå hur funktioner används
+</item>
+        <item>
+Identifiera och fixa buggar och krascher
+</item>
+        <item>
+Förbättra funktioner och användarupplevelse
+</item>
+        <item>
+Ta välgrundade utvecklingsbeslut
+</item>
+    </string-array>
+
+    <!-- Storage permissions (Section 4) -->
+    <string-array name="pp_storage_perm_labels">
+        <item>
+MANAGE_EXTERNAL_STORAGE
+</item>
+        <item>
+READ_EXTERNAL_STORAGE
+</item>
+        <item>
+WRITE_EXTERNAL_STORAGE
+</item>
+    </string-array>
+    <string-array name="pp_storage_perm_details">
+        <item>
+API 30+ · Full filhantering över all lagring
+</item>
+        <item>
+Nedan API 33 · Äldre filåtkomst på äldre enheter
+</item>
+        <item>
+Nedan API 29 · Äldre filändring på äldre enheter
+</item>
+    </string-array>
+
+    <!-- Network permissions (Section 4) -->
+    <string-array name="pp_network_perm_labels">
+        <item>
+INTERNET
+</item>
+        <item>
+ACCESS_WIFI_STATE
+</item>
+        <item>
+ACCESS_NETWORK_STATE
+</item>
+        <item>
+CHANGE_WIFI_MULTICAST_STATE
+</item>
+    </string-array>
+    <string-array name="pp_network_perm_details">
+        <item>
+Möjliggör fjärrfilhantering, värd för lokala filservrar, SMB/FTP/SFTP/SCP/NFS nätverksdelningsåtkomst och enhetsparning
+</item>
+        <item>
+Visar din lokala IP-adress för fjärråtkomst
+</item>
+        <item>
+Upptäcker aktivt nätverk och VPN-status för fjärrhantering och nätverksresurser
+</item>
+        <item>
+Aktiverar lokal nätverksenhetsupptäckt (NSD/mDNS) för enhetsparning
+</item>
+    </string-array>
+
+    <!-- Other permissions (Section 4) -->
+    <string-array name="pp_other_perm_labels">
+        <item>
+POST_NOTIFICATIONS
+</item>
+        <item>
+moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+</item>
+        <item>
+RECEIVE_BOOT_COMPLETED
+</item>
+        <item>
+REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+</item>
+        <item>
+REQUEST_INSTALL_PACKAGES
+</item>
+        <item>
+QUERY_ALL_PACKAGES
+</item>
+        <item>
+FOREGROUND_SERVICE / FOREGROUND_SERVICE_DATA_SYNC
+</item>
+        <item>
+WAKE_LOCK
+</item>
+    </string-array>
+    <string-array name="pp_other_perm_details">
+        <item>
+Varnar dig när filhanteringen är klar eller lagringen är låg
+</item>
+        <item>
+Tillåter kommunikation med Shizuku eller Shevery Manager för ökad filåtkomst
+</item>
+        <item>
+Tillåter Shizuku- eller Shevery-tjänster att starta automatiskt vid start för omedelbar tillgänglighet
+</item>
+        <item>
+Låter dig välja att hålla Shizuku eller Shevery aktiva i bakgrunden för pålitlig prestanda
+</item>
+        <item>
+Tillåter installation av APK-filer du väljer
+</item>
+        <item>
+Krävs av App Manager- och Debloater-funktionerna. Läser: appnamn, paket-ID, version, APK-storlek, installation och uppdatering av tidsstämplar och flagga för system kontra användare-app – bearbetas helt på enheten. Fliken Debloater laddar ner en allmänt tillgänglig referenslista för debloat och korsrefererar den lokalt mot installerade paketnamn. Ingen installerad applikationsdata överförs någonsin externt.
+</item>
+        <item>
+Kör mappsynkronisering, filöverföringar och mediauppspelning som en förgrundstjänst så att de slutförs på ett tillförlitligt sätt och fortsätter spela även när skärmen är avstängd eller du använder andra appar
+</item>
+        <item>
+Håller CPU och Wi-Fi aktiva under stora filöverföringar och mediauppspelning så att de slutförs tillförlitligt även när skärmen stängs av
+</item>
+    </string-array>
+
+    <!-- Encryption spec (Section 5) -->
+    <string-array name="pp_encryption_labels">
+        <item>
+Algoritm
+</item>
+        <item>
+Nyckelförvaring
+</item>
+        <item>
+Nyckelstorlek
+</item>
+        <item>
+Autentisering
+</item>
+    </string-array>
+    <string-array name="pp_encryption_details">
+        <item>
+AES-256-GCM (Advanced Encryption Standard with Galois/Counter Mode)
+</item>
+        <item>
+Android Keystore — hårdvarustödd säker lagring
+</item>
+        <item>
+256-bitars
+</item>
+        <item>
+Användardefinierad PIN-kod
+</item>
+    </string-array>
+
+    <!-- Local data protection (Section 5) -->
+    <string-array name="pp_local_protection">
+        <item>
+All lokal data lagras i appens privata lagringsområde – andra appar kan inte komma åt den.
+</item>
+        <item>
+Din PIN-kod hashas innan lagring – vi ser den aldrig i vanlig text.
+</item>
+        <item>
+Nätverksdelningsuppgifter lagras i appens privata lagring och överförs aldrig externt.
+</item>
+        <item>
+OAuth-tokens för Google Drive, OneDrive och Dropbox lagras i appens privata lagring och överförs aldrig till våra servrar eller någon tredje part.
+</item>
+        <item>
+S3/S3-kompatibla åtkomstuppgifter (Access Key ID och Secret Access Key) lagras i appens privata lagring och används uteslutande för att autentisera förfrågningar till din konfigurerade slutpunkt – de överförs aldrig till våra servrar.
+</item>
+        <item>
+Säkerhetsprocedurer finns på plats för att skydda sekretessen för all lokalt lagrad data.
+</item>
+        <item>
+All data raderas automatiskt när du avinstallerar appen.
+</item>
+    </string-array>
+
+    <!-- Remote security (Section 5) -->
+    <string-array name="pp_remote_security">
+        <item>
+PIN-skyddad åtkomst — endast personer du auktoriserar kan ansluta.
+</item>
+        <item>
+Sessionsbaserad autentisering på varje anslutning.
+</item>
+        <item>
+Fungerar endast på ditt lokala nätverk – ingen extern internetåtkomst.
+</item>
+        <item>
+Servern stängs av automatiskt när du lämnar skärmen för fjärrhantering.
+</item>
+        <item>
+Viktigt: Fjärrhantering använder okrypterad HTTP. Valvåtkomst via fjärrhantering (inklusive PIN-inmatning) överförs okrypterat över ditt lokala nätverk. Använd endast på nätverk du litar på, till exempel ditt Wi-Fi hem.
+</item>
+    </string-array>
+
+    <!-- Google Drive user data table (Section 6) -->
+    <string-array name="pp_google_data_labels">
+        <item>
+Fil- och mappmetadata (namn, storlek, MIME-typ, ändringsdatum, enhets-ID)
+</item>
+        <item>
+Fil binärt innehåll
+</item>
+        <item>
+OAuth Access Token &amp; Refresh Token
+</item>
+    </string-array>
+    <string-array name="pp_google_data_when">
+        <item>
+När du surfar på din Google Drive i appen
+</item>
+        <item>
+Endast när du uttryckligen öppnar, laddar ner, laddar upp, kopierar, flyttar eller synkroniserar en fil
+</item>
+        <item>
+Lagras lokalt efter att du loggat in på Google Drive
+</item>
+    </string-array>
+    <string-array name="pp_google_data_purposes">
+        <item>
+Visar ditt Drive-innehåll i filläsaren
+</item>
+        <item>
+Utför den specifika filoperationen du begärde
+</item>
+        <item>
+Underhålla din autentiserade session utan att kräva upprepade inloggningar
+</item>
+    </string-array>
+    <!-- Permitted uses of Google data (Section 6) -->
+    <string-array name="pp_google_permitted">
+        <item>
+Bläddra på din Drive: Hämtar fil- och mappmetadata för att visa ditt Drive-innehåll.
+</item>
+        <item>
+Ladda upp filer: Skicka en lokal fil till din Drive när du uttryckligen begär det.
+</item>
+        <item>
+Ladda ner filer: Hämta en Drive-fil till din enhet när du uttryckligen begär det.
+</item>
+        <item>
+Flytta och kopiera filer: Utför filoperationer på Drive-sidan som du uttryckligen initierar.
+</item>
+        <item>
+Ta bort filer: Ta bort Drive-filer som du uttryckligen väljer att radera.
+</item>
+        <item>
+Mappsynkronisering: Synkronisera en lokal mapp med en Drive-mapp enligt synkroniseringsprofilen du konfigurerade.
+</item>
+    </string-array>
+    <!-- Prohibited uses of Google data (Section 6) -->
+    <string-array name="pp_google_prohibited">
+        <item>
+Riktad, personlig, omriktad eller intressebaserad reklam
+</item>
+        <item>
+Sälja till datamäklare eller tillhandahålla informationsåterförsäljare
+</item>
+        <item>
+Fastställande av kreditvärdighet eller för utlåningsändamål
+</item>
+        <item>
+Utbildning av artificiell intelligens eller maskininlärningsmodeller
+</item>
+        <item>
+Skapa användardatabaser eller profiler som inte är relaterade till filhantering
+</item>
+        <item>
+All datautvinning, skrapning eller aggregering för externa ändamål
+</item>
+        <item>
+Överföra Googles användardata till tredje part av någon annan anledning än att tillhandahålla eller förbättra appens filhanteringsfunktioner, eller som krävs enligt lag
+</item>
+    </string-array>
+    <!-- Third parties (Section 7) -->
+    <string-array name="pp_third_party_names">
+        <item>
+Firebase Analytics
+</item>
+        <item>
+Google Play-tjänster
+</item>
+        <item>
+Google Play Fakturering
+</item>
+        <item>
+Microsoft OneDrive API
+</item>
+        <item>
+Google Drive API
+</item>
+        <item>
+Dropbox API
+</item>
+        <item>
+AWS S3 / S3-kompatibla API:er (t.ex. AWS S3, MinIO, IDrive E2)
+</item>
+    </string-array>
+    <string-array name="pp_third_party_providers">
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Microsoft Corporation
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Dropbox, Inc.
+</item>
+        <item>
+Amazon Web Services och kompatibla leverantörer
+</item>
+    </string-array>
+    <string-array name="pp_third_party_purposes">
+        <item>
+Anonym användningsanalys
+</item>
+        <item>
+Appdistribution, uppdateringar och recensioner i appen
+</item>
+        <item>
+Behandlar valfria tipsköp i appen (endast köptokens, på enheten)
+</item>
+        <item>
+Autentiserar och bearbetar användarförfrågningar för Microsoft OneDrive-integration
+</item>
+        <item>
+Autentiserar och bearbetar användarinitierade filhanteringsförfrågningar för Google Drive-integrering
+</item>
+        <item>
+Autentiserar och bearbetar användarförfrågningar för Dropbox-integrering
+</item>
+        <item>
+Autentiserar och bearbetar användarinitierade filhanteringsförfrågningar för S3-kompatibel molnlagring via den slutpunkt du konfigurerar
+</item>
+    </string-array>
+
+    <!-- Data retention (Section 8) -->
+    <string-array name="pp_retention_labels">
+        <item>
+Lokal appdata
+</item>
+        <item>
+Valvkrypteringsnycklar
+</item>
+        <item>
+Indexed File Metadata
+</item>
+        <item>
+Google Drive / OneDrive / Dropbox OAuth-tokens
+</item>
+        <item>
+S3 / S3-kompatibla åtkomstuppgifter
+</item>
+        <item>
+Firebase Analytics-data
+</item>
+    </string-array>
+    <string-array name="pp_retention_details">
+        <item>
+Tills du avinstallerar appen
+</item>
+        <item>
+Tills du avinstallerar appen
+</item>
+        <item>
+Tills den raderas via Inställningar -> Lagringsindexerare, eller tills appen avinstalleras
+</item>
+        <item>
+Tills du kopplar bort kontot i Inställningar, eller tills appen avinstalleras
+</item>
+        <item>
+Tills du tar bort S3-profilen i Inställningar, eller tills appen avinstalleras
+</item>
+        <item>
+14 månader (Googles standardlagringsperiod)
+</item>
+    </string-array>
+
+    <!-- Your rights (Section 9) -->
+    <string-array name="pp_rights">
+        <item>
+Få åtkomst till din lokalt lagrade data direkt via appen.
+</item>
+        <item>
+Ta bort data från valvet genom att ta bort objekt från valvet.
+</item>
+        <item>
+Hantera och ta bort indexerad filmetadata via Inställningar -> Lagringsindexerare.
+</item>
+        <item>
+Koppla från ditt Google Drive-, OneDrive- eller Dropbox-konto när som helst för att återkalla åtkomst och ta bort lagrade OAuth-tokens.
+</item>
+        <item>
+Ta bort dina S3 / S3-kompatibla lagringsprofiler när som helst via Inställningar för att radera de lagrade åtkomstuppgifterna.
+</item>
+        <item>
+Exportera dina filer med hjälp av dela- eller kopieringsfunktionerna.
+</item>
+        <item>
+Bevilja eller dra tillbaka samtycke till Firebase Analytics när som helst via Inställningar → Användningsanalys i appen; alternativt, använd din Android-enhetsinställningar.
+</item>
+    </string-array>
+
+    <!-- Delete steps (Section 8) -->
+    <string-array name="pp_delete_steps">
+        <item>
+Öppna Android-inställningar och gå till Appar.
+</item>
+        <item>
+Find and tap Ultimate File Manager Pro.
+</item>
+        <item>
+Tryck på Lagring → Rensa data, eller avinstallera helt enkelt appen.
+</item>
+    </string-array>
+
+    <!-- Play Store compliance table (Section 12) -->
+    <string-array name="pp_compliance_labels">
+        <item>
+Lagringsbehörigheter
+</item>
+        <item>
+Network Permissions
+</item>
+        <item>
+Network State
+</item>
+        <item>
+Multicast
+</item>
+        <item>
+Aviseringar
+</item>
+        <item>
+Installera paket
+</item>
+        <item>
+Elevated Access (Shizuku)
+</item>
+        <item>
+Förvaringsindexerare
+</item>
+        <item>
+Query Packages
+</item>
+        <item>
+Recensioner i appen
+</item>
+        <item>
+AVIF Image Support
+</item>
+        <item>
+Lottie Animations
+</item>
+    </string-array>
+    <string-array name="pp_compliance_details">
+        <item>
+File browsing and management
+</item>
+        <item>
+Remote file management, SMB/FTP/SFTP/SCP/NFS network shares, and device pairing over local Wi-Fi
+</item>
+        <item>
+VPN detection for Remote Management and network share connectivity
+</item>
+        <item>
+Lokal nätverksenhetsupptäckt (NSD/mDNS) för enhetsparning
+</item>
+        <item>
+Varningar om slutförande av drift och lagringsvarningar
+</item>
+        <item>
+APK installation from local storage
+</item>
+        <item>
+Avancerad filhantering i begränsade systemkataloger via Shizuku API
+</item>
+        <item>
+Indexes file metadata locally for fast search
+</item>
+        <item>
+App Manager and Debloater features — reads installed package names, versions, sizes, and system/user flags on-device only. Not uploaded or shared. The Debloater cross-references package names locally against a publicly available debloat reference list.
+</item>
+        <item>
+Google Play In-App Review API for collecting user feedback
+</item>
+        <item>
+Avkodar och visar AVIF-bilder i den inbyggda visningsprogrammet via avif-coder (io.github.awxkee) på API 24–30; API 31+ använder den inbyggda ImageDecoder
+</item>
+        <item>
+Återger smidiga UI-animationer i hela appen via Lottie-biblioteket v6.3.0 (com.airbnb.android:lottie)
+</item>
+    </string-array>
+
+
+    <!-- Contact (Section 14) -->
+    <string-array name="pp_contact_labels">
+        <item>
+E-post
+</item>
+    </string-array>
+    <string-array name="pp_contact_values">
+        <item>
+support@kilowatch.co.za
+</item>
+    </string-array>
+
+</resources>

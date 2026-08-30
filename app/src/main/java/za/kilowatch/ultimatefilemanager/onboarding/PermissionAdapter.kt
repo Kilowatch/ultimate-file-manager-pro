@@ -68,7 +68,18 @@ class PermissionAdapter(
 
             imgIcon.setImageResource(item.iconRes)
             txtTitle.text = context.getString(item.titleRes)
-            txtDesc.text = context.getString(item.descRes)
+            if (item.id == "storage_access" && item.status == PermissionStatus.GRANTED) {
+                val isAllFiles = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R &&
+                        android.os.Environment.isExternalStorageManager()
+                if (isAllFiles) {
+                    txtDesc.text = context.getString(R.string.settings_all_files_access_enabled)
+                } else {
+                    val count = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(context).size
+                    txtDesc.text = context.getString(R.string.selected_folders_count, count)
+                }
+            } else {
+                txtDesc.text = context.getString(item.descRes)
+            }
 
             if (isTv) {
                 val focusYellow = context.getColor(R.color.tv_button_focused_yellow)
@@ -124,13 +135,22 @@ class PermissionAdapter(
                     } else {
                         txtStatus.setTextColor(0xFF4ADE80.toInt())
                         txtStatus.setBackgroundResource(R.drawable.bg_status_badge_granted)
-                        btnGrant.isEnabled = false
-                        btnGrant.text = context.getString(R.string.status_granted)
-                        btnGrant.icon = ContextCompat.getDrawable(context, R.drawable.ic_check)
-                        btnGrant.iconTint = ColorStateList.valueOf(0xFF4ADE80.toInt())
-                        btnGrant.setTextColor(0xFF4ADE80.toInt())
-                        btnGrant.backgroundTintList = ColorStateList.valueOf(0x264ADE80)
-                        btnGrant.alpha = 1f
+                        if (item.id == "storage_access") {
+                            btnGrant.isEnabled = true
+                            btnGrant.text = context.getString(R.string.btn_manage)
+                            btnGrant.icon = null
+                            btnGrant.setTextColor(Color.WHITE)
+                            btnGrant.backgroundTintList = ColorStateList.valueOf(context.getColor(R.color.ufm_primary))
+                            btnGrant.alpha = 1f
+                        } else {
+                            btnGrant.isEnabled = false
+                            btnGrant.text = context.getString(R.string.status_granted)
+                            btnGrant.icon = ContextCompat.getDrawable(context, R.drawable.ic_check)
+                            btnGrant.iconTint = ColorStateList.valueOf(0xFF4ADE80.toInt())
+                            btnGrant.setTextColor(0xFF4ADE80.toInt())
+                            btnGrant.backgroundTintList = ColorStateList.valueOf(0x264ADE80)
+                            btnGrant.alpha = 1f
+                        }
                     }
                 }
                 PermissionStatus.DENIED -> {
@@ -189,12 +209,10 @@ class PermissionAdapter(
                 onGrantClick(item, bindingAdapterPosition)
             }
 
-            // On TV, clicking the focused card should also trigger grant
-            if (isTv) {
-                card.setOnClickListener {
-                    if (btnGrant.isEnabled) {
-                        onGrantClick(item, bindingAdapterPosition)
-                    }
+            // Clicking the card triggers grant if button is enabled or if storage_access
+            card.setOnClickListener {
+                if (btnGrant.isEnabled || item.id == "storage_access") {
+                    onGrantClick(item, bindingAdapterPosition)
                 }
             }
         }

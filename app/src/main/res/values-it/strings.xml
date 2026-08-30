@@ -13061,6 +13061,111 @@ Impostazioni di connessione ADB
     <string name="invalid_ip_or_port">
 Inserisci un indirizzo IP e una porta validi (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Accesso all\'archiviazione
+</string>
+    <string name="perm_storage_access_desc">
+Scegli Cartelle selezionate per la privacy o concedi l\'accesso a tutti i file per una gestione senza restrizioni del dispositivo.
+</string>
+    <string name="perm_choice_dialog_title">
+Accesso all\'archiviazione
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Scegli come UFM accede al tuo spazio di archiviazione. Puoi modificarlo in qualsiasi momento nelle Impostazioni.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Cartelle selezionate (consigliato)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Scegli solo le cartelle a cui UFM può accedere. Mantiene privati ​​gli altri tuoi file.
+</string>
+    <string name="perm_choice_all_files_title">
+Accesso a tutti i file (avanzato)
+</string>
+    <string name="perm_choice_all_files_desc">
+Accesso illimitato a tutti i file sul dispositivo per una gestione completa dei file.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Seleziona Cartelle di archiviazione
+</string>
+    <string name="dialog_setup_folders_desc">
+Scegli le cartelle sul tuo dispositivo a cui UFM può accedere e gestire.
+</string>
+    <string name="btn_add_another_folder">
++ Aggiungi cartella/file
+</string>
+    <string name="selected_folders_count">
+%1$d cartella/e selezionata/e
+</string>
+    <string name="no_folders_selected_hint">
+Nessuna cartella ancora aggiunta. Tocca \"+ Aggiungi cartella/file\" per scegliere le cartelle.
+</string>
+    <string name="btn_done">
+Fatto
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Aggiungi cartella/file
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Concedi l\'accesso a una cartella o a un file in questo spazio di archiviazione
+</string>
+    <string name="restricted_storage_empty_title">
+Nessuna cartella ancora aggiunta
+</string>
+    <string name="restricted_storage_empty_desc">
+Stai utilizzando la modalità cartelle selezionate. Aggiungi cartelle per accedervi e gestirle qui.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Abilita l\'accesso a tutti i file nelle Impostazioni
+</string>
+    <string name="storage_selected_folders_mode">
+Cartelle selezionate (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Accesso a tutti i file
+</string>
+    <string name="settings_all_files_access_enabled">
+Accesso completo allo spazio di archiviazione a livello di dispositivo abilitato
+</string>
+    <string name="settings_all_files_access_disabled">
+Modalità cartelle selezionate attiva (accesso limitato)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+È richiesto l\'accesso a tutti i file
+</string>
+    <string name="restricted_feature_dialog_desc">
+Questa funzionalità richiede l\'accesso illimitato allo spazio di archiviazione a livello di dispositivo. Puoi concedere l\'accesso a tutti i file in Impostazioni o continuare a utilizzare le cartelle selezionate.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Rimuovere l\'accesso alle cartelle?
+</string>
+    <string name="unmount_folder_confirm">
+Rimuovere l\'accesso a \"%1$s\" da questo spazio di archiviazione? Nessun file fisico verrà eliminato.
+</string>
+    <string name="unmount_folder_action">
+Rimuovi accesso
+</string>
+    <string name="folder_access_removed">
+Accesso alle cartelle rimosso
+</string>
+    <string name="indexing_saf_folder_started">
+Indicizzazione %1$s...
+</string>
+    <string name="btn_manage">
+Maneggio
+</string>
 </resources>
 
 

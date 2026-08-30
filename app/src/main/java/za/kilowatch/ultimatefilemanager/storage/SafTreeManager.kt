@@ -63,6 +63,56 @@ object SafTreeManager {
         invalidatePath(norm)
     }
 
+    fun hasAnyPersistedPermission(context: Context): Boolean {
+        return try {
+            context.contentResolver.persistedUriPermissions.any { it.isReadPermission }
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    fun getGrantedPathsForStorage(context: Context, storageMountPath: String): List<String> {
+        val cleanRoot = normalizePath(storageMountPath).trimEnd('/')
+        val list = mutableListOf<String>()
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        for ((path, uriStr) in prefs.all) {
+            if (uriStr is String) {
+                val norm = normalizePath(path)
+                if (norm == cleanRoot || norm.startsWith("$cleanRoot/")) {
+                    list.add(norm)
+                }
+            }
+        }
+        val locations = SafLocationRepository.getLocationsForStorage(context, storageMountPath)
+        for (loc in locations) {
+            val p = loc.getDisplayPath().trimEnd('/')
+            if (p.isNotEmpty()) {
+                list.add(p)
+            }
+        }
+        return list.distinct()
+    }
+
+    fun removeTreePermissionAndLocation(context: Context, pathOrSafUri: String): Boolean {
+        val norm = normalizePath(pathOrSafUri)
+        val locations = SafLocationRepository.getLocations(context)
+        val matchedLoc = locations.firstOrNull {
+            it.treeUriString == norm || it.getDisplayPath() == norm || "saf://${it.id}" == norm || norm.endsWith("/${it.id}")
+        }
+        if (matchedLoc != null) {
+            SafLocationRepository.removeLocation(context, matchedLoc.id)
+        }
+        val uriToRelease = getTreeUriForPath(context, norm)
+        if (uriToRelease != null) {
+            try {
+                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                context.contentResolver.releasePersistableUriPermission(uriToRelease, flags)
+            } catch (_: Exception) {}
+        }
+        removeTreePermission(context, norm)
+        return true
+    }
+
     fun hasTreePermissionForPath(context: Context, path: String): Boolean {
         val norm = normalizePath(path)
         if (norm.startsWith("saf://")) {

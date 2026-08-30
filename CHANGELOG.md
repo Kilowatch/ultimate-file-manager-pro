@@ -8,6 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.3] — 2026-08-27
 
 ### Added
+- **Swedish (Svenska) Language Support**:
+  - Added complete Swedish translation across the application (`values-sv/strings.xml` and `values-sv/strings_policy.xml`).
+  - Added official Sweden flag vector SVG (`se.svg`) to assets.
+  - Added Swedish (`LOCALE_SV`) to `LocaleHelper` and registered in `build.gradle.kts` (`resourceConfigurations`).
+  - Integrated Swedish into first-screen onboarding (`LanguageWelcomeActivity`) with automatic device system language detection and selection.
+  - Added Swedish option to `LanguageActivity` (Mobile & TV) and active language subtitle in `SettingsActivity`.
+  - Added Swedish selector item and JS mapping to the Remote File Server desktop web UI (`remote/index.html`).
+  - Added Swedish language option and flag to the Web Share portal (`WebShareServer`).
+  - Added Swedish language, Base64 flag, and 50 localized UI strings to the Windows Companion Console (`UFM-Windows/src/hooks/translations.ts`).
+- **Chinese (Simplified / 中文) Language Support**:
+  - Added complete Chinese translation across the application (`values-zh/strings.xml` and `values-zh/strings_policy.xml`).
+  - Added official China flag vector SVG (`cn.svg`) to assets.
+  - Added Chinese (`LOCALE_ZH`) to `LocaleHelper` and registered in `build.gradle.kts` (`resourceConfigurations`).
+  - Integrated Chinese into first-screen onboarding (`LanguageWelcomeActivity`) with automatic device system language detection and selection.
+  - Added Chinese option to `LanguageActivity` (Mobile & TV) and active language subtitle in `SettingsActivity`.
+  - Added Chinese selector item and JS mapping to the Remote File Server desktop web UI (`remote/index.html`).
+  - Added Chinese language option and flag to the Web Share portal (`WebShareServer`).
+  - Added Chinese language, Base64 flag, and 50 localized UI strings to the Windows Companion Console (`UFM-Windows/src/hooks/translations.ts`).
 - **Dutch (Nederlands) Language Support**:
   - Added complete Dutch translation across the application (`values-nl/strings.xml` and `values-nl/strings_policy.xml`).
   - Added official Netherlands flag vector SVG (`nl.svg`) to assets.
@@ -26,6 +44,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added Italian language selector item and JS mapping to the Remote File Server desktop web UI (`remote/index.html`).
   - Added Italian language option and flag to the Web Share portal (`WebShareServer`).
   - Added Italian language, Base64 flag, and complete localized UI strings to the Windows Companion Console (`UFM-Windows/src/hooks/translations.ts`).
+- **Optional All Files Access with Selected Folders (SAF Mode) on Mobile**:
+  - Optional "All Files Access" mode on mobile (Android 11+ / API 30+), allowing users to choose between Selected Folders (SAF) and unrestricted All Files Access.
+  - Multi-folder setup dialog in onboarding (`WelcomeActivity`) with scrollable folder list, count badge, and individual removal support.
+  - Interactive `+ Add Folder / File` action banner and empty-state prompts at storage roots when in Selected Folders mode.
+  - Dedicated "All Files Access" toggle card in Settings (`SettingsActivity`) with real-time `onResume` synchronization.
+  - Indexing support for granted SAF folders (internal storage, SD card, and USB) in `StorageIndexerActivity`.
+  - Guidance modal when accessing whole-device features (such as Storage Analyzer) while in restricted Selected Folders mode.
+
+### Changed
+- Storage root browsing in `FileBrowserActivity` and `FileBrowserFragment` automatically adapts between full device listing and granted SAF folders based on active permission status.
+- `+ Add Folder / File` button automatically hides when device-wide All Files Access is active, and re-appears if toggled off.
+
+### Fixed
+- **16 KB Page Size Device Compatibility (Zstandard)**: Upgraded `zstd-jni` from `1.5.7-12` to `1.5.7-16` (built with NDK r29 and 16 KB ELF segment alignment). Resolves the Google Play Console warning: *"Your app is compiled for 16 KB devices, but some of its libraries were compiled using an older Android NDK version that can still cause crashes (`libzstd-jni`)"*.
 
 ## [1.9.2] — 2026-08-25
 

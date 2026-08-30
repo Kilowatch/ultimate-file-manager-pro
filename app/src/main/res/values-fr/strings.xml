@@ -13061,6 +13061,111 @@ Paramètres de connexion BAD
     <string name="invalid_ip_or_port">
 Veuillez saisir une adresse IP et un port valides (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Accès au stockage
+</string>
+    <string name="perm_storage_access_desc">
+Choisissez Dossiers sélectionnés pour plus de confidentialité ou accordez l\'accès à tous les fichiers pour une gestion illimitée des appareils.
+</string>
+    <string name="perm_choice_dialog_title">
+Accès au stockage
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Choisissez comment UFM accède à votre stockage. Vous pouvez modifier cela à tout moment dans les paramètres.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Dossiers sélectionnés (recommandé)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Choisissez uniquement les dossiers auxquels UFM est autorisé à accéder. Garde vos autres fichiers privés.
+</string>
+    <string name="perm_choice_all_files_title">
+Accès à tous les fichiers (avancé)
+</string>
+    <string name="perm_choice_all_files_desc">
+Accès illimité à tous les fichiers de l\'appareil pour une gestion complète des fichiers.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Sélectionnez les dossiers de stockage
+</string>
+    <string name="dialog_setup_folders_desc">
+Choisissez les dossiers sur votre appareil que UFM est autorisé à accéder et à gérer.
+</string>
+    <string name="btn_add_another_folder">
++ Ajouter un dossier/fichier
+</string>
+    <string name="selected_folders_count">
+%1$d dossier(s) sélectionné(s)
+</string>
+    <string name="no_folders_selected_hint">
+Aucun dossier ajouté pour l\'instant. Appuyez sur \"+ Ajouter un dossier/fichier\" pour choisir les dossiers.
+</string>
+    <string name="btn_done">
+Fait
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Ajouter un dossier/fichier
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Accorder l\'accès à un dossier ou un fichier dans ce stockage
+</string>
+    <string name="restricted_storage_empty_title">
+Aucun dossier ajouté pour l\'instant
+</string>
+    <string name="restricted_storage_empty_desc">
+Vous utilisez le mode dossiers sélectionnés. Ajoutez des dossiers pour y accéder et gérez-les ici.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Activer l\'accès à tous les fichiers dans les paramètres
+</string>
+    <string name="storage_selected_folders_mode">
+Dossiers sélectionnés (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Accès à tous les fichiers
+</string>
+    <string name="settings_all_files_access_enabled">
+Accès complet au stockage sur l\'ensemble de l\'appareil activé
+</string>
+    <string name="settings_all_files_access_disabled">
+Mode dossiers sélectionnés actif (accès restreint)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+Accès à tous les fichiers requis
+</string>
+    <string name="restricted_feature_dialog_desc">
+Cette fonctionnalité nécessite un accès illimité au stockage à l’échelle de l’appareil. Vous pouvez accorder l\'accès à tous les fichiers dans Paramètres ou continuer à utiliser les dossiers sélectionnés.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Supprimer l\'accès aux dossiers ?
+</string>
+    <string name="unmount_folder_confirm">
+Supprimer l\'accès à \"%1$s\" de cet espace de stockage ? Aucun fichier physique ne sera supprimé.
+</string>
+    <string name="unmount_folder_action">
+Supprimer l\'accès
+</string>
+    <string name="folder_access_removed">
+Accès aux dossiers supprimé
+</string>
+    <string name="indexing_saf_folder_started">
+Indexation de %1$s...
+</string>
+    <string name="btn_manage">
+Gérer
+</string>
 </resources>
 
 

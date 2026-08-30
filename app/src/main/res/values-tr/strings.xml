@@ -13061,6 +13061,111 @@ ADB Bağlantı Ayarları
     <string name="invalid_ip_or_port">
 Lütfen geçerli bir IP adresi ve bağlantı noktası girin (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Depolama Erişimi
+</string>
+    <string name="perm_storage_access_desc">
+Gizlilik için Seçilen Klasörler\'i seçin veya sınırsız cihaz yönetimi için Tüm Dosyalara Erişim izni verin.
+</string>
+    <string name="perm_choice_dialog_title">
+Depolama Erişimi
+</string>
+    <string name="perm_choice_dialog_subtitle">
+UFM\'nin depolama alanınıza nasıl erişeceğini seçin. Bunu istediğiniz zaman Ayarlar\'dan değiştirebilirsiniz.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Seçilen Klasörler (Önerilen)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Yalnızca UFM\'nin erişmesine izin verilen klasörleri seçin. Diğer dosyalarınızı gizli tutar.
+</string>
+    <string name="perm_choice_all_files_title">
+Tüm Dosyalara Erişim (Gelişmiş)
+</string>
+    <string name="perm_choice_all_files_desc">
+Eksiksiz dosya yönetimi için cihazdaki tüm dosyalara sınırsız erişim.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Depolama Klasörlerini Seçin
+</string>
+    <string name="dialog_setup_folders_desc">
+Cihazınızda UFM\'nin erişmesine ve yönetmesine izin verilen klasörleri seçin.
+</string>
+    <string name="btn_add_another_folder">
++ Klasör / Dosya Ekle
+</string>
+    <string name="selected_folders_count">
+%1$d klasör seçildi
+</string>
+    <string name="no_folders_selected_hint">
+Henüz klasör eklenmedi. Klasörleri seçmek için \"+ Klasör / Dosya Ekle\"ye dokunun.
+</string>
+    <string name="btn_done">
+Tamamlamak
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Klasör / Dosya Ekle
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Bu depolama alanındaki bir klasöre veya dosyaya erişim izni verin
+</string>
+    <string name="restricted_storage_empty_title">
+Henüz Klasör Eklenmedi
+</string>
+    <string name="restricted_storage_empty_desc">
+Seçilen klasörler modunu kullanıyorsunuz. Erişmek ve yönetmek için klasörleri buraya ekleyin.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Ayarlar\'da Tüm Dosyalara Erişimi Etkinleştir
+</string>
+    <string name="storage_selected_folders_mode">
+Seçilen Klasörler (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Tüm Dosyalara Erişim
+</string>
+    <string name="settings_all_files_access_enabled">
+Cihaz çapında tam depolama erişimi etkinleştirildi
+</string>
+    <string name="settings_all_files_access_disabled">
+Seçilen klasörler modu etkin (sınırlı erişim)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+Tüm Dosyalara Erişim Gerekli
+</string>
+    <string name="restricted_feature_dialog_desc">
+Bu özellik, cihaz çapında sınırsız depolama erişimi gerektirir. Ayarlar\'da Tüm Dosyalara Erişim verebilir veya seçilen klasörleri kullanmaya devam edebilirsiniz.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Klasör Erişimi Kaldırılsın mı?
+</string>
+    <string name="unmount_folder_confirm">
+Bu depolama alanından \"%1$s\" erişimi kaldırılsın mı? Hiçbir fiziksel dosya silinmeyecektir.
+</string>
+    <string name="unmount_folder_action">
+Erişimi Kaldır
+</string>
+    <string name="folder_access_removed">
+Klasör erişimi kaldırıldı
+</string>
+    <string name="indexing_saf_folder_started">
+%1$s dizine ekleniyor...
+</string>
+    <string name="btn_manage">
+Üstesinden gelmek
+</string>
 </resources>
 
 

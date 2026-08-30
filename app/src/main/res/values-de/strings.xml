@@ -13061,6 +13061,111 @@ ADB-Verbindungseinstellungen
     <string name="invalid_ip_or_port">
 Bitte geben Sie eine gültige IP-Adresse und einen gültigen Port ein (1-65535).
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Speicherzugriff
+</string>
+    <string name="perm_storage_access_desc">
+Wählen Sie „Ausgewählte Ordner“ aus Datenschutzgründen oder gewähren Sie „Alle Dateien Zugriff“ für eine uneingeschränkte Geräteverwaltung.
+</string>
+    <string name="perm_choice_dialog_title">
+Speicherzugriff
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Wählen Sie, wie UFM auf Ihren Speicher zugreift. Sie können dies jederzeit in den Einstellungen ändern.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Ausgewählte Ordner (empfohlen)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Wählen Sie nur die Ordner aus, auf die UFM zugreifen darf. Hält Ihre anderen Dateien privat.
+</string>
+    <string name="perm_choice_all_files_title">
+Zugriff auf alle Dateien (erweitert)
+</string>
+    <string name="perm_choice_all_files_desc">
+Uneingeschränkter Zugriff auf alle Dateien auf dem Gerät für eine vollständige Dateiverwaltung.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Wählen Sie Speicherordner
+</string>
+    <string name="dialog_setup_folders_desc">
+Wählen Sie die Ordner auf Ihrem Gerät aus, auf die UFM zugreifen und diese verwalten darf.
+</string>
+    <string name="btn_add_another_folder">
++ Ordner/Datei hinzufügen
+</string>
+    <string name="selected_folders_count">
+%1$d Ordner ausgewählt
+</string>
+    <string name="no_folders_selected_hint">
+Es wurden noch keine Ordner hinzugefügt. Tippen Sie auf „+ Ordner/Datei hinzufügen“, um Ordner auszuwählen.
+</string>
+    <string name="btn_done">
+Erledigt
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Ordner/Datei hinzufügen
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Gewähren Sie Zugriff auf einen Ordner oder eine Datei in diesem Speicher
+</string>
+    <string name="restricted_storage_empty_title">
+Noch keine Ordner hinzugefügt
+</string>
+    <string name="restricted_storage_empty_desc">
+Sie verwenden den Modus „Ausgewählte Ordner“. Fügen Sie hier Ordner hinzu, um darauf zuzugreifen und sie zu verwalten.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Aktivieren Sie den Zugriff auf alle Dateien in den Einstellungen
+</string>
+    <string name="storage_selected_folders_mode">
+Ausgewählte Ordner (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Zugriff auf alle Dateien
+</string>
+    <string name="settings_all_files_access_enabled">
+Vollständiger geräteweiter Speicherzugriff aktiviert
+</string>
+    <string name="settings_all_files_access_disabled">
+Modus „Ausgewählte Ordner“ aktiv (eingeschränkter Zugriff)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+Zugriff auf alle Dateien erforderlich
+</string>
+    <string name="restricted_feature_dialog_desc">
+Diese Funktion erfordert uneingeschränkten geräteweiten Speicherzugriff. Sie können in den Einstellungen Zugriff auf alle Dateien gewähren oder ausgewählte Ordner weiterhin verwenden.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Ordnerzugriff entfernen?
+</string>
+    <string name="unmount_folder_confirm">
+Zugriff auf „%1$s“ aus diesem Speicher entfernen? Es werden keine physischen Dateien gelöscht.
+</string>
+    <string name="unmount_folder_action">
+Zugriff entfernen
+</string>
+    <string name="folder_access_removed">
+Ordnerzugriff entfernt
+</string>
+    <string name="indexing_saf_folder_started">
+Indizierung von %1$s...
+</string>
+    <string name="btn_manage">
+Verwalten
+</string>
 </resources>
 
 

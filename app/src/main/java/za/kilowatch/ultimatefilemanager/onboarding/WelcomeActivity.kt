@@ -27,6 +27,18 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.provider.DocumentsContract
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import za.kilowatch.ultimatefilemanager.indexing.FileIndexingService
+import za.kilowatch.ultimatefilemanager.storage.SafLocation
+import za.kilowatch.ultimatefilemanager.storage.SafLocationRepository
+import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
+import za.kilowatch.ultimatefilemanager.util.GoRoLog
+
 /**
  * Welcome/Onboarding screen that guides the user through granting
  * the required permissions for the file manager to function.
@@ -44,6 +56,17 @@ class WelcomeActivity : AppCompatActivity() {
 
     private var currentPermissionIndex = -1
     private var isTv = false
+
+    private var pendingFolderSetupAdapter: SelectedFoldersAdapter? = null
+    private var pendingFolderSetupDialog: AlertDialog? = null
+
+    // Launcher for SAF directory picker during onboarding
+    private val folderPickerLauncher: ActivityResultLauncher<Uri?> =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri: Uri? ->
+            if (uri != null) {
+                handleOnboardingFolderPicked(uri)
+            }
+        }
 
     // Launcher for standard runtime permissions
     private val permissionLauncher: ActivityResultLauncher<Array<String>> =
@@ -150,18 +173,13 @@ class WelcomeActivity : AppCompatActivity() {
      */
     private fun requestPermissionForItem(item: PermissionItem) {
         when {
+            // Storage Access (Mobile API 30+): Choice between Selected Folders and All Files Access
+            item.id == "storage_access" -> {
+                showStorageAccessChoiceDialog()
+            }
             // MANAGE_EXTERNAL_STORAGE — open Settings
             item.id == "all_files" && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
-                try {
-                    val intent = Intent(
-                        Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                        Uri.parse("package:$packageName")
-                    )
-                    settingsLauncher.launch(intent)
-                } catch (_: Exception) {
-                    // Specific settings page doesn't exist — open app details
-                    openAppDetailsSettings()
-                }
+                requestAllFilesSettings()
             }
             // QUERY_ALL_PACKAGES — manifest-only, open app details as fallback
             item.id == "query_apps" -> {
@@ -184,6 +202,163 @@ class WelcomeActivity : AppCompatActivity() {
             // Standard runtime permissions
             else -> {
                 permissionLauncher.launch(item.permissions.toTypedArray())
+            }
+        }
+    }
+
+    private fun handleOnboardingFolderPicked(uri: Uri) {
+        val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        try {
+            contentResolver.takePersistableUriPermission(uri, flags)
+        } catch (e: Exception) {
+            GoRoLog.w("WelcomeActivity", "Failed to take persistable URI permission: ${e.message}")
+        }
+
+        val authority = uri.authority ?: ""
+        val doc = androidx.documentfile.provider.DocumentFile.fromTreeUri(this, uri)
+        val defaultName = doc?.name ?: getString(R.string.storage_location_saf_default_name)
+        val docId = try {
+            DocumentsContract.getTreeDocumentId(uri)
+        } catch (_: Exception) { "" }
+
+        val newLocation = SafLocation(
+            displayName = defaultName,
+            treeUriString = uri.toString(),
+            authority = authority,
+            rootDocId = docId,
+            iconType = "folder"
+        )
+        SafLocationRepository.addLocation(this, newLocation)
+        val resolvedPath = newLocation.getDisplayPath()
+        if (resolvedPath.isNotEmpty()) {
+            SafTreeManager.saveTreePermission(this, resolvedPath, uri)
+            val storageId = if (resolvedPath.startsWith("/storage/emulated/0")) "internal" else "external"
+            FileIndexingService.getInstance(this).startFirstTimeIndex(storageId, resolvedPath, storageId)
+        }
+
+        val locations = SafLocationRepository.getLocations(this)
+        pendingFolderSetupAdapter?.submitList(locations)
+        updateFolderSetupDialogViews(locations)
+        refreshPermissionStatuses()
+    }
+
+    private fun handleOnboardingFolderRemoved(loc: SafLocation) {
+        SafTreeManager.removeTreePermissionAndLocation(this, loc.treeUriString)
+        val updated = SafLocationRepository.getLocations(this)
+        pendingFolderSetupAdapter?.submitList(updated)
+        updateFolderSetupDialogViews(updated)
+        refreshPermissionStatuses()
+    }
+
+    private fun showSelectedFoldersSetupDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_selected_folders_setup, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        pendingFolderSetupDialog = dialog
+
+        val recycler = dialogView.findViewById<RecyclerView>(R.id.recyclerSelectedFolders)
+        val btnAdd = dialogView.findViewById<View>(R.id.btnAddFolder)
+        val btnDone = dialogView.findViewById<View>(R.id.btnDoneSetup)
+        val btnAllFiles = dialogView.findViewById<View>(R.id.btnAllFilesFallback)
+
+        val adapter = SelectedFoldersAdapter { loc ->
+            handleOnboardingFolderRemoved(loc)
+        }
+        pendingFolderSetupAdapter = adapter
+
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = adapter
+
+        val currentLocations = SafLocationRepository.getLocations(this)
+        adapter.submitList(currentLocations)
+        updateFolderSetupDialogViews(currentLocations)
+
+        btnAdd.setOnClickListener {
+            folderPickerLauncher.launch(null)
+        }
+
+        btnDone.setOnClickListener {
+            dialog.dismiss()
+            refreshPermissionStatuses()
+        }
+
+        btnAllFiles.setOnClickListener {
+            dialog.dismiss()
+            requestAllFilesSettings()
+        }
+
+        dialog.setOnDismissListener {
+            pendingFolderSetupDialog = null
+            pendingFolderSetupAdapter = null
+            refreshPermissionStatuses()
+        }
+
+        dialog.show()
+
+        if (currentLocations.isEmpty()) {
+            folderPickerLauncher.launch(null)
+        }
+    }
+
+    private fun updateFolderSetupDialogViews(locations: List<SafLocation>) {
+        pendingFolderSetupDialog?.let { dialog ->
+            val txtCount = dialog.findViewById<TextView>(R.id.txtSelectedCount)
+            val txtHint = dialog.findViewById<TextView>(R.id.txtNoFoldersHint)
+            val recycler = dialog.findViewById<RecyclerView>(R.id.recyclerSelectedFolders)
+
+            if (locations.isEmpty()) {
+                txtCount?.visibility = View.GONE
+                txtHint?.visibility = View.VISIBLE
+                recycler?.visibility = View.GONE
+            } else {
+                txtCount?.visibility = View.VISIBLE
+                txtCount?.text = getString(R.string.selected_folders_count, locations.size)
+                txtHint?.visibility = View.GONE
+                recycler?.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun showStorageAccessChoiceDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_storage_access_choice, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialogView.findViewById<View>(R.id.cardChoiceSelectedFolders)?.setOnClickListener {
+            dialog.dismiss()
+            showSelectedFoldersSetupDialog()
+        }
+
+        dialogView.findViewById<View>(R.id.cardChoiceAllFiles)?.setOnClickListener {
+            dialog.dismiss()
+            requestAllFilesSettings()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancelChoice)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun requestAllFilesSettings() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                    Uri.parse("package:$packageName")
+                )
+                settingsLauncher.launch(intent)
+            } catch (_: Exception) {
+                openAppDetailsSettings()
             }
         }
     }
@@ -243,6 +418,15 @@ class WelcomeActivity : AppCompatActivity() {
      */
     private fun checkPermissionStatus(item: PermissionItem): PermissionStatus {
         return when {
+            item.id == "storage_access" -> {
+                val allFilesGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Environment.isExternalStorageManager()
+                } else false
+                val safGranted = SafTreeManager.hasAnyPersistedPermission(this) ||
+                        SafLocationRepository.getLocations(this).isNotEmpty()
+                if (allFilesGranted || safGranted) PermissionStatus.GRANTED
+                else PermissionStatus.NOT_REQUESTED
+            }
             item.id == "all_files" && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
                 if (Environment.isExternalStorageManager()) PermissionStatus.GRANTED
                 else PermissionStatus.NOT_REQUESTED

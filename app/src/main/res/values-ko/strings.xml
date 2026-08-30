@@ -13061,6 +13061,111 @@ ADB 연결 설정
     <string name="invalid_ip_or_port">
 유효한 IP 주소와 포트(1-65535)를 입력하세요.
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+저장소 액세스
+</string>
+    <string name="perm_storage_access_desc">
+개인정보 보호를 위해 선택한 폴더를 선택하거나 무제한 장치 관리를 위해 모든 파일 액세스 권한을 부여하세요.
+</string>
+    <string name="perm_choice_dialog_title">
+저장소 액세스
+</string>
+    <string name="perm_choice_dialog_subtitle">
+UFM이 스토리지에 액세스하는 방법을 선택하세요. 설정에서 언제든지 변경할 수 있습니다.
+</string>
+    <string name="perm_choice_selected_folders_title">
+선택한 폴더(권장)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+UFM이 접근할 수 있는 폴더만 선택하세요. 다른 파일을 비공개로 유지합니다.
+</string>
+    <string name="perm_choice_all_files_title">
+모든 파일 액세스(고급)
+</string>
+    <string name="perm_choice_all_files_desc">
+완전한 파일 관리를 위해 장치의 모든 파일에 대한 무제한 액세스.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+저장소 폴더 선택
+</string>
+    <string name="dialog_setup_folders_desc">
+UFM이 액세스하고 관리할 수 있는 장치의 폴더를 선택하세요.
+</string>
+    <string name="btn_add_another_folder">
++ 폴더/파일 추가
+</string>
+    <string name="selected_folders_count">
+%1$d 폴더가 선택됨
+</string>
+    <string name="no_folders_selected_hint">
+아직 추가된 폴더가 없습니다. 폴더를 선택하려면 \"+ 폴더/파일 추가\"를 탭하세요.
+</string>
+    <string name="btn_done">
+완료
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ 폴더/파일 추가
+</string>
+    <string name="action_add_folder_to_storage_desc">
+이 저장소의 폴더 또는 파일에 대한 액세스 권한을 부여하세요.
+</string>
+    <string name="restricted_storage_empty_title">
+아직 추가된 폴더가 없습니다.
+</string>
+    <string name="restricted_storage_empty_desc">
+선택한 폴더 모드를 사용하고 있습니다. 여기에 액세스하고 관리할 폴더를 추가하세요.
+</string>
+    <string name="restricted_storage_grant_all_files">
+설정에서 모든 파일 액세스 활성화
+</string>
+    <string name="storage_selected_folders_mode">
+선택한 폴더(%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+모든 파일 액세스
+</string>
+    <string name="settings_all_files_access_enabled">
+전체 기기 전체의 저장소 액세스가 활성화되었습니다.
+</string>
+    <string name="settings_all_files_access_disabled">
+선택한 폴더 모드 활성화(액세스 제한)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+모든 파일 액세스 필요
+</string>
+    <string name="restricted_feature_dialog_desc">
+이 기능을 사용하려면 기기 전체에서 무제한 저장소 액세스가 필요합니다. 설정에서 모든 파일 액세스 권한을 부여하거나 선택한 폴더를 계속 사용할 수 있습니다.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+폴더 액세스를 삭제하시겠습니까?
+</string>
+    <string name="unmount_folder_confirm">
+이 저장소에서 \'%1$s\'에 대한 액세스 권한을 삭제하시겠습니까? 실제 파일은 삭제되지 않습니다.
+</string>
+    <string name="unmount_folder_action">
+액세스 삭제
+</string>
+    <string name="folder_access_removed">
+폴더 액세스가 삭제되었습니다.
+</string>
+    <string name="indexing_saf_folder_started">
+%1$s 색인 생성 중...
+</string>
+    <string name="btn_manage">
+관리하다
+</string>
 </resources>
 
 

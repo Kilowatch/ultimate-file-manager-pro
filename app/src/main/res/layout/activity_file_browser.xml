@@ -377,6 +377,38 @@
         <View android:id="@+id/btnDelete" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
     </LinearLayout>
 
+    <!-- Restricted Storage Mode Header: + Add Folder / File button -->
+    <LinearLayout
+        android:id="@+id/layoutRestrictedAddFolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="8dp"
+        android:background="@color/mobile_glass_header"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutBreadcrumbsScroll"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRestrictedAddFolder"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="@string/action_add_folder_to_storage"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-bold"
+            app:icon="@drawable/ic_add"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:cornerRadius="12dp"
+            app:strokeColor="?attr/colorPrimary"
+            android:textColor="?attr/colorPrimary"
+            app:iconTint="?attr/colorPrimary" />
+    </LinearLayout>
+
     <!-- File List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFiles"
@@ -384,7 +416,7 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingVertical="@dimen/margin_xs"
-        app:layout_constraintTop_toBottomOf="@id/layoutBreadcrumbsScroll"
+        app:layout_constraintTop_toBottomOf="@id/layoutRestrictedAddFolder"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

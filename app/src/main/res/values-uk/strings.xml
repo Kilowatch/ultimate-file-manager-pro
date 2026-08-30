@@ -13061,6 +13061,111 @@ ADB підключено
     <string name="invalid_ip_or_port">
 Введіть дійсну IP-адресу та порт (1-65535)
 </string>
+
+    <!-- Storage Access Permission & Selected Folders Mode -->
+    <string name="perm_storage_access_title">
+Доступ до сховища
+</string>
+    <string name="perm_storage_access_desc">
+Виберіть «Вибрані папки» для конфіденційності або надайте доступ до всіх файлів для необмеженого керування пристроєм.
+</string>
+    <string name="perm_choice_dialog_title">
+Доступ до сховища
+</string>
+    <string name="perm_choice_dialog_subtitle">
+Виберіть спосіб доступу UFM до вашого сховища. Ви можете будь-коли змінити це в налаштуваннях.
+</string>
+    <string name="perm_choice_selected_folders_title">
+Вибрані папки (рекомендовано)
+</string>
+    <string name="perm_choice_selected_folders_desc">
+Виберіть лише ті папки, до яких UFM має доступ. Зберігає ваші інші файли конфіденційними.
+</string>
+    <string name="perm_choice_all_files_title">
+Доступ до всіх файлів (розширений)
+</string>
+    <string name="perm_choice_all_files_desc">
+Необмежений доступ до всіх файлів на пристрої для повного керування файлами.
+</string>
+
+    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <string name="dialog_setup_folders_title">
+Виберіть Папки зберігання
+</string>
+    <string name="dialog_setup_folders_desc">
+Виберіть папки на своєму пристрої, до яких UFM має доступ і керує ними.
+</string>
+    <string name="btn_add_another_folder">
++ Додати папку / файл
+</string>
+    <string name="selected_folders_count">
+Вибрано %1$d папку(и).
+</string>
+    <string name="no_folders_selected_hint">
+Папки ще не додано. Натисніть «+ Додати папку / файл», щоб вибрати папки.
+</string>
+    <string name="btn_done">
+Готово
+</string>
+
+    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <string name="action_add_folder_to_storage">
++ Додати папку / файл
+</string>
+    <string name="action_add_folder_to_storage_desc">
+Надайте доступ до папки або файлу в цьому сховищі
+</string>
+    <string name="restricted_storage_empty_title">
+Папки ще не додано
+</string>
+    <string name="restricted_storage_empty_desc">
+Ви використовуєте режим вибраних папок. Додайте папки для доступу та керування ними тут.
+</string>
+    <string name="restricted_storage_grant_all_files">
+Увімкніть доступ до всіх файлів у налаштуваннях
+</string>
+    <string name="storage_selected_folders_mode">
+Вибрані папки (%1$d)
+</string>
+
+    <!-- Settings Switch for All Files Access -->
+    <string name="settings_all_files_access_title">
+Доступ до всіх файлів
+</string>
+    <string name="settings_all_files_access_enabled">
+Увімкнено повний доступ до сховища на всьому пристрої
+</string>
+    <string name="settings_all_files_access_disabled">
+Режим вибраних папок активний (обмежений доступ)
+</string>
+
+    <!-- Feature Gating Guidance Dialog -->
+    <string name="restricted_feature_dialog_title">
+Потрібен доступ до всіх файлів
+</string>
+    <string name="restricted_feature_dialog_desc">
+Для цієї функції потрібен необмежений доступ до пам’яті всього пристрою. Ви можете надати доступ до всіх файлів у налаштуваннях або продовжити використання вибраних папок.
+</string>
+
+    <!-- Unmount / Remove Folder Access -->
+    <string name="unmount_folder_title">
+Скасувати доступ до папки?
+</string>
+    <string name="unmount_folder_confirm">
+Скасувати доступ до \"%1$s\" із цього сховища? Жодні фізичні файли не будуть видалені.
+</string>
+    <string name="unmount_folder_action">
+Видалити доступ
+</string>
+    <string name="folder_access_removed">
+Доступ до папки видалено
+</string>
+    <string name="indexing_saf_folder_started">
+Індексація %1$s...
+</string>
+    <string name="btn_manage">
+Керувати
+</string>
 </resources>
 
 

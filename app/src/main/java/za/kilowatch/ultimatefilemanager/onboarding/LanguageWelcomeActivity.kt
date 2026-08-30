@@ -55,6 +55,8 @@ class LanguageWelcomeActivity : AppCompatActivity() {
         LanguageItem(LocaleHelper.LOCALE_HI, "Hindi", "हिन्दी", "in.svg"),
         LanguageItem(LocaleHelper.LOCALE_JA, "Japanese", "日本語", "jp.svg"),
         LanguageItem(LocaleHelper.LOCALE_KO, "Korean", "한국어", "kr.svg"),
+        LanguageItem(LocaleHelper.LOCALE_ZH, "Chinese", "中文", "cn.svg"),
+        LanguageItem(LocaleHelper.LOCALE_SV, "Swedish", "Svenska", "se.svg"),
         LanguageItem(LocaleHelper.LOCALE_UK, "Ukrainian", "Українська", "ua.svg")
     )
 
