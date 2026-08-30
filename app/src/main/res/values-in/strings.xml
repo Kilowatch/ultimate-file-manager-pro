@@ -50,6 +50,12 @@ Italian (Italiano)
     <string name="language_dutch">
 Dutch (Nederlands)
 </string>
+    <string name="language_chinese">
+Chinese (中文)
+</string>
+    <string name="language_swedish">
+Swedish (Svenska)
+</string>
     <string name="select_language">
 Pilih Bahasa
 </string>
@@ -4276,7 +4282,7 @@ Jangan tampilkan lagi
 </string>
     <string name="tv_pairing_subtitle">
 Tautkan TV Anda menggunakan perangkat seluler Anda
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. Di ponsel Anda, buka \"TV yang Dipasangkan\"
 </string>
@@ -13087,8 +13093,11 @@ All Files Access (Advanced)
     <string name="perm_choice_all_files_desc">
 Unrestricted access to all files on the device for complete file management.
 </string>
+    <string name="perm_switch_to_all_files">
+Switch to All Files Access (Advanced)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Select Storage Folders
 </string>
@@ -13096,24 +13105,39 @@ Select Storage Folders
 Choose the folders on your device UFM is allowed to access and manage.
 </string>
     <string name="btn_add_another_folder">
-+ Add Folder / File
+Add Folder
 </string>
     <string name="selected_folders_count">
 %1$d folder(s) selected
 </string>
     <string name="no_folders_selected_hint">
-No folders added yet. Tap \"+ Add Folder / File\" to choose folders.
+No folders added yet. Tap \"Add Folder\" to choose folders.
 </string>
     <string name="btn_done">
 Done
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Add Folder / File
+Add Folder
 </string>
     <string name="action_add_folder_to_storage_desc">
-Grant access to a folder or file in this storage
+Grant access to a folder in this storage
+</string>
+    <string name="action_remove_folder_from_storage">
+Remove Folder
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remove mounted folder access from this storage
+</string>
+    <string name="dialog_remove_folders_title">
+Remove Mounted Folders
+</string>
+    <string name="dialog_remove_folders_desc">
+Select a folder to remove access from this storage. Your files will not be deleted.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 No Folders Added Yet

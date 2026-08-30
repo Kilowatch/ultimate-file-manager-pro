@@ -2,7 +2,9 @@ package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.storage.StorageManager
 import android.view.View
 import android.widget.ImageView
@@ -124,47 +126,76 @@ class StorageIndexerActivity : AppCompatActivity() {
                 val items = mutableListOf<StorageItem>()
                 val repo = IndexingRepository.getInstance(this@StorageIndexerActivity)
                 
-                // 1. Local Storage
-                val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
-                sm.storageVolumes.forEach { volume ->
-                    val path = if (volume.isPrimary) "/storage/emulated/0" else "/storage/${volume.uuid}"
-                    if (path != "/storage/null") {
-                        val storageId = IndexingRepository.resolveStorageForPath(path).first
-                        val isIndexed = repo.isStorageFullyIndexed(storageId)
-                        val count = if (isIndexed) repo.getFileCount(storageId) else 0L
+                val isRestricted = !DeviceUtils.isTvDevice(this@StorageIndexerActivity) &&
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                        !Environment.isExternalStorageManager()
 
-                        items.add(StorageItem(
-                            id = storageId,
-                            label = volume.getDescription(this@StorageIndexerActivity),
-                            iconRes = StorageItem.iconForType(volume.isRemovable, volume.getDescription(this@StorageIndexerActivity)),
-                            totalBytes = 0,
-                            usedBytes = 0,
-                            mountPath = path,
-                            isIndexed = isIndexed,
-                            indexedFileCount = count
-                        ))
+                if (isRestricted) {
+                    val safLocations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this@StorageIndexerActivity)
+                    val addedPaths = mutableSetOf<String>()
+                    for (loc in safLocations) {
+                        val p = if (loc.isStandalone) "saf://${loc.id}" else loc.getDisplayPath()
+                        if (p.isNotEmpty() && addedPaths.add(p)) {
+                            val storageId = "saf_${loc.id}"
+                            val isIndexed = repo.isStorageFullyIndexed(storageId)
+                            val count = if (isIndexed) repo.getFileCount(storageId) else 0L
+                            items.add(StorageItem(
+                                id = storageId,
+                                label = loc.displayName.ifEmpty { p.substringAfterLast('/') },
+                                iconRes = if (loc.isStandalone) R.drawable.ic_terminal else R.drawable.ic_folder,
+                                totalBytes = 0,
+                                usedBytes = 0,
+                                mountPath = p,
+                                isIndexed = isIndexed,
+                                indexedFileCount = count
+                            ))
+                        }
                     }
-                }
+                } else {
+                    // 1. Local Storage
+                    val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
+                    sm.storageVolumes.forEach { volume ->
+                        val path = if (volume.isPrimary) "/storage/emulated/0" else "/storage/${volume.uuid}"
+                        if (path != "/storage/null" && volume.state == Environment.MEDIA_MOUNTED) {
+                            val storageId = IndexingRepository.resolveStorageForPath(path).first
+                            val isIndexed = repo.isStorageFullyIndexed(storageId)
+                            val count = if (isIndexed) repo.getFileCount(storageId) else 0L
 
-                // 2. Granted SAF Folders (Local, SD card, USB)
-                val safLocations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this@StorageIndexerActivity)
-                val addedPaths = mutableSetOf<String>()
-                for (loc in safLocations) {
-                    val p = loc.getDisplayPath()
-                    if (p.isNotEmpty() && addedPaths.add(p)) {
-                        val storageId = IndexingRepository.resolveStorageForPath(p).first
-                        val isIndexed = repo.isStorageFullyIndexed(storageId) || repo.getFileCount(storageId) > 0
-                        val count = repo.getFileCount(storageId)
-                        items.add(StorageItem(
-                            id = storageId,
-                            label = loc.displayName.ifEmpty { p.substringAfterLast('/') },
-                            iconRes = R.drawable.ic_folder,
-                            totalBytes = 0,
-                            usedBytes = 0,
-                            mountPath = p,
-                            isIndexed = isIndexed,
-                            indexedFileCount = count
-                        ))
+                            items.add(StorageItem(
+                                id = storageId,
+                                label = volume.getDescription(this@StorageIndexerActivity),
+                                iconRes = StorageItem.iconForType(volume.isRemovable, volume.getDescription(this@StorageIndexerActivity)),
+                                totalBytes = 0,
+                                usedBytes = 0,
+                                mountPath = path,
+                                isIndexed = isIndexed,
+                                indexedFileCount = count
+                            ))
+                        }
+                    }
+
+                    // 2. Standalone SAF Folders
+                    val safLocations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this@StorageIndexerActivity)
+                    val addedPaths = mutableSetOf<String>()
+                    for (loc in safLocations) {
+                        if (loc.isStandalone) {
+                            val p = "saf://${loc.id}"
+                            if (addedPaths.add(p)) {
+                                val storageId = "saf_${loc.id}"
+                                val isIndexed = repo.isStorageFullyIndexed(storageId)
+                                val count = if (isIndexed) repo.getFileCount(storageId) else 0L
+                                items.add(StorageItem(
+                                    id = storageId,
+                                    label = loc.displayName.ifEmpty { "SAF Storage" },
+                                    iconRes = R.drawable.ic_terminal,
+                                    totalBytes = 0,
+                                    usedBytes = 0,
+                                    mountPath = p,
+                                    isIndexed = isIndexed,
+                                    indexedFileCount = count
+                                ))
+                            }
+                        }
                     }
                 }
 
@@ -235,6 +266,7 @@ class StorageIndexerActivity : AppCompatActivity() {
         
         val storageType = when {
             storage.isNetworkRoot -> "NETWORK"
+            storage.mountPath.startsWith("saf://") || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, storage.mountPath) -> "SAF"
             else -> "LOCAL"
         }
         showIndexingProgressDialog(storage, storage.id, storageType)

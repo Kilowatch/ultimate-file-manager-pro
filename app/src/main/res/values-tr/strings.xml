@@ -50,6 +50,12 @@ Ukraynaca (українська)
     <string name="language_dutch">
 Felemenkçe (Hollanda)
 </string>
+    <string name="language_chinese">
+Çince (中文)
+</string>
+    <string name="language_swedish">
+İsveççe (Svenska)
+</string>
     <string name="select_language">
 Dil Seçin
 </string>
@@ -4276,7 +4282,7 @@ Bunu bir daha gösterme
 </string>
     <string name="tv_pairing_subtitle">
 Mobil cihazınızı kullanarak TV\'nizi bağlayın
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. Telefonunuzda \"Eşleştirilmiş TV\'ler\" bölümüne gidin
 </string>
@@ -13087,8 +13093,11 @@ Tüm Dosyalara Erişim (Gelişmiş)
     <string name="perm_choice_all_files_desc">
 Eksiksiz dosya yönetimi için cihazdaki tüm dosyalara sınırsız erişim.
 </string>
+    <string name="perm_switch_to_all_files">
+Tüm Dosya Erişimine Geç (Gelişmiş)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Depolama Klasörlerini Seçin
 </string>
@@ -13096,24 +13105,39 @@ Depolama Klasörlerini Seçin
 Cihazınızda UFM\'nin erişmesine ve yönetmesine izin verilen klasörleri seçin.
 </string>
     <string name="btn_add_another_folder">
-+ Klasör / Dosya Ekle
+Klasör Ekle
 </string>
     <string name="selected_folders_count">
 %1$d klasör seçildi
 </string>
     <string name="no_folders_selected_hint">
-Henüz klasör eklenmedi. Klasörleri seçmek için \"+ Klasör / Dosya Ekle\"ye dokunun.
+Henüz klasör eklenmedi. Klasörleri seçmek için \"Klasör Ekle\"ye dokunun.
 </string>
     <string name="btn_done">
 Tamamlamak
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Klasör / Dosya Ekle
+Klasör Ekle
 </string>
     <string name="action_add_folder_to_storage_desc">
-Bu depolama alanındaki bir klasöre veya dosyaya erişim izni verin
+Bu depolama alanındaki bir klasöre erişim izni verin
+</string>
+    <string name="action_remove_folder_from_storage">
+Klasörü Kaldır
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Bu depolama alanından takılı klasör erişimini kaldır
+</string>
+    <string name="dialog_remove_folders_title">
+Takılı Klasörleri Kaldır
+</string>
+    <string name="dialog_remove_folders_desc">
+Bu depolama alanından erişimi kaldırmak için bir klasör seçin. Dosyalarınız silinmeyecektir.
+</string>
+    <string name="no_mounted_folders_hint">
+Bu depolama alanı için takılı klasör kalmadı.
 </string>
     <string name="restricted_storage_empty_title">
 Henüz Klasör Eklenmedi

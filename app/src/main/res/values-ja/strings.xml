@@ -50,6 +50,12 @@ Ultimate File Manager Pro
     <string name="language_dutch">
 オランダ語 (オランダ)
 </string>
+    <string name="language_chinese">
+中国語 (中文)
+</string>
+    <string name="language_swedish">
+スウェーデン語 (スヴェンスカ)
+</string>
     <string name="select_language">
 言語を選択
 </string>
@@ -4276,7 +4282,7 @@ TVで「モバイルアプリをリンク」を選択して、4桁のPINを取�
 </string>
     <string name="tv_pairing_subtitle">
 モバイルデバイスを使用してテレビをリンク
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. スマートフォンで「ペアリング済みのテレビ」に移動
 </string>
@@ -13087,8 +13093,11 @@ UFM がアクセスを許可されているフォルダーのみを選択して�
     <string name="perm_choice_all_files_desc">
 デバイス上のすべてのファイルに無制限にアクセスして、完全なファイル管理を実現します。
 </string>
+    <string name="perm_switch_to_all_files">
+すべてのファイル アクセスに切り替える (詳細)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 ストレージフォルダーの選択
 </string>
@@ -13096,24 +13105,39 @@ UFM がアクセスを許可されているフォルダーのみを選択して�
 UFM がアクセスおよび管理を許可されているデバイス上のフォルダーを選択します。
 </string>
     <string name="btn_add_another_folder">
-+ フォルダー/ファイルを追加
+フォルダーの追加
 </string>
     <string name="selected_folders_count">
 %1$d 個のフォルダが選択されました
 </string>
     <string name="no_folders_selected_hint">
-まだフォルダーは追加されていません。 「+ フォルダー/ファイルを追加」をタップしてフォルダーを選択します。
+まだフォルダーは追加されていません。 「フォルダーを追加」をタップしてフォルダーを選択します。
 </string>
     <string name="btn_done">
 終わり
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ フォルダー/ファイルを追加
+フォルダーの追加
 </string>
     <string name="action_add_folder_to_storage_desc">
-このストレージ内のフォルダーまたはファイルへのアクセスを許可します
+このストレージ内のフォルダーへのアクセスを許可します
+</string>
+    <string name="action_remove_folder_from_storage">
+Remove Folder
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remove mounted folder access from this storage
+</string>
+    <string name="dialog_remove_folders_title">
+Remove Mounted Folders
+</string>
+    <string name="dialog_remove_folders_desc">
+Select a folder to remove access from this storage. Your files will not be deleted.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 まだフォルダが追加されていません

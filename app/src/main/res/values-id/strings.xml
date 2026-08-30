@@ -50,6 +50,12 @@ Italia (Italia)
     <string name="language_dutch">
 Belanda (Nederland)
 </string>
+    <string name="language_chinese">
+Cina (中文)
+</string>
+    <string name="language_swedish">
+Swedia (Svenska)
+</string>
     <string name="select_language">
 Pilih Bahasa
 </string>
@@ -4276,7 +4282,7 @@ Jangan tampilkan lagi
 </string>
     <string name="tv_pairing_subtitle">
 Tautkan TV Anda menggunakan perangkat seluler
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. Di ponsel Anda, buka \"TV yang Terpasang\"
 </string>
@@ -13087,8 +13093,11 @@ Akses Semua File (Lanjutan)
     <string name="perm_choice_all_files_desc">
 Akses tidak terbatas ke semua file di perangkat untuk manajemen file lengkap.
 </string>
+    <string name="perm_switch_to_all_files">
+Beralih ke Akses Semua File (Lanjutan)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Pilih Folder Penyimpanan
 </string>
@@ -13096,24 +13105,39 @@ Pilih Folder Penyimpanan
 Pilih folder di perangkat Anda yang boleh diakses dan dikelola oleh UFM.
 </string>
     <string name="btn_add_another_folder">
-+ Tambahkan Folder / File
+Tambahkan Map
 </string>
     <string name="selected_folders_count">
 %1$d folder dipilih
 </string>
     <string name="no_folders_selected_hint">
-Belum ada folder yang ditambahkan. Ketuk \"+ Tambahkan Folder / File\" untuk memilih folder.
+Belum ada folder yang ditambahkan. Ketuk \"Tambah Folder\" untuk memilih folder.
 </string>
     <string name="btn_done">
 Selesai
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Tambahkan Folder / File
+Tambahkan Map
 </string>
     <string name="action_add_folder_to_storage_desc">
-Berikan akses ke folder atau file di penyimpanan ini
+Berikan akses ke folder di penyimpanan ini
+</string>
+    <string name="action_remove_folder_from_storage">
+Hapus Folder
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remove mounted folder access from this storage
+</string>
+    <string name="dialog_remove_folders_title">
+Hapus Folder yang Dipasang
+</string>
+    <string name="dialog_remove_folders_desc">
+Pilih folder untuk menghapus akses dari penyimpanan ini. File Anda tidak akan dihapus.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 Belum Ada Folder yang Ditambahkan

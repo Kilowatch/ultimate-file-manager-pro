@@ -1,10 +1,16 @@
 package za.kilowatch.ultimatefilemanager.indexing
 
 import android.content.Context
+import android.os.Build
+import android.os.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import za.kilowatch.ultimatefilemanager.UfmApplication
+import za.kilowatch.ultimatefilemanager.storage.SafFile
+import za.kilowatch.ultimatefilemanager.storage.SafLocationRepository
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
 
@@ -82,6 +88,30 @@ class IndexingRepository(
      */
     private fun enumerateLocalVolumes(): List<Triple<String, String, String>> {
         val volumes = mutableListOf<Triple<String, String, String>>()
+
+        val isRestricted = !DeviceUtils.isTvDevice(context) &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                !Environment.isExternalStorageManager()
+
+        if (isRestricted) {
+            val locations = SafLocationRepository.getLocations(context)
+            for (loc in locations) {
+                val p = if (loc.isStandalone) "saf://${loc.id}" else loc.getDisplayPath()
+                if (p.isNotEmpty()) {
+                    volumes.add(Triple("saf_${loc.id}", p, "saf"))
+                }
+            }
+            // Clear legacy whole-volume indexes that may have been created before switching to restricted mode
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            if (isStorageFullyIndexed("internal") || prefs.contains("${PREF_FULLY_INDEXED}internal")) {
+                clearIndexForStorage("internal")
+            }
+            prefs.all.keys.filter { it.startsWith("${PREF_FULLY_INDEXED}sdcard_") }.forEach { key ->
+                val sid = key.removePrefix(PREF_FULLY_INDEXED)
+                clearIndexForStorage(sid)
+            }
+            return volumes
+        }
 
         // Primary internal storage — always present
         volumes.add(Triple("internal", "/storage/emulated/0", "internal"))
@@ -462,12 +492,36 @@ class IndexingRepository(
          *  - anything else             → ("internal",       "internal", "/storage/emulated/0")
          */
         fun resolveStorageForPath(path: String): Triple<String, String, String> {
+            val norm = SafFile.cleanSafPath(path)
+            if (norm.startsWith("saf://")) {
+                val id = norm.removePrefix("saf://").substringBefore('/')
+                return Triple("saf_$id", "saf", "saf://$id")
+            }
+
+            val app = try { UfmApplication.instance } catch (_: Exception) { null }
+            if (app != null) {
+                val isRestricted = !DeviceUtils.isTvDevice(app) &&
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                        !Environment.isExternalStorageManager()
+
+                val locations = SafLocationRepository.getLocations(app)
+                val matchingLoc = locations.filter { loc ->
+                    val disp = SafFile.cleanSafPath(loc.getDisplayPath())
+                    disp.isNotEmpty() && (norm == disp || norm.startsWith("$disp/"))
+                }.maxByOrNull { it.getDisplayPath().length }
+
+                if (matchingLoc != null && (isRestricted || matchingLoc.isStandalone)) {
+                    val storageId = "saf_${matchingLoc.id}"
+                    return Triple(storageId, "saf", matchingLoc.getDisplayPath())
+                }
+            }
+
             return when {
-                path.startsWith("/storage/emulated/0") ->
+                norm.startsWith("/storage/emulated/0") ->
                     Triple("internal", "internal", "/storage/emulated/0")
 
-                path.startsWith("/storage/") -> {
-                    val parts = path.split("/")          // ["","storage","UUID",...]
+                norm.startsWith("/storage/") -> {
+                    val parts = norm.split("/")          // ["","storage","UUID",...]
                     val uuid = parts.getOrElse(2) { "" }
                     val root = "/storage/$uuid"
                     Triple("sdcard_$uuid", "sdcard", root)

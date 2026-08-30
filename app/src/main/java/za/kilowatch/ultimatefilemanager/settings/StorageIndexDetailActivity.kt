@@ -9,8 +9,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -131,7 +134,13 @@ class StorageIndexDetailActivity : AppCompatActivity() {
 
         btnDeleteConfirm.setOnClickListener {
             dialog.dismiss()
-            IndexingRepository.getInstance(this).clearIndexForStorage(storageId)
+            val repo = IndexingRepository.getInstance(this)
+            repo.clearIndexForStorage(storageId)
+            if (storagePath.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    repo.deleteTreeFromIndex(storagePath)
+                }
+            }
             finish()
         }
 

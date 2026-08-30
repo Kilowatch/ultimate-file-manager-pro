@@ -50,6 +50,12 @@ italiano (italiano)
     <string name="language_dutch">
 Holandés (Países Bajos)
 </string>
+    <string name="language_chinese">
+Chino (中文)
+</string>
+    <string name="language_swedish">
+sueco (svenska)
+</string>
     <string name="select_language">
 Seleccionar idioma
 </string>
@@ -4276,7 +4282,7 @@ No mostrar de nuevo
 </string>
     <string name="tv_pairing_subtitle">
 Vincular tu TV usando tu dispositivo móvil
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. En tu teléfono, ve a \"TVs emparejados\"
 </string>
@@ -13099,8 +13105,11 @@ Acceso a todos los archivos (avanzado)
     <string name="perm_choice_all_files_desc">
 Acceso sin restricciones a todos los archivos del dispositivo para una gestión completa de los archivos.
 </string>
+    <string name="perm_switch_to_all_files">
+Cambiar a acceso a todos los archivos (avanzado)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Seleccionar carpetas de almacenamiento
 </string>
@@ -13108,24 +13117,39 @@ Seleccionar carpetas de almacenamiento
 Elija las carpetas en su dispositivo a las que UFM puede acceder y administrar.
 </string>
     <string name="btn_add_another_folder">
-+ Agregar carpeta/archivo
+Agregar carpeta
 </string>
     <string name="selected_folders_count">
 %1$d carpeta(s) seleccionada(s)
 </string>
     <string name="no_folders_selected_hint">
-Aún no se han agregado carpetas. Toque \"+ Agregar carpeta/archivo\" para elegir carpetas.
+Aún no se han agregado carpetas. Toque \"Agregar carpeta\" para elegir carpetas.
 </string>
     <string name="btn_done">
 Hecho
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Agregar carpeta/archivo
+Agregar carpeta
 </string>
     <string name="action_add_folder_to_storage_desc">
-Conceder acceso a una carpeta o archivo en este almacenamiento
+Conceder acceso a una carpeta en este almacenamiento
+</string>
+    <string name="action_remove_folder_from_storage">
+Remove Folder
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remove mounted folder access from this storage
+</string>
+    <string name="dialog_remove_folders_title">
+Remove Mounted Folders
+</string>
+    <string name="dialog_remove_folders_desc">
+Select a folder to remove access from this storage. Your files will not be deleted.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 Aún no se han agregado carpetas

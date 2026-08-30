@@ -50,6 +50,12 @@ Italiano (Italiano)
     <string name="language_dutch">
 Olandese (Paesi Bassi)
 </string>
+    <string name="language_chinese">
+Cinese (中文)
+</string>
+    <string name="language_swedish">
+Svedese (Svenska)
+</string>
     <string name="select_language">
 Seleziona lingua
 </string>
@@ -4276,7 +4282,7 @@ Non mostrarlo più
 </string>
     <string name="tv_pairing_subtitle">
 Collega la tua TV utilizzando il tuo dispositivo mobile
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. Sul telefono, vai su \"TV associate\"
 </string>
@@ -13087,8 +13093,11 @@ Accesso a tutti i file (avanzato)
     <string name="perm_choice_all_files_desc">
 Accesso illimitato a tutti i file sul dispositivo per una gestione completa dei file.
 </string>
+    <string name="perm_switch_to_all_files">
+Passa a Accesso a tutti i file (Avanzato)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Seleziona Cartelle di archiviazione
 </string>
@@ -13096,24 +13105,39 @@ Seleziona Cartelle di archiviazione
 Scegli le cartelle sul tuo dispositivo a cui UFM può accedere e gestire.
 </string>
     <string name="btn_add_another_folder">
-+ Aggiungi cartella/file
+Aggiungi cartella
 </string>
     <string name="selected_folders_count">
 %1$d cartella/e selezionata/e
 </string>
     <string name="no_folders_selected_hint">
-Nessuna cartella ancora aggiunta. Tocca \"+ Aggiungi cartella/file\" per scegliere le cartelle.
+Nessuna cartella ancora aggiunta. Tocca \"Aggiungi cartella\" per scegliere le cartelle.
 </string>
     <string name="btn_done">
 Fatto
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Aggiungi cartella/file
+Aggiungi cartella
 </string>
     <string name="action_add_folder_to_storage_desc">
-Concedi l\'accesso a una cartella o a un file in questo spazio di archiviazione
+Concedi l\'accesso a una cartella in questo spazio di archiviazione
+</string>
+    <string name="action_remove_folder_from_storage">
+Remove Folder
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remove mounted folder access from this storage
+</string>
+    <string name="dialog_remove_folders_title">
+Remove Mounted Folders
+</string>
+    <string name="dialog_remove_folders_desc">
+Select a folder to remove access from this storage. Your files will not be deleted.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 Nessuna cartella ancora aggiunta

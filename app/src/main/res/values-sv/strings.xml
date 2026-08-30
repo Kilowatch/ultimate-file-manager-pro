@@ -13070,8 +13070,11 @@ Alla filer åtkomst (avancerat)
     <string name="perm_choice_all_files_desc">
 Obegränsad åtkomst till alla filer på enheten för fullständig filhantering.
 </string>
+    <string name="perm_switch_to_all_files">
+Byt till alla filer (avancerat)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Välj Lagringsmappar
 </string>
@@ -13079,24 +13082,39 @@ Välj Lagringsmappar
 Välj de mappar på din enhet som UFM får åtkomst till och hantera.
 </string>
     <string name="btn_add_another_folder">
-+ Lägg till mapp/fil
+Lägg till mapp
 </string>
     <string name="selected_folders_count">
 %1$d mapp(ar) har valts
 </string>
     <string name="no_folders_selected_hint">
-Inga mappar har lagts till ännu. Tryck på \"+ Lägg till mapp / fil\" för att välja mappar.
+Inga mappar har lagts till ännu. Tryck på \"Lägg till mapp\" för att välja mappar.
 </string>
     <string name="btn_done">
 Gjort
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Lägg till mapp/fil
+Lägg till mapp
 </string>
     <string name="action_add_folder_to_storage_desc">
-Ge åtkomst till en mapp eller fil i denna lagring
+Ge åtkomst till en mapp i denna lagring
+</string>
+    <string name="action_remove_folder_from_storage">
+Ta bort mapp
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Ta bort åtkomst till monterad mapp från denna lagring
+</string>
+    <string name="dialog_remove_folders_title">
+Ta bort monterade mappar
+</string>
+    <string name="dialog_remove_folders_desc">
+Välj en mapp för att ta bort åtkomst från denna lagring. Dina filer kommer inte att raderas.
+</string>
+    <string name="no_mounted_folders_hint">
+Inga monterade mappar kvar för denna lagring.
 </string>
     <string name="restricted_storage_empty_title">
 Inga mappar har lagts till ännu

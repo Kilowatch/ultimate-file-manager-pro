@@ -50,6 +50,12 @@
     <string name="language_dutch">
 الهولندية (هولندا)
 </string>
+    <string name="language_chinese">
+الصينية (中文)
+</string>
+    <string name="language_swedish">
+السويدية (سفينسكا)
+</string>
     <string name="select_language">
 اختيار اللغة
 </string>
@@ -4276,7 +4282,7 @@ ADB Shell جاهز
 </string>
     <string name="tv_pairing_subtitle">
 اربط تلفازك باستخدام جهازك المحمول
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. على هاتفك، انتقل إلى \"أجهزة التلفاز المقترنة\"
 </string>
@@ -13087,8 +13093,11 @@ support@kilowatch.co.za
     <string name="perm_choice_all_files_desc">
 وصول غير مقيد إلى جميع الملفات الموجودة على الجهاز لإدارة الملفات بشكل كامل.
 </string>
+    <string name="perm_switch_to_all_files">
+التبديل إلى الوصول إلى كافة الملفات (متقدم)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 حدد مجلدات التخزين
 </string>
@@ -13096,24 +13105,39 @@ support@kilowatch.co.za
 اختر المجلدات الموجودة على جهازك والتي يُسمح لـ UFM بالوصول إليها وإدارتها.
 </string>
     <string name="btn_add_another_folder">
-+ إضافة مجلد / ملف
+إضافة مجلد
 </string>
     <string name="selected_folders_count">
 تم تحديد %1$d المجلد (المجلدات).
 </string>
     <string name="no_folders_selected_hint">
-لم تتم إضافة أي مجلدات حتى الآن. اضغط على \"+ إضافة مجلد / ملف\" لاختيار المجلدات.
+لم تتم إضافة أي مجلدات حتى الآن. اضغط على \"إضافة مجلد\" لاختيار المجلدات.
 </string>
     <string name="btn_done">
 منتهي
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ إضافة مجلد / ملف
+إضافة مجلد
 </string>
     <string name="action_add_folder_to_storage_desc">
-منح الوصول إلى مجلد أو ملف في وحدة التخزين هذه
+منح الوصول إلى مجلد في وحدة التخزين هذه
+</string>
+    <string name="action_remove_folder_from_storage">
+Remove Folder
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remove mounted folder access from this storage
+</string>
+    <string name="dialog_remove_folders_title">
+Remove Mounted Folders
+</string>
+    <string name="dialog_remove_folders_desc">
+Select a folder to remove access from this storage. Your files will not be deleted.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 لم تتم إضافة أي مجلدات حتى الآن

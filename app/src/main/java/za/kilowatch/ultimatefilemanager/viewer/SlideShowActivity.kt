@@ -817,7 +817,7 @@ class SlideShowActivity : AppCompatActivity() {
                 val drawingBmp = drawingOverlay.getDrawingBitmap()
                 val cropRect = drawingOverlay.computeCropRect()
 
-                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path)
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@SlideShowActivity, path)
                 val docUri = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this@SlideShowActivity, path) ?: Uri.parse(path) else null
                 val dataObj: Any = if (isSaf && docUri != null) docUri else file
 
@@ -1062,7 +1062,7 @@ class SlideShowActivity : AppCompatActivity() {
     private fun performDeleteLocal(file: File, position: Int, recycleEnabled: Boolean) {
         val fileName = file.name
         val filePath = file.absolutePath
-        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(filePath)
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@SlideShowActivity, filePath)
         val shouldRecycle = !isSaf && recycleEnabled
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -1205,7 +1205,7 @@ class SlideShowActivity : AppCompatActivity() {
     }
 
     private fun performRenameLocal(file: File, newName: String, position: Int) {
-        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@SlideShowActivity, file.absolutePath)
         lifecycleScope.launch(Dispatchers.IO) {
             val (success, targetPath) = if (isSaf) {
                 val renamed = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(this@SlideShowActivity, file.absolutePath, newName)

@@ -4610,18 +4610,24 @@
     <string name="perm_choice_selected_folders_desc">Choose only the folders UFM is allowed to access. Keeps your other files private.</string>
     <string name="perm_choice_all_files_title">All Files Access (Advanced)</string>
     <string name="perm_choice_all_files_desc">Unrestricted access to all files on the device for complete file management.</string>
+    <string name="perm_switch_to_all_files">Switch to All Files Access (Advanced)</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">Select Storage Folders</string>
     <string name="dialog_setup_folders_desc">Choose the folders on your device UFM is allowed to access and manage.</string>
-    <string name="btn_add_another_folder">+ Add Folder / File</string>
+    <string name="btn_add_another_folder">Add Folder</string>
     <string name="selected_folders_count">%1$d folder(s) selected</string>
-    <string name="no_folders_selected_hint">No folders added yet. Tap \"+ Add Folder / File\" to choose folders.</string>
+    <string name="no_folders_selected_hint">No folders added yet. Tap \"Add Folder\" to choose folders.</string>
     <string name="btn_done">Done</string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
-    <string name="action_add_folder_to_storage">+ Add Folder / File</string>
-    <string name="action_add_folder_to_storage_desc">Grant access to a folder or file in this storage</string>
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
+    <string name="action_add_folder_to_storage">Add Folder</string>
+    <string name="action_add_folder_to_storage_desc">Grant access to a folder in this storage</string>
+    <string name="action_remove_folder_from_storage">Remove Folder</string>
+    <string name="action_remove_folder_from_storage_desc">Remove mounted folder access from this storage</string>
+    <string name="dialog_remove_folders_title">Remove Mounted Folders</string>
+    <string name="dialog_remove_folders_desc">Select a folder to remove access from this storage. Your files will not be deleted.</string>
+    <string name="no_mounted_folders_hint">No mounted folders remaining for this storage.</string>
     <string name="restricted_storage_empty_title">No Folders Added Yet</string>
     <string name="restricted_storage_empty_desc">You are using selected folders mode. Add folders to access and manage them here.</string>
     <string name="restricted_storage_grant_all_files">Enable All Files Access in Settings</string>

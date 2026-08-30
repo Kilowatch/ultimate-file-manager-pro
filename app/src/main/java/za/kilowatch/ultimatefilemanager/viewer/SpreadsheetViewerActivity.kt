@@ -532,9 +532,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
     }
 
     private fun openInputStream(file: File): java.io.InputStream? {
-        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, file.absolutePath)
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, file)
         return if (isSaf) {
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, file.absolutePath)
         } else {
@@ -618,9 +616,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
     }
 
     private fun loadXlsx(file: File): List<Spreadsheet> {
-        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, file.absolutePath)
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, file)
         var tempFile: File? = null
         val targetFile = if (isSaf) {
             tempFile = File(cacheDir, "temp_sheet_${System.currentTimeMillis()}.xlsx")

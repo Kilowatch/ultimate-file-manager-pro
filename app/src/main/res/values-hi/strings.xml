@@ -50,6 +50,12 @@
     <string name="language_dutch">
 डच (नीदरलैंड्स)
 </string>
+    <string name="language_chinese">
+Chinese (中文)
+</string>
+    <string name="language_swedish">
+Swedish (Svenska)
+</string>
     <string name="select_language">
 भाषा चुनें
 </string>
@@ -4276,7 +4282,7 @@ TV मुख्य मेनू में \"पेयर्ड फोन\" च�
 </string>
     <string name="tv_pairing_subtitle">
 अपने मोबाइल उपकरण का उपयोग करके अपने टीवी को लिंक करें
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. अपने फ़ोन पर, \"पेयर किए गए टीवी\" पर जाएं
 </string>
@@ -13087,8 +13093,11 @@ SAF स्टोरेज
     <string name="perm_choice_all_files_desc">
 संपूर्ण फ़ाइल प्रबंधन के लिए डिवाइस पर सभी फ़ाइलों तक अप्रतिबंधित पहुंच।
 </string>
+    <string name="perm_switch_to_all_files">
+सभी फ़ाइलें एक्सेस (उन्नत) पर स्विच करें
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 स्टोरेज फोल्डर का चयन करें
 </string>
@@ -13096,24 +13105,39 @@ SAF स्टोरेज
 अपने डिवाइस पर फ़ोल्डर चुनें यूएफएम को एक्सेस और प्रबंधन करने की अनुमति है।
 </string>
     <string name="btn_add_another_folder">
-+फ़ोल्डर/फ़ाइल जोड़ें
+Add Folder
 </string>
     <string name="selected_folders_count">
 %1$d फ़ोल्डर चयनित
 </string>
     <string name="no_folders_selected_hint">
-अभी तक कोई फ़ोल्डर नहीं जोड़ा गया. फ़ोल्डर चुनने के लिए \"+फ़ोल्डर/फ़ाइल जोड़ें\" पर टैप करें।
+No folders added yet. Tap \"Add Folder\" to choose folders.
 </string>
     <string name="btn_done">
 हो गया
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+फ़ोल्डर/फ़ाइल जोड़ें
+Add Folder
 </string>
     <string name="action_add_folder_to_storage_desc">
-इस संग्रहण में किसी फ़ोल्डर या फ़ाइल तक पहुंच प्रदान करें
+इस संग्रहण में किसी फ़ोल्डर तक पहुंच प्रदान करें
+</string>
+    <string name="action_remove_folder_from_storage">
+फ़ोल्डर हटाएँ
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+इस स्टोरेज से माउंटेड फोल्डर एक्सेस हटा दें
+</string>
+    <string name="dialog_remove_folders_title">
+माउंटेड फ़ोल्डर हटाएँ
+</string>
+    <string name="dialog_remove_folders_desc">
+इस स्टोरेज से एक्सेस हटाने के लिए एक फ़ोल्डर का चयन करें। आपकी फ़ाइलें हटाई नहीं जाएंगी.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 अभी तक कोई फ़ोल्डर नहीं जोड़ा गया

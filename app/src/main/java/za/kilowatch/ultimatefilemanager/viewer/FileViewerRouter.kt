@@ -254,7 +254,8 @@ object FileViewerRouter {
     ) {
         val ext = file.extension.lowercase()
         val isImage = ext in IMAGE_EXTENSIONS
-        val effectiveContentUri = contentUri ?: if (file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)) {
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
+        val effectiveContentUri = contentUri ?: if (isSaf) {
             (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, file.absolutePath)
         } else null
 
@@ -336,9 +337,7 @@ object FileViewerRouter {
         }
         val comparator = SortFilterPreferenceManager.getFileComparator(sortState, context)
 
-        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
         val parentPath = file.parent ?: ""
         val mediaFiles = if (isSaf && parentPath.isNotEmpty()) {
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, parentPath).filter { f ->
@@ -399,7 +398,8 @@ object FileViewerRouter {
         return try {
             val ext = file.extension.lowercase()
             val mimeType = MimeTypeHelper.getOrFallback(ext)
-            val uri: Uri = if (file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)) {
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
+            val uri: Uri = if (isSaf) {
                 (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, file.absolutePath) ?: Uri.parse(file.absolutePath)
             } else {
                 FileProvider.getUriForFile(
@@ -530,9 +530,7 @@ object FileViewerRouter {
 
         // ── UFM Slide Show (shown for Images on local and SAF storage) ──
         if (isImage && !isNetwork) {
-            val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
-                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
-                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
             val parentPath = file.parent ?: ""
             val filesToConsider: List<File> = if (isSaf) {
                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, parentPath)
@@ -742,7 +740,8 @@ object FileViewerRouter {
         val uri: Uri
         try {
             mimeType = MimeTypeHelper.getOrFallback(ext)
-            uri = if (file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)) {
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
+            uri = if (isSaf) {
                 (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, file.absolutePath) ?: Uri.parse(file.absolutePath)
             } else {
                 FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)

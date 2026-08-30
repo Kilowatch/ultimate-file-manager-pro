@@ -50,6 +50,12 @@ Italiano (Italiano)
     <string name="language_dutch">
 Holandês (Holanda)
 </string>
+    <string name="language_chinese">
+Chinês (中文)
+</string>
+    <string name="language_swedish">
+Sueco (Svenska)
+</string>
     <string name="select_language">
 Selecionar Idioma
 </string>
@@ -4276,7 +4282,7 @@ Não mostrar novamente
 </string>
     <string name="tv_pairing_subtitle">
 Vincule sua TV usando seu dispositivo móvel
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. No seu telefone, vá para \"TVs Emparelhadas\"
 </string>
@@ -13087,8 +13093,11 @@ Acesso a todos os arquivos (avançado)
     <string name="perm_choice_all_files_desc">
 Acesso irrestrito a todos os arquivos do dispositivo para gerenciamento completo de arquivos.
 </string>
+    <string name="perm_switch_to_all_files">
+Mudar para acesso a todos os arquivos (avançado)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Selecione pastas de armazenamento
 </string>
@@ -13096,24 +13105,39 @@ Selecione pastas de armazenamento
 Escolha as pastas em seu dispositivo que o UFM tem permissão para acessar e gerenciar.
 </string>
     <string name="btn_add_another_folder">
-+ Adicionar pasta/arquivo
+Adicionar pasta
 </string>
     <string name="selected_folders_count">
 %1$d pasta(s) selecionada(s)
 </string>
     <string name="no_folders_selected_hint">
-Nenhuma pasta adicionada ainda. Toque em \"+ Adicionar pasta/arquivo\" para escolher as pastas.
+Nenhuma pasta adicionada ainda. Toque em \"Adicionar pasta\" para escolher as pastas.
 </string>
     <string name="btn_done">
 Feito
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Adicionar pasta/arquivo
+Adicionar pasta
 </string>
     <string name="action_add_folder_to_storage_desc">
-Conceda acesso a uma pasta ou arquivo neste armazenamento
+Conceda acesso a uma pasta neste armazenamento
+</string>
+    <string name="action_remove_folder_from_storage">
+Remover pasta
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remova o acesso à pasta montada deste armazenamento
+</string>
+    <string name="dialog_remove_folders_title">
+Remover pastas montadas
+</string>
+    <string name="dialog_remove_folders_desc">
+Selecione uma pasta para remover o acesso deste armazenamento. Seus arquivos não serão excluídos.
+</string>
+    <string name="no_mounted_folders_hint">
+Nenhuma pasta montada restante para este armazenamento.
 </string>
     <string name="restricted_storage_empty_title">
 Nenhuma pasta adicionada ainda

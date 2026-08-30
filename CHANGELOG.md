@@ -47,16 +47,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Optional All Files Access with Selected Folders (SAF Mode) on Mobile**:
   - Optional "All Files Access" mode on mobile (Android 11+ / API 30+), allowing users to choose between Selected Folders (SAF) and unrestricted All Files Access.
   - Multi-folder setup dialog in onboarding (`WelcomeActivity`) with scrollable folder list, count badge, and individual removal support.
-  - Interactive `+ Add Folder / File` action banner and empty-state prompts at storage roots when in Selected Folders mode.
+  - Interactive action banner with "Add Folder" and "Remove Folder" buttons and empty-state prompts at storage roots when in Selected Folders mode.
+  - "Remove Folder" unmount dialog to view and unmount individual SAF folders with real-time directory refresh.
   - Dedicated "All Files Access" toggle card in Settings (`SettingsActivity`) with real-time `onResume` synchronization.
-  - Indexing support for granted SAF folders (internal storage, SD card, and USB) in `StorageIndexerActivity`.
+  - Manual indexing support for granted SAF folders (internal storage, SD card, and USB) in `StorageIndexerActivity`.
   - Guidance modal when accessing whole-device features (such as Storage Analyzer) while in restricted Selected Folders mode.
 
 ### Changed
 - Storage root browsing in `FileBrowserActivity` and `FileBrowserFragment` automatically adapts between full device listing and granted SAF folders based on active permission status.
-- `+ Add Folder / File` button automatically hides when device-wide All Files Access is active, and re-appears if toggled off.
+- "Add Folder" and "Remove Folder" buttons automatically hide when device-wide All Files Access is active, and re-appear if toggled off.
+- Scoped SAF folders added for local/SD storage are prevented from generating standalone main menu tiles (only Termux/custom storage locations appear on the main menu).
+- Disabled automatic background indexing when adding SAF folders; indexing is now strictly manual via Storage Indexer.
+- Replaced "+ Add Folder / File" button text with "Add Folder" alongside single `+` icon across storage browsing and setup dialogs.
 
 ### Fixed
+- Fixed permission card on the Welcome screen failing to update its selected folder count when multiple folders were added.
+- Fixed setup dialog layout padding and fallback action button styling to prevent cutoff against the dialog bottom curve.
 - **16 KB Page Size Device Compatibility (Zstandard)**: Upgraded `zstd-jni` from `1.5.7-12` to `1.5.7-16` (built with NDK r29 and 16 KB ELF segment alignment). Resolves the Google Play Console warning: *"Your app is compiled for 16 KB devices, but some of its libraries were compiled using an older Android NDK version that can still cause crashes (`libzstd-jni`)"*.
 
 ## [1.9.2] — 2026-08-25

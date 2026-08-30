@@ -465,12 +465,20 @@ class SearchActivity : AppCompatActivity() {
             )
         }
         for (root in roots) {
-            val isInternal = root.absolutePath.contains("emulated/0")
+            val isInternal = root.absolutePath == "/storage/emulated/0" || root.absolutePath == "/storage/emulated/0/"
             val label = when {
+                root is za.kilowatch.ultimatefilemanager.storage.SafFile -> {
+                    if (root.absolutePath.startsWith("saf://")) {
+                        val locId = root.absolutePath.removePrefix("saf://").substringBefore('/')
+                        za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationById(this, locId)?.displayName ?: root.name
+                    } else root.name
+                }
                 isInternal -> getString(R.string.storage_internal)
                 else -> root.name
             }
             val iconRes = when {
+                root is za.kilowatch.ultimatefilemanager.storage.SafFile && root.absolutePath.startsWith("saf://") -> R.drawable.ic_terminal
+                root is za.kilowatch.ultimatefilemanager.storage.SafFile -> R.drawable.ic_folder
                 isInternal -> R.drawable.ic_storage_internal
                 root.absolutePath.contains("usb", ignoreCase = true) -> R.drawable.ic_storage_usb
                 else -> R.drawable.ic_storage_sdcard
@@ -768,7 +776,19 @@ class SearchActivity : AppCompatActivity() {
                             folderScope = folderScope,
                             limit       = pageSize,
                             offset      = offset
-                        ).map { File(it.path) }.filter { it.exists() }
+                        ).map { 
+                            if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@SearchActivity, it.path)) {
+                                za.kilowatch.ultimatefilemanager.storage.SafFile(it.path, it.isDirectory)
+                            } else {
+                                File(it.path)
+                            }
+                        }.filter { file ->
+                            if (file is za.kilowatch.ultimatefilemanager.storage.SafFile) {
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@SearchActivity, file.absolutePath)
+                            } else {
+                                file.exists() || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@SearchActivity, file.absolutePath)
+                            }
+                        }
                     }
 
                     val unindexedDeferreds = unindexedRoots.map { root ->
@@ -2089,15 +2109,44 @@ class SearchActivity : AppCompatActivity() {
 
     private fun getStorageRoots(): List<File> {
         val roots = mutableListOf<File>()
-        val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
-        for (vol in sm.storageVolumes) {
-            try {
-                val dirPath = vol.safeDirectoryPath
-                val dir = dirPath?.let { File(it) }
-                if (dir != null && dir.exists() && dir.canRead()) {
-                    roots.add(dir)
+        val isRestricted = !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this) &&
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R &&
+                !android.os.Environment.isExternalStorageManager()
+
+        if (isRestricted) {
+            val locations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this)
+            for (loc in locations) {
+                val p = if (loc.isStandalone) "saf://${loc.id}" else loc.getDisplayPath()
+                if (p.isNotEmpty() && roots.none { it.absolutePath == p }) {
+                    roots.add(za.kilowatch.ultimatefilemanager.storage.SafFile(p, isDir = true))
                 }
-            } catch (_: Exception) { }
+            }
+            val granted = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getGrantedPathsForStorage(this, "/storage/emulated/0")
+            for (gp in granted) {
+                if (roots.none { it.absolutePath == gp }) {
+                    roots.add(za.kilowatch.ultimatefilemanager.storage.SafFile(gp, isDir = true))
+                }
+            }
+        } else {
+            val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            for (vol in sm.storageVolumes) {
+                try {
+                    val dirPath = vol.safeDirectoryPath
+                    val dir = dirPath?.let { File(it) }
+                    if (dir != null && dir.exists() && dir.canRead()) {
+                        roots.add(dir)
+                    }
+                } catch (_: Exception) { }
+            }
+            val locations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this)
+            for (loc in locations) {
+                if (loc.isStandalone) {
+                    val p = "saf://${loc.id}"
+                    if (roots.none { it.absolutePath == p }) {
+                        roots.add(za.kilowatch.ultimatefilemanager.storage.SafFile(p, isDir = true))
+                    }
+                }
+            }
         }
         if (roots.isEmpty()) {
             roots.add(File("/storage/emulated/0"))
@@ -2106,6 +2155,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun openFile(file: File) {
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, file)
+        val safDocUri = if (isSaf) {
+            (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri
+                ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this, file.absolutePath)
+        } else null
+
         // Try built-in viewer first
         if (za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.openFile(this, file)) return
 
@@ -2113,10 +2168,10 @@ class SearchActivity : AppCompatActivity() {
         try {
             val extension = file.extension.lowercase()
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
-            val uri: Uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+            val uri: Uri = safDocUri ?: FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, mimeType)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             }
             if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)

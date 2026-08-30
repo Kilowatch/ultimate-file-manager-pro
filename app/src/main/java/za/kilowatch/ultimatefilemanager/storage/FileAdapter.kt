@@ -259,7 +259,7 @@ class FileAdapter(
 
                 for (dir in dirs) {
                     if (!isActive) return@launch
-                    val isSafDir = dir is SafFile || SafTreeManager.isSafPath(dir.absolutePath)
+                    val isSafDir = dir is SafFile || (ctx != null && SafTreeManager.isSaf(ctx, dir))
                     val visibleCount = if (isSafDir && ctx != null) {
                         SafTreeManager.getChildCount(ctx, dir.absolutePath)
                     } else {

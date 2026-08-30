@@ -50,6 +50,12 @@ Ultimate File Manager Pro
     <string name="language_dutch">
 Голландский (Нидерланды)
 </string>
+    <string name="language_chinese">
+Китайский (中文)
+</string>
+    <string name="language_swedish">
+Шведский (Свенска)
+</string>
     <string name="select_language">
 Выберите язык
 </string>
@@ -4276,7 +4282,7 @@ IP-адрес целевого устройства
 </string>
     <string name="tv_pairing_subtitle">
 Свяжите ваш телевизор с помощью мобильного устройства
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. На телефоне перейдите в раздел «Сопряжённые телевизоры»
 </string>
@@ -13087,8 +13093,11 @@ support@kilowatch.co.za
     <string name="perm_choice_all_files_desc">
 Неограниченный доступ ко всем файлам на устройстве для полного управления файлами.
 </string>
+    <string name="perm_switch_to_all_files">
+Переключиться на доступ ко всем файлам (расширенный)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Выберите папки хранения
 </string>
@@ -13096,24 +13105,39 @@ support@kilowatch.co.za
 Выберите папки на вашем устройстве, к которым UFM разрешен доступ и которыми можно управлять.
 </string>
     <string name="btn_add_another_folder">
-+ Добавить папку/файл
+Добавить папку
 </string>
     <string name="selected_folders_count">
 Выбраны папки %1$d
 </string>
     <string name="no_folders_selected_hint">
-Папки пока не добавлены. Нажмите «+ Добавить папку/файл», чтобы выбрать папки.
+Папки пока не добавлены. Нажмите «Добавить папку», чтобы выбрать папки.
 </string>
     <string name="btn_done">
 Сделанный
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Добавить папку/файл
+Добавить папку
 </string>
     <string name="action_add_folder_to_storage_desc">
-Предоставить доступ к папке или файлу в этом хранилище
+Предоставить доступ к папке в этом хранилище
+</string>
+    <string name="action_remove_folder_from_storage">
+Удалить папку
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Удалить доступ к подключенной папке из этого хранилища
+</string>
+    <string name="dialog_remove_folders_title">
+Удалить смонтированные папки
+</string>
+    <string name="dialog_remove_folders_desc">
+Выберите папку, чтобы закрыть доступ к этому хранилищу. Ваши файлы не будут удалены.
+</string>
+    <string name="no_mounted_folders_hint">
+В этом хранилище не осталось подключенных папок.
 </string>
     <string name="restricted_storage_empty_title">
 Папки пока не добавлены

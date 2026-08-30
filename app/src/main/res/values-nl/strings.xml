@@ -50,6 +50,12 @@ Italiaans (Italiaans)
     <string name="language_dutch">
 Nederlands (Nederlands)
 </string>
+    <string name="language_chinese">
+Chinees (中文)
+</string>
+    <string name="language_swedish">
+Zweeds (Zweeds)
+</string>
     <string name="select_language">
 Selecteer Taal
 </string>
@@ -4276,7 +4282,7 @@ Laat dit niet meer zien
 </string>
     <string name="tv_pairing_subtitle">
 Koppel uw tv via uw mobiele apparaat
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. Ga op je telefoon naar \'Gekoppelde tv\'s\'
 </string>
@@ -13087,8 +13093,11 @@ Toegang tot alle bestanden (geavanceerd)
     <string name="perm_choice_all_files_desc">
 Onbeperkte toegang tot alle bestanden op het apparaat voor volledig bestandsbeheer.
 </string>
+    <string name="perm_switch_to_all_files">
+Schakel over naar toegang tot alle bestanden (geavanceerd)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Selecteer Opslagmappen
 </string>
@@ -13096,24 +13105,39 @@ Selecteer Opslagmappen
 Kies de mappen op uw apparaat die UFM mag openen en beheren.
 </string>
     <string name="btn_add_another_folder">
-+ Map / bestand toevoegen
+Map toevoegen
 </string>
     <string name="selected_folders_count">
 %1$d map(pen) geselecteerd
 </string>
     <string name="no_folders_selected_hint">
-Er zijn nog geen mappen toegevoegd. Tik op \"+ Map/bestand toevoegen\" om mappen te kiezen.
+Er zijn nog geen mappen toegevoegd. Tik op \"Map toevoegen\" om mappen te kiezen.
 </string>
     <string name="btn_done">
 Klaar
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Map / bestand toevoegen
+Map toevoegen
 </string>
     <string name="action_add_folder_to_storage_desc">
-Verleen toegang tot een map of bestand in deze opslag
+Verleen toegang tot een map in deze opslag
+</string>
+    <string name="action_remove_folder_from_storage">
+Map verwijderen
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Verwijder de toegang tot gekoppelde mappen uit deze opslag
+</string>
+    <string name="dialog_remove_folders_title">
+Remove Mounted Folders
+</string>
+    <string name="dialog_remove_folders_desc">
+Selecteer een map om de toegang tot deze opslag te verwijderen. Uw bestanden worden niet verwijderd.
+</string>
+    <string name="no_mounted_folders_hint">
+Er zijn geen gekoppelde mappen meer voor deze opslag.
 </string>
     <string name="restricted_storage_empty_title">
 Nog geen mappen toegevoegd

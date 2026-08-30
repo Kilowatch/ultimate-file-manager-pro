@@ -50,6 +50,12 @@ Italienisch (Italiano)
     <string name="language_dutch">
 Niederländisch (Niederlande)
 </string>
+    <string name="language_chinese">
+Chinesisch (中文)
+</string>
+    <string name="language_swedish">
+Schwedisch (Svenska)
+</string>
     <string name="select_language">
 Sprache auswählen
 </string>
@@ -4276,7 +4282,7 @@ Nicht mehr anzeigen
 </string>
     <string name="tv_pairing_subtitle">
 Verknüpfen Sie Ihren Fernseher mit Ihrem mobilen Gerät
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. Gehen Sie auf Ihrem Telefon zu \"Gekoppelte Fernseher\"
 </string>
@@ -13087,8 +13093,11 @@ Zugriff auf alle Dateien (erweitert)
     <string name="perm_choice_all_files_desc">
 Uneingeschränkter Zugriff auf alle Dateien auf dem Gerät für eine vollständige Dateiverwaltung.
 </string>
+    <string name="perm_switch_to_all_files">
+Zu Zugriff auf alle Dateien wechseln (Erweitert)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Wählen Sie Speicherordner
 </string>
@@ -13096,24 +13105,39 @@ Wählen Sie Speicherordner
 Wählen Sie die Ordner auf Ihrem Gerät aus, auf die UFM zugreifen und diese verwalten darf.
 </string>
     <string name="btn_add_another_folder">
-+ Ordner/Datei hinzufügen
+Ordner hinzufügen
 </string>
     <string name="selected_folders_count">
 %1$d Ordner ausgewählt
 </string>
     <string name="no_folders_selected_hint">
-Es wurden noch keine Ordner hinzugefügt. Tippen Sie auf „+ Ordner/Datei hinzufügen“, um Ordner auszuwählen.
+Es wurden noch keine Ordner hinzugefügt. Tippen Sie auf „Ordner hinzufügen“, um Ordner auszuwählen.
 </string>
     <string name="btn_done">
 Erledigt
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Ordner/Datei hinzufügen
+Ordner hinzufügen
 </string>
     <string name="action_add_folder_to_storage_desc">
-Gewähren Sie Zugriff auf einen Ordner oder eine Datei in diesem Speicher
+Gewähren Sie Zugriff auf einen Ordner in diesem Speicher
+</string>
+    <string name="action_remove_folder_from_storage">
+Remove Folder
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remove mounted folder access from this storage
+</string>
+    <string name="dialog_remove_folders_title">
+Remove Mounted Folders
+</string>
+    <string name="dialog_remove_folders_desc">
+Select a folder to remove access from this storage. Your files will not be deleted.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 Noch keine Ordner hinzugefügt

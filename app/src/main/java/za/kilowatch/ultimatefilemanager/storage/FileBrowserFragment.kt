@@ -168,8 +168,6 @@ class FileBrowserFragment : Fragment() {
                     val resolvedPath = newLocation.getDisplayPath()
                     if (resolvedPath.isNotEmpty()) {
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(ctx, resolvedPath, uri)
-                        val storageIdToUse = if (resolvedPath.startsWith("/storage/emulated/0")) "internal" else "external"
-                        za.kilowatch.ultimatefilemanager.indexing.FileIndexingService.getInstance(ctx).startFirstTimeIndex(storageIdToUse, resolvedPath, storageIdToUse)
                     } else if (::currentDir.isInitialized) {
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(ctx, currentDir.absolutePath, uri)
                     }
@@ -209,6 +207,63 @@ class FileBrowserFragment : Fragment() {
                 context?.let { android.widget.Toast.makeText(it, "Could not launch folder picker: ${e.message}", android.widget.Toast.LENGTH_LONG).show() }
             }
         }
+    }
+
+    private fun launchRemoveFolderDialog() {
+        val ctx = context ?: return
+        val rootToUse = if (::currentDir.isInitialized) currentDir.absolutePath else rootPath
+        val currentLocations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationsForStorage(ctx, rootToUse).toMutableList()
+        if (currentLocations.isEmpty()) {
+            return
+        }
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_remove_mounted_folders, null)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val recycler = dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerMountedFolders)
+        val txtEmpty = dialogView.findViewById<android.widget.TextView>(R.id.txtNoMountedFolders)
+        val btnDone = dialogView.findViewById<android.view.View>(R.id.btnDoneRemove)
+
+        lateinit var adapter: za.kilowatch.ultimatefilemanager.onboarding.SelectedFoldersAdapter
+        adapter = za.kilowatch.ultimatefilemanager.onboarding.SelectedFoldersAdapter { loc ->
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.removeTreePermissionAndLocation(ctx, loc.treeUriString)
+            currentLocations.removeAll { it.id == loc.id || it.treeUriString == loc.treeUriString }
+            adapter.submitList(currentLocations.toList())
+            if (currentLocations.isEmpty()) {
+                recycler?.visibility = View.GONE
+                txtEmpty?.visibility = View.VISIBLE
+            }
+            if (::currentDir.isInitialized) {
+                loadDirectory(currentDir)
+            }
+        }
+
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(ctx)
+        recycler.adapter = adapter
+
+        val maxRecyclerHeight = (220 * resources.displayMetrics.density).toInt()
+        recycler.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                if (recycler.height > maxRecyclerHeight) {
+                    recycler.layoutParams.height = maxRecyclerHeight
+                    recycler.requestLayout()
+                }
+                return true
+            }
+        })
+
+        adapter.submitList(currentLocations)
+
+        btnDone.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
 
@@ -2188,7 +2243,10 @@ class FileBrowserFragment : Fragment() {
         var targetDir: File = directory
         val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(pathStr)
         val canUseShizuku = isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(pathStr)
-        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(pathStr) || (isProtected && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, pathStr))
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(pathStr) ||
+                (ctx != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, pathStr)) ||
+                directory is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                pathStr.startsWith("saf://")
 
         za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SafStorage", "FileBrowserFragment loadDirectory: path=$pathStr, isProtected=$isProtected, canUseShizuku=$canUseShizuku, isSaf=$isSaf")
 
@@ -2213,6 +2271,8 @@ class FileBrowserFragment : Fragment() {
                 storageLabel = internalLabel
                 targetDir = File(internalPath)
             }
+        } else if (pathStr == rootPath && !pathStr.startsWith("saf://")) {
+            targetDir = File(pathStr)
         } else if (isProtected && canUseShizuku && targetDir !is za.kilowatch.ultimatefilemanager.storage.ShizukuFile) {
             val pName = pathStr.substringAfterLast("/")
             val pParent = pathStr.substringBeforeLast("/", "")
@@ -2282,11 +2342,22 @@ class FileBrowserFragment : Fragment() {
         val isRestrictedRoot = !isTv &&
                 android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R &&
                 !android.os.Environment.isExternalStorageManager() &&
-                targetDir.absolutePath == rootPath
+                targetDir.absolutePath == rootPath &&
+                !targetDir.absolutePath.startsWith("saf://") &&
+                !za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(targetDir.absolutePath)
+
+        val countMounted = if (isRestrictedRoot) {
+            za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationsForStorage(requireContext(), targetDir.absolutePath).size +
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getGrantedPathsForStorage(requireContext(), targetDir.absolutePath).size
+        } else 0
 
         view?.findViewById<View>(R.id.layoutRestrictedAddFolder)?.visibility = if (isRestrictedRoot) View.VISIBLE else View.GONE
+        view?.findViewById<View>(R.id.btnRestrictedRemoveFolder)?.visibility = if (isRestrictedRoot && countMounted > 0) View.VISIBLE else View.GONE
         view?.findViewById<View>(R.id.btnRestrictedAddFolder)?.setOnClickListener {
             launchAddFolderPicker()
+        }
+        view?.findViewById<View>(R.id.btnRestrictedRemoveFolder)?.setOnClickListener {
+            launchRemoveFolderDialog()
         }
 
         if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
@@ -2396,7 +2467,8 @@ class FileBrowserFragment : Fragment() {
                                 }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
-                                    submitAdapterList(sorted, true, hiddenPaths)
+                                    val isStorageIndexed = za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.isStorageFullyIndexed(storageId)
+                                    submitAdapterList(sorted, isStorageIndexed, hiddenPaths)
                                 }
                             }
                         }
@@ -3773,7 +3845,7 @@ class FileBrowserFragment : Fragment() {
             val ctx = context
             val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(currentDir.absolutePath)
             val canUseShizuku = isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)
-            val hasSaf = (isProtected || currentDir.absolutePath.startsWith("saf://")) && ctx != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, currentDir.absolutePath)
+            val hasSaf = ctx != null && (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, currentDir.absolutePath))
 
             val layoutProtected = view?.findViewById<View>(R.id.layoutProtectedPrompt)
             val txtEmptyFolder = view?.findViewById<View>(R.id.txtEmptyFolder)

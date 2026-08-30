@@ -116,7 +116,8 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Re-check all permission statuses when returning from settings
+        // Invalidate cached locations and re-check all permission statuses
+        za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.clearCache()
         refreshPermissionStatuses()
     }
 
@@ -226,16 +227,16 @@ class WelcomeActivity : AppCompatActivity() {
             treeUriString = uri.toString(),
             authority = authority,
             rootDocId = docId,
-            iconType = "folder"
+            iconType = "folder",
+            isStandalone = false
         )
         SafLocationRepository.addLocation(this, newLocation)
         val resolvedPath = newLocation.getDisplayPath()
         if (resolvedPath.isNotEmpty()) {
             SafTreeManager.saveTreePermission(this, resolvedPath, uri)
-            val storageId = if (resolvedPath.startsWith("/storage/emulated/0")) "internal" else "external"
-            FileIndexingService.getInstance(this).startFirstTimeIndex(storageId, resolvedPath, storageId)
         }
 
+        SafLocationRepository.clearCache()
         val locations = SafLocationRepository.getLocations(this)
         pendingFolderSetupAdapter?.submitList(locations)
         updateFolderSetupDialogViews(locations)
@@ -244,6 +245,7 @@ class WelcomeActivity : AppCompatActivity() {
 
     private fun handleOnboardingFolderRemoved(loc: SafLocation) {
         SafTreeManager.removeTreePermissionAndLocation(this, loc.treeUriString)
+        SafLocationRepository.clearCache()
         val updated = SafLocationRepository.getLocations(this)
         pendingFolderSetupAdapter?.submitList(updated)
         updateFolderSetupDialogViews(updated)
@@ -273,6 +275,18 @@ class WelcomeActivity : AppCompatActivity() {
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 
+        val maxRecyclerHeight = (220 * resources.displayMetrics.density).toInt()
+        recycler.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                if (recycler.height > maxRecyclerHeight) {
+                    recycler.layoutParams.height = maxRecyclerHeight
+                    recycler.requestLayout()
+                }
+                return true
+            }
+        })
+
+        SafLocationRepository.clearCache()
         val currentLocations = SafLocationRepository.getLocations(this)
         adapter.submitList(currentLocations)
         updateFolderSetupDialogViews(currentLocations)
@@ -283,6 +297,7 @@ class WelcomeActivity : AppCompatActivity() {
 
         btnDone.setOnClickListener {
             dialog.dismiss()
+            SafLocationRepository.clearCache()
             refreshPermissionStatuses()
         }
 
@@ -294,6 +309,7 @@ class WelcomeActivity : AppCompatActivity() {
         dialog.setOnDismissListener {
             pendingFolderSetupDialog = null
             pendingFolderSetupAdapter = null
+            SafLocationRepository.clearCache()
             refreshPermissionStatuses()
         }
 
@@ -405,10 +421,8 @@ class WelcomeActivity : AppCompatActivity() {
         if (!::permissionItems.isInitialized) return
         permissionItems.forEachIndexed { index, item ->
             val newStatus = checkPermissionStatus(item)
-            if (item.status != newStatus) {
-                item.status = newStatus
-                permissionAdapter.updateItem(index, item)
-            }
+            item.status = newStatus
+            permissionAdapter.updateItem(index, item)
         }
         updateContinueButton()
     }

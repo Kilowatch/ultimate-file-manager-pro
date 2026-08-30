@@ -53,6 +53,9 @@ Ultimate File Manager Pro
     <string name="language_chinese">
 Chinese (中文)
 </string>
+    <string name="language_swedish">
+瑞典语（Svenska）
+</string>
     <string name="select_language">
 选择语言
 </string>
@@ -13090,8 +13093,11 @@ SAF 存储
     <string name="perm_choice_all_files_desc">
 不受限制地访问设备上的所有文件，以实现完整的文件管理。
 </string>
+    <string name="perm_switch_to_all_files">
+切换到所有文件访问（高级）
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 选择存储文件夹
 </string>
@@ -13099,24 +13105,39 @@ SAF 存储
 选择您设备上允许 UFM 访问和管理的文件夹。
 </string>
     <string name="btn_add_another_folder">
-+ 添加文件夹/文件
+添加文件夹
 </string>
     <string name="selected_folders_count">
 已选择 %1$d 个文件夹
 </string>
     <string name="no_folders_selected_hint">
-尚未添加文件夹。点击“+ 添加文件夹/文件”以选择文件夹。
+尚未添加文件夹。点击“添加文件夹”以选择文件夹。
 </string>
     <string name="btn_done">
 完毕
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ 添加文件夹/文件
+添加文件夹
 </string>
     <string name="action_add_folder_to_storage_desc">
-授予对此存储中的文件夹或文件的访问权限
+授予对此存储中的文件夹的访问权限
+</string>
+    <string name="action_remove_folder_from_storage">
+删除文件夹
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+从此存储中删除已安装的文件夹访问权限
+</string>
+    <string name="dialog_remove_folders_title">
+删除已安装的文件夹
+</string>
+    <string name="dialog_remove_folders_desc">
+选择一个文件夹以删除对此存储的访问权限。您的文件不会被删除。
+</string>
+    <string name="no_mounted_folders_hint">
+此存储没有剩余的已安装文件夹。
 </string>
     <string name="restricted_storage_empty_title">
 尚未添加文件夹

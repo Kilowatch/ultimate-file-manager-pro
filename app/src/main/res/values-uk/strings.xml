@@ -50,6 +50,12 @@ Ultimate File Manager Pro
     <string name="language_dutch">
 голландська (Нідерланди)
 </string>
+    <string name="language_chinese">
+китайська (中文)
+</string>
+    <string name="language_swedish">
+шведська (Svenska)
+</string>
     <string name="select_language">
 Виберіть мову
 </string>
@@ -4276,7 +4282,7 @@ IP-адреса цільового пристрою
 </string>
     <string name="tv_pairing_subtitle">
 Пов\'яжіть телевізор за допомогою мобільного пристрою
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. На телефоні перейдіть до \"Сполучених телевізорів\"
 </string>
@@ -13087,8 +13093,11 @@ ADB підключено
     <string name="perm_choice_all_files_desc">
 Необмежений доступ до всіх файлів на пристрої для повного керування файлами.
 </string>
+    <string name="perm_switch_to_all_files">
+Переключитися на доступ до всіх файлів (розширений)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Виберіть Папки зберігання
 </string>
@@ -13096,24 +13105,39 @@ ADB підключено
 Виберіть папки на своєму пристрої, до яких UFM має доступ і керує ними.
 </string>
     <string name="btn_add_another_folder">
-+ Додати папку / файл
+Додати папку
 </string>
     <string name="selected_folders_count">
 Вибрано %1$d папку(и).
 </string>
     <string name="no_folders_selected_hint">
-Папки ще не додано. Натисніть «+ Додати папку / файл», щоб вибрати папки.
+Папки ще не додано. Натисніть «Додати папку», щоб вибрати папки.
 </string>
     <string name="btn_done">
 Готово
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Додати папку / файл
+Додати папку
 </string>
     <string name="action_add_folder_to_storage_desc">
-Надайте доступ до папки або файлу в цьому сховищі
+Надайте доступ до папки в цьому сховищі
+</string>
+    <string name="action_remove_folder_from_storage">
+Remove Folder
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remove mounted folder access from this storage
+</string>
+    <string name="dialog_remove_folders_title">
+Remove Mounted Folders
+</string>
+    <string name="dialog_remove_folders_desc">
+Select a folder to remove access from this storage. Your files will not be deleted.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 Папки ще не додано

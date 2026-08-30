@@ -219,7 +219,7 @@ class ImageViewerActivity : AppCompatActivity() {
                 val cropRect = drawingOverlay.computeCropRect()
 
                 val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
-                val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@ImageViewerActivity, file)
                 val dataToLoad: Any = if (contentUriStr != null) {
                     android.net.Uri.parse(contentUriStr)
                 } else if (isSaf) {
@@ -470,7 +470,7 @@ class ImageViewerActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
 
         val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
-        val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, file)
         val dataToLoad: Any = if (contentUriStr != null) {
             android.net.Uri.parse(contentUriStr)
         } else if (isSaf) {

@@ -254,7 +254,7 @@ class PdfViewerActivity : AppCompatActivity() {
                 }
 
                 val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
-                val isSaf = renderFile is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(renderFile.absolutePath)
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@PdfViewerActivity, renderFile)
                 val safUri = if (contentUriStr != null) {
                     android.net.Uri.parse(contentUriStr)
                 } else if (isSaf) {

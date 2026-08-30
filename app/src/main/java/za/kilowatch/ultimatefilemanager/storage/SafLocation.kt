@@ -16,7 +16,8 @@ data class SafLocation(
     val rootDocId: String,
     var customColor: String? = null,
     var iconType: String = "folder",
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val isStandalone: Boolean = false
 ) {
     fun getDisplayPath(): String {
         val decodedDocId = try { android.net.Uri.decode(rootDocId) } catch (_: Exception) { rootDocId }
@@ -73,20 +74,25 @@ data class SafLocation(
             put("customColor", customColor ?: "")
             put("iconType", iconType)
             put("createdAt", createdAt)
+            put("isStandalone", isStandalone)
         }
     }
 
     companion object {
         fun fromJson(json: JSONObject): SafLocation {
+            val authority = json.optString("authority", "")
+            val iconType = json.optString("iconType", "folder")
+            val defaultStandalone = authority.contains("termux") || iconType == "terminal"
             return SafLocation(
                 id = json.optString("id", UUID.randomUUID().toString()),
                 displayName = json.optString("displayName", "Custom Storage"),
                 treeUriString = json.optString("treeUriString", ""),
-                authority = json.optString("authority", ""),
+                authority = authority,
                 rootDocId = json.optString("rootDocId", ""),
                 customColor = json.optString("customColor").ifEmpty { null },
-                iconType = json.optString("iconType", "folder"),
-                createdAt = json.optLong("createdAt", System.currentTimeMillis())
+                iconType = iconType,
+                createdAt = json.optLong("createdAt", System.currentTimeMillis()),
+                isStandalone = json.optBoolean("isStandalone", defaultStandalone)
             )
         }
     }

@@ -310,7 +310,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
             // Add Custom SAF Storage Locations (Termux, Document Providers, USB/Custom Folders)
             val safLocations = SafLocationRepository.getLocations(context)
-            for (loc in safLocations) {
+            for (loc in safLocations.filter { it.isStandalone }) {
                 val iconRes = if (loc.iconType == "terminal" || loc.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
 
                 storageItems.add(StorageItem(
@@ -574,7 +574,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             items.add(StorageItem(id = "about_tile", label = context.getString(R.string.about_title), iconRes = R.drawable.ic_about, totalBytes = 0, usedBytes = 0, mountPath = "", isAboutTile = true))
 
             val safLocations = SafLocationRepository.getLocations(context)
-            for (loc in safLocations) {
+            for (loc in safLocations.filter { it.isStandalone }) {
                 val iconRes = if (loc.iconType == "terminal" || loc.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
 
                 items.add(StorageItem(
@@ -708,7 +708,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                 treeUriString = uri.toString(),
                 authority = authority,
                 rootDocId = docId,
-                iconType = defaultIcon
+                iconType = defaultIcon,
+                isStandalone = true
             )
 
             val success = SafLocationRepository.addLocation(this, newLocation)
@@ -3795,7 +3796,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             // Add Custom SAF Storage Locations (Termux, Document Providers, USB/Custom Folders)
             if (!capturedIsSearchFolderPicker) {
                 val safLocations = SafLocationRepository.getLocations(this@StorageBrowserActivity)
-                for (loc in safLocations) {
+                for (loc in safLocations.filter { it.isStandalone }) {
                     val iconRes = if (loc.iconType == "terminal" || loc.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
 
                     storageItems.add(StorageItem(

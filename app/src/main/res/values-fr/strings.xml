@@ -50,6 +50,12 @@ italien (italien)
     <string name="language_dutch">
 Néerlandais (Pays-Bas)
 </string>
+    <string name="language_chinese">
+Chinois (中文)
+</string>
+    <string name="language_swedish">
+Suédois (Svenska)
+</string>
     <string name="select_language">
 Sélectionnez la langue
 </string>
@@ -4276,7 +4282,7 @@ Ne plus afficher
 </string>
     <string name="tv_pairing_subtitle">
 Liez votre TV à l\\\'aide de votre appareil mobile
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. Sur votre téléphone, allez dans \\\"TV appairées\\\"
 </string>
@@ -13087,8 +13093,11 @@ Accès à tous les fichiers (avancé)
     <string name="perm_choice_all_files_desc">
 Accès illimité à tous les fichiers de l\'appareil pour une gestion complète des fichiers.
 </string>
+    <string name="perm_switch_to_all_files">
+Passer à l\'accès à tous les fichiers (avancé)
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 Sélectionnez les dossiers de stockage
 </string>
@@ -13096,24 +13105,39 @@ Sélectionnez les dossiers de stockage
 Choisissez les dossiers sur votre appareil que UFM est autorisé à accéder et à gérer.
 </string>
     <string name="btn_add_another_folder">
-+ Ajouter un dossier/fichier
+Ajouter un dossier
 </string>
     <string name="selected_folders_count">
 %1$d dossier(s) sélectionné(s)
 </string>
     <string name="no_folders_selected_hint">
-Aucun dossier ajouté pour l\'instant. Appuyez sur \"+ Ajouter un dossier/fichier\" pour choisir les dossiers.
+Aucun dossier ajouté pour l\'instant. Appuyez sur « Ajouter un dossier » pour choisir des dossiers.
 </string>
     <string name="btn_done">
 Fait
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ Ajouter un dossier/fichier
+Ajouter un dossier
 </string>
     <string name="action_add_folder_to_storage_desc">
-Accorder l\'accès à un dossier ou un fichier dans ce stockage
+Accorder l\'accès à un dossier dans ce stockage
+</string>
+    <string name="action_remove_folder_from_storage">
+Supprimer le dossier
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Supprimer l\'accès aux dossiers montés de ce stockage
+</string>
+    <string name="dialog_remove_folders_title">
+Supprimer les dossiers montés
+</string>
+    <string name="dialog_remove_folders_desc">
+Sélectionnez un dossier pour supprimer l\'accès à ce stockage. Vos fichiers ne seront pas supprimés.
+</string>
+    <string name="no_mounted_folders_hint">
+Aucun dossier monté restant pour ce stockage.
 </string>
     <string name="restricted_storage_empty_title">
 Aucun dossier ajouté pour l\'instant

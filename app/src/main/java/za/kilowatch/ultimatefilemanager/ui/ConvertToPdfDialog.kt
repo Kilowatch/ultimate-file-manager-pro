@@ -102,7 +102,7 @@ class ConvertToPdfDialog : DialogFragment() {
         val activity = requireActivity()
         dismiss()
 
-        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(sourcePath)
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(activity, sourcePath)
         val sourceFile = if (isSaf) za.kilowatch.ultimatefilemanager.storage.SafFile(sourcePath) else File(sourcePath)
         val parentPath = sourceFile.parentFile?.absolutePath ?: ""
         val outputPdfName = "$filename.pdf"

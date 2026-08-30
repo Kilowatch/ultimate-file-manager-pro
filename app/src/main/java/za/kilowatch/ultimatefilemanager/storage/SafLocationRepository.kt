@@ -18,25 +18,63 @@ object SafLocationRepository {
     @Volatile
     private var cachedLocations: List<SafLocation>? = null
 
+    fun clearCache() {
+        cachedLocations = null
+    }
+
     fun getLocations(context: Context): List<SafLocation> {
         val cached = cachedLocations
         if (cached != null) return cached
 
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val jsonStr = prefs.getString(KEY_LOCATIONS, null) ?: run {
-            cachedLocations = emptyList()
-            return emptyList()
-        }
+        val jsonStr = prefs.getString(KEY_LOCATIONS, null)
         val list = mutableListOf<SafLocation>()
+        if (jsonStr != null) {
+            try {
+                val jsonArray = JSONArray(jsonStr)
+                for (i in 0 until jsonArray.length()) {
+                    val obj = jsonArray.getJSONObject(i)
+                    list.add(SafLocation.fromJson(obj))
+                }
+            } catch (e: Exception) {
+                GoRoLog.e("SafLocationRepository", "Error parsing custom SAF locations", e)
+            }
+        }
+
+        // Reconcile with system persistedUriPermissions to discover all granted folders
         try {
-            val jsonArray = JSONArray(jsonStr)
-            for (i in 0 until jsonArray.length()) {
-                val obj = jsonArray.getJSONObject(i)
-                list.add(SafLocation.fromJson(obj))
+            var changed = false
+            val persisted = context.contentResolver.persistedUriPermissions
+            val knownUris = list.map { it.treeUriString }.toSet()
+            for (perm in persisted) {
+                if (!perm.isReadPermission) continue
+                val uriStr = perm.uri.toString()
+                if (!knownUris.contains(uriStr)) {
+                    val doc = androidx.documentfile.provider.DocumentFile.fromTreeUri(context, perm.uri)
+                    val name = doc?.name ?: "Storage Folder"
+                    val docId = try {
+                        android.provider.DocumentsContract.getTreeDocumentId(perm.uri)
+                    } catch (_: Exception) { "" }
+                    val authority = perm.uri.authority ?: ""
+                    val isTermux = authority.contains("termux")
+                    list.add(SafLocation(
+                        displayName = name,
+                        treeUriString = uriStr,
+                        authority = authority,
+                        rootDocId = docId,
+                        iconType = if (isTermux) "terminal" else "folder",
+                        isStandalone = isTermux
+                    ))
+                    changed = true
+                }
+            }
+            if (changed) {
+                saveLocations(context, list)
             }
         } catch (e: Exception) {
-            GoRoLog.e("SafLocationRepository", "Error parsing custom SAF locations", e)
+            GoRoLog.w("SafLocationRepository", "Error reconciling persisted URI permissions: ${e.message}")
         }
+
         val result = list.toList()
         cachedLocations = result
         return result

@@ -50,6 +50,12 @@ Ultimate File Manager Pro
     <string name="language_dutch">
 네덜란드어(네덜란드)
 </string>
+    <string name="language_chinese">
+Chinese (中文)
+</string>
+    <string name="language_swedish">
+스웨덴어(스벤스카)
+</string>
     <string name="select_language">
 언어 선택
 </string>
@@ -4276,7 +4282,7 @@ TV 이름 바꾸기
 </string>
     <string name="tv_pairing_subtitle">
 모바일 기기를 사용하여 TV 연결
-</string>>
+</string>
     <string name="tv_pairing_step1">
 1. 휴대폰에서 \'페어링된 TV\'로 이동
 </string>
@@ -13087,8 +13093,11 @@ UFM이 접근할 수 있는 폴더만 선택하세요. 다른 파일을 비공�
     <string name="perm_choice_all_files_desc">
 완전한 파일 관리를 위해 장치의 모든 파일에 대한 무제한 액세스.
 </string>
+    <string name="perm_switch_to_all_files">
+모든 파일 액세스(고급)로 전환
+</string>
 
-    <!-- Multi-Folder / File Startup Setup Dialog -->
+    <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
 저장소 폴더 선택
 </string>
@@ -13096,24 +13105,39 @@ UFM이 접근할 수 있는 폴더만 선택하세요. 다른 파일을 비공�
 UFM이 액세스하고 관리할 수 있는 장치의 폴더를 선택하세요.
 </string>
     <string name="btn_add_another_folder">
-+ 폴더/파일 추가
+폴더 추가
 </string>
     <string name="selected_folders_count">
 %1$d 폴더가 선택됨
 </string>
     <string name="no_folders_selected_hint">
-아직 추가된 폴더가 없습니다. 폴더를 선택하려면 \"+ 폴더/파일 추가\"를 탭하세요.
+아직 추가된 폴더가 없습니다. 폴더를 선택하려면 \"폴더 추가\"를 탭하세요.
 </string>
     <string name="btn_done">
 완료
 </string>
 
-    <!-- In-Storage Browsing: + Add Folder / File and Empty State -->
+    <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-+ 폴더/파일 추가
+폴더 추가
 </string>
     <string name="action_add_folder_to_storage_desc">
-이 저장소의 폴더 또는 파일에 대한 액세스 권한을 부여하세요.
+이 저장소의 폴더에 대한 액세스 권한을 부여하세요.
+</string>
+    <string name="action_remove_folder_from_storage">
+Remove Folder
+</string>
+    <string name="action_remove_folder_from_storage_desc">
+Remove mounted folder access from this storage
+</string>
+    <string name="dialog_remove_folders_title">
+Remove Mounted Folders
+</string>
+    <string name="dialog_remove_folders_desc">
+Select a folder to remove access from this storage. Your files will not be deleted.
+</string>
+    <string name="no_mounted_folders_hint">
+No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
 아직 추가된 폴더가 없습니다.

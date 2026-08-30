@@ -38,7 +38,7 @@ class PdfConverter(private val context: Context) {
     }
 
     private fun openInput(path: String): java.io.InputStream? {
-        return if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path)) {
+        return if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, path)) {
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, path)
         } else {
             try { File(path).inputStream() } catch (_: Exception) { null }
@@ -46,7 +46,7 @@ class PdfConverter(private val context: Context) {
     }
 
     private fun openOutput(path: String): java.io.OutputStream? {
-        return if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path)) {
+        return if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, path)) {
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(context, path)
         } else {
             try { File(path).outputStream() } catch (_: Exception) { null }
@@ -141,7 +141,7 @@ class PdfConverter(private val context: Context) {
      */
     private fun readExifRotation(sourcePath: String): Int {
         return try {
-            val exif = if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(sourcePath)) {
+            val exif = if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, sourcePath)) {
                 openInput(sourcePath)?.use { ExifInterface(it) } ?: return 0
             } else {
                 ExifInterface(sourcePath)

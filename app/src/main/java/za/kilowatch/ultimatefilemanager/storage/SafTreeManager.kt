@@ -6,6 +6,9 @@ import android.net.Uri
 import android.os.Build
 import android.provider.DocumentsContract
 import androidx.documentfile.provider.DocumentFile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
 import java.io.InputStream
@@ -31,6 +34,14 @@ object SafTreeManager {
 
     fun isSafPath(path: String): Boolean {
         return normalizePath(path).startsWith("saf://")
+    }
+
+    fun isSaf(context: Context, path: String): Boolean {
+        return isSafPath(path) || hasTreePermissionForPath(context, path)
+    }
+
+    fun isSaf(context: Context, file: File): Boolean {
+        return file is SafFile || isSafPath(file.absolutePath) || hasTreePermissionForPath(context, file.absolutePath)
     }
 
     fun clearCache() {
@@ -97,19 +108,36 @@ object SafTreeManager {
         val norm = normalizePath(pathOrSafUri)
         val locations = SafLocationRepository.getLocations(context)
         val matchedLoc = locations.firstOrNull {
-            it.treeUriString == norm || it.getDisplayPath() == norm || "saf://${it.id}" == norm || norm.endsWith("/${it.id}")
+            it.treeUriString == pathOrSafUri || it.treeUriString == norm || it.getDisplayPath() == norm || "saf://${it.id}" == norm || norm.endsWith("/${it.id}")
         }
+        val displayP = matchedLoc?.getDisplayPath() ?: norm
+        val storageId = if (matchedLoc != null) "saf_${matchedLoc.id}" else za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(displayP).first
+
         if (matchedLoc != null) {
             SafLocationRepository.removeLocation(context, matchedLoc.id)
+            val dp = normalizePath(matchedLoc.getDisplayPath())
+            removeTreePermission(context, dp)
         }
         val uriToRelease = getTreeUriForPath(context, norm)
-        if (uriToRelease != null) {
+            ?: (if (matchedLoc != null) try { Uri.parse(matchedLoc.treeUriString) } catch (_: Exception) { null } else null)
+            ?: (try { Uri.parse(pathOrSafUri) } catch (_: Exception) { null })
+        if (uriToRelease != null && uriToRelease.scheme == "content") {
             try {
                 val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 context.contentResolver.releasePersistableUriPermission(uriToRelease, flags)
             } catch (_: Exception) {}
         }
         removeTreePermission(context, norm)
+
+        // Purge all indexing records and metadata for this removed storage/folder
+        try {
+            val repo = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.getInstance(context)
+            repo.clearIndexForStorage(storageId)
+            CoroutineScope(Dispatchers.IO).launch {
+                repo.deleteTreeFromIndex(displayP)
+            }
+        } catch (_: Exception) {}
+
         return true
     }
 
@@ -182,12 +210,11 @@ object SafTreeManager {
 
             // Direct mapping for external storage documents (Internal storage, SD cards)
             if (treeUri.authority == "com.android.externalstorage.documents") {
-                val targetDocId = if (rootDocId.endsWith(":")) {
-                    "$rootDocId$relativeSubpath"
-                } else if (rootDocId.contains(":")) {
-                    "${rootDocId.substringBefore(':')}:$relativeSubpath"
-                } else {
-                    "primary:$relativeSubpath"
+                val cleanSub = relativeSubpath.trim('/')
+                val targetDocId = when {
+                    rootDocId.endsWith(":") || rootDocId.endsWith("/") -> "$rootDocId$cleanSub"
+                    rootDocId.isNotEmpty() -> "$rootDocId/$cleanSub"
+                    else -> "primary:$cleanSub"
                 }
                 val docUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, targetDocId)
                 treeUriCache[norm] = treeUri
@@ -275,12 +302,11 @@ object SafTreeManager {
         }
 
         if (treeUri.authority == "com.android.externalstorage.documents") {
-            val targetDocId = if (rootDocId.endsWith(":")) {
-                "$rootDocId$relativeSubpath"
-            } else if (rootDocId.contains(":")) {
-                "${rootDocId.substringBefore(':')}:$relativeSubpath"
-            } else {
-                "primary:$relativeSubpath"
+            val cleanSub = relativeSubpath.trim('/')
+            val targetDocId = when {
+                rootDocId.endsWith(":") || rootDocId.endsWith("/") -> "$rootDocId$cleanSub"
+                rootDocId.isNotEmpty() -> "$rootDocId/$cleanSub"
+                else -> "primary:$cleanSub"
             }
             val docUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, targetDocId)
             treeUriCache[norm] = treeUri
@@ -406,6 +432,16 @@ object SafTreeManager {
                     if (bestMatch == null || regNorm.length > bestMatch.first.length) {
                         bestMatch = Pair(regNorm, uriString)
                     }
+                }
+            }
+        }
+        // Also check SafLocationRepository for any locations registered or reconciled from persistedUriPermissions
+        val locations = SafLocationRepository.getLocations(context)
+        for (loc in locations) {
+            val disp = normalizePath(loc.getDisplayPath())
+            if (disp.isNotEmpty() && (norm == disp || norm.startsWith("$disp/"))) {
+                if (bestMatch == null || disp.length > bestMatch.first.length) {
+                    bestMatch = Pair(disp, loc.treeUriString)
                 }
             }
         }
