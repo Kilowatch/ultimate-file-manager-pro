@@ -3742,7 +3742,26 @@ class FileBrowserFragment : Fragment() {
                         offset = offset
                     )
                     hasMoreSearchResults = results.size >= batchSize
-                    results.map { File(it.path) }.filter { it.exists() }
+                    results.map {
+                        val ctx = context
+                        if (ctx != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(ctx, it.path)) {
+                            za.kilowatch.ultimatefilemanager.storage.SafFile(
+                                pathname = it.path,
+                                isDir = it.isDirectory,
+                                docLength = it.size,
+                                docLastModified = it.lastModified
+                            )
+                        } else {
+                            File(it.path)
+                        }
+                    }.filter { file ->
+                        val ctx = context
+                        if (file is za.kilowatch.ultimatefilemanager.storage.SafFile && ctx != null) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, file.absolutePath)
+                        } else {
+                            file.exists() || (ctx != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, file.absolutePath))
+                        }
+                    }
                 } else {
                     val isSaf = currentDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) ||

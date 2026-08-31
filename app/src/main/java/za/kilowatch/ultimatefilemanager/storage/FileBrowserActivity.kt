@@ -424,6 +424,15 @@ class FileBrowserActivity : AppCompatActivity() {
     private var focusPath: String? = null
     private var isCategoryMode = false
     private var categoryName: String? = null
+    private var categoryFilterType = SortFilterSheet.FilterType.ALL
+
+    private fun getEffectiveFilterType(): SortFilterSheet.FilterType {
+        return if (isCategoryMode && filterType == SortFilterSheet.FilterType.ALL) {
+            categoryFilterType
+        } else {
+            filterType
+        }
+    }
 
     // ── Category-mode pagination ─────────────────────────────────────────────
     private val CATEGORY_PAGE_SIZE = 1000
@@ -550,17 +559,31 @@ class FileBrowserActivity : AppCompatActivity() {
         isSmartSortPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_PICKER, false)
 
         // Category mode — read extras that drive the filtered file list
-        isCategoryMode = intent.getBooleanExtra(EXTRA_IS_CATEGORY_MODE, false)
-        categoryName   = intent.getStringExtra(EXTRA_CATEGORY_NAME)
+        isCategoryMode = savedInstanceState?.getBoolean(EXTRA_IS_CATEGORY_MODE)
+            ?: intent.getBooleanExtra(EXTRA_IS_CATEGORY_MODE, false)
+        categoryName = savedInstanceState?.getString(EXTRA_CATEGORY_NAME)
+            ?: intent.getStringExtra(EXTRA_CATEGORY_NAME)
         if (isCategoryMode) {
-            val filterOrdinal = intent.getIntExtra(EXTRA_FILTER_TYPE, 0)
-            filterType = SortFilterSheet.FilterType.entries.getOrElse(filterOrdinal) { SortFilterSheet.FilterType.ALL }
-        }
+            val filterOrdinal = savedInstanceState?.getInt(EXTRA_FILTER_TYPE)
+                ?: intent.getIntExtra(EXTRA_FILTER_TYPE, 0)
+            categoryFilterType = SortFilterSheet.FilterType.entries.getOrElse(filterOrdinal) { SortFilterSheet.FilterType.ALL }
+            val currentFilterOrdinal = savedInstanceState?.getInt("CURRENT_FILTER_TYPE", categoryFilterType.ordinal)
+                ?: categoryFilterType.ordinal
+            filterType = SortFilterSheet.FilterType.entries.getOrElse(currentFilterOrdinal) { categoryFilterType }
 
-        // Restore sort preferences — prefer folder-specific, fall back to global
-        val globalState = SortFilterPreferenceManager.loadGlobal(this)
-        sortMode  = globalState.sortMode
-        sortOrder = globalState.sortOrder
+            val catState = SortFilterPreferenceManager.loadCategory(this, categoryFilterType)
+                ?: SortFilterPreferenceManager.loadGlobal(this)
+            sortMode  = catState.sortMode
+            sortOrder = catState.sortOrder
+            currentDateFilter = catState.dateFilter
+            currentSizeFilter = catState.sizeFilter
+            activeTagsFilter = catState.activeTags
+        } else {
+            // Restore sort preferences — prefer folder-specific, fall back to global
+            val globalState = SortFilterPreferenceManager.loadGlobal(this)
+            sortMode  = globalState.sortMode
+            sortOrder = globalState.sortOrder
+        }
         // Folder-specific overrides are applied in loadDirectory() on the IO thread.
 
         setupViews()
@@ -615,6 +638,12 @@ class FileBrowserActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         saveCurrentFolderScroll()
         outState.putBundle("KEY_FOLDER_SCROLL_STATES", FolderScrollState.toBundle(folderScrollStates))
+        if (isCategoryMode) {
+            outState.putBoolean(EXTRA_IS_CATEGORY_MODE, isCategoryMode)
+            outState.putString(EXTRA_CATEGORY_NAME, categoryName)
+            outState.putInt(EXTRA_FILTER_TYPE, categoryFilterType.ordinal)
+            outState.putInt("CURRENT_FILTER_TYPE", filterType.ordinal)
+        }
     }
 
     private fun updateFabPositions() {
@@ -1440,11 +1469,14 @@ class FileBrowserActivity : AppCompatActivity() {
         val db = UfmIndexingDatabase.getInstance(applicationContext)
         val dao = db.fileIndexDao()
         val offset = categoryPage * CATEGORY_PAGE_SIZE
+        val effectiveFilter = getEffectiveFilterType()
 
         val fileIndices = withContext(Dispatchers.IO) {
             dao.getFilesByCategory(
                 storageId  = storageId,
-                filterType = filterType.ordinal,
+                filterType = effectiveFilter.ordinal,
+                sortMode   = sortMode.ordinal,
+                sortOrder  = sortOrder.ordinal,
                 limit      = CATEGORY_PAGE_SIZE,
                 offset     = offset
             )
@@ -1460,15 +1492,40 @@ class FileBrowserActivity : AppCompatActivity() {
             val showHidden  = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
             val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase
                 .getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
-            val files = fileIndices.map { File(it.path) }
-                .filter { it.exists() && isFileVisible(it, showHidden, hiddenPaths) }
+            val files = fileIndices.map { index ->
+                if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(index.path)) {
+                    za.kilowatch.ultimatefilemanager.storage.ShizukuFile(
+                        parentPath = index.folderPath,
+                        docName = index.filename,
+                        isDir = index.isDirectory,
+                        docLength = index.size,
+                        docLastModified = index.lastModified
+                    )
+                } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, index.path) ||
+                           za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@FileBrowserActivity, index.path)) {
+                    za.kilowatch.ultimatefilemanager.storage.SafFile(
+                        parentPath = index.folderPath,
+                        docName = index.filename,
+                        isDir = index.isDirectory,
+                        docLength = index.size,
+                        docLastModified = index.lastModified
+                    )
+                } else {
+                    File(index.path)
+                }
+            }.filter { file ->
+                (file is za.kilowatch.ultimatefilemanager.storage.ShizukuFile ||
+                 file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                 file.exists()) && isFileVisible(file, showHidden, hiddenPaths)
+            }
+            val processed = sortAndFilterFiles(files)
 
             withContext(Dispatchers.Main) {
                 if (append) {
-                    fileAdapter.appendList(files)
+                    fileAdapter.appendList(processed)
                 } else {
-                    fileAdapter.submitList(files, showAllAsIndexed = true, hiddenPaths = hiddenPaths)
-                    updateEmptyState(files.isEmpty())
+                    fileAdapter.submitList(processed, showAllAsIndexed = true, hiddenPaths = hiddenPaths)
+                    updateEmptyState(processed.isEmpty())
                     applyFileFocus()
                 }
             }
@@ -2861,9 +2918,9 @@ class FileBrowserActivity : AppCompatActivity() {
         sheet.activeTags = activeTagsFilter
 
         val folderKey = SortFilterPreferenceManager.folderKey(currentDir.absolutePath)
-        sheet.currentFolderKey = folderKey
-        sheet.currentFolderDisplayPath = currentDir.absolutePath
-        val hasFolderOverride = SortFilterPreferenceManager.hasFolderOverride(this, currentDir.absolutePath)
+        sheet.currentFolderKey = if (isCategoryMode) SortFilterPreferenceManager.categoryKey(categoryFilterType) else folderKey
+        sheet.currentFolderDisplayPath = if (isCategoryMode) (categoryName ?: "Category") else currentDir.absolutePath
+        val hasFolderOverride = if (isCategoryMode) false else SortFilterPreferenceManager.hasFolderOverride(this, currentDir.absolutePath)
         sheet.currentScope = if (hasFolderOverride) SortFilterSheet.Scope.FOLDER else SortFilterSheet.Scope.GLOBAL
         
         val activeState = if (hasFolderOverride) {
@@ -2890,7 +2947,19 @@ class FileBrowserActivity : AppCompatActivity() {
                 za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
             }
 
-            if (!isSearchActive) {
+            if (isCategoryMode) {
+                val state = SortFilterPreferenceManager.SortFilterState(
+                    mode, order, filter, showHidden, groupByDate, tags,
+                    viewMode = selectedViewMode,
+                    isRecursive = false,
+                    dateFilter = dateFilter,
+                    sizeFilter = sizeFilter
+                )
+                lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    SortFilterPreferenceManager.saveCategory(this@FileBrowserActivity, categoryFilterType, state)
+                    ViewModeManager.save(this@FileBrowserActivity, selectedViewMode)
+                }
+            } else if (!isSearchActive) {
                 val state = SortFilterPreferenceManager.SortFilterState(
                     mode, order, filter, showHidden, groupByDate, tags,
                     viewMode = if (scope == SortFilterSheet.Scope.FOLDER) selectedViewMode else null,
@@ -5022,17 +5091,24 @@ class FileBrowserActivity : AppCompatActivity() {
 
         // Load folder-specific sort settings (or fall back to global) on IO thread
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            val state = SortFilterPreferenceManager.loadForPath(this@FileBrowserActivity, targetDir.absolutePath)
-                ?: SortFilterPreferenceManager.loadGlobal(this@FileBrowserActivity)
-            val hasFolderOverride = SortFilterPreferenceManager.hasFolderOverride(this@FileBrowserActivity, targetDir.absolutePath)
+            val state = if (isCategoryMode) {
+                SortFilterPreferenceManager.loadCategory(this@FileBrowserActivity, categoryFilterType)
+                    ?: SortFilterPreferenceManager.loadGlobal(this@FileBrowserActivity)
+            } else {
+                SortFilterPreferenceManager.loadForPath(this@FileBrowserActivity, targetDir.absolutePath)
+                    ?: SortFilterPreferenceManager.loadGlobal(this@FileBrowserActivity)
+            }
+            val hasFolderOverride = if (isCategoryMode) false else SortFilterPreferenceManager.hasFolderOverride(this@FileBrowserActivity, targetDir.absolutePath)
             val viewModeToApply = state.viewMode ?: ViewModeManager.load(this@FileBrowserActivity)
             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                 sortMode  = state.sortMode
                 sortOrder = state.sortOrder
-                filterType = state.filterType
-                currentDateFilter = state.dateFilter
-                currentSizeFilter = state.sizeFilter
-                activeTagsFilter = state.activeTags
+                if (!isCategoryMode) {
+                    filterType = state.filterType
+                    currentDateFilter = state.dateFilter
+                    currentSizeFilter = state.sizeFilter
+                    activeTagsFilter = state.activeTags
+                }
                 updateSortBadge(hasFolderOverride)
                 if (fileAdapter.viewMode != viewModeToApply) {
                     applyViewMode(viewModeToApply)
@@ -5229,24 +5305,22 @@ class FileBrowserActivity : AppCompatActivity() {
                         val isSaf = currentDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) ||
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, currentDir.absolutePath)
-                        val files = if (isSaf) {
+                        val rawFiles = if (isSaf) {
                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.walkSafTopDown(this@FileBrowserActivity, currentDir.absolutePath)
                                 .filter { coroutineContext.ensureActive(); true }
-                                .filter { !it.isDirectory && SortFilterSheet.matchesFilter(it, filterType) }
-                                .filter { isFileVisible(it, showHidden, hiddenPaths) }
-                                .sortedByDescending { it.lastModified() }
+                                .filter { !it.isDirectory && isFileVisible(it, showHidden, hiddenPaths) }
+                                .toList()
                         } else {
                             currentDir.walkTopDown()
                                 .filter { coroutineContext.ensureActive(); true }
-                                .filter { it.isFile && SortFilterSheet.matchesFilter(it, filterType) }
-                                .filter { isFileVisible(it, showHidden, hiddenPaths) }
-                                .sortedByDescending { it.lastModified() }
+                                .filter { it.isFile && isFileVisible(it, showHidden, hiddenPaths) }
                                 .toList()
                         }
+                        val sorted = sortAndFilterFiles(rawFiles)
                         withContext(Dispatchers.Main) {
                             submitAdapterList {
-                                fileAdapter.submitList(files, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
-                                updateEmptyState(files.isEmpty())
+                                fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
+                                updateEmptyState(sorted.isEmpty())
                                 applyFileFocus()
                             }
                         }
@@ -5431,7 +5505,8 @@ class FileBrowserActivity : AppCompatActivity() {
             files.filter { it.isDirectory || it.extension.lowercase() in pickerExtensions }
         } else files
 
-        val filtered = preFiltered.filter { SortFilterSheet.matchesFilter(it, filterType, currentDateFilter, currentSizeFilter) }
+        val effectiveFilter = getEffectiveFilterType()
+        val filtered = preFiltered.filter { SortFilterSheet.matchesFilter(it, effectiveFilter, currentDateFilter, currentSizeFilter) }
 
         val tagFiltered = if (activeTagsFilter.isNotEmpty()) {
             filtered.filter { it.isDirectory || FileTagsManager.getTags(this, it.absolutePath).any { t -> t in activeTagsFilter } }
@@ -5442,7 +5517,7 @@ class FileBrowserActivity : AppCompatActivity() {
         val state = SortFilterPreferenceManager.SortFilterState(
             sortMode = sortMode,
             sortOrder = sortOrder,
-            filterType = filterType,
+            filterType = effectiveFilter,
             showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled,
             groupByDate = false,
             activeTags = activeTagsFilter,
@@ -6726,7 +6801,24 @@ class FileBrowserActivity : AppCompatActivity() {
                         offset = offset
                     )
                     hasMoreSearchResults = results.size >= batchSize
-                    results.map { File(it.path) }.filter { it.exists() }
+                    results.map {
+                        if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@FileBrowserActivity, it.path)) {
+                            za.kilowatch.ultimatefilemanager.storage.SafFile(
+                                pathname = it.path,
+                                isDir = it.isDirectory,
+                                docLength = it.size,
+                                docLastModified = it.lastModified
+                            )
+                        } else {
+                            File(it.path)
+                        }
+                    }.filter { file ->
+                        if (file is za.kilowatch.ultimatefilemanager.storage.SafFile) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, file.absolutePath)
+                        } else {
+                            file.exists() || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, file.absolutePath)
+                        }
+                    }
                 } else {
                     val isSaf = currentDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) ||

@@ -294,10 +294,22 @@ object AutoBackupPrefs {
                 android.util.Log.w(TAG, "Custom local path $customPath does not exist — falling back to default")
             }
         }
-        return File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-            "UFM"
-        )
+        val hasAllFilesAccess = android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R ||
+                android.os.Environment.isExternalStorageManager()
+        if (hasAllFilesAccess) {
+            val publicDir = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+                "UFM"
+            )
+            try {
+                if (publicDir.exists() || publicDir.mkdirs()) {
+                    return publicDir
+                }
+            } catch (_: Exception) {}
+        }
+        val appDir = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) ?: context.filesDir, "Backup")
+        if (!appDir.exists()) appDir.mkdirs()
+        return appDir
     }
 
     fun getConfigFile(context: Context): File {

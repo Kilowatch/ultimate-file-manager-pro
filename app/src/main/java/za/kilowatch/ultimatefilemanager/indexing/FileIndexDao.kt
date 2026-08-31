@@ -572,17 +572,35 @@ interface FileIndexDao {
         WHERE isDirectory = 0
           AND storageId = :storageId
           AND (
+              (:filterType = 0) OR
               (:filterType = 1 AND (extension IN ('jpg','jpeg','png','gif','bmp','webp','svg','heic','heif','avif','jxl'))) OR
               (:filterType = 2 AND (extension IN ('mp4','mkv','avi','mov','wmv','flv','webm','3gp','m4v'))) OR
               (:filterType = 3 AND (extension IN ('mp3','wav','aac','flac','ogg','wma','m4a','opus'))) OR
               (:filterType = 4 AND (extension IN ('pdf','doc','docx','docm','dot','dotx','dotm','xls','xlsx','xlsm','xlt','xltx','xltm','xlsb','ppt','pptx','pptm','pps','ppsx','pot','potx','potm','txt','csv','rtf','odt','dat','vsd','vsdx','pub','accdb','mdb'))) OR
-              (:filterType = 5 AND (extension IN ('apk','xapk','apks'))) OR
-              (:filterType = 6 AND (extension NOT IN ('jpg','jpeg','png','gif','bmp','webp','svg','heic','heif','avif','jxl','mp4','mkv','avi','mov','wmv','flv','webm','3gp','m4v','mp3','wav','aac','flac','ogg','wma','m4a','opus','pdf','doc','docx','docm','dot','dotx','dotm','xls','xlsx','xlsm','xlt','xltx','xltm','xlsb','ppt','pptx','pptm','pps','ppsx','pot','potx','potm','txt','csv','rtf','odt','dat','vsd','vsdx','pub','accdb','mdb','apk','xapk','apks')))
+              (:filterType = 5 AND (extension IN ('zip','rar','7z','tar','gz','bz2','xz','iso','tgz','tbz2','zst','cab','lzma','lzh','arj'))) OR
+              (:filterType = 6 AND (extension IN ('apk','xapk','apks'))) OR
+              (:filterType = 7 AND (extension NOT IN ('jpg','jpeg','png','gif','bmp','webp','svg','heic','heif','avif','jxl','mp4','mkv','avi','mov','wmv','flv','webm','3gp','m4v','mp3','wav','aac','flac','ogg','wma','m4a','opus','pdf','doc','docx','docm','dot','dotx','dotm','xls','xlsx','xlsm','xlt','xltx','xltm','xlsb','ppt','pptx','pptm','pps','ppsx','pot','potx','potm','txt','csv','rtf','odt','dat','vsd','vsdx','pub','accdb','mdb','zip','rar','7z','tar','gz','bz2','xz','iso','tgz','tbz2','zst','cab','lzma','lzh','arj','apk','xapk','apks')))
           )
-        ORDER BY lastModified DESC
+        ORDER BY
+            CASE WHEN :sortMode = 0 AND :sortOrder = 0 THEN filename END ASC,
+            CASE WHEN :sortMode = 0 AND :sortOrder = 1 THEN filename END DESC,
+            CASE WHEN :sortMode = 1 AND :sortOrder = 0 THEN size END ASC,
+            CASE WHEN :sortMode = 1 AND :sortOrder = 1 THEN size END DESC,
+            CASE WHEN :sortMode = 2 AND :sortOrder = 0 THEN lastModified END ASC,
+            CASE WHEN :sortMode = 2 AND :sortOrder = 1 THEN lastModified END DESC,
+            CASE WHEN :sortMode = 3 AND :sortOrder = 0 THEN extension END ASC,
+            CASE WHEN :sortMode = 3 AND :sortOrder = 1 THEN extension END DESC,
+            filename ASC
         LIMIT :limit OFFSET :offset
     """)
-    suspend fun getFilesByCategory(storageId: String, filterType: Int, limit: Int = 1000, offset: Int = 0): List<FileIndex>
+    suspend fun getFilesByCategory(
+        storageId: String,
+        filterType: Int,
+        sortMode: Int = 2,
+        sortOrder: Int = 1,
+        limit: Int = 1000,
+        offset: Int = 0
+    ): List<FileIndex>
 
     @Query("""
         SELECT SUM(size) as totalSize, COUNT(*) as fileCount

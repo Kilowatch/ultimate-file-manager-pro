@@ -255,6 +255,25 @@ object SortFilterPreferenceManager {
             .apply()
     }
 
+    // ── Category load / save ──────────────────────────────────────────────────
+
+    fun categoryKey(filterType: SortFilterSheet.FilterType): String =
+        "category_${filterType.name.lowercase()}"
+
+    /**
+     * Save category-specific sort & filter state to encrypted preferences.
+     */
+    fun saveCategory(context: Context, filterType: SortFilterSheet.FilterType, state: SortFilterState) {
+        saveFolderSpecific(context, categoryKey(filterType), "Category: ${filterType.name}", state, isNetwork = false)
+    }
+
+    /**
+     * Load category-specific sort & filter state. Returns null if none exists.
+     */
+    fun loadCategory(context: Context, filterType: SortFilterSheet.FilterType): SortFilterState? {
+        return loadForFolder(context, categoryKey(filterType))
+    }
+
     // ── Per-folder load / save ────────────────────────────────────────────────
 
     /**

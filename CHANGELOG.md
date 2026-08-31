@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed Android TV media player seek bar jumping back to the current playback position during D-pad seeking, now holding the target seek position until confirmed with the D-pad Center / OK button.
+- Fixed Sort & Filter behavior inside Storage Analyzer → Storage Breakdown categories on Mobile and Android TV:
+  - Selecting "Filter → All" now correctly retains all files in the current category instead of clearing the list.
+  - Applying matching filters and changing Sort by, Order, Date, or Size options now updates the file list properly.
+  - Resolved an issue where backgrounding and returning to the app cleared category file listings.
+  - Aligned Room DAO category queries and extension aggregation to ensure file counts in Storage Breakdown match opened category listings across indexed and non-indexed storages.
+- Fixed Storage Access Framework (SAF) search results displaying "0 B" file size and "Unknown Storage" labels:
+  - Passed indexed file size and modification timestamps to SAF file instances in search results.
+  - Resolved SAF location and custom drive display names for search result storage badges.
+  - Added SAF support to unindexed fallback searches.
+- Fixed category-specific Sort & Filter preferences and pagination sorting in Storage Analyzer:
+  - Added category persistence for Sort Mode (Name, Size, Date, Type), Sort Order (Ascending, Descending), Date filters, and Size filters so choices persist across app launches and restarts.
+  - Implemented SQL-level dynamic sorting (`ORDER BY CASE`) in Room DAO category queries to ensure paginated results are ordered correctly across all pages.
+- Fixed Notepad permission denied error (`EACCES`) when running in Selected Folders (SAF) mode without All Files Access:
+  - Added safe directory resolution and automatic app-specific storage fallback for the default working scratchpad.
+  - Applied consistent fallback handling across Document Scanner and Auto-Backup.
+- Added restricted feature guidance dialog to TV device management screen:
+  - Prompts with the All Files Access guidance popup when triggering "Take Screenshot" or "Record Screen" while in restricted storage mode.
 
 ## [1.9.3] — 2026-08-27
 

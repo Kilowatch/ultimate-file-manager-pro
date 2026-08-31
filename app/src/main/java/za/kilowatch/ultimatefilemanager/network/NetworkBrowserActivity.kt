@@ -7019,7 +7019,36 @@ class NetworkBrowserActivity : AppCompatActivity() {
         return R.drawable.ic_tv_remote
     }
 
+    private fun showRestrictedFeatureGuidanceDialog() {
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.restricted_feature_dialog_title)
+            .setMessage(R.string.restricted_feature_dialog_desc)
+            .setPositiveButton(R.string.btn_open_settings) { _, _ ->
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    try {
+                        val intent = Intent(
+                            android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                            Uri.parse("package:$packageName")
+                        )
+                        startActivity(intent)
+                    } catch (_: Exception) {
+                        try {
+                            val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
+                            startActivity(intent)
+                        } catch (_: Exception) {}
+                    }
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+        dialog.show()
+    }
+
     private fun performTvScreenshot() {
+        if (!isTv && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !android.os.Environment.isExternalStorageManager()) {
+            showRestrictedFeatureGuidanceDialog()
+            return
+        }
         // First check if ADB is enabled on the TV via HTTP
         lifecycleScope.launch {
             val adbEnabled = withContext(Dispatchers.IO) {
@@ -7183,6 +7212,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
     // ── TV Screen Record ───────────────────────────────────────────────────────
 
     private fun performTvRecordScreen() {
+        if (!isTv && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !android.os.Environment.isExternalStorageManager()) {
+            showRestrictedFeatureGuidanceDialog()
+            return
+        }
         lifecycleScope.launch {
             val adbEnabled = withContext(Dispatchers.IO) {
                 TvShareClient.isAdbEnabled(share)

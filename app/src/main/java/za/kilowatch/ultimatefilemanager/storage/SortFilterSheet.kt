@@ -221,6 +221,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         val chipDocs = view.findViewById<Chip>(R.id.chipDocuments)
         val chipArchives = view.findViewById<Chip?>(R.id.chipArchives)
         val chipApks = view.findViewById<Chip>(R.id.chipApks)
+        val chipOther = view.findViewById<Chip?>(R.id.chipOther)
 
         when (currentFilterType) {
             FilterType.ALL -> chipAll.isChecked = true
@@ -230,7 +231,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
             FilterType.DOCUMENTS -> chipDocs.isChecked = true
             FilterType.ARCHIVES -> chipArchives?.isChecked = true
             FilterType.APKS -> chipApks.isChecked = true
-            FilterType.OTHER -> { /* No specific chip for Other */ }
+            FilterType.OTHER -> chipOther?.isChecked = true
         }
 
         // Date filter chips
@@ -342,6 +343,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                 R.id.chipDocuments -> FilterType.DOCUMENTS
                 R.id.chipArchives -> FilterType.ARCHIVES
                 R.id.chipApks -> FilterType.APKS
+                R.id.chipOther -> FilterType.OTHER
                 else -> FilterType.ALL
             }
             val dateFilter = when (cgDate?.checkedChipId) {
@@ -464,7 +466,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         val chips = listOf(
             R.id.chipSortName, R.id.chipSortSize, R.id.chipSortDate, R.id.chipSortType,
             R.id.chipAscending, R.id.chipDescending,
-            R.id.chipAll, R.id.chipImages, R.id.chipVideos, R.id.chipAudio, R.id.chipDocuments, R.id.chipArchives, R.id.chipApks,
+            R.id.chipAll, R.id.chipImages, R.id.chipVideos, R.id.chipAudio, R.id.chipDocuments, R.id.chipArchives, R.id.chipApks, R.id.chipOther,
             R.id.chipDateAny, R.id.chipDateToday, R.id.chipDateYesterday, R.id.chipDateThisWeek, R.id.chipDatePrevWeek,
             R.id.chipDateThisMonth, R.id.chipDatePrevMonth, R.id.chipDateThisYear, R.id.chipDatePrevYear,
             R.id.chipSizeAny, R.id.chipSizeEmpty, R.id.chipSizeTiny, R.id.chipSizeSmall, R.id.chipSizeMedium,

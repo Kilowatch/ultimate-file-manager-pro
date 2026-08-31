@@ -778,7 +778,12 @@ class SearchActivity : AppCompatActivity() {
                             offset      = offset
                         ).map { 
                             if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@SearchActivity, it.path)) {
-                                za.kilowatch.ultimatefilemanager.storage.SafFile(it.path, it.isDirectory)
+                                za.kilowatch.ultimatefilemanager.storage.SafFile(
+                                    pathname = it.path,
+                                    isDir = it.isDirectory,
+                                    docLength = it.size,
+                                    docLastModified = it.lastModified
+                                )
                             } else {
                                 File(it.path)
                             }
@@ -846,13 +851,48 @@ class SearchActivity : AppCompatActivity() {
 
             // Build storageLabels only for new-page results and add to cumulative map
             if (!append) cumulativeStorageLabels.clear()
+            val safLocations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this)
             results.forEach { file ->
                 val path = file.absolutePath
                 val (storageId, _, _) = IndexingRepository.resolveStorageForPath(path)
                 cumulativeStorageLabels[path] = when {
-                    storageId == "internal"            -> getString(R.string.storage_internal)
-                    storageId.startsWith("sdcard_")   -> "${getString(R.string.storage_sd_card)} (${storageId.removePrefix("sdcard_")})"
-                    else                               -> getString(R.string.storage_unknown)
+                    storageId == "internal" -> {
+                        if (selectedDrivePath != null && selectedDrivePath !is za.kilowatch.ultimatefilemanager.storage.SafFile &&
+                            path.startsWith(selectedDrivePath!!.absolutePath) && selectedDrivePath!!.absolutePath != "/storage/emulated/0"
+                        ) {
+                            driveEntries.getOrNull(selectedDriveIndex)?.label ?: getString(R.string.storage_internal)
+                        } else {
+                            getString(R.string.storage_internal)
+                        }
+                    }
+                    storageId.startsWith("sdcard_") -> {
+                        "${getString(R.string.storage_sd_card)} (${storageId.removePrefix("sdcard_")})"
+                    }
+                    storageId.startsWith("saf_") -> {
+                        val locId = storageId.removePrefix("saf_")
+                        val matchedLoc = safLocations.firstOrNull { it.id == locId }
+                            ?: safLocations.firstOrNull { l ->
+                                val dp = l.getDisplayPath()
+                                (dp.isNotEmpty() && path.startsWith(dp)) || path.startsWith("saf://${l.id}")
+                            }
+                        matchedLoc?.displayName ?: run {
+                            if (file is za.kilowatch.ultimatefilemanager.storage.SafFile && file.parent != null) {
+                                File(file.parent).name.ifEmpty { "SAF" }
+                            } else {
+                                "SAF"
+                            }
+                        }
+                    }
+                    else -> {
+                        val matchedLoc = safLocations.firstOrNull { l ->
+                            val dp = l.getDisplayPath()
+                            (dp.isNotEmpty() && path.startsWith(dp)) || path.startsWith("saf://${l.id}")
+                        }
+                        matchedLoc?.displayName ?: run {
+                            val matchedDrive = driveEntries.firstOrNull { d -> d.path != null && path.startsWith(d.path.absolutePath) }
+                            matchedDrive?.label ?: getString(R.string.storage_unknown)
+                        }
+                    }
                 }
             }
 
@@ -903,13 +943,23 @@ class SearchActivity : AppCompatActivity() {
 
             for (root in roots) {
                 if (!isActive) break
-                try {
-                    root.walkTopDown()
-                        .onEnter { isActive }
-                        .filter { it.name.lowercase().contains(lowerQuery) }
-                        .take(pageSize)
-                        .forEach { found.add(it) }
-                } catch (_: Exception) { }
+                val isSaf = root is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(root.absolutePath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@SearchActivity, root.absolutePath)
+                if (isSaf) {
+                    val safResults = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.searchSaf(
+                        this@SearchActivity, root.absolutePath, query, maxResults = pageSize
+                    )
+                    found.addAll(safResults)
+                } else {
+                    try {
+                        root.walkTopDown()
+                            .onEnter { isActive }
+                            .filter { it.name.lowercase().contains(lowerQuery) }
+                            .take(pageSize)
+                            .forEach { found.add(it) }
+                    } catch (_: Exception) { }
+                }
             }
             found.sortedWith(NaturalSort.byName { it.name })
         }

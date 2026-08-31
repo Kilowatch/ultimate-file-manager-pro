@@ -120,10 +120,7 @@ class NotepadActivity : AppCompatActivity() {
         }
         editText.background = border
 
-        notesDir = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-            "UFM/Notes"
-        )
+        notesDir = getNotesDirectory()
         selectedFolderPath = notesDir?.absolutePath
 
         scaleDetector = ScaleGestureDetector(this, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -224,6 +221,27 @@ class NotepadActivity : AppCompatActivity() {
         }
     }
 
+    private fun getNotesDirectory(): File {
+        val hasAllFilesAccess = android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R ||
+                android.os.Environment.isExternalStorageManager()
+        if (hasAllFilesAccess) {
+            val publicDir = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+                "UFM/Notes"
+            )
+            try {
+                if (publicDir.exists() || publicDir.mkdirs()) {
+                    return publicDir
+                }
+            } catch (_: Exception) {}
+        }
+        val appDir = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS) ?: filesDir, "Notes")
+        if (!appDir.exists()) {
+            appDir.mkdirs()
+        }
+        return appDir
+    }
+
     private fun loadOrCreateNote() {
         lifecycleScope.launch(Dispatchers.IO) {
             var attempt = 0
@@ -233,12 +251,11 @@ class NotepadActivity : AppCompatActivity() {
 
             while (attempt < maxAttempts) {
                 try {
-                    notesDir?.let {
-                        if (!it.exists()) {
-                            it.mkdirs()
-                        }
+                    val dir = notesDir ?: getNotesDirectory().also { notesDir = it }
+                    if (!dir.exists()) {
+                        dir.mkdirs()
                     }
-                    val file = File(notesDir, "Notepad.txt")
+                    val file = File(dir, "Notepad.txt")
                     if (!file.exists()) {
                         file.writeText("", Charsets.UTF_8)
                     }
@@ -259,8 +276,11 @@ class NotepadActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     lastException = e
                     attempt++
+                    // Fallback to internal storage if external storage access failed
+                    notesDir = File(filesDir, "Notes").apply { if (!exists()) mkdirs() }
+                    selectedFolderPath = notesDir?.absolutePath
                     if (attempt < maxAttempts) {
-                        delay(500)
+                        delay(200)
                     }
                 }
             }
@@ -448,8 +468,9 @@ class NotepadActivity : AppCompatActivity() {
         editText.text.clear()
         fileName = "Notepad.txt"
         txtTitle.text = fileName
-        currentFile = File(notesDir, "Notepad.txt")
-        selectedFolderPath = notesDir?.absolutePath
+        val dir = notesDir ?: getNotesDirectory().also { notesDir = it }
+        currentFile = File(dir, "Notepad.txt")
+        selectedFolderPath = dir.absolutePath
         isModified = false
         updateWordCount()
         editText.requestFocus()
@@ -475,7 +496,16 @@ class NotepadActivity : AppCompatActivity() {
         val content = editText.text.toString()
         try {
             if (file.extension.lowercase() != "pdf") {
-                file.writeText(content, Charsets.UTF_8)
+                val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, file.absolutePath)
+                if (isSaf) {
+                    val out = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(this, file.absolutePath)
+                    out?.use { it.write(content.toByteArray(Charsets.UTF_8)) }
+                } else {
+                    file.parentFile?.mkdirs()
+                    file.writeText(content, Charsets.UTF_8)
+                }
                 isModified = false
             }
         } catch (_: Exception) {}

@@ -54,8 +54,8 @@ class StorageAnalyzerEngine(private val context: Context) {
     }
 
     suspend fun getCategories(storageId: String, usedBytes: Long): List<CategoryData> {
-        val mimeUsage = dao.getStorageUsageByMimeType(storageId)
-        return buildCategories(mimeUsage, usedBytes)
+        val extUsage = dao.getStorageUsageByType(storageId)
+        return buildCategories(extUsage, usedBytes)
     }
 
     suspend fun getTopFolders(storageId: String): List<AnalyzerFolder> {
@@ -197,10 +197,10 @@ class StorageAnalyzerEngine(private val context: Context) {
     }
 
     /**
-     * Build the 6 user-facing categories from MIME type aggregations.
+     * Build the 6 user-facing categories from extension aggregations.
      * All categories are returned (even if 0 bytes) so the UI can display them.
      */
-    private fun buildCategories(mimeUsage: List<za.kilowatch.ultimatefilemanager.indexing.FileTypeUsage>, usedBytes: Long): List<CategoryData> {
+    private fun buildCategories(extUsage: List<za.kilowatch.ultimatefilemanager.indexing.FileTypeUsage>, usedBytes: Long): List<CategoryData> {
         var imageBytes = 0L; var imageCount = 0L
         var videoBytes = 0L; var videoCount = 0L
         var audioBytes = 0L; var audioCount = 0L
@@ -208,20 +208,15 @@ class StorageAnalyzerEngine(private val context: Context) {
         var apkBytes   = 0L; var apkCount   = 0L
         var otherBytes = 0L; var otherCount = 0L
 
-        for (row in mimeUsage) {
-            val mime = row.extension  // column alias is extension but holds mimeType
+        for (row in extUsage) {
+            val ext = row.extension.lowercase().trimStart('.')
             when {
-                mime.startsWith("image/")                      -> { imageBytes += row.totalSize; imageCount += row.fileCount }
-                mime.startsWith("video/")                      -> { videoBytes += row.totalSize; videoCount += row.fileCount }
-                mime.startsWith("audio/")                      -> { audioBytes += row.totalSize; audioCount += row.fileCount }
-                mime == "application/vnd.android.package-archive" ||
-                mime.endsWith(".apk")                          -> { apkBytes   += row.totalSize; apkCount   += row.fileCount }
-                mime.startsWith("application/") &&
-                (mime.contains("pdf") || mime.contains("msword") ||
-                 mime.contains("sheet") || mime.contains("text") ||
-                 mime.contains("presentation"))                -> { docBytes   += row.totalSize; docCount   += row.fileCount }
-                mime.startsWith("text/")                       -> { docBytes   += row.totalSize; docCount   += row.fileCount }
-                else                                           -> { otherBytes += row.totalSize; otherCount += row.fileCount }
+                ext in SortFilterSheet.IMAGE_EXTENSIONS    -> { imageBytes += row.totalSize; imageCount += row.fileCount }
+                ext in SortFilterSheet.VIDEO_EXTENSIONS    -> { videoBytes += row.totalSize; videoCount += row.fileCount }
+                ext in SortFilterSheet.AUDIO_EXTENSIONS    -> { audioBytes += row.totalSize; audioCount += row.fileCount }
+                ext in SortFilterSheet.DOCUMENT_EXTENSIONS -> { docBytes   += row.totalSize; docCount   += row.fileCount }
+                ext in SortFilterSheet.APK_EXTENSIONS      -> { apkBytes   += row.totalSize; apkCount   += row.fileCount }
+                else                                        -> { otherBytes += row.totalSize; otherCount += row.fileCount }
             }
         }
 

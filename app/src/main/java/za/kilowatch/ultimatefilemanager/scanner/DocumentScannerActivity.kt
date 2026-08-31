@@ -215,12 +215,22 @@ class DocumentScannerActivity : AppCompatActivity() {
     }
 
     private fun getDefaultScansDir(): String {
-        val dir = File(
-            android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOCUMENTS),
-            "UFM/Scans"
-        )
-        if (!dir.exists()) dir.mkdirs()
-        return dir.absolutePath
+        val hasAllFilesAccess = android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R ||
+                android.os.Environment.isExternalStorageManager()
+        if (hasAllFilesAccess) {
+            val dir = File(
+                android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOCUMENTS),
+                "UFM/Scans"
+            )
+            try {
+                if (dir.exists() || dir.mkdirs()) {
+                    return dir.absolutePath
+                }
+            } catch (_: Exception) {}
+        }
+        val appDir = File(getExternalFilesDir(android.os.Environment.DIRECTORY_DOCUMENTS) ?: filesDir, "Scans")
+        if (!appDir.exists()) appDir.mkdirs()
+        return appDir.absolutePath
     }
 
     private fun loadBitmapFromUri(uri: Uri) {
