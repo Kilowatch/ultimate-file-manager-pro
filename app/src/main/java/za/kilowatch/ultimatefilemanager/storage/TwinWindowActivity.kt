@@ -76,6 +76,47 @@ class TwinWindowActivity : AppCompatActivity() {
     private var pane1IsNetwork: Boolean = false
     private var pane1ShareId: String? = null
     private var pane1SharePath: String = ""
+    private var pane1LocalMountPath: String? = null
+    private var pane1LocalLabel: String? = null
+
+    private fun isFullStoragePermissionGranted(): Boolean {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            android.os.Environment.isExternalStorageManager()
+        } else {
+            androidx.core.content.ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun isPathAccessible(path: String?): Boolean {
+        if (path.isNullOrEmpty()) return false
+        if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, path)) return true
+        if (isFullStoragePermissionGranted() && java.io.File(path).exists()) return true
+        return false
+    }
+
+    private fun getDefaultStoragePair(): Pair<Pair<String, String>, Pair<String, String>> {
+        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
+        val internalLabel = getString(R.string.storage_internal)
+
+        if (isFullStoragePermissionGranted() && java.io.File(internalPath).canRead()) {
+            return Pair(Pair(internalPath, internalLabel), Pair(internalPath, internalLabel))
+        }
+
+        // If all files permission is not granted, check for available SAF storages
+        val safLocations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this)
+        if (safLocations.isNotEmpty()) {
+            val loc1 = safLocations.first()
+            val loc2 = safLocations.getOrNull(1) ?: loc1
+            val path1 = "saf://${loc1.id}"
+            val path2 = "saf://${loc2.id}"
+            return Pair(Pair(path1, loc1.displayName), Pair(path2, loc2.displayName))
+        }
+
+        return Pair(Pair(internalPath, internalLabel), Pair(internalPath, internalLabel))
+    }
 
 
     private var selectedPaneIndex: Int = 1 // 1 or 2
@@ -179,22 +220,22 @@ class TwinWindowActivity : AppCompatActivity() {
             insets
         }
         // Initialize panes — pane 1 can be seeded by the caller, pane 2 restores last selection
-        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
-        val internalLabel = getString(R.string.storage_internal)
+        val defaultStorages = getDefaultStoragePair()
+        val defaultPane1 = defaultStorages.first
+        val defaultPane2 = defaultStorages.second
 
         val topLocalPath  = intent.getStringExtra(EXTRA_TOP_LOCAL_PATH)
-        val topLocalLabel = intent.getStringExtra(EXTRA_TOP_LOCAL_LABEL) ?: internalLabel
+        val topLocalLabel = intent.getStringExtra(EXTRA_TOP_LOCAL_LABEL)
         val topLocalInitialPath = intent.getStringExtra(EXTRA_TOP_LOCAL_INITIAL_PATH) ?: ""
         val topShareId    = intent.getStringExtra(EXTRA_TOP_SHARE_ID)
         val topSharePath  = intent.getStringExtra(EXTRA_TOP_SHARE_PATH) ?: ""
 
         when {
-            topLocalPath != null -> {
+            topLocalPath != null && isPathAccessible(topLocalPath) -> {
                 pane1IsNetwork = false
-                val validPath = if (java.io.File(topLocalPath).exists()) topLocalPath else internalPath
-                val validLabel = if (java.io.File(topLocalPath).exists()) topLocalLabel else internalLabel
-                val validInit = if (topLocalInitialPath.isNotEmpty() && java.io.File(topLocalInitialPath).exists()) topLocalInitialPath else ""
-                setupLocalPane(1, validPath, validLabel, validInit, requestInitialFocus = true)
+                val validLabel = topLocalLabel ?: defaultPane1.second
+                val validInit = if (topLocalInitialPath.isNotEmpty() && isPathAccessible(topLocalInitialPath)) topLocalInitialPath else ""
+                setupLocalPane(1, topLocalPath, validLabel, validInit, requestInitialFocus = true)
             }
             topShareId   != null && isShareValid(topShareId) -> {
                 pane1IsNetwork = true
@@ -204,12 +245,12 @@ class TwinWindowActivity : AppCompatActivity() {
             }
             else                 -> {
                 pane1IsNetwork = false
-                setupLocalPane(1, internalPath, internalLabel, requestInitialFocus = true)
+                setupLocalPane(1, defaultPane1.first, defaultPane1.second, requestInitialFocus = true)
             }
         }
 
         // Restore pane 2's last remembered storage selection.
-        // Fallback to Internal Storage if the saved path no longer exists (SD card removed)
+        // Fallback to default storage if the saved path is not accessible (SD card removed or permission missing)
         // or if a network share ID was saved but is now unavailable — keeping the UX clean.
         val p2PrefsManager = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager
         val p2Type        = p2PrefsManager.getPane2Type(this)
@@ -217,15 +258,15 @@ class TwinWindowActivity : AppCompatActivity() {
         val p2Label       = p2PrefsManager.getPane2LocalLabel(this)
         val p2ShareId     = p2PrefsManager.getPane2ShareId(this)
         val p2InitialPath = p2PrefsManager.getPane2InitialPath(this) ?: ""
-        val p2PathValid   = p2Path != null && java.io.File(p2Path).exists()
-        val p2InitValid   = p2InitialPath.isNotEmpty() && java.io.File(p2InitialPath).exists()
+        val p2PathValid   = isPathAccessible(p2Path)
+        val p2InitValid   = isPathAccessible(p2InitialPath)
         val p2ShareValid  = p2ShareId != null && isShareValid(p2ShareId)
 
         when {
             p2Type == "network" && p2ShareValid -> setupNetworkPane(2, p2ShareId!!, if (p2InitValid) p2InitialPath else "", requestInitialFocus = false)
             p2Type == "apps"                         -> setupAppPane(2)
-            p2Type == "local" && p2PathValid          -> setupLocalPane(2, p2Path!!, p2Label ?: internalLabel, if (p2InitValid) p2InitialPath else "", requestInitialFocus = false)
-            else                                     -> setupLocalPane(2, internalPath, internalLabel, "", requestInitialFocus = false)
+            p2Type == "local" && p2PathValid          -> setupLocalPane(2, p2Path!!, p2Label ?: defaultPane2.second, if (p2InitValid) p2InitialPath else "", requestInitialFocus = false)
+            else                                     -> setupLocalPane(2, defaultPane2.first, defaultPane2.second, "", requestInitialFocus = false)
         }
 
         if (!DeviceUtils.isTvDevice(this)) {
@@ -267,15 +308,14 @@ class TwinWindowActivity : AppCompatActivity() {
         // the Drive Picker — in that case p2Path is never saved and onCreate()'s else-fallback
         // ignores the saved p2InitialPath. Writing both values here fixes that gap.
         val prefs = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager
-        val internalPath  = android.os.Environment.getExternalStorageDirectory().absolutePath
-        val internalLabel = getString(R.string.storage_internal)
+        val defaultPane2 = getDefaultStoragePair().second
         when (val f = pane2) {
             is FileBrowserFragment -> {
                 prefs.savePane2InitialPath(this, f.getCurrentDir().absolutePath)
                 prefs.savePane2Selection(
                     this, "local",
-                    path  = f.getRootPath().ifEmpty { internalPath },
-                    label = f.getStorageLabel().ifEmpty { internalLabel }
+                    path  = f.getRootPath().ifEmpty { defaultPane2.first },
+                    label = f.getStorageLabel().ifEmpty { defaultPane2.second }
                 )
             }
             is NetworkBrowserFragment -> {
@@ -325,14 +365,25 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     private fun setupLocalPane(index: Int, path: String, label: String, initialPath: String = "", requestInitialFocus: Boolean = false) {
-        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
-        val internalLabel = getString(R.string.storage_internal)
+        val defaultStorages = getDefaultStoragePair()
+        val defaultForPane = if (index == 1) defaultStorages.first else defaultStorages.second
 
-        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, path)
-        val validPath = if (path.isNotEmpty() && (java.io.File(path).exists() || isSaf)) path else internalPath
-        val validLabel = if (path.isNotEmpty() && (java.io.File(path).exists() || isSaf)) label else internalLabel
-        val isSafInit = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(initialPath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, initialPath)
-        val validInit = if (initialPath.isNotEmpty() && (java.io.File(initialPath).exists() || isSafInit)) initialPath else ""
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, path)
+        val isLocalValid = isFullStoragePermissionGranted() && java.io.File(path).exists()
+        val validPath = if (path.isNotEmpty() && (isLocalValid || isSaf)) path else defaultForPane.first
+        val validLabel = if (path.isNotEmpty() && (isLocalValid || isSaf)) label else defaultForPane.second
+
+        val isSafInit = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, initialPath)
+        val isInitValid = isFullStoragePermissionGranted() && java.io.File(initialPath).exists()
+        val validInit = if (initialPath.isNotEmpty() && (isInitValid || isSafInit)) initialPath else ""
+
+        if (index == 1) {
+            pane1IsNetwork = false
+            pane1ShareId = null
+            pane1SharePath = validInit
+            pane1LocalMountPath = validPath
+            pane1LocalLabel = validLabel
+        }
 
         // Both panes show their back button so the user can navigate/exit from either side.
         val fragment = FileBrowserFragment.newInstance(validPath, validLabel, isTwinWindow = true, hideBack = false, initialPath = validInit, requestInitialFocus = requestInitialFocus)
@@ -366,17 +417,16 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     private fun setupNetworkPane(index: Int, shareId: String, initialPath: String = "", requestInitialFocus: Boolean = false) {
-        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
-        val internalLabel = getString(R.string.storage_internal)
+        val defaultForPane = if (index == 1) getDefaultStoragePair().first else getDefaultStoragePair().second
 
         if (!isShareValid(shareId)) {
-            setupLocalPane(index, internalPath, internalLabel, requestInitialFocus = requestInitialFocus)
+            setupLocalPane(index, defaultForPane.first, defaultForPane.second, requestInitialFocus = requestInitialFocus)
             return
         }
 
         val fragment = NetworkBrowserFragment.newInstance(shareId, initialPath = initialPath, isTwinWindow = true, requestInitialFocus = requestInitialFocus)
         fragment.onInvalidShare = {
-            setupLocalPane(index, internalPath, internalLabel, requestInitialFocus = requestInitialFocus)
+            setupLocalPane(index, defaultForPane.first, defaultForPane.second, requestInitialFocus = requestInitialFocus)
         }
         fragment.onStoragePickerRequested = {
             selectedPaneIndex = index
@@ -435,9 +485,8 @@ class TwinWindowActivity : AppCompatActivity() {
         fragment.onActionRequested = { action -> onActionRequested(fragment, action) }
         // Back button restores the local file browser for this pane
         fragment.onNavigateBack = {
-            val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
-            val internalLabel = getString(R.string.storage_internal)
-            setupLocalPane(index, internalPath, internalLabel, requestInitialFocus = true)
+            val defaultForPane = if (index == 1) getDefaultStoragePair().first else getDefaultStoragePair().second
+            setupLocalPane(index, defaultForPane.first, defaultForPane.second, requestInitialFocus = true)
         }
         replacePane(index, fragment)
     }
@@ -590,17 +639,17 @@ class TwinWindowActivity : AppCompatActivity() {
         } else if (exitingFragment is za.kilowatch.ultimatefilemanager.storage.FileBrowserFragment) {
             val localFrag = exitingFragment
             val localPath = localFrag.getCurrentDir().absolutePath
+            val mountPath = localFrag.getRootPath()
+            val mountLabel = localFrag.getStorageLabel()
             if (index == 2) {
                 prefs.savePane2InitialPath(this, localPath)
-                prefs.savePane2Selection(this, "local", path = localFrag.getRootPath().ifEmpty { internalPath }, label = localFrag.getStorageLabel().ifEmpty { "Storage" })
+                prefs.savePane2Selection(this, "local", path = mountPath.ifEmpty { getDefaultStoragePair().second.first }, label = mountLabel.ifEmpty { getDefaultStoragePair().second.second })
             } else {
-                // For pane 1 local, save the current path so restorePane(1) can restore it
-                // Instead of always going to internalPath root
                 pane1IsNetwork = false
-                // Store the path for local pane 1 restore
-                // We'll use pane1SharePath as a generic "restore path" regardless of type
                 pane1SharePath = localPath
-                android.util.Log.d("AfterVideo", "replacePaneWithPlayer(1-local): saving path='$localPath'")
+                pane1LocalMountPath = mountPath
+                pane1LocalLabel = mountLabel
+                android.util.Log.d("AfterVideo", "replacePaneWithPlayer(1-local): saving path='$localPath' mount='$mountPath'")
             }
             android.util.Log.d("AfterVideo", "replacePaneWithPlayer($index-local): saving path='$localPath'")
         }
@@ -655,15 +704,15 @@ class TwinWindowActivity : AppCompatActivity() {
 
     private fun restorePane(index: Int) {
         val prefs = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager
-        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
-        val internalLabel = getString(R.string.storage_internal)
+        val defaultStorages = getDefaultStoragePair()
+        val defaultForPane = if (index == 1) defaultStorages.first else defaultStorages.second
 
         val p2Type = prefs.getPane2Type(this)
         val p2Path = prefs.getPane2LocalPath(this)
         val p2Label = prefs.getPane2LocalLabel(this)
         val p2ShareId = prefs.getPane2ShareId(this)
         val p2InitialPath = prefs.getPane2InitialPath(this) ?: ""
-        val p2PathValid = p2Path != null && java.io.File(p2Path).exists()
+        val p2PathValid = isPathAccessible(p2Path)
         android.util.Log.d("AfterVideo", "restorePane: index=$index p2Type=$p2Type p2ShareId=$p2ShareId p2InitialPath=$p2InitialPath pane1IsNetwork=$pane1IsNetwork pane1ShareId=$pane1ShareId")
 
         if (index == 1) {
@@ -672,22 +721,19 @@ class TwinWindowActivity : AppCompatActivity() {
                 android.util.Log.d("AfterVideo", "restorePane(1): restoring network share id=$pane1ShareId path=$pane1SharePath")
                 setupNetworkPane(1, pane1ShareId!!, pane1SharePath, requestInitialFocus = true)
             } else {
-                val savedLocalPath = pane1SharePath
-                if (savedLocalPath.isNotEmpty() && java.io.File(savedLocalPath).exists()) {
-                    android.util.Log.d("AfterVideo", "restorePane(1): restoring local path=$savedLocalPath mount=$internalPath")
-                    setupLocalPane(1, internalPath, internalLabel, initialPath = savedLocalPath, requestInitialFocus = true)
-                } else {
-                    android.util.Log.d("AfterVideo", "restorePane(1): restoring local storage root")
-                    setupLocalPane(1, internalPath, internalLabel, requestInitialFocus = true)
-                }
+                val mountToRestore = pane1LocalMountPath ?: defaultForPane.first
+                val labelToRestore = pane1LocalLabel ?: defaultForPane.second
+                val initToRestore = if (isPathAccessible(pane1SharePath)) pane1SharePath else ""
+                android.util.Log.d("AfterVideo", "restorePane(1): restoring local path=$initToRestore mount=$mountToRestore")
+                setupLocalPane(1, mountToRestore, labelToRestore, initialPath = initToRestore, requestInitialFocus = true)
             }
         } else {
             android.util.Log.d("AfterVideo", "restorePane(2): type=$p2Type shareId=$p2ShareId initPath=$p2InitialPath")
             when {
                 p2Type == "network" && p2ShareId != null -> setupNetworkPane(2, p2ShareId, p2InitialPath, requestInitialFocus = true)
                 p2Type == "apps" -> setupAppPane(2)
-                p2Type == "local" && p2PathValid -> setupLocalPane(2, p2Path!!, p2Label ?: internalLabel, p2InitialPath, requestInitialFocus = true)
-                else -> setupLocalPane(2, internalPath, internalLabel, p2InitialPath, requestInitialFocus = true)
+                p2Type == "local" && p2PathValid -> setupLocalPane(2, p2Path!!, p2Label ?: defaultForPane.second, p2InitialPath, requestInitialFocus = true)
+                else -> setupLocalPane(2, defaultForPane.first, defaultForPane.second, p2InitialPath, requestInitialFocus = true)
             }
         }
     }
@@ -1268,7 +1314,7 @@ class TwinWindowActivity : AppCompatActivity() {
                                     if (isMove && !isCancelled && item !is AppItem) { 
                                         try { 
                                             if (isSrcSaf) {
-                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@TwinWindowActivity, actualItem.absolutePath)
+                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@TwinWindowActivity, actualItem.absolutePath)
                                             } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
                                                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(actualItem.absolutePath)
                                             } else {
@@ -1565,7 +1611,7 @@ class TwinWindowActivity : AppCompatActivity() {
                                     if (isMove && !isCancelled && item !is AppItem) {
                                         try {
                                             if (isSrcSaf) {
-                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@TwinWindowActivity, actualItem.absolutePath)
+                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@TwinWindowActivity, actualItem.absolutePath)
                                             } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
                                                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(actualItem.absolutePath)
                                             } else {
@@ -1626,12 +1672,16 @@ class TwinWindowActivity : AppCompatActivity() {
                                         currentTransferConnection = null
                                         if (isMove && item !is AppItem) {
                                             if (isSrcSaf) {
-                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@TwinWindowActivity, actualItem.absolutePath)
+                                                val deleted = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@TwinWindowActivity, actualItem.absolutePath)
+                                                if (!deleted) {
+                                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@TwinWindowActivity, actualItem.absolutePath)
+                                                }
                                             } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualItem.absolutePath)) {
                                                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(actualItem.absolutePath)
                                             } else {
                                                 actualItem.delete()
                                             }
+                                            za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.deleteTreeFromIndex(actualItem.absolutePath)
                                             FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.absolutePath, finalPath)
                                         } else if (item !is AppItem) {
                                             FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, finalPath)

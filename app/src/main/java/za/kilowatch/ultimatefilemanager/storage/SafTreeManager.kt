@@ -438,6 +438,12 @@ object SafTreeManager {
         // Also check SafLocationRepository for any locations registered or reconciled from persistedUriPermissions
         val locations = SafLocationRepository.getLocations(context)
         for (loc in locations) {
+            val safPrefix = "saf://${loc.id}"
+            if (norm == safPrefix || norm.startsWith("$safPrefix/")) {
+                if (bestMatch == null || safPrefix.length > bestMatch.first.length) {
+                    bestMatch = Pair(safPrefix, loc.treeUriString)
+                }
+            }
             val disp = normalizePath(loc.getDisplayPath())
             if (disp.isNotEmpty() && (norm == disp || norm.startsWith("$disp/"))) {
                 if (bestMatch == null || disp.length > bestMatch.first.length) {
@@ -587,6 +593,18 @@ object SafTreeManager {
                 GoRoLog.w("SafStorage", "deleteDocument failed for $norm: ${e.message}")
             }
 
+            if (!success) {
+                val (treeUri, docId) = resolveTreeAndDocId(context, norm) ?: (null to null)
+                if (docId != null && treeUri != null) {
+                    try {
+                        val singleDocUri = DocumentsContract.buildDocumentUri(treeUri.authority, docId)
+                        success = DocumentsContract.deleteDocument(context.contentResolver, singleDocUri)
+                    } catch (e: Exception) {
+                        GoRoLog.w("SafStorage", "deleteDocument (single-doc URI) failed for $norm: ${e.message}")
+                    }
+                }
+            }
+
             if (!success && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val parentPath = norm.substringBeforeLast('/', "")
                 if (parentPath.isNotEmpty()) {
@@ -607,6 +625,22 @@ object SafTreeManager {
                 } catch (_: Exception) {}
             }
 
+            if (!success) {
+                try {
+                    val (treeUri, _) = resolveTreeAndDocId(context, norm) ?: (null to null)
+                    if (treeUri != null) {
+                        val parentPath = norm.substringBeforeLast('/', "")
+                        val fileName = norm.substringAfterLast('/')
+                        val parentDocUri = if (parentPath.isNotEmpty()) getDocumentUriForPath(context, parentPath) else null
+                        val parentDocFile = if (parentDocUri != null) DocumentFile.fromTreeUri(context, parentDocUri) else DocumentFile.fromTreeUri(context, treeUri)
+                        val targetFile = parentDocFile?.findFile(fileName)
+                        if (targetFile != null && targetFile.exists()) {
+                            success = targetFile.delete()
+                        }
+                    }
+                } catch (_: Exception) {}
+            }
+
             if (success) {
                 invalidatePath(norm)
             }
@@ -620,17 +654,14 @@ object SafTreeManager {
     fun deleteRecursively(context: Context, path: String): Boolean {
         val norm = normalizePath(path)
         return try {
-            if (delete(context, norm)) {
-                return true
-            }
-
-            // If direct delete fails (e.g. non-empty folder on strict providers), recursively delete children
             val children = listFiles(context, norm)
-            for (child in children) {
-                if (child.isDirectory) {
-                    deleteRecursively(context, child.absolutePath)
-                } else {
-                    delete(context, child.absolutePath)
+            if (children.isNotEmpty()) {
+                for (child in children) {
+                    if (child.isDirectory) {
+                        deleteRecursively(context, child.absolutePath)
+                    } else {
+                        delete(context, child.absolutePath)
+                    }
                 }
             }
             delete(context, norm)
@@ -643,10 +674,32 @@ object SafTreeManager {
 
     fun getFileSize(context: Context, path: String): Long {
         val norm = normalizePath(path)
-        val docUri = getDocumentUriForPath(context, norm) ?: return -1L
+        val docUri = getDocumentUriForPath(context, norm)
+        if (docUri != null) {
+            val size = try {
+                context.contentResolver.query(
+                    docUri,
+                    arrayOf(DocumentsContract.Document.COLUMN_SIZE),
+                    null, null, null
+                )?.use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val sizeIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_SIZE)
+                        if (sizeIndex != -1 && !cursor.isNull(sizeIndex)) {
+                            cursor.getLong(sizeIndex)
+                        } else -1L
+                    } else -1L
+                } ?: -1L
+            } catch (_: Exception) {
+                -1L
+            }
+            if (size >= 0L) return size
+        }
+
+        val (treeUri, docId) = resolveTreeAndDocId(context, norm) ?: return -1L
         return try {
+            val treeDocUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, docId)
             context.contentResolver.query(
-                docUri,
+                treeDocUri,
                 arrayOf(DocumentsContract.Document.COLUMN_SIZE),
                 null, null, null
             )?.use { cursor ->

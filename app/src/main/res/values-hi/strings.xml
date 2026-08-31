@@ -13140,10 +13140,10 @@ Add Folder
 No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
-अभी तक कोई फ़ोल्डर नहीं जोड़ा गया
+सभी फ़ाइलों तक पहुंच आवश्यक है
 </string>
     <string name="restricted_storage_empty_desc">
-आप चयनित फ़ोल्डर मोड का उपयोग कर रहे हैं. यहां उन तक पहुंचने और उन्हें प्रबंधित करने के लिए फ़ोल्डर जोड़ें।
+इस स्टोरेज में फ़ाइलों तक पहुंचने और प्रबंधित करने के लिए, कृपया एंड्रॉइड सेटिंग्स में ऑल फाइल्स एक्सेस को सक्षम करें।
 </string>
     <string name="restricted_storage_grant_all_files">
 सेटिंग्स में सभी फ़ाइलों तक पहुंच सक्षम करें

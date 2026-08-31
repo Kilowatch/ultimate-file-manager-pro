@@ -4845,6 +4845,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
                 suspend fun processLocalItem(source: java.io.File, op: za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation, currentDest: String, destChildren: List<NetworkFile>) {
                     if (isCancelledByUser) throw CancellationException()
+                    val isSrcSaf = source is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                   za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(source.absolutePath) ||
+                                   za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@NetworkBrowserActivity, source.absolutePath)
                     val itemName = source.name
                     val cleanDest = stripSharePrefix(currentDest)
                     val targetPath = if (cleanDest.isEmpty() || cleanDest == "/") itemName else "${cleanDest.trimEnd('/')}/$itemName"
@@ -4908,7 +4911,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             }
                         } catch (_: Exception) { emptyList<NetworkFile>() }
 
-                        val children = source.listFiles()
+                        val children = if (isSrcSaf) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@NetworkBrowserActivity, source.absolutePath)
+                        } else {
+                            source.listFiles()?.toList()
+                        }
                         if (children != null) {
                             for (child in children) {
                                 if (isCancelledByUser) throw CancellationException()
@@ -4923,7 +4930,16 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             }
                         }
                         if (op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE || op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT) {
-                            try { source.delete() } catch (_: Exception) {}
+                            try {
+                                if (isSrcSaf) {
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@NetworkBrowserActivity, source.absolutePath)
+                                } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(source.absolutePath)) {
+                                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(source.absolutePath)
+                                } else {
+                                    source.delete()
+                                }
+                                za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
+                            } catch (_: Exception) {}
                             FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.absolutePath, effectiveDest)
                         } else {
                             FileTagsManager.onPathCopied(this@NetworkBrowserActivity, source.absolutePath, effectiveDest)
@@ -4953,8 +4969,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         else targetPath
 
                         fileIndex++
+                        val sourceSize = if (isSrcSaf) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this@NetworkBrowserActivity, source.absolutePath)
+                        } else {
+                            source.length()
+                        }
                         try {
-                            updateProgress(itemName, 0, source.length(), fileIndex, totalFiles)
+                            updateProgress(itemName, 0, sourceSize, fileIndex, totalFiles)
                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uploadLocalToNetworkAtomic(
                                 source, share, finalPath,
                                 { c, t -> updateProgress(itemName, c, t, fileIndex, totalFiles) },
@@ -4963,9 +4984,27 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             currentTransferConnection = null
                             if (op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE || op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT) {
                                 val remoteSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(share, finalPath)
-                                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                                        remoteSize, source.length(), source.name)) {
-                                    try { source.delete() } catch(_: Exception) {}
+                                val isSafeToDelete = if (remoteSize <= 0L && sourceSize > 0L) {
+                                    true
+                                } else {
+                                    za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                                        remoteSize, sourceSize, source.name
+                                    )
+                                }
+                                if (isSafeToDelete) {
+                                    try {
+                                        if (isSrcSaf) {
+                                            val deleted = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@NetworkBrowserActivity, source.absolutePath)
+                                            if (!deleted) {
+                                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@NetworkBrowserActivity, source.absolutePath)
+                                            }
+                                        } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(source.absolutePath)) {
+                                            za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(source.absolutePath)
+                                        } else {
+                                            source.delete()
+                                        }
+                                        za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
+                                    } catch (_: Exception) {}
                                 }
                                 FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.absolutePath, finalPath)
                             } else {

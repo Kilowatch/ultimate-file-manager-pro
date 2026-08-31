@@ -1004,9 +1004,14 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 val remoteSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(
                     share, if (remotePath.isEmpty()) file.name else "${remotePath.trimEnd('/')}/${file.name}"
                 )
-                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                val isSafeToDelete = if (remoteSize <= 0L && sourceSize > 0L) {
+                    true
+                } else {
+                    za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
                         remoteSize, sourceSize, file.name
-                    )) {
+                    )
+                }
+                if (isSafeToDelete) {
                     if (isSrcSaf) {
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(applicationContext, file.absolutePath)
                     } else {
@@ -1153,8 +1158,15 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                     File(localDir, rName)
                 }
                 // Zero-byte guard: only delete remote source if local file has data
-                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                        localFile.length(), remoteFile.size, remoteFile.name)) {
+                val localSize = if (isLocalSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(applicationContext, localFile.absolutePath) else localFile.length()
+                val isSafeToDelete = if (isLocalSaf && localSize <= 0L) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(applicationContext, localFile.absolutePath)
+                } else {
+                    za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                        localSize, remoteFile.size, remoteFile.name
+                    )
+                }
+                if (isSafeToDelete) {
                     try {
                         deleteRemoteFileByType(share, rfPath)
                         Log.d(TAG, "Moved (deleted remote): ${remoteFile.name}")

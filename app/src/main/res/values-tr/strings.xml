@@ -13140,10 +13140,10 @@ Bu depolama alanından erişimi kaldırmak için bir klasör seçin. Dosyaların
 Bu depolama alanı için takılı klasör kalmadı.
 </string>
     <string name="restricted_storage_empty_title">
-Henüz Klasör Eklenmedi
+All Files Access Required
 </string>
     <string name="restricted_storage_empty_desc">
-Seçilen klasörler modunu kullanıyorsunuz. Erişmek ve yönetmek için klasörleri buraya ekleyin.
+To access and manage files in this storage, please enable All Files Access in Android Settings.
 </string>
     <string name="restricted_storage_grant_all_files">
 Ayarlar\'da Tüm Dosyalara Erişimi Etkinleştir

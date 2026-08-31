@@ -243,6 +243,28 @@ object WebShareServer {
         }
     }
 
+    private fun isSafFile(context: Context, file: File): Boolean {
+        return za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
+               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+    }
+
+    private fun getFileLength(context: Context, file: File): Long {
+        return if (isSafFile(context, file)) {
+            val size = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(context, file.absolutePath)
+            if (size >= 0L) size else file.length()
+        } else {
+            file.length()
+        }
+    }
+
+    private fun openFileStream(context: Context, file: File): java.io.InputStream? {
+        return if (isSafFile(context, file)) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, file.absolutePath)
+        } else {
+            if (!file.exists() || !file.isFile) null else try { FileInputStream(file) } catch (_: Exception) { null }
+        }
+    }
+
     fun start(context: Context, files: List<File>, cleanUp: Boolean = false): String {
         appContext = context.applicationContext
         filesToShare = files
@@ -313,7 +335,8 @@ object WebShareServer {
                         }
 
                         val file = filesToShare[index]
-                        if (!file.exists() || !file.isFile) {
+                        val inStream = openFileStream(context, file)
+                        if (inStream == null) {
                             call.respondRedirect("/")
                             return@withContext
                         }
@@ -328,7 +351,7 @@ object WebShareServer {
                         )
 
                         call.respondOutputStream(ContentType.parse(mimeType)) {
-                            FileInputStream(file).use { input ->
+                            inStream.use { input ->
                                 input.copyTo(this)
                             }
                         }
@@ -352,9 +375,10 @@ object WebShareServer {
                         call.respondOutputStream(ContentType.Application.Zip) {
                             ZipOutputStream(this).use { zipOut ->
                                 for (file in filesToShare) {
-                                    if (file.exists() && file.isFile) {
+                                    val inStream = openFileStream(context, file)
+                                    if (inStream != null) {
                                         zipOut.putNextEntry(ZipEntry(file.name))
-                                        FileInputStream(file).use { it.copyTo(zipOut) }
+                                        inStream.use { it.copyTo(zipOut) }
                                         zipOut.closeEntry()
                                     }
                                 }
@@ -768,7 +792,7 @@ object WebShareServer {
         } else {
             for (i in filesToShare.indices) {
                 val file = filesToShare[i]
-                val sizeStr = Formatter.formatFileSize(ctx, file.length())
+                val sizeStr = Formatter.formatFileSize(ctx, getFileLength(ctx, file))
                 fileListHtml.append("""
                     <div class="file-item">
                         <div class="file-info">

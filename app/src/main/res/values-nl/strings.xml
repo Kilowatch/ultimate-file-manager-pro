@@ -13140,10 +13140,10 @@ Selecteer een map om de toegang tot deze opslag te verwijderen. Uw bestanden wor
 Er zijn geen gekoppelde mappen meer voor deze opslag.
 </string>
     <string name="restricted_storage_empty_title">
-Nog geen mappen toegevoegd
+Toegang tot alle bestanden vereist
 </string>
     <string name="restricted_storage_empty_desc">
-U gebruikt de modus voor geselecteerde mappen. Voeg mappen toe om ze hier te openen en te beheren.
+Om bestanden in deze opslag te openen en te beheren, schakelt u Toegang tot alle bestanden in de Android-instellingen in.
 </string>
     <string name="restricted_storage_grant_all_files">
 Schakel toegang tot alle bestanden in Instellingen in

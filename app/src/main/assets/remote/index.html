@@ -2298,6 +2298,36 @@
 
     function renderPath(p) {
       var bar = document.getElementById('pathBar');
+      if (p.indexOf('saf://') === 0) {
+        var raw = p.substring(6);
+        var parts = raw.split('/');
+        var filtered = [];
+        for (var i = 0; i < parts.length; i++) { if (parts[i]) filtered.push(parts[i]); }
+        var rootId = filtered[0] || '';
+        var html = '<span class="path-node" onclick="browse(\'saf://' + rootId + '\')">SAF</span>';
+        var acc = 'saf://' + rootId;
+        for (var j = 1; j < filtered.length; j++) {
+          acc += '/' + filtered[j];
+          html += '<span class="path-sep">/</span><span class="path-node" onclick="browse(\'' + acc + '\')">' + filtered[j] + '</span>';
+        }
+        bar.innerHTML = html;
+        return;
+      }
+      if (p.indexOf('net:') === 0) {
+        var raw = p.substring(4);
+        var parts = raw.split('/');
+        var filtered = [];
+        for (var i = 0; i < parts.length; i++) { if (parts[i]) filtered.push(parts[i]); }
+        var rootId = filtered[0] || '';
+        var html = '<span class="path-node" onclick="browse(\'net:' + rootId + '\')">Network</span>';
+        var acc = 'net:' + rootId;
+        for (var j = 1; j < filtered.length; j++) {
+          acc += '/' + filtered[j];
+          html += '<span class="path-sep">/</span><span class="path-node" onclick="browse(\'' + acc + '\')">' + filtered[j] + '</span>';
+        }
+        bar.innerHTML = html;
+        return;
+      }
       var parts = p.split('/');
       var filtered = [];
       for (var i = 0; i < parts.length; i++) { if (parts[i]) filtered.push(parts[i]); }

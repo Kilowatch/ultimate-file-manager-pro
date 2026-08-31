@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.runBlocking
 import za.kilowatch.ultimatefilemanager.network.*
+import za.kilowatch.ultimatefilemanager.storage.SafLocationRepository
+import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -85,7 +87,17 @@ object UfmFileSystemBridge {
 
     fun exists(context: Context, uri: String): Boolean {
         return try {
-            getFileMetadata(context, uri) != null
+            val (scheme, id, path) = parseUri(uri)
+            if (scheme == "saf") {
+                val fullSafPath = if (path.isEmpty() || path == "/") "saf://$id" else "saf://$id/${path.trimStart('/')}"
+                if (path.isEmpty() || path == "/") {
+                    SafLocationRepository.getLocationById(context, id) != null || SafTreeManager.exists(context, fullSafPath)
+                } else {
+                    SafTreeManager.exists(context, fullSafPath) || getFileMetadata(context, uri) != null
+                }
+            } else {
+                getFileMetadata(context, uri) != null
+            }
         } catch (e: Exception) {
             false
         }
@@ -152,6 +164,21 @@ object UfmFileSystemBridge {
                 val share = storageToShare(storage)
                 runBlocking { S3ShareClient.listFiles(share, path) }
             }
+            "saf" -> {
+                val fullSafPath = if (path.isEmpty() || path == "/") "saf://$id" else "saf://$id/${path.trimStart('/')}"
+                val files = SafTreeManager.listFiles(context, fullSafPath)
+                files.map { f ->
+                    val isDir = f.isDirectory
+                    val size = if (isDir) 0L else f.length()
+                    NetworkFile(
+                        name = f.name,
+                        path = if (path.isEmpty() || path == "/") "/${f.name}" else "${path.trimEnd('/')}/${f.name}",
+                        isDirectory = isDir,
+                        size = size,
+                        lastModified = f.lastModified()
+                    )
+                }
+            }
             else -> emptyList()
         }
         Log.d(TAG, "listFiles [${schemeOf(uri)}] -> ${files.size} items")
@@ -181,6 +208,27 @@ object UfmFileSystemBridge {
                 val name = getFileName(path)
                 if (path.isEmpty() || path == "/") return NetworkFile("root", "/", true, 0, 0)
                 SmbShareClient.listFiles(share, parentPath).find { it.name == name }
+            }
+            "saf" -> {
+                if (path.isEmpty() || path == "/") {
+                    val rootName = SafLocationRepository.getLocationById(context, id)?.displayName ?: "root"
+                    NetworkFile(rootName, "/", true, 0, 0)
+                } else {
+                    val fullSafPath = "saf://$id/${path.trimStart('/')}"
+                    val parentPath = getParentPath(path)
+                    val name = getFileName(path)
+                    val parentUri = buildUri("saf", id, parentPath)
+                    val foundInParent = listFiles(context, parentUri).find { it.name == name }
+                    if (foundInParent != null) {
+                        foundInParent
+                    } else if (SafTreeManager.exists(context, fullSafPath)) {
+                        val isDir = SafTreeManager.isDirectory(context, fullSafPath)
+                        val size = if (isDir) 0L else SafTreeManager.getFileSize(context, fullSafPath)
+                        NetworkFile(name, path, isDir, size, 0L)
+                    } else {
+                        null
+                    }
+                }
             }
             "ftp", "sftp", "nfs", "tv", "gdrive", "onedrive", "dropbox", "s3", "webdav" -> {
                 val parentPath = getParentPath(path)
@@ -263,6 +311,13 @@ object UfmFileSystemBridge {
                     stream
                 }
             }
+            "saf" -> {
+                val fullSafPath = if (path.isEmpty() || path == "/") "saf://$id" else "saf://$id/${path.trimStart('/')}"
+                val stream = SafTreeManager.openInputStream(context, fullSafPath)
+                    ?: throw IOException("SAF file not found or inaccessible: $fullSafPath")
+                if (startOffset > 0) stream.skip(startOffset)
+                stream
+            }
             else -> throw IOException("Unsupported scheme: $scheme")
         }
     }
@@ -320,6 +375,11 @@ object UfmFileSystemBridge {
                 val storage = OnlineStorageRepository.getInstance(context).getById(id)!!
                 runBlocking { S3ShareClient.openOutputStream(storageToShare(storage), path) }
             }
+            "saf" -> {
+                val fullSafPath = if (path.isEmpty() || path == "/") "saf://$id" else "saf://$id/${path.trimStart('/')}"
+                SafTreeManager.openOutputStream(context, fullSafPath)
+                    ?: throw IOException("Failed to open SAF output stream: $fullSafPath")
+            }
             else -> throw IOException("Unsupported scheme: $scheme")
         }
     }
@@ -365,6 +425,13 @@ object UfmFileSystemBridge {
             "s3" -> {
                 val storage = OnlineStorageRepository.getInstance(context).getById(id)!!
                 runBlocking { S3ShareClient.mkdir(storageToShare(storage), path) }
+            }
+            "saf" -> {
+                val fullSafPath = if (path.isEmpty() || path == "/") "saf://$id" else "saf://$id/${path.trimStart('/')}"
+                val parent = fullSafPath.substringBeforeLast('/')
+                val name = fullSafPath.substringAfterLast('/')
+                val created = SafTreeManager.mkdir(context, parent, name)
+                if (!created) throw IOException("Failed to create SAF directory: $fullSafPath")
             }
         }
     }
@@ -441,6 +508,15 @@ object UfmFileSystemBridge {
                     else S3ShareClient.deleteFile(share, path)
                 }
             }
+            "saf" -> {
+                val fullSafPath = if (path.isEmpty() || path == "/") "saf://$id" else "saf://$id/${path.trimStart('/')}"
+                val deleted = if (metadata.isDirectory) {
+                    SafTreeManager.deleteRecursively(context, fullSafPath)
+                } else {
+                    SafTreeManager.delete(context, fullSafPath)
+                }
+                if (!deleted) throw IOException("Failed to delete SAF file: $fullSafPath")
+            }
         }
         invalidate(uri)
         return true
@@ -497,6 +573,11 @@ object UfmFileSystemBridge {
                 val storage = OnlineStorageRepository.getInstance(context).getById(id)!!
                 runBlocking { S3ShareClient.rename(storageToShare(storage), path, newPath) }
             }
+            "saf" -> {
+                val fullSafPath = if (path.isEmpty() || path == "/") "saf://$id" else "saf://$id/${path.trimStart('/')}"
+                val renamed = SafTreeManager.rename(context, fullSafPath, newName)
+                if (!renamed) throw IOException("Failed to rename SAF file: $fullSafPath to $newName")
+            }
         }
         invalidate(uri)
         invalidate(buildUri(scheme, id, newPath))
@@ -508,7 +589,8 @@ object UfmFileSystemBridge {
         val scheme = uri.substringBefore("://")
         val rest = uri.substringAfter("://")
         val id = rest.substringBefore("/")
-        val rawPath = "/" + rest.substringAfter("/").trimStart('/')
+        val sub = if (rest.contains("/")) rest.substringAfter("/") else ""
+        val rawPath = if (sub.isEmpty()) "/" else "/" + sub.trimStart('/')
         val normalized = normalizePath(rawPath)
         return Triple(scheme, id, normalized)
     }
@@ -534,7 +616,8 @@ object UfmFileSystemBridge {
     }
 
     private fun buildUri(scheme: String, id: String, path: String): String {
-        return "$scheme://$id/${path.trimStart('/')}"
+        val clean = path.trimStart('/')
+        return if (clean.isEmpty()) "$scheme://$id" else "$scheme://$id/$clean"
     }
 
     private fun getParentPath(path: String): String {

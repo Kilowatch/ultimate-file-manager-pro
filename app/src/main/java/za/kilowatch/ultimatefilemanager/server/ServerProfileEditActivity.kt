@@ -162,6 +162,7 @@ class ServerProfileEditActivity : AppCompatActivity() {
                 selectedLocationUri   = uri
                 selectedLocationLabel = label
                 selectedLocationType  = when (typeStr) {
+                    "SAF"          -> LocationType.SAF
                     "LOCAL"        -> LocationType.LOCAL
                     "SMB"          -> LocationType.SMB
                     "FTP"          -> LocationType.FTP
@@ -169,7 +170,7 @@ class ServerProfileEditActivity : AppCompatActivity() {
                     "TV"           -> LocationType.TV
                     "GOOGLE_DRIVE" -> LocationType.GOOGLE_DRIVE
                     "ONEDRIVE"     -> LocationType.ONEDRIVE
-                    else           -> LocationType.LOCAL
+                    else           -> if (uri.startsWith("saf://")) LocationType.SAF else LocationType.LOCAL
                 }
                 selectedLocationMetaId = metaId
                 txtDefaultLocation.text = label

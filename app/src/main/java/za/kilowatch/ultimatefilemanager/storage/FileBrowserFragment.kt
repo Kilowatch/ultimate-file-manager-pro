@@ -194,77 +194,7 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
-    private fun launchAddFolderPicker() {
-        val rootToUse = if (::currentDir.isInitialized) currentDir.absolutePath else rootPath
-        try {
-            val intent = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createDocumentTreeIntent(rootToUse)
-            safTreeLauncher.launch(intent)
-        } catch (_: Exception) {
-            try {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                safTreeLauncher.launch(intent)
-            } catch (e: Exception) {
-                context?.let { android.widget.Toast.makeText(it, "Could not launch folder picker: ${e.message}", android.widget.Toast.LENGTH_LONG).show() }
-            }
-        }
-    }
 
-    private fun launchRemoveFolderDialog() {
-        val ctx = context ?: return
-        val rootToUse = if (::currentDir.isInitialized) currentDir.absolutePath else rootPath
-        val currentLocations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationsForStorage(ctx, rootToUse).toMutableList()
-        if (currentLocations.isEmpty()) {
-            return
-        }
-
-        val dialogView = layoutInflater.inflate(R.layout.dialog_remove_mounted_folders, null)
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-            .setView(dialogView)
-            .setCancelable(true)
-            .create()
-
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-
-        val recycler = dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerMountedFolders)
-        val txtEmpty = dialogView.findViewById<android.widget.TextView>(R.id.txtNoMountedFolders)
-        val btnDone = dialogView.findViewById<android.view.View>(R.id.btnDoneRemove)
-
-        lateinit var adapter: za.kilowatch.ultimatefilemanager.onboarding.SelectedFoldersAdapter
-        adapter = za.kilowatch.ultimatefilemanager.onboarding.SelectedFoldersAdapter { loc ->
-            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.removeTreePermissionAndLocation(ctx, loc.treeUriString)
-            currentLocations.removeAll { it.id == loc.id || it.treeUriString == loc.treeUriString }
-            adapter.submitList(currentLocations.toList())
-            if (currentLocations.isEmpty()) {
-                recycler?.visibility = View.GONE
-                txtEmpty?.visibility = View.VISIBLE
-            }
-            if (::currentDir.isInitialized) {
-                loadDirectory(currentDir)
-            }
-        }
-
-        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(ctx)
-        recycler.adapter = adapter
-
-        val maxRecyclerHeight = (220 * resources.displayMetrics.density).toInt()
-        recycler.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                if (recycler.height > maxRecyclerHeight) {
-                    recycler.layoutParams.height = maxRecyclerHeight
-                    recycler.requestLayout()
-                }
-                return true
-            }
-        })
-
-        adapter.submitList(currentLocations)
-
-        btnDone.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
 
 
     
@@ -2233,6 +2163,47 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
+    private fun isAppSpecificPath(path: String): Boolean {
+        val ctx = context ?: return false
+        val pkg = ctx.packageName
+        val appData = "Android/data/$pkg"
+        val appMedia = "Android/media/$pkg"
+        val appObb = "Android/obb/$pkg"
+        val extFiles = ctx.getExternalFilesDir(null)?.absolutePath ?: ""
+        val extCache = ctx.externalCacheDir?.absolutePath ?: ""
+        val intFiles = ctx.filesDir.absolutePath
+        val intCache = ctx.cacheDir.absolutePath
+        return path.contains(appData) || path.contains(appMedia) || path.contains(appObb) ||
+               (extFiles.isNotEmpty() && path.startsWith(extFiles)) ||
+               (extCache.isNotEmpty() && path.startsWith(extCache)) ||
+               path.startsWith(intFiles) || path.startsWith(intCache)
+    }
+
+    private fun isRestrictedStorageRoot(dir: File, sessionRoot: String): Boolean {
+        val ctx = context ?: return false
+        val isTv = DeviceUtils.isTvDevice(ctx)
+        if (isTv) return false
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R) return false
+        if (android.os.Environment.isExternalStorageManager()) return false
+        if (isAppSpecificPath(dir.absolutePath)) return false
+        if (dir.absolutePath.startsWith("saf://") || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dir.absolutePath)) return false
+        if (dir.absolutePath != sessionRoot) return false
+
+        val canList = try {
+            val list = dir.listFiles()
+            list != null && dir.canRead()
+        } catch (_: Exception) {
+            false
+        }
+        if (canList) return false
+
+        val internalRoot = android.os.Environment.getExternalStorageDirectory().absolutePath
+        return dir.absolutePath == internalRoot ||
+               dir.absolutePath == "/storage/emulated/0" ||
+               dir.absolutePath == "/sdcard" ||
+               dir.absolutePath.matches(Regex("^/storage/[^/]+/?$"))
+    }
+
     private fun loadDirectory(directory: File) {
         val ctx = context ?: return
         val isTv = DeviceUtils.isTvDevice(ctx)
@@ -2339,26 +2310,7 @@ class FileBrowserFragment : Fragment() {
             }
         }
 
-        val isRestrictedRoot = !isTv &&
-                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R &&
-                !android.os.Environment.isExternalStorageManager() &&
-                targetDir.absolutePath == rootPath &&
-                !targetDir.absolutePath.startsWith("saf://") &&
-                !za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(targetDir.absolutePath)
-
-        val countMounted = if (isRestrictedRoot) {
-            za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationsForStorage(requireContext(), targetDir.absolutePath).size +
-            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getGrantedPathsForStorage(requireContext(), targetDir.absolutePath).size
-        } else 0
-
-        view?.findViewById<View>(R.id.layoutRestrictedAddFolder)?.visibility = if (isRestrictedRoot) View.VISIBLE else View.GONE
-        view?.findViewById<View>(R.id.btnRestrictedRemoveFolder)?.visibility = if (isRestrictedRoot && countMounted > 0) View.VISIBLE else View.GONE
-        view?.findViewById<View>(R.id.btnRestrictedAddFolder)?.setOnClickListener {
-            launchAddFolderPicker()
-        }
-        view?.findViewById<View>(R.id.btnRestrictedRemoveFolder)?.setOnClickListener {
-            launchRemoveFolderDialog()
-        }
+        val isRestrictedRoot = isRestrictedStorageRoot(targetDir, rootPath)
 
         if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
 

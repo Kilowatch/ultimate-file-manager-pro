@@ -122,7 +122,7 @@ class UFMPlayerActivity : AppCompatActivity() {
     private lateinit var trackSheetTitle: TextView
 
     // ── Gesture Controls ────────────────────────────────────────────
-    private lateinit var gestureOverlay: PlayerGestureOverlayView
+    private var gestureOverlay: PlayerGestureOverlayView? = null
     private var gestureController: PlayerGestureController? = null
     private var currentTrackInfo: QueueItem? = null
 
@@ -206,6 +206,8 @@ class UFMPlayerActivity : AppCompatActivity() {
     private var currentSubtitleTracks: List<SubtitleTrackInfo> = emptyList()
     private var externalSubtitleInfos: List<SubtitleTrackInfo> = emptyList()
     private var isPiP = false
+    private var isTv = false
+    private var isTvSeeking = false
 
     private val handler = Handler(Looper.getMainLooper())
     private var isTracking = false
@@ -256,9 +258,14 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private val playbackCallback = object : UFMPlaybackService.PlaybackCallback {
         override fun onProgressUpdate(position: Long, duration: Long) {
-            if (!isTracking && !isPiP) {
+            if (!isTracking && !(isTv && isTvSeeking) && !isPiP) {
                 if (duration > 0) {
                     seekBar.max = duration.toInt()
+                    if (isTv) {
+                        val skipMs = PlayerPreferencesManager.getSkipLengthMs(this@UFMPlayerActivity).toInt()
+                        val step = if (skipMs > 0) skipMs else (duration / 100).toInt().coerceIn(5_000, 60_000)
+                        seekBar.keyProgressIncrement = step
+                    }
                     seekBar.progress = position.toInt()
                     updateTimeLabels(position.toInt(), duration.toInt())
                 }
@@ -367,7 +374,7 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private val hideControlsRunnable = Runnable {
         runOnUiThread {
-            if (!isDestroyed && !isFinishing && !isShowingSheet) {
+            if (!isDestroyed && !isFinishing && !isShowingSheet && !(isTv && isTvSeeking)) {
                 controlsLayout.animate().alpha(0f).setDuration(300).withEndAction {
                     controlsLayout.visibility = View.GONE
                     subtitleView.setPadding(0, 0, 0, dp(16))
@@ -382,11 +389,16 @@ class UFMPlayerActivity : AppCompatActivity() {
     private val progressUpdater = object : Runnable {
         override fun run() {
             val svc = playbackService
-            if (svc != null && !isTracking && !isPiP) {
+            if (svc != null && !isTracking && !(isTv && isTvSeeking) && !isPiP) {
                 val pos = svc.currentPosition
                 val dur = svc.duration
                 if (dur > 0) {
                     seekBar.max = dur.toInt()
+                    if (isTv) {
+                        val skipMs = PlayerPreferencesManager.getSkipLengthMs(this@UFMPlayerActivity).toInt()
+                        val step = if (skipMs > 0) skipMs else (dur / 100).toInt().coerceIn(5_000, 60_000)
+                        seekBar.keyProgressIncrement = step
+                    }
                     seekBar.progress = pos.toInt()
                     updateTimeLabels(pos.toInt(), dur.toInt())
 
@@ -442,7 +454,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         window.statusBarColor = android.graphics.Color.TRANSPARENT
         window.navigationBarColor = android.graphics.Color.TRANSPARENT
 
-        val isTv = DeviceUtils.isTvDevice(this)
+        isTv = DeviceUtils.isTvDevice(this)
         setContentView(if (isTv) R.layout.activity_ufm_player_tv else R.layout.activity_ufm_player)
 
         // Read extras
@@ -483,6 +495,8 @@ class UFMPlayerActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 if (isShowingSheet) {
                     dismissTrackSheet()
+                } else if (isTv && isTvSeeking) {
+                    cancelTvSeek()
                 } else {
                     stopPlaybackAndFinish()
                 }
@@ -549,8 +563,13 @@ class UFMPlayerActivity : AppCompatActivity() {
                 val player = za.kilowatch.ultimatefilemanager.media.MjpegPlayerHelper(
                     dataSource = ds,
                     onFrameRendered = { currentMs, totalMs ->
-                        if (!isTracking) {
+                        if (!isTracking && !(isTv && isTvSeeking)) {
                             seekBar.max = totalMs.toInt()
+                            if (isTv) {
+                                val skipMs = PlayerPreferencesManager.getSkipLengthMs(this@UFMPlayerActivity).toInt()
+                                val step = if (skipMs > 0) skipMs else (totalMs / 100).toInt().coerceIn(5_000, 60_000)
+                                seekBar.keyProgressIncrement = step
+                            }
                             seekBar.progress = currentMs.toInt()
                             updateTimeLabels(currentMs.toInt(), totalMs.toInt())
                         }
@@ -725,17 +744,15 @@ class UFMPlayerActivity : AppCompatActivity() {
             // Just hide the UI controls that are irrelevant in PiP mode
             controlsLayout.visibility = GONE
             topBar.visibility = GONE
-            if (::gestureOverlay.isInitialized) {
-                gestureOverlay.hideAll(true)
-                gestureOverlay.visibility = GONE
+            gestureOverlay?.let {
+                it.hideAll(true)
+                it.visibility = GONE
             }
         } else {
             // Returned from PiP — player is already attached, just restore UI
             controlsLayout.visibility = VISIBLE
             topBar.visibility = VISIBLE
-            if (::gestureOverlay.isInitialized) {
-                gestureOverlay.visibility = VISIBLE
-            }
+            gestureOverlay?.visibility = VISIBLE
         }
     }
 
@@ -769,62 +786,65 @@ class UFMPlayerActivity : AppCompatActivity() {
         trackSheetLayout = findViewById(R.id.trackSheetLayout)
         trackSheetList = findViewById(R.id.trackSheetList)
         trackSheetTitle = findViewById(R.id.trackSheetTitle)
-        gestureOverlay = findViewById(R.id.gestureOverlay)
 
         if (!DeviceUtils.isTvDevice(this)) {
-            gestureController = PlayerGestureController(
-                activity = this,
-                overlayView = gestureOverlay,
-                topBar = topBar,
-                controlsLayout = controlsLayout,
-                isGesturesEnabled = {
-                    PlayerPreferencesManager.isGesturesEnabled(this) && !isPiP
-                },
-                isVideoPlaying = {
-                    val isVid = currentTrackInfo?.isVideo ?: (playerView.visibility == View.VISIBLE)
-                    isVid
-                },
-                getCurrentPosition = {
-                    mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
-                },
-                getDuration = {
-                    mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
-                },
-                onSeekTo = { pos ->
-                    if (mjpegPlayer != null) {
-                        mjpegPlayer?.seekTo(pos, audioPoster)
-                    } else {
-                        playbackService?.seekTo(pos)
+            val overlay = findViewById<PlayerGestureOverlayView?>(R.id.gestureOverlay)
+            if (overlay != null) {
+                gestureOverlay = overlay
+                gestureController = PlayerGestureController(
+                    activity = this,
+                    overlayView = overlay,
+                    topBar = topBar,
+                    controlsLayout = controlsLayout,
+                    isGesturesEnabled = {
+                        PlayerPreferencesManager.isGesturesEnabled(this) && !isPiP
+                    },
+                    isVideoPlaying = {
+                        val isVid = currentTrackInfo?.isVideo ?: (playerView.visibility == View.VISIBLE)
+                        isVid
+                    },
+                    getCurrentPosition = {
+                        mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
+                    },
+                    getDuration = {
+                        mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+                    },
+                    onSeekTo = { pos ->
+                        if (mjpegPlayer != null) {
+                            mjpegPlayer?.seekTo(pos, audioPoster)
+                        } else {
+                            playbackService?.seekTo(pos)
+                        }
+                    },
+                    onSingleTap = {
+                        toggleControls()
+                    },
+                    onLongPress = {
+                        showSpeedSheet()
+                    },
+                    hideControls = {
+                        hideControls()
+                    },
+                    resetHideTimer = {
+                        resetHideTimer()
                     }
-                },
-                onSingleTap = {
-                    toggleControls()
-                },
-                onLongPress = {
-                    showSpeedSheet()
-                },
-                hideControls = {
-                    hideControls()
-                },
-                resetHideTimer = {
-                    resetHideTimer()
-                }
-            )
+                )
 
-            gestureOverlay.setOnTouchListener { _, event ->
-                if (isShowingSheet) {
-                    if (event.action == android.view.MotionEvent.ACTION_DOWN) {
-                        val sheetRect = android.graphics.Rect()
-                        trackSheetLayout.getGlobalVisibleRect(sheetRect)
-                        val touchX = event.rawX.toInt()
-                        val touchY = event.rawY.toInt()
-                        if (!sheetRect.contains(touchX, touchY)) {
-                            dismissTrackSheet()
-                            return@setOnTouchListener true
+                overlay.setOnTouchListener { _, event ->
+                    if (isShowingSheet) {
+                        if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+                            val sheetRect = android.graphics.Rect()
+                            trackSheetLayout.getGlobalVisibleRect(sheetRect)
+                            val touchX = event.rawX.toInt()
+                            val touchY = event.rawY.toInt()
+                            if (!sheetRect.contains(touchX, touchY)) {
+                                dismissTrackSheet()
+                                return@setOnTouchListener true
+                            }
                         }
                     }
+                    gestureController?.handleTouchEvent(event) ?: false
                 }
-                gestureController?.handleTouchEvent(event) ?: false
             }
         }
 
@@ -873,8 +893,12 @@ class UFMPlayerActivity : AppCompatActivity() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
+                    if (isTv) {
+                        isTvSeeking = true
+                    }
                     val dur = mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
                     updateTimeLabels(progress, if (dur > 0) dur.toInt() else 0)
+                    resetHideTimer()
                 }
             }
             override fun onStartTrackingTouch(sb: SeekBar?) { isTracking = true }
@@ -890,13 +914,47 @@ class UFMPlayerActivity : AppCompatActivity() {
         })
 
         seekBar.setOnKeyListener { _, keyCode, event ->
-            if (event.action == android.view.KeyEvent.ACTION_DOWN) {
-                if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || keyCode == android.view.KeyEvent.KEYCODE_ENTER) {
-                    playbackService?.seekTo(seekBar.progress.toLong())
-                    resetHideTimer()
-                    true
-                } else false
+            if (isTv && event.action == android.view.KeyEvent.ACTION_DOWN) {
+                when (keyCode) {
+                    android.view.KeyEvent.KEYCODE_DPAD_CENTER,
+                    android.view.KeyEvent.KEYCODE_ENTER,
+                    android.view.KeyEvent.KEYCODE_NUMPAD_ENTER -> {
+                        val target = seekBar.progress.toLong()
+                        if (mjpegPlayer != null) {
+                            mjpegPlayer?.seekTo(target, audioPoster)
+                        } else {
+                            playbackService?.seekTo(target)
+                        }
+                        isTvSeeking = false
+                        resetHideTimer()
+                        true
+                    }
+                    android.view.KeyEvent.KEYCODE_DPAD_LEFT,
+                    android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                        isTvSeeking = true
+                        resetHideTimer()
+                        false
+                    }
+                    android.view.KeyEvent.KEYCODE_DPAD_UP,
+                    android.view.KeyEvent.KEYCODE_DPAD_DOWN -> {
+                        if (isTvSeeking) {
+                            cancelTvSeek()
+                        }
+                        false
+                    }
+                    else -> false
+                }
             } else false
+        }
+
+        seekBar.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                resetHideTimer()
+            } else {
+                if (isTv && isTvSeeking) {
+                    cancelTvSeek()
+                }
+            }
         }
 
         // Button click handlers — all go through service
@@ -1002,10 +1060,10 @@ class UFMPlayerActivity : AppCompatActivity() {
                             dp(44), dp(44)
                         ).apply { marginStart = dp(2) }
                         setImageResource(R.drawable.ic_list_view_custom)
-                        background = resources.getDrawable(
-                            android.R.attr.selectableItemBackgroundBorderless,
-                            theme
-                        )
+                        val typedValue = android.util.TypedValue()
+                        if (theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true)) {
+                            background = androidx.core.content.ContextCompat.getDrawable(this@UFMPlayerActivity, typedValue.resourceId)
+                        }
                         imageTintList = android.content.res.ColorStateList.valueOf(
                             android.graphics.Color.WHITE
                         )
@@ -1069,9 +1127,21 @@ class UFMPlayerActivity : AppCompatActivity() {
         topBar.alpha = 1f
         subtitleView.setPadding(0, 0, 0, dp(100))
 
-        if (playbackService?.isPlaying == true && !isShowingSheet) {
+        if (playbackService?.isPlaying == true && !isShowingSheet && !(isTv && isTvSeeking)) {
             handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(this))
         }
+    }
+
+    private fun cancelTvSeek() {
+        if (!isTvSeeking) return
+        isTvSeeking = false
+        val pos = mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
+        val dur = mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+        if (dur > 0) {
+            seekBar.progress = pos.toInt()
+            updateTimeLabels(pos.toInt(), dur.toInt())
+        }
+        resetHideTimer()
     }
 
     private fun updateAlpha(view: View, isActive: Boolean) {
@@ -1127,9 +1197,7 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     private fun stopPlaybackAndFinish() {
-        if (::gestureOverlay.isInitialized) {
-            gestureOverlay.hideAll(true)
-        }
+        gestureOverlay?.hideAll(true)
         mjpegPlayer?.release()
         mjpegPlayer = null
         if (bound) {

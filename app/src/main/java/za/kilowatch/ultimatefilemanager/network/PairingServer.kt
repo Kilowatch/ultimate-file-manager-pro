@@ -31,6 +31,10 @@ import java.security.KeyStore
 import java.util.UUID
 import java.util.zip.ZipFile
 import android.os.storage.StorageManager
+import za.kilowatch.ultimatefilemanager.storage.SafFile
+import za.kilowatch.ultimatefilemanager.storage.SafLocationRepository
+import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 
 class PairingServer(
@@ -635,12 +639,45 @@ class PairingServer(
     }
 
     private fun handleTvDrives(): Response {
+        val arr = JSONArray()
+
+        val isRestricted = !DeviceUtils.isTvDevice(context) &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                !Environment.isExternalStorageManager()
+
+        if (isRestricted) {
+            val locations = SafLocationRepository.getLocations(context)
+            val addedPaths = mutableSetOf<String>()
+            for (loc in locations) {
+                val p = if (loc.isStandalone) "saf://${loc.id}" else loc.getDisplayPath()
+                if (p.isNotEmpty() && addedPaths.add(p)) {
+                    val label = loc.displayName.ifEmpty { p.substringAfterLast('/') }
+                    val dir = File(p)
+                    val freeBytes = try { dir.freeSpace } catch (_: Exception) { 0L }
+                    val totalBytes = try { dir.totalSpace } catch (_: Exception) { 0L }
+
+                    val obj = JSONObject().apply {
+                        put("name", label)
+                        put("label", label)
+                        put("path", p)
+                        put("isDirectory", true)
+                        put("size", totalBytes)
+                        put("lastModified", 0L)
+                        put("freeSpace", freeBytes)
+                        put("isRemovable", false)
+                    }
+                    arr.put(obj)
+                }
+            }
+            return newFixedLengthResponse(Response.Status.OK, "application/json", arr.toString())
+        }
+
         val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
         val volumes = storageManager.storageVolumes
-        val arr = JSONArray()
 
         for (volume in volumes) {
             val path = volume.safeDirectoryPath ?: continue
+            if (volume.state != Environment.MEDIA_MOUNTED) continue
 
             // Human-readable label: "Internal shared storage", "SD card", "USB drive", etc.
             val label = try {
@@ -667,6 +704,27 @@ class PairingServer(
             }
             arr.put(obj)
         }
+
+        // Also append standalone SAF locations if present
+        val safLocations = SafLocationRepository.getLocations(context)
+        for (loc in safLocations) {
+            if (loc.isStandalone) {
+                val p = "saf://${loc.id}"
+                val label = loc.displayName.ifEmpty { "SAF Storage" }
+                val obj = JSONObject().apply {
+                    put("name", label)
+                    put("label", label)
+                    put("path", p)
+                    put("isDirectory", true)
+                    put("size", 0L)
+                    put("lastModified", 0L)
+                    put("freeSpace", 0L)
+                    put("isRemovable", false)
+                }
+                arr.put(obj)
+            }
+        }
+
         return newFixedLengthResponse(Response.Status.OK, "application/json", arr.toString())
     }
 
@@ -684,10 +742,27 @@ class PairingServer(
 
     // ─── Path Validation ────────────────────────────────────────────────
     private fun isPathAllowed(path: String): Boolean {
-        if (path.startsWith("net:") || path.startsWith("content:")) return true
+        if (path.startsWith("net:") || path.startsWith("content:") || path.startsWith("saf://")) return true
         
         val file = File(path)
         val canonicalReq = try { file.canonicalPath } catch (e: Exception) { return false }
+
+        val isRestricted = !DeviceUtils.isTvDevice(context) &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                !Environment.isExternalStorageManager()
+
+        if (isRestricted) {
+            val cacheDir = try { context.cacheDir.canonicalPath } catch (e: Exception) { null }
+            if (cacheDir != null && (canonicalReq == cacheDir || canonicalReq.startsWith("$cacheDir/"))) return true
+
+            if (SafTreeManager.isSaf(context, path)) return true
+
+            val locations = SafLocationRepository.getLocations(context)
+            return locations.any { loc ->
+                val disp = SafFile.cleanSafPath(loc.getDisplayPath())
+                disp.isNotEmpty() && (canonicalReq == disp || canonicalReq.startsWith("$disp/"))
+            }
+        }
         
         // 1. Direct Volume check: If the path belongs to a user-manageable storage volume, allow it.
         val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as? StorageManager
@@ -718,27 +793,43 @@ class PairingServer(
         val path = session.parms["path"] ?: ""
         val dir = File(path)
         
-        Log.e("PairingServer", "handleTvFiles requesting path: [$path]")
-        Log.e("PairingServer", "handleTvFiles exists: ${dir.exists()}, isDirectory: ${dir.isDirectory}, canRead: ${dir.canRead()}")
+        Log.d("PairingServer", "handleTvFiles requesting path: [$path]")
         
         if (!isPathAllowed(dir.absolutePath)) {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "application/json", "{\"error\":\"Permission denied: restricted path\"}")
         }
-        if (!dir.exists() || !dir.isDirectory) {
-            return newFixedLengthResponse(Response.Status.NOT_FOUND, "application/json", "{\"error\":\"Not a directory\"}")
-        }
 
-        val files = dir.listFiles() ?: emptyArray()
+        val isSaf = SafTreeManager.isSaf(context, path)
         val arr = JSONArray()
-        for (file in files) {
-            val obj = JSONObject().apply {
-                put("name", file.name)
-                put("path", file.absolutePath)
-                put("isDirectory", file.isDirectory)
-                put("size", if (file.isDirectory) 0L else file.length())
-                put("lastModified", file.lastModified())
+
+        if (isSaf) {
+            val files = SafTreeManager.listFiles(context, path)
+            for (file in files) {
+                val obj = JSONObject().apply {
+                    put("name", file.name)
+                    put("path", file.absolutePath)
+                    put("isDirectory", file.isDirectory)
+                    put("size", if (file.isDirectory) 0L else file.length())
+                    put("lastModified", file.lastModified())
+                }
+                arr.put(obj)
             }
-            arr.put(obj)
+        } else {
+            if (!dir.exists() || !dir.isDirectory) {
+                return newFixedLengthResponse(Response.Status.NOT_FOUND, "application/json", "{\"error\":\"Not a directory\"}")
+            }
+
+            val files = dir.listFiles() ?: emptyArray()
+            for (file in files) {
+                val obj = JSONObject().apply {
+                    put("name", file.name)
+                    put("path", file.absolutePath)
+                    put("isDirectory", file.isDirectory)
+                    put("size", if (file.isDirectory) 0L else file.length())
+                    put("lastModified", file.lastModified())
+                }
+                arr.put(obj)
+            }
         }
         return newFixedLengthResponse(Response.Status.OK, "application/json", arr.toString())
     }
@@ -750,6 +841,14 @@ class PairingServer(
         if (!isPathAllowed(file.absolutePath)) {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, MIME_PLAINTEXT, "Permission denied")
         }
+
+        val isSaf = SafTreeManager.isSaf(context, path)
+        if (isSaf) {
+            val inStream = SafTreeManager.openInputStream(context, path)
+                ?: return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "File not found or cannot open stream")
+            return newChunkedResponse(Response.Status.OK, "application/octet-stream", inStream)
+        }
+
         if (!file.exists() || !file.isFile) {
             return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "File not found")
         }
@@ -770,16 +869,17 @@ class PairingServer(
         if (!isPathAllowed(file.absolutePath)) {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "application/json", "{\"error\":\"Permission denied\"}")
         }
-        
+
+        val isSaf = SafTreeManager.isSaf(context, path)
         return try {
-            // Write input stream directly to file
-            FileOutputStream(file).use { out ->
-                // NanoHTTPD gives us a temporary file for the body or parses it via parseBody
-                // However, for direct streaming to avoid memory issues, we can try to copy session.inputStream
-                // But NanoHTTPD requires calling parseBody first.
-                // For a big file upload, we should use session.inputStream carefully, but NanoHTTPD's parseBody handles multipart or standard form data.
-                // Since our client sends a pure raw POST stream:
-                
+            val outStream = if (isSaf) {
+                SafTreeManager.openOutputStream(context, path)
+                    ?: throw java.io.IOException("Cannot open SAF output stream for $path")
+            } else {
+                FileOutputStream(file)
+            }
+
+            outStream.use { out ->
                 val buffer = ByteArray(8192)
                 var bytesRead = 0
                 val lenHeader = session.headers["content-length"]?.toLongOrNull()
@@ -811,10 +911,21 @@ class PairingServer(
         val rawPath = JSONObject(bodyStr).optString("path", "")
         val path = rawPath.replace("%CACHE%", context.cacheDir.absolutePath)
         
-        val dir = File(path)
-        if (!isPathAllowed(dir.absolutePath)) {
+        if (!isPathAllowed(path)) {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "application/json", "{\"error\":\"Permission denied\"}")
         }
+
+        val isSaf = SafTreeManager.isSaf(context, path)
+        if (isSaf) {
+            val success = SafTreeManager.createFolder(context, path)
+            return if (success) {
+                newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
+            } else {
+                newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "application/json", "{\"error\":\"Failed to create directory\"}")
+            }
+        }
+
+        val dir = File(path)
         return if (dir.mkdirs()) {
             newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
         } else {
@@ -829,10 +940,21 @@ class PairingServer(
         val rawPath = JSONObject(bodyStr).optString("path", "")
         val path = rawPath.replace("%CACHE%", context.cacheDir.absolutePath)
         
-        val file = File(path)
-        if (!isPathAllowed(file.absolutePath)) {
+        if (!isPathAllowed(path)) {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "application/json", "{\"error\":\"Permission denied\"}")
         }
+
+        val isSaf = SafTreeManager.isSaf(context, path)
+        if (isSaf) {
+            val success = SafTreeManager.deleteRecursively(context, path)
+            return if (success) {
+                newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
+            } else {
+                newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "application/json", "{\"error\":\"Failed to delete\"}")
+            }
+        }
+
+        val file = File(path)
         val success = if (file.isDirectory) file.deleteRecursively() else file.delete()
         
         return if (success) {
@@ -852,13 +974,23 @@ class PairingServer(
         val path = rawPath.replace("%CACHE%", context.cacheDir.absolutePath)
         val newPath = rawNewPath.replace("%CACHE%", context.cacheDir.absolutePath)
         
-        val file = File(path)
-        val newFile = File(newPath)
-        
-        if (!isPathAllowed(file.absolutePath) || !isPathAllowed(newFile.absolutePath)) {
+        if (!isPathAllowed(path) || !isPathAllowed(newPath)) {
             return newFixedLengthResponse(Response.Status.FORBIDDEN, "application/json", "{\"error\":\"Permission denied\"}")
         }
-        
+
+        val isSaf = SafTreeManager.isSaf(context, path)
+        if (isSaf) {
+            val newName = newPath.substringAfterLast('/')
+            val success = SafTreeManager.rename(context, path, newName)
+            return if (success) {
+                newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
+            } else {
+                newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "application/json", "{\"error\":\"Failed to rename\"}")
+            }
+        }
+
+        val file = File(path)
+        val newFile = File(newPath)
         return if (file.renameTo(newFile)) {
             newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
         } else {

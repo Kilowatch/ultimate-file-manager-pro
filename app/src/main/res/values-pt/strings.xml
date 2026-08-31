@@ -13140,10 +13140,10 @@ Selecione uma pasta para remover o acesso deste armazenamento. Seus arquivos nã
 Nenhuma pasta montada restante para este armazenamento.
 </string>
     <string name="restricted_storage_empty_title">
-Nenhuma pasta adicionada ainda
+Acesso a todos os arquivos necessário
 </string>
     <string name="restricted_storage_empty_desc">
-Você está usando o modo de pastas selecionadas. Adicione pastas para acessá-las e gerenciá-las aqui.
+Para acessar e gerenciar arquivos neste armazenamento, ative o acesso a todos os arquivos nas configurações do Android.
 </string>
     <string name="restricted_storage_grant_all_files">
 Habilite o acesso a todos os arquivos nas configurações

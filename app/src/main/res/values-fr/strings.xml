@@ -13140,10 +13140,10 @@ Sélectionnez un dossier pour supprimer l\'accès à ce stockage. Vos fichiers n
 Aucun dossier monté restant pour ce stockage.
 </string>
     <string name="restricted_storage_empty_title">
-Aucun dossier ajouté pour l\'instant
+Accès à tous les fichiers requis
 </string>
     <string name="restricted_storage_empty_desc">
-Vous utilisez le mode dossiers sélectionnés. Ajoutez des dossiers pour y accéder et gérez-les ici.
+Pour accéder et gérer les fichiers de ce stockage, veuillez activer l\'accès à tous les fichiers dans les paramètres Android.
 </string>
     <string name="restricted_storage_grant_all_files">
 Activer l\'accès à tous les fichiers dans les paramètres

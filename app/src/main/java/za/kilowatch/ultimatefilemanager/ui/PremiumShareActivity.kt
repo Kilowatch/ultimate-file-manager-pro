@@ -211,7 +211,7 @@ class PremiumShareActivity : AppCompatActivity() {
         val txtCopyTitle = cardCopy.findViewById<TextView>(R.id.share_option_premium)
         txtCopyTitle.text = getString(R.string.apk_action_copy)
         val txtCopyDesc = cardCopy.findViewById<TextView>(R.id.share_option_premium_desc)
-        txtCopyDesc.text = getString(R.string.confirm_transfer_message, 1, Formatter.formatFileSize(this, apkFile.length()), getString(R.string.default_destination_path))
+        txtCopyDesc.text = getString(R.string.confirm_transfer_message, 1, Formatter.formatFileSize(this, getFileSize(apkFile)), getString(R.string.default_destination_path))
 
         dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
             dialog.dismiss()
@@ -231,8 +231,19 @@ class PremiumShareActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
+    private fun getFileSize(file: File): Long {
+        val path = file.absolutePath
+        return if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, path)) {
+            val size = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this, path)
+            if (size >= 0L) size else file.length()
+        } else {
+            file.length()
+        }
+    }
+
     private fun showPremiumConfirmTransferDialog(device: AdbDevice, transferFiles: List<File>, installApk: Boolean) {
-        val totalBytes = transferFiles.sumOf { it.length() }
+        val totalBytes = transferFiles.sumOf { getFileSize(it) }
         val sizeStr = Formatter.formatFileSize(this, totalBytes)
         val destPath = getString(R.string.default_destination_path)
         val message = getString(R.string.confirm_transfer_message, transferFiles.size, sizeStr, destPath)

@@ -367,18 +367,23 @@ object TransferConflictHelper {
             za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.copy(src.absolutePath, tmp.absolutePath)
             tmp
         } else { src }
+
+        val effectiveSourceSize = if (actualSrc != src) actualSrc.length() else {
+            if (sourceSize > 0L) sourceSize else src.length()
+        }
+
         try {
             // Zero-byte guard with auto-retry — wraps upload + rename into a single
             // doCopy lambda. verifyDestSize queries the final remote file size after
             // the rename has completed.
             val uploadSucceeded = FileTransferGuard.guardedCopy(
                 sourceName = src.name,
-                sourceSize = sourceSize,
+                sourceSize = effectiveSourceSize,
                 verifyDestSize = { getRemoteFileSize(destShare, destPath) },
                 doCopy = {
                     if (destShare.type == ShareType.TV) {
                         FileInputStream(actualSrc).use { inp ->
-                            TvShareClient.uploadStream(destShare, tmpPath, inp, sourceSize)
+                            TvShareClient.uploadStream(destShare, tmpPath, inp, effectiveSourceSize)
                         }
                         TvShareClient.rename(destShare, tmpPath, destPath)
                     } else {
@@ -393,19 +398,19 @@ object TransferConflictHelper {
                             if (za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(destShare)) {
                                 // rclone: stream via operations/copyfile with real-time core/stats progress
                                 za.kilowatch.ultimatefilemanager.network.RCloneShareClient.uploadWithProgress(
-                                    destShare, actualSrc, tmpPath, sourceSize, onProgress
+                                    destShare, actualSrc, tmpPath, effectiveSourceSize, onProgress
                                 )
                             } else {
                                 withContext(Dispatchers.IO) {
                                     FileInputStream(actualSrc).use { inp ->
                                         when (destShare.type) {
                                             ShareType.ONEDRIVE ->
-                                                za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.uploadStream(destShare, tmpPath, inp, sourceSize, onProgress)
+                                                za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.uploadStream(destShare, tmpPath, inp, effectiveSourceSize, onProgress)
                                             ShareType.GOOGLE_DRIVE ->
-                                                za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.uploadStream(destShare, tmpPath, inp, sourceSize, onProgress)
+                                                za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.uploadStream(destShare, tmpPath, inp, effectiveSourceSize, onProgress)
                                             ShareType.DROPBOX ->
-                                                za.kilowatch.ultimatefilemanager.network.DropboxShareClient.uploadStream(destShare, tmpPath, inp, sourceSize) { copied ->
-                                                    onProgress?.invoke(copied, sourceSize)
+                                                za.kilowatch.ultimatefilemanager.network.DropboxShareClient.uploadStream(destShare, tmpPath, inp, effectiveSourceSize) { copied ->
+                                                    onProgress?.invoke(copied, effectiveSourceSize)
                                                 }
                                             else -> {}
                                         }
@@ -425,7 +430,7 @@ object TransferConflictHelper {
                             withContext(Dispatchers.IO) {
                                 FileInputStream(actualSrc).use { inp ->
                                     outStream.use { out ->
-                                        CopyHelper.copy(inp, out, sourceSize, onProgress)
+                                        CopyHelper.copy(inp, out, effectiveSourceSize, onProgress)
                                     }
                                 }
                             }

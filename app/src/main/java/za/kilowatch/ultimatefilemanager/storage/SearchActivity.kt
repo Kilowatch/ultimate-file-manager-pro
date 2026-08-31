@@ -1437,7 +1437,8 @@ class SearchActivity : AppCompatActivity() {
                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@SearchActivity, path)
                 val deleted = if (isSaf) {
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@SearchActivity, path)
+                    if (isDir) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@SearchActivity, path)
+                    else za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@SearchActivity, path)
                 } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
                 } else if (isDir) {
@@ -1970,7 +1971,8 @@ class SearchActivity : AppCompatActivity() {
                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@SearchActivity, path)
                     val deleted = if (isSaf) {
-                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@SearchActivity, path)
+                        if (isDir) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@SearchActivity, path)
+                        else za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@SearchActivity, path)
                     } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
                         za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
                     } else if (isDir) {

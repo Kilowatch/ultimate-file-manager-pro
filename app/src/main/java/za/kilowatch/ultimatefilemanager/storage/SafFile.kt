@@ -68,6 +68,28 @@ class SafFile : File {
     override fun canRead(): Boolean = true
     override fun canWrite(): Boolean = true
 
+    override fun delete(): Boolean {
+        val ctx = za.kilowatch.ultimatefilemanager.UfmApplication.instance
+        return if (isDir) SafTreeManager.deleteRecursively(ctx, rawPath) else SafTreeManager.delete(ctx, rawPath)
+    }
+
+    fun deleteRecursively(): Boolean {
+        val ctx = za.kilowatch.ultimatefilemanager.UfmApplication.instance
+        return if (isDir) SafTreeManager.deleteRecursively(ctx, rawPath) else SafTreeManager.delete(ctx, rawPath)
+    }
+
+    override fun mkdir(): Boolean {
+        val ctx = za.kilowatch.ultimatefilemanager.UfmApplication.instance
+        val p = parent ?: ""
+        return SafTreeManager.mkdir(ctx, p, docName)
+    }
+
+    override fun createNewFile(): Boolean {
+        val ctx = za.kilowatch.ultimatefilemanager.UfmApplication.instance
+        val p = parent ?: ""
+        return SafTreeManager.createFile(ctx, p, docName) != null
+    }
+
     companion object {
         fun cleanSafPath(path: String): String {
             var p = path.trim()

@@ -13140,10 +13140,10 @@ Select a folder to remove access from this storage. Your files will not be delet
 No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
-لم تتم إضافة أي مجلدات حتى الآن
+مطلوب الوصول إلى كافة الملفات
 </string>
     <string name="restricted_storage_empty_desc">
-أنت تستخدم وضع المجلدات المحددة. أضف مجلدات للوصول إليها وإدارتها هنا.
+To access and manage files in this storage, please enable All Files Access in Android Settings.
 </string>
     <string name="restricted_storage_grant_all_files">
 تمكين الوصول إلى كافة الملفات في الإعدادات

@@ -13117,10 +13117,10 @@ Välj en mapp för att ta bort åtkomst från denna lagring. Dina filer kommer i
 Inga monterade mappar kvar för denna lagring.
 </string>
     <string name="restricted_storage_empty_title">
-Inga mappar har lagts till ännu
+Alla filer åtkomst krävs
 </string>
     <string name="restricted_storage_empty_desc">
-Du använder läget för valda mappar. Lägg till mappar för att komma åt och hantera dem här.
+För att komma åt och hantera filer i detta lagringsutrymme, aktivera alla filer i Android-inställningarna.
 </string>
     <string name="restricted_storage_grant_all_files">
 Aktivera alla filer i Inställningar

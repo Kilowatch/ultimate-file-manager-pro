@@ -71,13 +71,81 @@ class LocalSmartSortStorage : SmartSortStorage {
     }
 
     override suspend fun rename(from: String, to: String): Boolean = withContext(Dispatchers.IO) {
+        val fromParent = from.substringBeforeLast('/', "")
+        val toParent = to.substringBeforeLast('/', "")
+        val newName = to.substringAfterLast('/')
+        val oldName = from.substringAfterLast('/')
+
         if (isSaf(from) || isSaf(to)) {
-            val name = to.substringAfterLast('/')
-            return@withContext za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(ctx, from, name)
+            // Case 1: Same parent directory -> in-place rename
+            if (fromParent == toParent) {
+                return@withContext za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(ctx, from, newName)
+            }
+
+            // Case 2: Different parent directory -> Move across SAF directories
+            // Try DocumentsContract.moveDocument first (API 24+)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                val srcUri = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(ctx, from)
+                val srcParentUri = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(ctx, fromParent)
+                val dstParentUri = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(ctx, toParent)
+                if (srcUri != null && srcParentUri != null && dstParentUri != null) {
+                    try {
+                        val movedUri = android.provider.DocumentsContract.moveDocument(
+                            ctx.contentResolver, srcUri, srcParentUri, dstParentUri
+                        )
+                        if (movedUri != null) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.invalidatePath(from)
+                            if (newName != oldName) {
+                                val movedPath = za.kilowatch.ultimatefilemanager.storage.SafFile.combineSafPath(toParent, oldName)
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(ctx, movedPath, newName)
+                            }
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.invalidatePath(to)
+                            return@withContext true
+                        }
+                    } catch (e: Exception) {
+                        za.kilowatch.ultimatefilemanager.util.GoRoLog.w("SmartSort", "moveDocument failed for $from -> $to: ${e.message}, falling back to stream copy")
+                    }
+                }
+            }
+
+            // Fallback for SAF: Stream copy + delete source
+            return@withContext try {
+                val input = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(ctx, from)
+                    ?: return@withContext false
+                val out = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(ctx, to)
+                    ?: run { input.close(); return@withContext false }
+                input.use { inStream ->
+                    out.use { outStream ->
+                        inStream.copyTo(outStream, bufferSize = STREAM_BUFFER_BYTES)
+                    }
+                }
+                val srcLen = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, from)
+                val dstLen = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, to)
+                val isSafe = if (dstLen <= 0L && srcLen > 0L) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, to)
+                } else {
+                    za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                        dstLen, srcLen, newName
+                    )
+                }
+                if (isSafe) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(ctx, from)
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.invalidatePath(from)
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.invalidatePath(to)
+                    true
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                za.kilowatch.ultimatefilemanager.util.GoRoLog.e("SmartSort", "SAF stream move failed for $from -> $to: ${e.message}", e)
+                false
+            }
         }
+
         val src = File(from)
         val dst = File(to)
         if (dst.exists()) return@withContext false
+        dst.parentFile?.mkdirs()
         if (src.renameTo(dst)) return@withContext true
         try {
             src.copyTo(dst, overwrite = false)
@@ -317,7 +385,7 @@ class SmartSortEngine {
         for (entry in manifest.entries.reversed()) {
             val count = processed.incrementAndGet()
             onProgress?.invoke(File(entry.newPath).name, count, total)
-            val destParent = File(entry.originalPath).parentFile?.absolutePath ?: continue
+            val destParent = entry.originalPath.substringBeforeLast('/', "").ifEmpty { rootPath }
             sourceStorage.mkdirs(destParent)
 
             val customShareId = entry.categoryKey?.let { manifest.customCategoryShareIds[it] }
@@ -462,7 +530,7 @@ class SmartSortEngine {
         return when (config.duplicateStrategy) {
             SmartSortConfig.DuplicateStrategy.SKIP -> null
             SmartSortConfig.DuplicateStrategy.OVERWRITE -> {
-                File(targetPath).delete()
+                s.delete(targetPath)
                 targetPath
             }
             SmartSortConfig.DuplicateStrategy.RENAME -> {
@@ -488,11 +556,8 @@ class SmartSortEngine {
         if (srcStorage::class == dstStorage::class) {
             if (srcStorage.rename(srcPath, dstPath)) return true
         }
-        val srcSize = getSmartSortDestSize(srcStorage, srcPath)
-        // Block the move only when the source size cannot be determined at all —
-        // an unknown size means the zero-byte guard cannot safely verify the copy.
-        // Empty files (size 0) are still moved.
-        if (srcSize < 0L) return false
+        val rawSrcSize = getSmartSortDestSize(srcStorage, srcPath)
+        val srcSize = if (rawSrcSize >= 0L) rawSrcSize else maxOf(0L, File(srcPath).length())
         return try {
             val copied = when (srcStorage) {
                 is LocalSmartSortStorage -> {
@@ -517,14 +582,34 @@ class SmartSortEngine {
             if (copied) {
                 // Zero-byte guard: verify destination has data before deleting source
                 val destSize = getSmartSortDestSize(dstStorage, dstPath)
-                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                        destSize, srcSize, srcPath.substringAfterLast('/'))) {
+                val isSafeToDelete = if (destSize <= 0L && srcSize > 0L) {
+                    val ctx = za.kilowatch.ultimatefilemanager.UfmApplication.instance
+                    when (dstStorage) {
+                        is LocalSmartSortStorage -> {
+                            if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dstPath) ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, dstPath)) {
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, dstPath)
+                            } else {
+                                File(dstPath).exists()
+                            }
+                        }
+                        else -> true
+                    }
+                } else {
+                    za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                        destSize, srcSize, srcPath.substringAfterLast('/')
+                    )
+                }
+                if (isSafeToDelete) {
                     srcStorage.delete(srcPath)
                     return true
                 }
             }
             false
-        } catch (_: Exception) { false }
+        } catch (e: Exception) {
+            za.kilowatch.ultimatefilemanager.util.GoRoLog.e("SmartSort", "moveFile failed for $srcPath -> $dstPath: ${e.message}", e)
+            false
+        }
     }
 
     /**

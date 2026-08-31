@@ -73,6 +73,7 @@ class TwinWindowPlayerFragment : Fragment() {
     private var isRepeat: Boolean = false
     private var isRepeatingPlayback: Boolean = false
     private var isTracking: Boolean = false
+    private var isTvSeeking: Boolean = false
     private val handler = Handler(Looper.getMainLooper())
     private var isTv: Boolean = false
 
@@ -321,9 +322,14 @@ class TwinWindowPlayerFragment : Fragment() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
+                    if (isTv) {
+                        isTvSeeking = true
+                    }
                     val duration = player?.duration ?: 0L
                     updateTimeLabels(progress, if (duration > 0) duration.toInt() else 0)
-                    player?.seekTo(progress.toLong())
+                    if (!isTv) {
+                        player?.seekTo(progress.toLong())
+                    }
                     resetHideTimer()
                 }
             }
@@ -334,6 +340,35 @@ class TwinWindowPlayerFragment : Fragment() {
                 resetHideTimer()
             }
         })
+
+        seekBar.setOnKeyListener { _, keyCode, event ->
+            if (isTv && event.action == android.view.KeyEvent.ACTION_DOWN) {
+                when (keyCode) {
+                    android.view.KeyEvent.KEYCODE_DPAD_CENTER,
+                    android.view.KeyEvent.KEYCODE_ENTER,
+                    android.view.KeyEvent.KEYCODE_NUMPAD_ENTER -> {
+                        player?.seekTo(seekBar.progress.toLong())
+                        isTvSeeking = false
+                        resetHideTimer()
+                        true
+                    }
+                    android.view.KeyEvent.KEYCODE_DPAD_LEFT,
+                    android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                        isTvSeeking = true
+                        resetHideTimer()
+                        false
+                    }
+                    android.view.KeyEvent.KEYCODE_DPAD_UP,
+                    android.view.KeyEvent.KEYCODE_DPAD_DOWN -> {
+                        if (isTvSeeking) {
+                            cancelTvSeek()
+                        }
+                        false
+                    }
+                    else -> false
+                }
+            } else false
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(controlsLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -353,8 +388,12 @@ class TwinWindowPlayerFragment : Fragment() {
         }
 
         listOf(btnBack, btnPlayPause, btnRewind, btnForward, btnMute, btnFullscreen, btnRepeat, seekBar, volumeSeekBar).forEach { v ->
-            v.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) resetHideTimer()
+            v.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    resetHideTimer()
+                } else if (view == seekBar && isTv && isTvSeeking) {
+                    cancelTvSeek()
+                }
             }
         }
         updateRepeatIcon()
@@ -547,11 +586,16 @@ class TwinWindowPlayerFragment : Fragment() {
     private val progressUpdater = object : Runnable {
         override fun run() {
             player?.let { p ->
-                if (!isTracking && p.isPlaying && (!isTv || !seekBar.isFocused)) {
+                if (!isTracking && !(isTv && isTvSeeking) && p.isPlaying) {
                     val pos = p.currentPosition.toInt()
                     val dur = p.duration
                     if (dur > 0L) {
                         seekBar.max = dur.toInt()
+                        if (isTv) {
+                            val skipMs = PlayerPreferencesManager.getSkipLengthMs(requireContext()).toInt()
+                            val step = if (skipMs > 0) skipMs else (dur / 100).toInt().coerceIn(5_000, 60_000)
+                            seekBar.keyProgressIncrement = step
+                        }
                         seekBar.progress = pos
                         updateTimeLabels(pos, dur.toInt())
                     }
@@ -561,12 +605,24 @@ class TwinWindowPlayerFragment : Fragment() {
         }
     }
 
+    private fun cancelTvSeek() {
+        if (!isTvSeeking) return
+        isTvSeeking = false
+        updateSeek()
+        resetHideTimer()
+    }
+
     private fun updateSeek() {
         player?.let { p ->
             val pos = p.currentPosition.toInt()
             val dur = p.duration
             if (dur > 0L) {
                 seekBar.max = dur.toInt()
+                if (isTv) {
+                    val skipMs = PlayerPreferencesManager.getSkipLengthMs(requireContext()).toInt()
+                    val step = if (skipMs > 0) skipMs else (dur / 100).toInt().coerceIn(5_000, 60_000)
+                    seekBar.keyProgressIncrement = step
+                }
                 seekBar.progress = pos
                 updateTimeLabels(pos, dur.toInt())
             }

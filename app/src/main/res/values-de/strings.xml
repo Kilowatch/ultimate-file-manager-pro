@@ -13140,10 +13140,10 @@ Select a folder to remove access from this storage. Your files will not be delet
 No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
-Noch keine Ordner hinzugefügt
+Zugriff auf alle Dateien erforderlich
 </string>
     <string name="restricted_storage_empty_desc">
-Sie verwenden den Modus „Ausgewählte Ordner“. Fügen Sie hier Ordner hinzu, um darauf zuzugreifen und sie zu verwalten.
+Um auf Dateien in diesem Speicher zuzugreifen und sie zu verwalten, aktivieren Sie bitte den Zugriff auf alle Dateien in den Android-Einstellungen.
 </string>
     <string name="restricted_storage_grant_all_files">
 Aktivieren Sie den Zugriff auf alle Dateien in den Einstellungen

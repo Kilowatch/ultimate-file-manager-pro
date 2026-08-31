@@ -90,8 +90,7 @@ class UfmSftpFileSystemProvider(val context: Context, val readOnly: Boolean = fa
     override fun newFileSystem(uri: URI, env: MutableMap<String, *>): FileSystem {
         val rootUri = env["rootUri"] as String
         val scheme = rootUri.substringBefore("://")
-        val id = rootUri.substringAfter("://").substringBefore("/")
-        return systems.getOrPut(scheme to id) { UfmSftpFileSystem(this, rootUri) }
+        return systems.getOrPut(scheme to rootUri) { UfmSftpFileSystem(this, rootUri) }
     }
 
     override fun getFileSystem(uri: URI): FileSystem {

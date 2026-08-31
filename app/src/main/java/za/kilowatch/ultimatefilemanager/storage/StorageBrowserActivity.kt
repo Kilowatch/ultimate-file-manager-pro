@@ -1971,8 +1971,12 @@ class StorageBrowserActivity : AppCompatActivity() {
                 showPremiumSnackbar(getString(R.string.opening_online_storages))
             }
             item.isVaultTile -> {
-                startActivity(Intent(this, VaultActivity::class.java))
-                showPremiumSnackbar(getString(R.string.opening_vault))
+                if (!isTv && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R && !android.os.Environment.isExternalStorageManager()) {
+                    showRestrictedFeatureGuidanceDialog()
+                } else {
+                    startActivity(Intent(this, VaultActivity::class.java))
+                    showPremiumSnackbar(getString(R.string.opening_vault))
+                }
             }
             item.isRecycleBinTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.recycle.RecycleBinActivity::class.java))
@@ -3708,23 +3712,29 @@ class StorageBrowserActivity : AppCompatActivity() {
             val discoveredPaths = mutableSetOf<String>()
             val newKnownPaths = mutableSetOf<String>()
 
+            val isRestricted = !capturedIsTv &&
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                    !android.os.Environment.isExternalStorageManager()
+
             // Reset SELinux-blocked detection for this scan cycle
             usbSelinuxBlocked = false
 
-            Log.d(TAG, "StorageManager reports ${volumes.size} volume(s)")
+            Log.d(TAG, "StorageManager reports ${volumes.size} volume(s), isRestricted=$isRestricted")
             val seenVolumeIds   = mutableSetOf<String>()
             val seenMountPaths  = mutableSetOf<String>()
-            for (volume in volumes) {
-                val item = volumeToStorageItem(volume) ?: continue
-                // Guard against firmware bugs that return the same volume twice â€”
-                // deduplicate by both id (UUID/"internal") and mountPath.
-                if (!seenVolumeIds.add(item.id) || !seenMountPaths.add(item.mountPath)) {
-                    Log.w(TAG, "Skipping duplicate storage volume: id=${item.id} path=${item.mountPath}")
-                    continue
+            if (!isRestricted) {
+                for (volume in volumes) {
+                    val item = volumeToStorageItem(volume) ?: continue
+                    // Guard against firmware bugs that return the same volume twice —
+                    // deduplicate by both id (UUID/"internal") and mountPath.
+                    if (!seenVolumeIds.add(item.id) || !seenMountPaths.add(item.mountPath)) {
+                        Log.w(TAG, "Skipping duplicate storage volume: id=${item.id} path=${item.mountPath}")
+                        continue
+                    }
+                    storageItems.add(item)
+                    newKnownPaths.add(item.mountPath)
+                    discoveredPaths.add(item.mountPath)
                 }
-                storageItems.add(item)
-                newKnownPaths.add(item.mountPath)
-                discoveredPaths.add(item.mountPath)
             }
 
             // Composite flag: feature tiles are suppressed in any picker mode
@@ -3796,7 +3806,8 @@ class StorageBrowserActivity : AppCompatActivity() {
             // Add Custom SAF Storage Locations (Termux, Document Providers, USB/Custom Folders)
             if (!capturedIsSearchFolderPicker) {
                 val safLocations = SafLocationRepository.getLocations(this@StorageBrowserActivity)
-                for (loc in safLocations.filter { it.isStandalone }) {
+                val locsToAdd = if (isRestricted) safLocations else safLocations.filter { it.isStandalone }
+                for (loc in locsToAdd) {
                     val iconRes = if (loc.iconType == "terminal" || loc.authority.contains("termux")) R.drawable.ic_terminal else R.drawable.ic_folder
 
                     storageItems.add(StorageItem(
@@ -3810,6 +3821,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                         safLocation = loc,
                         subtitle = getString(R.string.saf_storage)
                     ))
+                    newKnownPaths.add("saf://${loc.id}")
+                    discoveredPaths.add("saf://${loc.id}")
                 }
             }
 

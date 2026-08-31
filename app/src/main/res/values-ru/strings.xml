@@ -13140,10 +13140,10 @@ support@kilowatch.co.za
 В этом хранилище не осталось подключенных папок.
 </string>
     <string name="restricted_storage_empty_title">
-Папки пока не добавлены
+Требуется доступ ко всем файлам
 </string>
     <string name="restricted_storage_empty_desc">
-Вы используете режим выбранных папок. Добавляйте папки для доступа и управления ими здесь.
+Чтобы получить доступ к файлам в этом хранилище и управлять ими, включите «Доступ ко всем файлам» в настройках Android.
 </string>
     <string name="restricted_storage_grant_all_files">
 Включить доступ ко всем файлам в настройках

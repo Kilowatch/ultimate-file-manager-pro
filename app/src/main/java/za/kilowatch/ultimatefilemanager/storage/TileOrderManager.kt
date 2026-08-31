@@ -26,14 +26,16 @@ object TileOrderManager {
     /** Broad category used only for grouping during merge. */
     private enum class TileCategory {
         STORAGE_VOLUME,   // Internal / SD / USB drives
+        SAF_LOCATION,     // Custom SAF mounted locations
         NETWORK_ROOT,     // SMB/FTP mounts + connected TV/Phone entries
         FEATURE           // All hard-coded feature tiles + custom tiles
     }
 
     private fun categoryOf(item: StorageItem): TileCategory = when {
-        item.isNetworkRoot  -> TileCategory.NETWORK_ROOT
-        isFeatureTile(item) -> TileCategory.FEATURE
-        else                -> TileCategory.STORAGE_VOLUME  // physical drive
+        item.isSafCustomLocation -> TileCategory.SAF_LOCATION
+        item.isNetworkRoot       -> TileCategory.NETWORK_ROOT
+        isFeatureTile(item)      -> TileCategory.FEATURE
+        else                     -> TileCategory.STORAGE_VOLUME  // physical drive
     }
 
     private fun isFeatureTile(item: StorageItem) =

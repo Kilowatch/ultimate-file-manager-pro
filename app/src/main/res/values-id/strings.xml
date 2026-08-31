@@ -13140,10 +13140,10 @@ Pilih folder untuk menghapus akses dari penyimpanan ini. File Anda tidak akan di
 No mounted folders remaining for this storage.
 </string>
     <string name="restricted_storage_empty_title">
-Belum Ada Folder yang Ditambahkan
+Semua Akses File Diperlukan
 </string>
     <string name="restricted_storage_empty_desc">
-Anda menggunakan mode folder yang dipilih. Tambahkan folder untuk mengakses dan mengelolanya di sini.
+Untuk mengakses dan mengelola file di penyimpanan ini, aktifkan Akses Semua File di Pengaturan Android.
 </string>
     <string name="restricted_storage_grant_all_files">
 Aktifkan Akses Semua File di Pengaturan

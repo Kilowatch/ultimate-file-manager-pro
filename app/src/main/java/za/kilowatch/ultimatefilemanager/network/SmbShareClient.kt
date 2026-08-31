@@ -33,9 +33,8 @@ object SmbShareClient {
     // ── Read operations ───────────────────────────────────────────────────────
 
     fun listFiles(share: NetworkShare, remotePath: String): List<NetworkFile> {
-        return withDiskShare(share) { diskShare, basePath ->
-            val fullPath = joinPath(basePath, remotePath)
-            diskShare.list(fullPath).map { info ->
+        return withDiskShare(share, remotePath) { diskShare, innerPath ->
+            diskShare.list(innerPath).map { info ->
                 za.kilowatch.ultimatefilemanager.util.GoRoLog.w("RAW LIST ITEM: name=${info.fileName}, size=${info.endOfFile}, alloc=${info.allocationSize}, attr=${info.fileAttributes}")
                 val isDir = info.fileAttributes and 0x10L != 0L
                 var fileSize = info.endOfFile
@@ -100,9 +99,8 @@ object SmbShareClient {
     /** Query the server for the actual size of a single remote file. Returns null if unavailable. */
     fun getFileSize(share: NetworkShare, remotePath: String): Long? {
         return runCatching {
-            withDiskShare(share) { diskShare, basePath ->
-                val filePath = joinPath(basePath, remotePath)
-                val fi = diskShare.getFileInformation(filePath)
+            withDiskShare(share, remotePath) { diskShare, innerPath ->
+                val fi = diskShare.getFileInformation(innerPath)
                 var size = fi.standardInformation.endOfFile
                 if (size == 0L) size = fi.standardInformation.allocationSize
                 if (size <= 0L) null else size
@@ -298,10 +296,9 @@ object SmbShareClient {
     }
 
     fun mkdir(share: NetworkShare, remotePath: String) {
-        withDiskShare(share) { diskShare, basePath ->
-            val fullPath = joinPath(basePath, remotePath)
-            za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SmbClient", "MKDIR fullPath: $fullPath (remotePath: $remotePath, basePath: $basePath)")
-            diskShare.mkdir(fullPath)
+        withDiskShare(share, remotePath) { diskShare, innerPath ->
+            za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SmbClient", "MKDIR innerPath: $innerPath (remotePath: $remotePath)")
+            diskShare.mkdir(innerPath)
         }
     }
 
@@ -310,17 +307,17 @@ object SmbShareClient {
         // The delay between delete and verify is a suspend (non-blocking) delay.
         for (attempt in 1..2) {
             // Step 1: delete (ignore failures — file may already be gone)
-            withDiskShare(share) { diskShare, basePath ->
-                runCatching { diskShare.rm(joinPath(basePath, remotePath)) }
+            withDiskShare(share, remotePath) { diskShare, innerPath ->
+                runCatching { diskShare.rm(innerPath) }
             }
 
             // Step 2: wait briefly for the server to process the delete (suspend, don't block)
             kotlinx.coroutines.delay(300)
 
             // Step 3: verify deletion on a pooled connection
-            val stillExists = withDiskShare(share) { diskShare, basePath ->
+            val stillExists = withDiskShare(share, remotePath) { diskShare, innerPath ->
                 try {
-                    diskShare.fileExists(joinPath(basePath, remotePath))
+                    diskShare.fileExists(innerPath)
                 } catch (_: Exception) {
                     false   // exception querying the path = it's gone
                 }
@@ -336,34 +333,33 @@ object SmbShareClient {
     }
 
     suspend fun deleteDir(share: NetworkShare, remotePath: String) {
-        withDiskShare(share) { diskShare, basePath ->
-            diskShare.rmdir(joinPath(basePath, remotePath), true)
+        withDiskShare(share, remotePath) { diskShare, innerPath ->
+            diskShare.rmdir(innerPath, true)
         }
     }
 
     fun rename(share: NetworkShare, fromPath: String, toPath: String) {
-        withDiskShare(share) { diskShare, basePath ->
-            val fullFrom = joinPath(basePath, fromPath)
-            val fullTo   = joinPath(basePath, toPath)
-            
+        val (shareFrom, innerFrom) = splitSharePath(share.remotePath, fromPath)
+        val (_, innerTo) = splitSharePath(share.remotePath, toPath)
+        withDiskShare(share, fromPath) { diskShare, _ ->
             try {
                 diskShare.openFile(
-                    fullFrom,
+                    innerFrom,
                     EnumSet.of(AccessMask.DELETE),
                     null,
                     SMB2ShareAccess.ALL,
                     SMB2CreateDisposition.FILE_OPEN,
                     null
-                ).use { f -> f.rename(fullTo, true) }
+                ).use { f -> f.rename(innerTo, true) }
             } catch (e: Exception) {
                 diskShare.openDirectory(
-                    fullFrom,
+                    innerFrom,
                     EnumSet.of(AccessMask.DELETE),
                     null,
                     SMB2ShareAccess.ALL,
                     SMB2CreateDisposition.FILE_OPEN,
                     null
-                ).use { d -> d.rename(fullTo, true) }
+                ).use { d -> d.rename(innerTo, true) }
             }
         }
     }
@@ -414,9 +410,14 @@ object SmbShareClient {
                     val conn    = smb.connect(share.host, share.effectivePort)
                     val auth    = authContext(share)
                     val session = conn.authenticate(auth)
-                    val (shareName, basePath) = splitSharePath(share.remotePath, "")
-                    val diskShare = session.connectShare(shareName) as DiskShare
-                    diskShare.use { ds -> ds.list(basePath.ifBlank { "" }) }
+                    if (share.isServerMode || share.remotePath.isBlank()) {
+                        // In server mode, verifying authentication with the host is sufficient
+                        null
+                    } else {
+                        val (shareName, basePath) = splitSharePath(share.remotePath, "")
+                        val diskShare = session.connectShare(shareName) as DiskShare
+                        diskShare.use { ds -> ds.list(basePath.ifBlank { "" }) }
+                    }
                 }
                 null // success
             }.getOrElse { e -> friendlyMessage(e.message ?: e.javaClass.simpleName) }
@@ -460,6 +461,7 @@ object SmbShareClient {
 
     private fun <T> withDiskShare(
         share: NetworkShare,
+        remotePath: String = "",
         maxAttempts: Int = 2,
         block: (DiskShare, String) -> T
     ): T {
@@ -467,7 +469,10 @@ object SmbShareClient {
         for (attempt in 1..maxAttempts) {
             val pooled = SmbSessionPool.borrow(share, authContext(share))
             try {
-                val (shareName, basePath) = splitSharePath(share.remotePath, "")
+                val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+                if (shareName.isBlank()) {
+                    throw IllegalArgumentException("Cannot determine SMB share name for share.remotePath='${share.remotePath}' and remotePath='$remotePath'")
+                }
                 val diskShare = pooled.session.connectShare(shareName) as DiskShare
 
                 if (!diskShare.isConnected) {
@@ -478,7 +483,7 @@ object SmbShareClient {
                 }
 
                 val result = diskShare.use { connectedShare ->
-                    block(connectedShare, basePath)
+                    block(connectedShare, innerPath)
                 }
                 pooled.release()
                 return result
@@ -503,30 +508,14 @@ object SmbShareClient {
 
     private fun authContext(share: NetworkShare): AuthenticationContext {
         if (share.username.isBlank()) {
-            // Use GUEST + empty password for open/anonymous shares.
-            // This mirrors jcifs-ng's withGuestCrendentials() which sends NtlmPasswordAuthenticator("GUEST","").
-            // A null session (anonymous()) is rejected by most Windows and NAS servers with STATUS_ACCESS_DENIED,
-            // whereas the GUEST account with empty password is the standard mechanism for open SMB shares.
             return AuthenticationContext("GUEST", "".toCharArray(), "")
         }
 
-        // If the username contains '@' (e.g. an email / Microsoft account like
-        // "user@hotmail.com"), smbj's AuthenticationContext treats it as a UPN and
-        // the embedded domain after '@' can override the explicitly-provided domain,
-        // causing authentication failures.
-        //
-        // Strategy:
-        //  • If the user provided an explicit domain (non-blank, non-"WORKGROUP"),
-        //    strip the @-part from the username so NTLM uses domain\username cleanly.
-        //  • Otherwise, use the part after '@' as the domain (UPN-style) so that
-        //    Microsoft-account logins work without a separate domain entry.
         val atIndex = share.username.indexOf('@')
         return if (atIndex > 0) {
             val localPart  = share.username.substring(0, atIndex)
             val emailDomain = share.username.substring(atIndex + 1)
             val effectiveDomain = if (share.domain.isNotBlank()) share.domain else emailDomain
-            // Pass the local part of the email as the username together with the
-            // resolved domain – this avoids the UPN-vs-domain conflict in smbj.
             AuthenticationContext(localPart, share.password.toCharArray(), effectiveDomain)
         } else {
             AuthenticationContext(share.username, share.password.toCharArray(), share.domain)
@@ -534,18 +523,22 @@ object SmbShareClient {
     }
 
     private fun splitSharePath(basePath: String, subPath: String): Pair<String, String> {
-        val cleanBase = basePath.trimStart('/')
+        val cleanBase = basePath.replace('\\', '/').trimStart('/').trimEnd('/')
         if (cleanBase.isBlank()) {
-            throw IllegalArgumentException(
-                "splitSharePath: basePath is empty — server-mode SMB share used without remotePath override. " +
-                "share.remotePath='$basePath' subPath='$subPath'"
-            )
+            val cleanSub = subPath.replace('\\', '/').trimStart('/').trimEnd('/')
+            if (cleanSub.isBlank()) {
+                return "" to ""
+            }
+            val parts = cleanSub.split('/', limit = 2)
+            val shareName = parts.getOrElse(0) { "" }
+            val inner = parts.getOrElse(1) { "" }.replace('/', '\\')
+            return shareName to inner
         }
         val parts = cleanBase.split("/", limit = 2)
         val shareName = parts.getOrElse(0) { "" }
-        val inner = parts.getOrElse(1) { "" }
+        val inner = parts.getOrElse(1) { "" }.replace('/', '\\')
 
-        var cleanSub = subPath.trimStart('/')
+        var cleanSub = subPath.replace('\\', '/').trimStart('/')
         if (cleanSub.equals(shareName, ignoreCase = true)) {
             cleanSub = ""
         } else if (cleanSub.startsWith("$shareName/", ignoreCase = true)) {
@@ -556,7 +549,8 @@ object SmbShareClient {
             cleanSub = cleanSub.substring(cleanBase.length + 1).trimStart('/')
         }
 
-        val combined = listOf(inner, cleanSub).filter { it.isNotBlank() }.joinToString("\\")
+        val normalizedSub = cleanSub.replace('/', '\\').trimStart('\\')
+        val combined = listOf(inner, normalizedSub).filter { it.isNotBlank() }.joinToString("\\")
         return shareName to combined
     }
 

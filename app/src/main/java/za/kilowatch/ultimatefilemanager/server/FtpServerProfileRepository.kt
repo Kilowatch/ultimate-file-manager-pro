@@ -109,7 +109,7 @@ class FtpServerProfileRepository private constructor(private val context: Contex
                         } catch (_: Exception) {
                             LocationType.LOCAL
                         },
-                        locationMetaId = o.optString("locationMetaId", null),
+                        locationMetaId = o.optString("locationMetaId").ifEmpty { null },
                         readOnly = o.optBoolean("readOnly", false),
                         authorizedKeys = o.optString("authorizedKeys", ""),
                         isCredentialsStripped = o.optBoolean("isCredentialsStripped", false)

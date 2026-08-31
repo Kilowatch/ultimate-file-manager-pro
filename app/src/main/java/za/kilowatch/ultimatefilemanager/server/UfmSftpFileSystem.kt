@@ -99,12 +99,14 @@ class UfmSftpPath(private val fileSystem: UfmSftpFileSystem, private val path: S
         val scheme = root.substringBefore("://")
         val rest = root.substringAfter("://")
         val id = rest.substringBefore("/")
-        val rootPath = "/" + rest.substringAfter("/").trimStart('/')
+        val subAfter = if (rest.contains("/")) rest.substringAfter("/") else ""
+        val rootPath = if (subAfter.isEmpty()) "/" else "/" + subAfter.trimStart('/')
 
         // Canonicalize the path before combining with the rootUri.
         val normalizedSelf = normalize().toString()
         val combinedPath = if (rootPath == "/") normalizedSelf else rootPath.trimEnd('/') + "/" + normalizedSelf.trimStart('/')
-        return "$scheme://$id/${combinedPath.trimStart('/')}"
+        val clean = combinedPath.trim('/')
+        return if (clean.isEmpty()) "$scheme://$id" else "$scheme://$id/$clean"
     }
 
     /**

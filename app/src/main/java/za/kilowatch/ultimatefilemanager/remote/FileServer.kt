@@ -20,6 +20,10 @@ import android.os.StatFs
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.provider.Settings
+import za.kilowatch.ultimatefilemanager.storage.SafFile
+import za.kilowatch.ultimatefilemanager.storage.SafLocationRepository
+import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.text.format.Formatter
@@ -1017,26 +1021,74 @@ class FileServer(
     private fun handleVolumes(session: KtorSession): KtorResult {
         val lang = session.ufmLang
         val localizedCtx = getLocalizedContext(lang)
-        val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
-        val volumes = storageManager.storageVolumes
         val arr = JSONArray()
 
-        for (volume in volumes) {
-            val path = volume.safeDirectoryPath ?: continue
+        val isRestricted = !DeviceUtils.isTvDevice(context) &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                !Environment.isExternalStorageManager()
 
-            val stat = try { StatFs(path) } catch (_: Exception) { continue }
-
-            val obj = JSONObject().apply {
-                put("label", getLocalizedLabel(lang, volume))
-                put("path", path)
-                put("primary", volume.isPrimary)
-                put("removable", volume.isRemovable)
-                put("totalBytes", stat.totalBytes)
-                put("freeBytes", stat.freeBytes)
-                put("totalFormatted", Formatter.formatFileSize(context, stat.totalBytes))
-                put("freeFormatted", Formatter.formatFileSize(context, stat.freeBytes))
+        val safLocations = SafLocationRepository.getLocations(context)
+        if (isRestricted) {
+            val addedPaths = mutableSetOf<String>()
+            for (loc in safLocations) {
+                val p = "saf://${loc.id}"
+                if (addedPaths.add(p)) {
+                    val label = loc.displayName.ifEmpty { "SAF Storage" }
+                    val obj = JSONObject().apply {
+                        put("label", label)
+                        put("path", p)
+                        put("primary", false)
+                        put("removable", false)
+                        put("totalBytes", 0L)
+                        put("freeBytes", 0L)
+                        put("totalFormatted", "")
+                        put("freeFormatted", "")
+                        put("isSaf", true)
+                    }
+                    arr.put(obj)
+                }
             }
-            arr.put(obj)
+        } else {
+            val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            val volumes = storageManager.storageVolumes
+
+            for (volume in volumes) {
+                val path = volume.safeDirectoryPath ?: continue
+                if (volume.state != Environment.MEDIA_MOUNTED) continue
+
+                val stat = try { StatFs(path) } catch (_: Exception) { continue }
+
+                val obj = JSONObject().apply {
+                    put("label", getLocalizedLabel(lang, volume))
+                    put("path", path)
+                    put("primary", volume.isPrimary)
+                    put("removable", volume.isRemovable)
+                    put("totalBytes", stat.totalBytes)
+                    put("freeBytes", stat.freeBytes)
+                    put("totalFormatted", Formatter.formatFileSize(context, stat.totalBytes))
+                    put("freeFormatted", Formatter.formatFileSize(context, stat.freeBytes))
+                }
+                arr.put(obj)
+            }
+
+            for (loc in safLocations) {
+                if (loc.isStandalone) {
+                    val p = "saf://${loc.id}"
+                    val label = loc.displayName.ifEmpty { "SAF Storage" }
+                    val obj = JSONObject().apply {
+                        put("label", label)
+                        put("path", p)
+                        put("primary", false)
+                        put("removable", false)
+                        put("totalBytes", 0L)
+                        put("freeBytes", 0L)
+                        put("totalFormatted", "")
+                        put("freeFormatted", "")
+                        put("isSaf", true)
+                    }
+                    arr.put(obj)
+                }
+            }
         }
         
         // Append Network Shares to the volumes list
@@ -1633,7 +1685,8 @@ class FileServer(
     }
     // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ Path Validation ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
     private fun isPathAllowed(path: String): Boolean {
-        if (path.startsWith("net:") || path.startsWith("content:")) return true
+        if (path.startsWith("net:") || path.startsWith("content:") || path.startsWith("saf://")) return true
+        if (SafTreeManager.hasTreePermissionForPath(context, path)) return true
         
         val file = File(path)
         val canonicalReq = try { file.canonicalPath } catch (e: Exception) { return false }
@@ -1677,21 +1730,35 @@ class FileServer(
             return handleNetworkBrowse(path)
         }
 
+        if (path.startsWith("saf://") || (!File(path).exists() && SafTreeManager.hasTreePermissionForPath(context, path))) {
+            return handleSafBrowse(path)
+        }
+
         val dir = File(path)
         if (!isPathAllowed(dir.absolutePath)) {
             return jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: restricted path")
         }
         if (!dir.exists() || !dir.isDirectory) {
+            if (SafTreeManager.hasTreePermissionForPath(context, dir.absolutePath)) {
+                return handleSafBrowse(dir.absolutePath)
+            }
             return jsonResponse(Status.NOT_FOUND, "error" to "Directory not found")
         }
         if (!dir.canRead()) {
+            if (SafTreeManager.hasTreePermissionForPath(context, dir.absolutePath)) {
+                return handleSafBrowse(dir.absolutePath)
+            }
             return jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: cannot read this directory")
         }
 
-        val files = dir.listFiles() ?: emptyArray()
+        val files = dir.listFiles()
+        if (files == null && SafTreeManager.hasTreePermissionForPath(context, dir.absolutePath)) {
+            return handleSafBrowse(dir.absolutePath)
+        }
+        val safeFiles = files ?: emptyArray()
         val arr = JSONArray()
 
-        for (file in files.sortedWith(compareBy<File> { !it.isDirectory }.thenBy { it.name.lowercase() })) {
+        for (file in safeFiles.sortedWith(compareBy<File> { !it.isDirectory }.thenBy { it.name.lowercase() })) {
             val obj = JSONObject().apply {
                 put("name", file.name)
                 put("path", file.absolutePath)
@@ -1719,6 +1786,59 @@ class FileServer(
         val result = JSONObject().apply {
             put("path", dir.absolutePath)
             put("parent", dir.parent)
+            put("items", arr)
+            put("itemCount", safeFiles.size)
+        }
+
+        return newFixedLengthResponse(Status.OK, "application/json", result.toString())
+    }
+
+    private fun handleSafBrowse(safPath: String): KtorResult {
+        val files = SafTreeManager.listFiles(context, safPath)
+        val arr = JSONArray()
+
+        for (file in files.sortedWith(compareBy<File> { !it.isDirectory }.thenBy { it.name.lowercase() })) {
+            val obj = JSONObject().apply {
+                put("name", file.name)
+                put("path", file.absolutePath)
+                put("isDirectory", file.isDirectory)
+                
+                if (file.isDirectory) {
+                    val childCount = SafTreeManager.getChildCount(context, file.absolutePath)
+                    put("size", 0L)
+                    put("sizeFormatted", "0 B")
+                    put("childCount", childCount)
+                    put("childCountFormatted", "$childCount item${if (childCount != 1) "s" else ""}")
+                } else {
+                    val len = file.length()
+                    put("size", len)
+                    put("sizeFormatted", Formatter.formatFileSize(context, len))
+                }
+                
+                put("lastModified", file.lastModified())
+                put("canRead", true)
+                put("canWrite", true)
+            }
+            arr.put(obj)
+        }
+
+        val parentPath: String? = if (safPath.startsWith("saf://")) {
+            val withoutPrefix = safPath.removePrefix("saf://").trimEnd('/')
+            if (withoutPrefix.contains('/')) {
+                "saf://" + withoutPrefix.substringBeforeLast('/')
+            } else {
+                null
+            }
+        } else {
+            val parent = File(safPath).parent
+            if (parent != null && SafTreeManager.hasTreePermissionForPath(context, parent)) parent else null
+        }
+
+        val result = JSONObject().apply {
+            put("path", safPath)
+            if (parentPath != null) {
+                put("parent", parentPath)
+            }
             put("items", arr)
             put("itemCount", files.size)
         }
@@ -1822,6 +1942,17 @@ class FileServer(
             return handleNetworkMkdir(path, name)
         }
 
+        if (path.startsWith("saf://") || SafTreeManager.hasTreePermissionForPath(context, path)) {
+            val cleanPath = path.trimEnd('/')
+            val ok = SafTreeManager.mkdir(context, cleanPath, name)
+            return if (ok) {
+                val newPath = if (cleanPath.startsWith("saf://")) "$cleanPath/$name" else File(cleanPath, name).absolutePath
+                jsonResponse(Status.OK, "success" to true, "path" to newPath)
+            } else {
+                jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: cannot create folder in SAF storage")
+            }
+        }
+
         val newDir = File(path, name)
         if (!isPathAllowed(newDir.absolutePath)) {
             return jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: restricted path")
@@ -1923,6 +2054,15 @@ class FileServer(
 
         if (path.startsWith("net:")) {
             return handleNetworkDelete(path)
+        }
+
+        if (path.startsWith("saf://") || SafTreeManager.hasTreePermissionForPath(context, path)) {
+            val deleted = SafTreeManager.deleteRecursively(context, path)
+            return if (deleted) {
+                jsonResponse(Status.OK, "success" to true)
+            } else {
+                jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: cannot delete this item")
+            }
         }
 
         val file = File(path)
@@ -2035,6 +2175,15 @@ class FileServer(
 
         if (path.startsWith("net:")) {
             return handleNetworkRename(path, newName)
+        }
+
+        if (path.startsWith("saf://") || SafTreeManager.hasTreePermissionForPath(context, path)) {
+            val ok = SafTreeManager.rename(context, path, newName)
+            return if (ok) {
+                jsonResponse(Status.OK, "success" to true)
+            } else {
+                jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: cannot rename this item")
+            }
         }
 
         val file = File(path)
@@ -2159,6 +2308,7 @@ class FileServer(
         }
         
         val isNetDest = destinationPath.startsWith("net:")
+        val isSafDest = !isNetDest && (destinationPath.startsWith("saf://") || SafTreeManager.hasTreePermissionForPath(context, destinationPath))
         var destShare: za.kilowatch.ultimatefilemanager.network.NetworkShare? = null
         var destRemotePath = ""
         if (isNetDest) {
@@ -2168,7 +2318,7 @@ class FileServer(
             destShare = resolveShare(shareId) ?: return@runBlocking jsonResponse(Status.NOT_FOUND, "error" to "Target share not found")
             if (destShare.readOnly) return@runBlocking jsonResponse(Status.FORBIDDEN, "error" to "Target share is read-only")
             destRemotePath = if (idEnd < destinationPath.length) destinationPath.substring(idEnd + 1) else ""
-        } else {
+        } else if (!isSafDest) {
             val destDir = File(destinationPath)
             if (!isPathAllowed(destDir.absolutePath)) {
                 return@runBlocking jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: restricted destination path")
@@ -2192,9 +2342,83 @@ class FileServer(
         for (i in 0 until sourcesArray.length()) {
             val srcPath = sourcesArray.getString(i)
             val isNetSrc = srcPath.startsWith("net:")
+            val isSafSrc = !isNetSrc && (srcPath.startsWith("saf://") || SafTreeManager.hasTreePermissionForPath(context, srcPath))
             
             try {
-                if (!isNetSrc && !isNetDest) {
+                if (isSafSrc || isSafDest) {
+                    val fileName = srcPath.substringAfterLast('/')
+                    val inStream = if (isNetSrc) {
+                        val prefix = "net:"
+                        val idEnd = srcPath.indexOf('/', prefix.length).takeIf { it != -1 } ?: srcPath.length
+                        val srcShareId = srcPath.substring(prefix.length, idEnd)
+                        val srcShare = resolveShare(srcShareId) ?: throw Exception("Src share missing")
+                        val srcRemote = if (idEnd < srcPath.length) srcPath.substring(idEnd + 1) else ""
+                        when (srcShare.type) {
+                            za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.openInputStream(srcShare, srcRemote)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.openInputStream(srcShare, srcRemote)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.openInputStream(srcShare, srcRemote)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(srcShare, srcRemote)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> runBlocking { za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(srcShare, srcRemote).first }
+                            za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> runBlocking { za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(srcShare, srcRemote).first }
+                            za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(srcShare, srcRemote).first }
+                            za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(srcShare, srcRemote).first }
+                            za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, srcRemote).first }
+                            za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(srcShare, srcRemote)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.openInputStream(srcShare, srcRemote)
+                        }
+                    } else if (isSafSrc) {
+                        SafTreeManager.openInputStream(context, srcPath) ?: throw Exception("Cannot open SAF input stream")
+                    } else {
+                        val srcFile = File(srcPath)
+                        if (!isPathAllowed(srcFile.absolutePath) || !srcFile.exists()) { failCount++; continue }
+                        FileInputStream(srcFile)
+                    }
+
+                    if (isNetDest) {
+                        val destRemote = if (destRemotePath.isEmpty()) fileName else "$destRemotePath/$fileName"
+                        if (destShare!!.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                            val tempFile = java.io.File.createTempFile("ufm_tvbuf_", ".tmp")
+                            try {
+                                inStream.use { inp -> tempFile.outputStream().use { out -> za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(inp, out) } }
+                                tempFile.inputStream().use { inp ->
+                                    za.kilowatch.ultimatefilemanager.network.TvShareClient.uploadStream(destShare, destRemote, inp, tempFile.length())
+                                }
+                            } finally { tempFile.delete() }
+                        } else {
+                            val outStream = when (destShare!!.type) {
+                                za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.openOutputStream(destShare, destRemote)
+                                za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.openOutputStream(destShare, destRemote)
+                                za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openOutputStream(destShare, destRemote)
+                                za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> runBlocking { za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openOutputStream(destShare, destRemote) }
+                                za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> runBlocking { za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openOutputStream(destShare, destRemote) }
+                                za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openOutputStream(destShare, destRemote) }
+                                za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(destShare, destRemote) }
+                                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(destShare, destRemote) }
+                                za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(destShare, destRemote)
+                                else -> throw Exception("Unsupported share type for write")
+                            }
+                            inStream.use { inp -> outStream.use { out -> za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(inp, out) } }
+                        }
+                    } else if (isSafDest) {
+                        val targetSafPath = "${destinationPath.trimEnd('/')}/$fileName"
+                        val outStream = SafTreeManager.openOutputStream(context, targetSafPath) ?: throw Exception("Cannot open SAF output stream")
+                        inStream.use { inp -> outStream.use { out -> za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(inp, out) } }
+                    } else {
+                        val targetFile = File(destinationPath, fileName)
+                        if (!isPathAllowed(targetFile.absolutePath)) { failCount++; inStream.close(); continue }
+                        val outStream = FileOutputStream(targetFile)
+                        inStream.use { inp -> outStream.use { out -> za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(inp, out) } }
+                    }
+
+                    if (isMove) {
+                        if (isSafSrc) {
+                            SafTreeManager.deleteRecursively(context, srcPath)
+                        } else if (!isNetSrc) {
+                            File(srcPath).delete()
+                        }
+                    }
+                    successCount++
+                } else if (!isNetSrc && !isNetDest) {
                     // Local -> Local
                     val srcFile = File(srcPath)
                     if (!isPathAllowed(srcFile.absolutePath) || !srcFile.exists()) { failCount++; continue }
@@ -2463,6 +2687,29 @@ class FileServer(
             return@runBlocking handleNetworkUpload(targetPath, fileName, tmpFile)
         }
 
+        if (targetPath.startsWith("saf://") || SafTreeManager.hasTreePermissionForPath(context, targetPath)) {
+            val cleanTarget = targetPath.trimEnd('/')
+            val destPath = "$cleanTarget/$fileName"
+            val outStream = SafTreeManager.openOutputStream(context, destPath)
+                ?: return@runBlocking jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: cannot write to SAF storage")
+            try {
+                File(tmpFile).inputStream().use { input ->
+                    outStream.use { output ->
+                        za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(input, output)
+                    }
+                }
+            } catch (e: IOException) {
+                return@runBlocking jsonResponse(Status.INTERNAL_ERROR, "error" to "Upload failed: ${e.message}")
+            }
+            val size = SafTreeManager.getFileSize(context, destPath)
+            return@runBlocking jsonResponse(
+                Status.OK,
+                "success" to true,
+                "path" to destPath,
+                "size" to if (size > 0) size else File(tmpFile).length()
+            )
+        }
+
         val targetDir = File(targetPath)
         if (!isPathAllowed(targetDir.absolutePath)) {
             return@runBlocking jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: restricted target path")
@@ -2544,6 +2791,21 @@ class FileServer(
             if (targetPath.startsWith("net:")) {
                 // Network uploads: chunked mode not supported for network, use single-shot
                 handleStreamNetworkUpload(targetPath, fileName, rawInput, contentLength)
+            } else if (targetPath.startsWith("saf://") || SafTreeManager.hasTreePermissionForPath(context, targetPath)) {
+                val cleanTarget = targetPath.trimEnd('/')
+                val destPath = "$cleanTarget/$fileName"
+                val outStream = SafTreeManager.openOutputStream(context, destPath)
+                    ?: return@runBlocking jsonResponse(Status.FORBIDDEN, "error" to "Permission denied: cannot write to SAF storage")
+                val bytesCopied = outStream.use { out ->
+                    za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(rawInput, out, contentLength)
+                }
+                val finalSize = SafTreeManager.getFileSize(context, destPath)
+                jsonResponse(
+                    Status.OK,
+                    "success" to true,
+                    "path" to destPath,
+                    "size" to if (finalSize > 0) finalSize else bytesCopied
+                )
             } else {
                 val targetDir = File(targetPath)
                 if (!isPathAllowed(targetDir.absolutePath)) {
@@ -2566,7 +2828,7 @@ class FileServer(
                 }
 
                 if (offset != null) {
-                    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ Chunked write: seek to offset, write this chunk ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
+                    // ── Chunked write: seek to offset, write this chunk ──
                     java.io.RandomAccessFile(destFile, "rw").use { raf ->
                         raf.seek(offset)
                         val buf = ByteArray(256 * 1024)
@@ -2593,7 +2855,7 @@ class FileServer(
                         "size" to destFile.length()
                     )
                 } else {
-                    // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ Single-shot write (non-chunked, files ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¤ 1 GB) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
+                    // ── Single-shot write (non-chunked, files ≤ 1 GB) ──
                     val bytesCopied = FileOutputStream(destFile).use { out ->
                         za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(rawInput, out, contentLength)
                     }
@@ -2662,8 +2924,6 @@ class FileServer(
                         runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 ->
                         runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(share, destPath) }
-                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
-                        runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
                         runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.NFS ->
@@ -2740,7 +3000,6 @@ class FileServer(
                     za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, destPath) }
-                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(share, destPath)
                     za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                     else -> throw Exception("Unhandled share type")
@@ -2788,6 +3047,23 @@ class FileServer(
 
         if (path.startsWith("net:")) {
             return handleNetworkDownload(path)
+        }
+
+        if (path.startsWith("saf://") || SafTreeManager.hasTreePermissionForPath(context, path)) {
+            val fileName = path.substringAfterLast('/')
+            val ext = fileName.substringAfterLast('.', "")
+            val mimeType = MimeTypeMap.getSingleton()
+                .getMimeTypeFromExtension(ext.lowercase())
+                ?: "application/octet-stream"
+            val size = SafTreeManager.getFileSize(context, path)
+
+            return KtorResult.Stream(
+                status = Status.OK,
+                contentType = mimeType,
+                headers = mapOf("Content-Disposition" to "attachment; filename=\"$fileName\""),
+                body = { SafTreeManager.openInputStream(context, path) ?: throw IOException("Cannot open SAF input stream") },
+                length = if (size > 0) size else -1L
+            )
         }
 
         val file = File(path)

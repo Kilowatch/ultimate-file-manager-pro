@@ -6,7 +6,7 @@ import java.util.UUID
  * Represents the type of default location a server profile points to.
  */
 enum class LocationType {
-    LOCAL, SMB, FTP, SFTP, TV, GOOGLE_DRIVE, ONEDRIVE
+    LOCAL, SAF, SMB, FTP, SFTP, TV, GOOGLE_DRIVE, ONEDRIVE
 }
 
 /**

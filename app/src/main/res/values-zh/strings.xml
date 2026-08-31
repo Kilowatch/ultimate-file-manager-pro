@@ -13140,10 +13140,10 @@ SAF 存储
 此存储没有剩余的已安装文件夹。
 </string>
     <string name="restricted_storage_empty_title">
-尚未添加文件夹
+All Files Access Required
 </string>
     <string name="restricted_storage_empty_desc">
-您正在使用选定文件夹模式。添加文件夹以在此处访问和管理它们。
+To access and manage files in this storage, please enable All Files Access in Android Settings.
 </string>
     <string name="restricted_storage_grant_all_files">
 在设置中启用所有文件访问

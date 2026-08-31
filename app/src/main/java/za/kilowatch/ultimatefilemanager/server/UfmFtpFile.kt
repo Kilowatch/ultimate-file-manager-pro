@@ -175,9 +175,11 @@ class UfmFtpFile(
         val scheme = root.substringBefore("://")
         val rest = root.substringAfter("://")
         val id = rest.substringBefore("/")
-        val rootPath = "/" + rest.substringAfter("/").trimStart('/')
-        val combinedPath = if (rootPath == "/") ftpPath else rootPath.trimEnd('/') + ftpPath
-        return "$scheme://$id/${combinedPath.trimStart('/')}"
+        val subAfter = if (rest.contains("/")) rest.substringAfter("/") else ""
+        val rootPath = if (subAfter.isEmpty()) "/" else "/" + subAfter.trimStart('/')
+        val combinedPath = if (rootPath == "/") ftpPath else rootPath.trimEnd('/') + "/" + ftpPath.trimStart('/')
+        val clean = combinedPath.trim('/')
+        return if (clean.isEmpty()) "$scheme://$id" else "$scheme://$id/$clean"
     }
 
     companion object {

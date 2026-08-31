@@ -41,7 +41,7 @@ data class StorageEntry(
 )
 
 enum class StorageEntryType {
-    LOCAL, NETWORK, ONLINE
+    LOCAL, SAF, NETWORK, ONLINE
 }
 
 class SmartSortActivity : AppCompatActivity() {
@@ -180,6 +180,7 @@ class SmartSortActivity : AppCompatActivity() {
         txtPath.text = getString(R.string.smart_sort_select_drive)
         val allEntries = buildStorageList()
         val localList = allEntries.filter { it.type == StorageEntryType.LOCAL }
+        val safList = allEntries.filter { it.type == StorageEntryType.SAF }
         val netList = allEntries.filter { it.type == StorageEntryType.NETWORK }
         val onlineList = allEntries.filter { it.type == StorageEntryType.ONLINE }
 
@@ -196,6 +197,11 @@ class SmartSortActivity : AppCompatActivity() {
         if (localList.isNotEmpty()) {
             contentLayout.addView(createSectionHeader(getString(R.string.storage_section_devices)))
             contentLayout.addView(createGroupCard(localList, isTv))
+        }
+
+        if (safList.isNotEmpty()) {
+            contentLayout.addView(createSectionHeader(getString(R.string.saf_storage)))
+            contentLayout.addView(createGroupCard(safList, isTv))
         }
 
         if (netList.isNotEmpty()) {
@@ -242,6 +248,7 @@ class SmartSortActivity : AppCompatActivity() {
         txtName.text = entry.label
         txtFolderPath.text = when (entry.type) {
             StorageEntryType.LOCAL -> entry.path
+            StorageEntryType.SAF -> getString(R.string.saf_storage)
             StorageEntryType.NETWORK -> getString(R.string.network_tile_subtitle)
             StorageEntryType.ONLINE -> DeviceUtils.getOnlineStoragesSubtitle(this)
         }
@@ -252,7 +259,7 @@ class SmartSortActivity : AppCompatActivity() {
 
     private fun onStorageEntryClicked(entry: StorageEntry) {
         when (entry.type) {
-            StorageEntryType.LOCAL -> {
+            StorageEntryType.LOCAL, StorageEntryType.SAF -> {
                 val intent = Intent(this, FileBrowserActivity::class.java).apply {
                     putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, entry.path)
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, entry.label)
@@ -451,38 +458,59 @@ class SmartSortActivity : AppCompatActivity() {
     private fun buildStorageList(): List<StorageEntry> {
         val list = mutableListOf<StorageEntry>()
 
-        // Local storage volumes
-        val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
-        for (vol in sm.storageVolumes) {
-            try {
-                val dirPath = vol.safeDirectoryPath
-                val dir = if (dirPath != null) File(dirPath) else null
-                if (dir != null && dir.exists() && dir.canRead()) {
-                    val label = if (vol.isPrimary) {
-                        getString(R.string.internal_storage)
-                    } else {
-                        val uuid = vol.getUuid()
-                        if (uuid != null) "SD Card ($uuid)" else "SD Card"
+        val isTv = DeviceUtils.isTvDevice(this)
+        val isRestricted = !isTv &&
+            android.os.Build.VERSION.SDK_INT >= 30 &&
+            !android.os.Environment.isExternalStorageManager()
+
+        // Local storage volumes (suppressed on restricted phones)
+        if (!isRestricted) {
+            val sm = getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            for (vol in sm.storageVolumes) {
+                try {
+                    val dirPath = vol.safeDirectoryPath
+                    val dir = if (dirPath != null) File(dirPath) else null
+                    if (dir != null && dir.exists() && dir.canRead()) {
+                        val label = if (vol.isPrimary) {
+                            getString(R.string.internal_storage)
+                        } else {
+                            val uuid = vol.getUuid()
+                            if (uuid != null) "SD Card ($uuid)" else "SD Card"
+                        }
+                        list.add(StorageEntry(
+                            id = dir.absolutePath,
+                            label = label,
+                            path = dir.absolutePath,
+                            iconRes = R.drawable.ic_storage_internal,
+                            type = StorageEntryType.LOCAL
+                        ))
                     }
-                    list.add(StorageEntry(
-                        id = dir.absolutePath,
-                        label = label,
-                        path = dir.absolutePath,
-                        iconRes = R.drawable.ic_storage_internal,
-                        type = StorageEntryType.LOCAL
-                    ))
-                }
-            } catch (_: Exception) { }
+                } catch (_: Exception) { }
+            }
+            if (list.isEmpty()) {
+                list.add(StorageEntry(
+                    id = "/storage/emulated/0",
+                    label = "Internal Storage",
+                    path = "/storage/emulated/0",
+                    iconRes = R.drawable.ic_storage_internal,
+                    type = StorageEntryType.LOCAL
+                ))
+            }
         }
-        if (list.isEmpty()) {
-            list.add(StorageEntry(
-                id = "/storage/emulated/0",
-                label = "Internal Storage",
-                path = "/storage/emulated/0",
-                iconRes = R.drawable.ic_storage_internal,
-                type = StorageEntryType.LOCAL
-            ))
-        }
+
+        // SAF Custom Locations
+        try {
+            val safLocations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this)
+            for (loc in safLocations) {
+                list.add(StorageEntry(
+                    id = loc.id,
+                    label = loc.displayName,
+                    path = "saf://${loc.id}",
+                    iconRes = R.drawable.ic_folder_special,
+                    type = StorageEntryType.SAF
+                ))
+            }
+        } catch (_: Exception) { }
 
         // Network shares
         try {

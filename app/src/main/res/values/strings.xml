@@ -4628,8 +4628,8 @@
     <string name="dialog_remove_folders_title">Remove Mounted Folders</string>
     <string name="dialog_remove_folders_desc">Select a folder to remove access from this storage. Your files will not be deleted.</string>
     <string name="no_mounted_folders_hint">No mounted folders remaining for this storage.</string>
-    <string name="restricted_storage_empty_title">No Folders Added Yet</string>
-    <string name="restricted_storage_empty_desc">You are using selected folders mode. Add folders to access and manage them here.</string>
+    <string name="restricted_storage_empty_title">All Files Access Required</string>
+    <string name="restricted_storage_empty_desc">To access and manage files in this storage, please enable All Files Access in Android Settings.</string>
     <string name="restricted_storage_grant_all_files">Enable All Files Access in Settings</string>
     <string name="storage_selected_folders_mode">Selected Folders (%1$d)</string>
 

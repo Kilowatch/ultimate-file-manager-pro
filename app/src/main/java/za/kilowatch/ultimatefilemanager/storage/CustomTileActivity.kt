@@ -474,7 +474,11 @@ class CustomTileActivity : AppCompatActivity() {
                 startActivity(Intent(this, SearchActivity::class.java))
             }
             item.isAnalyzerTile -> {
-                startActivity(Intent(this, StorageAnalyzerActivity::class.java))
+                if (!isTv && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R && !android.os.Environment.isExternalStorageManager()) {
+                    showRestrictedFeatureGuidanceDialog()
+                } else {
+                    startActivity(Intent(this, StorageAnalyzerActivity::class.java))
+                }
             }
             item.isSmartSortTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.smartsort.SmartSortActivity::class.java))
@@ -492,7 +496,11 @@ class CustomTileActivity : AppCompatActivity() {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.network.OnlineStorageManagerActivity::class.java))
             }
             item.isVaultTile -> {
-                startActivity(Intent(this, VaultActivity::class.java))
+                if (!isTv && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R && !android.os.Environment.isExternalStorageManager()) {
+                    showRestrictedFeatureGuidanceDialog()
+                } else {
+                    startActivity(Intent(this, VaultActivity::class.java))
+                }
             }
             item.isRecycleBinTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.recycle.RecycleBinActivity::class.java))
@@ -1024,6 +1032,31 @@ class CustomTileActivity : AppCompatActivity() {
                 btnColorTile?.visibility = View.GONE
             }
         }
+    }
+
+    private fun showRestrictedFeatureGuidanceDialog() {
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.restricted_feature_dialog_title)
+            .setMessage(R.string.restricted_feature_dialog_desc)
+            .setPositiveButton(R.string.btn_open_settings) { _, _ ->
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                    try {
+                        val intent = Intent(
+                            android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                            android.net.Uri.parse("package:$packageName")
+                        )
+                        startActivity(intent)
+                    } catch (_: Exception) {
+                        try {
+                            val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, android.net.Uri.parse("package:$packageName"))
+                            startActivity(intent)
+                        } catch (_: Exception) {}
+                    }
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+        dialog.show()
     }
 
     private fun showPremiumSnackbar(message: String) {
