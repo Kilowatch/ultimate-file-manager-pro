@@ -250,6 +250,116 @@
             </TableRow>
         </TableLayout>
 
+        <!-- Divider Root / POSIX -->
+        <View
+            android:id="@+id/dividerRoot"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
+
+        <!-- Root / POSIX Properties Section -->
+        <TableLayout
+            android:id="@+id/tableRootProperties"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1"
+            android:visibility="gone">
+
+            <!-- Permissions Row -->
+            <TableRow
+                android:id="@+id/rowPermissions"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/root_posix_permissions"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtPermissionsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="rwxr-xr-x (0755)" />
+            </TableRow>
+
+            <!-- Owner / Group Row -->
+            <TableRow
+                android:id="@+id/rowOwnerGroup"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/root_owner_group"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtOwnerGroupValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="root : root" />
+            </TableRow>
+
+            <!-- SELinux Context Row -->
+            <TableRow
+                android:id="@+id/rowSelinux"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/root_selinux_context"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtSelinuxValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    tools:text="u:object_r:system_file:s0" />
+            </TableRow>
+
+            <!-- Symlink Target Row -->
+            <TableRow
+                android:id="@+id/rowSymlink"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/root_symlink_target"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtSymlinkValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="/system/bin/app_process64" />
+            </TableRow>
+        </TableLayout>
+
         <!-- Divider 3: Attributes -->
         <View
             android:id="@+id/dividerAttributes"

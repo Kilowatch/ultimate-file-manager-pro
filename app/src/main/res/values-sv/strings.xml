@@ -12597,6 +12597,9 @@ Support e-post kopierad till urklipp
     <string name="about_section_app">
 Appinformation
 </string>
+    <string name="about_section_system">
+Enhet &amp; System
+</string>
     <string name="about_section_support">
 Utvecklare &amp; Länkar
 </string>
@@ -13147,7 +13150,6 @@ Alla filer åtkomst krävs
     <string name="restricted_feature_dialog_desc">
 Den här funktionen kräver obegränsad åtkomst till hela enheten. Du kan ge alla filer åtkomst i Inställningar eller fortsätta använda valda mappar.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Ta bort mappåtkomst?
@@ -13166,6 +13168,129 @@ Indexerar %1$s...
 </string>
     <string name="btn_manage">
 Hantera
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Rotstatus
+</string>
+    <string name="root_status_not_rooted">
+Inte rotad
+</string>
+    <string name="root_status_detected">
+Rotad (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisk
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+APatch
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+su binär
+</string>
+    <string name="root_details_title">
+Rotdiagnostik
+</string>
+    <string name="root_details_binaries">
+Identifierade binärer: %1$s
+</string>
+    <string name="root_details_packages">
+Upptäckta paket: %1$s
+</string>
+    <string name="root_details_test_keys">
+Byggetiketter: Anpassade / Test-nycklar
+</string>
+    <string name="root_details_none">
+Inga rotbinärer eller hanterarpaket upptäcktes på den här enheten.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Root Access
+</string>
+    <string name="icon_storage_root">
+Rotlagring
+</string>
+    <string name="root_storage_title">
+Root Storage
+</string>
+    <string name="root_storage_subtitle">
+Systempartition (/)
+</string>
+    <string name="settings_root_access_title">
+Root Access
+</string>
+    <string name="settings_root_access_desc">
+Tillåt förhöjd superanvändaråtkomst för systempartitioner och skyddade kataloger
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Aktiverad — Superanvändaråtkomst aktiv
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Inaktiverad
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Roten upptäcktes inte på den här enheten
+</string>
+    <string name="root_grant_dialog_title">
+Bevilja root-åtkomst?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro kommer att begära Superuser-behörigheter från din rothanterare (%1$s). Detta ger tillgång till att bläddra och hantera filer på systemnivå.\n
+\n
+Bevilja endast root-åtkomst om du förstår riskerna med att ändra systemfiler.
+</string>
+    <string name="root_grant_dialog_grant">
+Grant Root
+</string>
+    <string name="root_denied_title">
+Rottillstånd nekad
+</string>
+    <string name="root_denied_desc">
+Superanvändaråtkomst nekades av din rothanterare. Rotfunktioner förblir inaktiverade.
+</string>
+    <string name="root_requesting_title">
+Begär rotåtkomst...
+</string>
+    <string name="root_storage_dialog_title">
+Rotlagring
+</string>
+    <string name="root_storage_dialog_desc">
+Rotpartitionen (/) är tillgänglig via superanvändarprivilegier.\n
+\n
+• Root Manager: %1$s\n
+• Monteringsväg: /\n
+• Åtkomstläge: Superanvändare aktiv
+</string>
+    <string name="backup_pref_root">
+Inställningar för rotåtkomst
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Superanvändaråtkomst krävs för att komma åt skyddade rotkataloger.
+</string>
+    <string name="root_remount_failed">
+Det gick inte att montera om partitionen som läs-skriv.
+</string>
+    <string name="root_file_saved">
+Sparad med superanvändarbehörigheter
+</string>
+    <string name="root_posix_permissions">
+Behörigheter
+</string>
+    <string name="root_selinux_context">
+SELinux kontext
+</string>
+    <string name="root_owner_group">
+Ägare / Grupp
+</string>
+    <string name="root_symlink_target">
+Länkmål
 </string>
 </resources>
 

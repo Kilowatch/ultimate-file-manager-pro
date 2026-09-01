@@ -194,6 +194,10 @@ object TransferConflictHelper {
         val isDestSaf = dest is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dest.absolutePath) ||
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, dest.absolutePath)
+        val isSrcRoot = src is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                        za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(src.absolutePath)
+        val isDestRoot = dest is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                         za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(dest.absolutePath)
 
         val actualDest = when (action) {
             ConflictAction.KEEP_BOTH -> uniqueLocalFile(dest.parentFile ?: File(dest.parent ?: ""), dest.name)
@@ -203,6 +207,16 @@ object TransferConflictHelper {
         // Safety: never copy a file onto itself — that would truncate it to 0 bytes.
         if (src.canonicalPath == actualDest.canonicalPath || src.absolutePath == actualDest.absolutePath) {
             android.util.Log.w("TransferConflictHelper", "copyLocalToLocalAtomic: src == actualDest, skipping self-copy: ${src.absolutePath}")
+            return actualDest
+        }
+
+        if (isSrcRoot && isDestRoot) {
+            if (!actualDest.exists() || action == ConflictAction.OVERWRITE) {
+                if (action == ConflictAction.OVERWRITE && actualDest.exists()) {
+                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(actualDest.absolutePath)
+                }
+                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.copy(src.absolutePath, actualDest.absolutePath)
+            }
             return actualDest
         }
 
@@ -219,12 +233,16 @@ object TransferConflictHelper {
 
         val sourceSize = if (isSrcSaf) {
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, src.absolutePath)
+        } else if (isSrcRoot) {
+            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(src.absolutePath)
         } else {
             src.length()
         }
 
         val destExists = if (isDestSaf) {
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, actualDest.absolutePath)
+        } else if (isDestRoot) {
+            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(actualDest.absolutePath)
         } else {
             actualDest.exists()
         }
@@ -234,12 +252,32 @@ object TransferConflictHelper {
                 if (isSrcSaf) {
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(ctx, src.absolutePath)
                         ?: throw java.io.FileNotFoundException("Cannot open SAF input stream for ${src.absolutePath}")
+                } else if (isSrcRoot) {
+                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openInputStream(src.absolutePath)
                 } else {
                     FileInputStream(src)
                 }
             }
 
-            if (isDestSaf) {
+            if (isDestRoot) {
+                // Root Destination direct superuser streaming
+                if (destExists && action == ConflictAction.OVERWRITE) {
+                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(actualDest.absolutePath)
+                }
+                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.remount(actualDest.absolutePath, rw = true)
+                val outStream = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openOutputStream(actualDest.absolutePath)
+                val bytesCopied = openInStream().use { inp ->
+                    outStream.use { out ->
+                        CopyHelper.copy(inp, out, sourceSize, onProgress)
+                    }
+                }
+                if (sourceSize > 0 && bytesCopied != sourceSize) {
+                    throw Exception("Copy integrity check failed: expected $sourceSize bytes, wrote $bytesCopied bytes to ${actualDest.name}")
+                }
+                if (sourceSize > 0 && bytesCopied <= 0L) {
+                    throw Exception("Copy failed: 0 bytes written for ${src.name}")
+                }
+            } else if (isDestSaf) {
                 // SAF Destination direct streaming
                 val destParent = actualDest.parent ?: ""
                 val destName = actualDest.name
@@ -348,11 +386,17 @@ object TransferConflictHelper {
         val isSrcSaf = src is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(src.absolutePath) ||
                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, src.absolutePath)
+        val isSrcRoot = src is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                        za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(src.absolutePath)
 
         val useTmp = (destShare.type != ShareType.AWS_S3 && destShare.type != ShareType.IDRIVE_E2 && destShare.type != ShareType.WEBDAV && destShare.type != ShareType.NFS)
             && za.kilowatch.ultimatefilemanager.settings.CacheCopyPreferenceManager.isEnabled(ctx)
         val tmpPath = if (useTmp) "$destPath.ufm_tmp" else destPath
-        val sourceSize = if (isSrcSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, src.absolutePath) else src.length()
+        val sourceSize = if (isSrcSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, src.absolutePath)
+        } else if (isSrcRoot) {
+            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(src.absolutePath)
+        } else src.length()
 
         val actualSrc = if (isSrcSaf) {
             val cacheDir = ctx.externalCacheDir ?: ctx.cacheDir
@@ -360,6 +404,13 @@ object TransferConflictHelper {
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(ctx, src.absolutePath)?.use { inp ->
                 tmp.outputStream().use { out -> inp.copyTo(out) }
             } ?: throw java.io.FileNotFoundException("Cannot read SAF source for upload: ${src.absolutePath}")
+            tmp
+        } else if (isSrcRoot) {
+            val cacheDir = ctx.externalCacheDir ?: ctx.cacheDir
+            val tmp = File.createTempFile("ufm_root_up_", ".tmp", cacheDir)
+            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openInputStream(src.absolutePath).use { inp ->
+                tmp.outputStream().use { out -> inp.copyTo(out) }
+            }
             tmp
         } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(src.absolutePath)) {
             val cacheDir = ctx.externalCacheDir ?: ctx.cacheDir
@@ -404,7 +455,7 @@ object TransferConflictHelper {
                                 withContext(Dispatchers.IO) {
                                     FileInputStream(actualSrc).use { inp ->
                                         when (destShare.type) {
-                                            ShareType.ONEDRIVE ->
+                                             ShareType.ONEDRIVE ->
                                                 za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.uploadStream(destShare, tmpPath, inp, effectiveSourceSize, onProgress)
                                             ShareType.GOOGLE_DRIVE ->
                                                 za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.uploadStream(destShare, tmpPath, inp, effectiveSourceSize, onProgress)
@@ -496,6 +547,8 @@ object TransferConflictHelper {
         val isDestSaf = dest is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dest.absolutePath) ||
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, dest.absolutePath)
+        val isDestRoot = dest is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                         za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(dest.absolutePath)
 
         val actualDest = when (action) {
             ConflictAction.KEEP_BOTH -> {
@@ -503,6 +556,42 @@ object TransferConflictHelper {
                 uniqueLocalFile(parentDir, srcFile.name, ctx)
             }
             else -> dest
+        }
+
+        if (isDestRoot) {
+            val destExists = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(actualDest.absolutePath)
+            if (destExists && action == ConflictAction.OVERWRITE) {
+                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(actualDest.absolutePath)
+            }
+            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.remount(actualDest.absolutePath, rw = true)
+            val outStream = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openOutputStream(actualDest.absolutePath)
+            val inStream = when (srcShare.type) {
+                ShareType.SMB -> SmbShareClient.openInputStream(srcShare, srcFile.path) { conn -> onConnectionReady?.invoke(conn) }
+                ShareType.FTP -> FtpShareClient.openInputStream(srcShare, srcFile.path)
+                ShareType.TV  -> TvShareClient.openInputStream(srcShare, srcFile.path)
+                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(srcShare, srcFile.path)
+                ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(srcShare, srcFile.path)
+                ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(srcShare, srcFile.path).first
+                ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(srcShare, srcFile.path).first
+                ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(srcShare, srcFile.path).first
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(srcShare, srcFile.path).first
+                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, srcFile.path).first
+                ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+            }
+            val bytesCopied = withContext(Dispatchers.IO) {
+                inStream.use { inp ->
+                    outStream.use { out ->
+                        CopyHelper.copy(inp, out, srcFile.size, onProgress)
+                    }
+                }
+            }
+            if (srcFile.size > 0 && bytesCopied != srcFile.size) {
+                throw Exception("Download integrity check failed: expected ${srcFile.size} bytes, wrote $bytesCopied bytes to ${actualDest.name}")
+            }
+            if (srcFile.size > 0 && bytesCopied <= 0L) {
+                throw Exception("Download failed: 0 bytes written for ${srcFile.name}")
+            }
+            return actualDest
         }
 
         if (isDestSaf) {
@@ -626,7 +715,7 @@ object TransferConflictHelper {
     // EXISTENCE CHECKS
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    /** Returns true if [name] already exists in [destDir] (local/SAF). */
+    /** Returns true if [name] already exists in [destDir] (local/SAF/Root). */
     fun localFileExists(destDir: File, name: String, context: Context? = null): Boolean {
         val ctx = context ?: za.kilowatch.ultimatefilemanager.UfmApplication.instance
         val isSaf = destDir is za.kilowatch.ultimatefilemanager.storage.SafFile || 
@@ -635,6 +724,10 @@ object TransferConflictHelper {
         if (isSaf) {
             val candidatePath = za.kilowatch.ultimatefilemanager.storage.SafFile.combineSafPath(destDir.absolutePath, name)
             return za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, candidatePath)
+        }
+        if (destDir is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(destDir.absolutePath)) {
+            val candidate = File(destDir, name)
+            return za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(candidate.absolutePath)
         }
         if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destDir.absolutePath)) {
             return za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(File(destDir, name).absolutePath)
@@ -651,6 +744,10 @@ object TransferConflictHelper {
         if (isSaf) {
             val candidatePath = za.kilowatch.ultimatefilemanager.storage.SafFile.combineSafPath(destDir.absolutePath, name)
             return za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, candidatePath)
+        }
+        if (destDir is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(destDir.absolutePath)) {
+            val candidate = File(destDir, name)
+            return za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(candidate.absolutePath)
         }
         val f = File(destDir, name)
         return if (f.exists()) f.length() else -1L
@@ -672,12 +769,14 @@ object TransferConflictHelper {
     // UTILITIES
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    /** Generates a unique local/SAF file path by appending " (1)", " (2)" … */
+    /** Generates a unique local/SAF/Root file path by appending " (1)", " (2)" … */
     fun uniqueLocalFile(dir: File, name: String, context: Context? = null): File {
-        val ctx = context ?: za.kilowatch.ultimatefilemanager.UfmApplication.instance
+        val ctx = context ?: runCatching { za.kilowatch.ultimatefilemanager.UfmApplication.instance }.getOrNull()
         val isSaf = dir is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dir.absolutePath) ||
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, dir.absolutePath)
+                    (ctx != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, dir.absolutePath))
+        val isRoot = dir is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                     za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(dir.absolutePath)
         val ext  = if (name.contains('.')) ".${name.substringAfterLast('.')}" else ""
         val base = if (name.contains('.')) name.substringBeforeLast('.') else name
         var counter = 1
@@ -685,7 +784,11 @@ object TransferConflictHelper {
         fun checkExists(candName: String): Boolean {
             if (isSaf) {
                 val candidatePath = za.kilowatch.ultimatefilemanager.storage.SafFile.combineSafPath(dir.absolutePath, candName)
-                return za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, candidatePath)
+                return ctx != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, candidatePath)
+            }
+            if (isRoot) {
+                val candidate = File(dir, candName)
+                return za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(candidate.absolutePath)
             }
             val candidate = File(dir, candName)
             return if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(candidate.absolutePath))
@@ -698,23 +801,31 @@ object TransferConflictHelper {
         }
         return if (isSaf) {
             za.kilowatch.ultimatefilemanager.storage.SafFile(dir.absolutePath, candidateName, false)
+        } else if (isRoot) {
+            za.kilowatch.ultimatefilemanager.storage.RootFile(dir.absolutePath, candidateName, false)
         } else {
             File(dir, candidateName)
         }
     }
 
-    /** Generates a unique local/SAF folder path by appending " (1)", " (2)" … */
+    /** Generates a unique local/SAF/Root folder path by appending " (1)", " (2)" … */
     fun uniqueLocalFolder(dir: File, name: String, context: Context? = null): File {
-        val ctx = context ?: za.kilowatch.ultimatefilemanager.UfmApplication.instance
+        val ctx = context ?: runCatching { za.kilowatch.ultimatefilemanager.UfmApplication.instance }.getOrNull()
         val isSaf = dir is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dir.absolutePath) ||
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, dir.absolutePath)
+                    (ctx != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, dir.absolutePath))
+        val isRoot = dir is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                     za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(dir.absolutePath)
         var counter = 1
         var candidateName = name
         fun checkExists(candName: String): Boolean {
             if (isSaf) {
                 val candidatePath = za.kilowatch.ultimatefilemanager.storage.SafFile.combineSafPath(dir.absolutePath, candName)
-                return za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, candidatePath)
+                return ctx != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, candidatePath)
+            }
+            if (isRoot) {
+                val candidate = File(dir, candName)
+                return za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(candidate.absolutePath)
             }
             val candidate = File(dir, candName)
             return if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(candidate.absolutePath))
@@ -727,6 +838,8 @@ object TransferConflictHelper {
         }
         return if (isSaf) {
             za.kilowatch.ultimatefilemanager.storage.SafFile(dir.absolutePath, candidateName, true)
+        } else if (isRoot) {
+            za.kilowatch.ultimatefilemanager.storage.RootFile(dir.absolutePath, candidateName, true)
         } else {
             File(dir, candidateName)
         }
@@ -799,8 +912,12 @@ object TransferConflictHelper {
                 val isSaf = src is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(src.absolutePath) ||
                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, src.absolutePath)
+                val isRoot = src is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                             za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(src.absolutePath)
                 val children = if (isSaf) {
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(ctx, src.absolutePath)
+                } else if (isRoot) {
+                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.listFiles(src.absolutePath)
                 } else {
                     src.listFiles()?.toList()
                 }
@@ -844,9 +961,13 @@ object TransferConflictHelper {
         val isSaf = dir is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(dir.absolutePath) ||
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, dir.absolutePath)
+        val isRoot = dir is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                     za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(dir.absolutePath)
         var count = 0
         val children = if (isSaf) {
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(ctx, dir.absolutePath)
+        } else if (isRoot) {
+            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.listFiles(dir.absolutePath)
         } else {
             dir.listFiles()?.toList()
         } ?: return 0

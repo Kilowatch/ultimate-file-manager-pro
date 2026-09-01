@@ -12620,6 +12620,9 @@ Support-E-Mail in die Zwischenablage kopiert
     <string name="about_section_app">
 App-Informationen
 </string>
+    <string name="about_section_system">
+Gerät und System
+</string>
     <string name="about_section_support">
 Entwickler &amp; Links
 </string>
@@ -13170,7 +13173,6 @@ Zugriff auf alle Dateien erforderlich
     <string name="restricted_feature_dialog_desc">
 Diese Funktion erfordert uneingeschränkten geräteweiten Speicherzugriff. Sie können in den Einstellungen Zugriff auf alle Dateien gewähren oder ausgewählte Ordner weiterhin verwenden.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Ordnerzugriff entfernen?
@@ -13189,6 +13191,129 @@ Indizierung von %1$s...
 </string>
     <string name="btn_manage">
 Verwalten
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Root-Status
+</string>
+    <string name="root_status_not_rooted">
+Nicht gerootet
+</string>
+    <string name="root_status_detected">
+Verwurzelt (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisk
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+Ein Patch
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+su binär
+</string>
+    <string name="root_details_title">
+Root-Diagnose
+</string>
+    <string name="root_details_binaries">
+Erkannte Binärdateien: %1$s
+</string>
+    <string name="root_details_packages">
+Erkannte Pakete: %1$s
+</string>
+    <string name="root_details_test_keys">
+Build-Tags: Benutzerdefiniert / Testschlüssel
+</string>
+    <string name="root_details_none">
+Auf diesem Gerät wurden keine Root-Binärdateien oder Manager-Pakete erkannt.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Root-Zugriff
+</string>
+    <string name="icon_storage_root">
+Root-Speicher
+</string>
+    <string name="root_storage_title">
+Root-Speicher
+</string>
+    <string name="root_storage_subtitle">
+Systempartition (/)
+</string>
+    <string name="settings_root_access_title">
+Root-Zugriff
+</string>
+    <string name="settings_root_access_desc">
+Erlauben Sie erhöhten Superuser-Zugriff für Systempartitionen und geschützte Verzeichnisse
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Aktiviert – Superuser-Zugriff aktiv
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Deaktiviert
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Root wurde auf diesem Gerät nicht erkannt
+</string>
+    <string name="root_grant_dialog_title">
+Root-Zugriff gewähren?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro fordert Superuser-Berechtigungen von Ihrem Root-Manager an (%1$s). Dies gewährt Zugriff zum Durchsuchen und Verwalten von Dateien auf Systemebene.\n
+\n
+Gewähren Sie Root-Zugriff nur, wenn Sie die Risiken verstehen, die mit der Änderung von Systemdateien einhergehen.
+</string>
+    <string name="root_grant_dialog_grant">
+Wurzel gewähren
+</string>
+    <string name="root_denied_title">
+Root-Berechtigung verweigert
+</string>
+    <string name="root_denied_desc">
+Der Superuser-Zugriff wurde von Ihrem Root-Manager verweigert. Root-Funktionen bleiben deaktiviert.
+</string>
+    <string name="root_requesting_title">
+Root-Zugriff anfordern...
+</string>
+    <string name="root_storage_dialog_title">
+Root-Speicher
+</string>
+    <string name="root_storage_dialog_desc">
+Auf die Root-Partition (/) kann über Superuser-Rechte zugegriffen werden.\n
+\n
+• Root-Manager: %1$s\n
+• Mount-Pfad: /\n
+• Zugriffsmodus: Superuser aktiv
+</string>
+    <string name="backup_pref_root">
+Root-Zugriffseinstellungen
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Für den Zugriff auf geschützte Stammverzeichnisse ist Superuser-Zugriff erforderlich.
+</string>
+    <string name="root_remount_failed">
+Die erneute Bereitstellung der Partition als Lese-/Schreibzugriff ist fehlgeschlagen.
+</string>
+    <string name="root_file_saved">
+Mit Superuser-Berechtigungen gespeichert
+</string>
+    <string name="root_posix_permissions">
+Berechtigungen
+</string>
+    <string name="root_selinux_context">
+SELinux-Kontext
+</string>
+    <string name="root_owner_group">
+Eigentümer / Gruppe
+</string>
+    <string name="root_symlink_target">
+Linkziel
 </string>
 </resources>
 

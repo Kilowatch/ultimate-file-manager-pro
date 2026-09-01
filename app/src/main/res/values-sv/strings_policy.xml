@@ -46,6 +46,9 @@ Genom att ladda ner eller använda Ultimate File Manager Pro accepterar du dessa
     <string name="tc_s3b_title">
 3b. RClone Cloud Integration
 </string>
+    <string name="tc_s3c_title">
+3c. Rootade enheter och superanvändarprivilegier
+</string>
     <string name="tc_s4_title">
 4. Ditt ansvar
 </string>
@@ -133,6 +136,9 @@ Eftersom molnleverantörens API:er och slutpunkter kan ändras utan föregående
     </string-array>
     <string name="tc_s3b_summary">
 Anslutning till molnenheter via RClone sker direkt från din telefon eller TV. Vi ser aldrig dina molnfiler eller lösenord. Dina lösenord krypteras på din telefon, och du omfattas av villkoren för den molnleverantör du konfigurerar.
+</string>
+    <string name="tc_s3c_body">
+När du väljer att aktivera rotåtkomst på en rotad mobil enhet använder Ultimate File Manager Pro libsu-biblioteket för att begära Superuser-behörigheter från din installerade rothanterare (Magisk, KernelSU, APatch, SuperSU). Superanvändaråtkomst ger obegränsade läs- och skrivmöjligheter över din enhets systempartitioner (inklusive rot-/monteringspunkten). Att ändra, byta namn på eller ta bort systemfiler medför allvarliga risker, inklusive permanent OS-korruption, bootloops, dataförlust eller blockering. Du bekräftar att du använder Root Access helt på egen risk. KiloWatch tar inget ansvar för enhetsinstabilitet, maskinvarufel eller dataförlust som uppstår från rotoperationer.
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ GIF Creator — skapa animerade GIF-filer från utvalda bilder med anpassad bild
         <item>
 Foto EXIF-verktyg — inspektera foto EXIF- och GPS-metadata, skrubba bort privata geotaggar och enhetsinformation och byt namn på bilder i grupp med hjälp av tidsstämplar och kamerametadata.
 </item>
+        <item>
+Foto EXIF-verktyg — inspektera foto EXIF- och GPS-metadata, skrubba bort privata geotaggar och enhetsinformation och byt namn på bilder i grupp med hjälp av tidsstämplar och kamerametadata.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -285,6 +294,9 @@ Buggar och fel
         <item>
 Vårt ansvar
 </item>
+        <item>
+Vårt ansvar
+</item>
     </string-array>
     <string-array name="tc_risk_details">
         <item>
@@ -322,6 +334,9 @@ Indexet återspeglar tillståndet för din lagring vid tidpunkten för skanning.
 </item>
         <item>
 Ingen programvara är perfekt. Vi kan inte lova att appen alltid kommer att vara felfri eller oavbruten.
+</item>
+        <item>
+Vårt totala ansvar är begränsat till det totala beloppet du betalade för köp i appen under de 30 dagarna före eventuella anspråk. Vi är inte ansvariga för dataförlust, enhetsskada eller förlorad vinst som härrör från gratisfunktioner.
 </item>
         <item>
 Vårt totala ansvar är begränsat till det totala beloppet du betalade för köp i appen under de 30 dagarna före eventuella anspråk. Vi är inte ansvariga för dataförlust, enhetsskada eller förlorad vinst som härrör från gratisfunktioner.
@@ -368,6 +383,9 @@ Försök inte att bakåtkonstruera, dekompilera eller manipulera appen.
 </item>
         <item>
 Hantera dina indexerade poster på ett ansvarsfullt sätt - du kan ta bort poster eller ignorera specifika enheter när som helst via Inställningar -> Lagringsindexerare.
+</item>
+        <item>
+Verifiera äktheten och säkerheten för eventuella APK-filer innan du installerar dem.
 </item>
         <item>
 Verifiera äktheten och säkerheten för eventuella APK-filer innan du installerar dem.
@@ -430,6 +448,9 @@ Bluetooth
         <item>
 Vibrera
 </item>
+        <item>
+Vibrera
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -482,6 +503,9 @@ Använder lagringsbehörigheter för att skanna och indexera filmetadata för pr
 </item>
         <item>
 Ansluts till din parade Android TV för att fungera som ett Bluetooth-tangentbord och en mus för fjärrkontroll.
+</item>
+        <item>
+Ger haptisk feedback när du trycker på knappar på TV-fjärrkontrollen.
 </item>
         <item>
 Ger haptisk feedback när du trycker på knappar på TV-fjärrkontrollen.
@@ -616,6 +640,9 @@ AndroidX ExifInterface (androidx.exifinterface:exifinterface) — bibliotek för
         <item>
 Amazon Appstore SDK — behandlar valfria tipsköp i appen på Amazon-enheter. (Egendomsskyddad)
 </item>
+        <item>
+Amazon Appstore SDK — behandlar valfria tipsköp i appen på Amazon-enheter. (Egendomsskyddad)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ Your files stay on your device — we never see them. With your consent, we coll
 </string>
     <string name="pp_s6b_title">
 6b. RClone-molnintegration — Sekretess &amp; efterlevnad
+</string>
+    <string name="pp_s6c_title">
+6c. Rootade enheter och superanvändaråtkomst — Sekretess och efterlevnad
 </string>
     <string name="pp_s7_title">
 7. Datadelning och tredje part
@@ -842,6 +872,30 @@ Fjärrsurfning: Hämtar mappstrukturer och filmetadata för att visa ditt molnla
 Filåtgärder: Ladda upp, ladda ner, döpa om, kopiera, flytta eller ta bort filer på din fjärrlagring på din uttryckliga begäran.
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+Root Access på mobila enheter som stöds fungerar strikt på enheten med hjälp av libsu-ramverket. Inga förhöjda kommandodata eller systemfiler samlas in eller överförs någonsin.
+</string>
+    <string name="pp_s6c_intro">
+När Root Access är aktiverat på en rotad mobil enhet, exekveras alla superanvändarkommandon, root-skalsessioner och partitionsoperationer strikt på enheten. Ultimate File Manager Pro överför, loggar, laddar upp eller delar inte några rotpartitionsfiler, systembinärfiler eller superanvändaruppgifter till KiloWatch-servrar eller tredje part. Root-privilegier åberopas endast vid explicit användaråtgärd och kan återkallas när som helst via Inställningar → Root Access.
+</string>
+    <string name="pp_s6c_local_heading">
+Rootexekvering på enheten
+</string>
+    <string name="pp_s6c_local_body">
+Alla rotkommandon och I/O-strömmar hanteras via en lokal rotprocess som hanteras av libsu och din installerade rothanterare (Magisk, KernelSU, APatch, SuperSU). Inga rotuppgifter, su-nycklar eller kommandologgar lagras på distans eller överförs utanför din enhet.
+</string>
+    <string name="pp_s6c_permitted_heading">
+Tillåten användning av root-åtkomst
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+Systempartitionsbläddring: Bläddra och inspektera filer på rotpartitionen (/) och skyddade kataloger på din explicita instruktion.
+</item>
+        <item>
+Förhöjda filoperationer: Utför filkopiering, flyttning, redigering eller radering på skyddade lagringsplatser när användaren begär det.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 Vi säljer, hyr ut, byter, överför eller avslöjar inte din personliga information eller Googles användardata till någon tredje part i något syfte som inte är direkt relaterat till att tillhandahålla Ultimate File Manager Pros filhanteringsfunktioner – punkt.
@@ -1000,6 +1054,9 @@ Språkval (cookie)
         <item>
 Mediauppspelningstillstånd
 </item>
+        <item>
+Mediauppspelningstillstånd
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1049,6 +1106,9 @@ Filmetadata (namn, storlekar, datum) för snabb bläddring och sökning lagrad i
 </item>
         <item>
 Aktuell kö, uppspelningsposition och spelarinställningar för att fortsätta där du slutade · Android Shared Preferences
+</item>
+        <item>
+En cookie (ufm_lang) kommer ihåg ditt språkval under hela sessionen och över omstarter av webbläsare · Webbläsarlagring
 </item>
         <item>
 En cookie (ufm_lang) kommer ihåg ditt språkval under hela sessionen och över omstarter av webbläsare · Webbläsarlagring
@@ -1120,6 +1180,9 @@ Använd förhöjd åtkomst (Shizuku/Shevery/ADB) för att hantera systemskyddade
 </item>
         <item>
 Skapa och underhåll filindexering för snabb bläddring och sökning (kan hanteras via Inställningar -> Lagringsindexerare)
+</item>
+        <item>
+Tillhandahåll grundläggande appfunktioner
 </item>
         <item>
 Tillhandahåll grundläggande appfunktioner

@@ -12620,6 +12620,9 @@ E-mail de suporte copiado para a área de transferência
     <string name="about_section_app">
 Informações do aplicativo
 </string>
+    <string name="about_section_system">
+Dispositivo e sistema
+</string>
     <string name="about_section_support">
 Desenvolvedor e links
 </string>
@@ -13170,7 +13173,6 @@ Acesso a todos os arquivos necessário
     <string name="restricted_feature_dialog_desc">
 Este recurso requer acesso irrestrito ao armazenamento em todo o dispositivo. Você pode conceder acesso a todos os arquivos nas configurações ou continuar usando as pastas selecionadas.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Remover o acesso à pasta?
@@ -13189,6 +13191,129 @@ Indexando %1$s...
 </string>
     <string name="btn_manage">
 Gerenciar
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Status raiz
+</string>
+    <string name="root_status_not_rooted">
+Não enraizado
+</string>
+    <string name="root_status_detected">
+Enraizado (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisk
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+APatch
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+su binário
+</string>
+    <string name="root_details_title">
+Diagnóstico raiz
+</string>
+    <string name="root_details_binaries">
+Binários detectados: %1$s
+</string>
+    <string name="root_details_packages">
+Pacotes detectados: %1$s
+</string>
+    <string name="root_details_test_keys">
+Tags de construção: chaves personalizadas/de teste
+</string>
+    <string name="root_details_none">
+Nenhum binário raiz ou pacote de gerenciamento detectado neste dispositivo.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Acesso raiz
+</string>
+    <string name="icon_storage_root">
+Armazenamento raiz
+</string>
+    <string name="root_storage_title">
+Armazenamento raiz
+</string>
+    <string name="root_storage_subtitle">
+Partição do sistema (/)
+</string>
+    <string name="settings_root_access_title">
+Acesso raiz
+</string>
+    <string name="settings_root_access_desc">
+Permitir acesso elevado de superusuário para partição do sistema e diretórios protegidos
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Habilitado — Acesso de superusuário ativo
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Desabilitado
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Root não detectado neste dispositivo
+</string>
+    <string name="root_grant_dialog_title">
+Conceder acesso root?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro solicitará permissões de superusuário ao seu gerenciador root (%1$s). Isso concede acesso para navegar e gerenciar arquivos no nível do sistema.\n
+\n
+Conceda acesso root apenas se você compreender os riscos de modificar arquivos do sistema.
+</string>
+    <string name="root_grant_dialog_grant">
+Conceder raiz
+</string>
+    <string name="root_denied_title">
+Permissão de root negada
+</string>
+    <string name="root_denied_desc">
+O acesso de superusuário foi negado pelo seu gerenciador root. Os recursos raiz permanecerão desativados.
+</string>
+    <string name="root_requesting_title">
+Solicitando acesso root...
+</string>
+    <string name="root_storage_dialog_title">
+Armazenamento raiz
+</string>
+    <string name="root_storage_dialog_desc">
+A partição raiz (/) pode ser acessada por meio de privilégios de superusuário.\n
+\n
+• Gerenciador raiz: %1$s\n
+• Caminho de montagem: /\n
+• Modo de acesso: Superusuário ativo
+</string>
+    <string name="backup_pref_root">
+Configurações de acesso root
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+O acesso de superusuário é necessário para acessar diretórios raiz protegidos.
+</string>
+    <string name="root_remount_failed">
+Falha ao remontar a partição como leitura-gravação.
+</string>
+    <string name="root_file_saved">
+Salvo com permissões de superusuário
+</string>
+    <string name="root_posix_permissions">
+Permissões
+</string>
+    <string name="root_selinux_context">
+Contexto SELinux
+</string>
+    <string name="root_owner_group">
+Proprietário/Grupo
+</string>
+    <string name="root_symlink_target">
+Alvo do link
 </string>
 </resources>
 

@@ -406,4 +406,10 @@
 -keepclassmembers class za.kilowatch.ultimatefilemanager.BuildConfig {
     public static <fields>;
 }
+
+# ── libsu & libsu:nio (com.github.topjohnwu.libsu) ─────────────────────────
+-keep class com.topjohnwu.superuser.** { *; }
+-keepclassmembers class com.topjohnwu.superuser.** { *; }
+-dontwarn com.topjohnwu.superuser.**
+
 

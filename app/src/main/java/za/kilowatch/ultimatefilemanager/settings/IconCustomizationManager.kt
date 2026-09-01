@@ -20,7 +20,7 @@ data class IconOverride(
 val ALL_BUILTIN_ICONS = intArrayOf(
     // Folders & Storage
     R.drawable.ic_folder, R.drawable.ic_home,
-    R.drawable.ic_storage_internal, R.drawable.ic_storage_usb, R.drawable.ic_storage_sdcard,
+    R.drawable.ic_storage_internal, R.drawable.ic_storage_usb, R.drawable.ic_storage_sdcard, R.drawable.ic_root_storage,
     // Network & Cloud
     R.drawable.ic_cloud, R.drawable.ic_network, R.drawable.ic_dlna, R.drawable.ic_dropbox,
     // Apps & Features

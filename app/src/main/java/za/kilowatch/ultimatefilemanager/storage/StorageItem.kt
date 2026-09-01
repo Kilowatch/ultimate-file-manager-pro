@@ -45,6 +45,7 @@ data class StorageItem(
     val isTwinWindowTile: Boolean = false,
     val isTerminalTile: Boolean = false,
     val isShizukuTile: Boolean = false,
+    val isRootTile: Boolean = false,
     val isOnlineStoragesTile: Boolean = false,
     val isOnlineStorage: Boolean = false,
     val isFileServerTile: Boolean = false,
@@ -96,7 +97,7 @@ data class StorageItem(
         (isAppsTile || isRemoteTile || isSearchTile || isAnalyzerTile ||
          isVaultTile || isTvRemoteTile || isSafTile || isNetworkTile ||
          isPairedDevicesTile || isExtractsTile || isSyncTile || isAdvancedSyncTile || isSettingsTile ||
-         isFavoriteTile || isTwinWindowTile || isTerminalTile || isShizukuTile ||
+         isFavoriteTile || isTwinWindowTile || isTerminalTile || isShizukuTile || isRootTile ||
          isOnlineStoragesTile || isFileServerTile || isAboutTile ||
          isRecycleBinTile || isLegalTile || isRateUsTile || isTipJarTile ||
          isNotepadTile || isScannerTile || isSmartSortTile || isSupportTile ||

@@ -492,8 +492,14 @@ class TextViewerActivity : AppCompatActivity() {
     private fun saveFile(content: String, fileName: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val parentDir = File(originalFilePath).parentFile ?: cacheDir
-                val targetFile = File(parentDir, fileName)
+                val isRoot = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(originalFilePath)
+                val targetFile = if (isRoot) {
+                    val pDir = originalFilePath.substringBeforeLast('/', "")
+                    za.kilowatch.ultimatefilemanager.storage.RootFile(pDir, fileName, false)
+                } else {
+                    val parentDir = File(originalFilePath).parentFile ?: cacheDir
+                    File(parentDir, fileName)
+                }
 
                 if (targetFile.absolutePath == originalFilePath && targetFile.length() > 0L) {
                     withContext(Dispatchers.Main) {
@@ -543,15 +549,35 @@ class TextViewerActivity : AppCompatActivity() {
 
     private suspend fun doSave(content: String, targetFile: File) {
         try {
+            val isRoot = targetFile is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(targetFile.absolutePath)
             val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
-            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, targetFile)
+            val isSaf = !isRoot && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, targetFile)
             val safUri = if (contentUriStr != null && targetFile.absolutePath == originalFilePath) {
                 android.net.Uri.parse(contentUriStr)
             } else if (isSaf) {
                 (targetFile as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this, targetFile.absolutePath)
             } else null
 
-            if (safUri != null) {
+            if (isRoot) {
+                when (fileExtension) {
+                    "docx", "docm", "dotx", "dotm", "xlsx", "xlsm", "xltx", "xltm", "pptx", "pptm", "ppsx", "potx", "potm", "xls", "xlt", "xlsb" -> {
+                        val temp = File(cacheDir, "temp_save_${System.currentTimeMillis()}.$fileExtension")
+                        when (fileExtension) {
+                            "docx", "docm", "dotx", "dotm" -> saveAsDocx(content, temp)
+                            "xlsx", "xlsm", "xltx", "xltm" -> saveAsXlsx(content, temp)
+                            "pptx", "pptm", "ppsx", "potx", "potm" -> saveAsPptx(content, temp)
+                            "xls", "xlt", "xlsb" -> saveAsXls(content, temp)
+                        }
+                        val success = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.copy(temp.absolutePath, targetFile.absolutePath)
+                        temp.delete()
+                        if (!success) throw java.io.IOException("Failed to write root file: ${targetFile.absolutePath}")
+                    }
+                    else -> {
+                        val success = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.writeText(targetFile.absolutePath, content)
+                        if (!success) throw java.io.IOException("Failed to write root file: ${targetFile.absolutePath}")
+                    }
+                }
+            } else if (safUri != null) {
                 contentResolver.openOutputStream(safUri, "wt")?.use { outStream ->
                     outStream.write(content.toByteArray(Charsets.UTF_8))
                 }
@@ -1005,6 +1031,22 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     private fun readPlainText(file: File, charset: java.nio.charset.Charset = Charsets.UTF_8): String {
+        val isRoot = file is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(file.absolutePath)
+        if (isRoot) {
+            val inStream = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openInputStream(file.absolutePath)
+                ?: throw java.io.FileNotFoundException("Cannot open root stream for ${file.name}")
+            return inStream.use { stream ->
+                val maxBytes = 1 * 1024 * 1024
+                val bytes = stream.readBytes()
+                if (bytes.size > maxBytes) {
+                    val truncated = bytes.copyOf(maxBytes)
+                    String(truncated, charset) + "\n\n... [File too large, showing first 1MB]"
+                } else {
+                    String(bytes, charset)
+                }
+            }
+        }
+
         val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, file)
         if (isSaf) {
             val inStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, file.absolutePath)
@@ -1031,6 +1073,14 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     private fun stageSafFileIfNeeded(file: File): Pair<File, File?> {
+        val isRoot = file is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(file.absolutePath)
+        if (isRoot) {
+            val temp = File(cacheDir, "temp_txt_view_${System.currentTimeMillis()}.${file.extension}")
+            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openInputStream(file.absolutePath)?.use { input ->
+                temp.outputStream().use { output -> input.copyTo(output) }
+            }
+            return Pair(temp, temp)
+        }
         val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, file)
         if (!isSaf) return Pair(file, null)
         val temp = File(cacheDir, "temp_txt_view_${System.currentTimeMillis()}.${file.extension}")

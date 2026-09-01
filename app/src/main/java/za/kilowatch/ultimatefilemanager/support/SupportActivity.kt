@@ -503,6 +503,13 @@ class SupportActivity : AppCompatActivity() {
             .addFormDataPart("package_name", BuildConfig.APPLICATION_ID)
             .addFormDataPart("honeypot", honeypot)
 
+        // Root diagnostics (Mobile only)
+        if (!isTv) {
+            val rootResult = za.kilowatch.ultimatefilemanager.util.RootDetector.detect(this)
+            bodyBuilder.addFormDataPart("is_rooted", if (rootResult.isRooted) "1" else "0")
+            bodyBuilder.addFormDataPart("root_type", rootResult.rootType.name)
+        }
+
         // Optional fields
         if (steps.isNotEmpty()) bodyBuilder.addFormDataPart("steps", steps)
         if (useCase.isNotEmpty()) bodyBuilder.addFormDataPart("use_case", useCase)

@@ -390,10 +390,13 @@ class FileBrowserActivity : AppCompatActivity() {
         const val EXTRA_SUPPORT_ATTACHMENT_PICKER = "extra_support_attachment_picker"
         /** When true, opened from SearchActivity ("Open Folder Location" or folder click) */
         const val EXTRA_FROM_SEARCH = "extra_from_search"
+        /** When true, browsing root filesystem (/) */
+        const val EXTRA_IS_ROOT_STORAGE = "extra_is_root_storage"
     }
     
     private var isFromSearch = false
     private var isLocationPickerMode = false
+    private var isRootStorage = false
 
     private var isPickerMode = false
     private var pickerExtensions: Set<String> = emptySet()
@@ -468,25 +471,32 @@ class FileBrowserActivity : AppCompatActivity() {
         val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
         val internalLabel = getString(R.string.storage_internal)
 
-        rootPath = SafFile.cleanSafPath(intent.getStringExtra(EXTRA_MOUNT_PATH) ?: internalPath)
+        val rawMountPath = intent.getStringExtra(EXTRA_MOUNT_PATH)
+        isRootStorage = intent.getBooleanExtra(EXTRA_IS_ROOT_STORAGE, false) ||
+                        intent.getStringExtra(EXTRA_STORAGE_TYPE).equals("ROOT", ignoreCase = true) ||
+                        rawMountPath == "/"
+
+        rootPath = if (isRootStorage) "/" else SafFile.cleanSafPath(rawMountPath ?: internalPath)
         val isRootProtected = ShizukuShellWrapper.isProtectedPath(rootPath)
         val isRootSaf = SafTreeManager.isSafPath(rootPath) || SafTreeManager.hasTreePermissionForPath(this, rootPath)
 
-        za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SafStorage", "FileBrowserActivity onCreate: rootPath=$rootPath, isRootProtected=$isRootProtected, isRootSaf=$isRootSaf")
+        za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SafStorage", "FileBrowserActivity onCreate: rootPath=$rootPath, isRootProtected=$isRootProtected, isRootSaf=$isRootSaf, isRootStorage=$isRootStorage")
 
-        if (rootPath.isEmpty() || (!isRootProtected && !isRootSaf && !File(rootPath).exists())) {
+        if (!isRootStorage && (rootPath.isEmpty() || (!isRootProtected && !isRootSaf && !File(rootPath).exists()))) {
             za.kilowatch.ultimatefilemanager.util.GoRoLog.w("SafStorage", "Root path $rootPath does not exist and is neither protected nor SAF. Falling back to internal storage.")
             rootPath = internalPath
             storageLabel = internalLabel
             storageId = "internal"
             storageType = "internal"
         } else {
-            storageLabel = intent.getStringExtra(EXTRA_STORAGE_LABEL) ?: getString(R.string.storage)
+            storageLabel = intent.getStringExtra(EXTRA_STORAGE_LABEL) ?: if (isRootStorage) getString(R.string.root_storage_title) else getString(R.string.storage)
             val (resolvedSid, resolvedStype, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(rootPath)
-            storageId = intent.getStringExtra(EXTRA_STORAGE_ID) ?: resolvedSid
-            storageType = intent.getStringExtra(EXTRA_STORAGE_TYPE) ?: resolvedStype
+            storageId = intent.getStringExtra(EXTRA_STORAGE_ID) ?: if (isRootStorage) "root" else resolvedSid
+            storageType = intent.getStringExtra(EXTRA_STORAGE_TYPE) ?: if (isRootStorage) "ROOT" else resolvedStype
         }
-        currentDir = if (isRootProtected && ShizukuShellWrapper.canUseShizukuForPath(rootPath)) {
+        currentDir = if (isRootStorage) {
+            za.kilowatch.ultimatefilemanager.storage.RootFile("", "")
+        } else if (isRootProtected && ShizukuShellWrapper.canUseShizukuForPath(rootPath)) {
             val pName = rootPath.substringAfterLast("/")
             val pParent = rootPath.substringBeforeLast("/", "")
             ShizukuFile(pParent, pName, true)
@@ -507,7 +517,10 @@ class FileBrowserActivity : AppCompatActivity() {
             val cleanInit = SafFile.cleanSafPath(initialPath)
             val isInitProtected = ShizukuShellWrapper.isProtectedPath(cleanInit)
             val isInitSaf = SafTreeManager.isSafPath(cleanInit) || SafTreeManager.hasTreePermissionForPath(this, cleanInit)
-            val initExists = if (isInitProtected) {
+            val isInitRoot = isRootStorage || cleanInit == "/" || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(cleanInit)
+            val initExists = if (isInitRoot) {
+                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(cleanInit)
+            } else if (isInitProtected) {
                 if (ShizukuShellWrapper.canUseShizukuForPath(cleanInit)) ShizukuShellWrapper.exists(cleanInit)
                 else if (SafTreeManager.hasTreePermissionForPath(this, cleanInit)) SafTreeManager.exists(this, cleanInit)
                 else true
@@ -516,8 +529,12 @@ class FileBrowserActivity : AppCompatActivity() {
             } else {
                 File(cleanInit).exists()
             }
-            if (initExists && cleanInit.startsWith(rootPath)) {
-                currentDir = if (isInitProtected && ShizukuShellWrapper.canUseShizukuForPath(cleanInit)) {
+            if (initExists && (isInitRoot || cleanInit.startsWith(rootPath))) {
+                currentDir = if (isInitRoot) {
+                    val pName = cleanInit.substringAfterLast("/")
+                    val pParent = cleanInit.substringBeforeLast("/", "")
+                    za.kilowatch.ultimatefilemanager.storage.RootFile(pParent, pName, true)
+                } else if (isInitProtected && ShizukuShellWrapper.canUseShizukuForPath(cleanInit)) {
                     val pName = cleanInit.substringAfterLast("/")
                     val pParent = cleanInit.substringBeforeLast("/", "")
                     ShizukuFile(pParent, pName, true)
@@ -3465,7 +3482,10 @@ class FileBrowserActivity : AppCompatActivity() {
 
                     for (file in filesToDelete) {
                         val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, file.absolutePath)
-                        val success = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(file.absolutePath)) {
+                        val isRoot = file is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(file.absolutePath)
+                        val success = if (isRoot) {
+                            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(file.absolutePath)
+                        } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(file.absolutePath)) {
                             za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(file.absolutePath)
                         } else if (isSaf) {
                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@FileBrowserActivity, file.absolutePath)
@@ -3534,10 +3554,17 @@ class FileBrowserActivity : AppCompatActivity() {
         btnSaveRename?.setOnClickListener {
             val newName = editFileName?.text?.toString()?.trim().orEmpty()
             if (newName.isNotEmpty() && newName != file.name) {
-                val newFile = File(file.parent, newName)
+                val isRoot = file is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(file.absolutePath)
+                val newFile = if (isRoot) {
+                    za.kilowatch.ultimatefilemanager.storage.RootFile(file.parent ?: "/", newName, file.isDirectory)
+                } else {
+                    File(file.parent, newName)
+                }
                 lifecycleScope.launch(Dispatchers.IO) {
                     val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, file.absolutePath)
-                    val success = if (isSaf) {
+                    val success = if (isRoot) {
+                        za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.move(file.absolutePath, newFile.absolutePath)
+                    } else if (isSaf) {
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(this@FileBrowserActivity, file.absolutePath, newName)
                     } else {
                         file.renameTo(newFile)
@@ -3736,8 +3763,21 @@ class FileBrowserActivity : AppCompatActivity() {
      */
     private fun createTextFile(baseName: String) {
         val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, currentDir.absolutePath)
+        val isRoot = isRootStorage || currentDir is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(currentDir.absolutePath)
         val fileToCreate = if (isSaf) {
             za.kilowatch.ultimatefilemanager.storage.SafFile(currentDir.absolutePath, baseName, false)
+        } else if (isRoot) {
+            var targetFile = za.kilowatch.ultimatefilemanager.storage.RootFile(currentDir.absolutePath, baseName, false)
+            if (targetFile.exists()) {
+                val nameWithoutExt = targetFile.nameWithoutExtension
+                val ext = targetFile.extension
+                var counter = 2
+                while (targetFile.exists()) {
+                    targetFile = za.kilowatch.ultimatefilemanager.storage.RootFile(currentDir.absolutePath, "$nameWithoutExt ($counter).$ext", false)
+                    counter++
+                }
+            }
+            targetFile
         } else {
             var targetFile = File(currentDir, baseName)
             if (targetFile.exists()) {
@@ -3756,16 +3796,20 @@ class FileBrowserActivity : AppCompatActivity() {
             try {
                 val created = if (isSaf) {
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFile(this@FileBrowserActivity, currentDir.absolutePath, fileToCreate.name, "text/plain") != null
+                } else if (isRoot) {
+                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.createFile(fileToCreate.absolutePath)
                 } else {
                     fileToCreate.createNewFile()
                 }
                 if (created) {
-                    // Index the new file
-                    try {
-                        val (sid, stype) = IndexingRepository.resolveStorageForPath(fileToCreate.absolutePath)
-                            .let { it.first to it.second }
-                        UfmApplication.indexingRepository.indexFile(fileToCreate, sid, stype)
-                    } catch (_: Exception) { }
+                    // Index the new file (skip for root partitions)
+                    if (!isRoot) {
+                        try {
+                            val (sid, stype) = IndexingRepository.resolveStorageForPath(fileToCreate.absolutePath)
+                                .let { it.first to it.second }
+                            UfmApplication.indexingRepository.indexFile(fileToCreate, sid, stype)
+                        } catch (_: Exception) { }
+                    }
 
                     withContext(Dispatchers.Main) {
                         loadDirectory(currentDir)
@@ -3816,7 +3860,10 @@ class FileBrowserActivity : AppCompatActivity() {
             } else {
                 dialog.dismiss()
                 val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, currentDir.absolutePath)
-                val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
+                val isRoot = isRootStorage || currentDir is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(currentDir.absolutePath)
+                val newDir = if (isRoot) {
+                    za.kilowatch.ultimatefilemanager.storage.RootFile(currentDir.absolutePath, name, true)
+                } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
                     za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
                 } else if (isSaf) {
                     za.kilowatch.ultimatefilemanager.storage.SafFile(currentDir.absolutePath, name, true)
@@ -3824,7 +3871,9 @@ class FileBrowserActivity : AppCompatActivity() {
                     File(currentDir, name)
                 }
                 lifecycleScope.launch(Dispatchers.IO) {
-                    val exists = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
+                    val exists = if (isRoot) {
+                        za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(newDir.absolutePath)
+                    } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
                         za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(newDir.absolutePath)
                     } else if (isSaf) {
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, newDir.absolutePath)
@@ -3833,6 +3882,8 @@ class FileBrowserActivity : AppCompatActivity() {
                     }
                     val created = if (exists) {
                         false
+                    } else if (isRoot) {
+                        za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.mkdir(newDir.absolutePath)
                     } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
                         za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.mkdir(newDir.absolutePath)
                     } else if (isSaf) {
@@ -3845,12 +3896,14 @@ class FileBrowserActivity : AppCompatActivity() {
                         when {
                             exists -> showPremiumSnackbar(getString(R.string.new_folder_exists))
                             created -> {
-                                try {
-                                    val (sid, stype) = za.kilowatch.ultimatefilemanager.indexing
-                                        .IndexingRepository.resolveStorageForPath(newDir.absolutePath)
-                                        .let { it.first to it.second }
-                                    UfmApplication.indexingRepository.indexFile(newDir, sid, stype)
-                                } catch (_: Exception) { }
+                                if (!isRoot) {
+                                    try {
+                                        val (sid, stype) = za.kilowatch.ultimatefilemanager.indexing
+                                            .IndexingRepository.resolveStorageForPath(newDir.absolutePath)
+                                            .let { it.first to it.second }
+                                        UfmApplication.indexingRepository.indexFile(newDir, sid, stype)
+                                    } catch (_: Exception) { }
+                                }
                                 loadDirectory(currentDir)
                                 showPremiumSnackbar(getString(R.string.new_folder_success))
                             }
@@ -4528,9 +4581,13 @@ class FileBrowserActivity : AppCompatActivity() {
                     val isSrcSaf = source is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(source.absolutePath) ||
                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, source.absolutePath)
+                    val isSrcRoot = source is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(source.absolutePath)
                     val isDestSaf = destBase is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destBase.absolutePath) ||
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, destBase.absolutePath)
+                    val isDestRoot = destBase is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                                     za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(destBase.absolutePath)
 
                     if (source.isDirectory) {
                         val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
@@ -4564,10 +4621,16 @@ class FileBrowserActivity : AppCompatActivity() {
                         val isEffSaf = effectiveDest is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(effectiveDest.absolutePath) ||
                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, effectiveDest.absolutePath)
+                        val isEffRoot = effectiveDest is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                                        za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(effectiveDest.absolutePath)
                         try {
                             if (isEffSaf) {
                                 if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, effectiveDest.absolutePath)) {
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(this@FileBrowserActivity, effectiveDest.parent ?: effectiveDestDir.absolutePath, effectiveDest.name)
+                                }
+                            } else if (isEffRoot) {
+                                if (!za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(effectiveDest.absolutePath)) {
+                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.mkdir(effectiveDest.absolutePath)
                                 }
                             } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(effectiveDest.absolutePath)) {
                                 if (!za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(effectiveDest.absolutePath)) {
@@ -4576,7 +4639,7 @@ class FileBrowserActivity : AppCompatActivity() {
                             } else {
                                 if (!effectiveDest.exists()) effectiveDest.mkdirs()
                             }
-                            if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
+                            if (!isEffRoot && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
                                 pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
                                 if (pendingIndices.size >= 50) flushIndices()
                             }
@@ -4584,6 +4647,8 @@ class FileBrowserActivity : AppCompatActivity() {
 
                         val children = if (isSrcSaf) {
                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@FileBrowserActivity, source.absolutePath)
+                        } else if (isSrcRoot) {
+                            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.listFiles(source.absolutePath)
                         } else {
                             source.listFiles()?.toList()
                         }
@@ -4592,6 +4657,8 @@ class FileBrowserActivity : AppCompatActivity() {
                                 try {
                                     val childDest = if (isEffSaf) {
                                         za.kilowatch.ultimatefilemanager.storage.SafFile(effectiveDest.absolutePath, child.name, child.isDirectory)
+                                    } else if (isEffRoot) {
+                                        za.kilowatch.ultimatefilemanager.storage.RootFile(effectiveDest.absolutePath, child.name, child.isDirectory)
                                     } else {
                                         java.io.File(effectiveDest, child.name)
                                     }
@@ -4608,12 +4675,16 @@ class FileBrowserActivity : AppCompatActivity() {
                             try {
                                 if (isSrcSaf) {
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@FileBrowserActivity, source.absolutePath)
+                                } else if (isSrcRoot) {
+                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(source.absolutePath)
                                 } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(source.absolutePath)) {
                                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(source.absolutePath)
                                 } else {
                                     source.delete()
                                 }
-                                UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
+                                if (!isSrcRoot) {
+                                    UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
+                                }
                             } catch (_: Exception) {}
                             FileTagsManager.onPathMoved(this@FileBrowserActivity, source.absolutePath, effectiveDest.absolutePath)
                         } else {
@@ -4643,7 +4714,9 @@ class FileBrowserActivity : AppCompatActivity() {
                             return
                         }
 
-                        val sourceSize = if (isSrcSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this@FileBrowserActivity, source.absolutePath) else source.length()
+                        val sourceSize = if (isSrcSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this@FileBrowserActivity, source.absolutePath)
+                                         else if (isSrcRoot) za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(source.absolutePath)
+                                         else source.length()
                         updateProgress(source.name, 0, sourceSize, fileIndex, totalFiles)
                         val finalDest = if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH)
                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(destBase.parentFile ?: effectiveDestDir, destBase.name, this@FileBrowserActivity)
@@ -4652,15 +4725,23 @@ class FileBrowserActivity : AppCompatActivity() {
                             updateProgress(source.name, c, t, fileIndex, totalFiles)
                         }
 
-                        if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
+                        val isEffDestRoot = writtenDest is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(writtenDest.absolutePath)
+                        if (!isEffDestRoot && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
                             pendingIndices.add(metadataExtractor.extractMetadata(writtenDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
                             if (pendingIndices.size >= 50) flushIndices()
                         }
 
                         if (operation == FileClipboard.Operation.MOVE || operation == FileClipboard.Operation.EXTRACT) {
-                            val writtenSize = if (isDestSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this@FileBrowserActivity, writtenDest.absolutePath) else writtenDest.length()
-                            val isSafeToDelete = if (isDestSaf && writtenSize <= 0L) {
+                            val isEffSafDest = writtenDest is za.kilowatch.ultimatefilemanager.storage.SafFile || 
+                                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(writtenDest.absolutePath) ||
+                                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, writtenDest.absolutePath)
+                            val writtenSize = if (isEffSafDest) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this@FileBrowserActivity, writtenDest.absolutePath)
+                                              else if (isEffDestRoot) za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(writtenDest.absolutePath)
+                                              else writtenDest.length()
+                            val isSafeToDelete = if (isEffSafDest && writtenSize <= 0L) {
                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, writtenDest.absolutePath)
+                            } else if (isEffDestRoot && writtenSize <= 0L) {
+                                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(writtenDest.absolutePath)
                             } else {
                                 za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
                                     writtenSize, sourceSize, source.name
@@ -4669,12 +4750,16 @@ class FileBrowserActivity : AppCompatActivity() {
                             if (isSafeToDelete) {
                                 if (isSrcSaf) {
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@FileBrowserActivity, source.absolutePath)
+                                } else if (isSrcRoot) {
+                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(source.absolutePath)
                                 } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(source.absolutePath)) {
                                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(source.absolutePath)
                                 } else {
                                     source.delete()
                                 }
-                                UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
+                                if (!isSrcRoot) {
+                                    UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
+                                }
                             }
                             FileTagsManager.onPathMoved(this@FileBrowserActivity, source.absolutePath, writtenDest.absolutePath)
                         } else {
@@ -4688,6 +4773,8 @@ class FileBrowserActivity : AppCompatActivity() {
                     val isDestSaf = destBase is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destBase.absolutePath) ||
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, destBase.absolutePath)
+                    val isDestRoot = destBase is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                                     za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(destBase.absolutePath)
 
                     if (source.isDirectory) {
                         val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
@@ -4721,10 +4808,16 @@ class FileBrowserActivity : AppCompatActivity() {
                         val isEffSaf = effectiveDest is za.kilowatch.ultimatefilemanager.storage.SafFile || 
                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(effectiveDest.absolutePath) ||
                                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, effectiveDest.absolutePath)
+                        val isEffRoot = effectiveDest is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                                        za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(effectiveDest.absolutePath)
                         try {
                             if (isEffSaf) {
                                 if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, effectiveDest.absolutePath)) {
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(this@FileBrowserActivity, effectiveDest.parent ?: effectiveDestDir.absolutePath, effectiveDest.name)
+                                }
+                            } else if (isEffRoot) {
+                                if (!za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(effectiveDest.absolutePath)) {
+                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.mkdir(effectiveDest.absolutePath)
                                 }
                             } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(effectiveDest.absolutePath)) {
                                 if (!za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(effectiveDest.absolutePath)) {
@@ -4733,7 +4826,7 @@ class FileBrowserActivity : AppCompatActivity() {
                             } else {
                                 if (!effectiveDest.exists()) effectiveDest.mkdirs()
                             }
-                            if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
+                            if (!isEffRoot && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
                                 pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
                                 if (pendingIndices.size >= 50) flushIndices()
                             }
@@ -4758,6 +4851,8 @@ class FileBrowserActivity : AppCompatActivity() {
                             try {
                                 val childDest = if (isEffSaf) {
                                     za.kilowatch.ultimatefilemanager.storage.SafFile(effectiveDest.absolutePath, child.name, child.isDirectory)
+                                } else if (isEffRoot) {
+                                    za.kilowatch.ultimatefilemanager.storage.RootFile(effectiveDest.absolutePath, child.name, child.isDirectory)
                                 } else {
                                     java.io.File(effectiveDest, child.name)
                                 }
@@ -4820,7 +4915,8 @@ class FileBrowserActivity : AppCompatActivity() {
                         )
                         currentTransferConnection = null
 
-                        if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
+                        val isEffDestRoot = writtenDest is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(writtenDest.absolutePath)
+                        if (!isEffDestRoot && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
                             pendingIndices.add(metadataExtractor.extractMetadata(writtenDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
                             if (pendingIndices.size >= 50) flushIndices()
                         }
@@ -5232,6 +5328,26 @@ class FileBrowserActivity : AppCompatActivity() {
         // 1. If indexing is NOT declined, collect from Room Flow for reactive updates.
         // 2. If indexing IS declined, fetch directly from filesystem via listFiles().
         folderFlowJob?.cancel()
+
+        val isRootDir = isRootStorage || targetDir is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(targetDir.absolutePath)
+        if (isRootDir) {
+            folderFlowJob = lifecycleScope.launch(Dispatchers.IO) {
+                val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
+                coroutineContext.ensureActive()
+                val rawFiles = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.listFiles(targetDir.absolutePath)
+                val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
+                val sorted = sortAndFilterFiles(visibleFiles)
+                withContext(Dispatchers.Main) {
+                    submitAdapterList {
+                        fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
+                        updateEmptyState(sorted.isEmpty())
+                        applyFileFocus()
+                    }
+                }
+            }
+            return
+        }
 
         // Cert and keyfile pickers always list directly from the filesystem so that
         // unindexed SD cards (and any other storage) are fully browseable with all
@@ -6882,18 +6998,25 @@ class FileBrowserActivity : AppCompatActivity() {
         container.removeAllViews()
         
         val isRootSaf = SafTreeManager.isSafPath(rootPath)
+        val isRoot = isRootStorage || rootPath == "/"
         val list = mutableListOf<Pair<String, File?>>()
         list.add(Pair("Home", null))
-        list.add(Pair(storageLabel, if (isRootSaf) SafFile(rootPath, true) else File(rootPath)))
+        val rootFileObj: File = if (isRoot) za.kilowatch.ultimatefilemanager.storage.RootFile("", "")
+                                else if (isRootSaf) SafFile(rootPath, true)
+                                else File(rootPath)
+        list.add(Pair(storageLabel, rootFileObj))
         
-        if (currentDir.absolutePath.startsWith(rootPath) && currentDir.absolutePath != rootPath) {
-            val relativePath = currentDir.absolutePath.substring(rootPath.length).removePrefix("/")
+        if (currentDir.absolutePath != rootPath && (isRoot || currentDir.absolutePath.startsWith(rootPath))) {
+            val relativePath = if (rootPath == "/") currentDir.absolutePath.removePrefix("/")
+                               else currentDir.absolutePath.substring(rootPath.length).removePrefix("/")
             if (relativePath.isNotEmpty()) {
                 val parts = relativePath.split("/")
-                var currentAccumulated: File = if (isRootSaf) SafFile(rootPath, true) else File(rootPath)
+                var currentAccumulated: File = rootFileObj
                 for (part in parts) {
                     if (part.isNotEmpty()) {
-                        currentAccumulated = if (isRootSaf) SafFile(currentAccumulated.absolutePath, part, true) else File(currentAccumulated, part)
+                        currentAccumulated = if (isRoot) za.kilowatch.ultimatefilemanager.storage.RootFile(currentAccumulated.absolutePath, part, true)
+                                             else if (isRootSaf) SafFile(currentAccumulated.absolutePath, part, true)
+                                             else File(currentAccumulated, part)
                         list.add(Pair(part, currentAccumulated))
                     }
                 }

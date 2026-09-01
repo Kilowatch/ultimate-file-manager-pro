@@ -266,6 +266,28 @@ class StorageBrowserActivity : AppCompatActivity() {
                 ))
             }
 
+            // Root Storage (Mobile only, when enabled by user in Settings)
+            if (!DeviceUtils.isTvDevice(context) && za.kilowatch.ultimatefilemanager.settings.RootPreferenceManager.isRootEnabled(context)) {
+                var rootTotal = 0L
+                var rootUsed = 0L
+                try {
+                    val stats = StatFs("/")
+                    rootTotal = stats.totalBytes
+                    rootUsed = rootTotal - stats.availableBytes
+                } catch (_: Exception) {}
+
+                storageItems.add(StorageItem(
+                    id = "root_storage_tile",
+                    label = context.getString(R.string.root_storage_title),
+                    iconRes = R.drawable.ic_root_storage,
+                    totalBytes = rootTotal,
+                    usedBytes = rootUsed,
+                    mountPath = "/",
+                    isRootTile = true,
+                    subtitle = context.getString(R.string.root_storage_subtitle)
+                ))
+            }
+
             if (localOnly) return storageItems
 
             // Add Network Shares (SMB/FTP)
@@ -556,6 +578,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
             items.add(StorageItem(id = "terminal_tile", label = context.getString(R.string.adb_terminal_title), iconRes = R.drawable.ic_terminal, totalBytes = 0, usedBytes = 0, mountPath = "", isTerminalTile = true))
             items.add(StorageItem(id = "shizuku_tile", label = context.getString(R.string.shizuku_title), iconRes = R.drawable.ic_shizuku_logo, totalBytes = 0, usedBytes = 0, mountPath = "", isShizukuTile = true, subtitle = context.getString(R.string.shizuku_subtitle)))
+            if (!isTv) {
+                items.add(StorageItem(id = "root_storage_tile", label = context.getString(R.string.root_storage_title), iconRes = R.drawable.ic_root_storage, totalBytes = 0, usedBytes = 0, mountPath = "/", isRootTile = true, subtitle = context.getString(R.string.root_storage_subtitle)))
+            }
             items.add(StorageItem(id = "network_tile", label = context.getString(R.string.network_tile_title), iconRes = R.drawable.ic_network, totalBytes = 0, usedBytes = 0, mountPath = "", isNetworkTile = true))
             items.add(StorageItem(id = "online_storages_tile", label = context.getString(R.string.online_storages_title), iconRes = R.drawable.ic_cloud, totalBytes = 0, usedBytes = 0, mountPath = "", isOnlineStoragesTile = true))
             if (!isTv) {
@@ -2003,6 +2028,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             item.isAboutTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.AboutActivity::class.java))
             }
+            item.isRootTile -> {
+                navigateToFileBrowser(item, "root", "ROOT")
+            }
             item.isTipJarTile -> {
                 if (isAmazon && !BuildConfig.AMAZON_IAP_ENABLED) {
                     // Tip Jar not yet available on Amazon â€” show notice and don't open the activity
@@ -2576,6 +2604,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
             putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, storageId)
             putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, storageType)
+            if (item.isRootTile || storageType.equals("ROOT", ignoreCase = true)) {
+                putExtra(FileBrowserActivity.EXTRA_IS_ROOT_STORAGE, true)
+            }
             if (isPickerMode) {
                 putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
                 putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
@@ -3735,6 +3766,30 @@ class StorageBrowserActivity : AppCompatActivity() {
                     newKnownPaths.add(item.mountPath)
                     discoveredPaths.add(item.mountPath)
                 }
+            }
+
+            // Root Storage (Mobile only, when enabled by user in Settings)
+            if (!capturedIsTv && za.kilowatch.ultimatefilemanager.settings.RootPreferenceManager.isRootEnabled(this@StorageBrowserActivity)) {
+                var rootTotal = 0L
+                var rootUsed = 0L
+                try {
+                    val stats = StatFs("/")
+                    rootTotal = stats.totalBytes
+                    rootUsed = rootTotal - stats.availableBytes
+                } catch (_: Exception) {}
+
+                storageItems.add(StorageItem(
+                    id = "root_storage_tile",
+                    label = getString(R.string.root_storage_title),
+                    iconRes = R.drawable.ic_root_storage,
+                    totalBytes = rootTotal,
+                    usedBytes = rootUsed,
+                    mountPath = "/",
+                    isRootTile = true,
+                    subtitle = getString(R.string.root_storage_subtitle)
+                ))
+                newKnownPaths.add("/")
+                discoveredPaths.add("/")
             }
 
             // Composite flag: feature tiles are suppressed in any picker mode

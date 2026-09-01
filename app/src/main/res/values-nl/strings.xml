@@ -12620,6 +12620,9 @@ Ondersteunings-e-mail gekopieerd naar klembord
     <string name="about_section_app">
 App-informatie
 </string>
+    <string name="about_section_system">
+Apparaat &amp; Systeem
+</string>
     <string name="about_section_support">
 Ontwikkelaar en koppelingen
 </string>
@@ -13170,7 +13173,6 @@ Toegang tot alle bestanden vereist
     <string name="restricted_feature_dialog_desc">
 Deze functie vereist onbeperkte opslagtoegang op het hele apparaat. U kunt toegang tot alle bestanden verlenen in Instellingen of geselecteerde mappen blijven gebruiken.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Maptoegang verwijderen?
@@ -13189,6 +13191,129 @@ Indexeren van %1$s...
 </string>
     <string name="btn_manage">
 Beheren
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Rootstatus
+</string>
+    <string name="root_status_not_rooted">
+Niet geworteld
+</string>
+    <string name="root_status_detected">
+Geworteld (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisk
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+APatch
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+su binair
+</string>
+    <string name="root_details_title">
+Root-diagnostiek
+</string>
+    <string name="root_details_binaries">
+Gedetecteerde binaire bestanden: %1$s
+</string>
+    <string name="root_details_packages">
+Gedetecteerde pakketten: %1$s
+</string>
+    <string name="root_details_test_keys">
+Tags bouwen: aangepaste / testsleutels
+</string>
+    <string name="root_details_none">
+Er zijn geen binaire rootbestanden of managerpakketten gedetecteerd op dit apparaat.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Root-toegang
+</string>
+    <string name="icon_storage_root">
+Root-opslag
+</string>
+    <string name="root_storage_title">
+Root-opslag
+</string>
+    <string name="root_storage_subtitle">
+Systeempartitie (/)
+</string>
+    <string name="settings_root_access_title">
+Root-toegang
+</string>
+    <string name="settings_root_access_desc">
+Sta verhoogde superuser-toegang toe voor systeempartities en beveiligde mappen
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Ingeschakeld — Superuser-toegang actief
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Gehandicapt
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Root niet gedetecteerd op dit apparaat
+</string>
+    <string name="root_grant_dialog_title">
+Root-toegang verlenen?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro vraagt ​​Superuser-machtigingen aan uw hoofdbeheerder (%1$s). Dit geeft toegang tot het bladeren en beheren van bestanden op systeemniveau.\n
+\n
+Verleen alleen root-toegang als u de risico\'s van het wijzigen van systeembestanden begrijpt.
+</string>
+    <string name="root_grant_dialog_grant">
+Wortel verlenen
+</string>
+    <string name="root_denied_title">
+Root-toestemming geweigerd
+</string>
+    <string name="root_denied_desc">
+Toegang tot superuser is geweigerd door uw rootmanager. Root-functies blijven uitgeschakeld.
+</string>
+    <string name="root_requesting_title">
+Root-toegang aanvragen...
+</string>
+    <string name="root_storage_dialog_title">
+Root-opslag
+</string>
+    <string name="root_storage_dialog_desc">
+Rootpartitie (/) is toegankelijk via Superuser-rechten.\n
+\n
+• Root Manager: %1$s\n
+• Mount-pad: /\n
+• Toegangsmodus: Superuser actief
+</string>
+    <string name="backup_pref_root">
+Instellingen voor roottoegang
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Om toegang te krijgen tot beschermde hoofdmappen is superuser-toegang vereist.
+</string>
+    <string name="root_remount_failed">
+Kan de partitie niet opnieuw koppelen als lezen-schrijven.
+</string>
+    <string name="root_file_saved">
+Opgeslagen met superuser-rechten
+</string>
+    <string name="root_posix_permissions">
+Machtigingen
+</string>
+    <string name="root_selinux_context">
+SELinux-context
+</string>
+    <string name="root_owner_group">
+Eigenaar / Groep
+</string>
+    <string name="root_symlink_target">
+Doel koppelen
 </string>
 </resources>
 

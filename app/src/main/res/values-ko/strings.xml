@@ -12620,6 +12620,9 @@ support@kilowatch.co.za
     <string name="about_section_app">
 앱 정보
 </string>
+    <string name="about_section_system">
+장치 및 시스템
+</string>
     <string name="about_section_support">
 개발자 및 링크
 </string>
@@ -13170,7 +13173,6 @@ No mounted folders remaining for this storage.
     <string name="restricted_feature_dialog_desc">
 이 기능을 사용하려면 기기 전체에서 무제한 저장소 액세스가 필요합니다. 설정에서 모든 파일 액세스 권한을 부여하거나 선택한 폴더를 계속 사용할 수 있습니다.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 폴더 액세스를 삭제하시겠습니까?
@@ -13189,6 +13191,129 @@ No mounted folders remaining for this storage.
 </string>
     <string name="btn_manage">
 관리하다
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+루트 상태
+</string>
+    <string name="root_status_not_rooted">
+루팅되지 않음
+</string>
+    <string name="root_status_detected">
+루팅됨(%1$s)
+</string>
+    <string name="root_type_magisk">
+마기스크
+</string>
+    <string name="root_type_kernelsu">
+커널SU
+</string>
+    <string name="root_type_apatch">
+AP패치
+</string>
+    <string name="root_type_supersu">
+슈퍼SU
+</string>
+    <string name="root_type_generic">
+su 바이너리
+</string>
+    <string name="root_details_title">
+루트 진단
+</string>
+    <string name="root_details_binaries">
+감지된 바이너리: %1$s
+</string>
+    <string name="root_details_packages">
+감지된 패키지: %1$s
+</string>
+    <string name="root_details_test_keys">
+빌드 태그: 사용자 정의/테스트 키
+</string>
+    <string name="root_details_none">
+이 장치에서는 루트 바이너리 또는 관리자 패키지가 감지되지 않습니다.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+루트 액세스
+</string>
+    <string name="icon_storage_root">
+루트 저장소
+</string>
+    <string name="root_storage_title">
+루트 저장소
+</string>
+    <string name="root_storage_subtitle">
+시스템 파티션(/)
+</string>
+    <string name="settings_root_access_title">
+루트 액세스
+</string>
+    <string name="settings_root_access_desc">
+시스템 파티션 및 보호된 디렉터리에 대해 높은 수퍼유저 액세스 허용
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+활성화됨 — 수퍼유저 액세스가 활성화되었습니다.
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+장애가 있는
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+이 장치에서 루트가 감지되지 않습니다
+</string>
+    <string name="root_grant_dialog_title">
+루트 액세스 권한을 부여하시겠습니까?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro는 루트 관리자(%1$s)에게 수퍼유저 권한을 요청합니다. 이렇게 하면 시스템 수준 파일을 찾아보고 관리할 수 있는 액세스 권한이 부여됩니다.\n
+\n
+시스템 파일 수정의 위험을 이해하는 경우에만 루트 액세스 권한을 부여하세요.
+</string>
+    <string name="root_grant_dialog_grant">
+그랜트 루트
+</string>
+    <string name="root_denied_title">
+루트 권한이 거부되었습니다
+</string>
+    <string name="root_denied_desc">
+루트 관리자가 수퍼유저 액세스를 거부했습니다. 루트 기능은 비활성화된 상태로 유지됩니다.
+</string>
+    <string name="root_requesting_title">
+루트 액세스 요청 중...
+</string>
+    <string name="root_storage_dialog_title">
+루트 저장소
+</string>
+    <string name="root_storage_dialog_desc">
+루트 파티션(/)은 수퍼유저 권한을 통해 액세스할 수 있습니다.\n
+\n
+• 루트 관리자: %1$s\n
+• 마운트 경로: /\n
+• 액세스 모드: 수퍼유저 활성
+</string>
+    <string name="backup_pref_root">
+루트 액세스 설정
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+보호된 루트 디렉토리에 액세스하려면 수퍼유저 액세스가 필요합니다.
+</string>
+    <string name="root_remount_failed">
+파티션을 읽기-쓰기로 다시 마운트하지 못했습니다.
+</string>
+    <string name="root_file_saved">
+슈퍼유저 권한으로 저장됨
+</string>
+    <string name="root_posix_permissions">
+권한
+</string>
+    <string name="root_selinux_context">
+SELinux 컨텍스트
+</string>
+    <string name="root_owner_group">
+소유자/그룹
+</string>
+    <string name="root_symlink_target">
+링크 대상
 </string>
 </resources>
 

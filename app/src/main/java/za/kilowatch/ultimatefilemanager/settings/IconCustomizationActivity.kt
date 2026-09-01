@@ -439,6 +439,7 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("settings_quick_transfer", getString(R.string.icon_settings_quick_transfer), R.drawable.ic_copy, emptyList()),
             IconItemData("settings_network_open_cache", getString(R.string.icon_settings_network_open_cache), R.drawable.ic_cloud, emptyList()),
             IconItemData("settings_storage_indexer", getString(R.string.icon_settings_storage_indexer), R.drawable.ic_storage_internal, emptyList()),
+            IconItemData("settings_root_access", getString(R.string.icon_settings_root_access), R.drawable.ic_root_storage, emptyList()),
             IconItemData("settings_analytics", getString(R.string.icon_settings_analytics), R.drawable.ic_tune, emptyList())
         )
         if (isTv) {

@@ -12620,6 +12620,9 @@ Email dukungan disalin ke clipboard
     <string name="about_section_app">
 Informasi Aplikasi
 </string>
+    <string name="about_section_system">
+Perangkat &amp; Sistem
+</string>
     <string name="about_section_support">
 Pengembang &amp; Tautan
 </string>
@@ -13170,7 +13173,6 @@ Semua Akses File Diperlukan
     <string name="restricted_feature_dialog_desc">
 Fitur ini memerlukan akses penyimpanan seluruh perangkat yang tidak dibatasi. Anda dapat memberikan Akses Semua File di Pengaturan atau terus menggunakan folder yang dipilih.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Hapus Akses Folder?
@@ -13189,6 +13191,129 @@ Mengindeks %1$s...
 </string>
     <string name="btn_manage">
 Mengelola
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Status Akar
+</string>
+    <string name="root_status_not_rooted">
+Tidak Berakar
+</string>
+    <string name="root_status_detected">
+Berakar (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisk
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+Patch
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+su biner
+</string>
+    <string name="root_details_title">
+Diagnostik Akar
+</string>
+    <string name="root_details_binaries">
+Biner Terdeteksi: %1$s
+</string>
+    <string name="root_details_packages">
+Paket Terdeteksi: %1$s
+</string>
+    <string name="root_details_test_keys">
+Tag Bangun: Kunci Khusus / Uji
+</string>
+    <string name="root_details_none">
+Tidak ada biner root atau paket manajer yang terdeteksi pada perangkat ini.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Root Access
+</string>
+    <string name="icon_storage_root">
+Root Storage
+</string>
+    <string name="root_storage_title">
+Root Storage
+</string>
+    <string name="root_storage_subtitle">
+System partition (/)
+</string>
+    <string name="settings_root_access_title">
+Root Access
+</string>
+    <string name="settings_root_access_desc">
+Izinkan akses pengguna super yang lebih tinggi untuk partisi sistem dan direktori yang dilindungi
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Enabled — Superuser access active
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Dengan disabilitas
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Root tidak terdeteksi pada perangkat ini
+</string>
+    <string name="root_grant_dialog_title">
+Grant Root Access?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro akan meminta izin Pengguna Super dari manajer root Anda (%1$s). Ini memberikan akses untuk menelusuri dan mengelola file tingkat sistem.\n
+\n
+Hanya berikan akses root jika Anda memahami risiko memodifikasi file sistem.
+</string>
+    <string name="root_grant_dialog_grant">
+Berikan Akar
+</string>
+    <string name="root_denied_title">
+Izin Root Ditolak
+</string>
+    <string name="root_denied_desc">
+Akses pengguna super ditolak oleh manajer root Anda. Fitur root akan tetap dinonaktifkan.
+</string>
+    <string name="root_requesting_title">
+Meminta Akses Root...
+</string>
+    <string name="root_storage_dialog_title">
+Penyimpanan Akar
+</string>
+    <string name="root_storage_dialog_desc">
+Partisi root (/) dapat diakses melalui hak istimewa Pengguna Super.\n
+\n
+• Manajer Root: %1$s\n
+• Jalur Pemasangan: /\n
+• Mode Akses: Pengguna Super Aktif
+</string>
+    <string name="backup_pref_root">
+Pengaturan Akses Root
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Akses pengguna super diperlukan untuk mengakses direktori root yang dilindungi.
+</string>
+    <string name="root_remount_failed">
+Gagal memasang ulang partisi sebagai baca-tulis.
+</string>
+    <string name="root_file_saved">
+Disimpan dengan izin pengguna super
+</string>
+    <string name="root_posix_permissions">
+Izin
+</string>
+    <string name="root_selinux_context">
+Konteks SELinux
+</string>
+    <string name="root_owner_group">
+Pemilik / Grup
+</string>
+    <string name="root_symlink_target">
+Tautan Sasaran
 </string>
 </resources>
 

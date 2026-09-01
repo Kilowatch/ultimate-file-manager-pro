@@ -12620,6 +12620,9 @@ support@kilowatch.co.za
     <string name="about_section_app">
 معلومات التطبيق
 </string>
+    <string name="about_section_system">
+الجهاز والنظام
+</string>
     <string name="about_section_support">
 المطور والروابط
 </string>
@@ -13170,7 +13173,6 @@ To access and manage files in this storage, please enable All Files Access in An
     <string name="restricted_feature_dialog_desc">
 تتطلب هذه الميزة وصولاً غير مقيد إلى مساحة التخزين على مستوى الجهاز. يمكنك منح حق الوصول إلى جميع الملفات في الإعدادات أو الاستمرار في استخدام المجلدات المحددة.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 هل ترغب في إزالة الوصول إلى المجلد؟
@@ -13189,6 +13191,129 @@ To access and manage files in this storage, please enable All Files Access in An
 </string>
     <string name="btn_manage">
 يدير
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+حالة الجذر
+</string>
+    <string name="root_status_not_rooted">
+غير متجذرة
+</string>
+    <string name="root_status_detected">
+متجذر (%1$s)
+</string>
+    <string name="root_type_magisk">
+ماجيسك
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+أباتش
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+سو ثنائي
+</string>
+    <string name="root_details_title">
+تشخيص الجذر
+</string>
+    <string name="root_details_binaries">
+الثنائيات المكتشفة: %1$s
+</string>
+    <string name="root_details_packages">
+الحزم المكتشفة: %1$s
+</string>
+    <string name="root_details_test_keys">
+بناء العلامات: مفاتيح مخصصة / اختبار
+</string>
+    <string name="root_details_none">
+لم يتم اكتشاف أي ثنائيات جذرية أو حزم إدارية على هذا الجهاز.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+الوصول إلى الجذر
+</string>
+    <string name="icon_storage_root">
+تخزين الجذر
+</string>
+    <string name="root_storage_title">
+تخزين الجذر
+</string>
+    <string name="root_storage_subtitle">
+قسم النظام (/)
+</string>
+    <string name="settings_root_access_title">
+الوصول إلى الجذر
+</string>
+    <string name="settings_root_access_desc">
+السماح بوصول المستخدم المتميز إلى قسم النظام والأدلة المحمية
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+ممكّن — وصول المستخدم المتميز نشط
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+عاجز
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+لم يتم الكشف عن الجذر على هذا الجهاز
+</string>
+    <string name="root_grant_dialog_title">
+منح الوصول إلى الجذر؟
+</string>
+    <string name="root_grant_dialog_desc">
+سيطلب Ultimate File Manager Pro أذونات المستخدم المتميز من مدير الجذر الخاص بك (%1$s). يؤدي هذا إلى منح حق الوصول لاستعراض الملفات على مستوى النظام وإدارتها.\n
+\n
+امنح حق الوصول إلى الجذر فقط إذا كنت تفهم مخاطر تعديل ملفات النظام.
+</string>
+    <string name="root_grant_dialog_grant">
+منح الجذر
+</string>
+    <string name="root_denied_title">
+تم رفض إذن الجذر
+</string>
+    <string name="root_denied_desc">
+تم رفض وصول المستخدم المتميز من قبل مدير الجذر الخاص بك. ستظل ميزات الجذر معطلة.
+</string>
+    <string name="root_requesting_title">
+جارٍ طلب الوصول إلى الجذر...
+</string>
+    <string name="root_storage_dialog_title">
+تخزين الجذر
+</string>
+    <string name="root_storage_dialog_desc">
+يمكن الوصول إلى قسم الجذر (/) عبر امتيازات المستخدم المتميز.\n
+\n
+• مدير الجذر: %1$s\n
+• مسار التثبيت: /\n
+• وضع الوصول: المستخدم المتميز النشط
+</string>
+    <string name="backup_pref_root">
+إعدادات الوصول إلى الجذر
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+مطلوب وصول المستخدم المتميز للوصول إلى الدلائل الجذر المحمية.
+</string>
+    <string name="root_remount_failed">
+فشل في إعادة تحميل القسم للقراءة والكتابة.
+</string>
+    <string name="root_file_saved">
+تم الحفظ بأذونات المستخدم المتميز
+</string>
+    <string name="root_posix_permissions">
+الأذونات
+</string>
+    <string name="root_selinux_context">
+سياق سيلينوكس
+</string>
+    <string name="root_owner_group">
+المالك / المجموعة
+</string>
+    <string name="root_symlink_target">
+هدف الارتباط
 </string>
 </resources>
 

@@ -12620,6 +12620,9 @@ Destek e-postası panoya kopyalandı
     <string name="about_section_app">
 Uygulama Bilgileri
 </string>
+    <string name="about_section_system">
+Cihaz ve Sistem
+</string>
     <string name="about_section_support">
 Geliştirici ve Bağlantılar
 </string>
@@ -13170,7 +13173,6 @@ Tüm Dosyalara Erişim Gerekli
     <string name="restricted_feature_dialog_desc">
 Bu özellik, cihaz çapında sınırsız depolama erişimi gerektirir. Ayarlar\'da Tüm Dosyalara Erişim verebilir veya seçilen klasörleri kullanmaya devam edebilirsiniz.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Klasör Erişimi Kaldırılsın mı?
@@ -13189,6 +13191,129 @@ Klasör erişimi kaldırıldı
 </string>
     <string name="btn_manage">
 Üstesinden gelmek
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Kök Durumu
+</string>
+    <string name="root_status_not_rooted">
+Not Rooted
+</string>
+    <string name="root_status_detected">
+Köklendi (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisk
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+AYaması
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+su ikili
+</string>
+    <string name="root_details_title">
+Root Diagnostics
+</string>
+    <string name="root_details_binaries">
+Algılanan İkili Dosyalar: %1$s
+</string>
+    <string name="root_details_packages">
+Detected Packages: %1$s
+</string>
+    <string name="root_details_test_keys">
+Oluşturma Etiketleri: Özel / Test Anahtarları
+</string>
+    <string name="root_details_none">
+No root binaries or manager packages detected on this device.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Kök Erişimi
+</string>
+    <string name="icon_storage_root">
+Kök Depolama
+</string>
+    <string name="root_storage_title">
+Kök Depolama
+</string>
+    <string name="root_storage_subtitle">
+Sistem bölümü (/)
+</string>
+    <string name="settings_root_access_title">
+Kök Erişimi
+</string>
+    <string name="settings_root_access_desc">
+Sistem bölümü ve korumalı dizinler için yükseltilmiş süper kullanıcı erişimine izin ver
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Etkin — Süper kullanıcı erişimi etkin
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Engelli
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Bu cihazda kök algılanmadı
+</string>
+    <string name="root_grant_dialog_title">
+Kök Erişimi Verilsin mi?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro, kök yöneticinizden (%1$s) Süper Kullanıcı izinleri isteyecektir. Bu, sistem düzeyindeki dosyalara göz atma ve bunları yönetme erişimi sağlar.\n
+\n
+Yalnızca sistem dosyalarını değiştirmenin risklerini anlıyorsanız kök erişimi verin.
+</string>
+    <string name="root_grant_dialog_grant">
+Hibe Kökü
+</string>
+    <string name="root_denied_title">
+Kök İzni Reddedildi
+</string>
+    <string name="root_denied_desc">
+Süper kullanıcı erişimi kök yöneticiniz tarafından reddedildi. Kök özellikleri devre dışı kalacaktır.
+</string>
+    <string name="root_requesting_title">
+Kök Erişimi İsteniyor...
+</string>
+    <string name="root_storage_dialog_title">
+Kök Depolama
+</string>
+    <string name="root_storage_dialog_desc">
+Kök bölüme (/) Süper Kullanıcı ayrıcalıkları aracılığıyla erişilebilir.\n
+\n
+• Kök Yönetici: %1$s\n
+• Bağlantı Yolu: /\n
+• Erişim Modu: Süper Kullanıcı Etkin
+</string>
+    <string name="backup_pref_root">
+Kök Erişim Ayarları
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Korumalı kök dizinlere erişmek için süper kullanıcı erişimi gereklidir.
+</string>
+    <string name="root_remount_failed">
+Bölüm okuma-yazma olarak yeniden bağlanamadı.
+</string>
+    <string name="root_file_saved">
+Süper kullanıcı izinleriyle kaydedildi
+</string>
+    <string name="root_posix_permissions">
+İzinler
+</string>
+    <string name="root_selinux_context">
+SELinux Bağlamı
+</string>
+    <string name="root_owner_group">
+Sahip / Grup
+</string>
+    <string name="root_symlink_target">
+Bağlantı Hedefi
 </string>
 </resources>
 

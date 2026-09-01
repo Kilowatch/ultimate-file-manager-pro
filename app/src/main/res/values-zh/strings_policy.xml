@@ -46,6 +46,9 @@ https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
     <string name="tc_s3b_title">
 3b. RClone云集成
 </string>
+    <string name="tc_s3c_title">
+3c.已 Root 的设备和超级用户权限
+</string>
     <string name="tc_s4_title">
 4. 您的责任
 </string>
@@ -133,6 +136,9 @@ Ultimate File Manager Pro 是一款免费的 Android 应用程序（可在手机
     </string-array>
     <string name="tc_s3b_summary">
 Connecting to cloud drives via RClone is done directly from your phone or TV. We never see your cloud files or passwords. Your passwords are encrypted on your phone, and you are subject to the terms of whatever cloud provider you configure.
+</string>
+    <string name="tc_s3c_body">
+当您选择在已取得 root 权限的移动设备上启用根访问权限时，Ultimate File Manager Pro 使用 libsu 库向您安装的根管理器（Magisk、KernelSU、APatch、SuperSU）请求超级用户权限。超级用户访问权限可在设备的系统分区（包括根/安装点）上授予不受限制的读写功能。修改、重命名或删除系统文件会带来严重的风险，包括操作系统永久性损坏、引导循环、数据丢失或变砖。您承认使用根访问权限完全由您自行承担风险。 KiloWatch 对 root 操作引起的设备不稳定、硬件故障或数据丢失不承担任何责任。
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ GIF Creator — 使用自定义帧速率、调整大小选项和拖放帧重新�
         <item>
 照片 EXIF 工具 — 检查照片 EXIF 和 GPS 元数据、清除私人地理标签和设备信息，以及使用拍摄时间戳和相机元数据批量重命名照片。
 </item>
+        <item>
+照片 EXIF 工具 — 检查照片 EXIF 和 GPS 元数据，清除私人地理标签和设备信息，并使用拍摄时间戳和相机元数据批量重命名照片。
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -285,6 +294,9 @@ APK文件
         <item>
 我们的责任
 </item>
+        <item>
+我们的责任
+</item>
     </string-array>
     <string-array name="tc_risk_details">
         <item>
@@ -322,6 +334,9 @@ ADB 配对需要通过本地 Wi-Fi 在您的设备和目标设备之间交换证
 </item>
         <item>
 没有软件是完美的。我们不能保证该应用程序将始终没有错误或不间断。
+</item>
+        <item>
+我们的总责任上限为您在提出索赔前 30 天内为应用内购买支付的总金额。对于因免费功能而导致的数据丢失、设备损坏或利润损失，我们不承担任何责任。
 </item>
         <item>
 我们的总责任上限为您在提出索赔前 30 天内为应用内购买支付的总金额。对于因免费功能而导致的数据丢失、设备损坏或利润损失，我们不承担任何责任。
@@ -368,6 +383,9 @@ ADB 配对需要通过本地 Wi-Fi 在您的设备和目标设备之间交换证
 </item>
         <item>
 负责任地管理您的索引记录 - 您可以随时通过“设置”->“存储索引器”删除记录或忽略特定驱动器。
+</item>
+        <item>
+在安装任何 APK 文件之前验证其真实性和安全性。
 </item>
         <item>
 在安装任何 APK 文件之前验证其真实性和安全性。
@@ -430,6 +448,9 @@ Bluetooth
         <item>
 Vibrate
 </item>
+        <item>
+颤动
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -482,6 +503,9 @@ Keeps the CPU and Wi-Fi active during large file transfers so they complete reli
 </item>
         <item>
 连接到配对的 Android TV，充当蓝牙键盘和鼠标进行远程控制。
+</item>
+        <item>
+按下电视遥控器上的按钮时提供触觉反馈。
 </item>
         <item>
 按下电视遥控器上的按钮时提供触觉反馈。
@@ -616,6 +640,9 @@ AndroidX ExifInterface (androidx.exifinterface:exifinterface) — 用于跨 JPEG
         <item>
 Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
 </item>
+        <item>
+Amazon Appstore SDK — 处理 Amazon 设备上可选的应用内小费购买。 （所有权）
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ Privacy Policy
 </string>
     <string name="pp_s6b_title">
 6b. RClone 云集成 — 隐私与合规性
+</string>
+    <string name="pp_s6c_title">
+6c.已取得 root 权限的设备和超级用户访问权限 — 隐私与合规性
 </string>
     <string name="pp_s7_title">
 7. 数据共享和第三方
@@ -842,6 +872,30 @@ Ultimate File Manager Pro 集成了 RClone 后端，支持连接到 100 多个�
 文件操作：根据您的明确请求上传、下载、重命名、复制、移动或删除远程存储上的文件。
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+支持的移动设备上的 Root 访问严格使用 libsu 框架在设备上进行。不会收集或传输任何提升的命令数据或系统文件。
+</string>
+    <string name="pp_s6c_intro">
+当在已取得 root 权限的移动设备上启用 Root 访问时，所有超级用户命令、root shell 会话和分区操作都严格在设备上执行。 Ultimate File Manager Pro 不会向 KiloWatch 服务器或任何第三方传输、记录、上传或共享任何根分区文件、系统二进制文件或超级用户凭据。 Root 权限仅在明确的用户操作时调用，并且可以随时通过“设置”→“Root 访问”撤销。
+</string>
+    <string name="pp_s6c_local_heading">
+设备上根执行
+</string>
+    <string name="pp_s6c_local_body">
+所有 root 命令和 I/O 流均通过 libsu 和您安装的根管理器（Magisk、KernelSU、APatch、SuperSU）管理的本地根进程进行处理。不会远程存储或在设备外部传输 root 凭据、su 密钥或命令日志。
+</string>
+    <string name="pp_s6c_permitted_heading">
+根访问权限的允许用途
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+系统分区浏览：根据您的明确指示，浏览和检查根 (/) 分区和受保护目录上的文件。
+</item>
+        <item>
+提升的文件操作：当用户请求时，在受保护的存储位置执行文件复制、移动、编辑或删除。
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 我们不会出于与提供 Ultimate File Manager Pro 的文件管理功能不直接相关的任何目的向任何第三方出售、出租、交易、转让或披露您的个人信息或 Google 用户数据（句号）。
@@ -1000,6 +1054,9 @@ S3 / S3兼容的存储凭证（AWS S3、MinIO、IDrive E2等）
         <item>
 媒体播放状态
 </item>
+        <item>
+媒体播放状态
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1049,6 +1106,9 @@ Shizuku 或 Shevery Manager 应用程序的提升访问授权的状态 · 应用
 </item>
         <item>
 当前队列、播放位置以及用于从上次中断处恢复的播放器设置 · Android SharedPreferences
+</item>
+        <item>
+cookie (ufm_lang) 会在整个会话期间和跨浏览器重新启动时记住您的语言选择 · Web 浏览器存储
 </item>
         <item>
 cookie (ufm_lang) 会在整个会话期间和跨浏览器重新启动时记住您的语言选择 · Web 浏览器存储
@@ -1120,6 +1180,9 @@ cookie (ufm_lang) 会在整个会话期间和跨浏览器重新启动时记住�
 </item>
         <item>
 创建和维护文件索引以实现快速浏览和搜索（可通过“设置”->“存储索引器”进行管理）
+</item>
+        <item>
+提供核心应用功能
 </item>
         <item>
 提供核心应用功能

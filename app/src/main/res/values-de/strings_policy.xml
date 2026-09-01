@@ -46,6 +46,9 @@ Durch das Herunterladen oder Verwenden von Ultimate File Manager Pro akzeptieren
     <string name="tc_s3b_title">
 3b. RClone-Cloud-Integration
 </string>
+    <string name="tc_s3c_title">
+3c. Gerootete Geräte und Superuser-Rechte
+</string>
     <string name="tc_s4_title">
 4. Ihre Verantwortung
 </string>
@@ -133,6 +136,9 @@ Da sich APIs und Endpunkte von Cloud-Anbietern ohne Vorankündigung ändern kön
     </string-array>
     <string name="tc_s3b_summary">
 Die Verbindung zu Cloud-Laufwerken über RClone erfolgt direkt von Ihrem Telefon oder Fernseher. Wir sehen niemals Ihre Cloud-Dateien oder Passwörter. Ihre Passwörter werden auf Ihrem Telefon verschlüsselt, und Sie unterliegen den Bedingungen des von Ihnen konfigurierten Cloud-Anbieters.
+</string>
+    <string name="tc_s3c_body">
+Wenn Sie Root-Zugriff auf einem gerooteten Mobilgerät aktivieren, verwendet Ultimate File Manager Pro die libsu-Bibliothek, um Superuser-Berechtigungen von Ihrem installierten Root-Manager (Magisk, KernelSU, APatch, SuperSU) anzufordern. Der Superuser-Zugriff gewährt uneingeschränkte Lese- und Schreibberechtigungen für die Systempartitionen Ihres Geräts (einschließlich Root/Bereitstellungspunkt). Das Ändern, Umbenennen oder Löschen von Systemdateien birgt schwerwiegende Risiken, einschließlich dauerhafter Betriebssystembeschädigung, Bootloops, Datenverlust oder Bricking. Sie erkennen an, dass Sie Root Access ausschließlich auf eigenes Risiko nutzen. KiloWatch übernimmt keine Haftung für Geräteinstabilität, Hardwarefehler oder Datenverlust, die durch Root-Vorgänge entstehen.
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ GIF-Ersteller — Erstellen Sie animierte GIF-Dateien aus ausgewählten Bildern 
         <item>
 Foto-EXIF-Tools — Untersuchen Sie EXIF- und GPS-Metadaten von Fotos, entfernen Sie private Geotags und Geräteinformationen und benennen Sie Fotos mithilfe von Aufnahmezeitstempeln und Kamera-Metadaten stapelweise um.
 </item>
+        <item>
+Foto-EXIF-Tools – Überprüfen Sie Foto-EXIF- und GPS-Metadaten, bereinigen Sie private Geotags und Geräteinformationen und benennen Sie Fotos mithilfe von Aufnahmezeitstempeln und Kamerametadaten stapelweise um.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -281,6 +290,9 @@ Genauigkeit des Indexierers
 </item>
         <item>
 Fehler &amp; Störungen
+</item>
+        <item>
+Unsere Haftung
 </item>
         <item>
 Unsere Haftung
@@ -326,6 +338,9 @@ Keine Software ist perfekt. Wir können nicht versprechen, dass die App immer fe
         <item>
 Unsere Gesamthaftung ist auf den Gesamtbetrag begrenzt, den Sie für In-App-Käufe in den 30 Tagen vor einem Anspruch gezahlt haben. Wir haften nicht für Datenverlust, Geräteschäden oder entgangene Gewinne, die aus kostenlosen Funktionen entstehen.
 </item>
+        <item>
+Unsere Gesamthaftung ist auf den Gesamtbetrag begrenzt, den Sie in den 30 Tagen vor der Geltendmachung eines Anspruchs für In-App-Käufe bezahlt haben. Wir haften nicht für Datenverlust, Geräteschäden oder entgangenen Gewinn, die durch kostenlose Funktionen entstehen.
+</item>
     </string-array>
 
     <!-- Responsibilities list (Section 4) -->
@@ -368,6 +383,9 @@ Versuchen Sie nicht, die App zurückzuentwickeln, zu dekompilieren oder zu manip
 </item>
         <item>
 Verwalten Sie Ihre indizierten Datensätze verantwortungsvoll – Sie können jederzeit Datensätze löschen oder bestimmte Laufwerke ignorieren über Einstellungen -> Speicherindexierer.
+</item>
+        <item>
+Überprüfen Sie die Authentizität und Sicherheit aller APK-Dateien, bevor Sie sie installieren.
 </item>
         <item>
 Überprüfen Sie die Authentizität und Sicherheit aller APK-Dateien, bevor Sie sie installieren.
@@ -430,6 +448,9 @@ Bluetooth
         <item>
 Vibrieren
 </item>
+        <item>
+Vibrieren
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -482,6 +503,9 @@ Verwendet Speicherberechtigungen, um Dateimetadaten für die Leistung zu scannen
 </item>
         <item>
 Verbindet sich mit Ihrem gekoppelten Android TV, um als Bluetooth-Tastatur und -Maus für die Fernbedienung zu fungieren.
+</item>
+        <item>
+Bietet haptisches Feedback beim Drücken von Tasten auf der TV-Fernbedienung.
 </item>
         <item>
 Bietet haptisches Feedback beim Drücken von Tasten auf der TV-Fernbedienung.
@@ -616,6 +640,9 @@ AndroidX ExifInterface (androidx.exifinterface:exifinterface) — Bibliothek zum
         <item>
 Amazon Appstore SDK — verarbeitet optionale In-App-Trinkgeld-Käufe auf Amazon-Geräten. (Proprietary)
 </item>
+        <item>
+Amazon Appstore SDK – verarbeitet optionale In-App-Trinkgeldkäufe auf Amazon-Geräten. (Eigentümer)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ Ihre Dateien bleiben auf Ihrem Gerät — wir sehen sie nie. Mit Ihrer Zustimmun
 </string>
     <string name="pp_s6b_title">
 6b. RClone-Cloud-Integration – Datenschutz &amp; Compliance
+</string>
+    <string name="pp_s6c_title">
+6c. Gerootete Geräte und Superuser-Zugriff – Datenschutz und Compliance
 </string>
     <string name="pp_s7_title">
 7. Datenweitergabe &amp; Dritte
@@ -842,6 +872,30 @@ Fernzugriff: Abrufen von Ordnerstrukturen und Dateimetadaten, um den Inhalt Ihre
 Dateioperationen: Hochladen, Herunterladen, Umbenennen, Kopieren, Verschieben oder Löschen von Dateien in Ihrem entfernten Speicher auf Ihre ausdrückliche Anforderung hin.
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+Der Root-Zugriff auf unterstützten Mobilgeräten erfolgt ausschließlich geräteintern unter Verwendung des libsu-Frameworks. Es werden niemals erhöhte Befehlsdaten oder Systemdateien erfasst oder übertragen.
+</string>
+    <string name="pp_s6c_intro">
+Wenn der Root-Zugriff auf einem gerooteten Mobilgerät aktiviert ist, werden alle Superuser-Befehle, Root-Shell-Sitzungen und Partitionsvorgänge ausschließlich auf dem Gerät ausgeführt. Ultimate File Manager Pro überträgt, protokolliert, lädt oder teilt keine Root-Partitionsdateien, Systembinärdateien oder Superuser-Anmeldeinformationen an KiloWatch-Server oder Dritte. Root-Berechtigungen werden nur durch explizite Benutzeraktion aufgerufen und können jederzeit über Einstellungen → Root-Zugriff widerrufen werden.
+</string>
+    <string name="pp_s6c_local_heading">
+Root-Ausführung auf dem Gerät
+</string>
+    <string name="pp_s6c_local_body">
+Alle Root-Befehle und I/O-Streams werden über einen lokalen Root-Prozess abgewickelt, der von libsu und Ihrem installierten Root-Manager (Magisk, KernelSU, APatch, SuperSU) verwaltet wird. Es werden keine Root-Anmeldeinformationen, SU-Schlüssel oder Befehlsprotokolle remote gespeichert oder außerhalb Ihres Geräts übertragen.
+</string>
+    <string name="pp_s6c_permitted_heading">
+Zulässige Nutzung des Root-Zugriffs
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+Durchsuchen der Systempartition: Durchsuchen und Überprüfen von Dateien auf der Root-Partition (/) und geschützten Verzeichnissen auf Ihre ausdrückliche Anweisung hin.
+</item>
+        <item>
+Erweiterte Dateivorgänge: Durchführen des Kopierens, Verschiebens, Bearbeitens oder Löschens von Dateien an geschützten Speicherorten, wenn dies vom Benutzer angefordert wird.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 Wir verkaufen, vermieten, handeln, übertragen oder offenlegen Ihre persönlichen Daten oder Google-Nutzerdaten nicht an Dritte für Zwecke, die nicht direkt mit der Bereitstellung der Dateiverwaltungsfunktionen von Ultimate File Manager Pro zusammenhängen – Punkt.
@@ -1000,6 +1054,9 @@ Sprachauswahl (Cookie)
         <item>
 Wiedergabestatus
 </item>
+        <item>
+Medienwiedergabestatus
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1052,6 +1109,9 @@ Aktuelle Warteschlange, Wiedergabeposition und Player-Einstellungen zum Fortsetz
 </item>
         <item>
 Ein Cookie (ufm_lang) merkt sich Ihre Sprachauswahl während der Sitzung und über Browser-Neustarts hinweg · Webbrowser-Speicher
+</item>
+        <item>
+Ein Cookie (ufm_lang) merkt sich Ihre Sprachauswahl während der gesamten Sitzung und bei jedem Browser-Neustart. · Speicherung im Webbrowser
 </item>
     </string-array>
 
@@ -1123,6 +1183,9 @@ Dateiindizierung für schnelles Durchsuchen und Suchen erstellen und verwalten (
 </item>
         <item>
 Bereitstellung der Kernfunktionen der App
+</item>
+        <item>
+Bereitstellung zentraler App-Funktionen
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

@@ -12620,6 +12620,9 @@ E-mail de support copié dans le presse-papiers
     <string name="about_section_app">
 Informations sur l\\\'application
 </string>
+    <string name="about_section_system">
+Appareil et système
+</string>
     <string name="about_section_support">
 Développeur et liens
 </string>
@@ -13170,7 +13173,6 @@ Accès à tous les fichiers requis
     <string name="restricted_feature_dialog_desc">
 Cette fonctionnalité nécessite un accès illimité au stockage à l’échelle de l’appareil. Vous pouvez accorder l\'accès à tous les fichiers dans Paramètres ou continuer à utiliser les dossiers sélectionnés.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Supprimer l\'accès aux dossiers ?
@@ -13189,6 +13191,129 @@ Indexation de %1$s...
 </string>
     <string name="btn_manage">
 Gérer
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Statut racine
+</string>
+    <string name="root_status_not_rooted">
+Pas enraciné
+</string>
+    <string name="root_status_detected">
+Enraciné (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisk
+</string>
+    <string name="root_type_kernelsu">
+NoyauSU
+</string>
+    <string name="root_type_apatch">
+Un correctif
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+su binaire
+</string>
+    <string name="root_details_title">
+Diagnostic racine
+</string>
+    <string name="root_details_binaries">
+Fichiers binaires détectés : %1$s
+</string>
+    <string name="root_details_packages">
+Paquets détectés : %1$s
+</string>
+    <string name="root_details_test_keys">
+Balises de construction : Clés personnalisées/test
+</string>
+    <string name="root_details_none">
+Aucun binaire racine ou package de gestionnaire détecté sur cet appareil.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Accès racine
+</string>
+    <string name="icon_storage_root">
+Stockage racine
+</string>
+    <string name="root_storage_title">
+Stockage racine
+</string>
+    <string name="root_storage_subtitle">
+Partition système (/)
+</string>
+    <string name="settings_root_access_title">
+Accès racine
+</string>
+    <string name="settings_root_access_desc">
+Autoriser l\'accès superutilisateur élevé à la partition système et aux répertoires protégés
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Activé — Accès superutilisateur actif
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Désactivé
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Root non détecté sur cet appareil
+</string>
+    <string name="root_grant_dialog_title">
+Accorder l\'accès root ?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro demandera les autorisations de superutilisateur à votre gestionnaire racine (%1$s). Cela accorde l\'accès pour parcourir et gérer les fichiers au niveau du système.\n
+\n
+N\'accordez l\'accès root que si vous comprenez les risques liés à la modification des fichiers système.
+</string>
+    <string name="root_grant_dialog_grant">
+Accorder la racine
+</string>
+    <string name="root_denied_title">
+Autorisation racine refusée
+</string>
+    <string name="root_denied_desc">
+L\'accès superutilisateur a été refusé par votre gestionnaire racine. Les fonctionnalités racine resteront désactivées.
+</string>
+    <string name="root_requesting_title">
+Demande d\'accès root...
+</string>
+    <string name="root_storage_dialog_title">
+Stockage racine
+</string>
+    <string name="root_storage_dialog_desc">
+La partition racine (/) est accessible via les privilèges de superutilisateur.\n
+\n
+• Gestionnaire de racine : %1$s\n
+• Chemin de montage : /\n
+• Mode d\'accès : Superutilisateur actif
+</string>
+    <string name="backup_pref_root">
+Paramètres d\'accès racine
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Superuser access is required to access protected root directories.
+</string>
+    <string name="root_remount_failed">
+Échec du remontage de la partition en lecture-écriture.
+</string>
+    <string name="root_file_saved">
+Saved with superuser permissions
+</string>
+    <string name="root_posix_permissions">
+Permissions
+</string>
+    <string name="root_selinux_context">
+SELinux Context
+</string>
+    <string name="root_owner_group">
+Propriétaire / Groupe
+</string>
+    <string name="root_symlink_target">
+Cible du lien
 </string>
 </resources>
 

@@ -2,6 +2,9 @@ package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.os.Bundle
@@ -9,11 +12,14 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -39,6 +45,11 @@ class SettingsActivity : AppCompatActivity() {
     private var dividerAllFilesAccess: View? = null
     private var switchAllFilesAccess: SwitchMaterial? = null
     private var txtAllFilesAccessSubtitle: TextView? = null
+
+    private var cardRootAccess: View? = null
+    private var dividerRootAccess: View? = null
+    private var switchRootAccess: SwitchMaterial? = null
+    private var txtRootAccessSubtitle: TextView? = null
 
     private lateinit var switchHiddenFiles: SwitchMaterial
     private lateinit var txtHiddenFilesSubtitle: TextView
@@ -237,6 +248,28 @@ class SettingsActivity : AppCompatActivity() {
         } else {
             cardAllFilesAccess?.visibility = View.GONE
             dividerAllFilesAccess?.visibility = View.GONE
+        }
+
+        // Root Access toggle (Mobile only)
+        cardRootAccess = findViewById(R.id.cardRootAccess)
+        dividerRootAccess = findViewById(R.id.dividerRootAccess)
+        switchRootAccess = findViewById(R.id.switchRootAccess)
+        txtRootAccessSubtitle = findViewById(R.id.txtRootAccessSubtitle)
+
+        if (!isTv) {
+            cardRootAccess?.visibility = View.VISIBLE
+            dividerRootAccess?.visibility = View.VISIBLE
+            val rootEnabled = RootPreferenceManager.isRootEnabled(this)
+            switchRootAccess?.isChecked = rootEnabled
+            updateRootAccessSubtitle(rootEnabled)
+
+            cardRootAccess?.setOnClickListener {
+                toggleRootAccess()
+            }
+            switchRootAccess?.setOnCheckedChangeListener(null)
+        } else {
+            cardRootAccess?.visibility = View.GONE
+            dividerRootAccess?.visibility = View.GONE
         }
 
         // Hidden Files toggle
@@ -1099,6 +1132,9 @@ class SettingsActivity : AppCompatActivity() {
 
         // Apply custom icon overrides to settings cards
         applySettingsCardIcons()
+
+        // Refresh Root Access toggle & status
+        syncRootAccessStatus()
     }
 
     private fun updateApkExtractSubtitle() {
@@ -1187,6 +1223,135 @@ class SettingsActivity : AppCompatActivity() {
                 } catch (_: Exception) {}
             }
         }
+    }
+
+    private fun syncRootAccessStatus() {
+        if (!isTv) {
+            val rootEnabled = RootPreferenceManager.isRootEnabled(this)
+            switchRootAccess?.isChecked = rootEnabled
+            updateRootAccessSubtitle(rootEnabled)
+        }
+    }
+
+    private fun updateRootAccessSubtitle(enabled: Boolean) {
+        val txt = txtRootAccessSubtitle ?: return
+        if (!za.kilowatch.ultimatefilemanager.util.RootDetector.isRooted(this)) {
+            txt.text = getString(R.string.settings_root_access_disabled_unrooted)
+            switchRootAccess?.isEnabled = false
+            cardRootAccess?.alpha = 0.6f
+        } else {
+            switchRootAccess?.isEnabled = true
+            cardRootAccess?.alpha = 1.0f
+            txt.text = if (enabled) {
+                getString(R.string.settings_root_access_enabled_subtitle)
+            } else {
+                getString(R.string.settings_root_access_desc)
+            }
+        }
+    }
+
+    private fun toggleRootAccess() {
+        if (!za.kilowatch.ultimatefilemanager.util.RootDetector.isRooted(this)) {
+            Toast.makeText(this, R.string.settings_root_access_disabled_unrooted, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val current = switchRootAccess?.isChecked == true
+        if (current) {
+            // Toggling OFF
+            RootPreferenceManager.setRootEnabled(this, false)
+            switchRootAccess?.isChecked = false
+            updateRootAccessSubtitle(false)
+        } else {
+            // Toggling ON -> Prompt confirmation dialog first
+            showRootGrantConfirmationDialog()
+        }
+    }
+
+    private fun showRootGrantConfirmationDialog() {
+        val rootResult = za.kilowatch.ultimatefilemanager.util.RootDetector.detect(this)
+        val managerName = rootResult.rootType.getLocalizedName(this)
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        imgIcon?.setImageResource(R.drawable.ic_root_storage)
+        imgIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_granted))
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        txtTitle?.text = getString(R.string.root_grant_dialog_title)
+
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        txtMessage?.text = getString(R.string.root_grant_dialog_desc, managerName)
+
+        val btnPositive = dialogView.findViewById<MaterialButton>(R.id.btnDialogPositive)
+        btnPositive?.text = getString(R.string.root_grant_dialog_grant)
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            requestRootPermission()
+        }
+
+        val btnNegative = dialogView.findViewById<MaterialButton>(R.id.btnDialogNegative)
+        btnNegative?.setText(android.R.string.cancel)
+        btnNegative?.visibility = View.VISIBLE
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun requestRootPermission() {
+        Toast.makeText(this, R.string.root_requesting_title, Toast.LENGTH_SHORT).show()
+        RootPreferenceManager.requestRootAccess(this) { granted, errorMsg ->
+            if (granted) {
+                RootPreferenceManager.setRootEnabled(this, true)
+                switchRootAccess?.isChecked = true
+                updateRootAccessSubtitle(true)
+                Toast.makeText(this, R.string.settings_root_access_enabled_subtitle, Toast.LENGTH_SHORT).show()
+            } else {
+                RootPreferenceManager.setRootEnabled(this, false)
+                switchRootAccess?.isChecked = false
+                updateRootAccessSubtitle(false)
+                showRootDeniedDialog(errorMsg)
+            }
+        }
+    }
+
+    private fun showRootDeniedDialog(errorMsg: String?) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        imgIcon?.setImageResource(R.drawable.ic_shield_alert)
+        imgIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_denied))
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        txtTitle?.text = getString(R.string.root_denied_title)
+
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val details = if (!errorMsg.isNullOrBlank()) "\n\nDetails: $errorMsg" else ""
+        txtMessage?.text = getString(R.string.root_denied_desc) + details
+
+        val btnPositive = dialogView.findViewById<MaterialButton>(R.id.btnDialogPositive)
+        btnPositive?.text = getString(R.string.btn_ok)
+        btnPositive?.setOnClickListener { dialog.dismiss() }
+
+        val btnNegative = dialogView.findViewById<View>(R.id.btnDialogNegative)
+        btnNegative?.visibility = View.GONE
+
+        dialog.show()
     }
 
     private fun updateHiddenFilesSubtitle(enabled: Boolean) {
@@ -1762,6 +1927,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardMiniPlayer, "settings_mini_player", R.drawable.ic_list_view_custom),
             CardIcon(R.id.cardResumeAfterInterruption, "settings_resume_interruption", R.drawable.ic_phone),
             CardIcon(R.id.cardSkipLength, "settings_skip_length", R.drawable.ic_skip_forward),
+            CardIcon(R.id.cardRootAccess, "settings_root_access", R.drawable.ic_root_storage),
             CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
             CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size),
             CardIcon(R.id.cardGridIndicators, "settings_grid_indicators", R.drawable.ic_view_list),

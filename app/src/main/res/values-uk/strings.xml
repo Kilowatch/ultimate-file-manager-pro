@@ -12620,6 +12620,9 @@ support@kilowatch.co.za
     <string name="about_section_app">
 Інформація про застосунок
 </string>
+    <string name="about_section_system">
+Пристрій і система
+</string>
     <string name="about_section_support">
 Розробник і посилання
 </string>
@@ -13170,7 +13173,6 @@ No mounted folders remaining for this storage.
     <string name="restricted_feature_dialog_desc">
 Для цієї функції потрібен необмежений доступ до пам’яті всього пристрою. Ви можете надати доступ до всіх файлів у налаштуваннях або продовжити використання вибраних папок.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Скасувати доступ до папки?
@@ -13189,6 +13191,129 @@ No mounted folders remaining for this storage.
 </string>
     <string name="btn_manage">
 Керувати
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Кореневий статус
+</string>
+    <string name="root_status_not_rooted">
+Не рутований
+</string>
+    <string name="root_status_detected">
+Кореневі (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisk
+</string>
+    <string name="root_type_kernelsu">
+Ядро SU
+</string>
+    <string name="root_type_apatch">
+APatch
+</string>
+    <string name="root_type_supersu">
+СуперСУ
+</string>
+    <string name="root_type_generic">
+su двійковий
+</string>
+    <string name="root_details_title">
+Коренева діагностика
+</string>
+    <string name="root_details_binaries">
+Виявлено двійкові файли: %1$s
+</string>
+    <string name="root_details_packages">
+Виявлені пакети: %1$s
+</string>
+    <string name="root_details_test_keys">
+Теги збірки: Custom / Test-Keys
+</string>
+    <string name="root_details_none">
+На цьому пристрої не виявлено кореневих двійкових файлів або пакетів менеджера.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Кореневий доступ
+</string>
+    <string name="icon_storage_root">
+Кореневе сховище
+</string>
+    <string name="root_storage_title">
+Кореневе сховище
+</string>
+    <string name="root_storage_subtitle">
+Системний розділ (/)
+</string>
+    <string name="settings_root_access_title">
+Кореневий доступ
+</string>
+    <string name="settings_root_access_desc">
+Дозволити підвищений доступ суперкористувача до системного розділу та захищених каталогів
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Увімкнено — доступ суперкористувача активний
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Вимкнено
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Root не виявлено на цьому пристрої
+</string>
+    <string name="root_grant_dialog_title">
+Надати кореневий доступ?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro запитає дозволи суперкористувача у вашого кореневого менеджера (%1$s). Це надає доступ для перегляду файлів системного рівня та керування ними.\n
+\n
+Надавайте права root, лише якщо ви розумієте ризики змінення системних файлів.
+</string>
+    <string name="root_grant_dialog_grant">
+Надати Root
+</string>
+    <string name="root_denied_title">
+Root-дозвіл заборонено
+</string>
+    <string name="root_denied_desc">
+Ваш адміністратор root заборонив доступ суперкористувача. Кореневі функції залишаться вимкненими.
+</string>
+    <string name="root_requesting_title">
+Запит кореневого доступу...
+</string>
+    <string name="root_storage_dialog_title">
+Кореневе сховище
+</string>
+    <string name="root_storage_dialog_desc">
+Кореневий розділ (/) доступний через права суперкористувача.\n
+\n
+• Кореневий менеджер: %1$s\n
+• Шлях монтування: /\n
+• Режим доступу: Суперкористувач активний
+</string>
+    <string name="backup_pref_root">
+Налаштування кореневого доступу
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Для доступу до захищених кореневих каталогів потрібен доступ суперкористувача.
+</string>
+    <string name="root_remount_failed">
+Не вдалося перемонтувати розділ як читання та запис.
+</string>
+    <string name="root_file_saved">
+Збережено з правами суперкористувача
+</string>
+    <string name="root_posix_permissions">
+Дозволи
+</string>
+    <string name="root_selinux_context">
+Контекст SELinux
+</string>
+    <string name="root_owner_group">
+Власник / Група
+</string>
+    <string name="root_symlink_target">
+Link Target
 </string>
 </resources>
 

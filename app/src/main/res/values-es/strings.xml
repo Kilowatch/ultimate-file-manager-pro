@@ -12632,6 +12632,9 @@ Correo de soporte copiado al portapapeles
     <string name="about_section_app">
 Información de la app
 </string>
+    <string name="about_section_system">
+Dispositivo y sistema
+</string>
     <string name="about_section_support">
 Desarrollador y enlaces
 </string>
@@ -13182,7 +13185,6 @@ Se requiere acceso a todos los archivos
     <string name="restricted_feature_dialog_desc">
 Esta función requiere acceso al almacenamiento sin restricciones en todo el dispositivo. Puede otorgar acceso a todos los archivos en Configuración o continuar usando las carpetas seleccionadas.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 ¿Eliminar el acceso a la carpeta?
@@ -13201,6 +13203,129 @@ Indexando %1$s...
 </string>
     <string name="btn_manage">
 Administrar
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Estado de raíz
+</string>
+    <string name="root_status_not_rooted">
+No rooteado
+</string>
+    <string name="root_status_detected">
+Rooteado (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisco
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+Parche
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+binario
+</string>
+    <string name="root_details_title">
+Diagnóstico de raíz
+</string>
+    <string name="root_details_binaries">
+Binarios detectados: %1$s
+</string>
+    <string name="root_details_packages">
+Paquetes detectados: %1$s
+</string>
+    <string name="root_details_test_keys">
+Etiquetas de compilación: personalizadas/claves de prueba
+</string>
+    <string name="root_details_none">
+No se detectaron archivos binarios raíz ni paquetes de administrador en este dispositivo.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Acceso raíz
+</string>
+    <string name="icon_storage_root">
+Almacenamiento raíz
+</string>
+    <string name="root_storage_title">
+Almacenamiento raíz
+</string>
+    <string name="root_storage_subtitle">
+Partición del sistema (/)
+</string>
+    <string name="settings_root_access_title">
+Acceso raíz
+</string>
+    <string name="settings_root_access_desc">
+Permitir acceso elevado de superusuario a la partición del sistema y a los directorios protegidos
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Habilitado: acceso de superusuario activo
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Desactivado
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Root no detectado en este dispositivo
+</string>
+    <string name="root_grant_dialog_title">
+¿Otorgar acceso raíz?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro solicitará permisos de superusuario a su administrador raíz (%1$s). Esto otorga acceso para explorar y administrar archivos a nivel del sistema.\n
+\n
+Otorgue acceso raíz solo si comprende los riesgos de modificar archivos del sistema.
+</string>
+    <string name="root_grant_dialog_grant">
+Conceder raíz
+</string>
+    <string name="root_denied_title">
+Permiso raíz denegado
+</string>
+    <string name="root_denied_desc">
+Su administrador raíz denegó el acceso de superusuario. Las funciones raíz permanecerán deshabilitadas.
+</string>
+    <string name="root_requesting_title">
+Solicitando acceso raíz...
+</string>
+    <string name="root_storage_dialog_title">
+Almacenamiento raíz
+</string>
+    <string name="root_storage_dialog_desc">
+Se puede acceder a la partición raíz (/) mediante privilegios de superusuario.\n
+\n
+• Administrador raíz: %1$s\n
+• Ruta de montaje: /\n
+• Modo de acceso: Superusuario activo
+</string>
+    <string name="backup_pref_root">
+Configuración de acceso raíz
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Se requiere acceso de superusuario para acceder a los directorios raíz protegidos.
+</string>
+    <string name="root_remount_failed">
+No se pudo volver a montar la partición como lectura-escritura.
+</string>
+    <string name="root_file_saved">
+Guardado con permisos de superusuario
+</string>
+    <string name="root_posix_permissions">
+Permisos
+</string>
+    <string name="root_selinux_context">
+Contexto SELinux
+</string>
+    <string name="root_owner_group">
+Propietario / Grupo
+</string>
+    <string name="root_symlink_target">
+Destino del enlace
 </string>
 </resources>
 

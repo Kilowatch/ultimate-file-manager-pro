@@ -12620,6 +12620,9 @@ support@kilowatch.co.za
     <string name="about_section_app">
 ऐप जानकारी
 </string>
+    <string name="about_section_system">
+डिवाइस एवं सिस्टम
+</string>
     <string name="about_section_support">
 डेवलपर और लिंक
 </string>
@@ -13170,7 +13173,6 @@ No mounted folders remaining for this storage.
     <string name="restricted_feature_dialog_desc">
 इस सुविधा के लिए अप्रतिबंधित डिवाइस-व्यापी संग्रहण पहुंच की आवश्यकता होती है। आप सेटिंग्स में सभी फ़ाइलों तक पहुंच प्रदान कर सकते हैं या चयनित फ़ोल्डरों का उपयोग जारी रख सकते हैं।
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 फ़ोल्डर एक्सेस हटाएं?
@@ -13189,6 +13191,129 @@ No mounted folders remaining for this storage.
 </string>
     <string name="btn_manage">
 प्रबंधित करना
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+मूल स्थिति
+</string>
+    <string name="root_status_not_rooted">
+जड़ नहीं
+</string>
+    <string name="root_status_detected">
+रूट किया गया (%1$s)
+</string>
+    <string name="root_type_magisk">
+मैजिक
+</string>
+    <string name="root_type_kernelsu">
+कर्नेलएसयू
+</string>
+    <string name="root_type_apatch">
+एपैच
+</string>
+    <string name="root_type_supersu">
+सुपरएसयू
+</string>
+    <string name="root_type_generic">
+सु बाइनरी
+</string>
+    <string name="root_details_title">
+जड़ निदान
+</string>
+    <string name="root_details_binaries">
+पता लगाए गए बायनेरिज़: %1$s
+</string>
+    <string name="root_details_packages">
+पता लगाए गए पैकेज: %1$s
+</string>
+    <string name="root_details_test_keys">
+बिल्ड टैग: कस्टम / टेस्ट-कुंजियाँ
+</string>
+    <string name="root_details_none">
+इस डिवाइस पर कोई रूट बायनेरिज़ या मैनेजर पैकेज नहीं पाया गया।
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+रूट एक्सेस
+</string>
+    <string name="icon_storage_root">
+जड़ भंडारण
+</string>
+    <string name="root_storage_title">
+जड़ भंडारण
+</string>
+    <string name="root_storage_subtitle">
+सिस्टम विभाजन (/)
+</string>
+    <string name="settings_root_access_title">
+रूट एक्सेस
+</string>
+    <string name="settings_root_access_desc">
+सिस्टम विभाजन और संरक्षित निर्देशिकाओं के लिए उन्नत सुपरयूज़र एक्सेस की अनुमति दें
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+सक्षम - सुपरयूजर एक्सेस सक्रिय
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+अक्षम
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+इस डिवाइस पर रूट का पता नहीं चला
+</string>
+    <string name="root_grant_dialog_title">
+रूट एक्सेस प्रदान करें?
+</string>
+    <string name="root_grant_dialog_desc">
+अल्टीमेट फाइल मैनेजर प्रो आपके रूट मैनेजर (%1$s) से सुपरयूजर अनुमतियों का अनुरोध करेगा। यह सिस्टम-स्तरीय फ़ाइलों को ब्राउज़ करने और प्रबंधित करने की पहुंच प्रदान करता है।\n
+\n
+यदि आप सिस्टम फ़ाइलों को संशोधित करने के जोखिमों को समझते हैं तो केवल रूट एक्सेस प्रदान करें।
+</string>
+    <string name="root_grant_dialog_grant">
+ग्रांट रूट
+</string>
+    <string name="root_denied_title">
+रूट अनुमति अस्वीकृत
+</string>
+    <string name="root_denied_desc">
+आपके रूट मैनेजर द्वारा सुपरयूज़र एक्सेस अस्वीकृत कर दिया गया था। रूट सुविधाएँ अक्षम रहेंगी.
+</string>
+    <string name="root_requesting_title">
+रूट एक्सेस का अनुरोध किया जा रहा है...
+</string>
+    <string name="root_storage_dialog_title">
+जड़ भंडारण
+</string>
+    <string name="root_storage_dialog_desc">
+रूट विभाजन (/) सुपरयूजर विशेषाधिकारों के माध्यम से पहुंच योग्य है।\n
+\n
+• रूट प्रबंधक: %1$s\n
+• माउंट पथ: /\n
+• एक्सेस मोड: सुपरयूजर सक्रिय
+</string>
+    <string name="backup_pref_root">
+रूट एक्सेस सेटिंग्स
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+संरक्षित रूट निर्देशिकाओं तक पहुँचने के लिए सुपरयूज़र एक्सेस की आवश्यकता होती है।
+</string>
+    <string name="root_remount_failed">
+विभाजन को पढ़ने-लिखने के रूप में पुनः माउंट करने में विफल।
+</string>
+    <string name="root_file_saved">
+सुपरयूजर अनुमतियों के साथ सहेजा गया
+</string>
+    <string name="root_posix_permissions">
+अनुमतियां
+</string>
+    <string name="root_selinux_context">
+SELinux प्रसंग
+</string>
+    <string name="root_owner_group">
+स्वामी/समूह
+</string>
+    <string name="root_symlink_target">
+लिंक लक्ष्य
 </string>
 </resources>
 

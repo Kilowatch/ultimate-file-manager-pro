@@ -4,6 +4,9 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -14,11 +17,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.support.SupportActivity
 import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.RootDetector
 
 /**
  * FOSS build override for AboutActivity.
@@ -83,14 +88,18 @@ class AboutActivity : AppCompatActivity() {
         // Back button
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
-            val whiteCsl  = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val whiteCsl  = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
             }
         }
         btnBack?.setOnClickListener { finish() }
+
+        if (!isTv) {
+            setupRootStatus()
+        }
 
         // Support Email row
         findViewById<View?>(R.id.cardSupportEmail)?.setOnClickListener {
@@ -130,6 +139,56 @@ class AboutActivity : AppCompatActivity() {
         // Report a Bug button — links to GitHub Issues
         val btnReportBug = findViewById<View?>(R.id.btnReportBug)
         btnReportBug?.setOnClickListener { openUrl(GITHUB_ISSUES_URL) }
+    }
+
+    private fun setupRootStatus() {
+        val rootResult = RootDetector.detect(this)
+        val txtRootStatus = findViewById<TextView?>(R.id.txtRootStatus)
+        val imgRootStatusIcon = findViewById<ImageView?>(R.id.imgRootStatusIcon)
+        val cardRootStatus = findViewById<View?>(R.id.cardRootStatus)
+
+        txtRootStatus?.text = rootResult.getSummary(this)
+        if (rootResult.isRooted) {
+            imgRootStatusIcon?.setImageResource(R.drawable.ic_shield_alert)
+            imgRootStatusIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_denied))
+        } else {
+            imgRootStatusIcon?.setImageResource(R.drawable.ic_shield_check)
+            imgRootStatusIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_granted))
+        }
+
+        cardRootStatus?.setOnClickListener {
+            showRootDiagnosticsDialog()
+        }
+    }
+
+    private fun showRootDiagnosticsDialog() {
+        val result = RootDetector.detect(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        imgIcon?.setImageResource(if (result.isRooted) R.drawable.ic_shield_alert else R.drawable.ic_shield_check)
+        val tintColor = if (result.isRooted) getColor(R.color.ufm_denied) else getColor(R.color.ufm_granted)
+        imgIcon?.imageTintList = ColorStateList.valueOf(tintColor)
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        txtTitle?.text = getString(R.string.root_details_title)
+
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        txtMessage?.text = result.getDetailedReport(this)
+
+        val btnOk = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+        btnOk?.text = getString(R.string.btn_ok)
+        btnOk?.setOnClickListener { dialog.dismiss() }
+
+        val btnNegative = dialogView.findViewById<View?>(R.id.btnDialogNegative)
+        btnNegative?.visibility = View.GONE
+
+        dialog.show()
     }
 
     private fun openUrl(url: String) {

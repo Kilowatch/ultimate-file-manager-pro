@@ -46,6 +46,9 @@ Ultimate File Manager Pro\'yu indirerek veya kullanarak bu Şartları kabul etmi
     <string name="tc_s3b_title">
 3b. RClone Bulut Entegrasyonu
 </string>
+    <string name="tc_s3c_title">
+3c. Köklü Cihazlar ve Süper Kullanıcı Ayrıcalıkları
+</string>
     <string name="tc_s4_title">
 4. Sorumluluklarınız
 </string>
@@ -133,6 +136,9 @@ Bulut sağlayıcı API\'leri ve uç noktaları bildirim yapılmadan değişebile
     </string-array>
     <string name="tc_s3b_summary">
 RClone üzerinden bulut sürücülerine bağlanma işlemi doğrudan telefonunuzdan veya TV\'nizden yapılır. Bulut dosyalarınızı veya şifrelerinizi asla görmeyiz. Şifreleriniz telefonunuzda şifrelenir ve yapılandırdığınız bulut sağlayıcısının şartlarına tabisiniz.
+</string>
+    <string name="tc_s3c_body">
+Root erişimli bir mobil cihazda Root Erişimini etkinleştirmeyi seçtiğinizde Ultimate File Manager Pro, kurulu kök yöneticinizden (Magisk, KernelSU, APatch, SuperSU) Süper Kullanıcı izinleri istemek için libsu kitaplığını kullanır. Süper kullanıcı erişimi, cihazınızın sistem bölümlerinde (kök / bağlama noktası dahil) sınırsız okuma ve yazma yetenekleri sağlar. Sistem dosyalarını değiştirmek, yeniden adlandırmak veya silmek, kalıcı işletim sistemi bozulması, önyükleme döngüleri, veri kaybı veya tuğla oluşturma gibi ciddi riskler taşır. Root Erişimini kullanma riskinin tamamen size ait olduğunu kabul edersiniz. KiloWatch, root işlemlerinden kaynaklanan cihaz kararsızlığı, donanım arızası veya veri kaybı konusunda hiçbir sorumluluk kabul etmez.
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ GIF Oluşturucu — seçilen görüntülerden özel kare hızı, yeniden boyutla
         <item>
 Fotoğraf EXIF Araçları — fotoğraf EXIF ve GPS meta verilerini inceleyin, özel coğrafi etiketleri ve cihaz bilgilerini temizleyin, fotoğrafları çekim zaman damgaları ve kamera meta verilerini kullanarak toplu yeniden adlandırın.
 </item>
+        <item>
+Fotoğraf EXIF ​​Araçları — fotoğraf EXIF ​​ve GPS meta verilerini inceleyin, özel coğrafi etiketleri ve cihaz bilgilerini temizleyin ve yakalama zaman damgalarını ve kamera meta verilerini kullanarak fotoğrafları toplu olarak yeniden adlandırın.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -281,6 +290,9 @@ Dizinleyici Doğruluğu
 </item>
         <item>
 Hatalar ve Sorunlar
+</item>
+        <item>
+Sorumluluğumuz
 </item>
         <item>
 Sorumluluğumuz
@@ -325,6 +337,9 @@ Hiçbir yazılım mükemmel değildir. Uygulamanın her zaman hatasız veya kesi
 </item>
         <item>
 Toplam sorumluluğumuz, herhangi bir talepten önceki 30 gün içinde uygulama içi satın almalar için ödediğiniz toplam tutarla sınırlıdır. Ücretsiz özelliklerden kaynaklanan veri kaybı, cihaz hasarı veya kar kaybından sorumlu değiliz.
+</item>
+        <item>
+Toplam sorumluluğumuz, herhangi bir talepten önceki 30 gün içinde uygulama içi satın alımlar için ödediğiniz toplam tutarla sınırlıdır. Ücretsiz özelliklerden kaynaklanan veri kaybı, cihaz hasarı veya kar kaybından sorumlu değiliz.
 </item>
     </string-array>
 
@@ -371,6 +386,9 @@ Dizinlenmiş kayıtlarınızı sorumlu bir şekilde yönetin — kayıtları ist
 </item>
         <item>
 APK dosyalarını yüklemeden önce orijinalliğini ve güvenliğini doğrulayın.
+</item>
+        <item>
+Herhangi bir APK dosyasını yüklemeden önce orijinalliğini ve güvenliğini doğrulayın.
 </item>
     </string-array>
 
@@ -430,6 +448,9 @@ Bluetooth
         <item>
 Titreşim
 </item>
+        <item>
+Titreşim
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -485,6 +506,9 @@ Eşleştirilmiş Android TV\'nize bağlanarak uzaktan kumanda için Bluetooth kl
 </item>
         <item>
 TV Uzaktan Kumandası\'ndaki düğmelere basıldığında dokunsal geri bildirim sağlar.
+</item>
+        <item>
+TV Uzaktan Kumandasındaki düğmelere basıldığında dokunsal geri bildirim sağlar.
 </item>
     </string-array>
 
@@ -616,6 +640,9 @@ AndroidX ExifInterface (androidx.exifinterface:exifinterface) — JPEG, PNG, Web
         <item>
 Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın alımlarını işler. (Tescilli)
 </item>
+        <item>
+Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi ipucu satın alımlarını işler. (Tescilli)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ Dosyalarınız cihazınızda kalır — biz onları asla görmeyiz. Rızanızla,
 </string>
     <string name="pp_s6b_title">
 6b. RClone Bulut Entegrasyonu — Gizlilik ve Uyumluluk
+</string>
+    <string name="pp_s6c_title">
+6c. Root Erişimli Cihazlar ve Süper Kullanıcı Erişimi — Gizlilik ve Uyumluluk
 </string>
     <string name="pp_s7_title">
 7. Veri Paylaşımı ve Üçüncü Taraflar
@@ -842,6 +872,30 @@ Uzaktan Gezinme: Uzak bulut depolama içeriğinizi görüntülemek için klasör
 Dosya İşlemleri: Açık talebiniz üzerine uzak depolama alanınızda dosyaları yükleme, indirme, yeniden adlandırma, kopyalama, taşıma veya silme.
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+Desteklenen mobil cihazlarda Kök Erişimi, libsu çerçevesini kullanarak kesinlikle cihaz üzerinde çalışır. Hiçbir yükseltilmiş komut verisi veya sistem dosyası asla toplanmaz veya iletilmez.
+</string>
+    <string name="pp_s6c_intro">
+Root erişimli bir mobil cihazda Root Erişimi etkinleştirildiğinde, tüm süper kullanıcı komutları, kök kabuk oturumları ve bölümleme işlemleri kesinlikle cihaz üzerinde yürütülür. Ultimate File Manager Pro, herhangi bir kök bölüm dosyasını, sistem ikili dosyasını veya süper kullanıcı kimlik bilgilerini KiloWatch sunucularına veya herhangi bir üçüncü tarafa iletmez, kaydetmez, yüklemez veya paylaşmaz. Kök ayrıcalıkları yalnızca açık kullanıcı eylemi üzerine başlatılır ve Ayarlar → Kök Erişimi aracılığıyla herhangi bir zamanda iptal edilebilir.
+</string>
+    <string name="pp_s6c_local_heading">
+Cihaz Üzerinde Kök Yürütme
+</string>
+    <string name="pp_s6c_local_body">
+Tüm kök komutları ve G/Ç akışları, libsu ve kurulu kök yöneticiniz (Magisk, KernelSU, APatch, SuperSU) tarafından yönetilen yerel bir kök işlemi aracılığıyla gerçekleştirilir. Hiçbir kök kimlik bilgisi, su anahtarı veya komut günlüğü uzaktan saklanmaz veya cihazınızın dışına aktarılmaz.
+</string>
+    <string name="pp_s6c_permitted_heading">
+Kök Erişiminin İzin Verilen Kullanımları
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+Sistem Bölümüne Göz Atma: Açık talimatınız doğrultusunda kök (/) bölümdeki ve korumalı dizinlerdeki dosyalara göz atma ve inceleme.
+</item>
+        <item>
+Yükseltilmiş Dosya İşlemleri: Kullanıcının talebi üzerine korumalı depolama konumlarında dosya kopyalama, taşıma, düzenleme veya silme işlemlerinin gerçekleştirilmesi.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 Kişisel bilgilerinizi veya Google kullanıcı verilerinizi, Ultimate File Manager Pro\'nun dosya yönetimi özelliklerini sağlamakla doğrudan ilgili olmayan herhangi bir amaçla hiçbir üçüncü tarafa satmaz, kiralamaz, takas etmez, aktarmaz veya ifşa etmeyiz — nokta.
@@ -1000,6 +1054,9 @@ Dil Seçimi (Çerez)
         <item>
 Medya Oynatma Durumu
 </item>
+        <item>
+Medya Oynatma Durumu
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1052,6 +1109,9 @@ Kaldığınız yerden devam etmek için mevcut sıra, oynatma konumu ve oynatıc
 </item>
         <item>
 Bir çerez (ufm_lang), oturum boyunca ve tarayıcı yeniden başlatmalarında dil seçiminizi hatırlar · Web tarayıcı depolama alanı
+</item>
+        <item>
+Bir çerez (ufm_lang), oturum boyunca ve tarayıcı yeniden başlatıldığında dil seçiminizi hatırlar · Web tarayıcısı depolama alanı
 </item>
     </string-array>
 
@@ -1123,6 +1183,9 @@ Hızlı gezinti ve arama için dosya dizin oluşturma ve bakımını yap (Ayarla
 </item>
         <item>
 Temel uygulama işlevselliği sağla
+</item>
+        <item>
+Temel uygulama işlevselliğini sağlayın
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

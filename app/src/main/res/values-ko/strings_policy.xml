@@ -46,6 +46,9 @@ Ultimate File Manager Pro를 다운로드하거나 사용함으로써 귀하는 
     <string name="tc_s3b_title">
 3b. RClone 클라우드 통합
 </string>
+    <string name="tc_s3c_title">
+3c. 루팅된 장치 및 수퍼유저 권한
+</string>
     <string name="tc_s4_title">
 4. 사용자의 책임
 </string>
@@ -133,6 +136,9 @@ RClone과 통합된 클라우드 스토리지 사용은 해당 클라우드 제�
     </string-array>
     <string name="tc_s3b_summary">
 RClone을 통한 클라우드 드라이브 연결은 휴대폰 또는 TV에서 직접 이루어집니다. 당사는 귀하의 클라우드 파일이나 비밀번호를 볼 수 없습니다. 비밀번호는 휴대폰에서 암호화되며, 귀하는 구성한 클라우드 제공업체의 약관을 따릅니다.
+</string>
+    <string name="tc_s3c_body">
+루팅된 모바일 장치에서 루트 액세스를 활성화하도록 선택하면 Ultimate File Manager Pro는 libsu 라이브러리를 사용하여 설치된 루트 관리자(Magisk, KernelSU, APatch, SuperSU)에 수퍼유저 권한을 요청합니다. 수퍼유저 액세스는 장치의 시스템 파티션(루트/마운트 지점 포함)에 걸쳐 무제한 읽기 및 쓰기 기능을 부여합니다. 시스템 파일을 수정하거나 이름을 바꾸거나 삭제하면 영구적인 OS 손상, 부트 루프, 데이터 손실 또는 벽돌화를 포함한 심각한 위험이 따릅니다. 귀하는 전적으로 귀하의 책임하에 루트 액세스를 사용한다는 것을 인정합니다. KiloWatch는 루트 작업으로 인해 발생하는 장치 불안정, 하드웨어 오류 또는 데이터 손실에 대해 책임을 지지 않습니다.
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ GIF 생성기 — 선택한 이미지에서 맞춤 프레임 속도, 크기 조�
         <item>
 사진 EXIF 도구 — 사진의 EXIF 및 GPS 메타데이터를 확인하고, 개인 지오태그와 기기 정보를 제거하며, 촬영 타임스탬프와 카메라 메타데이터를 사용하여 사진을 일괄 이름 변경합니다.
 </item>
+        <item>
+사진 EXIF ​​도구 — 사진 EXIF ​​및 GPS 메타데이터를 검사하고, 개인 위치 태그 및 장치 정보를 삭제하고, 캡처 타임스탬프와 카메라 메타데이터를 사용하여 사진 이름을 일괄적으로 바꿉니다.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -285,6 +294,9 @@ TV 스크린샷
         <item>
 당사의 책임
 </item>
+        <item>
+우리의 책임
+</item>
     </string-array>
     <string-array name="tc_risk_details">
         <item>
@@ -325,6 +337,9 @@ Shizuku, Shevery 또는 ADB를 상승된 액세스에 사용하면 앱이 시스
 </item>
         <item>
 당사의 총 책임은 청구 전 30일 이내에 인앱 구매에 지불한 총 금액으로 제한됩니다. 무료 기능으로 인한 데이터 손실, 기기 손상 또는 손실된 이익에 대해 당사는 책임을 지지 않습니다.
+</item>
+        <item>
+당사의 총 책임은 청구 전 30일 동안 귀하가 인앱 구매에 대해 지불한 총액으로 제한됩니다. 무료 기능으로 인해 발생하는 데이터 손실, 기기 손상, 이익 손실에 대해 당사는 책임을 지지 않습니다.
 </item>
     </string-array>
 
@@ -371,6 +386,9 @@ Shizuku 또는 Shevery Manager를 안전하게 보호하십시오. Shizuku 또�
 </item>
         <item>
 APK 파일을 설치하기 전에 해당 파일의 신뢰성과 안전성을 확인하십시오.
+</item>
+        <item>
+APK 파일을 설치하기 전에 해당 파일의 신뢰성과 안전성을 확인하세요.
 </item>
     </string-array>
 
@@ -430,6 +448,9 @@ ADB 디버그 브리지
         <item>
 진동
 </item>
+        <item>
+떨리다
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -485,6 +506,9 @@ Google Play를 통해 선택적 팁 항아리 구매를 처리합니다.
 </item>
         <item>
 TV 리모컨의 버튼을 누를 때 햅틱 피드백을 제공합니다.
+</item>
+        <item>
+TV 리모컨의 버튼을 누를 때 촉각 피드백을 제공합니다.
 </item>
     </string-array>
 
@@ -616,6 +640,9 @@ AndroidX ExifInterface (androidx.exifinterface:exifinterface) — JPEG, PNG, Web
         <item>
 Amazon Appstore SDK — Amazon 기기에서 선택적 인앱 팁 구매를 처리합니다. (사유)
 </item>
+        <item>
+Amazon Appstore SDK — Amazon 장치에서 선택적 인앱 팁 구매를 처리합니다. (소유권)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ support@kilowatch.co.za
 </string>
     <string name="pp_s6b_title">
 6b. RClone 클라우드 통합 — 개인정보 보호 및 규정 준수
+</string>
+    <string name="pp_s6c_title">
+6c. 루팅된 장치 및 수퍼유저 액세스 — 개인 정보 보호 및 규정 준수
 </string>
     <string name="pp_s7_title">
 7. 데이터 공유 및 제3자
@@ -840,6 +870,30 @@ RClone 스토리지 구성을 위해 입력된 모든 비밀번호, 토큰 또�
 파일 작업: 귀하의 명시적 요청에 따라 원격 저장소에서 파일을 업로드, 다운로드, 이름 변경, 복사, 이동 또는 삭제합니다.
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+지원되는 모바일 장치의 루트 액세스는 libsu 프레임워크를 사용하여 장치 내에서 엄격하게 작동합니다. 승격된 명령 데이터나 시스템 파일은 수집되거나 전송되지 않습니다.
+</string>
+    <string name="pp_s6c_intro">
+루팅된 모바일 장치에서 루트 액세스가 활성화되면 모든 수퍼유저 명령, 루트 셸 세션 및 파티션 작업은 엄격하게 장치 내에서 실행됩니다. Ultimate File Manager Pro는 루트 파티션 파일, 시스템 바이너리 또는 수퍼유저 자격 증명을 KiloWatch 서버 또는 제3자에게 전송, 기록, 업로드 또는 공유하지 않습니다. 루트 권한은 명시적인 사용자 작업이 있을 때만 호출되며 설정 → 루트 액세스를 통해 언제든지 취소할 수 있습니다.
+</string>
+    <string name="pp_s6c_local_heading">
+온디바이스 루트 실행
+</string>
+    <string name="pp_s6c_local_body">
+모든 루트 명령과 I/O 스트림은 libsu와 설치된 루트 관리자(Magisk, KernelSU, APatch, SuperSU)가 관리하는 로컬 루트 프로세스를 통해 처리됩니다. 루트 자격 증명, su 키 또는 명령 로그는 원격으로 저장되거나 장치 외부로 전송되지 않습니다.
+</string>
+    <string name="pp_s6c_permitted_heading">
+루트 액세스의 허용된 사용
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+시스템 파티션 검색: 명시적인 지시에 따라 루트(/) 파티션과 보호된 디렉터리의 파일을 검색하고 검사합니다.
+</item>
+        <item>
+승격된 파일 작업: 사용자가 요청할 때 보호된 저장 위치에서 파일 복사, 이동, 편집 또는 삭제를 수행합니다.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 당사는 Ultimate File Manager Pro의 파일 관리 기능 제공과 직접 관련되지 않은 목적으로 귀하의 개인 정보나 Google 사용자 데이터를 제3자에게 판매, 임대, 교환, 이전 또는 공개하지 않습니다. 명백합니다.
@@ -998,6 +1052,9 @@ S3 / S3 호환 저장소 자격 증명(AWS S3, MinIO, IDrive E2 등)
         <item>
 미디어 재생 상태
 </item>
+        <item>
+미디어 재생 상태
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1050,6 +1107,9 @@ S3 버킷 연결을 위한 액세스 키 ID 및 시크릿 액세스 키 · 앱 �
 </item>
         <item>
 쿠키(ufm_lang)는 세션 및 브라우저 재시작 전반에 걸쳐 언어 선택을 기억합니다 · 웹 브라우저 저장소
+</item>
+        <item>
+쿠키(ufm_lang)는 세션 전체와 브라우저 재시작 시 귀하의 언어 선택을 기억합니다. · 웹 브라우저 저장
 </item>
     </string-array>
 
@@ -1118,6 +1178,9 @@ PIN 또는 복구 코드
 </item>
         <item>
 빠른 탐색 및 검색을 위한 파일 인덱싱 생성 및 유지(설정 -> 저장소 인덱서를 통해 관리 가능)
+</item>
+        <item>
+핵심 앱 기능 제공
 </item>
         <item>
 핵심 앱 기능 제공

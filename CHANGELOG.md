@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.9.4] — 2026-08-31
 
+### Added
+- **Root Detection Engine (Phase 1 — Mobile Only)**:
+  - Implemented multi-vector passive root detection (`RootDetector.kt`) checking filesystem binaries, `PATH` environment, installed root managers (Magisk, KernelSU, APatch, SuperSU), and custom ROM build tags without triggering intrusive superuser prompts.
+  - Added Root Status card to the Mobile About screen with an interactive diagnostics dialog displaying detected root environment details.
+  - Added root diagnostic metadata (`is_rooted`, `root_type`) to Support Ticket submissions.
+- **Root Access Integration & Superuser Authorization (Phase 2 — Mobile Only)**:
+  - Integrated `libsu` 6.0.0 (`core` and `nio`) for asynchronous superuser privilege management and high-performance root I/O streams.
+  - Added Root Access toggle to Settings with dynamic root manager detection, glassmorphic safety confirmation, and denial guidance dialogs.
+  - Added Root Storage tile to the Main Menu, dynamically displayed under connected storages when root access is authorized.
+  - Added Root Storage vector icon (`ic_root_storage`) with complete icon customization and icon pack export/import support.
+  - Added `root_preferences` registration to Settings Backup & Restore.
+  - Updated Terms & Conditions (Section 3c) and Privacy Policy (Section 6c) for rooted devices and local superuser compliance.
+- **Root Filesystem Browsing & Universal I/O Engine (Phase 3 — Mobile Only)**:
+  - Added full root filesystem browsing at `/` with live directory listing, file/folder creation, deletion, renaming, paste I/O, breadcrumbs, and back navigation in File Browser and Twin Window dual-pane modes.
+  - Universal Root Transfers & Conflict Resolution: Bidirectional file copy and move between Local storage, Network shares, SAF storage, Online Cloud providers, and Root filesystem with Overwrite, Skip, and Keep Both conflict resolution.
+  - Root Text Editing: View and edit root configuration and system text files in built-in Text Viewer/Editor with automatic partition remounting (`rw`/`ro`).
+  - Root File Properties: Asynchronous inspection of POSIX permissions (e.g. `rwxr-xr-x (0755)`), owner/group (`root : root`), SELinux security context, and recursive folder size statistics.
+  - Added ProGuard keep rules for `libsu` superuser engine.
+
 ### Fixed
 - Fixed Android TV media player seek bar jumping back to the current playback position during D-pad seeking, now holding the target seek position until confirmed with the D-pad Center / OK button.
 - Fixed Sort & Filter behavior inside Storage Analyzer → Storage Breakdown categories on Mobile and Android TV:

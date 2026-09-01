@@ -46,6 +46,9 @@ Dengan mengunduh atau menggunakan Ultimate File Manager Pro, Anda menerima Keten
     <string name="tc_s3b_title">
 3b. Integrasi Cloud RClone
 </string>
+    <string name="tc_s3c_title">
+3c. Perangkat yang Di-Root &amp; Hak Istimewa Pengguna Super
+</string>
     <string name="tc_s4_title">
 4. Tanggung Jawab Anda
 </string>
@@ -133,6 +136,9 @@ Karena API dan titik akhir penyedia cloud dapat berubah tanpa pemberitahuan, kam
     </string-array>
     <string name="tc_s3b_summary">
 Menghubungkan ke drive cloud melalui RClone dilakukan langsung dari ponsel atau TV Anda. Kami tidak pernah melihat file atau kata sandi cloud Anda. Kata sandi Anda dienkripsi di ponsel Anda, dan Anda tunduk pada ketentuan penyedia cloud mana pun yang Anda konfigurasi.
+</string>
+    <string name="tc_s3c_body">
+Saat Anda memilih untuk mengaktifkan Akses Root pada perangkat seluler yang di-rooting, Ultimate File Manager Pro menggunakan perpustakaan libsu untuk meminta izin Pengguna Super dari manajer root yang Anda instal (Magisk, KernelSU, APatch, SuperSU). Akses pengguna super memberikan kemampuan membaca dan menulis tanpa batas di seluruh partisi sistem perangkat Anda (termasuk titik root/mount). Memodifikasi, mengganti nama, atau menghapus file sistem memiliki risiko besar, termasuk kerusakan OS permanen, bootloop, kehilangan data, atau bricking. Anda mengakui bahwa Anda menggunakan Akses Root sepenuhnya risiko Anda sendiri. KiloWatch tidak bertanggung jawab atas ketidakstabilan perangkat, kegagalan perangkat keras, atau kehilangan data yang timbul dari operasi root.
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ Pembuat GIF — buat file GIF animasi dari gambar yang dipilih dengan kecepatan 
         <item>
 Alat EXIF Foto — periksa metadata EXIF dan GPS foto, bersihkan geotag pribadi dan informasi perangkat, serta ubah nama foto secara massal menggunakan stempel waktu pengambilan dan metadata kamera.
 </item>
+        <item>
+Alat EXIF ​​Foto — memeriksa EXIF ​​foto dan metadata GPS, menghapus geotag pribadi dan informasi perangkat, dan mengganti nama foto secara batch menggunakan stempel waktu pengambilan dan metadata kamera.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -281,6 +290,9 @@ Akurasi Pengindeks
 </item>
         <item>
 Bug &amp; Kesalahan
+</item>
+        <item>
+Tanggung Jawab Kami
 </item>
         <item>
 Tanggung Jawab Kami
@@ -325,6 +337,9 @@ Tidak ada perangkat lunak yang sempurna. Kami tidak dapat menjamin aplikasi akan
 </item>
         <item>
 Total tanggung jawab kami dibatasi pada jumlah total yang Anda bayarkan untuk pembelian dalam aplikasi dalam 30 hari sebelum klaim. Kami tidak bertanggung jawab atas kehilangan data, kerusakan perangkat, atau kehilangan keuntungan yang timbul dari fitur gratis.
+</item>
+        <item>
+Tanggung jawab total kami dibatasi pada jumlah total yang Anda bayarkan untuk pembelian dalam aplikasi dalam 30 hari sebelum klaim apa pun. Kami tidak bertanggung jawab atas kehilangan data, kerusakan perangkat, atau hilangnya keuntungan yang timbul dari fitur gratis.
 </item>
     </string-array>
 
@@ -371,6 +386,9 @@ Kelola catatan terindeks Anda secara bertanggung jawab — Anda dapat menghapus 
 </item>
         <item>
 Verifikasi keaslian dan keamanan berkas APK sebelum menginstalnya.
+</item>
+        <item>
+Verifikasi keaslian dan keamanan file APK apa pun sebelum menginstalnya.
 </item>
     </string-array>
 
@@ -430,6 +448,9 @@ Bluetooth
         <item>
 Getar
 </item>
+        <item>
+Bergetar
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -485,6 +506,9 @@ Terhubung ke Android TV yang dipasangkan untuk bertindak sebagai keyboard dan mo
 </item>
         <item>
 Memberikan umpan balik haptik saat menekan tombol pada Remote TV.
+</item>
+        <item>
+Memberikan umpan balik haptik saat menekan tombol di Remote TV.
 </item>
     </string-array>
 
@@ -616,6 +640,9 @@ AndroidX ExifInterface (androidx.exifinterface:exifinterface) — pustaka untuk 
         <item>
 Amazon Appstore SDK — memproses pembelian tip opsional dalam aplikasi di perangkat Amazon. (Proprietary)
 </item>
+        <item>
+Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di perangkat Amazon. (Hak milik)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ File Anda tetap berada di perangkat Anda — kami tidak pernah melihatnya. Denga
 </string>
     <string name="pp_s6b_title">
 6b. Integrasi Cloud RClone — Privasi &amp; Kepatuhan
+</string>
+    <string name="pp_s6c_title">
+6c. Perangkat yang Di-Root &amp; Akses Pengguna Super — Privasi &amp; Kepatuhan
 </string>
     <string name="pp_s7_title">
 7. Berbagi Data &amp; Pihak Ketiga
@@ -840,6 +870,30 @@ Penjelajahan Jarak Jauh: Mengambil struktur folder dan metadata file untuk menam
 Operasi File: Mengunggah, mengunduh, mengganti nama, menyalin, memindahkan, atau menghapus file di penyimpanan jarak jauh Anda atas permintaan eksplisit Anda.
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+Akses Root pada perangkat seluler yang didukung beroperasi secara ketat pada perangkat menggunakan kerangka libsu. Tidak ada data perintah atau file sistem yang ditinggikan yang dikumpulkan atau dikirimkan.
+</string>
+    <string name="pp_s6c_intro">
+Ketika Akses Root diaktifkan pada perangkat seluler yang di-rooting, semua perintah pengguna super, sesi shell root, dan operasi partisi dijalankan secara ketat di perangkat. Ultimate File Manager Pro tidak mengirimkan, mencatat, mengunggah, atau membagikan file partisi root, biner sistem, atau kredensial pengguna super apa pun ke server KiloWatch atau pihak ketiga mana pun. Hak istimewa root hanya dipanggil atas tindakan pengguna eksplisit dan dapat dicabut kapan saja melalui Pengaturan → Akses Root.
+</string>
+    <string name="pp_s6c_local_heading">
+Eksekusi Root Pada Perangkat
+</string>
+    <string name="pp_s6c_local_body">
+Semua perintah root dan aliran I/O ditangani melalui proses root lokal yang dikelola oleh libsu dan root manager yang Anda instal (Magisk, KernelSU, APatch, SuperSU). Tidak ada kredensial root, kunci su, atau log perintah yang disimpan dari jarak jauh atau dikirimkan ke luar perangkat Anda.
+</string>
+    <string name="pp_s6c_permitted_heading">
+Penggunaan Akses Root yang Diizinkan
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+Penjelajahan Partisi Sistem: Menjelajah dan memeriksa file di partisi root (/) dan direktori yang dilindungi sesuai instruksi eksplisit Anda.
+</item>
+        <item>
+Operasi File yang Ditinggikan: Melakukan penyalinan, pemindahan, pengeditan, atau penghapusan file di lokasi penyimpanan yang dilindungi bila diminta oleh pengguna.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 Kami tidak menjual, menyewakan, memperdagangkan, mentransfer, atau mengungkapkan informasi pribadi atau data pengguna Google Anda kepada pihak ketiga mana pun untuk tujuan apa pun yang tidak terkait langsung dengan penyediaan fitur manajemen file Ultimate File Manager Pro — titik.
@@ -998,6 +1052,9 @@ Pilihan Bahasa (Cookie)
         <item>
 Status Pemutaran Media
 </item>
+        <item>
+Status Pemutaran Media
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1050,6 +1107,9 @@ Antrean saat ini, posisi pemutaran, dan pengaturan pemutar untuk melanjutkan dar
 </item>
         <item>
 Cookie (ufm_lang) mengingat pilihan bahasa Anda selama sesi dan di seluruh restart browser · Penyimpanan peramban web
+</item>
+        <item>
+Cookie (ufm_lang) mengingat pilihan bahasa Anda sepanjang sesi dan saat browser dimulai ulang · Penyimpanan browser web
 </item>
     </string-array>
 
@@ -1121,6 +1181,9 @@ Membuat dan memelihara pengindeksan file untuk penjelajahan dan pencarian cepat 
 </item>
         <item>
 Menyediakan fungsionalitas inti aplikasi
+</item>
+        <item>
+Menyediakan fungsionalitas aplikasi inti
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

@@ -12620,6 +12620,9 @@ DLNA 服务
     <string name="about_section_app">
 应用信息
 </string>
+    <string name="about_section_system">
+设备与系统
+</string>
     <string name="about_section_support">
 开发者和链接
 </string>
@@ -13170,7 +13173,6 @@ To access and manage files in this storage, please enable All Files Access in An
     <string name="restricted_feature_dialog_desc">
 此功能需要不受限制的设备范围存储访问。您可以在“设置”中授予所有文件访问权限或继续使用选定的文件夹。
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 删除文件夹访问权限？
@@ -13189,6 +13191,129 @@ To access and manage files in this storage, please enable All Files Access in An
 </string>
     <string name="btn_manage">
 管理
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+根状态
+</string>
+    <string name="root_status_not_rooted">
+未扎根
+</string>
+    <string name="root_status_detected">
+已扎根 (%1$s)
+</string>
+    <string name="root_type_magisk">
+马吉斯克
+</string>
+    <string name="root_type_kernelsu">
+内核SU
+</string>
+    <string name="root_type_apatch">
+补丁
+</string>
+    <string name="root_type_supersu">
+超级SU
+</string>
+    <string name="root_type_generic">
+苏二进制
+</string>
+    <string name="root_details_title">
+根诊断
+</string>
+    <string name="root_details_binaries">
+检测到的二进制文件：%1$s
+</string>
+    <string name="root_details_packages">
+检测到的包：%1$s
+</string>
+    <string name="root_details_test_keys">
+构建标签：自定义/测试密钥
+</string>
+    <string name="root_details_none">
+在此设备上未检测到根二进制文件或管理器包。
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+根访问
+</string>
+    <string name="icon_storage_root">
+根存储
+</string>
+    <string name="root_storage_title">
+根存储
+</string>
+    <string name="root_storage_subtitle">
+系统分区（/）
+</string>
+    <string name="settings_root_access_title">
+根访问
+</string>
+    <string name="settings_root_access_desc">
+允许对系统分区和受保护目录进行提升的超级用户访问权限
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+已启用 — 超级用户访问处于活动状态
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+残疾人
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+此设备上未检测到 root
+</string>
+    <string name="root_grant_dialog_title">
+授予根访问权限吗？
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro 将向您的根管理器 (%1$s) 请求超级用户权限。这将授予浏览和管理系统级文件的访问权限。\n
+\n
+仅当您了解修改系统文件的风险时才授予 root 访问权限。
+</string>
+    <string name="root_grant_dialog_grant">
+格兰特·鲁特
+</string>
+    <string name="root_denied_title">
+Root 权限被拒绝
+</string>
+    <string name="root_denied_desc">
+超级用户访问被您的根管理器拒绝。根功能将保持禁用状态。
+</string>
+    <string name="root_requesting_title">
+请求根访问...
+</string>
+    <string name="root_storage_dialog_title">
+根存储
+</string>
+    <string name="root_storage_dialog_desc">
+根分区 (/) 可通过超级用户权限访问。\n
+\n
+• 根管理器：%1$s\n
+• 装载路径：/\n
+• 访问模式：超级用户活动
+</string>
+    <string name="backup_pref_root">
+根访问设置
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+需要超级用户访问权限才能访问受保护的根目录。
+</string>
+    <string name="root_remount_failed">
+无法将分区重新挂载为读写。
+</string>
+    <string name="root_file_saved">
+以超级用户权限保存
+</string>
+    <string name="root_posix_permissions">
+权限
+</string>
+    <string name="root_selinux_context">
+SELinux 上下文
+</string>
+    <string name="root_owner_group">
+业主/团体
+</string>
+    <string name="root_symlink_target">
+链接目标
 </string>
 </resources>
 

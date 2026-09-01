@@ -46,6 +46,9 @@ En téléchargeant ou en utilisant Ultimate File Manager Pro, vous acceptez ces 
     <string name="tc_s3b_title">
 3b. Intégration cloud RClone
 </string>
+    <string name="tc_s3c_title">
+3c. Appareils rootés et privilèges de superutilisateur
+</string>
     <string name="tc_s4_title">
 4. Vos responsabilités
 </string>
@@ -133,6 +136,9 @@ Votre utilisation de tout stockage cloud intégré à RClone est régie par les 
     </string-array>
     <string name="tc_s3b_summary">
 La connexion aux disques cloud via RClone s\'effectue directement depuis votre téléphone ou TV. Nous ne voyons jamais vos fichiers cloud ni vos mots de passe. Vos mots de passe sont cryptés sur votre téléphone, et vous êtes soumis aux conditions du fournisseur cloud que vous configurez.
+</string>
+    <string name="tc_s3c_body">
+Lorsque vous choisissez d\'activer l\'accès root sur un appareil mobile rooté, Ultimate File Manager Pro utilise la bibliothèque libsu pour demander les autorisations de superutilisateur à votre gestionnaire racine installé (Magisk, KernelSU, APatch, SuperSU). L\'accès superutilisateur accorde des capacités de lecture et d\'écriture illimitées sur les partitions système de votre appareil (y compris la racine/le point de montage). La modification, le renommage ou la suppression de fichiers système comporte de graves risques, notamment une corruption permanente du système d\'exploitation, des boucles de démarrage, une perte de données ou un brickage. Vous reconnaissez que vous utilisez Root Access entièrement à vos propres risques. KiloWatch décline toute responsabilité en cas d\'instabilité de l\'appareil, de panne matérielle ou de perte de données résultant des opérations root.
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ Créateur de GIF — créez des fichiers GIF animés à partir d\\\'images séle
         <item>
 Outils EXIF photo — inspectez les métadonnées EXIF et GPS des photos, effacez les géotags privés et les informations de l\\\'appareil, et renommez des photos en masse à l\\\'aide des horodatages de prise de vue et des métadonnées de l\\\'appareil photo.
 </item>
+        <item>
+Outils Photo EXIF : inspectez les métadonnées EXIF ​​et GPS des photos, nettoyez les géolocalisations privées et les informations sur l\'appareil, et renommez les photos par lots à l\'aide des horodatages de capture et des métadonnées de l\'appareil photo.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -281,6 +290,9 @@ Précision de l\\\'indexeur
 </item>
         <item>
 Bugs et erreurs
+</item>
+        <item>
+Notre responsabilité
 </item>
         <item>
 Notre responsabilité
@@ -325,6 +337,9 @@ Aucun logiciel n\\\'est parfait. Nous ne pouvons pas promettre que l\\\'applicat
 </item>
         <item>
 Notre responsabilité totale est limitée au montant total que vous avez payé pour les achats intégrés dans les 30 jours précédant toute réclamation. Nous ne sommes pas responsables des pertes de données, des dommages matériels ou des pertes de profits découlant des fonctionnalités gratuites.
+</item>
+        <item>
+Notre responsabilité totale est plafonnée au montant total que vous avez payé pour les achats intégrés dans les 30 jours précédant toute réclamation. Nous ne sommes pas responsables de la perte de données, des dommages à l\'appareil ou de la perte de profits résultant des fonctionnalités gratuites.
 </item>
     </string-array>
 
@@ -371,6 +386,9 @@ Gérez vos enregistrements indexés de manière responsable — vous pouvez supp
 </item>
         <item>
 Vérifiez l\\\'authenticité et la sécurité des fichiers APK avant de les installer.
+</item>
+        <item>
+Vérifiez l\'authenticité et la sécurité de tous les fichiers APK avant de les installer.
 </item>
     </string-array>
 
@@ -430,6 +448,9 @@ Bluetooth
         <item>
 Vibration
 </item>
+        <item>
+Vibrer
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -485,6 +506,9 @@ Se connecte à votre Android TV appairé pour agir comme un clavier et une souri
 </item>
         <item>
 Fournit un retour haptique lors de l\\\'appui sur les boutons de la télécommande TV.
+</item>
+        <item>
+Fournit un retour haptique lorsque vous appuyez sur les boutons de la télécommande du téléviseur.
 </item>
     </string-array>
 
@@ -616,6 +640,9 @@ AndroidX ExifInterface (androidx.exifinterface:exifinterface) — bibliothèque 
         <item>
 Amazon Appstore SDK — traite les achats facultatifs de pourboires in-app sur les appareils Amazon. (Propriétaire)
 </item>
+        <item>
+Amazon Appstore SDK : traite les achats facultatifs de pourboires dans l\'application sur les appareils Amazon. (Propriétaire)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ Vos fichiers restent sur votre appareil — nous ne les voyons jamais. Avec votr
 </string>
     <string name="pp_s6b_title">
 6b. Intégration cloud RClone — Confidentialité et conformité
+</string>
+    <string name="pp_s6c_title">
+6c. Appareils rootés et accès superutilisateur – Confidentialité et conformité
 </string>
     <string name="pp_s7_title">
 7. Partage de données et tiers
@@ -842,6 +872,30 @@ Navigation à distance : Récupération des structures de dossiers et des métad
 Opérations sur les fichiers : Téléchargement, chargement, renommage, copie, déplacement ou suppression de fichiers sur votre stockage distant à votre demande explicite.
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+L\'accès racine sur les appareils mobiles pris en charge fonctionne strictement sur l\'appareil en utilisant le framework libsu. Aucune donnée de commande élevée ou fichier système n\'est jamais collecté ou transmis.
+</string>
+    <string name="pp_s6c_intro">
+Lorsque l\'accès racine est activé sur un appareil mobile rooté, toutes les commandes du superutilisateur, les sessions shell root et les opérations de partition sont exécutées strictement sur l\'appareil. Ultimate File Manager Pro ne transmet, n\'enregistre, ne télécharge ou ne partage aucun fichier de partition racine, binaires système ou informations d\'identification de superutilisateur avec les serveurs KiloWatch ou des tiers. Les privilèges root ne sont invoqués que lors d\'une action explicite de l\'utilisateur et peuvent être révoqués à tout moment via Paramètres → Accès root.
+</string>
+    <string name="pp_s6c_local_heading">
+Exécution racine sur l\'appareil
+</string>
+    <string name="pp_s6c_local_body">
+Toutes les commandes racine et flux d\'E/S sont gérés via un processus racine local géré par libsu et votre gestionnaire racine installé (Magisk, KernelSU, APatch, SuperSU). Aucune information d\'identification racine, clé su ou journal de commande n\'est stockée à distance ou transmise en dehors de votre appareil.
+</string>
+    <string name="pp_s6c_permitted_heading">
+Utilisations autorisées de l\'accès root
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+Navigation dans la partition système : navigation et inspection des fichiers sur la partition racine (/) et des répertoires protégés selon vos instructions explicites.
+</item>
+        <item>
+Opérations de fichiers élevées : effectuer la copie, le déplacement, la modification ou la suppression de fichiers dans des emplacements de stockage protégés à la demande de l\'utilisateur.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 Nous ne vendons, louons, échangeons, transférons ou divulguons vos informations personnelles ou données utilisateur Google à un tiers pour quelque finalité que ce soit qui n\'est pas directement liée à la fourniture des fonctionnalités de gestion de fichiers d\'Ultimate File Manager Pro — point final.
@@ -1000,6 +1054,9 @@ Sélection de la langue (Cookie)
         <item>
 État de la lecture multimédia
 </item>
+        <item>
+État de lecture multimédia
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1052,6 +1109,9 @@ File d\\\'attente actuelle, position de lecture et paramètres du lecteur pour r
 </item>
         <item>
 Un cookie (ufm_lang) mémorise votre choix de langue pendant la session et après les redémarrages du navigateur · Stockage du navigateur web
+</item>
+        <item>
+Un cookie (ufm_lang) mémorise votre choix de langue tout au long de la session et lors des redémarrages du navigateur · Stockage du navigateur Web
 </item>
     </string-array>
 
@@ -1123,6 +1183,9 @@ Créer et maintenir un index de fichiers pour une navigation et une recherche ra
 </item>
         <item>
 Fournir les fonctionnalités principales de l\\\'application
+</item>
+        <item>
+Fournir les fonctionnalités de base de l\'application
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

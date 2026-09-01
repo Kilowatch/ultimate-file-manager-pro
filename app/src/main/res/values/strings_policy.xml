@@ -22,6 +22,7 @@
     <string name="tc_s3_title">3. Risk &amp; Liability — The Honest Truth</string>
     <string name="tc_s3a_title">3a. In-App Purchases &amp; Billing</string>
     <string name="tc_s3b_title">3b. RClone Cloud Integration</string>
+    <string name="tc_s3c_title">3c. Rooted Devices &amp; Superuser Privileges</string>
     <string name="tc_s4_title">4. Your Responsibilities</string>
     <string name="tc_s5_title">5. Permissions We Need &amp; Why</string>
     <string name="tc_s6_title">6. Who Owns What</string>
@@ -58,6 +59,7 @@
         <item>Because cloud provider APIs and endpoints can change without notice, we cannot guarantee that any specific RClone provider will remain accessible or function uninterrupted.</item>
     </string-array>
     <string name="tc_s3b_summary">Connecting to cloud drives via RClone is done directly from your phone or TV. We never see your cloud files or passwords. Your passwords are encrypted on your phone, and you are subject to the terms of whatever cloud provider you configure.</string>
+    <string name="tc_s3c_body">When you choose to enable Root Access on a rooted mobile device, Ultimate File Manager Pro uses the libsu library to request Superuser permissions from your installed root manager (Magisk, KernelSU, APatch, SuperSU). Superuser access grants unrestricted read and write capabilities across your device\'s system partitions (including the root / mount point). Modifying, renaming, or deleting system files carries severe risks, including permanent OS corruption, bootloops, data loss, or bricking. You acknowledge that you use Root Access entirely at your own risk. KiloWatch accepts no liability for device instability, hardware failure, or data loss arising from root operations.</string>
 
     <string name="tc_s4_body">Using this app comes with a few simple responsibilities on your side.</string>
 
@@ -96,6 +98,7 @@
         <item>App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.</item>
         <item>APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.</item>
         <item>Elevated Access (Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.</item>
+        <item>Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.</item>
         <item>Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.</item>
         <item>Storage Access Framework — other apps can access your files through UFM\'s document provider.</item>
         <item>Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.</item>
@@ -115,6 +118,7 @@
         <item>System App Removal</item>
         <item>ADB Pairing</item>
         <item>Shizuku, Shevery &amp; Elevated Access</item>
+        <item>Root Access &amp; Superuser Privileges</item>
         <item>TV Screenshots</item>
         <item>Indexer Accuracy</item>
         <item>Bugs &amp; Errors</item>
@@ -130,6 +134,7 @@
         <item>Removing system apps based on debloat recommendations may affect device stability. Proceed with caution.</item>
         <item>ADB pairing requires exchanging certificates between your device and the target device over your local Wi-Fi. Only connect to devices you own or have permission to access. Anyone on your network who captures your pairing PIN can access your device — keep this PIN private.</item>
         <item>Using Shizuku, Shevery, or ADB for elevated access allows the app to modify system-protected files. Misuse of these features could affect device stability or security. Use with caution and only grant access to this app.</item>
+        <item>Granting Superuser access allows direct modification of protected system partitions. Deleting or altering system files may cause bootloops or irreparable system failure. You assume full responsibility when enabling Root Access.</item>
         <item>Screenshots of paired TVs are captured via ADB over your local network and saved directly to your phone\'s storage. We do not transmit, view, or upload your screenshots. Ensure you only capture screens on devices you own or have permission to access.</item>
         <item>The index reflects the state of your storage at the time of scanning. You may need to refresh the index if files are changed by other apps.</item>
         <item>No software is perfect. We can\'t promise the app will always be error-free or uninterrupted.</item>
@@ -147,6 +152,7 @@
         <item>Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.</item>
         <item>Keep any ADB, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.</item>
         <item>Secure your Shizuku or Shevery Manager — granting UFM elevated access via Shizuku or Shevery gives it power over restricted files. Only grant this access if you trust the app.</item>
+        <item>Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.</item>
         <item>Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.</item>
         <item>Don\'t use Remote Management to access another person\'s device without their permission.</item>
         <item>Don\'t attempt to reverse-engineer, decompile, or tamper with the app.</item>
@@ -167,6 +173,7 @@
         <item>Billing</item>
         <item>ADB Debug Bridge</item>
         <item>Elevated Access (Shizuku &amp; Shevery)</item>
+        <item>Root / Superuser Access</item>
         <item>Boot Start</item>
         <item>Battery Optimization</item>
         <item>Foreground Service</item>
@@ -187,6 +194,7 @@
         <item>Processes optional Tip Jar purchases via Google Play.</item>
         <item>Allows secure connection to Android devices for advanced shell access. Generates a unique RSA certificate on your device for pairing; no certificates are transmitted to external servers.</item>
         <item>Allows the app to use the Shizuku / Shevery API (including Secure Settings) for managing files in restricted system directories without rooting.</item>
+        <item>Requested dynamically via your root manager (Magisk, KernelSU, APatch, SuperSU) only when you explicitly enable Root Access in Settings on mobile devices. Used strictly for local root file operations.</item>
         <item>Allows Shizuku and Shevery services to start automatically when your device boots up to ensure immediate availability.</item>
         <item>Allows you to opt-in to keeping Shizuku and Shevery services active in the background for reliable performance.</item>
         <item>Required to run Folder Sync and file transfers as a foreground service so they complete reliably even when the screen is off.</item>
@@ -216,6 +224,7 @@
         <item>zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)</item>
         <item>Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)</item>
         <item>libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)</item>
+        <item>libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)</item>
         <item>Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)</item>
         <item>EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)</item>
         <item>SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)</item>
@@ -265,6 +274,7 @@
     <string name="pp_s5_title">5. Data Security</string>
     <string name="pp_s6_title">6. Google API Services — Limited Use Disclosure</string>
     <string name="pp_s6b_title">6b. RClone Cloud Integration — Privacy &amp; Compliance</string>
+    <string name="pp_s6c_title">6c. Rooted Devices &amp; Superuser Access — Privacy &amp; Compliance</string>
     <string name="pp_s7_title">7. Data Sharing &amp; Third Parties</string>
     <string name="pp_s8_title">8. How Long We Keep Data</string>
     <string name="pp_s9_title">9. Your Rights</string>
@@ -334,6 +344,16 @@
         <item>Remote Browsing: Retrieving folder structures and file metadata to display your remote cloud storage contents.</item>
         <item>File Operations: Uploading, downloading, renaming, copying, moving, or deleting files on your remote storage at your explicit request.</item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">Root Access on supported mobile devices operates strictly on-device using the libsu framework. No elevated command data or system files are ever collected or transmitted.</string>
+    <string name="pp_s6c_intro">When Root Access is enabled on a rooted mobile device, all superuser commands, root shell sessions, and partition operations are executed strictly on-device. Ultimate File Manager Pro does not transmit, log, upload, or share any root partition files, system binaries, or superuser credentials to KiloWatch servers or any third parties. Root privileges are only invoked upon explicit user action and can be revoked at any time via Settings → Root Access.</string>
+    <string name="pp_s6c_local_heading">On-Device Root Execution</string>
+    <string name="pp_s6c_local_body">All root commands and I/O streams are handled via a local root process managed by libsu and your installed root manager (Magisk, KernelSU, APatch, SuperSU). No root credentials, su keys, or command logs are stored remotely or transmitted outside your device.</string>
+    <string name="pp_s6c_permitted_heading">Permitted Uses of Root Access</string>
+    <string-array name="pp_s6c_permitted">
+        <item>System Partition Browsing: Browsing and inspecting files on the root (/) partition and protected directories at your explicit instruction.</item>
+        <item>Elevated File Operations: Performing file copying, moving, editing, or deletion in protected storage locations when requested by the user.</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">We do not sell, rent, trade, transfer, or disclose your personal information or Google user data to any third party for any purpose not directly related to providing Ultimate File Manager Pro\'s file management features — full stop.</string>
     <string name="pp_s7_third_heading">Third-Party Services We Use</string>
@@ -391,6 +411,7 @@
         <item>Paired Device Info</item>
         <item>ADB Authentication Keys</item>
         <item>Shizuku / Shevery Authorization State</item>
+        <item>Root Access Authorization State</item>
         <item>TV Screenshots</item>
         <item>Sync Profiles</item>
         <item>Cloud Storage Tokens (Google Drive, OneDrive, Dropbox)</item>
@@ -410,6 +431,7 @@
         <item>Device name, ID, and IP for device pairing · App private storage</item>
         <item>RSA keys and certificates generated for secure ADB connections · App private storage</item>
         <item>Status of the elevated access grant from the Shizuku or Shevery Manager app · App private storage</item>
+        <item>Status of Superuser permission granted via libsu · Android SharedPreferences</item>
         <item>Screenshots captured from a paired TV via ADB · Your phone\'s local Pictures/Screenshots folder</item>
         <item>Local folder URI and remote path for each sync profile · App private storage</item>
         <item>OAuth tokens for accessing Google Drive, OneDrive, and Dropbox · App private storage</item>
@@ -448,6 +470,7 @@
         <item>Encrypt and decrypt your private files</item>
         <item>Remember your preferences and settings</item>
         <item>Use elevated access (Shizuku/Shevery/ADB) for managing system-protected files in restricted directories</item>
+        <item>Execute superuser file operations on rooted devices when Root Access is explicitly enabled</item>
         <item>Create and maintain file indexing for fast browsing and search (manageable via Settings -> Storage Indexer)</item>
         <item>Provide core app functionality</item>
     </string-array>

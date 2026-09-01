@@ -62,6 +62,17 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
     private lateinit var rowModified: View
     private lateinit var txtModifiedValue: TextView
 
+    private lateinit var dividerRoot: View
+    private lateinit var tableRootProperties: View
+    private lateinit var rowPermissions: View
+    private lateinit var txtPermissionsValue: TextView
+    private lateinit var rowOwnerGroup: View
+    private lateinit var txtOwnerGroupValue: TextView
+    private lateinit var rowSelinux: View
+    private lateinit var txtSelinuxValue: TextView
+    private lateinit var rowSymlink: View
+    private lateinit var txtSymlinkValue: TextView
+
     private lateinit var dividerAttributes: View
     private lateinit var layoutAttributes: View
     private lateinit var cgAttributes: ChipGroup
@@ -219,6 +230,17 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
         rowModified = view.findViewById(R.id.rowModified)
         txtModifiedValue = view.findViewById(R.id.txtModifiedValue)
 
+        dividerRoot = view.findViewById(R.id.dividerRoot)
+        tableRootProperties = view.findViewById(R.id.tableRootProperties)
+        rowPermissions = view.findViewById(R.id.rowPermissions)
+        txtPermissionsValue = view.findViewById(R.id.txtPermissionsValue)
+        rowOwnerGroup = view.findViewById(R.id.rowOwnerGroup)
+        txtOwnerGroupValue = view.findViewById(R.id.txtOwnerGroupValue)
+        rowSelinux = view.findViewById(R.id.rowSelinux)
+        txtSelinuxValue = view.findViewById(R.id.txtSelinuxValue)
+        rowSymlink = view.findViewById(R.id.rowSymlink)
+        txtSymlinkValue = view.findViewById(R.id.txtSymlinkValue)
+
         dividerAttributes = view.findViewById(R.id.dividerAttributes)
         layoutAttributes = view.findViewById(R.id.layoutAttributes)
         cgAttributes = view.findViewById(R.id.cgAttributes)
@@ -373,10 +395,21 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                         var totalFiles = 0
                         var totalFolders = 0
 
-                        val isSaf = ctx != null && (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                        val isRoot = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(path)
+                        val isSaf = !isRoot && ctx != null && (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, path))
 
-                        if (isSaf && ctx != null) {
+                        if (isRoot) {
+                            val items = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.listFiles(path)
+                            for (item in items) {
+                                if (item.isDirectory) {
+                                    totalFolders++
+                                } else {
+                                    totalFiles++
+                                    totalBytes += item.length()
+                                }
+                            }
+                        } else if (isSaf && ctx != null) {
                             val items = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.walkSafTopDown(ctx, path)
                             for (item in items) {
                                 if (item.isDirectory) {
@@ -426,11 +459,47 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                 tableTimestamps.visibility = View.GONE
             }
 
+            // 4.5 Root / POSIX Metadata
+            val isRoot = !isNetwork && (za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(path) || path == "/")
+            if (isRoot) {
+                dividerRoot.visibility = View.VISIBLE
+                tableRootProperties.visibility = View.VISIBLE
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                    val posix = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getPosixPermissions(path)
+                    val ownerGroup = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getOwnerGroup(path)
+                    val selinux = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getSelinuxContext(path)
+                    withContext(Dispatchers.Main) {
+                        if (!isAdded) return@withContext
+                        if (posix != null) {
+                            rowPermissions.visibility = View.VISIBLE
+                            txtPermissionsValue.text = posix
+                        } else {
+                            rowPermissions.visibility = View.GONE
+                        }
+                        if (ownerGroup != null) {
+                            rowOwnerGroup.visibility = View.VISIBLE
+                            txtOwnerGroupValue.text = ownerGroup
+                        } else {
+                            rowOwnerGroup.visibility = View.GONE
+                        }
+                        if (selinux != null) {
+                            rowSelinux.visibility = View.VISIBLE
+                            txtSelinuxValue.text = selinux
+                        } else {
+                            rowSelinux.visibility = View.GONE
+                        }
+                    }
+                }
+            } else {
+                dividerRoot.visibility = View.GONE
+                tableRootProperties.visibility = View.GONE
+            }
+
             // 5. Attributes
             setupAttributes(listOf(path), booleanArrayOf(isDirectory))
 
             // 6. Tags (Single file only)
-            if (!isDirectory) {
+            if (!isDirectory && !isRoot) {
                 layoutTagsSection.visibility = View.VISIBLE
                 loadTags(path)
                 btnEditTags.setOnClickListener { showEditTagsDialog(path) }
@@ -440,6 +509,9 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
 
         } else {
             // Multiple Items Selected
+            dividerRoot.visibility = View.GONE
+            tableRootProperties.visibility = View.GONE
+
             val directFiles = isDirList.count { !it }
             val directFolders = isDirList.count { it }
 
@@ -483,10 +555,27 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                     for (i in filePaths.indices) {
                         val p = filePaths[i]
                         val isD = isDirList.getOrNull(i) ?: false
-                        val isSaf = ctx != null && (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(p) ||
+                        val isRoot = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(p)
+                        val isSaf = !isRoot && ctx != null && (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(p) ||
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, p))
 
-                        if (isSaf && ctx != null) {
+                        if (isRoot) {
+                            if (isD) {
+                                totalFolders++
+                                val items = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.listFiles(p)
+                                for (item in items) {
+                                    if (item.isDirectory) {
+                                        totalFolders++
+                                    } else {
+                                        totalFiles++
+                                        totalBytes += item.length()
+                                    }
+                                }
+                            } else {
+                                totalFiles++
+                                totalBytes += za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(p).coerceAtLeast(0L)
+                            }
+                        } else if (isSaf && ctx != null) {
                             if (isD) {
                                 totalFolders++
                                 val items = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.walkSafTopDown(ctx, p)

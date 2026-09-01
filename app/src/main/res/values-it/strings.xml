@@ -12620,6 +12620,9 @@ E-mail di supporto copiata negli appunti
     <string name="about_section_app">
 Informazioni sull\'app
 </string>
+    <string name="about_section_system">
+Dispositivo e sistema
+</string>
     <string name="about_section_support">
 Sviluppatore e Collegamenti
 </string>
@@ -13170,7 +13173,6 @@ Modalità cartelle selezionate attiva (accesso limitato)
     <string name="restricted_feature_dialog_desc">
 Questa funzionalità richiede l\'accesso illimitato allo spazio di archiviazione a livello di dispositivo. Puoi concedere l\'accesso a tutti i file in Impostazioni o continuare a utilizzare le cartelle selezionate.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Rimuovere l\'accesso alle cartelle?
@@ -13189,6 +13191,129 @@ Indicizzazione %1$s...
 </string>
     <string name="btn_manage">
 Maneggio
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Stato della radice
+</string>
+    <string name="root_status_not_rooted">
+Non rootato
+</string>
+    <string name="root_status_detected">
+Radicato (%1$s)
+</string>
+    <string name="root_type_magisk">
+Magisk
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+APatch
+</string>
+    <string name="root_type_supersu">
+SuperSU
+</string>
+    <string name="root_type_generic">
+su binario
+</string>
+    <string name="root_details_title">
+Diagnostica della radice
+</string>
+    <string name="root_details_binaries">
+File binari rilevati: %1$s
+</string>
+    <string name="root_details_packages">
+Pacchetti rilevati: %1$s
+</string>
+    <string name="root_details_test_keys">
+Tag di creazione: Chiavi personalizzate/Test
+</string>
+    <string name="root_details_none">
+Nessun file binario root o pacchetto di gestione rilevato su questo dispositivo.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Accesso root
+</string>
+    <string name="icon_storage_root">
+Archiviazione delle radici
+</string>
+    <string name="root_storage_title">
+Archiviazione delle radici
+</string>
+    <string name="root_storage_subtitle">
+Partizione di sistema (/)
+</string>
+    <string name="settings_root_access_title">
+Accesso root
+</string>
+    <string name="settings_root_access_desc">
+Consenti accesso superutente elevato per la partizione di sistema e le directory protette
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Abilitato: accesso superutente attivo
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Disabilitato
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+Root non rilevato su questo dispositivo
+</string>
+    <string name="root_grant_dialog_title">
+Concedere l\'accesso root?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro richiederà le autorizzazioni di superutente al tuo gestore root (%1$s). Ciò garantisce l\'accesso per sfogliare e gestire i file a livello di sistema.\n
+\n
+Concedi l\'accesso root solo se comprendi i rischi derivanti dalla modifica dei file di sistema.
+</string>
+    <string name="root_grant_dialog_grant">
+Concedere Radice
+</string>
+    <string name="root_denied_title">
+Autorizzazione root negata
+</string>
+    <string name="root_denied_desc">
+L\'accesso come superutente è stato negato dal tuo root manager. Le funzionalità di root rimarranno disabilitate.
+</string>
+    <string name="root_requesting_title">
+Richiesta di accesso root...
+</string>
+    <string name="root_storage_dialog_title">
+Archiviazione delle radici
+</string>
+    <string name="root_storage_dialog_desc">
+La partizione root (/) è accessibile tramite privilegi di superutente.\n
+\n
+• Gestore root: %1$s\n
+• Percorso di montaggio: /\n
+• Modalità di accesso: Superutente attivo
+</string>
+    <string name="backup_pref_root">
+Impostazioni di accesso root
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Superuser access is required to access protected root directories.
+</string>
+    <string name="root_remount_failed">
+Impossibile rimontare la partizione in lettura-scrittura.
+</string>
+    <string name="root_file_saved">
+Saved with superuser permissions
+</string>
+    <string name="root_posix_permissions">
+Permissions
+</string>
+    <string name="root_selinux_context">
+Contesto SELinux
+</string>
+    <string name="root_owner_group">
+Proprietario/Gruppo
+</string>
+    <string name="root_symlink_target">
+Link Target
 </string>
 </resources>
 

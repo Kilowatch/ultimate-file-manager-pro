@@ -12620,6 +12620,9 @@ support@kilowatch.co.za
     <string name="about_section_app">
 Информация о приложении
 </string>
+    <string name="about_section_system">
+Device &amp; System
+</string>
     <string name="about_section_support">
 Разработчик и ссылки
 </string>
@@ -13170,7 +13173,6 @@ support@kilowatch.co.za
     <string name="restricted_feature_dialog_desc">
 Эта функция требует неограниченного доступа к хранилищу всего устройства. Вы можете предоставить доступ ко всем файлам в настройках или продолжить использование выбранных папок.
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 Удалить доступ к папке?
@@ -13189,6 +13191,129 @@ support@kilowatch.co.za
 </string>
     <string name="btn_manage">
 Управлять
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+Корневой статус
+</string>
+    <string name="root_status_not_rooted">
+Не укоренен
+</string>
+    <string name="root_status_detected">
+Rooted (%1$s)
+</string>
+    <string name="root_type_magisk">
+Магиск
+</string>
+    <string name="root_type_kernelsu">
+KernelSU
+</string>
+    <string name="root_type_apatch">
+APatch
+</string>
+    <string name="root_type_supersu">
+СуперСУ
+</string>
+    <string name="root_type_generic">
+su двоичный файл
+</string>
+    <string name="root_details_title">
+Корневая диагностика
+</string>
+    <string name="root_details_binaries">
+Обнаружены двоичные файлы: %1$s
+</string>
+    <string name="root_details_packages">
+Обнаруженные пакеты: %1$s
+</string>
+    <string name="root_details_test_keys">
+Теги сборки: Пользовательские / Тестовые ключи
+</string>
+    <string name="root_details_none">
+На этом устройстве не обнаружено корневых двоичных файлов или пакетов менеджера.
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+Корневой доступ
+</string>
+    <string name="icon_storage_root">
+Корневое хранилище
+</string>
+    <string name="root_storage_title">
+Корневое хранилище
+</string>
+    <string name="root_storage_subtitle">
+Системный раздел (/)
+</string>
+    <string name="settings_root_access_title">
+Корневой доступ
+</string>
+    <string name="settings_root_access_desc">
+Разрешить повышенный доступ суперпользователя к системному разделу и защищенным каталогам.
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+Включено — активен доступ суперпользователя.
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+Неполноценный
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+На этом устройстве не обнаружен рут
+</string>
+    <string name="root_grant_dialog_title">
+Предоставить root-доступ?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro запросит права суперпользователя у вашего корневого менеджера (%1$s). Это предоставляет доступ для просмотра и управления файлами системного уровня.\n
+\n
+Предоставляйте root-доступ только в том случае, если вы понимаете риски, связанные с изменением системных файлов.
+</string>
+    <string name="root_grant_dialog_grant">
+Грант Рут
+</string>
+    <string name="root_denied_title">
+Корневое разрешение отклонено
+</string>
+    <string name="root_denied_desc">
+Доступ суперпользователя запрещен вашим корневым менеджером. Корневые функции останутся отключенными.
+</string>
+    <string name="root_requesting_title">
+Запрос root-доступа...
+</string>
+    <string name="root_storage_dialog_title">
+Корневое хранилище
+</string>
+    <string name="root_storage_dialog_desc">
+Корневой раздел (/) доступен с правами суперпользователя.\n
+\n
+• Корневой менеджер: %1$s\n
+• Путь монтирования: /\n
+• Режим доступа: активен суперпользователь
+</string>
+    <string name="backup_pref_root">
+Настройки корневого доступа
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+Для доступа к защищенным корневым каталогам требуется доступ суперпользователя.
+</string>
+    <string name="root_remount_failed">
+Не удалось перемонтировать раздел для чтения и записи.
+</string>
+    <string name="root_file_saved">
+Сохранено с правами суперпользователя.
+</string>
+    <string name="root_posix_permissions">
+Разрешения
+</string>
+    <string name="root_selinux_context">
+Контекст SELinux
+</string>
+    <string name="root_owner_group">
+Владелец / Группа
+</string>
+    <string name="root_symlink_target">
+Цель ссылки
 </string>
 </resources>
 

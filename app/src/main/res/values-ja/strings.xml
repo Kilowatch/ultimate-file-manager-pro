@@ -12620,6 +12620,9 @@ support@kilowatch.co.za
     <string name="about_section_app">
 アプリ情報
 </string>
+    <string name="about_section_system">
+デバイスとシステム
+</string>
     <string name="about_section_support">
 開発者とリンク
 </string>
@@ -13170,7 +13173,6 @@ No mounted folders remaining for this storage.
     <string name="restricted_feature_dialog_desc">
 この機能には、デバイス全体のストレージへの無制限のアクセスが必要です。設定ですべてのファイルへのアクセスを許可することも、選択したフォルダーの使用を継続することもできます。
 </string>
-
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
 フォルダーアクセスを削除しますか?
@@ -13189,6 +13191,129 @@ No mounted folders remaining for this storage.
 </string>
     <string name="btn_manage">
 管理
+</string>
+    <!-- Root Detection & Diagnostics (Mobile) -->
+    <string name="root_status_title">
+ルートステータス
+</string>
+    <string name="root_status_not_rooted">
+ルート化されていません
+</string>
+    <string name="root_status_detected">
+ルート化済み (%1$s)
+</string>
+    <string name="root_type_magisk">
+マジスク
+</string>
+    <string name="root_type_kernelsu">
+カーネルSU
+</string>
+    <string name="root_type_apatch">
+APパッチ
+</string>
+    <string name="root_type_supersu">
+スーパーSU
+</string>
+    <string name="root_type_generic">
+バイナリ
+</string>
+    <string name="root_details_title">
+ルート診断
+</string>
+    <string name="root_details_binaries">
+検出されたバイナリ: %1$s
+</string>
+    <string name="root_details_packages">
+検出されたパッケージ: %1$s
+</string>
+    <string name="root_details_test_keys">
+ビルドタグ: カスタム/テストキー
+</string>
+    <string name="root_details_none">
+このデバイスではルート バイナリまたはマネージャー パッケージが検出されません。
+</string>
+    <!-- Phase 2: Root Integration & Authorization (Mobile) -->
+    <string name="icon_settings_root_access">
+ルートアクセス
+</string>
+    <string name="icon_storage_root">
+ルートストレージ
+</string>
+    <string name="root_storage_title">
+ルートストレージ
+</string>
+    <string name="root_storage_subtitle">
+システムパーティション(/)
+</string>
+    <string name="settings_root_access_title">
+ルートアクセス
+</string>
+    <string name="settings_root_access_desc">
+システム パーティションおよび保護されたディレクトリに対する昇格されたスーパーユーザー アクセスを許可します。
+</string>
+    <string name="settings_root_access_enabled_subtitle">
+有効 — スーパーユーザー アクセスがアクティブです
+</string>
+    <string name="settings_root_access_disabled_subtitle">
+無効
+</string>
+    <string name="settings_root_access_disabled_unrooted">
+このデバイスではルートが検出されません
+</string>
+    <string name="root_grant_dialog_title">
+ルートアクセスを許可しますか?
+</string>
+    <string name="root_grant_dialog_desc">
+Ultimate File Manager Pro は、ルート マネージャー (%1$s) にスーパーユーザー権限を要求します。これにより、システム レベルのファイルを参照および管理するためのアクセスが許可されます。\n
+\n
+システム ファイルを変更するリスクを理解している場合にのみ、root アクセスを許可してください。
+</string>
+    <string name="root_grant_dialog_grant">
+ルートの付与
+</string>
+    <string name="root_denied_title">
+ルート権限が拒否されました
+</string>
+    <string name="root_denied_desc">
+スーパーユーザーのアクセスはルート マネージャーによって拒否されました。ルート機能は無効のままになります。
+</string>
+    <string name="root_requesting_title">
+ルートアクセスを要求中...
+</string>
+    <string name="root_storage_dialog_title">
+ルートストレージ
+</string>
+    <string name="root_storage_dialog_desc">
+ルート パーティション (/) には、スーパーユーザー権限を介してアクセスできます。\n
+\n
+• ルート マネージャー: %1$s\n
+• マウント パス: /\n
+• アクセス モード: スーパーユーザー アクティブ
+</string>
+    <string name="backup_pref_root">
+ルートアクセス設定
+</string>
+    <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
+    <string name="root_permission_required_desc">
+保護されたルート ディレクトリにアクセスするには、スーパーユーザー アクセスが必要です。
+</string>
+    <string name="root_remount_failed">
+パーティションを読み取り/書き込みとして再マウントできませんでした。
+</string>
+    <string name="root_file_saved">
+スーパーユーザー権限で保存されました
+</string>
+    <string name="root_posix_permissions">
+権限
+</string>
+    <string name="root_selinux_context">
+SELinux コンテキスト
+</string>
+    <string name="root_owner_group">
+オーナー/グループ
+</string>
+    <string name="root_symlink_target">
+リンクターゲット
 </string>
 </resources>
 

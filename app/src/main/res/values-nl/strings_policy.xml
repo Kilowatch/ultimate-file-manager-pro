@@ -46,6 +46,9 @@ Door Ultimate File Manager Pro te downloaden of te gebruiken, accepteert u deze 
     <string name="tc_s3b_title">
 3b. RClone Cloud-integratie
 </string>
+    <string name="tc_s3c_title">
+3c. Geroote apparaten en superuser-rechten
+</string>
     <string name="tc_s4_title">
 4. Jouw verantwoordelijkheden
 </string>
@@ -133,6 +136,9 @@ Omdat API\'s en eindpunten van cloudproviders zonder voorafgaande kennisgeving k
     </string-array>
     <string name="tc_s3b_summary">
 Verbinding maken met clouddrives via RClone gebeurt rechtstreeks vanaf uw telefoon of tv. We zien nooit uw cloudbestanden of wachtwoorden. Uw wachtwoorden worden gecodeerd op uw telefoon en u bent onderworpen aan de voorwaarden van welke cloudprovider u ook configureert.
+</string>
+    <string name="tc_s3c_body">
+Wanneer u ervoor kiest om roottoegang in te schakelen op een geroot mobiel apparaat, gebruikt Ultimate File Manager Pro de libsu-bibliotheek om Superuser-machtigingen aan te vragen bij uw geïnstalleerde rootmanager (Magisk, KernelSU, APatch, SuperSU). Superuser-toegang biedt onbeperkte lees- en schrijfmogelijkheden op de systeempartities van uw apparaat (inclusief het root-/koppelpunt). Het wijzigen, hernoemen of verwijderen van systeembestanden brengt ernstige risico\'s met zich mee, waaronder permanente corruptie van het besturingssysteem, bootloops, gegevensverlies of bricking. U erkent dat u Root Access geheel op eigen risico gebruikt. KiloWatch aanvaardt geen aansprakelijkheid voor apparaatinstabiliteit, hardwarestoringen of gegevensverlies als gevolg van rootbewerkingen.
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ GIF Creator — maak geanimeerde GIF-bestanden van geselecteerde afbeeldingen me
         <item>
 Foto-EXIF-tools — inspecteer EXIF- en GPS-metagegevens van foto\'s, wis privé-geotags en apparaatinformatie en hernoem foto\'s in batch met behulp van vastgelegde tijdstempels en camera-metagegevens.
 </item>
+        <item>
+Foto-EXIF-tools — inspecteer EXIF- en GPS-metagegevens van foto\'s, wis privé-geotags en apparaatinformatie en hernoem foto\'s in batch met behulp van vastgelegde tijdstempels en camera-metagegevens.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -281,6 +290,9 @@ Nauwkeurigheid van de indexeerder
 </item>
         <item>
 Bugs en fouten
+</item>
+        <item>
+Onze aansprakelijkheid
 </item>
         <item>
 Onze aansprakelijkheid
@@ -326,6 +338,9 @@ Geen enkele software is perfect. We kunnen niet beloven dat de app altijd foutlo
         <item>
 Onze totale aansprakelijkheid is beperkt tot het totale bedrag dat u in de 30 dagen voorafgaand aan een claim voor in-app-aankopen heeft betaald. Wij zijn niet aansprakelijk voor gegevensverlies, apparaatschade of winstderving als gevolg van gratis functies.
 </item>
+        <item>
+Onze totale aansprakelijkheid is beperkt tot het totale bedrag dat u voor in-app-aankopen heeft betaald in de 30 dagen voorafgaand aan een claim. Wij zijn niet aansprakelijk voor gegevensverlies, apparaatschade of winstderving als gevolg van gratis functies.
+</item>
     </string-array>
 
     <!-- Responsibilities list (Section 4) -->
@@ -368,6 +383,9 @@ Probeer de app niet te reverse-engineeren, decompileren of ermee te knoeien.
 </item>
         <item>
 Beheer uw geïndexeerde records op verantwoorde wijze: u kunt op elk gewenst moment records verwijderen of specifieke schijven negeren via Instellingen -> Storage Indexer.
+</item>
+        <item>
+Controleer de authenticiteit en veiligheid van eventuele APK-bestanden voordat u ze installeert.
 </item>
         <item>
 Controleer de authenticiteit en veiligheid van eventuele APK-bestanden voordat u ze installeert.
@@ -430,6 +448,9 @@ Bluetooth
         <item>
 Trillen
 </item>
+        <item>
+Trillen
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -482,6 +503,9 @@ Gebruikt opslagrechten om metagegevens van bestanden te scannen en te indexeren 
 </item>
         <item>
 Maakt verbinding met uw gekoppelde Android TV en fungeert als Bluetooth-toetsenbord en -muis voor afstandsbediening.
+</item>
+        <item>
+Biedt haptische feedback bij het indrukken van knoppen op de afstandsbediening van de tv.
 </item>
         <item>
 Biedt haptische feedback bij het indrukken van knoppen op de afstandsbediening van de tv.
@@ -616,6 +640,9 @@ AndroidX ExifInterface (androidx.exifinterface:exifinterface) - bibliotheek voor
         <item>
 Amazon Appstore SDK - verwerkt optionele in-app-tipaankopen op Amazon-apparaten. (eigendom)
 </item>
+        <item>
+Amazon Appstore SDK - verwerkt optionele in-app-tipaankopen op Amazon-apparaten. (eigendom)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ Uw bestanden blijven op uw apparaat staan; we zien ze nooit. Met uw toestemming 
 </string>
     <string name="pp_s6b_title">
 6b. RClone Cloud-integratie — Privacy en naleving
+</string>
+    <string name="pp_s6c_title">
+6c. Geroote apparaten en superuser-toegang — Privacy en compliance
 </string>
     <string name="pp_s7_title">
 7. Gegevens delen en derden
@@ -842,6 +872,30 @@ Remote Browsing: mapstructuren en bestandsmetagegevens ophalen om de inhoud van 
 Bestandsbewerkingen: het uploaden, downloaden, hernoemen, kopiëren, verplaatsen of verwijderen van bestanden op uw externe opslag op uw expliciete verzoek.
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+Root-toegang op ondersteunde mobiele apparaten werkt uitsluitend op het apparaat met behulp van het libsu-framework. Er worden nooit verhoogde opdrachtgegevens of systeembestanden verzameld of verzonden.
+</string>
+    <string name="pp_s6c_intro">
+Wanneer roottoegang is ingeschakeld op een geroot mobiel apparaat, worden alle superuser-opdrachten, rootshell-sessies en partitiebewerkingen uitsluitend op het apparaat uitgevoerd. Ultimate File Manager Pro verzendt, logt, uploadt of deelt geen rootpartitiebestanden, systeembinaire bestanden of superuser-referenties naar KiloWatch-servers of derden. Root-privileges worden alleen ingeroepen na expliciete gebruikersactie en kunnen op elk moment worden ingetrokken via Instellingen → Root-toegang.
+</string>
+    <string name="pp_s6c_local_heading">
+Root-uitvoering op het apparaat
+</string>
+    <string name="pp_s6c_local_body">
+Alle rootopdrachten en I/O-streams worden afgehandeld via een lokaal rootproces dat wordt beheerd door libsu en uw geïnstalleerde rootmanager (Magisk, KernelSU, APatch, SuperSU). Er worden geen root-referenties, su-sleutels of opdrachtlogboeken op afstand opgeslagen of buiten uw apparaat verzonden.
+</string>
+    <string name="pp_s6c_permitted_heading">
+Toegestaan ​​gebruik van roottoegang
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+Bladeren door systeempartities: Bladeren en inspecteren van bestanden op de rootpartitie (/) en beschermde mappen op uw uitdrukkelijke instructie.
+</item>
+        <item>
+Verhoogde bestandsbewerkingen: het kopiëren, verplaatsen, bewerken of verwijderen van bestanden op beveiligde opslaglocaties wanneer daarom wordt gevraagd door de gebruiker.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 We verkopen, verhuren, verhandelen, overdragen of maken uw persoonlijke gegevens of Google-gebruikersgegevens niet bekend aan derden voor enig doel dat niet direct verband houdt met het leveren van de bestandsbeheerfuncties van Ultimate File Manager Pro - punt uit.
@@ -1000,6 +1054,9 @@ Taalkeuze (Cookie)
         <item>
 Media-afspeelstatus
 </item>
+        <item>
+Media-afspeelstatus
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1049,6 +1106,9 @@ Metagegevens van bestanden (namen, groottes, datums) voor snel bladeren en zoeke
 </item>
         <item>
 Huidige wachtrij, afspeelpositie en spelerinstellingen om verder te gaan waar je was gebleven · Android SharedPreferences
+</item>
+        <item>
+Een cookie (ufm_lang) onthoudt uw taalkeuze tijdens de sessie en bij het opnieuw opstarten van de browser. · Opslag van de webbrowser
 </item>
         <item>
 Een cookie (ufm_lang) onthoudt uw taalkeuze tijdens de sessie en bij het opnieuw opstarten van de browser. · Opslag van de webbrowser
@@ -1120,6 +1180,9 @@ Gebruik verhoogde toegang (Shizuku/Shevery/ADB) voor het beheren van door het sy
 </item>
         <item>
 Bestandsindexering maken en onderhouden voor snel browsen en zoeken (beheerbaar via Instellingen -> Storage Indexer)
+</item>
+        <item>
+Bied kernapp-functionaliteit aan
 </item>
         <item>
 Bied kernapp-functionaliteit aan

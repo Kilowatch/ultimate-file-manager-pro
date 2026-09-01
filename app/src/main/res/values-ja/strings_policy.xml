@@ -46,6 +46,9 @@ Ultimate File Manager Proをダウンロードまたは使用することによ�
     <string name="tc_s3b_title">
 3b. RCloneクラウド連携
 </string>
+    <string name="tc_s3c_title">
+3c. root化されたデバイスとスーパーユーザー権限
+</string>
     <string name="tc_s4_title">
 4. ユーザーの責任
 </string>
@@ -133,6 +136,9 @@ RCloneと統合されたクラウドストレージの使用は、各クラウ�
     </string-array>
     <string name="tc_s3b_summary">
 RCloneを介したクラウドドライブへの接続は、お客様の電話またはテレビから直接行われます。当社はお客様のクラウドファイルやパスワードを一切確認しません。パスワードはお客様の電話で暗号化され、設定したクラウドプロバイダーの利用規約に従うものとします。
+</string>
+    <string name="tc_s3c_body">
+ルート化されたモバイル デバイスでルート アクセスを有効にすることを選択すると、Ultimate File Manager Pro は libsu ライブラリを使用して、インストールされているルート マネージャー (Magisk、KernelSU、APatch、SuperSU) にスーパーユーザー権限を要求します。スーパーユーザー アクセスでは、デバイスのシステム パーティション (ルート/マウント ポイントを含む) 全体で無制限の読み取りおよび書き込み機能が許可されます。システム ファイルの変更、名前変更、削除には、永続的な OS の破損、ブートループ、データ損失、ブリックなどの重大なリスクが伴います。あなたは、ルート アクセスを完全に自己責任で使用することを認めます。 KiloWatch は、root 操作に起因するデバイスの不安定性、ハードウェア障害、またはデータ損失に対して一切の責任を負いません。
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ GIFクリエーター — 選択した画像からアニメーションGIFファ
         <item>
 写真EXIFツール — 写真のEXIFおよびGPSメタデータを検査し、プライベートなジオタグやデバイス情報を削除し、撮影タイムスタンプとカメラメタデータを使用して写真を一括リネームできます。
 </item>
+        <item>
+写真 EXIF ツール — 写真の EXIF と GPS メタデータを検査し、プライベート ジオタグとデバイス情報をスクラブし、キャプチャ タイムスタンプとカメラ メタデータを使用して写真の名前をバッチ変更します。
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -285,6 +294,9 @@ TVスクリーンショット
         <item>
 当社の責任
 </item>
+        <item>
+私たちの責任
+</item>
     </string-array>
     <string-array name="tc_risk_details">
         <item>
@@ -325,6 +337,9 @@ Shizuku、Shevery、またはADBを昇格アクセスに使用すると、アプ
 </item>
         <item>
 当社の総責任額は、請求前30日間にお客様がアプリ内購入で支払った総額に制限されます。無料機能に起因するデータ損失、デバイスの損傷、逸失利益については責任を負いません。
+</item>
+        <item>
+当社の責任総額は、請求前の 30 日間にお客様がアプリ内購入に対して支払った合計金額に制限されます。無料機能に起因するデータ損失、デバイスの損傷、または逸失利益については、当社は責任を負いません。
 </item>
     </string-array>
 
@@ -371,6 +386,9 @@ ShizukuまたはSheveryマネージャーを保護してください。UFMにShi
 </item>
         <item>
 APKファイルをインストールする前に、その信頼性と安全性を確認してください。
+</item>
+        <item>
+APK ファイルをインストールする前に、そのファイルの信頼性と安全性を確認してください。
 </item>
     </string-array>
 
@@ -430,6 +448,9 @@ Bluetooth
         <item>
 バイブレーション
 </item>
+        <item>
+振動する
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -485,6 +506,9 @@ ShizukuおよびSheveryサービスをバックグラウンドでアクティブ
 </item>
         <item>
 TVリモコンのボタンを押したときに触覚フィードバックを提供します。
+</item>
+        <item>
+テレビのリモコンのボタンを押したときに触覚フィードバックを提供します。
 </item>
     </string-array>
 
@@ -616,6 +640,9 @@ AndroidX ExifInterface（androidx.exifinterface:exifinterface） — JPEG、PNG�
         <item>
 Amazon Appstore SDK — Amazonデバイスでの任意のアプリ内チップ購入を処理します。（プロプライエタリ）
 </item>
+        <item>
+Amazon Appstore SDK — Amazon デバイスでのオプションのアプリ内チップ購入を処理します。 (独自)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ support@kilowatch.co.za
 </string>
     <string name="pp_s6b_title">
 6b. RCloneクラウド連携 — プライバシーとコンプライアンス
+</string>
+    <string name="pp_s6c_title">
+6c. Root化されたデバイスとスーパーユーザーのアクセス — プライバシーとコンプライアンス
 </string>
     <string name="pp_s7_title">
 7. データ共有と第三者
@@ -840,6 +870,30 @@ RCloneストレージ設定に入力されたパスワード、トークン、AP
 ファイル操作: お客様の明示的な要求に応じて、リモートストレージ上のファイルのアップロード、ダウンロード、名前変更、コピー、移動、または削除を行います。
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+サポートされているモバイル デバイス上のルート アクセスは、libsu フレームワークを使用して厳密にデバイス上で動作します。昇格されたコマンド データやシステム ファイルが収集または送信されることはありません。
+</string>
+    <string name="pp_s6c_intro">
+root 化されたモバイル デバイスで Root Access が有効になっている場合、すべてのスーパーユーザー コマンド、root シェル セッション、およびパーティション操作は厳密にデバイス上で実行されます。 Ultimate File Manager Pro は、ルート パーティション ファイル、システム バイナリ、またはスーパーユーザー資格情報を KiloWatch サーバーまたは第三者に送信、記録、アップロード、または共有しません。 root 権限は、ユーザーの明示的な操作があった場合にのみ呼び出され、「設定」→「root アクセス」でいつでも取り消すことができます。
+</string>
+    <string name="pp_s6c_local_heading">
+オンデバイスのルート実行
+</string>
+    <string name="pp_s6c_local_body">
+すべてのルート コマンドと I/O ストリームは、libsu とインストールされたルート マネージャー (Magisk、KernelSU、APatch、SuperSU) によって管理されるローカル ルート プロセスを介して処理されます。 root 資格情報、su キー、またはコマンド ログがリモートに保存されたり、デバイスの外部に送信されたりすることはありません。
+</string>
+    <string name="pp_s6c_permitted_heading">
+ルートアクセスの許可された用途
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+システム パーティションの参照: 明示的な指示に応じて、ルート (/) パーティションおよび保護されたディレクトリ上のファイルを参照および検査します。
+</item>
+        <item>
+高度なファイル操作: ユーザーの要求に応じて、保護されたストレージの場所でファイルのコピー、移動、編集、または削除を実行します。
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 当社は、Ultimate File Manager Proのファイル管理機能の提供に直接関係しない目的で、お客様の個人情報やGoogleユーザーデータを第三者に販売、レンタル、交換、譲渡、開示することは一切ありません。
@@ -998,6 +1052,9 @@ S3 / S3互換ストレージの認証情報（AWS S3、MinIO、IDrive E2など�
         <item>
 メディア再生状態
 </item>
+        <item>
+メディアの再生状態
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1050,6 +1107,9 @@ S3バケットに接続するためのアクセスキーIDとシークレット�
 </item>
         <item>
 Cookie（ufm_lang）により、セッション間およびブラウザ再起動後も言語設定を記憶 · Webブラウザストレージ
+</item>
+        <item>
+Cookie (ufm_lang) は、セッション中およびブラウザの再起動後も選択した言語を記憶します · Web ブラウザのストレージ
 </item>
     </string-array>
 
@@ -1121,6 +1181,9 @@ PINまたは復旧コード
 </item>
         <item>
 アプリのコア機能を提供
+</item>
+        <item>
+アプリのコア機能を提供する
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

@@ -46,6 +46,9 @@ Dengan mengunduh atau menggunakan Ultimate File Manager Pro, Anda menyetujui Sya
     <string name="tc_s3b_title">
 3b. Integrasi Cloud RClone
 </string>
+    <string name="tc_s3c_title">
+3c. Rooted Devices &amp; Superuser Privileges
+</string>
     <string name="tc_s4_title">
 4. Tanggung Jawab Anda
 </string>
@@ -133,6 +136,9 @@ Karena API dan titik akhir penyedia cloud dapat berubah tanpa pemberitahuan, kam
     </string-array>
     <string name="tc_s3b_summary">
 Menghubungkan ke drive cloud melalui RClone dilakukan langsung dari ponsel atau TV Anda. Kami tidak pernah melihat file atau kata sandi cloud Anda. Kata sandi Anda dienkripsi di ponsel Anda, dan Anda tunduk pada ketentuan penyedia cloud yang Anda konfigurasi.
+</string>
+    <string name="tc_s3c_body">
+When you choose to enable Root Access on a rooted mobile device, Ultimate File Manager Pro uses the libsu library to request Superuser permissions from your installed root manager (Magisk, KernelSU, APatch, SuperSU). Superuser access grants unrestricted read and write capabilities across your device\'s system partitions (including the root / mount point). Modifying, renaming, or deleting system files carries severe risks, including permanent OS corruption, bootloops, data loss, or bricking. You acknowledge that you use Root Access entirely at your own risk. KiloWatch accepts no liability for device instability, hardware failure, or data loss arising from root operations.
 </string>
 
     <string name="tc_s4_body">
@@ -242,6 +248,9 @@ Pembuat GIF — buat berkas GIF animasi dari gambar yang dipilih dengan kecepata
         <item>
 Alat EXIF Foto — periksa metadata EXIF dan GPS foto, hapus geotag privat dan informasi perangkat, serta ganti nama foto secara massal menggunakan stempel waktu pengambilan dan metadata kamera.
 </item>
+        <item>
+Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -285,6 +294,9 @@ Bug &amp; Kesalahan
         <item>
 Tanggung Jawab Kami
 </item>
+        <item>
+Our Liability
+</item>
     </string-array>
     <string-array name="tc_risk_details">
         <item>
@@ -325,6 +337,9 @@ Tidak ada perangkat lunak yang sempurna. Kami tidak dapat menjamin aplikasi akan
 </item>
         <item>
 Total tanggung jawab kami dibatasi pada jumlah total yang Anda bayarkan untuk pembelian dalam aplikasi dalam 30 hari sebelum klaim. Kami tidak bertanggung jawab atas kehilangan data, kerusakan perangkat, atau kerugian keuntungan yang timbul dari fitur gratis.
+</item>
+        <item>
+Our total liability is capped at the total amount you paid for in-app purchases in the 30 days before any claim. We are not liable for data loss, device damage, or lost profits arising from free features.
 </item>
     </string-array>
 
@@ -371,6 +386,9 @@ Kelola catatan terindeks Anda secara bertanggung jawab — Anda dapat menghapus 
 </item>
         <item>
 Verifikasi keaslian dan keamanan berkas APK sebelum menginstalnya.
+</item>
+        <item>
+Verify the authenticity and safety of any APK files before installing them.
 </item>
     </string-array>
 
@@ -430,6 +448,9 @@ Bluetooth
         <item>
 Getar
 </item>
+        <item>
+Vibrate
+</item>
     </string-array>
     <string-array name="tc_permission_details">
         <item>
@@ -485,6 +506,9 @@ Terhubung ke Android TV yang dipasangkan untuk bertindak sebagai keyboard dan mo
 </item>
         <item>
 Memberikan umpan balik haptik saat menekan tombol pada Remote TV.
+</item>
+        <item>
+Provides haptic feedback when pressing buttons on the TV Remote.
 </item>
     </string-array>
 
@@ -616,6 +640,9 @@ AndroidX ExifInterface (androidx.exifinterface:exifinterface) — pustaka untuk 
         <item>
 Amazon Appstore SDK — memproses pembelian tip dalam aplikasi yang opsional di perangkat Amazon. (Proprietary)
 </item>
+        <item>
+Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -662,6 +689,9 @@ File Anda tetap berada di perangkat Anda — kami tidak pernah melihatnya. Denga
 </string>
     <string name="pp_s6b_title">
 6b. Integrasi Cloud RClone — Privasi &amp; Kepatuhan
+</string>
+    <string name="pp_s6c_title">
+6c. Rooted Devices &amp; Superuser Access — Privacy &amp; Compliance
 </string>
     <string name="pp_s7_title">
 7. Berbagi Data &amp; Pihak Ketiga
@@ -842,6 +872,30 @@ Remote Browsing: Mengambil struktur folder dan metadata file untuk menampilkan k
 File Operations: Mengunggah, mengunduh, mengubah nama, menyalin, memindahkan, atau menghapus file di penyimpanan jarak jauh Anda atas permintaan eksplisit Anda.
 </item>
     </string-array>
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
+    <string name="pp_s6c_compliance_banner">
+Root Access on supported mobile devices operates strictly on-device using the libsu framework. No elevated command data or system files are ever collected or transmitted.
+</string>
+    <string name="pp_s6c_intro">
+When Root Access is enabled on a rooted mobile device, all superuser commands, root shell sessions, and partition operations are executed strictly on-device. Ultimate File Manager Pro does not transmit, log, upload, or share any root partition files, system binaries, or superuser credentials to KiloWatch servers or any third parties. Root privileges are only invoked upon explicit user action and can be revoked at any time via Settings → Root Access.
+</string>
+    <string name="pp_s6c_local_heading">
+On-Device Root Execution
+</string>
+    <string name="pp_s6c_local_body">
+All root commands and I/O streams are handled via a local root process managed by libsu and your installed root manager (Magisk, KernelSU, APatch, SuperSU). No root credentials, su keys, or command logs are stored remotely or transmitted outside your device.
+</string>
+    <string name="pp_s6c_permitted_heading">
+Permitted Uses of Root Access
+</string>
+    <string-array name="pp_s6c_permitted">
+        <item>
+System Partition Browsing: Browsing and inspecting files on the root (/) partition and protected directories at your explicit instruction.
+</item>
+        <item>
+Elevated File Operations: Performing file copying, moving, editing, or deletion in protected storage locations when requested by the user.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 Kami tidak menjual, menyewakan, memperdagangkan, mentransfer, atau mengungkapkan informasi pribadi Anda atau data pengguna Google kepada pihak ketiga mana pun untuk tujuan apa pun yang tidak terkait langsung dengan penyediaan fitur manajemen file Ultimate File Manager Pro — titik.
@@ -1000,6 +1054,9 @@ Pilihan Bahasa (Cookie)
         <item>
 Status Pemutaran Media
 </item>
+        <item>
+Media Playback State
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1052,6 +1109,9 @@ Antrean saat ini, posisi pemutaran, dan pengaturan pemutar untuk melanjutkan dar
 </item>
         <item>
 Cookie (ufm_lang) mengingat pilihan bahasa Anda selama sesi dan saat memulai ulang browser · Penyimpanan peramban web
+</item>
+        <item>
+A cookie (ufm_lang) remembers your language choice throughout the session and across browser restarts · Web browser storage
 </item>
     </string-array>
 
@@ -1123,6 +1183,9 @@ Buat dan rawat indeks file untuk penelusuran dan pencarian cepat (dapat dikelola
 </item>
         <item>
 Menyediakan fungsi inti aplikasi
+</item>
+        <item>
+Provide core app functionality
 </item>
     </string-array>
     <string-array name="pp_use_analytics">
