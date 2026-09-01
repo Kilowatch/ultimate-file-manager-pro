@@ -13315,6 +13315,85 @@ SELinux コンテキスト
     <string name="root_symlink_target">
 リンクターゲット
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+アップデートをチェックする
+</string>
+    <string name="settings_foss_update_subtitle_on">
+アプリを開いたときの自動リリースチェック (GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+自動リリースチェックが無効になっています
+</string>
+    <string name="settings_foss_update_check_now">
+アップデートをチェックする
+</string>
+    <string name="update_checking_toast">
+アップデートをチェックしています...
+</string>
+    <string name="update_already_latest_title">
+最新情報を入手
+</string>
+    <string name="update_already_latest_msg">
+Ultimate File Manager Pro v%1$s は最新リリースです。
+</string>
+    <string name="update_available_title">
+利用可能なアップデート: v%1$s
+</string>
+    <string name="update_available_msg">
+Ultimate File Manager Pro の新しいバージョンが GitHub で入手できます。
+</string>
+    <string name="update_version_comparison">
+インストール済み: v%1$s • 最新: v%2$s
+</string>
+    <string name="update_btn_download">
+アップデートをダウンロード (%1$s)
+</string>
+    <string name="update_btn_view_release">
+GitHub で見る
+</string>
+    <string name="update_btn_remind_later">
+後でリマインドする
+</string>
+    <string name="update_notification_title">
+利用可能な UFM アップデート: v%1$s
+</string>
+    <string name="update_notification_desc">
+新しいリリース (v%1$s) は GitHub で入手できます。タップしてダウンロードします。
+</string>
+    <string name="update_downloading_toast">
+ダウンロードリンクを開いています...
+</string>
+    <string name="update_check_failed">
+更新を確認できません。インターネット接続を確認してください。
+</string>
+    <string name="btn_download">
+ダウンロード
+</string>
+    <string name="btn_cancel">
+キャンセル
+</string>
+    <string name="notif_channel_app_updates">
+アプリのアップデート
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+更新チェックを有効にしますか?
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+有効にすると、Ultimate File Manager Pro はアプリを開いたときに新しい GitHub リリースをチェックし、新しいバージョンがダウンロード可能になったときに通知します。\n
+\n
+このチェック中に個人データが収集または送信されることはありません。
+</string>
+    <string name="settings_foss_update_enable_btn">
+有効にする
+</string>
+    <string name="backup_pref_foss_update">
+更新チェック設定
+</string>
+    <string name="icon_settings_foss_update">
+アップデートをチェックする
+</string>
 </resources>
 
 

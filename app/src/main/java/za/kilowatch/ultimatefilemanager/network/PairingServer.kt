@@ -541,8 +541,7 @@ class PairingServer(
     }
 
     private fun isTvDevice(): Boolean {
-        val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as android.app.UiModeManager
-        return uiModeManager.currentModeType == android.content.res.Configuration.UI_MODE_TYPE_TELEVISION
+        return za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)
     }
 
     // --- TV Storage Endpoints ---

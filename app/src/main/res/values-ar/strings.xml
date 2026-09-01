@@ -13315,6 +13315,85 @@ SuperSU
     <string name="root_symlink_target">
 هدف الارتباط
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+التحقق من وجود تحديثات
+</string>
+    <string name="settings_foss_update_subtitle_on">
+عمليات فحص الإصدار التلقائي عند فتح التطبيق (GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+تم تعطيل عمليات التحقق من الإصدار التلقائي
+</string>
+    <string name="settings_foss_update_check_now">
+التحقق من وجود تحديثات
+</string>
+    <string name="update_checking_toast">
+جارٍ التحقق من وجود تحديثات...
+</string>
+    <string name="update_already_latest_title">
+أنت على اطلاع
+</string>
+    <string name="update_already_latest_msg">
+Ultimate File Manager Pro v%1$s هو الإصدار الأحدث.
+</string>
+    <string name="update_available_title">
+التحديث متاح: v%1$s
+</string>
+    <string name="update_available_msg">
+يتوفر إصدار جديد من Ultimate File Manager Pro على GitHub.
+</string>
+    <string name="update_version_comparison">
+تم التثبيت: v%1$s • الأحدث: v%2$s
+</string>
+    <string name="update_btn_download">
+تنزيل التحديث (%1$s)
+</string>
+    <string name="update_btn_view_release">
+عرض على جيثب
+</string>
+    <string name="update_btn_remind_later">
+ذكرني لاحقا
+</string>
+    <string name="update_notification_title">
+يتوفر تحديث UFM: v%1$s
+</string>
+    <string name="update_notification_desc">
+يتوفر إصدار جديد (v%1$s) على GitHub. انقر للتنزيل.
+</string>
+    <string name="update_downloading_toast">
+جاري فتح رابط التحميل...
+</string>
+    <string name="update_check_failed">
+غير قادر على التحقق من وجود تحديثات. يرجى التحقق من اتصالك بالإنترنت.
+</string>
+    <string name="btn_download">
+تحميل
+</string>
+    <string name="btn_cancel">
+يلغي
+</string>
+    <string name="notif_channel_app_updates">
+تحديثات التطبيق
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+هل تريد تمكين عمليات التحقق من التحديث؟
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+عند التمكين، سيقوم Ultimate File Manager Pro بالتحقق من إصدارات GitHub الجديدة عند فتح التطبيق وإعلامك عند توفر إصدار جديد للتنزيل.\n
+\n
+لا يتم جمع أي بيانات شخصية أو نقلها أثناء هذا التحقق.
+</string>
+    <string name="settings_foss_update_enable_btn">
+يُمكَِن
+</string>
+    <string name="backup_pref_foss_update">
+تحديث إعدادات التحقق
+</string>
+    <string name="icon_settings_foss_update">
+التحقق من وجود تحديثات
+</string>
 </resources>
 
 

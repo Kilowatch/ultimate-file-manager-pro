@@ -13315,6 +13315,85 @@ SELinux 컨텍스트
     <string name="root_symlink_target">
 링크 대상
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+업데이트 확인
+</string>
+    <string name="settings_foss_update_subtitle_on">
+앱 열기 시 자동 릴리스 확인(GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+자동 릴리스 확인이 비활성화되었습니다.
+</string>
+    <string name="settings_foss_update_check_now">
+업데이트 확인
+</string>
+    <string name="update_checking_toast">
+업데이트 확인 중...
+</string>
+    <string name="update_already_latest_title">
+최신 정보를 확인하세요
+</string>
+    <string name="update_already_latest_msg">
+Ultimate File Manager Pro v%1$s가 최신 릴리스입니다.
+</string>
+    <string name="update_available_title">
+업데이트 가능: v%1$s
+</string>
+    <string name="update_available_msg">
+Ultimate File Manager Pro의 새 버전이 GitHub에서 제공됩니다.
+</string>
+    <string name="update_version_comparison">
+설치됨: v%1$s • 최신: v%2$s
+</string>
+    <string name="update_btn_download">
+업데이트 다운로드(%1$s)
+</string>
+    <string name="update_btn_view_release">
+GitHub에서 보기
+</string>
+    <string name="update_btn_remind_later">
+나중에 알림
+</string>
+    <string name="update_notification_title">
+UFM 업데이트 가능: v%1$s
+</string>
+    <string name="update_notification_desc">
+GitHub에서 새 릴리스(v%1$s)를 사용할 수 있습니다. 다운로드하려면 탭하세요.
+</string>
+    <string name="update_downloading_toast">
+다운로드 링크를 여는 중...
+</string>
+    <string name="update_check_failed">
+업데이트를 확인할 수 없습니다. 인터넷 연결을 확인하세요.
+</string>
+    <string name="btn_download">
+다운로드
+</string>
+    <string name="btn_cancel">
+취소
+</string>
+    <string name="notif_channel_app_updates">
+앱 업데이트
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+업데이트 확인을 활성화하시겠습니까?
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+활성화되면 Ultimate File Manager Pro는 앱이 열릴 때 새로운 GitHub 릴리스를 확인하고 새 버전을 다운로드할 수 있을 때 알려줍니다.\n
+\n
+이 확인 중에는 개인 데이터가 수집되거나 전송되지 않습니다.
+</string>
+    <string name="settings_foss_update_enable_btn">
+할 수 있게 하다
+</string>
+    <string name="backup_pref_foss_update">
+업데이트 확인 설정
+</string>
+    <string name="icon_settings_foss_update">
+업데이트 확인
+</string>
 </resources>
 
 

@@ -674,7 +674,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             val item = svc.currentQueueItem
             if (item?.isVideo == true &&
                 PlayerPreferencesManager.getBackgroundVideoMode(this) == BackgroundVideoMode.PIP &&
-                !DeviceUtils.isTvDevice(this)
+                !isTv
             ) {
                 // Build PiP params with Previous, Play/Pause, Next
                 val pipBuilder = android.app.PictureInPictureParams.Builder()
@@ -787,7 +787,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         trackSheetList = findViewById(R.id.trackSheetList)
         trackSheetTitle = findViewById(R.id.trackSheetTitle)
 
-        if (!DeviceUtils.isTvDevice(this)) {
+        if (!isTv) {
             val overlay = findViewById<PlayerGestureOverlayView?>(R.id.gestureOverlay)
             if (overlay != null) {
                 gestureOverlay = overlay
@@ -857,7 +857,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         if (mainView != null) {
             ViewCompat.setOnApplyWindowInsetsListener(mainView) { v, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val isTv = DeviceUtils.isTvDevice(this)
+                val isTv = this.isTv
 
                 val pv = findViewById<View>(R.id.playerView)
                 if (pv != null) {
@@ -1145,7 +1145,7 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     private fun updateAlpha(view: View, isActive: Boolean) {
-        if (DeviceUtils.isTvDevice(this)) {
+        if (isTv) {
             view.alpha = if (isActive) 1.0f else 0.5f
         } else {
             view.alpha = if (isActive) 1.0f else 0.4f
@@ -1160,7 +1160,7 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     private fun showSpeedSheet() {
-        if (DeviceUtils.isTvDevice(this)) return
+        if (isTv) return
         if (playbackService?.isPlaying != true) return
         val current = playbackService?.getPlaybackSpeed() ?: 1.0f
         PlaybackSpeedBottomSheet.newInstance(current) { speed ->

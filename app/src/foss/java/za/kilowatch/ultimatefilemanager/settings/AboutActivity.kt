@@ -80,6 +80,9 @@ class AboutActivity : AppCompatActivity() {
 
         val txtVersion  = findViewById<TextView>(R.id.txtVersion)
         txtVersion.text = versionStr + fossBadge
+        txtVersion.setOnClickListener {
+            za.kilowatch.ultimatefilemanager.update.FossUpdateManager.checkManually(this)
+        }
 
         // GPL-3.0 notice — satisfies GPL-3.0 §4 user notification requirement
         val txtLicense = findViewById<TextView?>(R.id.txtFossLicense)
@@ -115,6 +118,11 @@ class AboutActivity : AppCompatActivity() {
                 clipboard?.setPrimaryClip(clip)
                 Toast.makeText(this, R.string.about_email_copied, Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // Check for Updates row
+        findViewById<View?>(R.id.cardCheckUpdates)?.setOnClickListener {
+            za.kilowatch.ultimatefilemanager.update.FossUpdateManager.checkManually(this)
         }
 
         // Help & Support row

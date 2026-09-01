@@ -3995,6 +3995,73 @@
                                                     android:clickable="false"
                                                     android:focusable="false" />
                         </LinearLayout>
+                        <View
+                            android:id="@+id/dividerFossUpdateCheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="64dp"
+                            android:background="@color/mobile_glass_stroke"
+                            android:visibility="gone" />
+                        <LinearLayout
+                            android:id="@+id/cardFossUpdateCheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackground"
+                            android:visibility="gone">
+                            <!-- Icon -->
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_install"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@string/settings_foss_update_title" />
+                            </FrameLayout>
+
+                            <!-- Label + current value -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="@dimen/margin_md">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_foss_update_title"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtFossUpdateCheckSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_foss_update_subtitle_off"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchFossUpdateCheck"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:clickable="false"
+                                android:focusable="false" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>

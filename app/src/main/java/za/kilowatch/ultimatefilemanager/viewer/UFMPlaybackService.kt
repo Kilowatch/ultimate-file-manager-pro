@@ -657,11 +657,11 @@ class UFMPlaybackService : Service() {
 
     private fun acquireWakeLock() {
         if (wakeLock == null) {
-            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-            wakeLock = powerManager.newWakeLock(
+            val powerManager = getSystemService(POWER_SERVICE) as? PowerManager
+            wakeLock = powerManager?.newWakeLock(
                 PowerManager.PARTIAL_WAKE_LOCK,
                 "UFM:MediaPlayback"
-            ).apply { setReferenceCounted(false) }
+            )?.apply { setReferenceCounted(false) }
         }
         wakeLock?.acquire(30 * 60 * 1000L) // max 30 min
     }

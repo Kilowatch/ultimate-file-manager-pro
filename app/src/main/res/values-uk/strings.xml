@@ -13315,6 +13315,85 @@ Root-дозвіл заборонено
     <string name="root_symlink_target">
 Link Target
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+Перевірте наявність оновлень
+</string>
+    <string name="settings_foss_update_subtitle_on">
+Автоматична перевірка випуску під час відкриття програми (GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+Автоматичні перевірки випуску вимкнено
+</string>
+    <string name="settings_foss_update_check_now">
+Перевірте наявність оновлень
+</string>
+    <string name="update_checking_toast">
+Перевірка оновлень...
+</string>
+    <string name="update_already_latest_title">
+Ви в курсі подій
+</string>
+    <string name="update_already_latest_msg">
+Ultimate File Manager Pro v%1$s – це остання версія.
+</string>
+    <string name="update_available_title">
+Доступне оновлення: v%1$s
+</string>
+    <string name="update_available_msg">
+Нова версія Ultimate File Manager Pro доступна на GitHub.
+</string>
+    <string name="update_version_comparison">
+Установлено: v%1$s • Останні: v%2$s
+</string>
+    <string name="update_btn_download">
+Завантажити оновлення (%1$s)
+</string>
+    <string name="update_btn_view_release">
+Переглянути на GitHub
+</string>
+    <string name="update_btn_remind_later">
+Нагадати мені пізніше
+</string>
+    <string name="update_notification_title">
+Доступне оновлення UFM: v%1$s
+</string>
+    <string name="update_notification_desc">
+Новий випуск (версія %1$s) доступний на GitHub. Торкніться, щоб завантажити.
+</string>
+    <string name="update_downloading_toast">
+Відкриття посилання для завантаження...
+</string>
+    <string name="update_check_failed">
+Не вдалося перевірити наявність оновлень. Перевірте підключення до Інтернету.
+</string>
+    <string name="btn_download">
+Завантажити
+</string>
+    <string name="btn_cancel">
+Скасувати
+</string>
+    <string name="notif_channel_app_updates">
+Оновлення програми
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+Увімкнути перевірку оновлень?
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+Якщо ввімкнено, Ultimate File Manager Pro перевірятиме наявність нових версій GitHub, коли програма відкриватиметься, і сповіщатиме вас, коли нова версія стане доступною для завантаження.\n
+\n
+Жодні особисті дані не збираються та не передаються під час цієї перевірки.
+</string>
+    <string name="settings_foss_update_enable_btn">
+Увімкнути
+</string>
+    <string name="backup_pref_foss_update">
+Оновити параметри перевірки
+</string>
+    <string name="icon_settings_foss_update">
+Перевірте наявність оновлень
+</string>
 </resources>
 
 

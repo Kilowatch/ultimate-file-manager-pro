@@ -112,8 +112,7 @@ class DevicePairingActivity : AppCompatActivity() {
     }
 
     private fun isTvDevice(): Boolean {
-        val uiModeManager = getSystemService(Context.UI_MODE_SERVICE) as android.app.UiModeManager
-        return uiModeManager.currentModeType == android.content.res.Configuration.UI_MODE_TYPE_TELEVISION
+        return za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
     }
 
     private fun setupRecyclerView() {

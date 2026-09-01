@@ -16,12 +16,13 @@ object DeviceUtils {
      * Checks UiModeManager first; falls back to Amazon manufacturer check
      * for Fire TV Sticks that may not report UI_MODE_TYPE_TELEVISION correctly.
      */
-    fun isTvDevice(context: Context): Boolean {
-        val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
-        val isTvMode = uiModeManager.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
+    fun isTvDevice(context: Context?): Boolean {
+        if (context == null) return false
+        val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
+        val isTvMode = uiModeManager?.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
         // Fallback: some Amazon Fire TV Sticks report UI_MODE_TYPE_NORMAL
         val isAmazonTv = isAmazonDevice(context) &&
-            !context.packageManager.hasSystemFeature("android.hardware.touchscreen")
+            (context.packageManager?.hasSystemFeature("android.hardware.touchscreen") == false)
         return isTvMode || isAmazonTv
     }
 
@@ -38,9 +39,10 @@ object DeviceUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
     }
 
-    fun isAmazonDevice(context: Context): Boolean {
+    fun isAmazonDevice(context: Context?): Boolean {
+        if (context == null) return false
         return Build.MANUFACTURER.equals("Amazon", ignoreCase = true) ||
-               context.packageManager.hasSystemFeature("amazon.hardware.fire_tv")
+               (context.packageManager?.hasSystemFeature("amazon.hardware.fire_tv") == true)
     }
 
     /**

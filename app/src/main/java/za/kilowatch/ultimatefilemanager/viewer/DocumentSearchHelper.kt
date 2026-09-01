@@ -99,8 +99,8 @@ class DocumentSearchHelper<T>(
 
         searchInput.requestFocus()
         val imm = host.getContext()
-            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(searchInput, InputMethodManager.SHOW_IMPLICIT)
+            .getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.showSoftInput(searchInput, InputMethodManager.SHOW_IMPLICIT)
 
         // Restore previous query if one exists
         if (_query.isNotEmpty()) {
@@ -115,8 +115,8 @@ class DocumentSearchHelper<T>(
 
         searchInput.setText("")
         val imm = host.getContext()
-            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(searchInput.windowToken, 0)
+            .getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(searchInput.windowToken, 0)
 
         _query = ""
         matches = emptyList()

@@ -46,7 +46,7 @@ class PlayerGestureController(
         SEEK
     }
 
-    private val audioManager = activity.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val audioManager = activity.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
     private val touchSlop = ViewConfiguration.get(activity).scaledTouchSlop
 
     private var currentGesture = GestureType.NONE
@@ -151,8 +151,8 @@ class PlayerGestureController(
                 downY = event.y
                 currentGesture = GestureType.NONE
 
-                maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-                initialVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+                maxVolume = audioManager?.getStreamMaxVolume(AudioManager.STREAM_MUSIC) ?: 15
+                initialVolume = audioManager?.getStreamVolume(AudioManager.STREAM_MUSIC) ?: 0
 
                 val lp = activity.window.attributes
                 initialBrightness = if (lp.screenBrightness < 0f) {
@@ -214,7 +214,7 @@ class PlayerGestureController(
                         val volumeStep = (percentDelta * maxVolume).toInt()
                         val targetVolume = (initialVolume + volumeStep).coerceIn(0, maxVolume)
 
-                        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, targetVolume, 0)
+                        audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, targetVolume, 0)
 
                         val isMuted = targetVolume == 0
                         val percent = if (maxVolume > 0) (targetVolume * 100 / maxVolume) else 0

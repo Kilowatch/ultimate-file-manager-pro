@@ -992,6 +992,11 @@ class StorageBrowserActivity : AppCompatActivity() {
             hasCheckedCrashReportThisSession = true
             CrashReportDialogHelper.maybeShowCrashReportDialog(this, lifecycleScope)
         }
+
+        // Check for FOSS updates on app launch / re-open
+        if (za.kilowatch.ultimatefilemanager.BuildConfig.IS_FOSS) {
+            za.kilowatch.ultimatefilemanager.update.FossUpdateManager.checkOnAppOpen(this)
+        }
     }
 
     // â”€â”€ Auto-Backup Restore Detection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

@@ -5,6 +5,18 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.5] — 2026-09-01
+
+### Added
+- **FOSS GitHub Release Update Checker**:
+  - Implemented automatic GitHub release check on app launch / re-open for FOSS editions (`mobileFoss` and `tvFoss`), disabled by default with an opt-in confirmation dialog explaining update checks and zero personal data collection.
+  - Added "Check for Updates" toggle and instant check row to Settings and FOSS About screen with real-time feedback.
+  - Added automatic platform-targeted APK resolution (`tv-foss-release.apk` on Android TV vs `mobile-foss-release.apk` on Mobile) with glassmorphic dialogs and system update notifications.
+  - Implemented server-side release caching cron script (`fetch_latest_release.php`) and high-performance, rate-limit-free endpoint (`update.php`).
+
+### Fixed
+- Fixed a crash (`NullPointerException`) on app launch / media playback opening in `UFMPlayerActivity.onCreate` on devices where `UiModeManager` or system services return null (reported on HUAWEI QINL-360A, SDK 31, app 1.9.3-FOSS) by making `DeviceUtils.isTvDevice()` and player system service lookups fully null-safe.
+
 ## [1.9.4] — 2026-08-31
 
 ### Added

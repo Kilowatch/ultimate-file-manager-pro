@@ -13315,6 +13315,85 @@ Sahip / Grup
     <string name="root_symlink_target">
 Bağlantı Hedefi
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+Güncellemeleri Kontrol Et
+</string>
+    <string name="settings_foss_update_subtitle_on">
+Uygulama açıldığında otomatik sürüm kontrolleri (GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+Otomatik serbest bırakma kontrolleri devre dışı bırakıldı
+</string>
+    <string name="settings_foss_update_check_now">
+Güncellemeleri Kontrol Et
+</string>
+    <string name="update_checking_toast">
+Güncellemeler kontrol ediliyor...
+</string>
+    <string name="update_already_latest_title">
+Güncelsiniz
+</string>
+    <string name="update_already_latest_msg">
+Ultimate File Manager Pro v%1$s en son sürümdür.
+</string>
+    <string name="update_available_title">
+Güncelleme Mevcut: v%1$s
+</string>
+    <string name="update_available_msg">
+Ultimate File Manager Pro\'nun yeni bir sürümü GitHub\'da mevcut.
+</string>
+    <string name="update_version_comparison">
+Yüklendi: v%1$s • En son: v%2$s
+</string>
+    <string name="update_btn_download">
+Güncellemeyi İndir (%1$s)
+</string>
+    <string name="update_btn_view_release">
+GitHub\'da görüntüle
+</string>
+    <string name="update_btn_remind_later">
+Daha Sonra Hatırlat
+</string>
+    <string name="update_notification_title">
+UFM Güncellemesi Mevcut: v%1$s
+</string>
+    <string name="update_notification_desc">
+GitHub\'da yeni bir sürüm (v%1$s) mevcut. İndirmek için dokunun.
+</string>
+    <string name="update_downloading_toast">
+İndirme bağlantısı açılıyor...
+</string>
+    <string name="update_check_failed">
+Güncellemeler kontrol edilemiyor. Lütfen internet bağlantınızı kontrol edin.
+</string>
+    <string name="btn_download">
+İndirmek
+</string>
+    <string name="btn_cancel">
+İptal etmek
+</string>
+    <string name="notif_channel_app_updates">
+Uygulama Güncellemeleri
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+Güncelleme Kontrolleri Etkinleştirilsin mi?
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+Etkinleştirildiğinde, Ultimate File Manager Pro, uygulama açıldığında yeni GitHub sürümlerini kontrol edecek ve indirilmeye hazır yeni bir sürüm olduğunda sizi bilgilendirecektir.\n
+\n
+Bu kontrol sırasında hiçbir kişisel veri toplanmaz veya iletilmez.
+</string>
+    <string name="settings_foss_update_enable_btn">
+Olanak vermek
+</string>
+    <string name="backup_pref_foss_update">
+Kontrol Ayarlarını Güncelle
+</string>
+    <string name="icon_settings_foss_update">
+Güncellemeleri Kontrol Et
+</string>
 </resources>
 
 

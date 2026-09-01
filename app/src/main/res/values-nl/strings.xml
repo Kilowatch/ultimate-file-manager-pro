@@ -13315,6 +13315,85 @@ Eigenaar / Groep
     <string name="root_symlink_target">
 Doel koppelen
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+Controleer op updates
+</string>
+    <string name="settings_foss_update_subtitle_on">
+Automatische releasecontroles bij het openen van een app (GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+Automatische vrijgavecontroles uitgeschakeld
+</string>
+    <string name="settings_foss_update_check_now">
+Controleer op updates
+</string>
+    <string name="update_checking_toast">
+Controleren op updates...
+</string>
+    <string name="update_already_latest_title">
+Je bent op de hoogte
+</string>
+    <string name="update_already_latest_msg">
+Ultimate File Manager Pro v%1$s is de nieuwste release.
+</string>
+    <string name="update_available_title">
+Update beschikbaar: v%1$s
+</string>
+    <string name="update_available_msg">
+Een nieuwe versie van Ultimate File Manager Pro is beschikbaar op GitHub.
+</string>
+    <string name="update_version_comparison">
+Geïnstalleerd: v%1$s • Nieuwste: v%2$s
+</string>
+    <string name="update_btn_download">
+Update downloaden (%1$s)
+</string>
+    <string name="update_btn_view_release">
+Bekijk op GitHub
+</string>
+    <string name="update_btn_remind_later">
+Herinner me er later aan
+</string>
+    <string name="update_notification_title">
+UFM-update beschikbaar: v%1$s
+</string>
+    <string name="update_notification_desc">
+Er is een nieuwe release (v%1$s) beschikbaar op GitHub. Tik om te downloaden.
+</string>
+    <string name="update_downloading_toast">
+Downloadlink openen...
+</string>
+    <string name="update_check_failed">
+Kan niet controleren op updates. Controleer uw internetverbinding.
+</string>
+    <string name="btn_download">
+Downloaden
+</string>
+    <string name="btn_cancel">
+Annuleren
+</string>
+    <string name="notif_channel_app_updates">
+App-updates
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+Updatecontroles inschakelen?
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+Indien ingeschakeld, zal Ultimate File Manager Pro controleren op nieuwe GitHub-releases wanneer de app wordt geopend en u op de hoogte stellen wanneer er een nieuwe versie beschikbaar is om te downloaden.\n
+\n
+Tijdens deze controle worden geen persoonlijke gegevens verzameld of verzonden.
+</string>
+    <string name="settings_foss_update_enable_btn">
+Inschakelen
+</string>
+    <string name="backup_pref_foss_update">
+Update Controleer instellingen
+</string>
+    <string name="icon_settings_foss_update">
+Controleer op updates
+</string>
 </resources>
 
 

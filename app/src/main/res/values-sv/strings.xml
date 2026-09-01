@@ -13292,6 +13292,85 @@ SELinux kontext
     <string name="root_symlink_target">
 Länkmål
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+Check for Updates
+</string>
+    <string name="settings_foss_update_subtitle_on">
+Automatic release checks on app open (GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+Automatiska släppkontroller inaktiverade
+</string>
+    <string name="settings_foss_update_check_now">
+Check for Updates
+</string>
+    <string name="update_checking_toast">
+Checking for updates...
+</string>
+    <string name="update_already_latest_title">
+You\'re Up to Date
+</string>
+    <string name="update_already_latest_msg">
+Ultimate File Manager Pro v%1$s is the latest release.
+</string>
+    <string name="update_available_title">
+Update Available: v%1$s
+</string>
+    <string name="update_available_msg">
+A new version of Ultimate File Manager Pro is available on GitHub.
+</string>
+    <string name="update_version_comparison">
+Installed: v%1$s  •  Latest: v%2$s
+</string>
+    <string name="update_btn_download">
+Ladda ned uppdatering (%1$s)
+</string>
+    <string name="update_btn_view_release">
+Visa på GitHub
+</string>
+    <string name="update_btn_remind_later">
+Påminn mig senare
+</string>
+    <string name="update_notification_title">
+UFM-uppdatering tillgänglig: v%1$s
+</string>
+    <string name="update_notification_desc">
+En ny version (v%1$s) är tillgänglig på GitHub. Tryck för att ladda ner.
+</string>
+    <string name="update_downloading_toast">
+Öppnar nedladdningslänk...
+</string>
+    <string name="update_check_failed">
+Unable to check for updates. Please check your internet connection.
+</string>
+    <string name="btn_download">
+Ladda ner
+</string>
+    <string name="btn_cancel">
+Cancel
+</string>
+    <string name="notif_channel_app_updates">
+App Updates
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+Enable Update Checks?
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+När den är aktiverad kommer Ultimate File Manager Pro att leta efter nya GitHub-versioner när appen öppnas och meddela dig när en ny version är tillgänglig för nedladdning.\n
+\n
+Ingen personlig data samlas in eller överförs under denna kontroll.
+</string>
+    <string name="settings_foss_update_enable_btn">
+Aktivera
+</string>
+    <string name="backup_pref_foss_update">
+Update Check Settings
+</string>
+    <string name="icon_settings_foss_update">
+Sök efter uppdateringar
+</string>
 </resources>
 
 

@@ -13315,6 +13315,85 @@ SELinux 上下文
     <string name="root_symlink_target">
 链接目标
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+检查更新
+</string>
+    <string name="settings_foss_update_subtitle_on">
+应用程序打开时自动发布检查 (GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+自动释放检查已禁用
+</string>
+    <string name="settings_foss_update_check_now">
+检查更新
+</string>
+    <string name="update_checking_toast">
+正在检查更新...
+</string>
+    <string name="update_already_latest_title">
+你是最新的
+</string>
+    <string name="update_already_latest_msg">
+Ultimate File Manager Pro v%1$s 是最新版本。
+</string>
+    <string name="update_available_title">
+可用更新：v%1$s
+</string>
+    <string name="update_available_msg">
+GitHub 上提供了 Ultimate File Manager Pro 的新版本。
+</string>
+    <string name="update_version_comparison">
+已安装：v%1$s • 最新：v%2$s
+</string>
+    <string name="update_btn_download">
+下载更新 (%1$s)
+</string>
+    <string name="update_btn_view_release">
+在 GitHub 上查看
+</string>
+    <string name="update_btn_remind_later">
+稍后提醒我
+</string>
+    <string name="update_notification_title">
+UFM 更新可用：v%1$s
+</string>
+    <string name="update_notification_desc">
+GitHub 上提供了新版本 (v%1$s)。点击即可下载。
+</string>
+    <string name="update_downloading_toast">
+正在打开下载链接...
+</string>
+    <string name="update_check_failed">
+无法检查更新。请检查您的互联网连接。
+</string>
+    <string name="btn_download">
+下载
+</string>
+    <string name="btn_cancel">
+取消
+</string>
+    <string name="notif_channel_app_updates">
+应用程序更新
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+启用更新检查吗？
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+启用后，Ultimate File Manager Pro 将在应用打开时检查新的 GitHub 版本，并在有新版本可供下载时通知您。\n
+\n
+在此检查期间不会收集或传输任何个人数据。
+</string>
+    <string name="settings_foss_update_enable_btn">
+使能够
+</string>
+    <string name="backup_pref_foss_update">
+更新检查设置
+</string>
+    <string name="icon_settings_foss_update">
+检查更新
+</string>
 </resources>
 
 

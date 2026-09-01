@@ -193,10 +193,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
 
     private val isTv: Boolean
-        get() {
-            val uiModeManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
-            return uiModeManager.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
-        }
+        get() = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
 
     private lateinit var share: NetworkShare
     private var originalRemotePath: String = ""

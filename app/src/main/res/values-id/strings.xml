@@ -13315,6 +13315,85 @@ Pemilik / Grup
     <string name="root_symlink_target">
 Tautan Sasaran
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+Periksa Pembaruan
+</string>
+    <string name="settings_foss_update_subtitle_on">
+Pemeriksaan rilis otomatis saat aplikasi dibuka (GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+Pemeriksaan rilis otomatis dinonaktifkan
+</string>
+    <string name="settings_foss_update_check_now">
+Periksa Pembaruan
+</string>
+    <string name="update_checking_toast">
+Memeriksa pembaruan...
+</string>
+    <string name="update_already_latest_title">
+Anda Terkini
+</string>
+    <string name="update_already_latest_msg">
+Ultimate File Manager Pro v%1$s adalah rilis terbaru.
+</string>
+    <string name="update_available_title">
+Pembaruan Tersedia: v%1$s
+</string>
+    <string name="update_available_msg">
+Versi baru Ultimate File Manager Pro tersedia di GitHub.
+</string>
+    <string name="update_version_comparison">
+Terpasang: v%1$s • Terbaru: v%2$s
+</string>
+    <string name="update_btn_download">
+Unduh Pembaruan (%1$s)
+</string>
+    <string name="update_btn_view_release">
+Lihat di GitHub
+</string>
+    <string name="update_btn_remind_later">
+Ingatkan Saya Nanti
+</string>
+    <string name="update_notification_title">
+Pembaruan UFM Tersedia: v%1$s
+</string>
+    <string name="update_notification_desc">
+Rilis baru (v%1$s) tersedia di GitHub. Ketuk untuk mengunduh.
+</string>
+    <string name="update_downloading_toast">
+Membuka tautan unduhan...
+</string>
+    <string name="update_check_failed">
+Tidak dapat memeriksa pembaruan. Silakan periksa koneksi internet Anda.
+</string>
+    <string name="btn_download">
+Unduh
+</string>
+    <string name="btn_cancel">
+Membatalkan
+</string>
+    <string name="notif_channel_app_updates">
+Pembaruan Aplikasi
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+Aktifkan Pemeriksaan Pembaruan?
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+Jika diaktifkan, Ultimate File Manager Pro akan memeriksa rilis GitHub baru saat aplikasi dibuka dan memberi tahu Anda saat versi baru tersedia untuk diunduh.\n
+\n
+Tidak ada data pribadi yang dikumpulkan atau dikirimkan selama pemeriksaan ini.
+</string>
+    <string name="settings_foss_update_enable_btn">
+Memungkinkan
+</string>
+    <string name="backup_pref_foss_update">
+Perbarui Pengaturan Periksa
+</string>
+    <string name="icon_settings_foss_update">
+Periksa Pembaruan
+</string>
 </resources>
 
 

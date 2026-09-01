@@ -13315,6 +13315,85 @@ SELinux प्रसंग
     <string name="root_symlink_target">
 लिंक लक्ष्य
 </string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">
+अद्यतन के लिए जाँच
+</string>
+    <string name="settings_foss_update_subtitle_on">
+ऐप खुलने पर स्वचालित रिलीज़ जाँच (GitHub)
+</string>
+    <string name="settings_foss_update_subtitle_off">
+स्वचालित रिलीज़ जाँच अक्षम
+</string>
+    <string name="settings_foss_update_check_now">
+अद्यतन के लिए जाँच
+</string>
+    <string name="update_checking_toast">
+अपडेट के लिए जांच कर रहा है...
+</string>
+    <string name="update_already_latest_title">
+आप अप टू डेट हैं
+</string>
+    <string name="update_already_latest_msg">
+अल्टीमेट फ़ाइल मैनेजर प्रो v%1$s नवीनतम रिलीज़ है।
+</string>
+    <string name="update_available_title">
+अद्यतन उपलब्ध: v%1$s
+</string>
+    <string name="update_available_msg">
+अल्टीमेट फ़ाइल मैनेजर प्रो का एक नया संस्करण GitHub पर उपलब्ध है।
+</string>
+    <string name="update_version_comparison">
+स्थापित: v%1$s • नवीनतम: v%2$s
+</string>
+    <string name="update_btn_download">
+अपडेट डाउनलोड करें (%1$s)
+</string>
+    <string name="update_btn_view_release">
+GitHub पर देखें
+</string>
+    <string name="update_btn_remind_later">
+मुझे बाद में याद दिलाना
+</string>
+    <string name="update_notification_title">
+यूएफएम अपडेट उपलब्ध: v%1$s
+</string>
+    <string name="update_notification_desc">
+एक नई रिलीज़ (v%1$s) GitHub पर उपलब्ध है। डाउनलोड करने के लिए टैप करें.
+</string>
+    <string name="update_downloading_toast">
+डाउनलोड लिंक खुल रहा है...
+</string>
+    <string name="update_check_failed">
+अद्यतनों की जाँच करने में असमर्थ. कृपया अपने इंटरनेट कनेक्शन की जाँच करें।
+</string>
+    <string name="btn_download">
+डाउनलोड करना
+</string>
+    <string name="btn_cancel">
+रद्द करना
+</string>
+    <string name="notif_channel_app_updates">
+ऐप अपडेट
+</string>
+    <string name="settings_foss_update_enable_dialog_title">
+अद्यतन जांच सक्षम करें?
+</string>
+    <string name="settings_foss_update_enable_dialog_desc">
+सक्षम होने पर, अल्टीमेट फ़ाइल मैनेजर प्रो ऐप खुलने पर नए GitHub रिलीज़ की जाँच करेगा और डाउनलोड के लिए नया संस्करण उपलब्ध होने पर आपको सूचित करेगा।\n
+\n
+इस जाँच के दौरान कोई व्यक्तिगत डेटा एकत्र या प्रसारित नहीं किया जाता है।
+</string>
+    <string name="settings_foss_update_enable_btn">
+सक्षम
+</string>
+    <string name="backup_pref_foss_update">
+जाँच सेटिंग्स अद्यतन करें
+</string>
+    <string name="icon_settings_foss_update">
+अद्यतन के लिए जाँच
+</string>
 </resources>
 
 

@@ -4690,6 +4690,33 @@
     <string name="root_selinux_context">SELinux Context</string>
     <string name="root_owner_group">Owner / Group</string>
     <string name="root_symlink_target">Link Target</string>
+
+    <!-- FOSS GitHub Release Update Checker -->
+    <string name="settings_foss_update_title">Check for Updates</string>
+    <string name="settings_foss_update_subtitle_on">Automatic release checks on app open (GitHub)</string>
+    <string name="settings_foss_update_subtitle_off">Automatic release checks disabled</string>
+    <string name="settings_foss_update_check_now">Check for Updates</string>
+    <string name="update_checking_toast">Checking for updates...</string>
+    <string name="update_already_latest_title">You\'re Up to Date</string>
+    <string name="update_already_latest_msg">Ultimate File Manager Pro v%1$s is the latest release.</string>
+    <string name="update_available_title">Update Available: v%1$s</string>
+    <string name="update_available_msg">A new version of Ultimate File Manager Pro is available on GitHub.</string>
+    <string name="update_version_comparison">Installed: v%1$s  •  Latest: v%2$s</string>
+    <string name="update_btn_download">Download Update (%1$s)</string>
+    <string name="update_btn_view_release">View on GitHub</string>
+    <string name="update_btn_remind_later">Remind Me Later</string>
+    <string name="update_notification_title">UFM Update Available: v%1$s</string>
+    <string name="update_notification_desc">A new release (v%1$s) is available on GitHub. Tap to download.</string>
+    <string name="update_downloading_toast">Opening download link...</string>
+    <string name="update_check_failed">Unable to check for updates. Please check your internet connection.</string>
+    <string name="btn_download">Download</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="notif_channel_app_updates">App Updates</string>
+    <string name="settings_foss_update_enable_dialog_title">Enable Update Checks?</string>
+    <string name="settings_foss_update_enable_dialog_desc">When enabled, Ultimate File Manager Pro will check for new GitHub releases when the app opens and notify you when a new version is available for download.\n\nNo personal data is collected or transmitted during this check.</string>
+    <string name="settings_foss_update_enable_btn">Enable</string>
+    <string name="backup_pref_foss_update">Update Check Settings</string>
+    <string name="icon_settings_foss_update">Check for Updates</string>
 </resources>
 
 

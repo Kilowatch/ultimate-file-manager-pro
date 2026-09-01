@@ -41,6 +41,11 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchCrashReport: SwitchMaterial
     private lateinit var txtCrashReportSubtitle: TextView
 
+    private var cardFossUpdateCheck: View? = null
+    private var dividerFossUpdateCheck: View? = null
+    private var switchFossUpdateCheck: SwitchMaterial? = null
+    private var txtFossUpdateCheckSubtitle: TextView? = null
+
     private var cardAllFilesAccess: View? = null
     private var dividerAllFilesAccess: View? = null
     private var switchAllFilesAccess: SwitchMaterial? = null
@@ -232,6 +237,36 @@ class SettingsActivity : AppCompatActivity() {
 
         cardCrashReport.setOnClickListener { toggleCrashReport() }
         switchCrashReport.setOnCheckedChangeListener(null)
+
+        // Check for Updates (FOSS only)
+        cardFossUpdateCheck = findViewById(R.id.cardFossUpdateCheck)
+        dividerFossUpdateCheck = findViewById(R.id.dividerFossUpdateCheck)
+        switchFossUpdateCheck = findViewById(R.id.switchFossUpdateCheck)
+        txtFossUpdateCheckSubtitle = findViewById(R.id.txtFossUpdateCheckSubtitle)
+
+        if (za.kilowatch.ultimatefilemanager.BuildConfig.IS_FOSS) {
+            cardFossUpdateCheck?.visibility = View.VISIBLE
+            dividerFossUpdateCheck?.visibility = View.VISIBLE
+
+            val autoCheckEnabled = FossUpdatePreferenceManager.isAutoCheckEnabled(this)
+            switchFossUpdateCheck?.isChecked = autoCheckEnabled
+            updateFossUpdateSubtitle(autoCheckEnabled)
+
+            cardFossUpdateCheck?.setOnClickListener {
+                if (!FossUpdatePreferenceManager.isAutoCheckEnabled(this)) {
+                    toggleFossAutoCheck()
+                } else {
+                    za.kilowatch.ultimatefilemanager.update.FossUpdateManager.checkManually(this)
+                }
+            }
+
+            switchFossUpdateCheck?.setOnClickListener {
+                toggleFossAutoCheck()
+            }
+        } else {
+            cardFossUpdateCheck?.visibility = View.GONE
+            dividerFossUpdateCheck?.visibility = View.GONE
+        }
 
         // All Files Access toggle (Mobile API 30+)
         cardAllFilesAccess = findViewById(R.id.cardAllFilesAccess)
@@ -1070,6 +1105,13 @@ class SettingsActivity : AppCompatActivity() {
             updateTipJarPopupSubtitle(enabled)
         }
 
+        // Refresh Check for Updates (FOSS)
+        if (za.kilowatch.ultimatefilemanager.BuildConfig.IS_FOSS && switchFossUpdateCheck != null) {
+            val enabled = FossUpdatePreferenceManager.isAutoCheckEnabled(this)
+            switchFossUpdateCheck?.isChecked = enabled
+            updateFossUpdateSubtitle(enabled)
+        }
+
         // Refresh Main Menu View Mode subtitle
         val txtMainMenuViewModeSubtitle = findViewById<TextView?>(R.id.txtMainMenuViewModeSubtitle)
         val mode = za.kilowatch.ultimatefilemanager.storage.MainMenuViewModeManager.loadViewMode(this)
@@ -1193,6 +1235,74 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.settings_crash_report_subtitle_on)
         } else {
             getString(R.string.settings_crash_report_subtitle_off)
+        }
+    }
+
+    private fun toggleFossAutoCheck() {
+        val currentlyEnabled = FossUpdatePreferenceManager.isAutoCheckEnabled(this)
+        if (!currentlyEnabled) {
+            showEnableFossUpdateDialog()
+        } else {
+            FossUpdatePreferenceManager.setAutoCheckEnabled(this, false)
+            switchFossUpdateCheck?.isChecked = false
+            updateFossUpdateSubtitle(false)
+        }
+    }
+
+    private fun showEnableFossUpdateDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message,
+            null
+        )
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        imgIcon?.setImageResource(R.drawable.ic_install)
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        txtTitle?.text = getString(R.string.settings_foss_update_enable_dialog_title)
+
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        txtMessage?.text = getString(R.string.settings_foss_update_enable_dialog_desc)
+
+        val btnEnable = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+        btnEnable?.text = getString(R.string.settings_foss_update_enable_btn)
+        btnEnable?.setOnClickListener {
+            dialog.dismiss()
+            FossUpdatePreferenceManager.setAutoCheckEnabled(this, true)
+            switchFossUpdateCheck?.isChecked = true
+            updateFossUpdateSubtitle(true)
+            za.kilowatch.ultimatefilemanager.update.FossUpdateManager.checkManually(this)
+        }
+
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+        btnCancel?.visibility = View.VISIBLE
+        btnCancel?.text = getString(R.string.btn_cancel)
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+            switchFossUpdateCheck?.isChecked = false
+            updateFossUpdateSubtitle(false)
+        }
+
+        dialog.setOnCancelListener {
+            switchFossUpdateCheck?.isChecked = false
+            updateFossUpdateSubtitle(false)
+        }
+
+        dialog.show()
+    }
+
+    private fun updateFossUpdateSubtitle(enabled: Boolean) {
+        txtFossUpdateCheckSubtitle?.text = if (enabled) {
+            getString(R.string.settings_foss_update_subtitle_on)
+        } else {
+            getString(R.string.settings_foss_update_subtitle_off)
         }
     }
 
@@ -1931,7 +2041,8 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
             CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size),
             CardIcon(R.id.cardGridIndicators, "settings_grid_indicators", R.drawable.ic_view_list),
-            CardIcon(R.id.cardTipJarPopup, "settings_tip_jar_popup", R.drawable.ic_tip_jar_glow)
+            CardIcon(R.id.cardTipJarPopup, "settings_tip_jar_popup", R.drawable.ic_tip_jar_glow),
+            CardIcon(R.id.cardFossUpdateCheck, "settings_foss_update", R.drawable.ic_install)
         )
 
         for (card in cards) {
