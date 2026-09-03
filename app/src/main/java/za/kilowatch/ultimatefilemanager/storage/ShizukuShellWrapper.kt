@@ -51,10 +51,9 @@ object ShizukuShellWrapper {
                 ?: reply?.getBinder("binder")
             if (binder != null) {
                 try {
-                    val method = Shizuku::class.java.getDeclaredMethod("setProviderBinder", android.os.IBinder::class.java)
-                    method.isAccessible = true
-                    method.invoke(null, binder)
-                } catch (e: Exception) {
+                    Shizuku.onBinderReceived(null, ctx.packageName)
+                    Shizuku.onBinderReceived(binder, ctx.packageName)
+                } catch (e: Throwable) {
                     e.printStackTrace()
                 }
                 Shizuku.pingBinder()
@@ -66,13 +65,89 @@ object ShizukuShellWrapper {
         }
     }
 
-    fun isAuthorized(context: android.content.Context? = null): Boolean {
+    /**
+     * Safely checks self permission without crashing if the client is not attached,
+     * the remote binder is dead, or the service threw an IllegalStateException.
+     * If unattached, attempts an automatic one-time re-attach before reporting denied.
+     */
+    fun checkPermissionSafely(context: android.content.Context? = null): Int {
         return try {
             if (!Shizuku.pingBinder()) {
                 tryBindShevery(context)
             }
-            Shizuku.pingBinder() && Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
-        } catch (e: Exception) {
+            if (!Shizuku.pingBinder()) {
+                return PackageManager.PERMISSION_DENIED
+            }
+            try {
+                Shizuku.checkSelfPermission()
+            } catch (e: IllegalStateException) {
+                // If "Not an attached client", try to re-attach once
+                val binder = Shizuku.getBinder()
+                val pkgName = context?.packageName ?: try {
+                    za.kilowatch.ultimatefilemanager.UfmApplication.instance.packageName
+                } catch (_: Exception) { null }
+
+                if (binder != null && binder.pingBinder() && pkgName != null) {
+                    try {
+                        Shizuku.onBinderReceived(null, pkgName)
+                        Shizuku.onBinderReceived(binder, pkgName)
+                        return Shizuku.checkSelfPermission()
+                    } catch (re: Throwable) {
+                        android.util.Log.w("ShizukuShellWrapper", "Re-attach failed: ${re.message}")
+                    }
+                }
+                PackageManager.PERMISSION_DENIED
+            }
+        } catch (e: Throwable) {
+            android.util.Log.w("ShizukuShellWrapper", "checkPermissionSafely failed: ${e.message}")
+            PackageManager.PERMISSION_DENIED
+        }
+    }
+
+    /**
+     * Safely requests permission without crashing if client is not attached.
+     * Attempts a one-time re-attach if unattached before failing.
+     */
+    fun requestPermissionSafely(requestCode: Int, context: android.content.Context? = null): Boolean {
+        return try {
+            if (!Shizuku.pingBinder()) {
+                tryBindShevery(context)
+            }
+            if (!Shizuku.pingBinder()) {
+                return false
+            }
+            try {
+                Shizuku.requestPermission(requestCode)
+                true
+            } catch (e: IllegalStateException) {
+                // Try re-attaching once
+                val binder = Shizuku.getBinder()
+                val pkgName = context?.packageName ?: try {
+                    za.kilowatch.ultimatefilemanager.UfmApplication.instance.packageName
+                } catch (_: Exception) { null }
+
+                if (binder != null && binder.pingBinder() && pkgName != null) {
+                    try {
+                        Shizuku.onBinderReceived(null, pkgName)
+                        Shizuku.onBinderReceived(binder, pkgName)
+                        Shizuku.requestPermission(requestCode)
+                        return true
+                    } catch (re: Throwable) {
+                        android.util.Log.w("ShizukuShellWrapper", "requestPermission re-attach failed: ${re.message}")
+                    }
+                }
+                false
+            }
+        } catch (e: Throwable) {
+            android.util.Log.w("ShizukuShellWrapper", "requestPermissionSafely failed: ${e.message}")
+            false
+        }
+    }
+
+    fun isAuthorized(context: android.content.Context? = null): Boolean {
+        return try {
+            checkPermissionSafely(context) == PackageManager.PERMISSION_GRANTED
+        } catch (e: Throwable) {
             false
         }
     }

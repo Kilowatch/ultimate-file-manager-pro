@@ -13394,6 +13394,95 @@ Mettre à jour les paramètres de vérification
     <string name="icon_settings_foss_update">
 Vérifier les mises à jour
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+Détails de l\'application
+</string>
+    <string name="apk_details_version">
+Version:
+</string>
+    <string name="apk_details_installed">
+Installé:
+</string>
+    <string name="apk_details_not_installed">
+Non installé
+</string>
+    <string name="apk_details_open">
+Ouvrir
+</string>
+    <string name="apk_details_target_sdk">
+Cible:
+</string>
+    <string name="apk_details_min_sdk">
+Minimum:
+</string>
+    <string name="apk_details_play_store">
+Jouer au magasin
+</string>
+    <string name="apk_details_manifest">
+Manifeste
+</string>
+    <string name="apk_details_certificate">
+Certificat
+</string>
+    <string name="apk_details_cert_title">
+Informations sur le certificat
+</string>
+    <string name="apk_details_subject">
+Sujet
+</string>
+    <string name="apk_details_issuer">
+Émetteur
+</string>
+    <string name="apk_details_validity">
+Validité
+</string>
+    <string name="apk_details_algorithm">
+Algorithme
+</string>
+    <string name="apk_details_serial">
+Numéro de série
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+Copié dans le presse-papiers
+</string>
+    <string name="apk_details_copy_package">
+Copier le nom du package
+</string>
+    <string name="apk_details_status_same">
+Installé
+</string>
+    <string name="apk_details_status_update">
+Mise à jour
+</string>
+    <string name="apk_details_status_downgrade">
+Rétrograder
+</string>
+    <string name="apk_details_install">
+Installer
+</string>
+    <string name="apk_details_manifest_error">
+Impossible de décoder AndroidManifest.xml
+</string>
+    <string name="apk_details_cert_error">
+Impossible d\'extraire le certificat de signature
+</string>
+    <string name="apk_details_splits">
+Divisions
+</string>
+    <string name="apk_details_arch">
+Architecture
+</string>
 </resources>
 
 

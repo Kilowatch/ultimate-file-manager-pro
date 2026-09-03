@@ -82,7 +82,7 @@ class ShizukuActivity : AppCompatActivity() {
         // Primary Action (Start service or Authorize)
         binding.btnShizukuEnable.setOnClickListener {
             if (ShizukuShellWrapper.tryBindShevery(this)) {
-                if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
+                if (ShizukuShellWrapper.checkPermissionSafely(this) != PackageManager.PERMISSION_GRANTED) {
                     showAuthDialog()
                 }
             } else {
@@ -90,7 +90,11 @@ class ShizukuActivity : AppCompatActivity() {
             }
         }
 
-        Shizuku.addRequestPermissionResultListener(permissionListener)
+        try {
+            Shizuku.addRequestPermissionResultListener(permissionListener)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -159,7 +163,10 @@ class ShizukuActivity : AppCompatActivity() {
             .create()
 
         dialogView.findViewById<View>(R.id.btnAuthorize).setOnClickListener {
-            Shizuku.requestPermission(SHIZUKU_CODE)
+            val requested = ShizukuShellWrapper.requestPermissionSafely(SHIZUKU_CODE, this)
+            if (!requested) {
+                Toast.makeText(this, R.string.shizuku_start_failed, Toast.LENGTH_SHORT).show()
+            }
             dialog.dismiss()
         }
 
@@ -174,7 +181,11 @@ class ShizukuActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         statusAnimator?.cancel()
-        Shizuku.removeRequestPermissionResultListener(permissionListener)
+        try {
+            Shizuku.removeRequestPermissionResultListener(permissionListener)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 
     override fun onResume() {
@@ -213,7 +224,7 @@ class ShizukuActivity : AppCompatActivity() {
         if (isManagerInstalled) {
             val isBound = ShizukuShellWrapper.tryBindShevery(this)
             if (isBound) {
-                val isGranted = Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+                val isGranted = ShizukuShellWrapper.checkPermissionSafely(this) == PackageManager.PERMISSION_GRANTED
                 if (isGranted) {
                     // STATE 4: Active & Authorized (Connected)
                     binding.imgStatusIcon.setImageResource(R.drawable.ic_shield_check)

@@ -21,6 +21,7 @@
             android:layout_marginBottom="16dp">
 
             <FrameLayout
+                android:id="@+id/layoutPropertiesIconContainer"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@drawable/bg_icon_circle"
@@ -70,6 +71,311 @@
             android:layout_height="1dp"
             android:background="?android:attr/dividerHorizontal"
             android:layout_marginBottom="16dp" />
+
+        <!-- APK / XAPK App Details Section (Mobile Only) -->
+        <LinearLayout
+            android:id="@+id/layoutApkDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <!-- Package Name (Interactive pill chip with copy icon) -->
+            <LinearLayout
+                android:id="@+id/btnCopyApkPackage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_badge_step_pill"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="5dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:id="@+id/txtApkPackageName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="13sp"
+                    android:fontFamily="monospace"
+                    android:textStyle="bold"
+                    tools:text="com.barclays.absa.banking" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_copy"
+                    app:tint="?attr/colorPrimary"
+                    android:contentDescription="@string/apk_details_copy_package" />
+            </LinearLayout>
+
+            <!-- Table with Version, Installed, Target, Minimum -->
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1"
+                android:layout_marginTop="8dp">
+
+                <!-- Versão / Version Row -->
+                <TableRow android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/apk_details_version"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="14sp"
+                        android:paddingEnd="16dp" />
+                    <TextView
+                        android:id="@+id/txtApkVersionValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="14sp"
+                        android:fontFamily="monospace"
+                        tools:text="26.2.0 - February-Release 11181" />
+                </TableRow>
+
+                <!-- Instalado / Installed Row -->
+                <TableRow android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/apk_details_installed"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="14sp"
+                        android:paddingEnd="16dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtApkInstalledValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="14sp"
+                            android:fontFamily="monospace"
+                            tools:text="26.7.1 - July-Release 11214" />
+
+                        <!-- Status Badge & Open Button Row (Placed neatly below version to prevent clipping) -->
+                        <LinearLayout
+                            android:id="@+id/rowApkStatusActions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="5dp">
+
+                            <TextView
+                                android:id="@+id/badgeApkStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="3dp"
+                                android:background="@drawable/bg_apk_status_downgrade"
+                                android:textColor="#FFB74D"
+                                android:visibility="gone"
+                                tools:visibility="visible"
+                                tools:text="Downgrade" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnApkOpen"
+                                style="@style/Widget.Material3Expressive.Button.TonalButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginStart="8dp"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="0dp"
+                                android:minHeight="0dp"
+                                android:minWidth="0dp"
+                                android:text="@string/apk_details_open"
+                                android:textSize="12sp"
+                                android:textAllCaps="false"
+                                android:fontFamily="sans-serif-medium"
+                                android:textColor="?attr/colorPrimary"
+                                app:icon="@drawable/ic_arrow_forward"
+                                app:iconSize="14dp"
+                                app:iconTint="?attr/colorPrimary"
+                                app:iconGravity="textStart"
+                                app:iconPadding="4dp"
+                                app:cornerRadius="16dp"
+                                android:visibility="gone"
+                                tools:visibility="visible" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </TableRow>
+
+                <!-- Alvo / Target SDK Row -->
+                <TableRow android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/apk_details_target_sdk"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="14sp"
+                        android:paddingEnd="16dp" />
+                    <TextView
+                        android:id="@+id/txtApkTargetValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="14sp"
+                        android:fontFamily="monospace"
+                        tools:text="16.0 (SDK 36 W)" />
+                </TableRow>
+
+                <!-- Mínimo / Min SDK Row -->
+                <TableRow android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/apk_details_min_sdk"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="14sp"
+                        android:paddingEnd="16dp" />
+                    <TextView
+                        android:id="@+id/txtApkMinValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="14sp"
+                        android:fontFamily="monospace"
+                        tools:text="8.0 (SDK 26 O)" />
+                </TableRow>
+            </TableLayout>
+
+            <!-- Premium Actions: 2 Rows filling entire width -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp">
+
+                <!-- Row 1: Play Store & Manifest -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <!-- Play Store -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnApkPlayStore"
+                        style="@style/Widget.Material3Expressive.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="0dp"
+                        android:text="@string/apk_details_play_store"
+                        android:textSize="13sp"
+                        android:textAllCaps="false"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="?android:attr/textColorPrimary"
+                        app:cornerRadius="14dp"
+                        app:icon="@drawable/ic_apps"
+                        app:iconSize="18dp"
+                        app:iconPadding="8dp"
+                        app:iconGravity="textStart"
+                        app:iconTint="?attr/colorPrimary" />
+
+                    <!-- Manifest -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnApkManifest"
+                        style="@style/Widget.Material3Expressive.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="0dp"
+                        android:text="@string/apk_details_manifest"
+                        android:textSize="13sp"
+                        android:textAllCaps="false"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="?android:attr/textColorPrimary"
+                        app:cornerRadius="14dp"
+                        app:icon="@drawable/ic_file_code"
+                        app:iconSize="18dp"
+                        app:iconPadding="8dp"
+                        app:iconGravity="textStart"
+                        app:iconTint="?attr/colorPrimary" />
+                </LinearLayout>
+
+                <!-- Row 2: Certificate & Install -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Certificate -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnApkCertificate"
+                        style="@style/Widget.Material3Expressive.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="0dp"
+                        android:text="@string/apk_details_certificate"
+                        android:textSize="13sp"
+                        android:textAllCaps="false"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="?android:attr/textColorPrimary"
+                        app:cornerRadius="14dp"
+                        app:icon="@drawable/ic_shield_check"
+                        app:iconSize="18dp"
+                        app:iconPadding="8dp"
+                        app:iconGravity="textStart"
+                        app:iconTint="?attr/colorPrimary" />
+
+                    <!-- Install (Primary Accent Button) -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnApkInstallAction"
+                        style="@style/Widget.Material3Expressive.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="0dp"
+                        android:text="@string/apk_details_install"
+                        android:textSize="13sp"
+                        android:textAllCaps="false"
+                        android:fontFamily="sans-serif-bold"
+                        android:textColor="@color/white"
+                        app:backgroundTint="?attr/colorPrimary"
+                        app:cornerRadius="14dp"
+                        app:icon="@drawable/ic_install"
+                        app:iconSize="18dp"
+                        app:iconPadding="8dp"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/white" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Divider after APK Details -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/dividerHorizontal"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
 
         <!-- General Info Section (Grid/Table style rows) -->
         <TableLayout

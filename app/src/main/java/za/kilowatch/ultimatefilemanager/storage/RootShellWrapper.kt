@@ -41,8 +41,26 @@ object RootShellWrapper {
             return false
         }
         if (path.startsWith("/storage/") || path.startsWith("/sdcard") || path.startsWith("/mnt/media_rw") ||
-            path.startsWith("/mnt/user/") || path.startsWith("/mnt/runtime/") || path.startsWith("/mnt/expand/")) {
+            path.startsWith("/mnt/user/") || path.startsWith("/mnt/runtime/") || path.startsWith("/mnt/expand/") ||
+            path.startsWith("/mnt/sdcard")) {
             return false
+        }
+        // App's own private sandbox storage (cache, files, data dirs) is never part of the root hierarchy
+        val app = try { za.kilowatch.ultimatefilemanager.UfmApplication.instance } catch (_: Throwable) { null }
+        val pkg = app?.packageName ?: "za.kilowatch.ultimatefilemanager"
+        if (path.contains("/$pkg/") || path.endsWith("/$pkg") || path.contains("za.kilowatch.ultimatefilemanager")) {
+            return false
+        }
+        if (app != null) {
+            try {
+                if (path.startsWith(app.cacheDir.absolutePath) || path.startsWith(app.filesDir.absolutePath)) {
+                    return false
+                }
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N &&
+                    path.startsWith(app.dataDir.absolutePath)) {
+                    return false
+                }
+            } catch (_: Throwable) {}
         }
         return path == "/" || path.startsWith("/")
     }
@@ -344,6 +362,9 @@ object RootShellWrapper {
      * Opens an [InputStream] to read a root-protected file.
      */
     fun openInputStream(path: String): InputStream {
+        if (!isAuthorized()) {
+            throw java.io.IOException("Root access is not available or not authorized")
+        }
         val safePath = escapeShellPath(path)
         val process = ProcessBuilder("su", "-c", "cat '$safePath'").start()
         return process.inputStream
@@ -353,6 +374,9 @@ object RootShellWrapper {
      * Opens an [OutputStream] to write to a root-protected file.
      */
     fun openOutputStream(path: String): OutputStream {
+        if (!isAuthorized()) {
+            throw java.io.IOException("Root access is not available or not authorized")
+        }
         remount(path, rw = true)
         val safePath = escapeShellPath(path)
         val process = ProcessBuilder("su", "-c", "cat > '$safePath'").start()

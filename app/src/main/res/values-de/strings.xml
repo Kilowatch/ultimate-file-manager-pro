@@ -13394,6 +13394,95 @@ Prüfeinstellungen aktualisieren
     <string name="icon_settings_foss_update">
 Suchen Sie nach Updates
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+App-Details
+</string>
+    <string name="apk_details_version">
+Version:
+</string>
+    <string name="apk_details_installed">
+Installiert:
+</string>
+    <string name="apk_details_not_installed">
+Nicht installiert
+</string>
+    <string name="apk_details_open">
+Offen
+</string>
+    <string name="apk_details_target_sdk">
+Ziel:
+</string>
+    <string name="apk_details_min_sdk">
+Minimum:
+</string>
+    <string name="apk_details_play_store">
+Play Store
+</string>
+    <string name="apk_details_manifest">
+Manifest
+</string>
+    <string name="apk_details_certificate">
+Zertifikat
+</string>
+    <string name="apk_details_cert_title">
+Zertifikatsinformationen
+</string>
+    <string name="apk_details_subject">
+Thema
+</string>
+    <string name="apk_details_issuer">
+Emittent
+</string>
+    <string name="apk_details_validity">
+Gültigkeit
+</string>
+    <string name="apk_details_algorithm">
+Algorithmus
+</string>
+    <string name="apk_details_serial">
+Seriennummer
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+In die Zwischenablage kopiert
+</string>
+    <string name="apk_details_copy_package">
+Paketnamen kopieren
+</string>
+    <string name="apk_details_status_same">
+Installiert
+</string>
+    <string name="apk_details_status_update">
+Aktualisieren
+</string>
+    <string name="apk_details_status_downgrade">
+Downgrade
+</string>
+    <string name="apk_details_install">
+Installieren
+</string>
+    <string name="apk_details_manifest_error">
+AndroidManifest.xml konnte nicht dekodiert werden
+</string>
+    <string name="apk_details_cert_error">
+Signaturzertifikat konnte nicht extrahiert werden
+</string>
+    <string name="apk_details_splits">
+Spaltt
+</string>
+    <string name="apk_details_arch">
+Architektur
+</string>
 </resources>
 
 

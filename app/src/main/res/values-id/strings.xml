@@ -13394,6 +13394,95 @@ Perbarui Pengaturan Periksa
     <string name="icon_settings_foss_update">
 Periksa Pembaruan
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+Detail Aplikasi
+</string>
+    <string name="apk_details_version">
+Versi:
+</string>
+    <string name="apk_details_installed">
+Dipasang:
+</string>
+    <string name="apk_details_not_installed">
+Tidak dipasang
+</string>
+    <string name="apk_details_open">
+Membuka
+</string>
+    <string name="apk_details_target_sdk">
+Target:
+</string>
+    <string name="apk_details_min_sdk">
+Minimum:
+</string>
+    <string name="apk_details_play_store">
+Mainkan Toko
+</string>
+    <string name="apk_details_manifest">
+Tampak
+</string>
+    <string name="apk_details_certificate">
+Sertifikat
+</string>
+    <string name="apk_details_cert_title">
+Informasi Sertifikat
+</string>
+    <string name="apk_details_subject">
+Subjek
+</string>
+    <string name="apk_details_issuer">
+Penerbit
+</string>
+    <string name="apk_details_validity">
+Keabsahan
+</string>
+    <string name="apk_details_algorithm">
+Algoritma
+</string>
+    <string name="apk_details_serial">
+Nomor seri
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+Disalin ke papan klip
+</string>
+    <string name="apk_details_copy_package">
+Salin Nama Paket
+</string>
+    <string name="apk_details_status_same">
+Dipasang
+</string>
+    <string name="apk_details_status_update">
+Memperbarui
+</string>
+    <string name="apk_details_status_downgrade">
+Turunkan versi
+</string>
+    <string name="apk_details_install">
+Memasang
+</string>
+    <string name="apk_details_manifest_error">
+Tidak dapat memecahkan kode AndroidManifest.xml
+</string>
+    <string name="apk_details_cert_error">
+Tidak dapat mengekstrak sertifikat penandatanganan
+</string>
+    <string name="apk_details_splits">
+Perpecahan
+</string>
+    <string name="apk_details_arch">
+Arsitektur
+</string>
 </resources>
 
 

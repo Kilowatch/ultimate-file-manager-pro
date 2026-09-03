@@ -13394,6 +13394,95 @@ Ultimate File Manager Pro v%1$s – це остання версія.
     <string name="icon_settings_foss_update">
 Перевірте наявність оновлень
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+Деталі програми
+</string>
+    <string name="apk_details_version">
+Версія:
+</string>
+    <string name="apk_details_installed">
+Встановлено:
+</string>
+    <string name="apk_details_not_installed">
+Не встановлено
+</string>
+    <string name="apk_details_open">
+ВІДЧИНЕНО
+</string>
+    <string name="apk_details_target_sdk">
+Мета:
+</string>
+    <string name="apk_details_min_sdk">
+мінімум:
+</string>
+    <string name="apk_details_play_store">
+Play Store
+</string>
+    <string name="apk_details_manifest">
+Маніфест
+</string>
+    <string name="apk_details_certificate">
+Сертифікат
+</string>
+    <string name="apk_details_cert_title">
+Інформація про сертифікат
+</string>
+    <string name="apk_details_subject">
+Тема
+</string>
+    <string name="apk_details_issuer">
+Емітент
+</string>
+    <string name="apk_details_validity">
+Термін дії
+</string>
+    <string name="apk_details_algorithm">
+Алгоритм
+</string>
+    <string name="apk_details_serial">
+Серійний номер
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+Скопійовано в буфер обміну
+</string>
+    <string name="apk_details_copy_package">
+Копіювати назву пакета
+</string>
+    <string name="apk_details_status_same">
+встановлено
+</string>
+    <string name="apk_details_status_update">
+оновлення
+</string>
+    <string name="apk_details_status_downgrade">
+Понизити
+</string>
+    <string name="apk_details_install">
+встановити
+</string>
+    <string name="apk_details_manifest_error">
+Не вдалося декодувати AndroidManifest.xml
+</string>
+    <string name="apk_details_cert_error">
+Неможливо отримати сертифікат підпису
+</string>
+    <string name="apk_details_splits">
+Спліт
+</string>
+    <string name="apk_details_arch">
+Архітектура
+</string>
 </resources>
 
 

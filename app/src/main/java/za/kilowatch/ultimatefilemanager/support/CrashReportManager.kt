@@ -2344,54 +2344,58 @@ object CrashReportManager {
                     //     (`mAnimatorMap.keySet()`) that `animatePropertyBy` uses to
                     //     cancel a running animation on the property before starting the
                     //     next one, a single tiny object allocation that is likewise
-                    //     µs-scale. The app chains its animations from the
-                    //     end-listener (e.g. a repeating fade/pulse: when one alpha
-                    //     animation ends, the listener starts the next `.alpha()`
-                    //     animation), which is bounded per-frame UI work — `getValue` is
-                    //     a µs-scale property read and starting the next animator is
-                    //     allocation plus a property getter, so neither can by itself
-                    //     occupy the main thread for 5 s. The main looper is demonstrably
-                    //     processing a freshly dispatched vsync frame callback at sample
-                    //     time, which a thread parked inside a >5 s block cannot do — the
-                    //     >5 s block is device-side slowness / CPU starvation on the
-                    //     mid-range OPPO (the report's own `DefaultDispatcher-worker-*`,
-                    //     `DlnaSsdpListener`, `NanoHttpd Main Listener` and HTTP-server
-                    //     threads are all RUNNABLE) or a post-stall sample of the
-                    //     backlog the main looper drains after a genuine stall. The
-                    //     `AnrWatchdogThread` now treats a main-thread stack whose top
-                    //     frame is a `ViewPropertyAnimator` method (or the
-                    //     `java.util.HashMap$KeySet.iterator` creation directly above
-                    //     `ViewPropertyAnimator.animatePropertyBy` at the same chain's
-                    //     entry), with a
+                    //     µs-scale. A third report from a realme RMX2076, SDK 31, app
+                    //     1.9.1-FOSS, sampled the same animation-end chaining at
+                    //     `ViewPropertyAnimator.start`: when the animation-end listener
+                    //     starts the next animation via `.start()`, `start()` clears
+                    //     pending starters via `View.removeCallbacks` ->
+                    //     `HandlerActionQueue.removeCallbacks` (top frame), an in-memory
+                    //     queue cleanup of a single action that is likewise µs-scale.
+                    //     The app chains its animations from the end-listener (e.g. a
+                    //     repeating fade/pulse: when one animation ends, the listener starts
+                    //     the next animation), which is bounded per-frame UI work —
+                    //     `getValue`, iterator creation, or `removeCallbacks` is a
+                    //     µs-scale in-memory operation and starting the next animator
+                    //     cannot by itself occupy the main thread for 5 s. The main looper
+                    //     is demonstrably processing a freshly dispatched vsync frame
+                    //     callback at sample time, which a thread parked inside a >5 s
+                    //     block cannot do — the >5 s block is device-side slowness / CPU
+                    //     starvation on the device or a post-stall sample of the backlog the
+                    //     main looper drains after a genuine stall. The `AnrWatchdogThread`
+                    //     now treats a main-thread stack whose top frame is a
+                    //     `ViewPropertyAnimator` method (or the `HashMap$KeySet.iterator`
+                    //     creation directly above `animatePropertyBy`, or the
+                    //     `removeCallbacks` queue cleanup directly above `start`), with a
                     //     `ViewPropertyAnimator$AnimatorEventListener.onAnimationEnd`
                     //     dispatch from a `ValueAnimator.endAnimation` reached through
                     //     the `AnimationHandler`/`Choreographer` vsync frame, a
                     //     non-platform (R8-obfuscated) listener frame directly below the
-                    //     `ViewPropertyAnimator.alpha` call (the app's end-listener
-                    //     chaining the next animation — a pure-framework animation-end
-                    //     dispatch without it would already be caught by
-                    //     `isPureFrameworkStack`), and no framework blocking primitive
-                    //     anywhere on the stack, as a false positive and resets its
-                    //     heartbeat instead of writing a report. Genuine freezes keep the
-                    //     main thread parked inside a blocking primitive (a lock,
-                    //     file/network/database I/O or binder frame appears on the
-                    //     stack), or run the animation-end listener's body doing blocking
-                    //     work, and are still reported.
-                    val alphaFrameIdx = mainStackTrace.indexOfFirst {
-                        it.className == "android.view.ViewPropertyAnimator" && it.methodName == "alpha"
+                    //     `ViewPropertyAnimator` call (the app's end-listener chaining
+                    //     the next animation), and no framework blocking primitive anywhere
+                    //     on the stack, as a false positive and resets its heartbeat
+                    //     instead of writing a report. Genuine freezes keep the main
+                    //     thread parked inside a blocking primitive (a lock, file/network/
+                    //     database I/O or binder frame appears on the stack), or run the
+                    //     animation-end listener's body doing blocking work, and are still
+                    //     reported.
+                    val animFrameIdx = mainStackTrace.indexOfFirst {
+                        it.className == "android.view.ViewPropertyAnimator"
                     }
                     val topIsViewPropertyAnimatorMethod =
                         topFrame?.className == "android.view.ViewPropertyAnimator" ||
                         (topFrame?.className == "java.util.HashMap\$KeySet" &&
                          topFrame?.methodName == "iterator" &&
                          mainStackTrace.getOrNull(1)?.className == "android.view.ViewPropertyAnimator" &&
-                         mainStackTrace.getOrNull(1)?.methodName == "animatePropertyBy")
+                         mainStackTrace.getOrNull(1)?.methodName == "animatePropertyBy") ||
+                        ((topFrame?.className == "android.view.HandlerActionQueue" ||
+                          topFrame?.className == "android.view.View") &&
+                         topFrame?.methodName == "removeCallbacks" &&
+                         mainStackTrace.any {
+                             it.className == "android.view.ViewPropertyAnimator" && it.methodName == "start"
+                         })
 
                     val isViewPropertyAnimatorChainingStall =
                         topIsViewPropertyAnimatorMethod &&
-                        mainStackTrace.any {
-                            it.className == "android.view.ViewPropertyAnimator" && it.methodName == "animateProperty"
-                        } &&
                         mainStackTrace.any {
                             it.className == "android.view.ViewPropertyAnimator\$AnimatorEventListener" && it.methodName == "onAnimationEnd"
                         } &&
@@ -2408,8 +2412,8 @@ object CrashReportManager {
                         mainStackTrace.any {
                             it.className == "android.os.Handler" && it.methodName == "handleCallback"
                         } &&
-                        alphaFrameIdx >= 0 &&
-                        mainStackTrace.getOrNull(alphaFrameIdx + 1)
+                        animFrameIdx >= 0 &&
+                        mainStackTrace.getOrNull(animFrameIdx + 1)
                             ?.let { listener ->
                                 PLATFORM_PREFIXES.none { prefix -> listener.className.startsWith(prefix) }
                             } == true &&
@@ -2611,51 +2615,49 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    // 44. The main thread is sampled at the parcel-write entry of a
-                    //     device-vendor (OEM) binder call to its own "trancare assist"
-                    //     service, made from the frame-skip Choreographer hook the vendor
-                    //     ROM injects into the frame-rendering pipeline — e.g. TECNO/
-                    //     Transsion's `com.transsion.hubcore.view.TranChoreographerImpl.
-                    //     skippedFrames` (the same Choreographer hook as filters 21 and 28)
-                    //     -> `com.transsion.hubsdk.trancare.trancareassist.
-                    //     ITranTrancareAssistManager$Stub$Proxy.compulateSkipperFrame`
-                    //     (the vendor AIDL proxy dispatching skipped-frame data to the
-                    //     ROM's trancare service) -> `android.os.Parcel.writeInterfaceToken`
-                    //     -> `android.os.Parcel.nativeWriteInterfaceToken` (top frame),
-                    //     under `android.view.Choreographer.doFrame` ->
-                    //     `Choreographer$FrameDisplayEventReceiver.run` (a vsync frame
-                    //     callback freshly dispatched to the main looper by
-                    //     `Handler.handleCallback`) (reported from a TECNO TECNO KJ5,
-                    //     SDK 33, app 1.8.1-FOSS — the same device and family that
-                    //     produced the already-filtered filter 28 `Slog.e`/
-                    //     `Log.println_native` frame-skip report, sampled at the
-                    //     binder-call phase instead of the logging phase). The sampled
-                    //     frame is the vendor hook writing the parcel interface token at
-                    //     the very START of its binder call — `nativeWriteInterfaceToken`
-                    //     is a µs-scale in-memory parcel-buffer write that cannot by
-                    //     itself occupy the main thread for 5 s (the blocking
-                    //     `transact()` follows only after the parcel is fully written,
-                    //     so a sample caught here is by definition not inside the binder
-                    //     round-trip), and a thread genuinely parked inside a >5 s block
-                    //     cannot be processing a freshly dispatched vsync frame callback
-                    //     at sample time — so the >5 s block occurred in a PREVIOUS
-                    //     main-looper message and this sample is the post-stall first
-                    //     frame after recovery, the same family as filters 10/20/21/22/28.
-                    //     The stack has zero `za.kilowatch.ultimatefilemanager` frames,
-                    //     and the vendor SDK's class names (`com.transsion.*`, injected
-                    //     by the TECNO ROM, not part of this app) are not
-                    //     platform-prefixed, so `isPureFrameworkStack` is false even
-                    //     though the wait is the same system-side class. A genuine
-                    //     freeze keeps the main thread inside app business logic — an
-                    //     app frame on the stack, or a top frame that is not a Parcel
-                    //     `writeInterfaceToken` under the vendor's `skippedFrames` (e.g.
-                    //     the app's own AIDL binder call, which carries the app's
-                    //     generated `$Stub$Proxy` frame above the parcel write) — and
-                    //     is still reported.
+                    // 44. The main thread is sampled at the parcel-write entry or the
+                    //     synchronous binder round-trip of a device-vendor (OEM) binder call
+                    //     to its own "trancare assist" service, made from the frame-skip
+                    //     Choreographer hook the vendor ROM injects into the frame-rendering
+                    //     pipeline — e.g. TECNO/Transsion's `com.transsion.hubcore.view.
+                    //     TranChoreographerImpl.skippedFrames` (the same Choreographer hook as
+                    //     filters 21 and 28) -> `com.transsion.hubsdk.trancare.trancareassist.
+                    //     ITranTrancareAssistManager$Stub$Proxy.compulateSkipperFrame` (the
+                    //     vendor AIDL proxy dispatching skipped-frame data to the ROM's
+                    //     trancare service) -> `android.os.Parcel.writeInterfaceToken` ->
+                    //     `android.os.Parcel.nativeWriteInterfaceToken` (top frame in the
+                    //     parcel-write phase) or `BinderProxy.transact` -> `transactNative`
+                    //     (top frame in the binder round-trip phase), under `android.view.
+                    //     Choreographer.doFrame` -> `Choreographer$FrameDisplayEventReceiver.run`
+                    //     (a vsync frame callback freshly dispatched to the main looper by
+                    //     `Handler.handleCallback`) (originally reported from a TECNO TECNO
+                    //     KJ5, SDK 33, app 1.8.1-FOSS, and follow-up report from the same TECNO
+                    //     TECNO KJ5, SDK 33, app 1.9.3-FOSS sampled during the synchronous
+                    //     binder transact). The sampled frame is the vendor hook's skipped-frame
+                    //     reporting: writing the parcel interface token is µs-scale, and the
+                    //     subsequent synchronous `transact()` round-trip to the ROM's
+                    //     trancareassist service is system-side latency that the app cannot act
+                    //     on. A thread genuinely parked inside a >5 s app block cannot be
+                    //     processing a freshly dispatched vsync frame callback at sample time,
+                    //     and the stack has zero `za.kilowatch.ultimatefilemanager` frames;
+                    //     the vendor SDK's class names (`com.transsion.*`, injected by the
+                    //     TECNO ROM, not part of this app) are not platform-prefixed, so
+                    //     `isPureFrameworkStack` is false even though the wait is the same
+                    //     system-side class. The `AnrWatchdogThread` now treats both the
+                    //     `Parcel.nativeWriteInterfaceToken`/`writeInterfaceToken` parcel-write
+                    //     shape and the `BinderProxy.transact`/`transactNative` binder round-trip
+                    //     shape under `TranChoreographerImpl.skippedFrames` and `ITranTrancareAssistManager`
+                    //     as a false positive and resets its heartbeat instead of writing a
+                    //     report. Genuine freezes keep the main thread inside app business logic
+                    //     (an app frame on the stack) or reach a binder call outside the vendor's
+                    //     `skippedFrames` hook, and are still reported.
                     val isVendorFrameSkipTrancareBinderStall =
-                        topFrame?.className == "android.os.Parcel" &&
-                        (topFrame?.methodName == "nativeWriteInterfaceToken" ||
-                         topFrame?.methodName == "writeInterfaceToken") &&
+                        ((topFrame?.className == "android.os.Parcel" &&
+                          (topFrame?.methodName == "nativeWriteInterfaceToken" ||
+                           topFrame?.methodName == "writeInterfaceToken")) ||
+                         (topFrame?.className == "android.os.BinderProxy" &&
+                          (topFrame?.methodName == "transact" ||
+                           topFrame?.methodName == "transactNative"))) &&
                         mainStackTrace.any {
                             it.className == "com.transsion.hubcore.view.TranChoreographerImpl" &&
                             it.methodName == "skippedFrames"
@@ -4275,7 +4277,65 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 63. The main thread is sampled inside MediaTek's proprietary CPU
+                    //     performance booster framework (`com.mediatek.boostfwk`) while the
+                    //     framework dispatches a VSync tick or frame callback — e.g. top frame
+                    //     `com.mediatek.boostfwk.scenario.frame.FrameScenario.getScenarioAction`
+                    //     under `FrameIdentify.dispatchScenario` ->
+                    //     `BoostModuleDispatcher.scenarioActionDispatcher` ->
+                    //     `BoostFwkManagerImpl.perfHint`, reached from `Choreographer$
+                    //     FrameDisplayEventReceiver.onVsync` -> `DisplayEventReceiver.
+                    //     dispatchVsync` (dispatched from the native message queue loop
+                    //     `nativePollOnce` -> `MessageQueue.next` -> `Looper.loopOnce` ->
+                    //     `Looper.loop` -> `ActivityThread.main`) — reported from a TECNO
+                    //     TECNO KJ5, SDK 33, app 1.9.3-FOSS. MediaTek chipsets hook into
+                    //     `Choreographer.onVsync`/`doFrame` to adjust CPU governor hints on
+                    //     each display refresh; the scenario lookup is a µs-scale in-memory
+                    //     action dispatch that cannot by itself occupy the main thread for 5 s.
+                    //     The main thread is RUNNABLE, actively receiving a display VSync
+                    //     pulse, and the stack has zero `za.kilowatch.ultimatefilemanager`
+                    //     frames; the vendor SDK's class names (`com.mediatek.boostfwk.*`,
+                    //     injected into the Android framework by the MediaTek ROM/BSP, not part
+                    //     of this app) are not platform-prefixed, so `isPureFrameworkStack`
+                    //     evaluated to false. The >5 s block is device-side CPU starvation /
+                    //     low-end phone slowness or waking from Doze/sleep, where the watchdog
+                    //     heartbeat was delayed and caught the thread immediately upon awakening
+                    //     at the first VSync pulse. The `AnrWatchdogThread` now treats a
+                    //     main-thread stack inside MediaTek's `boostfwk` scenario dispatch
+                    //     reached from Choreographer VSync / frame dispatch, with no app frames
+                    //     and no framework blocking primitives, as a false positive and resets
+                    //     its heartbeat instead of writing a report. Genuine freezes keep the
+                    //     main thread inside app business logic (an app frame on the stack) or
+                    //     a blocking primitive (a lock, file/network/database I/O, or binder
+                    //     call) and are still reported.
+                    val isMediaTekBoostFwkScenarioStall =
+                        (topFrame?.className?.startsWith("com.mediatek.boostfwk.") == true ||
+                         (topFrame != null && PLATFORM_PREFIXES.any { topFrame.className.startsWith(it) } &&
+                          mainStackTrace.indexOfFirst { it.className.startsWith("com.mediatek.boostfwk.") } in 1..3)) &&
+                        mainStackTrace.any { it.className.startsWith("com.mediatek.boostfwk.") } &&
+                        (mainStackTrace.any {
+                            it.className.startsWith("android.view.Choreographer") &&
+                            (it.methodName == "onVsync" || it.methodName == "doFrame")
+                        } || mainStackTrace.any {
+                            it.className == "android.view.DisplayEventReceiver" &&
+                            it.methodName == "dispatchVsync"
+                        }) &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in bounded
+                        // per-vsync CPU-hinting framework dispatch.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {

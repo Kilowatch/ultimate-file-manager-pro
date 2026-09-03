@@ -13394,6 +13394,95 @@ Ultimate File Manager Pro v%1$s هو الإصدار الأحدث.
     <string name="icon_settings_foss_update">
 التحقق من وجود تحديثات
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+تفاصيل التطبيق
+</string>
+    <string name="apk_details_version">
+إصدار:
+</string>
+    <string name="apk_details_installed">
+تم التثبيت:
+</string>
+    <string name="apk_details_not_installed">
+غير مثبت
+</string>
+    <string name="apk_details_open">
+يفتح
+</string>
+    <string name="apk_details_target_sdk">
+هدف:
+</string>
+    <string name="apk_details_min_sdk">
+الحد الأدنى:
+</string>
+    <string name="apk_details_play_store">
+متجر اللعب
+</string>
+    <string name="apk_details_manifest">
+يظهر
+</string>
+    <string name="apk_details_certificate">
+شهادة
+</string>
+    <string name="apk_details_cert_title">
+معلومات الشهادة
+</string>
+    <string name="apk_details_subject">
+موضوع
+</string>
+    <string name="apk_details_issuer">
+المصدر
+</string>
+    <string name="apk_details_validity">
+صحة
+</string>
+    <string name="apk_details_algorithm">
+خوارزمية
+</string>
+    <string name="apk_details_serial">
+رقم سري
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+شا-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+شا-256
+</string>
+    <string name="apk_details_copied">
+تم النسخ إلى الحافظة
+</string>
+    <string name="apk_details_copy_package">
+انسخ اسم الحزمة
+</string>
+    <string name="apk_details_status_same">
+تم التثبيت
+</string>
+    <string name="apk_details_status_update">
+تحديث
+</string>
+    <string name="apk_details_status_downgrade">
+الرجوع إلى إصدار سابق
+</string>
+    <string name="apk_details_install">
+ثَبَّتَ
+</string>
+    <string name="apk_details_manifest_error">
+غير قادر على فك تشفير AndroidManifest.xml
+</string>
+    <string name="apk_details_cert_error">
+غير قادر على استخراج شهادة التوقيع
+</string>
+    <string name="apk_details_splits">
+الانقسامات
+</string>
+    <string name="apk_details_arch">
+بنيان
+</string>
 </resources>
 
 

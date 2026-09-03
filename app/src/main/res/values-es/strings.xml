@@ -13406,6 +13406,95 @@ Actualizar configuración de verificación
     <string name="icon_settings_foss_update">
 Buscar actualizaciones
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+Detalles de la aplicación
+</string>
+    <string name="apk_details_version">
+Versión:
+</string>
+    <string name="apk_details_installed">
+Instalado:
+</string>
+    <string name="apk_details_not_installed">
+No instalado
+</string>
+    <string name="apk_details_open">
+Abierto
+</string>
+    <string name="apk_details_target_sdk">
+Objetivo:
+</string>
+    <string name="apk_details_min_sdk">
+Mínimo:
+</string>
+    <string name="apk_details_play_store">
+Tienda de juegos
+</string>
+    <string name="apk_details_manifest">
+Manifiesto
+</string>
+    <string name="apk_details_certificate">
+Certificado
+</string>
+    <string name="apk_details_cert_title">
+Información del certificado
+</string>
+    <string name="apk_details_subject">
+Sujeto
+</string>
+    <string name="apk_details_issuer">
+Editor
+</string>
+    <string name="apk_details_validity">
+Validez
+</string>
+    <string name="apk_details_algorithm">
+Algoritmo
+</string>
+    <string name="apk_details_serial">
+Número de serie
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+Copiado al portapapeles
+</string>
+    <string name="apk_details_copy_package">
+Copiar nombre del paquete
+</string>
+    <string name="apk_details_status_same">
+Instalado
+</string>
+    <string name="apk_details_status_update">
+Actualizar
+</string>
+    <string name="apk_details_status_downgrade">
+Degradar
+</string>
+    <string name="apk_details_install">
+Instalar
+</string>
+    <string name="apk_details_manifest_error">
+No se puede decodificar AndroidManifest.xml
+</string>
+    <string name="apk_details_cert_error">
+No se puede extraer el certificado de firma
+</string>
+    <string name="apk_details_splits">
+divisiones
+</string>
+    <string name="apk_details_arch">
+Arquitectura
+</string>
 </resources>
 
 

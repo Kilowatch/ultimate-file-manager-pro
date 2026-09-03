@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Drag handle -->
+        <View
+            android:layout_width="36dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/bg_drag_handle" />
+
+        <!-- Header: Shield Icon + Title -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_icon_circle"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_shield_check"
+                    app:tint="?android:attr/textColorPrimary" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apk_details_cert_title"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtCertPackage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    tools:text="com.integration.unitvsiptv" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:layout_marginBottom="14dp" />
+
+        <!-- Certificate Details Table -->
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1">
+
+            <!-- Subject -->
+            <TableRow android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apk_details_subject"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13sp"
+                    android:paddingEnd="12dp" />
+                <TextView
+                    android:id="@+id/txtCertSubject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="13sp"
+                    tools:text="CN=Android, OU=Android, O=Google Inc" />
+            </TableRow>
+
+            <!-- Issuer -->
+            <TableRow android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apk_details_issuer"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13sp"
+                    android:paddingEnd="12dp" />
+                <TextView
+                    android:id="@+id/txtCertIssuer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="13sp"
+                    tools:text="CN=Android, OU=Android, O=Google Inc" />
+            </TableRow>
+
+            <!-- Validity -->
+            <TableRow android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apk_details_validity"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13sp"
+                    android:paddingEnd="12dp" />
+                <TextView
+                    android:id="@+id/txtCertValidity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="13sp"
+                    tools:text="2020-01-01 to 2050-01-01" />
+            </TableRow>
+
+            <!-- Algorithm -->
+            <TableRow android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apk_details_algorithm"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13sp"
+                    android:paddingEnd="12dp" />
+                <TextView
+                    android:id="@+id/txtCertAlgorithm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="13sp"
+                    tools:text="SHA256withRSA" />
+            </TableRow>
+
+            <!-- Serial -->
+            <TableRow android:layout_marginBottom="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apk_details_serial"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13sp"
+                    android:paddingEnd="12dp" />
+                <TextView
+                    android:id="@+id/txtCertSerial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"
+                    tools:text="45:9B:7C:2E" />
+            </TableRow>
+        </TableLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="14dp" />
+
+        <!-- Fingerprints section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fingerprints"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp" />
+
+        <!-- MD5 Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apk_details_fingerprint_md5"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/txtCertMd5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    tools:text="AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btnCopyMd5"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_copy"
+                android:background="@drawable/bg_icon_circle"
+                android:contentDescription="Copy MD5"
+                app:tint="?android:attr/textColorPrimary" />
+        </LinearLayout>
+
+        <!-- SHA-1 Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apk_details_fingerprint_sha1"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/txtCertSha1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    tools:text="11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33:44" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btnCopySha1"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_copy"
+                android:background="@drawable/bg_icon_circle"
+                android:contentDescription="Copy SHA-1"
+                app:tint="?android:attr/textColorPrimary" />
+        </LinearLayout>
+
+        <!-- SHA-256 Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apk_details_fingerprint_sha256"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/txtCertSha256"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    tools:text="AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btnCopySha256"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_copy"
+                android:background="@drawable/bg_icon_circle"
+                android:contentDescription="Copy SHA-256"
+                app:tint="?android:attr/textColorPrimary" />
+        </LinearLayout>
+
+        <!-- Close Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCertClose"
+            style="@style/Widget.Material3Expressive.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/remote_close"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

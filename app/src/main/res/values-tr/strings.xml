@@ -13394,6 +13394,95 @@ Kontrol Ayarlarını Güncelle
     <string name="icon_settings_foss_update">
 Güncellemeleri Kontrol Et
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+Uygulama Ayrıntıları
+</string>
+    <string name="apk_details_version">
+Sürüm:
+</string>
+    <string name="apk_details_installed">
+Kurulu:
+</string>
+    <string name="apk_details_not_installed">
+Kurulu değil
+</string>
+    <string name="apk_details_open">
+Açık
+</string>
+    <string name="apk_details_target_sdk">
+Hedef:
+</string>
+    <string name="apk_details_min_sdk">
+Minimum:
+</string>
+    <string name="apk_details_play_store">
+Play Store
+</string>
+    <string name="apk_details_manifest">
+manifest
+</string>
+    <string name="apk_details_certificate">
+Sertifika
+</string>
+    <string name="apk_details_cert_title">
+Sertifika Bilgileri
+</string>
+    <string name="apk_details_subject">
+Ders
+</string>
+    <string name="apk_details_issuer">
+İhraççı
+</string>
+    <string name="apk_details_validity">
+Geçerlilik
+</string>
+    <string name="apk_details_algorithm">
+Algoritma
+</string>
+    <string name="apk_details_serial">
+Seri numarası
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+Panoya kopyalandı
+</string>
+    <string name="apk_details_copy_package">
+Paket Adını Kopyala
+</string>
+    <string name="apk_details_status_same">
+Yüklendi
+</string>
+    <string name="apk_details_status_update">
+Güncelleme
+</string>
+    <string name="apk_details_status_downgrade">
+Sürüm düşürme
+</string>
+    <string name="apk_details_install">
+Düzenlemek
+</string>
+    <string name="apk_details_manifest_error">
+AndroidManifest.xml\'in kodu çözülemiyor
+</string>
+    <string name="apk_details_cert_error">
+İmza sertifikası çıkarılamıyor
+</string>
+    <string name="apk_details_splits">
+Bölünmeler
+</string>
+    <string name="apk_details_arch">
+Mimarlık
+</string>
 </resources>
 
 

@@ -13394,6 +13394,95 @@ GitHub で見る
     <string name="icon_settings_foss_update">
 アップデートをチェックする
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+アプリの詳細
+</string>
+    <string name="apk_details_version">
+バージョン:
+</string>
+    <string name="apk_details_installed">
+インストール済み:
+</string>
+    <string name="apk_details_not_installed">
+インストールされていません
+</string>
+    <string name="apk_details_open">
+開ける
+</string>
+    <string name="apk_details_target_sdk">
+ターゲット：
+</string>
+    <string name="apk_details_min_sdk">
+最小：
+</string>
+    <string name="apk_details_play_store">
+Playストア
+</string>
+    <string name="apk_details_manifest">
+マニフェスト
+</string>
+    <string name="apk_details_certificate">
+証明書
+</string>
+    <string name="apk_details_cert_title">
+証明書情報
+</string>
+    <string name="apk_details_subject">
+主題
+</string>
+    <string name="apk_details_issuer">
+発行者
+</string>
+    <string name="apk_details_validity">
+有効
+</string>
+    <string name="apk_details_algorithm">
+アルゴリズム
+</string>
+    <string name="apk_details_serial">
+シリアルナンバー
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+クリップボードにコピーされました
+</string>
+    <string name="apk_details_copy_package">
+パッケージ名のコピー
+</string>
+    <string name="apk_details_status_same">
+インストール済み
+</string>
+    <string name="apk_details_status_update">
+アップデート
+</string>
+    <string name="apk_details_status_downgrade">
+ダウングレード
+</string>
+    <string name="apk_details_install">
+インストール
+</string>
+    <string name="apk_details_manifest_error">
+AndroidManifest.xml をデコードできません
+</string>
+    <string name="apk_details_cert_error">
+署名証明書を抽出できません
+</string>
+    <string name="apk_details_splits">
+スプリット
+</string>
+    <string name="apk_details_arch">
+建築
+</string>
 </resources>
 
 

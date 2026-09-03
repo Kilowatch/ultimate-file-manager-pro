@@ -13394,6 +13394,95 @@ GitHub에서 새 릴리스(v%1$s)를 사용할 수 있습니다. 다운로드하
     <string name="icon_settings_foss_update">
 업데이트 확인
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+앱 세부정보
+</string>
+    <string name="apk_details_version">
+버전:
+</string>
+    <string name="apk_details_installed">
+설치됨:
+</string>
+    <string name="apk_details_not_installed">
+설치되지 않음
+</string>
+    <string name="apk_details_open">
+열려 있는
+</string>
+    <string name="apk_details_target_sdk">
+목표:
+</string>
+    <string name="apk_details_min_sdk">
+최저한의:
+</string>
+    <string name="apk_details_play_store">
+플레이 스토어
+</string>
+    <string name="apk_details_manifest">
+명백한
+</string>
+    <string name="apk_details_certificate">
+자격증
+</string>
+    <string name="apk_details_cert_title">
+인증서 정보
+</string>
+    <string name="apk_details_subject">
+주제
+</string>
+    <string name="apk_details_issuer">
+발급자
+</string>
+    <string name="apk_details_validity">
+효력
+</string>
+    <string name="apk_details_algorithm">
+연산
+</string>
+    <string name="apk_details_serial">
+일련번호
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+클립보드에 복사됨
+</string>
+    <string name="apk_details_copy_package">
+패키지 이름 복사
+</string>
+    <string name="apk_details_status_same">
+설치됨
+</string>
+    <string name="apk_details_status_update">
+업데이트
+</string>
+    <string name="apk_details_status_downgrade">
+다운그레이드
+</string>
+    <string name="apk_details_install">
+설치하다
+</string>
+    <string name="apk_details_manifest_error">
+AndroidManifest.xml을 디코딩할 수 없습니다.
+</string>
+    <string name="apk_details_cert_error">
+서명 인증서를 추출할 수 없습니다.
+</string>
+    <string name="apk_details_splits">
+분할
+</string>
+    <string name="apk_details_arch">
+건축학
+</string>
 </resources>
 
 

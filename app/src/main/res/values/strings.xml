@@ -4717,6 +4717,37 @@
     <string name="settings_foss_update_enable_btn">Enable</string>
     <string name="backup_pref_foss_update">Update Check Settings</string>
     <string name="icon_settings_foss_update">Check for Updates</string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">App Details</string>
+    <string name="apk_details_version">Version:</string>
+    <string name="apk_details_installed">Installed:</string>
+    <string name="apk_details_not_installed">Not installed</string>
+    <string name="apk_details_open">Open</string>
+    <string name="apk_details_target_sdk">Target:</string>
+    <string name="apk_details_min_sdk">Minimum:</string>
+    <string name="apk_details_play_store">Play Store</string>
+    <string name="apk_details_manifest">Manifest</string>
+    <string name="apk_details_certificate">Certificate</string>
+    <string name="apk_details_cert_title">Certificate Information</string>
+    <string name="apk_details_subject">Subject</string>
+    <string name="apk_details_issuer">Issuer</string>
+    <string name="apk_details_validity">Validity</string>
+    <string name="apk_details_algorithm">Algorithm</string>
+    <string name="apk_details_serial">Serial Number</string>
+    <string name="apk_details_fingerprint_md5">MD5</string>
+    <string name="apk_details_fingerprint_sha1">SHA-1</string>
+    <string name="apk_details_fingerprint_sha256">SHA-256</string>
+    <string name="apk_details_copied">Copied to clipboard</string>
+    <string name="apk_details_copy_package">Copy Package Name</string>
+    <string name="apk_details_status_same">Installed</string>
+    <string name="apk_details_status_update">Update</string>
+    <string name="apk_details_status_downgrade">Downgrade</string>
+    <string name="apk_details_install">Install</string>
+    <string name="apk_details_manifest_error">Unable to decode AndroidManifest.xml</string>
+    <string name="apk_details_cert_error">Unable to extract signing certificate</string>
+    <string name="apk_details_splits">Splits</string>
+    <string name="apk_details_arch">Architecture</string>
 </resources>
 
 

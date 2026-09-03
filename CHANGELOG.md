@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.5] — 2026-09-01
 
 ### Added
+- Added full application package details to the mobile Properties sheet for APK, XAPK, APKS, and APKM files, featuring package name (tap-to-copy), version info, installed status comparison, direct app launch, Target & Min SDK version mapping, Google Play Store shortcut, built-in AndroidManifest.xml viewer, and signing certificate inspector with fingerprint copy actions.
 - **FOSS GitHub Release Update Checker**:
   - Implemented automatic GitHub release check on app launch / re-open for FOSS editions (`mobileFoss` and `tvFoss`), disabled by default with an opt-in confirmation dialog explaining update checks and zero personal data collection.
   - Added "Check for Updates" toggle and instant check row to Settings and FOSS About screen with real-time feedback.
@@ -15,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Implemented server-side release caching cron script (`fetch_latest_release.php`) and high-performance, rate-limit-free endpoint (`update.php`).
 
 ### Fixed
+- Fixed a false-positive ANR report on Realme/OPPO devices where the watchdog sampled the main thread inside `ViewPropertyAnimator.start()` / `HandlerActionQueue.removeCallbacks` during animation-end chaining.
+- Fixed a false-positive ANR report on Transsion/TECNO devices where the watchdog sampled the main thread inside the synchronous binder transaction of Transsion's frame-skip assist hook (`TranChoreographerImpl.skippedFrames` -> `ITranTrancareAssistManager.compulateSkipperFrame`).
+- Fixed a false-positive ANR report on MediaTek devices (such as TECNO KJ5) where the watchdog sampled the main thread inside MediaTek's vendor boost framework (`com.mediatek.boostfwk`) during Choreographer VSync callbacks.
+- Fixed an issue where opening text and configuration files (such as YAML) from network shares (SMB, FTP, SFTP) failed with `Cannot run program "su"` on non-rooted devices due to internal cache paths being misclassified as root filesystem paths.
+- Fixed an `IllegalStateException: Not an attached client` crash in `ShizukuActivity.onResume` and `ShizukuTvActivity.onResume` when resuming the Elevated Access screen on devices where the Shizuku/Shevery daemon restarted or lost client attachment (reported on INFINIX Infinix X6531B, Android 14 SDK 34).
+- Added automatic client re-attachment and safe fallback in `ShizukuShellWrapper.checkPermissionSafely` and `requestPermissionSafely`.
+- Fixed Shevery binder registration to use official `Shizuku.onBinderReceived` API instead of invalid reflection.
 - Fixed a crash (`NullPointerException`) on app launch / media playback opening in `UFMPlayerActivity.onCreate` on devices where `UiModeManager` or system services return null (reported on HUAWEI QINL-360A, SDK 31, app 1.9.3-FOSS) by making `DeviceUtils.isTvDevice()` and player system service lookups fully null-safe.
 
 ## [1.9.4] — 2026-08-31

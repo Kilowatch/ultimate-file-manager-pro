@@ -6,8 +6,10 @@ import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.android.material.button.MaterialButton
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -81,6 +83,23 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
     private lateinit var btnEditTags: ImageView
     private lateinit var cgTags: ChipGroup
     private lateinit var txtNoTags: TextView
+
+    // APK / XAPK details views (Mobile Only)
+    private lateinit var layoutPropertiesIconContainer: FrameLayout
+    private lateinit var layoutApkDetails: View
+    private lateinit var btnCopyApkPackage: View
+    private lateinit var txtApkPackageName: TextView
+    private lateinit var txtApkVersionValue: TextView
+    private lateinit var txtApkInstalledValue: TextView
+    private lateinit var rowApkStatusActions: View
+    private lateinit var badgeApkStatus: TextView
+    private lateinit var btnApkOpen: MaterialButton
+    private lateinit var txtApkTargetValue: TextView
+    private lateinit var txtApkMinValue: TextView
+    private lateinit var btnApkPlayStore: MaterialButton
+    private lateinit var btnApkManifest: MaterialButton
+    private lateinit var btnApkCertificate: MaterialButton
+    private lateinit var btnApkInstallAction: MaterialButton
 
     private var filePaths: ArrayList<String> = arrayListOf()
     private var isDirList: BooleanArray = booleanArrayOf()
@@ -250,6 +269,22 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
         cgTags = view.findViewById(R.id.cgTags)
         txtNoTags = view.findViewById(R.id.txtNoTags)
 
+        layoutPropertiesIconContainer = view.findViewById(R.id.layoutPropertiesIconContainer)
+        layoutApkDetails = view.findViewById(R.id.layoutApkDetails)
+        btnCopyApkPackage = view.findViewById(R.id.btnCopyApkPackage)
+        txtApkPackageName = view.findViewById(R.id.txtApkPackageName)
+        txtApkVersionValue = view.findViewById(R.id.txtApkVersionValue)
+        txtApkInstalledValue = view.findViewById(R.id.txtApkInstalledValue)
+        rowApkStatusActions = view.findViewById(R.id.rowApkStatusActions)
+        badgeApkStatus = view.findViewById(R.id.badgeApkStatus)
+        btnApkOpen = view.findViewById(R.id.btnApkOpen)
+        txtApkTargetValue = view.findViewById(R.id.txtApkTargetValue)
+        txtApkMinValue = view.findViewById(R.id.txtApkMinValue)
+        btnApkPlayStore = view.findViewById(R.id.btnApkPlayStore)
+        btnApkManifest = view.findViewById(R.id.btnApkManifest)
+        btnApkCertificate = view.findViewById(R.id.btnApkCertificate)
+        btnApkInstallAction = view.findViewById(R.id.btnApkInstallAction)
+
         setupWindowsProperties()
     }
 
@@ -284,6 +319,13 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
 
             // 1. Header
             txtFilename.text = name
+            layoutPropertiesIconContainer.setBackgroundResource(R.drawable.bg_icon_circle)
+            val density = resources.displayMetrics.density
+            imgPropertiesIcon.layoutParams.width = (28 * density).toInt()
+            imgPropertiesIcon.layoutParams.height = (28 * density).toInt()
+            val typedVal = android.util.TypedValue()
+            requireContext().theme.resolveAttribute(android.R.attr.textColorPrimary, typedVal, true)
+            imgPropertiesIcon.imageTintList = android.content.res.ColorStateList.valueOf(typedVal.data)
             imgPropertiesIcon.setImageResource(resolveIconRes(name, isDirectory, count))
 
             val (subtitle, fullType) = resolveFileType(name, isDirectory)
@@ -507,8 +549,18 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                 layoutTagsSection.visibility = View.GONE
             }
 
+            // 7. APK / XAPK Details (Single file, mobile only)
+            val isMobile = context != null && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)
+            val isApkOrBundle = !isDirectory && !isNetwork && za.kilowatch.ultimatefilemanager.util.ApkPackageDetailsHelper.isApkOrBundle(name)
+            if (isMobile && isApkOrBundle) {
+                loadApkDetails(path, name)
+            } else {
+                layoutApkDetails.visibility = View.GONE
+            }
+
         } else {
             // Multiple Items Selected
+            layoutApkDetails.visibility = View.GONE
             dividerRoot.visibility = View.GONE
             tableRootProperties.visibility = View.GONE
 
@@ -805,6 +857,9 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             "wav" -> Pair("WAV audio (.wav)", "Waveform Audio (.wav)")
             "m4a", "aac", "ogg" -> Pair("${ext.uppercase()} audio (.${ext})", "${ext.uppercase()} Audio (.${ext})")
             "apk" -> Pair("Android Package (.apk)", "Android Application Package (.apk)")
+            "xapk" -> Pair("Split APK Bundle (.xapk)", "Split Android Application Package (.xapk)")
+            "apks" -> Pair("Split APK Bundle (.apks)", "Split Android Application Package (.apks)")
+            "apkm" -> Pair("APKMirror Bundle (.apkm)", "APKMirror Application Package (.apkm)")
             "aab" -> Pair("Android App Bundle (.aab)", "Android App Bundle (.aab)")
             else -> Pair("${ext.uppercase()} File (.${ext})", "${ext.uppercase()} File (.${ext})")
         }
@@ -819,6 +874,7 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             ext in setOf("zip", "7z", "rar", "tar", "gz", "bz2", "xz", "iso", "jar") -> getString(R.string.properties_viewer_archive)
             ext in setOf("xls", "xlsx", "csv", "xlsm", "xltx", "xltm", "xlt", "xlsb") -> getString(R.string.properties_viewer_spreadsheet)
             ext == "pdf" -> getString(R.string.properties_viewer_pdf)
+            ext in setOf("apk", "xapk", "apks", "apkm") -> "Package Installer"
             else -> getString(R.string.properties_viewer_default)
         }
     }
@@ -838,7 +894,7 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             ext in setOf("xls", "xlsx", "csv", "xlsm", "xltx", "xltm", "xlt", "xlsb") -> R.drawable.ic_file_spreadsheet
             ext in setOf("ppt", "pptx") -> R.drawable.ic_file_presentation
             ext in FileViewerRouter.TEXT_EXTENSIONS || FileViewerRouter.isDotConfigFile(name) -> R.drawable.ic_file_code
-            ext in setOf("apk", "aab", "xapk", "apks") -> R.drawable.ic_file_apk
+            ext in setOf("apk", "aab", "xapk", "apks", "apkm") -> R.drawable.ic_file_apk
             else -> R.drawable.ic_file_generic
         }
     }
@@ -943,6 +999,203 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtInput) {
             btnDone?.performClick()
+        }
+    }
+
+    private fun loadApkDetails(path: String, name: String) {
+        val ctx = context?.applicationContext ?: return
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, path)
+
+            var tempSafFile: File? = null
+            val apkFile = if (isSaf) {
+                try {
+                    val ext = name.substringAfterLast('.', "apk")
+                    tempSafFile = File(ctx.cacheDir, "props_saf_inspect_${System.currentTimeMillis()}.$ext")
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(ctx, path)?.use { input ->
+                        tempSafFile.outputStream().use { output -> input.copyTo(output) }
+                    }
+                    tempSafFile
+                } catch (_: Exception) { null }
+            } else {
+                File(path)
+            }
+
+            if (apkFile == null || !apkFile.exists()) return@launch
+
+            val details = za.kilowatch.ultimatefilemanager.util.ApkPackageDetailsHelper.parse(ctx, apkFile)
+
+            withContext(Dispatchers.Main) {
+                if (!isAdded || details == null) return@withContext
+                displayApkDetails(details, apkFile)
+            }
+        }
+    }
+
+    private fun displayApkDetails(
+        details: za.kilowatch.ultimatefilemanager.util.ApkPackageDetailsHelper.ApkPackageDetails,
+        apkFile: File
+    ) {
+        layoutApkDetails.visibility = View.VISIBLE
+
+        // 1. Icon & Header
+        if (details.icon != null) {
+            imgPropertiesIcon.imageTintList = null
+            imgPropertiesIcon.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            imgPropertiesIcon.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+            imgPropertiesIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+            layoutPropertiesIconContainer.background = null
+            imgPropertiesIcon.setImageDrawable(details.icon)
+        }
+        if (details.appName.isNotEmpty() && details.appName != txtFilename.text.toString()) {
+            val originalFilename = txtFilename.text.toString()
+            txtFilename.text = details.appName
+            txtTypeSubtitle.text = "$originalFilename • ${if (details.isSplit) "Split APK Bundle" else "Android Package"}"
+        }
+
+        // 2. Package Name (clickable chip / tap to copy)
+        txtApkPackageName.text = details.packageName
+        val copyPackageListener = View.OnClickListener {
+            val cm = requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            cm.setPrimaryClip(android.content.ClipData.newPlainText("Package Name", details.packageName))
+            android.widget.Toast.makeText(
+                requireContext(),
+                "${details.packageName}: ${getString(R.string.apk_details_copied)}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        }
+        btnCopyApkPackage.setOnClickListener(copyPackageListener)
+        txtApkPackageName.setOnClickListener(copyPackageListener)
+
+        // 3. Version
+        txtApkVersionValue.text = "${details.versionName} ${details.versionCode}".trim()
+
+        // 4. Installed Status
+        if (details.installedVersionName != null) {
+            txtApkInstalledValue.text = "${details.installedVersionName} ${details.installedVersionCode ?: ""}".trim()
+            rowApkStatusActions.visibility = View.VISIBLE
+            badgeApkStatus.visibility = View.VISIBLE
+            when (details.installState) {
+                za.kilowatch.ultimatefilemanager.util.ApkPackageDetailsHelper.InstallState.SAME_VERSION -> {
+                    badgeApkStatus.text = getString(R.string.apk_details_status_same)
+                    badgeApkStatus.setBackgroundResource(R.drawable.bg_apk_status_same)
+                    badgeApkStatus.setTextColor(0xFF81C784.toInt())
+                }
+                za.kilowatch.ultimatefilemanager.util.ApkPackageDetailsHelper.InstallState.UPDATE_AVAILABLE -> {
+                    badgeApkStatus.text = getString(R.string.apk_details_status_update)
+                    badgeApkStatus.setBackgroundResource(R.drawable.bg_apk_status_update)
+                    badgeApkStatus.setTextColor(0xFF64B5F6.toInt())
+                }
+                za.kilowatch.ultimatefilemanager.util.ApkPackageDetailsHelper.InstallState.NEWER_INSTALLED -> {
+                    badgeApkStatus.text = getString(R.string.apk_details_status_downgrade)
+                    badgeApkStatus.setBackgroundResource(R.drawable.bg_apk_status_downgrade)
+                    badgeApkStatus.setTextColor(0xFFFFB74D.toInt())
+                }
+                else -> {
+                    badgeApkStatus.visibility = View.GONE
+                }
+            }
+
+            // Show "Open" button
+            btnApkOpen.visibility = View.VISIBLE
+            btnApkOpen.setOnClickListener {
+                val launchIntent = requireContext().packageManager.getLaunchIntentForPackage(details.packageName)
+                if (launchIntent != null) {
+                    startActivity(launchIntent)
+                } else {
+                    try {
+                        val appInfoIntent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = android.net.Uri.fromParts("package", details.packageName, null)
+                        }
+                        startActivity(appInfoIntent)
+                    } catch (_: Exception) {
+                        android.widget.Toast.makeText(requireContext(), "Unable to open app", android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        } else {
+            txtApkInstalledValue.text = getString(R.string.apk_details_not_installed)
+            badgeApkStatus.visibility = View.VISIBLE
+            badgeApkStatus.text = getString(R.string.apk_details_not_installed)
+            badgeApkStatus.setBackgroundResource(R.drawable.bg_apk_status_not_installed)
+            badgeApkStatus.setTextColor(0xFF90A4AE.toInt())
+            rowApkStatusActions.visibility = View.VISIBLE
+            btnApkOpen.visibility = View.GONE
+        }
+
+        // 5. Target & Min SDK
+        txtApkTargetValue.text = details.targetSdkDisplay
+        txtApkMinValue.text = details.minSdkDisplay
+
+        // 6. Action: Play Store
+        btnApkPlayStore.setOnClickListener {
+            try {
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("market://details?id=${details.packageName}")).apply {
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                startActivity(intent)
+            } catch (_: Exception) {
+                val webIntent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://play.google.com/store/apps/details?id=${details.packageName}")).apply {
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                startActivity(webIntent)
+            }
+        }
+
+        // 7. Action: Manifest
+        btnApkManifest.setOnClickListener {
+            val ctx = context?.applicationContext ?: return@setOnClickListener
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                val manifestXml = za.kilowatch.ultimatefilemanager.util.ApkPackageDetailsHelper.decodeManifest(apkFile)
+                withContext(Dispatchers.Main) {
+                    if (!isAdded) return@withContext
+                    if (!manifestXml.isNullOrBlank()) {
+                        try {
+                            val manifestFile = File(ctx.cacheDir, "${details.packageName}_manifest.xml")
+                            manifestFile.writeText(manifestXml)
+                            val intent = android.content.Intent(requireContext(), za.kilowatch.ultimatefilemanager.viewer.TextViewerActivity::class.java).apply {
+                                putExtra(FileViewerRouter.EXTRA_FILE_PATH, manifestFile.absolutePath)
+                                putExtra(FileViewerRouter.EXTRA_FILE_NAME, "AndroidManifest.xml")
+                            }
+                            startActivity(intent)
+                        } catch (e: Exception) {
+                            android.widget.Toast.makeText(requireContext(), R.string.apk_details_manifest_error, android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        android.widget.Toast.makeText(requireContext(), R.string.apk_details_manifest_error, android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        // 8. Action: Certificate
+        btnApkCertificate.setOnClickListener {
+            if (details.certificateInfo != null) {
+                val sheet = ApkCertificateBottomSheet.newInstance(details.packageName, details.certificateInfo)
+                sheet.show(parentFragmentManager, ApkCertificateBottomSheet.TAG)
+            } else {
+                android.widget.Toast.makeText(requireContext(), R.string.apk_details_cert_error, android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // 9. Action: Install (always visible in Row 2, using entire width alongside Certificate)
+        btnApkInstallAction.visibility = View.VISIBLE
+        if (details.installState == za.kilowatch.ultimatefilemanager.util.ApkPackageDetailsHelper.InstallState.UPDATE_AVAILABLE) {
+            btnApkInstallAction.text = getString(R.string.apk_details_status_update)
+        } else {
+            btnApkInstallAction.text = getString(R.string.apk_details_install)
+        }
+        btnApkInstallAction.setOnClickListener {
+            try {
+                val installIntent = android.content.Intent(requireContext(), za.kilowatch.ultimatefilemanager.ui.PackageInstallerActivity::class.java).apply {
+                    data = android.net.Uri.fromFile(apkFile)
+                }
+                startActivity(installIntent)
+                dismiss()
+            } catch (e: Exception) {
+                android.widget.Toast.makeText(requireContext(), "Failed to start install: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

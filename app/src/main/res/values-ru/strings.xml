@@ -13394,6 +13394,95 @@ Ultimate File Manager Pro v%1$s — последняя версия.
     <string name="icon_settings_foss_update">
 Проверьте наличие обновлений
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+Подробности приложения
+</string>
+    <string name="apk_details_version">
+Версия:
+</string>
+    <string name="apk_details_installed">
+Установлено:
+</string>
+    <string name="apk_details_not_installed">
+Не установлено
+</string>
+    <string name="apk_details_open">
+Открыть
+</string>
+    <string name="apk_details_target_sdk">
+Цель:
+</string>
+    <string name="apk_details_min_sdk">
+Минимум:
+</string>
+    <string name="apk_details_play_store">
+Play Маркет
+</string>
+    <string name="apk_details_manifest">
+Манифест
+</string>
+    <string name="apk_details_certificate">
+Сертификат
+</string>
+    <string name="apk_details_cert_title">
+Информация о сертификате
+</string>
+    <string name="apk_details_subject">
+Предмет
+</string>
+    <string name="apk_details_issuer">
+Эмитент
+</string>
+    <string name="apk_details_validity">
+Срок действия
+</string>
+    <string name="apk_details_algorithm">
+Алгоритм
+</string>
+    <string name="apk_details_serial">
+Серийный номер
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+ША-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+ША-256
+</string>
+    <string name="apk_details_copied">
+Скопировано в буфер обмена
+</string>
+    <string name="apk_details_copy_package">
+Копировать имя пакета
+</string>
+    <string name="apk_details_status_same">
+Установлено
+</string>
+    <string name="apk_details_status_update">
+Обновлять
+</string>
+    <string name="apk_details_status_downgrade">
+Понизить версию
+</string>
+    <string name="apk_details_install">
+Установить
+</string>
+    <string name="apk_details_manifest_error">
+Невозможно декодировать AndroidManifest.xml.
+</string>
+    <string name="apk_details_cert_error">
+Не удалось извлечь сертификат подписи
+</string>
+    <string name="apk_details_splits">
+Сплиты
+</string>
+    <string name="apk_details_arch">
+Архитектура
+</string>
 </resources>
 
 

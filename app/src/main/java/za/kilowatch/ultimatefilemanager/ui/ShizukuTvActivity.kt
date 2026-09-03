@@ -55,7 +55,7 @@ class ShizukuTvActivity : AppCompatActivity() {
 
         binding.btnShizukuEnable.setOnClickListener {
             if (ShizukuShellWrapper.tryBindShevery(this)) {
-                if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
+                if (ShizukuShellWrapper.checkPermissionSafely(this) != PackageManager.PERMISSION_GRANTED) {
                     showAuthDialog()
                 }
             } else {
@@ -63,7 +63,11 @@ class ShizukuTvActivity : AppCompatActivity() {
             }
         }
 
-        Shizuku.addRequestPermissionResultListener(permissionListener)
+        try {
+            Shizuku.addRequestPermissionResultListener(permissionListener)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 
     private fun startShizukuService() {
@@ -115,7 +119,10 @@ class ShizukuTvActivity : AppCompatActivity() {
         val btnCancel = dialogView.findViewById<android.widget.Button>(R.id.btnCancel)
 
         btnAuth.setOnClickListener {
-            Shizuku.requestPermission(SHIZUKU_CODE)
+            val requested = ShizukuShellWrapper.requestPermissionSafely(SHIZUKU_CODE, this)
+            if (!requested) {
+                android.widget.Toast.makeText(this, R.string.shizuku_start_failed, android.widget.Toast.LENGTH_SHORT).show()
+            }
             dialog.dismiss()
         }
 
@@ -171,7 +178,11 @@ class ShizukuTvActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         statusAnimator?.cancel()
-        Shizuku.removeRequestPermissionResultListener(permissionListener)
+        try {
+            Shizuku.removeRequestPermissionResultListener(permissionListener)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 
     override fun onResume() {
@@ -201,7 +212,7 @@ class ShizukuTvActivity : AppCompatActivity() {
 
             val isBound = ShizukuShellWrapper.tryBindShevery(this)
             if (isBound) {
-                if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
+                if (ShizukuShellWrapper.checkPermissionSafely(this) == PackageManager.PERMISSION_GRANTED) {
                     binding.txtShizukuServiceStatus.text = getString(R.string.shizuku_authorized)
                     binding.txtShizukuServiceStatus.setTextColor(getColor(R.color.shizuku_status_ok))
                     binding.btnShizukuEnable.visibility = View.GONE

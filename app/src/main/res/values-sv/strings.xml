@@ -13371,6 +13371,95 @@ Update Check Settings
     <string name="icon_settings_foss_update">
 Sök efter uppdateringar
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+Appdetaljer
+</string>
+    <string name="apk_details_version">
+Version:
+</string>
+    <string name="apk_details_installed">
+Installerat:
+</string>
+    <string name="apk_details_not_installed">
+Ej installerad
+</string>
+    <string name="apk_details_open">
+Öppna
+</string>
+    <string name="apk_details_target_sdk">
+Mål:
+</string>
+    <string name="apk_details_min_sdk">
+Minimum:
+</string>
+    <string name="apk_details_play_store">
+Play Butik
+</string>
+    <string name="apk_details_manifest">
+Manifestera
+</string>
+    <string name="apk_details_certificate">
+Certifikat
+</string>
+    <string name="apk_details_cert_title">
+Certifikatinformation
+</string>
+    <string name="apk_details_subject">
+Ämne
+</string>
+    <string name="apk_details_issuer">
+Emittent
+</string>
+    <string name="apk_details_validity">
+Giltighet
+</string>
+    <string name="apk_details_algorithm">
+Algoritm
+</string>
+    <string name="apk_details_serial">
+Serienummer
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+Kopierade till urklipp
+</string>
+    <string name="apk_details_copy_package">
+Kopiera paketnamn
+</string>
+    <string name="apk_details_status_same">
+Installerad
+</string>
+    <string name="apk_details_status_update">
+Uppdatera
+</string>
+    <string name="apk_details_status_downgrade">
+Nedvärdera
+</string>
+    <string name="apk_details_install">
+Installera
+</string>
+    <string name="apk_details_manifest_error">
+Det går inte att avkoda AndroidManifest.xml
+</string>
+    <string name="apk_details_cert_error">
+Det gick inte att extrahera signeringscertifikat
+</string>
+    <string name="apk_details_splits">
+Delar
+</string>
+    <string name="apk_details_arch">
+Arkitektur
+</string>
 </resources>
 
 

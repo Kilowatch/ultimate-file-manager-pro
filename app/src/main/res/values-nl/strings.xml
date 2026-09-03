@@ -13394,6 +13394,95 @@ Update Controleer instellingen
     <string name="icon_settings_foss_update">
 Controleer op updates
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+App-details
+</string>
+    <string name="apk_details_version">
+Versie:
+</string>
+    <string name="apk_details_installed">
+Geïnstalleerd:
+</string>
+    <string name="apk_details_not_installed">
+Niet geïnstalleerd
+</string>
+    <string name="apk_details_open">
+Open
+</string>
+    <string name="apk_details_target_sdk">
+Doel:
+</string>
+    <string name="apk_details_min_sdk">
+Minimum:
+</string>
+    <string name="apk_details_play_store">
+Speel Winkel
+</string>
+    <string name="apk_details_manifest">
+Manifest
+</string>
+    <string name="apk_details_certificate">
+Certificaat
+</string>
+    <string name="apk_details_cert_title">
+Certificaatinformatie
+</string>
+    <string name="apk_details_subject">
+Onderwerp
+</string>
+    <string name="apk_details_issuer">
+Uitgever
+</string>
+    <string name="apk_details_validity">
+Geldigheid
+</string>
+    <string name="apk_details_algorithm">
+Algoritme
+</string>
+    <string name="apk_details_serial">
+Serienummer
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+Gekopieerd naar klembord
+</string>
+    <string name="apk_details_copy_package">
+Kopieer pakketnaam
+</string>
+    <string name="apk_details_status_same">
+Geïnstalleerd
+</string>
+    <string name="apk_details_status_update">
+Update
+</string>
+    <string name="apk_details_status_downgrade">
+Downgraden
+</string>
+    <string name="apk_details_install">
+Installeren
+</string>
+    <string name="apk_details_manifest_error">
+Kan AndroidManifest.xml niet decoderen
+</string>
+    <string name="apk_details_cert_error">
+Kan het handtekeningcertificaat niet extraheren
+</string>
+    <string name="apk_details_splits">
+Splitsingen
+</string>
+    <string name="apk_details_arch">
+Architectuur
+</string>
 </resources>
 
 

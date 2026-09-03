@@ -13394,6 +13394,95 @@ GitHub 上提供了新版本 (v%1$s)。点击即可下载。
     <string name="icon_settings_foss_update">
 检查更新
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+应用详情
+</string>
+    <string name="apk_details_version">
+版本：
+</string>
+    <string name="apk_details_installed">
+安装：
+</string>
+    <string name="apk_details_not_installed">
+未安装
+</string>
+    <string name="apk_details_open">
+打开
+</string>
+    <string name="apk_details_target_sdk">
+目标：
+</string>
+    <string name="apk_details_min_sdk">
+最低限度：
+</string>
+    <string name="apk_details_play_store">
+Play 商店
+</string>
+    <string name="apk_details_manifest">
+显现
+</string>
+    <string name="apk_details_certificate">
+证书
+</string>
+    <string name="apk_details_cert_title">
+证书信息
+</string>
+    <string name="apk_details_subject">
+主题
+</string>
+    <string name="apk_details_issuer">
+发行人
+</string>
+    <string name="apk_details_validity">
+有效性
+</string>
+    <string name="apk_details_algorithm">
+算法
+</string>
+    <string name="apk_details_serial">
+序列号
+</string>
+    <string name="apk_details_fingerprint_md5">
+MD5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+已复制到剪贴板
+</string>
+    <string name="apk_details_copy_package">
+复制包名称
+</string>
+    <string name="apk_details_status_same">
+已安装
+</string>
+    <string name="apk_details_status_update">
+更新
+</string>
+    <string name="apk_details_status_downgrade">
+降级
+</string>
+    <string name="apk_details_install">
+安装
+</string>
+    <string name="apk_details_manifest_error">
+无法解码 AndroidManifest.xml
+</string>
+    <string name="apk_details_cert_error">
+无法提取签名证书
+</string>
+    <string name="apk_details_splits">
+分裂
+</string>
+    <string name="apk_details_arch">
+建筑学
+</string>
 </resources>
 
 

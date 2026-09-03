@@ -13394,6 +13394,95 @@ GitHub पर देखें
     <string name="icon_settings_foss_update">
 अद्यतन के लिए जाँच
 </string>
+
+    <!-- APK / XAPK Properties App Details -->
+    <string name="apk_details_title">
+ऐप विवरण
+</string>
+    <string name="apk_details_version">
+संस्करण:
+</string>
+    <string name="apk_details_installed">
+स्थापित:
+</string>
+    <string name="apk_details_not_installed">
+स्थापित नहीं हे
+</string>
+    <string name="apk_details_open">
+खुला
+</string>
+    <string name="apk_details_target_sdk">
+लक्ष्य:
+</string>
+    <string name="apk_details_min_sdk">
+न्यूनतम:
+</string>
+    <string name="apk_details_play_store">
+खेल स्टोर
+</string>
+    <string name="apk_details_manifest">
+घोषणापत्र
+</string>
+    <string name="apk_details_certificate">
+प्रमाणपत्र
+</string>
+    <string name="apk_details_cert_title">
+प्रमाणपत्र सूचना
+</string>
+    <string name="apk_details_subject">
+विषय
+</string>
+    <string name="apk_details_issuer">
+जारीकर्ता
+</string>
+    <string name="apk_details_validity">
+वैधता
+</string>
+    <string name="apk_details_algorithm">
+एल्गोरिदम
+</string>
+    <string name="apk_details_serial">
+क्रम संख्या
+</string>
+    <string name="apk_details_fingerprint_md5">
+एमडी5
+</string>
+    <string name="apk_details_fingerprint_sha1">
+SHA-1
+</string>
+    <string name="apk_details_fingerprint_sha256">
+SHA-256
+</string>
+    <string name="apk_details_copied">
+क्लिपबोर्ड पर कॉपी किया गया
+</string>
+    <string name="apk_details_copy_package">
+पैकेज का नाम कॉपी करें
+</string>
+    <string name="apk_details_status_same">
+स्थापित
+</string>
+    <string name="apk_details_status_update">
+अद्यतन
+</string>
+    <string name="apk_details_status_downgrade">
+ढाल
+</string>
+    <string name="apk_details_install">
+स्थापित करना
+</string>
+    <string name="apk_details_manifest_error">
+AndroidManifest.xml को डीकोड करने में असमर्थ
+</string>
+    <string name="apk_details_cert_error">
+हस्ताक्षरित प्रमाणपत्र निकालने में असमर्थ
+</string>
+    <string name="apk_details_splits">
+विभाजन
+</string>
+    <string name="apk_details_arch">
+वास्तुकला
+</string>
 </resources>
 
 
