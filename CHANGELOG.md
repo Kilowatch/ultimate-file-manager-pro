@@ -5,6 +5,11 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.6] — 2026-09-03
+
+### Changed
+- Rebuilt native RClone engine (`rclone.aar`) with 16 KB ELF memory page size alignment (`-Wl,-z,max-page-size=16384`) across `arm64-v8a` to satisfy Android 15 memory page size standards and Google Play Console release requirements.
+
 ## [1.9.5] — 2026-09-01
 
 ### Added
