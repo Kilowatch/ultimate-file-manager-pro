@@ -22,11 +22,35 @@ object PlaylistCache {
         return key
     }
 
+    /** Store [playlist] with an explicit [key]. */
+    fun put(key: String, playlist: List<String>) {
+        if (key.isNotBlank()) {
+            store[key] = playlist
+        }
+    }
+
+    /**
+     * Retrieve the playlist for [key] without removing it.
+     * Returns `null` if [key] is blank or no entry exists.
+     */
+    fun get(key: String): List<String>? {
+        if (key.isBlank()) return null
+        return store[key]
+    }
+
     /**
      * Retrieve and remove the playlist for [key].
      * Returns `null` if [key] is blank or no entry exists (e.g. process was restarted).
      */
     fun take(key: String): List<String>? {
+        if (key.isBlank()) return null
+        return store.remove(key)
+    }
+
+    /**
+     * Explicitly remove the playlist for [key].
+     */
+    fun remove(key: String): List<String>? {
         if (key.isBlank()) return null
         return store.remove(key)
     }

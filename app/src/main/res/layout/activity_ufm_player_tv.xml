@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -77,34 +78,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="180dp"
+        android:layout_marginBottom="140dp"
         android:visibility="gone" />
 
+    <!-- Top Bar -->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="32dp"
+        android:padding="28dp"
         android:background="@drawable/bg_ufm_controls">
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:padding="12dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
             android:focusable="true"
             android:background="@drawable/selector_tv_button_yellow"
-            app:tint="@color/selector_tv_icon_tint_yellow" />
-            
+            app:tint="@color/selector_tv_icon_tint_yellow"
+            android:contentDescription="@string/back" />
+
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="20dp"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
@@ -113,50 +116,129 @@
             android:focusableInTouchMode="true"
             android:text="Media Title"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Controls Overlay (Bottom) for TV -->
+    <!-- Side Controls Dock (Left) for TV -->
+    <LinearLayout
+        android:id="@+id/sideControlsLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginStart="32dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:background="@drawable/bg_tv_side_dock"
+        android:elevation="8dp">
+
+        <ImageButton
+            android:id="@+id/btnSubtitles"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/tv_button_selector"
+            android:src="@drawable/ic_subtitles"
+            android:focusable="true"
+            android:nextFocusDown="@+id/btnAudioTrack"
+            android:nextFocusRight="@+id/btnPrev"
+            android:contentDescription="@string/subtitles" />
+
+        <ImageButton
+            android:id="@+id/btnAudioTrack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/tv_button_selector"
+            android:src="@drawable/ic_audio_track"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btnSubtitles"
+            android:nextFocusDown="@+id/btnRepeat"
+            android:nextFocusRight="@+id/btnPrev"
+            android:contentDescription="@string/audio_track" />
+
+        <ImageButton
+            android:id="@+id/btnRepeat"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/tv_button_selector"
+            android:src="@drawable/ic_repeat"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btnAudioTrack"
+            android:nextFocusDown="@+id/btnShuffle"
+            android:nextFocusRight="@+id/btnPrev"
+            android:contentDescription="Repeat" />
+
+        <ImageButton
+            android:id="@+id/btnShuffle"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/tv_button_selector"
+            android:src="@drawable/ic_shuffle"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btnRepeat"
+            android:nextFocusRight="@+id/btnPrev"
+            android:contentDescription="Shuffle" />
+    </LinearLayout>
+
+    <!-- Track Selection Sheet (TV Left Side Modal Panel) -->
+    <LinearLayout
+        android:id="@+id/trackSheetLayout"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginStart="96dp"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:background="@drawable/bg_tv_modal_panel"
+        android:elevation="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/trackSheetTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="@string/audio_track" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:maxHeight="320dp">
+
+            <LinearLayout
+                android:id="@+id/trackSheetList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- Bottom Controls Overlay for TV -->
     <LinearLayout
         android:id="@+id/controlsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="28dp"
+        android:layout_marginHorizontal="64dp"
         android:orientation="vertical"
-        android:padding="48dp"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="14dp"
         android:background="@drawable/bg_ufm_controls">
-
-        <!-- Track Selection Sheet (TV) — appears above seek bar when triggered -->
-        <LinearLayout
-            android:id="@+id/trackSheetLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/trackSheetTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/tv_text_primary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="@string/audio_track" />
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="320dp"
-                android:layout_marginTop="12dp">
-
-                <LinearLayout
-                    android:id="@+id/trackSheetList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </ScrollView>
-        </LinearLayout>
 
         <!-- Seek Bar Row -->
         <LinearLayout
@@ -164,15 +246,16 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
-            
+
             <TextView
                 android:id="@+id/txtElapsed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="16sp" />
-                
+                android:textSize="14sp"
+                android:fontFamily="monospace" />
+
             <SeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="0dp"
@@ -181,141 +264,208 @@
                 android:layout_marginHorizontal="16dp"
                 android:splitTrack="false"
                 android:focusable="true"
+                android:nextFocusDown="@+id/btnPlayPause"
+                android:nextFocusLeft="@+id/btnAudioTrack"
+                android:nextFocusRight="@+id/btnPlaylist"
                 android:progressDrawable="@drawable/tv_seek_bar_progress"
                 android:thumbTint="#FBBF24"
                 android:progressTint="#FBBF24" />
-                
+
             <TextView
                 android:id="@+id/txtRemaining"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-00:00"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="16sp" />
+                android:textSize="14sp"
+                android:fontFamily="monospace" />
         </LinearLayout>
 
-        <!-- Primary transport row: prev · << · play/pause · >> · next -->
+        <!-- Primary transport row: prev · << · play/pause · >> · next · playlist -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="12dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/btnPrev"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
                 android:background="@drawable/tv_button_selector"
                 android:src="@drawable/ic_skip_previous"
                 android:focusable="true"
+                android:nextFocusUp="@+id/seekBar"
+                android:nextFocusLeft="@+id/btnAudioTrack"
                 android:nextFocusRight="@+id/btnSkipBack"
-                android:nextFocusDown="@+id/btnShuffle" />
+                android:contentDescription="@string/player_toast_previous" />
 
             <ImageButton
                 android:id="@+id/btnSkipBack"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginHorizontal="16dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="12dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
                 android:background="@drawable/tv_button_selector"
                 android:src="@drawable/ic_skip_back"
                 android:focusable="true"
+                android:nextFocusUp="@+id/seekBar"
                 android:nextFocusLeft="@+id/btnPrev"
                 android:nextFocusRight="@+id/btnPlayPause"
-                android:nextFocusDown="@+id/btnShuffle" />
+                android:contentDescription="Skip back" />
 
             <ImageButton
                 android:id="@+id/btnPlayPause"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:layout_marginHorizontal="16dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="12dp"
+                android:padding="14dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_pause"
                 android:background="@drawable/tv_button_selector_primary"
                 android:focusable="true"
+                android:nextFocusUp="@+id/seekBar"
                 android:nextFocusLeft="@+id/btnSkipBack"
                 android:nextFocusRight="@+id/btnSkipForward"
-                android:nextFocusDown="@+id/btnRepeat" />
+                android:contentDescription="Play or Pause" />
 
             <ImageButton
                 android:id="@+id/btnSkipForward"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginHorizontal="16dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="12dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
                 android:background="@drawable/tv_button_selector"
                 android:src="@drawable/ic_skip_forward"
                 android:focusable="true"
+                android:nextFocusUp="@+id/seekBar"
                 android:nextFocusLeft="@+id/btnPlayPause"
                 android:nextFocusRight="@+id/btnNext"
-                android:nextFocusDown="@+id/btnSubtitles" />
+                android:contentDescription="Skip forward" />
 
             <ImageButton
                 android:id="@+id/btnNext"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="12dp"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
                 android:background="@drawable/tv_button_selector"
                 android:src="@drawable/ic_skip_next"
                 android:focusable="true"
+                android:nextFocusUp="@+id/seekBar"
                 android:nextFocusLeft="@+id/btnSkipForward"
-                android:nextFocusDown="@+id/btnSubtitles" />
-
-        </LinearLayout>
-
-        <!-- Secondary controls row: shuffle · repeat · audio track · subtitles -->
-        <LinearLayout
-            android:id="@+id/secondaryControlsRow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+                android:nextFocusRight="@+id/btnPlaylist"
+                android:contentDescription="@string/player_toast_next" />
 
             <ImageButton
-                android:id="@+id/btnShuffle"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:id="@+id/btnPlaylist"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="20dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
                 android:background="@drawable/tv_button_selector"
-                android:src="@drawable/ic_shuffle"
+                android:src="@drawable/ic_list_view_custom"
                 android:focusable="true"
-                android:nextFocusRight="@+id/btnRepeat"
-                android:nextFocusUp="@+id/btnSkipBack" />
-
-            <ImageButton
-                android:id="@+id/btnRepeat"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="24dp"
-                android:background="@drawable/tv_button_selector"
-                android:src="@drawable/ic_repeat"
-                android:focusable="true"
-                android:nextFocusLeft="@+id/btnShuffle"
-                android:nextFocusRight="@+id/btnAudioTrack"
-                android:nextFocusUp="@+id/btnPlayPause" />
-
-            <ImageButton
-                android:id="@+id/btnAudioTrack"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="24dp"
-                android:background="@drawable/tv_button_selector"
-                android:src="@drawable/ic_audio_track"
-                android:focusable="true"
-                android:nextFocusLeft="@+id/btnRepeat"
-                android:nextFocusRight="@+id/btnSubtitles"
-                android:nextFocusUp="@+id/btnPlayPause" />
-
-            <ImageButton
-                android:id="@+id/btnSubtitles"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="24dp"
-                android:background="@drawable/tv_button_selector"
-                android:src="@drawable/ic_subtitles"
-                android:focusable="true"
-                android:nextFocusLeft="@+id/btnAudioTrack"
-                android:nextFocusUp="@+id/btnSkipForward" />
-
+                android:nextFocusUp="@+id/seekBar"
+                android:nextFocusLeft="@+id/btnNext"
+                android:contentDescription="@string/tv_player_button_playlist" />
         </LinearLayout>
     </LinearLayout>
+
+    <!-- Directory / Playlist Drawer (Right Side) for TV -->
+    <LinearLayout
+        android:id="@+id/playlistDrawerLayout"
+        android:layout_width="380dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:orientation="vertical"
+        android:background="@drawable/bg_tv_playlist_drawer"
+        android:elevation="24dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:visibility="gone">
+
+        <!-- Drawer Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtPlaylistTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_player_folder_videos"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtPlaylistCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="12sp"
+                    tools:text="8 videos" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btnPlaylistClose"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                android:focusable="true"
+                android:background="@drawable/tv_button_selector"
+                app:tint="@color/selector_tv_icon_tint_yellow"
+                android:contentDescription="@string/cancel" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1E293B" />
+
+        <!-- Empty indicator -->
+        <TextView
+            android:id="@+id/txtTvPlaylistEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:gravity="center"
+            android:text="@string/tv_player_playlist_empty"
+            android:textColor="#64748B"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <!-- Playlist RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTvPlaylist"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingVertical="8dp" />
+    </LinearLayout>
+
 </FrameLayout>

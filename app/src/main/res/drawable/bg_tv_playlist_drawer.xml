@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Left 1dp border line -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#1E293B" />
+        </shape>
+    </item>
+    <!-- Background surface inset 1dp from left -->
+    <item android:left="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#F2090D16" />
+        </shape>
+    </item>
+</layer-list>

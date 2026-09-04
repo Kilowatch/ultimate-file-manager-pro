@@ -13483,6 +13483,21 @@ Splits
     <string name="apk_details_arch">
 Architecture
 </string>
+    <string name="tv_player_folder_videos">
+Folder Videos
+</string>
+    <string name="tv_player_playlist_empty">
+No other videos in this folder
+</string>
+    <string name="tv_player_playlist_count">
+%1$d videos
+</string>
+    <string name="tv_player_now_playing">
+Now Playing
+</string>
+    <string name="tv_player_button_playlist">
+Playlist
+</string>
 </resources>
 
 

@@ -62,6 +62,12 @@ class FileAdapter(
     companion object {
         private val videoCache = android.util.LruCache<String, android.graphics.Bitmap>(64)
 
+        fun getVideoThumbnail(path: String): android.graphics.Bitmap? = videoCache.get(path)
+
+        fun putVideoThumbnail(path: String, bitmap: android.graphics.Bitmap) {
+            videoCache.put(path, bitmap)
+        }
+
         fun clearCacheForPath(path: String) {
             videoCache.remove(path)
         }

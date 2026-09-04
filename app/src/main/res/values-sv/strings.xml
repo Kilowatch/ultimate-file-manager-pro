@@ -13460,6 +13460,21 @@ Delar
     <string name="apk_details_arch">
 Arkitektur
 </string>
+    <string name="tv_player_folder_videos">
+Mappvideor
+</string>
+    <string name="tv_player_playlist_empty">
+Inga andra videor i den här mappen
+</string>
+    <string name="tv_player_playlist_count">
+%1$d videor
+</string>
+    <string name="tv_player_now_playing">
+Spelar nu
+</string>
+    <string name="tv_player_button_playlist">
+Spellista
+</string>
 </resources>
 
 

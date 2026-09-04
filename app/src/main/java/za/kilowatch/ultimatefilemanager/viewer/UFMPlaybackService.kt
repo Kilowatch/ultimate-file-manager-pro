@@ -387,22 +387,42 @@ class UFMPlaybackService : Service() {
     /** Current playback speed (defaults to 1.0x). */
     fun getPlaybackSpeed(): Float = player?.playbackParameters?.speed ?: 1.0f
 
+    private var lastPrevClickTime: Long = 0L
+
     fun skipToNext() {
         val nextIdx = queueManager.nextIndex(isShuffle) ?: return
+        if (nextIdx == queueManager.currentIndex && queueManager.size <= 1) {
+            return
+        }
         queueManager.currentIndex = nextIdx
         playCurrent()
     }
 
     fun skipToPrev() {
-        // If more than 5 seconds in, restart current track
+        val now = System.currentTimeMillis()
         val pos = player?.currentPosition ?: 0L
-        if (pos > 5000L) {
+        val isDoublePress = (now - lastPrevClickTime) <= 3000L
+        lastPrevClickTime = now
+
+        // Option A: Seek to 0:00 if >3s in; second press within 3s (or within first 3s) jumps to previous video file
+        if (pos > 3000L && !isDoublePress) {
             player?.seekTo(0)
             return
         }
         val prevIdx = queueManager.prevIndex(isShuffle) ?: return
+        if (prevIdx == queueManager.currentIndex && queueManager.size <= 1) {
+            player?.seekTo(0)
+            return
+        }
         queueManager.currentIndex = prevIdx
         playCurrent()
+    }
+
+    /** Jump directly to a specific track in the queue. */
+    fun skipToIndex(index: Int) {
+        if (queueManager.setCurrentIndex(index)) {
+            playCurrent()
+        }
     }
 
     fun toggleShuffle() {
@@ -801,9 +821,12 @@ class UFMPlaybackService : Service() {
             GoRoLog.e("UFMPlaybackService", "handlePlayAction: no initialPath or extra_file_path in intent")
             return
         }
-        // Prefer cache written by UFMPlayerActivity (avoids TransactionTooLargeException)
-        val serviceCacheKey = intent.getStringExtra("serviceCacheKey") ?: ""
-        val cachedList = PlaylistCache.take(serviceCacheKey)
+        // Prefer cache written by FileViewerRouter / UFMPlayerActivity (avoids TransactionTooLargeException)
+        val cacheKey = intent.getStringExtra("playlistCacheKey")
+            ?.takeIf { it.isNotBlank() }
+            ?: intent.getStringExtra("serviceCacheKey")
+            ?: ""
+        val cachedList = PlaylistCache.get(cacheKey)
         val legacyList = intent.getStringArrayListExtra("playlist")
         val playlistFinal: ArrayList<String> = when {
             cachedList != null -> ArrayList(cachedList)

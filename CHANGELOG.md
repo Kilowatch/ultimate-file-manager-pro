@@ -5,6 +5,20 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.7] — 2026-09-04
+
+### Added
+- Android TV video player directory playlist drawer: slide-out panel on the right displaying 16:9 video thumbnails, durations, and active playing indicator with direct click-to-play switching.
+- Android TV vertical side controls dock for secondary actions (Subtitles, Audio Track, Repeat, Shuffle).
+
+### Changed
+- Streamlined Android TV video playback controls to a minimalist floating transport bar with reduced button dimensions and uncluttered layout.
+- Standardized Previous video button behavior on TV: seeks to 0:00 when pressed after 3 seconds; double-pressing within 3 seconds navigates to the previous video file in the directory.
+
+### Fixed
+- Fixed issue where Previous and Next buttons restarted the current video instead of navigating to other video files in the folder.
+- Fixed single-video open mode by automatically discovering sibling video files in the current folder.
+
 ## [1.9.6] — 2026-09-03
 
 ### Changed

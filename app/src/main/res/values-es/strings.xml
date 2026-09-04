@@ -13495,6 +13495,21 @@ divisiones
     <string name="apk_details_arch">
 Arquitectura
 </string>
+    <string name="tv_player_folder_videos">
+Vídeos de carpetas
+</string>
+    <string name="tv_player_playlist_empty">
+No hay otros vídeos en esta carpeta.
+</string>
+    <string name="tv_player_playlist_count">
+%1$d vídeos
+</string>
+    <string name="tv_player_now_playing">
+Ahora jugando
+</string>
+    <string name="tv_player_button_playlist">
+Lista de reproducción
+</string>
 </resources>
 
 

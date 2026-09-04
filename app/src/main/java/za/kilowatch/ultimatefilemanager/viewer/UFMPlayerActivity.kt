@@ -68,6 +68,7 @@ import za.kilowatch.ultimatefilemanager.network.SmbShareClient
 import za.kilowatch.ultimatefilemanager.network.SshShareClient
 import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
 import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
+import za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.PlayerPreferencesManager
 import za.kilowatch.ultimatefilemanager.settings.BackgroundVideoMode
@@ -120,6 +121,17 @@ class UFMPlayerActivity : AppCompatActivity() {
     private lateinit var trackSheetLayout: View
     private lateinit var trackSheetList: LinearLayout
     private lateinit var trackSheetTitle: TextView
+
+    // ── TV Playlist Drawer Views ───────────────────────────────────
+    private var sideControlsLayout: View? = null
+    private var playlistDrawerLayout: View? = null
+    private var rvTvPlaylist: RecyclerView? = null
+    private var btnPlaylist: ImageButton? = null
+    private var txtPlaylistCount: TextView? = null
+    private var txtTvPlaylistEmpty: TextView? = null
+    private var btnPlaylistClose: ImageView? = null
+    private var tvPlaylistAdapter: TvPlayerPlaylistAdapter? = null
+    private var isTvPlaylistDrawerOpen: Boolean = false
 
     // ── Gesture Controls ────────────────────────────────────────────
     private var gestureOverlay: PlayerGestureOverlayView? = null
@@ -198,6 +210,7 @@ class UFMPlayerActivity : AppCompatActivity() {
     private var provider: String = ""
     private var remotePathExtra: String = ""
     private var initialFileSize: Long = 0L
+    private var sizesMap: Map<String, Long> = emptyMap()
 
     // ── State ───────────────────────────────────────────────────────
     private var isShowingSheet = false
@@ -230,6 +243,26 @@ class UFMPlayerActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as? UFMPlaybackService.LocalBinder ?: return
             playbackService = binder.getService().also { svc ->
+                // If service queue has only 1 item and activity has full playlist, sync it
+                if (svc.queueManager.size <= 1 && playlist.size > 1) {
+                    val items = playlist.map { path ->
+                        val ext = path.substringAfterLast('.', "").lowercase()
+                        val size = sizesMap[path] ?: if (shareId.isEmpty()) File(path).length() else (if (path == playlist.getOrNull(currentIndex)) initialFileSize else 0L)
+                        QueueItem(
+                            path = path,
+                            isVideo = !FileViewerRouter.isAudio(ext),
+                            fileSize = size,
+                            shareId = shareId.ifEmpty { null },
+                            shareHost = shareHost.ifEmpty { null },
+                            shareUsername = shareUsername.ifEmpty { null },
+                            shareName = shareName.ifEmpty { null },
+                            provider = provider.ifEmpty { null },
+                            remotePath = remotePathExtra.ifEmpty { null }
+                        )
+                    }
+                    svc.updateQueue(items, currentIndex)
+                }
+
                 // Set player reference for track operations
                 player = svc.getPlayer()
                 playerView.player = player
@@ -280,6 +313,13 @@ class UFMPlayerActivity : AppCompatActivity() {
                 if (trackInfo != null) {
                     val fileName = trackInfo.path.substringAfterLast("/")
                     txtTitle.text = trackInfo.title ?: fileName
+
+                    val newIdx = playlist.indexOf(trackInfo.path).takeIf { it >= 0 }
+                        ?: (playbackService?.queueManager?.currentIndex ?: currentIndex)
+                    currentIndex = newIdx
+                    if (isTv) {
+                        tvPlaylistAdapter?.setCurrentIndex(newIdx)
+                    }
 
                     // Switch audio/video mode
                     val isAudio = trackInfo.isVideo.not()
@@ -359,7 +399,14 @@ class UFMPlayerActivity : AppCompatActivity() {
         }
 
         override fun onQueueChanged(queue: List<QueueItem>) {
-            // Will be used by the queue drawer (T019-T020)
+            runOnUiThread {
+                val currentIdx = playbackService?.queueManager?.currentIndex ?: currentIndex
+                queueAdapter?.updateData(queue.toMutableList(), currentIdx)
+                if (isTv) {
+                    tvPlaylistAdapter?.updateItems(queue, currentIdx)
+                    updatePlaylistCountText()
+                }
+            }
         }
 
         override fun onError(error: String) {
@@ -374,13 +421,16 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private val hideControlsRunnable = Runnable {
         runOnUiThread {
-            if (!isDestroyed && !isFinishing && !isShowingSheet && !(isTv && isTvSeeking)) {
+            if (!isDestroyed && !isFinishing && !isShowingSheet && !isTvPlaylistDrawerOpen && !(isTv && isTvSeeking)) {
                 controlsLayout.animate().alpha(0f).setDuration(300).withEndAction {
                     controlsLayout.visibility = View.GONE
                     subtitleView.setPadding(0, 0, 0, dp(16))
                 }
                 topBar.animate().alpha(0f).setDuration(300).withEndAction {
                     topBar.visibility = View.GONE
+                }
+                sideControlsLayout?.animate()?.alpha(0f)?.setDuration(300)?.withEndAction {
+                    sideControlsLayout?.visibility = View.GONE
                 }
             }
         }
@@ -471,9 +521,12 @@ class UFMPlayerActivity : AppCompatActivity() {
         remotePathExtra = intent.getStringExtra(
             za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH
         ) ?: ""
+        initialFileSize = intent.getLongExtra("initialSize", 0L)
+        @Suppress("UNCHECKED_CAST")
+        sizesMap = (intent.getSerializableExtra("sizesMap") as? java.util.HashMap<String, Long>) ?: emptyMap()
         // Prefer cache to avoid TransactionTooLargeException for large folders
         val cacheKey = intent.getStringExtra("playlistCacheKey") ?: ""
-        val cachedPlaylist = PlaylistCache.take(cacheKey)
+        val cachedPlaylist = PlaylistCache.get(cacheKey)
 
         playlist = when {
             cachedPlaylist != null -> ArrayList(cachedPlaylist)
@@ -488,6 +541,20 @@ class UFMPlayerActivity : AppCompatActivity() {
         currentIndex = playlist.indexOf(initialPath)
         if (currentIndex == -1) currentIndex = 0
 
+        // Ensure cacheKey is available for the service
+        if (cacheKey.isNotEmpty()) {
+            intent.putExtra("playlistCacheKey", cacheKey)
+            intent.putExtra("serviceCacheKey", cacheKey)
+        } else if (playlist.isNotEmpty()) {
+            val newKey = PlaylistCache.put(playlist)
+            intent.putExtra("playlistCacheKey", newKey)
+            intent.putExtra("serviceCacheKey", newKey)
+        }
+
+        if (playlist.size <= 1 && initialPath.isNotEmpty()) {
+            discoverSiblingVideos(initialPath)
+        }
+
         initViews()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -495,6 +562,8 @@ class UFMPlayerActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 if (isShowingSheet) {
                     dismissTrackSheet()
+                } else if (isTvPlaylistDrawerOpen) {
+                    closeTvPlaylistDrawer()
                 } else if (isTv && isTvSeeking) {
                     cancelTvSeek()
                 } else {
@@ -646,6 +715,8 @@ class UFMPlayerActivity : AppCompatActivity() {
         playerView.player = null
         handler.removeCallbacks(progressUpdater)
         handler.removeCallbacks(hideControlsRunnable)
+        tvPlaylistAdapter?.release()
+        tvPlaylistAdapter = null
         super.onDestroy()
     }
 
@@ -1045,40 +1116,43 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         updateSkipButtonVisibility()
 
-        // ── Queue Drawer Button in Controls Row ────────────────────
-        // Find a place for the queue toggle — add to btnSubtitles' parent
-        val controlsRow = findViewById<LinearLayout>(R.id.controlsLayout)
-            ?.findViewWithTag<LinearLayout>("controlsButtonRow")
-        if (controlsRow == null) {
-            // Fallback: add programmatically to the last LinearLayout in controlsLayout
-            try {
-                val parent = (btnSubtitles.parent as? LinearLayout)
-                if (parent != null && parent.childCount > 0) {
-                    val queueBtn = ImageButton(this).apply {
-                        id = android.view.View.generateViewId()
-                        layoutParams = LinearLayout.LayoutParams(
-                            dp(44), dp(44)
-                        ).apply { marginStart = dp(2) }
-                        setImageResource(R.drawable.ic_list_view_custom)
-                        val typedValue = android.util.TypedValue()
-                        if (theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true)) {
-                            background = androidx.core.content.ContextCompat.getDrawable(this@UFMPlayerActivity, typedValue.resourceId)
+        if (!isTv) {
+            // ── Queue Drawer Button in Controls Row (Mobile) ───────────
+            val controlsRow = findViewById<LinearLayout>(R.id.controlsLayout)
+                ?.findViewWithTag<LinearLayout>("controlsButtonRow")
+            if (controlsRow == null) {
+                try {
+                    val parent = (btnSubtitles.parent as? LinearLayout)
+                    if (parent != null && parent.childCount > 0) {
+                        val queueBtn = ImageButton(this).apply {
+                            id = android.view.View.generateViewId()
+                            layoutParams = LinearLayout.LayoutParams(
+                                dp(44), dp(44)
+                            ).apply { marginStart = dp(2) }
+                            setImageResource(R.drawable.ic_list_view_custom)
+                            val typedValue = android.util.TypedValue()
+                            if (theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true)) {
+                                background = androidx.core.content.ContextCompat.getDrawable(this@UFMPlayerActivity, typedValue.resourceId)
+                            }
+                            imageTintList = android.content.res.ColorStateList.valueOf(
+                                android.graphics.Color.WHITE
+                            )
+                            setOnClickListener { toggleQueueDrawer() }
+                            contentDescription = getString(R.string.queue_title)
                         }
-                        imageTintList = android.content.res.ColorStateList.valueOf(
-                            android.graphics.Color.WHITE
-                        )
-                        setOnClickListener { toggleQueueDrawer() }
-                        contentDescription = getString(R.string.queue_title)
+                        parent.addView(queueBtn, parent.childCount)
                     }
-                    parent.addView(queueBtn, parent.childCount)
+                } catch (_: Exception) {
+                    // Silently skip if layout is unexpected
                 }
-            } catch (_: Exception) {
-                // Silently skip if layout is unexpected
             }
-        }
 
-        // ── Queue Drawer Init ───────────────────────────────────────
-        initQueueDrawer()
+            // ── Queue Drawer Init (Mobile) ──────────────────────────────
+            initQueueDrawer()
+        } else {
+            // ── TV Playlist Drawer Init ─────────────────────────────────
+            initTvPlaylistDrawer()
+        }
 
         // ── Next-Track Overlay ──────────────────────────────────────
         nextTrackOverlay = NextTrackOverlayView(this).apply {
@@ -1099,6 +1173,10 @@ class UFMPlayerActivity : AppCompatActivity() {
     // ── UI Helpers ──────────────────────────────────────────────────
 
     private fun toggleControls() {
+        if (isTvPlaylistDrawerOpen) {
+            closeTvPlaylistDrawer()
+            return
+        }
         if (controlsLayout.visibility == View.VISIBLE) {
             hideControls()
         } else {
@@ -1108,13 +1186,16 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private fun hideControls() {
         handler.removeCallbacks(hideControlsRunnable)
-        if (!isDestroyed && !isFinishing && !isShowingSheet) {
+        if (!isDestroyed && !isFinishing && !isShowingSheet && !isTvPlaylistDrawerOpen) {
             controlsLayout.animate().alpha(0f).setDuration(250).withEndAction {
                 controlsLayout.visibility = View.GONE
                 subtitleView.setPadding(0, 0, 0, dp(16))
             }
             topBar.animate().alpha(0f).setDuration(250).withEndAction {
                 topBar.visibility = View.GONE
+            }
+            sideControlsLayout?.animate()?.alpha(0f)?.setDuration(250)?.withEndAction {
+                sideControlsLayout?.visibility = View.GONE
             }
         }
     }
@@ -1125,9 +1206,11 @@ class UFMPlayerActivity : AppCompatActivity() {
         controlsLayout.alpha = 1f
         topBar.visibility = View.VISIBLE
         topBar.alpha = 1f
+        sideControlsLayout?.visibility = View.VISIBLE
+        sideControlsLayout?.alpha = 1f
         subtitleView.setPadding(0, 0, 0, dp(100))
 
-        if (playbackService?.isPlaying == true && !isShowingSheet && !(isTv && isTvSeeking)) {
+        if (playbackService?.isPlaying == true && !isShowingSheet && !isTvPlaylistDrawerOpen && !(isTv && isTvSeeking)) {
             handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(this))
         }
     }
@@ -1303,6 +1386,23 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (isTv && event.action == android.view.KeyEvent.ACTION_DOWN) {
+            // If controls are hidden and drawer/sheet are closed, first D-pad interaction wakes up controls
+            if (controlsLayout.visibility != View.VISIBLE && !isShowingSheet && !isTvPlaylistDrawerOpen) {
+                when (event.keyCode) {
+                    android.view.KeyEvent.KEYCODE_DPAD_CENTER,
+                    android.view.KeyEvent.KEYCODE_ENTER,
+                    android.view.KeyEvent.KEYCODE_DPAD_UP,
+                    android.view.KeyEvent.KEYCODE_DPAD_DOWN,
+                    android.view.KeyEvent.KEYCODE_DPAD_LEFT,
+                    android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                        resetHideTimer()
+                        btnPlayPause.requestFocus()
+                        return true
+                    }
+                }
+            }
+        }
         resetHideTimer()
         return super.dispatchKeyEvent(event)
     }
@@ -1857,6 +1957,197 @@ class UFMPlayerActivity : AppCompatActivity() {
                 overlay.visibility = View.GONE
                 overlay.alpha = 1f
             }.start()
+        }
+    }
+
+    // ── TV Playlist Drawer ─────────────────────────────────────────
+
+    private fun initTvPlaylistDrawer() {
+        if (!isTv) return
+        playlistDrawerLayout = findViewById(R.id.playlistDrawerLayout)
+        sideControlsLayout = findViewById(R.id.sideControlsLayout)
+        rvTvPlaylist = findViewById(R.id.rvTvPlaylist)
+        txtPlaylistCount = findViewById(R.id.txtPlaylistCount)
+        txtTvPlaylistEmpty = findViewById(R.id.txtTvPlaylistEmpty)
+        btnPlaylistClose = findViewById(R.id.btnPlaylistClose)
+        btnPlaylist = findViewById(R.id.btnPlaylist)
+
+        btnPlaylist?.setOnClickListener {
+            resetHideTimer()
+            toggleTvPlaylistDrawer()
+        }
+
+        btnPlaylistClose?.setOnClickListener {
+            closeTvPlaylistDrawer()
+        }
+
+        val recycler = rvTvPlaylist ?: return
+        recycler.layoutManager = LinearLayoutManager(this)
+
+        val queueItems = playlist.map { path ->
+            val ext = path.substringAfterLast('.', "").lowercase()
+            val size = sizesMap[path] ?: if (shareId.isEmpty()) File(path).length() else (if (path == playlist.getOrNull(currentIndex)) initialFileSize else 0L)
+            QueueItem(
+                path = path,
+                isVideo = !FileViewerRouter.isAudio(ext),
+                fileSize = size,
+                shareId = shareId.ifEmpty { null },
+                shareHost = shareHost.ifEmpty { null },
+                shareUsername = shareUsername.ifEmpty { null },
+                shareName = shareName.ifEmpty { null },
+                provider = provider.ifEmpty { null },
+                remotePath = remotePathExtra.ifEmpty { null }
+            )
+        }
+
+        tvPlaylistAdapter = TvPlayerPlaylistAdapter(queueItems, currentIndex) { position ->
+            resetHideTimer()
+            currentIndex = position
+            tvPlaylistAdapter?.setCurrentIndex(position)
+            val path = playlist.getOrNull(position) ?: ""
+            txtTitle.text = path.substringAfterLast('/')
+            playbackService?.skipToIndex(position)
+        }
+        recycler.adapter = tvPlaylistAdapter
+        updatePlaylistCountText()
+    }
+
+    private fun toggleTvPlaylistDrawer() {
+        if (isTvPlaylistDrawerOpen) {
+            closeTvPlaylistDrawer()
+        } else {
+            openTvPlaylistDrawer()
+        }
+    }
+
+    private fun openTvPlaylistDrawer() {
+        val drawer = playlistDrawerLayout ?: return
+        isTvPlaylistDrawerOpen = true
+        resetHideTimer()
+
+        // Sync with service queue if available
+        playbackService?.let { svc ->
+            val queue = svc.queueManager.queue
+            if (queue.isNotEmpty()) {
+                tvPlaylistAdapter?.updateItems(queue, svc.queueManager.currentIndex)
+            }
+        }
+        updatePlaylistCountText()
+
+        drawer.visibility = View.VISIBLE
+        drawer.translationX = dp(380).toFloat()
+        drawer.animate()
+            .translationX(0f)
+            .setDuration(250)
+            .withEndAction {
+                val pos = tvPlaylistAdapter?.getCurrentIndex() ?: currentIndex
+                rvTvPlaylist?.scrollToPosition(pos)
+                rvTvPlaylist?.post {
+                    rvTvPlaylist?.findViewHolderForAdapterPosition(pos)?.itemView?.requestFocus()
+                        ?: rvTvPlaylist?.requestFocus()
+                }
+            }
+            .start()
+    }
+
+    private fun closeTvPlaylistDrawer() {
+        val drawer = playlistDrawerLayout ?: return
+        if (!isTvPlaylistDrawerOpen) return
+        isTvPlaylistDrawerOpen = false
+        drawer.animate()
+            .translationX(dp(380).toFloat())
+            .setDuration(200)
+            .withEndAction {
+                drawer.visibility = View.GONE
+                btnPlaylist?.requestFocus()
+            }
+            .start()
+    }
+
+    private fun updatePlaylistCountText() {
+        val count = tvPlaylistAdapter?.itemCount ?: playlist.size
+        txtPlaylistCount?.text = getString(R.string.tv_player_playlist_count, count)
+        txtTvPlaylistEmpty?.visibility = if (count <= 1) View.VISIBLE else View.GONE
+    }
+
+    // ── Sibling Video Discovery ─────────────────────────────────────
+
+    private fun discoverSiblingVideos(initialPath: String) {
+        val ext = initialPath.substringAfterLast('.', "").lowercase()
+        val isVideo = ext in FileViewerRouter.VIDEO_EXTENSIONS
+        val isAudio = FileViewerRouter.isAudio(ext)
+        if (!isVideo && !isAudio) return
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val isLocal = shareId.isEmpty() && shareHost.isEmpty() && provider.isEmpty()
+                val discoveredPaths = if (isLocal) {
+                    val currentFile = File(initialPath)
+                    val parentDir = currentFile.parentFile
+                    if (parentDir != null && parentDir.isDirectory) {
+                        val sortState = SortFilterPreferenceManager.loadForLocalPath(this@UFMPlayerActivity, parentDir.absolutePath)
+                            ?: SortFilterPreferenceManager.loadGlobal(this@UFMPlayerActivity)
+                        val comparator = SortFilterPreferenceManager.getFileComparator(sortState, this@UFMPlayerActivity)
+                        val files = parentDir.listFiles { f ->
+                            val e = f.extension.lowercase()
+                            if (isVideo) FileViewerRouter.isVideo(e)
+                            else FileViewerRouter.isAudio(e) || FileViewerRouter.isVideo(e)
+                        }?.sortedWith(comparator)
+                        files?.map { it.absolutePath }
+                    } else null
+                } else null
+
+                if (!discoveredPaths.isNullOrEmpty() && discoveredPaths.size > 1) {
+                    withContext(Dispatchers.Main) {
+                        if (isDestroyed || isFinishing) return@withContext
+                        playlist.clear()
+                        playlist.addAll(discoveredPaths)
+                        currentIndex = playlist.indexOf(initialPath).coerceAtLeast(0)
+
+                        // Update service queue
+                        playbackService?.let { svc ->
+                            val items = playlist.map { path ->
+                                val e = path.substringAfterLast('.', "").lowercase()
+                                QueueItem(
+                                    path = path,
+                                    isVideo = !FileViewerRouter.isAudio(e),
+                                    fileSize = if (shareId.isEmpty()) File(path).length() else 0L,
+                                    shareId = shareId.ifEmpty { null },
+                                    shareHost = shareHost.ifEmpty { null },
+                                    shareUsername = shareUsername.ifEmpty { null },
+                                    shareName = shareName.ifEmpty { null },
+                                    provider = provider.ifEmpty { null },
+                                    remotePath = remotePathExtra.ifEmpty { null }
+                                )
+                            }
+                            svc.updateQueue(items, currentIndex)
+                        }
+
+                        if (isTv) {
+                            tvPlaylistAdapter?.updateItems(
+                                playlist.map { p ->
+                                    val e = p.substringAfterLast('.', "").lowercase()
+                                    QueueItem(
+                                        path = p,
+                                        isVideo = !FileViewerRouter.isAudio(e),
+                                        fileSize = if (shareId.isEmpty()) File(p).length() else 0L,
+                                        shareId = shareId.ifEmpty { null },
+                                        shareHost = shareHost.ifEmpty { null },
+                                        shareUsername = shareUsername.ifEmpty { null },
+                                        shareName = shareName.ifEmpty { null },
+                                        provider = provider.ifEmpty { null },
+                                        remotePath = remotePathExtra.ifEmpty { null }
+                                    )
+                                },
+                                currentIndex
+                            )
+                            updatePlaylistCountText()
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                za.kilowatch.ultimatefilemanager.util.GoRoLog.w("UFMPlayerActivity", "Sibling video discovery error: ${e.message}")
+            }
         }
     }
 
