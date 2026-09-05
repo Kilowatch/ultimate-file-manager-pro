@@ -106,7 +106,7 @@ This branch is the **FOSS edition** and must stay free of closed-source componen
 - **Google Firebase / Crashlytics / analytics**
 - **Google Play Billing** or Amazon equivalent
 
-For why these are removed and what the FOSS build includes instead, see the [FOSS Edition vs. Store Edition](README.md#foss-edition-vs-store-edition) section in the README.
+For why these are removed and what the FOSS build includes instead, see the [FOSS Edition vs. Store Edition](README.md#-foss-edition-vs-store-edition) section in the README.
 
 ---
 
