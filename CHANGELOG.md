@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Streamlined Android TV video playback controls to a minimalist floating transport bar with reduced button dimensions and uncluttered layout.
 - Standardized Previous video button behavior on TV: seeks to 0:00 when pressed after 3 seconds; double-pressing within 3 seconds navigates to the previous video file in the directory.
+- Repository maintenance: added community-health docs (CONTRIBUTING, Code of Conduct, issue/PR templates), a GitHub Actions CI workflow that builds the FOSS debug APKs on every push/PR, and README improvements (table of contents and a new screenshots section). No app behavior changed.
 
 ### Fixed
 - Fixed issue where Previous and Next buttons restarted the current video instead of navigating to other video files in the folder.
