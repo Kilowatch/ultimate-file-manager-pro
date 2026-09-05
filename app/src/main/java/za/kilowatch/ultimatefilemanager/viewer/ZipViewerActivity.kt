@@ -433,6 +433,35 @@ class ZipViewerActivity : AppCompatActivity() {
             }
         )
 
+        // 4. Checksum Tools
+        val filesOnly = items.filter { !it.isDirectory && it.entry != null }
+        val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+        if (filesOnly.isNotEmpty() && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) {
+            actions.add(
+                ArchiveToolsBottomSheet.ActionItem(
+                    id = "checksum",
+                    label = getString(R.string.action_checksum),
+                    defaultIconRes = R.drawable.ic_checksum,
+                    customIconId = "toolbar_checksum"
+                ) {
+                    val file = sourceFile ?: return@ActionItem
+                    val sources = filesOnly.map { item ->
+                        val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                        val size = item.entry?.uncompressedSize ?: 0L
+                        za.kilowatch.ultimatefilemanager.checksum.ArchiveFileSource(
+                            archiveFile = file,
+                            entryPath = entryPath,
+                            entrySize = size,
+                            password = archivePassword
+                        )
+                    }
+                    clearSelection()
+                    za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                        .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+                }
+            )
+        }
+
         val title = if (items.size == 1) items.first().name else getString(R.string.selection_count, items.size)
         val sheet = ArchiveToolsBottomSheet.newInstance(actions, title = title)
         sheet.show(supportFragmentManager, ArchiveToolsBottomSheet.TAG)

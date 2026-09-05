@@ -13498,6 +13498,125 @@ SHA-256
     <string name="tv_player_button_playlist">
 Список відтворення
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+Інструменти контрольної суми
+</string>
+    <string name="action_compare_files">
+Порівняти файли
+</string>
+    <string name="action_verify_checksum_file">
+Перевірте файл контрольної суми
+</string>
+    <string name="checksum_sheet_title">
+Перевірка контрольної суми та хешу
+</string>
+    <string name="checksum_generate">
+Генерувати
+</string>
+    <string name="checksum_generate_all">
+Згенерувати все
+</string>
+    <string name="checksum_generating">
+Обчислення контрольної суми…
+</string>
+    <string name="checksum_verify_hint">
+Вставте хеш для перевірки
+</string>
+    <string name="checksum_match">
+✓ Збіг — хеш відповідає перевіреному файлу
+</string>
+    <string name="checksum_mismatch">
+✗ Невідповідність — хеш не збігається
+</string>
+    <string name="checksum_prompt_compute_algo">
+Вставлено %1$s хеш. Торкніться, щоб обчислити та підтвердити
+</string>
+    <string name="checksum_copy_all">
+Копіювати все
+</string>
+    <string name="checksum_copied">
+Контрольну суму скопійовано в буфер обміну
+</string>
+    <string name="checksum_all_copied">
+Усі контрольні суми скопійовано в буфер обміну
+</string>
+    <string name="checksum_export">
+Експортний маніфест
+</string>
+    <string name="checksum_export_success">
+Експортовано %1$s
+</string>
+    <string name="checksum_export_error">
+Не вдалося експортувати маніфест
+</string>
+    <string name="checksum_compare_title">
+Порівняти файли
+</string>
+    <string name="checksum_compare_identical">
+✓ Файли ідентичні
+</string>
+    <string name="checksum_compare_different">
+✗ Файли відрізняються
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ Файли відрізняються (різні розміри: %1$s проти %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+Ідентичний розмір (%1$s). Хешування для перевірки вмісту…
+</string>
+    <string name="checksum_compare_select_hint">
+Виберіть 1 файл на кожній панелі або 2 файли на одній панелі для порівняння
+</string>
+    <string name="checksum_large_file_warning_title">
+Попередження про великий файл
+</string>
+    <string name="checksum_large_file_warning_msg">
+Це файл %1$s, його читання може зайняти деякий час. Продовжити?
+</string>
+    <string name="checksum_dont_ask_again">
+Більше не питай
+</string>
+    <string name="checksum_manifest_verify_title">
+Перевірте маніфест контрольної суми
+</string>
+    <string name="checksum_manifest_reading">
+Читання маніфесту…
+</string>
+    <string name="checksum_manifest_summary">
+%1$d перевірено, %2$d не вдалося, %3$d відсутні
+</string>
+    <string name="checksum_manifest_status_ok">
+добре
+</string>
+    <string name="checksum_manifest_status_failed">
+ПОМИЛКА
+</string>
+    <string name="checksum_manifest_status_missing">
+ВІДСУТИЙ
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+НЕВІДПОВІДНІСТЬ РОЗМІРІВ
+</string>
+    <string name="checksum_speed_format">
+%1$.1f МБ/с
+</string>
+    <string name="checksum_eta_format">
+Приблизний час прибуття: %1$dс
+</string>
+    <string name="checksum_batch_progress_format">
+Файл %1$d з %2$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+Створення та перевірка хешів файлів (CRC32, MD5, SHA-1, SHA-256, SHA-512)
+</string>
+    <string name="icon_toolbar_checksum">
+Інструменти контрольної суми
+</string>
+    <string name="backup_pref_checksum">
+Параметри контрольної суми
+</string>
 </resources>
 
 

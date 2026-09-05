@@ -13498,6 +13498,125 @@ Sedang Dimainkan
     <string name="tv_player_button_playlist">
 Daftar putar
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+Alat Checksum
+</string>
+    <string name="action_compare_files">
+Bandingkan File
+</string>
+    <string name="action_verify_checksum_file">
+Verifikasi File Checksum
+</string>
+    <string name="checksum_sheet_title">
+Verifikasi Checksum &amp; Hash
+</string>
+    <string name="checksum_generate">
+Menghasilkan
+</string>
+    <string name="checksum_generate_all">
+Hasilkan Semua
+</string>
+    <string name="checksum_generating">
+Menghitung checksum…
+</string>
+    <string name="checksum_verify_hint">
+Tempel hash untuk memverifikasi
+</string>
+    <string name="checksum_match">
+✓ Cocok — Hash cocok dengan file terverifikasi
+</string>
+    <string name="checksum_mismatch">
+✗ Ketidakcocokan — Hash tidak cocok
+</string>
+    <string name="checksum_prompt_compute_algo">
+Hash %1$s ditempel. Ketuk untuk menghitung dan memverifikasi
+</string>
+    <string name="checksum_copy_all">
+Salin Semua
+</string>
+    <string name="checksum_copied">
+Checksum disalin ke papan klip
+</string>
+    <string name="checksum_all_copied">
+Semua checksum disalin ke clipboard
+</string>
+    <string name="checksum_export">
+Ekspor Manifes
+</string>
+    <string name="checksum_export_success">
+Diekspor %1$s
+</string>
+    <string name="checksum_export_error">
+Gagal mengekspor manifes
+</string>
+    <string name="checksum_compare_title">
+Bandingkan File
+</string>
+    <string name="checksum_compare_identical">
+✓ File identik
+</string>
+    <string name="checksum_compare_different">
+✗ File berbeda
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ File berbeda (ukuran berbeda: %1$s vs %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+Ukuran identik (%1$s). Hashing untuk memverifikasi konten…
+</string>
+    <string name="checksum_compare_select_hint">
+Pilih 1 file di setiap panel, atau 2 file dalam satu panel untuk dibandingkan
+</string>
+    <string name="checksum_large_file_warning_title">
+Peringatan File Besar
+</string>
+    <string name="checksum_large_file_warning_msg">
+File ini berukuran %1$s dan mungkin memerlukan waktu beberapa saat untuk dibaca. Melanjutkan?
+</string>
+    <string name="checksum_dont_ask_again">
+Jangan bertanya lagi
+</string>
+    <string name="checksum_manifest_verify_title">
+Verifikasi Manifes Checksum
+</string>
+    <string name="checksum_manifest_reading">
+Manifes bacaan…
+</string>
+    <string name="checksum_manifest_summary">
+%1$d terverifikasi, %2$d gagal, %3$d hilang
+</string>
+    <string name="checksum_manifest_status_ok">
+OKE
+</string>
+    <string name="checksum_manifest_status_failed">
+GAGAL
+</string>
+    <string name="checksum_manifest_status_missing">
+HILANG
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+UKURAN TIDAK SESUAI
+</string>
+    <string name="checksum_speed_format">
+%1$.1f MB/dtk
+</string>
+    <string name="checksum_eta_format">
+Waktu tempuh: %1$ds
+</string>
+    <string name="checksum_batch_progress_format">
+File %1$d dari %2$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+Hasilkan dan verifikasi hash file (CRC32, MD5, SHA-1, SHA-256, SHA-512)
+</string>
+    <string name="icon_toolbar_checksum">
+Alat Checksum
+</string>
+    <string name="backup_pref_checksum">
+Preferensi Checksum
+</string>
 </resources>
 
 

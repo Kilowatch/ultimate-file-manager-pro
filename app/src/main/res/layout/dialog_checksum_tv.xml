@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="680dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <!-- Header Icon -->
+    <ImageView
+        android:id="@+id/imgHeroIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_checksum"
+        app:tint="@color/tv_button_focused_yellow"
+        android:layout_marginBottom="8dp"
+        android:importantForAccessibility="no" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/checksum_sheet_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="2dp" />
+
+    <!-- File Meta -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/txtTargetFileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:maxWidth="350dp"
+            tools:text="sample_movie.iso" />
+
+        <TextView
+            android:id="@+id/txtFileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14sp"
+            android:layout_marginStart="8dp"
+            tools:text="• 2.1 GB" />
+
+        <TextView
+            android:id="@+id/txtStorageBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_storage_badge"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:textColor="@color/tv_button_focused_yellow"
+            android:textSize="11sp"
+            android:fontFamily="sans-serif-bold"
+            tools:text="SMB" />
+    </LinearLayout>
+
+    <!-- Scrollable Body -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="380dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Chips Row -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Algorithms:"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="6dp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupAlgorithms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCrc32"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="CRC32" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipMd5"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="MD5" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSha1"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="SHA-1" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSha256"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:focusable="true"
+                    android:text="SHA-256" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSha512"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="SHA-512" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Buttons Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="14dp">
+
+                <Button
+                    android:id="@+id/btnGenerate"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:text="@string/checksum_generate"
+                    android:textColor="@color/selector_tv_button_text"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:focusable="true" />
+
+                <Button
+                    android:id="@+id/btnCopyAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/selector_tv_button"
+                    android:text="@string/checksum_copy_all"
+                    android:textColor="@color/selector_tv_button_text"
+                    android:textSize="13sp"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/btnExportManifest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/selector_tv_button"
+                    android:text="@string/checksum_export"
+                    android:textColor="@color/selector_tv_button_text"
+                    android:textSize="13sp"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+            <!-- Progress Container -->
+            <LinearLayout
+                android:id="@+id/layoutProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_glass"
+                android:padding="12dp"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtProgressStatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/checksum_generating"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/txtProgressSpeed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/tv_button_focused_yellow"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-bold"
+                        tools:text="45.2 MB/s" />
+
+                    <TextView
+                        android:id="@+id/txtProgressEta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="13sp"
+                        tools:text="ETA: 12s" />
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progressBarChecksum"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:max="100"
+                    tools:progress="45" />
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_gravity="end"
+                    android:background="@drawable/selector_tv_button"
+                    android:text="@android:string/cancel"
+                    android:textColor="@color/tv_error_red"
+                    android:textSize="12sp"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- Results List -->
+            <LinearLayout
+                android:id="@+id/layoutResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Verify Field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilVerifyHash"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/checksum_verify_hint"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="@color/tv_button_focused_yellow"
+                app:hintTextColor="@color/tv_text_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtVerifyHash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tv_text_primary"
+                    android:typeface="monospace"
+                    android:textSize="12sp"
+                    android:singleLine="true"
+                    android:focusable="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Verification Banner -->
+            <LinearLayout
+                android:id="@+id/layoutVerifyBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_card_glass"
+                android:padding="10dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/imgVerifyBannerIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_check"
+                    app:tint="@color/ufm_granted" />
+
+                <TextView
+                    android:id="@+id/txtVerifyBannerText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-bold"
+                    tools:text="✓ Match — SHA-256 matches verified file" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

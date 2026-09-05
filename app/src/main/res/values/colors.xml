@@ -201,6 +201,10 @@
     <color name="btn_disabled_bg">#FFB0BEC5</color>   <!-- blue-grey 200, clearly muted on light bg -->
     <color name="btn_disabled_text">#FF607D8B</color> <!-- blue-grey 600 -->
 
+    <!-- Checksum & Compare Action Button Light Green -->
+    <color name="checksum_btn_light_green">#4CAF50</color>
+    <color name="checksum_btn_light_green_text">#FFFFFF</color>
+
     <!-- Dialog / Premium Gloss Surface (95% opaque white) -->
     <color name="dialog_glass_bg">#F2FFFFFF</color>
 

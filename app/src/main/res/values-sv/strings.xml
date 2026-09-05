@@ -13475,6 +13475,125 @@ Spelar nu
     <string name="tv_player_button_playlist">
 Spellista
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+Kontrollsummeverktyg
+</string>
+    <string name="action_compare_files">
+Jämför filer
+</string>
+    <string name="action_verify_checksum_file">
+Verifiera kontrollsummafilen
+</string>
+    <string name="checksum_sheet_title">
+Checksumma &amp; Hash-verifiering
+</string>
+    <string name="checksum_generate">
+Generera
+</string>
+    <string name="checksum_generate_all">
+Generera alla
+</string>
+    <string name="checksum_generating">
+Beräknar kontrollsumma...
+</string>
+    <string name="checksum_verify_hint">
+Klistra in hash för att verifiera
+</string>
+    <string name="checksum_match">
+✓ Matcha — Hash matchar verifierad fil
+</string>
+    <string name="checksum_mismatch">
+✗ Missmatch — Hash matchar inte
+</string>
+    <string name="checksum_prompt_compute_algo">
+Klistrade in %1$s hash. Tryck för att beräkna och verifiera
+</string>
+    <string name="checksum_copy_all">
+Kopiera alla
+</string>
+    <string name="checksum_copied">
+Kontrollsumman har kopierats till urklipp
+</string>
+    <string name="checksum_all_copied">
+Alla kontrollsummor har kopierats till urklipp
+</string>
+    <string name="checksum_export">
+Exportmanifest
+</string>
+    <string name="checksum_export_success">
+Exporterade %1$s
+</string>
+    <string name="checksum_export_error">
+Det gick inte att exportera manifest
+</string>
+    <string name="checksum_compare_title">
+Jämför filer
+</string>
+    <string name="checksum_compare_identical">
+✓ Filerna är identiska
+</string>
+    <string name="checksum_compare_different">
+✗ Filer skiljer sig åt
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ Filer skiljer sig åt (olika storlekar: %1$s jämfört med %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+Identisk storlek (%1$s). Hashing för att verifiera innehåll...
+</string>
+    <string name="checksum_compare_select_hint">
+Välj 1 fil i varje ruta, eller 2 filer i en ruta för att jämföra
+</string>
+    <string name="checksum_large_file_warning_title">
+Stor fil varning
+</string>
+    <string name="checksum_large_file_warning_msg">
+Den här filen är %1$s och kan ta ett tag att läsa. Fortsätta?
+</string>
+    <string name="checksum_dont_ask_again">
+Fråga inte igen
+</string>
+    <string name="checksum_manifest_verify_title">
+Verifiera kontrollsummanifest
+</string>
+    <string name="checksum_manifest_reading">
+Läser manifest...
+</string>
+    <string name="checksum_manifest_summary">
+%1$d verifierad, %2$d misslyckades, %3$d saknas
+</string>
+    <string name="checksum_manifest_status_ok">
+OK
+</string>
+    <string name="checksum_manifest_status_failed">
+MISLYCKADES
+</string>
+    <string name="checksum_manifest_status_missing">
+SAKNAD
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+STORLEK MISMATCH
+</string>
+    <string name="checksum_speed_format">
+%1$.1f MB/s
+</string>
+    <string name="checksum_eta_format">
+ETA: %1$ds
+</string>
+    <string name="checksum_batch_progress_format">
+Fil %1$d av %2$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+Generera och verifiera filhashar (CRC32, MD5, SHA-1, SHA-256, SHA-512)
+</string>
+    <string name="icon_toolbar_checksum">
+Kontrollsummeverktyg
+</string>
+    <string name="backup_pref_checksum">
+Inställningar för kontrollsumma
+</string>
 </resources>
 
 

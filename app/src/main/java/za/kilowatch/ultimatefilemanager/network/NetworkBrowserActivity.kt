@@ -213,6 +213,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private lateinit var btnCreateNew: ImageView
     private var btnViewToggle: ImageView? = null
     private var btnRetriggerThumbnails: ImageView? = null
+    private var btnChecksum: ImageView? = null
     private var btnSort: ImageView? = null
     private lateinit var recyclerFiles: RecyclerView
     private lateinit var layoutEmpty: View
@@ -874,6 +875,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         btnExtract = findViewById(R.id.btnExtract)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         btnRetriggerThumbnails = findViewById(R.id.btnRetriggerThumbnails)
+        btnChecksum = findViewById(R.id.btnChecksum)
         fabPaste = findViewById(R.id.fabPaste)
         fabTools = findViewById(R.id.fabTools)
         floatingQuickBar = findViewById(R.id.floatingQuickBar)
@@ -1520,6 +1522,16 @@ class NetworkBrowserActivity : AppCompatActivity() {
             }
         }
 
+        btnChecksum?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles().filter { !it.isDirectory }
+            if (selected.isNotEmpty()) {
+                fileAdapter.exitSelectionMode()
+                val sources = selected.map { za.kilowatch.ultimatefilemanager.checksum.NetworkFileSource(share, it) }
+                za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                    .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+            }
+        }
+
         fabTools?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             val count = selected.size
@@ -1802,6 +1814,30 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 })
             }
 
+            // Checksum Tools
+            if (count > 0 && selected.any { !it.isDirectory } && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) {
+                list.add(FileToolsBottomSheet.ActionItem("checksum", getString(R.string.action_checksum), R.drawable.ic_checksum, "toolbar_checksum") {
+                    val files = selected.filter { !it.isDirectory }
+                    if (files.isNotEmpty()) {
+                        fileAdapter.exitSelectionMode()
+                        val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.NetworkFileSource(share, it) }
+                        za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                            .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+                    }
+                })
+            }
+
+            // Compare Files
+            if (count == 2 && selected.all { !it.isDirectory } && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) {
+                list.add(FileToolsBottomSheet.ActionItem("compare_files", getString(R.string.action_compare_files), R.drawable.ic_checksum, "toolbar_checksum") {
+                    val files = selected.filter { !it.isDirectory }
+                    fileAdapter.exitSelectionMode()
+                    val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.NetworkFileSource(share, it) }
+                    za.kilowatch.ultimatefilemanager.checksum.FileCompareDialogFragment.newInstance(sources[0], sources[1])
+                        .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.FileCompareDialogFragment.TAG)
+                })
+            }
+
             val displayList = pm.filterItemsForBottomSheet(this, list)
             if (displayList.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
@@ -1858,6 +1894,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                    btnCopyEncrypt, btnMoveEncrypt)
             btnViewToggle?.let { tvButtons.add(it) }
             btnRetriggerThumbnails?.let { tvButtons.add(it) }
+            btnChecksum?.let { tvButtons.add(it) }
             
             tvButtons.forEach { btn ->
                 btn.imageTintList = iconTintDefault
@@ -2601,6 +2638,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
             }
             pm.ACTION_INVERT_SELECTION -> fileAdapter.invertSelection()
+            pm.ACTION_CHECKSUM -> {
+                val files = selected.filter { !it.isDirectory }
+                if (files.isNotEmpty()) {
+                    fileAdapter.exitSelectionMode()
+                    val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.NetworkFileSource(share, it) }
+                    za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                        .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+                }
+            }
             pm.ACTION_MORE -> {
                 fabTools?.performClick()
             }
@@ -2709,6 +2755,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(this, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
 
             val selectedFiles = fileAdapter.getSelectedFiles()
+            btnChecksum?.visibility = if (showActions && selectedFiles.any { !it.isDirectory } && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) View.VISIBLE else View.GONE
             val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
             
             val prefs = getSharedPreferences("ufm_prefs", MODE_PRIVATE)

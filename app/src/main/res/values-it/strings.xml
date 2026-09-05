@@ -13498,6 +13498,125 @@ Ora in riproduzione
     <string name="tv_player_button_playlist">
 Playlist
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+Strumenti per il checksum
+</string>
+    <string name="action_compare_files">
+Confronta file
+</string>
+    <string name="action_verify_checksum_file">
+Verifica il file del checksum
+</string>
+    <string name="checksum_sheet_title">
+Checksum e verifica dell\'hash
+</string>
+    <string name="checksum_generate">
+Generare
+</string>
+    <string name="checksum_generate_all">
+Genera tutto
+</string>
+    <string name="checksum_generating">
+Calcolo del checksum…
+</string>
+    <string name="checksum_verify_hint">
+Incolla l\'hash per verificare
+</string>
+    <string name="checksum_match">
+✓ Corrispondenza: l\'hash corrisponde al file verificato
+</string>
+    <string name="checksum_mismatch">
+✗ Mancata corrispondenza: l\'hash non corrisponde
+</string>
+    <string name="checksum_prompt_compute_algo">
+Hash %1$s incollato. Tocca per calcolare e verificare
+</string>
+    <string name="checksum_copy_all">
+Copia tutto
+</string>
+    <string name="checksum_copied">
+Checksum copiato negli appunti
+</string>
+    <string name="checksum_all_copied">
+Tutti i checksum copiati negli appunti
+</string>
+    <string name="checksum_export">
+Manifesto dell\'esportazione
+</string>
+    <string name="checksum_export_success">
+Esportato %1$s
+</string>
+    <string name="checksum_export_error">
+Impossibile esportare il manifest
+</string>
+    <string name="checksum_compare_title">
+Confronta file
+</string>
+    <string name="checksum_compare_identical">
+✓ I file sono identici
+</string>
+    <string name="checksum_compare_different">
+✗ I file differiscono
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ I file differiscono (dimensioni diverse: %1$s vs %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+Dimensione identica (%1$s). Hashing per verificare il contenuto...
+</string>
+    <string name="checksum_compare_select_hint">
+Seleziona 1 file in ciascun riquadro o 2 file in un riquadro da confrontare
+</string>
+    <string name="checksum_large_file_warning_title">
+Avviso file di grandi dimensioni
+</string>
+    <string name="checksum_large_file_warning_msg">
+Questo file è %1$s e la lettura potrebbe richiedere del tempo. Continuare?
+</string>
+    <string name="checksum_dont_ask_again">
+Non chiedermelo più
+</string>
+    <string name="checksum_manifest_verify_title">
+Verificare il manifesto del checksum
+</string>
+    <string name="checksum_manifest_reading">
+Lettura del manifesto...
+</string>
+    <string name="checksum_manifest_summary">
+%1$d verificato, %2$d non riuscito, %3$d mancante
+</string>
+    <string name="checksum_manifest_status_ok">
+OK
+</string>
+    <string name="checksum_manifest_status_failed">
+FALLITO
+</string>
+    <string name="checksum_manifest_status_missing">
+MANCANTE
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+TAGLIA NON CORRISPONDENTE
+</string>
+    <string name="checksum_speed_format">
+%1$.1f MB/s
+</string>
+    <string name="checksum_eta_format">
+ETA: %1$ds
+</string>
+    <string name="checksum_batch_progress_format">
+File %1$d di %2$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+Genera e verifica gli hash dei file (CRC32, MD5, SHA-1, SHA-256, SHA-512)
+</string>
+    <string name="icon_toolbar_checksum">
+Strumenti per il checksum
+</string>
+    <string name="backup_pref_checksum">
+Preferenze checksum
+</string>
 </resources>
 
 

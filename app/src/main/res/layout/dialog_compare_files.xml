@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="20dp"
+    android:gravity="center_horizontal">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_checksum"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtCompareTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/checksum_compare_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Two Panes Comparison Cards -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:layout_marginBottom="14dp">
+
+        <!-- Left Pane File Card -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card_glass"
+            android:padding="10dp"
+            android:layout_marginEnd="6dp">
+
+            <TextView
+                android:id="@+id/txtLeftStorage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_storage_badge"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="1dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-bold"
+                tools:text="Left Pane" />
+
+            <TextView
+                android:id="@+id/txtLeftFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="sample_a.iso" />
+
+            <TextView
+                android:id="@+id/txtLeftFileSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="11sp"
+                tools:text="2.14 GB" />
+        </LinearLayout>
+
+        <!-- Right Pane File Card -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card_glass"
+            android:padding="10dp"
+            android:layout_marginStart="6dp">
+
+            <TextView
+                android:id="@+id/txtRightStorage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_storage_badge"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="1dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-bold"
+                tools:text="Right Pane" />
+
+            <TextView
+                android:id="@+id/txtRightFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="sample_b.iso" />
+
+            <TextView
+                android:id="@+id/txtRightFileSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="11sp"
+                tools:text="2.14 GB" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Size Difference / Pre-check Banner -->
+    <LinearLayout
+        android:id="@+id/layoutSizeCheckBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_card_glass"
+        android:padding="10dp"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/imgSizeCheckIcon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/tv_error_red"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/txtSizeCheckMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            tools:text="✗ Files differ (different sizes: 29 B vs 28 B)" />
+    </LinearLayout>
+
+    <!-- Algorithm Selector (single-choice for comparison) -->
+    <LinearLayout
+        android:id="@+id/layoutCompareAlgoSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Comparison Algorithm:"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginBottom="6dp" />
+
+        <!-- Top line for SHA algorithms (3 divided across full width) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="6dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCompareSha1"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:text="SHA-1" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCompareSha256"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:checked="true"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:text="SHA-256" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCompareSha512"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:text="SHA-512" />
+        </LinearLayout>
+
+        <!-- Second line for other algorithms (2 divided across full width) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCompareCrc32"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="3dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:text="CRC32" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCompareMd5"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="3dp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:text="MD5" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Compare Action Buttons -->
+    <LinearLayout
+        android:id="@+id/layoutCompareButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStartCompare"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="@string/action_compare_files"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-bold"
+            app:backgroundTint="@color/btn_action_green_bg"
+            android:textColor="@color/btn_action_green_text"
+            app:cornerRadius="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDismissCompare"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/close"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- Progress Container -->
+    <LinearLayout
+        android:id="@+id/layoutCompareProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_card_glass"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/txtCompareProgressFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            tools:text="Hashing Left File: sample_a.iso (45%)" />
+
+        <ProgressBar
+            android:id="@+id/progressBarCompare"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:max="100" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelCompare"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="end"
+            android:text="@android:string/cancel"
+            android:textColor="@color/tv_error_red"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Result Banner -->
+    <LinearLayout
+        android:id="@+id/layoutCompareResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_card_glass"
+        android:padding="12dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+            <ImageView
+                android:id="@+id/imgCompareResultIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_check"
+                app:tint="@color/ufm_granted"
+                android:importantForAccessibility="no" />
+
+            <TextView
+                android:id="@+id/txtCompareResultTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-bold"
+                tools:text="✓ Files are identical" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtCompareResultDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:typeface="monospace"
+            android:textSize="11sp"
+            android:textColor="@color/mobile_text_secondary"
+            android:lineSpacingExtra="2dp"
+            tools:text="Left:  0a6042db6993...\nRight: 0a6042db6993..." />
+    </LinearLayout>
+
+</LinearLayout>

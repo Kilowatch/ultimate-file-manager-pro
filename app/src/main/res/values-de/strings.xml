@@ -13498,6 +13498,125 @@ Jetzt gespielt
     <string name="tv_player_button_playlist">
 Wiedergabeliste
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+Prüfsummen-Tools
+</string>
+    <string name="action_compare_files">
+Dateien vergleichen
+</string>
+    <string name="action_verify_checksum_file">
+Überprüfen Sie die Prüfsummendatei
+</string>
+    <string name="checksum_sheet_title">
+Prüfsummen- und Hash-Verifizierung
+</string>
+    <string name="checksum_generate">
+Erzeugen
+</string>
+    <string name="checksum_generate_all">
+Alle generieren
+</string>
+    <string name="checksum_generating">
+Prüfsumme wird berechnet...
+</string>
+    <string name="checksum_verify_hint">
+Fügen Sie den Hash zur Überprüfung ein
+</string>
+    <string name="checksum_match">
+✓ Übereinstimmung – Hash stimmt mit verifizierter Datei überein
+</string>
+    <string name="checksum_mismatch">
+✗ Nichtübereinstimmung – Hash stimmt nicht überein
+</string>
+    <string name="checksum_prompt_compute_algo">
+%1$s Hash eingefügt. Zum Berechnen und Überprüfen tippen
+</string>
+    <string name="checksum_copy_all">
+Alles kopieren
+</string>
+    <string name="checksum_copied">
+Prüfsumme in die Zwischenablage kopiert
+</string>
+    <string name="checksum_all_copied">
+Alle Prüfsummen in die Zwischenablage kopiert
+</string>
+    <string name="checksum_export">
+Manifest exportieren
+</string>
+    <string name="checksum_export_success">
+Exportiert %1$s
+</string>
+    <string name="checksum_export_error">
+Manifest konnte nicht exportiert werden
+</string>
+    <string name="checksum_compare_title">
+Dateien vergleichen
+</string>
+    <string name="checksum_compare_identical">
+✓ Dateien sind identisch
+</string>
+    <string name="checksum_compare_different">
+✗ Dateien unterscheiden sich
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ Dateien unterscheiden sich (unterschiedliche Größen: %1$s vs. %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+Identische Größe (%1$s). Hashing zur Überprüfung von Inhalten…
+</string>
+    <string name="checksum_compare_select_hint">
+Wählen Sie zum Vergleichen eine Datei in jedem Bereich oder zwei Dateien in einem Bereich aus
+</string>
+    <string name="checksum_large_file_warning_title">
+Warnung vor großen Dateien
+</string>
+    <string name="checksum_large_file_warning_msg">
+Diese Datei ist %1$s und das Lesen kann eine Weile dauern. Weitermachen?
+</string>
+    <string name="checksum_dont_ask_again">
+Fragen Sie nicht noch einmal
+</string>
+    <string name="checksum_manifest_verify_title">
+Überprüfen Sie das Prüfsummenmanifest
+</string>
+    <string name="checksum_manifest_reading">
+Manifest lesen…
+</string>
+    <string name="checksum_manifest_summary">
+%1$d überprüft, %2$d fehlgeschlagen, %3$d fehlt
+</string>
+    <string name="checksum_manifest_status_ok">
+OK
+</string>
+    <string name="checksum_manifest_status_failed">
+FEHLGESCHLAGEN
+</string>
+    <string name="checksum_manifest_status_missing">
+FEHLEN
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+GRÖSSENFEHLER
+</string>
+    <string name="checksum_speed_format">
+%1$.1f MB/s
+</string>
+    <string name="checksum_eta_format">
+voraussichtliche Ankunftszeit: %1$ds
+</string>
+    <string name="checksum_batch_progress_format">
+Datei %1$d von %2$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+Datei-Hashes generieren und überprüfen (CRC32, MD5, SHA-1, SHA-256, SHA-512)
+</string>
+    <string name="icon_toolbar_checksum">
+Prüfsummen-Tools
+</string>
+    <string name="backup_pref_checksum">
+Prüfsummeneinstellungen
+</string>
 </resources>
 
 

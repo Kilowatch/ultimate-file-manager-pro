@@ -693,6 +693,36 @@ class NetworkBrowserFragment : Fragment() {
                 })
             }
 
+            // Checksum Tools
+            if (count > 0 && selected.any { !it.isDirectory } && pm.isIconEnabled(context, pm.KEY_CHECKSUM)) {
+                list.add(FileToolsBottomSheet.ActionItem("checksum", getString(R.string.action_checksum), R.drawable.ic_checksum, "toolbar_checksum") {
+                    val files = selected.filter { !it.isDirectory }
+                    if (files.isNotEmpty()) {
+                        fileAdapter.exitSelectionMode()
+                        val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.NetworkFileSource(share, it) }
+                        za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                            .show(parentFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+                    }
+                })
+            }
+
+            // Compare Files
+            if (count == 2 && selected.all { !it.isDirectory } && pm.isIconEnabled(context, pm.KEY_CHECKSUM)) {
+                list.add(FileToolsBottomSheet.ActionItem("compare_files", getString(R.string.action_compare_files), R.drawable.ic_checksum, "toolbar_checksum") {
+                    val files = selected.filter { !it.isDirectory }
+                    fileAdapter.exitSelectionMode()
+                    val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.NetworkFileSource(share, it) }
+                    za.kilowatch.ultimatefilemanager.checksum.FileCompareDialogFragment.newInstance(sources[0], sources[1])
+                        .show(parentFragmentManager, za.kilowatch.ultimatefilemanager.checksum.FileCompareDialogFragment.TAG)
+                })
+            }
+            if (isTwinWindow && count == 1 && !selected.first().isDirectory && pm.isIconEnabled(context, pm.KEY_CHECKSUM)) {
+                list.add(FileToolsBottomSheet.ActionItem("compare_twin", getString(R.string.action_compare_files), R.drawable.ic_checksum, "toolbar_checksum") {
+                    fileAdapter.exitSelectionMode()
+                    onActionRequested?.invoke("compare")
+                })
+            }
+
             val displayList = pm.filterItemsForBottomSheet(context, list)
             if (displayList.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
@@ -866,6 +896,15 @@ class NetworkBrowserFragment : Fragment() {
                         android.widget.Toast.makeText(requireContext(), getString(R.string.toast_unpinned_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
+        }
+        view.findViewById<View>(R.id.btnChecksum)?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles().filter { !it.isDirectory }
+            if (selected.isNotEmpty()) {
+                fileAdapter.exitSelectionMode()
+                val sources = selected.map { za.kilowatch.ultimatefilemanager.checksum.NetworkFileSource(share, it) }
+                za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                    .show(parentFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
             }
         }
         view.findViewById<View>(R.id.btnRetriggerThumbnails)?.setOnClickListener {
@@ -1223,6 +1262,15 @@ class NetworkBrowserFragment : Fragment() {
                 if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
             }
             pm.ACTION_INVERT_SELECTION -> fileAdapter.invertSelection()
+            pm.ACTION_CHECKSUM -> {
+                val files = selected.filter { !it.isDirectory }
+                if (files.isNotEmpty()) {
+                    fileAdapter.exitSelectionMode()
+                    val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.NetworkFileSource(share, it) }
+                    za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                        .show(parentFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+                }
+            }
             pm.ACTION_MORE -> {
                 fabTools?.performClick()
             }
@@ -1341,8 +1389,8 @@ class NetworkBrowserFragment : Fragment() {
                 view?.findViewById<View>(R.id.btnUnprotect)?.visibility = if (showActions && hasProtected && pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
                 view?.findViewById<View>(R.id.btnPin)?.visibility = if (showActions && hasUnpinned && pm.isIconEnabled(context, pm.KEY_PIN)) View.VISIBLE else View.GONE
                 view?.findViewById<View>(R.id.btnUnpin)?.visibility = if (showActions && hasPinned && pm.isIconEnabled(context, pm.KEY_UNPIN)) View.VISIBLE else View.GONE
-
                 val selectedFiles = fileAdapter.getSelectedFiles()
+                view?.findViewById<View>(R.id.btnChecksum)?.visibility = if (showActions && selectedFiles.any { !it.isDirectory } && pm.isIconEnabled(context, pm.KEY_CHECKSUM)) View.VISIBLE else View.GONE
                 val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
                 
                 val prefs = requireContext().getSharedPreferences("ufm_prefs", android.content.Context.MODE_PRIVATE)
@@ -1909,8 +1957,9 @@ class NetworkBrowserFragment : Fragment() {
         listOf(
             R.id.btnCloseSelection, R.id.btnCopy, R.id.btnMove, R.id.btnRename, R.id.btnFavorite,
             R.id.btnShare, R.id.btnCopyEncrypt, R.id.btnMoveEncrypt, R.id.btnProtect, R.id.btnUnprotect,
-        R.id.btnPin, R.id.btnUnpin,
-            R.id.btnRetriggerThumbnails
+            R.id.btnPin, R.id.btnUnpin,
+            R.id.btnRetriggerThumbnails,
+            R.id.btnChecksum
         ).forEach { id ->
             val btn = view.findViewById<ImageView>(id) ?: return@forEach
             btn.imageTintList = iconTintDefault

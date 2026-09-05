@@ -13498,6 +13498,125 @@ AndroidManifest.xml을 디코딩할 수 없습니다.
     <string name="tv_player_button_playlist">
 재생목록
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+체크섬 도구
+</string>
+    <string name="action_compare_files">
+파일 비교
+</string>
+    <string name="action_verify_checksum_file">
+체크섬 파일 확인
+</string>
+    <string name="checksum_sheet_title">
+체크섬 및 해시 검증
+</string>
+    <string name="checksum_generate">
+생성하다
+</string>
+    <string name="checksum_generate_all">
+모두 생성
+</string>
+    <string name="checksum_generating">
+체크섬 계산 중…
+</string>
+    <string name="checksum_verify_hint">
+확인하려면 해시를 붙여넣으세요.
+</string>
+    <string name="checksum_match">
+✓ 일치 — 해시가 확인된 파일과 일치합니다.
+</string>
+    <string name="checksum_mismatch">
+✗ 불일치 — 해시가 일치하지 않습니다.
+</string>
+    <string name="checksum_prompt_compute_algo">
+%1$s 해시를 붙여넣었습니다. 계산하고 확인하려면 탭하세요.
+</string>
+    <string name="checksum_copy_all">
+모두 복사
+</string>
+    <string name="checksum_copied">
+체크섬이 클립보드에 복사되었습니다.
+</string>
+    <string name="checksum_all_copied">
+모든 체크섬이 클립보드에 복사되었습니다.
+</string>
+    <string name="checksum_export">
+매니페스트 내보내기
+</string>
+    <string name="checksum_export_success">
+%1$s을(를) 내보냈습니다.
+</string>
+    <string name="checksum_export_error">
+매니페스트를 내보내지 못했습니다.
+</string>
+    <string name="checksum_compare_title">
+파일 비교
+</string>
+    <string name="checksum_compare_identical">
+✓ 파일이 동일합니다
+</string>
+    <string name="checksum_compare_different">
+✗ 파일이 다름
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ 파일이 다름(다른 크기: %1$s 및 %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+동일한 크기(%1$s). 콘텐츠 확인을 위한 해싱…
+</string>
+    <string name="checksum_compare_select_hint">
+각 창에서 1개의 파일을 선택하거나 한 창에서 2개의 파일을 선택하여 비교할 수 있습니다.
+</string>
+    <string name="checksum_large_file_warning_title">
+대용량 파일 경고
+</string>
+    <string name="checksum_large_file_warning_msg">
+이 파일은 %1$s이며 읽는 데 시간이 걸릴 수 있습니다. 계속하다?
+</string>
+    <string name="checksum_dont_ask_again">
+다시 묻지 마세요
+</string>
+    <string name="checksum_manifest_verify_title">
+체크섬 매니페스트 확인
+</string>
+    <string name="checksum_manifest_reading">
+매니페스트를 읽는 중…
+</string>
+    <string name="checksum_manifest_summary">
+%1$d 확인됨, %2$d 실패, %3$d 누락됨
+</string>
+    <string name="checksum_manifest_status_ok">
+좋아요
+</string>
+    <string name="checksum_manifest_status_failed">
+실패한
+</string>
+    <string name="checksum_manifest_status_missing">
+없어진
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+사이즈 불일치
+</string>
+    <string name="checksum_speed_format">
+%1$.1fMB/초
+</string>
+    <string name="checksum_eta_format">
+예상 시간: %1$d초
+</string>
+    <string name="checksum_batch_progress_format">
+%2$d(%3$d%%)의 파일 %1$d
+</string>
+    <string name="toolbar_desc_checksum">
+파일 해시(CRC32, MD5, SHA-1, SHA-256, SHA-512) 생성 및 확인
+</string>
+    <string name="icon_toolbar_checksum">
+체크섬 도구
+</string>
+    <string name="backup_pref_checksum">
+체크섬 기본 설정
+</string>
 </resources>
 
 

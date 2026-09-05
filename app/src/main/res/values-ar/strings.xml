@@ -13498,6 +13498,125 @@ MD5
     <string name="tv_player_button_playlist">
 قائمة التشغيل
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+أدوات المجموع الاختباري
+</string>
+    <string name="action_compare_files">
+مقارنة الملفات
+</string>
+    <string name="action_verify_checksum_file">
+التحقق من ملف المجموع الاختباري
+</string>
+    <string name="checksum_sheet_title">
+التحقق من المجموع الاختباري والتجزئة
+</string>
+    <string name="checksum_generate">
+يولد
+</string>
+    <string name="checksum_generate_all">
+توليد الكل
+</string>
+    <string name="checksum_generating">
+جارٍ حساب المجموع الاختباري…
+</string>
+    <string name="checksum_verify_hint">
+لصق التجزئة للتحقق
+</string>
+    <string name="checksum_match">
+✓ مطابقة - تطابق التجزئة مع الملف الذي تم التحقق منه
+</string>
+    <string name="checksum_mismatch">
+✗ عدم التطابق — التجزئة غير متطابقة
+</string>
+    <string name="checksum_prompt_compute_algo">
+تم لصق تجزئة %1$s. انقر للحساب والتحقق
+</string>
+    <string name="checksum_copy_all">
+نسخ الكل
+</string>
+    <string name="checksum_copied">
+تم نسخ المجموع الاختباري إلى الحافظة
+</string>
+    <string name="checksum_all_copied">
+تم نسخ كافة المجاميع الاختبارية إلى الحافظة
+</string>
+    <string name="checksum_export">
+بيان التصدير
+</string>
+    <string name="checksum_export_success">
+تم التصدير %1$s
+</string>
+    <string name="checksum_export_error">
+فشل تصدير البيان
+</string>
+    <string name="checksum_compare_title">
+مقارنة الملفات
+</string>
+    <string name="checksum_compare_identical">
+✓ الملفات متطابقة
+</string>
+    <string name="checksum_compare_different">
+✗ تختلف الملفات
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ تختلف الملفات (أحجام مختلفة: %1$s مقابل %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+الحجم مطابق (%1$s). التجزئة للتحقق من المحتوى…
+</string>
+    <string name="checksum_compare_select_hint">
+حدد ملفًا واحدًا في كل جزء، أو ملفين في جزء واحد للمقارنة
+</string>
+    <string name="checksum_large_file_warning_title">
+تحذير من ملف كبير
+</string>
+    <string name="checksum_large_file_warning_msg">
+هذا الملف هو %1$s وقد تستغرق قراءته بعض الوقت. يكمل؟
+</string>
+    <string name="checksum_dont_ask_again">
+لا تسأل مرة أخرى
+</string>
+    <string name="checksum_manifest_verify_title">
+التحقق من بيان المجموع الاختباري
+</string>
+    <string name="checksum_manifest_reading">
+بيان القراءة…
+</string>
+    <string name="checksum_manifest_summary">
+تم التحقق من %1$d، وفشل %2$d، و%3$d مفقود
+</string>
+    <string name="checksum_manifest_status_ok">
+نعم
+</string>
+    <string name="checksum_manifest_status_failed">
+فشل
+</string>
+    <string name="checksum_manifest_status_missing">
+مفتقد
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+عدم تطابق الحجم
+</string>
+    <string name="checksum_speed_format">
+%1$.1f ميجابايت/ثانية
+</string>
+    <string name="checksum_eta_format">
+الوقت المتوقع للوصول: %1$dث
+</string>
+    <string name="checksum_batch_progress_format">
+ملف %1$d من %2$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+إنشاء تجزئات الملف والتحقق منها (CRC32، MD5، SHA-1، SHA-256، SHA-512)
+</string>
+    <string name="icon_toolbar_checksum">
+أدوات المجموع الاختباري
+</string>
+    <string name="backup_pref_checksum">
+تفضيلات المجموع الاختباري
+</string>
 </resources>
 
 

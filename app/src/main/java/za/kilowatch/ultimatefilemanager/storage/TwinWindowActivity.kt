@@ -25,6 +25,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.network.*
+import za.kilowatch.ultimatefilemanager.checksum.*
 import za.kilowatch.ultimatefilemanager.settings.ApkExtractPreferenceManager
 import za.kilowatch.ultimatefilemanager.util.ApkMetadataExtractor
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -845,7 +846,57 @@ class TwinWindowActivity : AppCompatActivity() {
             "copy" -> showConfirmDialog(sourceFiles, targetFragment, isMove = false)
             "move" -> showConfirmDialog(sourceFiles, targetFragment, isMove = true)
             "delete" -> showDeleteConfirm(sourceFiles, sourceFragment)
+            "compare" -> showTwinCompare(sourceFiles, targetFragment)
         }
+    }
+
+    private fun toUfmFileSource(item: Any, fragment: Fragment): UfmFileSource? {
+        return when (item) {
+            is File -> LocalFileSource(item)
+            is NetworkFile -> {
+                val share = (fragment as? NetworkBrowserFragment)?.getShare()
+                if (share != null) NetworkFileSource(share, item) else null
+            }
+            else -> null
+        }
+    }
+
+    private fun showTwinCompare(sourceFiles: List<Any>, targetFragment: Fragment) {
+        val targetFiles = getSelectedItems(targetFragment).filter { item ->
+            when (item) {
+                is File -> !item.isDirectory
+                is NetworkFile -> !item.isDirectory
+                else -> false
+            }
+        }
+        val sourceFragment = (if (targetFragment === getPane1()) getPane2() else getPane1()) ?: return
+        val validSourceFiles = sourceFiles.filter { item ->
+            when (item) {
+                is File -> !item.isDirectory
+                is NetworkFile -> !item.isDirectory
+                else -> false
+            }
+        }
+
+        if (validSourceFiles.size == 1 && targetFiles.size == 1) {
+            val src1 = toUfmFileSource(validSourceFiles[0], sourceFragment)
+            val src2 = toUfmFileSource(targetFiles[0], targetFragment)
+            if (src1 != null && src2 != null) {
+                FileCompareDialogFragment.newInstance(src1, src2)
+                    .show(supportFragmentManager, FileCompareDialogFragment.TAG)
+                return
+            }
+        } else if (validSourceFiles.size == 2) {
+            val src1 = toUfmFileSource(validSourceFiles[0], sourceFragment)
+            val src2 = toUfmFileSource(validSourceFiles[1], sourceFragment)
+            if (src1 != null && src2 != null) {
+                FileCompareDialogFragment.newInstance(src1, src2)
+                    .show(supportFragmentManager, FileCompareDialogFragment.TAG)
+                return
+            }
+        }
+
+        Snackbar.make(findViewById(android.R.id.content), getString(R.string.checksum_compare_select_hint), Snackbar.LENGTH_LONG).show()
     }
 
     private fun getSelectedItems(fragment: Fragment): List<Any> {

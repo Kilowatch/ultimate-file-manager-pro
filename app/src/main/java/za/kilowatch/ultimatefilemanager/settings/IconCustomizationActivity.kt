@@ -578,7 +578,8 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("toolbar_unpin", getString(R.string.icon_toolbar_unpin), R.drawable.ic_paperclip_off, emptyList()),
             IconItemData("toolbar_set_home_wallpaper", getString(R.string.icon_toolbar_set_home_wallpaper), R.drawable.ic_wallpaper_home, emptyList()),
             IconItemData("toolbar_set_lock_wallpaper", getString(R.string.icon_toolbar_set_lock_wallpaper), R.drawable.ic_wallpaper_lock, emptyList()),
-            IconItemData("toolbar_exif_cleaner", getString(R.string.icon_toolbar_exif_cleaner), R.drawable.ic_exif_cleaner, emptyList())
+            IconItemData("toolbar_exif_cleaner", getString(R.string.icon_toolbar_exif_cleaner), R.drawable.ic_exif_cleaner, emptyList()),
+            IconItemData("toolbar_checksum", getString(R.string.icon_toolbar_checksum), R.drawable.ic_checksum, emptyList())
         )
     }
 

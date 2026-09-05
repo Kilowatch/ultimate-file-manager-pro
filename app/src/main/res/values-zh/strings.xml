@@ -13498,6 +13498,125 @@ SHA-256
     <string name="tv_player_button_playlist">
 播放列表
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+校验和工具
+</string>
+    <string name="action_compare_files">
+比较文件
+</string>
+    <string name="action_verify_checksum_file">
+验证校验和文件
+</string>
+    <string name="checksum_sheet_title">
+校验和和哈希验证
+</string>
+    <string name="checksum_generate">
+产生
+</string>
+    <string name="checksum_generate_all">
+生成全部
+</string>
+    <string name="checksum_generating">
+正在计算校验和...
+</string>
+    <string name="checksum_verify_hint">
+粘贴哈希值进行验证
+</string>
+    <string name="checksum_match">
+✓ 匹配 — 哈希值与经过验证的文件匹配
+</string>
+    <string name="checksum_mismatch">
+✗ 不匹配——哈希值不匹配
+</string>
+    <string name="checksum_prompt_compute_algo">
+粘贴了 %1$s 哈希值。点击计算并验证
+</string>
+    <string name="checksum_copy_all">
+全部复制
+</string>
+    <string name="checksum_copied">
+校验和已复制到剪贴板
+</string>
+    <string name="checksum_all_copied">
+所有校验和已复制到剪贴板
+</string>
+    <string name="checksum_export">
+出口舱单
+</string>
+    <string name="checksum_export_success">
+已导出 %1$s
+</string>
+    <string name="checksum_export_error">
+导出清单失败
+</string>
+    <string name="checksum_compare_title">
+比较文件
+</string>
+    <string name="checksum_compare_identical">
+✓ 文件相同
+</string>
+    <string name="checksum_compare_different">
+✗ 文件不同
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ 文件不同（不同大小：%1$s 与 %2$s）
+</string>
+    <string name="checksum_compare_same_size">
+大小相同 (%1$s)。散列以验证内容...
+</string>
+    <string name="checksum_compare_select_hint">
+在每个窗格中选择 1 个文件，或在一个窗格中选择 2 个文件进行比较
+</string>
+    <string name="checksum_large_file_warning_title">
+大文件警告
+</string>
+    <string name="checksum_large_file_warning_msg">
+该文件为 %1$s，可能需要一段时间才能读取。继续？
+</string>
+    <string name="checksum_dont_ask_again">
+不要再问
+</string>
+    <string name="checksum_manifest_verify_title">
+验证校验和清单
+</string>
+    <string name="checksum_manifest_reading">
+正在阅读清单...
+</string>
+    <string name="checksum_manifest_summary">
+%1$d 已验证，%2$d 失败，%3$d 缺失
+</string>
+    <string name="checksum_manifest_status_ok">
+好的
+</string>
+    <string name="checksum_manifest_status_failed">
+失败的
+</string>
+    <string name="checksum_manifest_status_missing">
+丢失的
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+尺寸不匹配
+</string>
+    <string name="checksum_speed_format">
+%1$.1f MB/秒
+</string>
+    <string name="checksum_eta_format">
+预计到达时间：%1$d秒
+</string>
+    <string name="checksum_batch_progress_format">
+%2$d 的文件 %1$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+生成并验证文件哈希值（CRC32、MD5、SHA-1、SHA-256、SHA-512）
+</string>
+    <string name="icon_toolbar_checksum">
+校验和工具
+</string>
+    <string name="backup_pref_checksum">
+校验和首选项
+</string>
 </resources>
 
 

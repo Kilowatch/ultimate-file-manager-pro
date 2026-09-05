@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card_glass"
+    android:padding="10dp"
+    android:layout_marginBottom="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Status Icon (OK / FAILED / MISSING) -->
+        <ImageView
+            android:id="@+id/imgEntryStatus"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_check"
+            app:tint="@color/ufm_granted"
+            android:importantForAccessibility="no" />
+
+        <!-- File Name -->
+        <TextView
+            android:id="@+id/txtEntryFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            tools:text="sample_image.iso" />
+
+        <!-- Status Label -->
+        <TextView
+            android:id="@+id/txtEntryStatusLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_storage_badge"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:textColor="@color/ufm_granted"
+            android:textSize="10sp"
+            android:fontFamily="sans-serif-black"
+            tools:text="OK" />
+    </LinearLayout>
+
+    <!-- Detailed Info (visible when failed or size mismatch) -->
+    <TextView
+        android:id="@+id/txtEntryDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:typeface="monospace"
+        android:textSize="11sp"
+        android:textColor="@color/mobile_text_secondary"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Expected: 0a6042db...\nActual:   9f70d5c4..." />
+</LinearLayout>

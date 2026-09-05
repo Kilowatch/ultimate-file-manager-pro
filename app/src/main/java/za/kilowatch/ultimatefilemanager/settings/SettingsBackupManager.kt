@@ -296,6 +296,7 @@ object SettingsBackupManager {
         add("ufm_keyboard_shortcuts_prefs", context.getString(R.string.backup_pref_keyboard_shortcuts))
         add("ufm_saf_locations_prefs",   context.getString(R.string.backup_pref_saf_locations))
         add("adb_preferences",           context.getString(R.string.backup_pref_adb_settings))
+        add("checksum_prefs",          context.getString(R.string.backup_pref_checksum))
         if (!za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
             add("root_preferences",          context.getString(R.string.backup_pref_root))
         }
@@ -625,6 +626,7 @@ object SettingsBackupManager {
                 "ufm_keyboard_shortcuts_prefs" to R.string.backup_pref_keyboard_shortcuts,
                 "ufm_saf_locations_prefs"   to R.string.backup_pref_saf_locations,
                 "adb_preferences"           to R.string.backup_pref_adb_settings,
+                "checksum_prefs"          to R.string.backup_pref_checksum,
                 "root_preferences"          to R.string.backup_pref_root,
                 "ufm_tv_server_prefs"       to R.string.backup_pref_tv_server,
                 "ufm_foss_update_prefs"     to R.string.backup_pref_foss_update

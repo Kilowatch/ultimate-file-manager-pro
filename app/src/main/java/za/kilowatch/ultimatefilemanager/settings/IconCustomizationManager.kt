@@ -52,7 +52,7 @@ val ALL_BUILTIN_ICONS = intArrayOf(
     R.drawable.ic_crop, R.drawable.ic_zoom_in, R.drawable.ic_zoom_out, R.drawable.ic_fit_screen,
     R.drawable.ic_paperclip, R.drawable.ic_paperclip_off,
     R.drawable.ic_wallpaper_home, R.drawable.ic_wallpaper_lock,
-    R.drawable.ic_exif_cleaner,
+    R.drawable.ic_exif_cleaner, R.drawable.ic_checksum,
 
     // Media Player
     R.drawable.ic_play, R.drawable.ic_pause, R.drawable.ic_skip_next,

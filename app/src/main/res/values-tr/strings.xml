@@ -13498,6 +13498,125 @@ Bu klasörde başka video yok
     <string name="tv_player_button_playlist">
 Çalma listesi
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+Sağlama Toplamı Araçları
+</string>
+    <string name="action_compare_files">
+Dosyaları Karşılaştır
+</string>
+    <string name="action_verify_checksum_file">
+Sağlama Toplamı Dosyasını Doğrulayın
+</string>
+    <string name="checksum_sheet_title">
+Sağlama Toplamı ve Karma Doğrulaması
+</string>
+    <string name="checksum_generate">
+Oluştur
+</string>
+    <string name="checksum_generate_all">
+Tümünü Oluştur
+</string>
+    <string name="checksum_generating">
+Sağlama toplamı hesaplanıyor…
+</string>
+    <string name="checksum_verify_hint">
+Doğrulamak için karma değerini yapıştırın
+</string>
+    <string name="checksum_match">
+✓ Eşleşme — Hash, doğrulanmış dosyayla eşleşir
+</string>
+    <string name="checksum_mismatch">
+✗ Uyuşmazlık — Karma eşleşmiyor
+</string>
+    <string name="checksum_prompt_compute_algo">
+%1$s hash yapıştırıldı. Hesaplamak ve doğrulamak için dokunun
+</string>
+    <string name="checksum_copy_all">
+Tümünü Kopyala
+</string>
+    <string name="checksum_copied">
+Sağlama toplamı panoya kopyalandı
+</string>
+    <string name="checksum_all_copied">
+Tüm sağlama toplamları panoya kopyalandı
+</string>
+    <string name="checksum_export">
+İhracat Bildirimi
+</string>
+    <string name="checksum_export_success">
+Dışa aktarıldı %1$s
+</string>
+    <string name="checksum_export_error">
+Bildiri dışa aktarılamadı
+</string>
+    <string name="checksum_compare_title">
+Dosyaları Karşılaştır
+</string>
+    <string name="checksum_compare_identical">
+✓ Dosyalar aynıdır
+</string>
+    <string name="checksum_compare_different">
+✗ Dosyalar farklı
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ Dosyalar farklıdır (farklı boyutlar: %1$s ve %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+Aynı boyut (%1$s). İçeriği doğrulamak için karma işlemi yapılıyor…
+</string>
+    <string name="checksum_compare_select_hint">
+Karşılaştırmak için her bölmede 1 dosya veya bir bölmede 2 dosya seçin
+</string>
+    <string name="checksum_large_file_warning_title">
+Büyük Dosya Uyarısı
+</string>
+    <string name="checksum_large_file_warning_msg">
+Bu dosya %1$s olup okunması biraz zaman alabilir. Devam etmek?
+</string>
+    <string name="checksum_dont_ask_again">
+Bir daha sorma
+</string>
+    <string name="checksum_manifest_verify_title">
+Sağlama Toplamı Bildirimini Doğrulayın
+</string>
+    <string name="checksum_manifest_reading">
+Manifesto okunuyor…
+</string>
+    <string name="checksum_manifest_summary">
+%1$d doğrulandı, %2$d başarısız oldu, %3$d eksik
+</string>
+    <string name="checksum_manifest_status_ok">
+TAMAM
+</string>
+    <string name="checksum_manifest_status_failed">
+ARIZALI
+</string>
+    <string name="checksum_manifest_status_missing">
+EKSİK
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+BEDEN UYUŞMAZLIĞI
+</string>
+    <string name="checksum_speed_format">
+%1$.1f MB/sn
+</string>
+    <string name="checksum_eta_format">
+Tahmini varış saati: %1$d saniye
+</string>
+    <string name="checksum_batch_progress_format">
+%2$d dosyasından %1$d dosyası (%%3$d)
+</string>
+    <string name="toolbar_desc_checksum">
+Dosya karmalarını oluşturun ve doğrulayın (CRC32, MD5, SHA-1, SHA-256, SHA-512)
+</string>
+    <string name="icon_toolbar_checksum">
+Sağlama Toplamı Araçları
+</string>
+    <string name="backup_pref_checksum">
+Sağlama Toplamı Tercihleri
+</string>
 </resources>
 
 

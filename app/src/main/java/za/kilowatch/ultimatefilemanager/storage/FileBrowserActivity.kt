@@ -55,6 +55,7 @@ import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
 import java.io.File
+import java.util.Locale
 import za.kilowatch.ultimatefilemanager.settings.SearchResultsLimitManager
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
@@ -108,6 +109,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var btnRetriggerThumbnails: ImageView? = null
     private var btnDuplicateFinder: ImageView? = null
     private var btnLargeFilesFinder: ImageView? = null
+    private var btnChecksum: ImageView? = null
 
     private var btnSort: ImageView? = null
     private var btnOptionsToggle: ImageView? = null
@@ -1772,6 +1774,7 @@ class FileBrowserActivity : AppCompatActivity() {
         btnRetriggerThumbnails = findViewById(R.id.btnRetriggerThumbnails)
         btnDuplicateFinder = findViewById(R.id.btnDuplicateFinder)
         btnLargeFilesFinder = findViewById(R.id.btnLargeFilesFinder)
+        btnChecksum = findViewById(R.id.btnChecksum)
         fabPaste = findViewById(R.id.fabPaste)
         fabTools = findViewById(R.id.fabTools)
         floatingQuickBar = findViewById(R.id.floatingQuickBar)
@@ -2500,6 +2503,16 @@ class FileBrowserActivity : AppCompatActivity() {
             }
         }
 
+        btnChecksum?.setOnClickListener {
+            val files = fileAdapter.getSelectedFiles().filter { !it.isDirectory }
+            if (files.isNotEmpty()) {
+                fileAdapter.exitSelectionMode()
+                val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.LocalFileSource(it) }
+                za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                    .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+            }
+        }
+
 
         fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
@@ -2891,6 +2904,45 @@ class FileBrowserActivity : AppCompatActivity() {
                 }
             }
 
+            // Checksum Tools
+            if (count > 0 && selected.any { !it.isDirectory } && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) {
+                list.add(FileToolsBottomSheet.ActionItem("checksum", getString(R.string.action_checksum), R.drawable.ic_checksum, "toolbar_checksum") {
+                    val files = selected.filter { !it.isDirectory }
+                    if (files.isNotEmpty()) {
+                        fileAdapter.exitSelectionMode()
+                        val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.LocalFileSource(it) }
+                        za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                            .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+                    }
+                })
+            }
+
+            // Compare Files
+            if (count == 2 && selected.all { !it.isDirectory } && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) {
+                list.add(FileToolsBottomSheet.ActionItem("compare_files", getString(R.string.action_compare_files), R.drawable.ic_checksum, "toolbar_checksum") {
+                    val files = selected.filter { !it.isDirectory }
+                    fileAdapter.exitSelectionMode()
+                    val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.LocalFileSource(it) }
+                    za.kilowatch.ultimatefilemanager.checksum.FileCompareDialogFragment.newInstance(sources[0], sources[1])
+                        .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.FileCompareDialogFragment.TAG)
+                })
+            }
+
+            // Manifest verify (if single file is a checksum manifest)
+            if (count == 1 && !selected.first().isDirectory) {
+                val sel = selected.first()
+                val ext = sel.extension.lowercase(Locale.ROOT)
+                if (ext in listOf("sha256", "sha512", "sha1", "md5", "sfv", "crc")) {
+                    list.add(FileToolsBottomSheet.ActionItem("verify_checksum_manifest", getString(R.string.action_verify_checksum_file), R.drawable.ic_checksum, "toolbar_checksum") {
+                        fileAdapter.exitSelectionMode()
+                        za.kilowatch.ultimatefilemanager.checksum.ChecksumManifestVerifyDialogFragment.newInstance(
+                            za.kilowatch.ultimatefilemanager.checksum.LocalFileSource(sel),
+                            sel.parentFile
+                        ).show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumManifestVerifyDialogFragment.TAG)
+                    })
+                }
+            }
+
             val displayList = pm.filterItemsForBottomSheet(this, list)
             if (displayList.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
@@ -2913,6 +2965,7 @@ class FileBrowserActivity : AppCompatActivity() {
             btnRetriggerThumbnails?.let { tvButtons.add(it) }
             btnDuplicateFinder?.let { tvButtons.add(it) }
             btnLargeFilesFinder?.let { tvButtons.add(it) }
+            btnChecksum?.let { tvButtons.add(it) }
             tvButtons.forEach { btn ->
                 btn.imageTintList = iconTintDefault  // set initial white tint
                 btn.setOnFocusChangeListener { _, hasFocus ->
@@ -3217,6 +3270,15 @@ class FileBrowserActivity : AppCompatActivity() {
                     }
                 }
             }
+            pm.ACTION_CHECKSUM -> {
+                val files = selected.filter { !it.isDirectory }
+                if (files.isNotEmpty()) {
+                    fileAdapter.exitSelectionMode()
+                    val sources = files.map { za.kilowatch.ultimatefilemanager.checksum.LocalFileSource(it) }
+                    za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                        .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+                }
+            }
             pm.ACTION_MORE -> {
                 fabTools?.performClick()
             }
@@ -3344,6 +3406,7 @@ class FileBrowserActivity : AppCompatActivity() {
             btnLargeFilesFinder?.visibility = if (showActions && isSingleFolderSel && isSelFolderIndexed && pm.isIconEnabled(this, pm.KEY_LARGE_FILES_FINDER)) View.VISIBLE else View.GONE
 
             val selectedFiles = fileAdapter.getSelectedFiles()
+            btnChecksum?.visibility = if (showActions && selectedFiles.any { !it.isDirectory } && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) View.VISIBLE else View.GONE
             val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
             
             val prefs = getSharedPreferences("ufm_prefs", MODE_PRIVATE)

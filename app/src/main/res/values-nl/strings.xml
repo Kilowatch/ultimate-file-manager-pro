@@ -13498,6 +13498,125 @@ Nu aan het spelen
     <string name="tv_player_button_playlist">
 Playlist
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+Controlesomhulpmiddelen
+</string>
+    <string name="action_compare_files">
+Vergelijk bestanden
+</string>
+    <string name="action_verify_checksum_file">
+Controleer het controlesombestand
+</string>
+    <string name="checksum_sheet_title">
+Checksum- en hash-verificatie
+</string>
+    <string name="checksum_generate">
+Genereer
+</string>
+    <string name="checksum_generate_all">
+Genereer alles
+</string>
+    <string name="checksum_generating">
+Controlesom berekenen…
+</string>
+    <string name="checksum_verify_hint">
+Plak hash om te verifiëren
+</string>
+    <string name="checksum_match">
+✓ Match – Hash komt overeen met geverifieerd bestand
+</string>
+    <string name="checksum_mismatch">
+✗ Mismatch — Hash komt niet overeen
+</string>
+    <string name="checksum_prompt_compute_algo">
+%1$s hash geplakt. Tik om te berekenen en te verifiëren
+</string>
+    <string name="checksum_copy_all">
+Kopieer alles
+</string>
+    <string name="checksum_copied">
+Controlesom gekopieerd naar klembord
+</string>
+    <string name="checksum_all_copied">
+Alle controlesommen gekopieerd naar het klembord
+</string>
+    <string name="checksum_export">
+Manifest exporteren
+</string>
+    <string name="checksum_export_success">
+Geëxporteerd %1$s
+</string>
+    <string name="checksum_export_error">
+Kan manifest niet exporteren
+</string>
+    <string name="checksum_compare_title">
+Vergelijk bestanden
+</string>
+    <string name="checksum_compare_identical">
+✓ Bestanden zijn identiek
+</string>
+    <string name="checksum_compare_different">
+✗ Bestanden verschillen
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ Bestanden verschillen (verschillende formaten: %1$s versus %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+Identiek formaat (%1$s). Hashing om de inhoud te verifiëren...
+</string>
+    <string name="checksum_compare_select_hint">
+Selecteer 1 bestand in elk venster, of 2 bestanden in één venster om te vergelijken
+</string>
+    <string name="checksum_large_file_warning_title">
+Waarschuwing voor groot bestand
+</string>
+    <string name="checksum_large_file_warning_msg">
+Dit bestand is %1$s en het kan even duren om te lezen. Doorgaan?
+</string>
+    <string name="checksum_dont_ask_again">
+Vraag het niet opnieuw
+</string>
+    <string name="checksum_manifest_verify_title">
+Controleer het checksum-manifest
+</string>
+    <string name="checksum_manifest_reading">
+Manifest lezen…
+</string>
+    <string name="checksum_manifest_summary">
+%1$d geverifieerd, %2$d mislukt, %3$d ontbreekt
+</string>
+    <string name="checksum_manifest_status_ok">
+OK
+</string>
+    <string name="checksum_manifest_status_failed">
+MISLUKT
+</string>
+    <string name="checksum_manifest_status_missing">
+VERMIST
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+MAAT IS NIET OVEREENKOMST
+</string>
+    <string name="checksum_speed_format">
+%1$.1f MB/s
+</string>
+    <string name="checksum_eta_format">
+Verwachte aankomsttijd: %1$ds
+</string>
+    <string name="checksum_batch_progress_format">
+Bestand %1$d van %2$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+Bestandshashes genereren en verifiëren (CRC32, MD5, SHA-1, SHA-256, SHA-512)
+</string>
+    <string name="icon_toolbar_checksum">
+Controlesomhulpmiddelen
+</string>
+    <string name="backup_pref_checksum">
+Checksum-voorkeuren
+</string>
 </resources>
 
 

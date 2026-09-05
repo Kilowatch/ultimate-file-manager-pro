@@ -33,7 +33,7 @@ object ToolbarIconsPreferenceManager {
     const val KEY_SET_LOCK_WALLPAPER = "pref_icon_set_lock_wallpaper"
     const val KEY_CREATE_GIF = "pref_icon_create_gif"
     const val KEY_EXIF_TOOLS = "pref_icon_exif_tools"
-
+    const val KEY_CHECKSUM = "pref_icon_checksum"
 
     const val KEY_QUICK_BAR_ENABLED = "pref_quick_bar_enabled"
     const val KEY_QUICK_BAR_ITEMS = "pref_quick_bar_items"
@@ -63,6 +63,7 @@ object ToolbarIconsPreferenceManager {
     const val ACTION_RETRIGGER_THUMBNAILS = "retrigger_thumbnails"
     const val ACTION_COPY_ENCRYPT = "copy_encrypt"
     const val ACTION_MOVE_ENCRYPT = "move_encrypt"
+    const val ACTION_CHECKSUM = "checksum"
     const val ACTION_MORE = "more"
 
     val DEFAULT_QUICK_BAR_ITEMS = listOf(

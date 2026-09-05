@@ -85,6 +85,7 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                 pm.ACTION_SET_LOCK_WALLPAPER -> pm.isIconEnabled(context, pm.KEY_SET_LOCK_WALLPAPER)
                 pm.ACTION_SELECT_ALL -> pm.isIconEnabled(context, pm.KEY_SELECT_ALL)
                 pm.ACTION_INVERT_SELECTION -> pm.isIconEnabled(context, pm.KEY_INVERT_SELECTION)
+                pm.ACTION_CHECKSUM -> pm.isIconEnabled(context, pm.KEY_CHECKSUM)
                 pm.ACTION_MORE -> true
                 else -> true
             }
@@ -246,6 +247,11 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                     resolvedIconRes = R.drawable.ic_move_encrypt
                     resolvedNameRes = R.string.action_move_encrypt
                     customIconKey = "toolbar_move_encrypt"
+                }
+                pm.ACTION_CHECKSUM -> {
+                    resolvedIconRes = R.drawable.ic_checksum
+                    resolvedNameRes = R.string.action_checksum
+                    customIconKey = "toolbar_checksum"
                 }
                 pm.ACTION_MORE -> {
                     resolvedIconRes = R.drawable.ic_arrow_forward

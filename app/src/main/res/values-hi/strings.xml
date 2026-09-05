@@ -13498,6 +13498,125 @@ AndroidManifest.xml को डीकोड करने में असमर�
     <string name="tv_player_button_playlist">
 प्लेलिस्ट
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+चेकसम उपकरण
+</string>
+    <string name="action_compare_files">
+फ़ाइलों की तुलना करें
+</string>
+    <string name="action_verify_checksum_file">
+चेकसम फ़ाइल सत्यापित करें
+</string>
+    <string name="checksum_sheet_title">
+चेकसम और हैश सत्यापन
+</string>
+    <string name="checksum_generate">
+उत्पन्न
+</string>
+    <string name="checksum_generate_all">
+सभी उत्पन्न करें
+</string>
+    <string name="checksum_generating">
+चेकसम की गणना की जा रही है...
+</string>
+    <string name="checksum_verify_hint">
+सत्यापित करने के लिए हैश चिपकाएँ
+</string>
+    <string name="checksum_match">
+✓ मिलान - हैश सत्यापित फ़ाइल से मेल खाता है
+</string>
+    <string name="checksum_mismatch">
+✗ बेमेल - हैश मेल नहीं खाता
+</string>
+    <string name="checksum_prompt_compute_algo">
+%1$s हैश चिपकाया गया। गणना करने और सत्यापित करने के लिए टैप करें
+</string>
+    <string name="checksum_copy_all">
+सभी को कॉपी करें
+</string>
+    <string name="checksum_copied">
+चेकसम को क्लिपबोर्ड पर कॉपी किया गया
+</string>
+    <string name="checksum_all_copied">
+सभी चेकसम क्लिपबोर्ड पर कॉपी किए गए
+</string>
+    <string name="checksum_export">
+निर्यात प्रकट
+</string>
+    <string name="checksum_export_success">
+निर्यात किया गया %1$s
+</string>
+    <string name="checksum_export_error">
+मेनिफ़ेस्ट निर्यात करने में विफल
+</string>
+    <string name="checksum_compare_title">
+फ़ाइलों की तुलना करें
+</string>
+    <string name="checksum_compare_identical">
+✓ फ़ाइलें समान हैं
+</string>
+    <string name="checksum_compare_different">
+✗ फ़ाइलें भिन्न हैं
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ फ़ाइलें अलग-अलग हैं (विभिन्न आकार: %1$s बनाम %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+समान आकार (%1$s). सामग्री को सत्यापित करने के लिए हैशिंग…
+</string>
+    <string name="checksum_compare_select_hint">
+तुलना करने के लिए प्रत्येक फलक में 1 फ़ाइल, या एक फलक में 2 फ़ाइलें चुनें
+</string>
+    <string name="checksum_large_file_warning_title">
+बड़ी फ़ाइल चेतावनी
+</string>
+    <string name="checksum_large_file_warning_msg">
+यह फ़ाइल %1$s है और इसे पढ़ने में कुछ समय लग सकता है। जारी रखना?
+</string>
+    <string name="checksum_dont_ask_again">
+दोबारा मत पूछो
+</string>
+    <string name="checksum_manifest_verify_title">
+चेकसम मेनिफेस्ट सत्यापित करें
+</string>
+    <string name="checksum_manifest_reading">
+मेनिफेस्ट पढ़ रहा हूँ...
+</string>
+    <string name="checksum_manifest_summary">
+%1$d सत्यापित, %2$d विफल, %3$d गायब
+</string>
+    <string name="checksum_manifest_status_ok">
+ठीक है
+</string>
+    <string name="checksum_manifest_status_failed">
+असफल
+</string>
+    <string name="checksum_manifest_status_missing">
+गुम
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+साइज़ बेमेल
+</string>
+    <string name="checksum_speed_format">
+%1$.1f MB/s
+</string>
+    <string name="checksum_eta_format">
+ईटीए: %1$ds
+</string>
+    <string name="checksum_batch_progress_format">
+%2$d में से फ़ाइल %1$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+फ़ाइल हैश उत्पन्न और सत्यापित करें (CRC32, MD5, SHA-1, SHA-256, SHA-512)
+</string>
+    <string name="icon_toolbar_checksum">
+चेकसम उपकरण
+</string>
+    <string name="backup_pref_checksum">
+चेकसम प्राथमिकताएँ
+</string>
 </resources>
 
 

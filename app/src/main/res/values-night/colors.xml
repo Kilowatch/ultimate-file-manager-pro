@@ -158,6 +158,10 @@
     <color name="btn_disabled_bg">#FF37474F</color>   <!-- blue-grey 800, visible on dark glass bg -->
     <color name="btn_disabled_text">#FF78909C</color> <!-- blue-grey 400 -->
 
+    <!-- Checksum & Compare Action Button Light Green -->
+    <color name="checksum_btn_light_green">#66BB6A</color>
+    <color name="checksum_btn_light_green_text">#FFFFFF</color>
+
     <!-- Dialog / Premium Gloss Surface (95% opaque dark slate) -->
     <color name="dialog_glass_bg">#F21E293B</color>
 

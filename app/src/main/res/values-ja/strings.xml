@@ -13498,6 +13498,125 @@ AndroidManifest.xml をデコードできません
     <string name="tv_player_button_playlist">
 プレイリスト
 </string>
+
+    <!-- Checksum & Hash Verification Tools -->
+    <string name="action_checksum">
+チェックサムツール
+</string>
+    <string name="action_compare_files">
+ファイルを比較する
+</string>
+    <string name="action_verify_checksum_file">
+チェックサムファイルの検証
+</string>
+    <string name="checksum_sheet_title">
+チェックサムとハッシュの検証
+</string>
+    <string name="checksum_generate">
+生成する
+</string>
+    <string name="checksum_generate_all">
+すべて生成
+</string>
+    <string name="checksum_generating">
+チェックサムを計算しています…
+</string>
+    <string name="checksum_verify_hint">
+ハッシュを貼り付けて確認します
+</string>
+    <string name="checksum_match">
+✓ 一致 - ハッシュは検証されたファイルと一致します
+</string>
+    <string name="checksum_mismatch">
+✗ 不一致 — ハッシュが一致しません
+</string>
+    <string name="checksum_prompt_compute_algo">
+%1$s ハッシュを貼り付けました。タップして計算して検証します
+</string>
+    <string name="checksum_copy_all">
+すべてコピー
+</string>
+    <string name="checksum_copied">
+チェックサムがクリップボードにコピーされました
+</string>
+    <string name="checksum_all_copied">
+すべてのチェックサムがクリップボードにコピーされました
+</string>
+    <string name="checksum_export">
+マニフェストのエクスポート
+</string>
+    <string name="checksum_export_success">
+エクスポート済み %1$s
+</string>
+    <string name="checksum_export_error">
+マニフェストのエクスポートに失敗しました
+</string>
+    <string name="checksum_compare_title">
+ファイルを比較する
+</string>
+    <string name="checksum_compare_identical">
+✓ ファイルは同一です
+</string>
+    <string name="checksum_compare_different">
+✗ ファイルが異なります
+</string>
+    <string name="checksum_compare_diff_sizes">
+✗ ファイルが異なります (サイズが異なります: %1$s と %2$s)
+</string>
+    <string name="checksum_compare_same_size">
+同じサイズ (%1$s)。内容を検証するためのハッシュ化…
+</string>
+    <string name="checksum_compare_select_hint">
+各ペインで 1 つのファイルを選択するか、1 つのペインで 2 つのファイルを選択して比較します
+</string>
+    <string name="checksum_large_file_warning_title">
+大きなファイルの警告
+</string>
+    <string name="checksum_large_file_warning_msg">
+このファイルは %1$s であり、読み取るのに時間がかかる場合があります。続く？
+</string>
+    <string name="checksum_dont_ask_again">
+二度と聞かないでください
+</string>
+    <string name="checksum_manifest_verify_title">
+チェックサムマニフェストの検証
+</string>
+    <string name="checksum_manifest_reading">
+マニフェストを読んでいます…
+</string>
+    <string name="checksum_manifest_summary">
+%1$d が確認されました、%2$d が失敗しました、%3$d が見つかりません
+</string>
+    <string name="checksum_manifest_status_ok">
+わかりました
+</string>
+    <string name="checksum_manifest_status_failed">
+失敗した
+</string>
+    <string name="checksum_manifest_status_missing">
+ない
+</string>
+    <string name="checksum_manifest_status_size_mismatch">
+サイズの不一致
+</string>
+    <string name="checksum_speed_format">
+%1$.1f MB/秒
+</string>
+    <string name="checksum_eta_format">
+到着予定時刻: %1$ds
+</string>
+    <string name="checksum_batch_progress_format">
+ファイル %1$d/%2$d (%3$d%%)
+</string>
+    <string name="toolbar_desc_checksum">
+ファイル ハッシュ (CRC32、MD5、SHA-1、SHA-256、SHA-512) の生成と検証
+</string>
+    <string name="icon_toolbar_checksum">
+チェックサムツール
+</string>
+    <string name="backup_pref_checksum">
+チェックサムの設定
+</string>
 </resources>
 
 

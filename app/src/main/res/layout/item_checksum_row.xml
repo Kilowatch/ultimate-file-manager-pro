@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card_glass"
+    android:padding="10dp"
+    android:layout_marginBottom="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Algorithm Badge -->
+        <TextView
+            android:id="@+id/txtAlgorithmBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_storage_badge"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="11sp"
+            android:fontFamily="sans-serif-black"
+            tools:text="SHA-256" />
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- Status Icon (Match / Mismatch) -->
+        <ImageView
+            android:id="@+id/imgMatchStatus"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:src="@drawable/ic_check" />
+
+        <!-- Copy Single Hash Button -->
+        <FrameLayout
+            android:id="@+id/btnCopyHash"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_copy"
+                app:tint="?attr/colorControlNormal"
+                android:contentDescription="@string/action_copy" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Hash Monospace Text -->
+    <TextView
+        android:id="@+id/txtHashValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:typeface="monospace"
+        android:textSize="12sp"
+        android:textColor="@color/mobile_text_primary"
+        android:textIsSelectable="true"
+        android:lineSpacingExtra="2dp"
+        tools:text="0a6042db6993a4662d08a54d58045610217ec6c8e31fc57ec718e2be3620ff44" />
+</LinearLayout>

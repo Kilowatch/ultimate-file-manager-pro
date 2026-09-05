@@ -145,7 +145,8 @@ class ToolbarIconsActivity : AppCompatActivity() {
                     ToolbarItem(R.drawable.ic_wallpaper_home, R.string.action_set_home_wallpaper, R.string.toolbar_desc_set_home_wallpaper, ToolbarIconsPreferenceManager.KEY_SET_HOME_WALLPAPER, "toolbar_set_home_wallpaper"),
                     ToolbarItem(R.drawable.ic_wallpaper_lock, R.string.action_set_lock_wallpaper, R.string.toolbar_desc_set_lock_wallpaper, ToolbarIconsPreferenceManager.KEY_SET_LOCK_WALLPAPER, "toolbar_set_lock_wallpaper"),
                     ToolbarItem(R.drawable.ic_duplicate_finder, R.string.action_duplicate_finder, R.string.toolbar_desc_duplicate_finder, ToolbarIconsPreferenceManager.KEY_DUPLICATE_FINDER, "toolbar_duplicate_finder"),
-                    ToolbarItem(R.drawable.ic_folder_large_files, R.string.action_large_files_finder, R.string.toolbar_desc_large_files_finder, ToolbarIconsPreferenceManager.KEY_LARGE_FILES_FINDER, "toolbar_large_files_finder")
+                    ToolbarItem(R.drawable.ic_folder_large_files, R.string.action_large_files_finder, R.string.toolbar_desc_large_files_finder, ToolbarIconsPreferenceManager.KEY_LARGE_FILES_FINDER, "toolbar_large_files_finder"),
+                    ToolbarItem(R.drawable.ic_checksum, R.string.action_checksum, R.string.toolbar_desc_checksum, ToolbarIconsPreferenceManager.KEY_CHECKSUM, "toolbar_checksum")
                 )
             )
         )
@@ -185,6 +186,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.ACTION_RETRIGGER_THUMBNAILS -> QuickActionDef(pm.ACTION_RETRIGGER_THUMBNAILS, R.string.action_retrigger_thumbnails, R.drawable.ic_photo_video, "toolbar_retrigger_thumbnails")
             pm.ACTION_COPY_ENCRYPT -> QuickActionDef(pm.ACTION_COPY_ENCRYPT, R.string.action_copy_encrypt, R.drawable.ic_copy_encrypt, "toolbar_copy_encrypt")
             pm.ACTION_MOVE_ENCRYPT -> QuickActionDef(pm.ACTION_MOVE_ENCRYPT, R.string.action_move_encrypt, R.drawable.ic_move_encrypt, "toolbar_move_encrypt")
+            pm.ACTION_CHECKSUM -> QuickActionDef(pm.ACTION_CHECKSUM, R.string.action_checksum, R.drawable.ic_checksum, "toolbar_checksum")
             pm.ACTION_MORE -> QuickActionDef(pm.ACTION_MORE, R.string.quick_bar_action_more, R.drawable.ic_arrow_forward)
             else -> QuickActionDef(actionId, R.string.quick_bar_action_more, R.drawable.ic_more)
         }
@@ -217,6 +219,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.KEY_SET_LOCK_WALLPAPER -> pm.ACTION_SET_LOCK_WALLPAPER
             pm.KEY_DUPLICATE_FINDER -> pm.ACTION_DUPLICATE_FINDER
             pm.KEY_LARGE_FILES_FINDER -> pm.ACTION_LARGE_FILES_FINDER
+            pm.KEY_CHECKSUM -> pm.ACTION_CHECKSUM
             else -> prefKey
         }
     }

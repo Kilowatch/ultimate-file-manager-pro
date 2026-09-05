@@ -5,6 +5,18 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.8] — 2026-09-05
+
+### Added
+- Checksum & Hash Verification Tools for Mobile and Android TV:
+  - Generate CRC32, MD5, SHA-1, SHA-256, and SHA-512 hashes for single and multiple files in a single pass.
+  - Multi-storage support across Local storage, SD cards, USB drives, SAF locations, Root storage, Network shares (SMB, FTP, SFTP, NFS, WebDAV, DLNA), Cloud storage, and archive contents (ZIP, 7Z).
+  - Live paste verification field with auto-algorithm length detection and visual match/mismatch status indicators.
+  - Twin Window dual-pane file comparison with size-difference early exit and content hash verification.
+  - GNU coreutils manifest file export (.sha256, .md5, etc.) and batch manifest import verification checklist.
+  - Integrated into Settings -> "Long Press Toolbar Icons" (Tools & Media section), Mobile Floating Quick Action Bar, TV selection action bar, and Settings Backup & Restore.
+  - Added new cryptographic shield and hash vector icon (`ic_checksum`) with full icon customization palette and icon pack export support.
+
 ## [1.9.7] — 2026-09-04
 
 ### Added
