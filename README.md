@@ -76,21 +76,21 @@ Pre-compiled production binaries for all supported platforms are published on ev
 
 ## 📸 Screenshots
 
-<!-- 📸 Screenshots — drop-in files → docs/screenshots/: mobile-main.png, mobile-cloud.png, mobile-storage-access.png (portrait ~1080×2340), tv-browser.png (16:9). See docs/screenshots/README.md. Remove this comment once all images are added. -->
+<!-- 📸 Screenshots — drop-in files → docs/screenshots/: mobile-main.jpeg, mobile-cloud.jpeg, mobile-storage-access.jpeg (portrait ~1080×2340), tv-browser.jpeg (16:9). See docs/screenshots/README.md. Remove this comment once all images are added. -->
 
 ### 📱 Mobile
 
 **Main file manager screen**
 
-![Main file manager screen](docs/screenshots/mobile-main.png)
+![Main file manager screen](docs/screenshots/mobile-main.jpeg)
 
 **Network & cloud storage**
 
-![Network and cloud storage - SMB, SFTP, WebDAV, and more](docs/screenshots/mobile-cloud.png)
+![Network and cloud storage - SMB, SFTP, WebDAV, and more](docs/screenshots/mobile-cloud.jpeg)
 
 **Storage access**
 
-![Storage access](docs/screenshots/mobile-storage-access.png)
+![Storage access](docs/screenshots/mobile-storage-access.jpeg)
 
 > 🔐 When you first set up UFM you choose how much storage it can reach: grant access to the **specific folders** you select, or allow **full access** to all files on your device. No root required.
 
@@ -98,7 +98,7 @@ Pre-compiled production binaries for all supported platforms are published on ev
 
 **Big-screen browser**
 
-![Android TV and Fire TV big-screen browser](docs/screenshots/tv-browser.png)
+![Android TV and Fire TV big-screen browser](docs/screenshots/tv-browser.jpeg)
 
 ---
 
