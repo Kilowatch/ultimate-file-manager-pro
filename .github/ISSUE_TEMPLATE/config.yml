@@ -1,0 +1,12 @@
+# Blank issues are disabled so every issue uses a structured template.
+blank_issues_enabled: false
+
+# General questions and support requests are handled on the community forums,
+# keeping the issue tracker focused on bugs and feature requests.
+contact_links:
+  - name: XDA Forum Thread
+    url: https://xdaforums.com/t/app-free-ultimate-file-manager-pro-dual-pane-android-mobile-android-tv-foss-edition-available.4791958/
+    about: Ask questions and discuss UFM with the community on XDA Developers.
+  - name: Reddit — r/UFManagerPro
+    url: https://www.reddit.com/r/UFManagerPro/
+    about: Community support, tips, and discussion on Reddit.
