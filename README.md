@@ -80,17 +80,18 @@ Pre-compiled production binaries for all supported platforms are published on ev
 
 ### 📱 Mobile
 
-**Main file manager screen**
-
-![Main file manager screen](docs/screenshots/mobile-main.jpeg)
-
-**Network & cloud storage**
-
-![Network and cloud storage - SMB, SFTP, WebDAV, and more](docs/screenshots/mobile-cloud.jpeg)
-
-**Storage access**
-
-![Storage access](docs/screenshots/mobile-storage-access.jpeg)
+<table align="center">
+  <tr>
+    <td align="center"><img src="docs/screenshots/mobile-main.jpeg" alt="Main file manager screen" width="280"></td>
+    <td align="center"><img src="docs/screenshots/mobile-cloud.jpeg" alt="Network and cloud storage - SMB, SFTP, WebDAV, and more" width="280"></td>
+    <td align="center"><img src="docs/screenshots/mobile-storage-access.jpeg" alt="Storage access" width="280"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Main screen</b></td>
+    <td align="center"><b>Network &amp; cloud</b></td>
+    <td align="center"><b>Storage access</b></td>
+  </tr>
+</table>
 
 > 🔐 When you first set up UFM you choose how much storage it can reach: grant access to the **specific folders** you select, or allow **full access** to all files on your device. No root required.
 
