@@ -60,6 +60,18 @@ private fun ImageView.safeSetIcon(resId: Int) {
     var onEditModeClick: ((StorageItem) -> Unit)? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    init {
+        stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        setHasStableIds(true)
+    }
+
+    override fun getItemId(position: Int): Long {
+        val item = items.getOrNull(position) ?: return RecyclerView.NO_ID
+        return item.id.hashCode().toLong()
+    }
+
+    var onTileFocused: ((StorageItem) -> Unit)? = null
+
     private val rawItems = mutableListOf<StorageItem>()
     private val items = mutableListOf<StorageItem>()
     private var tileColors: Map<String, TileColorConfig> = emptyMap()
@@ -526,6 +538,14 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 }
             }
 
+            if (isTv) {
+                itemView.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        onTileFocused?.invoke(item)
+                    }
+                }
+            }
+
             // Mobile: touch-hold on header starts drag
             if (!isTv && onLongPress != null) {
                 itemView.setOnTouchListener { _, motionEvent ->
@@ -618,6 +638,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                     if (card.hasFocus()) {
                         card.strokeWidth = strokePx
                         card.setStrokeColor(accentColor)
+                        onTileFocused?.invoke(item)
                     } else {
                         applyUnfocusedStroke()
                     }
@@ -626,6 +647,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                         if (hasFocus) {
                             card.strokeWidth = strokePx
                             card.setStrokeColor(accentColor)
+                            onTileFocused?.invoke(item)
                         } else {
                             applyUnfocusedStroke()
                         }

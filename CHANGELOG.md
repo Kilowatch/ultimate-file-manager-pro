@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Repository maintenance: added community-health docs (CONTRIBUTING, Code of Conduct, issue/PR templates), a GitHub Actions CI workflow that builds the FOSS debug APKs on every push/PR, and README improvements (table of contents and a new screenshots section). No app behavior changed.
 
 ### Fixed
+- Main Menu (Storage Browser): Prevented scroll and focus selection from jumping back to the top of the screen when navigating back on Mobile and Android TV across List, Grid, and Modern Categorized views.
 - Fixed issue where Previous and Next buttons restarted the current video instead of navigating to other video files in the folder.
 - Fixed single-video open mode by automatically discovering sibling video files in the current folder.
 

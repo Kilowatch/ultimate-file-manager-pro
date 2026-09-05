@@ -94,7 +94,11 @@ class StorageBrowserActivity : AppCompatActivity() {
     private lateinit var layoutEmptyStorage: android.view.ViewGroup
     private var btnToggleGrid: ImageView? = null
     private var btnToggleList: ImageView? = null
-    
+    private var lastInteractedTileId: String? = null
+    private var lastFocusedTileId: String? = null
+    private var savedScrollPosition: Int = RecyclerView.NO_POSITION
+    private var savedScrollOffset: Int = 0
+
     private var isPickerMode = false
     private var isKeyfilePickerMode = false
     private var isCertPickerMode = false
@@ -892,6 +896,13 @@ class StorageBrowserActivity : AppCompatActivity() {
             pickerExtensions = "ico,png"
         }
 
+        if (savedInstanceState != null) {
+            savedScrollPosition = savedInstanceState.getInt("KEY_SAVED_SCROLL_POS", RecyclerView.NO_POSITION)
+            savedScrollOffset = savedInstanceState.getInt("KEY_SAVED_SCROLL_OFFSET", 0)
+            lastInteractedTileId = savedInstanceState.getString("KEY_LAST_INTERACTED_TILE_ID")
+            lastFocusedTileId = savedInstanceState.getString("KEY_LAST_FOCUSED_TILE_ID")
+        }
+
         setupViews()
         loadStorageVolumes()
         registerStorageReceiver()
@@ -912,6 +923,20 @@ class StorageBrowserActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         unregisterReceiver(updateReceiver)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        captureCurrentScrollAndFocus()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        captureCurrentScrollAndFocus()
+        outState.putInt("KEY_SAVED_SCROLL_POS", savedScrollPosition)
+        outState.putInt("KEY_SAVED_SCROLL_OFFSET", savedScrollOffset)
+        outState.putString("KEY_LAST_INTERACTED_TILE_ID", lastInteractedTileId)
+        outState.putString("KEY_LAST_FOCUSED_TILE_ID", lastFocusedTileId)
     }
 
     private var hasShownReviewPopupThisSession = false
@@ -1202,21 +1227,90 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
 
+    private fun captureCurrentScrollAndFocus() {
+        if (!::recyclerStorage.isInitialized) return
+        val lm = recyclerStorage.layoutManager as? LinearLayoutManager
+        val pos = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
+        if (pos != RecyclerView.NO_POSITION) {
+            savedScrollPosition = pos
+            savedScrollOffset = lm?.findViewByPosition(pos)?.top ?: 0
+        }
+        if (isTv && ::storageAdapter.isInitialized) {
+            val focused = currentFocus ?: recyclerStorage.findFocus()
+            if (focused != null) {
+                val vh = recyclerStorage.findContainingViewHolder(focused)
+                if (vh != null && vh.bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    storageAdapter.getItems().getOrNull(vh.bindingAdapterPosition)?.let {
+                        lastFocusedTileId = it.id
+                    }
+                }
+            }
+        }
+    }
+
+    private fun restoreTvFocus(targetId: String) {
+        if (!isTv || !::storageAdapter.isInitialized || !::recyclerStorage.isInitialized) return
+        val pos = storageAdapter.getItems().indexOfFirst { it.id == targetId }
+        if (pos >= 0) {
+            recyclerStorage.scrollToPosition(pos)
+            recyclerStorage.post {
+                val vh = recyclerStorage.findViewHolderForAdapterPosition(pos)
+                if (vh != null) {
+                    vh.itemView.requestFocus()
+                } else {
+                    recyclerStorage.postDelayed({
+                        recyclerStorage.findViewHolderForAdapterPosition(pos)?.itemView?.requestFocus()
+                    }, 60)
+                }
+            }
+        }
+    }
+
+    private fun restoreSelectionAndScroll() {
+        if (!::recyclerStorage.isInitialized || !::storageAdapter.isInitialized) return
+        if (isTv) {
+            val targetId = lastInteractedTileId ?: lastFocusedTileId
+            if (targetId != null) {
+                restoreTvFocus(targetId)
+            }
+        } else {
+            if (savedScrollPosition != RecyclerView.NO_POSITION) {
+                val pos = savedScrollPosition
+                val offset = savedScrollOffset
+                savedScrollPosition = RecyclerView.NO_POSITION
+                recyclerStorage.post {
+                    (recyclerStorage.layoutManager as? LinearLayoutManager)
+                        ?.scrollToPositionWithOffset(pos, offset)
+                }
+            } else if (lastInteractedTileId != null) {
+                val pos = storageAdapter.getItems().indexOfFirst { it.id == lastInteractedTileId }
+                if (pos >= 0) {
+                    recyclerStorage.post {
+                        (recyclerStorage.layoutManager as? LinearLayoutManager)
+                            ?.scrollToPositionWithOffset(pos, 0)
+                    }
+                }
+            }
+        }
+    }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        // TV: when window regains focus (returning from child screen), focus first item
+        // TV: when window regains focus (returning from child screen), restore focus to target tile
         if (hasFocus && isTv) {
-            recyclerStorage.postDelayed({
-                // Try the first child view directly
-                val firstChild = recyclerStorage.getChildAt(0)
-                if (firstChild != null) {
-                    firstChild.requestFocus()
-                } else {
-                    // Fallback: focus the RecyclerView itself â€” descendantFocusability
-                    // will pass it down to the first focusable child
-                    recyclerStorage.requestFocus()
-                }
-            }, 300)
+            val targetId = lastInteractedTileId ?: lastFocusedTileId
+            if (targetId != null) {
+                restoreTvFocus(targetId)
+            } else {
+                recyclerStorage.postDelayed({
+                    val firstChild = recyclerStorage.getChildAt(0)
+                    if (firstChild != null) {
+                        firstChild.requestFocus()
+                    } else {
+                        recyclerStorage.requestFocus()
+                    }
+                }, 300)
+            }
         }
     }
 
@@ -1495,6 +1589,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             viewMode = initMode
             gridColumnCount = initCols
             itemSize = initSize
+            onTileFocused = { item ->
+                lastFocusedTileId = item.id
+            }
             onHideClick = { item ->
                 if (item.isSafCustomLocation) {
                     showRemoveStorageLocationDialog(item)
@@ -1791,6 +1888,8 @@ class StorageBrowserActivity : AppCompatActivity() {
      * and the [ManageTilesBottomSheet] (for clicking on hidden tiles).
      */
     fun onStorageTileClicked(item: StorageItem) {
+        lastInteractedTileId = item.id
+        lastFocusedTileId = item.id
         when {
             item.isCustomTile -> {
                 val intent = Intent(this, CustomTileActivity::class.java).apply {
@@ -4001,8 +4100,17 @@ class StorageBrowserActivity : AppCompatActivity() {
                     storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
                     storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
                     storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
+                    if (savedScrollPosition == RecyclerView.NO_POSITION) {
+                        val lm = recyclerStorage.layoutManager as? LinearLayoutManager
+                        val pos = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
+                        if (pos != RecyclerView.NO_POSITION) {
+                            savedScrollPosition = pos
+                            savedScrollOffset = lm?.findViewByPosition(pos)?.top ?: 0
+                        }
+                    }
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
+                    restoreSelectionAndScroll()
                 }
                 return@launch
             }
@@ -4015,8 +4123,17 @@ class StorageBrowserActivity : AppCompatActivity() {
                     storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
                     storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
                     storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
+                    if (savedScrollPosition == RecyclerView.NO_POSITION) {
+                        val lm = recyclerStorage.layoutManager as? LinearLayoutManager
+                        val pos = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
+                        if (pos != RecyclerView.NO_POSITION) {
+                            savedScrollPosition = pos
+                            savedScrollOffset = lm?.findViewByPosition(pos)?.top ?: 0
+                        }
+                    }
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
+                    restoreSelectionAndScroll()
                 }
                 return@launch
             }
@@ -4030,8 +4147,17 @@ class StorageBrowserActivity : AppCompatActivity() {
                     storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
                     storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
                     storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
+                    if (savedScrollPosition == RecyclerView.NO_POSITION) {
+                        val lm = recyclerStorage.layoutManager as? LinearLayoutManager
+                        val pos = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
+                        if (pos != RecyclerView.NO_POSITION) {
+                            savedScrollPosition = pos
+                            savedScrollOffset = lm?.findViewByPosition(pos)?.top ?: 0
+                        }
+                    }
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
+                    restoreSelectionAndScroll()
                 }
                 return@launch
             }
@@ -4425,8 +4551,19 @@ class StorageBrowserActivity : AppCompatActivity() {
                 storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
                 storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
                 storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
+
+                if (savedScrollPosition == RecyclerView.NO_POSITION) {
+                    val lm = recyclerStorage.layoutManager as? LinearLayoutManager
+                    val pos = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
+                    if (pos != RecyclerView.NO_POSITION) {
+                        savedScrollPosition = pos
+                        savedScrollOffset = lm?.findViewByPosition(pos)?.top ?: 0
+                    }
+                }
+
                 storageAdapter.submitList(displayItems, this@StorageBrowserActivity)
                 updateEmptyState(storageItems.isEmpty())
+                restoreSelectionAndScroll()
             }
         }
     }
@@ -4919,45 +5056,72 @@ class StorageBrowserActivity : AppCompatActivity() {
             tvSnapHelper?.attachToRecyclerView(null)
             tvSnapHelper = null
 
-            if (mode == MainMenuViewModeManager.ViewMode.LIST) {
-                recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
-            } else if (mode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED) {
-                val gridLayoutManager = GridLayoutManager(this, 1)
-                recyclerStorage.layoutManager = gridLayoutManager
-                if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
-            } else {
-                val gridLayoutManager = GridLayoutManager(this, cols)
-                gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int {
-                        val item = storageAdapter.getItems().getOrNull(position)
-                        return if (item?.isCategoryHeader == true) cols else 1
-                    }
+            val currentLm = if (::recyclerStorage.isInitialized) recyclerStorage.layoutManager else null
+            val needsNewLm = when (mode) {
+                MainMenuViewModeManager.ViewMode.LIST -> {
+                    currentLm == null || currentLm !is LinearLayoutManager || currentLm is GridLayoutManager
                 }
-                recyclerStorage.layoutManager = gridLayoutManager
+                MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED -> {
+                    currentLm == null || currentLm !is GridLayoutManager || currentLm.spanCount != 1
+                }
+                MainMenuViewModeManager.ViewMode.GRID -> {
+                    currentLm == null || currentLm !is GridLayoutManager || currentLm.spanCount != cols
+                }
+            }
 
-                if (isTv) {
-                    recyclerStorage.doOnLayout {
-                        val density = resources.displayMetrics.density
-                        val rvH = recyclerStorage.height
-                        val pTop = recyclerStorage.paddingTop
-                        val pBot = recyclerStorage.paddingBottom
-                        val marginPx = (16f * density).toInt() * 4
+            if (needsNewLm && ::recyclerStorage.isInitialized) {
+                val lm = currentLm as? LinearLayoutManager
+                val pos = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
+                if (pos != RecyclerView.NO_POSITION && savedScrollPosition == RecyclerView.NO_POSITION) {
+                    savedScrollPosition = pos
+                    savedScrollOffset = lm?.findViewByPosition(pos)?.top ?: 0
+                }
 
-                        val availableHeight = rvH - pTop - pBot - marginPx
-                        val itemInnerHeightPx = availableHeight / 2
-                        
-                        if (::storageAdapter.isInitialized && itemInnerHeightPx > 0) {
-                            storageAdapter.gridItemHeightPx = itemInnerHeightPx
+                if (mode == MainMenuViewModeManager.ViewMode.LIST) {
+                    recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                    if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
+                } else if (mode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED) {
+                    val gridLayoutManager = GridLayoutManager(this, 1)
+                    recyclerStorage.layoutManager = gridLayoutManager
+                    if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
+                } else {
+                    val gridLayoutManager = GridLayoutManager(this, cols)
+                    gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            val item = storageAdapter.getItems().getOrNull(position)
+                            return if (item?.isCategoryHeader == true) cols else 1
                         }
                     }
+                    recyclerStorage.layoutManager = gridLayoutManager
 
-                    if (mode == MainMenuViewModeManager.ViewMode.GRID) {
-                        val snapHelper = TopSnapHelper()
-                        snapHelper.attachToRecyclerView(recyclerStorage)
-                        tvSnapHelper = snapHelper
+                    if (isTv) {
+                        recyclerStorage.doOnLayout {
+                            val density = resources.displayMetrics.density
+                            val rvH = recyclerStorage.height
+                            val pTop = recyclerStorage.paddingTop
+                            val pBot = recyclerStorage.paddingBottom
+                            val marginPx = (16f * density).toInt() * 4
+
+                            val availableHeight = rvH - pTop - pBot - marginPx
+                            val itemInnerHeightPx = availableHeight / 2
+                            
+                            if (::storageAdapter.isInitialized && itemInnerHeightPx > 0) {
+                                storageAdapter.gridItemHeightPx = itemInnerHeightPx
+                            }
+                        }
+
+                        if (mode == MainMenuViewModeManager.ViewMode.GRID) {
+                            val snapHelper = TopSnapHelper()
+                            snapHelper.attachToRecyclerView(recyclerStorage)
+                            tvSnapHelper = snapHelper
+                        }
                     }
                 }
+                restoreSelectionAndScroll()
+            } else if (isTv && mode == MainMenuViewModeManager.ViewMode.GRID && ::recyclerStorage.isInitialized) {
+                val snapHelper = TopSnapHelper()
+                snapHelper.attachToRecyclerView(recyclerStorage)
+                tvSnapHelper = snapHelper
             }
 
             updateToggleVisuals()
