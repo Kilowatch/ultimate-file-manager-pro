@@ -45,6 +45,9 @@ app/google-services.json
 # Keys folder (review before publishing — may contain secrets)
 Keys/
 screenshots/
+# Repo README screenshots live in docs/screenshots/ and ARE tracked;
+# the rule above only hides the store-listing screenshots/ folder at the repo root.
+!docs/screenshots/
 # Amazon store files
 /Amazon/
 scripts/
