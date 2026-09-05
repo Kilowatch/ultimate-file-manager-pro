@@ -18,6 +18,21 @@
 
 ---
 
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Screenshots](#-screenshots)
+- [Download Releases](#-download-releases)
+- [Features](#-features)
+- [FOSS Edition vs. Store Edition](#-foss-edition-vs-store-edition)
+- [App Size & Storage Footprint](#-app-size--storage-footprint-180-mb)
+- [Windows Companion App](#-windows-companion-app)
+- [Building the Android App](#-building-the-android-app)
+- [Community & Support](#-community--support)
+- [License](#-license)
+
+---
+
 ## 🌟 Overview
 
 **Ultimate File Manager Pro (UFM)** is a high-performance, feature-packed dual-pane file manager designed for power users across **Android Mobile**, **Android TV / Fire TV**, and **Windows PC**. Built with privacy, efficiency, and speed in mind, UFM allows seamless side-by-side file operations, LAN auto-discovery, remote PC pairing, and multi-protocol network storage access.
@@ -56,6 +71,34 @@ Pre-compiled production binaries for all supported platforms are published on ev
 - ☁️ **Self-Hosted Network Storage**: Full integration with **SMB**, **SFTP**, **FTP**, **WebDAV**, and **AWS S3**.
 - 🛡️ **100% Privacy & FOSS**: Free of closed-source SDKs, Google tracking services, and invasive analytics.
 - 📺 **Android TV Native Interface**: Full D-pad navigation, Leanback UI design, and quick action bars tailored for big-screen remotes.
+
+---
+
+## 📸 Screenshots
+
+<!-- 📸 Screenshots — drop-in files → docs/screenshots/: mobile-main.png, mobile-cloud.png, mobile-storage-access.png (portrait ~1080×2340), tv-browser.png (16:9). See docs/screenshots/README.md. Remove this comment once all images are added. -->
+
+### 📱 Mobile
+
+**Main file manager screen**
+
+![Main file manager screen](docs/screenshots/mobile-main.png)
+
+**Network & cloud storage**
+
+![Network and cloud storage - SMB, SFTP, WebDAV, and more](docs/screenshots/mobile-cloud.png)
+
+**Storage access**
+
+![Storage access](docs/screenshots/mobile-storage-access.png)
+
+> 🔐 When you first set up UFM you choose how much storage it can reach: grant access to the **specific folders** you select, or allow **full access** to all files on your device. No root required.
+
+### 📺 Android TV / Fire TV
+
+**Big-screen browser**
+
+![Android TV and Fire TV big-screen browser](docs/screenshots/tv-browser.png)
 
 ---
 
