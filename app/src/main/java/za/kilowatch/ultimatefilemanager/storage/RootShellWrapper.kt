@@ -359,6 +359,18 @@ object RootShellWrapper {
     }
 
     /**
+     * Sets SELinux security context (e.g. "u:object_r:system_file:s0") on a root path.
+     */
+    fun setSelinuxContext(path: String, context: String): Boolean {
+        if (context.isEmpty()) return false
+        remount(path, rw = true)
+        val safePath = escapeShellPath(path)
+        val safeContext = escapeShellPath(context)
+        val (code, _) = runCommand("chcon '$safeContext' '$safePath' 2>/dev/null")
+        return code == 0
+    }
+
+    /**
      * Opens an [InputStream] to read a root-protected file.
      */
     fun openInputStream(path: String): InputStream {

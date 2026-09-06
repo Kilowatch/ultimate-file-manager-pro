@@ -343,6 +343,12 @@ USB 驱动器
     <string name="twin_window">
 双窗
 </string>
+    <string name="copy_folder_path">
+Copy Folder Path
+</string>
+    <string name="folder_path_copied">
+Folder path copied to clipboard
+</string>
     <string name="close_twin_window">
 关闭双窗
 </string>
@@ -13616,6 +13622,17 @@ SHA-256
 </string>
     <string name="backup_pref_checksum">
 校验和首选项
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+已将 %1$d 个修改过的文件同步回根目录
+</string>
+    <string name="root_file_save_error">
+无法将更改保存回根目录
+</string>
+    <string name="root_staging_error">
+无法为外部应用准备根目录文件
 </string>
 </resources>
 

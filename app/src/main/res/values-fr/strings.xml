@@ -343,6 +343,12 @@ Gestion de fichiers à double volet
     <string name="twin_window">
 Fenêtre jumelle
 </string>
+    <string name="copy_folder_path">
+Copier le chemin du dossier
+</string>
+    <string name="folder_path_copied">
+Chemin du dossier copié dans le presse-papiers
+</string>
     <string name="close_twin_window">
 Fermer la fenêtre jumelle
 </string>
@@ -13616,6 +13622,17 @@ Outils de somme de contrôle
 </string>
     <string name="backup_pref_checksum">
 Préférences de somme de contrôle
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+%1$d fichier(s) modifié(s) synchronisé(s) vers le stockage racine.
+</string>
+    <string name="root_file_save_error">
+Impossible d\\\'enregistrer les modifications dans le stockage racine.
+</string>
+    <string name="root_staging_error">
+Impossible de préparer le fichier racine pour une application externe.
 </string>
 </resources>
 

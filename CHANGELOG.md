@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.8] — 2026-09-05
 
 ### Added
+- Mobile Header Options Menu: Added "Copy Folder Path" option between "Twin Window" and "Settings" when browsing Local, SAF, Network, and Online storages, instantly copying the full folder path to the clipboard with confirmation feedback.
 - Checksum & Hash Verification Tools for Mobile and Android TV:
   - Generate CRC32, MD5, SHA-1, SHA-256, and SHA-512 hashes for single and multiple files in a single pass.
   - Multi-storage support across Local storage, SD cards, USB drives, SAF locations, Root storage, Network shares (SMB, FTP, SFTP, NFS, WebDAV, DLNA), Cloud storage, and archive contents (ZIP, 7Z).
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed an issue where Material You dynamic wallpaper colors failed to apply in AMOLED Black mode on Android 12+, causing UI accents to stick to the standard fallback color instead of the dynamic system palette.
+- Fixed rooted external application edit / sharing permissions error.
 
 ## [1.9.7] — 2026-09-04
 

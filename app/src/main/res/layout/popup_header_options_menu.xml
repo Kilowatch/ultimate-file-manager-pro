@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="200dp"
+    android:layout_width="215dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_popup_dropdown_glass"
@@ -35,6 +35,46 @@
             android:layout_weight="1"
             android:layout_marginStart="14dp"
             android:text="@string/twin_window"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium" />
+    </LinearLayout>
+
+    <!-- Subtle Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="6dp"
+        android:layout_marginVertical="2dp"
+        android:background="@color/mobile_glass_stroke" />
+
+    <!-- Copy Folder Path Option -->
+    <LinearLayout
+        android:id="@+id/menuItemCopyFolderPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="46dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/bg_header_action_ripple">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_copy"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:text="@string/copy_folder_path"
             android:textColor="@color/mobile_text_primary"
             android:textSize="14sp"
             android:fontFamily="sans-serif-medium" />

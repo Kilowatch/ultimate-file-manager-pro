@@ -343,6 +343,12 @@ Gerenciamento de arquivos em painel duplo
     <string name="twin_window">
 Janela Dupla
 </string>
+    <string name="copy_folder_path">
+Copy Folder Path
+</string>
+    <string name="folder_path_copied">
+Folder path copied to clipboard
+</string>
     <string name="close_twin_window">
 Fechar Janela Dupla
 </string>
@@ -13616,6 +13622,17 @@ Ferramentas de soma de verificação
 </string>
     <string name="backup_pref_checksum">
 Preferências de soma de verificação
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+Sincronizados %1$d arquivo(s) modificado(s) de volta para o armazenamento raiz
+</string>
+    <string name="root_file_save_error">
+Falha ao salvar as alterações de volta no armazenamento raiz
+</string>
+    <string name="root_staging_error">
+Não foi possível preparar o arquivo raiz para o aplicativo externo
 </string>
 </resources>
 

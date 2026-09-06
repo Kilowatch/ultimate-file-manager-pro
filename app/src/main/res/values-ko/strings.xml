@@ -343,6 +343,12 @@ USB 드라이브
     <string name="twin_window">
 듀얼 창
 </string>
+    <string name="copy_folder_path">
+Copy Folder Path
+</string>
+    <string name="folder_path_copied">
+폴더 경로가 클립보드에 복사되었습니다.
+</string>
     <string name="close_twin_window">
 듀얼 창 닫기
 </string>
@@ -13616,6 +13622,17 @@ AndroidManifest.xml을 디코딩할 수 없습니다.
 </string>
     <string name="backup_pref_checksum">
 체크섬 기본 설정
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+수정된 파일 %1$d개를 루트 저장소에 다시 동기화했습니다.
+</string>
+    <string name="root_file_save_error">
+루트 저장소에 변경 사항을 다시 저장하지 못했습니다.
+</string>
+    <string name="root_staging_error">
+외부 앱용 루트 파일을 준비할 수 없습니다.
 </string>
 </resources>
 

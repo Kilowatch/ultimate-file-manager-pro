@@ -485,9 +485,9 @@
             android:name=".ui.policy.LicensesActivity"
             android:exported="false" />
 
-        <!-- FileProvider for opening files -->
+        <!-- FileProvider for opening files (Root-aware) -->
         <provider
-            android:name="androidx.core.content.FileProvider"
+            android:name=".storage.UfmFileProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">

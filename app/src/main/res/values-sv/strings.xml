@@ -341,6 +341,12 @@ Filhantering med dubbla fönster
     <string name="twin_window">
 Dubbelfönster
 </string>
+    <string name="copy_folder_path">
+Kopiera mappsökväg
+</string>
+    <string name="folder_path_copied">
+Mappsökväg kopierad till urklipp
+</string>
     <string name="close_twin_window">
 Stäng tvåbäddsfönstret
 </string>
@@ -13593,6 +13599,17 @@ Kontrollsummeverktyg
 </string>
     <string name="backup_pref_checksum">
 Inställningar för kontrollsumma
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+Synkroniserade %1$d ändrade fil(er) tillbaka till rotlagringen
+</string>
+    <string name="root_file_save_error">
+Det gick inte att spara ändringarna tillbaka till rotlagringen
+</string>
+    <string name="root_staging_error">
+Det gick inte att förbereda rotfilen för extern app
 </string>
 </resources>
 

@@ -343,6 +343,12 @@ USBドライブ
     <string name="twin_window">
 ツインウィンドウ
 </string>
+    <string name="copy_folder_path">
+フォルダーのパスをコピー
+</string>
+    <string name="folder_path_copied">
+フォルダーパスがクリップボードにコピーされました
+</string>
     <string name="close_twin_window">
 ツインウィンドウを閉じる
 </string>
@@ -13616,6 +13622,17 @@ AndroidManifest.xml をデコードできません
 </string>
     <string name="backup_pref_checksum">
 チェックサムの設定
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+変更された%1$d個のファイルをルートストレージに同期しました
+</string>
+    <string name="root_file_save_error">
+変更をルートストレージに保存できませんでした
+</string>
+    <string name="root_staging_error">
+外部アプリ用にルートファイルを準備できません
 </string>
 </resources>
 

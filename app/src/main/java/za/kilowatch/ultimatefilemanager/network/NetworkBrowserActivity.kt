@@ -2554,9 +2554,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun showMobileNetworkOptionsPopupMenu(anchor: View) {
         val popupView = layoutInflater.inflate(R.layout.popup_header_options_menu, null)
+        val popupWidth = (215 * resources.displayMetrics.density).toInt()
         val popupWindow = android.widget.PopupWindow(
             popupView,
-            (200 * resources.displayMetrics.density).toInt(),
+            popupWidth,
             android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         ).apply {
@@ -2585,13 +2586,114 @@ class NetworkBrowserActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        popupView.findViewById<View>(R.id.menuItemCopyFolderPath)?.setOnClickListener {
+            popupWindow.dismiss()
+            copyCurrentNetworkFolderPathToClipboard()
+        }
+
         popupView.findViewById<View>(R.id.menuItemSettings)?.setOnClickListener {
             popupWindow.dismiss()
             startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.SettingsActivity::class.java))
         }
 
-        val xOffset = -(200 * resources.displayMetrics.density - anchor.width).toInt()
+        val xOffset = -(popupWidth - anchor.width)
         popupWindow.showAsDropDown(anchor, xOffset, (4 * resources.displayMetrics.density).toInt())
+    }
+
+    private fun copyCurrentNetworkFolderPathToClipboard() {
+        val cleanCur = currentPath.trim('/')
+        val fullPath = when (share.type) {
+            ShareType.SMB -> {
+                if (share.isServerMode) {
+                    if (cleanCur.isEmpty()) "smb://${share.host}/" else "smb://${share.host}/$cleanCur"
+                } else {
+                    val prefix = share.remotePath.trim('/')
+                    val combined = when {
+                        prefix.isEmpty() -> cleanCur
+                        cleanCur.isEmpty() -> prefix
+                        else -> "$prefix/$cleanCur"
+                    }
+                    if (combined.isEmpty()) "smb://${share.host}/" else "smb://${share.host}/$combined"
+                }
+            }
+            ShareType.FTP -> {
+                val host = if (share.port > 0 && share.port != 21) "${share.host}:${share.port}" else share.host
+                val prefix = share.remotePath.trim('/')
+                val combined = when {
+                    prefix.isEmpty() -> cleanCur
+                    cleanCur.isEmpty() -> prefix
+                    else -> "$prefix/$cleanCur"
+                }
+                "ftp://$host/$combined"
+            }
+            ShareType.SFTP -> {
+                val host = if (share.port > 0 && share.port != 22) "${share.host}:${share.port}" else share.host
+                val prefix = share.remotePath.trim('/')
+                val combined = when {
+                    prefix.isEmpty() -> cleanCur
+                    cleanCur.isEmpty() -> prefix
+                    else -> "$prefix/$cleanCur"
+                }
+                "sftp://$host/$combined"
+            }
+            ShareType.SCP -> {
+                val host = if (share.port > 0 && share.port != 22) "${share.host}:${share.port}" else share.host
+                val prefix = share.remotePath.trim('/')
+                val combined = when {
+                    prefix.isEmpty() -> cleanCur
+                    cleanCur.isEmpty() -> prefix
+                    else -> "$prefix/$cleanCur"
+                }
+                "scp://$host/$combined"
+            }
+            ShareType.NFS -> {
+                val prefix = share.remotePath.trim('/')
+                val combined = when {
+                    prefix.isEmpty() -> cleanCur
+                    cleanCur.isEmpty() -> prefix
+                    else -> "$prefix/$cleanCur"
+                }
+                "nfs://${share.host}/$combined"
+            }
+            ShareType.WEBDAV -> {
+                val rawHost = share.host.removePrefix("http://").removePrefix("https://")
+                val scheme = if (share.host.startsWith("http://")) "http" else "https"
+                if (cleanCur.isEmpty()) "$scheme://$rawHost" else "$scheme://${rawHost.trimEnd('/')}/$cleanCur"
+            }
+            ShareType.TV -> {
+                if (share.host.isNotEmpty()) {
+                    if (cleanCur.isEmpty()) "tv://${share.host}/" else "tv://${share.host}/$cleanCur"
+                } else {
+                    val storageName = if (share.name.isNotEmpty()) share.name else "TV"
+                    if (cleanCur.isEmpty()) "$storageName/" else "$storageName/$cleanCur"
+                }
+            }
+            ShareType.GOOGLE_DRIVE,
+            ShareType.ONEDRIVE,
+            ShareType.DROPBOX,
+            ShareType.AWS_S3,
+            ShareType.IDRIVE_E2,
+            ShareType.DLNA -> {
+                val storageName = when {
+                    share.name.isNotEmpty() -> share.name
+                    share.type == ShareType.GOOGLE_DRIVE -> "Google Drive"
+                    share.type == ShareType.ONEDRIVE -> "OneDrive"
+                    share.type == ShareType.DROPBOX -> "Dropbox"
+                    share.type == ShareType.AWS_S3 -> "S3"
+                    share.type == ShareType.IDRIVE_E2 -> "IDrive E2"
+                    share.type == ShareType.DLNA -> "DLNA"
+                    else -> "Cloud"
+                }
+                if (cleanCur.isEmpty()) "$storageName/" else "$storageName/$cleanCur"
+            }
+        }
+
+        val clipboard = getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+        if (clipboard != null) {
+            val clip = android.content.ClipData.newPlainText("Folder Path", fullPath)
+            clipboard.setPrimaryClip(clip)
+            showPremiumSnackbar(getString(R.string.folder_path_copied))
+        }
     }
 
     private fun handleQuickActionClick(actionId: String) {

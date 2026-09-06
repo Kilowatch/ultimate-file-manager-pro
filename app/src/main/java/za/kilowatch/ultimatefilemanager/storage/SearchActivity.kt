@@ -217,6 +217,10 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        val syncedCount = za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPending(this)
+        if (syncedCount > 0) {
+            showSnackbar(getString(R.string.root_file_saved_success, syncedCount))
+        }
         updateIndexingBanner()
     }
 
@@ -1447,6 +1451,9 @@ class SearchActivity : AppCompatActivity() {
         try {
             val extension = file.extension.lowercase()
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
+            if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(this, file.absolutePath)) {
+                za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(this, file.absolutePath)
+            }
             val uri: Uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = mimeType
@@ -2067,11 +2074,14 @@ class SearchActivity : AppCompatActivity() {
             return
         }
         try {
-            val uris = nonDirFiles.map {
+            val uris = nonDirFiles.map { file ->
+                if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(this, file.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(this, file.absolutePath)
+                }
                 FileProvider.getUriForFile(
                     this,
                     "${packageName}.fileprovider",
-                    it
+                    file
                 )
             }
             val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
@@ -2220,7 +2230,12 @@ class SearchActivity : AppCompatActivity() {
         try {
             val extension = file.extension.lowercase()
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
-            val uri: Uri = safDocUri ?: FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+            val uri: Uri = safDocUri ?: run {
+                if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(this, file.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(this, file.absolutePath)
+                }
+                FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+            }
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, mimeType)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)

@@ -343,6 +343,12 @@ Zweispaltige Dateiverwaltung
     <string name="twin_window">
 Zwillingsfenster
 </string>
+    <string name="copy_folder_path">
+Ordnerpfad kopieren
+</string>
+    <string name="folder_path_copied">
+Ordnerpfad in die Zwischenablage kopiert
+</string>
     <string name="close_twin_window">
 Zwillingsfenster schließen
 </string>
@@ -13616,6 +13622,17 @@ Prüfsummen-Tools
 </string>
     <string name="backup_pref_checksum">
 Prüfsummeneinstellungen
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+%1$d geänderte Datei(en) zurück zum Root-Speicher synchronisiert
+</string>
+    <string name="root_file_save_error">
+Änderungen konnten nicht zurück zum Root-Speicher gespeichert werden
+</string>
+    <string name="root_staging_error">
+Die Root-Datei kann nicht für eine externe App vorbereitet werden
 </string>
 </resources>
 

@@ -414,6 +414,12 @@ class FileBrowserFragment : Fragment() {
         applyLeftHandedFabSettings()
         applyToolbarIconVisibility()
         updatePasteFab()
+        context?.let { ctx ->
+            val syncedCount = za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPending(ctx)
+            if (syncedCount > 0) {
+                showFeedback(getString(R.string.root_file_saved_success, syncedCount))
+            }
+        }
         // Refresh file list on return from child activities (e.g. Settings toggle)
         if (::currentDir.isInitialized && !isSearchActive) {
             loadDirectory(currentDir)
@@ -2789,12 +2795,15 @@ class FileBrowserFragment : Fragment() {
         try {
             val extension = file.extension.lowercase()
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
+            if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(requireContext(), file.absolutePath)) {
+                za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(requireContext(), file.absolutePath)
+            }
             val uri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", file)
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, mimeType)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             }
-            startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
+            startActivity(Intent.createChooser(intent, getString(R.string.open_with)))
         } catch (e: Exception) {
             Log.e("FileBrowser", "Open error: ${e.message}")
         }
@@ -3370,7 +3379,12 @@ class FileBrowserFragment : Fragment() {
         val ctx = context ?: return
         try {
             val uris = ArrayList<Uri>()
-            files.forEach { uris.add(FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", it)) }
+            files.forEach { file ->
+                if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(ctx, file.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(ctx, file.absolutePath)
+                }
+                uris.add(FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", file))
+            }
             val intent = if (uris.size == 1) {
                 Intent(Intent.ACTION_SEND).apply {
                     type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(files[0].extension.lowercase()) ?: "*/*"

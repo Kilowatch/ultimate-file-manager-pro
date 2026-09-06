@@ -123,6 +123,8 @@
     <string name="twin_window_title">Twin Window</string>
     <string name="twin_window_subtitle">Dual-pane file management</string>
     <string name="twin_window">Twin Window</string>
+    <string name="copy_folder_path">Copy Folder Path</string>
+    <string name="folder_path_copied">Folder path copied to clipboard</string>
     <string name="close_twin_window">Close Twin Window</string>
     <string name="settings_twin_window_layout_title">Twin Window Layout</string>
     <string name="settings_twin_window_layout_subtitle_horizontal">Horizontal Split</string>
@@ -4794,6 +4796,11 @@
     <string name="toolbar_desc_checksum">Generate and verify file hashes (CRC32, MD5, SHA-1, SHA-256, SHA-512)</string>
     <string name="icon_toolbar_checksum">Checksum Tools</string>
     <string name="backup_pref_checksum">Checksum Preferences</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">Synced %1$d modified file(s) back to root storage</string>
+    <string name="root_file_save_error">Failed to save changes back to root storage</string>
+    <string name="root_staging_error">Unable to prepare root file for external app</string>
 </resources>
 
 

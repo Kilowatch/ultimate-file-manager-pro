@@ -627,6 +627,10 @@ class FileBrowserActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        val syncedCount = za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPending(this)
+        if (syncedCount > 0) {
+            showPremiumSnackbar(getString(R.string.root_file_saved_success, syncedCount))
+        }
         applyLeftHandedFabSettings()
         applyToolbarIconVisibility()
         // Refresh file list so files created/modified in child activities
@@ -4088,6 +4092,9 @@ class FileBrowserActivity : AppCompatActivity() {
         try {
             val uris = ArrayList<Uri>()
             for (file in files) {
+                if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(this, file.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(this, file.absolutePath)
+                }
                 val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
                 uris.add(uri)
             }
@@ -5736,11 +5743,16 @@ class FileBrowserActivity : AppCompatActivity() {
             val extension = file.extension.lowercase()
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
 
-            val uri: Uri = safDocUri ?: FileProvider.getUriForFile(
-                this,
-                "${packageName}.fileprovider",
-                file
-            )
+            val uri: Uri = safDocUri ?: run {
+                if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(this, file.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(this, file.absolutePath)
+                }
+                FileProvider.getUriForFile(
+                    this,
+                    "${packageName}.fileprovider",
+                    file
+                )
+            }
 
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, mimeType)
@@ -7137,9 +7149,10 @@ class FileBrowserActivity : AppCompatActivity() {
 
     private fun showMobileOptionsPopupMenu(anchor: View) {
         val popupView = layoutInflater.inflate(R.layout.popup_header_options_menu, null)
+        val popupWidth = (215 * resources.displayMetrics.density).toInt()
         val popupWindow = android.widget.PopupWindow(
             popupView,
-            (200 * resources.displayMetrics.density).toInt(),
+            popupWidth,
             android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         ).apply {
@@ -7160,13 +7173,50 @@ class FileBrowserActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        popupView.findViewById<View>(R.id.menuItemCopyFolderPath)?.setOnClickListener {
+            popupWindow.dismiss()
+            copyCurrentFolderPathToClipboard()
+        }
+
         popupView.findViewById<View>(R.id.menuItemSettings)?.setOnClickListener {
             popupWindow.dismiss()
             startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.SettingsActivity::class.java))
         }
 
-        val xOffset = -(200 * resources.displayMetrics.density - anchor.width).toInt()
+        val xOffset = -(popupWidth - anchor.width)
         popupWindow.showAsDropDown(anchor, xOffset, (4 * resources.displayMetrics.density).toInt())
+    }
+
+    private fun copyCurrentFolderPathToClipboard() {
+        val rawPath = if (::currentDir.isInitialized) currentDir.absolutePath else rootPath
+        val isSafExplicit = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(rawPath)
+        val matchingSafLoc = if (isSafExplicit) {
+            val locId = rawPath.removePrefix("saf://").substringBefore('/')
+            za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationById(this, locId)
+        } else {
+            za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocations(this).firstOrNull { loc ->
+                val disp = loc.getDisplayPath().trimEnd('/')
+                disp.isNotEmpty() && (rawPath == disp || rawPath.startsWith("$disp/"))
+            }
+        }
+        val resolvedPath = if (isSafExplicit && matchingSafLoc != null) {
+            val baseDisp = matchingSafLoc.getDisplayPath().trimEnd('/')
+            val rel = rawPath.removePrefix("saf://${matchingSafLoc.id}").trimStart('/')
+            if (baseDisp.isNotEmpty()) {
+                if (rel.isEmpty()) baseDisp else "$baseDisp/$rel"
+            } else {
+                rawPath
+            }
+        } else {
+            rawPath
+        }
+
+        val clipboard = getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+        if (clipboard != null) {
+            val clip = android.content.ClipData.newPlainText("Folder Path", resolvedPath)
+            clipboard.setPrimaryClip(clip)
+            showPremiumSnackbar(getString(R.string.folder_path_copied))
+        }
     }
 
     private fun applyCustomToolbarIcons() {
@@ -7236,6 +7286,7 @@ class FileBrowserActivity : AppCompatActivity() {
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
+
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (!isTv && ::keyboardShortcutHandler.isInitialized && keyboardShortcutHandler.handleKeyEvent(event)) {

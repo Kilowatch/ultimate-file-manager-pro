@@ -735,6 +735,12 @@ object FileViewerRouter {
         val ext = extension.lowercase()
         android.util.Log.d(tag, "openWithExternalApp: ext=$ext preferred=$preferredPackage remember=$remember isNetwork=$isNetwork")
 
+        // -- Pre-stage root file if applicable --
+        val isRoot = za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(context, file.absolutePath)
+        if (isRoot) {
+            za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(context, file.absolutePath)
+        }
+
         // -- Build URI --
         val mimeType: String
         val uri: Uri
@@ -762,7 +768,7 @@ object FileViewerRouter {
                 val directIntent = Intent(Intent.ACTION_VIEW).apply {
                     setDataAndType(uri, mimeType)
                     setPackage(preferredPackage)
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 }
                 val resolves = pm.queryIntentActivities(directIntent, PackageManager.MATCH_DEFAULT_ONLY)
                 android.util.Log.d(tag, "  Direct resolves: ${resolves.size}")
@@ -787,7 +793,7 @@ object FileViewerRouter {
         android.util.Log.d(tag, "  Building chooser")
         val viewIntent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(uri, mimeType)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         }
         val chooser = Intent.createChooser(viewIntent, context.getString(R.string.open_with))
 

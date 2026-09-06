@@ -343,6 +343,12 @@ Gestión de archivos de doble panel
     <string name="twin_window">
 Ventana gemela
 </string>
+    <string name="copy_folder_path">
+Copiar ruta de carpeta
+</string>
+    <string name="folder_path_copied">
+Ruta de la carpeta copiada al portapapeles
+</string>
     <string name="close_twin_window">
 Cerrar ventana gemela
 </string>
@@ -13628,6 +13634,17 @@ Herramientas de suma de comprobación
 </string>
     <string name="backup_pref_checksum">
 Preferencias de suma de comprobación
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+%1$d archivo(s) modificado(s) sincronizado(s) de vuelta al almacenamiento raíz
+</string>
+    <string name="root_file_save_error">
+No se pudieron guardar los cambios de vuelta al almacenamiento raíz
+</string>
+    <string name="root_staging_error">
+No se pudo preparar el archivo raíz para una aplicación externa
 </string>
 </resources>
 

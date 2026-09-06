@@ -343,6 +343,12 @@ USB-накопитель
     <string name="twin_window">
 Двойное окно
 </string>
+    <string name="copy_folder_path">
+Копировать путь к папке
+</string>
+    <string name="folder_path_copied">
+Путь к папке скопирован в буфер обмена
+</string>
     <string name="close_twin_window">
 Закрыть двойное окно
 </string>
@@ -13616,6 +13622,17 @@ MD5
 </string>
     <string name="backup_pref_checksum">
 Настройки контрольной суммы
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+Синхронизировано %1$d изменённых файлов обратно в корневое хранилище
+</string>
+    <string name="root_file_save_error">
+Не удалось сохранить изменения обратно в корневое хранилище
+</string>
+    <string name="root_staging_error">
+Не удалось подготовить корневой файл для внешнего приложения
 </string>
 </resources>
 

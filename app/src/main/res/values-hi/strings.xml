@@ -343,6 +343,12 @@ USB ड्राइव
     <string name="twin_window">
 जुड़वां विंडो
 </string>
+    <string name="copy_folder_path">
+फ़ोल्डर पथ कॉपी करें
+</string>
+    <string name="folder_path_copied">
+फ़ोल्डर पथ क्लिपबोर्ड पर कॉपी किया गया
+</string>
     <string name="close_twin_window">
 जुड़वां विंडो बंद करें
 </string>
@@ -13616,6 +13622,17 @@ AndroidManifest.xml को डीकोड करने में असमर�
 </string>
     <string name="backup_pref_checksum">
 चेकसम प्राथमिकताएँ
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+%1$d संशोधित फ़ाइलें रूट स्टोरेज में वापस सिंक की गईं
+</string>
+    <string name="root_file_save_error">
+परिवर्तनों को रूट स्टोरेज में वापस सहेजने में विफलता
+</string>
+    <string name="root_staging_error">
+बाहरी ऐप के लिए रूट फ़ाइल तैयार करने में असमर्थ
 </string>
 </resources>
 

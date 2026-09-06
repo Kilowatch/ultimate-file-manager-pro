@@ -343,6 +343,12 @@ Gestione dei file a doppio riquadro
     <string name="twin_window">
 Finestra doppia
 </string>
+    <string name="copy_folder_path">
+Copy Folder Path
+</string>
+    <string name="folder_path_copied">
+Folder path copied to clipboard
+</string>
     <string name="close_twin_window">
 Chiudi la finestra doppia
 </string>
@@ -13616,6 +13622,17 @@ Strumenti per il checksum
 </string>
     <string name="backup_pref_checksum">
 Preferenze checksum
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+Sincronizzati %1$d file modificati nell\\\'archivio di root
+</string>
+    <string name="root_file_save_error">
+Impossibile salvare le modifiche nell\\\'archivio di root
+</string>
+    <string name="root_staging_error">
+Impossibile preparare il file di root per l\\\'app esterna
 </string>
 </resources>
 

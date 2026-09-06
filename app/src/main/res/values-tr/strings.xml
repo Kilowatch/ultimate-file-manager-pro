@@ -343,6 +343,12 @@ Dosyalarınız her yerde — keşfetmek için bir sürücüye dokunun
     <string name="twin_window">
 İkili Pencere
 </string>
+    <string name="copy_folder_path">
+Klasör Yolunu Kopyala
+</string>
+    <string name="folder_path_copied">
+Folder path copied to clipboard
+</string>
     <string name="close_twin_window">
 İkili Pencereyi Kapat
 </string>
@@ -13616,6 +13622,17 @@ Sağlama Toplamı Araçları
 </string>
     <string name="backup_pref_checksum">
 Sağlama Toplamı Tercihleri
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+Değiştirilen %1$d dosya kök depolama alanına geri senkronize edildi
+</string>
+    <string name="root_file_save_error">
+Değişiklikler kök depolama alanına geri kaydedilemedi
+</string>
+    <string name="root_staging_error">
+Harici uygulama için kök dosya hazırlanamadı
 </string>
 </resources>
 

@@ -343,6 +343,12 @@ Bestandsbeheer met twee vensters
     <string name="twin_window">
 Dubbel raam
 </string>
+    <string name="copy_folder_path">
+Mappad kopiëren
+</string>
+    <string name="folder_path_copied">
+Mappad gekopieerd naar klembord
+</string>
     <string name="close_twin_window">
 Sluit het dubbele venster
 </string>
@@ -13616,6 +13622,17 @@ Controlesomhulpmiddelen
 </string>
     <string name="backup_pref_checksum">
 Checksum-voorkeuren
+</string>
+
+    <!-- Root Staging & Sync -->
+    <string name="root_file_saved_success">
+%1$d gewijzigde bestanden teruggesynchroniseerd naar de hoofdopslag
+</string>
+    <string name="root_file_save_error">
+Kan wijzigingen niet terugzetten naar de hoofdopslag
+</string>
+    <string name="root_staging_error">
+Kan het rootbestand niet voorbereiden voor een externe app
 </string>
 </resources>
 
