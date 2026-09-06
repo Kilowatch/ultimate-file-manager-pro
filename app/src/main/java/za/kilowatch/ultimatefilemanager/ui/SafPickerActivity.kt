@@ -228,53 +228,61 @@ class SafPickerActivity : AppCompatActivity() {
         txtTitle.text = if (isCreateAction) getString(R.string.save_to) else "Select Storage"
         txtSubtitle.setText(R.string.choose_a_volume_to_browse)
         layoutBottomAction.visibility = View.GONE
-        progressBar.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+        recyclerItems.visibility = View.GONE
+        layoutEmpty.visibility = View.GONE
 
-        val items = mutableListOf<PickerItem>()
-        
-        // Local volumes
-        val storageManager = getSystemService(Context.STORAGE_SERVICE) as StorageManager
-        for (volume in storageManager.storageVolumes) {
-            val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                volume.safeDirectoryPath
-            } else {
-                try {
-                    volume.javaClass.getMethod("getPath").invoke(volume) as? String
-                } catch (_: Exception) { null }
-            } ?: continue
+        lifecycleScope.launch(Dispatchers.IO) {
+            val items = mutableListOf<PickerItem>()
             
-            val label = when {
-                volume.isPrimary -> getString(R.string.storage_internal)
-                volume.isRemovable -> {
-                    val desc = volume.getDescription(this).lowercase()
-                    if (desc.contains("usb")) getString(R.string.storage_usb)
-                    else getString(R.string.storage_sd_card)
+            // Local volumes
+            val storageManager = getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            for (volume in storageManager.storageVolumes) {
+                val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    volume.safeDirectoryPath
+                } else {
+                    try {
+                        volume.javaClass.getMethod("getPath").invoke(volume) as? String
+                    } catch (_: Exception) { null }
+                } ?: continue
+                
+                val label = when {
+                    volume.isPrimary -> getString(R.string.storage_internal)
+                    volume.isRemovable -> {
+                        val desc = volume.getDescription(this@SafPickerActivity).lowercase()
+                        if (desc.contains("usb")) getString(R.string.storage_usb)
+                        else getString(R.string.storage_sd_card)
+                    }
+                    else -> volume.getDescription(this@SafPickerActivity)
                 }
-                else -> volume.getDescription(this)
+                
+                items.add(PickerItem(
+                    label = label,
+                    iconRes = StorageItem.iconForType(volume.isRemovable, volume.getDescription(this@SafPickerActivity) ?: ""),
+                    path = path,
+                    isRoot = true
+                ))
             }
-            
-            items.add(PickerItem(
-                label = label,
-                iconRes = StorageItem.iconForType(volume.isRemovable, volume.getDescription(this) ?: ""),
-                path = path,
-                isRoot = true
-            ))
-        }
 
-        // Network shares (create mode supports writing to SMB/FTP/TV via pipe/buffer)
-        val repo = NetworkShareRepository.getInstance(this)
-        for (share in repo.getAll()) {
-            items.add(PickerItem(
-                label = share.name,
-                iconRes = R.drawable.ic_network,
-                path = "", // Start at share root
-                isRoot = true,
-                share = share
-            ))
-        }
+            // Network shares (create mode supports writing to SMB/FTP/TV via pipe/buffer)
+            val repo = NetworkShareRepository.getInstance(this@SafPickerActivity)
+            for (share in repo.getAll()) {
+                items.add(PickerItem(
+                    label = share.name,
+                    iconRes = R.drawable.ic_network,
+                    path = "", // Start at share root
+                    isRoot = true,
+                    share = share
+                ))
+            }
 
-        adapter.submitList(items)
-        layoutEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+            withContext(Dispatchers.Main) {
+                adapter.submitList(items)
+                progressBar.visibility = View.GONE
+                recyclerItems.visibility = View.VISIBLE
+                layoutEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+            }
+        }
     }
 
     private fun loadDirectory(path: String, share: NetworkShare? = null) {
@@ -303,26 +311,35 @@ class SafPickerActivity : AppCompatActivity() {
     }
 
     private fun browseLocal(file: File) {
-        val items = mutableListOf<PickerItem>()
-        val files = file.listFiles()?.toList() ?: emptyList()
-        
-        files.sortedWith(compareBy<File> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name })
-            .forEach { f ->
-                val showFile = !isTreeAction || f.isDirectory
-                val matchesMime = f.isDirectory || mimeMatchesAny(f.name)
-                if (showFile && matchesMime) {
-                    items.add(PickerItem(
-                        label = f.name,
-                        iconRes = if (f.isDirectory) R.drawable.ic_folder else FileTypeIconProvider.iconForFile(f),
-                        path = f.absolutePath,
-                        isDir = f.isDirectory
-                    ))
-                }
-            }
+        progressBar.visibility = View.VISIBLE
+        recyclerItems.visibility = View.GONE
+        layoutEmpty.visibility = View.GONE
 
-        adapter.submitList(items)
-        layoutEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-        progressBar.visibility = View.GONE
+        lifecycleScope.launch(Dispatchers.IO) {
+            val items = mutableListOf<PickerItem>()
+            val files = file.listFiles()?.toList() ?: emptyList()
+            
+            files.sortedWith(compareBy<File> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name })
+                .forEach { f ->
+                    val showFile = !isTreeAction || f.isDirectory
+                    val matchesMime = f.isDirectory || mimeMatchesAny(f.name)
+                    if (showFile && matchesMime) {
+                        items.add(PickerItem(
+                            label = f.name,
+                            iconRes = if (f.isDirectory) R.drawable.ic_folder else FileTypeIconProvider.iconForFile(f),
+                            path = f.absolutePath,
+                            isDir = f.isDirectory
+                        ))
+                    }
+                }
+
+            withContext(Dispatchers.Main) {
+                adapter.submitList(items)
+                progressBar.visibility = View.GONE
+                recyclerItems.visibility = View.VISIBLE
+                layoutEmpty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
+            }
+        }
     }
 
     private fun browseNetwork(share: NetworkShare, path: String) {
@@ -530,7 +547,9 @@ class SafPickerActivity : AppCompatActivity() {
             items.clear()
             items.addAll(newItems)
             notifyDataSetChanged()
-            recyclerItems.scrollToPosition(0)
+            if (items.isNotEmpty()) {
+                recyclerItems.scrollToPosition(0)
+            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

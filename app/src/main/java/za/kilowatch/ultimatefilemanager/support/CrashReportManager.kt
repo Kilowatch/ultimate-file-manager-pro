@@ -4335,7 +4335,66 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 64. The main thread is sampled inside the OverScroller animation
+                    //     abort / finish method while a RecyclerView resets scroll position
+                    //     or stops flinging during an Activity's cold-start onCreate — e.g.
+                    //     top frame `android.widget.OverScroller.abortAnimation` (or
+                    //     `OverScroller.finish`), under `androidx.recyclerview.widget.
+                    //     RecyclerView.stopScroll` / `scrollToPosition` (or obfuscated
+                    //     RecyclerView / adapter helper methods), reached from an Activity's
+                    //     `onCreate` (e.g. `SafPickerActivity.onCreate` -> `loadRoots` ->
+                    //     `adapter.submitList` -> `recyclerItems.scrollToPosition(0)`),
+                    //     under `Activity.performCreate` -> `Instrumentation.callActivityOnCreate`
+                    //     -> `ActivityThread.performLaunchActivity` (reported from an
+                    //     Expressluck Profilo 2K Android TV, SDK 34, app 1.9.6-GOOGLE). In
+                    //     AOSP `OverScroller.abortAnimation()` performs two field assignments
+                    //     (`mScrollerX.finish()`, `mScrollerY.finish()`) without loops, locks,
+                    //     I/O, or IPC; it is a µs-scale in-memory state transition that cannot
+                    //     by itself occupy the main thread for 5 s. The stack is under a
+                    //     framework-driven Activity cold start (`performLaunchActivity` ->
+                    //     `callActivityOnCreate` -> `performCreate`), and has no framework
+                    //     blocking primitive anywhere (no `BinderProxy.transact`, `Object.wait`,
+                    //     `LockSupport.park`, `java.io.*`, `libcore.io.*`, `java.net.*`, or
+                    //     `android.database.*`). The >5 s block is therefore device-side
+                    //     cold-start latency on a low-end Android TV (class loading, layout
+                    //     inflation, resource decode, and concurrent background thread
+                    //     initialization) where the watchdog sampled the main thread right as
+                    //     the initial UI was attached — the same class as filters 24
+                    //     (`isActivityOnCreateViewLookupStall`) and 34
+                    //     (`isColdStartLayoutInflateStall`). The `AnrWatchdogThread` now treats
+                    //     a main-thread stack whose top frame is `OverScroller.abortAnimation` /
+                    //     `OverScroller.finish`, with a RecyclerView frame and an Activity
+                    //     cold-start launch frame (`performLaunchActivity` /
+                    //     `callActivityOnCreate` / `performCreate`), an Activity `onCreate`
+                    //     frame, and no framework blocking primitives, as a false positive and
+                    //     resets its heartbeat instead of writing a report. Genuine freezes
+                    //     keep the main thread inside blocking work — a lock, file/network/
+                    //     database I/O, binder transact, or app business logic outside of
+                    //     OverScroller animation completion — and are still reported.
+                    val isActivityColdStartOverScrollerStall =
+                        topFrame?.className == "android.widget.OverScroller" &&
+                        (topFrame?.methodName == "abortAnimation" || topFrame?.methodName == "finish") &&
+                        mainStackTrace.any { it.className.startsWith("androidx.recyclerview.widget.RecyclerView") } &&
+                        mainStackTrace.any {
+                            (it.className == "android.app.Activity" && it.methodName == "performCreate") ||
+                            (it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnCreate") ||
+                            (it.className == "android.app.ActivityThread" && it.methodName == "performLaunchActivity")
+                        } &&
+                        mainStackTrace.any {
+                            it.className.endsWith("Activity") && it.methodName == "onCreate"
+                        } &&
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {

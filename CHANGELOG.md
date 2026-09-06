@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed an issue where Material You dynamic wallpaper colors failed to apply in AMOLED Black mode on Android 12+, causing UI accents to stick to the standard fallback color instead of the dynamic system palette.
 - Fixed rooted external application edit / sharing permissions error.
+- Fixed an ANR (freeze) on Android TV devices when launching the SAF document picker (`SafPickerActivity`) on cold start by offloading storage volume queries, network share loading, and local directory scanning to background coroutines, and added ANR watchdog filter 64 for cold-start `OverScroller` animation completion.
 
 ## [1.9.7] — 2026-09-04
 

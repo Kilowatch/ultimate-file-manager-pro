@@ -335,6 +335,16 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             } catch (e: Exception) {
                 Log.e(TAG, "AdbManager pre-warm failed", e)
             }
+
+            // 5. Pre-warm NetworkShareRepository — loads network_shares.json from disk and decrypts
+            //    passwords via VaultCrypto (KeyStore IPC) on this background thread so that activities
+            //    like SafPickerActivity and StorageBrowserActivity never block the main thread.
+            try {
+                za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this@UfmApplication)
+                Log.d(TAG, "NetworkShareRepository pre-warmed successfully")
+            } catch (e: Exception) {
+                Log.e(TAG, "NetworkShareRepository pre-warm failed", e)
+            }
             
         }.apply { name = "ufm-startup-io"; start() }
 
