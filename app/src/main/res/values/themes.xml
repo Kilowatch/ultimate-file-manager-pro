@@ -268,6 +268,14 @@
         <item name="colorSurfaceVariant">#FF0A0A0A</item>
         <item name="android:statusBarColor">#FF000000</item>
         <item name="android:navigationBarColor">#FF000000</item>
+    </style>
+
+    <!--
+        AMOLED default primary color fallback — applied only when Material You
+        is NOT active, so the AMOLED default primary color (#FFE8C98A) takes effect
+        without clobbering wallpaper-derived dynamic colors on Android 12+.
+    -->
+    <style name="ThemeOverlay.UFM.Amoled.Colors" parent="">
         <item name="colorPrimary">@color/theme_primary_amoled</item>
         <item name="colorPrimaryContainer">@color/theme_primary_amoled</item>
     </style>

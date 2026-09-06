@@ -178,7 +178,7 @@ class ThemeActivity : AppCompatActivity() {
         val isDarkOrAmoled  = theme == ThemeHelper.THEME_DARK || theme == ThemeHelper.THEME_AMOLED
 
         if (wasDarkOrAmoled && isDarkOrAmoled) {
-            recreate()
+            za.kilowatch.ultimatefilemanager.UfmApplication.instance.recreateAllActivities()
         } else {
             Snackbar.make(findViewById(R.id.main), getString(R.string.theme_applied), Snackbar.LENGTH_SHORT)
                 .setBackgroundTint(getColor(R.color.ufm_surface_variant))

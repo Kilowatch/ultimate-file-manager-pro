@@ -48,6 +48,15 @@ object ThemeHelper {
                 za.kilowatch.ultimatefilemanager.R.style.ThemeOverlay_UFM_Amoled,
                 /* force = */ true
             )
+            val isMaterialYouActive = MaterialYouPrefs.isEnabled(context) &&
+                !DeviceUtils.isTvDevice(context) &&
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
+            if (!isMaterialYouActive) {
+                context.theme.applyStyle(
+                    za.kilowatch.ultimatefilemanager.R.style.ThemeOverlay_UFM_Amoled_Colors,
+                    /* force = */ true
+                )
+            }
         }
 
         // When Material You is off and the user has chosen a custom accent color,

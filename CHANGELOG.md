@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Integrated into Settings -> "Long Press Toolbar Icons" (Tools & Media section), Mobile Floating Quick Action Bar, TV selection action bar, and Settings Backup & Restore.
   - Added new cryptographic shield and hash vector icon (`ic_checksum`) with full icon customization palette and icon pack export support.
 
+### Fixed
+- Fixed an issue where Material You dynamic wallpaper colors failed to apply in AMOLED Black mode on Android 12+, causing UI accents to stick to the standard fallback color instead of the dynamic system palette.
+
 ## [1.9.7] — 2026-09-04
 
 ### Added
