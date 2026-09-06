@@ -13634,6 +13634,211 @@ Değişiklikler kök depolama alanına geri kaydedilemedi
     <string name="root_staging_error">
 Harici uygulama için kök dosya hazırlanamadı
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+Security
+</string>
+    <string name="settings_security_app_lock_title">
+Uygulama Kilidi
+</string>
+    <string name="settings_security_app_lock_subtitle">
+Require authentication to open Ultimate File Manager Pro
+</string>
+    <string name="settings_security_method_title">
+Authentication Method
+</string>
+    <string name="settings_security_method_picker_title">
+Choose Security Method
+</string>
+    <string name="settings_security_method_picker_subtitle">
+Dosyalarınızı nasıl korumak istediğinizi seçin
+</string>
+    <string name="settings_security_method_none">
+Hiçbiri
+</string>
+    <string name="settings_security_method_pin">
+4-Digit PIN
+</string>
+    <string name="settings_security_method_pin_desc">
+Hızlı, sayısal tuş takımı kilidini açma
+</string>
+    <string name="settings_security_method_password">
+Özel Şifre
+</string>
+    <string name="settings_security_method_password_desc">
+Harfler ve semboller içeren alfasayısal ifade
+</string>
+    <string name="settings_security_method_biometric">
+Biyometri / Cihaz Kilidi
+</string>
+    <string name="settings_security_method_biometric_desc">
+Parmak İzi, Yüz Tanıma Kilidi veya Desen
+</string>
+    <string name="settings_security_biometric_unavailable">
+Biyometri bu cihazda kullanılamıyor
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+Android Ayarlarında biyometri veya cihaz kilidi ayarlanmadı
+</string>
+    <string name="settings_security_change_pin">
+PIN\'i değiştir
+</string>
+    <string name="settings_security_change_pin_subtitle">
+Mevcut 4 haneli güvenlik PIN\'inizi güncelleyin
+</string>
+    <string name="settings_security_change_password">
+Şifre değiştir
+</string>
+    <string name="settings_security_change_password_subtitle">
+Özel alfasayısal şifrenizi güncelleyin
+</string>
+    <string name="settings_security_verify_old_pin">
+Devam etmek için mevcut 4 haneli PIN\'inizi girin
+</string>
+    <string name="settings_security_verify_old_password_title">
+Mevcut Şifreyi Doğrulayın
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+Değiştirmeden önce eski şifrenizi girin
+</string>
+    <string name="settings_security_disable_pin_title">
+Uygulama Kilidini Devre Dışı Bırak
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+Uygulama Kilidini kapatmak için 4 haneli PIN\'inizi girin
+</string>
+    <string name="settings_security_disable_password_title">
+Uygulama Kilidini Devre Dışı Bırak
+</string>
+    <string name="settings_security_disable_password_subtitle">
+Uygulama Kilidini kapatmak için şifrenizi girin
+</string>
+    <string name="settings_security_disable_biometric_title">
+Uygulama Kilidini Devre Dışı Bırak
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+Uygulama Kilidini kapatmak için kimlik doğrulaması yapın
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+UFM\'yi güvence altına almak için 4 haneli bir PIN girin
+</string>
+    <string name="settings_security_password_title">
+Şifreyi Ayarla
+</string>
+    <string name="settings_security_password_subtitle">
+UFM için güvenli bir şifre girin
+</string>
+    <string name="settings_security_password_create_title">
+Şifre Oluştur
+</string>
+    <string name="settings_security_password_create_subtitle">
+Güvenli bir alfasayısal şifre girin (en az 4 karakter)
+</string>
+    <string name="settings_security_password_confirm_title">
+Şifreyi Onayla
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+Onaylamak için şifrenizi tekrar girin
+</string>
+    <string name="settings_security_lock_frequency">
+Kilit Frekansı
+</string>
+    <string name="settings_security_lock_fresh_open">
+Yalnızca yeni/yeni açılışta
+</string>
+    <string name="settings_security_lock_immediately">
+Hemen arka planda
+</string>
+    <string name="settings_security_lock_1min">
+1 dakika sonra
+</string>
+    <string name="settings_security_lock_5min">
+5 dakika sonra
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+Kilit Frekansını Seçin
+</string>
+    <string name="security_warning_title">
+Önemli Güvenlik Uyarısı
+</string>
+    <string name="security_warning_message">
+PIN\'inizi veya Parolanızı unutursanız ve Kurtarma Anahtarınızı kaybederseniz Ultimate File Manager Pro\'ya erişiminiz kalıcı olarak kilitlenir.\n
+\n
+Ne KiloWatch ne de başkası kimlik bilgilerinizi kurtaramaz veya dosyalarınızın kilidini açamaz. Kurtarma Anahtarınızı güvenli ve emniyetli bir yerde sakladığınızdan emin olun.
+</string>
+    <string name="security_warning_confirm">
+Anladım — Kurtarma Anahtarını Göster
+</string>
+    <string name="security_recovery_code_title">
+Güvenlik Kurtarma Anahtarı
+</string>
+    <string name="security_recovery_code_body">
+Bu anahtarı yazın. PIN\'inizi veya Parolanızı unutursanız UFM\'nin kilidini açmanın TEK yolu budur.
+</string>
+    <string name="security_recovery_code_copy">
+Kurtarma Anahtarını Kopyala
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+Kurtarma Anahtarı kopyalandı. Pano, güvenlik nedeniyle 60 saniye içinde otomatik olarak temizlenecektir.
+</string>
+    <string name="security_recovery_code_hint">
+16 Karakterli Anahtar
+</string>
+    <string name="security_recovery_entry_title">
+Kurtarma Anahtarını Girin
+</string>
+    <string name="security_recovery_entry_subtitle">
+Yeniden erişim kazanmak ve kimlik bilgilerinizi sıfırlamak için 16 karakterlik kurtarma anahtarınızı yazın
+</string>
+    <string name="security_recovery_success">
+Kurtarma anahtarı başarıyla doğrulandı
+</string>
+    <string name="security_unlock_enter_pin">
+Kilidini açmak için PIN\'i girin
+</string>
+    <string name="security_unlock_enter_password">
+Kilidi Açmak için Şifreyi Girin
+</string>
+    <string name="security_unlock_forgot_credential">
+PIN veya Şifrenizi mi unuttunuz? Kurtarma Anahtarını Girin
+</string>
+    <string name="security_unlock_biometric_prompt">
+Sensöre dokunun veya kameraya bakın
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+Kimlik doğrulamak için dokunun
+</string>
+    <string name="security_unlock_use_device_lock">
+Cihaz PIN\'ini / Desenini Kullan
+</string>
+    <string name="security_unlock_invalid_pin">
+Yanlış PIN. %1$d deneme hakkı kaldı
+</string>
+    <string name="security_unlock_invalid_password">
+Yanlış şifre. %1$d deneme hakkı kaldı
+</string>
+    <string name="security_unlock_invalid_password_short">
+Yanlış şifre
+</string>
+    <string name="security_unlock_too_many_attempts">
+Çok Fazla Başarısız Deneme
+</string>
+    <string name="security_unlock_try_again_after_timer">
+Güvenliğiniz için zamanlayıcının süresi dolduktan sonra tekrar deneyin
+</string>
+    <string name="icon_settings_security">
+Güvenlik
+</string>
+    <string name="confirm">
+Onayla
+</string>
+    <string name="unlock">
+Kilidi Aç
+</string>
+    <string name="field_cannot_be_empty">
+Alan boş bırakılamaz
+</string>
 </resources>
 
 

@@ -13634,6 +13634,211 @@ SHA-256
     <string name="root_staging_error">
 Неможливо підготувати кореневий файл для зовнішнього додатка
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+Безпека
+</string>
+    <string name="settings_security_app_lock_title">
+Блокування програми
+</string>
+    <string name="settings_security_app_lock_subtitle">
+Потрібна автентифікація, щоб відкрити Ultimate File Manager Pro
+</string>
+    <string name="settings_security_method_title">
+Метод автентифікації
+</string>
+    <string name="settings_security_method_picker_title">
+Виберіть метод безпеки
+</string>
+    <string name="settings_security_method_picker_subtitle">
+Виберіть спосіб захисту файлів
+</string>
+    <string name="settings_security_method_none">
+Жодного
+</string>
+    <string name="settings_security_method_pin">
+4-значний PIN-код
+</string>
+    <string name="settings_security_method_pin_desc">
+Швидке розблокування цифрової клавіатури
+</string>
+    <string name="settings_security_method_password">
+Спеціальний пароль
+</string>
+    <string name="settings_security_method_password_desc">
+Буквено-цифрова фраза з буквами та символами
+</string>
+    <string name="settings_security_method_biometric">
+Біометрія / блокування пристрою
+</string>
+    <string name="settings_security_method_biometric_desc">
+Відбиток пальця, розблокування обличчям або графічний ключ
+</string>
+    <string name="settings_security_biometric_unavailable">
+Біометрія недоступна на цьому пристрої
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+У налаштуваннях Android не налаштовано біометричні дані чи блокування пристрою
+</string>
+    <string name="settings_security_change_pin">
+Змінити PIN-код
+</string>
+    <string name="settings_security_change_pin_subtitle">
+Оновіть поточний 4-значний PIN-код безпеки
+</string>
+    <string name="settings_security_change_password">
+Змінити пароль
+</string>
+    <string name="settings_security_change_password_subtitle">
+Оновіть свій власний буквено-цифровий пароль
+</string>
+    <string name="settings_security_verify_old_pin">
+Щоб продовжити, введіть поточний 4-значний PIN-код
+</string>
+    <string name="settings_security_verify_old_password_title">
+Перевірте поточний пароль
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+Перед зміною введіть свій старий пароль
+</string>
+    <string name="settings_security_disable_pin_title">
+Вимкнути блокування програм
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+Введіть 4-значний PIN-код, щоб вимкнути блокування програм
+</string>
+    <string name="settings_security_disable_password_title">
+Вимкнути блокування програм
+</string>
+    <string name="settings_security_disable_password_subtitle">
+Введіть свій пароль, щоб вимкнути блокування програм
+</string>
+    <string name="settings_security_disable_biometric_title">
+Вимкнути блокування програм
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+Пройдіть автентифікацію, щоб вимкнути блокування програм
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+Введіть 4-значний PIN-код, щоб захистити UFM
+</string>
+    <string name="settings_security_password_title">
+Встановити пароль
+</string>
+    <string name="settings_security_password_subtitle">
+Введіть безпечний пароль для UFM
+</string>
+    <string name="settings_security_password_create_title">
+Створити пароль
+</string>
+    <string name="settings_security_password_create_subtitle">
+Введіть надійний буквено-цифровий пароль (щонайменше 4 символи)
+</string>
+    <string name="settings_security_password_confirm_title">
+Підтвердьте пароль
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+Повторно введіть пароль для підтвердження
+</string>
+    <string name="settings_security_lock_frequency">
+Частота блокування
+</string>
+    <string name="settings_security_lock_fresh_open">
+Лише на нових/нових відкритих
+</string>
+    <string name="settings_security_lock_immediately">
+Відразу на тлі
+</string>
+    <string name="settings_security_lock_1min">
+Через 1 хв
+</string>
+    <string name="settings_security_lock_5min">
+Через 5 хв
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+Виберіть Блокувати частоту
+</string>
+    <string name="security_warning_title">
+Важливе повідомлення про безпеку
+</string>
+    <string name="security_warning_message">
+Якщо ви забудете свій PIN-код або пароль і втратите ключ відновлення, ви назавжди заблокуєте доступ до Ultimate File Manager Pro.\n
+\n
+Ні KiloWatch, ні будь-хто інший не зможе відновити ваші облікові дані чи розблокувати файли. Обов’язково зберігайте свій ключ відновлення в надійному місці.
+</string>
+    <string name="security_warning_confirm">
+Я розумію — Показати ключ відновлення
+</string>
+    <string name="security_recovery_code_title">
+Ключ відновлення безпеки
+</string>
+    <string name="security_recovery_code_body">
+Запишіть цей ключ. Це єдиний спосіб розблокувати UFM, якщо ви забули свій PIN-код або пароль.
+</string>
+    <string name="security_recovery_code_copy">
+Копіювати ключ відновлення
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+Ключ відновлення скопійовано. З міркувань безпеки буфер обміну автоматично очищається через 60 секунд.
+</string>
+    <string name="security_recovery_code_hint">
+16-символьний ключ
+</string>
+    <string name="security_recovery_entry_title">
+Введіть ключ відновлення
+</string>
+    <string name="security_recovery_entry_subtitle">
+Введіть свій 16-значний ключ відновлення, щоб відновити доступ і скинути свої облікові дані
+</string>
+    <string name="security_recovery_success">
+Ключ відновлення успішно перевірено
+</string>
+    <string name="security_unlock_enter_pin">
+Введіть PIN-код для розблокування
+</string>
+    <string name="security_unlock_enter_password">
+Введіть пароль для розблокування
+</string>
+    <string name="security_unlock_forgot_credential">
+Забули PIN-код або пароль? Введіть ключ відновлення
+</string>
+    <string name="security_unlock_biometric_prompt">
+Торкніться датчика або подивіться на камеру
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+Торкніться, щоб автентифікувати
+</string>
+    <string name="security_unlock_use_device_lock">
+Використовуйте PIN-код пристрою / шаблон
+</string>
+    <string name="security_unlock_invalid_pin">
+Неправильний PIN-код. Залишилося %1$d спроб
+</string>
+    <string name="security_unlock_invalid_password">
+Невірний пароль. Залишилося %1$d спроб
+</string>
+    <string name="security_unlock_invalid_password_short">
+Невірний пароль
+</string>
+    <string name="security_unlock_too_many_attempts">
+Занадто багато невдалих спроб
+</string>
+    <string name="security_unlock_try_again_after_timer">
+З міркувань безпеки повторіть спробу після закінчення таймера
+</string>
+    <string name="icon_settings_security">
+Безпека
+</string>
+    <string name="confirm">
+Підтвердити
+</string>
+    <string name="unlock">
+Розблокувати
+</string>
+    <string name="field_cannot_be_empty">
+Поле не може бути порожнім
+</string>
 </resources>
 
 

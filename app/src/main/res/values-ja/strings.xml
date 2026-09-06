@@ -13634,6 +13634,211 @@ AndroidManifest.xml をデコードできません
     <string name="root_staging_error">
 外部アプリ用にルートファイルを準備できません
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+Security
+</string>
+    <string name="settings_security_app_lock_title">
+App Lock
+</string>
+    <string name="settings_security_app_lock_subtitle">
+Require authentication to open Ultimate File Manager Pro
+</string>
+    <string name="settings_security_method_title">
+Authentication Method
+</string>
+    <string name="settings_security_method_picker_title">
+Choose Security Method
+</string>
+    <string name="settings_security_method_picker_subtitle">
+ファイルを保護する方法を選択してください
+</string>
+    <string name="settings_security_method_none">
+なし
+</string>
+    <string name="settings_security_method_pin">
+4桁のPIN
+</string>
+    <string name="settings_security_method_pin_desc">
+テンキーによる素早いロック解除
+</string>
+    <string name="settings_security_method_password">
+カスタムパスワード
+</string>
+    <string name="settings_security_method_password_desc">
+文字と記号を含む英数字のフレーズ
+</string>
+    <string name="settings_security_method_biometric">
+生体認証 / デバイスロック
+</string>
+    <string name="settings_security_method_biometric_desc">
+指紋、顔認証、またはパターン
+</string>
+    <string name="settings_security_biometric_unavailable">
+このデバイスでは生体認証は利用できません
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+Android の設定で生体認証やデバイスのロックが設定されていない
+</string>
+    <string name="settings_security_change_pin">
+PINの変更
+</string>
+    <string name="settings_security_change_pin_subtitle">
+現在の 4 桁のセキュリティ PIN を更新します
+</string>
+    <string name="settings_security_change_password">
+パスワードを変更する
+</string>
+    <string name="settings_security_change_password_subtitle">
+カスタムの英数字パスワードを更新する
+</string>
+    <string name="settings_security_verify_old_pin">
+Enter your current 4-digit PIN to continue
+</string>
+    <string name="settings_security_verify_old_password_title">
+現在のパスワードを確認する
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+変更する前に古いパスワードを入力してください
+</string>
+    <string name="settings_security_disable_pin_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+Enter your 4-digit PIN to turn off App Lock
+</string>
+    <string name="settings_security_disable_password_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_password_subtitle">
+Enter your password to turn off App Lock
+</string>
+    <string name="settings_security_disable_biometric_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+Authenticate to turn off App Lock
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+Enter a 4-digit PIN to secure UFM
+</string>
+    <string name="settings_security_password_title">
+Set Password
+</string>
+    <string name="settings_security_password_subtitle">
+Enter a secure password for UFM
+</string>
+    <string name="settings_security_password_create_title">
+Create Password
+</string>
+    <string name="settings_security_password_create_subtitle">
+Enter a secure alphanumeric password (at least 4 characters)
+</string>
+    <string name="settings_security_password_confirm_title">
+Confirm Password
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+Re-enter your password to confirm
+</string>
+    <string name="settings_security_lock_frequency">
+ロック周波数
+</string>
+    <string name="settings_security_lock_fresh_open">
+新規/新規オープン時のみ
+</string>
+    <string name="settings_security_lock_immediately">
+すぐに背景に
+</string>
+    <string name="settings_security_lock_1min">
+1分後
+</string>
+    <string name="settings_security_lock_5min">
+5分後
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+ロック周波数の選択
+</string>
+    <string name="security_warning_title">
+重要なセキュリティに関するお知らせ
+</string>
+    <string name="security_warning_message">
+PIN またはパスワードを忘れて回復キーを紛失した場合、Ultimate File Manager Pro から永久にロックアウトされます。\n
+\n
+KiloWatch も他の誰も、あなたの資格情報を回復したり、ファイルのロックを解除したりすることはできません。回復キーは安全な場所に保管してください。
+</string>
+    <string name="security_warning_confirm">
+理解しました — 回復キーを表示します
+</string>
+    <string name="security_recovery_code_title">
+セキュリティ回復キー
+</string>
+    <string name="security_recovery_code_body">
+このキーを書き留めます。 PIN またはパスワードを忘れた場合、これが UFM のロックを解除する唯一の方法です。
+</string>
+    <string name="security_recovery_code_copy">
+回復キーをコピーする
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+回復キーがコピーされました。セキュリティのため、クリップボードは 60 秒後に自動的に消去されます。
+</string>
+    <string name="security_recovery_code_hint">
+16 文字のキー
+</string>
+    <string name="security_recovery_entry_title">
+回復キーを入力してください
+</string>
+    <string name="security_recovery_entry_subtitle">
+16 文字の回復キーを入力してアクセスを回復し、資格情報をリセットします
+</string>
+    <string name="security_recovery_success">
+回復キーが正常に検証されました
+</string>
+    <string name="security_unlock_enter_pin">
+PINを入力してロックを解除します
+</string>
+    <string name="security_unlock_enter_password">
+パスワードを入力してロックを解除する
+</string>
+    <string name="security_unlock_forgot_credential">
+PIN またはパスワードをお忘れですか?回復キーを入力してください
+</string>
+    <string name="security_unlock_biometric_prompt">
+タッチセンサーまたはカメラ目線
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+タップして認証する
+</string>
+    <string name="security_unlock_use_device_lock">
+デバイスのPIN/パターンを使用する
+</string>
+    <string name="security_unlock_invalid_pin">
+PIN が間違っています。残り %1$d 回の試行回数
+</string>
+    <string name="security_unlock_invalid_password">
+パスワードが間違っています。残り %1$d 回の試行回数
+</string>
+    <string name="security_unlock_invalid_password_short">
+パスワードが間違っています
+</string>
+    <string name="security_unlock_too_many_attempts">
+失敗した試行が多すぎます
+</string>
+    <string name="security_unlock_try_again_after_timer">
+安全のため、タイマーが期限切れになった後にもう一度お試しください
+</string>
+    <string name="icon_settings_security">
+安全
+</string>
+    <string name="confirm">
+確認
+</string>
+    <string name="unlock">
+ロック解除
+</string>
+    <string name="field_cannot_be_empty">
+フィールドを空にすることはできません
+</string>
 </resources>
 
 

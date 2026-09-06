@@ -13634,6 +13634,211 @@ AndroidManifest.xml을 디코딩할 수 없습니다.
     <string name="root_staging_error">
 외부 앱용 루트 파일을 준비할 수 없습니다.
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+보안
+</string>
+    <string name="settings_security_app_lock_title">
+앱 잠금
+</string>
+    <string name="settings_security_app_lock_subtitle">
+Ultimate File Manager Pro를 열려면 인증이 필요합니다.
+</string>
+    <string name="settings_security_method_title">
+인증 방법
+</string>
+    <string name="settings_security_method_picker_title">
+보안 방법 선택
+</string>
+    <string name="settings_security_method_picker_subtitle">
+파일을 보호할 방법을 선택하세요.
+</string>
+    <string name="settings_security_method_none">
+없음
+</string>
+    <string name="settings_security_method_pin">
+4자리 PIN
+</string>
+    <string name="settings_security_method_pin_desc">
+빠른 숫자 키패드 잠금 해제
+</string>
+    <string name="settings_security_method_password">
+맞춤 비밀번호
+</string>
+    <string name="settings_security_method_password_desc">
+문자와 기호가 포함된 영숫자 구문
+</string>
+    <string name="settings_security_method_biometric">
+생체인식/기기 잠금
+</string>
+    <string name="settings_security_method_biometric_desc">
+지문, 얼굴인식 잠금해제 또는 패턴
+</string>
+    <string name="settings_security_biometric_unavailable">
+이 기기에서는 생체 인식을 사용할 수 없습니다.
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+Android 설정에 생체 인식 또는 기기 잠금이 설정되어 있지 않습니다.
+</string>
+    <string name="settings_security_change_pin">
+PIN 변경
+</string>
+    <string name="settings_security_change_pin_subtitle">
+현재 4자리 보안 PIN을 업데이트하세요.
+</string>
+    <string name="settings_security_change_password">
+비밀번호 변경
+</string>
+    <string name="settings_security_change_password_subtitle">
+맞춤 영숫자 비밀번호 업데이트
+</string>
+    <string name="settings_security_verify_old_pin">
+계속하려면 현재 4자리 PIN을 입력하세요.
+</string>
+    <string name="settings_security_verify_old_password_title">
+현재 비밀번호 확인
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+변경하기 전에 이전 비밀번호를 입력하세요.
+</string>
+    <string name="settings_security_disable_pin_title">
+앱 잠금 비활성화
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+앱 잠금을 끄려면 4자리 PIN을 입력하세요.
+</string>
+    <string name="settings_security_disable_password_title">
+앱 잠금 비활성화
+</string>
+    <string name="settings_security_disable_password_subtitle">
+앱 잠금을 끄려면 비밀번호를 입력하세요
+</string>
+    <string name="settings_security_disable_biometric_title">
+앱 잠금 비활성화
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+앱 잠금을 끄려면 인증하세요
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+UFM을 보호하려면 4자리 PIN을 입력하세요.
+</string>
+    <string name="settings_security_password_title">
+비밀번호 설정
+</string>
+    <string name="settings_security_password_subtitle">
+UFM의 보안 비밀번호를 입력하세요
+</string>
+    <string name="settings_security_password_create_title">
+비밀번호 생성
+</string>
+    <string name="settings_security_password_create_subtitle">
+안전한 영숫자 비밀번호를 입력하세요(최소 4자)
+</string>
+    <string name="settings_security_password_confirm_title">
+비밀번호 확인
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+확인을 위해 비밀번호를 다시 입력하세요
+</string>
+    <string name="settings_security_lock_frequency">
+잠금 빈도
+</string>
+    <string name="settings_security_lock_fresh_open">
+신규/신규 오픈시에만
+</string>
+    <string name="settings_security_lock_immediately">
+배경에 즉시
+</string>
+    <string name="settings_security_lock_1min">
+1분 후
+</string>
+    <string name="settings_security_lock_5min">
+5분 후
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+잠금 빈도 선택
+</string>
+    <string name="security_warning_title">
+중요한 보안 공지
+</string>
+    <string name="security_warning_message">
+PIN 또는 비밀번호를 잊어버리고 복구 키를 분실한 경우 Ultimate File Manager Pro가 영구적으로 잠깁니다.\n
+\n
+KiloWatch나 다른 누구도 귀하의 자격 증명을 복구하거나 파일을 잠금 해제할 수 없습니다. 복구 키를 안전한 곳에 보관하세요.
+</string>
+    <string name="security_warning_confirm">
+이해합니다 - 복구 키 표시
+</string>
+    <string name="security_recovery_code_title">
+보안 복구 키
+</string>
+    <string name="security_recovery_code_body">
+이 키를 적어두세요. PIN이나 비밀번호를 잊어버린 경우 UFM을 잠금 해제할 수 있는 유일한 방법입니다.
+</string>
+    <string name="security_recovery_code_copy">
+복구 키 복사
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+복구 키가 복사되었습니다. 클립보드는 보안을 위해 60초 후에 자동으로 지워집니다.
+</string>
+    <string name="security_recovery_code_hint">
+16자 키
+</string>
+    <string name="security_recovery_entry_title">
+복구 키 입력
+</string>
+    <string name="security_recovery_entry_subtitle">
+16자 복구 키를 입력하여 액세스 권한을 다시 얻고 자격 증명을 재설정하세요.
+</string>
+    <string name="security_recovery_success">
+복구 키가 성공적으로 확인되었습니다.
+</string>
+    <string name="security_unlock_enter_pin">
+잠금을 해제하려면 PIN을 입력하세요.
+</string>
+    <string name="security_unlock_enter_password">
+잠금 해제하려면 비밀번호를 입력하세요
+</string>
+    <string name="security_unlock_forgot_credential">
+PIN이나 비밀번호를 잊으셨나요? 복구 키 입력
+</string>
+    <string name="security_unlock_biometric_prompt">
+센서를 터치하거나 카메라를 바라보세요.
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+탭하여 인증하세요
+</string>
+    <string name="security_unlock_use_device_lock">
+장치 PIN/패턴 사용
+</string>
+    <string name="security_unlock_invalid_pin">
+잘못된 PIN입니다. %1$d회 남은 횟수
+</string>
+    <string name="security_unlock_invalid_password">
+비밀번호가 잘못되었습니다. %1$d회 남은 횟수
+</string>
+    <string name="security_unlock_invalid_password_short">
+잘못된 비밀번호
+</string>
+    <string name="security_unlock_too_many_attempts">
+시도 실패 횟수가 너무 많음
+</string>
+    <string name="security_unlock_try_again_after_timer">
+보안을 위해 타이머가 만료된 후 다시 시도하세요.
+</string>
+    <string name="icon_settings_security">
+보안
+</string>
+    <string name="confirm">
+확인
+</string>
+    <string name="unlock">
+잠금 해제
+</string>
+    <string name="field_cannot_be_empty">
+필드는 비워 둘 수 없습니다
+</string>
 </resources>
 
 

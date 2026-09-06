@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Security Unlock Screen — UFMStandard Mobile Activity -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".security.SecurityUnlockActivity">
+
+    <!-- Top Spacer / Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.10" />
+
+    <!-- Hero Header Block -->
+    <LinearLayout
+        android:id="@+id/layoutHeroHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/guideTop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginBottom="14dp">
+
+            <ImageView
+                android:id="@+id/imgUnlockHero"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_security_lock"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/txtUnlockSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/security_unlock_enter_pin"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13.5sp"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <!-- Error Message Display -->
+    <TextView
+        android:id="@+id/txtUnlockError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/ufm_denied"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeroHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Incorrect PIN. 4 attempts remaining"
+        tools:visibility="visible" />
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 1: PIN UNLOCK CONTAINER                                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutPinContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/txtUnlockError"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- PIN Indicator Dots -->
+        <LinearLayout
+            android:id="@+id/layoutPinDots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
+
+            <View
+                android:id="@+id/pinDot1"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/bg_pin_dot_empty"
+                android:layout_marginHorizontal="10dp" />
+
+            <View
+                android:id="@+id/pinDot2"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/bg_pin_dot_empty"
+                android:layout_marginHorizontal="10dp" />
+
+            <View
+                android:id="@+id/pinDot3"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/bg_pin_dot_empty"
+                android:layout_marginHorizontal="10dp" />
+
+            <View
+                android:id="@+id/pinDot4"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/bg_pin_dot_empty"
+                android:layout_marginHorizontal="10dp" />
+        </LinearLayout>
+
+        <!-- Glass Numeric Keypad (Table Layout of 3x4) -->
+        <TableLayout
+            android:id="@+id/keypadTable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:stretchColumns="*">
+
+            <!-- Row 1: 1, 2, 3 -->
+            <TableRow android:layout_marginBottom="12dp">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey1"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="1"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey2"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="2"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey3"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="3"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+            </TableRow>
+
+            <!-- Row 2: 4, 5, 6 -->
+            <TableRow android:layout_marginBottom="12dp">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey4"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="4"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey5"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="5"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey6"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="6"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+            </TableRow>
+
+            <!-- Row 3: 7, 8, 9 -->
+            <TableRow android:layout_marginBottom="12dp">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey7"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="7"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey8"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="8"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey9"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="9"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+            </TableRow>
+
+            <!-- Row 4: Empty, 0, Backspace -->
+            <TableRow>
+                <View
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKey0"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="0"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="24sp"
+                    android:fontFamily="sans-serif-bold"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnKeyBackspace"
+                    style="@style/Widget.Material3Expressive.Button"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginHorizontal="10dp"
+                    app:icon="@drawable/ic_close"
+                    app:iconTint="@color/mobile_text_primary"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="36dp" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Forgot PIN / Recovery Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPinForgot"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/security_unlock_forgot_credential"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 2: PASSWORD UNLOCK CONTAINER                            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutPasswordContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="32dp"
+        android:layout_marginTop="24dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/txtUnlockError"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilUnlockPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/mobile_text_secondary"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:hintTextColor="?attr/colorPrimary"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUnlockPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="15sp"
+                android:singleLine="true"
+                android:imeOptions="actionDone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnUnlockPassword"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/unlock"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-bold"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPasswordForgot"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/security_unlock_forgot_credential"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 3: BIOMETRIC UNLOCK CONTAINER                           -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutBiometricContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="32dp"
+        android:layout_marginTop="32dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/txtUnlockError"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:id="@+id/frameBiometricSensor"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_fingerprint"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTriggerBiometric"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/security_unlock_tap_to_authenticate"
+            android:textColor="@color/white"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
+            app:icon="@drawable/ic_fingerprint"
+            app:iconTint="@color/white"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDeviceLockFallback"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/security_unlock_use_device_lock"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 4: RATE LIMIT LOCKOUT OVERLAY                           -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutLockoutContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="32dp"
+        android:layout_marginTop="32dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/txtUnlockError"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_shield_alert"
+                app:tint="@color/ufm_denied"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/security_unlock_too_many_attempts"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-bold"
+            android:gravity="center"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/mobile_glass_card"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/txtLockoutTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="12dp"
+                android:fontFamily="monospace"
+                android:textSize="26sp"
+                android:textColor="@color/ufm_denied"
+                android:textStyle="bold"
+                tools:text="00:28" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/security_unlock_try_again_after_timer"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

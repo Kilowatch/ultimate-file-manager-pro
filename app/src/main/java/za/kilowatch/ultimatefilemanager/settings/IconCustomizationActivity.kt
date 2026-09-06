@@ -442,6 +442,9 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("settings_root_access", getString(R.string.icon_settings_root_access), R.drawable.ic_root_storage, emptyList()),
             IconItemData("settings_analytics", getString(R.string.icon_settings_analytics), R.drawable.ic_tune, emptyList())
         )
+        if (!isTv) {
+            settingsIcons.add(IconItemData("settings_security", getString(R.string.icon_settings_security), R.drawable.ic_security_lock, emptyList()))
+        }
         if (isTv) {
             settingsIcons.add(IconItemData("settings_tv_background_server", getString(R.string.icon_settings_tv_background_server), R.drawable.ic_tv, emptyList()))
         }

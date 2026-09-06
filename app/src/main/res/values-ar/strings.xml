@@ -13634,6 +13634,211 @@ MD5
     <string name="root_staging_error">
 تعذّر تجهيز الملف الجذر للتطبيق الخارجي
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+حماية
+</string>
+    <string name="settings_security_app_lock_title">
+قفل التطبيق
+</string>
+    <string name="settings_security_app_lock_subtitle">
+تتطلب المصادقة لفتح Ultimate File Manager Pro
+</string>
+    <string name="settings_security_method_title">
+طريقة المصادقة
+</string>
+    <string name="settings_security_method_picker_title">
+اختر طريقة الأمان
+</string>
+    <string name="settings_security_method_picker_subtitle">
+حدد الطريقة التي تريد بها حماية ملفاتك
+</string>
+    <string name="settings_security_method_none">
+لا أحد
+</string>
+    <string name="settings_security_method_pin">
+رقم التعريف الشخصي المكون من 4 أرقام
+</string>
+    <string name="settings_security_method_pin_desc">
+فتح سريع للوحة المفاتيح الرقمية
+</string>
+    <string name="settings_security_method_password">
+كلمة المرور المخصصة
+</string>
+    <string name="settings_security_method_password_desc">
+عبارة أبجدية رقمية تحتوي على حروف ورموز
+</string>
+    <string name="settings_security_method_biometric">
+القياسات الحيوية / قفل الجهاز
+</string>
+    <string name="settings_security_method_biometric_desc">
+بصمة الإصبع أو فتح القفل بالوجه أو النمط
+</string>
+    <string name="settings_security_biometric_unavailable">
+القياسات الحيوية غير متوفرة على هذا الجهاز
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+لم يتم إعداد القياسات الحيوية أو قفل الجهاز في إعدادات Android
+</string>
+    <string name="settings_security_change_pin">
+تغيير رقم التعريف الشخصي
+</string>
+    <string name="settings_security_change_pin_subtitle">
+قم بتحديث رقم التعريف الشخصي للأمان الحالي المكون من 4 أرقام
+</string>
+    <string name="settings_security_change_password">
+تغيير كلمة المرور
+</string>
+    <string name="settings_security_change_password_subtitle">
+قم بتحديث كلمة المرور الأبجدية الرقمية المخصصة الخاصة بك
+</string>
+    <string name="settings_security_verify_old_pin">
+Enter your current 4-digit PIN to continue
+</string>
+    <string name="settings_security_verify_old_password_title">
+التحقق من كلمة المرور الحالية
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+Enter your old password before changing
+</string>
+    <string name="settings_security_disable_pin_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+أدخل رقم التعريف الشخصي المكون من 4 أرقام لإيقاف تشغيل App Lock
+</string>
+    <string name="settings_security_disable_password_title">
+تعطيل قفل التطبيقات
+</string>
+    <string name="settings_security_disable_password_subtitle">
+أدخل كلمة المرور الخاصة بك لإيقاف تشغيل قفل التطبيقات
+</string>
+    <string name="settings_security_disable_biometric_title">
+تعطيل قفل التطبيقات
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+Authenticate to turn off App Lock
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+Enter a 4-digit PIN to secure UFM
+</string>
+    <string name="settings_security_password_title">
+Set Password
+</string>
+    <string name="settings_security_password_subtitle">
+أدخل كلمة مرور آمنة لـ UFM
+</string>
+    <string name="settings_security_password_create_title">
+إنشاء كلمة المرور
+</string>
+    <string name="settings_security_password_create_subtitle">
+أدخل كلمة مرور أبجدية رقمية آمنة (4 أحرف على الأقل)
+</string>
+    <string name="settings_security_password_confirm_title">
+تأكيد كلمة المرور
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+أعد إدخال كلمة المرور الخاصة بك للتأكيد
+</string>
+    <string name="settings_security_lock_frequency">
+تردد القفل
+</string>
+    <string name="settings_security_lock_fresh_open">
+على الجديد / الطازج المفتوح فقط
+</string>
+    <string name="settings_security_lock_immediately">
+على الفور في الخلفية
+</string>
+    <string name="settings_security_lock_1min">
+بعد 1 دقيقة
+</string>
+    <string name="settings_security_lock_5min">
+بعد 5 دقائق
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+حدد تردد القفل
+</string>
+    <string name="security_warning_title">
+إشعار أمني مهم
+</string>
+    <string name="security_warning_message">
+إذا نسيت رقم التعريف الشخصي أو كلمة المرور الخاصة بك وفقدت مفتاح الاسترداد، فسيتم منعك نهائيًا من استخدام Ultimate File Manager Pro.\n
+\n
+لا يستطيع KiloWatch ولا أي شخص آخر استعادة بيانات الاعتماد الخاصة بك أو فتح ملفاتك. تأكد من الاحتفاظ بمفتاح الاسترداد الخاص بك في مكان آمن.
+</string>
+    <string name="security_warning_confirm">
+أنا أفهم — إظهار مفتاح الاسترداد
+</string>
+    <string name="security_recovery_code_title">
+مفتاح استرداد الأمان
+</string>
+    <string name="security_recovery_code_body">
+اكتب هذا المفتاح. إنها الطريقة الوحيدة لفتح UFM إذا نسيت رقم التعريف الشخصي أو كلمة المرور.
+</string>
+    <string name="security_recovery_code_copy">
+نسخ مفتاح الاسترداد
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+تم نسخ مفتاح الاسترداد. سيتم مسح الحافظة تلقائيًا خلال 60 ثانية للأمان.
+</string>
+    <string name="security_recovery_code_hint">
+مفتاح مكون من 16 حرفًا
+</string>
+    <string name="security_recovery_entry_title">
+أدخل مفتاح الاسترداد
+</string>
+    <string name="security_recovery_entry_subtitle">
+اكتب مفتاح الاسترداد المكون من 16 حرفًا لاستعادة الوصول وإعادة تعيين بيانات الاعتماد الخاصة بك
+</string>
+    <string name="security_recovery_success">
+تم التحقق من مفتاح الاسترداد بنجاح
+</string>
+    <string name="security_unlock_enter_pin">
+أدخل رقم التعريف الشخصي لفتح القفل
+</string>
+    <string name="security_unlock_enter_password">
+أدخل كلمة المرور لفتح
+</string>
+    <string name="security_unlock_forgot_credential">
+هل نسيت رقم التعريف الشخصي أو كلمة المرور؟ أدخل مفتاح الاسترداد
+</string>
+    <string name="security_unlock_biometric_prompt">
+المس المستشعر أو انظر إلى الكاميرا
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+انقر للمصادقة
+</string>
+    <string name="security_unlock_use_device_lock">
+استخدم رقم التعريف الشخصي/النمط للجهاز
+</string>
+    <string name="security_unlock_invalid_pin">
+رقم التعريف الشخصي غير صحيح. %1$d من المحاولات المتبقية
+</string>
+    <string name="security_unlock_invalid_password">
+كلمة مرور غير صحيحة. %1$d من المحاولات المتبقية
+</string>
+    <string name="security_unlock_invalid_password_short">
+كلمة مرور غير صحيحة
+</string>
+    <string name="security_unlock_too_many_attempts">
+الكثير من المحاولات الفاشلة
+</string>
+    <string name="security_unlock_try_again_after_timer">
+لدواعي الأمان، حاول مرة أخرى بعد انتهاء صلاحية المؤقت
+</string>
+    <string name="icon_settings_security">
+حماية
+</string>
+    <string name="confirm">
+يتأكد
+</string>
+    <string name="unlock">
+فتح
+</string>
+    <string name="field_cannot_be_empty">
+لا يمكن أن يكون الحقل فارغًا
+</string>
 </resources>
 
 

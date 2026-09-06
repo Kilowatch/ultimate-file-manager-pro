@@ -13646,6 +13646,211 @@ No se pudieron guardar los cambios de vuelta al almacenamiento raíz
     <string name="root_staging_error">
 No se pudo preparar el archivo raíz para una aplicación externa
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+Seguridad
+</string>
+    <string name="settings_security_app_lock_title">
+Bloqueo de aplicaciones
+</string>
+    <string name="settings_security_app_lock_subtitle">
+Requerir autenticación para abrir Ultimate File Manager Pro
+</string>
+    <string name="settings_security_method_title">
+Método de autenticación
+</string>
+    <string name="settings_security_method_picker_title">
+Elija el método de seguridad
+</string>
+    <string name="settings_security_method_picker_subtitle">
+Selecciona cómo quieres proteger tus archivos
+</string>
+    <string name="settings_security_method_none">
+Ninguno
+</string>
+    <string name="settings_security_method_pin">
+PIN de 4 dígitos
+</string>
+    <string name="settings_security_method_pin_desc">
+Desbloqueo rápido del teclado numérico
+</string>
+    <string name="settings_security_method_password">
+Contraseña personalizada
+</string>
+    <string name="settings_security_method_password_desc">
+Frase alfanumérica con letras y símbolos.
+</string>
+    <string name="settings_security_method_biometric">
+Biometría/bloqueo de dispositivo
+</string>
+    <string name="settings_security_method_biometric_desc">
+Huella digital, Desbloqueo facial o Patrón
+</string>
+    <string name="settings_security_biometric_unavailable">
+Biometría no disponible en este dispositivo
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+No hay datos biométricos ni bloqueo del dispositivo configurados en la configuración de Android
+</string>
+    <string name="settings_security_change_pin">
+Cambiar PIN
+</string>
+    <string name="settings_security_change_pin_subtitle">
+Actualice su PIN de seguridad actual de 4 dígitos
+</string>
+    <string name="settings_security_change_password">
+Cambiar la contraseña
+</string>
+    <string name="settings_security_change_password_subtitle">
+Actualice su contraseña alfanumérica personalizada
+</string>
+    <string name="settings_security_verify_old_pin">
+Ingrese su PIN actual de 4 dígitos para continuar
+</string>
+    <string name="settings_security_verify_old_password_title">
+Verificar contraseña actual
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+Ingrese su antigua contraseña antes de cambiarla
+</string>
+    <string name="settings_security_disable_pin_title">
+Deshabilitar el bloqueo de aplicaciones
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+Ingrese su PIN de 4 dígitos para desactivar el bloqueo de aplicaciones
+</string>
+    <string name="settings_security_disable_password_title">
+Deshabilitar el bloqueo de aplicaciones
+</string>
+    <string name="settings_security_disable_password_subtitle">
+Ingrese su contraseña para desactivar el bloqueo de aplicaciones
+</string>
+    <string name="settings_security_disable_biometric_title">
+Deshabilitar el bloqueo de aplicaciones
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+Autenticarse para desactivar el bloqueo de aplicaciones
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+Ingrese un PIN de 4 dígitos para proteger UFM
+</string>
+    <string name="settings_security_password_title">
+Establecer contraseña
+</string>
+    <string name="settings_security_password_subtitle">
+Ingrese una contraseña segura para UFM
+</string>
+    <string name="settings_security_password_create_title">
+Crear contraseña
+</string>
+    <string name="settings_security_password_create_subtitle">
+Ingrese una contraseña alfanumérica segura (al menos 4 caracteres)
+</string>
+    <string name="settings_security_password_confirm_title">
+confirmar Contraseña
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+Vuelva a ingresar su contraseña para confirmar
+</string>
+    <string name="settings_security_lock_frequency">
+Frecuencia de bloqueo
+</string>
+    <string name="settings_security_lock_fresh_open">
+Solo en abierto nuevo/nuevo
+</string>
+    <string name="settings_security_lock_immediately">
+Inmediatamente en segundo plano
+</string>
+    <string name="settings_security_lock_1min">
+Después de 1 minuto
+</string>
+    <string name="settings_security_lock_5min">
+Después de 5 minutos
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+Seleccionar frecuencia de bloqueo
+</string>
+    <string name="security_warning_title">
+Aviso de seguridad importante
+</string>
+    <string name="security_warning_message">
+Si olvida su PIN o contraseña y pierde su clave de recuperación, quedará bloqueado permanentemente de Ultimate File Manager Pro.\n
+\n
+Ni KiloWatch ni nadie más podrá recuperar sus credenciales ni desbloquear sus archivos. Asegúrese de guardar su clave de recuperación en un lugar seguro.
+</string>
+    <string name="security_warning_confirm">
+Entiendo: Mostrar clave de recuperación
+</string>
+    <string name="security_recovery_code_title">
+Clave de recuperación de seguridad
+</string>
+    <string name="security_recovery_code_body">
+Anota esta clave. Es la ÚNICA forma de desbloquear UFM si olvida su PIN o Contraseña.
+</string>
+    <string name="security_recovery_code_copy">
+Copiar clave de recuperación
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+Clave de recuperación copiada. El portapapeles se borrará automáticamente en 60 segundos por seguridad.
+</string>
+    <string name="security_recovery_code_hint">
+Clave de 16 caracteres
+</string>
+    <string name="security_recovery_entry_title">
+Ingrese la clave de recuperación
+</string>
+    <string name="security_recovery_entry_subtitle">
+Escriba su clave de recuperación de 16 caracteres para recuperar el acceso y restablecer sus credenciales
+</string>
+    <string name="security_recovery_success">
+Clave de recuperación verificada exitosamente
+</string>
+    <string name="security_unlock_enter_pin">
+Ingrese el PIN para desbloquear
+</string>
+    <string name="security_unlock_enter_password">
+Ingrese la contraseña para desbloquear
+</string>
+    <string name="security_unlock_forgot_credential">
+¿Olvidó su PIN o contraseña? Ingrese la clave de recuperación
+</string>
+    <string name="security_unlock_biometric_prompt">
+Toque el sensor o mire a la cámara
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+Toque para autenticar
+</string>
+    <string name="security_unlock_use_device_lock">
+Usar PIN/patrón del dispositivo
+</string>
+    <string name="security_unlock_invalid_pin">
+PIN incorrecto. Quedan %1$d intentos
+</string>
+    <string name="security_unlock_invalid_password">
+Contraseña incorrecta. Quedan %1$d intentos
+</string>
+    <string name="security_unlock_invalid_password_short">
+Contraseña incorrecta
+</string>
+    <string name="security_unlock_too_many_attempts">
+Demasiados intentos fallidos
+</string>
+    <string name="security_unlock_try_again_after_timer">
+Por tu seguridad, inténtalo de nuevo después de que expire el temporizador.
+</string>
+    <string name="icon_settings_security">
+Security
+</string>
+    <string name="confirm">
+Confirmar
+</string>
+    <string name="unlock">
+Desbloquear
+</string>
+    <string name="field_cannot_be_empty">
+El campo no puede estar vacío
+</string>
 </resources>
 
 

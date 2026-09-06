@@ -76,6 +76,7 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
     // applied per-activity at creation time, so every activity must re-create to
     // pick up the new palette, not just the current screen.
     private val aliveActivities = java.util.concurrent.CopyOnWriteArraySet<android.app.Activity>()
+    private var startedActivityCount = 0
 
     override fun onCreate() {
         // ── Security provider setup ───────────────────────────────────────────────────
@@ -144,6 +145,16 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize recycle bin manager", e)
         }
+        try {
+            za.kilowatch.ultimatefilemanager.security.AppSecurityManager.getInstance(this)
+            androidx.lifecycle.ProcessLifecycleOwner.get().lifecycle.addObserver(object : androidx.lifecycle.DefaultLifecycleObserver {
+                override fun onStop(owner: androidx.lifecycle.LifecycleOwner) {
+                    za.kilowatch.ultimatefilemanager.security.AppSecurityManager.getInstance(this@UfmApplication).onAppEnteredBackground()
+                }
+            })
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize AppSecurityManager or its lifecycle observer", e)
+        }
 
         // Apply Material You Dynamic Colors — adapts the app's color scheme to the
         // user's wallpaper on Android 12+ (API 31+), gated to non-TV devices with
@@ -197,8 +208,25 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                     }
                 }
             }
-            override fun onActivityStarted(activity: android.app.Activity) {}
+            override fun onActivityStarted(activity: android.app.Activity) {
+                startedActivityCount++
+            }
             override fun onActivityResumed(activity: android.app.Activity) {
+                // Check if Mobile Security App Lock should be prompted
+                if (!activity.isFinishing &&
+                    activity !is za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity &&
+                    activity !is za.kilowatch.ultimatefilemanager.onboarding.LanguageWelcomeActivity &&
+                    activity !is za.kilowatch.ultimatefilemanager.onboarding.PolicyWelcomeActivity) {
+                    val secManager = za.kilowatch.ultimatefilemanager.security.AppSecurityManager.getInstance(this@UfmApplication)
+                    if (secManager.shouldPromptLock(activity)) {
+                        val intent = android.content.Intent(activity, za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity::class.java).apply {
+                            addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        }
+                        activity.startActivity(intent)
+                        return
+                    }
+                }
+
                 val localeHelper = za.kilowatch.ultimatefilemanager.settings.LocaleHelper
                 val fontHelper  = za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 
@@ -253,7 +281,15 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                 }
             }
             override fun onActivityPaused(activity: android.app.Activity) {}
-            override fun onActivityStopped(activity: android.app.Activity) {}
+            override fun onActivityStopped(activity: android.app.Activity) {
+                startedActivityCount--
+                if (startedActivityCount <= 0) {
+                    startedActivityCount = 0
+                    if (!activity.isChangingConfigurations && activity !is za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity) {
+                        za.kilowatch.ultimatefilemanager.security.AppSecurityManager.getInstance(this@UfmApplication).onAppEnteredBackground()
+                    }
+                }
+            }
             override fun onActivitySaveInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {}
             override fun onActivityDestroyed(activity: android.app.Activity) { aliveActivities.remove(activity) }
         })
@@ -422,6 +458,9 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
+        if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+            za.kilowatch.ultimatefilemanager.security.AppSecurityManager.getInstance(this).onAppEnteredBackground()
+        }
         if (level == ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL) {
             Log.d(TAG, "Low memory — no cleanup needed (hard deletes, no orphan rows)")
         }

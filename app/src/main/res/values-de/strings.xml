@@ -13634,6 +13634,211 @@ Prüfsummeneinstellungen
     <string name="root_staging_error">
 Die Root-Datei kann nicht für eine externe App vorbereitet werden
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+Sicherheit
+</string>
+    <string name="settings_security_app_lock_title">
+App Lock
+</string>
+    <string name="settings_security_app_lock_subtitle">
+Zum Öffnen von Ultimate File Manager Pro ist eine Authentifizierung erforderlich
+</string>
+    <string name="settings_security_method_title">
+Authentication Method
+</string>
+    <string name="settings_security_method_picker_title">
+Choose Security Method
+</string>
+    <string name="settings_security_method_picker_subtitle">
+Wählen Sie aus, wie Sie Ihre Dateien schützen möchten
+</string>
+    <string name="settings_security_method_none">
+Keiner
+</string>
+    <string name="settings_security_method_pin">
+4-stellige PIN
+</string>
+    <string name="settings_security_method_pin_desc">
+Schnelles Entsperren des Ziffernblocks
+</string>
+    <string name="settings_security_method_password">
+Benutzerdefiniertes Passwort
+</string>
+    <string name="settings_security_method_password_desc">
+Alphanumerische Phrase mit Buchstaben und Symbolen
+</string>
+    <string name="settings_security_method_biometric">
+Biometrie/Gerätesperre
+</string>
+    <string name="settings_security_method_biometric_desc">
+Fingerabdruck, Gesichtsentsperrung oder Muster
+</string>
+    <string name="settings_security_biometric_unavailable">
+Biometrie ist auf diesem Gerät nicht verfügbar
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+In den Android-Einstellungen sind weder biometrische Daten noch eine Gerätesperre eingerichtet
+</string>
+    <string name="settings_security_change_pin">
+PIN ändern
+</string>
+    <string name="settings_security_change_pin_subtitle">
+Aktualisieren Sie Ihre aktuelle 4-stellige Sicherheits-PIN
+</string>
+    <string name="settings_security_change_password">
+Kennwort ändern
+</string>
+    <string name="settings_security_change_password_subtitle">
+Aktualisieren Sie Ihr benutzerdefiniertes alphanumerisches Passwort
+</string>
+    <string name="settings_security_verify_old_pin">
+Geben Sie Ihre aktuelle 4-stellige PIN ein, um fortzufahren
+</string>
+    <string name="settings_security_verify_old_password_title">
+Überprüfen Sie das aktuelle Passwort
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+Geben Sie Ihr altes Passwort ein, bevor Sie es ändern
+</string>
+    <string name="settings_security_disable_pin_title">
+Deaktivieren Sie die App-Sperre
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+Geben Sie Ihre 4-stellige PIN ein, um die App-Sperre zu deaktivieren
+</string>
+    <string name="settings_security_disable_password_title">
+Deaktivieren Sie die App-Sperre
+</string>
+    <string name="settings_security_disable_password_subtitle">
+Geben Sie Ihr Passwort ein, um die App-Sperre zu deaktivieren
+</string>
+    <string name="settings_security_disable_biometric_title">
+Deaktivieren Sie die App-Sperre
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+Authentifizieren Sie sich, um die App-Sperre zu deaktivieren
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+Geben Sie eine 4-stellige PIN ein, um UFM zu sichern
+</string>
+    <string name="settings_security_password_title">
+Passwort festlegen
+</string>
+    <string name="settings_security_password_subtitle">
+Geben Sie ein sicheres Passwort für UFM ein
+</string>
+    <string name="settings_security_password_create_title">
+Passwort erstellen
+</string>
+    <string name="settings_security_password_create_subtitle">
+Geben Sie ein sicheres alphanumerisches Passwort ein (mindestens 4 Zeichen)
+</string>
+    <string name="settings_security_password_confirm_title">
+Passwort bestätigen
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+Geben Sie Ihr Passwort zur Bestätigung erneut ein
+</string>
+    <string name="settings_security_lock_frequency">
+Sperrfrequenz
+</string>
+    <string name="settings_security_lock_fresh_open">
+Nur bei neuen/frisch geöffneten Produkten
+</string>
+    <string name="settings_security_lock_immediately">
+Sofort im Hintergrund
+</string>
+    <string name="settings_security_lock_1min">
+Nach 1 Minute
+</string>
+    <string name="settings_security_lock_5min">
+Nach 5 Minuten
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+Wählen Sie Sperrhäufigkeit aus
+</string>
+    <string name="security_warning_title">
+Wichtiger Sicherheitshinweis
+</string>
+    <string name="security_warning_message">
+Wenn Sie Ihre PIN oder Ihr Passwort vergessen und Ihren Wiederherstellungsschlüssel verlieren, werden Sie dauerhaft von Ultimate File Manager Pro ausgeschlossen.\n
+\n
+Weder KiloWatch noch jemand anderes kann Ihre Anmeldeinformationen wiederherstellen oder Ihre Dateien entsperren. Stellen Sie sicher, dass Sie Ihren Wiederherstellungsschlüssel an einem sicheren Ort aufbewahren.
+</string>
+    <string name="security_warning_confirm">
+Ich verstehe – Wiederherstellungsschlüssel anzeigen
+</string>
+    <string name="security_recovery_code_title">
+Sicherheitswiederherstellungsschlüssel
+</string>
+    <string name="security_recovery_code_body">
+Notieren Sie sich diesen Schlüssel. Dies ist die EINZIGE Möglichkeit, UFM zu entsperren, wenn Sie Ihre PIN oder Ihr Passwort vergessen.
+</string>
+    <string name="security_recovery_code_copy">
+Wiederherstellungsschlüssel kopieren
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+Wiederherstellungsschlüssel kopiert. Aus Sicherheitsgründen wird die Zwischenablage nach 60 Sekunden automatisch gelöscht.
+</string>
+    <string name="security_recovery_code_hint">
+16-stelliger Schlüssel
+</string>
+    <string name="security_recovery_entry_title">
+Geben Sie den Wiederherstellungsschlüssel ein
+</string>
+    <string name="security_recovery_entry_subtitle">
+Geben Sie Ihren 16-stelligen Wiederherstellungsschlüssel ein, um wieder Zugriff zu erhalten und Ihre Anmeldeinformationen zurückzusetzen
+</string>
+    <string name="security_recovery_success">
+Wiederherstellungsschlüssel erfolgreich überprüft
+</string>
+    <string name="security_unlock_enter_pin">
+Geben Sie zum Entsperren die PIN ein
+</string>
+    <string name="security_unlock_enter_password">
+Geben Sie zum Entsperren das Passwort ein
+</string>
+    <string name="security_unlock_forgot_credential">
+PIN oder Passwort vergessen? Geben Sie den Wiederherstellungsschlüssel ein
+</string>
+    <string name="security_unlock_biometric_prompt">
+Berühren Sie den Sensor oder schauen Sie in die Kamera
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+Tippen Sie auf, um sich zu authentifizieren
+</string>
+    <string name="security_unlock_use_device_lock">
+Verwenden Sie die Geräte-PIN/das Muster
+</string>
+    <string name="security_unlock_invalid_pin">
+Falsche PIN. %1$d Versuche verbleiben
+</string>
+    <string name="security_unlock_invalid_password">
+Falsches Passwort. %1$d Versuche verbleiben
+</string>
+    <string name="security_unlock_invalid_password_short">
+Falsches Passwort
+</string>
+    <string name="security_unlock_too_many_attempts">
+Zu viele gescheiterte Versuche
+</string>
+    <string name="security_unlock_try_again_after_timer">
+Versuchen Sie es zu Ihrer Sicherheit erneut, nachdem der Timer abgelaufen ist
+</string>
+    <string name="icon_settings_security">
+Sicherheit
+</string>
+    <string name="confirm">
+Bestätigen
+</string>
+    <string name="unlock">
+Entsperren
+</string>
+    <string name="field_cannot_be_empty">
+Feld darf nicht leer sein
+</string>
 </resources>
 
 

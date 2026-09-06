@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.8] — 2026-09-05
 
 ### Added
+- Enterprise-Grade Mobile Security & App Lock:
+  - Exclusive to Mobile devices (strictly disabled on Android TV), disabled by default.
+  - Mutually exclusive security modes: 4-Digit PIN, Custom Alphanumeric Password, or Device Biometrics (Fingerprint, Face Unlock, Device PIN/Pattern).
+  - Hardware & enrollment check automatically detects biometric capability and dims/disables the option when unavailable or not configured in Android Settings.
+  - Setup flow provides an Irreversible Lockout Warning dialog and generates a 16-character alphanumeric Recovery Key with a 60-second clipboard auto-clear security rule (matching Encrypted Vault).
+  - Modify credential flow requiring confirmation with current PIN or Password before updating.
+  - Secure disable verification requiring active PIN, password, or biometric authorization before clearing credentials.
+  - Dedicated full-screen `SecurityUnlockActivity` protected by `FLAG_SECURE` (blocks screenshot and recents preview leakage) and back-button minimization.
+  - Anti-brute-force rate limiting: 5 consecutive failed attempts trigger an automatic 30-second lockout timer.
+  - "Forgot PIN or Password? Enter Recovery Key" reset flow allowing credential restoration without app reinstallation.
+  - Lock frequency options: "On new / fresh open only" (default), "Immediately on background", "After 1 minute", and "After 5 minutes".
+  - Created professional cyber-shield padlock vector (`ic_security_lock`) registered across icon customization, export, and settings.
+  - Disclosed App Lock storage specifications and irreversible lockout policies in English strings, `WEBSITE/UFMPrivacyPolicy.html`, and `WEBSITE/UFMTerms.html`.
 - Mobile Header Options Menu: Added "Copy Folder Path" option between "Twin Window" and "Settings" when browsing Local, SAF, Network, and Online storages, instantly copying the full folder path to the clipboard with confirmation feedback.
 - Checksum & Hash Verification Tools for Mobile and Android TV:
   - Generate CRC32, MD5, SHA-1, SHA-256, and SHA-512 hashes for single and multiple files in a single pass.

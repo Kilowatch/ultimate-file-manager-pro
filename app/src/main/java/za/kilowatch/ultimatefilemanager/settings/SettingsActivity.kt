@@ -17,11 +17,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.security.AppSecurityManager
+import za.kilowatch.ultimatefilemanager.security.SecurityDialogHelper
+import za.kilowatch.ultimatefilemanager.security.SecurityMode
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -34,6 +39,24 @@ class SettingsActivity : AppCompatActivity() {
     // Persisted through recreate() to prevent looping when restartPending is still true.
     private var handledFontChange = false
     private var handledLocaleChange = false
+
+    // Mobile Security & App Lock views
+    private var layoutSectionSecurity: View? = null
+    private var cardSecurityEnabled: View? = null
+    private var switchSecurityEnabled: SwitchMaterial? = null
+    private var txtSecurityEnabledSubtitle: TextView? = null
+    private var dividerSecurityMethod: View? = null
+    private var cardSecurityMethod: View? = null
+    private var imgSecurityMethodIcon: ImageView? = null
+    private var txtSecurityMethodSubtitle: TextView? = null
+    private var dividerChangeCredential: View? = null
+    private var cardChangeCredential: View? = null
+    private var imgChangeCredentialIcon: ImageView? = null
+    private var txtChangeCredentialTitle: TextView? = null
+    private var txtChangeCredentialSubtitle: TextView? = null
+    private var dividerAutoLockTimeout: View? = null
+    private var cardAutoLockTimeout: View? = null
+    private var txtAutoLockTimeoutSubtitle: TextView? = null
 
     private lateinit var switchAnalytics: SwitchMaterial
     private lateinit var txtAnalyticsSubtitle: TextView
@@ -816,6 +839,9 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, AutoBackupActivity::class.java))
         }
 
+        // Mobile Security & App Lock (Mobile only)
+        setupSecuritySettings()
+
         // Initialize settings search view bindings
         cardSearchContainer = findViewById(R.id.cardSearchContainer)
         edtSettingsSearch = findViewById(R.id.edtSettingsSearch)
@@ -1177,6 +1203,12 @@ class SettingsActivity : AppCompatActivity() {
 
         // Refresh Root Access toggle & status
         syncRootAccessStatus()
+
+        // Refresh Mobile Security settings
+        if (!isTv && layoutSectionSecurity != null) {
+            val secManager = AppSecurityManager.getInstance(this)
+            updateSecurityUi(secManager.isSecurityEnabled(), secManager.getSecurityMode())
+        }
     }
 
     private fun updateApkExtractSubtitle() {
@@ -2000,6 +2032,7 @@ class SettingsActivity : AppCompatActivity() {
         data class CardIcon(val cardId: Int, val iconId: String, val defaultRes: Int)
 
         val cards = listOf(
+            CardIcon(R.id.cardSecurityEnabled, "settings_security", R.drawable.ic_security_lock),
             CardIcon(R.id.cardSettingsSearch, "settings_search_bar", R.drawable.ic_search),
             CardIcon(R.id.cardDefaultStartScreen, "settings_default_start_screen", R.drawable.ic_storage_internal),
             CardIcon(R.id.cardLanguage, "settings_language", R.drawable.ic_language),
@@ -2379,5 +2412,270 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         applyToViewGroup(list)
+    }
+
+    // ── Mobile Security & App Lock Implementation ───────────────────────────
+
+    private fun setupSecuritySettings() {
+        layoutSectionSecurity = findViewById(R.id.layoutSectionSecurity)
+        if (isTv) {
+            layoutSectionSecurity?.visibility = View.GONE
+            return
+        }
+
+        cardSecurityEnabled = findViewById(R.id.cardSecurityEnabled)
+        switchSecurityEnabled = findViewById(R.id.switchSecurityEnabled)
+        txtSecurityEnabledSubtitle = findViewById(R.id.txtSecurityEnabledSubtitle)
+        dividerSecurityMethod = findViewById(R.id.dividerSecurityMethod)
+        cardSecurityMethod = findViewById(R.id.cardSecurityMethod)
+        imgSecurityMethodIcon = findViewById(R.id.imgSecurityMethodIcon)
+        txtSecurityMethodSubtitle = findViewById(R.id.txtSecurityMethodSubtitle)
+        dividerChangeCredential = findViewById(R.id.dividerChangeCredential)
+        cardChangeCredential = findViewById(R.id.cardChangeCredential)
+        imgChangeCredentialIcon = findViewById(R.id.imgChangeCredentialIcon)
+        txtChangeCredentialTitle = findViewById(R.id.txtChangeCredentialTitle)
+        txtChangeCredentialSubtitle = findViewById(R.id.txtChangeCredentialSubtitle)
+        dividerAutoLockTimeout = findViewById(R.id.dividerAutoLockTimeout)
+        cardAutoLockTimeout = findViewById(R.id.cardAutoLockTimeout)
+        txtAutoLockTimeoutSubtitle = findViewById(R.id.txtAutoLockTimeoutSubtitle)
+
+        val secManager = AppSecurityManager.getInstance(this)
+        updateSecurityUi(secManager.isSecurityEnabled(), secManager.getSecurityMode())
+
+        cardSecurityEnabled?.setOnClickListener {
+            toggleSecurityLock()
+        }
+
+        cardSecurityMethod?.setOnClickListener {
+            // Re-authenticate before allowing method change
+            SecurityDialogHelper.showDisableConfirmDialog(
+                activity = this,
+                scope = lifecycleScope,
+                onConfirmed = {
+                    SecurityDialogHelper.showMethodPicker(
+                        context = this,
+                        onModeSelected = { newMode ->
+                            when (newMode) {
+                                SecurityMode.PIN -> {
+                                    SecurityDialogHelper.showSetPinFlow(
+                                        context = this,
+                                        scope = lifecycleScope,
+                                        onConfirmed = { updateSecurityUi(true, SecurityMode.PIN) },
+                                        onCancel = { updateSecurityUi(false, SecurityMode.NONE) }
+                                    )
+                                }
+                                SecurityMode.PASSWORD -> {
+                                    SecurityDialogHelper.showSetPasswordFlow(
+                                        context = this,
+                                        scope = lifecycleScope,
+                                        onConfirmed = { updateSecurityUi(true, SecurityMode.PASSWORD) },
+                                        onCancel = { updateSecurityUi(false, SecurityMode.NONE) }
+                                    )
+                                }
+                                SecurityMode.BIOMETRIC -> {
+                                    lifecycleScope.launch {
+                                        secManager.saveBiometricMode()
+                                        updateSecurityUi(true, SecurityMode.BIOMETRIC)
+                                    }
+                                }
+                                SecurityMode.NONE -> {
+                                    updateSecurityUi(false, SecurityMode.NONE)
+                                }
+                            }
+                        },
+                        onCancel = {
+                            updateSecurityUi(false, SecurityMode.NONE)
+                        }
+                    )
+                },
+                onCancel = {}
+            )
+        }
+
+        cardChangeCredential?.setOnClickListener {
+            val mode = secManager.getSecurityMode()
+            if (mode == SecurityMode.PIN) {
+                SecurityDialogHelper.showModifyPinFlow(
+                    context = this,
+                    scope = lifecycleScope,
+                    onConfirmed = {
+                        Toast.makeText(this, R.string.settings_security_change_pin, Toast.LENGTH_SHORT).show()
+                    },
+                    onCancel = {}
+                )
+            } else if (mode == SecurityMode.PASSWORD) {
+                SecurityDialogHelper.showModifyPasswordFlow(
+                    context = this,
+                    scope = lifecycleScope,
+                    onConfirmed = {
+                        Toast.makeText(this, R.string.settings_security_change_password, Toast.LENGTH_SHORT).show()
+                    },
+                    onCancel = {}
+                )
+            }
+        }
+
+        cardAutoLockTimeout?.setOnClickListener {
+            showLockTimeoutDialog()
+        }
+    }
+
+    private fun toggleSecurityLock() {
+        val secManager = AppSecurityManager.getInstance(this)
+        if (secManager.isSecurityEnabled()) {
+            SecurityDialogHelper.showDisableConfirmDialog(
+                activity = this,
+                scope = lifecycleScope,
+                onConfirmed = {
+                    updateSecurityUi(false, SecurityMode.NONE)
+                    Toast.makeText(this, R.string.settings_security_app_lock_title, Toast.LENGTH_SHORT).show()
+                },
+                onCancel = {
+                    updateSecurityUi(secManager.isSecurityEnabled(), secManager.getSecurityMode())
+                }
+            )
+        } else {
+            SecurityDialogHelper.showMethodPicker(
+                context = this,
+                onModeSelected = { selectedMode ->
+                    when (selectedMode) {
+                        SecurityMode.PIN -> {
+                            SecurityDialogHelper.showSetPinFlow(
+                                context = this,
+                                scope = lifecycleScope,
+                                onConfirmed = {
+                                    updateSecurityUi(true, SecurityMode.PIN)
+                                },
+                                onCancel = {
+                                    updateSecurityUi(secManager.isSecurityEnabled(), secManager.getSecurityMode())
+                                }
+                            )
+                        }
+                        SecurityMode.PASSWORD -> {
+                            SecurityDialogHelper.showSetPasswordFlow(
+                                context = this,
+                                scope = lifecycleScope,
+                                onConfirmed = {
+                                    updateSecurityUi(true, SecurityMode.PASSWORD)
+                                },
+                                onCancel = {
+                                    updateSecurityUi(secManager.isSecurityEnabled(), secManager.getSecurityMode())
+                                }
+                            )
+                        }
+                        SecurityMode.BIOMETRIC -> {
+                            lifecycleScope.launch {
+                                secManager.saveBiometricMode()
+                                updateSecurityUi(true, SecurityMode.BIOMETRIC)
+                            }
+                        }
+                        SecurityMode.NONE -> {
+                            updateSecurityUi(false, SecurityMode.NONE)
+                        }
+                    }
+                },
+                onCancel = {
+                    updateSecurityUi(secManager.isSecurityEnabled(), secManager.getSecurityMode())
+                }
+            )
+        }
+    }
+
+    private fun updateSecurityUi(enabled: Boolean, mode: SecurityMode) {
+        switchSecurityEnabled?.isChecked = enabled
+
+        if (enabled) {
+            dividerSecurityMethod?.visibility = View.VISIBLE
+            cardSecurityMethod?.visibility = View.VISIBLE
+            dividerAutoLockTimeout?.visibility = View.VISIBLE
+            cardAutoLockTimeout?.visibility = View.VISIBLE
+
+            when (mode) {
+                SecurityMode.PIN -> {
+                    txtSecurityMethodSubtitle?.text = getString(R.string.settings_security_method_pin)
+                    imgSecurityMethodIcon?.setImageResource(R.drawable.ic_dialpad)
+                    dividerChangeCredential?.visibility = View.VISIBLE
+                    cardChangeCredential?.visibility = View.VISIBLE
+                    txtChangeCredentialTitle?.setText(R.string.settings_security_change_pin)
+                    txtChangeCredentialSubtitle?.setText(R.string.settings_security_change_pin_subtitle)
+                }
+                SecurityMode.PASSWORD -> {
+                    txtSecurityMethodSubtitle?.text = getString(R.string.settings_security_method_password)
+                    imgSecurityMethodIcon?.setImageResource(R.drawable.ic_edit)
+                    dividerChangeCredential?.visibility = View.VISIBLE
+                    cardChangeCredential?.visibility = View.VISIBLE
+                    txtChangeCredentialTitle?.setText(R.string.settings_security_change_password)
+                    txtChangeCredentialSubtitle?.setText(R.string.settings_security_change_password_subtitle)
+                }
+                SecurityMode.BIOMETRIC -> {
+                    txtSecurityMethodSubtitle?.text = getString(R.string.settings_security_method_biometric)
+                    imgSecurityMethodIcon?.setImageResource(R.drawable.ic_fingerprint)
+                    dividerChangeCredential?.visibility = View.GONE
+                    cardChangeCredential?.visibility = View.GONE
+                }
+                SecurityMode.NONE -> {
+                    dividerChangeCredential?.visibility = View.GONE
+                    cardChangeCredential?.visibility = View.GONE
+                }
+            }
+        } else {
+            dividerSecurityMethod?.visibility = View.GONE
+            cardSecurityMethod?.visibility = View.GONE
+            dividerChangeCredential?.visibility = View.GONE
+            cardChangeCredential?.visibility = View.GONE
+            dividerAutoLockTimeout?.visibility = View.GONE
+            cardAutoLockTimeout?.visibility = View.GONE
+        }
+
+        val timeout = AppSecurityManager.getInstance(this).getLockTimeout()
+        txtAutoLockTimeoutSubtitle?.text = when (timeout) {
+            AppSecurityManager.TIMEOUT_IMMEDIATELY -> getString(R.string.settings_security_lock_immediately)
+            AppSecurityManager.TIMEOUT_ONE_MINUTE -> getString(R.string.settings_security_lock_1min)
+            AppSecurityManager.TIMEOUT_FIVE_MINUTES -> getString(R.string.settings_security_lock_5min)
+            else -> getString(R.string.settings_security_lock_fresh_open)
+        }
+
+        // Keep original visibilities updated for settings search filtering
+        fun recordVis(v: View?) {
+            if (v != null) originalVisibilities[v] = v.visibility
+        }
+        recordVis(dividerSecurityMethod)
+        recordVis(cardSecurityMethod)
+        recordVis(dividerChangeCredential)
+        recordVis(cardChangeCredential)
+        recordVis(dividerAutoLockTimeout)
+        recordVis(cardAutoLockTimeout)
+    }
+
+    private fun showLockTimeoutDialog() {
+        val secManager = AppSecurityManager.getInstance(this)
+        val current = secManager.getLockTimeout()
+        val options = arrayOf(
+            getString(R.string.settings_security_lock_fresh_open),
+            getString(R.string.settings_security_lock_immediately),
+            getString(R.string.settings_security_lock_1min),
+            getString(R.string.settings_security_lock_5min)
+        )
+        val values = longArrayOf(
+            AppSecurityManager.TIMEOUT_FRESH_OPEN_ONLY,
+            AppSecurityManager.TIMEOUT_IMMEDIATELY,
+            AppSecurityManager.TIMEOUT_ONE_MINUTE,
+            AppSecurityManager.TIMEOUT_FIVE_MINUTES
+        )
+
+        val selectedIndex = values.indexOfFirst { it == current }.let { if (it >= 0) it else 0 }
+
+        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.settings_security_lock_frequency_dialog_title)
+            .setSingleChoiceItems(options, selectedIndex) { dialog, which ->
+                val selectedTimeout = values[which]
+                lifecycleScope.launch {
+                    secManager.setLockTimeout(selectedTimeout)
+                    updateSecurityUi(secManager.isSecurityEnabled(), secManager.getSecurityMode())
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.btn_cancel, null)
+            .show()
     }
 }

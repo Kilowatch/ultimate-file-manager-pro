@@ -149,6 +149,9 @@ class IconPackExportActivity : AppCompatActivity() {
             "settings_network_thumbnails", "settings_cache_copy", "settings_quick_transfer",
             "settings_network_open_cache", "settings_storage_indexer", "settings_root_access", "settings_analytics"
         )
+        if (!isTv) {
+            settingsKeys.add("settings_security")
+        }
         if (isTv) {
             settingsKeys.add("settings_tv_background_server")
         }

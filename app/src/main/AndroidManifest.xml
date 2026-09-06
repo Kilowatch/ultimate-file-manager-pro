@@ -463,6 +463,14 @@
             android:name=".storage.VaultBrowserActivity"
             android:exported="false" />
 
+        <!-- Security App Lock Screen -->
+        <activity
+            android:name=".security.SecurityUnlockActivity"
+            android:exported="false"
+            android:theme="@style/Theme.UltimateFileManager"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:launchMode="singleTop" />
+
 
         <!-- XAPK Install Result Receiver -->
         <receiver

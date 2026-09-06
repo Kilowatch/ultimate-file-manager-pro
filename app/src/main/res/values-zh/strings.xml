@@ -13634,6 +13634,210 @@ SHA-256
     <string name="root_staging_error">
 无法为外部应用准备根目录文件
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+安全
+</string>
+    <string name="settings_security_app_lock_title">
+应用锁
+</string>
+    <string name="settings_security_app_lock_subtitle">
+需要身份验证才能打开 Ultimate File Manager Pro
+</string>
+    <string name="settings_security_method_title">
+认证方式
+</string>
+    <string name="settings_security_method_picker_title">
+选择安全方法
+</string>
+    <string name="settings_security_method_picker_subtitle">
+选择您想要如何保护您的文件
+</string>
+    <string name="settings_security_method_none">
+没有任何
+</string>
+    <string name="settings_security_method_pin">
+4 位 PIN 码
+</string>
+    <string name="settings_security_method_pin_desc">
+快速数字键盘解锁
+</string>
+    <string name="settings_security_method_password">
+自定义密码
+</string>
+    <string name="settings_security_method_password_desc">
+带有字母和符号的字母数字短语
+</string>
+    <string name="settings_security_method_biometric">
+Biometrics / Device Lock
+</string>
+    <string name="settings_security_method_biometric_desc">
+指纹、面部解锁或图案
+</string>
+    <string name="settings_security_biometric_unavailable">
+Biometrics not available on this device
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+Android 设置中未设置生物识别或设备锁定
+</string>
+    <string name="settings_security_change_pin">
+更改密码
+</string>
+    <string name="settings_security_change_pin_subtitle">
+Update your current 4-digit security PIN
+</string>
+    <string name="settings_security_change_password">
+Change Password
+</string>
+    <string name="settings_security_change_password_subtitle">
+Update your custom alphanumeric password
+</string>
+    <string name="settings_security_verify_old_pin">
+输入您当前的 4 位数 PIN 码以继续
+</string>
+    <string name="settings_security_verify_old_password_title">
+Verify Current Password
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+Enter your old password before changing
+</string>
+    <string name="settings_security_disable_pin_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+Enter your 4-digit PIN to turn off App Lock
+</string>
+    <string name="settings_security_disable_password_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_password_subtitle">
+输入密码以关闭应用锁
+</string>
+    <string name="settings_security_disable_biometric_title">
+禁用应用程序锁定
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+验证以关闭应用程序锁定
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+输入 4 位 PIN 码以保护 UFM
+</string>
+    <string name="settings_security_password_title">
+设置密码
+</string>
+    <string name="settings_security_password_subtitle">
+输入 UFM 的安全密码
+</string>
+    <string name="settings_security_password_create_title">
+创建密码
+</string>
+    <string name="settings_security_password_create_subtitle">
+输入安全的字母数字密码（至少 4 个字符）
+</string>
+    <string name="settings_security_password_confirm_title">
+确认密码
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+重新输入您的密码进行确认
+</string>
+    <string name="settings_security_lock_frequency">
+锁定频率
+</string>
+    <string name="settings_security_lock_fresh_open">
+仅限新/新开
+</string>
+    <string name="settings_security_lock_immediately">
+立即出现在背景上
+</string>
+    <string name="settings_security_lock_1min">
+1分钟后
+</string>
+    <string name="settings_security_lock_5min">
+5分钟后
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+选择锁定频率
+</string>
+    <string name="security_warning_title">
+重要安全通知
+</string>
+    <string name="security_warning_message">
+如果您忘记了 PIN 或密码并丢失了恢复密钥，您将被永久锁定，无法使用 Ultimate File Manager Pro。\\​​n\n
+KiloWatch 或其他任何人都无法恢复您的凭据或解锁您的文件。请确保将您的恢复密钥保存在安全可靠的地方。
+</string>
+    <string name="security_warning_confirm">
+我明白 — 显示恢复密钥
+</string>
+    <string name="security_recovery_code_title">
+安全恢复密钥
+</string>
+    <string name="security_recovery_code_body">
+记下这个键。如果您忘记了 PIN 码或密码，这是解锁 UFM 的唯一方法。
+</string>
+    <string name="security_recovery_code_copy">
+复制恢复密钥
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+已复制恢复密钥。为了安全起见，剪贴板将在 60 秒内自动清除。
+</string>
+    <string name="security_recovery_code_hint">
+16 个字符的密钥
+</string>
+    <string name="security_recovery_entry_title">
+输入恢复密钥
+</string>
+    <string name="security_recovery_entry_subtitle">
+输入 16 个字符的恢复密钥以重新获得访问权限并重置您的凭据
+</string>
+    <string name="security_recovery_success">
+恢复密钥验证成功
+</string>
+    <string name="security_unlock_enter_pin">
+输入 PIN 码进行解锁
+</string>
+    <string name="security_unlock_enter_password">
+输入密码解锁
+</string>
+    <string name="security_unlock_forgot_credential">
+忘记 PIN 码或密码？输入恢复密钥
+</string>
+    <string name="security_unlock_biometric_prompt">
+触摸传感器或查看相机
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+点击进行身份验证
+</string>
+    <string name="security_unlock_use_device_lock">
+使用设备 PIN/图案
+</string>
+    <string name="security_unlock_invalid_pin">
+PIN 码不正确。剩余 %1$d 次尝试
+</string>
+    <string name="security_unlock_invalid_password">
+密码不正确。剩余 %1$d 次尝试
+</string>
+    <string name="security_unlock_invalid_password_short">
+密码错误
+</string>
+    <string name="security_unlock_too_many_attempts">
+太多失败的尝试
+</string>
+    <string name="security_unlock_try_again_after_timer">
+为了您的安全，请在计时器到期后重试
+</string>
+    <string name="icon_settings_security">
+安全
+</string>
+    <string name="confirm">
+确认
+</string>
+    <string name="unlock">
+解锁
+</string>
+    <string name="field_cannot_be_empty">
+字段不能为空
+</string>
 </resources>
 
 

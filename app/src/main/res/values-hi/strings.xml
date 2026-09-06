@@ -13634,6 +13634,211 @@ AndroidManifest.xml को डीकोड करने में असमर�
     <string name="root_staging_error">
 बाहरी ऐप के लिए रूट फ़ाइल तैयार करने में असमर्थ
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+सुरक्षा
+</string>
+    <string name="settings_security_app_lock_title">
+ऐप लॉक
+</string>
+    <string name="settings_security_app_lock_subtitle">
+अल्टीमेट फ़ाइल मैनेजर प्रो खोलने के लिए प्रमाणीकरण की आवश्यकता है
+</string>
+    <string name="settings_security_method_title">
+प्रमाणीकरण विधि
+</string>
+    <string name="settings_security_method_picker_title">
+सुरक्षा विधि चुनें
+</string>
+    <string name="settings_security_method_picker_subtitle">
+चुनें कि आप अपनी फ़ाइलों को कैसे सुरक्षित रखना चाहते हैं
+</string>
+    <string name="settings_security_method_none">
+कोई नहीं
+</string>
+    <string name="settings_security_method_pin">
+4-अंकीय पिन
+</string>
+    <string name="settings_security_method_pin_desc">
+तेज़, संख्यात्मक कीपैड अनलॉक
+</string>
+    <string name="settings_security_method_password">
+कस्टम पासवर्ड
+</string>
+    <string name="settings_security_method_password_desc">
+अक्षरों और प्रतीकों के साथ अक्षरांकीय वाक्यांश
+</string>
+    <string name="settings_security_method_biometric">
+बायोमेट्रिक्स/डिवाइस लॉक
+</string>
+    <string name="settings_security_method_biometric_desc">
+फ़िंगरप्रिंट, फ़ेस अनलॉक, या पैटर्न
+</string>
+    <string name="settings_security_biometric_unavailable">
+इस डिवाइस पर बायोमेट्रिक्स उपलब्ध नहीं है
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+No biometrics or device lock set up in Android Settings
+</string>
+    <string name="settings_security_change_pin">
+Change PIN
+</string>
+    <string name="settings_security_change_pin_subtitle">
+अपना वर्तमान 4-अंकीय सुरक्षा पिन अपडेट करें
+</string>
+    <string name="settings_security_change_password">
+पासवर्ड बदलें
+</string>
+    <string name="settings_security_change_password_subtitle">
+अपना कस्टम अल्फ़ान्यूमेरिक पासवर्ड अपडेट करें
+</string>
+    <string name="settings_security_verify_old_pin">
+जारी रखने के लिए अपना वर्तमान 4-अंकीय पिन दर्ज करें
+</string>
+    <string name="settings_security_verify_old_password_title">
+वर्तमान पासवर्ड सत्यापित करें
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+बदलने से पहले अपना पुराना पासवर्ड दर्ज करें
+</string>
+    <string name="settings_security_disable_pin_title">
+ऐप लॉक अक्षम करें
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+ऐप लॉक बंद करने के लिए अपना 4 अंकों का पिन दर्ज करें
+</string>
+    <string name="settings_security_disable_password_title">
+ऐप लॉक अक्षम करें
+</string>
+    <string name="settings_security_disable_password_subtitle">
+ऐप लॉक बंद करने के लिए अपना पासवर्ड दर्ज करें
+</string>
+    <string name="settings_security_disable_biometric_title">
+ऐप लॉक अक्षम करें
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+ऐप लॉक बंद करने के लिए प्रमाणित करें
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+UFM को सुरक्षित करने के लिए 4 अंकों का पिन दर्ज करें
+</string>
+    <string name="settings_security_password_title">
+सांकेतिक शब्द लगना
+</string>
+    <string name="settings_security_password_subtitle">
+यूएफएम के लिए एक सुरक्षित पासवर्ड दर्ज करें
+</string>
+    <string name="settings_security_password_create_title">
+पासवर्ड बनाएं
+</string>
+    <string name="settings_security_password_create_subtitle">
+एक सुरक्षित अल्फ़ान्यूमेरिक पासवर्ड दर्ज करें (कम से कम 4 अक्षर)
+</string>
+    <string name="settings_security_password_confirm_title">
+पासवर्ड की पुष्टि कीजिये
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+पुष्टि करने के लिए अपना पासवर्ड दोबारा दर्ज करें
+</string>
+    <string name="settings_security_lock_frequency">
+लॉक फ़्रीक्वेंसी
+</string>
+    <string name="settings_security_lock_fresh_open">
+केवल नये/ताजा खुले पर
+</string>
+    <string name="settings_security_lock_immediately">
+तुरंत पृष्ठभूमि पर
+</string>
+    <string name="settings_security_lock_1min">
+1 मिनट बाद
+</string>
+    <string name="settings_security_lock_5min">
+5 मिनिट बाद
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+लॉक फ़्रीक्वेंसी चुनें
+</string>
+    <string name="security_warning_title">
+महत्वपूर्ण सुरक्षा सूचना
+</string>
+    <string name="security_warning_message">
+यदि आप अपना पिन या पासवर्ड भूल जाते हैं और अपनी रिकवरी कुंजी खो देते हैं, तो आपको अल्टीमेट फ़ाइल मैनेजर प्रो से स्थायी रूप से लॉक कर दिया जाएगा।\n
+\n
+न तो किलोवॉच और न ही कोई अन्य आपके क्रेडेंशियल्स को पुनर्प्राप्त कर सकता है या आपकी फ़ाइलों को अनलॉक कर सकता है। अपनी पुनर्प्राप्ति कुंजी को सुरक्षित स्थान पर रखना सुनिश्चित करें।
+</string>
+    <string name="security_warning_confirm">
+मैं समझता हूँ - पुनर्प्राप्ति कुंजी दिखाएँ
+</string>
+    <string name="security_recovery_code_title">
+सुरक्षा पुनर्प्राप्ति कुंजी
+</string>
+    <string name="security_recovery_code_body">
+इस कुंजी को लिख लें. यदि आप अपना पिन या पासवर्ड भूल जाते हैं तो यूएफएम को अनलॉक करने का यह एकमात्र तरीका है।
+</string>
+    <string name="security_recovery_code_copy">
+पुनर्प्राप्ति कुंजी कॉपी करें
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+पुनर्प्राप्ति कुंजी की प्रतिलिपि बनाई गई. सुरक्षा के लिए क्लिपबोर्ड 60 सेकंड में स्वचालित रूप से साफ़ हो जाएगा।
+</string>
+    <string name="security_recovery_code_hint">
+16-अक्षर कुंजी
+</string>
+    <string name="security_recovery_entry_title">
+पुनर्प्राप्ति कुंजी दर्ज करें
+</string>
+    <string name="security_recovery_entry_subtitle">
+पहुंच पुनः प्राप्त करने और अपने क्रेडेंशियल रीसेट करने के लिए अपनी 16-वर्ण पुनर्प्राप्ति कुंजी टाइप करें
+</string>
+    <string name="security_recovery_success">
+पुनर्प्राप्ति कुंजी सफलतापूर्वक सत्यापित की गई
+</string>
+    <string name="security_unlock_enter_pin">
+अनलॉक करने के लिए पिन दर्ज करें
+</string>
+    <string name="security_unlock_enter_password">
+अनलॉक करने के लिए पासवर्ड दर्ज करें
+</string>
+    <string name="security_unlock_forgot_credential">
+पिन या पासवर्ड भूल गए? पुनर्प्राप्ति कुंजी दर्ज करें
+</string>
+    <string name="security_unlock_biometric_prompt">
+सेंसर को स्पर्श करें या कैमरे को देखें
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+प्रमाणित करने के लिए टैप करें
+</string>
+    <string name="security_unlock_use_device_lock">
+डिवाइस पिन/पैटर्न का उपयोग करें
+</string>
+    <string name="security_unlock_invalid_pin">
+ग़लत पिन. %1$d प्रयास शेष हैं
+</string>
+    <string name="security_unlock_invalid_password">
+गलत पासवर्ड। %1$d प्रयास शेष हैं
+</string>
+    <string name="security_unlock_invalid_password_short">
+गलत पासवर्ड
+</string>
+    <string name="security_unlock_too_many_attempts">
+कई विफल प्रयास
+</string>
+    <string name="security_unlock_try_again_after_timer">
+आपकी सुरक्षा के लिए, टाइमर समाप्त होने के बाद पुनः प्रयास करें
+</string>
+    <string name="icon_settings_security">
+सुरक्षा
+</string>
+    <string name="confirm">
+पुष्टि करें
+</string>
+    <string name="unlock">
+अनलॉक करें
+</string>
+    <string name="field_cannot_be_empty">
+फ़ील्ड खाली नहीं हो सकती
+</string>
 </resources>
 
 

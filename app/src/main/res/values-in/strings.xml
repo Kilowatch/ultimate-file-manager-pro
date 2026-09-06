@@ -13634,6 +13634,211 @@ Gagal menyimpan perubahan kembali ke penyimpanan root
     <string name="root_staging_error">
 Tidak dapat menyiapkan file root untuk aplikasi eksternal
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+Security
+</string>
+    <string name="settings_security_app_lock_title">
+App Lock
+</string>
+    <string name="settings_security_app_lock_subtitle">
+Require authentication to open Ultimate File Manager Pro
+</string>
+    <string name="settings_security_method_title">
+Authentication Method
+</string>
+    <string name="settings_security_method_picker_title">
+Choose Security Method
+</string>
+    <string name="settings_security_method_picker_subtitle">
+Select how you want to protect your files
+</string>
+    <string name="settings_security_method_none">
+None
+</string>
+    <string name="settings_security_method_pin">
+4-Digit PIN
+</string>
+    <string name="settings_security_method_pin_desc">
+Fast, numeric keypad unlock
+</string>
+    <string name="settings_security_method_password">
+Custom Password
+</string>
+    <string name="settings_security_method_password_desc">
+Alphanumeric phrase with letters and symbols
+</string>
+    <string name="settings_security_method_biometric">
+Biometrics / Device Lock
+</string>
+    <string name="settings_security_method_biometric_desc">
+Fingerprint, Face unlock, or Pattern
+</string>
+    <string name="settings_security_biometric_unavailable">
+Biometrics not available on this device
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+No biometrics or device lock set up in Android Settings
+</string>
+    <string name="settings_security_change_pin">
+Change PIN
+</string>
+    <string name="settings_security_change_pin_subtitle">
+Update your current 4-digit security PIN
+</string>
+    <string name="settings_security_change_password">
+Change Password
+</string>
+    <string name="settings_security_change_password_subtitle">
+Update your custom alphanumeric password
+</string>
+    <string name="settings_security_verify_old_pin">
+Enter your current 4-digit PIN to continue
+</string>
+    <string name="settings_security_verify_old_password_title">
+Verify Current Password
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+Enter your old password before changing
+</string>
+    <string name="settings_security_disable_pin_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+Enter your 4-digit PIN to turn off App Lock
+</string>
+    <string name="settings_security_disable_password_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_password_subtitle">
+Enter your password to turn off App Lock
+</string>
+    <string name="settings_security_disable_biometric_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+Authenticate to turn off App Lock
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+Enter a 4-digit PIN to secure UFM
+</string>
+    <string name="settings_security_password_title">
+Set Password
+</string>
+    <string name="settings_security_password_subtitle">
+Enter a secure password for UFM
+</string>
+    <string name="settings_security_password_create_title">
+Create Password
+</string>
+    <string name="settings_security_password_create_subtitle">
+Enter a secure alphanumeric password (at least 4 characters)
+</string>
+    <string name="settings_security_password_confirm_title">
+Confirm Password
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+Re-enter your password to confirm
+</string>
+    <string name="settings_security_lock_frequency">
+Lock Frequency
+</string>
+    <string name="settings_security_lock_fresh_open">
+On new / fresh open only
+</string>
+    <string name="settings_security_lock_immediately">
+Immediately on background
+</string>
+    <string name="settings_security_lock_1min">
+After 1 minute
+</string>
+    <string name="settings_security_lock_5min">
+After 5 minutes
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+Select Lock Frequency
+</string>
+    <string name="security_warning_title">
+Important Security Notice
+</string>
+    <string name="security_warning_message">
+If you forget your PIN or Password and lose your Recovery Key, you will be permanently locked out of Ultimate File Manager Pro.\n
+\n
+Neither KiloWatch nor anyone else can recover your credentials or unlock your files. Make sure to keep your Recovery Key in a safe, secure place.
+</string>
+    <string name="security_warning_confirm">
+I Understand — Show Recovery Key
+</string>
+    <string name="security_recovery_code_title">
+Security Recovery Key
+</string>
+    <string name="security_recovery_code_body">
+Write down this key. It is the ONLY way to unlock UFM if you forget your PIN or Password.
+</string>
+    <string name="security_recovery_code_copy">
+Copy Recovery Key
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+Recovery Key copied. Clipboard will automatically clear in 60 seconds for security.
+</string>
+    <string name="security_recovery_code_hint">
+16-Character Key
+</string>
+    <string name="security_recovery_entry_title">
+Enter Recovery Key
+</string>
+    <string name="security_recovery_entry_subtitle">
+Type your 16-character recovery key to regain access and reset your credentials
+</string>
+    <string name="security_recovery_success">
+Recovery key verified successfully
+</string>
+    <string name="security_unlock_enter_pin">
+Enter PIN to Unlock
+</string>
+    <string name="security_unlock_enter_password">
+Enter Password to Unlock
+</string>
+    <string name="security_unlock_forgot_credential">
+Forgot PIN or Password? Enter Recovery Key
+</string>
+    <string name="security_unlock_biometric_prompt">
+Touch sensor or look at camera
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+Tap to Authenticate
+</string>
+    <string name="security_unlock_use_device_lock">
+Use Device PIN / Pattern
+</string>
+    <string name="security_unlock_invalid_pin">
+Incorrect PIN. %1$d attempts remaining
+</string>
+    <string name="security_unlock_invalid_password">
+Incorrect password. %1$d attempts remaining
+</string>
+    <string name="security_unlock_invalid_password_short">
+Incorrect password
+</string>
+    <string name="security_unlock_too_many_attempts">
+Too Many Failed Attempts
+</string>
+    <string name="security_unlock_try_again_after_timer">
+For your security, try again after the timer expires
+</string>
+    <string name="icon_settings_security">
+Security
+</string>
+    <string name="confirm">
+Konfirmasi
+</string>
+    <string name="unlock">
+Buka Kunci
+</string>
+    <string name="field_cannot_be_empty">
+Bidang tidak boleh kosong
+</string>
 </resources>
 
 

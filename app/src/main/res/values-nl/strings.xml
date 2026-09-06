@@ -13634,6 +13634,211 @@ Kan wijzigingen niet terugzetten naar de hoofdopslag
     <string name="root_staging_error">
 Kan het rootbestand niet voorbereiden voor een externe app
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+Beveiliging
+</string>
+    <string name="settings_security_app_lock_title">
+App-vergrendeling
+</string>
+    <string name="settings_security_app_lock_subtitle">
+Vereist authenticatie om Ultimate File Manager Pro te openen
+</string>
+    <string name="settings_security_method_title">
+Authenticatiemethode
+</string>
+    <string name="settings_security_method_picker_title">
+Kies Beveiligingsmethode
+</string>
+    <string name="settings_security_method_picker_subtitle">
+Selecteer hoe u uw bestanden wilt beveiligen
+</string>
+    <string name="settings_security_method_none">
+Geen
+</string>
+    <string name="settings_security_method_pin">
+4-cijferige pincode
+</string>
+    <string name="settings_security_method_pin_desc">
+Snelle ontgrendeling van het numerieke toetsenbord
+</string>
+    <string name="settings_security_method_password">
+Aangepast wachtwoord
+</string>
+    <string name="settings_security_method_password_desc">
+Alfanumerieke zin met letters en symbolen
+</string>
+    <string name="settings_security_method_biometric">
+Biometrie / Apparaatvergrendeling
+</string>
+    <string name="settings_security_method_biometric_desc">
+Vingerafdruk, Gezichtsontgrendeling of Patroon
+</string>
+    <string name="settings_security_biometric_unavailable">
+Biometrie is niet beschikbaar op dit apparaat
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+Geen biometrie of apparaatvergrendeling ingesteld in Android-instellingen
+</string>
+    <string name="settings_security_change_pin">
+Wijzig pincode
+</string>
+    <string name="settings_security_change_pin_subtitle">
+Update uw huidige beveiligingspincode van vier cijfers
+</string>
+    <string name="settings_security_change_password">
+Wachtwoord wijzigen
+</string>
+    <string name="settings_security_change_password_subtitle">
+Update uw aangepaste alfanumerieke wachtwoord
+</string>
+    <string name="settings_security_verify_old_pin">
+Voer uw huidige 4-cijferige pincode in om door te gaan
+</string>
+    <string name="settings_security_verify_old_password_title">
+Controleer het huidige wachtwoord
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+Voer uw oude wachtwoord in voordat u het wijzigt
+</string>
+    <string name="settings_security_disable_pin_title">
+Schakel App-vergrendeling uit
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+Voer uw viercijferige pincode in om App Lock uit te schakelen
+</string>
+    <string name="settings_security_disable_password_title">
+Schakel App-vergrendeling uit
+</string>
+    <string name="settings_security_disable_password_subtitle">
+Voer uw wachtwoord in om App Lock uit te schakelen
+</string>
+    <string name="settings_security_disable_biometric_title">
+Schakel App-vergrendeling uit
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+Verifieer om App Lock uit te schakelen
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+Voer een viercijferige pincode in om UFM te beveiligen
+</string>
+    <string name="settings_security_password_title">
+Wachtwoord instellen
+</string>
+    <string name="settings_security_password_subtitle">
+Voer een veilig wachtwoord in voor UFM
+</string>
+    <string name="settings_security_password_create_title">
+Wachtwoord aanmaken
+</string>
+    <string name="settings_security_password_create_subtitle">
+Voer een veilig alfanumeriek wachtwoord in (minimaal 4 tekens)
+</string>
+    <string name="settings_security_password_confirm_title">
+Bevestig wachtwoord
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+Voer uw wachtwoord opnieuw in om te bevestigen
+</string>
+    <string name="settings_security_lock_frequency">
+Vergrendel frequentie
+</string>
+    <string name="settings_security_lock_fresh_open">
+Op nieuw/vers alleen geopend
+</string>
+    <string name="settings_security_lock_immediately">
+Meteen op de achtergrond
+</string>
+    <string name="settings_security_lock_1min">
+Na 1 minuut
+</string>
+    <string name="settings_security_lock_5min">
+Na 5 minuten
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+Selecteer Vergrendelingsfrequentie
+</string>
+    <string name="security_warning_title">
+Belangrijke veiligheidsmededeling
+</string>
+    <string name="security_warning_message">
+Als u uw pincode of wachtwoord vergeet en uw herstelsleutel verliest, wordt u permanent uitgesloten van Ultimate File Manager Pro.\n
+\n
+Noch KiloWatch, noch iemand anders kan uw inloggegevens herstellen of uw bestanden ontgrendelen. Zorg ervoor dat u uw herstelsleutel op een veilige plaats bewaart.
+</string>
+    <string name="security_warning_confirm">
+Ik begrijp het: herstelsleutel tonen
+</string>
+    <string name="security_recovery_code_title">
+Beveiligingsherstelsleutel
+</string>
+    <string name="security_recovery_code_body">
+Schrijf deze sleutel op. Het is de ENIGE manier om UFM te ontgrendelen als u uw pincode of wachtwoord vergeet.
+</string>
+    <string name="security_recovery_code_copy">
+Kopieer de herstelsleutel
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+Herstelsleutel gekopieerd. Het klembord wordt om veiligheidsredenen automatisch na 60 seconden gewist.
+</string>
+    <string name="security_recovery_code_hint">
+Sleutel van 16 tekens
+</string>
+    <string name="security_recovery_entry_title">
+Voer de herstelsleutel in
+</string>
+    <string name="security_recovery_entry_subtitle">
+Typ uw herstelsleutel van 16 tekens om weer toegang te krijgen en uw inloggegevens opnieuw in te stellen
+</string>
+    <string name="security_recovery_success">
+Herstelsleutel succesvol geverifieerd
+</string>
+    <string name="security_unlock_enter_pin">
+Voer de pincode in om te ontgrendelen
+</string>
+    <string name="security_unlock_enter_password">
+Voer het wachtwoord in om te ontgrendelen
+</string>
+    <string name="security_unlock_forgot_credential">
+Pincode of wachtwoord vergeten? Voer de herstelsleutel in
+</string>
+    <string name="security_unlock_biometric_prompt">
+Raak de sensor aan of kijk naar de camera
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+Tik om te verifiëren
+</string>
+    <string name="security_unlock_use_device_lock">
+Gebruik apparaatpincode/patroon
+</string>
+    <string name="security_unlock_invalid_pin">
+Onjuiste pincode. %1$d resterende pogingen
+</string>
+    <string name="security_unlock_invalid_password">
+Onjuist wachtwoord. %1$d resterende pogingen
+</string>
+    <string name="security_unlock_invalid_password_short">
+Onjuist wachtwoord
+</string>
+    <string name="security_unlock_too_many_attempts">
+Te veel mislukte pogingen
+</string>
+    <string name="security_unlock_try_again_after_timer">
+Probeer het voor uw veiligheid opnieuw nadat de timer is verstreken
+</string>
+    <string name="icon_settings_security">
+Beveiliging
+</string>
+    <string name="confirm">
+Bevestigen
+</string>
+    <string name="unlock">
+Ontgrendelen
+</string>
+    <string name="field_cannot_be_empty">
+Veld mag niet leeg zijn
+</string>
 </resources>
 
 

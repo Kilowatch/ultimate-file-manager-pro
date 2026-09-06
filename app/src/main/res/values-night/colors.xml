@@ -118,6 +118,7 @@
     <color name="quick_bar_icon_tint">#FFFFFFFF</color>
     <color name="mobile_text_primary">#FFFFFFFF</color>
     <color name="mobile_text_secondary">#99FFFFFF</color>
+    <color name="mobile_text_hint">#99FFFFFF</color>
     <color name="mobile_icon_tint">#FFFFFFFF</color>
     <color name="mobile_card_text_primary">#FFFFFFFF</color>
     <color name="mobile_card_text_secondary">#99FFFFFF</color>

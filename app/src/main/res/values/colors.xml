@@ -145,6 +145,7 @@
     <color name="mobile_text_primary">#FF1C2B3A</color>
     <!-- Secondary text: slate (on light background) -->
     <color name="mobile_text_secondary">#FF546E7A</color>
+    <color name="mobile_text_hint">#FF546E7A</color>
     <!-- Icons on header: slate -->
     <color name="mobile_icon_tint">#FF1C2B3A</color>
     <!-- Card primary text: near-black (on white card surface) -->

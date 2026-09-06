@@ -13611,6 +13611,211 @@ Det gick inte att spara ändringarna tillbaka till rotlagringen
     <string name="root_staging_error">
 Det gick inte att förbereda rotfilen för extern app
 </string>
+    
+    <!-- Mobile Security & App Lock -->
+    <string name="settings_section_security">
+Säkerhet
+</string>
+    <string name="settings_security_app_lock_title">
+Applås
+</string>
+    <string name="settings_security_app_lock_subtitle">
+Kräv autentisering för att öppna Ultimate File Manager Pro
+</string>
+    <string name="settings_security_method_title">
+Autentiseringsmetod
+</string>
+    <string name="settings_security_method_picker_title">
+Välj Säkerhetsmetod
+</string>
+    <string name="settings_security_method_picker_subtitle">
+Välj hur du vill skydda dina filer
+</string>
+    <string name="settings_security_method_none">
+Ingen
+</string>
+    <string name="settings_security_method_pin">
+4-siffrig PIN-kod
+</string>
+    <string name="settings_security_method_pin_desc">
+Snabb upplåsning med numerisk knappsats
+</string>
+    <string name="settings_security_method_password">
+Anpassat lösenord
+</string>
+    <string name="settings_security_method_password_desc">
+Alfanumerisk fras med bokstäver och symboler
+</string>
+    <string name="settings_security_method_biometric">
+Biometri / Enhetslås
+</string>
+    <string name="settings_security_method_biometric_desc">
+Fingeravtryck, Ansiktsupplåsning eller Mönster
+</string>
+    <string name="settings_security_biometric_unavailable">
+Biometri är inte tillgänglig på den här enheten
+</string>
+    <string name="settings_security_biometric_none_enrolled">
+Ingen biometri eller enhetslås har konfigurerats i Android-inställningarna
+</string>
+    <string name="settings_security_change_pin">
+Ändra PIN-kod
+</string>
+    <string name="settings_security_change_pin_subtitle">
+Uppdatera din nuvarande 4-siffriga säkerhets-PIN
+</string>
+    <string name="settings_security_change_password">
+Ändra lösenord
+</string>
+    <string name="settings_security_change_password_subtitle">
+Uppdatera ditt anpassade alfanumeriska lösenord
+</string>
+    <string name="settings_security_verify_old_pin">
+Enter your current 4-digit PIN to continue
+</string>
+    <string name="settings_security_verify_old_password_title">
+Verify Current Password
+</string>
+    <string name="settings_security_verify_old_password_subtitle">
+Enter your old password before changing
+</string>
+    <string name="settings_security_disable_pin_title">
+Inaktivera applås
+</string>
+    <string name="settings_security_disable_pin_subtitle">
+Ange din 4-siffriga PIN-kod för att stänga av App Lock
+</string>
+    <string name="settings_security_disable_password_title">
+Inaktivera applås
+</string>
+    <string name="settings_security_disable_password_subtitle">
+Ange ditt lösenord för att stänga av App Lock
+</string>
+    <string name="settings_security_disable_biometric_title">
+Disable App Lock
+</string>
+    <string name="settings_security_disable_biometric_subtitle">
+Autentisera för att stänga av App Lock
+</string>
+    <string name="settings_security_pin_setup_subtitle">
+Ange en 4-siffrig PIN-kod för att säkra UFM
+</string>
+    <string name="settings_security_password_title">
+Ange lösenord
+</string>
+    <string name="settings_security_password_subtitle">
+Ange ett säkert lösenord för UFM
+</string>
+    <string name="settings_security_password_create_title">
+Create Password
+</string>
+    <string name="settings_security_password_create_subtitle">
+Ange ett säkert alfanumeriskt lösenord (minst 4 tecken)
+</string>
+    <string name="settings_security_password_confirm_title">
+Bekräfta lösenord
+</string>
+    <string name="settings_security_password_confirm_subtitle">
+Ange ditt lösenord igen för att bekräfta
+</string>
+    <string name="settings_security_lock_frequency">
+Låsfrekvens
+</string>
+    <string name="settings_security_lock_fresh_open">
+Endast på ny/nyöppen
+</string>
+    <string name="settings_security_lock_immediately">
+Omedelbart i bakgrunden
+</string>
+    <string name="settings_security_lock_1min">
+Efter 1 minut
+</string>
+    <string name="settings_security_lock_5min">
+Efter 5 minuter
+</string>
+    <string name="settings_security_lock_frequency_dialog_title">
+Välj Lås frekvens
+</string>
+    <string name="security_warning_title">
+Viktigt säkerhetsmeddelande
+</string>
+    <string name="security_warning_message">
+Om du glömmer din PIN-kod eller lösenord och förlorar din återställningsnyckel kommer du att bli permanent utelåst från Ultimate File Manager Pro.\n
+\n
+Varken KiloWatch eller någon annan kan återställa dina referenser eller låsa upp dina filer. Se till att förvara din återställningsnyckel på en säker och säker plats.
+</string>
+    <string name="security_warning_confirm">
+Jag förstår — Visa återställningsnyckel
+</string>
+    <string name="security_recovery_code_title">
+Säkerhetsåterställningsnyckel
+</string>
+    <string name="security_recovery_code_body">
+Skriv ner denna nyckel. Det är det ENDA sättet att låsa upp UFM om du glömmer din PIN-kod eller lösenord.
+</string>
+    <string name="security_recovery_code_copy">
+Kopiera återställningsnyckel
+</string>
+    <string name="security_recovery_code_copied_autoclear">
+Återställningsnyckel kopierad. Urklipp rensas automatiskt inom 60 sekunder för säkerhets skull.
+</string>
+    <string name="security_recovery_code_hint">
+16-teckens nyckel
+</string>
+    <string name="security_recovery_entry_title">
+Ange återställningsnyckel
+</string>
+    <string name="security_recovery_entry_subtitle">
+Skriv din 16-teckens återställningsnyckel för att återfå åtkomst och återställa dina autentiseringsuppgifter
+</string>
+    <string name="security_recovery_success">
+Återställningsnyckeln har verifierats
+</string>
+    <string name="security_unlock_enter_pin">
+Ange PIN för att låsa upp
+</string>
+    <string name="security_unlock_enter_password">
+Ange lösenord för att låsa upp
+</string>
+    <string name="security_unlock_forgot_credential">
+Glömt PIN eller lösenord? Ange återställningsnyckel
+</string>
+    <string name="security_unlock_biometric_prompt">
+Peksensor eller titta på kameran
+</string>
+    <string name="security_unlock_tap_to_authenticate">
+Tryck för att autentisera
+</string>
+    <string name="security_unlock_use_device_lock">
+Använd enhetens PIN/mönster
+</string>
+    <string name="security_unlock_invalid_pin">
+Felaktig PIN-kod. %1$d försök kvar
+</string>
+    <string name="security_unlock_invalid_password">
+Felaktigt lösenord. %1$d försök kvar
+</string>
+    <string name="security_unlock_invalid_password_short">
+Felaktigt lösenord
+</string>
+    <string name="security_unlock_too_many_attempts">
+För många misslyckade försök
+</string>
+    <string name="security_unlock_try_again_after_timer">
+För din säkerhet, försök igen efter att timern har gått ut
+</string>
+    <string name="icon_settings_security">
+Säkerhet
+</string>
+    <string name="confirm">
+Bekräfta
+</string>
+    <string name="unlock">
+Lås upp
+</string>
+    <string name="field_cannot_be_empty">
+Fältet får inte vara tomt
+</string>
 </resources>
 
 
