@@ -1006,8 +1006,10 @@ class NetworkBrowserFragment : Fragment() {
                     val ext = file.name.substringAfterLast(".").lowercase()
                     if (onMediaFileSelected != null && (za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext) || za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(ext))) {
                         onMediaFileSelected!!(file)
-                    } else {
+                    } else if (onFileSelected != null) {
                         onFileSelected?.invoke(file)
+                    } else {
+                        openNetworkFile(file)
                     }
                 }
             },
@@ -1957,6 +1959,21 @@ class NetworkBrowserFragment : Fragment() {
     fun getShare(): NetworkShare = share
     fun getCurrentFiles(): List<NetworkFile> = currentFiles
     fun getSortedFiles(): List<NetworkFile> = sortAndFilterFiles(currentFiles)
+    fun openNetworkFile(file: NetworkFile) {
+        if (!::share.isInitialized) return
+        val act = activity ?: return
+        val scope = try { viewLifecycleOwner.lifecycleScope } catch (_: Exception) { lifecycleScope }
+        NetworkFileOpener.openFile(
+            activity = act,
+            scope = scope,
+            share = share,
+            file = file,
+            currentFiles = currentFiles,
+            sortedFiles = getSortedFiles(),
+            snackAnchorView = view,
+            onShowSnackbar = { showFragmentSnackbar(it) }
+        )
+    }
     fun navigateTo(path: String) {
         saveCurrentFolderScroll()
         currentPath = path
