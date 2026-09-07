@@ -147,6 +147,13 @@
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
 
+        <!-- Tabbed File Browser (Mobile Only) -->
+        <activity
+            android:name=".tabs.TabbedBrowserActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
         <!-- Batch Rename TV Activity -->
         <activity
             android:name=".storage.BatchRenameTvActivity"

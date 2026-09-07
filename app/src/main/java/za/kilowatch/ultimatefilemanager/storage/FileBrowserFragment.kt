@@ -238,6 +238,7 @@ class FileBrowserFragment : Fragment() {
     var onSwitchToApps: (() -> Unit)? = null  // set only on the left pane for local storage
     var onMediaFileSelected: ((File) -> Unit)? = null
     var onCloseTwinWindow: (() -> Unit)? = null
+    var onDirectoryChanged: ((File) -> Unit)? = null
     private var folderFlowJob: Job? = null
     private var lastExitedDir: File? = null
     private var shouldRestoreFocus = false
@@ -708,6 +709,11 @@ class FileBrowserFragment : Fragment() {
             btnBack?.visibility = View.VISIBLE
             (btnBack?.parent as? android.widget.FrameLayout)?.visibility = View.VISIBLE
             btnBack?.setOnClickListener { navigateBack() }
+        }
+
+        if (activity is za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity) {
+            view.findViewById<View>(R.id.headerLayout)?.visibility = View.GONE
+            view.findViewById<View>(R.id.layoutSearchRow)?.visibility = View.GONE
         }
 
         // Apps-switch button: visible only when onSwitchToApps callback is wired (left local pane)
@@ -2381,6 +2387,7 @@ class FileBrowserFragment : Fragment() {
         }
 
         currentDir = targetDir
+        onDirectoryChanged?.invoke(targetDir)
         val displayTitle = if (labelPrefix.isNotEmpty()) "$labelPrefix${if (targetDir.absolutePath == rootPath) storageLabel else targetDir.name}" 
                           else if (targetDir.absolutePath == rootPath) storageLabel else targetDir.name
         view?.findViewById<TextView>(R.id.txtTvTitle)?.text = displayTitle
@@ -2673,7 +2680,7 @@ class FileBrowserFragment : Fragment() {
         val fab = fabPaste ?: return
         val hasLocal = FileClipboard.hasItems()
         val hasNet = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.hasItems()
-        val total = (if (hasLocal) FileClipboard.files.size else 0) + (if (hasNet) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files.size else 0)
+        val total = FileClipboard.totalItemCount() + (if (hasNet) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files.size else 0)
 
         if (total > 0) {
             if (hasLocal && FileClipboard.operation == FileClipboard.Operation.EXTRACT) {
@@ -3557,6 +3564,35 @@ class FileBrowserFragment : Fragment() {
     fun refresh() = loadDirectory(currentDir)
     fun getStorageId() = storageId
     fun getStorageType() = storageType
+    fun navigateTo(directory: File) {
+        saveCurrentFolderScroll()
+        loadDirectory(directory)
+    }
+    fun search(query: String) {
+        performSearch(query)
+    }
+    fun openSortFilterSheet() {
+        showSortFilterSheet()
+    }
+    fun openViewModeDialog() {
+        ViewModeManager.showSelectionDialog(requireContext(), fileAdapter.viewMode) { selectedMode ->
+            val folderKey = SortFilterPreferenceManager.folderKey(currentDir.absolutePath)
+            if (SortFilterPreferenceManager.hasFolderOverride(requireContext(), currentDir.absolutePath)) {
+                lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    val state = SortFilterPreferenceManager.loadForPath(requireContext(), currentDir.absolutePath)
+                    if (state != null) {
+                        SortFilterPreferenceManager.saveFolderSpecific(
+                            requireContext(), folderKey, currentDir.absolutePath,
+                            state.copy(viewMode = selectedMode), isNetwork = false
+                        )
+                    }
+                }
+            } else {
+                ViewModeManager.save(requireContext(), selectedMode)
+            }
+            applyViewMode(selectedMode)
+        }
+    }
 
     private fun performExtractHere(files: List<File>) {
         showExtractOptions(files)

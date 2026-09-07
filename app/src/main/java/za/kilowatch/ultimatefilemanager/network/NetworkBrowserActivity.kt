@@ -2568,6 +2568,21 @@ class NetworkBrowserActivity : AppCompatActivity() {
             animationStyle = android.R.style.Animation_Dialog
         }
 
+        popupView.findViewById<View>(R.id.menuItemNewTab)?.setOnClickListener {
+            popupWindow.dismiss()
+            val intent = Intent(this, za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity::class.java).apply {
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_PATH, currentPath)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_SHARE_ID, share.id)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_LABEL, share.name.ifEmpty { share.host })
+                val isCloud = share.type == ShareType.GOOGLE_DRIVE || share.type == ShareType.ONEDRIVE || share.type == ShareType.DROPBOX
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_STORAGE_TYPE,
+                    if (isCloud) za.kilowatch.ultimatefilemanager.tabs.StorageType.CLOUD.name else za.kilowatch.ultimatefilemanager.tabs.StorageType.NETWORK.name)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_OPEN_NEW_TAB_DIALOG, true)
+            }
+            startActivity(intent)
+            finish()
+        }
+
         popupView.findViewById<View>(R.id.menuItemTwinWindow)?.setOnClickListener {
             popupWindow.dismiss()
             val twinInitialPath = if (share.isServerMode) {
@@ -2972,7 +2987,14 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 // Server-mode SMB: intercept at root to discover shares
                 if (share.type == ShareType.SMB && share.isServerMode) {
                     kotlinx.coroutines.withTimeout(15_000L) {
-                        if (currentPath.isEmpty()) {
+                        val cleanPath = currentPath.trimStart('/')
+                        if (cleanPath.isEmpty()) {
+                            if (share.remotePath != originalRemotePath) {
+                                share = share.copy(remotePath = originalRemotePath)
+                                withContext(Dispatchers.Main) {
+                                    fileAdapter.share = share
+                                }
+                            }
                             val discovered = discoverServerShares(share)
                             withContext(Dispatchers.Main) {
                                 if (discovered.isEmpty()) {
@@ -2988,36 +3010,21 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
-                            // Inside a discovered share
-                            val existingShare = share.remotePath.trimStart('/')
-                            if (existingShare.isNotEmpty()) {
-                                // Already navigated into a share — strip the share name prefix from
-                                // currentPath before passing to SmbShareClient. currentPath holds the
-                                // full UI path (e.g. "C/D") while share.remotePath already encodes the
-                                // share name (e.g. "/C"). Passing "C/D" raw would make splitSharePath
-                                // produce \\server\C\C\D (duplicate). Strip "C/" to get just "D".
-                                val innerPath = stripSharePrefix(currentPath.trimStart('/'))
-                                var files = SmbShareClient.listFiles(share, innerPath)
-                                files = files.filter { it.name != ".." }
+                            // Inside a discovered share: first segment is ALWAYS the SMB share name
+                            val shareName = cleanPath.substringBefore('/')
+                            val innerPath = if (cleanPath.contains('/')) cleanPath.substringAfter('/') else ""
+                            val targetRemotePath = "/$shareName"
+                            if (share.remotePath != targetRemotePath) {
+                                share = share.copy(remotePath = targetRemotePath)
                                 withContext(Dispatchers.Main) {
-                                    currentFiles = files
-                                    applyData()
+                                    fileAdapter.share = share
                                 }
-                            } else {
-                                // First navigation into a share — extract share name from currentPath
-                                val parts = currentPath.trimStart('/').split("/", limit = 2)
-                                val shareName = parts[0]
-                                val innerPath = parts.getOrElse(1) { "" }
-                                // Update share to the effective copy so all file operations
-                                // (copy, delete, rename, etc.) use the correct remotePath
-                                share = share.copy(remotePath = "/$shareName")
-                                fileAdapter.share = share
-                                var files = SmbShareClient.listFiles(share, innerPath)
-                                files = files.filter { it.name != ".." }
-                                withContext(Dispatchers.Main) {
-                                    currentFiles = files
-                                    applyData()
-                                }
+                            }
+                            var files = SmbShareClient.listFiles(share, innerPath)
+                            files = files.filter { it.name != ".." }
+                            withContext(Dispatchers.Main) {
+                                currentFiles = files
+                                applyData()
                             }
                         }
                     }

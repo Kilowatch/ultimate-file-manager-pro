@@ -5,6 +5,27 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.9] — 2026-09-07
+
+### Added
+- Mobile Tabbed File Browser:
+  - Added "New Tab" option directly above "Twin Window" in the 3-dots header overflow menu for Local, SAF, Network, and Online storage browsers.
+  - Created a custom vector icon (`ic_tab_new`) registered in `IconCustomizationManager` (`ALL_BUILTIN_ICONS`).
+  - Added scrolling tab bar with active cyan glow pills and a transparent `(+)` button positioned immediately to the right of the last tab.
+  - "New Tab" / `(+)` prompts a glass location picker: "This Location" (duplicates active folder) vs "Select Other Storage..." (launches UFM Drive Picker with all internal, removable, SAF, network, and cloud storages).
+  - New tabs enter inline editing with "Tab N" pre-selected and automatic soft keyboard popup.
+  - Seamless support across Local, SAF, Network (SMB, FTP, SFTP, SCP, NFS, WebDAV, DLNA), and Cloud storages (Google Drive, OneDrive, Dropbox, S3).
+  - Full tab session persistence across app exit and relaunch via `tabs_preferences` and `SettingsBackupManager`.
+  - Storage Disconnect Watchdog: Automatically prunes tabs if an SD card, USB drive, or remote share becomes disconnected or deleted.
+  - Cross-tab copy/paste operations using global `FileClipboard` and `TransferConflictHelper`, with "Copy Folder Path" support for the active tab.
+  - Chrome-Style Tabs: Restyled mobile tabs to modern Google Chrome browser aesthetic with curved top corners (10dp radius), flat flush bottom, and top cyan accent stripe; positioned tabs directly below the breadcrumbs bar.
+  - Tab Drag-to-Reorder: Added long-press drag-and-drop to reorder tabs left and right with haptic feedback, 3D lift elevation, and session persistence.
+  - Double-Tap Tab Rename: Added double-tap gesture on tabs to trigger in-place renaming with soft keyboard Enter/Done key persistence.
+  - Gesture Controls: Swipe tab upward with fade animation to close, swipe downward to duplicate with bounce animation.
+
+### Changed
+- Improved Dutch (nl) localization translations for UI controls, network shares, permissions, and twin window mode.
+
 ## [1.9.8] — 2026-09-05
 
 ### Added

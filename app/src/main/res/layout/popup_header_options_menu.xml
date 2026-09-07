@@ -8,6 +8,79 @@
     android:elevation="12dp"
     android:padding="6dp">
 
+    <!-- New Tab Option -->
+    <LinearLayout
+        android:id="@+id/menuItemNewTab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="46dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/bg_header_action_ripple">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_tab_new"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:text="@string/new_tab"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium" />
+    </LinearLayout>
+
+    <!-- Close All Tabs Option (only visible if tabs are open) -->
+    <LinearLayout
+        android:id="@+id/menuItemCloseAllTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="46dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        android:background="@drawable/bg_header_action_ripple">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/ufm_denied"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:text="@string/close_all_tabs"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium" />
+    </LinearLayout>
+
+    <!-- Subtle Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="6dp"
+        android:layout_marginVertical="2dp"
+        android:background="@color/mobile_glass_stroke" />
+
     <!-- Twin Window Option -->
     <LinearLayout
         android:id="@+id/menuItemTwinWindow"

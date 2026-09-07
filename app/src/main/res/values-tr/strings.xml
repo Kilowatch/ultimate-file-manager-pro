@@ -13839,6 +13839,41 @@ Kilidi Aç
     <string name="field_cannot_be_empty">
 Alan boş bırakılamaz
 </string>
+
+    <!-- Mobile Tabbed File Browsing -->
+    <string name="new_tab">
+Yeni Sekme
+</string>
+    <string name="icon_action_new_tab">
+Yeni Sekme
+</string>
+    <string name="tab_option_this_location">
+Bu Konum
+</string>
+    <string name="tab_option_this_location_sub">
+Geçerli klasörü yeni sekmede aç
+</string>
+    <string name="tab_option_other_storage">
+Diğer Depolama Seç…
+</string>
+    <string name="tab_option_other_storage_sub">
+Dahili, SD Kart, Ağ veya Bulut depolamalarına göz at
+</string>
+    <string name="tab_default_name">
+Sekme %d
+</string>
+    <string name="tab_storage_unavailable_closed">
+\\\'%s\\\' sekmesi kapatıldı (depolama bağlantısı kesildi)
+</string>
+    <string name="backup_pref_tabs">
+Tarayıcı Sekmeleri ve Oturumlar
+</string>
+    <string name="tab_duplicated">
+Çoğaltıldı: %s
+</string>
+    <string name="close_all_tabs">
+Tüm sekmeleri kapat
+</string>
 </resources>
 
 

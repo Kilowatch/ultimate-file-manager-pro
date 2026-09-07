@@ -62,9 +62,7 @@ Selecteer Taal
     <string name="language_system_default">
 Systeemstandaard
 </string>
-    <string name="language_system_default_desc">
-Match de systeemtaal van het apparaat
-</string>
+    <string name="language_system_default_desc">Volg de systeemtaal van het apparaat</string>
     <string name="language_section_system">
 Systeemvoorkeur
 </string>
@@ -111,9 +109,7 @@ Rasterweergave -> Groot
 </string>
 
     <!-- View Mode Dialog Descriptions -->
-    <string name="view_mode_dialog_desc">
-Selecteer de gewenste indeling en artikelgrootte:
-</string>
+    <string name="view_mode_dialog_desc">Selecteer de gewenste indeling en itemgrootte:</string>
     <string name="view_mode_title_list_small">
 Lijst • Klein
 </string>
@@ -215,9 +211,7 @@ Doorgaan
     <string name="welcome_footer_hint">
 Verleen alle vereiste machtigingen om door te gaan
 </string>
-    <string name="btn_grant">
-Studiebeurs
-</string>
+    <string name="btn_grant">Toestaan</string>
     <string name="btn_enable">
 Inschakelen
 </string>
@@ -229,12 +223,8 @@ Instellingen openen
     <string name="perm_notifications_title">
 Meldingen
 </string>
-    <string name="perm_audio_title">
-Muziek en audio
-</string>
-    <string name="perm_photos_videos_title">
-Foto\'s en video\'s
-</string>
+    <string name="perm_audio_title">Muziek &amp; audio</string>
+    <string name="perm_photos_videos_title">Foto\'s &amp; video\'s</string>
     <string name="perm_media_title">
 Mediatoegang
 </string>
@@ -270,14 +260,10 @@ Installeer optioneel de APK-bestanden die u op uw opslag vindt. U wordt altijd g
     <string name="perm_query_apps_desc">
 Vereist door App Manager, Debloater en Remote File Server. Leest de volledige lijst met geïnstalleerde pakketten (app-namen, pakket-ID\'s, versies, APK-groottes, tijdstempels voor installatie/update, systeem-/gebruikersclassificatie). Gegevens blijven lokaal op uw apparaat staan, maar kunnen via uw lokale netwerk worden verzonden voor extern beheer wanneer de bestandsserver is ingeschakeld. Er worden nooit gegevens doorgegeven aan KiloWatch of een derde partij.
 </string>
-    <string name="pd_accept">
-Ik begrijp
-</string>
+    <string name="pd_accept">Begrepen</string>
 
     <!-- Permission Status -->
-    <string name="status_granted">
-Toegekend
-</string>
+    <string name="status_granted">Goedgekeurd</string>
     <string name="status_denied">
 Geweigerd
 </string>
@@ -325,51 +311,35 @@ Bekijk geïnstalleerde apps
     <string name="remote_tile_subtitle">
 Beheer bestanden op afstand
 </string>
-    <string name="storage_free_format">
-%1$s gratis van %2$s
-</string>
+    <string name="storage_free_format">%1$s vrij van %2$s</string>
     <string name="storage_no_storages">
 Geen opslagapparaten gevonden
 </string>
     <string name="storage_browser_subtitle">
 Uw bestanden, waar u ook bent: tik op een schijf om deze te verkennen
 </string>
-    <string name="twin_window_title">
-Dubbel raam
-</string>
+    <string name="twin_window_title">Dubbel venster</string>
     <string name="twin_window_subtitle">
 Bestandsbeheer met twee vensters
 </string>
-    <string name="twin_window">
-Dubbel raam
-</string>
-    <string name="copy_folder_path">
-Mappad kopiëren
-</string>
-    <string name="folder_path_copied">
-Mappad gekopieerd naar klembord
-</string>
+    <string name="twin_window">Dubbel venster</string>
+    <string name="copy_folder_path">Maplocatie kopiëren</string>
+    <string name="folder_path_copied">Maplocatie gekopieerd naar klembord</string>
     <string name="close_twin_window">
 Sluit het dubbele venster
 </string>
-    <string name="settings_twin_window_layout_title">
-Indeling met twee ramen
-</string>
+    <string name="settings_twin_window_layout_title">Indeling met twee vensters</string>
     <string name="settings_twin_window_layout_subtitle_horizontal">
 Horizontale splitsing
 </string>
     <string name="settings_twin_window_layout_subtitle_vertical">
 Verticale splitsing
 </string>
-    <string name="settings_twin_window_startup_title">
-Begin in Twin Panel
-</string>
+    <string name="settings_twin_window_startup_title">Begin met dubbele vensters</string>
     <string name="settings_twin_window_startup_subtitle_on">
 Ingeschakeld
 </string>
-    <string name="settings_twin_window_startup_subtitle_off">
-Gehandicapt
-</string>
+    <string name="settings_twin_window_startup_subtitle_off">Uitgeschakeld</string>
     <string name="settings_side_by_side_video_title">
 Naast elkaar video
 </string>
@@ -485,11 +455,7 @@ Bekijk en verwijder favoriete items
     <string name="manage_favorites_title">
 Favorieten
 </string>
-    <string name="manage_favorites_empty">
-Je hebt nog geen favorieten toegevoegd.\n
-\n
-Houd een bestand of map lang ingedrukt en tik op het sterpictogram om het hier toe te voegen.
-</string>
+    <string name="manage_favorites_empty">Je hebt nog geen favorieten toegevoegd.\n\nHoud een bestand of map lang ingedrukt en tik op het sterpictogram om het hier toe te voegen.</string>
     <string name="manage_favorites_empty_title">
 Geen favorieten gemarkeerd
 </string>
@@ -625,11 +591,7 @@ DCIM
     <string name="widget_preview_mock_network">
 Thuis-NAS
 </string>
-    <string name="network_connection_restored_first">
-Verbinding mislukt\n
-\n
-Zorg ervoor dat uw apparaat is verbonden met het netwerk of dat de tv is ingeschakeld en probeer het opnieuw.
-</string>
+    <string name="network_connection_restored_first">Verbinding mislukt\n\nZorg ervoor dat uw apparaat is verbonden met het netwerk of dat de tv is ingeschakeld en probeer het opnieuw.</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -677,11 +639,7 @@ Selecteer bestanden om acties uit te voeren
     <string name="delete_title">
 Permanent verwijderen?
 </string>
-    <string name="delete_message_mixed">
-U staat op het punt %1$d map(pen) en %2$d bestand(en) definitief te verwijderen.\n
-\n
-Deze actie kan niet ongedaan worden gemaakt.
-</string>
+    <string name="delete_message_mixed">U staat op het punt %1$d map(pen) en %2$d bestand(en) definitief te verwijderen.\n\nDeze actie kan niet ongedaan worden gemaakt.</string>
     <string name="delete_message_folders">
 U staat op het punt %1$d map(pen) en de volledige inhoud daarvan definitief te verwijderen.\n
 \n
@@ -1003,9 +961,7 @@ Bestandsgrootte
     <string name="search_pill_type">
 Bestandstype
 </string>
-    <string name="search_pill_extension">
-Verlenging
-</string>
+    <string name="search_pill_extension">Extensie</string>
     <string name="search_pill_date">
 Datum
 </string>
@@ -1016,9 +972,7 @@ Toepassen
     <string name="search_filter_size_title">
 Filter op bestandsgrootte
 </string>
-    <string name="search_filter_size_min_label">
-Minimale maat (optioneel)
-</string>
+    <string name="search_filter_size_min_label">Minimale grootte (optioneel)</string>
     <string name="search_filter_size_max_label">
 Maximale grootte (optioneel)
 </string>
@@ -1399,9 +1353,7 @@ Puur zwart — bespaart de batterij op OLED-schermen
     <string name="theme_applied">
 Thema toegepast
 </string>
-    <string name="material_you_title">
-Materiaal jij
-</string>
+    <string name="material_you_title">Materiaal You</string>
     <string name="material_you_summary">
 Gebruik de kleuren van uw behang voor een persoonlijke uitstraling
 </string>
@@ -1428,9 +1380,7 @@ Groot
     <string name="font_size_applied">
 Lettergrootte toegepast
 </string>
-    <string name="font_size_preview">
-De snelle bruine vos springt
-</string>
+    <string name="font_size_preview">Pa\'s wijze lynx bezag vroom het fikse aquaduct</string>
     <string name="font_size_small_desc">
 85% • Compact formaat voor hogere schermdichtheid
 </string>
@@ -1729,9 +1679,7 @@ Sorteren en filteren
     <string name="sort_by_name">
 Naam
 </string>
-    <string name="sort_by_size">
-Maat
-</string>
+    <string name="sort_by_size">Grootte</string>
     <string name="sort_by_date">
 Datum gewijzigd
 </string>
@@ -1970,9 +1918,7 @@ UFM-diavoorstelling
     <string name="default_apps_context_local">
 Lokaal
 </string>
-    <string name="default_apps_context_network">
-Wolk / Netwerk
-</string>
+    <string name="default_apps_context_network">Cloud / Netwerk</string>
     <string name="action_clear">
 Duidelijk
 </string>
@@ -2440,9 +2386,7 @@ Hoe het te gebruiken
     <string name="saf_info_status_active">
 ✓ Provider actief — UFM is beschikbaar in alle bestandskiezers
 </string>
-    <string name="saf_info_close">
-Rug
-</string>
+    <string name="saf_info_close">Terug</string>
 
     <string name="refresh">
 Vernieuwen
@@ -2491,9 +2435,7 @@ MKB · FTP
     <string name="network_shares_info_notice">
 Maak verbinding met SMB-, FTP-, SFTP-, SCP- en NFS-shares op uw lokale netwerk om naadloos bestanden te doorzoeken, over te dragen en te ordenen.
 </string>
-    <string name="network_add_share">
-Deel toevoegen
-</string>
+    <string name="network_add_share">Share toevoegen</string>
     <string name="network_empty_title">
 Geen netwerkshares geconfigureerd
 </string>
@@ -2501,18 +2443,12 @@ Geen netwerkshares geconfigureerd
 Tik op de knop + om een ​​SMB- of FTP-share toe te voegen.\n
 Geconfigureerde shares verschijnen in de bestandskiezer van elke app.
 </string>
-    <string name="network_edit_title_add">
-Deel toevoegen
-</string>
-    <string name="network_edit_title_edit">
-Deel bewerken
-</string>
+    <string name="network_edit_title_add">Share toevoegen</string>
+    <string name="network_edit_title_edit">Share bewerken</string>
     <string name="network_field_type">
 Protocol
 </string>
-    <string name="network_type_smb">
-MKB
-</string>
+    <string name="network_type_smb">SMB</string>
     <string name="network_type_ftp">
 FTP
 </string>
@@ -2573,9 +2509,7 @@ Extern pad (bijvoorbeeld /Media of leeg laten)
     <string name="network_btn_test">
 Verbinding testen
 </string>
-    <string name="network_btn_save">
-Redden
-</string>
+    <string name="network_btn_save">Opslaan</string>
     <string name="network_testing">
 Verbinding testen...
 </string>

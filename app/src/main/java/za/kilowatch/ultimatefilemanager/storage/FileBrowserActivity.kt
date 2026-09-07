@@ -7163,6 +7163,21 @@ class FileBrowserActivity : AppCompatActivity() {
             animationStyle = android.R.style.Animation_Dialog
         }
 
+        popupView.findViewById<View>(R.id.menuItemNewTab)?.setOnClickListener {
+            popupWindow.dismiss()
+            val intent = Intent(this, za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity::class.java).apply {
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_PATH, currentDir.absolutePath)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_ROOT_PATH, rootPath)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_LABEL, storageLabel)
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(rootPath)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_STORAGE_TYPE,
+                    if (isSaf) za.kilowatch.ultimatefilemanager.tabs.StorageType.SAF.name else za.kilowatch.ultimatefilemanager.tabs.StorageType.LOCAL.name)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_OPEN_NEW_TAB_DIALOG, true)
+            }
+            startActivity(intent)
+            finish()
+        }
+
         popupView.findViewById<View>(R.id.menuItemTwinWindow)?.setOnClickListener {
             popupWindow.dismiss()
             val intent = Intent(this, TwinWindowActivity::class.java).apply {

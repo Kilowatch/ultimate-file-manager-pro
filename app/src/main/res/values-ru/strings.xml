@@ -13839,6 +13839,41 @@ For your security, try again after the timer expires
     <string name="field_cannot_be_empty">
 Поле не может быть пустым
 </string>
+
+    <!-- Mobile Tabbed File Browsing -->
+    <string name="new_tab">
+Новая вкладка
+</string>
+    <string name="icon_action_new_tab">
+Новая вкладка
+</string>
+    <string name="tab_option_this_location">
+Это расположение
+</string>
+    <string name="tab_option_this_location_sub">
+Открыть текущую папку в новой вкладке
+</string>
+    <string name="tab_option_other_storage">
+Выбрать другое хранилище…
+</string>
+    <string name="tab_option_other_storage_sub">
+Просмотр внутренней памяти, SD-карты, сети или облачных хранилищ
+</string>
+    <string name="tab_default_name">
+Вкладка %d
+</string>
+    <string name="tab_storage_unavailable_closed">
+Закрыта вкладка \\\'%s\\\' (хранилище отключено)
+</string>
+    <string name="backup_pref_tabs">
+Вкладки браузера и сеансы
+</string>
+    <string name="tab_duplicated">
+Дублировано: %s
+</string>
+    <string name="close_all_tabs">
+Закрыть все вкладки
+</string>
 </resources>
 
 

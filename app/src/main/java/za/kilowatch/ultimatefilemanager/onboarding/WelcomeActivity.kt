@@ -533,6 +533,11 @@ class WelcomeActivity : AppCompatActivity() {
             }
         }
 
+        if (intent == null && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this) &&
+            za.kilowatch.ultimatefilemanager.tabs.TabSessionManager.hasSavedTabs(this)) {
+            intent = Intent(this, za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity::class.java)
+        }
+
         // Fallback to StorageBrowserActivity if the ID is STORAGE_BROWSER or if the target drive was disconnected/not found
         if (intent == null) {
             intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java)

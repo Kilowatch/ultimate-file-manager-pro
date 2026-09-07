@@ -2290,6 +2290,23 @@ class StorageBrowserActivity : AppCompatActivity() {
                         }
                         startActivity(intent)
                         showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+                    } else if (!isPickerMode && !DeviceUtils.isTvDevice(this) && za.kilowatch.ultimatefilemanager.tabs.TabSessionManager.hasSavedTabs(this)) {
+                        val share = item.networkShare
+                        val type = if (share?.type == za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE || share?.type == za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE || share?.type == za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX) {
+                            za.kilowatch.ultimatefilemanager.tabs.StorageType.CLOUD
+                        } else {
+                            za.kilowatch.ultimatefilemanager.tabs.StorageType.NETWORK
+                        }
+                        val rootPath = share?.remotePath ?: ""
+                        val intent = Intent(this, za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity::class.java).apply {
+                            putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_PATH, rootPath)
+                            putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_ROOT_PATH, rootPath)
+                            putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_LABEL, item.label)
+                            putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_SHARE_ID, share?.id)
+                            putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_STORAGE_TYPE, type.name)
+                        }
+                        startActivity(intent)
+                        showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
                     } else {
                         val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
                             if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
@@ -2447,6 +2464,18 @@ class StorageBrowserActivity : AppCompatActivity() {
                         }
                         startActivity(intent)
                         showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+                    } else if (!isPickerMode && !DeviceUtils.isTvDevice(this) && za.kilowatch.ultimatefilemanager.tabs.TabSessionManager.hasSavedTabs(this)) {
+                        launchWithRCloneInit {
+                            val intent = Intent(this, za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity::class.java).apply {
+                                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_PATH, "")
+                                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_ROOT_PATH, "")
+                                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_LABEL, "${item.label} - ${storage?.email}")
+                                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_SHARE_ID, storage?.id)
+                                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_STORAGE_TYPE, za.kilowatch.ultimatefilemanager.tabs.StorageType.CLOUD.name)
+                            }
+                            startActivity(intent)
+                            showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+                        }
                     } else {
                         launchWithRCloneInit {
                             val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
@@ -2697,6 +2726,20 @@ class StorageBrowserActivity : AppCompatActivity() {
                 putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_LABEL, item.label)
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, storageId)
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, storageType)
+            }
+            startActivity(intent)
+            showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+            return
+        }
+
+        if (!isPickerMode && !isSyncFolderPickerMode && !isAdvancedSyncFolderPickerMode && !isAdvancedSyncDestPickerMode && !isCompressDestPickerMode && !isImageCompressDestPickerMode && !isGifCreatorDestPickerMode && !isExtractDestPickerMode && !isLocationPickerMode && !isNetworkCachePickerMode && !isQuickTransferPickerMode && !isShareDestPickerMode && !isScannerFolderPicker && !isAutoBackupFolderPicker && !isSupportAttachmentPicker && !DeviceUtils.isTvDevice(this) && za.kilowatch.ultimatefilemanager.tabs.TabSessionManager.hasSavedTabs(this)) {
+            val intent = Intent(this, za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity::class.java).apply {
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_PATH, item.mountPath)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_ROOT_PATH, item.mountPath)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_LABEL, item.label)
+                putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_STORAGE_TYPE,
+                    if (item.mountPath.startsWith("content://")) za.kilowatch.ultimatefilemanager.tabs.StorageType.SAF.name
+                    else za.kilowatch.ultimatefilemanager.tabs.StorageType.LOCAL.name)
             }
             startActivity(intent)
             showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))

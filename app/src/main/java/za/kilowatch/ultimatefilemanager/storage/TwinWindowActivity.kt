@@ -260,7 +260,7 @@ class TwinWindowActivity : AppCompatActivity() {
         val p2ShareId     = p2PrefsManager.getPane2ShareId(this)
         val p2InitialPath = p2PrefsManager.getPane2InitialPath(this) ?: ""
         val p2PathValid   = isPathAccessible(p2Path)
-        val p2InitValid   = isPathAccessible(p2InitialPath)
+        val p2InitValid   = if (p2Type == "network") p2InitialPath.isNotEmpty() else isPathAccessible(p2InitialPath)
         val p2ShareValid  = p2ShareId != null && isShareValid(p2ShareId)
 
         when {

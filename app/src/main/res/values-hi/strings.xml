@@ -13839,6 +13839,41 @@ UFM को सुरक्षित करने के लिए 4 अंको
     <string name="field_cannot_be_empty">
 फ़ील्ड खाली नहीं हो सकती
 </string>
+
+    <!-- Mobile Tabbed File Browsing -->
+    <string name="new_tab">
+नया टैब
+</string>
+    <string name="icon_action_new_tab">
+नया टैब
+</string>
+    <string name="tab_option_this_location">
+यह स्थान
+</string>
+    <string name="tab_option_this_location_sub">
+वर्तमान फ़ोल्डर को नए टैब में खोलें
+</string>
+    <string name="tab_option_other_storage">
+अन्य स्टोरेज चुनें…
+</string>
+    <string name="tab_option_other_storage_sub">
+आंतरिक, एसडी कार्ड, नेटवर्क या क्लाउड स्टोरेज ब्राउज़ करें
+</string>
+    <string name="tab_default_name">
+टैब %d
+</string>
+    <string name="tab_storage_unavailable_closed">
+टैब \\\'%s\\\' बंद किया गया (स्टोरेज डिस्कनेक्ट हो गया)
+</string>
+    <string name="backup_pref_tabs">
+ब्राउज़र टैब और सत्र
+</string>
+    <string name="tab_duplicated">
+डुप्लिकेट किया गया: %s
+</string>
+    <string name="close_all_tabs">
+सभी टैब बंद करें
+</string>
 </resources>
 
 

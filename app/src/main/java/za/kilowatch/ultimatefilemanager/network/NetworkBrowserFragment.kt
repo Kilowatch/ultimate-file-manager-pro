@@ -147,6 +147,7 @@ class NetworkBrowserFragment : Fragment() {
     var onCloseTwinWindow: (() -> Unit)? = null
     var onSelectionChanged: ((List<NetworkFile>) -> Unit)? = null
     var onInvalidShare: (() -> Unit)? = null
+    var onDirectoryChanged: ((String) -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -435,6 +436,10 @@ class NetworkBrowserFragment : Fragment() {
 
     private fun setupViews(view: View) {
         recyclerFiles = view.findViewById(R.id.recyclerFiles)
+        if (activity is za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity) {
+            view.findViewById<View>(R.id.headerLayout)?.visibility = View.GONE
+            view.findViewById<View>(R.id.layoutSearchRow)?.visibility = View.GONE
+        }
         progressBar = view.findViewById(R.id.progressBar)
         txtTitle = view.findViewById(R.id.txtTitle)
         txtSubtitle = view.findViewById(R.id.txtSubtitle)
@@ -455,6 +460,8 @@ class NetworkBrowserFragment : Fragment() {
             val act = activity
             if (act is TwinWindowActivity) {
                 act.onPasteRequested(this)
+            } else if (act is NetworkOperationsListener) {
+                act.onNetworkPasteRequested(this, currentPath)
             }
         }
         
@@ -488,6 +495,8 @@ class NetworkBrowserFragment : Fragment() {
                 list.add(FileToolsBottomSheet.ActionItem("copy", getString(R.string.action_copy), R.drawable.ic_copy, "toolbar_copy") {
                     if (isTwinWindow) {
                         onActionRequested?.invoke("copy")
+                    } else {
+                        (activity as? NetworkOperationsListener)?.onNetworkCopyRequested(this, selected)
                     }
                     fileAdapter.exitSelectionMode()
                 })
@@ -498,6 +507,8 @@ class NetworkBrowserFragment : Fragment() {
                 list.add(FileToolsBottomSheet.ActionItem("move", getString(R.string.action_move), R.drawable.ic_move, "toolbar_move") {
                     if (isTwinWindow) {
                         onActionRequested?.invoke("move")
+                    } else {
+                        (activity as? NetworkOperationsListener)?.onNetworkMoveRequested(this, selected)
                     }
                     fileAdapter.exitSelectionMode()
                 })
@@ -837,6 +848,28 @@ class NetworkBrowserFragment : Fragment() {
         view.findViewById<View>(R.id.btnSelectAll)?.setOnClickListener {
             if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
         }
+        view.findViewById<View>(R.id.btnCopy)?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                if (isTwinWindow) {
+                    onActionRequested?.invoke("copy")
+                } else {
+                    (activity as? NetworkOperationsListener)?.onNetworkCopyRequested(this, selected)
+                }
+                fileAdapter.exitSelectionMode()
+            }
+        }
+        view.findViewById<View>(R.id.btnMove)?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                if (isTwinWindow) {
+                    onActionRequested?.invoke("move")
+                } else {
+                    (activity as? NetworkOperationsListener)?.onNetworkMoveRequested(this, selected)
+                }
+                fileAdapter.exitSelectionMode()
+            }
+        }
         view.findViewById<View>(R.id.btnDelete)?.setOnClickListener { showDeleteConfirmation() }
         view.findViewById<View>(R.id.btnProtect)?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
@@ -994,6 +1027,22 @@ class NetworkBrowserFragment : Fragment() {
             view.findViewById<View>(R.id.btnPillCopy)?.setOnClickListener { onActionRequested?.invoke("copy") }
             view.findViewById<View>(R.id.btnPillMove)?.setOnClickListener { onActionRequested?.invoke("move") }
             view.findViewById<View>(R.id.btnPillDelete)?.setOnClickListener { showDeleteConfirmation() }
+        } else {
+            view.findViewById<View>(R.id.btnPillCopy)?.setOnClickListener {
+                val selected = fileAdapter.getSelectedFiles()
+                if (selected.isNotEmpty()) {
+                    (activity as? NetworkOperationsListener)?.onNetworkCopyRequested(this, selected)
+                    fileAdapter.exitSelectionMode()
+                }
+            }
+            view.findViewById<View>(R.id.btnPillMove)?.setOnClickListener {
+                val selected = fileAdapter.getSelectedFiles()
+                if (selected.isNotEmpty()) {
+                    (activity as? NetworkOperationsListener)?.onNetworkMoveRequested(this, selected)
+                    fileAdapter.exitSelectionMode()
+                }
+            }
+            view.findViewById<View>(R.id.btnPillDelete)?.setOnClickListener { showDeleteConfirmation() }
         }
 
         val initialMode = ViewModeManager.load(requireContext())
@@ -1074,28 +1123,27 @@ class NetworkBrowserFragment : Fragment() {
                 // Server-mode SMB: intercept at root to discover shares
                 val files = kotlinx.coroutines.withTimeout(15_000L) {
                     if (share.type == ShareType.SMB && share.isServerMode) {
-                        if (currentPath.isEmpty()) {
-                            discoverServerShares(share)
-                        } else {
-                            // Inside a discovered share
-                            val existingShare = share.remotePath.trimStart('/')
-                            if (existingShare.isNotEmpty()) {
-                                // Already navigated into a share — currentPath is relative to share root
-                                val innerPath = stripSharePrefix(currentPath.trimStart('/'))
-                                SmbShareClient.listFiles(share, innerPath).filter { it.name != ".." }
-                            } else {
-                                // First navigation into a share — extract share name from currentPath
-                                val parts = currentPath.trimStart('/').split("/", limit = 2)
-                                val shareName = parts[0]
-                                val innerPath = parts.getOrElse(1) { "" }
-                                // Update share to the effective copy so all file operations
-                                // (copy, delete, rename, etc.) use the correct remotePath
-                                share = share.copy(remotePath = "/$shareName")
+                        val cleanPath = currentPath.trimStart('/')
+                        if (cleanPath.isEmpty()) {
+                            if (share.remotePath != originalRemotePath) {
+                                share = share.copy(remotePath = originalRemotePath)
                                 withContext(Dispatchers.Main) {
                                     fileAdapter.share = share
                                 }
-                                SmbShareClient.listFiles(share, innerPath).filter { it.name != ".." }
                             }
+                            discoverServerShares(share)
+                        } else {
+                            // Inside a discovered share: first segment is ALWAYS the SMB share name
+                            val shareName = cleanPath.substringBefore('/')
+                            val innerPath = if (cleanPath.contains('/')) cleanPath.substringAfter('/') else ""
+                            val targetRemotePath = "/$shareName"
+                            if (share.remotePath != targetRemotePath) {
+                                share = share.copy(remotePath = targetRemotePath)
+                                withContext(Dispatchers.Main) {
+                                    fileAdapter.share = share
+                                }
+                            }
+                            SmbShareClient.listFiles(share, innerPath).filter { it.name != ".." }
                         }
                     } else {
                         when (share.type) {
@@ -1135,6 +1183,7 @@ class NetworkBrowserFragment : Fragment() {
                         performSearch(edtSearch?.text?.toString()?.trim() ?: "")
                     }
                     updateSubtitle()
+                    onDirectoryChanged?.invoke(currentPath)
                 }
             } catch (e: Exception) {
                 if (e is kotlinx.coroutines.CancellationException && e !is kotlinx.coroutines.TimeoutCancellationException) throw e
@@ -1207,7 +1256,13 @@ class NetworkBrowserFragment : Fragment() {
                 if (isTwinWindow) {
                     onActionRequested?.invoke("copy")
                 } else {
-                    (activity as? NetworkBrowserActivity)?.handleNetworkCopyOrCut(selected, isMove = false)
+                    val handled = (activity as? NetworkOperationsListener)?.let {
+                        it.onNetworkCopyRequested(this, selected)
+                        true
+                    } ?: false
+                    if (!handled) {
+                        (activity as? NetworkBrowserActivity)?.handleNetworkCopyOrCut(selected, isMove = false)
+                    }
                 }
                 fileAdapter.exitSelectionMode()
             }
@@ -1216,7 +1271,13 @@ class NetworkBrowserFragment : Fragment() {
                     if (isTwinWindow) {
                         onActionRequested?.invoke("move")
                     } else {
-                        (activity as? NetworkBrowserActivity)?.handleNetworkCopyOrCut(selected, isMove = true)
+                        val handled = (activity as? NetworkOperationsListener)?.let {
+                            it.onNetworkMoveRequested(this, selected)
+                            true
+                        } ?: false
+                        if (!handled) {
+                            (activity as? NetworkBrowserActivity)?.handleNetworkCopyOrCut(selected, isMove = true)
+                        }
                     }
                     fileAdapter.exitSelectionMode()
                 }
@@ -1896,6 +1957,36 @@ class NetworkBrowserFragment : Fragment() {
     fun getShare(): NetworkShare = share
     fun getCurrentFiles(): List<NetworkFile> = currentFiles
     fun getSortedFiles(): List<NetworkFile> = sortAndFilterFiles(currentFiles)
+    fun navigateTo(path: String) {
+        saveCurrentFolderScroll()
+        currentPath = path
+        loadDirectory()
+    }
+    fun search(query: String) {
+        performSearch(query)
+    }
+    fun openSortFilterSheet() {
+        showSortFilterSheet()
+    }
+    fun openViewModeDialog() {
+        ViewModeManager.showSelectionDialog(requireContext(), fileAdapter.viewMode) { selectedMode ->
+            val folderKey = SortFilterPreferenceManager.folderKey(share.id, currentPath)
+            if (SortFilterPreferenceManager.hasFolderOverride(requireContext(), currentPath, share.id)) {
+                lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    val state = SortFilterPreferenceManager.loadForPath(requireContext(), currentPath, share.id)
+                    if (state != null) {
+                        SortFilterPreferenceManager.saveFolderSpecific(
+                            requireContext(), folderKey, "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath",
+                            state.copy(viewMode = selectedMode), isNetwork = true
+                        )
+                    }
+                }
+            } else {
+                ViewModeManager.save(requireContext(), selectedMode)
+            }
+            applyViewMode(selectedMode)
+        }
+    }
 
     private fun setupTvFocus(view: View) {
         val iconTintFocused = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_button_focused_yellow_text))
@@ -2188,7 +2279,7 @@ class NetworkBrowserFragment : Fragment() {
         val fab = fabPaste ?: return
         val hasLocal = za.kilowatch.ultimatefilemanager.storage.FileClipboard.hasItems()
         val hasNet = NetworkClipboard.hasItems()
-        val total = (if (hasLocal) za.kilowatch.ultimatefilemanager.storage.FileClipboard.files.size else 0) + (if (hasNet) NetworkClipboard.files.size else 0)
+        val total = za.kilowatch.ultimatefilemanager.storage.FileClipboard.totalItemCount() + (if (hasNet) NetworkClipboard.files.size else 0)
 
         if (total > 0) {
             val label = "${getString(R.string.action_paste)} ($total)"
@@ -2448,5 +2539,12 @@ class NetworkBrowserFragment : Fragment() {
                 }
             }
         }
+    }
+
+    interface NetworkOperationsListener {
+        fun onNetworkCopyRequested(fragment: NetworkBrowserFragment, files: List<NetworkFile>)
+        fun onNetworkMoveRequested(fragment: NetworkBrowserFragment, files: List<NetworkFile>)
+        fun onNetworkDeleteRequested(fragment: NetworkBrowserFragment, files: List<NetworkFile>)
+        fun onNetworkPasteRequested(fragment: NetworkBrowserFragment, destinationPath: String)
     }
 }
