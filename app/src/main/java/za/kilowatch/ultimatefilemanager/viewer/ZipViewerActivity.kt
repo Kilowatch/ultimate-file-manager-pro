@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,6 +67,7 @@ class ZipViewerActivity : AppCompatActivity() {
     private val extractedFiles = mutableMapOf<String, File>()
     private var focusedItem: ZipItem? = null
     private val selectedZipItems = mutableSetOf<ZipItem>()
+    private var isTv = false
 
     private var pendingExtractHeader: FileHeader? = null
     private var pendingTargetItem: ZipItem? = null
@@ -108,7 +110,7 @@ class ZipViewerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val isTv = DeviceUtils.isTvDevice(this)
+        isTv = DeviceUtils.isTvDevice(this)
         setContentView(
             if (isTv) R.layout.activity_zip_viewer_tv
             else R.layout.activity_zip_viewer
@@ -178,35 +180,53 @@ class ZipViewerActivity : AppCompatActivity() {
                 }
             }
             btnOptions.setOnClickListener {
-                val target = selectedZipItems.firstOrNull() ?: focusedItem
-                if (target != null) {
-                    if (!selectedZipItems.contains(target)) {
-                        selectedZipItems.clear()
-                        selectedZipItems.add(target)
-                        updateFabVisibility()
-                    }
-                    showArchiveToolsBottomSheet()
+                val targetItems = if (selectedZipItems.isNotEmpty()) {
+                    selectedZipItems.toList()
+                } else if (focusedItem != null) {
+                    listOf(focusedItem!!)
+                } else {
+                    val first = (recyclerEntries.adapter as? ZipAdapter)?.items?.firstOrNull()
+                    if (first != null) listOf(first) else emptyList()
+                }
+
+                if (targetItems.isNotEmpty()) {
+                    showItemOptionsForTarget(targetItems)
+                } else {
+                    showSnackbar(getString(R.string.empty_folder))
                 }
             }
-
-            val scrollContainer = findViewById<View>(R.id.scrollContainer)
-            scrollContainer?.setOnKeyListener { _, keyCode, event ->
-                if (event.action == android.view.KeyEvent.ACTION_DOWN) {
-                    val scrollAmount = (80 * resources.displayMetrics.density).toInt()
-                    when (keyCode) {
-                        android.view.KeyEvent.KEYCODE_DPAD_DOWN -> {
-                            recyclerEntries.smoothScrollBy(0, scrollAmount); true
-                        }
-                        android.view.KeyEvent.KEYCODE_DPAD_UP -> {
-                            if (!recyclerEntries.canScrollVertically(-1)) false // Let focus escape
-                            else { recyclerEntries.smoothScrollBy(0, -scrollAmount); true }
-                        }
-                        else -> false
-                    }
-                } else false
-            }
-            scrollContainer?.requestFocus()
         }
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (isTv && event.action == KeyEvent.ACTION_DOWN) {
+            when (event.keyCode) {
+                KeyEvent.KEYCODE_MENU -> {
+                    val target = selectedZipItems.firstOrNull() ?: focusedItem ?: (recyclerEntries.adapter as? ZipAdapter)?.items?.firstOrNull()
+                    if (target != null) {
+                        showItemOptionsForTarget(if (selectedZipItems.isNotEmpty()) selectedZipItems.toList() else listOf(target))
+                        return true
+                    }
+                }
+                KeyEvent.KEYCODE_DPAD_CENTER,
+                KeyEvent.KEYCODE_ENTER -> {
+                    if (event.isLongPress || event.repeatCount == 1) {
+                        val currentFocusView = currentFocus
+                        val focusedPos = currentFocusView?.let { recyclerEntries.getChildAdapterPosition(it) } ?: RecyclerView.NO_POSITION
+                        val item = if (focusedPos != RecyclerView.NO_POSITION) {
+                            (recyclerEntries.adapter as? ZipAdapter)?.items?.getOrNull(focusedPos)
+                        } else focusedItem
+                        if (item != null) {
+                            showItemOptionsForTarget(listOf(item))
+                            return true
+                        }
+                    } else if (event.repeatCount > 1) {
+                        return true
+                    }
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     private fun navigateBack() {
@@ -362,6 +382,11 @@ class ZipViewerActivity : AppCompatActivity() {
             layoutEmpty.visibility = View.GONE
             recyclerEntries.visibility = View.VISIBLE
             recyclerEntries.adapter = ZipAdapter(items)
+            if (isTv) {
+                recyclerEntries.post {
+                    recyclerEntries.findViewHolderForAdapterPosition(0)?.itemView?.requestFocus()
+                }
+            }
         }
     }
 
@@ -612,24 +637,63 @@ class ZipViewerActivity : AppCompatActivity() {
     }
 
     private fun showItemOptions(item: ZipItem) {
+        showItemOptionsForTarget(listOf(item))
+    }
+
+    private fun showItemOptionsForTarget(items: List<ZipItem>) {
+        if (items.isEmpty()) return
+        if (!isTv) {
+            if (!selectedZipItems.containsAll(items)) {
+                selectedZipItems.clear()
+                selectedZipItems.addAll(items)
+                updateFabVisibility()
+            }
+            showArchiveToolsBottomSheet()
+            return
+        }
+
         val dialog = ArchiveItemOptionsDialog()
-        dialog.setItemName(item.name)
+        val title = if (items.size == 1) items.first().name else getString(R.string.selection_count, items.size)
+        dialog.setItemName(title)
         dialog.setOnCopyOut {
+            pendingSelectedZipItems = items
             pendingExtractAll = false
-            pendingExtractHeader = item.entry
-            pendingTargetItem = item
+            pendingExtractHeader = if (items.size == 1) items.first().entry else null
+            pendingTargetItem = if (items.size == 1) items.first() else null
             pendingOpMode = ExtractOpMode.COPY_SINGLE
             launchDestPicker()
         }
         dialog.setOnMoveOut {
+            pendingSelectedZipItems = items
             pendingExtractAll = false
-            pendingExtractHeader = item.entry
-            pendingTargetItem = item
+            pendingExtractHeader = if (items.size == 1) items.first().entry else null
+            pendingTargetItem = if (items.size == 1) items.first() else null
             pendingOpMode = ExtractOpMode.MOVE_OUT_SINGLE
             launchDestPicker()
         }
         dialog.setOnDelete {
-            confirmDeleteZipItem(item)
+            confirmDeleteZipItems(items)
+        }
+        val filesOnly = items.filter { !it.isDirectory && it.entry != null }
+        val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+        if (filesOnly.isNotEmpty() && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) {
+            dialog.setAllowChecksum(true)
+            dialog.setOnChecksum {
+                val file = sourceFile ?: return@setOnChecksum
+                val sources = filesOnly.map { item ->
+                    val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val size = item.entry?.uncompressedSize ?: 0L
+                    za.kilowatch.ultimatefilemanager.checksum.ArchiveFileSource(
+                        archiveFile = file,
+                        entryPath = entryPath,
+                        entrySize = size,
+                        password = archivePassword
+                    )
+                }
+                clearSelection()
+                za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                    .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+            }
         }
         dialog.show(supportFragmentManager, ArchiveItemOptionsDialog.TAG)
     }
@@ -899,7 +963,7 @@ class ZipViewerActivity : AppCompatActivity() {
 
     // ── Adapter ──────────────────────────────────────────────────────────────
 
-    inner class ZipAdapter(private val items: List<ZipItem>) :
+    inner class ZipAdapter(val items: List<ZipItem>) :
         RecyclerView.Adapter<ZipAdapter.VH>() {
 
         inner class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -918,11 +982,17 @@ class ZipViewerActivity : AppCompatActivity() {
             val item = items[position]
             val context = holder.itemView.context
             val isSelected = selectedZipItems.contains(item)
+            val cardView = holder.itemView as? com.google.android.material.card.MaterialCardView
 
             holder.txtName.text = item.name
 
-            val cardView = holder.itemView as? com.google.android.material.card.MaterialCardView
-            if (isSelected) {
+            val isTvDevice = DeviceUtils.isTvDevice(context)
+            val isItemFocused = holder.itemView.hasFocus()
+
+            if (isTvDevice && isItemFocused) {
+                cardView?.setCardBackgroundColor(context.getColor(R.color.tv_button_focused_yellow))
+                cardView?.strokeColor = context.getColor(R.color.tv_button_focused_yellow)
+            } else if (isSelected) {
                 if (cardView != null) {
                     cardView.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
                     cardView.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.ufm_accent)
@@ -984,7 +1054,7 @@ class ZipViewerActivity : AppCompatActivity() {
             }
 
             // TV focus handling: Text/icon turns black on yellow focus bg
-            if (DeviceUtils.isTvDevice(context)) {
+            if (isTvDevice) {
                 val black = context.getColor(R.color.tv_button_focused_yellow_text)
                 val primaryColor = context.getColor(R.color.mobile_text_primary)
                 val secondaryColor = context.getColor(R.color.mobile_text_secondary)
@@ -993,13 +1063,32 @@ class ZipViewerActivity : AppCompatActivity() {
                 val blackCsl = android.content.res.ColorStateList.valueOf(black)
                 val iconCsl = android.content.res.ColorStateList.valueOf(iconColor)
 
+                if (isItemFocused) {
+                    holder.txtName.setTextColor(black)
+                    holder.txtInfo.setTextColor(black)
+                    holder.icon.imageTintList = blackCsl
+                } else {
+                    holder.txtName.setTextColor(primaryColor)
+                    holder.txtInfo.setTextColor(secondaryColor)
+                    holder.icon.imageTintList = iconCsl
+                }
+
                 holder.itemView.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
                         focusedItem = item
+                        cardView?.setCardBackgroundColor(context.getColor(R.color.tv_button_focused_yellow))
+                        cardView?.strokeColor = context.getColor(R.color.tv_button_focused_yellow)
                         holder.txtName.setTextColor(black)
                         holder.txtInfo.setTextColor(black)
                         holder.icon.imageTintList = blackCsl
                     } else {
+                        if (selectedZipItems.contains(item)) {
+                            cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
+                            cardView?.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.ufm_accent)
+                        } else {
+                            cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.mobile_glass_card))
+                            cardView?.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.mobile_glass_stroke)
+                        }
                         holder.txtName.setTextColor(primaryColor)
                         holder.txtInfo.setTextColor(secondaryColor)
                         holder.icon.imageTintList = iconCsl

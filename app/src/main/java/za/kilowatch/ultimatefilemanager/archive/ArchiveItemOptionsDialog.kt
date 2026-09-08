@@ -20,15 +20,19 @@ class ArchiveItemOptionsDialog : DialogFragment() {
 
     private var itemName: String = ""
     private var allowModification: Boolean = true
+    private var allowChecksum: Boolean = false
     private var onCopyOutListener: (() -> Unit)? = null
     private var onMoveOutListener: (() -> Unit)? = null
     private var onDeleteListener: (() -> Unit)? = null
+    private var onChecksumListener: (() -> Unit)? = null
 
     fun setItemName(name: String) { itemName = name }
     fun setAllowModification(allow: Boolean) { allowModification = allow }
+    fun setAllowChecksum(allow: Boolean) { allowChecksum = allow }
     fun setOnCopyOut(listener: () -> Unit) { onCopyOutListener = listener }
     fun setOnMoveOut(listener: () -> Unit) { onMoveOutListener = listener }
     fun setOnDelete(listener: () -> Unit) { onDeleteListener = listener }
+    fun setOnChecksum(listener: () -> Unit) { onChecksumListener = listener }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val isTv = DeviceUtils.isTvDevice(requireContext())
@@ -80,11 +84,14 @@ class ArchiveItemOptionsDialog : DialogFragment() {
         val btnExtractTo = view.findViewById<View>(R.id.btnExtractTo)
         val btnMoveOut = view.findViewById<View>(R.id.btnMoveOut)
         val btnDeleteFromArchive = view.findViewById<View>(R.id.btnDeleteFromArchive)
+        val btnChecksum = view.findViewById<View>(R.id.btnChecksum)
 
         if (!allowModification) {
             btnMoveOut.visibility = View.GONE
             btnDeleteFromArchive.visibility = View.GONE
         }
+
+        btnChecksum?.visibility = if (allowChecksum) View.VISIBLE else View.GONE
 
         btnExtractTo.setOnClickListener {
             dismiss()
@@ -101,6 +108,11 @@ class ArchiveItemOptionsDialog : DialogFragment() {
             onDeleteListener?.invoke()
         }
 
+        btnChecksum?.setOnClickListener {
+            dismiss()
+            onChecksumListener?.invoke()
+        }
+
         val context = requireContext()
         if (DeviceUtils.isTvDevice(context)) {
             val black = context.getColor(R.color.tv_button_focused_yellow_text)
@@ -110,8 +122,11 @@ class ArchiveItemOptionsDialog : DialogFragment() {
             setupTvFocusRow(btnExtractTo, view.findViewById(R.id.txtExtractText), view.findViewById(R.id.imgExtractIcon), context.getColor(R.color.tv_text_primary), yellowCsl, blackCsl)
             setupTvFocusRow(btnMoveOut, view.findViewById(R.id.txtMoveText), view.findViewById(R.id.imgMoveIcon), context.getColor(R.color.tv_accent), yellowCsl, blackCsl)
             setupTvFocusRow(btnDeleteFromArchive, view.findViewById(R.id.txtDeleteText), view.findViewById(R.id.imgDeleteIcon), context.getColor(R.color.ufm_error), yellowCsl, blackCsl)
+            if (btnChecksum != null) {
+                setupTvFocusRow(btnChecksum, view.findViewById(R.id.txtChecksumText), view.findViewById(R.id.imgChecksumIcon), context.getColor(R.color.tv_text_primary), yellowCsl, blackCsl)
+            }
 
-            btnMoveOut.requestFocus()
+            btnExtractTo.requestFocus()
         }
     }
 

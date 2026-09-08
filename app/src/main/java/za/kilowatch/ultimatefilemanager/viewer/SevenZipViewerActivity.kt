@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,6 +70,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
     private val extractedFiles = mutableMapOf<String, File>()
     private var focusedItem: SevenZipItem? = null
     private val selectedSevenZipItems = mutableSetOf<SevenZipItem>()
+    private var isTv = false
 
     private var pendingExtractEntry: SevenZArchiveEntry? = null
     private var pendingTargetItem: SevenZipItem? = null
@@ -111,7 +113,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val isTv = DeviceUtils.isTvDevice(this)
+        isTv = DeviceUtils.isTvDevice(this)
         setContentView(
             if (isTv) R.layout.activity_zip_viewer_tv
             else R.layout.activity_zip_viewer
@@ -183,16 +185,52 @@ class SevenZipViewerActivity : AppCompatActivity() {
             }
         }
         btnOptions.setOnClickListener {
-            val target = selectedSevenZipItems.firstOrNull() ?: focusedItem
-            if (target != null) {
-                if (!selectedSevenZipItems.contains(target)) {
-                    selectedSevenZipItems.clear()
-                    selectedSevenZipItems.add(target)
-                    updateFabVisibility()
-                }
-                showArchiveToolsBottomSheet()
+            val targetItems = if (selectedSevenZipItems.isNotEmpty()) {
+                selectedSevenZipItems.toList()
+            } else if (focusedItem != null) {
+                listOf(focusedItem!!)
+            } else {
+                val first = (recyclerEntries.adapter as? SevenZipAdapter)?.items?.firstOrNull()
+                if (first != null) listOf(first) else emptyList()
+            }
+
+            if (targetItems.isNotEmpty()) {
+                showItemOptionsForTarget(targetItems)
+            } else {
+                showSnackbar(getString(R.string.empty_folder))
             }
         }
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (isTv && event.action == KeyEvent.ACTION_DOWN) {
+            when (event.keyCode) {
+                KeyEvent.KEYCODE_MENU -> {
+                    val target = selectedSevenZipItems.firstOrNull() ?: focusedItem ?: (recyclerEntries.adapter as? SevenZipAdapter)?.items?.firstOrNull()
+                    if (target != null) {
+                        showItemOptionsForTarget(if (selectedSevenZipItems.isNotEmpty()) selectedSevenZipItems.toList() else listOf(target))
+                        return true
+                    }
+                }
+                KeyEvent.KEYCODE_DPAD_CENTER,
+                KeyEvent.KEYCODE_ENTER -> {
+                    if (event.isLongPress || event.repeatCount == 1) {
+                        val currentFocusView = currentFocus
+                        val focusedPos = currentFocusView?.let { recyclerEntries.getChildAdapterPosition(it) } ?: RecyclerView.NO_POSITION
+                        val item = if (focusedPos != RecyclerView.NO_POSITION) {
+                            (recyclerEntries.adapter as? SevenZipAdapter)?.items?.getOrNull(focusedPos)
+                        } else focusedItem
+                        if (item != null) {
+                            showItemOptionsForTarget(listOf(item))
+                            return true
+                        }
+                    } else if (event.repeatCount > 1) {
+                        return true
+                    }
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     private fun navigateBack() {
@@ -395,6 +433,11 @@ class SevenZipViewerActivity : AppCompatActivity() {
             layoutEmpty.visibility = View.GONE
             recyclerEntries.visibility = View.VISIBLE
             recyclerEntries.adapter = SevenZipAdapter(items)
+            if (isTv) {
+                recyclerEntries.post {
+                    recyclerEntries.findViewHolderForAdapterPosition(0)?.itemView?.requestFocus()
+                }
+            }
         }
     }
 
@@ -649,27 +692,70 @@ class SevenZipViewerActivity : AppCompatActivity() {
     }
 
     private fun showItemOptions(item: SevenZipItem) {
+        showItemOptionsForTarget(listOf(item))
+    }
+
+    private fun showItemOptionsForTarget(items: List<SevenZipItem>) {
+        if (items.isEmpty()) return
+        if (!isTv) {
+            if (!selectedSevenZipItems.containsAll(items)) {
+                selectedSevenZipItems.clear()
+                selectedSevenZipItems.addAll(items)
+                updateFabVisibility()
+            }
+            showArchiveToolsBottomSheet()
+            return
+        }
+
         val dialog = ArchiveItemOptionsDialog()
-        dialog.setItemName(item.name)
+        val title = if (items.size == 1) items.first().name else getString(R.string.selection_count, items.size)
+        dialog.setItemName(title)
         val ext = sourceFile?.extension?.lowercase(Locale.ROOT) ?: ""
         val isModifiable = ext != "rar"
         dialog.setAllowModification(isModifiable)
         dialog.setOnCopyOut {
+            pendingSelectedSevenZipItems = items
             pendingExtractAll = false
-            pendingExtractEntry = item.entry
-            pendingTargetItem = item
+            pendingExtractEntry = if (items.size == 1) items.first().entry else null
+            pendingTargetItem = if (items.size == 1) items.first() else null
             pendingOpMode = ExtractOpMode.COPY_SINGLE
             launchDestPicker()
         }
         dialog.setOnMoveOut {
+            pendingSelectedSevenZipItems = items
             pendingExtractAll = false
-            pendingExtractEntry = item.entry
-            pendingTargetItem = item
+            pendingExtractEntry = if (items.size == 1) items.first().entry else null
+            pendingTargetItem = if (items.size == 1) items.first() else null
             pendingOpMode = ExtractOpMode.MOVE_OUT_SINGLE
             launchDestPicker()
         }
         dialog.setOnDelete {
-            confirmDeleteSevenZipItem(item)
+            if (items.size == 1) {
+                confirmDeleteSevenZipItem(items.first())
+            } else {
+                confirmDeleteSevenZipItems(items)
+            }
+        }
+        val filesOnly = items.filter { !it.isDirectory && it.entry != null }
+        val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+        if (filesOnly.isNotEmpty() && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) {
+            dialog.setAllowChecksum(true)
+            dialog.setOnChecksum {
+                val file = sourceFile ?: return@setOnChecksum
+                val sources = filesOnly.map { item ->
+                    val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val size = item.entryInfo?.uncompressedSize ?: item.entry?.size ?: 0L
+                    za.kilowatch.ultimatefilemanager.checksum.ArchiveFileSource(
+                        archiveFile = file,
+                        entryPath = entryPath,
+                        entrySize = size,
+                        password = archivePassword
+                    )
+                }
+                clearSelection()
+                za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.newInstance(sources)
+                    .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
+            }
         }
         dialog.show(supportFragmentManager, ArchiveItemOptionsDialog.TAG)
     }
@@ -928,7 +1014,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
         val entry: SevenZArchiveEntry? = null
     )
 
-    inner class SevenZipAdapter(private val items: List<SevenZipItem>) : RecyclerView.Adapter<SevenZipAdapter.VH>() {
+    inner class SevenZipAdapter(val items: List<SevenZipItem>) : RecyclerView.Adapter<SevenZipAdapter.VH>() {
         inner class VH(v: View) : RecyclerView.ViewHolder(v) {
             val icon: ImageView = v.findViewById(R.id.imgIcon)
             val txtName: TextView = v.findViewById(R.id.txtName)
@@ -941,11 +1027,17 @@ class SevenZipViewerActivity : AppCompatActivity() {
             val item = items[position]
             val context = holder.itemView.context
             val isSelected = selectedSevenZipItems.contains(item)
+            val cardView = holder.itemView as? com.google.android.material.card.MaterialCardView
 
             holder.txtName.text = item.name
 
-            val cardView = holder.itemView as? com.google.android.material.card.MaterialCardView
-            if (isSelected) {
+            val isTvDevice = DeviceUtils.isTvDevice(context)
+            val isItemFocused = holder.itemView.hasFocus()
+
+            if (isTvDevice && isItemFocused) {
+                cardView?.setCardBackgroundColor(context.getColor(R.color.tv_button_focused_yellow))
+                cardView?.strokeColor = context.getColor(R.color.tv_button_focused_yellow)
+            } else if (isSelected) {
                 if (cardView != null) {
                     cardView.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
                     cardView.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.ufm_accent)
@@ -1003,20 +1095,40 @@ class SevenZipViewerActivity : AppCompatActivity() {
             }
 
             // TV focus: yellow highlight + track focused entry for the Options button.
-            if (DeviceUtils.isTvDevice(holder.itemView.context)) {
+            if (isTvDevice) {
                 val black = holder.itemView.context.getColor(R.color.tv_button_focused_yellow_text)
                 val primaryColor = holder.itemView.context.getColor(R.color.mobile_text_primary)
                 val secondaryColor = holder.itemView.context.getColor(R.color.mobile_text_secondary)
                 val iconColor = holder.itemView.context.getColor(R.color.mobile_icon_tint)
                 val blackCsl = android.content.res.ColorStateList.valueOf(black)
                 val iconCsl = android.content.res.ColorStateList.valueOf(iconColor)
+
+                if (isItemFocused) {
+                    holder.txtName.setTextColor(black)
+                    holder.txtInfo.setTextColor(black)
+                    holder.icon.imageTintList = blackCsl
+                } else {
+                    holder.txtName.setTextColor(primaryColor)
+                    holder.txtInfo.setTextColor(secondaryColor)
+                    holder.icon.imageTintList = iconCsl
+                }
+
                 holder.itemView.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
                         focusedItem = item
+                        cardView?.setCardBackgroundColor(context.getColor(R.color.tv_button_focused_yellow))
+                        cardView?.strokeColor = context.getColor(R.color.tv_button_focused_yellow)
                         holder.txtName.setTextColor(black)
                         holder.txtInfo.setTextColor(black)
                         holder.icon.imageTintList = blackCsl
                     } else {
+                        if (selectedSevenZipItems.contains(item)) {
+                            cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
+                            cardView?.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.ufm_accent)
+                        } else {
+                            cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.mobile_glass_card))
+                            cardView?.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.mobile_glass_stroke)
+                        }
                         holder.txtName.setTextColor(primaryColor)
                         holder.txtInfo.setTextColor(secondaryColor)
                         holder.icon.imageTintList = iconCsl

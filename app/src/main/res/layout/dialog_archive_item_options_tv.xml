@@ -93,6 +93,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/selector_tv_policy_scroll"
         android:clickable="true"
         android:focusable="true">
@@ -112,6 +113,37 @@
             android:layout_marginStart="16dp"
             android:text="@string/action_delete_from_archive"
             android:textColor="#FFFF5555"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Action 4: Checksum -->
+    <LinearLayout
+        android:id="@+id/btnChecksum"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="@drawable/selector_tv_policy_scroll"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgChecksumIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_checksum"
+            app:tint="@color/tv_text_primary"
+            android:contentDescription="@string/action_checksum" />
+
+        <TextView
+            android:id="@+id/txtChecksumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/action_checksum"
+            android:textColor="@color/tv_text_primary"
             android:textSize="16sp" />
     </LinearLayout>
 

@@ -31,6 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Improved Dutch (nl) localization translations for UI controls, network shares, permissions, and twin window mode.
 
+### Fixed
+- Fixed TV archive browsing "Options" button doing nothing when browsing ZIP, 7Z, TAR, and RAR files.
+- Fixed D-pad focus trap in TV archive viewer layouts, enabling smooth item navigation and yellow card focus highlighting.
+- Added remote Menu key and D-pad Center long-press shortcuts to open archive entry options on Android TV.
+
 ## [1.9.8] — 2026-09-05
 
 ### Added
