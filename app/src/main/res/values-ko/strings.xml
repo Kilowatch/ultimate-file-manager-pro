@@ -13874,6 +13874,20 @@ PIN이나 비밀번호를 잊으셨나요? 복구 키 입력
     <string name="close_all_tabs">
 모든 탭 닫기
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Expose to SAF &amp; Pickers
+</string>
+    <string name="expose_to_saf_subtitle">
+시스템 파일 선택기, Projectivy Launcher 배경화면 및 외부 앱에 표시됩니다.
+</string>
+    <string name="expose_to_saf_network_hint">
+Allows launchers and external apps (like Projectivy) to browse folders and stream media from this network share.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
+</string>
 </resources>
 
 

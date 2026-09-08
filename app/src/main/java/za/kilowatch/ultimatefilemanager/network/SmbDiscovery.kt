@@ -229,8 +229,23 @@ object SmbDiscovery {
                 TAG,
                 "Accessible-share cache miss: host=${cacheKey.host}, reason=${if (cached == null) "empty" else "expired"}"
             )
-            val accessibleShares = listShares(host, username, password, domain).filter { shareName ->
-                SmbShareClient.isShareAccessible(host, shareName, username, password, domain)
+            val rawShares = listShares(host, username, password, domain)
+            val accessibleShares = if (rawShares.isEmpty()) {
+                emptyList()
+            } else {
+                val pool = Executors.newFixedThreadPool(minOf(MAX_THREADS, rawShares.size))
+                val accessibleQueue = java.util.concurrent.ConcurrentLinkedQueue<String>()
+                val futures = rawShares.map { shareName ->
+                    pool.submit {
+                        if (SmbShareClient.isShareAccessible(host, shareName, username, password, domain)) {
+                            accessibleQueue.add(shareName)
+                        }
+                    }
+                }
+                pool.shutdown()
+                pool.awaitTermination(3000L, TimeUnit.MILLISECONDS)
+                futures.forEach { runCatching { it.cancel(true) } }
+                rawShares.filter { it in accessibleQueue }
             }
             val completedAtMs = System.currentTimeMillis()
             accessibleShareCache[cacheKey] = CachedShares(accessibleShares, completedAtMs)

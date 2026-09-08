@@ -13874,6 +13874,20 @@ Tarayıcı Sekmeleri ve Oturumlar
     <string name="close_all_tabs">
 Tüm sekmeleri kapat
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Expose to SAF &amp; Pickers
+</string>
+    <string name="expose_to_saf_subtitle">
+Sistem dosyası seçicilerine, Projectivy Launcher duvar kağıtlarına ve harici uygulamalara görünür yapın
+</string>
+    <string name="expose_to_saf_network_hint">
+Başlatıcıların ve harici uygulamaların (Projectivy gibi) bu ağ paylaşımından klasörlere göz atmasına ve medya akışı yapmasına izin verir.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
+</string>
 </resources>
 
 

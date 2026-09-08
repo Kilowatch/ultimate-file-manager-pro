@@ -13874,6 +13874,20 @@ Duplikat: %s
     <string name="close_all_tabs">
 Tutup semua tab
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Paparan ke SAF &amp; Pickers
+</string>
+    <string name="expose_to_saf_subtitle">
+Jadikan terlihat oleh pemetik file sistem, wallpaper Projectivy Launcher, dan aplikasi eksternal
+</string>
+    <string name="expose_to_saf_network_hint">
+Mengizinkan peluncur dan aplikasi eksternal (seperti Projectivy) menelusuri folder dan mengalirkan media dari jaringan berbagi ini.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Mengizinkan peluncur dan aplikasi eksternal (seperti Projectivy) menelusuri folder dan mengalirkan media dari penyimpanan online ini.
+</string>
 </resources>
 
 

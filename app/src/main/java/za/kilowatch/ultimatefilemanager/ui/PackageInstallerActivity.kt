@@ -66,8 +66,12 @@ class PackageInstallerActivity : AppCompatActivity() {
     }
 
     private suspend fun installFromUri(uri: Uri) = withContext(Dispatchers.IO) {
-        val file = if (uri.scheme == "file") {
-            File(uri.path!!)
+        val rawPath = uri.path ?: ""
+        val isSafPath = rawPath.startsWith("/saf:") || rawPath.startsWith("saf:") || uri.scheme == "saf"
+        val file = if (uri.scheme == "file" && !isSafPath) {
+            File(rawPath)
+        } else if (isSafPath) {
+            copySafToTempFile(rawPath)
         } else {
             // content:// URI - copy to temp cache file
             copyToTempFile(uri)
@@ -85,6 +89,24 @@ class PackageInstallerActivity : AppCompatActivity() {
         } else {
             throw IllegalArgumentException("${getString(R.string.error_not_apk_xapk)}: .$ext")
         }
+    }
+
+    private fun copySafToTempFile(rawPath: String): File {
+        val cleanSafPath = if (rawPath.startsWith("/saf:/")) "saf://" + rawPath.removePrefix("/saf:/")
+            else if (rawPath.startsWith("/saf:")) "saf://" + rawPath.removePrefix("/saf:")
+            else if (rawPath.startsWith("saf:/") && !rawPath.startsWith("saf://")) "saf://" + rawPath.removePrefix("saf:/")
+            else if (rawPath.startsWith("saf://")) rawPath
+            else "saf://${rawPath.trimStart('/')}"
+        val inputStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(this, cleanSafPath)
+            ?: throw Exception(getString(R.string.error_failed_open_uri))
+        val ext = cleanSafPath.substringAfterLast('.', "apk")
+        val tempFile = File(cacheDir, "install_temp_${UUID.randomUUID()}.$ext")
+        inputStream.use { input ->
+            tempFile.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+        return tempFile
     }
 
     private fun copyToTempFile(uri: Uri): File {

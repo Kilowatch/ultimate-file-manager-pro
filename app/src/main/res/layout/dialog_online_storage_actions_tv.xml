@@ -113,6 +113,50 @@
                 android:background="@color/tv_glass_border"
                 android:layout_marginVertical="4dp" />
 
+            <!-- Toggle SAF Action -->
+            <LinearLayout
+                android:id="@+id/btnActionToggleSaf"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="14dp"
+                android:background="@drawable/selector_tv_list_item"
+                android:focusable="true"
+                android:clickable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_share"
+                    app:tint="@color/tv_accent"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/expose_to_saf_title"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="15.5sp"
+                    android:fontFamily="sans-serif-bold" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/swActionSaf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:duplicateParentState="true" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/tv_glass_border"
+                android:layout_marginVertical="4dp" />
+
             <!-- Delete Action -->
             <LinearLayout
                 android:id="@+id/btnActionDelete"

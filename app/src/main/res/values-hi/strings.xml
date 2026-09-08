@@ -13874,6 +13874,20 @@ UFM को सुरक्षित करने के लिए 4 अंको
     <string name="close_all_tabs">
 सभी टैब बंद करें
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+एसएएफ और पिकर्स को बेनकाब करें
+</string>
+    <string name="expose_to_saf_subtitle">
+सिस्टम फ़ाइल पिकर, प्रोजेक्टिवी लॉन्चर वॉलपेपर और बाहरी ऐप्स के लिए दृश्यमान बनाएं
+</string>
+    <string name="expose_to_saf_network_hint">
+लॉन्चर और बाहरी ऐप्स (जैसे प्रोजेक्टिवी) को इस नेटवर्क शेयर से फ़ोल्डर्स ब्राउज़ करने और मीडिया स्ट्रीम करने की अनुमति देता है।
+</string>
+    <string name="expose_to_saf_cloud_hint">
+लॉन्चर और बाहरी ऐप्स (जैसे प्रोजेक्टिवी) को इस ऑनलाइन स्टोरेज से फ़ोल्डर्स ब्राउज़ करने और मीडिया स्ट्रीम करने की अनुमति देता है।
+</string>
 </resources>
 
 

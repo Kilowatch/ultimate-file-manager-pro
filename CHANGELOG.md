@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.9] — 2026-09-07
 
 ### Added
+- Storage Access Framework (SAF) Remote Integration:
+  - Expose network shares (SMB, FTP, SFTP, NFS, DLNA, TV) and online cloud storages (WebDAV, RClone, Google Drive, OneDrive, Dropbox, S3, IDrive e2) directly to the Android Storage Access Framework and system file pickers on Mobile and Android TV.
+  - Dedicated "Expose to SAF" toggle on network share edit screens, cloud setup dialogs, and Android TV action menus to control remote root visibility.
+  - Dynamic root share discovery for server-mode SMB configurations in SAF pickers.
+  - Hardened read-only write protection, credential safety filtering, and path traversal security guards for remote SAF access.
 - Mobile Tabbed File Browser:
   - Added "New Tab" option directly above "Twin Window" in the 3-dots header overflow menu for Local, SAF, Network, and Online storage browsers.
   - Created a custom vector icon (`ic_tab_new`) registered in `IconCustomizationManager` (`ALL_BUILTIN_ICONS`).

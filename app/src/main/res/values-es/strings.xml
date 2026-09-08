@@ -13886,6 +13886,20 @@ Duplicado: %s
     <string name="close_all_tabs">
 Cerrar todas las pestañas
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Exponer a SAF y recolectores
+</string>
+    <string name="expose_to_saf_subtitle">
+Hacer visible para los selectores de archivos del sistema, los fondos de pantalla de Projectivy Launcher y las aplicaciones externas.
+</string>
+    <string name="expose_to_saf_network_hint">
+Permite que los lanzadores y aplicaciones externas (como Projectivy) exploren carpetas y transmitan medios desde este recurso compartido de red.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Permite que los lanzadores y aplicaciones externas (como Projectivy) exploren carpetas y transmitan medios desde este almacenamiento en línea.
+</string>
 </resources>
 
 

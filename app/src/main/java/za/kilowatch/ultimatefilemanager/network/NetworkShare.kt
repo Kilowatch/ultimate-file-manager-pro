@@ -29,7 +29,8 @@ data class NetworkShare(
     val isServerMode: Boolean = false,
     val hostKeyFingerprint: String? = null,   // SHA-256 hex; null = TOFU on next connect
     val nfsVersion: Int = 0,                 // 0 = auto-negotiated (recommended), 3 = NFSv3, 4 = NFSv4
-    val nfsAuthFlavor: Int = 1               // 0 = AUTH_NONE, 1 = AUTH_SYS
+    val nfsAuthFlavor: Int = 1,              // 0 = AUTH_NONE, 1 = AUTH_SYS
+    val exposeToSaf: Boolean = true
 ) {
     val effectivePort: Int get() = when {
         port > 0  -> port

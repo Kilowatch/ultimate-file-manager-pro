@@ -179,7 +179,8 @@ class WebDavSetupActivity : AppCompatActivity() {
                     webDavUrl      = testShare.host,
                     webDavUsername = username.ifEmpty { null },
                     webDavPassword = password.ifEmpty { null },
-                    isCredentialsStripped = false
+                    isCredentialsStripped = false,
+                    exposeToSaf = editingStorageId?.let { repo.getById(it)?.exposeToSaf } ?: true
                 )
                 repo.save(storage)
                 GoRoLog.d(TAG, "WebDAV storage connected: $label")

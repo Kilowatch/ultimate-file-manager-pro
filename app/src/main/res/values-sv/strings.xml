@@ -13851,6 +13851,20 @@ Duplicerad: %s
     <string name="close_all_tabs">
 Stäng alla flikar
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Exponera för SAF &amp; Pickers
+</string>
+    <string name="expose_to_saf_subtitle">
+Gör synlig för systemfilväljare, Projectivy Launcher-bakgrunder och externa appar
+</string>
+    <string name="expose_to_saf_network_hint">
+Tillåter programstartare och externa appar (som Projectivy) att bläddra i mappar och strömma media från denna nätverksresurs.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Tillåter programstartare och externa appar (som Projectivy) att bläddra i mappar och strömma media från denna onlinelagring.
+</string>
 </resources>
 
 

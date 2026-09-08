@@ -13874,6 +13874,20 @@ PIN が間違っています。残り %1$d 回の試行回数
     <string name="close_all_tabs">
 すべてのタブを閉じる
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+SAF とピッカーを公開する
+</string>
+    <string name="expose_to_saf_subtitle">
+システム ファイル ピッカー、Projectivy Launcher の壁紙、外部アプリに表示されるようにする
+</string>
+    <string name="expose_to_saf_network_hint">
+ランチャーと外部アプリ (Projectivy など) がフォルダーを参照し、このネットワーク共有からメディアをストリーミングできるようにします。
+</string>
+    <string name="expose_to_saf_cloud_hint">
+ランチャーと外部アプリ (Projectivy など) がフォルダーを参照し、このオンライン ストレージからメディアをストリーミングできるようにします。
+</string>
 </resources>
 
 

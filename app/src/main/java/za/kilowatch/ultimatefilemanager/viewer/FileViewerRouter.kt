@@ -275,7 +275,7 @@ object FileViewerRouter {
                 textViewerIntent(context)
             in PACKAGE_EXTENSIONS ->
                 Intent(context, za.kilowatch.ultimatefilemanager.ui.PackageInstallerActivity::class.java).apply {
-                    data = contentUri ?: Uri.fromFile(file)
+                    data = effectiveContentUri ?: contentUri ?: Uri.fromFile(file)
                 }
             // Dot-config dotfiles (e.g. .env, .htaccess) have a misleading or
             // empty extension, so route them to the text viewer by filename.

@@ -13874,6 +13874,20 @@ SHA-256
     <string name="close_all_tabs">
 Закрити всі вкладки
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Відкрийте для SAF і Pickers
+</string>
+    <string name="expose_to_saf_subtitle">
+Зробити видимим для засобів вибору системних файлів, шпалер Projectivy Launcher і зовнішніх програм
+</string>
+    <string name="expose_to_saf_network_hint">
+Дозволяє програмам запуску та зовнішнім програмам (як-от Projectivy) переглядати папки та транслювати медіафайли з цієї спільної мережі.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Дозволяє програмам запуску та зовнішнім програмам (як-от Projectivy) переглядати папки та транслювати медіа з цього онлайн-сховища.
+</string>
 </resources>
 
 

@@ -13874,6 +13874,20 @@ Dupliziert: %s
     <string name="close_all_tabs">
 Alle Tabs schließen
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+SAF und Pickern ausgesetzt sein
+</string>
+    <string name="expose_to_saf_subtitle">
+Machen Sie es für Systemdateiauswahlprogramme, Projectivy Launcher-Hintergrundbilder und externe Apps sichtbar
+</string>
+    <string name="expose_to_saf_network_hint">
+Ermöglicht Launchern und externen Apps (wie Projectivy), Ordner zu durchsuchen und Medien von dieser Netzwerkfreigabe zu streamen.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Ermöglicht Launchern und externen Apps (wie Projectivy), Ordner zu durchsuchen und Medien von diesem Online-Speicher zu streamen.
+</string>
 </resources>
 
 

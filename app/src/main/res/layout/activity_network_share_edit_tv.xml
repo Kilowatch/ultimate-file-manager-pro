@@ -993,6 +993,66 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- 9. Expose to SAF Card (TV) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:id="@+id/layoutTvExposeToSaf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="14dp"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:background="@drawable/selector_tv_list_item">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginEnd="12dp"
+                            android:duplicateParentState="true">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/expose_to_saf_title"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-black"
+                                android:duplicateParentState="true" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/expose_to_saf_subtitle"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="12sp"
+                                android:layout_marginTop="2dp"
+                                android:duplicateParentState="true" />
+                        </LinearLayout>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/swExposeToSaf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:focusable="false"
+                            android:clickable="false"
+                            android:duplicateParentState="true" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
                 <!-- Test Connection result -->
                 <TextView
                     android:id="@+id/txtTestResult"

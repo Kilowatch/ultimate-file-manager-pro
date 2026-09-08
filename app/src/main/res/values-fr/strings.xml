@@ -13874,6 +13874,20 @@ Dupliqué : %s
     <string name="close_all_tabs">
 Fermer tous les onglets
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Expose to SAF &amp; Pickers
+</string>
+    <string name="expose_to_saf_subtitle">
+Make visible to system file pickers, Projectivy Launcher wallpapers, and external apps
+</string>
+    <string name="expose_to_saf_network_hint">
+Allows launchers and external apps (like Projectivy) to browse folders and stream media from this network share.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
+</string>
 </resources>
 
 

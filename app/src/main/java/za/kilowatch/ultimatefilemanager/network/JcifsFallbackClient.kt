@@ -33,12 +33,20 @@ object JcifsFallbackClient {
         val auth = NtlmPasswordAuthenticator(share.domain ?: "", share.username, share.password)
         val context = smbContext.withCredentials(auth)
 
-        val parts = share.remotePath.trim('/').split("/", limit = 2)
-        val shareName = if (parts.isNotEmpty()) parts[0] else ""
-        val basePath = if (parts.size > 1) parts[1] else ""
-        val innerPath = "$basePath/${remotePath.trimStart('/')}".trim('/')
+        val cleanBase = share.remotePath.trim('/').replace('\\', '/')
+        val (shareName, innerPath) = if (cleanBase.isBlank()) {
+            val cleanRemote = remotePath.trim('/').replace('\\', '/')
+            val parts = cleanRemote.split("/", limit = 2)
+            parts.getOrElse(0) { "" } to parts.getOrElse(1) { "" }
+        } else {
+            val parts = cleanBase.split("/", limit = 2)
+            val sName = parts.getOrElse(0) { "" }
+            val bPath = parts.getOrElse(1) { "" }
+            val iPath = "$bPath/${remotePath.trimStart('/')}".trim('/')
+            sName to iPath
+        }
 
-        val url = "smb://${share.host}/$shareName/$innerPath"
+        val url = if (innerPath.isBlank()) "smb://${share.host}/$shareName" else "smb://${share.host}/$shareName/$innerPath"
         GoRoLog.d("JcifsFallbackClient hooking direct stream to: $url")
 
         val smbFile = SmbFile(url, context)

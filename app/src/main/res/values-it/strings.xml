@@ -13874,6 +13874,20 @@ Scheda duplicata: %s
     <string name="close_all_tabs">
 Chiudi tutte le schede
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Esporre a SAF e raccoglitori
+</string>
+    <string name="expose_to_saf_subtitle">
+Rendi visibile ai selettori di file di sistema, agli sfondi di Projectivy Launcher e alle app esterne
+</string>
+    <string name="expose_to_saf_network_hint">
+Consente ai launcher e alle app esterne (come Projectivy) di sfogliare cartelle ed eseguire lo streaming di contenuti multimediali da questa condivisione di rete.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Consente ai launcher e alle app esterne (come Projectivy) di sfogliare cartelle ed eseguire lo streaming di contenuti multimediali da questo spazio di archiviazione online.
+</string>
 </resources>
 
 

@@ -13874,6 +13874,20 @@ Set Password
     <string name="close_all_tabs">
 إغلاق جميع التبويبات
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+فضح لSAF والملتقطين
+</string>
+    <string name="expose_to_saf_subtitle">
+اجعله مرئيًا لمنتقي ملفات النظام وخلفيات Projectivy Launcher والتطبيقات الخارجية
+</string>
+    <string name="expose_to_saf_network_hint">
+يسمح للمشغلات والتطبيقات الخارجية (مثل Projectivy) بتصفح المجلدات ودفق الوسائط من مشاركة الشبكة هذه.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+يسمح للمشغلات والتطبيقات الخارجية (مثل Projectivy) بتصفح المجلدات ودفق الوسائط من وحدة التخزين عبر الإنترنت هذه.
+</string>
 </resources>
 
 

@@ -55,26 +55,38 @@ class NetworkThumbnailCacheManager(private val context: Context) {
         private const val RETRIEVER_TIMEOUT_MS = 15_000L
     }
 
+    private fun normalizePath(path: String): String {
+        val clean = path.replace('\\', '/').trim()
+        return if (clean.startsWith("/")) clean else "/$clean"
+    }
+
     /**
      * Main entry point for the adapter to get a thumbnail.
      * Tries cache first, then generates and caches if missing.
      */
-    suspend fun getThumbnail(share: NetworkShare, networkFile: NetworkFile): String? = withContext(Dispatchers.IO) {
+    suspend fun getThumbnail(share: NetworkShare, networkFile: NetworkFile, force: Boolean = false): String? = withContext(Dispatchers.IO) {
         GoRoLog.d("UFM_CACHE", "🚀 [GoRo] getThumbnail entry: ${networkFile.path}")
-        val cached = getCachedThumbnailPath(share.id, networkFile.path)
+        val cached = getCachedThumbnailPath(share.id, networkFile.path, force = force)
         if (cached != null) return@withContext cached
 
-        return@withContext generateAndCache(share, networkFile)
+        return@withContext generateAndCache(share, networkFile, force = force)
     }
 
     /**
      * Checks if a thumbnail already exists in the cache database and on disk.
      */
-    suspend fun getCachedThumbnailPath(shareId: String, networkPath: String): String? = withContext(Dispatchers.IO) {
-        if (!NetworkThumbnailPreferenceManager.isEnabled(context)) return@withContext null
+    suspend fun getCachedThumbnailPath(shareId: String, networkPath: String, force: Boolean = false): String? = withContext(Dispatchers.IO) {
+        if (!force && !NetworkThumbnailPreferenceManager.isEnabled(context)) return@withContext null
 
         GoRoLog.d("UFM_CACHE", "🚀 [GoRo] Querying DB for: $networkPath")
-        val entity = db.dao().get(shareId, networkPath)
+        val normPath = normalizePath(networkPath)
+        var entity = db.dao().get(shareId, normPath)
+        if (entity == null && normPath != networkPath) {
+            entity = db.dao().get(shareId, networkPath)
+        }
+        if (entity == null) {
+            entity = db.dao().get(shareId, networkPath.trimStart('/'))
+        }
         if (entity != null) {
             val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)
             val file = File(cacheFolderPath, entity.localFileName)
@@ -83,7 +95,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                 return@withContext file.absolutePath
             } else {
                 // If it's in DB but not on disk, clean up DB
-                db.dao().delete(shareId, networkPath)
+                db.dao().delete(shareId, entity.networkPath)
             }
         }
         return@withContext null
@@ -98,9 +110,10 @@ class NetworkThumbnailCacheManager(private val context: Context) {
      */
     suspend fun generateAndCache(
         share: NetworkShare,
-        networkFile: NetworkFile
+        networkFile: NetworkFile,
+        force: Boolean = false
     ): String? = withContext(Dispatchers.IO) {
-        if (!NetworkThumbnailPreferenceManager.isEnabled(context)) return@withContext null
+        if (!force && !NetworkThumbnailPreferenceManager.isEnabled(context)) return@withContext null
 
         val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)
         val cacheFolder = File(cacheFolderPath)
@@ -124,9 +137,21 @@ class NetworkThumbnailCacheManager(private val context: Context) {
 
         if (!isImage && !isVideo && !isApk) return@withContext null
 
-        // Hash the combination of shareId and network path to use as unique local filename
+        // For RClone shares (like Filen), random access streaming is not supported,
+        // so openInputStream downloads the entire file to disk via operations/copyfile.
+        // Downloading large video files (> 20MB) in full solely for thumbnails saturates
+        // the single gomobile thread, exhausts device storage, and causes connection dropouts.
+        if (isVideo && za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(share)) {
+            val size = networkFile.size
+            if (size <= 0L || size > 20 * 1024 * 1024L) {
+                return@withContext null
+            }
+        }
+
+        // Hash the combination of shareId and normalized network path to use as unique local filename
+        val normPath = normalizePath(networkFile.path)
         val md = MessageDigest.getInstance("MD5")
-        val input = share.id + networkFile.path
+        val input = share.id + normPath
         val hashBytes = md.digest(input.toByteArray())
         val hashName = hashBytes.joinToString("") { "%02x".format(it) } + ".webp"
         val destFile = File(cacheFolder, hashName)
@@ -152,10 +177,18 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                 if (isVideo && isRandomAccessCapable && !skipRetriever && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // ── Random-access path (SMB / SFTP / FTP / cloud) ─────────────────────
                     var randomAccess: IRandomAccessFile? = null
+                    var dataSource: RemoteMediaDataSource? = null
                     val retriever = android.media.MediaMetadataRetriever()
                     try {
                         randomAccess = when (share.type) {
-                            ShareType.SMB          -> SmbShareClient.openRandomAccessFile(share, networkFile.path)
+                            ShareType.SMB          -> {
+                                try {
+                                    SmbShareClient.openRandomAccessFile(share, networkFile.path)
+                                } catch (e: Exception) {
+                                    GoRoLog.w("UFM_CACHE", "SmbShareClient openRandomAccessFile failed, falling back to JCIFS: ${e.message}")
+                                    JcifsFallbackClient.openRandomAccessFile(share, networkFile.path)
+                                }
+                            }
                             ShareType.SFTP,
                             ShareType.SCP          -> SshShareClient.openRandomAccessFile(share, networkFile.path)
                             ShareType.FTP          -> FtpShareClient.openRandomAccessFile(share, networkFile.path)
@@ -168,7 +201,8 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                             ShareType.DLNA       -> DlnaShareClient.openRandomAccessFile(share, networkFile.path)
                             else -> throw IllegalStateException("Unsupported RandomAccess ShareType")
                         }
-                        val dataSource = RemoteMediaDataSource(randomAccess)
+                        val ds = RemoteMediaDataSource(randomAccess)
+                        dataSource = ds
 
                         // Fix 2: 15-second timeout covers the entire retriever session
                         // (NTLM handshake + container probe + first-frame decode).
@@ -176,7 +210,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                         withTimeout(RETRIEVER_TIMEOUT_MS) {
                             // Fix 3: catch Throwable so OutOfMemoryError is handled gracefully.
                             try {
-                                retriever.setDataSource(dataSource)
+                                retriever.setDataSource(ds)
                                 val durationUs = retriever.extractMetadata(
                                     android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
                                 )?.toLongOrNull()?.times(1000) ?: 0L
@@ -204,7 +238,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                         GoRoLog.e("UFM_CACHE", "Remote Random Access video thumbnail failed for ${networkFile.path}", e)
                     } finally {
                         try { retriever.release() } catch (_: Exception) {}
-                        try { (retriever as? android.media.MediaDataSource)?.close() } catch (_: Exception) {}
+                        try { dataSource?.close() } catch (_: Exception) {}
                         randomAccess?.close()
                     }
                 }
@@ -223,7 +257,6 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                             ShareType.DROPBOX      -> DropboxShareClient.openInputStream(share, networkFile.path).first
                             ShareType.AWS_S3,
                             ShareType.IDRIVE_E2    -> S3ShareClient.openInputStream(share, networkFile.path).first
-                            ShareType.WEBDAV       -> WebDavShareClient.openInputStream(share, networkFile.path).first
                             ShareType.WEBDAV       -> WebDavShareClient.openInputStream(share, networkFile.path).first
                             ShareType.NFS          -> NfsShareClient.openInputStream(share, networkFile.path)
                             ShareType.DLNA       -> DlnaShareClient.openInputStream(share, networkFile.path)

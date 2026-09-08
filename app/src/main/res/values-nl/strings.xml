@@ -2522,9 +2522,7 @@ Verbinding mislukt: controleer host, inloggegevens en netwerk
     <string name="network_error_required">
 Naam en host zijn vereist
 </string>
-    <string name="network_delete_confirm_title">
-Deel verwijderen
-</string>
+    <string name="network_delete_confirm_title">Share verwijderen</string>
     <string name="network_delete_confirm_body">
 \'%1$s\' uit de lijst verwijderen? Hierdoor wordt het ook uit de bestandskiezers verwijderd.
 </string>
@@ -2532,15 +2530,9 @@ Deel verwijderen
 Verwijderen
 </string>
     <!-- TV share item action dialog options -->
-    <string name="network_action_browse">
-📂 Blader door delen
-</string>
-    <string name="network_action_edit">
-✏️ Deel bewerken
-</string>
-    <string name="network_action_delete">
-🗑️Deel verwijderen
-</string>
+    <string name="network_action_browse">📂 Blader door share</string>
+    <string name="network_action_edit">✏️ Share bewerken</string>
+    <string name="network_action_delete">🗑️ Share verwijderen</string>
     <string name="network_field_access">
 Toegangsmodus
 </string>
@@ -2581,17 +2573,13 @@ Gedeelde mappen
     <string name="smb_server_no_shares">
 Er zijn geen shares beschikbaar op deze server
 </string>
-    <string name="smb_server_discovery_error">
-Kan aandelen niet vinden: %s
-</string>
+    <string name="smb_server_discovery_error">Kan share niet vinden: %s</string>
 
     <!-- Connection Success Dialog -->
     <string name="network_dialog_success_title">
 Verbinding succesvol
 </string>
-    <string name="network_dialog_success_body">
-Jouw aandeel is bereikbaar. Nu opslaan?
-</string>
+    <string name="network_dialog_success_body">Jouw share is bereikbaar. Nu opslaan?</string>
     <string name="network_dialog_success_save">
 Opslaan en afsluiten
 </string>
@@ -2771,9 +2759,7 @@ Synchronisatiefiltering
     <string name="destination">
 Bestemming
 </string>
-    <string name="conflict_handling">
-Conflicthantering
-</string>
+    <string name="conflict_handling">Conflict afhandeling</string>
     <string name="manual">
 Handmatig
 </string>
@@ -3044,12 +3030,8 @@ Er zijn geen SMB-hosts gevonden op dit netwerk.
     <string name="smb_credentials_header">
 Verbinding maken met host
 </string>
-    <string name="smb_shares_title_generic">
-Beschikbare aandelen
-</string>
-    <string name="smb_shares_loading">
-Aandelen laden...
-</string>
+    <string name="smb_shares_title_generic">Beschikbare shares</string>
+    <string name="smb_shares_loading">Aandelen shares...</string>
     <string name="smb_shares_none">
 Geen toegankelijke shares gevonden.
 </string>
@@ -3059,9 +3041,7 @@ Verbinden
     <string name="smb_cd_scan">
 Scannen naar SMB-hosts
 </string>
-    <string name="smb_cd_browse_shares">
-Blader door beschikbare aandelen
-</string>
+    <string name="smb_cd_browse_shares">Blader door beschikbare shares</string>
     <string name="smb_error_max_connections">
 De SMB-server heeft het maximale aantal verbindingen bereikt. Probeer het later opnieuw of koppel andere apparaten los van deze server.
 </string>
@@ -3096,12 +3076,8 @@ De NFS-server ondersteunt de gevraagde protocolversie niet. De clientbibliotheek
     <string name="nfs_diagnostics_title">
 Verbindingsdiagnostiek
 </string>
-    <string name="nfs_diagnostics_dns_ok">
-Hostnaam wordt opgelost
-</string>
-    <string name="nfs_diagnostics_dns_fail">
-Hostnaam kan niet worden opgelost
-</string>
+    <string name="nfs_diagnostics_dns_ok">Hostnaam herleidt</string>
+    <string name="nfs_diagnostics_dns_fail">Hostnaam kan niet worden herleidt</string>
     <string name="nfs_diagnostics_port2049_ok">
 NFS-poort 2049 is bereikbaar
 </string>
@@ -3363,9 +3339,7 @@ Pictogramachtergrond
     <string name="tile_color_tile_bg">
 Tegel Achtergrond
 </string>
-    <string name="tile_color_copy_to">
-Kopiëren naar\\u2026
-</string>
+    <string name="tile_color_copy_to">Kopiëren naar\u2026</string>
     <string name="tile_copy_title">
 Kleur toepassen op tegels
 </string>
@@ -4010,9 +3984,7 @@ Verlaag de time-out
 Verhoog de time-out
 </string>
 
-    <string name="save">
-Redden
-</string>
+    <string name="save">Opslaan</string>
 
     <!-- ADB Terminal -->
     <string name="adb_terminal_title">
@@ -4163,9 +4135,7 @@ Beheer tv-verbindingen
 Nog geen apparaten gekoppeld.\n
 Tik op + om een ​​tv te koppelen.
 </string>
-    <string name="link_tv">
-Link-tv
-</string>
+    <string name="link_tv">Koppel tv</string>
     <string name="link_tv_button">
 Koppel een nieuwe tv
 </string>
@@ -5377,9 +5347,7 @@ Automatisch verwijderen
     <string name="recycle_bin_auto_delete_duration">
 Duur automatisch verwijderen
 </string>
-    <string name="recycle_bin_auto_delete_disabled">
-Gehandicapt
-</string>
+    <string name="recycle_bin_auto_delete_disabled">Uitgeschakeld</string>
     <string name="recycle_bin_auto_delete_days">
 %d dagen
 </string>
@@ -5825,9 +5793,7 @@ Weet je zeker dat je de %d geselecteerde items wilt verwijderen?
     <string name="remote_vol_used">
 %d%% gebruikt
 </string>
-    <string name="remote_vol_free_of">
-%1$s gratis van %2$s
-</string>
+    <string name="remote_vol_free_of">%1$s vrij van %2$s</string>
     <string name="remote_vol_shared_folder">
 Gedeelde map
 </string>
@@ -7630,9 +7596,7 @@ XAPK-installatiestatus: %1$s
     <string name="error_loading_emessage">
 Fout bij laden: %1$s
 </string>
-    <string name="freestr_free_of_totalstr">
-%1$s gratis van %2$s
-</string>
+    <string name="freestr_free_of_totalstr">%1$s vrij van %2$s</string>
     <string name="usedpct_used">
 %1$d%% gebruikt
 </string>
@@ -9602,9 +9566,7 @@ Extraheer het pictogram en de metagegevens naast APK/XAPK
     <string name="apk_extract_master_subtitle_on">
 Ingeschakeld: tik om velden te wijzigen
 </string>
-    <string name="apk_extract_master_subtitle_off">
-Gehandicapt
-</string>
+    <string name="apk_extract_master_subtitle_off">Uitgeschakeld</string>
     <string name="apk_extract_icon_title">
 App-pictogram uitpakken
 </string>
@@ -11163,15 +11125,9 @@ Kies hoe ver u vooruit of achteruit wilt springen tijdens het zoeken tijdens het
     <string name="skip_length_option_10s">
 10s
 </string>
-    <string name="skip_length_option_20s">
-jaren 20
-</string>
-    <string name="skip_length_option_30s">
-Jaren \'30
-</string>
-    <string name="skip_length_option_disable">
-Uitzetten
-</string>
+    <string name="skip_length_option_20s">20s</string>
+    <string name="skip_length_option_30s">30s</string>
+    <string name="skip_length_option_disable">Uitschakelen</string>
     <string name="skip_length_desc_3s">
 3 seconden overslaan
 </string>
@@ -13194,9 +13150,7 @@ Sta verhoogde superuser-toegang toe voor systeempartities en beveiligde mappen
     <string name="settings_root_access_enabled_subtitle">
 Ingeschakeld — Superuser-toegang actief
 </string>
-    <string name="settings_root_access_disabled_subtitle">
-Gehandicapt
-</string>
+    <string name="settings_root_access_disabled_subtitle">Uitgeschakeld</string>
     <string name="settings_root_access_disabled_unrooted">
 Root niet gedetecteerd op dit apparaat
 </string>
@@ -13772,6 +13726,55 @@ Ontgrendelen
 </string>
     <string name="field_cannot_be_empty">
 Veld mag niet leeg zijn
+</string>
+
+    <!-- Mobile Tabbed File Browsing -->
+    <string name="new_tab">
+New Tab
+</string>
+    <string name="icon_action_new_tab">
+Nieuw tabblad
+</string>
+    <string name="tab_option_this_location">
+This Location
+</string>
+    <string name="tab_option_this_location_sub">
+Open current folder in a new tab
+</string>
+    <string name="tab_option_other_storage">
+Select Other Storage…
+</string>
+    <string name="tab_option_other_storage_sub">
+Browse Internal, SD Card, Network, or Cloud storages
+</string>
+    <string name="tab_default_name">
+Tab %d
+</string>
+    <string name="tab_storage_unavailable_closed">
+Closed tab \'%s\' (storage disconnected)
+</string>
+    <string name="backup_pref_tabs">
+Browser Tabs &amp; Sessions
+</string>
+    <string name="tab_duplicated">
+Duplicated: %s
+</string>
+    <string name="close_all_tabs">
+Close all tabs
+</string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Stel u bloot aan SAF &amp; Pickers
+</string>
+    <string name="expose_to_saf_subtitle">
+Maak het zichtbaar voor systeembestandkiezers, Projectivy Launcher-achtergronden en externe apps
+</string>
+    <string name="expose_to_saf_network_hint">
+Hiermee kunnen opstartprogramma\'s en externe apps (zoals Projectivy) door mappen bladeren en media streamen vanaf deze netwerkshare.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Hiermee kunnen opstartprogramma\'s en externe apps (zoals Projectivy) door mappen bladeren en media streamen vanuit deze online opslag.
 </string>
 </resources>
 

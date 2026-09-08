@@ -110,6 +110,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
 
     private var chipReadOnly:             MaterialButton? = null
     private var chipReadWrite:            MaterialButton? = null
+    private var swExposeToSaf:            com.google.android.material.materialswitch.MaterialSwitch? = null
 
     private lateinit var txtResult:       TextView
     private lateinit var txtHostKeyFingerprint: TextView
@@ -272,6 +273,11 @@ class NetworkShareEditActivity : AppCompatActivity() {
         layerNfsDebugLog = findViewById(R.id.layerNfsDebugLog)
         txtNfsDebugLog   = findViewById(R.id.txtNfsDebugLog)
         btnCopyDebugLog  = findViewById(R.id.btnCopyDebugLog)
+
+        swExposeToSaf    = findViewById(R.id.swExposeToSaf)
+        findViewById<View?>(R.id.layoutTvExposeToSaf)?.setOnClickListener {
+            swExposeToSaf?.let { sw -> sw.isChecked = !sw.isChecked }
+        }
     }
 
     private fun handleKeyPicked(uri: Uri) {
@@ -664,6 +670,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
             chipReadWrite?.isChecked = true
             chipReadOnly?.isChecked = false
         }
+
+        swExposeToSaf?.isChecked = share.exposeToSaf
 
         // Initial visibility
         val isSsh = (share.type == ShareType.SFTP || share.type == ShareType.SCP)
@@ -1525,7 +1533,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
                     chipNfs4?.isChecked == true    -> 4
                     else                           -> 3
                 }
-            } else 3
+            } else 3,
+            exposeToSaf = swExposeToSaf?.isChecked ?: existingShare?.exposeToSaf ?: true
         )
     }
 

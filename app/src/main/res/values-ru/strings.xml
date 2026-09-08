@@ -13874,6 +13874,20 @@ For your security, try again after the timer expires
     <string name="close_all_tabs">
 Закрыть все вкладки
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Покажите SAF и сборщикам
+</string>
+    <string name="expose_to_saf_subtitle">
+Сделайте видимым для системных средств выбора файлов, обоев Projectivy Launcher и внешних приложений.
+</string>
+    <string name="expose_to_saf_network_hint">
+Позволяет средствам запуска и внешним приложениям (например, Projectivy) просматривать папки и осуществлять потоковую передачу мультимедиа из этого общего сетевого ресурса.
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Позволяет программам запуска и внешним приложениям (например, Projectivy) просматривать папки и осуществлять потоковую передачу мультимедиа из этого онлайн-хранилища.
+</string>
 </resources>
 
 

@@ -49,20 +49,49 @@ class TabAdapter(
         return if (position == tabs.size) VIEW_TYPE_ADD else VIEW_TYPE_TAB
     }
 
+    private var attachedRecyclerView: RecyclerView? = null
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        attachedRecyclerView = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        attachedRecyclerView = null
+    }
+
+    fun safeNotifyItemChanged(pos: Int, fallbackView: View? = null) {
+        if (pos !in tabs.indices) return
+        val rv = attachedRecyclerView
+        if (rv != null) {
+            if (rv.isComputingLayout) {
+                rv.post {
+                    if (pos in tabs.indices) {
+                        notifyItemChanged(pos)
+                    }
+                }
+            } else {
+                notifyItemChanged(pos)
+            }
+        } else if (fallbackView != null) {
+            fallbackView.post {
+                if (pos in tabs.indices) {
+                    notifyItemChanged(pos)
+                }
+            }
+        } else {
+            notifyItemChanged(pos)
+        }
+    }
+
     fun setActiveTabId(id: String, recyclerView: RecyclerView? = null) {
         if (activeTabId == id) return
         val oldPos = tabs.indexOfFirst { it.id == activeTabId }
         val newPos = tabs.indexOfFirst { it.id == id }
         activeTabId = id
-        val notifyChange = {
-            if (oldPos >= 0 && oldPos < tabs.size) notifyItemChanged(oldPos)
-            if (newPos >= 0 && newPos < tabs.size) notifyItemChanged(newPos)
-        }
-        if (recyclerView?.isComputingLayout == true) {
-            recyclerView.post(notifyChange)
-        } else {
-            notifyChange()
-        }
+        safeNotifyItemChanged(oldPos)
+        safeNotifyItemChanged(newPos)
     }
 
     fun startEditingTab(pos: Int) {
@@ -70,11 +99,11 @@ class TabAdapter(
             tabs.forEachIndexed { idx, t ->
                 if (t.isEditing && idx != pos) {
                     t.isEditing = false
-                    notifyItemChanged(idx)
+                    safeNotifyItemChanged(idx)
                 }
             }
             tabs[pos].isEditing = true
-            notifyItemChanged(pos)
+            safeNotifyItemChanged(pos)
         }
     }
 
@@ -116,6 +145,11 @@ class TabAdapter(
         fun bind(tab: TabModel, isActive: Boolean, position: Int) {
             val context = itemView.context
             val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+
+            // Clear listeners first to prevent recycled views from firing stale callbacks
+            edtTitle.onFocusChangeListener = null
+            edtTitle.setOnEditorActionListener(null)
+            edtTitle.setOnKeyListener(null)
 
             // Reset translation & scale in case view was recycled
             itemView.translationY = 0f
@@ -181,11 +215,7 @@ class TabAdapter(
                         val pos = bindingAdapterPosition
                         if (pos != RecyclerView.NO_POSITION) {
                             onTabRenamed(tab, finalName, pos)
-                            itemView.post {
-                                if (pos in tabs.indices) {
-                                    notifyItemChanged(pos)
-                                }
-                            }
+                            safeNotifyItemChanged(pos, itemView)
                         }
                     }
                 }

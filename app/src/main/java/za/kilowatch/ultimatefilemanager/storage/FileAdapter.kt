@@ -1260,23 +1260,54 @@ class FileAdapter(
 
                 if (isSaf) {
                     var iconDrawable: android.graphics.drawable.Drawable? = null
-                    // 1. Fast path: try streaming zip for icon.png without copying full file
+                    // 1. Fast path: try streaming zip for icon without copying full file.
+                    // We collect candidates from all density buckets and pick the best
+                    // (xxhdpi > xhdpi > hdpi > mdpi > ldpi > unknown) to avoid downloading
+                    // the entire APK over the network.
                     try {
                         val inStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(itemView.context, file.absolutePath)
                         if (inStream != null) {
+                            // Density rank: higher = better quality
+                            fun densityRank(name: String): Int = when {
+                                "xxxhdpi" in name -> 6
+                                "xxhdpi"  in name -> 5
+                                "xhdpi"   in name -> 4
+                                "hdpi"    in name -> 3
+                                "mdpi"    in name -> 2
+                                "ldpi"    in name -> 1
+                                else              -> 0
+                            }
+                            fun isIconEntry(n: String) =
+                                n == "icon.png" ||
+                                n == "ic_launcher.png" ||
+                                (n.startsWith("res/mipmap")  && n.endsWith(".png") && "ic_launcher" in n) ||
+                                (n.startsWith("res/drawable") && n.endsWith(".png") && "ic_launcher" in n) ||
+                                n.endsWith("/icon.png")
+
+                            var bestRank = -1
+                            var bestBytes: ByteArray? = null
+
                             java.util.zip.ZipInputStream(inStream).use { zip ->
                                 var entry = zip.nextEntry
                                 while (entry != null) {
-                                    val entryName = entry.name.lowercase()
-                                    if (entryName == "icon.png" || entryName == "res/drawable/icon.png" || entryName.endsWith("/icon.png")) {
-                                        val bytes = zip.readBytes()
-                                        val bmp = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                                        if (bmp != null) {
-                                            iconDrawable = android.graphics.drawable.BitmapDrawable(itemView.context.resources, bmp)
-                                            break
+                                    val n = entry.name.lowercase()
+                                    if (isIconEntry(n)) {
+                                        val rank = densityRank(n)
+                                        if (rank > bestRank) {
+                                            val bytes = zip.readBytes()
+                                            if (bytes.isNotEmpty()) {
+                                                bestRank = rank
+                                                bestBytes = bytes
+                                            }
                                         }
                                     }
                                     entry = zip.nextEntry
+                                }
+                            }
+                            bestBytes?.let { bytes ->
+                                val bmp = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                                if (bmp != null) {
+                                    iconDrawable = android.graphics.drawable.BitmapDrawable(itemView.context.resources, bmp)
                                 }
                             }
                         }

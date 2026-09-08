@@ -319,6 +319,10 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
                             itemView.context.startActivity(intent)
                         }
                     }
+                    itemView.setOnLongClickListener {
+                        showMobileActionDialog(storage)
+                        true
+                    }
                 }
             }
 
@@ -380,12 +384,62 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
                     }
                 }
 
+                val swActionSaf = dialogView.findViewById<com.google.android.material.materialswitch.MaterialSwitch?>(R.id.swActionSaf)
+                swActionSaf?.isChecked = storage.exposeToSaf
+                dialogView.findViewById<View>(R.id.btnActionToggleSaf)?.setOnClickListener {
+                    val updated = storage.copy(exposeToSaf = !storage.exposeToSaf)
+                    repo.save(updated)
+                    swActionSaf?.isChecked = updated.exposeToSaf
+                    refresh()
+                }
+
                 dialogView.findViewById<View>(R.id.btnActionDelete)?.setOnClickListener {
                     dialog.dismiss()
                     onDelete(storage)
                 }
 
                 dialog.show()
+            }
+
+            private fun showMobileActionDialog(storage: OnlineStorage) {
+                val safStatus = if (storage.exposeToSaf) "ON" else "OFF"
+                val items = arrayOf(
+                    getString(R.string.network_action_browse),
+                    "${getString(R.string.expose_to_saf_title)}: $safStatus",
+                    getString(R.string.network_action_delete)
+                )
+                MaterialAlertDialogBuilder(itemView.context)
+                    .setTitle(storage.displayName.ifBlank { storage.email })
+                    .setItems(items) { _, which ->
+                        when (which) {
+                            0 -> {
+                                if (storage.provider == OnlineStorageProvider.RCLONE) {
+                                    launchRCloneBrowse(itemView.context, storage)
+                                } else if (storage.isCredentialsStripped) {
+                                    Toast.makeText(
+                                        itemView.context,
+                                        R.string.backup_toast_please_fill_credentials,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    launchSetup(storage)
+                                } else {
+                                    val intent = Intent(itemView.context, NetworkBrowserActivity::class.java).apply {
+                                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage.id)
+                                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${storage.displayName} - ${storage.email}")
+                                        putExtra("isOnlineStorage", true)
+                                    }
+                                    itemView.context.startActivity(intent)
+                                }
+                            }
+                            1 -> {
+                                val updated = storage.copy(exposeToSaf = !storage.exposeToSaf)
+                                repo.save(updated)
+                                refresh()
+                            }
+                            2 -> onDelete(storage)
+                        }
+                    }
+                    .show()
             }
         }
     }

@@ -402,9 +402,10 @@ object RCloneShareClient {
 
     suspend fun listFiles(share: NetworkShare, remotePath: String): List<NetworkFile> =
         withContext(Dispatchers.IO) {
+            val cleanRemote = normalizePath(remotePath)
             val json = try {
                 rcloneCall(share, "operations/list", JSONObject().apply {
-                    put("remote", normalizePath(remotePath))
+                    put("remote", cleanRemote)
                 })
             } catch (e: IOException) {
                 GoRoLog.w(TAG, "listFiles error: ${e.message}")
@@ -418,7 +419,7 @@ object RCloneShareClient {
                         GoRoLog.i(TAG, "Layer 3: retry succeeded, calling rclone again")
                         // Retry the call once with the freshly-refreshed token
                         rcloneCall(share, "operations/list", JSONObject().apply {
-                            put("remote", normalizePath(remotePath))
+                            put("remote", cleanRemote)
                         })
                     } else {
                         GoRoLog.e(TAG, "Layer 3: retry failed, propagating original error")
@@ -429,19 +430,23 @@ object RCloneShareClient {
                     throw e  // not a Box auth error — propagate as-is
                 }
             }
-            parseFileList(json)
+            parseFileList(json, cleanRemote)
         }
 
     /** Parses the JSON response from an rclone operations/list call. */
-    private fun parseFileList(json: String): List<NetworkFile> {
+    private fun parseFileList(json: String, parentPath: String = ""): List<NetworkFile> {
         val result = mutableListOf<NetworkFile>()
         val response = JSONObject(json)
         val list = response.optJSONArray("list") ?: return result
+        val cleanParent = parentPath.trim('/')
         for (i in 0 until list.length()) {
             val item = list.getJSONObject(i)
+            val name = item.optString("Name", "")
+            val rawPath = item.optString("Path", "").ifBlank { name }.trim('/')
+            val fullPath = if (cleanParent.isEmpty()) rawPath else "$cleanParent/$rawPath"
             result.add(NetworkFile(
-                name         = item.optString("Name", ""),
-                path         = item.optString("Path", ""),
+                name         = name,
+                path         = fullPath,
                 isDirectory  = item.optBoolean("IsDir", false),
                 size         = item.optLong("Size", 0L),
                 lastModified = parseRcloneTime(item.optString("ModTime", ""))
@@ -652,10 +657,13 @@ object RCloneShareClient {
             val tempFile = File.createTempFile("rclone_os_", ".tmp")
             val fileOut = FileOutputStream(tempFile)
             object : OutputStream() {
+                private var isClosed = false
                 override fun write(b: Int) = fileOut.write(b)
                 override fun write(b: ByteArray, off: Int, len: Int) = fileOut.write(b, off, len)
                 override fun flush() = fileOut.flush()
                 override fun close() {
+                    if (isClosed) return
+                    isClosed = true
                     try {
                         fileOut.close()
                         rcloneCall(share, "operations/copyfile", JSONObject().apply {

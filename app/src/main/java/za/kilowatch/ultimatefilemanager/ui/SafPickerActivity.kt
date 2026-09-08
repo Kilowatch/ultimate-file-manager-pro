@@ -29,6 +29,8 @@ import com.google.android.material.textfield.TextInputLayout
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.NetworkShare
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
+import za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
+import za.kilowatch.ultimatefilemanager.network.toNetworkShare
 import za.kilowatch.ultimatefilemanager.network.ShareType
 import za.kilowatch.ultimatefilemanager.storage.StorageItem
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -38,6 +40,7 @@ import java.io.File
 
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.network.DlnaShareClient
@@ -57,8 +60,7 @@ import coil3.request.allowHardware
 import coil3.request.crossfade
 import coil3.size.Scale
 import za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
 import kotlinx.coroutines.Job
 
 private val VIDEO_EXTENSIONS = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
@@ -91,6 +93,7 @@ class SafPickerActivity : AppCompatActivity() {
     private var isCreateAction = false
     private var currentPath: String? = null // null means roots view
     private var currentShare: NetworkShare? = null
+    private var isCurrentShareOnline = false
     private var requestedMimeTypes: List<String>? = null
     private var allowMultiple = false
     private val selectedFiles = mutableSetOf<String>()
@@ -136,7 +139,7 @@ class SafPickerActivity : AppCompatActivity() {
                     } else if (currentShare != null) {
                         val lastSlash = currentPath!!.lastIndexOf('/')
                         val parent = if (lastSlash > 0) currentPath!!.substring(0, lastSlash) else ""
-                        loadDirectory(parent, currentShare)
+                        loadDirectory(parent, currentShare, isCurrentShareOnline)
                     } else {
                         val file = File(currentPath!!)
                         val parent = file.parentFile
@@ -192,7 +195,7 @@ class SafPickerActivity : AppCompatActivity() {
                 }
                 layoutFilename.error = null
                 val fullFolderDocId = if (currentShare != null) {
-                    currentShare!!.docIdPrefix + path
+                    getNetworkDocId(currentShare!!, path)
                 } else {
                     path
                 }
@@ -203,7 +206,7 @@ class SafPickerActivity : AppCompatActivity() {
             } else {
                 // Tree / folder-select mode
                 val fullPath = if (currentShare != null) {
-                    currentShare!!.docIdPrefix + path
+                    getNetworkDocId(currentShare!!, path)
                 } else {
                     path
                 }
@@ -225,6 +228,7 @@ class SafPickerActivity : AppCompatActivity() {
     private fun loadRoots() {
         currentPath = null
         currentShare = null
+        isCurrentShareOnline = false
         txtTitle.text = if (isCreateAction) getString(R.string.save_to) else "Select Storage"
         txtSubtitle.setText(R.string.choose_a_volume_to_browse)
         layoutBottomAction.visibility = View.GONE
@@ -267,12 +271,30 @@ class SafPickerActivity : AppCompatActivity() {
             // Network shares (create mode supports writing to SMB/FTP/TV via pipe/buffer)
             val repo = NetworkShareRepository.getInstance(this@SafPickerActivity)
             for (share in repo.getAll()) {
+                if (!share.exposeToSaf) continue
                 items.add(PickerItem(
                     label = share.name,
                     iconRes = R.drawable.ic_network,
                     path = "", // Start at share root
                     isRoot = true,
-                    share = share
+                    share = share,
+                    isOnlineStorage = false
+                ))
+            }
+
+            // Online storages (WebDAV / RClone / Cloud)
+            val osRepo = OnlineStorageRepository.getInstance(this@SafPickerActivity)
+            for (storage in osRepo.getAll()) {
+                if (storage.isCredentialsStripped || !storage.exposeToSaf) continue
+                val title = storage.displayName.ifEmpty { storage.getDisplayName(this@SafPickerActivity) }
+                val onlineShare = storage.toNetworkShare()
+                items.add(PickerItem(
+                    label = title,
+                    iconRes = R.drawable.ic_cloud,
+                    path = "", // Start at storage root
+                    isRoot = true,
+                    share = onlineShare,
+                    isOnlineStorage = true
                 ))
             }
 
@@ -285,9 +307,10 @@ class SafPickerActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadDirectory(path: String, share: NetworkShare? = null) {
+    private fun loadDirectory(path: String, share: NetworkShare? = null, isOnline: Boolean = false) {
         currentPath = path
         currentShare = share
+        isCurrentShareOnline = isOnline
         
         if (share != null) {
             txtTitle.text = share.name
@@ -349,15 +372,11 @@ class SafPickerActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val files = if (share.type == ShareType.SMB && share.isServerMode && path.isEmpty()) {
+                val files = if (share.type == ShareType.SMB && share.isServerMode && (path.isEmpty() || path == "/")) {
                     // Server-mode SMB at root — discover shares
                     val shareNames = SmbDiscovery.listShares(
                         share.host, share.username, share.password, share.domain
-                    ).filter { name ->
-                        SmbShareClient.isShareAccessible(
-                            share.host, name, share.username, share.password, share.domain
-                        )
-                    }
+                    )
                     shareNames.map { name ->
                         NetworkFile(name = name, path = "/$name", isDirectory = true)
                     }
@@ -593,11 +612,12 @@ class SafPickerActivity : AppCompatActivity() {
 
                 // ── Thumbnail vs. icon ────────────────────────────────────────
                 val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)
-                val file = if (!item.isRoot && !item.isDir && item.path.isNotEmpty()) File(item.path) else null
-                val ext = file?.extension?.lowercase() ?: ""
+                val file = if (!item.isRoot && !item.isDir && item.path.isNotEmpty() && currentShare == null) File(item.path) else null
+                val ext = if (currentShare != null) item.label.substringAfterLast('.', "").lowercase() else file?.extension?.lowercase() ?: ""
                 val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 val isVideo = ext in VIDEO_EXTENSIONS
-                val canShowThumb = showThumbnails && file != null && (isImage || isVideo)
+                val isApk = ext in listOf("apk", "xapk", "apks")
+                val canShowThumb = showThumbnails && !item.isRoot && !item.isDir && (isImage || isVideo || isApk)
 
                 icon.imageTintList = null
                 icon.alpha = alpha
@@ -612,49 +632,70 @@ class SafPickerActivity : AppCompatActivity() {
                         }
                     }
 
-                    if (isImage) {
-                        coilDisposable = icon.load(file!!) {
-                            crossfade(200)
-                            allowHardware(false)
-                            scale(Scale.FILL)
-                            placeholder(androidx.core.content.ContextCompat.getDrawable(itemView.context, item.iconRes)?.asImage())
-                            error(androidx.core.content.ContextCompat.getDrawable(itemView.context, item.iconRes)?.asImage())
-                        }
-                    } else {
-                        // Video: extract frame on a background coroutine
+                    val placeholderImage = androidx.core.content.ContextCompat.getDrawable(itemView.context, item.iconRes)?.asImage()
+
+                    if (currentShare != null) {
+                        val share = currentShare!!
+                        val netFile = NetworkFile(name = item.label, path = item.path, isDirectory = false)
+                        val cacheManager = NetworkThumbnailCacheManager(itemView.context)
                         icon.setImageResource(item.iconRes)
-                        @OptIn(DelicateCoroutinesApi::class)
-                        videoJob = GlobalScope.launch(Dispatchers.IO) {
-                            val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
-                            val f = file
-                            var bitmap: android.graphics.Bitmap? = if (f != null) {
-                                za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
-                                    f.absolutePath, pct, 256, 256
-                                )
-                            } else null
-
-                            if (bitmap == null && f != null) {
-                                bitmap = try {
-                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                                        android.media.ThumbnailUtils.createVideoThumbnail(
-                                            f, android.util.Size(256, 256), null
-                                        )
-                                    } else {
-                                        @Suppress("DEPRECATION")
-                                        android.media.ThumbnailUtils.createVideoThumbnail(
-                                            f.absolutePath,
-                                            android.provider.MediaStore.Video.Thumbnails.MINI_KIND
-                                        )
+                        videoJob = lifecycleScope.launch(Dispatchers.IO) {
+                            val cachedPath = cacheManager.getThumbnail(share, netFile)
+                            if (cachedPath != null && isActive) {
+                                withContext(Dispatchers.Main) {
+                                    if (isActive) {
+                                        coilDisposable = icon.load(File(cachedPath)) {
+                                            crossfade(200)
+                                            allowHardware(false)
+                                            scale(Scale.FILL)
+                                            placeholder(placeholderImage)
+                                            error(placeholderImage)
+                                        }
                                     }
-                                } catch (_: Throwable) { null }
+                                }
                             }
+                        }
+                    } else if (file != null) {
+                        if (isImage) {
+                            coilDisposable = icon.load(file) {
+                                crossfade(200)
+                                allowHardware(false)
+                                scale(Scale.FILL)
+                                placeholder(placeholderImage)
+                                error(placeholderImage)
+                            }
+                        } else if (isVideo) {
+                            // Video: extract frame on a background coroutine
+                            icon.setImageResource(item.iconRes)
+                            videoJob = lifecycleScope.launch(Dispatchers.IO) {
+                                val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
+                                var bitmap: android.graphics.Bitmap? = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
+                                    file.absolutePath, pct, 256, 256
+                                )
 
-                            withContext(Dispatchers.Main) {
-                                if (bitmap != null) {
-                                    coilDisposable = icon.load(bitmap) {
-                                        crossfade(150)
-                                        allowHardware(false)
-                                        scale(Scale.FILL)
+                                if (bitmap == null) {
+                                    bitmap = try {
+                                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                            android.media.ThumbnailUtils.createVideoThumbnail(
+                                                file, android.util.Size(256, 256), null
+                                            )
+                                        } else {
+                                            @Suppress("DEPRECATION")
+                                            android.media.ThumbnailUtils.createVideoThumbnail(
+                                                file.absolutePath,
+                                                android.provider.MediaStore.Video.Thumbnails.MINI_KIND
+                                            )
+                                        }
+                                    } catch (_: Throwable) { null }
+                                }
+
+                                withContext(Dispatchers.Main) {
+                                    if (bitmap != null && isActive) {
+                                        coilDisposable = icon.load(bitmap) {
+                                            crossfade(150)
+                                            allowHardware(false)
+                                            scale(Scale.FILL)
+                                        }
                                     }
                                 }
                             }
@@ -673,16 +714,16 @@ class SafPickerActivity : AppCompatActivity() {
                 }
                 itemView.setOnClickListener {
                     if (item.isRoot) {
-                        loadDirectory(item.path, item.share)
+                        loadDirectory(item.path, item.share, item.isOnlineStorage)
                     } else if (item.isDir) {
-                        loadDirectory(item.path, currentShare)
+                        loadDirectory(item.path, currentShare, isCurrentShareOnline)
                     } else if (allowMultiple) {
                         // Multi-select: toggle selection
                         toggleSelection(item.path)
                     } else if (!isTreeAction && !isCreateAction) {
                         // Open mode: tapping a file returns it immediately
                         val fullPath = if (currentShare != null) {
-                            currentShare!!.docIdPrefix + item.path
+                            getNetworkDocId(currentShare!!, item.path)
                         } else {
                             item.path
                         }
@@ -734,7 +775,7 @@ class SafPickerActivity : AppCompatActivity() {
         try {
             val uris = selectedFiles.mapNotNull { path ->
                 val fullPath = if (currentShare != null) {
-                    currentShare!!.docIdPrefix + path
+                    getNetworkDocId(currentShare!!, path)
                 } else {
                     path
                 }
@@ -779,6 +820,11 @@ class SafPickerActivity : AppCompatActivity() {
         }
     }
 
+    private fun getNetworkDocId(share: NetworkShare, path: String): String {
+        val clean = path.trimStart('/')
+        return if (isCurrentShareOnline) "os:${share.id}/$clean" else "${share.docIdPrefix}$clean"
+    }
+
     private fun mimeMatchesAny(fileName: String): Boolean {
         val mimeList = requestedMimeTypes
         if (mimeList.isNullOrEmpty()) return true
@@ -806,6 +852,7 @@ class SafPickerActivity : AppCompatActivity() {
         val path: String,
         val isRoot: Boolean = false,
         val isDir: Boolean = false,
-        val share: NetworkShare? = null
+        val share: NetworkShare? = null,
+        val isOnlineStorage: Boolean = false
     )
 }

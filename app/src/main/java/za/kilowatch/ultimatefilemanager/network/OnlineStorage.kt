@@ -34,7 +34,8 @@ data class OnlineStorage(
     val webDavUsername: String? = null,
     /** WebDAV password — encrypted at rest via VaultCrypto */
     val webDavPassword: String? = null,
-    val isCredentialsStripped: Boolean = false
+    val isCredentialsStripped: Boolean = false,
+    val exposeToSaf: Boolean = true
 ) {
     val docIdPrefix: String get() = "os:$id/"
 
@@ -68,5 +69,42 @@ fun OnlineStorageProvider.getFriendlyName(context: android.content.Context): Str
         OnlineStorageProvider.WEBDAV       -> context.getString(R.string.add_online_storage_webdav)
         OnlineStorageProvider.RCLONE       -> context.getString(R.string.add_online_storage_rclone)
     }
+}
+
+fun OnlineStorage.toNetworkShare(): NetworkShare {
+    val shareType = when (provider) {
+        OnlineStorageProvider.ONEDRIVE     -> ShareType.ONEDRIVE
+        OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
+        OnlineStorageProvider.DROPBOX      -> ShareType.DROPBOX
+        OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
+        OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
+        OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
+        OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
+    }
+    val shareHost = when (provider) {
+        OnlineStorageProvider.RCLONE -> RCloneShareClient.RCLONE_HOST_MARKER
+        else -> if (isWebDavProvider) webDavUrl ?: "" else s3Endpoint ?: email
+    }
+    val shareUsername = when (provider) {
+        OnlineStorageProvider.RCLONE -> id
+        else -> if (isWebDavProvider) webDavUsername ?: "" else s3AccessKey ?: email
+    }
+    val sharePassword = when {
+        isWebDavProvider -> webDavPassword ?: ""
+        else             -> s3SecretKey ?: ""
+    }
+    return NetworkShare(
+        id = id,
+        name = displayName.ifEmpty { email },
+        type = shareType,
+        host = shareHost,
+        domain = s3Bucket ?: "",
+        remotePath = s3Region ?: "",
+        username = shareUsername,
+        password = sharePassword,
+        readOnly = false,
+        isCredentialsStripped = isCredentialsStripped,
+        exposeToSaf = exposeToSaf
+    )
 }
 

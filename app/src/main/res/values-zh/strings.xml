@@ -13873,6 +13873,20 @@ PIN 码不正确。剩余 %1$d 次尝试
     <string name="close_all_tabs">
 关闭所有标签页
 </string>
+    
+    <!-- SAF & External File Pickers Exposure -->
+    <string name="expose_to_saf_title">
+Expose to SAF &amp; Pickers
+</string>
+    <string name="expose_to_saf_subtitle">
+对系统文件选择器、Projectivy Launcher 壁纸和外部应用程序可见
+</string>
+    <string name="expose_to_saf_network_hint">
+允许启动器和外部应用程序（如 Projectivy）浏览此网络共享中的文件夹和流媒体。
+</string>
+    <string name="expose_to_saf_cloud_hint">
+Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
+</string>
 </resources>
 
 

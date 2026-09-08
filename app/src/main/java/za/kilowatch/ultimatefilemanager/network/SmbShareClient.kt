@@ -149,7 +149,13 @@ object SmbShareClient {
                 null
             )
             val fileInfo = file.fileInformation
-            val fileSize = fileInfo.standardInformation.endOfFile
+            // Some SMB servers report endOfFile=0 even for non-empty files (e.g. sparse files,
+            // certain NAS firmware). Apply the same fallback that getFileSize() uses:
+            // prefer endOfFile, fall back to allocationSize, and if both are 0 leave as 0
+            // (SmbRandomAccess.read() will not use size as an early EOF guard when size == 0).
+            var fileSize = fileInfo.standardInformation.endOfFile
+            if (fileSize == 0L) fileSize = fileInfo.standardInformation.allocationSize
+            if (fileSize < 0L) fileSize = 0L
             SmbRandomAccess(
                 file,
                 fileSize,
@@ -189,8 +195,11 @@ object SmbShareClient {
          * when the handle is truly dead and closes it itself.
          */
         override fun read(offset: Long, buffer: ByteArray, length: Int): Int = synchronized(this) {
-            if (offset >= size) return -1
-            var toRead = minOf(length.toLong(), size - offset).toInt()
+            // Only use size as a hard EOF guard when we have a reliable non-zero size.
+            // When size == 0 (server reported 0 for a non-empty file), skip the guard
+            // and let the actual SMB read determine EOF naturally.
+            if (size > 0L && offset >= size) return -1
+            var toRead = if (size > 0L) minOf(length.toLong(), size - offset).toInt() else length
             var totalRead = 0
             var currentOffset = offset
 

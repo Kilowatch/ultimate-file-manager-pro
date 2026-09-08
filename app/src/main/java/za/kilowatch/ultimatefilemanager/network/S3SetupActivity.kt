@@ -195,7 +195,8 @@ class S3SetupActivity : AppCompatActivity() {
                         s3Region    = region,
                         s3AccessKey = accessKey,
                         s3SecretKey = secretKey,
-                        isCredentialsStripped = false
+                        isCredentialsStripped = false,
+                        exposeToSaf = editingStorageId?.let { repo.getById(it)?.exposeToSaf } ?: true
                     )
                     repo.save(storage)
                     GoRoLog.d(TAG, "S3 storage connected: $label ($provider)")
