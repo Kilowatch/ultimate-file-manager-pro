@@ -133,6 +133,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
                 val shareId = data.getStringExtra("share_id") ?: return@registerForActivityResult
                 val label = data.getStringExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL) ?: getString(R.string.network_shares_title)
                 val share = NetworkShareRepository.getInstance(this).getById(shareId)
+                val protocol = share?.type?.name ?: "SMB"
                 val type = if (share?.type == ShareType.GOOGLE_DRIVE || share?.type == ShareType.ONEDRIVE || share?.type == ShareType.DROPBOX) {
                     StorageType.CLOUD
                 } else {
@@ -144,7 +145,8 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     currentPath = share?.remotePath ?: "",
                     label = label,
                     shareId = shareId,
-                    isEditing = true
+                    protocol = protocol,
+                    isEditing = false
                 )
             } else {
                 val path = data.getStringExtra("result_selected_local_path")
@@ -152,12 +154,15 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     ?: return@registerForActivityResult
                 val label = data.getStringExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL) ?: getString(R.string.storage_internal)
                 val isSaf = isSafCustom || SafTreeManager.isSafPath(path)
+                val isUsb = path.contains("usb", ignoreCase = true) || label.contains("usb", ignoreCase = true)
+                val protocol = if (isUsb) "USB" else if (isSaf) "SD" else "LOCAL"
                 addNewTab(
                     type = if (isSaf) StorageType.SAF else StorageType.LOCAL,
                     rootPath = path,
                     currentPath = path,
                     label = label,
-                    isEditing = true
+                    protocol = protocol,
+                    isEditing = false
                 )
             }
         }
@@ -233,24 +238,13 @@ class TabbedBrowserActivity : AppCompatActivity(),
         layoutBreadcrumbsScroll = findViewById(R.id.layoutBreadcrumbsScroll)
         layoutBreadcrumbs = findViewById(R.id.layoutBreadcrumbs)
 
-        // Top Back button: goes up a level; if at root, closes tab (or exits to single browser if last tab)
+        // Top Back button: goes up a level; stays at root if already at root
         btnBack.setOnClickListener {
             val activeFrag = getActiveFragment()
-            val handled = if (activeFrag is FileBrowserFragment) {
+            if (activeFrag is FileBrowserFragment) {
                 activeFrag.handleBackPress()
             } else if (activeFrag is NetworkBrowserFragment) {
                 activeFrag.handleBackPress()
-            } else {
-                false
-            }
-
-            if (!handled) {
-                // At root of current tab
-                val activeTab = getActiveTab() ?: return@setOnClickListener
-                val pos = tabs.indexOf(activeTab)
-                if (pos >= 0) {
-                    closeTab(activeTab, pos)
-                }
             }
         }
 
@@ -456,6 +450,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
         viewPagerTabs.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                tabAdapter.commitAllEdits()
                 if (position in tabs.indices) {
                     val tab = tabs[position]
                     if (activeTabId != tab.id) {
@@ -500,6 +495,8 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     } catch (_: Exception) {
                         StorageType.LOCAL
                     }
+                    val isUsb = initialPath.contains("usb", ignoreCase = true) || initialLabel.contains("usb", ignoreCase = true)
+                    val protocol = if (isUsb) "USB" else if (type == StorageType.SAF) "SD" else if (type == StorageType.NETWORK) "SMB" else null
                     val newTab = TabModel(
                         title = initialLabel,
                         isCustomName = false,
@@ -507,6 +504,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
                         rootPath = initialRoot ?: initialPath,
                         currentPath = initialPath,
                         shareId = initialShareId,
+                        protocol = protocol,
                         storageLabel = initialLabel
                     )
                     tabs.add(newTab)
@@ -521,6 +519,8 @@ class TabbedBrowserActivity : AppCompatActivity(),
             } catch (_: Exception) {
                 StorageType.LOCAL
             }
+            val isUsb = initialPath.contains("usb", ignoreCase = true) || initialLabel.contains("usb", ignoreCase = true)
+            val protocol = if (isUsb) "USB" else if (type == StorageType.SAF) "SD" else if (type == StorageType.NETWORK) "SMB" else null
             val defaultTab = TabModel(
                 title = initialLabel,
                 isCustomName = false,
@@ -528,6 +528,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
                 rootPath = initialRoot ?: initialPath,
                 currentPath = initialPath,
                 shareId = initialShareId,
+                protocol = protocol,
                 storageLabel = initialLabel
             )
             tabs.add(defaultTab)
@@ -551,6 +552,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
     }
 
     fun selectTab(tab: TabModel) {
+        tabAdapter.commitAllEdits()
         activeTabId = tab.id
         val pos = tabs.indexOfFirst { it.id == tab.id }
         if (pos >= 0) {
@@ -566,12 +568,14 @@ class TabbedBrowserActivity : AppCompatActivity(),
     }
 
     private fun updateBadgeAndBreadcrumbs(tab: TabModel) {
+        val accentColor = tab.getAccentColor()
         badgeStorageType.text = when (tab.storageType) {
             StorageType.LOCAL -> getString(R.string.storage_internal).uppercase()
             StorageType.SAF -> getString(R.string.storage_sd_card).uppercase()
-            StorageType.NETWORK -> "NETWORK"
-            StorageType.CLOUD -> "CLOUD"
+            StorageType.NETWORK -> (tab.protocol ?: getString(R.string.storage_network)).uppercase()
+            StorageType.CLOUD -> (tab.protocol ?: getString(R.string.storage_cloud)).uppercase()
         }
+        badgeStorageType.setTextColor(accentColor)
         updateBreadcrumbs(tab)
     }
 
@@ -605,18 +609,26 @@ class TabbedBrowserActivity : AppCompatActivity(),
         currentPath: String,
         label: String,
         shareId: String? = null,
-        isEditing: Boolean = true
+        protocol: String? = null,
+        isEditing: Boolean = false
     ) {
-        val nextIndex = tabs.size + 1
-        val defaultName = getString(R.string.tab_default_name, nextIndex)
+        val folderName = currentPath.trimEnd('/').substringAfterLast('/')
+        val initialTitle = if (folderName.isNotEmpty()) folderName else label
+        val resolvedProtocol = protocol ?: when (type) {
+            StorageType.LOCAL -> if (rootPath.contains("usb", ignoreCase = true) || label.contains("usb", ignoreCase = true)) "USB" else "LOCAL"
+            StorageType.SAF -> if (rootPath.contains("usb", ignoreCase = true) || label.contains("usb", ignoreCase = true)) "USB" else "SD"
+            StorageType.NETWORK -> "SMB"
+            StorageType.CLOUD -> "CLOUD"
+        }
 
         val newTab = TabModel(
-            title = defaultName,
+            title = initialTitle,
             isCustomName = false,
             storageType = type,
             rootPath = rootPath,
             currentPath = currentPath,
             shareId = shareId,
+            protocol = resolvedProtocol,
             storageLabel = label,
             isEditing = isEditing
         )
@@ -654,7 +666,8 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     currentPath = activeTab.currentPath,
                     label = activeTab.storageLabel,
                     shareId = activeTab.shareId,
-                    isEditing = true
+                    protocol = activeTab.protocol,
+                    isEditing = false
                 )
             } else {
                 val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
@@ -663,7 +676,8 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     rootPath = internalPath,
                     currentPath = internalPath,
                     label = getString(R.string.storage_internal),
-                    isEditing = true
+                    protocol = "LOCAL",
+                    isEditing = false
                 )
             }
         }
@@ -721,6 +735,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
             rootPath = sourceTab.rootPath,
             currentPath = sourceTab.currentPath,
             shareId = sourceTab.shareId,
+            protocol = sourceTab.protocol,
             storageLabel = sourceTab.storageLabel,
             isEditing = false
         )
@@ -785,8 +800,9 @@ class TabbedBrowserActivity : AppCompatActivity(),
         layoutBreadcrumbs.removeAllViews()
         val inflater = LayoutInflater.from(this)
 
+        val homeLabel = getString(R.string.home)
         val list = mutableListOf<Pair<String, String>>()
-        list.add(Pair("Home", ""))
+        list.add(Pair(homeLabel, ""))
         list.add(Pair(tab.storageLabel, tab.rootPath))
 
         if (tab.currentPath != tab.rootPath) {
@@ -811,7 +827,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
 
         for (i in list.indices) {
             val item = list[i]
-            val view = if (item.first == "Home") {
+            val view = if (i == 0) {
                 inflater.inflate(R.layout.item_breadcrumb_home, layoutBreadcrumbs, false).apply {
                     setOnClickListener {
                         val intent = Intent(this@TabbedBrowserActivity, StorageBrowserActivity::class.java).apply {
@@ -826,7 +842,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
                         text = item.first
                     }
                     if (i == list.lastIndex) {
-                        findViewById<TextView>(R.id.txtBreadcrumbName).setTextColor(getColor(R.color.ufm_primary))
+                        findViewById<TextView>(R.id.txtBreadcrumbName).setTextColor(tab.getAccentColor())
                         isClickable = false
                         isFocusable = false
                     } else {
@@ -1905,6 +1921,17 @@ class TabbedBrowserActivity : AppCompatActivity(),
         popupView.findViewById<View>(R.id.menuItemNewTab)?.setOnClickListener {
             popupWindow.dismiss()
             showNewTabDialog()
+        }
+
+        val itemRenameTab = popupView.findViewById<View>(R.id.menuItemRenameTab)
+        itemRenameTab?.visibility = if (getActiveTab() != null) View.VISIBLE else View.GONE
+        itemRenameTab?.setOnClickListener {
+            popupWindow.dismiss()
+            val activeTab = getActiveTab() ?: return@setOnClickListener
+            val pos = tabs.indexOf(activeTab)
+            if (pos >= 0) {
+                tabAdapter.startEditingTab(pos)
+            }
         }
 
         val itemCloseAllTabs = popupView.findViewById<View>(R.id.menuItemCloseAllTabs)

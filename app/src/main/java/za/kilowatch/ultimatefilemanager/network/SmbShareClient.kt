@@ -468,6 +468,21 @@ object SmbShareClient {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
+    private fun isFatalTransportError(e: Throwable): Boolean {
+        if (e is com.hierynomus.protocol.transport.TransportException) return true
+        if (e is java.net.SocketException || e is java.io.EOFException) return true
+        val msg = e.message?.lowercase() ?: ""
+        if (e is java.io.IOException && (msg.contains("closed") || msg.contains("reset") || msg.contains("broken pipe"))) return true
+        if (e is com.hierynomus.mssmb2.SMBApiException) {
+            val status = e.status.value
+            return status == 0xC0000203L // STATUS_USER_SESSION_DELETED
+                    || status == 0xC00000C9L // STATUS_NETWORK_NAME_DELETED
+                    || status == 0xC000020CL // STATUS_CONNECTION_DISCONNECTED
+                    || status == 0xC000020DL // STATUS_CONNECTION_RESET
+        }
+        return false
+    }
+
     private fun <T> withDiskShare(
         share: NetworkShare,
         remotePath: String = "",
@@ -480,6 +495,7 @@ object SmbShareClient {
             try {
                 val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
                 if (shareName.isBlank()) {
+                    pooled.release()
                     throw IllegalArgumentException("Cannot determine SMB share name for share.remotePath='${share.remotePath}' and remotePath='$remotePath'")
                 }
                 val diskShare = pooled.session.connectShare(shareName) as DiskShare
@@ -501,9 +517,14 @@ object SmbShareClient {
                     pooled.release()
                     throw e
                 }
-                pooled.invalidate()
+                val fatal = isFatalTransportError(e)
+                if (fatal) {
+                    pooled.invalidate()
+                } else {
+                    pooled.release()
+                }
                 lastError = e
-                if (attempt < maxAttempts) {
+                if (fatal && attempt < maxAttempts) {
                     // Give the pool time to process the invalidation before retrying,
                     // otherwise borrow() may race and return the same broken entry.
                     Thread.sleep(150)
@@ -532,35 +553,46 @@ object SmbShareClient {
     }
 
     private fun splitSharePath(basePath: String, subPath: String): Pair<String, String> {
-        val cleanBase = basePath.replace('\\', '/').trimStart('/').trimEnd('/')
-        if (cleanBase.isBlank()) {
-            val cleanSub = subPath.replace('\\', '/').trimStart('/').trimEnd('/')
-            if (cleanSub.isBlank()) {
-                return "" to ""
-            }
-            val parts = cleanSub.split('/', limit = 2)
-            val shareName = parts.getOrElse(0) { "" }
-            val inner = parts.getOrElse(1) { "" }.replace('/', '\\')
-            return shareName to inner
-        }
-        val parts = cleanBase.split("/", limit = 2)
-        val shareName = parts.getOrElse(0) { "" }
-        val inner = parts.getOrElse(1) { "" }.replace('/', '\\')
+        val cleanBase = basePath.replace('\\', '/').trim('/').trim()
+        val cleanSub = subPath.replace('\\', '/').trim('/').trim()
 
-        var cleanSub = subPath.replace('\\', '/').trimStart('/')
-        if (cleanSub.equals(shareName, ignoreCase = true)) {
-            cleanSub = ""
-        } else if (cleanSub.startsWith("$shareName/", ignoreCase = true)) {
-            cleanSub = cleanSub.substring(shareName.length + 1).trimStart('/')
-        } else if (cleanSub.equals(cleanBase, ignoreCase = true)) {
-            cleanSub = ""
-        } else if (cleanSub.startsWith("$cleanBase/", ignoreCase = true)) {
-            cleanSub = cleanSub.substring(cleanBase.length + 1).trimStart('/')
+        if (cleanBase.isEmpty()) {
+            if (cleanSub.isEmpty()) return "" to ""
+            val segments = cleanSub.split('/').filter { it.isNotEmpty() }
+            val share = segments.firstOrNull() ?: ""
+            val inner = segments.drop(1).joinToString("\\")
+            return share to inner
         }
 
-        val normalizedSub = cleanSub.replace('/', '\\').trimStart('\\')
-        val combined = listOf(inner, normalizedSub).filter { it.isNotBlank() }.joinToString("\\")
-        return shareName to combined
+        val baseSegments = cleanBase.split('/').filter { it.isNotEmpty() }
+        val shareName = baseSegments.firstOrNull() ?: ""
+        val baseInnerSegments = baseSegments.drop(1)
+
+        if (cleanSub.isEmpty()) {
+            return shareName to baseInnerSegments.joinToString("\\")
+        }
+
+        var subSegments = cleanSub.split('/').filter { it.isNotEmpty() }
+
+        // If subSegments starts with shareName, strip it
+        if (subSegments.isNotEmpty() && subSegments.first().equals(shareName, ignoreCase = true)) {
+            subSegments = subSegments.drop(1)
+        }
+
+        // If subSegments already starts with base inner segments, avoid duplicating them
+        val matchesBaseInner = baseInnerSegments.isNotEmpty() &&
+                subSegments.size >= baseInnerSegments.size &&
+                baseInnerSegments.indices.all { idx ->
+                    subSegments[idx].equals(baseInnerSegments[idx], ignoreCase = true)
+                }
+
+        val finalInnerSegments = if (matchesBaseInner) {
+            subSegments
+        } else {
+            baseInnerSegments + subSegments
+        }
+
+        return shareName to finalInnerSegments.joinToString("\\")
     }
 
     private fun joinPath(base: String, sub: String): String {

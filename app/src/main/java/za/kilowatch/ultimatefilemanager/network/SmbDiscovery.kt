@@ -244,7 +244,7 @@ object SmbDiscovery {
                 }
                 pool.shutdown()
                 pool.awaitTermination(3000L, TimeUnit.MILLISECONDS)
-                futures.forEach { runCatching { it.cancel(true) } }
+                futures.forEach { runCatching { it.cancel(false) } }
                 rawShares.filter { it in accessibleQueue }
             }
             val completedAtMs = System.currentTimeMillis()

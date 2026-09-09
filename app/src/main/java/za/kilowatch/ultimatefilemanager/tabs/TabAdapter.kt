@@ -17,6 +17,13 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.RippleDrawable
+import android.view.Gravity
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -107,6 +114,49 @@ class TabAdapter(
         }
     }
 
+    fun commitAllEdits() {
+        tabs.forEachIndexed { idx, t ->
+            if (t.isEditing) {
+                t.isEditing = false
+                safeNotifyItemChanged(idx)
+            }
+        }
+    }
+
+    private val activeBgCache = mutableMapOf<Int, Drawable>()
+
+    private fun getActiveTabBackground(context: Context, accentColor: Int): Drawable {
+        return activeBgCache.getOrPut(accentColor) {
+            val density = context.resources.displayMetrics.density
+            val cornerRadius = 10f * density
+            val radii = floatArrayOf(cornerRadius, cornerRadius, cornerRadius, cornerRadius, 0f, 0f, 0f, 0f)
+
+            val bgShape = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadii = radii
+                setColor(Color.parseColor("#212A3D"))
+                setStroke((1f * density).toInt(), Color.parseColor("#364966"))
+            }
+
+            val stripeShape = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadii = radii
+                setColor(accentColor)
+            }
+
+            val layers = LayerDrawable(arrayOf(bgShape, stripeShape)).apply {
+                setLayerHeight(1, (2.5f * density).toInt())
+                setLayerGravity(1, Gravity.TOP)
+            }
+
+            RippleDrawable(
+                ColorStateList.valueOf(Color.parseColor("#33000000")),
+                layers,
+                null
+            )
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == VIEW_TYPE_ADD) {
@@ -160,15 +210,18 @@ class TabAdapter(
             isDraggingHorizontal = false
             isItemDragging = false
 
-            // Background & Styling: Google Chrome style
+            val accentColor = tab.getAccentColor()
+
+            // Background & Styling: Google Chrome style with dynamic storage-coded accent
             if (isActive) {
-                container.setBackgroundResource(R.drawable.bg_tab_pill_active)
+                container.background = getActiveTabBackground(context, accentColor)
                 txtTitle.setTextColor(Color.WHITE)
-                imgIcon.setColorFilter(Color.parseColor("#00E5FF"))
+                imgIcon.setColorFilter(accentColor)
             } else {
                 container.setBackgroundResource(R.drawable.bg_tab_pill_inactive)
                 txtTitle.setTextColor(Color.parseColor("#94A3B8"))
-                imgIcon.setColorFilter(Color.parseColor("#64748B"))
+                // Subtly tinted icon: gives an instant visual cue of the storage type even on inactive tabs!
+                imgIcon.setColorFilter(ColorUtils.setAlphaComponent(accentColor, 160))
             }
 
             imgIcon.setImageResource(tab.getIconRes())

@@ -4907,6 +4907,9 @@
     <string name="backup_pref_tabs">Browser Tabs &amp; Sessions</string>
     <string name="tab_duplicated">Duplicated: %s</string>
     <string name="close_all_tabs">Close all tabs</string>
+    <string name="tab_rename">Rename Tab</string>
+    <string name="storage_network">Network</string>
+    <string name="storage_cloud">Cloud</string>
     
     <!-- SAF & External File Pickers Exposure -->
     <string name="expose_to_saf_title">Expose to SAF &amp; Pickers</string>
