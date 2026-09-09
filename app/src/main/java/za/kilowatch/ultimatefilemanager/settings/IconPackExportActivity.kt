@@ -125,7 +125,8 @@ class IconPackExportActivity : AppCompatActivity() {
                 "toolbar_copy_encrypt", "toolbar_move_encrypt", "toolbar_favorite",
                 "toolbar_hide", "toolbar_unhide", "toolbar_select_all", "toolbar_invert_selection", "toolbar_compress", "toolbar_extract",
                 "toolbar_image_compress", "toolbar_create_gif", "toolbar_delete", "toolbar_pin", "toolbar_unpin", "toolbar_duplicate_finder",
-                "toolbar_set_home_wallpaper", "toolbar_set_lock_wallpaper", "toolbar_exif_cleaner", "toolbar_checksum")
+                "toolbar_set_home_wallpaper", "toolbar_set_lock_wallpaper", "toolbar_set_ringtone", "toolbar_set_notification", "toolbar_set_alarm",
+                "toolbar_exif_cleaner", "toolbar_checksum")
         ))
 
 

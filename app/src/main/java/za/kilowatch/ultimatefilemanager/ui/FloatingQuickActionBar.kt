@@ -39,7 +39,8 @@ class FloatingQuickActionBar @JvmOverloads constructor(
         val hasPinned: Boolean = false,
         val hasUnpinned: Boolean = false,
         val hasArchiveSelected: Boolean = false,
-        val allImagesSelected: Boolean = false
+        val allImagesSelected: Boolean = false,
+        val allAudioSelected: Boolean = false
     )
 
     private val cardPill: MaterialCardView
@@ -81,8 +82,11 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                 pm.ACTION_IMAGE_COMPRESS -> pm.isIconEnabled(context, pm.KEY_IMAGE_COMPRESS)
                 pm.ACTION_CREATE_GIF -> pm.isIconEnabled(context, pm.KEY_CREATE_GIF)
                 pm.ACTION_EXIF_TOOLS -> pm.isIconEnabled(context, pm.KEY_EXIF_TOOLS)
-                pm.ACTION_SET_HOME_WALLPAPER -> pm.isIconEnabled(context, pm.KEY_SET_HOME_WALLPAPER)
-                pm.ACTION_SET_LOCK_WALLPAPER -> pm.isIconEnabled(context, pm.KEY_SET_LOCK_WALLPAPER)
+                pm.ACTION_SET_HOME_WALLPAPER -> pm.isIconEnabled(context, pm.KEY_SET_HOME_WALLPAPER) && state.allImagesSelected && state.selectedCount == 1
+                pm.ACTION_SET_LOCK_WALLPAPER -> pm.isIconEnabled(context, pm.KEY_SET_LOCK_WALLPAPER) && state.allImagesSelected && state.selectedCount == 1
+                pm.ACTION_SET_RINGTONE -> pm.isIconEnabled(context, pm.KEY_SET_RINGTONE) && state.allAudioSelected
+                pm.ACTION_SET_NOTIFICATION -> pm.isIconEnabled(context, pm.KEY_SET_NOTIFICATION) && state.allAudioSelected
+                pm.ACTION_SET_ALARM -> pm.isIconEnabled(context, pm.KEY_SET_ALARM) && state.allAudioSelected
                 pm.ACTION_SELECT_ALL -> pm.isIconEnabled(context, pm.KEY_SELECT_ALL)
                 pm.ACTION_INVERT_SELECTION -> pm.isIconEnabled(context, pm.KEY_INVERT_SELECTION)
                 pm.ACTION_CHECKSUM -> pm.isIconEnabled(context, pm.KEY_CHECKSUM)
@@ -217,6 +221,21 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                     resolvedIconRes = R.drawable.ic_wallpaper_lock
                     resolvedNameRes = R.string.action_set_lock_wallpaper
                     customIconKey = "toolbar_set_lock_wallpaper"
+                }
+                pm.ACTION_SET_RINGTONE -> {
+                    resolvedIconRes = R.drawable.ic_ringtone
+                    resolvedNameRes = R.string.action_set_ringtone
+                    customIconKey = "toolbar_set_ringtone"
+                }
+                pm.ACTION_SET_NOTIFICATION -> {
+                    resolvedIconRes = R.drawable.ic_notification_sound
+                    resolvedNameRes = R.string.action_set_notification
+                    customIconKey = "toolbar_set_notification"
+                }
+                pm.ACTION_SET_ALARM -> {
+                    resolvedIconRes = R.drawable.ic_alarm_sound
+                    resolvedNameRes = R.string.action_set_alarm
+                    customIconKey = "toolbar_set_alarm"
                 }
                 pm.ACTION_DUPLICATE_FINDER -> {
                     resolvedIconRes = R.drawable.ic_duplicate_finder

@@ -65,6 +65,14 @@ class FileBrowserFragment : Fragment() {
 
     private lateinit var keyboardShortcutHandler: KeyboardShortcutHandler
 
+    private val fastNavHandler = Handler(Looper.getMainLooper())
+    private val resumeThumbnailsRunnable = Runnable {
+        fileAdapter.isFastNavigating = false
+        if (::recyclerFiles.isInitialized) {
+            fileAdapter.loadVisibleThumbnails(recyclerFiles)
+        }
+    }
+
     private lateinit var recyclerFiles: RecyclerView
     private lateinit var layoutEmpty: LinearLayout
     private var lottieEmptyFolder: com.airbnb.lottie.LottieAnimationView? = null
@@ -439,6 +447,7 @@ class FileBrowserFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
         context?.let { ctx ->
             try {
                 ctx.unregisterReceiver(folderChangedReceiver)
@@ -641,6 +650,7 @@ class FileBrowserFragment : Fragment() {
         view?.findViewById<View>(R.id.btnRefreshIndex)?.visibility = if (isIndexed) View.VISIBLE else View.GONE
     }
 
+    @android.annotation.SuppressLint("InvalidSetHasFixedSize")
     private fun setupViews(view: View) {
         recyclerFiles = view.findViewById(R.id.recyclerFiles)
         layoutEmpty = view.findViewById(R.id.layoutEmpty)
@@ -863,8 +873,23 @@ class FileBrowserFragment : Fragment() {
             }
         )
 
+        recyclerFiles.setHasFixedSize(true)
+        recyclerFiles.setItemViewCacheSize(12)
+        (recyclerFiles.itemAnimator as? androidx.recyclerview.widget.SimpleItemAnimator)?.supportsChangeAnimations = false
         recyclerFiles.adapter = fileAdapter
         recyclerFiles.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(rv: androidx.recyclerview.widget.RecyclerView, newState: Int) {
+                super.onScrollStateChanged(rv, newState)
+                if (newState == androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING ||
+                    newState == androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING) {
+                    fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
+                    fileAdapter.isFastNavigating = true
+                } else if (newState == androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE) {
+                    fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
+                    fastNavHandler.postDelayed(resumeThumbnailsRunnable, 150)
+                }
+            }
+
             override fun onScrolled(rv: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 if (dy <= 0 || !isSearchActive || isLoadingMoreSearch || !hasMoreSearchResults) return
                 val lm = rv.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager ?: return
@@ -1045,7 +1070,22 @@ class FileBrowserFragment : Fragment() {
             var tvLongPressRunnable: Runnable? = null
 
             recyclerFiles.setOnKeyListener { _, keyCode, event ->
-                if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                if (keyCode in listOf(KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT)) {
+                    when (event.action) {
+                        KeyEvent.ACTION_DOWN -> {
+                            if (event.repeatCount > 0) {
+                                fileAdapter.isFastNavigating = true
+                                fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
+                                fastNavHandler.postDelayed(resumeThumbnailsRunnable, 150)
+                            }
+                        }
+                        KeyEvent.ACTION_UP -> {
+                            fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
+                            fastNavHandler.postDelayed(resumeThumbnailsRunnable, 100)
+                        }
+                    }
+                    false
+                } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
                     when (event.action) {
                         KeyEvent.ACTION_DOWN -> {
                             if (event.repeatCount == 0) {
@@ -1465,6 +1505,100 @@ class FileBrowserFragment : Fragment() {
                                 withContext(Dispatchers.Main) {
                                     fileAdapter.exitSelectionMode()
                                     val msg = if (success) getString(R.string.toast_wallpaper_set_lock_success) else getString(R.string.toast_wallpaper_set_failed)
+                                    android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+
+            // Audio → System Sound (single audio file, mobile only)
+            val isSingleAudio = count == 1 && selected.first().isFile &&
+                za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(selected.first().extension)
+            if (isSingleAudio && !DeviceUtils.isTvDevice(requireContext())) {
+                val audioFile = selected.first()
+
+                // Set Ringtone
+                if (pm.isIconEnabled(context, pm.KEY_SET_RINGTONE)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_ringtone", getString(R.string.action_set_ringtone), R.drawable.ic_ringtone, "toolbar_set_ringtone") {
+                        za.kilowatch.ultimatefilemanager.util.RingtoneHelper.showConfirmDialog(
+                            requireContext(),
+                            audioFile.name,
+                            android.media.RingtoneManager.TYPE_RINGTONE
+                        ) {
+                            if (!za.kilowatch.ultimatefilemanager.util.RingtoneHelper.canWriteSettings(requireContext())) {
+                                android.widget.Toast.makeText(requireContext(), R.string.toast_sound_permission_required, android.widget.Toast.LENGTH_LONG).show()
+                                za.kilowatch.ultimatefilemanager.util.RingtoneHelper.requestWriteSettings(requireContext())
+                                return@showConfirmDialog
+                            }
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val success = za.kilowatch.ultimatefilemanager.util.RingtoneHelper.setAsSystemSound(
+                                    requireContext(),
+                                    audioFile,
+                                    android.media.RingtoneManager.TYPE_RINGTONE
+                                )
+                                withContext(Dispatchers.Main) {
+                                    fileAdapter.exitSelectionMode()
+                                    val msg = if (success) getString(R.string.toast_ringtone_set_success) else getString(R.string.toast_sound_set_failed)
+                                    android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    })
+                }
+
+                // Set Notification Sound
+                if (pm.isIconEnabled(context, pm.KEY_SET_NOTIFICATION)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_notification", getString(R.string.action_set_notification), R.drawable.ic_notification_sound, "toolbar_set_notification") {
+                        za.kilowatch.ultimatefilemanager.util.RingtoneHelper.showConfirmDialog(
+                            requireContext(),
+                            audioFile.name,
+                            android.media.RingtoneManager.TYPE_NOTIFICATION
+                        ) {
+                            if (!za.kilowatch.ultimatefilemanager.util.RingtoneHelper.canWriteSettings(requireContext())) {
+                                android.widget.Toast.makeText(requireContext(), R.string.toast_sound_permission_required, android.widget.Toast.LENGTH_LONG).show()
+                                za.kilowatch.ultimatefilemanager.util.RingtoneHelper.requestWriteSettings(requireContext())
+                                return@showConfirmDialog
+                            }
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val success = za.kilowatch.ultimatefilemanager.util.RingtoneHelper.setAsSystemSound(
+                                    requireContext(),
+                                    audioFile,
+                                    android.media.RingtoneManager.TYPE_NOTIFICATION
+                                )
+                                withContext(Dispatchers.Main) {
+                                    fileAdapter.exitSelectionMode()
+                                    val msg = if (success) getString(R.string.toast_notification_set_success) else getString(R.string.toast_sound_set_failed)
+                                    android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    })
+                }
+
+                // Set Alarm Sound
+                if (pm.isIconEnabled(context, pm.KEY_SET_ALARM)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_alarm", getString(R.string.action_set_alarm), R.drawable.ic_alarm_sound, "toolbar_set_alarm") {
+                        za.kilowatch.ultimatefilemanager.util.RingtoneHelper.showConfirmDialog(
+                            requireContext(),
+                            audioFile.name,
+                            android.media.RingtoneManager.TYPE_ALARM
+                        ) {
+                            if (!za.kilowatch.ultimatefilemanager.util.RingtoneHelper.canWriteSettings(requireContext())) {
+                                android.widget.Toast.makeText(requireContext(), R.string.toast_sound_permission_required, android.widget.Toast.LENGTH_LONG).show()
+                                za.kilowatch.ultimatefilemanager.util.RingtoneHelper.requestWriteSettings(requireContext())
+                                return@showConfirmDialog
+                            }
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val success = za.kilowatch.ultimatefilemanager.util.RingtoneHelper.setAsSystemSound(
+                                    requireContext(),
+                                    audioFile,
+                                    android.media.RingtoneManager.TYPE_ALARM
+                                )
+                                withContext(Dispatchers.Main) {
+                                    fileAdapter.exitSelectionMode()
+                                    val msg = if (success) getString(R.string.toast_alarm_set_success) else getString(R.string.toast_sound_set_failed)
                                     android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show()
                                 }
                             }
@@ -2074,6 +2208,78 @@ class FileBrowserFragment : Fragment() {
                     }
                 }
             }
+            pm.ACTION_SET_RINGTONE -> {
+                if (count == 1 && selected.first().isFile) {
+                    val audioFile = selected.first()
+                    za.kilowatch.ultimatefilemanager.util.RingtoneHelper.showConfirmDialog(
+                        requireContext(), audioFile.name, android.media.RingtoneManager.TYPE_RINGTONE
+                    ) {
+                        if (!za.kilowatch.ultimatefilemanager.util.RingtoneHelper.canWriteSettings(requireContext())) {
+                            android.widget.Toast.makeText(requireContext(), R.string.toast_sound_permission_required, android.widget.Toast.LENGTH_LONG).show()
+                            za.kilowatch.ultimatefilemanager.util.RingtoneHelper.requestWriteSettings(requireContext())
+                            return@showConfirmDialog
+                        }
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                            val success = za.kilowatch.ultimatefilemanager.util.RingtoneHelper.setAsSystemSound(
+                                requireContext(), audioFile, android.media.RingtoneManager.TYPE_RINGTONE
+                            )
+                            withContext(Dispatchers.Main) {
+                                fileAdapter.exitSelectionMode()
+                                val msg = if (success) getString(R.string.toast_ringtone_set_success) else getString(R.string.toast_sound_set_failed)
+                                android.widget.Toast.makeText(ctx, msg, android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
+            pm.ACTION_SET_NOTIFICATION -> {
+                if (count == 1 && selected.first().isFile) {
+                    val audioFile = selected.first()
+                    za.kilowatch.ultimatefilemanager.util.RingtoneHelper.showConfirmDialog(
+                        requireContext(), audioFile.name, android.media.RingtoneManager.TYPE_NOTIFICATION
+                    ) {
+                        if (!za.kilowatch.ultimatefilemanager.util.RingtoneHelper.canWriteSettings(requireContext())) {
+                            android.widget.Toast.makeText(requireContext(), R.string.toast_sound_permission_required, android.widget.Toast.LENGTH_LONG).show()
+                            za.kilowatch.ultimatefilemanager.util.RingtoneHelper.requestWriteSettings(requireContext())
+                            return@showConfirmDialog
+                        }
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                            val success = za.kilowatch.ultimatefilemanager.util.RingtoneHelper.setAsSystemSound(
+                                requireContext(), audioFile, android.media.RingtoneManager.TYPE_NOTIFICATION
+                            )
+                            withContext(Dispatchers.Main) {
+                                fileAdapter.exitSelectionMode()
+                                val msg = if (success) getString(R.string.toast_notification_set_success) else getString(R.string.toast_sound_set_failed)
+                                android.widget.Toast.makeText(ctx, msg, android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
+            pm.ACTION_SET_ALARM -> {
+                if (count == 1 && selected.first().isFile) {
+                    val audioFile = selected.first()
+                    za.kilowatch.ultimatefilemanager.util.RingtoneHelper.showConfirmDialog(
+                        requireContext(), audioFile.name, android.media.RingtoneManager.TYPE_ALARM
+                    ) {
+                        if (!za.kilowatch.ultimatefilemanager.util.RingtoneHelper.canWriteSettings(requireContext())) {
+                            android.widget.Toast.makeText(requireContext(), R.string.toast_sound_permission_required, android.widget.Toast.LENGTH_LONG).show()
+                            za.kilowatch.ultimatefilemanager.util.RingtoneHelper.requestWriteSettings(requireContext())
+                            return@showConfirmDialog
+                        }
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                            val success = za.kilowatch.ultimatefilemanager.util.RingtoneHelper.setAsSystemSound(
+                                requireContext(), audioFile, android.media.RingtoneManager.TYPE_ALARM
+                            )
+                            withContext(Dispatchers.Main) {
+                                fileAdapter.exitSelectionMode()
+                                val msg = if (success) getString(R.string.toast_alarm_set_success) else getString(R.string.toast_sound_set_failed)
+                                android.widget.Toast.makeText(ctx, msg, android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+            }
             pm.ACTION_CHECKSUM -> {
                 val files = selected.filter { !it.isDirectory }
                 if (files.isNotEmpty()) {
@@ -2130,7 +2336,9 @@ class FileBrowserFragment : Fragment() {
                         hasArchiveSelected = imgFiles.isNotEmpty() && imgFiles.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) },
                         allImagesSelected = imgFiles.isNotEmpty() && imgFiles.all {
                             it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
-                        }
+                        },
+                        allAudioSelected = imgFiles.isNotEmpty() && imgFiles.size == 1 &&
+                            za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(imgFiles.first().extension)
                     )
                     floatingQuickBar?.bindSelection(state)
                     floatingQuickBar?.showAnimated { updateFabPositions() }

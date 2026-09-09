@@ -5,6 +5,23 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] — 2026-09-09
+
+### Added
+- System Audio & Ringtone Set As Actions (Mobile):
+  - Added "Set as Ringtone", "Set as Notification Sound", and "Set as Alarm Sound" directly for single audio file selections.
+  - Available from the bottom actions sheet (tools button) and context menus when browsing Local storage, SD cards, USB drives, network shares, and open browser tabs.
+  - Added Floating Quick Action Bar shortcuts with new vector icons (`ic_ringtone`, `ic_notification_sound`, `ic_alarm_sound`), with full customization in Toolbar Icons Settings and Icon Customization.
+  - Automatically handles `WRITE_SETTINGS` permission request flow with explanatory system prompt.
+  - Automatically inserts audio files into Android's system `MediaStore` audio database with appropriate ringtone, notification, or alarm flags so other apps can discover them.
+  - Network and cloud audio files are automatically cached locally before being applied as system sounds.
+- System Ringtone Picker Provider (`ACTION_RINGTONE_PICKER`):
+  - Registered `SafPickerActivity` to handle Android's `ACTION_RINGTONE_PICKER` intent.
+  - Enables third-party applications (such as WhatsApp, Telegram, and messaging apps) to discover and launch Ultimate File Manager when choosing custom notification, ringtone, or alarm sounds.
+  - Supports custom ringtone picker window titles and audio-only file filtering.
+- Community Translation Hub (Mobile):
+  - Added Community Translation Hub link to mobile Help & Support to submit translation corrections directly via the web portal.
+
 ## [1.9.9] — 2026-09-07
 
 ### Added
@@ -29,9 +46,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Gesture Controls: Swipe tab upward with fade animation to close, swipe downward to duplicate with bounce animation.
 
 ### Changed
+- **UFM Player**: Removed the playlist button from the mobile media player controls so playlist access is exclusive to Android TV.
 - Improved Dutch (nl) localization translations for UI controls, network shares, permissions, and twin window mode.
 
 ### Fixed
+- **TV File Selector**: Fixed an issue in `SafPickerActivity` where image thumbnails disappeared and turned into solid blue folders upon D-pad navigation.
+- **TV File Selector**: Fixed D-pad hold scrolling stutter and freeze in image folders by adding fast-navigation thumbnail deferral, explicit 128x128 sub-sampling, hardware bitmaps, and view recycling cancellation.
+- Fixed Android TV image folder scrolling stutter and focus hangs when holding D-pad navigation keys.
+- Optimized image thumbnail decoding on TV with hardware bitmaps, explicit bounded thumbnail dimensions, and deferred thumbnail loading during rapid remote navigation.
+- Fixed D-pad downward focus search stall caused by hidden action pill targets.
 - Fixed TV archive browsing "Options" button doing nothing when browsing ZIP, 7Z, TAR, and RAR files.
 - Fixed D-pad focus trap in TV archive viewer layouts, enabling smooth item navigation and yellow card focus highlighting.
 - Added remote Menu key and D-pad Center long-press shortcuts to open archive entry options on Android TV.

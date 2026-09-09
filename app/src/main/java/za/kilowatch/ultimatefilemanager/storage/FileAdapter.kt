@@ -16,6 +16,7 @@ import coil3.request.Disposable
 import coil3.request.allowHardware
 import coil3.request.crossfade
 import coil3.size.Scale
+import coil3.size.Precision
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -88,6 +89,23 @@ class FileAdapter(
             field = value
             notifyDataSetChanged()
         }
+
+    /**
+     * Controls whether fast directional-pad navigation or fast scrolling is underway.
+     * When true, thumbnail decode jobs are deferred to ensure 60fps cursor responsiveness.
+     */
+    var isFastNavigating: Boolean = false
+
+    /**
+     * Iterates currently attached/visible ViewHolders and requests any pending deferred thumbnails.
+     */
+    fun loadVisibleThumbnails(recyclerView: RecyclerView) {
+        for (i in 0 until recyclerView.childCount) {
+            val child = recyclerView.getChildAt(i) ?: continue
+            val holder = recyclerView.getChildViewHolder(child) as? FileViewHolder ?: continue
+            holder.loadPendingThumbnail()
+        }
+    }
 
     private var attachedContext: android.content.Context? = null
 
@@ -536,6 +554,13 @@ class FileAdapter(
         }
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        if (holder is FileViewHolder) {
+            holder.recycle()
+        }
+    }
+
     override fun getItemCount(): Int = items.size
 
     inner class EmptyBufferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -636,6 +661,41 @@ class FileAdapter(
          */
         private var videoJob: kotlinx.coroutines.Job? = null
 
+        private var boundFile: File? = null
+        private var hasLoadedThumbnail: Boolean = false
+
+        fun recycle() {
+            coilDisposable?.dispose()
+            coilDisposable = null
+            videoJob?.cancel()
+            videoJob = null
+            stopPulse()
+            imgIcon.tag = null
+            hasLoadedThumbnail = false
+            boundFile = null
+        }
+
+        fun loadPendingThumbnail() {
+            val file = boundFile ?: return
+            if (hasLoadedThumbnail) return
+            val context = itemView.context
+            val ext = file.extension.lowercase()
+            val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+            val isVideo = ext in VIDEO_EXTENSIONS
+            val isApk = ext in listOf("apk", "xapk", "apks")
+            val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
+            val isThumbnail = !file.isDirectoryCached() && showThumbnails && (isImage || isVideo || isApk)
+            if (!isThumbnail) return
+
+            hasLoadedThumbnail = true
+            val isGrid = ViewModeManager.isGrid(viewMode)
+            if (!isGrid) {
+                loadListThumbnail(file, isImage, isApk)
+            } else {
+                loadThumbnail(file)
+            }
+        }
+
         private fun startPulse() {
             val anim = android.view.animation.AlphaAnimation(1.0f, 0.4f).apply {
                 duration = 600
@@ -651,6 +711,8 @@ class FileAdapter(
         }
 
         fun bind(file: File) {
+            boundFile = file
+            hasLoadedThumbnail = false
             val context = itemView.context
             val isGrid = ViewModeManager.isGrid(viewMode)
 
@@ -702,7 +764,7 @@ class FileAdapter(
 
                 itemView.minimumHeight = (heightDp * density + 0.5f).toInt()
                 val params = itemView.layoutParams
-                if (params != null) {
+                if (params != null && params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT
                     itemView.layoutParams = params
                 }
@@ -821,7 +883,13 @@ class FileAdapter(
                     }
 
                     isDisplayingThumbnail = true
-                    loadListThumbnail(file, isImage, isApk)
+                    if (isFastNavigating) {
+                        hasLoadedThumbnail = false
+                        imgIcon.setImageResource(R.drawable.ic_photo_video)
+                    } else {
+                        hasLoadedThumbnail = true
+                        loadListThumbnail(file, isImage, isApk)
+                    }
 
                     val baseDate = formatDate(context, file.lastModifiedCached())
                     val storage = storageLabels[file.absolutePath]
@@ -849,8 +917,24 @@ class FileAdapter(
                     if (showThumbnails && (isImage || isVideo || isApk)) {
                         iconContainer?.setBackgroundResource(0)
                         imgIcon.setPadding(0, 0, 0, 0)
+                        imgIcon.clipToOutline = true
+                        imgIcon.outlineProvider = object : android.view.ViewOutlineProvider() {
+                            override fun getOutline(view: android.view.View, outline: android.graphics.Outline) {
+                                val radius = 10f * view.context.resources.displayMetrics.density
+                                outline.setRoundRect(0, 0, view.width, view.height, radius)
+                            }
+                        }
+                        if (isFastNavigating) {
+                            hasLoadedThumbnail = false
+                            imgIcon.setImageResource(R.drawable.ic_photo_video)
+                            imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
+                        } else {
+                            hasLoadedThumbnail = true
+                            loadThumbnail(file)
+                        }
+                    } else {
+                        loadThumbnail(file)
                     }
-                    loadThumbnail(file)
                 }
             }
 
@@ -1060,8 +1144,7 @@ class FileAdapter(
         private fun loadListThumbnail(file: File, isImage: Boolean, isApk: Boolean) {
             val placeholderImage = ContextCompat.getDrawable(itemView.context, R.drawable.ic_photo_video)?.asImage()
             val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
-                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
-                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(itemView.context, file.absolutePath)
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)
             val safDocUri = if (isSaf) {
                 (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri
                     ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(itemView.context, file.absolutePath)
@@ -1073,8 +1156,15 @@ class FileAdapter(
                 imgIcon.tag = file.absolutePath
                 val loadTarget: Any = safDocUri ?: file
                 coilDisposable = imgIcon.load(loadTarget) {
-                    crossfade(200)
-                    allowHardware(false)
+                    size(128, 128)
+                    precision(Precision.INEXACT)
+                    if (isTv) {
+                        crossfade(false)
+                        allowHardware(true)
+                    } else {
+                        crossfade(200)
+                        allowHardware(false)
+                    }
                     scale(Scale.FILL)
                     placeholder(placeholderImage)
                     error(placeholderImage)
@@ -1454,8 +1544,7 @@ class FileAdapter(
             }
 
             val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
-                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
-                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath)
             val safDocUri = if (isSaf) {
                 (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri
                     ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, file.absolutePath)
@@ -1479,14 +1568,21 @@ class FileAdapter(
                 imgIcon.tag = file.absolutePath
                 val loadTarget: Any = safDocUri ?: file
                 coilDisposable = imgIcon.load(loadTarget) {
-                    crossfade(150)
-                    allowHardware(false)
+                    size(384, 384)
+                    precision(Precision.INEXACT)
+                    if (isTv) {
+                        crossfade(false)
+                        allowHardware(true)
+                    } else {
+                        crossfade(150)
+                        allowHardware(false)
+                    }
                     scale(Scale.FILL)
                     placeholder(placeholderImage)
                     error(placeholderImage)
                     listener(
                         onSuccess = { _, _ ->
-                            updateTextColorForDrawable(imgIcon.drawable, true)
+                            if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
                         },
                         onError = { _, _ ->
                             if (imgIcon.tag == file.absolutePath) {
@@ -1497,7 +1593,7 @@ class FileAdapter(
                                         withContext(Dispatchers.Main) {
                                             if (imgIcon.tag == file.absolutePath) {
                                                 imgIcon.setImageBitmap(bmp)
-                                                updateTextColorForDrawable(imgIcon.drawable, true)
+                                                if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
                                             }
                                         }
                                     }
@@ -1522,11 +1618,16 @@ class FileAdapter(
                             stopPulse()
                             if (drawable != null) {
                                 coilDisposable = imgIcon.load(drawable) {
-                                    crossfade(150)
-                                    allowHardware(false)
+                                    if (isTv) {
+                                        crossfade(false)
+                                        allowHardware(true)
+                                    } else {
+                                        crossfade(150)
+                                        allowHardware(false)
+                                    }
                                     listener(
                                         onSuccess = { _, _ ->
-                                            updateTextColorForDrawable(imgIcon.drawable, true)
+                                            if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
                                         }
                                     )
                                 }
@@ -1540,7 +1641,7 @@ class FileAdapter(
                 val cached = videoCache.get(file.absolutePath)
                 if (cached != null) {
                     imgIcon.setImageBitmap(cached)
-                    updateTextColorForDrawable(imgIcon.drawable, true)
+                    if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
                 } else {
                     imgIcon.setImageDrawable(
                         ContextCompat.getDrawable(itemView.context, R.drawable.ic_photo_video)
@@ -1629,12 +1730,17 @@ class FileAdapter(
                                 if (bitmap != null) {
                                     videoCache.put(file.absolutePath, bitmap)
                                     coilDisposable = imgIcon.load(bitmap) {
-                                        crossfade(150)
-                                        allowHardware(false)
+                                        if (isTv) {
+                                            crossfade(false)
+                                            allowHardware(true)
+                                        } else {
+                                            crossfade(150)
+                                            allowHardware(false)
+                                        }
                                         scale(Scale.FILL)
                                         listener(
                                             onSuccess = { _, _ ->
-                                                updateTextColorForDrawable(imgIcon.drawable, true)
+                                                if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
                                             }
                                         )
                                     }
@@ -1742,6 +1848,7 @@ class FileAdapter(
         }
 
         private fun applyGridTextColor(file: File) {
+            if (isTv) return
             val ext = file.extension.lowercase()
             val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val isVideo = ext in VIDEO_EXTENSIONS

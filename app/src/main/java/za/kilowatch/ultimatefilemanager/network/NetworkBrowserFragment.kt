@@ -588,6 +588,34 @@ class NetworkBrowserFragment : Fragment() {
                 }
             }
 
+            // System Sound (Single network audio file, mobile only)
+            val isSingleNetworkAudio = count == 1 && !selected.first().isDirectory &&
+                za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(selected.first().name.substringAfterLast('.'))
+            if (isSingleNetworkAudio && !DeviceUtils.isTvDevice(requireContext())) {
+                val targetFile = selected.first()
+
+                // Set Ringtone
+                if (pm.isIconEnabled(context, pm.KEY_SET_RINGTONE)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_ringtone", getString(R.string.action_set_ringtone), R.drawable.ic_ringtone, "toolbar_set_ringtone") {
+                        setNetworkSystemSound(targetFile, android.media.RingtoneManager.TYPE_RINGTONE)
+                    })
+                }
+
+                // Set Notification Sound
+                if (pm.isIconEnabled(context, pm.KEY_SET_NOTIFICATION)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_notification", getString(R.string.action_set_notification), R.drawable.ic_notification_sound, "toolbar_set_notification") {
+                        setNetworkSystemSound(targetFile, android.media.RingtoneManager.TYPE_NOTIFICATION)
+                    })
+                }
+
+                // Set Alarm Sound
+                if (pm.isIconEnabled(context, pm.KEY_SET_ALARM)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_alarm", getString(R.string.action_set_alarm), R.drawable.ic_alarm_sound, "toolbar_set_alarm") {
+                        setNetworkSystemSound(targetFile, android.media.RingtoneManager.TYPE_ALARM)
+                    })
+                }
+            }
+
             // 4. Protect
             val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(context, share.id)
             if (hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) {
@@ -2551,6 +2579,71 @@ class NetworkBrowserFragment : Fragment() {
                         if (isHome) R.string.toast_wallpaper_set_home_success else R.string.toast_wallpaper_set_lock_success
                     } else {
                         R.string.toast_wallpaper_set_failed
+                    }
+                    android.widget.Toast.makeText(ctx, getString(msgRes), android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun setNetworkSystemSound(networkFile: NetworkFile, type: Int) {
+        val ctx = context ?: return
+        za.kilowatch.ultimatefilemanager.util.RingtoneHelper.showConfirmDialog(
+            ctx,
+            networkFile.name,
+            type
+        ) {
+            if (!za.kilowatch.ultimatefilemanager.util.RingtoneHelper.canWriteSettings(ctx)) {
+                android.widget.Toast.makeText(ctx, R.string.toast_sound_permission_required, android.widget.Toast.LENGTH_LONG).show()
+                za.kilowatch.ultimatefilemanager.util.RingtoneHelper.requestWriteSettings(ctx)
+                return@showConfirmDialog
+            }
+            val toastFetching = android.widget.Toast.makeText(ctx, getString(R.string.fetching_filename, networkFile.name), android.widget.Toast.LENGTH_SHORT)
+            toastFetching.show()
+            lifecycleScope.launch(Dispatchers.IO) {
+                var tempFile: java.io.File? = null
+                var success = false
+                try {
+                    val tempDir = java.io.File(ctx.cacheDir, "ringtone_temp")
+                    tempDir.mkdirs()
+                    tempFile = java.io.File(tempDir, "${System.currentTimeMillis()}_${networkFile.name}")
+                    val inp = when (share.type) {
+                        ShareType.SMB -> SmbShareClient.openInputStream(share, networkFile.path)
+                        ShareType.FTP -> FtpShareClient.openInputStream(share, networkFile.path)
+                        ShareType.TV  -> TvShareClient.openInputStream(share, networkFile.path)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, networkFile.path)
+                        ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.WEBDAV -> WebDavShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.NFS -> NfsShareClient.openInputStream(share, networkFile.path)
+                        ShareType.DLNA -> DlnaShareClient.openInputStream(share, networkFile.path)
+                        else -> null
+                    }
+                    if (inp != null) {
+                        inp.use { input ->
+                            java.io.FileOutputStream(tempFile).use { output -> input.copyTo(output) }
+                        }
+                        success = za.kilowatch.ultimatefilemanager.util.RingtoneHelper.setAsSystemSound(ctx, tempFile, type)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    tempFile?.delete()
+                }
+
+                withContext(Dispatchers.Main) {
+                    fileAdapter.exitSelectionMode()
+                    val msgRes = if (success) {
+                        when (type) {
+                            android.media.RingtoneManager.TYPE_RINGTONE -> R.string.toast_ringtone_set_success
+                            android.media.RingtoneManager.TYPE_NOTIFICATION -> R.string.toast_notification_set_success
+                            android.media.RingtoneManager.TYPE_ALARM -> R.string.toast_alarm_set_success
+                            else -> R.string.toast_ringtone_set_success
+                        }
+                    } else {
+                        R.string.toast_sound_set_failed
                     }
                     android.widget.Toast.makeText(ctx, getString(msgRes), android.widget.Toast.LENGTH_SHORT).show()
                 }

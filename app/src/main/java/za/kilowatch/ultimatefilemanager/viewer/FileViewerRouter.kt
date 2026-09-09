@@ -127,7 +127,7 @@ object FileViewerRouter {
     private val PACKAGE_EXTENSIONS = setOf("apk", "xapk", "apks")
 
     // ── Audio ─────────────────────────────────────────────────────────────────
-    private val AUDIO_EXTENSIONS = setOf(
+    val AUDIO_EXTENSIONS = setOf(
         "mp3", "wav", "ogg", "m4a", "aac", "flac", "opus", "wma", "amr"
     )
 

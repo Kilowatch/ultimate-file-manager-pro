@@ -637,7 +637,6 @@
         android:paddingHorizontal="@dimen/tv_safe_horizontal"
         android:paddingVertical="@dimen/margin_sm"
         android:paddingBottom="120dp"
-        android:nextFocusDown="@id/btnPillCopy"
         app:layout_constraintTop_toBottomOf="@id/layoutSelectionBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1116,40 +1116,7 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         updateSkipButtonVisibility()
 
-        if (!isTv) {
-            // ── Queue Drawer Button in Controls Row (Mobile) ───────────
-            val controlsRow = findViewById<LinearLayout>(R.id.controlsLayout)
-                ?.findViewWithTag<LinearLayout>("controlsButtonRow")
-            if (controlsRow == null) {
-                try {
-                    val parent = (btnSubtitles.parent as? LinearLayout)
-                    if (parent != null && parent.childCount > 0) {
-                        val queueBtn = ImageButton(this).apply {
-                            id = android.view.View.generateViewId()
-                            layoutParams = LinearLayout.LayoutParams(
-                                dp(44), dp(44)
-                            ).apply { marginStart = dp(2) }
-                            setImageResource(R.drawable.ic_list_view_custom)
-                            val typedValue = android.util.TypedValue()
-                            if (theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true)) {
-                                background = androidx.core.content.ContextCompat.getDrawable(this@UFMPlayerActivity, typedValue.resourceId)
-                            }
-                            imageTintList = android.content.res.ColorStateList.valueOf(
-                                android.graphics.Color.WHITE
-                            )
-                            setOnClickListener { toggleQueueDrawer() }
-                            contentDescription = getString(R.string.queue_title)
-                        }
-                        parent.addView(queueBtn, parent.childCount)
-                    }
-                } catch (_: Exception) {
-                    // Silently skip if layout is unexpected
-                }
-            }
-
-            // ── Queue Drawer Init (Mobile) ──────────────────────────────
-            initQueueDrawer()
-        } else {
+        if (isTv) {
             // ── TV Playlist Drawer Init ─────────────────────────────────
             initTvPlaylistDrawer()
         }

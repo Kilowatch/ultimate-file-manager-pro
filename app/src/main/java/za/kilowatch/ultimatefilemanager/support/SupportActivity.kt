@@ -196,6 +196,22 @@ class SupportActivity : AppCompatActivity() {
                 Toast.makeText(this, R.string.support_direct_email_copied, Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Community Translation Hub card (mobile only)
+        findViewById<View?>(R.id.cardTranslationHub)?.setOnClickListener {
+            val url = TRANSLATION_HUB_URL
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url)).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                startActivity(intent)
+            } catch (e: Exception) {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("Translation Hub URL", url)
+                clipboard?.setPrimaryClip(clip)
+                Toast.makeText(this, R.string.support_translation_hub_copied, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupTvBackButton(btnBack: ImageView) {
@@ -739,5 +755,6 @@ class SupportActivity : AppCompatActivity() {
         private const val SUPPORT_ENDPOINT = "https://www.kilowatch.co.za/UFM/api/support.php"
         private const val MAX_ATTACHMENT_SIZE = 10L * 1024 * 1024 // 10MB
         private const val MAX_ATTACHMENT_COUNT = 5
+        private const val TRANSLATION_HUB_URL = "https://www.kilowatch.co.za/UFM/translate.html"
     }
 }

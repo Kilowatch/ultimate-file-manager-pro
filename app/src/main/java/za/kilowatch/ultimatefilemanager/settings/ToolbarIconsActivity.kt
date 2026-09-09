@@ -144,6 +144,9 @@ class ToolbarIconsActivity : AppCompatActivity() {
                     ToolbarItem(R.drawable.ic_exif_cleaner, R.string.action_exif_cleaner_renamer, R.string.toolbar_desc_exif_tools, ToolbarIconsPreferenceManager.KEY_EXIF_TOOLS, "toolbar_exif_cleaner", mobileOnly = true),
                     ToolbarItem(R.drawable.ic_wallpaper_home, R.string.action_set_home_wallpaper, R.string.toolbar_desc_set_home_wallpaper, ToolbarIconsPreferenceManager.KEY_SET_HOME_WALLPAPER, "toolbar_set_home_wallpaper"),
                     ToolbarItem(R.drawable.ic_wallpaper_lock, R.string.action_set_lock_wallpaper, R.string.toolbar_desc_set_lock_wallpaper, ToolbarIconsPreferenceManager.KEY_SET_LOCK_WALLPAPER, "toolbar_set_lock_wallpaper"),
+                    ToolbarItem(R.drawable.ic_ringtone, R.string.action_set_ringtone, R.string.toolbar_desc_set_ringtone, ToolbarIconsPreferenceManager.KEY_SET_RINGTONE, "toolbar_set_ringtone", mobileOnly = true),
+                    ToolbarItem(R.drawable.ic_notification_sound, R.string.action_set_notification, R.string.toolbar_desc_set_notification, ToolbarIconsPreferenceManager.KEY_SET_NOTIFICATION, "toolbar_set_notification", mobileOnly = true),
+                    ToolbarItem(R.drawable.ic_alarm_sound, R.string.action_set_alarm, R.string.toolbar_desc_set_alarm, ToolbarIconsPreferenceManager.KEY_SET_ALARM, "toolbar_set_alarm", mobileOnly = true),
                     ToolbarItem(R.drawable.ic_duplicate_finder, R.string.action_duplicate_finder, R.string.toolbar_desc_duplicate_finder, ToolbarIconsPreferenceManager.KEY_DUPLICATE_FINDER, "toolbar_duplicate_finder"),
                     ToolbarItem(R.drawable.ic_folder_large_files, R.string.action_large_files_finder, R.string.toolbar_desc_large_files_finder, ToolbarIconsPreferenceManager.KEY_LARGE_FILES_FINDER, "toolbar_large_files_finder"),
                     ToolbarItem(R.drawable.ic_checksum, R.string.action_checksum, R.string.toolbar_desc_checksum, ToolbarIconsPreferenceManager.KEY_CHECKSUM, "toolbar_checksum")
@@ -180,6 +183,9 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.ACTION_EXIF_TOOLS -> QuickActionDef(pm.ACTION_EXIF_TOOLS, R.string.action_exif_cleaner_renamer, R.drawable.ic_exif_cleaner, "toolbar_exif_cleaner")
             pm.ACTION_SET_HOME_WALLPAPER -> QuickActionDef(pm.ACTION_SET_HOME_WALLPAPER, R.string.action_set_home_wallpaper, R.drawable.ic_wallpaper_home, "toolbar_set_home_wallpaper")
             pm.ACTION_SET_LOCK_WALLPAPER -> QuickActionDef(pm.ACTION_SET_LOCK_WALLPAPER, R.string.action_set_lock_wallpaper, R.drawable.ic_wallpaper_lock, "toolbar_set_lock_wallpaper")
+            pm.ACTION_SET_RINGTONE -> QuickActionDef(pm.ACTION_SET_RINGTONE, R.string.action_set_ringtone, R.drawable.ic_ringtone, "toolbar_set_ringtone")
+            pm.ACTION_SET_NOTIFICATION -> QuickActionDef(pm.ACTION_SET_NOTIFICATION, R.string.action_set_notification, R.drawable.ic_notification_sound, "toolbar_set_notification")
+            pm.ACTION_SET_ALARM -> QuickActionDef(pm.ACTION_SET_ALARM, R.string.action_set_alarm, R.drawable.ic_alarm_sound, "toolbar_set_alarm")
             pm.ACTION_DUPLICATE_FINDER -> QuickActionDef(pm.ACTION_DUPLICATE_FINDER, R.string.action_duplicate_finder, R.drawable.ic_duplicate_finder, "toolbar_duplicate_finder")
             pm.ACTION_LARGE_FILES_FINDER -> QuickActionDef(pm.ACTION_LARGE_FILES_FINDER, R.string.action_large_files_finder, R.drawable.ic_folder_large_files, "toolbar_large_files_finder")
             pm.ACTION_CREATE_NEW -> QuickActionDef(pm.ACTION_CREATE_NEW, R.string.cd_create_new, R.drawable.ic_create_new, "toolbar_create_new")
@@ -217,6 +223,9 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.KEY_EXIF_TOOLS -> pm.ACTION_EXIF_TOOLS
             pm.KEY_SET_HOME_WALLPAPER -> pm.ACTION_SET_HOME_WALLPAPER
             pm.KEY_SET_LOCK_WALLPAPER -> pm.ACTION_SET_LOCK_WALLPAPER
+            pm.KEY_SET_RINGTONE -> pm.ACTION_SET_RINGTONE
+            pm.KEY_SET_NOTIFICATION -> pm.ACTION_SET_NOTIFICATION
+            pm.KEY_SET_ALARM -> pm.ACTION_SET_ALARM
             pm.KEY_DUPLICATE_FINDER -> pm.ACTION_DUPLICATE_FINDER
             pm.KEY_LARGE_FILES_FINDER -> pm.ACTION_LARGE_FILES_FINDER
             pm.KEY_CHECKSUM -> pm.ACTION_CHECKSUM

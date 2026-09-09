@@ -7,6 +7,7 @@ import za.kilowatch.ultimatefilemanager.network.SmbDiscovery
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -52,12 +53,17 @@ import za.kilowatch.ultimatefilemanager.network.TvShareClient
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import android.os.Handler
+import android.os.Looper
+import android.view.KeyEvent
 import android.webkit.MimeTypeMap
+import androidx.recyclerview.widget.SimpleItemAnimator
 import coil3.asImage
 import coil3.load
 import coil3.request.Disposable
 import coil3.request.allowHardware
 import coil3.request.crossfade
+import coil3.size.Precision
 import coil3.size.Scale
 import za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
@@ -91,6 +97,7 @@ class SafPickerActivity : AppCompatActivity() {
     private var action: String? = null
     private var isTreeAction = false
     private var isCreateAction = false
+    private var isRingtoneAction = false
     private var currentPath: String? = null // null means roots view
     private var currentShare: NetworkShare? = null
     private var isCurrentShareOnline = false
@@ -99,6 +106,14 @@ class SafPickerActivity : AppCompatActivity() {
     private val selectedFiles = mutableSetOf<String>()
 
     private val adapter = PickerAdapter()
+
+    private val fastNavHandler = Handler(Looper.getMainLooper())
+    private val resumeThumbnailsRunnable = Runnable {
+        adapter.isFastNavigating = false
+        if (::recyclerItems.isInitialized) {
+            adapter.loadVisibleThumbnails(recyclerItems)
+        }
+    }
 
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -113,10 +128,14 @@ class SafPickerActivity : AppCompatActivity() {
         action = intent.action
         isTreeAction  = action == Intent.ACTION_OPEN_DOCUMENT_TREE
         isCreateAction = action == Intent.ACTION_CREATE_DOCUMENT
+        isRingtoneAction = action == RingtoneManager.ACTION_RINGTONE_PICKER || action == "android.intent.action.RINGTONE_PICKER"
 
         // Extract requested MIME types from intent (supports both type field and EXTRA_MIME_TYPES)
         requestedMimeTypes = intent.getStringArrayListExtra(Intent.EXTRA_MIME_TYPES)?.takeIf { it.isNotEmpty() }
             ?: intent.type?.let { listOf(it) }
+        if (isRingtoneAction && requestedMimeTypes == null) {
+            requestedMimeTypes = listOf("audio/*")
+        }
         allowMultiple = intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
 
         GoRoLog.i("SafPickerActivity onCreate: action=$action, isTree=$isTreeAction, isCreate=$isCreateAction, allowMultiple=$allowMultiple")
@@ -156,6 +175,35 @@ class SafPickerActivity : AppCompatActivity() {
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (isTv && event.keyCode in listOf(
+                KeyEvent.KEYCODE_DPAD_DOWN,
+                KeyEvent.KEYCODE_DPAD_UP,
+                KeyEvent.KEYCODE_DPAD_LEFT,
+                KeyEvent.KEYCODE_DPAD_RIGHT
+            )) {
+            when (event.action) {
+                KeyEvent.ACTION_DOWN -> {
+                    if (event.repeatCount > 0) {
+                        adapter.isFastNavigating = true
+                        fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
+                        fastNavHandler.postDelayed(resumeThumbnailsRunnable, 150)
+                    }
+                }
+                KeyEvent.ACTION_UP -> {
+                    fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
+                    fastNavHandler.postDelayed(resumeThumbnailsRunnable, 100)
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
     private fun setupViews() {
         recyclerItems = findViewById(R.id.recyclerItems)
         txtTitle = findViewById(R.id.txtTitle)
@@ -173,8 +221,24 @@ class SafPickerActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.btnNewFolder).visibility = View.GONE // Keep it simple for now
 
+        recyclerItems.setHasFixedSize(true)
+        recyclerItems.setItemViewCacheSize(12)
+        (recyclerItems.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         recyclerItems.layoutManager = LinearLayoutManager(this)
         recyclerItems.adapter = adapter
+        recyclerItems.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(rv: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(rv, newState)
+                if (newState == RecyclerView.SCROLL_STATE_SETTLING ||
+                    newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
+                    adapter.isFastNavigating = true
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    fastNavHandler.removeCallbacks(resumeThumbnailsRunnable)
+                    fastNavHandler.postDelayed(resumeThumbnailsRunnable, 150)
+                }
+            }
+        })
 
         // Pre-fill filename from the intent's suggested title
         if (isCreateAction) {
@@ -229,7 +293,11 @@ class SafPickerActivity : AppCompatActivity() {
         currentPath = null
         currentShare = null
         isCurrentShareOnline = false
-        txtTitle.text = if (isCreateAction) getString(R.string.save_to) else "Select Storage"
+        val customTitle = if (isRingtoneAction) {
+            intent.getStringExtra(RingtoneManager.EXTRA_RINGTONE_TITLE)?.takeIf { it.isNotBlank() }
+                ?: getString(R.string.ringtone_confirm_title)
+        } else null
+        txtTitle.text = customTitle ?: if (isCreateAction) getString(R.string.save_to) else "Select Storage"
         txtSubtitle.setText(R.string.choose_a_volume_to_browse)
         layoutBottomAction.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
@@ -522,6 +590,9 @@ class SafPickerActivity : AppCompatActivity() {
 
             val resultIntent = Intent().apply {
                 data = uri
+                if (isRingtoneAction) {
+                    putExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI, uri)
+                }
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or
                         Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
                         Intent.FLAG_GRANT_PREFIX_URI_PERMISSION or
@@ -561,6 +632,7 @@ class SafPickerActivity : AppCompatActivity() {
 
     inner class PickerAdapter : RecyclerView.Adapter<PickerAdapter.ViewHolder>() {
         private val items = mutableListOf<PickerItem>()
+        var isFastNavigating: Boolean = false
 
         fun submitList(newItems: List<PickerItem>) {
             items.clear()
@@ -569,6 +641,19 @@ class SafPickerActivity : AppCompatActivity() {
             if (items.isNotEmpty()) {
                 recyclerItems.scrollToPosition(0)
             }
+        }
+
+        fun loadVisibleThumbnails(recyclerView: RecyclerView) {
+            for (i in 0 until recyclerView.childCount) {
+                val child = recyclerView.getChildAt(i) ?: continue
+                val holder = recyclerView.getChildViewHolder(child) as? ViewHolder ?: continue
+                holder.loadPendingThumbnail()
+            }
+        }
+
+        override fun onViewRecycled(holder: ViewHolder) {
+            super.onViewRecycled(holder)
+            holder.recycle()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -587,18 +672,32 @@ class SafPickerActivity : AppCompatActivity() {
             private val icon: ImageView = view.findViewById(R.id.imgFileIcon)
             private val title: TextView = view.findViewById(R.id.txtFileName)
             private val subtitle: TextView = view.findViewById(R.id.txtFileInfo)
+            private val iconContainer: View? = view.findViewById(R.id.iconContainer)
 
             /** Cancels any in-flight Coil request when this ViewHolder is rebound. */
             private var coilDisposable: Disposable? = null
             /** Cancels any in-flight video-frame extraction coroutine. */
             private var videoJob: Job? = null
+            private var hasLoadedThumbnail: Boolean = false
+            private var boundItem: PickerItem? = null
+
+            fun recycle() {
+                coilDisposable?.dispose()
+                coilDisposable = null
+                videoJob?.cancel()
+                videoJob = null
+                hasLoadedThumbnail = false
+                boundItem = null
+            }
 
             fun bind(item: PickerItem) {
+                boundItem = item
                 // Cancel stale async loads from a previous bind
                 coilDisposable?.dispose()
                 coilDisposable = null
                 videoJob?.cancel()
                 videoJob = null
+                hasLoadedThumbnail = false
 
                 title.text = item.label
                 subtitle.text = if (item.isRoot) getString(R.string.storage_volume) else if (item.isDir) "Folder" else "File"
@@ -619,10 +718,10 @@ class SafPickerActivity : AppCompatActivity() {
                 val isApk = ext in listOf("apk", "xapk", "apks")
                 val canShowThumb = showThumbnails && !item.isRoot && !item.isDir && (isImage || isVideo || isApk)
 
-                icon.imageTintList = null
                 icon.alpha = alpha
 
                 if (canShowThumb) {
+                    icon.imageTintList = null
                     icon.scaleType = ImageView.ScaleType.CENTER_CROP
                     icon.clipToOutline = true
                     icon.outlineProvider = object : android.view.ViewOutlineProvider() {
@@ -631,85 +730,30 @@ class SafPickerActivity : AppCompatActivity() {
                             outline.setRoundRect(0, 0, view.width, view.height, r)
                         }
                     }
+                    icon.setPadding(0, 0, 0, 0)
+                    iconContainer?.setBackgroundResource(0)
 
-                    val placeholderImage = androidx.core.content.ContextCompat.getDrawable(itemView.context, item.iconRes)?.asImage()
-
-                    if (currentShare != null) {
-                        val share = currentShare!!
-                        val netFile = NetworkFile(name = item.label, path = item.path, isDirectory = false)
-                        val cacheManager = NetworkThumbnailCacheManager(itemView.context)
-                        icon.setImageResource(item.iconRes)
-                        videoJob = lifecycleScope.launch(Dispatchers.IO) {
-                            val cachedPath = cacheManager.getThumbnail(share, netFile)
-                            if (cachedPath != null && isActive) {
-                                withContext(Dispatchers.Main) {
-                                    if (isActive) {
-                                        coilDisposable = icon.load(File(cachedPath)) {
-                                            crossfade(200)
-                                            allowHardware(false)
-                                            scale(Scale.FILL)
-                                            placeholder(placeholderImage)
-                                            error(placeholderImage)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else if (file != null) {
-                        if (isImage) {
-                            coilDisposable = icon.load(file) {
-                                crossfade(200)
-                                allowHardware(false)
-                                scale(Scale.FILL)
-                                placeholder(placeholderImage)
-                                error(placeholderImage)
-                            }
-                        } else if (isVideo) {
-                            // Video: extract frame on a background coroutine
-                            icon.setImageResource(item.iconRes)
-                            videoJob = lifecycleScope.launch(Dispatchers.IO) {
-                                val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
-                                var bitmap: android.graphics.Bitmap? = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
-                                    file.absolutePath, pct, 256, 256
-                                )
-
-                                if (bitmap == null) {
-                                    bitmap = try {
-                                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                                            android.media.ThumbnailUtils.createVideoThumbnail(
-                                                file, android.util.Size(256, 256), null
-                                            )
-                                        } else {
-                                            @Suppress("DEPRECATION")
-                                            android.media.ThumbnailUtils.createVideoThumbnail(
-                                                file.absolutePath,
-                                                android.provider.MediaStore.Video.Thumbnails.MINI_KIND
-                                            )
-                                        }
-                                    } catch (_: Throwable) { null }
-                                }
-
-                                withContext(Dispatchers.Main) {
-                                    if (bitmap != null && isActive) {
-                                        coilDisposable = icon.load(bitmap) {
-                                            crossfade(150)
-                                            allowHardware(false)
-                                            scale(Scale.FILL)
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    if (isFastNavigating) {
+                        hasLoadedThumbnail = false
+                        icon.setImageResource(R.drawable.ic_photo_video)
+                    } else {
+                        hasLoadedThumbnail = true
+                        loadThumbnail(item, file, isImage, isVideo)
                     }
                 } else {
                     // Generic icon
                     icon.scaleType = ImageView.ScaleType.FIT_CENTER
                     icon.clipToOutline = false
+                    val pad = (8 * itemView.context.resources.displayMetrics.density).toInt()
+                    icon.setPadding(pad, pad, pad, pad)
+                    iconContainer?.setBackgroundResource(if (isTv) R.drawable.bg_glass_card else R.drawable.bg_icon_circle_accent)
                     icon.setImageResource(item.iconRes)
                     // Restore accent tint for TV
                     if (isTv) {
                         val accent = itemView.context.getColor(R.color.tv_accent)
                         icon.imageTintList = android.content.res.ColorStateList.valueOf(accent)
+                    } else {
+                        icon.imageTintList = null
                     }
                 }
                 itemView.setOnClickListener {
@@ -744,11 +788,123 @@ class SafPickerActivity : AppCompatActivity() {
                         if (hasFocus) {
                             title.setTextColor(black)
                             subtitle.setTextColor(black)
-                            icon.imageTintList = blackCsl
+                            if (!canShowThumb) {
+                                icon.imageTintList = blackCsl
+                            }
                         } else {
                             title.setTextColor(white)
                             subtitle.setTextColor(secondary)
-                            icon.imageTintList = accent
+                            if (!canShowThumb) {
+                                icon.imageTintList = accent
+                            }
+                        }
+                    }
+                }
+            }
+
+            fun loadPendingThumbnail() {
+                if (hasLoadedThumbnail) return
+                val item = boundItem ?: return
+                val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)
+                val file = if (!item.isRoot && !item.isDir && item.path.isNotEmpty() && currentShare == null) File(item.path) else null
+                val ext = if (currentShare != null) item.label.substringAfterLast('.', "").lowercase() else file?.extension?.lowercase() ?: ""
+                val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                val isVideo = ext in VIDEO_EXTENSIONS
+                val isApk = ext in listOf("apk", "xapk", "apks")
+                val canShowThumb = showThumbnails && !item.isRoot && !item.isDir && (isImage || isVideo || isApk)
+                if (!canShowThumb) return
+                hasLoadedThumbnail = true
+                loadThumbnail(item, file, isImage, isVideo)
+            }
+
+            private fun loadThumbnail(item: PickerItem, file: File?, isImage: Boolean, isVideo: Boolean) {
+                val placeholderImage = androidx.core.content.ContextCompat.getDrawable(itemView.context, R.drawable.ic_photo_video)?.asImage()
+
+                if (currentShare != null) {
+                    val share = currentShare!!
+                    val netFile = NetworkFile(name = item.label, path = item.path, isDirectory = false)
+                    val cacheManager = NetworkThumbnailCacheManager(itemView.context)
+                    icon.setImageResource(R.drawable.ic_photo_video)
+                    videoJob = lifecycleScope.launch(Dispatchers.IO) {
+                        val cachedPath = cacheManager.getThumbnail(share, netFile)
+                        if (cachedPath != null && isActive) {
+                            withContext(Dispatchers.Main) {
+                                if (isActive) {
+                                    coilDisposable = icon.load(File(cachedPath)) {
+                                        size(128, 128)
+                                        precision(Precision.INEXACT)
+                                        if (isTv) {
+                                            crossfade(false)
+                                            allowHardware(true)
+                                        } else {
+                                            crossfade(200)
+                                            allowHardware(false)
+                                        }
+                                        scale(Scale.FILL)
+                                        placeholder(placeholderImage)
+                                        error(placeholderImage)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (file != null) {
+                    if (isImage) {
+                        coilDisposable = icon.load(file) {
+                            size(128, 128)
+                            precision(Precision.INEXACT)
+                            if (isTv) {
+                                crossfade(false)
+                                allowHardware(true)
+                            } else {
+                                crossfade(200)
+                                allowHardware(false)
+                            }
+                            scale(Scale.FILL)
+                            placeholder(placeholderImage)
+                            error(placeholderImage)
+                        }
+                    } else if (isVideo) {
+                        // Video: extract frame on a background coroutine
+                        icon.setImageResource(R.drawable.ic_photo_video)
+                        videoJob = lifecycleScope.launch(Dispatchers.IO) {
+                            val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
+                            var bitmap: android.graphics.Bitmap? = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
+                                file.absolutePath, pct, 256, 256
+                            )
+
+                            if (bitmap == null) {
+                                bitmap = try {
+                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                        android.media.ThumbnailUtils.createVideoThumbnail(
+                                            file, android.util.Size(256, 256), null
+                                        )
+                                    } else {
+                                        @Suppress("DEPRECATION")
+                                        android.media.ThumbnailUtils.createVideoThumbnail(
+                                            file.absolutePath,
+                                            android.provider.MediaStore.Video.Thumbnails.MINI_KIND
+                                        )
+                                    }
+                                } catch (_: Throwable) { null }
+                            }
+
+                            withContext(Dispatchers.Main) {
+                                if (bitmap != null && isActive) {
+                                    coilDisposable = icon.load(bitmap) {
+                                        size(128, 128)
+                                        precision(Precision.INEXACT)
+                                        if (isTv) {
+                                            crossfade(false)
+                                            allowHardware(true)
+                                        } else {
+                                            crossfade(150)
+                                            allowHardware(false)
+                                        }
+                                        scale(Scale.FILL)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -804,6 +960,9 @@ class SafPickerActivity : AppCompatActivity() {
                     data = uris[0]
                 } else {
                     putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
+                }
+                if (isRingtoneAction && uris.isNotEmpty()) {
+                    putExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI, uris[0])
                 }
                 addFlags(
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or

@@ -1435,6 +1435,9 @@
     <string name="toolbar_desc_exif_tools">Scrub metadata and batch rename photos</string>
     <string name="toolbar_desc_set_home_wallpaper">Set selected image as home screen wallpaper</string>
     <string name="toolbar_desc_set_lock_wallpaper">Set selected image as lock screen wallpaper</string>
+    <string name="toolbar_desc_set_ringtone">Set selected audio as phone ringtone</string>
+    <string name="toolbar_desc_set_notification">Set selected audio as notification sound</string>
+    <string name="toolbar_desc_set_alarm">Set selected audio as alarm sound</string>
     <string name="toolbar_desc_duplicate_finder">Scan and detect duplicate files</string>
     <string name="toolbar_desc_large_files_finder">Identify files consuming excess storage</string>
     <string name="long_press_duration_seconds">%1$.1f seconds</string>
@@ -4202,6 +4205,23 @@
     <string name="wallpaper_confirm_home_message">Do you want to set \"%1$s\" as your home screen wallpaper?</string>
     <string name="wallpaper_confirm_lock_message">Do you want to set \"%1$s\" as your lock screen wallpaper?</string>
     <string name="action_set_wallpaper">Set Wallpaper</string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">Set as Ringtone</string>
+    <string name="action_set_notification">Set as Notification Sound</string>
+    <string name="action_set_alarm">Set as Alarm Sound</string>
+    <string name="ringtone_confirm_title">Set System Sound</string>
+    <string name="ringtone_confirm_ringtone_message">Do you want to set \"%1$s\" as your default phone ringtone?</string>
+    <string name="ringtone_confirm_notification_message">Do you want to set \"%1$s\" as your default notification sound?</string>
+    <string name="ringtone_confirm_alarm_message">Do you want to set \"%1$s\" as your default alarm sound?</string>
+    <string name="toast_ringtone_set_success">Phone ringtone updated</string>
+    <string name="toast_notification_set_success">Notification sound updated</string>
+    <string name="toast_alarm_set_success">Alarm sound updated</string>
+    <string name="toast_sound_set_failed">Failed to set sound. Check Write Settings permission.</string>
+    <string name="toast_sound_permission_required">Write Settings permission required to set system sounds</string>
+    <string name="icon_toolbar_set_ringtone">Set as Ringtone</string>
+    <string name="icon_toolbar_set_notification">Set as Notification Sound</string>
+    <string name="icon_toolbar_set_alarm">Set as Alarm Sound</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">Tap icon to edit</string>
     <string name="settings_icon_tap_edit_mode_subtitle_enabled">Tapping a folder or file icon in list view enters selection mode</string>
@@ -4442,6 +4462,10 @@
     <string name="support_direct_email_title">support@kilowatch.co.za</string>
     <string name="support_direct_email_subtitle">Email the development team directly</string>
     <string name="support_direct_email_copied">Support email copied to clipboard</string>
+    <string name="support_section_community">Community</string>
+    <string name="support_translation_hub_title">Community Translation Hub</string>
+    <string name="support_translation_hub_subtitle">Help improve translations &amp; suggest corrections</string>
+    <string name="support_translation_hub_copied">Translation Hub link copied to clipboard</string>
 
     <!-- About Modernization -->
     <string name="about_section_app">App Information</string>
