@@ -172,6 +172,7 @@ object CrashReportManager {
     fun install(app: Application) {
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            Log.e(TAG, "UNCAUGHT_EX thread=${thread.name}", throwable)
             // Suppress ART's FinalizerWatchdogDaemon TimeoutException (e.g. android.content.res.ApkAssets.finalize() timed out after 10 seconds).
             // This is a known ART VM limitation when low-end TV/OEM devices sleep, throttle, or perform heavy GC.
             // Suppressing it prevents process crashes from internal finalizer delays.

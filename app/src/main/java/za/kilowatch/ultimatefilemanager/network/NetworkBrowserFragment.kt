@@ -801,7 +801,11 @@ class NetworkBrowserFragment : Fragment() {
         }
 
         view.findViewById<View>(R.id.btnBack)?.setOnClickListener { navigateUp() }
-        view.findViewById<View>(R.id.btnRefresh)?.setOnClickListener { loadDirectory() }
+        view.findViewById<View>(R.id.btnRefresh)?.setOnClickListener {
+            // An explicit refresh must bypass the RClone directory-list cache.
+            za.kilowatch.ultimatefilemanager.network.RCloneShareClient.clearDirListCache()
+            loadDirectory()
+        }
         view.findViewById<View>(R.id.btnCreateNew)?.setOnClickListener { showCreateNewMenu() }
         view.findViewById<View>(R.id.btnDrivePicker)?.setOnClickListener { onStoragePickerRequested?.invoke() }
 
@@ -2064,7 +2068,11 @@ class NetworkBrowserFragment : Fragment() {
             }
         }
 
-        wireTvIconBtn(view.findViewById(R.id.btnRefresh)) { loadDirectory() }
+        wireTvIconBtn(view.findViewById(R.id.btnRefresh)) {
+            // An explicit refresh must bypass the RClone directory-list cache.
+            za.kilowatch.ultimatefilemanager.network.RCloneShareClient.clearDirListCache()
+            loadDirectory()
+        }
         wireTvIconBtn(view.findViewById(R.id.btnDrivePicker)) { onStoragePickerRequested?.invoke() }
         wireTvIconBtn(view.findViewById(R.id.btnSearchToggle)) { toggleSearch() }
         wireTvIconBtn(view.findViewById(R.id.btnViewToggle)) {

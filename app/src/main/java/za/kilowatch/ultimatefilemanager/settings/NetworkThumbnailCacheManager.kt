@@ -137,14 +137,17 @@ class NetworkThumbnailCacheManager(private val context: Context) {
 
         if (!isImage && !isVideo && !isApk) return@withContext null
 
-        // For RClone shares (like Filen), random access streaming is not supported,
-        // so openInputStream downloads the entire file to disk via operations/copyfile.
-        // Downloading large video files (> 20MB) in full solely for thumbnails saturates
-        // the single gomobile thread, exhausts device storage, and causes connection dropouts.
+        // RClone: whole-file downloads are avoided when range reads work. When they do,
+        // large/4K videos flow into the SMB-style random-access retriever below (no full
+        // download). When range reads are NOT supported, keep skipping large/unknown videos
+        // so thumbnail-only work never triggers a whole-file download.
         if (isVideo && za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(share)) {
-            val size = networkFile.size
-            if (size <= 0L || size > 20 * 1024 * 1024L) {
-                return@withContext null
+            val rangeOk = za.kilowatch.ultimatefilemanager.network.RCloneShareClient.supportsRangeReads(share, networkFile.path, networkFile.size)
+            if (!rangeOk) {
+                val size = networkFile.size
+                if (size <= 0L || size > 20 * 1024 * 1024L) {
+                    return@withContext null
+                }
             }
         }
 
@@ -168,10 +171,12 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                 GoRoLog.d("UFM_CACHE", "Semaphore acquired for: ${networkFile.path}")
                 GoRoLog.d("UFM_CACHE", "Generating thumbnail for: ${networkFile.path} on share: ${share.id}")
 
+                val rCloneRangeOk = za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(share) &&
+                    za.kilowatch.ultimatefilemanager.network.RCloneShareClient.supportsRangeReads(share, networkFile.path, networkFile.size)
                 val isRandomAccessCapable = share.type in listOf(
                     ShareType.SMB, ShareType.SFTP, ShareType.SCP, ShareType.FTP, ShareType.NFS,
                     ShareType.GOOGLE_DRIVE, ShareType.ONEDRIVE
-                )
+                ) || rCloneRangeOk
                 val skipRetriever = ext in SKIP_RETRIEVER_EXTENSIONS
 
                 if (isVideo && isRandomAccessCapable && !skipRetriever && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -199,6 +204,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                             ShareType.ONEDRIVE     -> OnedriveShareClient.openRandomAccessFile(share, networkFile.path)
                             ShareType.NFS          -> NfsShareClient.openRandomAccessFile(share, networkFile.path)
                             ShareType.DLNA       -> DlnaShareClient.openRandomAccessFile(share, networkFile.path)
+                            ShareType.WEBDAV       -> WebDavShareClient.openRandomAccessFile(share, networkFile.path) // redirects RClone to RCloneShareClient
                             else -> throw IllegalStateException("Unsupported RandomAccess ShareType")
                         }
                         val ds = RemoteMediaDataSource(randomAccess)

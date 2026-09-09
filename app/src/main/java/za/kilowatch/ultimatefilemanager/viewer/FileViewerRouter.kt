@@ -723,6 +723,74 @@ object FileViewerRouter {
      * Otherwise shows the system chooser, and -- when [remember] is true -- registers a
      * one-shot broadcast receiver so the chosen component is persisted for future opens.
      */
+    /**
+     * If [path] is a media item opened through UFM's own SAF provider on an RClone
+     * online-storage root (document id `os:<storageId>/<remote>`), returns the
+     * [NetworkShare] + remote path so it can be handed to an external player via the
+     * local HTTP proxy (fast random-access reader) instead of the SAF content URI,
+     * which external players cannot sustain on the FUSE path.
+     */
+    private fun resolveOsRCloneForExternal(context: Context, path: String): Pair<za.kilowatch.ultimatefilemanager.network.NetworkShare, String>? {
+        val resolved = za.kilowatch.ultimatefilemanager.network.OnlineSafDoc.resolveRClone(context, path) ?: return null
+        val online = resolved.first
+        val share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
+            id = online.id,
+            name = online.displayName,
+            type = za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV,
+            host = za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER,
+            username = online.id
+        )
+        return Pair(share, resolved.second)
+    }
+
+    /**
+     * Opens an os-RClone media file in an external player via the local HTTP proxy.
+     * The size stat and proxy registration run on a background thread (review fix:
+     * previously they ran synchronously on the main thread via [getFileSizeSync]),
+     * then the chooser is launched on the main looper. Falls back to the SAF content
+     * URI if the proxy cannot be prepared.
+     */
+    private fun launchExternalViaProxy(
+        context: Context,
+        share: za.kilowatch.ultimatefilemanager.network.NetworkShare,
+        remotePath: String,
+        mimeType: String,
+        ext: String,
+        preferredPackage: String?,
+        fallbackUri: Uri
+    ) {
+        val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
+        Thread {
+            val chosenUri = runCatching {
+                val remoteSize = za.kilowatch.ultimatefilemanager.network.RCloneShareClient.getFileSizeSync(share, remotePath)
+                val url = za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer.register(share, remotePath, mimeType, remoteSize)
+                if (url.isNotBlank()) Uri.parse(url) else fallbackUri
+            }.getOrElse { fallbackUri }
+            mainHandler.post {
+                val pm = context.packageManager
+                if (preferredPackage != null && runCatching { pm.getPackageInfo(preferredPackage, 0); true }.getOrDefault(false)) {
+                    val direct = Intent(Intent.ACTION_VIEW).apply {
+                        setDataAndType(chosenUri, mimeType)
+                        setPackage(preferredPackage)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    }
+                    if (runCatching { context.startActivity(direct) }.isSuccess) return@post
+                }
+                val chooser = Intent.createChooser(
+                    Intent(Intent.ACTION_VIEW).apply {
+                        setDataAndType(chosenUri, mimeType)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    },
+                    context.getString(R.string.open_with)
+                )
+                runCatching { context.startActivity(chooser) }
+            }
+        }.apply {
+            isDaemon = true
+            name = "ufm-ext-rclone"
+        }.start()
+    }
+
     private fun openWithExternalApp(
         context: Context,
         file: File,
@@ -758,6 +826,20 @@ object FileViewerRouter {
             return
         }
 
+        // -- 0. RClone added-location media: hand external players a local HTTP proxy URL
+        //        (served from the fast random-access reader) instead of the SAF content URI,
+        //        which the FUSE/proxy path cannot sustain for external players.
+        //        Size stat + registration happen off the main thread (review fix).
+        var effectiveUri = uri
+        if ((ext in AUDIO_EXTENSIONS || ext in VIDEO_EXTENSIONS) &&
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
+        ) {
+            resolveOsRCloneForExternal(context, file.absolutePath)?.let { (share, remotePath) ->
+                launchExternalViaProxy(context, share, remotePath, mimeType, ext, preferredPackage, uri)
+                return
+            }
+        }
+
         // -- 1. Try direct launch into the preferred app --
         if (preferredPackage != null) {
             android.util.Log.d(tag, "  Trying direct launch into $preferredPackage")
@@ -766,7 +848,7 @@ object FileViewerRouter {
                             catch (_: PackageManager.NameNotFoundException) { false }
             if (installed) {
                 val directIntent = Intent(Intent.ACTION_VIEW).apply {
-                    setDataAndType(uri, mimeType)
+                    setDataAndType(effectiveUri, mimeType)
                     setPackage(preferredPackage)
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 }
@@ -792,7 +874,7 @@ object FileViewerRouter {
         // -- 2. Build system chooser --
         android.util.Log.d(tag, "  Building chooser")
         val viewIntent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(uri, mimeType)
+            setDataAndType(effectiveUri, mimeType)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         }
         val chooser = Intent.createChooser(viewIntent, context.getString(R.string.open_with))

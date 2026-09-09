@@ -364,9 +364,9 @@ class UfmDocumentsProvider : DocumentsProvider() {
         // This is ESSENTIAL for video playback (ExoPlayer/VLC) and thumbnail generation in SAF,
         // which require lseek() support that pipes cannot provide.
         //
-        // RClone backends (like Filen) are explicitly EXCLUDED from ProxyFileDescriptor because
-        // gomobile does not support stateless FUSE range reads without blocking the storage manager.
-        // Filen uses the unidirectional pipe stream instead.
+        // RClone backends are admitted to ProxyFileDescriptor ONLY when the range probe succeeds
+        // (supportsRangeReads). When range-capable, reads use the same seekable proxy as SMB/WebDAV;
+        // otherwise they keep the unidirectional pipe stream (whole-file download) as a safe fallback.
         //
         // IMPORTANT: Pure write mode (isStrictlyWrite) NEVER uses the proxy — even for SMB.
         // The JcifsFallback random-access handle on a 0-byte newly-created file reports
@@ -374,6 +374,21 @@ class UfmDocumentsProvider : DocumentsProvider() {
         // copy framework to think 2.15 GB was written. Sequential streaming via
         // openNetworkDocumentForWrite is always correct for pure writes.
         val isRClone = za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(share)
+        // Gate proxy admission on the CACHED verdict only — never block this binder call
+        // on a network probe. When unknown, warm the verdict in the background so later
+        // SAF opens can use the seekable proxy (review fix).
+        val rCloneCachedOk = if (isRClone) za.kilowatch.ultimatefilemanager.network.RCloneShareClient.cachedRangeSupport(share) else null
+        val rCloneRangeOk = rCloneCachedOk == true
+        if (isRClone && rCloneCachedOk == null) {
+            val warmShare = share
+            val warmPath = path
+            Thread {
+                runCatching { za.kilowatch.ultimatefilemanager.network.RCloneShareClient.supportsRangeReads(warmShare, warmPath) }
+            }.apply {
+                isDaemon = true
+                name = "ufm-rclone-range-warm"
+            }.start()
+        }
         val supportsRandomAccess = (share.type == ShareType.SMB ||
             share.type == ShareType.SFTP ||
             share.type == ShareType.SCP ||
@@ -382,7 +397,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
             share.type == ShareType.DROPBOX ||
             share.type == ShareType.AWS_S3 ||
             share.type == ShareType.IDRIVE_E2 ||
-            share.type == ShareType.WEBDAV) && !isRClone
+            share.type == ShareType.WEBDAV) && !isRClone || rCloneRangeOk
 
         // Use proxy ONLY for read or read-write modes (not pure write).
         // Pure write always uses the streaming pipe path regardless of share type.
@@ -1095,7 +1110,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
     private data class NetListCacheKey(val shareId: String, val path: String)
     private data class CachedNetList(val files: List<NetworkFile>, val timestamp: Long)
     private val netListCache = java.util.concurrent.ConcurrentHashMap<NetListCacheKey, CachedNetList>()
-    private val NET_LIST_CACHE_TTL_MS = 15_000L
+    private val NET_LIST_CACHE_TTL_MS = 30_000L
 
     private fun listNetworkFiles(share: NetworkShare, path: String): List<NetworkFile> {
         val cleanPath = path.trimEnd('/')

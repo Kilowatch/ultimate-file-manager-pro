@@ -21,6 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Supports custom ringtone picker window titles and audio-only file filtering.
 - Community Translation Hub (Mobile):
   - Added Community Translation Hub link to mobile Help & Support to submit translation corrections directly via the web portal.
+- RClone video thumbnails via range-based random-access frame extraction (the same approach used for SMB shares), so large cloud videos can show previews on Mobile and Android TV.
+
+### Changed
+- RClone cloud playback now uses a persistent, seekable read session for fast and smooth streaming on Mobile and Android TV.
+- Videos opened from an added "storage location" that maps to an RClone cloud account now stream through the same fast path as the online cloud browser.
+- RClone files exposed through SAF are served via the seekable proxy path when the backend supports range reads, instead of a whole-file pipe.
+- RClone/cloud folder listings are cached so navigation does not re-fetch and re-parse the whole folder every time.
+
+### Fixed
+- Fixed cloud (RClone) videos opened from an added storage location buffering indefinitely or never starting; they now start quickly and can be seeked.
+- Fixed external "Open with" for RClone storage-location media handing players a stream without a valid length, which caused players to reject it.
+- Fixed playback treating a transient cloud connection hiccup as the end of the file; reads are now retried instead.
 
 ## [1.9.9] — 2026-09-07
 

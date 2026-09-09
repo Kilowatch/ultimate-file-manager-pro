@@ -451,6 +451,18 @@ class UFMPlaybackService : Service() {
 
     // ── Internal Playback ───────────────────────────────────────────
 
+    /**
+     * When a media item was opened through UFM's own SAF provider on an RClone
+     * online-storage root (document id `os:<storageId>/<remote>`), returns the
+     * [NetworkShare] and remote path so playback can use the fast random-access
+     * streaming path (as the Online browser does) instead of the SAF FUSE pipe,
+     * which stutters on ranged reads (T-027).
+     */
+    private fun resolveOnlineStorageForSafPlayback(context: android.content.Context, path: String): Pair<NetworkShare, String>? {
+        val resolved = za.kilowatch.ultimatefilemanager.network.OnlineSafDoc.resolveRClone(context, path) ?: return null
+        return Pair(resolved.first.toNetworkShare(), resolved.second)
+    }
+
     private fun playCurrent() {
         val item = queueManager.currentItem ?: return
         val fileName = item.path.substringAfterLast('/')
@@ -481,6 +493,10 @@ class UFMPlaybackService : Service() {
         // Build media source
         val isNetwork = networkShare != null
         isCurrentLocal = !isNetwork
+        // RClone content added via "Add storage location" is an os: document behind our
+        // own SAF provider; stream it through the fast random-access path (the same one
+        // the Online browser uses) instead of the SAF FUSE pipe, which stutters (T-027).
+        val safOnline = if (!isNetwork) resolveOnlineStorageForSafPlayback(this, item.path) else null
         val mediaSource = if (isNetwork) {
             // Network file
             var share = networkShare ?: run {
@@ -496,6 +512,15 @@ class UFMPlaybackService : Service() {
             }
             androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
                 .createMediaSource(MediaItem.fromUri(Uri.parse("ufm://${item.path.replace(" ", "%20")}")))
+        } else if (safOnline != null) {
+            // Added-location RClone content — stream via the same network random-access path.
+            val (share, remotePath) = safOnline
+            val extractorsFactory = za.kilowatch.ultimatefilemanager.media.UfmExtractorsFactory()
+            val dataSourceFactory = DataSource.Factory {
+                UfmMedia3DataSource(share, remotePath, item.fileSize)
+            }
+            androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
+                .createMediaSource(MediaItem.fromUri(Uri.parse("ufm://${remotePath.replace(" ", "%20")}")))
         } else {
             // Local / SAF file
             val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(item.path) ||

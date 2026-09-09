@@ -30,11 +30,72 @@ object RCloneShareClient {
     private const val TAG = "RCloneShareClient"
     private const val OCTET_STREAM = "application/octet-stream"
 
+    /**
+     * Files at or above this size are never synchronously whole-file downloaded
+     * inside [openRandomAccessFile]; that path is reserved for small files and
+     * large files route to the progress-based fallback (see RCLONE_STREAMING_UNSUPPORTED).
+     */
+    private const val FALLBACK_SYNC_MAX_BYTES = 64L * 1024 * 1024
+
     /** Sentinel value placed in [NetworkShare.host] to mark RClone shares. */
     const val RCLONE_HOST_MARKER = "rclone"
 
     /** The fixed remote name used in rclone RC calls and as the config section header. */
     const val REMOTE_NAME = "ufm_rclone"
+
+    private data class RangeVerdict(val ok: Boolean, val expiry: Long)
+
+    /** Range-read capability cache keyed by remote name (backend capability is file-independent). */
+    private val rangeVerdicts = java.util.concurrent.ConcurrentHashMap<String, RangeVerdict>()
+
+    /**
+     * Best-effort check that this remote supports byte-range reads through
+     * [gomobile.Gomobile.rcloneReadRange]. Probes offset 0 then (when a size is
+     * known) a mid-file offset, retrying up to 3 times to ride out transient
+     * failures. Positive verdicts are cached permanently per remote; negative
+     * verdicts are cached for a short time (60 s) so a burst of transient failures
+     * (e.g. MEGA HTTP 509 under a folder-wide thumbnail scan) does not re-probe on
+     * every file, but a real recovery is still picked up promptly.
+     */
+    fun supportsRangeReads(share: NetworkShare, remotePath: String, fileSize: Long = -1L): Boolean {
+        val remote = getRemoteName(share)
+        val now = System.currentTimeMillis()
+        rangeVerdicts[remote]?.let { v ->
+            if (v.ok || v.expiry > now) return v.ok
+        }
+        val fsName = "$remote:"
+        val norm = normalizePath(remotePath)
+        val offsets = buildList<Long> {
+            add(0L)
+            if (fileSize > 1) add(fileSize / 2)
+        }
+        for (attempt in 1..3) {
+            for (off in offsets) {
+                try {
+                    val data = gomobile.Gomobile.rcloneReadRange(fsName, norm, off, 1L)
+                    if (data != null && data.isNotEmpty()) {
+                        rangeVerdicts[remote] = RangeVerdict(true, Long.MAX_VALUE)
+                        return true
+                    }
+                } catch (e: Exception) {
+                    GoRoLog.d(TAG, "supportsRangeReads probe fail remote=$remote off=$off attempt=$attempt: ${e.message}")
+                }
+            }
+        }
+        rangeVerdicts[remote] = RangeVerdict(false, now + 60_000L)
+        return false
+    }
+
+    /** Clears the cached range-support verdicts (e.g. after re-initialising the remote). */
+    fun clearRangeSupportCache() {
+        rangeVerdicts.clear()
+    }
+
+    /** Returns the cached positive range-support verdict for a remote, or null if unknown/negative. Never performs network I/O. */
+    fun cachedRangeSupport(share: NetworkShare): Boolean? {
+        val v = rangeVerdicts[getRemoteName(share)] ?: return null
+        return if (v.ok) true else null
+    }
 
 
     // ── Process-scoped initialization ───────────────────────────────────
@@ -400,9 +461,13 @@ object RCloneShareClient {
 
     // ── File listing ────────────────────────────────────────────────────
 
-    suspend fun listFiles(share: NetworkShare, remotePath: String): List<NetworkFile> =
+    suspend fun listFiles(share: NetworkShare, remotePath: String, forceRefresh: Boolean = false): List<NetworkFile> =
         withContext(Dispatchers.IO) {
+            val remote = getRemoteName(share)
             val cleanRemote = normalizePath(remotePath)
+            if (!forceRefresh) {
+                cachedDirList(remote, cleanRemote)?.let { return@withContext it }
+            }
             val json = try {
                 rcloneCall(share, "operations/list", JSONObject().apply {
                     put("remote", cleanRemote)
@@ -430,7 +495,9 @@ object RCloneShareClient {
                     throw e  // not a Box auth error — propagate as-is
                 }
             }
-            parseFileList(json, cleanRemote)
+            val files = parseFileList(json, cleanRemote)
+            storeDirList(remote, cleanRemote, files)
+            files
         }
 
     /** Parses the JSON response from an rclone operations/list call. */
@@ -455,18 +522,192 @@ object RCloneShareClient {
         return result
     }
 
+    // ── Directory listing cache ─────────────────────────────────────────
+    private data class DirListEntry(val files: List<NetworkFile>, val timestamp: Long)
+
+    /** Listing cache keyed by remote|normalizedPath with a short TTL to avoid re-running full operations/list on every visit/refresh. */
+    private val dirListCache = java.util.concurrent.ConcurrentHashMap<String, DirListEntry>()
+    private const val DIR_LIST_TTL_MS = 30_000L
+
+    private fun dirListKey(remote: String, cleanPath: String) = "$remote|$cleanPath"
+
+    private fun cachedDirList(remote: String, cleanPath: String): List<NetworkFile>? {
+        val k = dirListKey(remote, cleanPath)
+        val e = dirListCache[k] ?: return null
+        if (System.currentTimeMillis() - e.timestamp < DIR_LIST_TTL_MS) return e.files
+        dirListCache.remove(k)
+        return null
+    }
+
+    private fun storeDirList(remote: String, cleanPath: String, files: List<NetworkFile>) {
+        dirListCache[dirListKey(remote, cleanPath)] = DirListEntry(files, System.currentTimeMillis())
+    }
+
+    /** Removes the listing cache entries affected by a mutation of [path] (the dir itself and its parent). */
+    private fun invalidateDirCache(remote: String, path: String) {
+        val p = normalizePath(path).trim('/')
+        val parents = listOf(p, p.substringBeforeLast('/', ""))
+        for (dir in parents) dirListCache.remove(dirListKey(remote, dir))
+    }
+
+    /** Clears the whole directory-listing cache (e.g. on provider switch / re-init). */
+    fun clearDirListCache() {
+        dirListCache.clear()
+    }
+
+    // ── Progressive whole-file download fallback (range-unsupported backends) ──
+    private class ProgressDownload(val tempFile: File) {
+        val done = java.util.concurrent.atomic.AtomicBoolean(false)
+        val cancelled = java.util.concurrent.atomic.AtomicBoolean(false)
+        val error = java.util.concurrent.atomic.AtomicReference<Throwable?>(null)
+        val refs = java.util.concurrent.atomic.AtomicInteger(1)
+        @Volatile var thread: Thread? = null
+    }
+
+    /** In-flight progressive downloads keyed by remote|normalizedPath — one download shared by all openers. */
+    private val progressDownloads = java.util.concurrent.ConcurrentHashMap<String, ProgressDownload>()
+
+    private fun getProgressDownload(share: NetworkShare, remotePath: String, fileSize: Long): ProgressDownload {
+        val key = "${getRemoteName(share)}|${normalizePath(remotePath)}"
+        progressDownloads[key]?.let {
+            it.refs.incrementAndGet()
+            return it
+        }
+        val created = ProgressDownload(File.createTempFile("rclone_prog_", ".tmp"))
+        val prev = progressDownloads.putIfAbsent(key, created)
+        if (prev != null) {
+            prev.refs.incrementAndGet()
+            return prev
+        }
+        // Async operations/copyfile so the single gomobile thread is never held for the
+        // whole transfer; cancellable via job/stop when the last reader closes (review fix).
+        created.thread = Thread {
+            kotlinx.coroutines.runBlocking(Dispatchers.IO) {
+                var jobId = -1L
+                try {
+                    val start = JSONObject(
+                        rcloneCall(share, "operations/copyfile", JSONObject().apply {
+                            put("srcFs", "${getRemoteName(share)}:")
+                            put("srcRemote", normalizePath(remotePath))
+                            put("dstFs", "/")
+                            put("dstRemote", created.tempFile.absolutePath)
+                            put("_async", true)
+                        })
+                    )
+                    jobId = start.optLong("jobid", -1L)
+                    while (!created.cancelled.get()) {
+                        kotlinx.coroutines.delay(300)
+                        if (jobId >= 0) {
+                            val js = JSONObject(rcloneCall(share, "job/status", JSONObject().apply { put("jobid", jobId) }))
+                            if (js.optBoolean("finished", false)) {
+                                if (!js.optBoolean("success", true)) {
+                                    created.error.set(java.io.IOException("rclone async copy failed: ${js.optString("error", "unknown")}"))
+                                }
+                                break
+                            }
+                        }
+                    }
+                } catch (t: Throwable) {
+                    created.error.set(t)
+                } finally {
+                    if (created.cancelled.get() && jobId >= 0) {
+                        runCatching { rcloneCall(share, "job/stop", JSONObject().apply { put("jobid", jobId) }) }
+                    }
+                    created.done.set(true)
+                }
+            }
+        }.apply {
+            isDaemon = true
+            name = "ufm-rclone-progdl"
+        }.also { it.start() }
+        return created
+    }
+
+    private fun releaseProgressDownload(share: NetworkShare, remotePath: String, pd: ProgressDownload) {
+        val key = "${getRemoteName(share)}|${normalizePath(remotePath)}"
+        if (pd.refs.decrementAndGet() <= 0) {
+            progressDownloads.remove(key, pd)
+            pd.cancelled.set(true)
+            runCatching { pd.tempFile.delete() }
+        }
+    }
+
+    /**
+     * Fallback reader for large files whose backend cannot serve byte-range reads
+     * (FR-06): starts a shared async whole-file download to a temp cache and serves
+     * reads as the file grows, so playback can begin from the prefix instead of
+     * blocking until the entire file has downloaded.
+     */
+    private fun openProgressiveDownloadFallback(share: NetworkShare, remotePath: String, fileSize: Long): IRandomAccessFile {
+        val pd = getProgressDownload(share, remotePath, fileSize)
+        var raf: java.io.RandomAccessFile? = null
+
+        fun readAvailable(offset: Long, buffer: ByteArray, length: Int, availLen: Long): Int {
+            val n = minOf(length.toLong(), availLen - offset).toInt()
+            if (n <= 0) return -1
+            val r = raf ?: java.io.RandomAccessFile(pd.tempFile, "r").also { raf = it }
+            r.seek(offset)
+            return r.read(buffer, 0, n)
+        }
+
+        return object : IRandomAccessFile {
+            override val size: Long
+                get() = if (fileSize > 0L) fileSize else pd.tempFile.length()
+
+            override fun read(offset: Long, buffer: ByteArray, length: Int): Int {
+                if (length <= 0) return 0
+                return synchronized(this) { readProgressive(offset, buffer, length) }
+            }
+
+            private fun readProgressive(offset: Long, buffer: ByteArray, length: Int): Int {
+                while (true) {
+                    if (pd.cancelled.get()) {
+                        throw java.io.IOException("RClone progressive download cancelled")
+                    }
+                    pd.error.get()?.let {
+                        throw java.io.IOException("RClone progressive download failed: ${it.message}", it)
+                    }
+                    val len = pd.tempFile.length()
+                    if (len > offset) {
+                        return readAvailable(offset, buffer, length, len)
+                    }
+                    if (pd.done.get()) {
+                        // Download finished; this offset is either EOF or within the final file.
+                        return if (len > 0L && offset < len) readAvailable(offset, buffer, length, len) else -1
+                    }
+                    try {
+                        Thread.sleep(50)
+                    } catch (_: InterruptedException) {
+                        Thread.currentThread().interrupt()
+                        return -1
+                    }
+                }
+            }
+
+            override fun write(offset: Long, buffer: ByteArray, length: Int): Int =
+                throw java.io.IOException("RClone progressive-fallback write not supported")
+
+            override fun close() {
+                try { raf?.close() } catch (_: Exception) {}
+                releaseProgressDownload(share, remotePath, pd)
+            }
+        }
+    }
+
     // ── Directory operations ────────────────────────────────────────────
 
     suspend fun mkdir(share: NetworkShare, remotePath: String) = withContext(Dispatchers.IO) {
         rcloneCall(share, "operations/mkdir", JSONObject().apply {
             put("remote", normalizePath(remotePath))
         })
+        invalidateDirCache(getRemoteName(share), remotePath)
     }
 
     suspend fun deleteFile(share: NetworkShare, remotePath: String) = withContext(Dispatchers.IO) {
         rcloneCall(share, "operations/deletefile", JSONObject().apply {
             put("remote", normalizePath(remotePath))
         })
+        invalidateDirCache(getRemoteName(share), remotePath)
     }
 
     suspend fun deleteDir(share: NetworkShare, remotePath: String) = withContext(Dispatchers.IO) {
@@ -474,6 +715,7 @@ object RCloneShareClient {
         rcloneCall(share, "operations/purge", JSONObject().apply {
             put("remote", normalizePath(remotePath))
         })
+        invalidateDirCache(getRemoteName(share), remotePath)
     }
 
     suspend fun rename(share: NetworkShare, fromPath: String, toPath: String, isDirectory: Boolean = false) = withContext(Dispatchers.IO) {
@@ -493,6 +735,8 @@ object RCloneShareClient {
                 put("dstRemote", normalizePath(toPath))
             })
         }
+        invalidateDirCache(remote, fromPath)
+        invalidateDirCache(remote, toPath)
     }
 
 
@@ -557,12 +801,7 @@ object RCloneShareClient {
 
         // Probe: try a tiny range read to confirm the backend supports range reads.
         // Filen and most modern cloud backends do; some may not (e.g. encrypted archives).
-        val supportsRange = try {
-            val probe = gomobile.Gomobile.rcloneReadRange(fsName, normalizedPath, 0L, 1L)
-            probe != null
-        } catch (_: Exception) {
-            false
-        }
+        val supportsRange = supportsRangeReads(share, normalizedPath, fileSize)
 
         if (supportsRange) {
             // ── True streaming: each read fetches only the requested byte range ──────
@@ -570,25 +809,106 @@ object RCloneShareClient {
             return object : IRandomAccessFile {
                 override val size: Long = fileSize
 
+                // Read-ahead window: batches many small sequential reads into fewer
+                // range RPCs (important for MediaMetadataRetriever, ExoPlayer, and the
+                // SAF proxy). Sized generously (4 MB) because rcloneReadRange has a large
+                // fixed per-call overhead (~400 ms) regardless of the requested length.
+                private val windowSize = 4 * 1024 * 1024
+                private var winStart = -1L
+                private var winEnd = -1L
+                private var win: ByteArray? = null
+                // Persistent sequential-stream session (gomobile RcloneOpenSession),
+                // opened lazily on first fetch — makes sequential reads cheap (SMB-like).
+                private var sessionAttempted = false
+                private var sessionId = -1L
+
                 override fun read(offset: Long, buffer: ByteArray, length: Int): Int {
+                    if (length <= 0) return 0
                     if (fileSize > 0 && offset >= fileSize) return -1
                     val safeCount = if (fileSize > 0) {
-                        minOf(length.toLong(), fileSize - offset).toInt()
+                        minOf(length.toLong(), fileSize - offset)
                     } else {
-                        length
+                        length.toLong()
                     }
                     if (safeCount <= 0) return -1
-                    return try {
-                        val data = gomobile.Gomobile.rcloneReadRange(
-                            fsName, normalizedPath, offset, safeCount.toLong()
-                        )
-                        if (data == null || data.isEmpty()) return -1
-                        val toCopy = minOf(data.size, safeCount)
-                        System.arraycopy(data, 0, buffer, 0, toCopy)
-                        toCopy
-                    } catch (e: Exception) {
-                        GoRoLog.w(TAG, "range read failed at offset $offset: ${e.message}")
-                        -1
+                    return readInternal(offset, buffer, safeCount.toInt())
+                }
+
+                /** Fetches [count] bytes at [offset], preferring the persistent session stream and retrying transient network failures. */
+                private fun fetch(offset: Long, count: Int): ByteArray? {
+                    var attempt = 0
+                    // Retry generously: cloud backends intermittently abort connections and
+                    // drop DNS for a second or two (observed with Filen). Never treat that
+                    // as EOF — a media player must not stop on a transient network blip.
+                    while (attempt < 6) {
+                        attempt++
+                        if (!sessionAttempted) {
+                            sessionAttempted = true
+                            sessionId = try {
+                                gomobile.Gomobile.rcloneOpenSession(fsName, normalizedPath)
+                            } catch (_: Exception) {
+                                -1L
+                            }
+                        }
+                        if (sessionId >= 0) {
+                            try {
+                                val data = gomobile.Gomobile.rcloneReadSession(sessionId, offset, count.toLong())
+                                if (data != null && data.isNotEmpty()) return data
+                            } catch (e: Exception) {
+                                GoRoLog.w(TAG, "rcloneReadSession attempt $attempt failed at offset $offset: ${e.message}")
+                                runCatching { gomobile.Gomobile.rcloneCloseSession(sessionId) }
+                                sessionId = -1L
+                            }
+                        } else {
+                            try {
+                                val data = gomobile.Gomobile.rcloneReadRange(fsName, normalizedPath, offset, count.toLong())
+                                if (data != null && data.isNotEmpty()) return data
+                            } catch (e: Exception) {
+                                GoRoLog.w(TAG, "range read attempt $attempt failed at offset $offset: ${e.message}")
+                            }
+                        }
+                        if (attempt < 6) {
+                            try { Thread.sleep(200L * attempt) } catch (_: InterruptedException) { Thread.currentThread().interrupt(); break }
+                        }
+                    }
+                    return null
+                }
+
+                private fun readInternal(offset: Long, buffer: ByteArray, length: Int): Int {
+                    // Serve from the current read-ahead window when the read overlaps it.
+                    synchronized(this) {
+                        val w = win
+                        if (w != null && offset >= winStart && offset < winEnd) {
+                            val avail = (winEnd - offset).toInt()
+                            val n = minOf(length, avail)
+                            System.arraycopy(w, (offset - winStart).toInt(), buffer, 0, n)
+                            return n
+                        }
+                    }
+                    // Network fetch runs WITHOUT holding the object lock, so retry backoff
+                    // never blocks other readers of this handle (review fix).
+                    val fetchEnd = if (fileSize > 0) {
+                        minOf(offset + windowSize.toLong(), fileSize)
+                    } else {
+                        offset + windowSize.toLong()
+                    }
+                    val fetchLen = (fetchEnd - offset).toInt()
+                    if (fetchLen <= 0) return -1
+                    val data = fetch(offset, fetchLen)
+                    if (data == null || data.isEmpty()) return -1
+                    // Install the fetched block into the read-ahead window under the lock.
+                    return synchronized(this) {
+                        if (win == null || win!!.size < data.size) {
+                            win = ByteArray(data.size)
+                        }
+                        System.arraycopy(data, 0, win, 0, data.size)
+                        winStart = offset
+                        winEnd = offset + data.size
+                        val toCopy = minOf(length, data.size)
+                        if (toCopy > 0) {
+                            System.arraycopy(data, 0, buffer, 0, toCopy)
+                        }
+                        if (toCopy > 0) toCopy else -1
                     }
                 }
 
@@ -596,14 +916,25 @@ object RCloneShareClient {
                     throw IOException("RClone random-access write not supported")
 
                 override fun close() {
-                    // Stateless — no connection to close
+                    if (sessionId >= 0) {
+                        runCatching { gomobile.Gomobile.rcloneCloseSession(sessionId) }
+                        sessionId = -1L
+                    }
                 }
             }
         }
 
-        // ── Fallback: download the whole file to a temp file ─────────────────────
-        // Only reached if the backend does not support byte-range reads.
-        GoRoLog.w(TAG, "openRandomAccessFile: range reads not supported; falling back to full download for $normalizedPath")
+        // ── Fallback: whole-file download, served progressively ──────────────────
+        // Only reached if the backend does not support byte-range reads. Instead of
+        // the old behaviour — synchronously download the ENTIRE file before returning,
+        // i.e. "buffers forever" — start an async download to a temp cache and serve
+        // reads as the file grows (FR-06). Playback starts once the needed prefix is
+        // on disk; seeking past the downloaded region waits briefly for the download.
+        GoRoLog.w(TAG, "openRandomAccessFile: range reads not supported; using progressive download for $normalizedPath")
+        if (fileSize <= 0L || fileSize > FALLBACK_SYNC_MAX_BYTES) {
+            return openProgressiveDownloadFallback(share, remotePath, fileSize)
+        }
+        // Small known-size file: a quick synchronous download is acceptable.
         val tempFile = File.createTempFile("rclone_ra_", ".tmp")
         try {
             kotlinx.coroutines.runBlocking {
@@ -647,6 +978,7 @@ object RCloneShareClient {
                 put("dstFs", "${getRemoteName(share)}:")
                 put("dstRemote", normalizePath(remotePath))
             })
+            invalidateDirCache(getRemoteName(share), remotePath)
         } finally {
             tempFile.delete()
         }
@@ -672,6 +1004,7 @@ object RCloneShareClient {
                             put("dstFs", "${getRemoteName(share)}:")
                             put("dstRemote", normalizePath(remotePath))
                         })
+                        invalidateDirCache(getRemoteName(share), remotePath)
                     } finally {
                         tempFile.delete()
                     }
