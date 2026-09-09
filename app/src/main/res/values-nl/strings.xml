@@ -3933,6 +3933,15 @@ Stel de geselecteerde afbeelding in als achtergrond voor het startscherm
     <string name="toolbar_desc_set_lock_wallpaper">
 Stel de geselecteerde afbeelding in als achtergrond voor het vergrendelscherm
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Geselecteerde audio instellen als beltoon
+</string>
+    <string name="toolbar_desc_set_notification">
+Geselecteerde audio instellen als meldingsgeluid
+</string>
+    <string name="toolbar_desc_set_alarm">
+Geselecteerde audio instellen als alarmgeluid
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Scan en detecteer dubbele bestanden
 </string>
@@ -7492,6 +7501,15 @@ Bestandsoverdracht
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Houdt bestandsoverdrachten actief tijdens het screenen
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — opnieuw proberen %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — wachten om opnieuw verbinding te maken…
+</string>
+    <string name="transfer_error_unreachable">
+Kan de bestemming niet bereiken — overdracht gestopt
 </string>
     <string name="open_with_1">
 Openen met
@@ -11861,6 +11879,53 @@ Wilt u \'%1$s\' instellen als achtergrond voor uw vergrendelscherm?
     <string name="action_set_wallpaper">
 Achtergrond instellen
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Instellen als beltoon
+</string>
+    <string name="action_set_notification">
+Instellen als meldingsgeluid
+</string>
+    <string name="action_set_alarm">
+Instellen als alarmgeluid
+</string>
+    <string name="ringtone_confirm_title">
+Instellen als systeemgeluid
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+Wil je \"%1$s\" als standaardbeltoon instellen?
+</string>
+    <string name="ringtone_confirm_notification_message">
+Wil je \"%1$s\" als standaardmeldingsgeluid instellen?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+Wil je \"%1$s\" als standaardalarmgeluid instellen?
+</string>
+    <string name="toast_ringtone_set_success">
+Beltoon bijgewerkt
+</string>
+    <string name="toast_notification_set_success">
+Meldingsgeluid bijgewerkt
+</string>
+    <string name="toast_alarm_set_success">
+Alarmgeluid bijgewerkt
+</string>
+    <string name="toast_sound_set_failed">
+Geluid instellen is mislukt. Controleer de toestemming om instellingen te wijzigen.
+</string>
+    <string name="toast_sound_permission_required">
+Toestemming om instellingen te wijzigen is vereist voor het instellen van systeemgeluiden.
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Instellen als beltoon
+</string>
+    <string name="icon_toolbar_set_notification">
+Instellen als meldingsgeluid
+</string>
+    <string name="icon_toolbar_set_alarm">
+Instellen als alarmgeluid
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Tik op het pictogram om te bewerken
@@ -12510,6 +12575,18 @@ E-mail het ontwikkelingsteam rechtstreeks
 </string>
     <string name="support_direct_email_copied">
 Ondersteunings-e-mail gekopieerd naar klembord
+</string>
+    <string name="support_section_community">
+Community
+</string>
+    <string name="support_translation_hub_title">
+Community Vertaalhub
+</string>
+    <string name="support_translation_hub_subtitle">
+Help vertalingen verbeteren en stel correcties voor
+</string>
+    <string name="support_translation_hub_copied">
+Vertaalhub-link gekopieerd naar klembord
 </string>
 
     <!-- About Modernization -->

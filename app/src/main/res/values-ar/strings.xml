@@ -4025,6 +4025,15 @@ NFSv4
     <string name="toolbar_desc_set_lock_wallpaper">
 تعيين الصورة المحددة كخلفية لشاشة القفل
 </string>
+    <string name="toolbar_desc_set_ringtone">
+تعيين الصوت المحدد كنغمة الرنين
+</string>
+    <string name="toolbar_desc_set_notification">
+تعيين الصوت المحدد كصوت الإشعار
+</string>
+    <string name="toolbar_desc_set_alarm">
+تعيين الصوت المحدد كصوت المنبه
+</string>
     <string name="toolbar_desc_duplicate_finder">
 فحص واكتشاف الملفات المكررة
 </string>
@@ -7592,6 +7601,15 @@ Debloater
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 يحافظ على نقل الملفات نشطاً أثناء إيقاف تشغيل الشاشة
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — جارٍ إعادة المحاولة %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — في انتظار إعادة الاتصال…
+</string>
+    <string name="transfer_error_unreachable">
+تعذّر الوصول إلى الوجهة — توقف النقل
 </string>
     <string name="open_with_1">
 فتح باستخدام
@@ -11971,6 +11989,53 @@ UFM Spreadsheet Viewer
     <string name="action_set_wallpaper">
 تعيين الخلفية
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+تعيين كنغمة الرنين
+</string>
+    <string name="action_set_notification">
+تعيين كصوت الإشعار
+</string>
+    <string name="action_set_alarm">
+تعيين كصوت المنبه
+</string>
+    <string name="ringtone_confirm_title">
+تعيين كصوت النظام
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+هل تريد تعيين \"%1$s\" كنغمة الرنين الافتراضية؟
+</string>
+    <string name="ringtone_confirm_notification_message">
+هل تريد تعيين \"%1$s\" كصوت الإشعار الافتراضي؟
+</string>
+    <string name="ringtone_confirm_alarm_message">
+هل تريد تعيين \"%1$s\" كصوت المنبه الافتراضي؟
+</string>
+    <string name="toast_ringtone_set_success">
+تم تحديث نغمة الرنين
+</string>
+    <string name="toast_notification_set_success">
+تم تحديث صوت الإشعار
+</string>
+    <string name="toast_alarm_set_success">
+تم تحديث صوت المنبه
+</string>
+    <string name="toast_sound_set_failed">
+فشل تعيين الصوت. تحقق من إذن تعديل إعدادات النظام.
+</string>
+    <string name="toast_sound_permission_required">
+إذن تعديل إعدادات النظام مطلوب لتعيين أصوات النظام.
+</string>
+    <string name="icon_toolbar_set_ringtone">
+تعيين كنغمة الرنين
+</string>
+    <string name="icon_toolbar_set_notification">
+تعيين كصوت الإشعار
+</string>
+    <string name="icon_toolbar_set_alarm">
+تعيين كصوت المنبه
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 اضغط على الأيقونة للتعديل
@@ -12620,6 +12685,18 @@ support@kilowatch.co.za
 </string>
     <string name="support_direct_email_copied">
 تم نسخ بريد الدعم إلى الحافظة
+</string>
+    <string name="support_section_community">
+المجتمع
+</string>
+    <string name="support_translation_hub_title">
+مركز الترجمة المجتمعية
+</string>
+    <string name="support_translation_hub_subtitle">
+ساعد في تحسين الترجمات واقترح تصحيحات
+</string>
+    <string name="support_translation_hub_copied">
+تم نسخ رابط مركز الترجمة إلى الحافظة
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ Set Password
 </string>
     <string name="close_all_tabs">
 إغلاق جميع التبويبات
+</string>
+    <string name="tab_rename">
+إعادة تسمية التبويب
+</string>
+    <string name="storage_network">
+الشبكة
+</string>
+    <string name="storage_cloud">
+السحابة
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

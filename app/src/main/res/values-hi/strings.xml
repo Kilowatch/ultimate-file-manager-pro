@@ -4025,6 +4025,15 @@ ZIP या 7Z संग्रह बनाएं
     <string name="toolbar_desc_set_lock_wallpaper">
 चयनित छवि को लॉक स्क्रीन वॉलपेपर के रूप में सेट करें
 </string>
+    <string name="toolbar_desc_set_ringtone">
+चयनित ऑडियो को फ़ोन रिंगटोन के रूप में सेट करें
+</string>
+    <string name="toolbar_desc_set_notification">
+चयनित ऑडियो को सूचना ध्वनि के रूप में सेट करें
+</string>
+    <string name="toolbar_desc_set_alarm">
+चयनित ऑडियो को अलार्म ध्वनि के रूप में सेट करें
+</string>
     <string name="toolbar_desc_duplicate_finder">
 डुप्लिकेट फ़ाइलों को स्कैन और पहचानें
 </string>
@@ -7592,6 +7601,15 @@ UFM फ़ाइल स्थानांतरण
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 स्क्रीन बंद होने पर फ़ाइल स्थानांतरण चालू रखता है
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — पुनः प्रयास हो रहा है %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — पुनः कनेक्ट होने की प्रतीक्षा…
+</string>
+    <string name="transfer_error_unreachable">
+गंतव्य तक नहीं पहुँच सके — स्थानांतरण रोक दिया गया
 </string>
     <string name="open_with_1">
 इसके साथ खोलें
@@ -11971,6 +11989,53 @@ UFM ने आपके पिछले सत्र में प्रति�
     <string name="action_set_wallpaper">
 वॉलपेपर सेट करें
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+रिंगटोन के रूप में सेट करें
+</string>
+    <string name="action_set_notification">
+सूचना ध्वनि के रूप में सेट करें
+</string>
+    <string name="action_set_alarm">
+अलार्म ध्वनि के रूप में सेट करें
+</string>
+    <string name="ringtone_confirm_title">
+सिस्टम ध्वनि सेट करें
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+क्या आप \"%1$s\" को अपनी डिफ़ॉल्ट फ़ोन रिंगटोन के रूप में सेट करना चाहते हैं?
+</string>
+    <string name="ringtone_confirm_notification_message">
+क्या आप \"%1$s\" को अपनी डिफ़ॉल्ट सूचना ध्वनि के रूप में सेट करना चाहते हैं?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+क्या आप \"%1$s\" को अपनी डिफ़ॉल्ट अलार्म ध्वनि के रूप में सेट करना चाहते हैं?
+</string>
+    <string name="toast_ringtone_set_success">
+फ़ोन रिंगटोन अपडेट हो गया
+</string>
+    <string name="toast_notification_set_success">
+सूचना ध्वनि अपडेट हो गई
+</string>
+    <string name="toast_alarm_set_success">
+अलार्म ध्वनि अपडेट हो गई
+</string>
+    <string name="toast_sound_set_failed">
+ध्वनि सेट करने में विफल। Write Settings अनुमति की जाँच करें।
+</string>
+    <string name="toast_sound_permission_required">
+सिस्टम ध्वनियाँ सेट करने के लिए Write Settings अनुमति आवश्यक है
+</string>
+    <string name="icon_toolbar_set_ringtone">
+रिंगटोन के रूप में सेट करें
+</string>
+    <string name="icon_toolbar_set_notification">
+सूचना ध्वनि के रूप में सेट करें
+</string>
+    <string name="icon_toolbar_set_alarm">
+अलार्म ध्वनि के रूप में सेट करें
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 संपादन के लिए आइकन पर टैप करें
@@ -12620,6 +12685,18 @@ support@kilowatch.co.za
 </string>
     <string name="support_direct_email_copied">
 सहायता ईमेल क्लिपबोर्ड पर कॉपी कर दिया गया
+</string>
+    <string name="support_section_community">
+समुदाय
+</string>
+    <string name="support_translation_hub_title">
+सामुदायिक अनुवाद केंद्र
+</string>
+    <string name="support_translation_hub_subtitle">
+अनुवाद सुधारने में मदद करें और सुधार सुझाएँ
+</string>
+    <string name="support_translation_hub_copied">
+अनुवाद केंद्र का लिंक क्लिपबोर्ड पर कॉपी हो गया
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ UFM को सुरक्षित करने के लिए 4 अंको
 </string>
     <string name="close_all_tabs">
 सभी टैब बंद करें
+</string>
+    <string name="tab_rename">
+टैब का नाम बदलें
+</string>
+    <string name="storage_network">
+नेटवर्क
+</string>
+    <string name="storage_cloud">
+क्लाउड
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

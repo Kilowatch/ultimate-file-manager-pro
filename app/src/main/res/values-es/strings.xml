@@ -4025,6 +4025,15 @@ Establecer la imagen seleccionada como fondo de pantalla de inicio
     <string name="toolbar_desc_set_lock_wallpaper">
 Establecer la imagen seleccionada como fondo de pantalla de bloqueo
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Establecer el audio seleccionado como tono de llamada
+</string>
+    <string name="toolbar_desc_set_notification">
+Establecer el audio seleccionado como sonido de notificación
+</string>
+    <string name="toolbar_desc_set_alarm">
+Establecer el audio seleccionado como sonido de alarma
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Escanear y detectar archivos duplicados
 </string>
@@ -7592,6 +7601,15 @@ Transferencia de archivos
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Mantiene las transferencias de archivos activas durante la pantalla apagada
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — reintentando %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — esperando reconexión…
+</string>
+    <string name="transfer_error_unreachable">
+No se pudo alcanzar el destino: transferencia detenida
 </string>
     <string name="open_with_1">
 Abrir con
@@ -11983,6 +12001,53 @@ Establecer fondo de pantalla
     <string name="action_set_wallpaper">
 Establecer fondo de pantalla
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Establecer como tono de llamada
+</string>
+    <string name="action_set_notification">
+Establecer como sonido de notificación
+</string>
+    <string name="action_set_alarm">
+Establecer como sonido de alarma
+</string>
+    <string name="ringtone_confirm_title">
+Establecer sonido del sistema
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+¿Quieres establecer \"%1$s\" como tono de llamada predeterminado?
+</string>
+    <string name="ringtone_confirm_notification_message">
+¿Quieres establecer \"%1$s\" como sonido de notificación predeterminado?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+¿Quieres establecer \"%1$s\" como sonido de alarma predeterminado?
+</string>
+    <string name="toast_ringtone_set_success">
+Tono de llamada actualizado
+</string>
+    <string name="toast_notification_set_success">
+Sonido de notificación actualizado
+</string>
+    <string name="toast_alarm_set_success">
+Sonido de alarma actualizado
+</string>
+    <string name="toast_sound_set_failed">
+No se pudo configurar el sonido. Comprueba el permiso de escritura de ajustes.
+</string>
+    <string name="toast_sound_permission_required">
+Se requiere el permiso de escritura de ajustes para configurar sonidos del sistema
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Establecer como tono de llamada
+</string>
+    <string name="icon_toolbar_set_notification">
+Establecer como sonido de notificación
+</string>
+    <string name="icon_toolbar_set_alarm">
+Establecer como sonido de alarma
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Toca el icono para editar
@@ -12632,6 +12697,18 @@ Envía un correo electrónico al equipo de desarrollo directamente
 </string>
     <string name="support_direct_email_copied">
 Correo de soporte copiado al portapapeles
+</string>
+    <string name="support_section_community">
+Comunidad
+</string>
+    <string name="support_translation_hub_title">
+Centro de traducciones de la comunidad
+</string>
+    <string name="support_translation_hub_subtitle">
+Ayuda a mejorar las traducciones y sugiere correcciones
+</string>
+    <string name="support_translation_hub_copied">
+Enlace del centro de traducción copiado al portapapeles
 </string>
 
     <!-- About Modernization -->
@@ -13885,6 +13962,15 @@ Duplicado: %s
 </string>
     <string name="close_all_tabs">
 Cerrar todas las pestañas
+</string>
+    <string name="tab_rename">
+Renombrar pestaña
+</string>
+    <string name="storage_network">
+Red
+</string>
+    <string name="storage_cloud">
+Nube
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

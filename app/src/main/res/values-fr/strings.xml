@@ -4025,6 +4025,15 @@ Définir l\\\'image sélectionnée comme fond d\\\'écran d\\\'accueil
     <string name="toolbar_desc_set_lock_wallpaper">
 Définir l\\\'image sélectionnée comme fond d\\\'écran de verrouillage
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Définir le fichier audio sélectionné comme sonnerie du téléphone
+</string>
+    <string name="toolbar_desc_set_notification">
+Définir le fichier audio sélectionné comme son de notification
+</string>
+    <string name="toolbar_desc_set_alarm">
+Définir le fichier audio sélectionné comme son d\\\'alarme
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Analyser et détecter les fichiers en double
 </string>
@@ -7592,6 +7601,15 @@ Transfert de fichiers
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Maintient les transferts de fichiers actifs lorsque l\'écran est éteint
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — nouvelle tentative %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — en attente de reconnexion…
+</string>
+    <string name="transfer_error_unreachable">
+Impossible d\\\'atteindre la destination — transfert arrêté
 </string>
     <string name="open_with_1">
 Ouvrir avec
@@ -11971,6 +11989,53 @@ Voulez-vous définir \"%1$s\" comme fond d\\\'écran de verrouillage ?
     <string name="action_set_wallpaper">
 Définir le fond d\\\'écran
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Définir comme sonnerie
+</string>
+    <string name="action_set_notification">
+Définir comme son de notification
+</string>
+    <string name="action_set_alarm">
+Définir comme son d\\\'alarme
+</string>
+    <string name="ringtone_confirm_title">
+Définir comme son du système
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+Voulez-vous définir \"%1$s\" comme sonnerie par défaut du téléphone ?
+</string>
+    <string name="ringtone_confirm_notification_message">
+Voulez-vous définir \"%1$s\" comme son de notification par défaut ?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+Voulez-vous définir \"%1$s\" comme son d\\\'alarme par défaut ?
+</string>
+    <string name="toast_ringtone_set_success">
+Sonnerie du téléphone mise à jour
+</string>
+    <string name="toast_notification_set_success">
+Son de notification mis à jour
+</string>
+    <string name="toast_alarm_set_success">
+Son d\\\'alarme mis à jour
+</string>
+    <string name="toast_sound_set_failed">
+Impossible de définir le son. Vérifiez l\\\'autorisation de modifier les paramètres système.
+</string>
+    <string name="toast_sound_permission_required">
+L\\\'autorisation de modifier les paramètres système est requise pour définir les sons du système
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Définir comme sonnerie
+</string>
+    <string name="icon_toolbar_set_notification">
+Définir comme son de notification
+</string>
+    <string name="icon_toolbar_set_alarm">
+Définir comme son d\\\'alarme
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Touchez l\\\'icône pour modifier
@@ -12620,6 +12685,18 @@ Envoyez un e-mail directement à l\\\'équipe de développement
 </string>
     <string name="support_direct_email_copied">
 E-mail de support copié dans le presse-papiers
+</string>
+    <string name="support_section_community">
+Communauté
+</string>
+    <string name="support_translation_hub_title">
+Centre de traduction communautaire
+</string>
+    <string name="support_translation_hub_subtitle">
+Aidez-nous à améliorer les traductions et proposez des corrections
+</string>
+    <string name="support_translation_hub_copied">
+Lien vers le centre de traduction copié dans le presse-papiers
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ Dupliqué : %s
 </string>
     <string name="close_all_tabs">
 Fermer tous les onglets
+</string>
+    <string name="tab_rename">
+Renommer l\\\'onglet
+</string>
+    <string name="storage_network">
+Réseau
+</string>
+    <string name="storage_cloud">
+Cloud
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

@@ -4025,6 +4025,15 @@ ZIPまたは7Zアーカイブを作成
     <string name="toolbar_desc_set_lock_wallpaper">
 選択した画像をロック画面の壁紙に設定
 </string>
+    <string name="toolbar_desc_set_ringtone">
+選択した音声を着信音として設定
+</string>
+    <string name="toolbar_desc_set_notification">
+選択した音声を通知音として設定
+</string>
+    <string name="toolbar_desc_set_alarm">
+選択した音声をアラーム音として設定
+</string>
     <string name="toolbar_desc_duplicate_finder">
 重複ファイルをスキャンして検出
 </string>
@@ -7592,6 +7601,15 @@ UFMファイル転送
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 画面オフ中もファイル転送を維持
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — 再試行中 %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — 再接続待機中…
+</string>
+    <string name="transfer_error_unreachable">
+転送先に到達できなかったため、転送が停止しました
 </string>
     <string name="open_with_1">
 開く
@@ -11971,6 +11989,53 @@ UFMが前回のセッション中に応答しなくなりました。修正に�
     <string name="action_set_wallpaper">
 壁紙を設定
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+着信音として設定
+</string>
+    <string name="action_set_notification">
+通知音として設定
+</string>
+    <string name="action_set_alarm">
+アラーム音として設定
+</string>
+    <string name="ringtone_confirm_title">
+システムサウンドとして設定
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+「%1$s」を既定の着信音として設定しますか？
+</string>
+    <string name="ringtone_confirm_notification_message">
+「%1$s」を既定の通知音として設定しますか？
+</string>
+    <string name="ringtone_confirm_alarm_message">
+「%1$s」を既定のアラーム音として設定しますか？
+</string>
+    <string name="toast_ringtone_set_success">
+着信音を更新しました
+</string>
+    <string name="toast_notification_set_success">
+通知音を更新しました
+</string>
+    <string name="toast_alarm_set_success">
+アラーム音を更新しました
+</string>
+    <string name="toast_sound_set_failed">
+サウンドを設定できませんでした。システム設定の変更権限を確認してください。
+</string>
+    <string name="toast_sound_permission_required">
+システムサウンドを設定するには、システム設定の変更権限が必要です
+</string>
+    <string name="icon_toolbar_set_ringtone">
+着信音として設定
+</string>
+    <string name="icon_toolbar_set_notification">
+通知音として設定
+</string>
+    <string name="icon_toolbar_set_alarm">
+アラーム音として設定
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 アイコンをタップして編集
@@ -12620,6 +12685,18 @@ support@kilowatch.co.za
 </string>
     <string name="support_direct_email_copied">
 サポートメールをクリップボードにコピーしました
+</string>
+    <string name="support_section_community">
+コミュニティ
+</string>
+    <string name="support_translation_hub_title">
+コミュニティ翻訳ハブ
+</string>
+    <string name="support_translation_hub_subtitle">
+翻訳の改善と修正の提案にご協力ください
+</string>
+    <string name="support_translation_hub_copied">
+翻訳ハブのリンクをクリップボードにコピーしました
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ PIN が間違っています。残り %1$d 回の試行回数
 </string>
     <string name="close_all_tabs">
 すべてのタブを閉じる
+</string>
+    <string name="tab_rename">
+タブ名を変更
+</string>
+    <string name="storage_network">
+ネットワーク
+</string>
+    <string name="storage_cloud">
+クラウド
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

@@ -4025,6 +4025,15 @@ Ausgewähltes Bild als Hintergrundbild des Startbildschirms festlegen
     <string name="toolbar_desc_set_lock_wallpaper">
 Ausgewähltes Bild als Hintergrundbild des Sperrbildschirms festlegen
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Ausgewähltes Audio als Klingelton festlegen
+</string>
+    <string name="toolbar_desc_set_notification">
+Ausgewähltes Audio als Benachrichtigungston festlegen
+</string>
+    <string name="toolbar_desc_set_alarm">
+Ausgewähltes Audio als Alarmton festlegen
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Doppelte Dateien suchen und erkennen
 </string>
@@ -7592,6 +7601,15 @@ Dateiübertragung
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Hält Dateiübertragungen bei ausgeschaltetem Bildschirm aktiv
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — erneuter Versuch %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — Warten auf Wiederverbindung…
+</string>
+    <string name="transfer_error_unreachable">
+Ziel konnte nicht erreicht werden — Übertragung gestoppt
 </string>
     <string name="open_with_1">
 Öffnen mit
@@ -11971,6 +11989,53 @@ Möchten Sie \"%1$s\" als Sperrbildschirm-Hintergrund festlegen?
     <string name="action_set_wallpaper">
 Hintergrund festlegen
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Als Klingelton festlegen
+</string>
+    <string name="action_set_notification">
+Als Benachrichtigungston festlegen
+</string>
+    <string name="action_set_alarm">
+Als Alarmton festlegen
+</string>
+    <string name="ringtone_confirm_title">
+Als Systemton festlegen
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+Möchten Sie \"%1$s\" als Ihren Standard-Klingelton festlegen?
+</string>
+    <string name="ringtone_confirm_notification_message">
+Möchten Sie \"%1$s\" als Ihren Standard-Benachrichtigungston festlegen?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+Möchten Sie \"%1$s\" als Ihren Standard-Alarmton festlegen?
+</string>
+    <string name="toast_ringtone_set_success">
+Klingelton aktualisiert
+</string>
+    <string name="toast_notification_set_success">
+Benachrichtigungston aktualisiert
+</string>
+    <string name="toast_alarm_set_success">
+Alarmton aktualisiert
+</string>
+    <string name="toast_sound_set_failed">
+Ton konnte nicht festgelegt werden. Prüfen Sie die Berechtigung zum Ändern der Systemeinstellungen.
+</string>
+    <string name="toast_sound_permission_required">
+Zum Festlegen von Systemtönen ist die Berechtigung zum Ändern der Systemeinstellungen erforderlich.
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Als Klingelton festlegen
+</string>
+    <string name="icon_toolbar_set_notification">
+Als Benachrichtigungston festlegen
+</string>
+    <string name="icon_toolbar_set_alarm">
+Als Alarmton festlegen
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Zum Bearbeiten auf das Symbol tippen
@@ -12620,6 +12685,18 @@ Sende eine E-Mail direkt an das Entwicklungsteam
 </string>
     <string name="support_direct_email_copied">
 Support-E-Mail in die Zwischenablage kopiert
+</string>
+    <string name="support_section_community">
+Community
+</string>
+    <string name="support_translation_hub_title">
+Community-Übersetzungszentrum
+</string>
+    <string name="support_translation_hub_subtitle">
+Helfen Sie mit, Übersetzungen zu verbessern und Korrekturen vorzuschlagen.
+</string>
+    <string name="support_translation_hub_copied">
+Link zum Übersetzungszentrum wurde in die Zwischenablage kopiert.
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ Dupliziert: %s
 </string>
     <string name="close_all_tabs">
 Alle Tabs schließen
+</string>
+    <string name="tab_rename">
+Tab umbenennen
+</string>
+    <string name="storage_network">
+Netzwerk
+</string>
+    <string name="storage_cloud">
+Cloud
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

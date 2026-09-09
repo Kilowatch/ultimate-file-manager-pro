@@ -43,8 +43,17 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
     companion object {
         lateinit var instance: UfmApplication
             private set
-        
+
         lateinit var indexingRepository: IndexingRepository
+            private set
+
+        /**
+         * Process-lifetime coroutine scope for work that must outlive any single
+         * Activity — e.g. file transfers running under [za.kilowatch.ultimatefilemanager.util.TransferManager].
+         * Backed by SupervisorJob so an uncaught failure in one child never cancels siblings,
+         * and by Dispatchers.IO for blocking socket/stream I/O.
+         */
+        lateinit var applicationScope: kotlinx.coroutines.CoroutineScope
             private set
     }
 
@@ -131,6 +140,9 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
         // provider setup above ran.
         za.kilowatch.ultimatefilemanager.util.Analytics.init(this)
         instance = this
+        applicationScope = kotlinx.coroutines.CoroutineScope(
+            kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.IO
+        )
         za.kilowatch.ultimatefilemanager.archive.ArchivePreviewCache.registerBackgroundCleanup()
         Log.d(TAG, "Starting global UfmApplication...")
 

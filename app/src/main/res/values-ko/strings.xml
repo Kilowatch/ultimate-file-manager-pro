@@ -4025,6 +4025,15 @@ ZIP 또는 7Z 아카이브 만들기
     <string name="toolbar_desc_set_lock_wallpaper">
 선택한 이미지를 잠금 화면 배경화면으로 설정
 </string>
+    <string name="toolbar_desc_set_ringtone">
+선택한 오디오를 벨소리로 설정
+</string>
+    <string name="toolbar_desc_set_notification">
+선택한 오디오를 알림음으로 설정
+</string>
+    <string name="toolbar_desc_set_alarm">
+선택한 오디오를 알람음으로 설정
+</string>
     <string name="toolbar_desc_duplicate_finder">
 중복 파일 검사 및 감지
 </string>
@@ -7592,6 +7601,15 @@ UFM 파일 전송
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 화면 꺼짐 상태에서 파일 전송 유지
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — 재시도 중 %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — 재연결 대기 중…
+</string>
+    <string name="transfer_error_unreachable">
+대상에 연결할 수 없습니다 — 전송이 중지되었습니다.
 </string>
     <string name="open_with_1">
 다음으로 열기
@@ -11971,6 +11989,53 @@ UFM이 마지막 사용 중 응답하지 않았습니다. 문제 해결을 위�
     <string name="action_set_wallpaper">
 배경화면 설정
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+벨소리로 설정
+</string>
+    <string name="action_set_notification">
+알림음으로 설정
+</string>
+    <string name="action_set_alarm">
+알람음으로 설정
+</string>
+    <string name="ringtone_confirm_title">
+시스템 사운드로 설정
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+\"%1$s\"을(를) 기본 벨소리로 설정하시겠습니까?
+</string>
+    <string name="ringtone_confirm_notification_message">
+\"%1$s\"을(를) 기본 알림음으로 설정하시겠습니까?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+\"%1$s\"을(를) 기본 알람음으로 설정하시겠습니까?
+</string>
+    <string name="toast_ringtone_set_success">
+벨소리가 변경되었습니다.
+</string>
+    <string name="toast_notification_set_success">
+알림음이 변경되었습니다.
+</string>
+    <string name="toast_alarm_set_success">
+알람음이 변경되었습니다.
+</string>
+    <string name="toast_sound_set_failed">
+소리 설정에 실패했습니다. 시스템 설정 수정 권한을 확인하세요.
+</string>
+    <string name="toast_sound_permission_required">
+시스템 사운드를 설정하려면 시스템 설정 수정 권한이 필요합니다.
+</string>
+    <string name="icon_toolbar_set_ringtone">
+벨소리로 설정
+</string>
+    <string name="icon_toolbar_set_notification">
+알림음으로 설정
+</string>
+    <string name="icon_toolbar_set_alarm">
+알람음으로 설정
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 아이콘을 탭하여 편집
@@ -12620,6 +12685,18 @@ support@kilowatch.co.za
 </string>
     <string name="support_direct_email_copied">
 지원 이메일이 클립보드에 복사되었습니다.
+</string>
+    <string name="support_section_community">
+커뮤니티
+</string>
+    <string name="support_translation_hub_title">
+커뮤니티 번역 허브
+</string>
+    <string name="support_translation_hub_subtitle">
+번역 개선을 돕고 수정 사항을 제안해 주세요.
+</string>
+    <string name="support_translation_hub_copied">
+번역 허브 링크가 클립보드에 복사되었습니다.
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ PIN이나 비밀번호를 잊으셨나요? 복구 키 입력
 </string>
     <string name="close_all_tabs">
 모든 탭 닫기
+</string>
+    <string name="tab_rename">
+탭 이름 변경
+</string>
+    <string name="storage_network">
+네트워크
+</string>
+    <string name="storage_cloud">
+클라우드
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

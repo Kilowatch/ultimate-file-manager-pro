@@ -187,11 +187,6 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isSearchActive = false
     private var isSearchIndexed = false
     private var isTransferring = false
-    private var transferJob: kotlinx.coroutines.Job? = null
-    private var currentTransferDestFile: java.io.File? = null
-    private var currentTransferStreams: Pair<java.io.InputStream?, java.io.OutputStream?>? = null
-    private var currentTransferConnection: AutoCloseable? = null  // raw TCP connection — close() kills SMB write socket instantly
-    private var isCancelled = false
     private var folderFlowJob: kotlinx.coroutines.Job? = null
 
     private var onFolderPicked: ((File) -> Unit)? = null
@@ -4706,11 +4701,11 @@ class FileBrowserActivity : AppCompatActivity() {
     }
 
     private fun performPaste(targetSlotId: Long? = null) {
+        if (isTransferring) return
         val targetSlots = if (targetSlotId != null) FileClipboard.slots.filter { it.id == targetSlotId } else FileClipboard.slots
         if (targetSlots.isEmpty()) return
-        val hasLocal = targetSlots.any { it.hasLocal }
-        val hasNet = targetSlots.any { it.hasRemote }
         val isExtractOperation = targetSlots.any { it.isExtract }
+        val effectiveDestDir = quickTransferDestDir ?: currentDir
 
         // ── Build progress dialog ──────────────────────────────────────
         val dialogView = android.widget.LinearLayout(this).apply {
@@ -4756,585 +4751,93 @@ class FileBrowserActivity : AppCompatActivity() {
             .setNegativeButton(R.string.cancel, null)
             .create()
         dialog.show()
-        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
-            isCancelled = true
-            transferJob?.cancel()
-            runCatching { currentTransferConnection?.close() }
-            currentTransferConnection = null
-            currentTransferStreams?.let { (inp, out) ->
-                runCatching { out?.close() }
-                runCatching { inp?.close() }
-                currentTransferStreams = null
-            }
-            currentTransferDestFile?.let { f ->
-                currentTransferDestFile = null
-                lifecycleScope.launch(Dispatchers.IO) {
-                    try {
-                        if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(f.absolutePath)) {
-                            za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(f.absolutePath)
-                        } else if (f.isDirectory) {
-                            f.deleteRecursively()
-                        } else {
-                            f.delete()
-                        }
-                    } catch (_: Exception) {}
-                }
-            }
-            isTransferring = false
-            za.kilowatch.ultimatefilemanager.util.TransferService.stop(this)
-            dialog.dismiss()
-            loadDirectory(currentDir)
-        }
-
-        fun updateProgress(fileName: String, bytesCopied: Long, totalBytes: Long, fileIndex: Int, totalFiles: Int) {
-            try {
-                runOnUiThread {
-                    try {
-                        val copiedStr = android.text.format.Formatter.formatFileSize(this@FileBrowserActivity, bytesCopied)
-                        val totalStr = if (totalBytes > 0) android.text.format.Formatter.formatFileSize(this@FileBrowserActivity, totalBytes) else "?"
-                        statusText.text = if (totalFiles > 1) getString(R.string.file_fileindex_of_totalfiles_filename, fileIndex, totalFiles, fileName) else fileName
-                        detailText.text = getString(R.string.copiedstr_totalstr, copiedStr, totalStr)
-                        if (totalBytes > 0) {
-                            dialogProgress.progress = ((bytesCopied * 1000L) / totalBytes).toInt()
-                        }
-                    } catch (_: Exception) {}
-                }
-            } catch (_: Exception) {}
-        }
 
         isTransferring = true
-        za.kilowatch.ultimatefilemanager.util.TransferService.start(this)
-        transferJob = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO + kotlinx.coroutines.SupervisorJob()).launch {
-            try {
-                var successCount = 0
-                var failCount = 0
 
-                val db = UfmIndexingDatabase.getInstance(this@FileBrowserActivity)
-                val dao = db.fileIndexDao()
-                val metadataExtractor = MetadataExtractor(this@FileBrowserActivity)
-                val pendingIndices = mutableListOf<FileIndex>()
+        // ── UI adapter — TransferManager drives these callbacks on the main thread ──
+        val ui = object : za.kilowatch.ultimatefilemanager.util.TransferManager.TransferUi {
+            override val activity: android.app.Activity? get() = this@FileBrowserActivity
 
-                suspend fun flushIndices() {
-                    if (pendingIndices.isNotEmpty()) {
-                        dao.insertAll(pendingIndices.toList())
-                        pendingIndices.clear()
+            override fun onStarted(opLabel: String, isExtract: Boolean) {
+                // Dialog already shown above.
+            }
+
+            override fun onProgress(fileName: String, bytesCopied: Long, totalBytes: Long, fileIndex: Int, totalFiles: Int) {
+                if (isFinishing || isDestroyed) return
+                try {
+                    val copiedStr = android.text.format.Formatter.formatFileSize(this@FileBrowserActivity, bytesCopied)
+                    val totalStr = if (totalBytes > 0) android.text.format.Formatter.formatFileSize(this@FileBrowserActivity, totalBytes) else "?"
+                    statusText.text = if (totalFiles > 1) getString(R.string.file_fileindex_of_totalfiles_filename, fileIndex, totalFiles, fileName) else fileName
+                    detailText.text = getString(R.string.copiedstr_totalstr, copiedStr, totalStr)
+                    if (totalBytes > 0) {
+                        dialogProgress.progress = ((bytesCopied * 1000L) / totalBytes).toInt()
                     }
-                }
+                } catch (_: Exception) {}
+            }
 
-                // Pre-count total files
-                var totalFiles = 0
-                for (slot in targetSlots) {
-                    for (item in slot.items) {
-                        when (item) {
-                            is FileClipboard.ClipItem.Local -> {
-                                if (item.file.isDirectory) totalFiles += za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.countLocalFiles(item.file)
-                                else totalFiles++
-                            }
-                            is FileClipboard.ClipItem.Remote -> {
-                                totalFiles++
-                            }
-                        }
-                    }
-                }
-                var fileIndex = 0
+            override fun onRetry(fileName: String, attempt: Int, maxAttempts: Int) {
+                if (isFinishing || isDestroyed) return
+                try {
+                    statusText.text = getString(R.string.transfer_retrying_notif, fileName, attempt, maxAttempts)
+                } catch (_: Exception) {}
+            }
 
-                val effectiveDestDir = quickTransferDestDir ?: currentDir
-                val applyToAllRef = booleanArrayOf(false)
-                var globalAction: za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction? = null
+            override fun onFinished(summary: za.kilowatch.ultimatefilemanager.util.TransferManager.TransferSummary) {
+                isTransferring = false
+                if (isFinishing || isDestroyed) return
+                try { dialog.dismiss() } catch (_: Exception) {}
 
-                suspend fun processLocalItem(source: java.io.File, destBase: java.io.File, operation: FileClipboard.Operation) {
-                    val isSrcSaf = source is za.kilowatch.ultimatefilemanager.storage.SafFile || 
-                                   za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(source.absolutePath) ||
-                                   za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, source.absolutePath)
-                    val isSrcRoot = source is za.kilowatch.ultimatefilemanager.storage.RootFile ||
-                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(source.absolutePath)
-                    val isDestSaf = destBase is za.kilowatch.ultimatefilemanager.storage.SafFile || 
-                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destBase.absolutePath) ||
-                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, destBase.absolutePath)
-                    val isDestRoot = destBase is za.kilowatch.ultimatefilemanager.storage.RootFile ||
-                                     za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(destBase.absolutePath)
-
-                    if (source.isDirectory) {
-                        val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
-                            destBase.parentFile ?: effectiveDestDir, destBase.name, this@FileBrowserActivity
-                        )
-
-                        var effectiveDest = destBase
-                        if (hasConflict) {
-                            val resolvedAction = globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                    this@FileBrowserActivity, source.name, true, -1L, applyToAllRef
-                                ).also { if (applyToAllRef[0]) globalAction = it }
-                            }
-                            when (resolvedAction) {
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> throw CancellationException()
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
-                                    successCount++
-                                    return
-                                }
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
-                                    effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
-                                        destBase.parentFile ?: effectiveDestDir, source.name, this@FileBrowserActivity
-                                    )
-                                }
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
-                                    effectiveDest = destBase
-                                }
-                            }
-                        }
-
-                        val isEffSaf = effectiveDest is za.kilowatch.ultimatefilemanager.storage.SafFile || 
-                                       za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(effectiveDest.absolutePath) ||
-                                       za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, effectiveDest.absolutePath)
-                        val isEffRoot = effectiveDest is za.kilowatch.ultimatefilemanager.storage.RootFile ||
-                                        za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(effectiveDest.absolutePath)
-                        try {
-                            if (isEffSaf) {
-                                if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, effectiveDest.absolutePath)) {
-                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(this@FileBrowserActivity, effectiveDest.parent ?: effectiveDestDir.absolutePath, effectiveDest.name)
-                                }
-                            } else if (isEffRoot) {
-                                if (!za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(effectiveDest.absolutePath)) {
-                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.mkdir(effectiveDest.absolutePath)
-                                }
-                            } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(effectiveDest.absolutePath)) {
-                                if (!za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(effectiveDest.absolutePath)) {
-                                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.mkdir(effectiveDest.absolutePath)
-                                }
-                            } else {
-                                if (!effectiveDest.exists()) effectiveDest.mkdirs()
-                            }
-                            if (!isEffRoot && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                                pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
-                                if (pendingIndices.size >= 50) flushIndices()
-                            }
-                        } catch (_: Exception) {}
-
-                        val children = if (isSrcSaf) {
-                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@FileBrowserActivity, source.absolutePath)
-                        } else if (isSrcRoot) {
-                            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.listFiles(source.absolutePath)
-                        } else {
-                            source.listFiles()?.toList()
-                        }
-                        if (children != null) {
-                            for (child in children) {
-                                try {
-                                    val childDest = if (isEffSaf) {
-                                        za.kilowatch.ultimatefilemanager.storage.SafFile(effectiveDest.absolutePath, child.name, child.isDirectory)
-                                    } else if (isEffRoot) {
-                                        za.kilowatch.ultimatefilemanager.storage.RootFile(effectiveDest.absolutePath, child.name, child.isDirectory)
-                                    } else {
-                                        java.io.File(effectiveDest, child.name)
-                                    }
-                                    processLocalItem(child, childDest, operation)
-                                } catch (e: kotlinx.coroutines.CancellationException) {
-                                    throw e
-                                } catch (e: Exception) {
-                                    android.util.Log.e("PasteFeature", "Error processing local child ${child.name}: ${e.message}")
-                                    failCount++
-                                }
-                            }
-                        }
-                        if (operation == FileClipboard.Operation.MOVE || operation == FileClipboard.Operation.EXTRACT) {
-                            try {
-                                if (isSrcSaf) {
-                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.deleteRecursively(this@FileBrowserActivity, source.absolutePath)
-                                } else if (isSrcRoot) {
-                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(source.absolutePath)
-                                } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(source.absolutePath)) {
-                                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(source.absolutePath)
-                                } else {
-                                    source.delete()
-                                }
-                                if (!isSrcRoot) {
-                                    UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
-                                }
-                            } catch (_: Exception) {}
-                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.absolutePath, effectiveDest.absolutePath)
-                        } else {
-                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.absolutePath, effectiveDest.absolutePath)
-                        }
-                    } else {
-                        fileIndex++
-                        val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
-                            destBase.parentFile ?: effectiveDestDir, destBase.name, this@FileBrowserActivity
-                        )
-                        val resolvedAction = if (hasConflict) {
-                            val destSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileSize(
-                                destBase.parentFile ?: effectiveDestDir, destBase.name, this@FileBrowserActivity
-                            )
-                            globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                    this@FileBrowserActivity, source.name, false, destSize, applyToAllRef
-                                ).also { if (applyToAllRef[0]) globalAction = it }
-                            }
-                        } else za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH
-
-                        if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL) {
-                            throw CancellationException()
-                        }
-                        if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP) {
-                            successCount++
-                            return
-                        }
-
-                        val sourceSize = if (isSrcSaf) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this@FileBrowserActivity, source.absolutePath)
-                                         else if (isSrcRoot) za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(source.absolutePath)
-                                         else source.length()
-                        updateProgress(source.name, 0, sourceSize, fileIndex, totalFiles)
-                        val finalDest = if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH)
-                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(destBase.parentFile ?: effectiveDestDir, destBase.name, this@FileBrowserActivity)
-                        else destBase
-                        val writtenDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(source, finalDest, resolvedAction) { c, t ->
-                            updateProgress(source.name, c, t, fileIndex, totalFiles)
-                        }
-
-                        val isEffDestRoot = writtenDest is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(writtenDest.absolutePath)
-                        if (!isEffDestRoot && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                            pendingIndices.add(metadataExtractor.extractMetadata(writtenDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
-                            if (pendingIndices.size >= 50) flushIndices()
-                        }
-
-                        if (operation == FileClipboard.Operation.MOVE || operation == FileClipboard.Operation.EXTRACT) {
-                            val isEffSafDest = writtenDest is za.kilowatch.ultimatefilemanager.storage.SafFile || 
-                                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(writtenDest.absolutePath) ||
-                                               za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, writtenDest.absolutePath)
-                            val writtenSize = if (isEffSafDest) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this@FileBrowserActivity, writtenDest.absolutePath)
-                                              else if (isEffDestRoot) za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(writtenDest.absolutePath)
-                                              else writtenDest.length()
-                            val isSafeToDelete = if (isEffSafDest && writtenSize <= 0L) {
-                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, writtenDest.absolutePath)
-                            } else if (isEffDestRoot && writtenSize <= 0L) {
-                                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(writtenDest.absolutePath)
-                            } else {
-                                za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                                    writtenSize, sourceSize, source.name
-                                )
-                            }
-                            if (isSafeToDelete) {
-                                if (isSrcSaf) {
-                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(this@FileBrowserActivity, source.absolutePath)
-                                } else if (isSrcRoot) {
-                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(source.absolutePath)
-                                } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(source.absolutePath)) {
-                                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(source.absolutePath)
-                                } else {
-                                    source.delete()
-                                }
-                                if (!isSrcRoot) {
-                                    UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
-                                }
-                            }
-                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.absolutePath, writtenDest.absolutePath)
-                        } else {
-                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.absolutePath, writtenDest.absolutePath)
-                        }
-                        successCount++
-                    }
-                }
-
-                suspend fun processNetItem(source: za.kilowatch.ultimatefilemanager.network.NetworkFile, destBase: java.io.File, share: za.kilowatch.ultimatefilemanager.network.NetworkShare, operation: FileClipboard.Operation) {
-                    val isDestSaf = destBase is za.kilowatch.ultimatefilemanager.storage.SafFile || 
-                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destBase.absolutePath) ||
-                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, destBase.absolutePath)
-                    val isDestRoot = destBase is za.kilowatch.ultimatefilemanager.storage.RootFile ||
-                                     za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(destBase.absolutePath)
-
-                    if (source.isDirectory) {
-                        val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
-                            destBase.parentFile ?: effectiveDestDir, destBase.name, this@FileBrowserActivity
-                        )
-
-                        var effectiveDest = destBase
-                        if (hasConflict) {
-                            val resolvedAction = globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                    this@FileBrowserActivity, source.name, true, -1L, applyToAllRef
-                                ).also { if (applyToAllRef[0]) globalAction = it }
-                            }
-                            when (resolvedAction) {
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> throw CancellationException()
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
-                                    successCount++
-                                    return
-                                }
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
-                                    effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
-                                        destBase.parentFile ?: effectiveDestDir, source.name, this@FileBrowserActivity
-                                    )
-                                }
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
-                                    effectiveDest = destBase
-                                }
-                            }
-                        }
-
-                        val isEffSaf = effectiveDest is za.kilowatch.ultimatefilemanager.storage.SafFile || 
-                                       za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(effectiveDest.absolutePath) ||
-                                       za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, effectiveDest.absolutePath)
-                        val isEffRoot = effectiveDest is za.kilowatch.ultimatefilemanager.storage.RootFile ||
-                                        za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(effectiveDest.absolutePath)
-                        try {
-                            if (isEffSaf) {
-                                if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, effectiveDest.absolutePath)) {
-                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(this@FileBrowserActivity, effectiveDest.parent ?: effectiveDestDir.absolutePath, effectiveDest.name)
-                                }
-                            } else if (isEffRoot) {
-                                if (!za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(effectiveDest.absolutePath)) {
-                                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.mkdir(effectiveDest.absolutePath)
-                                }
-                            } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(effectiveDest.absolutePath)) {
-                                if (!za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(effectiveDest.absolutePath)) {
-                                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.mkdir(effectiveDest.absolutePath)
-                                }
-                            } else {
-                                if (!effectiveDest.exists()) effectiveDest.mkdirs()
-                            }
-                            if (!isEffRoot && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                                pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
-                                if (pendingIndices.size >= 50) flushIndices()
-                            }
-                        } catch (_: Exception) {}
-
-                        val children = when (share.type) {
-                            za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.listFiles(share, source.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
-                        }
-                        for (child in children) {
-                            if (isCancelled) break
-                            coroutineContext.ensureActive()
-                            try {
-                                val childDest = if (isEffSaf) {
-                                    za.kilowatch.ultimatefilemanager.storage.SafFile(effectiveDest.absolutePath, child.name, child.isDirectory)
-                                } else if (isEffRoot) {
-                                    za.kilowatch.ultimatefilemanager.storage.RootFile(effectiveDest.absolutePath, child.name, child.isDirectory)
-                                } else {
-                                    java.io.File(effectiveDest, child.name)
-                                }
-                                processNetItem(child, childDest, share, operation)
-                            } catch (e: kotlinx.coroutines.CancellationException) {
-                                throw e
-                            } catch (e: Exception) {
-                                if (isCancelled) throw CancellationException()
-                                android.util.Log.e("PasteFeature", "Error processing net child ${child.name}: ${e.message}")
-                                failCount++
-                            }
-                        }
-                        if (operation == FileClipboard.Operation.MOVE) {
-                            try {
-                                when (share.type) {
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.deleteDir(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.deleteDir(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteDir(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(share, source.path, true)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteDir(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
-                                }
-                            } catch (_: Exception) {}
-                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, effectiveDest.absolutePath)
-                        } else {
-                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, effectiveDest.absolutePath)
-                        }
-                    } else {
-                        fileIndex++
-                        val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileExists(
-                            destBase.parentFile ?: effectiveDestDir, destBase.name, this@FileBrowserActivity
-                        )
-                        val resolvedAction = if (hasConflict) {
-                            val destSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.localFileSize(
-                                destBase.parentFile ?: effectiveDestDir, destBase.name, this@FileBrowserActivity
-                            )
-                            globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                    this@FileBrowserActivity, source.name, false, destSize, applyToAllRef
-                                ).also { if (applyToAllRef[0]) globalAction = it }
-                            }
-                        } else za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH
-
-                        if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL) throw CancellationException()
-                        if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP) {
-                            successCount++
-                            return
-                        }
-
-                        updateProgress(source.name, 0, source.size, fileIndex, totalFiles)
-                        val writtenDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.downloadNetworkToLocalAtomic(
-                            share, source, destBase, resolvedAction,
-                            onProgress = { c, t -> updateProgress(source.name, c, t, fileIndex, totalFiles) },
-                            onConnectionReady = { conn -> currentTransferConnection = conn }
-                        )
-                        currentTransferConnection = null
-
-                        val isEffDestRoot = writtenDest is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(writtenDest.absolutePath)
-                        if (!isEffDestRoot && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                            pendingIndices.add(metadataExtractor.extractMetadata(writtenDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
-                            if (pendingIndices.size >= 50) flushIndices()
-                        }
-
-                        if (operation == FileClipboard.Operation.MOVE) {
-                            val isDestSafLocal = writtenDest is za.kilowatch.ultimatefilemanager.storage.SafFile || 
-                                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(writtenDest.absolutePath) ||
-                                                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, writtenDest.absolutePath)
-                            val writtenSize = if (isDestSafLocal) za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this@FileBrowserActivity, writtenDest.absolutePath) else writtenDest.length()
-                            val isSafeToDelete = if (isDestSafLocal && writtenSize <= 0L) {
-                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this@FileBrowserActivity, writtenDest.absolutePath)
-                            } else {
-                                za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                                    writtenSize, source.size, source.name
-                                )
-                            }
-                            if (isSafeToDelete) {
-                                when (share.type) {
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(share, source.path, false)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteFile(share, source.path)
-                                    za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
-                                }
-                            }
-                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, writtenDest.absolutePath)
-                        } else {
-                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, writtenDest.absolutePath)
-                        }
-                        successCount++
-                    }
-                }
-
-                // Process target slots
-                for (slot in targetSlots) {
-                    for (item in slot.items) {
-                        coroutineContext.ensureActive()
-                        when (item) {
-                            is FileClipboard.ClipItem.Local -> {
-                                try {
-                                    processLocalItem(item.file, java.io.File(effectiveDestDir, item.file.name), item.operation)
-                                } catch (e: CancellationException) {
-                                    throw e
-                                } catch (e: Exception) {
-                                    failCount++
-                                }
-                            }
-                            is FileClipboard.ClipItem.Remote -> {
-                                var share = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this@FileBrowserActivity).getById(item.sourceShareId)
-                                if (share?.isServerMode == true && item.sourceRemotePath.isNotEmpty()) {
-                                    share = share.copy(remotePath = item.sourceRemotePath)
-                                }
-                                if (share == null) {
-                                    val pairedDevice = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@FileBrowserActivity).getPairedDevice(item.sourceShareId)
-                                    if (pairedDevice != null && pairedDevice.isConnected) {
-                                        share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                                            id = pairedDevice.deviceId,
-                                            name = pairedDevice.name,
-                                            type = za.kilowatch.ultimatefilemanager.network.ShareType.TV,
-                                            host = pairedDevice.lastIp,
-                                            port = pairedDevice.lastPort
-                                        )
-                                    }
-                                }
-                                if (share == null) {
-                                    val onlineStorage = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this@FileBrowserActivity).getById(item.sourceShareId)
-                                    if (onlineStorage != null) {
-                                        share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                                            id = onlineStorage.id,
-                                            name = onlineStorage.displayName,
-                                            type = when (onlineStorage.provider) {
-                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
-                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
-                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX
-                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
-                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
-                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                                            },
-                                            host = when (onlineStorage.provider) {
-                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
-                                                else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUrl ?: onlineStorage.email else onlineStorage.s3Endpoint ?: onlineStorage.email
-                                            },
-                                            username = when (onlineStorage.provider) {
-                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> onlineStorage.id
-                                                else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUsername ?: "" else onlineStorage.s3AccessKey ?: ""
-                                            },
-                                            password = if (onlineStorage.isWebDavProvider) onlineStorage.webDavPassword ?: "" else onlineStorage.s3SecretKey ?: "",
-                                            readOnly = false
-                                        )
-                                    }
-                                }
-
-                                if (share != null) {
-                                    try {
-                                        processNetItem(item.file, java.io.File(currentDir, item.file.name), share, item.operation)
-                                    } catch (e: kotlinx.coroutines.CancellationException) {
-                                        throw e
-                                    } catch (e: Exception) {
-                                        if (isCancelled) throw CancellationException()
-                                        failCount++
-                                    }
-                                } else {
-                                    failCount++
-                                }
-                            }
-                        }
-                    }
-                    FileClipboard.removeSlot(slot.id)
-                }
-
-                if (targetSlotId == null) {
-                    FileClipboard.clear()
-                }
-                quickTransferDestDir = null
-                flushIndices()
-
-                withContext(Dispatchers.Main) {
-                    isTransferring = false
-                    dialog.dismiss()
-
-                    if (isQuickTransferPickerMode) {
-                        val result = Intent().apply {
-                            putExtra(RESULT_SELECTED_LOCAL_PATH, quickTransferDestDir?.absolutePath ?: currentDir.absolutePath)
-                            putExtra("QT_SUCCESS_COUNT", successCount)
-                            putExtra("QT_FAIL_COUNT", failCount)
-                        }
-                        setResult(RESULT_OK, result)
-                        finish()
-                        return@withContext
-                    }
-
+                // Cancelled (dialog or notification): behave like the old in-app cancel — dismiss,
+                // refresh, and stay (a quick-picker keeps its destination folder so the user can retry).
+                if (summary.cancelled) {
                     updatePasteFab()
                     loadDirectory(currentDir)
-                    InstantSyncWatcher.notifyDirectoryChanged(this@FileBrowserActivity, currentDir.absolutePath)
-
-                    if (failCount == 0 && successCount > 0) {
-                        if (isExtractOperation) showPremiumSnackbar(getString(R.string.extract_move_success, successCount))
-                        else showPremiumSnackbar(getString(R.string.paste_success, successCount))
-                    } else if (failCount > 0) {
-                        showPremiumSnackbar(getString(R.string.paste_error))
-                    }
+                    return
                 }
-            } finally {
-                isTransferring = false
-                za.kilowatch.ultimatefilemanager.util.TransferService.stop(this@FileBrowserActivity)
+
+                quickTransferDestDir = null
+                if (isQuickTransferPickerMode) {
+                    val result = Intent().apply {
+                        putExtra(RESULT_SELECTED_LOCAL_PATH, effectiveDestDir.absolutePath)
+                        putExtra("QT_SUCCESS_COUNT", summary.successCount)
+                        putExtra("QT_FAIL_COUNT", summary.failCount)
+                    }
+                    setResult(RESULT_OK, result)
+                    finish()
+                    return
+                }
+
+                updatePasteFab()
+                loadDirectory(currentDir)
+                InstantSyncWatcher.notifyDirectoryChanged(this@FileBrowserActivity, currentDir.absolutePath)
+
+                if (summary.failCount == 0 && summary.successCount > 0) {
+                    if (summary.isExtract) showPremiumSnackbar(getString(R.string.extract_move_success, summary.successCount))
+                    else showPremiumSnackbar(getString(R.string.paste_success, summary.successCount))
+                } else if (summary.failCount > 0) {
+                    showPremiumSnackbar(getString(R.string.paste_error))
+                }
             }
+        }
+
+        // Cancel → abort via the holder (closes sockets, cancels the coroutine).
+        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+            if (isFinishing || isDestroyed) return@setOnClickListener
+            za.kilowatch.ultimatefilemanager.util.TransferManager.cancelAll()
+        }
+
+        val engineCtx = LocalPasteEngine.LocalPasteContext(
+            appContext = applicationContext,
+            currentDir = currentDir,
+            effectiveDestDir = effectiveDestDir,
+            storageId = storageId,
+            storageType = storageType,
+            slots = targetSlots,
+            targetSlotId = targetSlotId
+        )
+
+        za.kilowatch.ultimatefilemanager.util.TransferManager.submit(ui, currentDir.absolutePath, isExtractOperation) { session ->
+            LocalPasteEngine.pasteIntoLocal(session, engineCtx)
         }
     }
 

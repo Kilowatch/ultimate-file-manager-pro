@@ -4025,6 +4025,15 @@ Definir imagem selecionada como papel de parede da tela inicial
     <string name="toolbar_desc_set_lock_wallpaper">
 Definir imagem selecionada como papel de parede da tela de bloqueio
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Definir o áudio selecionado como toque do telefone
+</string>
+    <string name="toolbar_desc_set_notification">
+Definir o áudio selecionado como som de notificação
+</string>
+    <string name="toolbar_desc_set_alarm">
+Definir o áudio selecionado como som de alarme
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Escanear e detectar arquivos duplicados
 </string>
@@ -7592,6 +7601,15 @@ Transferência de arquivos
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Mantém as transferências de arquivos ativas com a tela desligada
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — tentando novamente %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — aguardando reconexão…
+</string>
+    <string name="transfer_error_unreachable">
+Não foi possível alcançar o destino — transferência interrompida
 </string>
     <string name="open_with_1">
 Abrir com
@@ -11971,6 +11989,53 @@ Deseja definir \"%1$s\" como papel de parede da tela de bloqueio?
     <string name="action_set_wallpaper">
 Definir papel de parede
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Definir como toque
+</string>
+    <string name="action_set_notification">
+Definir como som de notificação
+</string>
+    <string name="action_set_alarm">
+Definir como som de alarme
+</string>
+    <string name="ringtone_confirm_title">
+Definir como som do sistema
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+Deseja definir \"%1$s\" como toque padrão do telefone?
+</string>
+    <string name="ringtone_confirm_notification_message">
+Deseja definir \"%1$s\" como som de notificação padrão?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+Deseja definir \"%1$s\" como som de alarme padrão?
+</string>
+    <string name="toast_ringtone_set_success">
+Toque do telefone atualizado
+</string>
+    <string name="toast_notification_set_success">
+Som de notificação atualizado
+</string>
+    <string name="toast_alarm_set_success">
+Som de alarme atualizado
+</string>
+    <string name="toast_sound_set_failed">
+Falha ao definir o som. Verifique a permissão para modificar configurações do sistema.
+</string>
+    <string name="toast_sound_permission_required">
+Para definir sons do sistema, é necessária a permissão para modificar configurações do sistema
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Definir como toque
+</string>
+    <string name="icon_toolbar_set_notification">
+Definir como som de notificação
+</string>
+    <string name="icon_toolbar_set_alarm">
+Definir como som de alarme
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Toque no ícone para editar
@@ -12620,6 +12685,18 @@ Envie um e-mail diretamente para a equipe de desenvolvimento
 </string>
     <string name="support_direct_email_copied">
 E-mail de suporte copiado para a área de transferência
+</string>
+    <string name="support_section_community">
+Comunidade
+</string>
+    <string name="support_translation_hub_title">
+Central de Tradução da Comunidade
+</string>
+    <string name="support_translation_hub_subtitle">
+Ajude a melhorar as traduções e a sugerir correções
+</string>
+    <string name="support_translation_hub_copied">
+Link da Central de Tradução copiado para a área de transferência
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ Duplicado: %s
 </string>
     <string name="close_all_tabs">
 Fechar todas as abas
+</string>
+    <string name="tab_rename">
+Renomear aba
+</string>
+    <string name="storage_network">
+Rede
+</string>
+    <string name="storage_cloud">
+Nuvem
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

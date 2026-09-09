@@ -4025,6 +4025,15 @@ Jadikan gambar yang dipilih sebagai wallpaper layar beranda
     <string name="toolbar_desc_set_lock_wallpaper">
 Jadikan gambar yang dipilih sebagai wallpaper layar kunci
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Setel audio yang dipilih sebagai nada dering telepon
+</string>
+    <string name="toolbar_desc_set_notification">
+Setel audio yang dipilih sebagai suara notifikasi
+</string>
+    <string name="toolbar_desc_set_alarm">
+Setel audio yang dipilih sebagai suara alarm
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Pindai dan deteksi file duplikat
 </string>
@@ -7592,6 +7601,15 @@ Transfer Berkas
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Menjaga transfer berkas tetap aktif saat layar mati
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — mencoba lagi %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — menunggu untuk terhubung kembali…
+</string>
+    <string name="transfer_error_unreachable">
+Tidak dapat menjangkau tujuan — transfer dihentikan
 </string>
     <string name="open_with_1">
 Buka dengan
@@ -11971,6 +11989,53 @@ Apakah Anda ingin mengatur \"%1$s\" sebagai wallpaper layar kunci?
     <string name="action_set_wallpaper">
 Atur Wallpaper
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Setel sebagai Nada Dering
+</string>
+    <string name="action_set_notification">
+Setel sebagai Suara Notifikasi
+</string>
+    <string name="action_set_alarm">
+Setel sebagai Suara Alarm
+</string>
+    <string name="ringtone_confirm_title">
+Setel Suara Sistem
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+Apakah Anda ingin menyetel \"%1$s\" sebagai nada dering default telepon Anda?
+</string>
+    <string name="ringtone_confirm_notification_message">
+Apakah Anda ingin menyetel \"%1$s\" sebagai suara notifikasi default Anda?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+Apakah Anda ingin menyetel \"%1$s\" sebagai suara alarm default Anda?
+</string>
+    <string name="toast_ringtone_set_success">
+Nada dering telepon diperbarui
+</string>
+    <string name="toast_notification_set_success">
+Suara notifikasi diperbarui
+</string>
+    <string name="toast_alarm_set_success">
+Suara alarm diperbarui
+</string>
+    <string name="toast_sound_set_failed">
+Gagal menyetel suara. Periksa izin Write Settings.
+</string>
+    <string name="toast_sound_permission_required">
+Izin Write Settings diperlukan untuk menyetel suara sistem
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Setel sebagai Nada Dering
+</string>
+    <string name="icon_toolbar_set_notification">
+Setel sebagai Suara Notifikasi
+</string>
+    <string name="icon_toolbar_set_alarm">
+Setel sebagai Suara Alarm
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Ketuk ikon untuk mengedit
@@ -12620,6 +12685,18 @@ Email tim pengembangan secara langsung
 </string>
     <string name="support_direct_email_copied">
 Email dukungan disalin ke clipboard
+</string>
+    <string name="support_section_community">
+Komunitas
+</string>
+    <string name="support_translation_hub_title">
+Pusat Terjemahan Komunitas
+</string>
+    <string name="support_translation_hub_subtitle">
+Bantu tingkatkan terjemahan dan sarankan koreksi
+</string>
+    <string name="support_translation_hub_copied">
+Tautan Pusat Terjemahan disalin ke papan klip
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ Duplikat: %s
 </string>
     <string name="close_all_tabs">
 Tutup semua tab
+</string>
+    <string name="tab_rename">
+Ganti Nama Tab
+</string>
+    <string name="storage_network">
+Jaringan
+</string>
+    <string name="storage_cloud">
+Cloud
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

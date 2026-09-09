@@ -4025,6 +4025,15 @@ Imposta l\'immagine selezionata come sfondo della schermata iniziale
     <string name="toolbar_desc_set_lock_wallpaper">
 Imposta l\'immagine selezionata come sfondo della schermata di blocco
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Imposta l\\\'audio selezionato come suoneria del telefono
+</string>
+    <string name="toolbar_desc_set_notification">
+Imposta l\\\'audio selezionato come suono di notifica
+</string>
+    <string name="toolbar_desc_set_alarm">
+Imposta l\\\'audio selezionato come suono della sveglia
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Scansiona e rileva file duplicati
 </string>
@@ -7592,6 +7601,15 @@ Trasferimento file
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Mantiene attivi i trasferimenti di file durante lo spegnimento dello schermo
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — nuovo tentativo %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — in attesa di riconnessione…
+</string>
+    <string name="transfer_error_unreachable">
+Impossibile raggiungere la destinazione — trasferimento interrotto
 </string>
     <string name="open_with_1">
 Apri con
@@ -11971,6 +11989,53 @@ Vuoi impostare \"%1$s\" come sfondo della schermata di blocco?
     <string name="action_set_wallpaper">
 Imposta lo sfondo
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Imposta come suoneria
+</string>
+    <string name="action_set_notification">
+Imposta come suono di notifica
+</string>
+    <string name="action_set_alarm">
+Imposta come suono della sveglia
+</string>
+    <string name="ringtone_confirm_title">
+Imposta suono di sistema
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+Vuoi impostare \"%1$s\" come suoneria predefinita del telefono?
+</string>
+    <string name="ringtone_confirm_notification_message">
+Vuoi impostare \"%1$s\" come suono di notifica predefinito?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+Vuoi impostare \"%1$s\" come suono della sveglia predefinito?
+</string>
+    <string name="toast_ringtone_set_success">
+Suoneria aggiornata
+</string>
+    <string name="toast_notification_set_success">
+Suono di notifica aggiornato
+</string>
+    <string name="toast_alarm_set_success">
+Suono della sveglia aggiornato
+</string>
+    <string name="toast_sound_set_failed">
+Impossibile impostare il suono. Controlla l\\\'autorizzazione di modifica delle impostazioni di sistema.
+</string>
+    <string name="toast_sound_permission_required">
+È necessaria l\\\'autorizzazione di modifica delle impostazioni di sistema per impostare i suoni di sistema
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Imposta come suoneria
+</string>
+    <string name="icon_toolbar_set_notification">
+Imposta come suono di notifica
+</string>
+    <string name="icon_toolbar_set_alarm">
+Imposta come suono della sveglia
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Tocca l\'icona per modificare
@@ -12620,6 +12685,18 @@ Invia un\'e-mail direttamente al team di sviluppo
 </string>
     <string name="support_direct_email_copied">
 E-mail di supporto copiata negli appunti
+</string>
+    <string name="support_section_community">
+Comunità
+</string>
+    <string name="support_translation_hub_title">
+Hub di traduzione della comunità
+</string>
+    <string name="support_translation_hub_subtitle">
+Contribuisci a migliorare le traduzioni e suggerisci correzioni
+</string>
+    <string name="support_translation_hub_copied">
+Link dell\\\'Hub di traduzione copiato negli appunti
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ Scheda duplicata: %s
 </string>
     <string name="close_all_tabs">
 Chiudi tutte le schede
+</string>
+    <string name="tab_rename">
+Rinomina scheda
+</string>
+    <string name="storage_network">
+Rete
+</string>
+    <string name="storage_cloud">
+Cloud
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

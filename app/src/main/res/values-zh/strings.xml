@@ -4025,6 +4025,15 @@ UFM 颜色代码
     <string name="toolbar_desc_set_lock_wallpaper">
 将选定的图像设置为锁屏壁纸
 </string>
+    <string name="toolbar_desc_set_ringtone">
+将所选音频设为手机铃声
+</string>
+    <string name="toolbar_desc_set_notification">
+将所选音频设为通知提示音
+</string>
+    <string name="toolbar_desc_set_alarm">
+将所选音频设为闹钟铃声
+</string>
     <string name="toolbar_desc_duplicate_finder">
 扫描并检测重复文件
 </string>
@@ -7592,6 +7601,15 @@ UFM 文件传输
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 在屏幕关闭期间保持文件传输活动
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — 正在重试 %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — 等待重新连接…
+</string>
+    <string name="transfer_error_unreachable">
+无法访问目标位置 — 传输已停止
 </string>
     <string name="open_with_1">
 打开方式
@@ -11971,6 +11989,53 @@ UFM 在您上次会话期间停止响应。您想发送冻结报告来帮助我�
     <string name="action_set_wallpaper">
 设置壁纸
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+设为铃声
+</string>
+    <string name="action_set_notification">
+设为通知提示音
+</string>
+    <string name="action_set_alarm">
+设为闹钟铃声
+</string>
+    <string name="ringtone_confirm_title">
+设置系统声音
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+是否要将“%1$s”设为默认手机铃声？
+</string>
+    <string name="ringtone_confirm_notification_message">
+是否要将“%1$s”设为默认通知提示音？
+</string>
+    <string name="ringtone_confirm_alarm_message">
+是否要将“%1$s”设为默认闹钟铃声？
+</string>
+    <string name="toast_ringtone_set_success">
+手机铃声已更新
+</string>
+    <string name="toast_notification_set_success">
+通知提示音已更新
+</string>
+    <string name="toast_alarm_set_success">
+闹钟铃声已更新
+</string>
+    <string name="toast_sound_set_failed">
+设置声音失败。请检查“写入系统设置”权限。
+</string>
+    <string name="toast_sound_permission_required">
+设置系统声音需要“写入系统设置”权限
+</string>
+    <string name="icon_toolbar_set_ringtone">
+设为铃声
+</string>
+    <string name="icon_toolbar_set_notification">
+设为通知提示音
+</string>
+    <string name="icon_toolbar_set_alarm">
+设为闹钟铃声
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 点击图标进行编辑
@@ -12620,6 +12685,18 @@ DLNA 服务
 </string>
     <string name="support_direct_email_copied">
 支持电子邮件复制到剪贴板
+</string>
+    <string name="support_section_community">
+社区
+</string>
+    <string name="support_translation_hub_title">
+社区翻译中心
+</string>
+    <string name="support_translation_hub_subtitle">
+帮助改进翻译并提出更正建议
+</string>
+    <string name="support_translation_hub_copied">
+翻译中心链接已复制到剪贴板
 </string>
 
     <!-- About Modernization -->
@@ -13872,6 +13949,15 @@ PIN 码不正确。剩余 %1$d 次尝试
 </string>
     <string name="close_all_tabs">
 关闭所有标签页
+</string>
+    <string name="tab_rename">
+重命名标签页
+</string>
+    <string name="storage_network">
+网络
+</string>
+    <string name="storage_cloud">
+云端
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

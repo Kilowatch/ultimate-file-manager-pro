@@ -4025,6 +4025,15 @@ Seçili görüntüyü ana ekran duvar kağıdı olarak ayarla
     <string name="toolbar_desc_set_lock_wallpaper">
 Seçili görüntüyü kilit ekranı duvar kağıdı olarak ayarla
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Seçilen sesi telefon zil sesi olarak ayarla
+</string>
+    <string name="toolbar_desc_set_notification">
+Seçilen sesi bildirim sesi olarak ayarla
+</string>
+    <string name="toolbar_desc_set_alarm">
+Seçilen sesi alarm sesi olarak ayarla
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Yinelenen dosyaları tara ve algıla
 </string>
@@ -7592,6 +7601,15 @@ Dosya Aktarımı
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Ekran kapalıyken dosya aktarımlarını canlı tutar
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — yeniden deneniyor %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — yeniden bağlanma bekleniyor…
+</string>
+    <string name="transfer_error_unreachable">
+Hedefe ulaşılamadı — aktarım durduruldu
 </string>
     <string name="open_with_1">
 Birlikte aç
@@ -11971,6 +11989,53 @@ Kilit ekranı duvar kağıdı olarak \"%1$s\" ayarlamak istiyor musunuz?
     <string name="action_set_wallpaper">
 Duvar Kağıdını Ayarla
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Zil sesi olarak ayarla
+</string>
+    <string name="action_set_notification">
+Bildirim sesi olarak ayarla
+</string>
+    <string name="action_set_alarm">
+Alarm sesi olarak ayarla
+</string>
+    <string name="ringtone_confirm_title">
+Sistem sesi olarak ayarla
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+\"%1$s\" öğesini varsayılan telefon zil sesi olarak ayarlamak istiyor musunuz?
+</string>
+    <string name="ringtone_confirm_notification_message">
+\"%1$s\" öğesini varsayılan bildirim sesi olarak ayarlamak istiyor musunuz?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+\"%1$s\" öğesini varsayılan alarm sesi olarak ayarlamak istiyor musunuz?
+</string>
+    <string name="toast_ringtone_set_success">
+Telefon zil sesi güncellendi
+</string>
+    <string name="toast_notification_set_success">
+Bildirim sesi güncellendi
+</string>
+    <string name="toast_alarm_set_success">
+Alarm sesi güncellendi
+</string>
+    <string name="toast_sound_set_failed">
+Ses ayarlanamadı. Sistem ayarlarına yazma iznini kontrol edin.
+</string>
+    <string name="toast_sound_permission_required">
+Sistem seslerini ayarlamak için sistem ayarlarına yazma izni gerekli
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Zil sesi olarak ayarla
+</string>
+    <string name="icon_toolbar_set_notification">
+Bildirim sesi olarak ayarla
+</string>
+    <string name="icon_toolbar_set_alarm">
+Alarm sesi olarak ayarla
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Düzenlemek için simgeye dokunun
@@ -12620,6 +12685,18 @@ Geliştirme ekibine doğrudan e-posta gönderin
 </string>
     <string name="support_direct_email_copied">
 Destek e-postası panoya kopyalandı
+</string>
+    <string name="support_section_community">
+Topluluk
+</string>
+    <string name="support_translation_hub_title">
+Topluluk Çeviri Merkezi
+</string>
+    <string name="support_translation_hub_subtitle">
+Çevirileri iyileştirmeye yardım edin ve düzeltmeler önerin
+</string>
+    <string name="support_translation_hub_copied">
+Çeviri Merkezi bağlantısı panoya kopyalandı
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ Tarayıcı Sekmeleri ve Oturumlar
 </string>
     <string name="close_all_tabs">
 Tüm sekmeleri kapat
+</string>
+    <string name="tab_rename">
+Sekmeyi yeniden adlandır
+</string>
+    <string name="storage_network">
+Ağ
+</string>
+    <string name="storage_cloud">
+Bulut
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

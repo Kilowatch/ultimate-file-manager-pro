@@ -4009,6 +4009,15 @@ Ställ in vald bild som bakgrundsbild på startskärmen
     <string name="toolbar_desc_set_lock_wallpaper">
 Ställ in den valda bilden som bakgrundsbild på låsskärmen
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Ställ in vald ljudfil som ringsignal
+</string>
+    <string name="toolbar_desc_set_notification">
+Ställ in vald ljudfil som aviseringsljud
+</string>
+    <string name="toolbar_desc_set_alarm">
+Ställ in vald ljudfil som alarmljud
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Skanna och upptäck dubbletter av filer
 </string>
@@ -7576,6 +7585,15 @@ Filöverföring
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Håller filöverföringar vid liv under skärmavstängning
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — försöker igen %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — väntar på återanslutning…
+</string>
+    <string name="transfer_error_unreachable">
+Det gick inte att nå destinationen — överföringen stoppades
 </string>
     <string name="open_with_1">
 Öppna med
@@ -11948,6 +11966,53 @@ Vill du ställa in \"%1$s\" som bakgrund på låsskärmen?
     <string name="action_set_wallpaper">
 Ställ in Bakgrund
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Ställ in som ringsignal
+</string>
+    <string name="action_set_notification">
+Ställ in som aviseringsljud
+</string>
+    <string name="action_set_alarm">
+Ställ in som alarmljud
+</string>
+    <string name="ringtone_confirm_title">
+Ställ in systemljud
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+Vill du ställa in \"%1$s\" som standardringsignal?
+</string>
+    <string name="ringtone_confirm_notification_message">
+Vill du ställa in \"%1$s\" som standardaviseringsljud?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+Vill du ställa in \"%1$s\" som standardalarmljud?
+</string>
+    <string name="toast_ringtone_set_success">
+Telefonens ringsignal har uppdaterats
+</string>
+    <string name="toast_notification_set_success">
+Aviseringsljudet har uppdaterats
+</string>
+    <string name="toast_alarm_set_success">
+Alarmljudet har uppdaterats
+</string>
+    <string name="toast_sound_set_failed">
+Det gick inte att ställa in ljudet. Kontrollera behörigheten att ändra systeminställningar.
+</string>
+    <string name="toast_sound_permission_required">
+Det krävs behörighet att ändra systeminställningar för att ställa in systemljud.
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Ställ in som ringsignal
+</string>
+    <string name="icon_toolbar_set_notification">
+Ställ in som aviseringsljud
+</string>
+    <string name="icon_toolbar_set_alarm">
+Ställ in som alarmljud
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Tryck på ikonen för att redigera
@@ -12597,6 +12662,18 @@ Maila utvecklingsteamet direkt
 </string>
     <string name="support_direct_email_copied">
 Support e-post kopierad till urklipp
+</string>
+    <string name="support_section_community">
+Community
+</string>
+    <string name="support_translation_hub_title">
+Översättningsnav för Community
+</string>
+    <string name="support_translation_hub_subtitle">
+Hjälp till att förbättra översättningarna och föreslå korrigeringar
+</string>
+    <string name="support_translation_hub_copied">
+Länken till översättningsnavet kopierades till urklipp.
 </string>
 
     <!-- About Modernization -->
@@ -13850,6 +13927,15 @@ Duplicerad: %s
 </string>
     <string name="close_all_tabs">
 Stäng alla flikar
+</string>
+    <string name="tab_rename">
+Byt namn på flik
+</string>
+    <string name="storage_network">
+Nätverk
+</string>
+    <string name="storage_cloud">
+Moln
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

@@ -30,6 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RClone/cloud folder listings are cached so navigation does not re-fetch and re-parse the whole folder every time.
 
 ### Fixed
+- Fixed file transfers (copy, move, and cloud upload/download) stopping when the screen turns off — most notably large copies to a NAS over SMB:
+  - Transfers now run on a shared, app-scoped transfer holder with a persistent, cancellable foreground notification, so they survive screen-off, backgrounding, and the launching screen being destroyed.
+  - Transient connection drops (SMB/FTP/SFTP/cloud) are retried automatically — up to 5 attempts per file, waiting for the network to return (~5-minute budget) — and the whole transfer stops with a clear error only when the destination is truly unreachable.
+  - Permanent errors (auth, permission, disk full, missing source) fail that file immediately without retrying.
+  - Applies across local, SAF, network shares, and online/RClone cloud — each as both source and destination.
 - Fixed cloud (RClone) videos opened from an added storage location buffering indefinitely or never starting; they now start quickly and can be seeked.
 - Fixed external "Open with" for RClone storage-location media handing players a stream without a valid length, which caused players to reject it.
 - Fixed playback treating a transient cloud connection hiccup as the end of the file; reads are now retried instead.

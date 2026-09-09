@@ -2641,6 +2641,9 @@
     <string name="transferring_files_1">Transferring files…</string>
     <string name="file_transfer">File Transfer</string>
     <string name="keeps_file_transfers_alive_during_screenoff">Keeps file transfers alive during screen-off</string>
+    <string name="transfer_retrying_notif">%1$s — retrying %2$d/%3$d</string>
+    <string name="transfer_waiting_notif">%1$s — waiting to reconnect…</string>
+    <string name="transfer_error_unreachable">Could not reach the destination — transfer stopped</string>
     <string name="open_with_1">Open with</string>
     <string name="ufm_viewer">UFM Viewer</string>
     <string name="ufm_slideshow">UFM Slide Show</string>

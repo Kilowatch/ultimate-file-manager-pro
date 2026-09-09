@@ -4025,6 +4025,15 @@ OK
     <string name="toolbar_desc_set_lock_wallpaper">
 Встановити вибране зображення як шпалери екрана блокування
 </string>
+    <string name="toolbar_desc_set_ringtone">
+Встановити вибраний аудіофайл як рингтон телефону
+</string>
+    <string name="toolbar_desc_set_notification">
+Встановити вибраний аудіофайл як звук сповіщення
+</string>
+    <string name="toolbar_desc_set_alarm">
+Встановити вибраний аудіофайл як звук будильника
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Сканувати та виявляти дублікати файлів
 </string>
@@ -7592,6 +7601,15 @@ ADB-з\\\'єднання встановлено через процедуру п
 </string>
     <string name="keeps_file_transfers_alive_during_screenoff">
 Підтримує передачу файлів при вимкненому екрані
+</string>
+    <string name="transfer_retrying_notif">
+%1$s — повторна спроба %2$d/%3$d
+</string>
+    <string name="transfer_waiting_notif">
+%1$s — очікування повторного підключення…
+</string>
+    <string name="transfer_error_unreachable">
+Не вдалося досягти призначення — передачу зупинено
 </string>
     <string name="open_with_1">
 Відкрити за допомогою
@@ -11971,6 +11989,53 @@ UFM перестав відповідати під час вашого оста�
     <string name="action_set_wallpaper">
 Встановити шпалери
 </string>
+
+    <!-- System Sound Actions -->
+    <string name="action_set_ringtone">
+Встановити як рингтон
+</string>
+    <string name="action_set_notification">
+Встановити як звук сповіщення
+</string>
+    <string name="action_set_alarm">
+Встановити як звук будильника
+</string>
+    <string name="ringtone_confirm_title">
+Встановити системний звук
+</string>
+    <string name="ringtone_confirm_ringtone_message">
+Ви хочете встановити \"%1$s\" як рингтон телефону за замовчуванням?
+</string>
+    <string name="ringtone_confirm_notification_message">
+Ви хочете встановити \"%1$s\" як звук сповіщення за замовчуванням?
+</string>
+    <string name="ringtone_confirm_alarm_message">
+Ви хочете встановити \"%1$s\" як звук будильника за замовчуванням?
+</string>
+    <string name="toast_ringtone_set_success">
+Рингтон телефону оновлено
+</string>
+    <string name="toast_notification_set_success">
+Звук сповіщення оновлено
+</string>
+    <string name="toast_alarm_set_success">
+Звук будильника оновлено
+</string>
+    <string name="toast_sound_set_failed">
+Не вдалося встановити звук. Перевірте дозвіл на змінення системних налаштувань.
+</string>
+    <string name="toast_sound_permission_required">
+Для встановлення системних звуків потрібен дозвіл на змінення системних налаштувань.
+</string>
+    <string name="icon_toolbar_set_ringtone">
+Встановити як рингтон
+</string>
+    <string name="icon_toolbar_set_notification">
+Встановити як звук сповіщення
+</string>
+    <string name="icon_toolbar_set_alarm">
+Встановити як звук будильника
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Торкніться значка, щоб редагувати
@@ -12620,6 +12685,18 @@ support@kilowatch.co.za
 </string>
     <string name="support_direct_email_copied">
 Електронну адресу підтримки скопійовано в буфер обміну
+</string>
+    <string name="support_section_community">
+Спільнота
+</string>
+    <string name="support_translation_hub_title">
+Центр перекладів спільноти
+</string>
+    <string name="support_translation_hub_subtitle">
+Допоможіть покращити переклади та пропонуйте виправлення
+</string>
+    <string name="support_translation_hub_copied">
+Посилання на центр перекладів скопійовано в буфер обміну
 </string>
 
     <!-- About Modernization -->
@@ -13873,6 +13950,15 @@ SHA-256
 </string>
     <string name="close_all_tabs">
 Закрити всі вкладки
+</string>
+    <string name="tab_rename">
+Перейменувати вкладку
+</string>
+    <string name="storage_network">
+Мережа
+</string>
+    <string name="storage_cloud">
+Хмара
 </string>
     
     <!-- SAF & External File Pickers Exposure -->

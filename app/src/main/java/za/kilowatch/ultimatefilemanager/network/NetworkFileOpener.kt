@@ -665,7 +665,10 @@ object NetworkFileOpener {
                     if (supportsProxy) {
                         val proxyUrl = NetworkHttpProxyServer.register(share, file.path, mime, file.size)
                         val mediaTypeLabel = if (FileViewerRouter.isVideo(ext)) "video" else "audio"
-                        TransferService.start(activity, "Streaming $mediaTypeLabel file", "Streaming ${file.name} to external player")
+                        // Released by the host Activity's onResume (TransferManager.endStream) when the player returns.
+                        za.kilowatch.ultimatefilemanager.util.TransferManager.startStream(
+                            "Streaming $mediaTypeLabel file", "Streaming ${file.name} to external player"
+                        )
 
                         val isExternalVideo = FileViewerRouter.isVideo(ext)
                         val proxySubtitleUris: List<Uri> = if (isExternalVideo && forceExternal) {
