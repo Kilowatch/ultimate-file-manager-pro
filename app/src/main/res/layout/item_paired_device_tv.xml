@@ -88,6 +88,6 @@
         android:focusable="false"
         android:padding="16dp"
         android:src="@drawable/ic_delete"
-        android:tint="@color/tv_error_red" />
+        android:tint="?attr/ufmTvErrorRed" />
 
 </LinearLayout>

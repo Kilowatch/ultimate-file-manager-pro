@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.storage.TileIconManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -143,6 +144,7 @@ class IconPackExportActivity : AppCompatActivity() {
             "settings_twin_window_layout", "settings_twin_window_startup",
             "settings_side_by_side_video", "settings_side_by_side_video_show_controls_on_repeat", "settings_breadcrumbs", "settings_default_apps",
             "settings_font_size", "settings_apk_extract", "settings_long_press",
+            "settings_colorblind",
             "settings_controls_timeout",
             "settings_toolbar_icons", "settings_favorites", "settings_custom_drive_names",
             "settings_file_server_tiles", "settings_hidden_files", "settings_recycle_bin",
@@ -192,7 +194,8 @@ class IconPackExportActivity : AppCompatActivity() {
         categories.add(CategorySelection(
             "status", getString(R.string.category_status),
             listOf("status_warning", "status_warning_badge", "status_check_circle",
-                "status_shield_check", "status_shield_alert")
+                "status_shield_check", "status_shield_alert",
+                "status_success", "status_warning_glyph", "status_error")
         ))
 
         // View Modes (3)
@@ -276,8 +279,8 @@ class IconPackExportActivity : AppCompatActivity() {
         dialog.show()
 
         if (isTv) {
-            val yellow = getColor(R.color.tv_button_focused_yellow)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(this)
+            val black = ColorblindPalette.focusFillText(this)
             val white = getColor(R.color.tv_text_primary)
             val glass = 0x26FFFFFF.toInt()
 
@@ -285,7 +288,7 @@ class IconPackExportActivity : AppCompatActivity() {
             btnEncrypt.setTextColor(black)
             btnEncrypt.setOnFocusChangeListener { _, hasFocus ->
                 btnEncrypt.backgroundTintList =
-                    if (hasFocus) ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    if (hasFocus) ColorStateList.valueOf(ColorblindPalette.focusFill(this))
                     else ColorStateList.valueOf(yellow)
             }
 
@@ -329,8 +332,8 @@ class IconPackExportActivity : AppCompatActivity() {
         confirmDialog.show()
 
         if (isTv) {
-            val yellow = getColor(R.color.tv_button_focused_yellow)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(this)
+            val black = ColorblindPalette.focusFillText(this)
             val white = getColor(R.color.tv_text_primary)
             val glass = 0x26FFFFFF.toInt()
 
@@ -338,7 +341,7 @@ class IconPackExportActivity : AppCompatActivity() {
             btnSaveUnencrypted.setTextColor(black)
             btnSaveUnencrypted.setOnFocusChangeListener { _, hasFocus ->
                 btnSaveUnencrypted.backgroundTintList =
-                    if (hasFocus) ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    if (hasFocus) ColorStateList.valueOf(ColorblindPalette.focusFill(this))
                     else ColorStateList.valueOf(yellow)
             }
 
@@ -387,8 +390,8 @@ class IconPackExportActivity : AppCompatActivity() {
     }
 
     private fun setupTvButtonFocus(btn: MaterialButton) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val defaultBg = getColor(R.color.btn_save_bg_tint)
         val defaultText = getColor(android.R.color.white)
 

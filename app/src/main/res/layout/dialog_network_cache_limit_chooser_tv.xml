@@ -83,7 +83,7 @@
                 android:id="@+id/rb500Mb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/tv_button_focused_yellow"
+                android:buttonTint="?attr/ufmFocusFill"
                 android:clickable="false"
                 android:focusable="false" />
         </LinearLayout>
@@ -124,7 +124,7 @@
                 android:id="@+id/rb1Gb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/tv_button_focused_yellow"
+                android:buttonTint="?attr/ufmFocusFill"
                 android:clickable="false"
                 android:focusable="false" />
         </LinearLayout>
@@ -165,7 +165,7 @@
                 android:id="@+id/rb2Gb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/tv_button_focused_yellow"
+                android:buttonTint="?attr/ufmFocusFill"
                 android:clickable="false"
                 android:focusable="false" />
         </LinearLayout>
@@ -206,7 +206,7 @@
                 android:id="@+id/rb5Gb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/tv_button_focused_yellow"
+                android:buttonTint="?attr/ufmFocusFill"
                 android:clickable="false"
                 android:focusable="false" />
         </LinearLayout>
@@ -247,7 +247,7 @@
                 android:id="@+id/rbCustom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/tv_button_focused_yellow"
+                android:buttonTint="?attr/ufmFocusFill"
                 android:clickable="false"
                 android:focusable="false" />
         </LinearLayout>

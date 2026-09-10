@@ -86,7 +86,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_check_circle"
-                app:tint="@color/tv_button_focused_yellow"
+                app:tint="?attr/ufmFocusFill"
                 android:contentDescription="@null" />
         </FrameLayout>
     </LinearLayout>

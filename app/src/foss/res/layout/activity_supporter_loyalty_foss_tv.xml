@@ -122,7 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/tip_jar_thanks"
-                android:textColor="@color/tv_button_focused_yellow_text"
+                android:textColor="?attr/ufmFocusFillText"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:gravity="center"

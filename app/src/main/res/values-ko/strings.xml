@@ -1573,6 +1573,107 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
     <string name="settings_section_privacy_diagnostics">
 개인정보 및 진단
 </string>
+    <string name="settings_section_accessibility">
+접근성
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+색약 모드
+</string>
+    <string name="colorblind_screen_subtitle">
+색상에 의존하지 않고 포커스, 선택 및 상태를 구분합니다.
+</string>
+    <string name="colorblind_subtitle_off">
+끔 — 표준 색상
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · %2$s 대비
+</string>
+    <string name="colorblind_group_type">
+유형
+</string>
+    <string name="colorblind_group_strength">
+대비 강도
+</string>
+    <string name="colorblind_group_strength_hint">
+강도가 높을수록 배경과의 구분이 커집니다.
+</string>
+    <string name="colorblind_type_off">
+끔
+</string>
+    <string name="colorblind_type_off_desc">
+앱의 표준 색상을 유지합니다.
+</string>
+    <string name="colorblind_type_red_green">
+적색-녹색
+</string>
+    <string name="colorblind_type_red_green_desc">
+제1색맹 및 제2색맹용. 적색과 녹색 상태가 파란색과 앰버 색상 쌍으로 재매핑됩니다.
+</string>
+    <string name="colorblind_type_blue_yellow">
+청색-황색
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+제3색맹용. 청색과 황색 상태가 마젠타와 녹색 쌍으로 재매핑됩니다.
+</string>
+    <string name="colorblind_type_high_contrast">
+고대비
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+색상 인식을 가정하지 않습니다. 상태는 밝기만으로 구분됩니다.
+</string>
+    <string name="colorblind_strength_low">
+낮음
+</string>
+    <string name="colorblind_strength_low_desc">
+최소 대비 3:1.
+</string>
+    <string name="colorblind_strength_medium">
+중간
+</string>
+    <string name="colorblind_strength_medium_desc">
+최소 대비 4.5:1. 권장.
+</string>
+    <string name="colorblind_strength_high">
+높음
+</string>
+    <string name="colorblind_strength_high_desc">
+최소 대비 7:1.
+</string>
+    <string name="colorblind_preview_title">
+미리보기
+</string>
+    <string name="colorblind_preview_hint">
+이 설정으로 생성되는 포커스, 선택 및 상태 색상을 표시합니다.
+</string>
+    <string name="colorblind_preview_unfocused">
+포커스 없음
+</string>
+    <string name="colorblind_preview_focused">
+포커스됨
+</string>
+    <string name="colorblind_preview_selected">
+선택됨
+</string>
+    <string name="colorblind_preview_success">
+성공
+</string>
+    <string name="colorblind_preview_warning">
+경고
+</string>
+    <string name="colorblind_preview_error">
+오류
+</string>
+    <string name="colorblind_status_success_desc">
+성공
+</string>
+    <string name="colorblind_status_warning_desc">
+경고
+</string>
+    <string name="colorblind_status_error_desc">
+오류
+</string>
     <string name="settings_search_bar_title">
 설정 검색창
 </string>
@@ -10456,6 +10557,15 @@ XML / 마크업
     <string name="icon_status_check_circle">
 체크 원
 </string>
+    <string name="icon_status_success">
+상태 성공
+</string>
+    <string name="icon_status_warning_glyph">
+상태 경고
+</string>
+    <string name="icon_status_error">
+상태 오류
+</string>
     <string name="icon_status_shield_check">
 방패 확인
 </string>
@@ -10534,6 +10644,9 @@ XML / 마크업
 </string>
     <string name="icon_settings_font_size">
 글꼴 크기
+</string>
+    <string name="icon_settings_colorblind">
+색약 모드
 </string>
     <string name="icon_settings_apk_extract">
 APK/XAPK 추출

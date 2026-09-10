@@ -38,6 +38,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.remote.PinDialogHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
@@ -47,6 +48,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
@@ -110,6 +112,7 @@ class VaultActivity : AppCompatActivity() {
         // SEC-§8.12: Prevent vault PIN and contents from appearing in recent-apps
         // thumbnails or being captured by screen recording / screenshot tools.
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val isTv = DeviceUtils.isTvDevice(this)
@@ -141,8 +144,8 @@ class VaultActivity : AppCompatActivity() {
 
             // Back button: white icon unfocused, black icon on yellow focus
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
+            val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(this))
             val glassCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_glass_white_15))
             val accentCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_accent))
 
@@ -154,7 +157,7 @@ class VaultActivity : AppCompatActivity() {
 
             // Add Folder button: white text + glass bg unfocused, black text + yellow bg focused
             btnAddFolder.setOnFocusChangeListener { _, hasFocus ->
-                btnAddFolder.setTextColor(if (hasFocus) getColor(R.color.tv_button_focused_yellow_text) else getColor(R.color.tv_text_primary))
+                btnAddFolder.setTextColor(if (hasFocus) ColorblindPalette.focusFillText(this) else getColor(R.color.tv_text_primary))
                 btnAddFolder.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
                 btnAddFolder.iconTint = if (hasFocus) blackCsl else accentCsl
             }
@@ -1237,9 +1240,9 @@ class VaultActivity : AppCompatActivity() {
             // On TV: make focused button clearly readable — white text + subtle scale
             if (isTv) {
                 val ctx = holder.itemView.context
-                val yellow = ctx.getColor(R.color.tv_button_focused_yellow)
-                val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
-                val dangerColor = ctx.getColor(R.color.ufm_denied)
+                val yellow = ColorblindPalette.focusFill(ctx)
+                val black = ColorblindPalette.focusFillText(ctx)
+                val dangerColor = ColorblindPalette.denied(ctx)
                 val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
                 val glassCsl = android.content.res.ColorStateList.valueOf(ctx.getColor(R.color.tv_glass_white_15))
                 val transparentCsl = android.content.res.ColorStateList.valueOf(0x00000000)

@@ -31,6 +31,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
@@ -422,25 +423,31 @@ class ChecksumDialogFragment : DialogFragment() {
         banner.visibility = View.VISIBLE
         if (matched) {
             banner.setBackgroundResource(R.drawable.bg_card_glass)
-            icon.setImageResource(R.drawable.ic_check)
-            icon.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_granted))
+            // FR-10: the glyph is the cue that survives when the remapped
+            // colours cannot be told apart. `statusIconOr` returns the site's
+            // own ic_check whenever the mode is off, so this line is a no-op
+            // then rather than a blank icon.
+            icon.setImageResource(ColorblindPalette.statusIconOr(
+                requireContext(), ColorblindPalette.StatusKind.SUCCESS, R.drawable.ic_check))
+            icon.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.statusSuccess(requireContext()))
             text.text = getString(R.string.checksum_match) + " (${matchedAlgo?.displayName})"
-            text.setTextColor(requireContext().getColor(R.color.ufm_granted))
+            text.setTextColor(ColorblindPalette.statusSuccess(requireContext()))
             banner.setOnClickListener(null)
         } else if (algoComputed) {
             banner.setBackgroundResource(R.drawable.bg_card_glass)
-            icon.setImageResource(R.drawable.ic_close)
-            icon.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_error_red))
+            icon.setImageResource(ColorblindPalette.statusIconOr(
+                requireContext(), ColorblindPalette.StatusKind.ERROR, R.drawable.ic_close))
+            icon.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.tvErrorRed(requireContext()))
             text.text = getString(R.string.checksum_mismatch)
-            text.setTextColor(requireContext().getColor(R.color.tv_error_red))
+            text.setTextColor(ColorblindPalette.tvErrorRed(requireContext()))
             banner.setOnClickListener(null)
         } else if (detectedAlgo != null) {
             // Algorithm not yet computed
             banner.setBackgroundResource(R.drawable.bg_card_glass)
             icon.setImageResource(R.drawable.ic_checksum)
-            icon.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_button_focused_yellow))
+            icon.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(requireContext()))
             text.text = getString(R.string.checksum_prompt_compute_algo, detectedAlgo.displayName)
-            text.setTextColor(requireContext().getColor(if (isTv) R.color.tv_button_focused_yellow else R.color.ufm_text_primary))
+            text.setTextColor(if (isTv) ColorblindPalette.focusFill(requireContext()) else requireContext().getColor(R.color.ufm_text_primary))
             banner.setOnClickListener {
                 activeAlgorithms.add(detectedAlgo)
                 ChecksumPreferenceManager.setSelectedAlgorithms(requireContext(), activeAlgorithms)

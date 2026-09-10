@@ -293,7 +293,7 @@
                     android:layout_height="36dp"
                     android:layout_gravity="end"
                     android:text="@android:string/cancel"
-                    android:textColor="@color/tv_error_red"
+                    android:textColor="?attr/ufmTvErrorRed"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -356,7 +356,7 @@
                         android:layout_height="18dp"
                         android:layout_marginEnd="8dp"
                         android:src="@drawable/ic_check"
-                        app:tint="@color/ufm_granted"
+                        app:tint="?attr/ufmStatusSuccess"
                         android:importantForAccessibility="no" />
 
                     <TextView

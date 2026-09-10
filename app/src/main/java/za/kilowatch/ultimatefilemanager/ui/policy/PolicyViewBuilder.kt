@@ -9,8 +9,10 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * Builds all policy screen views programmatically from string resources.
@@ -470,7 +472,7 @@ object PolicyViewBuilder {
                 text = if (isTerms) context.getString(R.string.i_have_read_and_accept_the_terms_conditions) else context.getString(R.string.i_have_read_and_accept_the_privacy_policy)
                 setTextColor(ContextCompat.getColor(context, if (isTvDevice) R.color.tv_text_primary else R.color.mobile_text_primary))
                 textSize = 14.5f * paddingMultiplier
-                buttonTintList = ContextCompat.getColorStateList(context, if (isTvDevice) R.color.tv_button_focused_yellow else R.color.selector_protocol_text)
+                buttonTintList = if (isTvDevice) android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(context)) else ContextCompat.getColorStateList(context, R.color.selector_protocol_text)
                 layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
                     bottomMargin = dp(context, (14 * paddingMultiplier).toInt())
                 }
@@ -511,13 +513,13 @@ object PolicyViewBuilder {
 
             if (isTvDevice) {
                 checkBox.isFocusable = true
-                val focusColor = ContextCompat.getColor(context, R.color.tv_button_focused_yellow_text)
+                val focusColor = ColorblindPalette.focusFillText(context)
                 val defaultColor = ContextCompat.getColor(context, R.color.tv_text_primary)
 
                 checkBox.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
                         checkBox.setTextColor(focusColor)
-                        checkBox.background = context.createRoundedBackground(R.color.tv_button_focused_yellow, 8f)
+                        checkBox.background = context.createRoundedBackgroundInt(ColorblindPalette.focusFill(context), 8f)
                     } else {
                         checkBox.setTextColor(defaultColor)
                         checkBox.background = null
@@ -525,9 +527,9 @@ object PolicyViewBuilder {
                 }
 
                 continueButton.isFocusable = true
-                val yellowText = ContextCompat.getColor(context, R.color.tv_button_focused_yellow_text)
+                val yellowText = ColorblindPalette.focusFillText(context)
                 val whiteText = ContextCompat.getColor(context, R.color.white)
-                val yellowCsl = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tv_button_focused_yellow))
+                val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(context))
                 val glassCsl = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tv_glass_white_10))
 
                 continueButton.setOnFocusChangeListener { _, hasFocus ->
@@ -681,19 +683,42 @@ object PolicyViewBuilder {
             setPadding(0, dp(context, (6 * paddingMultiplier).toInt()), 0, dp(context, (6 * paddingMultiplier).toInt()))
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
 
+            // These are now ARGB ints rather than resource ids, because the
+            // CHECK and CROSS branches resolve through the Colorblind Mode palette
+            // (FR-10) and the palette has no R.color entry to hand back. The
+            // BULLET branch stays literal: it is the blue "info" family, which is
+            // deliberately out of scope — blue is the hue a red-green-deficient
+            // user sees comparatively well, and info is not a status signal.
             val (symbol, bgColor, fgColor) = when (style) {
-                CheckStyle.CHECK  -> Triple("✓", if (isTv) R.color.tv_glass_green else R.color.policy_green_bg, R.color.policy_green)
-                CheckStyle.CROSS  -> Triple("✕", if (isTv) R.color.tv_glass_red else R.color.policy_red_bg, R.color.policy_red)
-                CheckStyle.BULLET -> Triple("•", if (isTv) R.color.tv_glass_blue else R.color.policy_accent_light, if (isTv) R.color.tv_accent else R.color.ufm_accent_light)
+                CheckStyle.CHECK  -> Triple(
+                    "✓",
+                    if (isTv) ColorblindPalette.statusGlassGreen(context)
+                    else ColorblindPalette.policyGreenSurface(context),
+                    ColorblindPalette.policyGreen(context)
+                )
+                CheckStyle.CROSS  -> Triple(
+                    "✕",
+                    if (isTv) ColorblindPalette.statusGlassRed(context)
+                    else ColorblindPalette.policyRedSurface(context),
+                    // policy_red is exactly #FFC62828 — byte-identical to ufm_error
+                    // — so it converts onto the existing statusError lever rather
+                    // than needing an attribute of its own.
+                    ColorblindPalette.statusError(context)
+                )
+                CheckStyle.BULLET -> Triple(
+                    "•",
+                    ContextCompat.getColor(context, if (isTv) R.color.tv_glass_blue else R.color.policy_accent_light),
+                    ContextCompat.getColor(context, if (isTv) R.color.tv_accent else R.color.ufm_accent_light)
+                )
             }
 
             addView(TextView(context).apply {
                 text = symbol
-                setTextColor(ContextCompat.getColor(context, fgColor))
+                setTextColor(fgColor)
                 textSize = 11f * textMultiplier
                 gravity = Gravity.CENTER
                 setTypeface(typeface, Typeface.BOLD)
-                background = context.createRoundedBackground(bgColor, 11f * paddingMultiplier)
+                background = context.createRoundedBackgroundInt(bgColor, 11f * paddingMultiplier)
                 layoutParams = LinearLayout.LayoutParams(dp(context, (22 * paddingMultiplier).toInt()), dp(context, (22 * paddingMultiplier).toInt())).apply {
                     marginEnd = dp(context, (12 * paddingMultiplier).toInt())
                     topMargin = dp(context, (2 * paddingMultiplier).toInt())
@@ -785,15 +810,20 @@ object PolicyViewBuilder {
     ): View {
         val textMultiplier = if (isTv) 1.3f else 1f
         val paddingMultiplier = if (isTv) 1.3f else 1f
-        val (bgRes, borderColor) = when (style) {
-            AlertStyle.INFO    -> (if (isTv) R.color.tv_glass_blue else R.color.mobile_glass_card) to R.color.ufm_accent_light
-            AlertStyle.SUCCESS -> (if (isTv) R.color.tv_glass_green else R.color.policy_green_bg) to R.color.policy_green
-            AlertStyle.DANGER  -> (if (isTv) R.color.tv_glass_red else R.color.policy_red_bg) to R.color.policy_red
+        // Fill and border resolve together: remapping a status label while its
+        // tinted pill stays the old hue just trades one clash for another.
+        val (bgColor, borderColor) = when (style) {
+            AlertStyle.INFO    -> ContextCompat.getColor(context, if (isTv) R.color.tv_glass_blue else R.color.mobile_glass_card) to
+                                  ContextCompat.getColor(context, R.color.ufm_accent_light)
+            AlertStyle.SUCCESS -> (if (isTv) ColorblindPalette.statusGlassGreen(context) else ColorblindPalette.policyGreenSurface(context)) to
+                                  ColorblindPalette.policyGreen(context)
+            AlertStyle.DANGER  -> (if (isTv) ColorblindPalette.statusGlassRed(context) else ColorblindPalette.policyRedSurface(context)) to
+                                  ColorblindPalette.statusError(context)
         }
 
         return LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
-            background = context.createRoundedBackground(bgRes, 10f * paddingMultiplier)
+            background = context.createRoundedBackgroundInt(bgColor, 10f * paddingMultiplier)
             clipToOutline = true
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
                 topMargin = dp(context, (4 * paddingMultiplier).toInt())
@@ -802,7 +832,7 @@ object PolicyViewBuilder {
             // Left colored border
             addView(View(context).apply {
                 layoutParams = LinearLayout.LayoutParams(dp(context, 6), MATCH_PARENT)
-                setBackgroundColor(ContextCompat.getColor(context, borderColor))
+                setBackgroundColor(borderColor)
             })
 
             // Content Container
@@ -832,12 +862,12 @@ object PolicyViewBuilder {
 
                     addView(TextView(context).apply {
                         text = title
-                        val titleRes = when (style) {
-                            AlertStyle.INFO    -> (if (isTv) R.color.tv_text_primary else R.color.mobile_text_primary)
-                            AlertStyle.SUCCESS -> R.color.policy_green
-                            AlertStyle.DANGER  -> R.color.policy_red
+                        val titleColor = when (style) {
+                            AlertStyle.INFO    -> ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.mobile_text_primary)
+                            AlertStyle.SUCCESS -> ColorblindPalette.policyGreen(context)
+                            AlertStyle.DANGER  -> ColorblindPalette.statusError(context)
                         }
-                        setTextColor(ContextCompat.getColor(context, titleRes))
+                        setTextColor(titleColor)
                         textSize = 13.5f * textMultiplier
                         setTypeface(typeface, Typeface.BOLD)
                         setPadding(0, 0, 0, dp(context, (4 * paddingMultiplier).toInt()))
@@ -900,6 +930,25 @@ object PolicyViewBuilder {
             shape = android.graphics.drawable.GradientDrawable.RECTANGLE
             cornerRadius = dp(this@createRoundedBackground, radiusDp.toInt()).toFloat()
             setColor(ContextCompat.getColor(this@createRoundedBackground, colorRes))
+        }
+    }
+
+    /**
+     * As [createRoundedBackground], for a colour that is already resolved.
+     *
+     * The Colorblind Mode palette returns ARGB ints, not resource ids — the
+     * `ufm*` theme attributes have no `R.color` entry to hand back. Sites that
+     * now resolve through the palette therefore need this overload; sites still
+     * passing a literal `R.color.*` keep using the original.
+     */
+    private fun Context.createRoundedBackgroundInt(
+        @ColorInt color: Int,
+        radiusDp: Float
+    ): android.graphics.drawable.GradientDrawable {
+        return android.graphics.drawable.GradientDrawable().apply {
+            shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+            cornerRadius = dp(this@createRoundedBackgroundInt, radiusDp.toInt()).toFloat()
+            setColor(color)
         }
     }
 

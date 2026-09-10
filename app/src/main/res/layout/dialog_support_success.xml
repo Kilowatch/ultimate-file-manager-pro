@@ -24,7 +24,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_success"
-            app:tint="@color/ufm_progress_fill"
+            app:tint="?attr/ufmProgressFill"
             android:contentDescription="@null" />
     </FrameLayout>
 

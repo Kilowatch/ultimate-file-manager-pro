@@ -178,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/compress_password_protect"
                 android:textColor="@color/tv_text_primary"
-                android:buttonTint="@color/tv_accent"
+                android:buttonTint="?attr/ufmFocusAccent"
                 android:focusable="true"
                 android:background="@drawable/selector_tv_button"
                 android:padding="12dp" />
@@ -232,7 +232,7 @@
         android:layout_height="wrap_content"
         android:text="@string/compress_use_current_folder"
         android:textColor="@color/selector_tv_button_text"
-        android:buttonTint="@color/tv_accent"
+        android:buttonTint="?attr/ufmFocusAccent"
         android:checked="true"
         android:focusable="true"
         android:background="@drawable/selector_tv_button"
@@ -252,7 +252,7 @@
             android:layout_weight="1"
             android:text="@string/compress_btn_start"
             android:background="@drawable/selector_tv_button_yellow"
-            android:textColor="@color/tv_button_focused_yellow_text"
+            android:textColor="?attr/ufmFocusFillText"
             android:focusable="true"
             android:layout_marginEnd="10dp" />
 

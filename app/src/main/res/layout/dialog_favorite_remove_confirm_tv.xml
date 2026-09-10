@@ -22,7 +22,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_delete"
-            app:tint="@color/status_error"
+            app:tint="?attr/ufmDenied"
             android:importantForAccessibility="no" />
     </FrameLayout>
 

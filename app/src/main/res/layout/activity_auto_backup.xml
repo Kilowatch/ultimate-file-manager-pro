@@ -661,7 +661,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/auto_backup_location_unavailable"
-                        android:textColor="@color/status_error"
+                        android:textColor="?attr/ufmDenied"
                         android:textSize="12sp"
                         android:layout_marginBottom="10dp"
                         android:visibility="gone" />

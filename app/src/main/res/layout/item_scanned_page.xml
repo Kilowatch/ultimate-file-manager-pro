@@ -65,6 +65,6 @@
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/bg_header_action_ripple"
-        app:tint="@color/ufm_denied" />
+        app:tint="?attr/ufmDenied" />
 
 </LinearLayout>

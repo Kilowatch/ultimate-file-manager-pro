@@ -23,10 +23,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Displays all files matching a specific category (Images, Videos, etc.)
@@ -52,6 +54,7 @@ class CategoryFilesActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val isTv = DeviceUtils.isTvDevice(this)
@@ -86,7 +89,7 @@ class CategoryFilesActivity : AppCompatActivity() {
             findViewById<TextView?>(R.id.tvHeaderTitle)?.text = categoryTitle
             val btnBack = findViewById<ImageView?>(R.id.btnBack)
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnClickListener { finish() }
             btnBack?.setOnFocusChangeListener { _, hasFocus ->

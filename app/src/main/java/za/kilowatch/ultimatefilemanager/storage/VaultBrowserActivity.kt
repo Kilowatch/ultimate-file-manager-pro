@@ -26,6 +26,7 @@ import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -57,6 +58,7 @@ class VaultBrowserActivity : AppCompatActivity() {
         // SEC-§8.12: Vault browser exposes decrypted files — prevent screenshots
         // and recent-apps thumbnails from leaking vault contents.
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (DeviceUtils.isTvDevice(this)) {

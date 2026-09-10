@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.NetworkOpenCachePreferenceManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.MimeTypeHelper
@@ -240,7 +241,9 @@ object NetworkFileOpener {
             val focusedBg = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 cornerRadius = dp(14).toFloat()
-                setColor(if (isFocusedYellow) Color.parseColor("#FBBF24") else activity.getColor(R.color.ufm_surface_variant))
+                // FR-05. #FBBF24 == #FFFBBF24 == ufmFocusFill's default, so the
+                // unfocused branch below is untouched and the off state is identical.
+                setColor(if (isFocusedYellow) ColorblindPalette.focusFill(activity) else activity.getColor(R.color.ufm_surface_variant))
             }
             val container = LinearLayout(activity).apply {
                 orientation = LinearLayout.HORIZONTAL

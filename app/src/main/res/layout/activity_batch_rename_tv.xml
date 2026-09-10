@@ -96,7 +96,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:hintTextColor="@color/tv_text_hint"
-                        app:boxStrokeColor="@color/tv_button_focused_yellow"
+                        app:boxStrokeColor="?attr/ufmFocusFill"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -130,7 +130,7 @@
                             android:layout_weight="1"
                             android:layout_marginEnd="8dp"
                             app:hintTextColor="@color/tv_text_hint"
-                            app:boxStrokeColor="@color/tv_button_focused_yellow"
+                            app:boxStrokeColor="?attr/ufmFocusFill"
                             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -156,7 +156,7 @@
                             android:layout_weight="1"
                             android:layout_marginStart="8dp"
                             app:hintTextColor="@color/tv_text_hint"
-                            app:boxStrokeColor="@color/tv_button_focused_yellow"
+                            app:boxStrokeColor="?attr/ufmFocusFill"
                             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -202,7 +202,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:hintTextColor="@color/tv_text_hint"
-                                app:boxStrokeColor="@color/tv_button_focused_yellow"
+                                app:boxStrokeColor="?attr/ufmFocusFill"
                                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -251,7 +251,7 @@
                                 android:layout_marginEnd="4dp"
                                 android:visibility="gone"
                                 app:hintTextColor="@color/tv_text_hint"
-                                app:boxStrokeColor="@color/tv_button_focused_yellow"
+                                app:boxStrokeColor="?attr/ufmFocusFill"
                                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -276,7 +276,7 @@
                                 android:layout_marginHorizontal="2dp"
                                 android:visibility="gone"
                                 app:hintTextColor="@color/tv_text_hint"
-                                app:boxStrokeColor="@color/tv_button_focused_yellow"
+                                app:boxStrokeColor="?attr/ufmFocusFill"
                                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -301,7 +301,7 @@
                                 android:layout_marginStart="4dp"
                                 android:visibility="gone"
                                 app:hintTextColor="@color/tv_text_hint"
-                                app:boxStrokeColor="@color/tv_button_focused_yellow"
+                                app:boxStrokeColor="?attr/ufmFocusFill"
                                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -325,7 +325,7 @@
                         android:id="@+id/txtPatternError"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/tv_button_focused_yellow"
+                        android:textColor="?attr/ufmFocusFill"
                         android:textSize="14sp"
                         android:visibility="gone"
                         android:layout_marginTop="4dp"
@@ -417,7 +417,7 @@
                             <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                app:boxStrokeColor="@color/tv_button_focused_yellow"
+                                app:boxStrokeColor="?attr/ufmFocusFill"
                                 app:hintEnabled="false"
                                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
@@ -460,7 +460,7 @@
                             <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                app:boxStrokeColor="@color/tv_button_focused_yellow"
+                                app:boxStrokeColor="?attr/ufmFocusFill"
                                 app:hintEnabled="false"
                                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 

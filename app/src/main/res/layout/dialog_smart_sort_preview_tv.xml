@@ -112,7 +112,7 @@
         app:cardCornerRadius="14dp"
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/ufm_progress_warning">
+        app:strokeColor="?attr/ufmProgressWarning">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -125,7 +125,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_warning"
-                app:tint="@color/ufm_progress_warning"
+                app:tint="?attr/ufmProgressWarning"
                 android:importantForAccessibility="no" />
 
             <TextView
@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="12dp"
-                android:textColor="@color/ufm_progress_warning"
+                android:textColor="?attr/ufmProgressWarning"
                 android:textSize="14sp"
                 android:fontFamily="sans-serif-medium"
                 tools:text="3 file conflicts detected" />
@@ -148,7 +148,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:text="@string/got_it_1"
-        android:textColor="@color/tv_button_focused_yellow_text"
+        android:textColor="?attr/ufmFocusFillText"
         android:textSize="15sp"
         android:fontFamily="sans-serif-bold"
         android:insetTop="0dp"

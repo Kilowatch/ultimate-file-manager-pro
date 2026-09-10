@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Tablet layout (sw600dp+): two-column side-by-side
-    Left column: D-pad + nav buttons
-    Right column: volume, media controls, keyboard panel
+    Tablet layout (sw600dp+): two-column side-by-side with modern glass header bar
+    Left column: Nav row (Back, Home, Volume toggle) + D-pad
+    Right column: Volume row, Media controls, Embedded Keyboard panel
 -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,142 +14,179 @@
     android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true">
 
-    <!-- Toolbar -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <!-- Modern Glass Header Bar (56dp standard) -->
+    <LinearLayout
+        android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
-        app:elevation="0dp">
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="?android:attr/textColorPrimary"
-            app:titleTextColor="?android:attr/textColorPrimary">
+        <!-- Back Button in 40dp Frosted Squircle -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <!-- Status Dot + Connection Label + Progress -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <View
+                android:id="@+id/viewStatusDot"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/bg_status_dot"
+                android:backgroundTint="?attr/colorSecondary"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:id="@+id/txtStatusLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_gravity="start">
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Connected to TV" />
 
-                <View
-                    android:id="@+id/viewStatusDot"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:background="@drawable/bg_status_dot"
-                    android:backgroundTint="?attr/colorSecondary"
-                    android:layout_marginEnd="10dp" />
+            <ProgressBar
+                android:id="@+id/progressConnecting"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/mobile_text_secondary"
+                android:visibility="gone" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtStatusLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:maxLines="1"
-                    tools:text="Connected to TV" />
+        <!-- Pair / Select Device Action in Frosted Squircle -->
+        <FrameLayout
+            android:id="@+id/btnPairContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:visibility="gone">
 
-                <ProgressBar
-                    android:id="@+id/progressConnecting"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginStart="8dp"
-                    android:indeterminate="true"
-                    android:indeterminateTint="?android:attr/textColorSecondary"
-                    android:visibility="gone" />
+            <TextView
+                android:id="@+id/btnPairAction"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="@string/bt_remote_select_device"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+        </FrameLayout>
 
-            </LinearLayout>
-        </com.google.android.material.appbar.MaterialToolbar>
+        <!-- Disconnect Action in Frosted Danger Squircle -->
+        <FrameLayout
+            android:id="@+id/btnDisconnectContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_btn_icon_danger"
+            android:visibility="gone">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <TextView
+                android:id="@+id/btnDisconnectAction"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:text="@string/bt_remote_card_action_disconnect"
+                android:textColor="?attr/ufmDenied"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+        </FrameLayout>
+
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollRemote"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="12dp"
+            android:paddingHorizontal="32dp"
+            android:paddingTop="16dp"
             android:paddingBottom="96dp">
 
-            <!-- Status card (full width) -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardStatus"
+            <!-- ═══ Status Action Button (Full Width, shown when disconnected/connecting) ═══ -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStatusAction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="?attr/colorSurface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:strokeWidth="1dp">
+                android:text="@string/bt_remote_card_action_connect"
+                android:visibility="gone"
+                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                app:strokeColor="?attr/colorPrimary" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="16dp"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="12dp">
-
-                    <TextView
-                        android:id="@+id/txtStatusSubtitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:textSize="12sp"
-                        android:maxLines="2"
-                        android:visibility="gone" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnStatusAction"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/bt_remote_card_action_connect"
-                        android:visibility="gone"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        app:strokeColor="?attr/colorPrimary" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ═══ Two-column body ═══ -->
+            <!-- ═══ Two-column body for Tablet ═══ -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="top">
 
-                <!-- LEFT COLUMN: Nav + D-Pad -->
+                <!-- LEFT COLUMN: Nav Row + D-Pad -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
-                    android:paddingEnd="12dp">
+                    android:paddingEnd="16dp">
 
-                    <!-- Nav row -->
+                    <!-- NAV ROW: Back | Home | Phone Volume Toggle -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center"
-                        android:layout_marginBottom="8dp">
+                        android:layout_marginBottom="16dp">
 
+                        <!-- Back -->
                         <LinearLayout
                             android:id="@+id/btnNavBack"
                             android:layout_width="0dp"
@@ -158,7 +195,7 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:background="@drawable/bg_remote_nav_btn"
-                            android:layout_marginHorizontal="4dp"
+                            android:layout_marginHorizontal="6dp"
                             android:clickable="true"
                             android:focusable="true">
 
@@ -176,9 +213,13 @@
                                 android:textColor="?android:attr/textColorSecondary"
                                 android:layout_marginTop="4dp"
                                 android:gravity="center"
-                                android:maxLines="1" />
+                                android:maxLines="1"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="6sp"
+                                app:autoSizeMaxTextSize="10sp" />
                         </LinearLayout>
 
+                        <!-- Home -->
                         <LinearLayout
                             android:id="@+id/btnNavHome"
                             android:layout_width="0dp"
@@ -187,7 +228,7 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:background="@drawable/bg_remote_nav_btn"
-                            android:layout_marginHorizontal="4dp"
+                            android:layout_marginHorizontal="6dp"
                             android:clickable="true"
                             android:focusable="true">
 
@@ -205,7 +246,10 @@
                                 android:textColor="?android:attr/textColorSecondary"
                                 android:layout_marginTop="4dp"
                                 android:gravity="center"
-                                android:maxLines="1" />
+                                android:maxLines="1"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="6sp"
+                                app:autoSizeMaxTextSize="10sp" />
                         </LinearLayout>
 
                         <!-- Phone Volume Toggle -->
@@ -217,7 +261,7 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:background="@drawable/bg_remote_toggle_btn"
-                            android:layout_marginHorizontal="4dp"
+                            android:layout_marginHorizontal="6dp"
                             android:clickable="true"
                             android:focusable="true">
 
@@ -237,59 +281,148 @@
                                 android:textColor="@color/selector_tv_remote_toggle_text"
                                 android:layout_marginTop="4dp"
                                 android:gravity="center"
-                                android:maxLines="1" />
+                                android:maxLines="1"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="6sp"
+                                app:autoSizeMaxTextSize="10sp" />
                         </LinearLayout>
+
                     </LinearLayout>
 
-                    <!-- D-Pad -->
+                    <!-- D-PAD SECTION -->
                     <FrameLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp">
 
                         <View
-                            android:layout_width="220dp"
-                            android:layout_height="220dp"
+                            android:layout_width="240dp"
+                            android:layout_height="240dp"
                             android:layout_gravity="center"
                             android:background="@drawable/bg_remote_dpad_ring" />
 
                         <GridLayout
-                            android:layout_width="220dp"
-                            android:layout_height="220dp"
+                            android:layout_width="240dp"
+                            android:layout_height="240dp"
                             android:layout_gravity="center"
                             android:columnCount="3"
                             android:rowCount="3">
 
-                            <Space android:layout_width="72dp" android:layout_height="72dp" android:layout_row="0" android:layout_column="0" />
-                            <ImageButton android:id="@+id/btnDpadUp" android:layout_width="76dp" android:layout_height="76dp" android:layout_row="0" android:layout_column="1" android:src="@drawable/ic_arrow_up" app:tint="?android:attr/textColorPrimary" android:background="@drawable/bg_remote_dpad_btn" android:contentDescription="@string/pan_up" android:scaleType="center" android:padding="20dp" />
-                            <Space android:layout_width="72dp" android:layout_height="72dp" android:layout_row="0" android:layout_column="2" />
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_row="0"
+                                android:layout_column="0" />
 
-                            <ImageButton android:id="@+id/btnDpadLeft" android:layout_width="72dp" android:layout_height="76dp" android:layout_row="1" android:layout_column="0" android:src="@drawable/ic_arrow_back" app:tint="?android:attr/textColorPrimary" android:background="@drawable/bg_remote_dpad_btn" android:contentDescription="@string/pan_left" android:scaleType="center" android:padding="20dp" />
+                            <ImageButton
+                                android:id="@+id/btnDpadUp"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_row="0"
+                                android:layout_column="1"
+                                android:src="@drawable/ic_arrow_up"
+                                app:tint="?android:attr/textColorPrimary"
+                                android:background="@drawable/bg_remote_dpad_btn"
+                                android:contentDescription="@string/pan_up"
+                                android:scaleType="center"
+                                android:padding="20dp" />
 
-                            <FrameLayout android:layout_width="76dp" android:layout_height="76dp" android:layout_row="1" android:layout_column="1">
-                                <com.google.android.material.button.MaterialButton android:id="@+id/btnDpadOk" style="@style/Widget.MaterialComponents.Button" android:layout_width="64dp" android:layout_height="64dp" android:layout_gravity="center" android:text="OK" android:textSize="14sp" android:textColor="?attr/colorOnPrimary" android:backgroundTint="?attr/colorPrimary" app:cornerRadius="32dp" android:elevation="4dp" android:contentDescription="OK" />
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_row="0"
+                                android:layout_column="2" />
+
+                            <ImageButton
+                                android:id="@+id/btnDpadLeft"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_row="1"
+                                android:layout_column="0"
+                                android:src="@drawable/ic_arrow_back"
+                                app:tint="?android:attr/textColorPrimary"
+                                android:background="@drawable/bg_remote_dpad_btn"
+                                android:contentDescription="@string/pan_left"
+                                android:scaleType="center"
+                                android:padding="20dp" />
+
+                            <FrameLayout
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_row="1"
+                                android:layout_column="1">
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btnDpadOk"
+                                    style="@style/Widget.Material3Expressive.Button"
+                                    android:layout_width="68dp"
+                                    android:layout_height="68dp"
+                                    android:layout_gravity="center"
+                                    android:text="OK"
+                                    android:textSize="14sp"
+                                    android:textColor="?attr/colorOnPrimary"
+                                    android:backgroundTint="?attr/colorPrimary"
+                                    app:autoSizeTextType="uniform"
+                                    app:autoSizeMinTextSize="10sp"
+                                    app:autoSizeMaxTextSize="14sp"
+                                    app:cornerRadius="34dp"
+                                    android:elevation="4dp"
+                                    android:contentDescription="OK" />
                             </FrameLayout>
 
-                            <ImageButton android:id="@+id/btnDpadRight" android:layout_width="72dp" android:layout_height="76dp" android:layout_row="1" android:layout_column="2" android:src="@drawable/ic_arrow_forward" app:tint="?android:attr/textColorPrimary" android:background="@drawable/bg_remote_dpad_btn" android:contentDescription="@string/pan_right" android:scaleType="center" android:padding="20dp" />
+                            <ImageButton
+                                android:id="@+id/btnDpadRight"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_row="1"
+                                android:layout_column="2"
+                                android:src="@drawable/ic_arrow_forward"
+                                app:tint="?android:attr/textColorPrimary"
+                                android:background="@drawable/bg_remote_dpad_btn"
+                                android:contentDescription="@string/pan_right"
+                                android:scaleType="center"
+                                android:padding="20dp" />
 
-                            <Space android:layout_width="72dp" android:layout_height="72dp" android:layout_row="2" android:layout_column="0" />
-                            <ImageButton android:id="@+id/btnDpadDown" android:layout_width="76dp" android:layout_height="72dp" android:layout_row="2" android:layout_column="1" android:src="@drawable/ic_arrow_down" app:tint="?android:attr/textColorPrimary" android:background="@drawable/bg_remote_dpad_btn" android:contentDescription="@string/pan_down" android:scaleType="center" android:padding="20dp" />
-                            <Space android:layout_width="72dp" android:layout_height="72dp" android:layout_row="2" android:layout_column="2" />
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_row="2"
+                                android:layout_column="0" />
+
+                            <ImageButton
+                                android:id="@+id/btnDpadDown"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_row="2"
+                                android:layout_column="1"
+                                android:src="@drawable/ic_arrow_down"
+                                app:tint="?android:attr/textColorPrimary"
+                                android:background="@drawable/bg_remote_dpad_btn"
+                                android:contentDescription="@string/pan_down"
+                                android:scaleType="center"
+                                android:padding="20dp" />
+
+                            <Space
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_row="2"
+                                android:layout_column="2" />
                         </GridLayout>
+
                     </FrameLayout>
 
                 </LinearLayout>
 
-                <!-- RIGHT COLUMN: Volume + Media + Keyboard -->
+                <!-- RIGHT COLUMN: Volume + Media + Keyboard Panel -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
-                    android:paddingStart="12dp"
-                    android:paddingTop="68dp">
+                    android:paddingStart="16dp">
 
-                    <!-- Volume row -->
+                    <!-- VOLUME ROW -->
                     <LinearLayout
                         android:id="@+id/layoutVolumeRow"
                         android:layout_width="match_parent"
@@ -298,13 +431,47 @@
                         android:gravity="center"
                         android:layout_marginBottom="16dp">
 
-                        <ImageButton android:id="@+id/btnVolDown" android:layout_width="56dp" android:layout_height="56dp" android:src="@drawable/ic_volume_down" app:tint="?android:attr/textColorPrimary" android:background="@drawable/bg_remote_nav_btn" android:contentDescription="Volume Down" android:scaleType="center" android:padding="12dp" android:layout_marginHorizontal="8dp" />
-                        <ImageButton android:id="@+id/btnMute" android:layout_width="56dp" android:layout_height="56dp" android:src="@drawable/ic_volume_off" app:tint="?android:attr/textColorPrimary" android:background="@drawable/bg_remote_nav_btn" android:contentDescription="Mute" android:scaleType="center" android:padding="12dp" android:layout_marginHorizontal="8dp" />
-                        <ImageButton android:id="@+id/btnVolUp" android:layout_width="56dp" android:layout_height="56dp" android:src="@drawable/ic_add" app:tint="?android:attr/textColorPrimary" android:background="@drawable/bg_remote_nav_btn" android:contentDescription="Volume Up" android:scaleType="center" android:padding="12dp" android:layout_marginHorizontal="8dp" />
+                        <ImageButton
+                            android:id="@+id/btnVolDown"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_volume_down"
+                            app:tint="?android:attr/textColorPrimary"
+                            android:background="@drawable/bg_remote_nav_btn"
+                            android:contentDescription="Volume Down"
+                            android:scaleType="center"
+                            android:padding="12dp"
+                            android:layout_marginHorizontal="8dp" />
 
+                        <ImageButton
+                            android:id="@+id/btnMute"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_volume_off"
+                            app:tint="?android:attr/textColorPrimary"
+                            android:background="@drawable/bg_remote_mute_btn"
+                            android:contentDescription="Mute"
+                            android:scaleType="center"
+                            android:padding="12dp"
+                            android:layout_marginHorizontal="8dp" />
+
+                        <ImageButton
+                            android:id="@+id/btnVolUp"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_add"
+                            app:tint="?android:attr/textColorPrimary"
+                            android:background="@drawable/bg_remote_nav_btn"
+                            android:contentDescription="Volume Up"
+                            android:scaleType="center"
+                            android:padding="12dp"
+                            android:layout_marginHorizontal="8dp" />
                     </LinearLayout>
 
-                    <!-- Media row -->
+                    <!-- MEDIA CONTROLS ROW -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -312,13 +479,45 @@
                         android:gravity="center"
                         android:layout_marginBottom="20dp">
 
-                        <ImageButton android:id="@+id/btnRewind" android:layout_width="56dp" android:layout_height="56dp" android:src="@drawable/ic_replay_10" app:tint="?android:attr/textColorPrimary" android:background="@drawable/bg_remote_nav_btn" android:contentDescription="Rewind" android:scaleType="center" android:padding="10dp" android:layout_marginHorizontal="10dp" />
-                        <ImageButton android:id="@+id/btnPlayPause" android:layout_width="72dp" android:layout_height="72dp" android:src="@drawable/ic_play" app:tint="?attr/colorOnPrimary" android:background="@drawable/bg_remote_playpause" android:contentDescription="@string/play_pause" android:scaleType="center" android:padding="16dp" android:layout_marginHorizontal="10dp" android:elevation="4dp" />
-                        <ImageButton android:id="@+id/btnFastForward" android:layout_width="56dp" android:layout_height="56dp" android:src="@drawable/ic_forward_10" app:tint="?android:attr/textColorPrimary" android:background="@drawable/bg_remote_nav_btn" android:contentDescription="Fast Forward" android:scaleType="center" android:padding="10dp" android:layout_marginHorizontal="10dp" />
+                        <ImageButton
+                            android:id="@+id/btnRewind"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:src="@drawable/ic_replay_10"
+                            app:tint="?android:attr/textColorPrimary"
+                            android:background="@drawable/bg_remote_nav_btn"
+                            android:contentDescription="Rewind"
+                            android:scaleType="center"
+                            android:padding="10dp"
+                            android:layout_marginHorizontal="12dp" />
 
+                        <ImageButton
+                            android:id="@+id/btnPlayPause"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:src="@drawable/ic_play"
+                            app:tint="?attr/colorOnPrimary"
+                            android:background="@drawable/bg_remote_playpause"
+                            android:contentDescription="@string/play_pause"
+                            android:scaleType="center"
+                            android:padding="16dp"
+                            android:layout_marginHorizontal="12dp"
+                            android:elevation="4dp" />
+
+                        <ImageButton
+                            android:id="@+id/btnFastForward"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:src="@drawable/ic_forward_10"
+                            app:tint="?android:attr/textColorPrimary"
+                            android:background="@drawable/bg_remote_nav_btn"
+                            android:contentDescription="Fast Forward"
+                            android:scaleType="center"
+                            android:padding="10dp"
+                            android:layout_marginHorizontal="12dp" />
                     </LinearLayout>
 
-                    <!-- Keyboard panel -->
+                    <!-- KEYBOARD PANEL -->
                     <LinearLayout
                         android:id="@+id/layoutKeyboardPanel"
                         android:layout_width="match_parent"
@@ -341,15 +540,41 @@
                                 android:imeOptions="flagNoExtractUi" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center" android:layout_marginBottom="8dp">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnKbBackspace" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="⌫" android:textSize="16sp" android:layout_marginHorizontal="4dp" />
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnKbTab" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Tab" android:layout_marginHorizontal="4dp" />
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnKbEnter" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="↵" android:textSize="16sp" android:layout_marginHorizontal="4dp" />
-                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:layout_marginBottom="8dp">
 
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center">
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnKbClear" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Clear" android:layout_marginHorizontal="4dp" />
-                            <com.google.android.material.button.MaterialButton android:id="@+id/btnKbSelectAll" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Select All" android:layout_marginHorizontal="4dp" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnKbBackspace"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="⌫"
+                                android:textSize="16sp"
+                                android:layout_marginHorizontal="4dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnKbClear"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Clear"
+                                android:layout_marginHorizontal="4dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnKbEnter"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="↵"
+                                android:textSize="16sp"
+                                android:layout_marginHorizontal="4dp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -362,13 +587,14 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Keyboard FAB — floats bottom-right -->
+    <!-- Keyboard FAB — floats bottom-right, toggles the keyboard panel -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabKeyboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="24dp"
         android:src="@drawable/ic_keyboard"
         app:tint="?attr/colorOnPrimary"
         android:contentDescription="Toggle Keyboard"
@@ -376,4 +602,4 @@
         app:fabSize="normal"
         android:elevation="8dp" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,18 +2,28 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Focused state: Danger Red background -->
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/ufm_denied" />
-            <corners android:radius="20dp" />
-            <stroke android:width="2dp" android:color="@color/white" />
-        </shape>
+        <layer-list>
+            <item>
+                <!-- NOT attribute-driven: ufm_denied is #FFC62828 day / #FFEF5350
+                     night, while ufm_error (ufmStatusError's default) has no night
+                     override. Routing this through ufmStatusError would change the
+                     button's colour with the mode OFF. Left literal on purpose. -->
+                <shape android:shape="rectangle">
+                    <solid android:color="?attr/ufmDenied" />
+                    <corners android:radius="20dp" />
+                    <stroke android:width="2dp" android:color="@color/white" />
+                </shape>
+            </item>
+            <!-- FR-06 leading-edge marker (T011); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
+        </layer-list>
     </item>
     <!-- Default state: Transparent glass background with subtle danger tint -->
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/tv_glass_white_10" />
             <corners android:radius="20dp" />
-            <stroke android:width="1dp" android:color="@color/ufm_denied" />
+            <stroke android:width="1dp" android:color="?attr/ufmDenied" />
         </shape>
     </item>
 </selector>

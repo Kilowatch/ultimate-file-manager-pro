@@ -76,7 +76,7 @@
             android:contentDescription="@string/delete"
             android:clickable="true"
             android:focusable="true"
-            app:tint="@color/mobile_stop_btn" />
+            app:tint="?attr/ufmStopButton" />
     </FrameLayout>
 
 </LinearLayout>

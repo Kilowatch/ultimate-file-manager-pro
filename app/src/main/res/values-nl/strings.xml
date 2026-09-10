@@ -1521,6 +1521,107 @@ Back-up en herstel
     <string name="settings_section_privacy_diagnostics">
 Privacy en diagnostiek
 </string>
+    <string name="settings_section_accessibility">
+Toegankelijkheid
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+Kleurenblindmodus
+</string>
+    <string name="colorblind_screen_subtitle">
+Onderscheid focus-, selectie- en statusstatussen zonder afhankelijk te zijn van kleur.
+</string>
+    <string name="colorblind_subtitle_off">
+Uit — standaardkleuren
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · %2$s contrast
+</string>
+    <string name="colorblind_group_type">
+Type
+</string>
+    <string name="colorblind_group_strength">
+Contraststerkte
+</string>
+    <string name="colorblind_group_strength_hint">
+Hogere sterkte verhoogt de scheiding met de achtergrond.
+</string>
+    <string name="colorblind_type_off">
+Uit
+</string>
+    <string name="colorblind_type_off_desc">
+Behoud de standaardkleuren van de app.
+</string>
+    <string name="colorblind_type_red_green">
+Rood-Groen
+</string>
+    <string name="colorblind_type_red_green_desc">
+Voor protanopie en deuteranopie. Rode en groene statussen worden omgezet naar een blauw en amber paar.
+</string>
+    <string name="colorblind_type_blue_yellow">
+Blauw-Geel
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+Voor tritanopie. Blauwe en gele statussen worden omgezet naar een magenta en groen paar.
+</string>
+    <string name="colorblind_type_high_contrast">
+Hoog contrast
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+Er wordt geen kleurwaarneming verondersteld. Statussen worden alleen door helderheid gescheiden.
+</string>
+    <string name="colorblind_strength_low">
+Laag
+</string>
+    <string name="colorblind_strength_low_desc">
+3:1 minimaal contrast.
+</string>
+    <string name="colorblind_strength_medium">
+Gemiddeld
+</string>
+    <string name="colorblind_strength_medium_desc">
+4.5:1 minimaal contrast. Aanbevolen.
+</string>
+    <string name="colorblind_strength_high">
+Hoog
+</string>
+    <string name="colorblind_strength_high_desc">
+7:1 minimaal contrast.
+</string>
+    <string name="colorblind_preview_title">
+Voorbeeld
+</string>
+    <string name="colorblind_preview_hint">
+Toont de focus-, selectie- en statuskleuren die deze instelling oplevert.
+</string>
+    <string name="colorblind_preview_unfocused">
+Niet gefocust
+</string>
+    <string name="colorblind_preview_focused">
+Gefocust
+</string>
+    <string name="colorblind_preview_selected">
+Geselecteerd
+</string>
+    <string name="colorblind_preview_success">
+Succes
+</string>
+    <string name="colorblind_preview_warning">
+Waarschuwing
+</string>
+    <string name="colorblind_preview_error">
+Fout
+</string>
+    <string name="colorblind_status_success_desc">
+Succes
+</string>
+    <string name="colorblind_status_warning_desc">
+Waarschuwing
+</string>
+    <string name="colorblind_status_error_desc">
+Fout
+</string>
     <string name="settings_search_bar_title">
 Zoekbalk Instellingen
 </string>
@@ -10310,6 +10411,15 @@ Waarschuwingsbadge
     <string name="icon_status_check_circle">
 Controleer Cirkel
 </string>
+    <string name="icon_status_success">
+Status Succes
+</string>
+    <string name="icon_status_warning_glyph">
+Status Waarschuwing
+</string>
+    <string name="icon_status_error">
+Status Fout
+</string>
     <string name="icon_status_shield_check">
 Schildcontrole
 </string>
@@ -10388,6 +10498,9 @@ Standaardapps
 </string>
     <string name="icon_settings_font_size">
 Lettergrootte
+</string>
+    <string name="icon_settings_colorblind">
+Kleurenblindmodus
 </string>
     <string name="icon_settings_apk_extract">
 APK/XAPK-extract

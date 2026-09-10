@@ -41,6 +41,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.remote.AdbRemoteForegroundService
 import za.kilowatch.ultimatefilemanager.remote.AdbWifiTransport
@@ -49,6 +50,7 @@ import za.kilowatch.ultimatefilemanager.remote.ManualDevice
 import za.kilowatch.ultimatefilemanager.remote.RemoteTransport
 import za.kilowatch.ultimatefilemanager.remote.RemoteTransportPrefs
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Full-screen TV Remote Control activity (mobile-only).
@@ -194,6 +196,7 @@ class TvRemoteActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
 
         androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -892,7 +895,7 @@ class TvRemoteActivity : AppCompatActivity() {
 
         progressConnecting.visibility = View.GONE
         viewStatusDot.backgroundTintList =
-            ContextCompat.getColorStateList(this, R.color.vpn_warning_amber)
+            android.content.res.ColorStateList.valueOf(ColorblindPalette.vpnWarningAmber(this))
         btnStatusAction.text = getString(R.string.bt_remote_card_action_pair_tv)
         btnStatusAction.visibility = View.VISIBLE
         btnStatusAction.setOnClickListener {
@@ -906,7 +909,7 @@ class TvRemoteActivity : AppCompatActivity() {
 
         progressConnecting.visibility = View.GONE
         viewStatusDot.backgroundTintList =
-            ContextCompat.getColorStateList(this, R.color.vpn_warning_amber)
+            android.content.res.ColorStateList.valueOf(ColorblindPalette.vpnWarningAmber(this))
 
         // Use the last connected transport — this is the single source of truth
         val transportPrefs = RemoteTransportPrefs(this)
@@ -969,7 +972,7 @@ class TvRemoteActivity : AppCompatActivity() {
 
         progressConnecting.visibility = View.VISIBLE
         viewStatusDot.backgroundTintList =
-            ContextCompat.getColorStateList(this, R.color.vpn_warning_amber)
+            android.content.res.ColorStateList.valueOf(ColorblindPalette.vpnWarningAmber(this))
         btnStatusAction.visibility = View.GONE
         setToolbarActions(pairVisible = false, disconnectVisible = false)
     }
@@ -980,7 +983,7 @@ class TvRemoteActivity : AppCompatActivity() {
 
         progressConnecting.visibility = View.GONE
         viewStatusDot.backgroundTintList =
-            ContextCompat.getColorStateList(this, R.color.ufm_success)
+            android.content.res.ColorStateList.valueOf(ColorblindPalette.success(this))
         btnStatusAction.visibility = View.GONE
         setToolbarActions(pairVisible = false, disconnectVisible = true)
     }
@@ -990,7 +993,7 @@ class TvRemoteActivity : AppCompatActivity() {
 
         progressConnecting.visibility = View.GONE
         viewStatusDot.backgroundTintList =
-            ContextCompat.getColorStateList(this, R.color.ufm_error)
+            android.content.res.ColorStateList.valueOf(ColorblindPalette.statusError(this))
         btnStatusAction.text = getString(R.string.bt_remote_card_action_turn_on)
         btnStatusAction.visibility = View.VISIBLE
         btnStatusAction.setOnClickListener {
@@ -1006,7 +1009,7 @@ class TvRemoteActivity : AppCompatActivity() {
 
         progressConnecting.visibility = View.GONE
         viewStatusDot.backgroundTintList =
-            ContextCompat.getColorStateList(this, R.color.ufm_error)
+            android.content.res.ColorStateList.valueOf(ColorblindPalette.statusError(this))
         btnStatusAction.text = getString(R.string.bt_remote_card_action_grant_permission)
         btnStatusAction.visibility = View.VISIBLE
         btnStatusAction.setOnClickListener {

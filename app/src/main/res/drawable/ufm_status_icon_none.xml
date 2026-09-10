@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ════════════════════════════════════════════════════════════════════════
+    Off-state default for ufmStatusSuccessIcon / WarningIcon / ErrorIcon
+    ════════════════════════════════════════════════════════════════════════
+
+    A transparent no-op. When Colorblind Mode is Off, all three status-glyph
+    attributes resolve here, so a caller that applies a glyph unconditionally
+    draws nothing rather than a wrong or duplicated icon.
+
+    WHY A TRANSPARENT DEFAULT RATHER THAN A REAL GLYPH
+
+    The ~40 status call sites are a mix of two kinds:
+
+      • sites that already render a status icon of their own, and
+      • sites that convey status by COLOUR alone.
+
+    A single default cannot be both "keep your existing icon" (which would need
+    to point at that site's icon) and "you have no icon to add". Pointing the
+    default at a real glyph would change every colour-only site the moment the
+    refactor lands, breaking FR-19's requirement that Off restores the app's
+    appearance exactly — and it would silently replace the existing icon at
+    sites that already have one.
+
+    So the contract is the inverse: callers apply a glyph ONLY while
+    ColorblindPalette is enabled, restoring the site's own drawable otherwise.
+    See ColorblindPalette.statusIcon and task T041.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@android:color/transparent" />
+</shape>

@@ -62,11 +62,16 @@ val ALL_BUILTIN_ICONS = intArrayOf(
     // Status / Alert
     R.drawable.ic_warning, R.drawable.ic_warning_badge, R.drawable.ic_check_circle,
     R.drawable.ic_shield_check, R.drawable.ic_shield_alert,
+    // FR-09 Colorblind Mode status glyphs. Shape-distinct (disc+check,
+    // triangle+bang, disc+cross) and coloured by ?attr/ufmStatus*, so they
+    // follow the applied Colorblind Mode overlay with no call-site tinting.
+    R.drawable.ic_status_success, R.drawable.ic_status_warning, R.drawable.ic_status_error,
     // View Modes
     R.drawable.ic_view_grid_small, R.drawable.ic_view_grid_medium,
     R.drawable.ic_view_grid_large, R.drawable.ic_view_list,
     // Settings
     R.drawable.ic_font_size, R.drawable.ic_language, R.drawable.ic_theme,
+    R.drawable.ic_colorblind,
     R.drawable.ic_palette, R.drawable.ic_export, R.drawable.ic_import,
     R.drawable.ic_long_press, R.drawable.ic_controls_timeout, R.drawable.ic_photo_video, R.drawable.ic_tune,
     R.drawable.ic_policy, R.drawable.ic_coffee, R.drawable.ic_home,

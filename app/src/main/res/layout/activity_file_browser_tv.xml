@@ -612,12 +612,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_delete"
-                android:textColor="@color/ufm_denied"
+                android:textColor="?attr/ufmDenied"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
-                app:backgroundTint="@color/ufm_delete_tint"
+                app:backgroundTint="?attr/ufmDeleteTint"
                 app:icon="@drawable/ic_delete"
-                app:iconTint="@color/ufm_denied"
+                app:iconTint="?attr/ufmDenied"
                 app:iconSize="20dp" />
         </LinearLayout>
 

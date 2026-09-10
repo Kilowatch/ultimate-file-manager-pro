@@ -91,7 +91,7 @@
                     android:id="@+id/txtDupWasted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/status_error"
+                    android:textColor="?attr/ufmDenied"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     tools:text="saves 48 MB" />

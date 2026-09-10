@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/tv_surface_focused" />
-            <stroke android:width="2dp" android:color="@color/tv_accent" />
-            <corners android:radius="8dp" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="?attr/ufmFocusAccentSurface" />
+                    <stroke android:width="2dp" android:color="?attr/ufmFocusAccent" />
+                    <corners android:radius="8dp" />
+                </shape>
+            </item>
+            <!-- FR-06 leading-edge marker (T012); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
+        </layer-list>
     </item>
     <item>
         <shape android:shape="rectangle">

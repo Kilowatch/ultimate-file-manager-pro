@@ -24,10 +24,12 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.security.AppSecurityManager
 import za.kilowatch.ultimatefilemanager.security.SecurityDialogHelper
 import za.kilowatch.ultimatefilemanager.security.SecurityMode
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
 
 /**
  * Settings hub screen.
@@ -196,7 +198,7 @@ class SettingsActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -209,7 +211,7 @@ class SettingsActivity : AppCompatActivity() {
         if (isTv) {
             btnListViewSize?.let { btn ->
                 val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-                val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+                val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
                 btn.imageTintList = whiteCsl
                 btn.setOnFocusChangeListener { _, hasFocus ->
                     btn.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -224,6 +226,11 @@ class SettingsActivity : AppCompatActivity() {
         val cardFontSize = findViewById<View>(R.id.cardFontSize)
         cardFontSize.setOnClickListener {
             startActivity(Intent(this, FontSizeActivity::class.java))
+        }
+
+        // Colorblind Mode row (FR-20)
+        findViewById<View>(R.id.cardColorblind)?.setOnClickListener {
+            startActivity(Intent(this, ColorblindActivity::class.java))
         }
 
         // File Tags row (Mobile Only)
@@ -771,6 +778,9 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<View>(R.id.cardScrollingText)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardGridIndicators)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardTipJarPopup)?.let { setupTvCardFocus(it) }
+            // FR-20. Omitting this would leave the Colorblind card rendered but
+            // D-pad-invisible — the exact failure this feature exists to fix.
+            findViewById<View>(R.id.cardColorblind)?.let { setupTvCardFocus(it) }
         }
 
         // Icons row
@@ -890,7 +900,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // Focus listeners for TV search card highlighting
         if (isTv) {
-            val yellowFill  = getColor(R.color.tv_button_focused_yellow)
+            val yellowFill  = ColorblindPalette.focusFill(this)
             val glassColor  = getColor(R.color.tv_glass_white_10)
             val primaryText = getColor(R.color.tv_text_primary)
             val secondText  = getColor(R.color.tv_text_secondary)
@@ -900,10 +910,10 @@ class SettingsActivity : AppCompatActivity() {
                 val hasFocus = edtSettingsSearch?.hasFocus() == true || btnSearchClear?.hasFocus() == true
                 if (hasFocus) {
                     cardSearchContainer?.setCardBackgroundColor(yellowFill)
-                    edtSettingsSearch?.setTextColor(getColor(R.color.tv_button_focused_yellow_text))
-                    edtSettingsSearch?.setHintTextColor(getColor(R.color.tv_button_focused_yellow_text))
-                    imgSearchIcon?.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
-                    btnSearchClear?.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+                    edtSettingsSearch?.setTextColor(ColorblindPalette.focusFillText(this))
+                    edtSettingsSearch?.setHintTextColor(ColorblindPalette.focusFillText(this))
+                    imgSearchIcon?.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
+                    btnSearchClear?.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
                 } else {
                     cardSearchContainer?.setCardBackgroundColor(glassColor)
                     edtSettingsSearch?.setTextColor(primaryText)
@@ -928,6 +938,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         applyListSize()
+        updateColorblindSubtitle()
         // Refresh the font size subtitle
         val txtFontSizeSubtitle = findViewById<TextView?>(R.id.txtFontSizeSubtitle)
         txtFontSizeSubtitle?.text = when (FontSizeHelper.getSavedSize(this)) {
@@ -1424,7 +1435,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
         imgIcon?.setImageResource(R.drawable.ic_root_storage)
-        imgIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_granted))
+        imgIcon?.imageTintList = ColorStateList.valueOf(ColorblindPalette.statusSuccess(this))
 
         val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
         txtTitle?.text = getString(R.string.root_grant_dialog_title)
@@ -1477,7 +1488,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
         imgIcon?.setImageResource(R.drawable.ic_shield_alert)
-        imgIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_denied))
+        imgIcon?.imageTintList = ColorStateList.valueOf(ColorblindPalette.denied(this))
 
         val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
         txtTitle?.text = getString(R.string.root_denied_title)
@@ -1971,30 +1982,76 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * The Colorblind row's subtitle: the current type and strength, or that the
+     * mode is off.
+     *
+     * Refreshed in `onResume()` rather than set once in `onCreate`, because the
+     * user changes it on `ColorblindActivity` and comes back through `onResume` —
+     * the same reason the font size and language subtitles are refreshed there.
+     * The values come from [ColorblindPrefs] directly rather than from a result
+     * extra, so a change made anywhere (including a settings restore) shows up.
+     */
+    private fun updateColorblindSubtitle() {
+        val subtitle = findViewById<TextView?>(R.id.txtColorblindSubtitle) ?: return
+        val type = ColorblindPrefs.getType(this)
+        subtitle.text = if (type == ColorblindPrefs.TYPE_OFF) {
+            getString(R.string.colorblind_subtitle_off)
+        } else {
+            getString(
+                R.string.colorblind_subtitle_on,
+                getString(colorblindTypeLabel(type)),
+                getString(colorblindStrengthLabel(ColorblindPrefs.getStrength(this))),
+            )
+        }
+    }
+
+    private fun colorblindTypeLabel(type: Int) = when (type) {
+        ColorblindPrefs.TYPE_RED_GREEN -> R.string.colorblind_type_red_green
+        ColorblindPrefs.TYPE_BLUE_YELLOW -> R.string.colorblind_type_blue_yellow
+        ColorblindPrefs.TYPE_HIGH_CONTRAST -> R.string.colorblind_type_high_contrast
+        else -> R.string.colorblind_type_off
+    }
+
+    private fun colorblindStrengthLabel(strength: Int) = when (strength) {
+        ColorblindPrefs.STRENGTH_LOW -> R.string.colorblind_strength_low
+        ColorblindPrefs.STRENGTH_HIGH -> R.string.colorblind_strength_high
+        else -> R.string.colorblind_strength_medium
+    }
+
+    /**
+     * The TV focus treatment for a settings card.
+     *
+     * Delegates to [TvFocusHelper] so this hub gets the FR-06 outline along with
+     * every other screen, and so the focus palette has one implementation. Only
+     * the child text/icon re-tinting stays here — that is this screen's own extra
+     * behaviour, not part of the shared treatment.
+     *
+     * The non-`MaterialCardView` branch is kept because a handful of rows are
+     * plain `View`s with a background rather than cards; [TvFocusHelper]
+     * deliberately takes a `MaterialCardView` because that is the only type whose
+     * stroke can be swapped.
+     */
     private fun setupTvCardFocus(card: View) {
-        val yellowFill  = getColor(R.color.tv_button_focused_yellow)
-        val blackText   = getColor(R.color.tv_button_focused_yellow_text)
-        val glassColor  = getColor(R.color.tv_glass_white_10)
+        // Resolved once per card, outside the listener: every accessor is a
+        // theme.resolveAttribute call and this fires on every D-pad move.
+        val colors      = TvFocusHelper.colors(this)
         val transparent = android.graphics.Color.TRANSPARENT
         val primaryText = getColor(R.color.tv_text_primary)
         val secondText  = getColor(R.color.tv_text_secondary)
         val iconTint    = getColor(R.color.tv_icon_tint)
 
         card.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                if (card is MaterialCardView) {
-                    card.setCardBackgroundColor(yellowFill)
-                } else {
-                    card.setBackgroundColor(yellowFill)
-                }
-                setChildTextColors(card, blackText)
-                setChildImageTints(card, blackText)
+            if (card is MaterialCardView) {
+                TvFocusHelper.applyCardFocus(card, colors, hasFocus)
             } else {
-                if (card is MaterialCardView) {
-                    card.setCardBackgroundColor(glassColor)
-                } else {
-                    card.setBackgroundColor(transparent)
-                }
+                TvFocusHelper.applyMarker(card, hasFocus)
+                card.setBackgroundColor(if (hasFocus) colors.fill else transparent)
+            }
+            if (hasFocus) {
+                setChildTextColors(card, colors.onFill)
+                setChildImageTints(card, colors.onFill)
+            } else {
                 setChildTextColorsTwo(card, primaryText, secondText)
                 setChildImageTints(card, iconTint)
             }
@@ -2044,6 +2101,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardAutoBackup, "settings_auto_backup", R.drawable.ic_cloud),
             CardIcon(R.id.cardMainMenuViewMode, "settings_main_menu_layout", R.drawable.ic_view_list),
             CardIcon(R.id.cardFontSize, "settings_font_size", R.drawable.ic_font_size),
+            CardIcon(R.id.cardColorblind, "settings_colorblind", R.drawable.ic_colorblind),
             CardIcon(R.id.cardApkExtract, "settings_apk_extract", R.drawable.ic_file_apk),
             CardIcon(R.id.cardSearchResultsLimit, "settings_search_limit", R.drawable.ic_search),
             CardIcon(R.id.cardLongPressDuration, "settings_long_press", R.drawable.ic_long_press),

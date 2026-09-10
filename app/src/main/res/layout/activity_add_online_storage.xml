@@ -277,7 +277,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginStart="4dp"
                 android:text="@string/onedrive_personal_note"
-                android:textColor="@color/mobile_note_color"
+                android:textColor="?attr/ufmMobileNoteColor"
                 android:textSize="12sp"
                 android:visibility="gone" />
 

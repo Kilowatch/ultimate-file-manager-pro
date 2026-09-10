@@ -151,7 +151,7 @@
             android:textColor="@color/white"
             android:textSize="14.5sp"
             android:fontFamily="sans-serif-bold"
-            app:backgroundTint="@color/ufm_denied"
+            app:backgroundTint="?attr/ufmDenied"
             app:cornerRadius="12dp" />
     </LinearLayout>
 

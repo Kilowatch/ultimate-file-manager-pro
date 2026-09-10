@@ -67,6 +67,6 @@
         android:layout_marginStart="12dp"
         android:clickable="false"
         android:focusable="false"
-        android:buttonTint="@color/tv_accent" />
+        android:buttonTint="?attr/ufmFocusAccent" />
 
 </LinearLayout>

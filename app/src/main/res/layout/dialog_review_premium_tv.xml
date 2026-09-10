@@ -28,7 +28,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_star"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:contentDescription="@null" />
     </FrameLayout>
 
@@ -56,7 +56,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_star"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:layout_marginHorizontal="2dp"
             android:contentDescription="@null" />
 
@@ -64,7 +64,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_star"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:layout_marginHorizontal="2dp"
             android:contentDescription="@null" />
 
@@ -72,7 +72,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_star"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:layout_marginHorizontal="2dp"
             android:contentDescription="@null" />
 
@@ -80,7 +80,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_star"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:layout_marginHorizontal="2dp"
             android:contentDescription="@null" />
 
@@ -88,7 +88,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_star"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:layout_marginHorizontal="2dp"
             android:contentDescription="@null" />
 

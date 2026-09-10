@@ -108,7 +108,7 @@
             android:focusable="false"
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
-            android:scrollbarThumbVertical="@color/tv_button_focused_yellow" />
+            android:scrollbarThumbVertical="?attr/ufmFocusFill" />
     </FrameLayout>
 
     <!-- Bottom D-pad chapter navigation bar -->

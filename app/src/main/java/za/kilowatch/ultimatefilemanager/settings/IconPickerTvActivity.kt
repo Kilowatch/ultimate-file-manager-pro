@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 
 class IconPickerTvActivity : AppCompatActivity() {
@@ -69,6 +71,7 @@ class IconPickerTvActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_icon_picker_tv)
@@ -156,7 +159,7 @@ class IconPickerTvActivity : AppCompatActivity() {
 
     private fun setupTvIconFocus(view: View) {
         val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-        val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+        val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
         if (view is ImageView) {
             view.imageTintList = whiteCsl
             view.setOnFocusChangeListener { _, hasFocus ->
@@ -171,8 +174,8 @@ class IconPickerTvActivity : AppCompatActivity() {
     }
 
     private fun setupTvButtonFocus(btn: MaterialButton) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val defaultText = getColor(R.color.tv_text_primary)
         val defaultBg = getColor(R.color.tv_glass_white_10)
 
@@ -228,8 +231,8 @@ class IconPickerTvActivity : AppCompatActivity() {
             holder.icon.isFocusable = true
             holder.icon.isFocusableInTouchMode = false
 
-            val yellowFill = ctx.getColor(R.color.tv_button_focused_yellow)
-            val blackText = ctx.getColor(R.color.tv_button_focused_yellow_text)
+            val yellowFill = ColorblindPalette.focusFill(ctx)
+            val blackText = ColorblindPalette.focusFillText(ctx)
             
             holder.icon.setOnFocusChangeListener { _, hasFocus ->
                 val newBg = GradientDrawable().apply {

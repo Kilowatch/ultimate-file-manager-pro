@@ -37,6 +37,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlin.coroutines.resume
 import kotlinx.coroutines.*
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
@@ -55,6 +56,7 @@ import za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Searches files by name across selected storage volume.
@@ -193,6 +195,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (DeviceUtils.isTvDevice(this)) {
@@ -247,7 +250,7 @@ class SearchActivity : AppCompatActivity() {
         if (isTv) {
             // TV: apply focus-based tint changes
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -344,8 +347,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         if (isTv) {
-            val yellow = getColor(R.color.tv_button_focused_yellow)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(this)
+            val black = ColorblindPalette.focusFillText(this)
             val white = getColor(R.color.tv_text_primary)
             val hint = getColor(R.color.tv_text_hint)
 
@@ -632,8 +635,8 @@ class SearchActivity : AppCompatActivity() {
         }
         spinner.adapter = adapter
 
-        val yellowColor = getColor(R.color.tv_button_focused_yellow)
-        val blackColor = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowColor = ColorblindPalette.focusFill(this)
+        val blackColor = ColorblindPalette.focusFillText(this)
         val white = getColor(R.color.tv_text_primary)
         spinner.setOnFocusChangeListener { v, hasFocus ->
             v.setBackgroundColor(if (hasFocus) yellowColor else android.graphics.Color.TRANSPARENT)
@@ -1137,10 +1140,12 @@ class SearchActivity : AppCompatActivity() {
                     holder.txtSummary.text = "${slot.totalCount} item(s) • $fileSummary"
 
                     if (isTv) {
-                        val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                        // `this` here is the anonymous adapter, not the Activity.
+                        val ctx = holder.card.context
+                        val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(ctx))
                         val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-                        val yellowText = getColor(R.color.tv_button_focused_yellow_text)
-                        val whiteText = getColor(R.color.tv_text_primary)
+                        val yellowText = ColorblindPalette.focusFillText(ctx)
+                        val whiteText = ctx.getColor(R.color.tv_text_primary)
                         holder.card.isFocusable = true
                         holder.card.isFocusableInTouchMode = true
                         holder.card.setOnFocusChangeListener { _, hasFocus ->
@@ -1298,7 +1303,7 @@ class SearchActivity : AppCompatActivity() {
         val bgColor = if (isOnTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
         val textColorPrimary = if (isOnTv) getColor(R.color.tv_text_primary) else getColor(R.color.ufm_text_primary)
         val textColorHint = if (isOnTv) getColor(R.color.tv_text_hint) else getColor(R.color.ufm_text_hint)
-        val accentColor = if (isOnTv) getColor(R.color.tv_button_focused_yellow) else getColor(R.color.ufm_primary)
+        val accentColor = if (isOnTv) ColorblindPalette.focusFill(this) else getColor(R.color.ufm_primary)
 
         val container = android.widget.LinearLayout(this).apply {
             orientation = android.widget.LinearLayout.VERTICAL
@@ -1598,7 +1603,7 @@ class SearchActivity : AppCompatActivity() {
 
         if (isTv) {
             val pills = listOf(pillSize, pillType, pillExtension, pillDate)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val black = ColorblindPalette.focusFillText(this)
 
             pills.forEach { pill ->
                 pill.setOnClickListener {
@@ -1644,7 +1649,13 @@ class SearchActivity : AppCompatActivity() {
                 }
                 pill.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
-                        pill.setChipBackgroundColorResource(R.color.tv_button_focused_yellow)
+                        // setChipBackgroundColorResource takes a res id, and the
+                        // palette has none to give — resolve to a CSL instead.
+                        pill.setChipBackgroundColor(
+                            android.content.res.ColorStateList.valueOf(
+                                ColorblindPalette.focusFill(this)
+                            )
+                        )
                         pill.setTextColor(black)
                     } else {
                         updateFilterPillState()
@@ -1689,7 +1700,9 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val primaryColor      = za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this)
-        val activeBgCsl       = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_selection_highlight))
+        // FR-08 active filter pill. This is a SELECTED state, not a focused one —
+        // the palette's selection fill, no FR-06 marker.
+        val activeBgCsl       = android.content.res.ColorStateList.valueOf(ColorblindPalette.selectionFill(this))
         val inactiveBgCsl     = android.content.res.ColorStateList.valueOf(getColor(R.color.mobile_glass_card))
         val activeStrokeCsl   = android.content.res.ColorStateList.valueOf(primaryColor)
         val inactiveStrokeCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.mobile_glass_stroke))
@@ -1814,8 +1827,8 @@ class SearchActivity : AppCompatActivity() {
         dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(if (isTv) bgColor else android.graphics.Color.TRANSPARENT))
 
         if (isTv) {
-            val yellow = getColor(R.color.tv_button_focused_yellow)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(this)
+            val black = ColorblindPalette.focusFillText(this)
             val white = getColor(R.color.tv_text_primary)
             val hint = getColor(R.color.tv_text_hint)
 
@@ -1883,7 +1896,7 @@ class SearchActivity : AppCompatActivity() {
         dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(if (isTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT))
 
         if (isTv) {
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val black = ColorblindPalette.focusFillText(this)
             val white = getColor(R.color.tv_text_primary)
             
             checkMap.keys.forEach { cb ->
@@ -1926,7 +1939,7 @@ class SearchActivity : AppCompatActivity() {
         dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(if (isTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT))
 
         if (isTv) {
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val black = ColorblindPalette.focusFillText(this)
             val white = getColor(R.color.tv_text_primary)
             val hint = getColor(R.color.tv_text_hint)
 
@@ -1966,7 +1979,7 @@ class SearchActivity : AppCompatActivity() {
         dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(if (isTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT))
 
         if (isTv) {
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val black = ColorblindPalette.focusFillText(this)
             val white = getColor(R.color.tv_text_primary)
             val hint = getColor(R.color.tv_text_hint)
 

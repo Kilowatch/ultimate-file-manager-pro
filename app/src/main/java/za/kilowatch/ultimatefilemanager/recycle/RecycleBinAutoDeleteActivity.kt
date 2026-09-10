@@ -17,6 +17,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 class RecycleBinAutoDeleteActivity : AppCompatActivity() {
 
@@ -69,7 +70,7 @@ class RecycleBinAutoDeleteActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -168,15 +169,21 @@ class RecycleBinAutoDeleteActivity : AppCompatActivity() {
     }
 
     private fun setupTvCardFocus(card: MaterialCardView, isAccentButton: Boolean = false) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val glassColor = getColor(R.color.tv_glass_white_10)
-        val accentColor = getColor(R.color.tv_accent)
+        val accentColor = ColorblindPalette.focusAccent(this)
         val primaryText = getColor(R.color.tv_text_primary)
         val secondText = getColor(R.color.tv_text_secondary)
         val whiteText = android.graphics.Color.WHITE
 
         card.setOnFocusChangeListener { _, hasFocus ->
+            // The FR-06 marker is NOT assigned here. This card declares
+            // `@drawable/selector_tv_card` as its XML foreground, and that selector's
+            // focused state already carries the marker. Writing to `foreground` would
+            // overwrite the whole selector, and since `marker()` returns null on blur
+            // the card would permanently lose its glow rings and accent border the
+            // first time it was focused -- with Colorblind Mode Off (FR-19).
             if (hasFocus) {
                 card.setCardBackgroundColor(yellowFill)
                 setChildTextColors(card, blackText)

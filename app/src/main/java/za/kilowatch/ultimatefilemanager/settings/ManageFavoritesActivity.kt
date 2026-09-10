@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -82,7 +83,7 @@ class ManageFavoritesActivity : AppCompatActivity() {
     private fun setupHeaderButtonFocus(btn: ImageView?) {
         if (btn == null) return
         val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-        val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+        val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
         btn.imageTintList = whiteCsl
         btn.setOnFocusChangeListener { _, hasFocus ->
             btn.imageTintList = if (hasFocus) blackCsl else whiteCsl

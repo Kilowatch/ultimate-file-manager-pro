@@ -39,6 +39,7 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.viewer.syntax.LanguageDef
 import za.kilowatch.ultimatefilemanager.viewer.syntax.LanguageRegistry
 import za.kilowatch.ultimatefilemanager.viewer.syntax.SyntaxHighlightEngine
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
@@ -118,6 +119,7 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         isTv = DeviceUtils.isTvDevice(this)
@@ -369,7 +371,13 @@ class TextViewerActivity : AppCompatActivity() {
             if (isHighlightedFile && currentLanguage != null) {
                 val lang = currentLanguage!!
                 lifecycleScope.launch(Dispatchers.Default) {
-                    val spannable = SyntaxHighlightEngine.highlight(fullText, lang, this@TextViewerActivity)
+                    // remap = false: this is the edit-mode entry path, and FR-12
+                    // keeps the editor's own syntax theme. This calls the *same*
+                    // `highlight()` the viewer does, which is why the decision has
+                    // to be made here rather than inferred inside the engine.
+                    val spannable = SyntaxHighlightEngine.highlight(
+                        fullText, lang, this@TextViewerActivity, remap = false
+                    )
                     withContext(Dispatchers.Main) {
                         val pos = txtContent.selectionStart.coerceIn(0, spannable.length)
                         txtContent.setText(spannable, android.widget.TextView.BufferType.SPANNABLE)
@@ -383,10 +391,14 @@ class TextViewerActivity : AppCompatActivity() {
             val debounce = Runnable {
                 if (isEditMode && isHighlightedFile && currentLanguage != null) {
                     // In-place span update — no setText(), no cursor reset
+                    // remap = false: this is the 300 ms debounced edit-mode
+                    // re-highlight, the most perf-sensitive path in the feature.
+                    // NFR-03 is satisfied by this flag, not by a faster code path.
                     SyntaxHighlightEngine.applyHighlight(
                         txtContent.text,
                         currentLanguage!!,
-                        this@TextViewerActivity
+                        this@TextViewerActivity,
+                        remap = false
                     )
                 }
             }
@@ -949,7 +961,15 @@ class TextViewerActivity : AppCompatActivity() {
             if (isHighlightedFile && currentLanguage != null && chunk.isNotEmpty()) {
                 val lang = currentLanguage!!
                 val context = this@TextViewerActivity
-                val spannable = SyntaxHighlightEngine.highlight(chunk, lang, context)
+                // remap = true: the read-only viewer is the one place FR-12 applies.
+                // The `isEditMode` bail-out below is in the MAIN-thread block, so
+                // it does not make this call edit-safe — the flag has to be right
+                // at the call site. Passing `!isEditMode` covers both: it is
+                // already false on the edit path, and would stay false if the
+                // guard moved.
+                val spannable = SyntaxHighlightEngine.highlight(
+                    chunk, lang, context, remap = !isEditMode
+                )
                 withContext(Dispatchers.Main) {
                     if (isEditMode) return@withContext
                     txtContent.setText(spannable, android.widget.TextView.BufferType.SPANNABLE)

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager
@@ -174,7 +175,7 @@ class DefaultAppsActivity : AppCompatActivity() {
 
     private fun setupHeaderButtonFocus(view: View) {
         val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-        val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+        val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
         val btn = view as? ImageView ?: return
 
         btn.setOnFocusChangeListener { _, hasFocus ->
@@ -253,8 +254,8 @@ class DefaultAppsActivity : AppCompatActivity() {
         }
 
         private fun setupTvFocus(holder: VH) {
-            val yellowFill = getColor(R.color.tv_button_focused_yellow)
-            val blackText = getColor(R.color.tv_button_focused_yellow_text)
+            val yellowFill = ColorblindPalette.focusFill(this@DefaultAppsActivity)
+            val blackText = ColorblindPalette.focusFillText(this@DefaultAppsActivity)
             val glassColor = getColor(R.color.tv_glass_white_10)
             val primaryText = getColor(R.color.tv_text_primary)
             val secondText = getColor(R.color.tv_text_secondary)

@@ -1573,6 +1573,107 @@ Yedekleme ve Geri Yükleme
     <string name="settings_section_privacy_diagnostics">
 Gizlilik ve Tanılama
 </string>
+    <string name="settings_section_accessibility">
+Erişilebilirlik
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+Renk Körü Modu
+</string>
+    <string name="colorblind_screen_subtitle">
+Odaklanmış, seçili ve durum hallerini renge bağlı kalmadan ayırt edin.
+</string>
+    <string name="colorblind_subtitle_off">
+Kapalı — standart renkler
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · %2$s kontrast
+</string>
+    <string name="colorblind_group_type">
+Tür
+</string>
+    <string name="colorblind_group_strength">
+Kontrast Gücü
+</string>
+    <string name="colorblind_group_strength_hint">
+Güç arttıkça arka plandan ayrışma da artar.
+</string>
+    <string name="colorblind_type_off">
+Kapalı
+</string>
+    <string name="colorblind_type_off_desc">
+Uygulamanın standart renklerini koru.
+</string>
+    <string name="colorblind_type_red_green">
+Kırmızı-Yeşil
+</string>
+    <string name="colorblind_type_red_green_desc">
+Protanopi ve döteranopi için. Kırmızı ve yeşil durumlar mavi ile kehribar renginden oluşan bir çifte dönüştürülür.
+</string>
+    <string name="colorblind_type_blue_yellow">
+Mavi-Sarı
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+Tritanopi için. Mavi ve sarı durumlar macenta ile yeşilden oluşan bir çifte dönüştürülür.
+</string>
+    <string name="colorblind_type_high_contrast">
+Yüksek Kontrast
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+Renk algısı varsayılmaz. Durumlar yalnızca açıklık ile ayrılır.
+</string>
+    <string name="colorblind_strength_low">
+Düşük
+</string>
+    <string name="colorblind_strength_low_desc">
+En az 3:1 kontrast.
+</string>
+    <string name="colorblind_strength_medium">
+Orta
+</string>
+    <string name="colorblind_strength_medium_desc">
+En az 4.5:1 kontrast. Önerilir.
+</string>
+    <string name="colorblind_strength_high">
+Yüksek
+</string>
+    <string name="colorblind_strength_high_desc">
+En az 7:1 kontrast.
+</string>
+    <string name="colorblind_preview_title">
+Önizleme
+</string>
+    <string name="colorblind_preview_hint">
+Bu ayarın oluşturduğu odaklanmış, seçili ve durum renklerini gösterir.
+</string>
+    <string name="colorblind_preview_unfocused">
+Odaklanmamış
+</string>
+    <string name="colorblind_preview_focused">
+Odaklanmış
+</string>
+    <string name="colorblind_preview_selected">
+Seçili
+</string>
+    <string name="colorblind_preview_success">
+Başarılı
+</string>
+    <string name="colorblind_preview_warning">
+Uyarı
+</string>
+    <string name="colorblind_preview_error">
+Hata
+</string>
+    <string name="colorblind_status_success_desc">
+Başarılı
+</string>
+    <string name="colorblind_status_warning_desc">
+Uyarı
+</string>
+    <string name="colorblind_status_error_desc">
+Hata
+</string>
     <string name="settings_search_bar_title">
 Ayarlar Arama Çubuğu
 </string>
@@ -10456,6 +10557,15 @@ Uyarı Rozeti
     <string name="icon_status_check_circle">
 Onay Dairesi
 </string>
+    <string name="icon_status_success">
+Durum Başarılı
+</string>
+    <string name="icon_status_warning_glyph">
+Durum Uyarısı
+</string>
+    <string name="icon_status_error">
+Durum Hatası
+</string>
     <string name="icon_status_shield_check">
 Kalkan Onay
 </string>
@@ -10534,6 +10644,9 @@ Varsayılan Uygulamalar
 </string>
     <string name="icon_settings_font_size">
 Yazı Boyutu
+</string>
+    <string name="icon_settings_colorblind">
+Renk Körü Modu
 </string>
     <string name="icon_settings_apk_extract">
 APK/XAPK Çıkart

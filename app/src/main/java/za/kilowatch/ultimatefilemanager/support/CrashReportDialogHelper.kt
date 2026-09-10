@@ -19,6 +19,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.MediaType.Companion.toMediaType
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.util.concurrent.TimeUnit
@@ -119,7 +120,7 @@ object CrashReportDialogHelper {
         // TV focus styling
         if (isTv) {
             val yellowCsl = android.content.res.ColorStateList.valueOf(
-                activity.getColor(R.color.tv_button_focused_yellow_text)
+                ColorblindPalette.focusFillText(activity)
             )
             val defaultCsl = android.content.res.ColorStateList.valueOf(
                 activity.getColor(R.color.tv_text_primary)

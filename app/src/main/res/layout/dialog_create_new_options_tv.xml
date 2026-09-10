@@ -13,7 +13,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/ic_create_new"
-        app:tint="@color/tv_button_focused_yellow"
+        app:tint="?attr/ufmFocusFill"
         android:layout_marginBottom="8dp" />
 
     <TextView

@@ -45,7 +45,7 @@
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_junk"
-                    app:tint="@color/ufm_risk_safe"
+                    app:tint="?attr/ufmRiskSafe"
                     android:importantForAccessibility="no" />
             </FrameLayout>
 
@@ -62,7 +62,7 @@
                 android:textAllCaps="true"
                 android:letterSpacing="0.06"
                 tools:text="SAFE"
-                tools:textColor="@color/ufm_risk_safe" />
+                tools:textColor="?attr/ufmRiskSafe" />
 
             <View
                 android:layout_width="0dp"

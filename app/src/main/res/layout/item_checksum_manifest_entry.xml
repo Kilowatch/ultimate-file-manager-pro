@@ -22,7 +22,7 @@
             android:layout_height="20dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_check"
-            app:tint="@color/ufm_granted"
+            app:tint="?attr/ufmStatusSuccess"
             android:importantForAccessibility="no" />
 
         <!-- File Name -->
@@ -46,7 +46,7 @@
             android:background="@drawable/bg_storage_badge"
             android:paddingHorizontal="6dp"
             android:paddingVertical="2dp"
-            android:textColor="@color/ufm_granted"
+            android:textColor="?attr/ufmStatusSuccess"
             android:textSize="10sp"
             android:fontFamily="sans-serif-black"
             tools:text="OK" />

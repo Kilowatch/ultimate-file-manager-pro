@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * Callback interface implemented by viewer activities to handle
@@ -93,8 +94,8 @@ class DocumentSearchHelper<T>(
 
     private fun open() {
         searchBarLayout.visibility = View.VISIBLE
-        searchIconView.imageTintList = ContextCompat.getColorStateList(
-            host.getContext(), R.color.ufm_granted
+        searchIconView.imageTintList = android.content.res.ColorStateList.valueOf(
+            ColorblindPalette.statusSuccess(host.getContext())
         )
 
         searchInput.requestFocus()

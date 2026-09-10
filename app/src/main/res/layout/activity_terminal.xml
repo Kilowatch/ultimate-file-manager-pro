@@ -136,7 +136,7 @@
             android:focusable="true"
             android:background="@drawable/bg_header_action_ripple"
             android:visibility="gone"
-            app:tint="@color/ufm_error" />
+            app:tint="?attr/ufmStatusError" />
     </LinearLayout>
 
     <!-- Terminal Console Area -->

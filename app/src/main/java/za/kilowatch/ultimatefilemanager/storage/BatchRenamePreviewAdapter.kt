@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * RecyclerView adapter for the batch rename preview list.
@@ -142,10 +143,15 @@ class BatchRenamePreviewAdapter(
                 PreviewConflict.INVALID_CHARS -> R.string.batch_rename_conflict_invalid
                 PreviewConflict.COLLISION -> R.string.batch_rename_conflict_collision
             }
-            val colorRes = when {
-                conflict.isBlocking && isTv -> R.color.tv_error_red
-                conflict.isBlocking -> R.color.ufm_error
-                else -> R.color.ufm_progress_warning
+            // Resolved to ARGB ints rather than resource ids: these are FR-10
+            // status colours and must follow the Colorblind Mode palette, which
+            // has no R.color entry to hand back. `tv_error_red` / `ufm_error` /
+            // `ufm_progress_warning` are three DIFFERENT colours, so each keeps
+            // its own lever and the off state stays byte-identical.
+            val badgeColor = when {
+                conflict.isBlocking && isTv -> ColorblindPalette.tvErrorRed(context)
+                conflict.isBlocking -> ColorblindPalette.statusError(context)
+                else -> ColorblindPalette.progressWarning(context)
             }
 
             txtConflictBadge.text = context.getString(labelRes)
@@ -155,7 +161,7 @@ class BatchRenamePreviewAdapter(
 
             val badgeBg = GradientDrawable()
             badgeBg.cornerRadius = context.resources.displayMetrics.density * 8f
-            badgeBg.setColor(ContextCompat.getColor(context, colorRes))
+            badgeBg.setColor(badgeColor)
             txtConflictBadge.background = badgeBg
             txtConflictBadge.visibility = View.VISIBLE
         }

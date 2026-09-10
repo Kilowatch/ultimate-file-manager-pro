@@ -9,22 +9,24 @@
             <!-- Outer glow -->
             <item android:top="-5dp" android:bottom="-5dp" android:left="-5dp" android:right="-5dp">
                 <shape android:shape="oval">
-                    <solid android:color="@color/tv_button_focused_yellow_glow" />
+                    <solid android:color="?attr/ufmFocusGlow" />
                 </shape>
             </item>
             <!-- Yellow fill circle -->
             <item>
                 <shape android:shape="oval">
-                    <solid android:color="@color/tv_button_focused_yellow" />
+                    <solid android:color="?attr/ufmFocusFill" />
                 </shape>
             </item>
+            <!-- FR-06 leading-edge marker (T011); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
         </layer-list>
     </item>
 
     <!-- Pressed: slightly dimmed yellow (alpha baked into color to avoid "Bad element under <shape>") -->
     <item android:state_pressed="true">
         <shape android:shape="oval">
-            <solid android:color="@color/tv_button_focused_yellow_70" />
+            <solid android:color="?attr/ufmFocusFillTranslucent" />
         </shape>
     </item>
 

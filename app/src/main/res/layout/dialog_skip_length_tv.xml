@@ -430,7 +430,7 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_close"
-                        app:tint="@color/status_error"
+                        app:tint="?attr/ufmDenied"
                         android:layout_marginEnd="16dp"
                         android:importantForAccessibility="no" />
 

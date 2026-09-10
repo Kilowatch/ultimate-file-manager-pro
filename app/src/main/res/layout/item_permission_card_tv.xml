@@ -79,7 +79,7 @@
                     android:textAllCaps="true"
                     android:letterSpacing="0.08"
                     tools:text="Required"
-                    tools:textColor="@color/ufm_pending" />
+                    tools:textColor="?attr/ufmStatusWarning" />
 
             </LinearLayout>
 

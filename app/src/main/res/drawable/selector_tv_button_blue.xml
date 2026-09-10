@@ -6,13 +6,13 @@
             <item android:top="-6dp" android:bottom="-6dp" android:left="-6dp" android:right="-6dp">
                 <shape android:shape="rectangle">
                     <corners android:radius="18dp" />
-                    <solid android:color="@color/tv_button_focused_blue_glow" />
+                    <solid android:color="?attr/ufmFocusBlueGlow" />
                 </shape>
             </item>
             <item>
                 <shape android:shape="rectangle">
                     <corners android:radius="14dp" />
-                    <solid android:color="@color/tv_button_focused_blue" />
+                    <solid android:color="?attr/ufmFocusBlue" />
                 </shape>
             </item>
         </layer-list>
@@ -21,7 +21,7 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <corners android:radius="14dp" />
-            <solid android:color="@color/tv_button_focused_blue" />
+            <solid android:color="?attr/ufmFocusBlue" />
         </shape>
     </item>
 

@@ -85,7 +85,7 @@
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:src="@drawable/ic_warning"
-                    app:tint="@color/status_error"
+                    app:tint="?attr/ufmDenied"
                     android:importantForAccessibility="no" />
 
                 <TextView
@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/backup_action_required_warning"
-                    android:textColor="@color/status_error"
+                    android:textColor="?attr/ufmDenied"
                     android:textSize="11.5sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_marginStart="4dp" />
@@ -133,7 +133,7 @@
                 android:src="@drawable/ic_delete"
                 android:clickable="true"
                 android:focusable="true"
-                app:tint="@color/status_error"
+                app:tint="?attr/ufmDenied"
                 android:contentDescription="@string/network_delete_confirm_title" />
         </FrameLayout>
 

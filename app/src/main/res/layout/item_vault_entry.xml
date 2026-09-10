@@ -180,11 +180,11 @@
                     android:text="@string/vault_remove"
                     android:textSize="13.5sp"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="@color/ufm_denied"
+                    android:textColor="?attr/ufmDenied"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
                     app:cornerRadius="12dp"
-                    app:strokeColor="@color/ufm_denied"
+                    app:strokeColor="?attr/ufmDenied"
                     app:strokeWidth="1dp" />
 
             </LinearLayout>

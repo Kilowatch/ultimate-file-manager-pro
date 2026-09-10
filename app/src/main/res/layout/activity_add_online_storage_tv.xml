@@ -313,7 +313,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="4dp"
                 android:text="@string/onedrive_personal_note"
-                android:textColor="@color/tv_note_color"
+                android:textColor="?attr/ufmTvNoteColor"
                 android:textSize="14sp"
                 android:fontFamily="sans-serif-medium"
                 android:visibility="visible"

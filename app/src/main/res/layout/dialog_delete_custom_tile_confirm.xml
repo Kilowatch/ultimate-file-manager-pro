@@ -29,7 +29,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_delete"
-                app:tint="@color/status_error"
+                app:tint="?attr/ufmDenied"
                 android:importantForAccessibility="no" />
         </FrameLayout>
 
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/status_error"
+                android:textColor="?attr/ufmDenied"
                 android:textSize="12sp"
                 android:fontFamily="sans-serif-medium"
                 android:visibility="gone" />
@@ -105,7 +105,7 @@
             app:iconGravity="textStart"
             app:iconPadding="8dp"
             app:iconTint="@color/white"
-            app:backgroundTint="@color/status_error" />
+            app:backgroundTint="?attr/ufmDenied" />
 
         <!-- Cancel Button -->
         <com.google.android.material.button.MaterialButton

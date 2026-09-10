@@ -85,7 +85,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="12dp"
         android:text="@string/smart_sort_history_clear_all"
-        android:textColor="@color/status_error"
+        android:textColor="?attr/ufmDenied"
         android:textSize="14sp"
         android:fontFamily="sans-serif-bold"
         android:insetTop="0dp"
@@ -94,6 +94,6 @@
         app:icon="@drawable/ic_delete"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
-        app:iconTint="@color/status_error" />
+        app:iconTint="?attr/ufmDenied" />
 
 </LinearLayout>

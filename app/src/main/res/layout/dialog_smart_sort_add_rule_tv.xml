@@ -76,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="@string/save"
-        android:textColor="@color/tv_button_focused_yellow_text"
+        android:textColor="?attr/ufmFocusFillText"
         android:textSize="15sp"
         android:fontFamily="sans-serif-bold"
         android:insetTop="0dp"

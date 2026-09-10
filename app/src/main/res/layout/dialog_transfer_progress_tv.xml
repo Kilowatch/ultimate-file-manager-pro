@@ -24,7 +24,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_copy"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:layout_marginEnd="14dp"
             android:importantForAccessibility="no" />
 
@@ -67,7 +67,7 @@
         app:trackThickness="10dp"
         app:trackCornerRadius="5dp"
         android:progress="0"
-        app:indicatorColor="@color/tv_button_focused_yellow" />
+        app:indicatorColor="?attr/ufmFocusFill" />
 
     <TextView
         android:id="@+id/txtProgressSize"

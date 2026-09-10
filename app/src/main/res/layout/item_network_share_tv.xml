@@ -88,7 +88,7 @@
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:src="@drawable/ic_warning"
-                    app:tint="@color/tv_error_red"
+                    app:tint="?attr/ufmTvErrorRed"
                     android:importantForAccessibility="no" />
 
                 <TextView
@@ -96,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/backup_action_required_warning"
-                    android:textColor="@color/tv_error_red"
+                    android:textColor="?attr/ufmTvErrorRed"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-medium"
                     android:layout_marginStart="4dp" />

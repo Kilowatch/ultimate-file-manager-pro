@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.R
 
 /**
@@ -41,10 +42,19 @@ class AnalyzerRecommendationAdapter(
         holder.txtDesc.text    = item.description
         holder.txtSavings.text = ctx.getString(R.string.save_formatterformatfilesizectx_itemestimatedbytes, Formatter.formatFileSize(ctx, item.estimatedBytes))
 
+        // The risk glyphs are shape-distinct on purpose (FR-10): a bin, a triangle,
+        // a question mark. MODERATE and MANUAL_REVIEW both carried
+        // `ic_warning_badge` before, which left two of the three levels sharing one
+        // silhouette — so with the colour removed they were told apart by the label
+        // alone, which is the dependency this feature exists to remove. `ic_help` is
+        // a hollow ring where `ic_warning_badge` is a solid triangle, so the two
+        // survive greyscale; and like `ic_warning_badge` its fill is a literal
+        // black, so the mobile tint below still drives it and TV still draws it
+        // exactly as before.
         val (riskLabel, riskColor, riskBgRes, defaultIcon) = when (item.riskLevel) {
-            RiskLevel.SAFE          -> Quad("SAFE TO CLEAN", ContextCompat.getColor(ctx, R.color.ufm_risk_safe), R.drawable.bg_badge_risk_safe, R.drawable.ic_junk)
-            RiskLevel.MODERATE      -> Quad("MODERATE RISK", ContextCompat.getColor(ctx, R.color.ufm_risk_moderate), R.drawable.bg_badge_risk_moderate, R.drawable.ic_warning_badge)
-            RiskLevel.MANUAL_REVIEW -> Quad(ctx.getString(R.string.manual_review), ContextCompat.getColor(ctx, R.color.ufm_risk_manual), R.drawable.bg_badge_risk_manual, R.drawable.ic_warning_badge)
+            RiskLevel.SAFE          -> Quad("SAFE TO CLEAN", ColorblindPalette.riskSafe(ctx), R.drawable.bg_badge_risk_safe, R.drawable.ic_junk)
+            RiskLevel.MODERATE      -> Quad("MODERATE RISK", ColorblindPalette.riskModerate(ctx), R.drawable.bg_badge_risk_moderate, R.drawable.ic_warning_badge)
+            RiskLevel.MANUAL_REVIEW -> Quad(ctx.getString(R.string.manual_review), ColorblindPalette.riskManual(ctx), R.drawable.bg_badge_risk_manual, R.drawable.ic_help)
         }
 
         val iconRes = when {

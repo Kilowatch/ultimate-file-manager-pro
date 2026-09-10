@@ -15,6 +15,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.button.MaterialButton
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -426,8 +427,8 @@ class SortFilterSheet : BottomSheetDialogFragment() {
     }
 
     private fun setupTvFocus(view: View) {
-        val yellowBg = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_button_focused_yellow))
-        val yellowText = requireContext().getColor(R.color.tv_button_focused_yellow_text)
+        val yellowBg = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(requireContext()))
+        val yellowText = ColorblindPalette.focusFillText(requireContext())
         val whiteText = requireContext().getColor(R.color.tv_text_primary)
         val accentText = requireContext().getColor(R.color.tv_accent)
 

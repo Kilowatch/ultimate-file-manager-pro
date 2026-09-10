@@ -32,10 +32,12 @@ import kotlinx.coroutines.withContext
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.DataFormatter
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.settings.GridIndicatorsPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 import java.io.FileInputStream
 import java.lang.StringBuilder
@@ -77,6 +79,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         isTv = DeviceUtils.isTvDevice(this)
@@ -312,7 +315,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                 val selectedBg = GradientDrawable().apply {
                     cornerRadius = dp(12).toFloat()
                     val color = if (isTv) {
-                        ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.tv_button_focused_yellow)
+                        ColorblindPalette.focusFill(this@SpreadsheetViewerActivity)
                     } else {
                         ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.ufm_accent)
                     }
@@ -354,7 +357,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                 val selectedBg = GradientDrawable().apply {
                     cornerRadius = dp(12).toFloat()
                     val color = if (isTv) {
-                        ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.tv_button_focused_yellow)
+                        ColorblindPalette.focusFill(this@SpreadsheetViewerActivity)
                     } else {
                         ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.ufm_accent)
                     }
@@ -478,7 +481,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                     setOnFocusChangeListener { view, hasFocus ->
                         if (hasFocus) {
                             val focusedBorder = GradientDrawable().apply {
-                                setColor(ContextCompat.getColor(this@SpreadsheetViewerActivity, R.color.tv_button_focused_yellow))
+                                setColor(ColorblindPalette.focusFill(this@SpreadsheetViewerActivity))
                                 setStroke(2, Color.WHITE)
                             }
                             view.background = focusedBorder

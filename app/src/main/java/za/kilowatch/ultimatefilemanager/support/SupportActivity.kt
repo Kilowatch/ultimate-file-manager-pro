@@ -17,6 +17,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -33,6 +35,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
@@ -135,8 +138,8 @@ class SupportActivity : AppCompatActivity() {
 
         // Apply TV focus to Send button on TV
         if (isTv) {
-            val yellowFill = getColor(R.color.tv_button_focused_yellow)
-            val blackText = getColor(R.color.tv_button_focused_yellow_text)
+            val yellowFill = ColorblindPalette.focusFill(this)
+            val blackText = ColorblindPalette.focusFillText(this)
             val defaultBg = getColor(R.color.tv_accent)
             val defaultText = getColor(R.color.tv_text_primary)
 
@@ -220,7 +223,7 @@ class SupportActivity : AppCompatActivity() {
                 getColor(R.color.tv_text_primary)
             )
             val blackCsl = android.content.res.ColorStateList.valueOf(
-                getColor(R.color.tv_button_focused_yellow_text)
+                ColorblindPalette.focusFillText(this)
             )
             btnBack.imageTintList = whiteCsl
             btnBack.setOnFocusChangeListener { _, hasFocus ->
@@ -389,7 +392,7 @@ class SupportActivity : AppCompatActivity() {
 
             if (isTv && btnRemove is ImageView) {
                 val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-                val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+                val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
                 btnRemove.imageTintList = whiteCsl
                 btnRemove.setOnFocusChangeListener { _, hasFocus ->
                     btnRemove.imageTintList = if (hasFocus) yellowCsl else whiteCsl
@@ -600,13 +603,21 @@ class SupportActivity : AppCompatActivity() {
 
     private fun showCustomSupportDialog(
         iconRes: Int,
-        iconTintRes: Int,
+        @ColorRes iconTintRes: Int,
         title: String,
         message: String,
         positiveText: String,
         negativeText: String? = null,
         onPositive: (() -> Unit)? = null,
-        onNegative: (() -> Unit)? = null
+        onNegative: (() -> Unit)? = null,
+        // Status icons whose colour is a severity, not a brand accent, arrive as
+        // a resolved ARGB int: `ColorblindPalette` returns ints and the `ufm*`
+        // attributes have no `R.color` entry to hand back, so a `@ColorRes`
+        // parameter cannot express them. Omitted by the brand-accent callers,
+        // which keep passing a resource id. Same shape as the sibling
+        // `createRoundedBackgroundInt` added to `PolicyViewBuilder` for this
+        // exact reason.
+        @ColorInt iconTint: Int? = null
     ) {
         val layoutRes = if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
         val customView = layoutInflater.inflate(layoutRes, null)
@@ -621,7 +632,7 @@ class SupportActivity : AppCompatActivity() {
 
         val imgIcon = customView.findViewById<ImageView>(R.id.imgDialogIcon)
         imgIcon.setImageResource(iconRes)
-        imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(iconTintRes))
+        imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTint ?: getColor(iconTintRes))
 
         customView.findViewById<TextView>(R.id.txtDialogTitle).text = title
         customView.findViewById<TextView>(R.id.txtDialogMessage).text = message
@@ -630,7 +641,7 @@ class SupportActivity : AppCompatActivity() {
         if (btnPositive is TextView) btnPositive.text = positiveText
 
         if (isTv && btnPositive is Button) {
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             val defaultCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
             btnPositive.setTextColor(defaultCsl)
             btnPositive.setOnFocusChangeListener { _, hasFocus ->
@@ -652,7 +663,7 @@ class SupportActivity : AppCompatActivity() {
             if (btnNegative is TextView) btnNegative.text = negativeText
 
             if (isTv && btnNegative is Button) {
-                val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+                val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
                 val defaultCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_secondary))
                 btnNegative.setTextColor(defaultCsl)
                 btnNegative.setOnFocusChangeListener { _, hasFocus ->
@@ -681,6 +692,7 @@ class SupportActivity : AppCompatActivity() {
         showCustomSupportDialog(
             iconRes = R.drawable.ic_success,
             iconTintRes = R.color.ufm_progress_fill,
+            iconTint = ColorblindPalette.progressFill(this),
             title = getString(R.string.support_success_title),
             message = getString(R.string.support_success_message),
             positiveText = getString(android.R.string.ok),
@@ -692,6 +704,7 @@ class SupportActivity : AppCompatActivity() {
         showCustomSupportDialog(
             iconRes = R.drawable.ic_warning,
             iconTintRes = R.color.ufm_progress_critical,
+            iconTint = ColorblindPalette.denied(this),
             title = getString(R.string.support_error_title),
             message = getString(R.string.support_error_message),
             positiveText = getString(R.string.support_retry),
@@ -704,6 +717,7 @@ class SupportActivity : AppCompatActivity() {
         showCustomSupportDialog(
             iconRes = R.drawable.ic_warning,
             iconTintRes = R.color.ufm_progress_warning,
+            iconTint = ColorblindPalette.progressWarning(this),
             title = getString(R.string.support_error_title),
             message = getString(R.string.support_rate_limited),
             positiveText = getString(android.R.string.ok)
@@ -714,6 +728,7 @@ class SupportActivity : AppCompatActivity() {
         showCustomSupportDialog(
             iconRes = R.drawable.ic_warning,
             iconTintRes = R.color.ufm_progress_warning,
+            iconTint = ColorblindPalette.progressWarning(this),
             title = getString(R.string.support_discard_title),
             message = getString(R.string.support_discard_message),
             positiveText = getString(R.string.support_discard_confirm),

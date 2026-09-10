@@ -36,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
@@ -176,10 +177,10 @@ class GifCreatorActivity : AppCompatActivity() {
         }
 
         if (isTv) {
-            val yellowColor = getColor(R.color.tv_button_focused_yellow)
+            val yellowColor = ColorblindPalette.focusFill(this)
             val normalColor = getColor(R.color.tv_text_primary)
             btnCreateGif.setOnFocusChangeListener { _, hasFocus ->
-                (btnCreateGif as? Button)?.setTextColor(if (hasFocus) getColor(R.color.tv_button_focused_yellow_text) else normalColor)
+                (btnCreateGif as? Button)?.setTextColor(if (hasFocus) ColorblindPalette.focusFillText(this) else normalColor)
             }
             btnChangeOutput.setOnFocusChangeListener { _, hasFocus ->
                 (btnChangeOutput as? Button)?.setTextColor(if (hasFocus) yellowColor else normalColor)

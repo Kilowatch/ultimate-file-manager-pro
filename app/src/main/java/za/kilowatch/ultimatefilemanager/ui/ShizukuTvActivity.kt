@@ -7,8 +7,10 @@ import rikka.shizuku.Shizuku
 import android.content.pm.PackageManager
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.databinding.ActivityShizukuTvBinding
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -33,6 +35,7 @@ class ShizukuTvActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         binding = ActivityShizukuTvBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -198,7 +201,7 @@ class ShizukuTvActivity : AppCompatActivity() {
         val isInstalled = isElevatedManagerInstalled()
         if (isInstalled) {
             binding.txtShizukuStatus.text = getString(R.string.shizuku_installed)
-            binding.txtShizukuStatus.setTextColor(getColor(R.color.shizuku_status_ok))
+            binding.txtShizukuStatus.setTextColor(ColorblindPalette.shizukuOk(this))
             binding.txtShizukuDescription.text = getString(R.string.shizuku_installed_msg)
             binding.txtShizukuDescription.visibility = View.VISIBLE
             
@@ -214,11 +217,11 @@ class ShizukuTvActivity : AppCompatActivity() {
             if (isBound) {
                 if (ShizukuShellWrapper.checkPermissionSafely(this) == PackageManager.PERMISSION_GRANTED) {
                     binding.txtShizukuServiceStatus.text = getString(R.string.shizuku_authorized)
-                    binding.txtShizukuServiceStatus.setTextColor(getColor(R.color.shizuku_status_ok))
+                    binding.txtShizukuServiceStatus.setTextColor(ColorblindPalette.shizukuOk(this))
                     binding.btnShizukuEnable.visibility = View.GONE
                     
                     binding.txtShizukuStatus.text = getString(R.string.shizuku_enabled_and_active)
-                    binding.txtShizukuStatus.setTextColor(getColor(R.color.shizuku_status_ok))
+                    binding.txtShizukuStatus.setTextColor(ColorblindPalette.shizukuOk(this))
                     statusAnimator = android.animation.ObjectAnimator.ofFloat(binding.txtShizukuStatus, "alpha", 1f, 0.3f, 1f).apply {
                         duration = 1000
                         repeatCount = android.animation.ObjectAnimator.INFINITE
@@ -226,19 +229,19 @@ class ShizukuTvActivity : AppCompatActivity() {
                     }
                 } else {
                     binding.txtShizukuServiceStatus.text = getString(R.string.shizuku_not_authorized)
-                    binding.txtShizukuServiceStatus.setTextColor(getColor(R.color.shizuku_status_error))
+                    binding.txtShizukuServiceStatus.setTextColor(ColorblindPalette.shizukuError(this))
                     binding.btnShizukuEnable.text = getString(R.string.shizuku_btn_authorize)
                     binding.btnShizukuEnable.visibility = View.VISIBLE
                 }
             } else {
                 binding.txtShizukuServiceStatus.text = getString(R.string.shizuku_service_not_running)
-                binding.txtShizukuServiceStatus.setTextColor(getColor(R.color.shizuku_status_error))
+                binding.txtShizukuServiceStatus.setTextColor(ColorblindPalette.shizukuError(this))
                 binding.btnShizukuEnable.text = getString(R.string.shizuku_btn_start_service)
                 binding.btnShizukuEnable.visibility = View.VISIBLE
             }
         } else {
             binding.txtShizukuStatus.text = getString(R.string.shizuku_not_installed)
-            binding.txtShizukuStatus.setTextColor(getColor(R.color.shizuku_status_error))
+            binding.txtShizukuStatus.setTextColor(ColorblindPalette.shizukuError(this))
             binding.txtShizukuDescription.text = getString(R.string.shizuku_description)
             binding.txtShizukuDescription.visibility = View.VISIBLE
             

@@ -1573,6 +1573,107 @@ Ultimate File Manager Pro
     <string name="settings_section_privacy_diagnostics">
 隐私与诊断
 </string>
+    <string name="settings_section_accessibility">
+无障碍
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+色盲模式
+</string>
+    <string name="colorblind_screen_subtitle">
+无需依赖颜色即可区分聚焦、选中和状态。
+</string>
+    <string name="colorblind_subtitle_off">
+关闭 — 标准颜色
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · %2$s 对比度
+</string>
+    <string name="colorblind_group_type">
+类型
+</string>
+    <string name="colorblind_group_strength">
+对比度强度
+</string>
+    <string name="colorblind_group_strength_hint">
+强度越高，与背景的区分度越大。
+</string>
+    <string name="colorblind_type_off">
+关闭
+</string>
+    <string name="colorblind_type_off_desc">
+保持应用的标准颜色。
+</string>
+    <string name="colorblind_type_red_green">
+红绿色
+</string>
+    <string name="colorblind_type_red_green_desc">
+适用于红色盲和绿色盲。红色和绿色状态会重新映射为蓝色和琥珀色。
+</string>
+    <string name="colorblind_type_blue_yellow">
+蓝黄色
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+适用于蓝色盲。蓝色和黄色状态会重新映射为品红色和绿色。
+</string>
+    <string name="colorblind_type_high_contrast">
+高对比度
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+假设无颜色感知。仅通过亮度区分状态。
+</string>
+    <string name="colorblind_strength_low">
+低
+</string>
+    <string name="colorblind_strength_low_desc">
+最低对比度 3:1。
+</string>
+    <string name="colorblind_strength_medium">
+中
+</string>
+    <string name="colorblind_strength_medium_desc">
+最低对比度 4.5:1。推荐。
+</string>
+    <string name="colorblind_strength_high">
+高
+</string>
+    <string name="colorblind_strength_high_desc">
+最低对比度 7:1。
+</string>
+    <string name="colorblind_preview_title">
+预览
+</string>
+    <string name="colorblind_preview_hint">
+显示此设置生成的聚焦、选中和状态颜色。
+</string>
+    <string name="colorblind_preview_unfocused">
+未聚焦
+</string>
+    <string name="colorblind_preview_focused">
+已聚焦
+</string>
+    <string name="colorblind_preview_selected">
+已选中
+</string>
+    <string name="colorblind_preview_success">
+成功
+</string>
+    <string name="colorblind_preview_warning">
+警告
+</string>
+    <string name="colorblind_preview_error">
+错误
+</string>
+    <string name="colorblind_status_success_desc">
+成功
+</string>
+    <string name="colorblind_status_warning_desc">
+警告
+</string>
+    <string name="colorblind_status_error_desc">
+错误
+</string>
     <string name="settings_search_bar_title">
 设置搜索栏
 </string>
@@ -10456,6 +10557,15 @@ XML/标记
     <string name="icon_status_check_circle">
 检查圆圈
 </string>
+    <string name="icon_status_success">
+状态成功
+</string>
+    <string name="icon_status_warning_glyph">
+状态警告
+</string>
+    <string name="icon_status_error">
+状态错误
+</string>
     <string name="icon_status_shield_check">
 屏蔽检查
 </string>
@@ -10534,6 +10644,9 @@ XML/标记
 </string>
     <string name="icon_settings_font_size">
 字体大小
+</string>
+    <string name="icon_settings_colorblind">
+色盲模式
 </string>
     <string name="icon_settings_apk_extract">
 APK/XAPK 提取

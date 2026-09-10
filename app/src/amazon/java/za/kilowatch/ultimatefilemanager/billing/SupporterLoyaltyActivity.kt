@@ -16,6 +16,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * Amazon flavor SupporterLoyaltyActivity utilizing standard XML layouts.
@@ -131,7 +132,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val yellowCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack.imageTintList = whiteCsl
             btnBack.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
@@ -172,7 +173,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         // Setup TV focus listeners & navigation chain
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(android.graphics.Color.WHITE)
-            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val yellowCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
 
             btnBack.nextFocusDownId = R.id.btnEspresso
             btnEspresso.nextFocusUpId = R.id.btnBack
@@ -186,7 +187,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                 button.isClickable = true
                 button.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
-                        button.backgroundTintList = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                        button.backgroundTintList = ColorStateList.valueOf(ColorblindPalette.focusFill(this))
                         button.setTextColor(yellowCsl)
                     } else {
                         button.backgroundTintList = null

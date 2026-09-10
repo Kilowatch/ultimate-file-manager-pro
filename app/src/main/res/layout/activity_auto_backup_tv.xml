@@ -100,7 +100,7 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_cloud"
-                        app:tint="@color/tv_button_focused_yellow"
+                        app:tint="?attr/ufmFocusFill"
                         android:importantForAccessibility="no" />
                 </FrameLayout>
 
@@ -162,7 +162,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_cloud"
-                            app:tint="@color/tv_button_focused_yellow"
+                            app:tint="?attr/ufmFocusFill"
                             android:importantForAccessibility="no" />
                     </FrameLayout>
 
@@ -200,7 +200,7 @@
                         android:checked="false"
                         android:clickable="false"
                         android:focusable="false"
-                        app:thumbTint="@color/tv_button_focused_yellow" />
+                        app:thumbTint="?attr/ufmFocusFill" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -277,7 +277,7 @@
                         android:checked="true"
                         android:clickable="false"
                         android:focusable="false"
-                        android:buttonTint="@color/tv_button_focused_yellow" />
+                        android:buttonTint="?attr/ufmFocusFill" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -354,7 +354,7 @@
                         android:checked="true"
                         android:clickable="false"
                         android:focusable="false"
-                        android:buttonTint="@color/tv_button_focused_yellow" />
+                        android:buttonTint="?attr/ufmFocusFill" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -487,7 +487,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_lock"
-                            app:tint="@color/tv_button_focused_yellow"
+                            app:tint="?attr/ufmFocusFill"
                             android:importantForAccessibility="no" />
                     </FrameLayout>
 
@@ -614,7 +614,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/auto_backup_location_unavailable"
-                        android:textColor="@color/tv_error_red"
+                        android:textColor="?attr/ufmTvErrorRed"
                         android:textSize="14sp"
                         android:layout_marginBottom="10dp"
                         android:visibility="gone" />
@@ -677,7 +677,7 @@
                 android:layout_gravity="center"
                 android:visibility="gone"
                 android:layout_marginTop="16dp"
-                android:indeterminateTint="@color/tv_button_focused_yellow" />
+                android:indeterminateTint="?attr/ufmFocusFill" />
 
         </LinearLayout>
     </ScrollView>

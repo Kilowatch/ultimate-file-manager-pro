@@ -24,7 +24,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_lightning"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:contentDescription="@null" />
     </FrameLayout>
 

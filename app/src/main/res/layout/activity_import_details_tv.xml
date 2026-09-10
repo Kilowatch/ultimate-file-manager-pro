@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:padding="24dp"
         android:gravity="center"
-        android:textColor="@color/mobile_note_color"
+        android:textColor="?attr/ufmMobileNoteColor"
         android:textSize="18sp"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
@@ -114,11 +114,11 @@
                 android:focusableInTouchMode="false"
                 android:clickable="false"
                 android:descendantFocusability="blocksDescendants"
-                app:cardBackgroundColor="@color/tv_glass_amber"
+                app:cardBackgroundColor="?attr/ufmStatusGlassAmber"
                 app:cardCornerRadius="@dimen/card_radius_lg"
                 app:cardElevation="0dp"
                 app:strokeWidth="1.5dp"
-                app:strokeColor="@color/tv_note_color"
+                app:strokeColor="?attr/ufmTvNoteColor"
                 android:layout_marginBottom="16dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/btnImportConfirm">
@@ -147,7 +147,7 @@
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:src="@drawable/ic_warning"
-                            app:tint="@color/tv_note_color"
+                            app:tint="?attr/ufmTvNoteColor"
                             android:layout_marginEnd="12dp"
                             android:contentDescription="@null"
                             android:focusable="false"
@@ -202,7 +202,7 @@
                 android:paddingBottom="16dp"
                 android:scrollbars="vertical"
                 android:fadeScrollbars="false"
-                android:scrollbarThumbVertical="@color/tv_button_focused_yellow"
+                android:scrollbarThumbVertical="?attr/ufmFocusFill"
                 android:focusable="false">
 
                 <LinearLayout

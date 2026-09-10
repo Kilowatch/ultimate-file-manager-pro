@@ -71,6 +71,7 @@ import za.kilowatch.ultimatefilemanager.network.SmbShareClient
 import za.kilowatch.ultimatefilemanager.network.SshShareClient
 import za.kilowatch.ultimatefilemanager.network.TvShareClient
 import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.SettingsActivity
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
@@ -82,6 +83,7 @@ import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.TransferConflictHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.ensureActive
@@ -174,6 +176,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
 
         // Mobile only — tabs are not enabled on TV
@@ -1162,7 +1165,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
     private fun showClipboardSheet() {
         if (!FileClipboard.hasItems()) return
         val colorCopy = getColor(R.color.ufm_primary)
-        val colorCut = getColor(R.color.ufm_denied)
+        val colorCut = ColorblindPalette.denied(this)
 
         val contentView = layoutInflater.inflate(R.layout.bottom_sheet_clipboard, null)
         val tabLayout = contentView.findViewById<TabLayout>(R.id.tabClipboardSlots)

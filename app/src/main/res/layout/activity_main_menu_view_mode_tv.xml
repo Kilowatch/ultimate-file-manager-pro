@@ -90,7 +90,7 @@
                         android:id="@+id/rbList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_button_focused_yellow"
+                        android:buttonTint="?attr/ufmFocusFill"
                         android:clickable="false"
                         android:focusable="false"
                         android:saveEnabled="false" />
@@ -145,7 +145,7 @@
                         android:id="@+id/rbGrid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_button_focused_yellow"
+                        android:buttonTint="?attr/ufmFocusFill"
                         android:clickable="false"
                         android:focusable="false"
                         android:saveEnabled="false" />
@@ -214,7 +214,7 @@
                             android:id="@+id/rbSizeLarge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:buttonTint="@color/tv_button_focused_yellow"
+                            android:buttonTint="?attr/ufmFocusFill"
                             android:clickable="false"
                             android:focusable="false"
                             android:saveEnabled="false" />
@@ -264,7 +264,7 @@
                             android:id="@+id/rbSizeMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:buttonTint="@color/tv_button_focused_yellow"
+                            android:buttonTint="?attr/ufmFocusFill"
                             android:clickable="false"
                             android:focusable="false"
                             android:saveEnabled="false" />
@@ -314,7 +314,7 @@
                             android:id="@+id/rbSizeSmall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:buttonTint="@color/tv_button_focused_yellow"
+                            android:buttonTint="?attr/ufmFocusFill"
                             android:clickable="false"
                             android:focusable="false"
                             android:saveEnabled="false" />
@@ -384,7 +384,7 @@
                             android:id="@+id/rbColumns4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:buttonTint="@color/tv_button_focused_yellow"
+                            android:buttonTint="?attr/ufmFocusFill"
                             android:clickable="false"
                             android:focusable="false"
                             android:saveEnabled="false" />
@@ -439,7 +439,7 @@
                             android:id="@+id/rbColumns3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:buttonTint="@color/tv_button_focused_yellow"
+                            android:buttonTint="?attr/ufmFocusFill"
                             android:clickable="false"
                             android:focusable="false"
                             android:saveEnabled="false" />

@@ -36,6 +36,7 @@ import za.kilowatch.ultimatefilemanager.network.PairingServer
 import kotlin.random.Random
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 class DevicePairingActivity : AppCompatActivity() {
 
@@ -62,6 +63,7 @@ class DevicePairingActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         isTvMode = isTvDevice()
         

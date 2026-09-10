@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.indexing.IndexingManager
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
@@ -76,7 +77,7 @@ class StorageIndexerActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack.imageTintList = whiteCsl
             btnBack.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -329,8 +330,11 @@ class StorageIndexerActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (dialog.isShowing) {
                         txtProgressStats.text = "Error: ${e.message}"
-                        val errColor = if (isTv) R.color.tv_error_red else R.color.status_error
-                        txtProgressStats.setTextColor(getColor(errColor))
+                        // Two different reds (the TV red is #FF5252, status_error
+                        // resolves to ufm_denied), so they keep their own levers.
+                        val errColor = if (isTv) ColorblindPalette.tvErrorRed(this)
+                                       else ColorblindPalette.denied(this)
+                        txtProgressStats.setTextColor(errColor)
                         btnRunBackground.setText(R.string.continue_anyway)
                     }
                 }

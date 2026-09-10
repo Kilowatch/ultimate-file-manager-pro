@@ -31,6 +31,7 @@ import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * Settings activity to manage custom labels for storage drives.
@@ -88,7 +89,7 @@ class StorageRenameActivity : AppCompatActivity() {
 
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
 
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
@@ -96,9 +97,9 @@ class StorageRenameActivity : AppCompatActivity() {
             }
 
             val clearIv = btnClearAll as? ImageView
-            clearIv?.imageTintList = ColorStateList.valueOf(getColor(R.color.status_error))
+            clearIv?.imageTintList = ColorStateList.valueOf(ColorblindPalette.denied(this))
             clearIv?.setOnFocusChangeListener { _, hasFocus ->
-                clearIv.imageTintList = if (hasFocus) blackCsl else ColorStateList.valueOf(getColor(R.color.status_error))
+                clearIv.imageTintList = if (hasFocus) blackCsl else ColorStateList.valueOf(ColorblindPalette.denied(this))
             }
         }
 
@@ -271,16 +272,16 @@ class StorageRenameActivity : AppCompatActivity() {
 
         if (item.isOnline) {
             txtStatus.setText(R.string.status_online)
-            txtStatus.backgroundTintList = ColorStateList.valueOf(getColor(R.color.status_success))
+            txtStatus.backgroundTintList = ColorStateList.valueOf(ColorblindPalette.statusSuccess(this))
             imgAction.setImageResource(R.drawable.ic_edit)
             imgAction.imageTintList = ColorStateList.valueOf(getColor(R.color.mobile_icon_tint))
             imgIcon.alpha = 1.0f
             txtTitle.alpha = 1.0f
         } else {
             txtStatus.setText(R.string.status_offline)
-            txtStatus.backgroundTintList = ColorStateList.valueOf(getColor(R.color.status_error))
+            txtStatus.backgroundTintList = ColorStateList.valueOf(ColorblindPalette.denied(this))
             imgAction.setImageResource(R.drawable.ic_undo)
-            imgAction.imageTintList = ColorStateList.valueOf(getColor(R.color.status_error))
+            imgAction.imageTintList = ColorStateList.valueOf(ColorblindPalette.denied(this))
             imgIcon.alpha = 0.5f
             txtTitle.alpha = 0.7f
         }
@@ -335,7 +336,7 @@ class StorageRenameActivity : AppCompatActivity() {
             txtSubtitle.text = formattedSize
         }
 
-        val badgeTint = if (item.isOnline) getColor(R.color.status_success) else getColor(R.color.status_error)
+        val badgeTint = if (item.isOnline) ColorblindPalette.statusSuccess(this) else ColorblindPalette.denied(this)
         txtStatus.setText(if (item.isOnline) R.string.status_online else R.string.status_offline)
         txtStatus.backgroundTintList = ColorStateList.valueOf(badgeTint)
 
@@ -344,12 +345,12 @@ class StorageRenameActivity : AppCompatActivity() {
     }
 
     private fun setupTvCardFocus(card: MaterialCardView, isOnline: Boolean) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val glassColor = getColor(R.color.tv_glass_white_10)
         val primaryText = getColor(R.color.tv_text_primary)
         val secondText = getColor(R.color.tv_text_secondary)
-        val badgeTint = if (isOnline) getColor(R.color.status_success) else getColor(R.color.status_error)
+        val badgeTint = if (isOnline) ColorblindPalette.statusSuccess(this) else ColorblindPalette.denied(this)
 
         val txtLabel = card.findViewById<TextView>(R.id.txtLabel)
         val txtSubtitle = card.findViewById<TextView>(R.id.txtSubtitle)
@@ -357,6 +358,12 @@ class StorageRenameActivity : AppCompatActivity() {
         val txtStatus = card.findViewById<TextView>(R.id.txtStatus)
 
         card.setOnFocusChangeListener { _, hasFocus ->
+            // The FR-06 marker is NOT assigned here. This card declares
+            // `@drawable/selector_tv_card` as its XML foreground, and that selector's
+            // focused state already carries the marker. Writing to `foreground` would
+            // overwrite the whole selector, and since `marker()` returns null on blur
+            // the card would permanently lose its glow rings and accent border the
+            // first time it was focused -- with Colorblind Mode Off (FR-19).
             if (hasFocus) {
                 card.setCardBackgroundColor(yellowFill)
                 txtLabel?.setTextColor(blackText)
@@ -368,7 +375,7 @@ class StorageRenameActivity : AppCompatActivity() {
                 card.setCardBackgroundColor(glassColor)
                 txtLabel?.setTextColor(primaryText)
                 txtSubtitle?.setTextColor(secondText)
-                imgIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.tv_accent))
+                imgIcon?.imageTintList = ColorStateList.valueOf(ColorblindPalette.focusAccent(this))
                 txtStatus?.setTextColor(Color.WHITE)
                 txtStatus?.backgroundTintList = ColorStateList.valueOf(badgeTint)
             }

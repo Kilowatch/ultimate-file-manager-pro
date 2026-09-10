@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import java.io.File
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager
 import za.kilowatch.ultimatefilemanager.util.MimeTypeHelper
 
@@ -647,7 +648,10 @@ object FileViewerRouter {
         val focusedBg = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadius = dp(14).toFloat()
-            setColor(Color.parseColor("#FBBF24")) // Yellow
+            // FR-05: the focused fill. `#FBBF24` is byte-identical to
+            // ufmFocusFill's default (#FFFBBF24 in both day and night), so with
+            // the mode OFF this is the same colour it has always been.
+            setColor(ColorblindPalette.focusFill(context))
         }
 
         return LinearLayout(context).apply {

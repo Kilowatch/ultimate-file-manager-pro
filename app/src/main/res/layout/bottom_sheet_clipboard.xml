@@ -56,7 +56,7 @@
             android:insetBottom="0dp"
             android:paddingHorizontal="8dp"
             android:text="@string/clear_all"
-            android:textColor="@color/ufm_denied"
+            android:textColor="?attr/ufmDenied"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -115,9 +115,9 @@
             android:layout_height="44dp"
             android:layout_weight="1"
             android:text="@string/remove_slot"
-            android:textColor="@color/ufm_denied"
+            android:textColor="?attr/ufmDenied"
             app:icon="@drawable/ic_delete"
-            app:iconTint="@color/ufm_denied"
+            app:iconTint="?attr/ufmDenied"
             app:iconPadding="6dp"
             app:iconSize="18dp"
             app:strokeColor="#55FF5252"

@@ -54,7 +54,7 @@
             android:contentDescription="@string/network_delete_confirm_yes"
             android:visibility="gone"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/ufm_denied" />
+            app:tint="?attr/ufmDenied" />
     </FrameLayout>
 
 </LinearLayout>

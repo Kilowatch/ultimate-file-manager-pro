@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
@@ -93,8 +94,8 @@ class ExportSelectionAdapter(
 
             holder.layoutHeader.setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
-                    v.setBackgroundColor(context.getColor(R.color.tv_button_focused_yellow))
-                    holder.txtHeaderTitle.setTextColor(context.getColor(R.color.tv_button_focused_yellow_text))
+                    v.setBackgroundColor(ColorblindPalette.focusFill(context))
+                    holder.txtHeaderTitle.setTextColor(ColorblindPalette.focusFillText(context))
                 } else {
                     v.setBackgroundColor(Color.TRANSPARENT)
                     holder.txtHeaderTitle.setTextColor(context.getColor(R.color.tv_text_primary))
@@ -139,8 +140,8 @@ class ExportSelectionAdapter(
 
                 childView.setOnFocusChangeListener { v, hasFocus ->
                     if (hasFocus) {
-                        v.setBackgroundColor(context.getColor(R.color.tv_button_focused_yellow))
-                        txtChildName.setTextColor(context.getColor(R.color.tv_button_focused_yellow_text))
+                        v.setBackgroundColor(ColorblindPalette.focusFill(context))
+                        txtChildName.setTextColor(ColorblindPalette.focusFillText(context))
                         txtChildExtra.setTextColor(Color.parseColor("#333333"))
                     } else {
                         v.setBackgroundColor(Color.TRANSPARENT)

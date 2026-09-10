@@ -85,7 +85,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/ic_star"
-                app:tint="@color/tv_button_focused_yellow"
+                app:tint="?attr/ufmFocusFill"
                 android:layout_marginBottom="12dp"
                 android:contentDescription="@null" />
 
@@ -112,7 +112,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_star"
-                    app:tint="@color/tv_button_focused_yellow"
+                    app:tint="?attr/ufmFocusFill"
                     android:layout_marginHorizontal="2dp"
                     android:contentDescription="@null" />
 
@@ -120,7 +120,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_star"
-                    app:tint="@color/tv_button_focused_yellow"
+                    app:tint="?attr/ufmFocusFill"
                     android:layout_marginHorizontal="2dp"
                     android:contentDescription="@null" />
 
@@ -128,7 +128,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_star"
-                    app:tint="@color/tv_button_focused_yellow"
+                    app:tint="?attr/ufmFocusFill"
                     android:layout_marginHorizontal="2dp"
                     android:contentDescription="@null" />
 
@@ -136,7 +136,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_star"
-                    app:tint="@color/tv_button_focused_yellow"
+                    app:tint="?attr/ufmFocusFill"
                     android:layout_marginHorizontal="2dp"
                     android:contentDescription="@null" />
 
@@ -144,7 +144,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_star"
-                    app:tint="@color/tv_button_focused_yellow"
+                    app:tint="?attr/ufmFocusFill"
                     android:layout_marginHorizontal="2dp"
                     android:contentDescription="@null" />
             </LinearLayout>

@@ -84,7 +84,7 @@
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
                 android:text="@string/smart_sort_execute"
-                android:textColor="@color/tv_button_focused_yellow_text"
+                android:textColor="?attr/ufmFocusFillText"
                 android:textSize="13sp"
                 android:fontFamily="sans-serif-bold"
                 android:insetTop="0dp"
@@ -93,7 +93,7 @@
                 app:backgroundTint="@color/selector_tv_button_yellow"
                 app:icon="@drawable/ic_play"
                 app:iconSize="16dp"
-                app:iconTint="@color/tv_button_focused_yellow_text" />
+                app:iconTint="?attr/ufmFocusFillText" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDeleteConfig"
@@ -103,7 +103,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="@string/smart_sort_delete_saved"
-                android:textColor="@color/tv_error_red"
+                android:textColor="?attr/ufmTvErrorRed"
                 android:textSize="13sp"
                 android:fontFamily="sans-serif-bold"
                 android:insetTop="0dp"
@@ -111,7 +111,7 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/ic_delete"
                 app:iconSize="16dp"
-                app:iconTint="@color/tv_error_red" />
+                app:iconTint="?attr/ufmTvErrorRed" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

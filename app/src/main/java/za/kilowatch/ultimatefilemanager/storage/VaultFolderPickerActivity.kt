@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import java.io.File
@@ -26,6 +27,7 @@ import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Simple folder picker used by the Vault to select a folder path.
@@ -51,6 +53,7 @@ class VaultFolderPickerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (DeviceUtils.isTvDevice(this)) {
@@ -78,7 +81,7 @@ class VaultFolderPickerActivity : AppCompatActivity() {
         if (isTv) {
             // TV: apply focus-based tint changes
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -96,12 +99,12 @@ class VaultFolderPickerActivity : AppCompatActivity() {
 
         // Select This Folder button — TV focus: yellow bg + black text
         if (isTv) {
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+            val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(this))
             val glassCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_glass_white_15))
             val accentCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_accent))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnSelectCurrent.setOnFocusChangeListener { _, hasFocus ->
-                btnSelectCurrent.setTextColor(if (hasFocus) getColor(R.color.tv_button_focused_yellow_text) else getColor(R.color.tv_text_primary))
+                btnSelectCurrent.setTextColor(if (hasFocus) ColorblindPalette.focusFillText(this) else getColor(R.color.tv_text_primary))
                 btnSelectCurrent.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
                 btnSelectCurrent.iconTint = if (hasFocus) blackCsl else accentCsl
             }
@@ -233,8 +236,8 @@ class VaultFolderPickerActivity : AppCompatActivity() {
 
                 // TV focus: yellow background + black text on focused folder rows
                 if (isDir) {
-                    val yellow = ctx.getColor(R.color.tv_button_focused_yellow)
-                    val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
+                    val yellow = ColorblindPalette.focusFill(ctx)
+                    val black = ColorblindPalette.focusFillText(ctx)
                     val white = ctx.getColor(R.color.tv_text_primary)
                     val hint = ctx.getColor(R.color.tv_text_hint)
                     val glassBg = ctx.getColor(R.color.tv_glass_white_10)

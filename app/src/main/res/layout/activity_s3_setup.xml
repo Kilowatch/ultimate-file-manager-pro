@@ -178,7 +178,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:textColor="@color/mobile_note_color"
+                android:textColor="?attr/ufmMobileNoteColor"
                 android:textSize="13sp"
                 android:visibility="gone" />
 

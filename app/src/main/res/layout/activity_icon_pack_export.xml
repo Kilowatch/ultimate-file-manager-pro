@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:padding="24dp"
         android:gravity="center"
-        android:textColor="@color/mobile_note_color"
+        android:textColor="?attr/ufmMobileNoteColor"
         android:textSize="15sp"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -127,7 +127,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_warning"
-                        app:tint="@color/mobile_note_color" />
+                        app:tint="?attr/ufmMobileNoteColor" />
                 </FrameLayout>
 
                 <TextView

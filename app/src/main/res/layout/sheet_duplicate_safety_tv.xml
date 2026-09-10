@@ -16,7 +16,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="24dp"
         app:srcCompat="@drawable/ic_warning_badge"
-        app:tint="@color/tv_error" />
+        app:tint="?attr/ufmTvErrorRed" />
 
     <TextView
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
             android:id="@+id/txtDangerousFiles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/tv_error"
+            android:textColor="?attr/ufmTvErrorRed"
             android:textSize="15sp"
             android:textStyle="italic"
             android:gravity="center" />

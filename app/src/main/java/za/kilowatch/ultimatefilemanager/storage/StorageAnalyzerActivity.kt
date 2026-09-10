@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
@@ -42,6 +43,7 @@ import za.kilowatch.ultimatefilemanager.ui.StorageBarView
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import android.os.StatFs
@@ -102,6 +104,7 @@ class StorageAnalyzerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         handledFontChange = savedInstanceState?.getBoolean("font_handled", false) ?: false
         handledLocaleChange = savedInstanceState?.getBoolean("locale_handled", false) ?: false
@@ -192,7 +195,7 @@ class StorageAnalyzerActivity : AppCompatActivity() {
         if (!isTv) return
         
         val normalColor = ContextCompat.getColor(this, R.color.tv_text_primary)
-        val focusedColor = ContextCompat.getColor(this, R.color.tv_button_focused_yellow_text)
+        val focusedColor = ColorblindPalette.focusFillText(this)
         
         // Inject margins and focus listeners into tabs
         tabLayout.post {
@@ -879,15 +882,24 @@ class OverviewTabFragment : AnalyzerTabFragment() {
         v.findViewById<TextView>(R.id.txtAnalyzerTotalUsage)?.text =
             getString(R.string.analyzer_total_used, usedFmt, totalFmt)
 
-        // Storage bar
-        val colors = listOf(
-            R.color.ufm_analyzer_images, R.color.ufm_analyzer_videos,
-            R.color.ufm_analyzer_audio, R.color.ufm_analyzer_documents,
-            R.color.ufm_analyzer_apks, R.color.ufm_analyzer_other
-        )
-        val segments = report.categoryBreakdown.mapIndexed { i, cat ->
-            StorageBarView.Segment(getString(cat.nameRes), cat.bytes,
-                ContextCompat.getColor(requireContext(), colors.getOrElse(i) { R.color.ufm_analyzer_other }))
+        // Storage bar (FR-11)
+        val ctx = requireContext()
+        val segments = report.categoryBreakdown.map { cat ->
+            // Keyed on cat.filterType rather than the list index. The old
+            // positional R.color.ufm_analyzer_* list happened to match the order
+            // buildCategories() emits, but the icon mapping below already keys on
+            // filterType — so index-keyed colours and filterType-keyed icons were
+            // two mappings that had to agree by coincidence. Now they cannot
+            // disagree.
+            val color = when (cat.filterType) {
+                SortFilterSheet.FilterType.IMAGES -> ColorblindPalette.analyzerImages(ctx)
+                SortFilterSheet.FilterType.VIDEOS -> ColorblindPalette.analyzerVideos(ctx)
+                SortFilterSheet.FilterType.AUDIO -> ColorblindPalette.analyzerAudio(ctx)
+                SortFilterSheet.FilterType.DOCUMENTS -> ColorblindPalette.analyzerDocuments(ctx)
+                SortFilterSheet.FilterType.APKS -> ColorblindPalette.analyzerApks(ctx)
+                else -> ColorblindPalette.analyzerOther(ctx)
+            }
+            StorageBarView.Segment(getString(cat.nameRes), cat.bytes, color)
         }
         v.findViewById<StorageBarView>(R.id.storageBar)?.setSegments(segments)
 
@@ -909,7 +921,14 @@ class OverviewTabFragment : AnalyzerTabFragment() {
             }
             itemView.findViewById<ImageView>(R.id.imgCategoryIcon)?.apply {
                 setImageResource(iconRes)
-                imageTintList = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.tv_accent))
+                // Routed through the palette so the legend icons follow the mode.
+                // `tv_accent` and the base default of `ufmFocusAccent` are the
+                // same colour, so the mode-off appearance is unchanged — but this
+                // is the *accent*, not a category, so it takes the accent
+                // attribute rather than one of the six analyzer colours.
+                imageTintList = android.content.res.ColorStateList.valueOf(
+                    ColorblindPalette.focusAccent(context)
+                )
             }
             itemView.findViewById<TextView>(R.id.txtCategoryName)?.text = getString(cat.nameRes)
             itemView.findViewById<TextView>(R.id.txtFileCount)?.text = if (cat.fileCount == 1L) getString(R.string.analyzer_file_count_singular, 1) else getString(R.string.analyzer_file_count_plural, cat.fileCount)

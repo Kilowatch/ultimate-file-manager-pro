@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -134,8 +135,8 @@ class AppAdapter(
 
             // TV focus styling (card layout only)
             if (isTv && card != null) {
-                val yellow = context.getColor(R.color.tv_button_focused_yellow)
-                val black  = context.getColor(R.color.tv_button_focused_yellow_text)
+                val yellow = ColorblindPalette.focusFill(context)
+                val black  = ColorblindPalette.focusFillText(context)
                 val white  = context.getColor(R.color.tv_text_primary)
                 val hint   = context.getColor(R.color.tv_text_hint)
                 val glassBg = context.getColor(R.color.tv_glass_white_10)
@@ -151,7 +152,7 @@ class AppAdapter(
                     } else {
                         // Restore state based on selection
                         if (isSelected && !compactLayout) {
-                            card.setCardBackgroundColor(context.getColor(R.color.ufm_selection_highlight))
+                            card.setCardBackgroundColor(ColorblindPalette.selectionFill(context))
                             card.strokeWidth = 4
                             card.setStrokeColor(android.content.res.ColorStateList.valueOf(context.getColor(R.color.ufm_primary)))
                         } else {
@@ -173,7 +174,7 @@ class AppAdapter(
                     if (!isTv || !card.hasFocus()) {
                         card.strokeWidth = 4
                         card.strokeColor = context.getColor(R.color.ufm_primary)
-                        card.setCardBackgroundColor(context.getColor(R.color.ufm_selection_highlight))
+                        card.setCardBackgroundColor(ColorblindPalette.selectionFill(context))
                     }
                 } else {
                     card.strokeWidth = 0

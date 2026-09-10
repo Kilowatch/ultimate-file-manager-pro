@@ -30,7 +30,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_warning"
-                app:tint="@color/ufm_progress_warning"
+                app:tint="?attr/ufmProgressWarning"
                 android:importantForAccessibility="no" />
         </FrameLayout>
 

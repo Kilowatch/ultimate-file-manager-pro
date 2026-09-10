@@ -307,7 +307,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_delete"
-                    app:tint="@color/status_error"
+                    app:tint="?attr/ufmDenied"
                     android:importantForAccessibility="no" />
 
                 <TextView
@@ -315,7 +315,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:text="@string/action_delete"
-                    android:textColor="@color/status_error"
+                    android:textColor="?attr/ufmDenied"
                     android:textSize="14.5sp"
                     android:fontFamily="sans-serif-medium" />
             </LinearLayout>

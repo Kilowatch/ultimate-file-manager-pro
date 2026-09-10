@@ -23,7 +23,7 @@
             android:layout_height="28dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_shield_alert"
-            app:tint="@color/ufm_denied"
+            app:tint="?attr/ufmDenied"
             android:contentDescription="@null" />
     </FrameLayout>
 

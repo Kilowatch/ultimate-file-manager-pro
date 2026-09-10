@@ -1573,6 +1573,107 @@ USBおよびローカルストレージドライブの名前を変更
     <string name="settings_section_privacy_diagnostics">
 プライバシーと診断
 </string>
+    <string name="settings_section_accessibility">
+アクセシビリティ
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+色覚サポートモード
+</string>
+    <string name="colorblind_screen_subtitle">
+色に頼らずに、フォーカス・選択・ステータスの各状態を見分けられるようにします。
+</string>
+    <string name="colorblind_subtitle_off">
+オフ — 標準の色
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s・%2$s のコントラスト
+</string>
+    <string name="colorblind_group_type">
+タイプ
+</string>
+    <string name="colorblind_group_strength">
+コントラストの強さ
+</string>
+    <string name="colorblind_group_strength_hint">
+強度を上げるほど、背景との区別がはっきりします。
+</string>
+    <string name="colorblind_type_off">
+オフ
+</string>
+    <string name="colorblind_type_off_desc">
+アプリの標準の色を使用します。
+</string>
+    <string name="colorblind_type_red_green">
+赤 - 緑
+</string>
+    <string name="colorblind_type_red_green_desc">
+1型・2型色覚向け。赤と緑の状態は青とアンバーの組み合わせに置き換えられます。
+</string>
+    <string name="colorblind_type_blue_yellow">
+青 - 黄
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+3型色覚向け。青と黄の状態はマゼンタと緑の組み合わせに置き換えられます。
+</string>
+    <string name="colorblind_type_high_contrast">
+ハイコントラスト
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+色の知覚を前提としません。状態は明度のみで区別されます。
+</string>
+    <string name="colorblind_strength_low">
+低
+</string>
+    <string name="colorblind_strength_low_desc">
+最小コントラスト 3:1。
+</string>
+    <string name="colorblind_strength_medium">
+中
+</string>
+    <string name="colorblind_strength_medium_desc">
+最小コントラスト 4.5:1。推奨。
+</string>
+    <string name="colorblind_strength_high">
+高
+</string>
+    <string name="colorblind_strength_high_desc">
+最小コントラスト 7:1。
+</string>
+    <string name="colorblind_preview_title">
+プレビュー
+</string>
+    <string name="colorblind_preview_hint">
+この設定で生成されるフォーカス・選択・ステータスの色を表示します。
+</string>
+    <string name="colorblind_preview_unfocused">
+非フォーカス
+</string>
+    <string name="colorblind_preview_focused">
+フォーカス
+</string>
+    <string name="colorblind_preview_selected">
+選択中
+</string>
+    <string name="colorblind_preview_success">
+成功
+</string>
+    <string name="colorblind_preview_warning">
+警告
+</string>
+    <string name="colorblind_preview_error">
+エラー
+</string>
+    <string name="colorblind_status_success_desc">
+成功
+</string>
+    <string name="colorblind_status_warning_desc">
+警告
+</string>
+    <string name="colorblind_status_error_desc">
+エラー
+</string>
     <string name="settings_search_bar_title">
 設定検索バー
 </string>
@@ -10456,6 +10557,15 @@ XML / マークアップ
     <string name="icon_status_check_circle">
 チェックサークル
 </string>
+    <string name="icon_status_success">
+ステータス: 成功
+</string>
+    <string name="icon_status_warning_glyph">
+ステータス: 警告
+</string>
+    <string name="icon_status_error">
+ステータス: エラー
+</string>
     <string name="icon_status_shield_check">
 シールドチェック
 </string>
@@ -10534,6 +10644,9 @@ XML / マークアップ
 </string>
     <string name="icon_settings_font_size">
 フォントサイズ
+</string>
+    <string name="icon_settings_colorblind">
+色覚サポートモード
 </string>
     <string name="icon_settings_apk_extract">
 APK/XAPK抽出

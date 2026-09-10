@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
                 android:letterSpacing="0.2"
-                android:textColor="@color/tv_button_focused_yellow"
+                android:textColor="?attr/ufmFocusFill"
                 android:textSize="54sp"
                 tools:text="1200" />
         </FrameLayout>

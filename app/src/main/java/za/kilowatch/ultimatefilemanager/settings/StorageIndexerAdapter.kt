@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.StorageItem
 
 /**
@@ -39,15 +40,15 @@ class StorageIndexerAdapter(
 
         init {
             if (isTv) {
-                val yellow = itemView.context.getColor(R.color.tv_button_focused_yellow)
+                val yellow = ColorblindPalette.focusFill(itemView.context)
                 val white = itemView.context.getColor(R.color.tv_text_primary)
-                val blackText = itemView.context.getColor(R.color.tv_button_focused_yellow_text)
+                val blackText = ColorblindPalette.focusFillText(itemView.context)
 
                 itemView.setOnFocusChangeListener { _, hasFocus ->
                     itemView.backgroundTintList = ColorStateList.valueOf(if (hasFocus) yellow else 0x1AFFFFFF)
                     labelView.setTextColor(if (hasFocus) blackText else white)
                     statusView.setTextColor(if (hasFocus) blackText else itemView.context.getColor(R.color.tv_text_secondary))
-                    countView.setTextColor(if (hasFocus) blackText else itemView.context.getColor(R.color.tv_button_focused_yellow))
+                    countView.setTextColor(if (hasFocus) blackText else ColorblindPalette.focusFill(itemView.context))
                 }
             }
             itemView.setOnClickListener { onStorageClick(getItem(bindingAdapterPosition)) }

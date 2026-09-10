@@ -11,6 +11,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -28,9 +29,14 @@ object IndexingUiHelper {
     ) {
         val isTv = DeviceUtils.isTvDevice(activity)
         if (isTv) {
-            val yellow = try { activity.getColor(R.color.tv_button_focused_yellow) } catch (_: Exception) { 0xFFFFCC00.toInt() }
-            val white  = try { activity.getColor(R.color.tv_text_primary) } catch (_: Exception) { 0xFFFFFFFF.toInt() }
-            val black  = try { activity.getColor(R.color.tv_button_focused_yellow_text) } catch (_: Exception) { 0xFF000000.toInt() }
+            // Focus colours resolve through the palette (FR-05 / FR-07). The old
+            // try/catch is gone: `Activity.getColor` is API 23 and minSdk is 26,
+            // so it could never throw — and its `0xFFFFCC00` fallback was not even
+            // the right colour (today's focus yellow is #FFFBBF24). ColorblindPalette
+            // carries its own, correct fallback chain.
+            val yellow = ColorblindPalette.focusFill(activity)
+            val white  = activity.getColor(R.color.tv_text_primary)
+            val black  = ColorblindPalette.focusFillText(activity)
             val glass  = 0x26FFFFFF.toInt()
 
             val dialog = MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
@@ -57,8 +63,13 @@ object IndexingUiHelper {
             dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
                 backgroundTintList = yellowCsl
                 setTextColor(black)
+                // This listener is a no-op: both branches resolve to the focused
+                // fill, so the button looks identical focused or not. It predates
+                // Colorblind Mode and is left as-is rather than redesigned here —
+                // the positive button is deliberately always-highlighted. Routed
+                // through the palette all the same, so it follows the remap.
                 setOnFocusChangeListener { _, hasFocus ->
-                    backgroundTintList = if (hasFocus) ColorStateList.valueOf(activity.getColor(R.color.tv_button_focused_yellow)) else yellowCsl
+                    backgroundTintList = if (hasFocus) ColorStateList.valueOf(ColorblindPalette.focusFill(activity)) else yellowCsl
                 }
                 requestFocus()
             }
@@ -163,8 +174,11 @@ object IndexingUiHelper {
                 activity.runOnUiThread {
                     if (!activity.isFinishing && !activity.isDestroyed && dialog.isShowing) {
                         txtProgressStats.text = "Error: ${e.message}"
-                        val errColor = if (isTv) R.color.tv_error_red else R.color.status_error
-                        txtProgressStats.setTextColor(activity.getColor(errColor))
+                        // Two different reds (the TV red is #FF5252, status_error
+                        // resolves to ufm_denied), so they keep their own levers.
+                        val errColor = if (isTv) ColorblindPalette.tvErrorRed(activity)
+                                       else ColorblindPalette.denied(activity)
+                        txtProgressStats.setTextColor(errColor)
                         btnRunBackground.setText(R.string.continue_anyway)
                     }
                 }
@@ -211,8 +225,8 @@ object IndexingUiHelper {
     fun showIndexingReminderDialog(activity: Activity, onDismiss: () -> Unit) {
         val isTv = DeviceUtils.isTvDevice(activity)
         if (isTv) {
-            val yellow = try { activity.getColor(R.color.tv_button_focused_yellow) } catch (_: Exception) { 0xFFFFCC00.toInt() }
-            val black  = try { activity.getColor(R.color.tv_button_focused_yellow_text) } catch (_: Exception) { 0xFF000000.toInt() }
+            val yellow = ColorblindPalette.focusFill(activity)
+            val black  = ColorblindPalette.focusFillText(activity)
 
             val dialog = MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
                 .setTitle(R.string.storage_indexer_reminder_title)
@@ -232,7 +246,7 @@ object IndexingUiHelper {
                 backgroundTintList = ColorStateList.valueOf(yellow)
                 setTextColor(black)
                 setOnFocusChangeListener { _, hasFocus ->
-                    backgroundTintList = if (hasFocus) ColorStateList.valueOf(activity.getColor(R.color.tv_button_focused_yellow)) else ColorStateList.valueOf(yellow)
+                    backgroundTintList = if (hasFocus) ColorStateList.valueOf(ColorblindPalette.focusFill(activity)) else ColorStateList.valueOf(yellow)
                 }
                 requestFocus()
             }

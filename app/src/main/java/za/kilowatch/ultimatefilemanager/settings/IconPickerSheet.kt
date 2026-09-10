@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 
@@ -200,8 +201,8 @@ class IconPickerSheet : BottomSheetDialogFragment() {
             holder.icon.isFocusableInTouchMode = false
 
             if (isTv) {
-                val yellowFill = ctx.getColor(R.color.tv_button_focused_yellow)
-                val blackText = ctx.getColor(R.color.tv_button_focused_yellow_text)
+                val yellowFill = ColorblindPalette.focusFill(ctx)
+                val blackText = ColorblindPalette.focusFillText(ctx)
                 
                 holder.icon.setOnFocusChangeListener { _, hasFocus ->
                     val newBg = GradientDrawable().apply {
@@ -227,8 +228,8 @@ class IconPickerSheet : BottomSheetDialogFragment() {
 
     private fun setupTvButtonFocus(btn: MaterialButton) {
         val context = requireContext()
-        val yellowFill = context.getColor(R.color.tv_button_focused_yellow)
-        val blackText = context.getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(context)
+        val blackText = ColorblindPalette.focusFillText(context)
         val defaultText = context.getColor(R.color.tv_text_primary)
         val defaultBg = context.getColor(R.color.tv_glass_white_10)
 

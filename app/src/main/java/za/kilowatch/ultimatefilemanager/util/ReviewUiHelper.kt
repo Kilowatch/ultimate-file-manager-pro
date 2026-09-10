@@ -12,6 +12,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.billing.SupporterLoyaltyActivity
 
 /**
@@ -94,10 +95,10 @@ object ReviewUiHelper {
             btnRate.requestFocus()
             
             val defaultColor = activity.getColor(R.color.tv_button_bg_tint)
-            val focusColor = activity.getColor(R.color.tv_button_focused_yellow)
+            val focusColor = ColorblindPalette.focusFill(activity)
             val defaultTextColor = activity.getColor(R.color.tv_text_primary)
             val tipDefaultTextColor = activity.getColor(R.color.tile_tip_jar_accent)
-            val focusTextColor = activity.getColor(R.color.tv_button_focused_yellow_text)
+            val focusTextColor = ColorblindPalette.focusFillText(activity)
 
             listOf(btnRate, btnMaybeLater, btnNoThanks, btnTipLink).forEach { btn ->
                 btn.setOnFocusChangeListener { _, hasFocus ->

@@ -532,7 +532,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:text="@string/delete_1"
-            android:textColor="@color/ufm_denied"
+            android:textColor="?attr/ufmDenied"
             android:textSize="14sp"
             android:fontFamily="sans-serif-medium"
             android:visibility="gone"

@@ -128,7 +128,7 @@
             android:id="@+id/txtPinError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/ufm_denied"
+            android:textColor="?attr/ufmDenied"
             android:textSize="12sp"
             android:fontFamily="sans-serif-bold"
             android:layout_marginTop="10dp"

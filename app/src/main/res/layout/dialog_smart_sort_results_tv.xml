@@ -26,7 +26,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_check_circle"
-            app:tint="@color/ufm_risk_safe"
+            app:tint="?attr/ufmRiskSafe"
             android:importantForAccessibility="no" />
     </FrameLayout>
 
@@ -73,7 +73,7 @@
                     android:id="@+id/txtMovedCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ufm_risk_safe"
+                    android:textColor="?attr/ufmRiskSafe"
                     android:textSize="22sp"
                     android:fontFamily="sans-serif-black"
                     tools:text="42" />
@@ -106,7 +106,7 @@
                     android:id="@+id/txtSkippedCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/ufm_risk_moderate"
+                    android:textColor="?attr/ufmRiskModerate"
                     android:textSize="22sp"
                     android:fontFamily="sans-serif-black"
                     tools:text="3" />
@@ -139,7 +139,7 @@
                     android:id="@+id/txtFailedCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/tv_error_red"
+                    android:textColor="?attr/ufmTvErrorRed"
                     android:textSize="22sp"
                     android:fontFamily="sans-serif-black"
                     tools:text="0" />
@@ -174,7 +174,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="@string/got_it_1"
-        android:textColor="@color/tv_button_focused_yellow_text"
+        android:textColor="?attr/ufmFocusFillText"
         android:textSize="15sp"
         android:fontFamily="sans-serif-bold"
         android:insetTop="0dp"

@@ -29,7 +29,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_undo"
-                app:tint="@color/status_error"
+                app:tint="?attr/ufmDenied"
                 android:importantForAccessibility="no" />
         </FrameLayout>
 
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="@string/reset_categorized_dialog_subtitle"
-                android:textColor="@color/status_error"
+                android:textColor="?attr/ufmDenied"
                 android:textSize="12sp"
                 android:fontFamily="sans-serif-medium" />
         </LinearLayout>
@@ -102,7 +102,7 @@
             app:iconGravity="textStart"
             app:iconPadding="8dp"
             app:iconTint="@color/white"
-            app:backgroundTint="@color/status_error" />
+            app:backgroundTint="?attr/ufmDenied" />
 
         <!-- Cancel Button -->
         <com.google.android.material.button.MaterialButton

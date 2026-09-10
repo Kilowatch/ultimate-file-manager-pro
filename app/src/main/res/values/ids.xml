@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="tag_original_drawable" type="id"/>
+    <!-- TvFocusHelper stores a card's XML-declared stroke here before it
+         overwrites it, so the resting border can be restored exactly. Different
+         cards declare different resting strokes (1dp glass in item cards, 2dp in
+         settings group cards), so hardcoding one restore value would silently
+         change the appearance of whichever cards disagreed. -->
+    <item name="tag_resting_stroke_color" type="id"/>
+    <item name="tag_resting_stroke_width" type="id"/>
+    <!-- Likewise for the unfocused fill. This used to be read from `View.tag`,
+         which collides with any caller that stores an option key there (an Int
+         option key is a valid Int colour, so blurring a tagged card painted it
+         the option key as an ARGB value). -->
+    <item name="tag_resting_fill" type="id"/>
+    <!-- And for the `foreground` slot. A card whose layout declares
+         `android:foreground="@drawable/selector_tv_card"` already owns that slot:
+         the selector draws the glow rings, the accent border and the FR-06 marker
+         from its own focused state. Assigning a marker over it replaces the whole
+         selector, and because blur assigns `null` rather than restoring, the card
+         loses its focus treatment permanently the first time it is focused - with
+         the Colorblind mode OFF. TvFocusHelper records whether it owns the slot
+         here, on the first event, while the XML value is still in place. -->
+    <item name="tag_foreground_owned" type="id"/>
 </resources>

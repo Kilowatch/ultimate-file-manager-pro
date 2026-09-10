@@ -103,7 +103,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
             android:text="@string/recycle_bin_restore"
-            android:textColor="@color/tv_button_focused_yellow_text"
+            android:textColor="?attr/ufmFocusFillText"
             android:background="@drawable/bg_tv_btn_restore_selector"
             app:backgroundTint="@null"
             app:cornerRadius="12dp"

@@ -3,7 +3,7 @@
     <!-- Focused state: TV Yellow highlight -->
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/tv_button_focused_yellow" />
+            <solid android:color="?attr/ufmFocusFill" />
             <corners android:radius="12dp" />
         </shape>
     </item>

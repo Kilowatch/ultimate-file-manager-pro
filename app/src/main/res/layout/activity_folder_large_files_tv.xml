@@ -73,7 +73,7 @@
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="@string/analyzer_delete_selected"
-            android:textColor="@color/tv_button_focused_yellow_text"
+            android:textColor="?attr/ufmFocusFillText"
             android:textSize="14sp"
             android:fontFamily="sans-serif-bold"
             android:paddingHorizontal="20dp"
@@ -107,7 +107,7 @@
             android:layout_marginEnd="10dp"
             android:src="@drawable/ic_folder_large_files"
             android:contentDescription="@null"
-            app:tint="@color/tv_button_focused_yellow" />
+            app:tint="?attr/ufmFocusFill" />
 
         <TextView
             android:id="@+id/txtScopeDescription"
@@ -153,7 +153,7 @@
             android:src="@drawable/ic_folder_large_files"
             android:contentDescription="@null"
             android:layout_marginBottom="12dp"
-            app:tint="@color/tv_button_focused_yellow" />
+            app:tint="?attr/ufmFocusFill" />
 
         <TextView
             android:id="@+id/txtEmptyTitle"

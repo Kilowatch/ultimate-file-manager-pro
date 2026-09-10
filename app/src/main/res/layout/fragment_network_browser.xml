@@ -425,8 +425,8 @@
                 android:text="@string/action_delete"
                 app:icon="@drawable/ic_delete"
                 app:iconSize="18dp"
-                app:iconTint="@color/ufm_denied"
-                android:textColor="@color/ufm_denied" />
+                app:iconTint="?attr/ufmDenied"
+                android:textColor="?attr/ufmDenied" />
 
         </LinearLayout>
     </HorizontalScrollView>

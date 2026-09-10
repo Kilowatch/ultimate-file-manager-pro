@@ -145,7 +145,7 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_delete"
-                app:tint="@color/status_error"
+                app:tint="?attr/ufmDenied"
                 android:contentDescription="@null" />
         </FrameLayout>
 
@@ -159,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/custom_tile_delete_title"
-                android:textColor="@color/status_error"
+                android:textColor="?attr/ufmDenied"
                 android:textSize="16sp"
                 android:fontFamily="sans-serif-bold" />
 

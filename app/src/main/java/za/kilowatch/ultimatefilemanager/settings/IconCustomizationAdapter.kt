@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.TileIconManager
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
@@ -67,7 +68,7 @@ class IconCustomizationAdapter(
 
         if (isTv) {
             holder.headerLayout.setBackgroundResource(R.drawable.selector_tv_list_item)
-            val black = holder.itemView.context.getColor(R.color.tv_button_focused_yellow_text)
+            val black = ColorblindPalette.focusFillText(holder.itemView.context)
             val white = holder.itemView.context.getColor(R.color.tv_text_primary)
             val secondary = holder.itemView.context.getColor(R.color.tv_text_secondary)
 
@@ -202,7 +203,7 @@ class IconCustomizationAdapter(
                     Gravity.CENTER
                 )
                 setImageResource(R.drawable.ic_refresh)
-                imageTintList = ColorStateList.valueOf(context.getColor(R.color.mobile_stop_btn))
+                imageTintList = ColorStateList.valueOf(ColorblindPalette.stopButton(context))
                 contentDescription = context.getString(R.string.reset_icon)
             }
             resetBadge.addView(resetIv)
@@ -211,7 +212,7 @@ class IconCustomizationAdapter(
         }
 
         if (isTv) {
-            val black = context.getColor(R.color.tv_button_focused_yellow_text)
+            val black = ColorblindPalette.focusFillText(context)
             val white = context.getColor(R.color.tv_text_primary)
             child.setOnFocusChangeListener { _, hasFocus ->
                 labelTv.setTextColor(if (hasFocus) black else white)

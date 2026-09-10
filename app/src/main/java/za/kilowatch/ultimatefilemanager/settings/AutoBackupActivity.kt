@@ -27,6 +27,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupPrefs
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -162,8 +163,8 @@ class AutoBackupActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
-        val primaryColor = if (isTv) getColor(R.color.tv_button_focused_yellow) else ThemeColors.primary(this)
-        val onPrimaryColor = if (isTv) getColor(R.color.tv_button_focused_yellow_text) else ThemeColors.onPrimary(this)
+        val primaryColor = if (isTv) ColorblindPalette.focusFill(this) else ThemeColors.primary(this)
+        val onPrimaryColor = if (isTv) ColorblindPalette.focusFillText(this) else ThemeColors.onPrimary(this)
 
         if (!isTv) {
             // Apply theme colors to section headers
@@ -179,7 +180,7 @@ class AutoBackupActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -395,13 +396,13 @@ class AutoBackupActivity : AppCompatActivity() {
         dialog.show()
 
         if (isTv) {
-            val yellow = getColor(R.color.tv_button_focused_yellow)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(this)
+            val black = ColorblindPalette.focusFillText(this)
             btnEncrypt.backgroundTintList = ColorStateList.valueOf(yellow)
             btnEncrypt.setTextColor(black)
             btnEncrypt.setOnFocusChangeListener { _, hasFocus ->
                 btnEncrypt.backgroundTintList =
-                    if (hasFocus) ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    if (hasFocus) ColorStateList.valueOf(ColorblindPalette.focusFill(this))
                     else ColorStateList.valueOf(yellow)
             }
             btnEncrypt.requestFocus()
@@ -599,9 +600,9 @@ class AutoBackupActivity : AppCompatActivity() {
     private fun setupToggleButtons() {
         val toggleButtons = listOf(btnDaily, btnWeekly, btnMonthly, btnLocationDefault, btnLocationCustom)
         if (isTv) {
-            val yellowBg = getColor(R.color.tv_button_focused_yellow)
+            val yellowBg = ColorblindPalette.focusFill(this)
             val glassBg = getColor(R.color.tv_glass_white_10)
-            val blackText = getColor(R.color.tv_button_focused_yellow_text)
+            val blackText = ColorblindPalette.focusFillText(this)
             val whiteText = getColor(R.color.tv_text_primary)
             val strokeColor = getColor(R.color.tv_glass_border)
 

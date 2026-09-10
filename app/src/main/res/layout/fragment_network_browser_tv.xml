@@ -539,12 +539,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_delete"
-                android:textColor="@color/ufm_denied"
+                android:textColor="?attr/ufmDenied"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
-                app:backgroundTint="@color/ufm_delete_tint"
+                app:backgroundTint="?attr/ufmDeleteTint"
                 app:icon="@drawable/ic_delete"
-                app:iconTint="@color/ufm_denied"
+                app:iconTint="?attr/ufmDenied"
                 app:iconSize="20dp" />
         </LinearLayout>
 
@@ -621,7 +621,7 @@
                 android:layout_height="48dp"
                 android:layout_marginEnd="12dp"
                 android:text="@string/clear_all"
-                android:textColor="@color/ufm_denied"
+                android:textColor="?attr/ufmDenied"
                 android:textSize="14sp"
                 android:fontFamily="sans-serif-medium"
                 app:backgroundTint="@color/tv_glass_white_10"
@@ -635,13 +635,13 @@
                 android:layout_height="48dp"
                 android:minWidth="200dp"
                 android:text="@string/paste_here"
-                android:textColor="@color/tv_button_focused_yellow_text"
+                android:textColor="?attr/ufmFocusFillText"
                 android:textSize="14sp"
                 android:fontFamily="sans-serif-black"
-                app:backgroundTint="@color/tv_button_focused_yellow"
+                app:backgroundTint="?attr/ufmFocusFill"
                 app:cornerRadius="12dp"
                 app:icon="@drawable/ic_paste"
-                app:iconTint="@color/tv_button_focused_yellow_text"
+                app:iconTint="?attr/ufmFocusFillText"
                 android:focusable="true"
                 android:focusableInTouchMode="false" />
 
@@ -753,8 +753,8 @@
             android:nextFocusLeft="@+id/btnPillMove"
             app:icon="@drawable/ic_delete"
             app:iconSize="24dp"
-            app:iconTint="@color/ufm_denied"
-            android:textColor="@color/ufm_denied" />
+            app:iconTint="?attr/ufmDenied"
+            android:textColor="?attr/ufmDenied" />
 
     </LinearLayout>
 

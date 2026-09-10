@@ -63,7 +63,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_delete"
-                app:tint="@color/tv_error_red"
+                app:tint="?attr/ufmTvErrorRed"
                 android:contentDescription="@string/smart_sort_remove_extension" />
         </FrameLayout>
     </LinearLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FR-09 error glyph: a solid disc with a cross knocked out of it.
+
+    Genuinely new: there is no ic_error.xml in the project (ic_success.xml and
+    ic_warning.xml both predate this feature, but nothing supplies an error
+    glyph today). Same contract as its two siblings: colour from
+    ?attr/ufmStatusError, silhouette distinct from disc+check and triangle+bang.
+
+    The cross is a plus polygon rotated 45 degrees about the centre, expressed as
+    one closed 12-vertex subpath and knocked out via fillType="evenOdd". It is a
+    single subpath rather than two overlapping bars on purpose: two bars would
+    overlap at the centre, and under evenOdd that overlap crosses an even number
+    of edges and would punch a hole through the middle of the mark.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="?attr/ufmStatusError"
+        android:fillType="evenOdd"
+        android:pathData="M12,2 A10,10 0 1,0 12,22 A10,10 0 1,0 12,2 Z M15.8,5.9 L18.1,8.2 L14.3,12 L18.1,15.8 L15.8,18.1 L12,14.3 L8.2,18.1 L5.9,15.8 L9.7,12 L5.9,8.2 L8.2,5.9 L12,9.7 Z" />
+</vector>

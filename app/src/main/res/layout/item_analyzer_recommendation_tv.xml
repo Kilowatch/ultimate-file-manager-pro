@@ -60,7 +60,7 @@
                 android:letterSpacing="0.06"
                 android:duplicateParentState="true"
                 tools:text="SAFE"
-                tools:textColor="@color/ufm_risk_safe" />
+                tools:textColor="?attr/ufmRiskSafe" />
 
             <View
                 android:layout_width="0dp"

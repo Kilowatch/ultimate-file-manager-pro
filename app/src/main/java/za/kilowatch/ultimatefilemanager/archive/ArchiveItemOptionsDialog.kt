@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
@@ -115,13 +116,13 @@ class ArchiveItemOptionsDialog : DialogFragment() {
 
         val context = requireContext()
         if (DeviceUtils.isTvDevice(context)) {
-            val black = context.getColor(R.color.tv_button_focused_yellow_text)
-            val yellowCsl = ColorStateList.valueOf(context.getColor(R.color.tv_button_focused_yellow))
+            val black = ColorblindPalette.focusFillText(context)
+            val yellowCsl = ColorStateList.valueOf(ColorblindPalette.focusFill(context))
             val blackCsl = ColorStateList.valueOf(black)
 
             setupTvFocusRow(btnExtractTo, view.findViewById(R.id.txtExtractText), view.findViewById(R.id.imgExtractIcon), context.getColor(R.color.tv_text_primary), yellowCsl, blackCsl)
             setupTvFocusRow(btnMoveOut, view.findViewById(R.id.txtMoveText), view.findViewById(R.id.imgMoveIcon), context.getColor(R.color.tv_accent), yellowCsl, blackCsl)
-            setupTvFocusRow(btnDeleteFromArchive, view.findViewById(R.id.txtDeleteText), view.findViewById(R.id.imgDeleteIcon), context.getColor(R.color.ufm_error), yellowCsl, blackCsl)
+            setupTvFocusRow(btnDeleteFromArchive, view.findViewById(R.id.txtDeleteText), view.findViewById(R.id.imgDeleteIcon), ColorblindPalette.statusError(context), yellowCsl, blackCsl)
             if (btnChecksum != null) {
                 setupTvFocusRow(btnChecksum, view.findViewById(R.id.txtChecksumText), view.findViewById(R.id.imgChecksumIcon), context.getColor(R.color.tv_text_primary), yellowCsl, blackCsl)
             }

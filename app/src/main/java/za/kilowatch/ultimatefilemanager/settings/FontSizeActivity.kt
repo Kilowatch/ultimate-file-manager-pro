@@ -17,8 +17,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
+import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
 
 /**
  * Font Size selection screen.
@@ -73,7 +75,7 @@ class FontSizeActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -383,13 +385,14 @@ class FontSizeActivity : AppCompatActivity() {
     }
 
     private fun setupTvCardFocus(card: MaterialCardView) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val glassColor = getColor(R.color.tv_glass_white_10)
         val primaryText = getColor(R.color.tv_text_primary)
         val secondaryText = getColor(R.color.tv_text_secondary)
 
         card.setOnFocusChangeListener { _, hasFocus ->
+            TvFocusHelper.applyMarker(card, hasFocus)
             val isSelected = (card.tag as Int) == FontSizeHelper.getSavedSize(this)
             val rb = card.findViewById<RadioButton>(R.id.rbSelect)
             val txtLetterBadge = card.findViewById<TextView>(R.id.txtLetterBadge)
@@ -402,7 +405,7 @@ class FontSizeActivity : AppCompatActivity() {
             } else {
                 card.setCardBackgroundColor(glassColor)
                 setCardTextColors(card, primaryText, secondaryText)
-                rb.buttonTintList = ColorStateList.valueOf(if (isSelected) getColor(R.color.tv_accent) else secondaryText)
+                rb.buttonTintList = ColorStateList.valueOf(if (isSelected) ColorblindPalette.focusAccent(this) else secondaryText)
                 txtLetterBadge.setTextColor(primaryText)
             }
         }

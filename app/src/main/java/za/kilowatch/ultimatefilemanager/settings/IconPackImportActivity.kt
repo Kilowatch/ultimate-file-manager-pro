@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
@@ -187,13 +188,13 @@ class IconPackImportActivity : AppCompatActivity() {
         dialog.show()
 
         if (isTv) {
-            val yellow = getColor(R.color.tv_button_focused_yellow)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(this)
+            val black = ColorblindPalette.focusFillText(this)
             btnDecrypt.backgroundTintList = ColorStateList.valueOf(yellow)
             btnDecrypt.setTextColor(black)
             btnDecrypt.setOnFocusChangeListener { _, hasFocus ->
                 btnDecrypt.backgroundTintList =
-                    if (hasFocus) ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    if (hasFocus) ColorStateList.valueOf(ColorblindPalette.focusFill(this))
                     else ColorStateList.valueOf(yellow)
             }
             btnDecrypt.requestFocus()
@@ -332,8 +333,8 @@ class IconPackImportActivity : AppCompatActivity() {
     }
 
     private fun setupTvButtonFocus(btn: MaterialButton) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val defaultBg = getColor(R.color.btn_save_bg_tint)
         val defaultText = getColor(android.R.color.white)
 

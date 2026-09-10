@@ -1573,6 +1573,107 @@ USB और स्थानीय स्टोरेज ड्राइव का
     <string name="settings_section_privacy_diagnostics">
 गोपनीयता और डायग्नोस्टिक्स
 </string>
+    <string name="settings_section_accessibility">
+सुगम्यता
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+रंग अंध मोड
+</string>
+    <string name="colorblind_screen_subtitle">
+रंग पर निर्भरता के बिना फोकस, चयनित और स्थिति अवस्थाओं को अलग करें।
+</string>
+    <string name="colorblind_subtitle_off">
+बंद — मानक रंग
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · %2$s कंट्रास्ट
+</string>
+    <string name="colorblind_group_type">
+प्रकार
+</string>
+    <string name="colorblind_group_strength">
+कंट्रास्ट की तीव्रता
+</string>
+    <string name="colorblind_group_strength_hint">
+उच्च तीव्रता पृष्ठभूमि के खिलाफ अलगाव बढ़ाती है।
+</string>
+    <string name="colorblind_type_off">
+बंद
+</string>
+    <string name="colorblind_type_off_desc">
+ऐप के मानक रंग रखें।
+</string>
+    <string name="colorblind_type_red_green">
+लाल-हरा
+</string>
+    <string name="colorblind_type_red_green_desc">
+प्रोटानोपिया और ड्यूटेरानोपिया के लिए। लाल और हरी अवस्थाएं नीले और एम्बर जोड़ी में पुनः मैप की जाती हैं।
+</string>
+    <string name="colorblind_type_blue_yellow">
+नीला-पीला
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+ट्राइटानोपिया के लिए। नीली और पीली अवस्थाएं मैजेंटा और हरी जोड़ी में पुनः मैप की जाती हैं।
+</string>
+    <string name="colorblind_type_high_contrast">
+उच्च कंट्रास्ट
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+कोई रंग धारणा नहीं मानी गई। अवस्थाएं केवल हल्केपन से अलग की जाती हैं।
+</string>
+    <string name="colorblind_strength_low">
+निम्न
+</string>
+    <string name="colorblind_strength_low_desc">
+3:1 न्यूनतम कंट्रास्ट।
+</string>
+    <string name="colorblind_strength_medium">
+मध्यम
+</string>
+    <string name="colorblind_strength_medium_desc">
+4.5:1 न्यूनतम कंट्रास्ट। अनुशंसित।
+</string>
+    <string name="colorblind_strength_high">
+उच्च
+</string>
+    <string name="colorblind_strength_high_desc">
+7:1 न्यूनतम कंट्रास्ट।
+</string>
+    <string name="colorblind_preview_title">
+पूर्वावलोकन
+</string>
+    <string name="colorblind_preview_hint">
+इस सेटिंग से उत्पन्न फोकस, चयनित और स्थिति रंग दिखाता है।
+</string>
+    <string name="colorblind_preview_unfocused">
+अनफोकस्ड
+</string>
+    <string name="colorblind_preview_focused">
+फोकस्ड
+</string>
+    <string name="colorblind_preview_selected">
+चयनित
+</string>
+    <string name="colorblind_preview_success">
+सफल
+</string>
+    <string name="colorblind_preview_warning">
+चेतावनी
+</string>
+    <string name="colorblind_preview_error">
+त्रुटि
+</string>
+    <string name="colorblind_status_success_desc">
+सफल
+</string>
+    <string name="colorblind_status_warning_desc">
+चेतावनी
+</string>
+    <string name="colorblind_status_error_desc">
+त्रुटि
+</string>
     <string name="settings_search_bar_title">
 सेटिंग्स सर्च बार
 </string>
@@ -10456,6 +10557,15 @@ XML / मार्कअप
     <string name="icon_status_check_circle">
 चेक सर्कल
 </string>
+    <string name="icon_status_success">
+स्थिति सफल
+</string>
+    <string name="icon_status_warning_glyph">
+स्थिति चेतावनी
+</string>
+    <string name="icon_status_error">
+स्थिति त्रुटि
+</string>
     <string name="icon_status_shield_check">
 शील्ड चेक
 </string>
@@ -10534,6 +10644,9 @@ XML / मार्कअप
 </string>
     <string name="icon_settings_font_size">
 फ़ॉन्ट आकार
+</string>
+    <string name="icon_settings_colorblind">
+रंग अंध मोड
 </string>
     <string name="icon_settings_apk_extract">
 APK/XAPK निकालें

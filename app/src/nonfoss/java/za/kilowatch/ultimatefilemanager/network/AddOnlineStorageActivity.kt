@@ -21,6 +21,7 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import java.util.concurrent.atomic.AtomicInteger
 
 class AddOnlineStorageActivity : AppCompatActivity() {
@@ -290,9 +291,9 @@ class AddOnlineStorageActivity : AppCompatActivity() {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             }
 
-            val focusColor = getColor(R.color.tv_button_focused_yellow)
+            val focusColor = ColorblindPalette.focusFill(this)
             val defaultColor = getColor(R.color.tv_button_bg_tint)
-            val focusTextColor = getColor(R.color.tv_button_focused_yellow_text)
+            val focusTextColor = ColorblindPalette.focusFillText(this)
             val defaultTextColor = getColor(R.color.tv_text_primary)
 
             listOf(

@@ -134,7 +134,7 @@
                         android:id="@+id/rbLight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_button_focused_yellow"
+                        android:buttonTint="?attr/ufmFocusFill"
                         android:clickable="false"
                         android:focusable="false"
                         android:saveEnabled="false" />
@@ -197,7 +197,7 @@
                         android:id="@+id/rbDark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_button_focused_yellow"
+                        android:buttonTint="?attr/ufmFocusFill"
                         android:clickable="false"
                         android:focusable="false"
                         android:saveEnabled="false" />
@@ -260,7 +260,7 @@
                         android:id="@+id/rbAmoled"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_button_focused_yellow"
+                        android:buttonTint="?attr/ufmFocusFill"
                         android:clickable="false"
                         android:focusable="false"
                         android:saveEnabled="false" />
@@ -323,7 +323,7 @@
                         android:id="@+id/rbSystem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_button_focused_yellow"
+                        android:buttonTint="?attr/ufmFocusFill"
                         android:clickable="false"
                         android:focusable="false"
                         android:saveEnabled="false" />

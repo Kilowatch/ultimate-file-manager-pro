@@ -80,7 +80,7 @@
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@drawable/ic_lightning"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:importantForAccessibility="no" />
 
         <TextView
@@ -130,7 +130,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:indeterminateTint="@color/tv_button_focused_yellow"
+        android:indeterminateTint="?attr/ufmFocusFill"
         app:layout_constraintTop_toBottomOf="@id/labelSectionStorages"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -84,7 +84,7 @@
             android:paddingHorizontal="12dp"
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
-            android:scrollbarThumbVertical="@color/tv_button_focused_yellow"
+            android:scrollbarThumbVertical="?attr/ufmFocusFill"
             android:focusable="false">
 
             <LinearLayout

@@ -23,7 +23,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/ic_sync"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:contentDescription="@string/transfer_settings" />
 
         <!-- Title -->
@@ -104,7 +104,7 @@
                 app:backgroundTint="@null"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:textColor="@color/tv_button_focused_yellow_text"
+                android:textColor="?attr/ufmFocusFillText"
                 android:textSize="15sp"
                 android:focusable="true"
                 android:textAllCaps="false"

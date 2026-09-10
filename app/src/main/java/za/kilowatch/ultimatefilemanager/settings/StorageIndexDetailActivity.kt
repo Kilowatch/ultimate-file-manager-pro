@@ -15,6 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
@@ -78,7 +79,7 @@ class StorageIndexDetailActivity : AppCompatActivity() {
         val btnBack = findViewById<View>(R.id.btnBack)
         if (isTv && btnBack is ImageView) {
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack.imageTintList = whiteCsl
             btnBack.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -153,10 +154,10 @@ class StorageIndexDetailActivity : AppCompatActivity() {
     }
 
     private fun setupTvFocus(card: MaterialCardView) {
-        val yellow = getColor(R.color.tv_button_focused_yellow)
-        val black = getColor(R.color.tv_button_focused_yellow_text)
+        val yellow = ColorblindPalette.focusFill(this)
+        val black = ColorblindPalette.focusFillText(this)
         val white = getColor(R.color.tv_text_primary)
-        val errorRed = getColor(R.color.status_error)
+        val errorRed = ColorblindPalette.denied(this)
 
         val txtDeleteTitle = card.findViewById<TextView>(R.id.txtDeleteTitle)
         val imgDeleteIcon = card.findViewById<ImageView>(R.id.imgDeleteIcon)

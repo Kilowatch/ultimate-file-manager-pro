@@ -25,6 +25,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.databinding.ActivityShizukuBinding
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Elevated Access (Shizuku / Shevery) Activity for Mobile — Modern Material 3 & Glassmorphism Design.
@@ -46,6 +47,7 @@ class ShizukuActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityShizukuBinding.inflate(layoutInflater)

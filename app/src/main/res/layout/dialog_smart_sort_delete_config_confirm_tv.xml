@@ -26,7 +26,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_delete"
-            app:tint="@color/status_error"
+            app:tint="?attr/ufmDenied"
             android:importantForAccessibility="no" />
     </FrameLayout>
 
@@ -72,7 +72,7 @@
         app:iconGravity="textStart"
         app:iconPadding="8dp"
         app:iconTint="@android:color/white"
-        app:backgroundTint="@color/status_error"
+        app:backgroundTint="?attr/ufmDenied"
         android:focusable="true"
         android:layout_marginBottom="8dp" />
 

@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
@@ -135,7 +136,7 @@ class ImportDetailsActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val yellowCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
@@ -247,13 +248,13 @@ class ImportDetailsActivity : AppCompatActivity() {
         dialog.show()
 
         if (isTvDevice) {
-            val yellow = getColor(R.color.tv_button_focused_yellow)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(this)
+            val black = ColorblindPalette.focusFillText(this)
             btnDecrypt.backgroundTintList = ColorStateList.valueOf(yellow)
             btnDecrypt.setTextColor(black)
             btnDecrypt.setOnFocusChangeListener { _, hasFocus ->
                 btnDecrypt.backgroundTintList =
-                    if (hasFocus) ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    if (hasFocus) ColorStateList.valueOf(ColorblindPalette.focusFill(this))
                     else ColorStateList.valueOf(yellow)
             }
             btnDecrypt.requestFocus()
@@ -422,8 +423,8 @@ class ImportDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupTvButtonFocus(btn: MaterialButton) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText  = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText  = ColorblindPalette.focusFillText(this)
         val defaultBg  = getColor(R.color.btn_save_bg_tint)
         val defaultText = getColor(android.R.color.white)
 

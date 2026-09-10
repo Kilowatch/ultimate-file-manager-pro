@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
@@ -170,10 +171,11 @@ class FileCompareDialogFragment : DialogFragment() {
         // Size check short-circuit
         if (left.size != right.size) {
             layoutSizeCheckBanner.visibility = View.VISIBLE
-            imgSizeCheckIcon.setImageResource(R.drawable.ic_close)
-            imgSizeCheckIcon.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_error_red))
+            imgSizeCheckIcon.setImageResource(ColorblindPalette.statusIconOr(
+                requireContext(), ColorblindPalette.StatusKind.ERROR, R.drawable.ic_close))
+            imgSizeCheckIcon.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.tvErrorRed(requireContext()))
             txtSizeCheckMessage.text = getString(R.string.checksum_compare_diff_sizes, leftSizeFormatted, rightSizeFormatted)
-            txtSizeCheckMessage.setTextColor(requireContext().getColor(R.color.tv_error_red))
+            txtSizeCheckMessage.setTextColor(ColorblindPalette.tvErrorRed(requireContext()))
 
             layoutCompareAlgoSection.visibility = View.GONE
             btnStartCompare.visibility = View.GONE
@@ -182,10 +184,11 @@ class FileCompareDialogFragment : DialogFragment() {
 
         // Identical size -> ready for hash comparison
         layoutSizeCheckBanner.visibility = View.VISIBLE
-        imgSizeCheckIcon.setImageResource(R.drawable.ic_check)
-        imgSizeCheckIcon.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_granted))
+        imgSizeCheckIcon.setImageResource(ColorblindPalette.statusIconOr(
+            requireContext(), ColorblindPalette.StatusKind.SUCCESS, R.drawable.ic_check))
+        imgSizeCheckIcon.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.statusSuccess(requireContext()))
         txtSizeCheckMessage.text = getString(R.string.checksum_compare_same_size, leftSizeFormatted)
-        txtSizeCheckMessage.setTextColor(requireContext().getColor(R.color.ufm_granted))
+        txtSizeCheckMessage.setTextColor(ColorblindPalette.statusSuccess(requireContext()))
 
         btnCancelCompare.setOnClickListener {
             compareJob?.cancel(CancellationException("Cancelled"))
@@ -245,16 +248,18 @@ class FileCompareDialogFragment : DialogFragment() {
                         btnStartCompare.isEnabled = true
 
                         if (isMatch) {
-                            imgCompareResultIcon.setImageResource(R.drawable.ic_check)
-                            imgCompareResultIcon.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_granted))
+                            imgCompareResultIcon.setImageResource(ColorblindPalette.statusIconOr(
+                                requireContext(), ColorblindPalette.StatusKind.SUCCESS, R.drawable.ic_check))
+                            imgCompareResultIcon.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.statusSuccess(requireContext()))
                             txtCompareResultTitle.text = getString(R.string.checksum_compare_identical)
-                            txtCompareResultTitle.setTextColor(requireContext().getColor(R.color.ufm_granted))
+                            txtCompareResultTitle.setTextColor(ColorblindPalette.statusSuccess(requireContext()))
                             txtCompareResultDetail.text = "${algo.displayName}:\n$leftHash"
                         } else {
-                            imgCompareResultIcon.setImageResource(R.drawable.ic_close)
-                            imgCompareResultIcon.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_error_red))
+                            imgCompareResultIcon.setImageResource(ColorblindPalette.statusIconOr(
+                                requireContext(), ColorblindPalette.StatusKind.ERROR, R.drawable.ic_close))
+                            imgCompareResultIcon.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.tvErrorRed(requireContext()))
                             txtCompareResultTitle.text = getString(R.string.checksum_compare_different)
-                            txtCompareResultTitle.setTextColor(requireContext().getColor(R.color.tv_error_red))
+                            txtCompareResultTitle.setTextColor(ColorblindPalette.tvErrorRed(requireContext()))
                             txtCompareResultDetail.text = "Left (${algo.displayName}):  $leftHash\nRight (${algo.displayName}): $rightHash"
                         }
                     }

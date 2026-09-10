@@ -6,7 +6,7 @@
     <!-- Shield body -->
     <path
         android:fillColor="#00000000"
-        android:strokeColor="@color/ufm_denied"
+        android:strokeColor="?attr/ufmDenied"
         android:strokeWidth="1.8"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
@@ -14,12 +14,12 @@
     <!-- Exclamation stem -->
     <path
         android:fillColor="#00000000"
-        android:strokeColor="@color/ufm_denied"
+        android:strokeColor="?attr/ufmDenied"
         android:strokeWidth="1.8"
         android:strokeLineCap="round"
         android:pathData="M12,8.5 L12,13" />
     <!-- Exclamation dot -->
     <path
-        android:fillColor="@color/ufm_denied"
+        android:fillColor="?attr/ufmDenied"
         android:pathData="M12,15.5 m-0.8,0 a0.8,0.8 0 1,0 1.6,0 a0.8,0.8 0 1,0 -1.6,0" />
 </vector>

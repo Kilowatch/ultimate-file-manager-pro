@@ -68,7 +68,7 @@
             android:textColor="@color/white"
             android:textSize="14.5sp"
             android:fontFamily="sans-serif-bold"
-            app:backgroundTint="@color/status_success"
+            app:backgroundTint="?attr/ufmStatusSuccess"
             app:cornerRadius="12dp"
             app:elevation="0dp"
             android:insetTop="0dp"

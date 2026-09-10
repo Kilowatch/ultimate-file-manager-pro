@@ -54,7 +54,7 @@
                 android:id="@+id/txtSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/tv_button_focused_yellow"
+                android:textColor="?attr/ufmFocusFill"
                 android:textSize="14sp"
                 android:fontFamily="sans-serif-medium"
                 tools:text="1.2 GB" />

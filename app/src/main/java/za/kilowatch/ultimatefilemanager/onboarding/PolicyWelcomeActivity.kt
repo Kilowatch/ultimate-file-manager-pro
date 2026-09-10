@@ -14,6 +14,7 @@ import com.google.android.material.button.MaterialButton
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.ui.policy.PolicyActivity
@@ -82,10 +83,10 @@ class PolicyWelcomeActivity : AppCompatActivity() {
         }
 
         if (isTv) {
-            val yellowText = getColor(R.color.tv_button_focused_yellow_text)
+            val yellowText = ColorblindPalette.focusFillText(this)
             val whiteText  = getColor(R.color.tv_text_primary)
             val yellowCsl  = android.content.res.ColorStateList.valueOf(
-                getColor(R.color.tv_button_focused_yellow)
+                ColorblindPalette.focusFill(this)
             )
             val glassCsl   = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
 
@@ -111,7 +112,7 @@ class PolicyWelcomeActivity : AppCompatActivity() {
         if (termsTime > 0) {
             val dateString = formatter.format(Date(termsTime))
             tvTermsStatus.text = getString(R.string.accepted_on_formatterformatdatetermstime, dateString)
-            tvTermsStatus.setTextColor(ContextCompat.getColor(this, R.color.policy_green))
+            tvTermsStatus.setTextColor(ColorblindPalette.policyGreen(this))
         } else {
             tvTermsStatus.setText(R.string.required)
             if (isTv) {
@@ -124,7 +125,7 @@ class PolicyWelcomeActivity : AppCompatActivity() {
         if (privacyTime > 0) {
             val dateString = formatter.format(Date(privacyTime))
             tvPrivacyStatus.text = getString(R.string.accepted_on_formatterformatdateprivacytime, dateString)
-            tvPrivacyStatus.setTextColor(ContextCompat.getColor(this, R.color.policy_green))
+            tvPrivacyStatus.setTextColor(ColorblindPalette.policyGreen(this))
         } else {
             tvPrivacyStatus.setText(R.string.required)
             if (isTv) {

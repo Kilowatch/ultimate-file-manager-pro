@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -70,10 +71,21 @@ object VpnWarningHelper {
         // TV: yellow highlight focus for the buttons (matches existing TV patterns)
         if (isTv) {
             val white = context.getColor(R.color.tv_text_primary)
-            val black = context.getColor(R.color.tv_button_focused_yellow_text)
-            val yellow = context.getColor(R.color.tv_button_focused_yellow)
+            val black = ColorblindPalette.focusFillText(context)
+            val yellow = ColorblindPalette.focusFill(context)
             val yellowCsl = ColorStateList.valueOf(yellow)
-            val amberCsl = ColorStateList.valueOf(0xFFFFA726.toInt())
+            // FR-10: this dialog IS the VPN warning, and amber is the only thing
+            // marking it as a warning on TV — the buttons are tinted, not
+            // labelled. The literal was byte-identical to `vpn_warning_amber`
+            // (#FFFFA726, no night override), which is exactly this attribute's
+            // base default, so routing it through the palette is appearance-
+            // neutral with the mode off (FR-19) and lets the nine overlays
+            // collapse it onto the selected type's warning hue.
+            // Hoisted alongside `white` above: the two focus listeners below run
+            // on every D-pad move, and each accessor is a `theme.resolveAttribute`
+            // (+ a possible `ContextCompat.getColor`).
+            val amber = ColorblindPalette.vpnWarningAmber(context)
+            val amberCsl = ColorStateList.valueOf(amber)
 
             btnClose.backgroundTintList = amberCsl
             btnClose.setTextColor(context.getColor(R.color.white))
@@ -82,10 +94,10 @@ object VpnWarningHelper {
                 btnClose.backgroundTintList = if (hasFocus) yellowCsl else amberCsl
                 btnClose.setTextColor(if (hasFocus) black else context.getColor(R.color.white))
             }
-            
+
             btnContinue.setOnFocusChangeListener { _, hasFocus ->
                 btnContinue.strokeColor = if (hasFocus) yellowCsl else amberCsl
-                btnContinue.setTextColor(if (hasFocus) white else 0xFFFFA726.toInt())
+                btnContinue.setTextColor(if (hasFocus) white else amber)
             }
 
             // Auto-focus the Continue button for D-pad navigation

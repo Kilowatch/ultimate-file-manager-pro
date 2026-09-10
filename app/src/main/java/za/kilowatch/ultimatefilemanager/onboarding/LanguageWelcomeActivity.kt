@@ -26,6 +26,7 @@ import androidx.core.os.ConfigurationCompat
 import java.util.Locale
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -227,9 +228,9 @@ class LanguageWelcomeActivity : AppCompatActivity() {
     }
 
     private fun setupTvFocus() {
-        val yellowBg = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+        val yellowBg = ColorStateList.valueOf(ColorblindPalette.focusFill(this))
         val glassBg  = ColorStateList.valueOf(getColor(R.color.tv_glass_white_10))
-        val yellowText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowText = ColorblindPalette.focusFillText(this)
         val whiteText  = getColor(R.color.tv_text_primary)
         val imgChevron = findViewById<ImageView>(R.id.imgChevron)
         val flagContainer = findViewById<FrameLayout>(R.id.flagContainer)
@@ -243,7 +244,7 @@ class LanguageWelcomeActivity : AppCompatActivity() {
         }
         
         cardLanguageSelector.setOnFocusChangeListener { _, hasFocus ->
-            cardLanguageSelector.setCardBackgroundColor(if (hasFocus) getColor(R.color.tv_button_focused_yellow) else getColor(R.color.tv_glass_white_10))
+            cardLanguageSelector.setCardBackgroundColor(if (hasFocus) ColorblindPalette.focusFill(this) else getColor(R.color.tv_glass_white_10))
             txtSelectedLanguage.setTextColor(if (hasFocus) yellowText else whiteText)
             imgChevron?.imageTintList = ColorStateList.valueOf(if (hasFocus) yellowText else whiteText)
             if (hasFocus) {
@@ -320,8 +321,8 @@ class LanguageWelcomeActivity : AppCompatActivity() {
                     holder.checkContainer.visibility = View.GONE
                 }
             } else {
-                val yellowColor = context.getColor(R.color.tv_button_focused_yellow)
-                val blackText = context.getColor(R.color.tv_button_focused_yellow_text)
+                val yellowColor = ColorblindPalette.focusFill(context)
+                val blackText = ColorblindPalette.focusFillText(context)
                 val whiteText = context.getColor(R.color.tv_text_primary)
                 val secText = context.getColor(R.color.tv_text_secondary)
                 val glassBg = context.getColor(R.color.tv_glass_white_10)

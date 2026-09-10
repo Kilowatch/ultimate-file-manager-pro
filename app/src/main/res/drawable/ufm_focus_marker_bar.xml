@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ════════════════════════════════════════════════════════════════════════
+    FR-06 positional focus marker — leading-edge vertical bar
+    ════════════════════════════════════════════════════════════════════════
+
+    A 3dp bar pinned to the LEADING edge (not the left edge, so it mirrors
+    correctly in RTL), spanning the full height of whatever it is drawn into.
+
+    WHY IT IS A LAYER-LIST RATHER THAN A BARE <shape>
+
+    This drawable has two consumers with different sizing needs:
+
+      1. As a nested item inside an existing focus selector's layer-list, where
+         the parent already controls placement.
+      2. As a View.foreground on the ~45 TV cards that paint focus
+         programmatically — there it must size ITSELF, because a foreground is
+         stretched to the view's bounds and a bare <shape> with only a width
+         would either fill the whole card or collapse to nothing.
+
+    Wrapping the bar in a layer-list with an explicit width and start gravity
+    makes it behave correctly in both: it fills the bounds it is given, and the
+    bar inside sits at the leading edge at its own width, full height.
+
+    WHY THE COLOUR IS AN ATTRIBUTE AND THE WIDTH IS NOT
+
+    `?attr/ufmFocusMarkerColor` is a COLOUR reference — a form this codebase
+    exercises in ~31 places across res/drawable and res/color. The width is a
+    literal on purpose: a `format="dimension"` attribute read through
+    `android:width="?attr/…"` is exercised NOWHERE in this project, and an
+    unproven mechanism does not belong at the root of a 44-file conversion.
+    Marker prominence therefore scales with strength by CONTRAST, not by width.
+
+    ⚠ THE ONE NOVEL MECHANISM IN THIS FEATURE — CONFIRM ON DEVICE
+
+    Measured across the whole repo (res/, not just res/drawable):
+
+      • `android:width` + `android:gravity` on a layer-list <item> — ZERO
+        occurrences. This file is the first.
+      • A drawable referenced as a LAYER inside a layer-list
+        (<item android:drawable="@drawable/…"/> within a <layer-list>) — ZERO
+        occurrences. `android:drawable` appears only inside <selector> items.
+
+    Both are standard framework behaviour (item width/height/gravity on
+    LayerDrawable landed in API 23; minSdk here is 26), so they are expected to
+    work — but "expected to work" is exactly the standard this refactor has
+    refused everywhere else, so it is recorded rather than glossed.
+
+    WHY THE PROVEN-FORMS-ONLY ALTERNATIVE WAS REJECTED: a fixed-width bar is not
+    expressible with layer-list insets alone (that needs right = -(width-3dp),
+    and width is unknown at design time). The only inset-only construction that
+    yields a narrow leading cue is a layer that PROTRUDES past the element's
+    left edge and is then covered by the fill — and on edge-to-edge TV rows that
+    protrusion is a candidate for parent clipping, which would silently defeat
+    FR-06 for exactly the rows that need it most. A standard framework feature
+    is the better trade against a fragile workaround.
+
+    IF IT IS WRONG, IT FAILS LOUDLY, NOT SILENTLY: without item width/gravity the
+    bar stretches to fill the item's bounds, so with the mode ON the whole
+    element turns the marker colour. That is unmissable in the first minute of
+    device testing — check this marker FIRST (see tasks.md T011).
+
+    OFF STATE
+
+    When Colorblind Mode is Off, ufmFocusMarkerColor resolves to
+    @android:color/transparent, so the bar occupies its 3dp inside the element's
+    existing padding and draws nothing. That is why there is no separate
+    "marker_none" drawable and no branching anywhere — and because the bar sits
+    inside existing padding, it cannot clip content or reflow a row (NFR-02).
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="3dp"
+        android:gravity="start|center_vertical">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/ufmFocusMarkerColor" />
+        </shape>
+    </item>
+</layer-list>

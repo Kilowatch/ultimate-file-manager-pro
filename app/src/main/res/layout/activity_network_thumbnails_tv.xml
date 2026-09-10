@@ -425,7 +425,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_delete"
-                            app:tint="@color/status_error"
+                            app:tint="?attr/ufmDenied"
                             android:importantForAccessibility="no" />
                     </FrameLayout>
 
@@ -440,7 +440,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/nt_clear_cache_title"
-                            android:textColor="@color/tv_error_red"
+                            android:textColor="?attr/ufmTvErrorRed"
                             android:textSize="16sp"
                             android:fontFamily="sans-serif-medium" />
 
@@ -459,7 +459,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/tv_error_red"
+                        app:tint="?attr/ufmTvErrorRed"
                         android:importantForAccessibility="no" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

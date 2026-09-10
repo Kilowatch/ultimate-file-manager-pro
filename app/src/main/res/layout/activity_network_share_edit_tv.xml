@@ -742,7 +742,7 @@
                                 android:text="@string/network_label_use_keychain"
                                 android:textColor="@color/tv_text_primary"
                                 android:focusable="true"
-                                app:buttonTint="@color/tv_accent" />
+                                app:buttonTint="?attr/ufmFocusAccent" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

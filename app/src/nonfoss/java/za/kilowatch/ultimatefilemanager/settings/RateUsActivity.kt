@@ -19,6 +19,7 @@ import za.kilowatch.ultimatefilemanager.billing.SupporterLoyaltyActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.ReviewHelper
 import za.kilowatch.ultimatefilemanager.util.ReviewPrefs
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * Screen that prompts the user to rate the app on Google Play / Amazon Appstore.
@@ -68,7 +69,7 @@ class RateUsActivity : AppCompatActivity() {
         
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val yellowCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl

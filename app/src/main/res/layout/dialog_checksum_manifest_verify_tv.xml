@@ -14,7 +14,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/ic_checksum"
-        app:tint="@color/tv_button_focused_yellow"
+        app:tint="?attr/ufmFocusFill"
         android:layout_marginBottom="8dp"
         android:importantForAccessibility="no" />
 
@@ -57,7 +57,7 @@
             android:background="@drawable/bg_storage_badge"
             android:paddingHorizontal="8dp"
             android:paddingVertical="2dp"
-            android:textColor="@color/tv_button_focused_yellow"
+            android:textColor="?attr/ufmFocusFill"
             android:textSize="11sp"
             android:fontFamily="sans-serif-bold"
             tools:text="SHA-256" />
@@ -113,7 +113,7 @@
             android:layout_height="44dp"
             android:background="@drawable/selector_tv_button"
             android:text="@android:string/cancel"
-            android:textColor="@color/tv_error_red"
+            android:textColor="?attr/ufmTvErrorRed"
             android:textSize="13sp"
             android:focusable="true" />
 

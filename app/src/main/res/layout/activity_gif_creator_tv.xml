@@ -166,7 +166,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="end"
                             android:text="1.0s"
-                            android:textColor="@color/tv_button_focused_yellow"
+                            android:textColor="?attr/ufmFocusFill"
                             android:textSize="18sp"
                             android:fontFamily="sans-serif-bold" />
                     </LinearLayout>

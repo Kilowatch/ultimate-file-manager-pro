@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FR-09 success glyph: a solid disc with a checkmark knocked out of it.
+
+    COLOUR COMES FROM THE THEME, NOT FROM THIS FILE
+
+    The fill references ?attr/ufmStatusSuccess, so the glyph resolves against
+    whichever ThemeOverlay.UFM.Colorblind.<Type>.<Strength> is applied and picks
+    up that type's successor colour with no call-site tinting. Inflated from a
+    context without the overlay it resolves to the base default and simply looks
+    like the rest of the app, which is the correct degradation.
+
+    SHAPE CARRIES THE MEANING, COLOUR ONLY REINFORCES IT
+
+    The three status glyphs are deliberately distinct in silhouette (disc+check,
+    triangle+bang, disc+cross) so they remain tellable apart in greyscale and for
+    a reader who cannot perceive the remapped colours at all. That is why the
+    checkmark is KNOCKED OUT rather than drawn on top: a cut-out mark reads
+    against any background, whereas an overlay would need its own contrasting
+    colour and would fail on the surfaces where it matters most.
+
+    The knockout uses fillType="evenOdd": a point inside both the disc and the
+    checkmark subpath crosses an even number of edges and is left unpainted.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="?attr/ufmStatusSuccess"
+        android:fillType="evenOdd"
+        android:pathData="M12,2 A10,10 0 1,0 12,22 A10,10 0 1,0 12,2 Z M10.5,16.2 L6.8,12.5 L8.2,11.1 L10.5,13.4 L15.8,8.1 L17.2,9.5 Z" />
+</vector>

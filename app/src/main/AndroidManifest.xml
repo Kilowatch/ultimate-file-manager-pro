@@ -290,6 +290,11 @@
             android:name=".settings.FontSizeActivity"
             android:exported="false" />
 
+        <!-- Colorblind Accessibility Mode (FR-20) -->
+        <activity
+            android:name=".settings.ColorblindActivity"
+            android:exported="false" />
+
         <!-- File Tags Settings (Mobile Only) -->
         <activity
             android:name=".settings.FileTagsSettingsActivity"

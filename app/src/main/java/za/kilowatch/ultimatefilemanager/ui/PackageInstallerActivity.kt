@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.PackageInstallerHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
@@ -33,6 +34,7 @@ class PackageInstallerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         
         // Simple "Preparing Installation" UI

@@ -799,7 +799,7 @@
                         android:layout_height="22dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_undo"
-                        app:tint="@color/status_error"
+                        app:tint="?attr/ufmDenied"
                         android:contentDescription="@null" />
                 </FrameLayout>
 
@@ -815,7 +815,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/reset_categorized_layout_title"
-                        android:textColor="@color/status_error"
+                        android:textColor="?attr/ufmDenied"
                         android:textSize="15sp"
                         android:fontFamily="sans-serif-bold" />
 

@@ -44,6 +44,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.coroutineContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.indexing.FileIndex
 import za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor
 import za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase
@@ -1088,7 +1089,7 @@ class FileBrowserActivity : AppCompatActivity() {
         if (btnPositive is android.widget.TextView) btnPositive.text = getString(R.string.support_attach_file)
 
         if (isTv && btnPositive is android.widget.Button) {
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             val defaultCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
             btnPositive.setTextColor(defaultCsl)
             btnPositive.setOnFocusChangeListener { _, hasFocus ->
@@ -1113,7 +1114,7 @@ class FileBrowserActivity : AppCompatActivity() {
         if (btnNegative is android.widget.TextView) btnNegative.text = getString(R.string.cancel)
 
         if (isTv && btnNegative is android.widget.Button) {
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             val defaultCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_secondary))
             btnNegative.setTextColor(defaultCsl)
             btnNegative.setOnFocusChangeListener { _, hasFocus ->
@@ -1411,10 +1412,12 @@ class FileBrowserActivity : AppCompatActivity() {
                     holder.txtSummary.text = "${slot.totalCount} item(s) • $fileSummary"
 
                     if (isOnTv) {
-                        val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                        // `this` here is the anonymous adapter, not the Activity.
+                        val ctx = holder.card.context
+                        val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(ctx))
                         val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-                        val yellowText = getColor(R.color.tv_button_focused_yellow_text)
-                        val whiteText = getColor(R.color.tv_text_primary)
+                        val yellowText = ColorblindPalette.focusFillText(ctx)
+                        val whiteText = ctx.getColor(R.color.tv_text_primary)
                         holder.card.isFocusable = true
                         holder.card.isFocusableInTouchMode = true
                         holder.card.setOnFocusChangeListener { _, hasFocus ->
@@ -1801,7 +1804,7 @@ class FileBrowserActivity : AppCompatActivity() {
         btnSearchToggle = findViewById(R.id.btnSearchToggle)
         btnSearchToggle.setImageResource(R.drawable.ic_search)
         if (isTv) {
-            btnSearchToggle.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_denied)) // Initial state: red on TV
+            btnSearchToggle.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.denied(this)) // Initial state: red on TV
         }
         layoutSearchRow = findViewById(R.id.layoutSearchRow)
         edtSearch = findViewById(R.id.edtSearch)
@@ -1833,7 +1836,7 @@ class FileBrowserActivity : AppCompatActivity() {
 
         if (isTv) {
             val iconTintFocused = android.content.res.ColorStateList.valueOf(
-                getColor(R.color.tv_button_focused_yellow_text)  // near-black
+                ColorblindPalette.focusFillText(this)  // near-black
             )
             val iconTintDefault = android.content.res.ColorStateList.valueOf(
                 getColor(R.color.tv_text_primary)  // white
@@ -1859,9 +1862,7 @@ class FileBrowserActivity : AppCompatActivity() {
                 } else {
                     val hasOverride = SortFilterPreferenceManager.hasFolderOverride(this, currentDir.absolutePath)
                     btnSortTv.imageTintList = android.content.res.ColorStateList.valueOf(
-                        getColor(
-                            if (hasOverride) R.color.tv_button_focused_yellow else R.color.tv_text_primary
-                        )
+                        if (hasOverride) ColorblindPalette.focusFill(this) else getColor(R.color.tv_text_primary)
                     )
                 }
             }
@@ -1926,12 +1927,12 @@ class FileBrowserActivity : AppCompatActivity() {
             }
 
             // FAB focus: toggle yellow bg + black text/icon on focus
-            val fabYellowBg = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+            val fabYellowBg = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(this))
             val fabDefaultBg = fabPaste.backgroundTintList  // preserve original tint
             fabPaste.setOnFocusChangeListener { _, hasFocus ->
                 fabPaste.backgroundTintList = if (hasFocus) fabYellowBg else fabDefaultBg
                 fabPaste.setTextColor(
-                    if (hasFocus) getColor(R.color.tv_button_focused_yellow_text)
+                    if (hasFocus) ColorblindPalette.focusFillText(this)
                     else getColor(R.color.tv_text_primary)
                 )
                 fabPaste.iconTint = if (hasFocus) iconTintFocused else iconTintDefault
@@ -3075,7 +3076,7 @@ class FileBrowserActivity : AppCompatActivity() {
         // TV: swap icon tint on focus for all selection bar icon buttons
         if (DeviceUtils.isTvDevice(this)) {
             val iconTintFocused = android.content.res.ColorStateList.valueOf(
-                getColor(R.color.tv_button_focused_yellow_text)
+                ColorblindPalette.focusFillText(this)
             )
             val iconTintDefault = android.content.res.ColorStateList.valueOf(
                 getColor(R.color.tv_text_primary)
@@ -3195,7 +3196,7 @@ class FileBrowserActivity : AppCompatActivity() {
         val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
         if (hasFolderOverride) {
             btn.imageTintList = android.content.res.ColorStateList.valueOf(
-                getColor(if (isTv) za.kilowatch.ultimatefilemanager.R.color.tv_button_focused_yellow else za.kilowatch.ultimatefilemanager.R.color.ufm_primary))
+                if (isTv) ColorblindPalette.focusFill(this) else getColor(R.color.ufm_primary))
         } else {
             btn.imageTintList = android.content.res.ColorStateList.valueOf(
                 getColor(if (isTv) za.kilowatch.ultimatefilemanager.R.color.tv_text_primary else za.kilowatch.ultimatefilemanager.R.color.mobile_icon_tint))
@@ -4186,8 +4187,8 @@ class FileBrowserActivity : AppCompatActivity() {
         btnCancel: View?
     ) {
         val white = getColor(R.color.tv_text_primary)
-        val black = getColor(R.color.tv_button_focused_yellow_text)
-        val yellow = getColor(R.color.tv_button_focused_yellow)
+        val black = ColorblindPalette.focusFillText(this)
+        val yellow = ColorblindPalette.focusFill(this)
         val secondary = getColor(R.color.tv_text_secondary)
 
         dialog.window?.setBackgroundDrawable(
@@ -4497,7 +4498,7 @@ class FileBrowserActivity : AppCompatActivity() {
         if (!FileClipboard.hasItems()) return
 
         val colorCopy = getColor(R.color.ufm_primary)
-        val colorCut = getColor(R.color.ufm_denied)
+        val colorCut = ColorblindPalette.denied(this)
 
         val layoutRes = if (isOnTv) R.layout.dialog_clipboard_tv else R.layout.bottom_sheet_clipboard
         val itemLayoutRes = if (isOnTv) R.layout.item_clipboard_entry_tv else R.layout.item_clipboard_entry
@@ -4595,8 +4596,9 @@ class FileBrowserActivity : AppCompatActivity() {
                         txtName.text = "$prefix${item.name}"
 
                         if (isOnTv) {
-                            val yellowTint = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
-                            val redTint = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_denied))
+                            // `this` here is the inner anonymous adapter; `v` is the row.
+                            val yellowTint = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(v.context))
+                            val redTint = android.content.res.ColorStateList.valueOf(ColorblindPalette.denied(v.context))
                             btnRemove.setOnFocusChangeListener { _, hasFocus ->
                                 btnRemove.imageTintList = if (hasFocus) yellowTint else redTint
                             }
@@ -4654,8 +4656,8 @@ class FileBrowserActivity : AppCompatActivity() {
 
         // TV: add yellow-focus D-pad states to action buttons
         if (isOnTv) {
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
-            val blackText = getColor(R.color.tv_button_focused_yellow_text)
+            val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(this))
+            val blackText = ColorblindPalette.focusFillText(this)
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
             val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
 
@@ -4678,14 +4680,14 @@ class FileBrowserActivity : AppCompatActivity() {
             btnRemoveSlot?.isFocusableInTouchMode = true
             btnRemoveSlot?.setOnFocusChangeListener { _, hasFocus ->
                 btnRemoveSlot.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                btnRemoveSlot.setTextColor(if (hasFocus) blackText else getColor(R.color.ufm_denied))
+                btnRemoveSlot.setTextColor(if (hasFocus) blackText else ColorblindPalette.denied(this))
             }
 
             btnClearAll.isFocusable = true
             btnClearAll.isFocusableInTouchMode = true
             btnClearAll.setOnFocusChangeListener { _, hasFocus ->
                 btnClearAll.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                btnClearAll.setTextColor(if (hasFocus) blackText else getColor(R.color.ufm_denied))
+                btnClearAll.setTextColor(if (hasFocus) blackText else ColorblindPalette.denied(this))
             }
         }
 
@@ -6198,8 +6200,8 @@ class FileBrowserActivity : AppCompatActivity() {
 
         val bgColor   = getColor(R.color.tv_bg_gradient_end)
         val white     = getColor(R.color.tv_text_primary)
-        val black     = getColor(R.color.tv_button_focused_yellow_text)
-        val yellow    = getColor(R.color.tv_button_focused_yellow)
+        val black     = ColorblindPalette.focusFillText(this)
+        val yellow    = ColorblindPalette.focusFill(this)
         val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
         val glassCsl  = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
 
@@ -6629,7 +6631,7 @@ class FileBrowserActivity : AppCompatActivity() {
         btnSearchToggle.setImageResource(R.drawable.ic_search)
         if (isTv) {
             btnSearchToggle.imageTintList = android.content.res.ColorStateList.valueOf(
-                getColor(if (isSearchVisible) R.color.ufm_granted else R.color.ufm_denied)
+                if (isSearchVisible) ColorblindPalette.statusSuccess(this) else ColorblindPalette.denied(this)
             )
         }
         

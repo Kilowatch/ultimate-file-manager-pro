@@ -30,6 +30,7 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import java.io.IOException
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -210,8 +211,8 @@ class DropboxAuthActivity : AppCompatActivity() {
             val btnOk = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPolicyOk)
             btnOk.setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
-                    v.setBackgroundColor(getColor(R.color.tv_button_focused_yellow))
-                    (v as com.google.android.material.button.MaterialButton).setTextColor(getColor(R.color.tv_button_focused_yellow_text))
+                    v.setBackgroundColor(ColorblindPalette.focusFill(this))
+                    (v as com.google.android.material.button.MaterialButton).setTextColor(ColorblindPalette.focusFillText(this))
                 } else {
                     v.setBackgroundColor(getColor(R.color.tv_glass_white_10))
                     (v as com.google.android.material.button.MaterialButton).setTextColor(getColor(R.color.tv_text_primary))

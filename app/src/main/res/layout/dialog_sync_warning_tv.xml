@@ -21,7 +21,7 @@
             android:layout_height="26dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_warning"
-            app:tint="@color/ufm_denied"
+            app:tint="?attr/ufmDenied"
             android:importantForAccessibility="no" />
     </FrameLayout>
 

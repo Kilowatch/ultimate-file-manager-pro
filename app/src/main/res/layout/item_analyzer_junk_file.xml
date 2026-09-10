@@ -76,7 +76,7 @@
             android:id="@+id/txtJunkFileSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/ufm_risk_safe"
+            android:textColor="?attr/ufmRiskSafe"
             android:textSize="12.5sp"
             android:fontFamily="sans-serif-bold"
             tools:text="12 MB" />

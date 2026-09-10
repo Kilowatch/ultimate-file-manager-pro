@@ -27,6 +27,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import java.util.concurrent.TimeUnit
 
 class SupporterLoyaltyActivity : AppCompatActivity() {
@@ -140,7 +141,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val yellowCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             
             btnBack.imageTintList = whiteCsl
             btnBack.setOnFocusChangeListener { _, hasFocus ->
@@ -243,8 +244,8 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     }
 
     private fun applyTvFocusLogic(button: MaterialButton) {
-        val focusTint    = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
-        val focusText    = getColor(R.color.tv_button_focused_yellow_text)
+        val focusTint    = ColorStateList.valueOf(ColorblindPalette.focusFill(this))
+        val focusText    = ColorblindPalette.focusFillText(this)
 
         button.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {

@@ -5,14 +5,14 @@
         <selector>
             <item android:state_focused="true">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/ufm_selection_highlight" />
+                    <solid android:color="?attr/ufmSelectionFill" />
                     <stroke android:width="2dp" android:color="?attr/colorPrimary" />
                     <corners android:radius="16dp" />
                 </shape>
             </item>
             <item android:state_pressed="true">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/ufm_selection_highlight" />
+                    <solid android:color="?attr/ufmSelectionFill" />
                     <stroke android:width="2dp" android:color="?attr/colorPrimary" />
                     <corners android:radius="16dp" />
                 </shape>

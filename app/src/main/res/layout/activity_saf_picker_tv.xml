@@ -130,8 +130,8 @@
             android:layout_height="56dp"
             android:minWidth="300dp"
             android:text="@string/select_this_folder"
-            android:textColor="@color/tv_button_focused_yellow_text"
-            app:backgroundTint="@color/tv_button_focused_yellow"
+            android:textColor="?attr/ufmFocusFillText"
+            app:backgroundTint="?attr/ufmFocusFill"
             app:cornerRadius="12dp"
             android:focusable="true"
             android:fontFamily="sans-serif-black" />

@@ -1560,6 +1560,107 @@ Säkerhetskopiera och återställa
     <string name="settings_section_privacy_diagnostics">
 Sekretess och diagnostik
 </string>
+    <string name="settings_section_accessibility">
+Tillgänglighet
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+Färgblindläge
+</string>
+    <string name="colorblind_screen_subtitle">
+Skilj på fokuserade, valda och statuslägen utan att förlita dig på färg.
+</string>
+    <string name="colorblind_subtitle_off">
+Av — standardfärger
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · %2$s kontrast
+</string>
+    <string name="colorblind_group_type">
+Typ
+</string>
+    <string name="colorblind_group_strength">
+Kontraststyrka
+</string>
+    <string name="colorblind_group_strength_hint">
+Högre styrka ökar separationen mot bakgrunden.
+</string>
+    <string name="colorblind_type_off">
+Av
+</string>
+    <string name="colorblind_type_off_desc">
+Behåll appens standardfärger.
+</string>
+    <string name="colorblind_type_red_green">
+Röd-grön
+</string>
+    <string name="colorblind_type_red_green_desc">
+För protanopi och deuteranopi. Röda och gröna tillstånd mappas om till ett blått och bärnstensfärgat par.
+</string>
+    <string name="colorblind_type_blue_yellow">
+Blå-gul
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+För tritanopi. Blå och gula tillstånd mappas om till ett magenta- och grönt par.
+</string>
+    <string name="colorblind_type_high_contrast">
+Hög kontrast
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+Ingen färguppfattning förutsätts. Tillstånd separeras enbart genom ljushet.
+</string>
+    <string name="colorblind_strength_low">
+Låg
+</string>
+    <string name="colorblind_strength_low_desc">
+Minsta kontrast 3:1.
+</string>
+    <string name="colorblind_strength_medium">
+Medel
+</string>
+    <string name="colorblind_strength_medium_desc">
+Minsta kontrast 4,5:1. Rekommenderas.
+</string>
+    <string name="colorblind_strength_high">
+Hög
+</string>
+    <string name="colorblind_strength_high_desc">
+Minsta kontrast 7:1.
+</string>
+    <string name="colorblind_preview_title">
+Förhandsvisning
+</string>
+    <string name="colorblind_preview_hint">
+Visar de fokus-, val- och statusfärger som den här inställningen ger.
+</string>
+    <string name="colorblind_preview_unfocused">
+Ofokuserad
+</string>
+    <string name="colorblind_preview_focused">
+Fokuserad
+</string>
+    <string name="colorblind_preview_selected">
+Vald
+</string>
+    <string name="colorblind_preview_success">
+Lyckat
+</string>
+    <string name="colorblind_preview_warning">
+Varning
+</string>
+    <string name="colorblind_preview_error">
+Fel
+</string>
+    <string name="colorblind_status_success_desc">
+Lyckat
+</string>
+    <string name="colorblind_status_warning_desc">
+Varning
+</string>
+    <string name="colorblind_status_error_desc">
+Fel
+</string>
     <string name="settings_search_bar_title">
 Inställningar Sökfält
 </string>
@@ -10433,6 +10534,15 @@ Varningsmärke
     <string name="icon_status_check_circle">
 Kontrollera Cirkel
 </string>
+    <string name="icon_status_success">
+Status: lyckat
+</string>
+    <string name="icon_status_warning_glyph">
+Status: varning
+</string>
+    <string name="icon_status_error">
+Status: fel
+</string>
     <string name="icon_status_shield_check">
 Shield Check
 </string>
@@ -10511,6 +10621,9 @@ Standardappar
 </string>
     <string name="icon_settings_font_size">
 Fontstorlek
+</string>
+    <string name="icon_settings_colorblind">
+Färgblindläge
 </string>
     <string name="icon_settings_apk_extract">
 APK/XAPK-utdrag

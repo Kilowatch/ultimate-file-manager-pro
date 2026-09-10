@@ -294,7 +294,7 @@
                 android:layout_height="16dp"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_lightning"
-                app:tint="@color/tv_button_focused_yellow"
+                app:tint="?attr/ufmFocusFill"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -424,7 +424,7 @@
         android:paddingVertical="10dp"
         android:drawableStart="@drawable/ic_warning"
         android:drawablePadding="10dp"
-        app:drawableTint="@color/tv_button_focused_yellow"
+        app:drawableTint="?attr/ufmFocusFill"
         android:text="@string/some_storages_are_not_indexed"
         android:textColor="@color/mobile_text_secondary"
         android:textSize="13sp"

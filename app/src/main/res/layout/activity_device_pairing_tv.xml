@@ -79,7 +79,7 @@
                     android:focusable="true"
                     android:paddingHorizontal="20dp"
                     android:text="@string/link_mobile_app"
-                    android:textColor="@color/tv_button_focused_yellow_text"
+                    android:textColor="?attr/ufmFocusFillText"
                     android:textSize="15sp"
                     android:textAllCaps="false"
                     style="@style/Widget.Material3.Button" />

@@ -85,7 +85,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
         android:text="@string/btn_discard"
-        android:textColor="@color/ufm_denied"
+        android:textColor="?attr/ufmDenied"
         android:textSize="14sp"
         android:fontFamily="sans-serif-bold"
         android:textAllCaps="false"

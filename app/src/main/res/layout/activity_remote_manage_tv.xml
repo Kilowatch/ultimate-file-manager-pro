@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/remote_server_running"
-                android:textColor="@color/ufm_granted"
+                android:textColor="?attr/ufmStatusSuccess"
                 android:textSize="13sp"
                 android:fontFamily="sans-serif-medium"
                 android:textAllCaps="true"

@@ -7,7 +7,7 @@
                 <shape android:shape="rectangle">
                     <stroke
                         android:width="2dp"
-                        android:color="@color/tv_focus_glow_outer" />
+                        android:color="?attr/ufmFocusAccentGlowOuter" />
                     <corners android:radius="32dp" />
                 </shape>
             </item>
@@ -16,20 +16,25 @@
                 <shape android:shape="rectangle">
                     <stroke
                         android:width="2dp"
-                        android:color="@color/tv_accent_glow" />
+                        android:color="?attr/ufmFocusAccentGlow" />
                     <corners android:radius="28dp" />
                 </shape>
             </item>
-            <!-- Solid Border -->
+            <!-- Solid Border. All three rings convert as a UNIT (T012): they are
+                 one graduated glow at 50/40/100% of the same hue, so remapping
+                 only the solid ring would leave blue halos around a
+                 differently-hued border. -->
             <item>
                 <shape android:shape="rectangle">
                     <solid android:color="@android:color/transparent" />
                     <stroke
                         android:width="3dp"
-                        android:color="@color/tv_focus_border_strong" />
+                        android:color="?attr/ufmFocusAccent" />
                     <corners android:radius="@dimen/card_radius_lg" />
                 </shape>
             </item>
+            <!-- FR-06 leading-edge marker (T012); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
         </layer-list>
     </item>
     <!-- Default: more visible border so cards are always distinguishable -->

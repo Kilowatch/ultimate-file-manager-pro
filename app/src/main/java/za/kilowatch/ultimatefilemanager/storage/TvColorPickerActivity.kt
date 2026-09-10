@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.ui.HexColorHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * D-Pad friendly full-screen colour picker for TV.
@@ -49,6 +50,7 @@ class TvColorPickerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv_color_picker)
 

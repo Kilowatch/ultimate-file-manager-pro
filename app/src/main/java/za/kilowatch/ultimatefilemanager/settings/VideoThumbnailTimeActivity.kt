@@ -18,8 +18,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
+import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
 
 /**
  * Video Thumbnail Time settings screen.
@@ -81,7 +83,7 @@ class VideoThumbnailTimeActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -273,14 +275,15 @@ class VideoThumbnailTimeActivity : AppCompatActivity() {
     }
 
     private fun setupTvCardFocus(card: MaterialCardView) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val glassColor = getColor(R.color.tv_glass_white_10)
         val primaryText = getColor(R.color.tv_text_primary)
         val secondaryText = getColor(R.color.tv_text_secondary)
         val white = getColor(R.color.white)
 
         card.setOnFocusChangeListener { _, hasFocus ->
+            TvFocusHelper.applyMarker(card, hasFocus)
             val cardPercent = card.tag as? Int ?: -1
             val isSelected = (cardPercent == VideoThumbnailTimePreferenceManager.getPercent(this))
             val rb = card.findViewById<RadioButton>(R.id.rbSelect)
@@ -295,7 +298,7 @@ class VideoThumbnailTimeActivity : AppCompatActivity() {
                 card.setCardBackgroundColor(glassColor)
                 setCardTextColors(card, primaryText, secondaryText)
                 txtBadge?.setTextColor(white)
-                rb.buttonTintList = ColorStateList.valueOf(if (isSelected) getColor(R.color.tv_accent) else secondaryText)
+                rb.buttonTintList = ColorStateList.valueOf(if (isSelected) ColorblindPalette.focusAccent(this) else secondaryText)
             }
         }
     }

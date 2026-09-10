@@ -20,14 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:indeterminate="true"
-            android:indeterminateTint="@color/status_error" />
+            android:indeterminateTint="?attr/ufmDenied" />
 
         <ImageView
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_delete"
-            app:tint="@color/status_error"
+            app:tint="?attr/ufmDenied"
             android:contentDescription="@null" />
     </FrameLayout>
 

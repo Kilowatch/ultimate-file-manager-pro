@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.network.NetworkShare
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
@@ -67,6 +68,7 @@ import coil3.size.Precision
 import coil3.size.Scale
 import za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import kotlinx.coroutines.Job
 
 private val VIDEO_EXTENSIONS = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
@@ -120,6 +122,7 @@ class SafPickerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         isTv = DeviceUtils.isTvDevice(this)
@@ -778,7 +781,7 @@ class SafPickerActivity : AppCompatActivity() {
 
                 if (isTv) {
                     val ctx = itemView.context
-                    val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
+                    val black = ColorblindPalette.focusFillText(ctx)
                     val white = ctx.getColor(R.color.tv_text_primary)
                     val secondary = ctx.getColor(R.color.tv_text_secondary)
                     val blackCsl = android.content.res.ColorStateList.valueOf(black)

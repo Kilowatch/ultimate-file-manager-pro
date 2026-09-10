@@ -39,6 +39,92 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowAnimationStyle">@style/UFM.WindowAnimation</item>
+
+        <!-- ── Colorblind Mode attribute defaults ───────────────────────────
+             See res/values/attrs.xml for why these exist. Colour resources
+             referenced as @color/… bind at inflation and cannot be swapped at
+             runtime, so the mode remaps these ?attr/ attributes instead. Every
+             default points at TODAY'S colour, which is what makes the
+             @color/ → ?attr/ refactor appearance-neutral: with no overlay
+             applied, each converted site resolves to the identical colour it
+             renders now. Additive only — no existing value changes.
+
+             The focus family defaults to the TV yellow palette in BOTH base
+             themes, deliberately. Mobile's focus chrome is ?attr/colorPrimary,
+             but the shared code this refactor converts (FileAdapter and
+             friends) paints tv_button_focused_* on BOTH form factors, so
+             defaulting to colorPrimary here would change mobile's appearance
+             the moment the refactor landed.
+
+             Both themes declare the full set because a <style> cannot inherit
+             from two parents, and each is applied in a different situation —
+             the TV theme is set at runtime for TV devices. -->
+        <!-- Focus (FR-05, FR-06, FR-07) -->
+        <item name="ufmFocusFill">@color/tv_button_focused_yellow</item>
+        <item name="ufmFocusFillText">@color/tv_button_focused_yellow_text</item>
+        <item name="ufmFocusGlow">@color/tv_button_focused_yellow_glow</item>
+        <item name="ufmFocusStrokeColor">@color/tv_focus_border_strong</item>
+        <item name="ufmFocusStrokeWidth">3dp</item>
+        <item name="ufmFocusMarkerColor">@android:color/transparent</item>
+        <item name="ufmFocusAccent">@color/tv_accent</item>
+        <item name="ufmFocusAccentGlowOuter">@color/tv_focus_glow_outer</item>
+        <item name="ufmFocusAccentGlow">@color/tv_accent_glow</item>
+        <item name="ufmFocusAccentSurface">@color/tv_surface_focused</item>
+        <!-- Selection (FR-08) -->
+        <item name="ufmSelectionFill">@color/ufm_selection_highlight</item>
+        <item name="ufmSelectionStroke">@color/ufm_selection_highlight</item>
+        <!-- Status & risk (FR-10) -->
+        <item name="ufmStatusSuccess">@color/ufm_granted</item>
+        <item name="ufmStatusWarning">@color/ufm_pending</item>
+        <item name="ufmStatusError">@color/ufm_error</item>
+        <item name="ufmDenied">@color/ufm_denied</item>
+        <item name="ufmTvErrorRed">@color/tv_error_red</item>
+        <item name="ufmStatusGlassGreen">@color/tv_glass_green</item>
+        <item name="ufmStatusGlassAmber">@color/tv_glass_amber</item>
+        <!-- T017. Seven more levers, each defaulted to the EXACT resource it
+             replaces; see the measurement table in attrs.xml for why none of
+             them can share a neighbour. -->
+        <item name="ufmPolicyGreen">@color/policy_green</item>
+        <item name="ufmSuccess">@color/ufm_success</item>
+        <item name="ufmVpnWarningAmber">@color/vpn_warning_amber</item>
+        <item name="ufmProgressWarning">@color/ufm_progress_warning</item>
+        <item name="ufmPolicyGreenSurface">@color/policy_green_bg</item>
+        <item name="ufmPolicyRedSurface">@color/policy_red_bg</item>
+        <item name="ufmStatusGlassRed">@color/tv_glass_red</item>
+        <item name="ufmRiskSafe">@color/ufm_risk_safe</item>
+        <item name="ufmRiskModerate">@color/ufm_risk_moderate</item>
+        <item name="ufmRiskManual">@color/ufm_risk_manual</item>
+        <item name="ufmStatusSuccessIcon">@drawable/ufm_status_icon_none</item>
+        <item name="ufmStatusWarningIcon">@drawable/ufm_status_icon_none</item>
+        <item name="ufmStatusErrorIcon">@drawable/ufm_status_icon_none</item>
+        <item name="ufmActionConfirm">@color/checksum_btn_light_green</item>
+        <item name="ufmActionConfirmText">@color/checksum_btn_light_green_text</item>
+        <!-- Storage Analyzer (FR-11) -->
+        <item name="ufmAnalyzerImages">@color/ufm_analyzer_images</item>
+        <item name="ufmAnalyzerVideos">@color/ufm_analyzer_videos</item>
+        <item name="ufmAnalyzerAudio">@color/ufm_analyzer_audio</item>
+        <item name="ufmAnalyzerDocuments">@color/ufm_analyzer_documents</item>
+        <item name="ufmAnalyzerApks">@color/ufm_analyzer_apks</item>
+        <item name="ufmAnalyzerOther">@color/ufm_analyzer_other</item>
+        <item name="ufmAnalyzerTrack">@color/ufm_analyzer_track</item>
+
+        <!-- T061: colours the FR-21 coverage sweep found with no lever. Each
+             defaults to the exact resource it replaces, so every conversion is
+             appearance-neutral with the mode off (FR-19). -->
+        <item name="ufmDeleteTint">@color/ufm_delete_tint</item>
+        <item name="ufmProgressCritical">@color/ufm_progress_critical</item>
+        <item name="ufmShizukuError">@color/shizuku_status_error</item>
+        <item name="ufmFocusBlue">@color/tv_button_focused_blue</item>
+        <item name="ufmFocusBlueGlow">@color/tv_button_focused_blue_glow</item>
+        <item name="ufmFocusFillTranslucent">@color/tv_button_focused_yellow_70</item>
+        <!-- T072: a NIGHT alias is not an alias. Each of these is a dark amber by
+             day and a different colour at night, so neither can ride the attribute
+             its night alias points at without repainting the mode-Off day state. -->
+        <item name="ufmTvNoteColor">@color/tv_note_color</item>
+        <item name="ufmMobileNoteColor">@color/mobile_note_color</item>
+        <item name="ufmShizukuOk">@color/shizuku_status_ok</item>
+        <item name="ufmStopButton">@color/mobile_stop_btn</item>
+        <item name="ufmProgressFill">@color/ufm_progress_fill</item>
     </style>
 
     <!-- Base application theme (TV). Deliberately frozen at the pre-redesign
@@ -76,6 +162,85 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowAnimationStyle">@style/UFM.WindowAnimation</item>
+
+        <!-- ── Colorblind Mode attribute defaults ───────────────────────────
+             Identical to the mobile block above, and deliberately so — see the
+             full rationale there. In short: every default is TODAY'S colour so
+             the refactor is appearance-neutral, and the focus family is the TV
+             yellow palette in both themes because the shared code being
+             converted paints tv_button_focused_* on both form factors.
+
+             This theme is frozen, and stays frozen: these items are additive.
+             It needs its own copy because a <style> cannot inherit from two
+             parents, and this theme is applied at runtime (via
+             ThemeHelper.applyTheme's setTheme) for TV devices rather than
+             being the manifest default. -->
+        <!-- Focus (FR-05, FR-06, FR-07) -->
+        <item name="ufmFocusFill">@color/tv_button_focused_yellow</item>
+        <item name="ufmFocusFillText">@color/tv_button_focused_yellow_text</item>
+        <item name="ufmFocusGlow">@color/tv_button_focused_yellow_glow</item>
+        <item name="ufmFocusStrokeColor">@color/tv_focus_border_strong</item>
+        <item name="ufmFocusStrokeWidth">3dp</item>
+        <item name="ufmFocusMarkerColor">@android:color/transparent</item>
+        <item name="ufmFocusAccent">@color/tv_accent</item>
+        <item name="ufmFocusAccentGlowOuter">@color/tv_focus_glow_outer</item>
+        <item name="ufmFocusAccentGlow">@color/tv_accent_glow</item>
+        <item name="ufmFocusAccentSurface">@color/tv_surface_focused</item>
+        <!-- Selection (FR-08) -->
+        <item name="ufmSelectionFill">@color/ufm_selection_highlight</item>
+        <item name="ufmSelectionStroke">@color/ufm_selection_highlight</item>
+        <!-- Status & risk (FR-10) -->
+        <item name="ufmStatusSuccess">@color/ufm_granted</item>
+        <item name="ufmStatusWarning">@color/ufm_pending</item>
+        <item name="ufmStatusError">@color/ufm_error</item>
+        <item name="ufmDenied">@color/ufm_denied</item>
+        <item name="ufmTvErrorRed">@color/tv_error_red</item>
+        <item name="ufmStatusGlassGreen">@color/tv_glass_green</item>
+        <item name="ufmStatusGlassAmber">@color/tv_glass_amber</item>
+        <!-- T017. Seven more levers, each defaulted to the EXACT resource it
+             replaces; see the measurement table in attrs.xml for why none of
+             them can share a neighbour. -->
+        <item name="ufmPolicyGreen">@color/policy_green</item>
+        <item name="ufmSuccess">@color/ufm_success</item>
+        <item name="ufmVpnWarningAmber">@color/vpn_warning_amber</item>
+        <item name="ufmProgressWarning">@color/ufm_progress_warning</item>
+        <item name="ufmPolicyGreenSurface">@color/policy_green_bg</item>
+        <item name="ufmPolicyRedSurface">@color/policy_red_bg</item>
+        <item name="ufmStatusGlassRed">@color/tv_glass_red</item>
+        <item name="ufmRiskSafe">@color/ufm_risk_safe</item>
+        <item name="ufmRiskModerate">@color/ufm_risk_moderate</item>
+        <item name="ufmRiskManual">@color/ufm_risk_manual</item>
+        <item name="ufmStatusSuccessIcon">@drawable/ufm_status_icon_none</item>
+        <item name="ufmStatusWarningIcon">@drawable/ufm_status_icon_none</item>
+        <item name="ufmStatusErrorIcon">@drawable/ufm_status_icon_none</item>
+        <item name="ufmActionConfirm">@color/checksum_btn_light_green</item>
+        <item name="ufmActionConfirmText">@color/checksum_btn_light_green_text</item>
+        <!-- Storage Analyzer (FR-11) -->
+        <item name="ufmAnalyzerImages">@color/ufm_analyzer_images</item>
+        <item name="ufmAnalyzerVideos">@color/ufm_analyzer_videos</item>
+        <item name="ufmAnalyzerAudio">@color/ufm_analyzer_audio</item>
+        <item name="ufmAnalyzerDocuments">@color/ufm_analyzer_documents</item>
+        <item name="ufmAnalyzerApks">@color/ufm_analyzer_apks</item>
+        <item name="ufmAnalyzerOther">@color/ufm_analyzer_other</item>
+        <item name="ufmAnalyzerTrack">@color/ufm_analyzer_track</item>
+
+        <!-- T061: colours the FR-21 coverage sweep found with no lever. Each
+             defaults to the exact resource it replaces, so every conversion is
+             appearance-neutral with the mode off (FR-19). -->
+        <item name="ufmDeleteTint">@color/ufm_delete_tint</item>
+        <item name="ufmProgressCritical">@color/ufm_progress_critical</item>
+        <item name="ufmShizukuError">@color/shizuku_status_error</item>
+        <item name="ufmFocusBlue">@color/tv_button_focused_blue</item>
+        <item name="ufmFocusBlueGlow">@color/tv_button_focused_blue_glow</item>
+        <item name="ufmFocusFillTranslucent">@color/tv_button_focused_yellow_70</item>
+        <!-- T072: a NIGHT alias is not an alias. Each of these is a dark amber by
+             day and a different colour at night, so neither can ride the attribute
+             its night alias points at without repainting the mode-Off day state. -->
+        <item name="ufmTvNoteColor">@color/tv_note_color</item>
+        <item name="ufmMobileNoteColor">@color/mobile_note_color</item>
+        <item name="ufmShizukuOk">@color/shizuku_status_ok</item>
+        <item name="ufmStopButton">@color/mobile_stop_btn</item>
+        <item name="ufmProgressFill">@color/ufm_progress_fill</item>
     </style>
 
     <style name="UFM.WindowAnimation" parent="@android:style/Animation.Activity">
@@ -184,10 +349,33 @@
 
     <!-- Dialog theme overlay: inherits correct dark/light text from Material3.
          MaterialAlertDialogBuilder reads colorOnSurface automatically — white in
-         dark mode, near-black in light mode. No hardcoded colours needed. -->
-    <style name="UFM.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="colorPrimary">@color/ufm_primary_light</item>
-    </style>
+         dark mode, near-black in light mode. No hardcoded colours needed.
+
+         colorPrimary IS DELIBERATELY NOT SET HERE (T081). It used to be pinned to
+         @color/ufm_primary_light, and that pin was the bug this removal fixes.
+
+         ContextThemeWrapper builds a dialog's theme by copying the Activity's
+         theme and THEN applying this style on top (setTo(base.getTheme()) then
+         applyStyle(UFM.Dialog, true)). Anything named here therefore beats the
+         Activity — including the Colorblind overlay ThemeHelper applied to it. So
+         while the pin existed, a dialog's colorPrimary was teal no matter what
+         the Activity behind it used: it hid the Colorblind palette from every
+         dialog button (FR-22), and it disagreed with the Activity in the mode-off
+         case too, where the base themes use @color/theme_primary (mobile) and
+         @color/ufm_primary (TV).
+
+         Verified, not assumed: ThemeOverlay.Material3.MaterialAlertDialog declares
+         no colorPrimary in material 1.14.0, so with this item gone the value
+         resolves from the Activity theme by ordinary inheritance. `?attr/colorPrimary`
+         was rejected as the replacement — a self-referential attribute inside the
+         very overlay that would define it has no well-defined resolution order,
+         and this file is not the place to depend on one.
+
+         Consequence, stated plainly: this changes dialog accents with the mode
+         OFF (teal -> theme_primary), and that is intended. It is the one place
+         this feature alters the mode-off appearance, and it is recorded as such
+         rather than folded silently into the colour conversions. -->
+    <style name="UFM.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog" />
 
     <!-- Premium Transparent Bottom Sheet -->
     <style name="TransparentBottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">

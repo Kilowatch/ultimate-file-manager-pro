@@ -21,7 +21,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_delete"
-            app:tint="@color/ufm_denied"
+            app:tint="?attr/ufmDenied"
             android:importantForAccessibility="no" />
     </FrameLayout>
 
@@ -61,7 +61,7 @@
         android:fontFamily="sans-serif-black"
         android:letterSpacing="0.02"
         android:textColor="@color/white"
-        app:backgroundTint="@color/ufm_denied"
+        app:backgroundTint="?attr/ufmDenied"
         app:cornerRadius="14dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"

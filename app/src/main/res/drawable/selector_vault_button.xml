@@ -7,24 +7,26 @@
             <!-- Outer amber glow bleed -->
             <item android:top="-6dp" android:bottom="-6dp" android:left="-6dp" android:right="-6dp">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/tv_button_focused_yellow_glow" />
+                    <solid android:color="?attr/ufmFocusGlow" />
                     <corners android:radius="30dp" />
                 </shape>
             </item>
             <!-- Inner glow ring -->
             <item android:top="-2dp" android:bottom="-2dp" android:left="-2dp" android:right="-2dp">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/tv_button_focused_yellow" />
+                    <solid android:color="?attr/ufmFocusFill" />
                     <corners android:radius="27dp" />
                 </shape>
             </item>
             <!-- Yellow button body -->
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/tv_button_focused_yellow" />
+                    <solid android:color="?attr/ufmFocusFill" />
                     <corners android:radius="24dp" />
                 </shape>
             </item>
+            <!-- FR-06 leading-edge marker (T011); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
         </layer-list>
     </item>
 

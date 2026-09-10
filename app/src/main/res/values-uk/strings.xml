@@ -1573,6 +1573,107 @@ Ultimate File Manager Pro
     <string name="settings_section_privacy_diagnostics">
 Приватність та діагностика
 </string>
+    <string name="settings_section_accessibility">
+Доступність
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+Режим для людей з порушеннями кольорового зору
+</string>
+    <string name="colorblind_screen_subtitle">
+Розрізняти стани фокусування, вибору та статусу, не покладаючись на колір.
+</string>
+    <string name="colorblind_subtitle_off">
+Вимкнено — стандартні кольори
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · %2$s контраст
+</string>
+    <string name="colorblind_group_type">
+Тип
+</string>
+    <string name="colorblind_group_strength">
+Сила контрасту
+</string>
+    <string name="colorblind_group_strength_hint">
+Вища сила збільшує контрастність відносно фону.
+</string>
+    <string name="colorblind_type_off">
+Вимкнено
+</string>
+    <string name="colorblind_type_off_desc">
+Зберегти стандартні кольори додатка.
+</string>
+    <string name="colorblind_type_red_green">
+Червоно-зелений
+</string>
+    <string name="colorblind_type_red_green_desc">
+Для протанопії та дейтеранопії. Червоні та зелені стани переназначаються на пару синього та янтарного.
+</string>
+    <string name="colorblind_type_blue_yellow">
+Синьо-жовтий
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+Для тританопії. Сині та жовті стани переназначаються на пару пурпурового та зеленого.
+</string>
+    <string name="colorblind_type_high_contrast">
+Високий контраст
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+Не передбачається сприйняття кольору. Стани розділяються лише за світністю.
+</string>
+    <string name="colorblind_strength_low">
+Низький
+</string>
+    <string name="colorblind_strength_low_desc">
+Мінімальний контраст 3:1.
+</string>
+    <string name="colorblind_strength_medium">
+Середній
+</string>
+    <string name="colorblind_strength_medium_desc">
+Мінімальний контраст 4.5:1. Рекомендовано.
+</string>
+    <string name="colorblind_strength_high">
+Високий
+</string>
+    <string name="colorblind_strength_high_desc">
+Мінімальний контраст 7:1.
+</string>
+    <string name="colorblind_preview_title">
+Попередній перегляд
+</string>
+    <string name="colorblind_preview_hint">
+Показує кольори фокусування, вибору та статусу, які створює це налаштування.
+</string>
+    <string name="colorblind_preview_unfocused">
+Без фокусу
+</string>
+    <string name="colorblind_preview_focused">
+У фокусі
+</string>
+    <string name="colorblind_preview_selected">
+Вибрано
+</string>
+    <string name="colorblind_preview_success">
+Успіх
+</string>
+    <string name="colorblind_preview_warning">
+Попередження
+</string>
+    <string name="colorblind_preview_error">
+Помилка
+</string>
+    <string name="colorblind_status_success_desc">
+Успіх
+</string>
+    <string name="colorblind_status_warning_desc">
+Попередження
+</string>
+    <string name="colorblind_status_error_desc">
+Помилка
+</string>
     <string name="settings_search_bar_title">
 Рядок пошуку налаштувань
 </string>
@@ -10456,6 +10557,15 @@ XML / Розмітка
     <string name="icon_status_check_circle">
 Галочка в колі
 </string>
+    <string name="icon_status_success">
+Статус: Успіх
+</string>
+    <string name="icon_status_warning_glyph">
+Статус: Попередження
+</string>
+    <string name="icon_status_error">
+Статус: Помилка
+</string>
     <string name="icon_status_shield_check">
 Щит із галочкою
 </string>
@@ -10534,6 +10644,9 @@ XML / Розмітка
 </string>
     <string name="icon_settings_font_size">
 Розмір шрифту
+</string>
+    <string name="icon_settings_colorblind">
+Режим для людей з порушеннями кольорового зору
 </string>
     <string name="icon_settings_apk_extract">
 Видобути APK/XAPK

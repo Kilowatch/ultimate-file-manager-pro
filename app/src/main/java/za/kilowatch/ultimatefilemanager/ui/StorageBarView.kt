@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * Custom view that draws a horizontal segmented bar chart.
@@ -25,16 +26,33 @@ class StorageBarView @JvmOverloads constructor(
 
     private val segments = mutableListOf<Segment>()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFFE0E0E0.toInt()
-    }
+    private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val rect = RectF()
     private var cornerRadius = 12f
+
+    /**
+     * Resolved once, not per frame.
+     *
+     * [ColorblindPalette.analyzerTrack] is a `theme.resolveAttribute` call, and
+     * `onDraw` runs on every scroll frame of the analyzer screen — resolving there
+     * would put a theme lookup in the draw path (NFR-03). Caching is safe because
+     * a theme change goes through `UfmApplication.recreateAllActivities()`, which
+     * builds a **new** instance of this view; an existing instance can never
+     * outlive the theme it resolved against. The cache is cleared on **attach**,
+     * not detach, so a view recycled into a different themed hierarchy re-resolves
+     * rather than carrying a stale track in with it.
+     */
+    private var trackColor: Int? = null
 
     fun setSegments(newSegments: List<Segment>) {
         segments.clear()
         segments.addAll(newSegments)
         invalidate()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        trackColor = null
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -44,6 +62,9 @@ class StorageBarView @JvmOverloads constructor(
         cornerRadius = h / 2f
 
         // Draw background
+        bgPaint.color = trackColor ?: ColorblindPalette.analyzerTrack(context).also {
+            trackColor = it
+        }
         rect.set(0f, 0f, w, h)
         canvas.drawRoundRect(rect, cornerRadius, cornerRadius, bgPaint)
 

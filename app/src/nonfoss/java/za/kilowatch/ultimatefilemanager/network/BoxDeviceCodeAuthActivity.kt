@@ -37,6 +37,7 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.util.QrCodeUtils
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -249,8 +250,8 @@ class BoxDeviceCodeAuthActivity : AppCompatActivity() {
         listOf(btnOk, btnCancel).forEach { btn ->
             btn.setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
-                    v.setBackgroundColor(getColor(R.color.tv_button_focused_yellow))
-                    (v as MaterialButton).setTextColor(getColor(R.color.tv_button_focused_yellow_text))
+                    v.setBackgroundColor(ColorblindPalette.focusFill(this))
+                    (v as MaterialButton).setTextColor(ColorblindPalette.focusFillText(this))
                 } else {
                     v.setBackgroundColor(getColor(R.color.tv_glass_white_10))
                     (v as MaterialButton).setTextColor(getColor(R.color.tv_text_primary))

@@ -33,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
@@ -385,16 +386,19 @@ class RCloneProviderActivity : AppCompatActivity() {
      */
     private fun updateProviderSelection() {
         val selectedId = viewModel.selectedProviderId.value
+        // This is the SELECTED state of a protocol button, not the focused one — it
+        // uses the focus fill because that is the palette the protocol cards were
+        // already drawn with (same reasoning as T012's selector_tv_protocol_card:
+        // colour follows the focus palette, but no FR-06 marker, because the marker
+        // means "the D-pad is here"). Resolved once, outside the loop.
+        val selectedFill = ColorblindPalette.focusFill(this)
+        val selectedText = ColorblindPalette.focusFillText(this)
         for (i in 0 until providerListContainer.childCount) {
             val btn = providerListContainer.getChildAt(i) as? MaterialButton ?: continue
             val isSelected = btn.tag == selectedId
             if (isSelected) {
-                btn.backgroundTintList = android.content.res.ColorStateList.valueOf(
-                    ContextCompat.getColor(this, R.color.tv_button_focused_yellow)
-                )
-                btn.setTextColor(
-                    ContextCompat.getColor(this, R.color.tv_button_focused_yellow_text)
-                )
+                btn.backgroundTintList = android.content.res.ColorStateList.valueOf(selectedFill)
+                btn.setTextColor(selectedText)
             } else {
                 btn.backgroundTintList = ContextCompat.getColorStateList(
                     this, R.color.selector_protocol_bg
@@ -925,7 +929,7 @@ class RCloneProviderActivity : AppCompatActivity() {
         txtResult.text = message
         txtResult.visibility = View.VISIBLE
         txtResult.setTextColor(
-            if (isError) getColor(R.color.tv_error)
+            if (isError) ColorblindPalette.tvErrorRed(this)
             else getColor(R.color.tv_accent)
         )
     }
@@ -940,7 +944,7 @@ class RCloneProviderActivity : AppCompatActivity() {
     private fun setSaveButtonEnabled(enabled: Boolean) {
         btnSave.isEnabled = enabled
         val color = if (enabled) {
-            ContextCompat.getColor(this, R.color.ufm_granted)
+            ColorblindPalette.statusSuccess(this)
         } else {
             ContextCompat.getColor(this, R.color.btn_disabled_bg)
         }

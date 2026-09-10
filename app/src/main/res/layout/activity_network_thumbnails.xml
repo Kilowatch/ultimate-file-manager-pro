@@ -476,7 +476,7 @@
                                 android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_delete"
-                                app:tint="@color/status_error"
+                                app:tint="?attr/ufmDenied"
                                 android:importantForAccessibility="no" />
                         </FrameLayout>
 
@@ -492,7 +492,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/nt_clear_cache_title"
-                                android:textColor="@color/mobile_stop_btn"
+                                android:textColor="?attr/ufmStopButton"
                                 android:textSize="15.5sp"
                                 android:fontFamily="sans-serif-bold" />
 
@@ -509,7 +509,7 @@
                             android:layout_width="18dp"
                             android:layout_height="18dp"
                             android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/status_error"
+                            app:tint="?attr/ufmDenied"
                             android:importantForAccessibility="no" />
                     </LinearLayout>
 

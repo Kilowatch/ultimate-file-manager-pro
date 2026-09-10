@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -115,8 +116,8 @@ object ProminentDisclosureHelper {
 
         // TV focus styling
         if (isTv) {
-            val yellow = activity.getColor(R.color.tv_button_focused_yellow)
-            val yellowText = activity.getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(activity)
+            val yellowText = ColorblindPalette.focusFillText(activity)
             val white = activity.getColor(R.color.tv_text_primary)
             val glass = 0x26FFFFFF.toInt()
             val yellowCsl = ColorStateList.valueOf(yellow)
@@ -197,8 +198,8 @@ object ProminentDisclosureHelper {
 
         // TV focus styling
         if (isTv) {
-            val yellow = activity.getColor(R.color.tv_button_focused_yellow)
-            val yellowText = activity.getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(activity)
+            val yellowText = ColorblindPalette.focusFillText(activity)
             val white = activity.getColor(R.color.tv_text_primary)
             val glass = 0x26FFFFFF.toInt()
             val yellowCsl = ColorStateList.valueOf(yellow)

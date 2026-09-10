@@ -1573,6 +1573,107 @@ Ultimate File Manager Pro
     <string name="settings_section_privacy_diagnostics">
 Конфиденциальность и диагностика
 </string>
+    <string name="settings_section_accessibility">
+Специальные возможности
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+Режим для дальтоников
+</string>
+    <string name="colorblind_screen_subtitle">
+Различать состояния фокуса, выбора и статуса, не полагаясь на цвет.
+</string>
+    <string name="colorblind_subtitle_off">
+Выкл. — стандартные цвета
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · контраст %2$s
+</string>
+    <string name="colorblind_group_type">
+Тип
+</string>
+    <string name="colorblind_group_strength">
+Уровень контраста
+</string>
+    <string name="colorblind_group_strength_hint">
+Более высокий уровень увеличивает отделение от фона.
+</string>
+    <string name="colorblind_type_off">
+Выкл.
+</string>
+    <string name="colorblind_type_off_desc">
+Сохранить стандартные цвета приложения.
+</string>
+    <string name="colorblind_type_red_green">
+Красно-зелёный
+</string>
+    <string name="colorblind_type_red_green_desc">
+Для протанопии и дейтеранопии. Красные и зелёные состояния переназначаются на синюю и янтарную пару.
+</string>
+    <string name="colorblind_type_blue_yellow">
+Сине-жёлтый
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+Для тританопии. Синие и жёлтые состояния переназначаются на пурпурную и зелёную пару.
+</string>
+    <string name="colorblind_type_high_contrast">
+Высокий контраст
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+Восприятие цвета не предполагается. Состояния различаются только по яркости.
+</string>
+    <string name="colorblind_strength_low">
+Низкий
+</string>
+    <string name="colorblind_strength_low_desc">
+Минимальный контраст 3:1.
+</string>
+    <string name="colorblind_strength_medium">
+Средний
+</string>
+    <string name="colorblind_strength_medium_desc">
+Минимальный контраст 4.5:1. Рекомендуется.
+</string>
+    <string name="colorblind_strength_high">
+Высокий
+</string>
+    <string name="colorblind_strength_high_desc">
+Минимальный контраст 7:1.
+</string>
+    <string name="colorblind_preview_title">
+Предпросмотр
+</string>
+    <string name="colorblind_preview_hint">
+Показывает цвета фокуса, выбора и статуса, создаваемые этим параметром.
+</string>
+    <string name="colorblind_preview_unfocused">
+Без фокуса
+</string>
+    <string name="colorblind_preview_focused">
+В фокусе
+</string>
+    <string name="colorblind_preview_selected">
+Выбранный
+</string>
+    <string name="colorblind_preview_success">
+Успех
+</string>
+    <string name="colorblind_preview_warning">
+Предупреждение
+</string>
+    <string name="colorblind_preview_error">
+Ошибка
+</string>
+    <string name="colorblind_status_success_desc">
+Успех
+</string>
+    <string name="colorblind_status_warning_desc">
+Предупреждение
+</string>
+    <string name="colorblind_status_error_desc">
+Ошибка
+</string>
     <string name="settings_search_bar_title">
 Строка поиска настроек
 </string>
@@ -10456,6 +10557,15 @@ Photo EXIF Cleaner &amp; Renamer
     <string name="icon_status_check_circle">
 Галочка в круге
 </string>
+    <string name="icon_status_success">
+Статус: успех
+</string>
+    <string name="icon_status_warning_glyph">
+Статус: предупреждение
+</string>
+    <string name="icon_status_error">
+Статус: ошибка
+</string>
     <string name="icon_status_shield_check">
 Щит с галочкой
 </string>
@@ -10534,6 +10644,9 @@ Photo EXIF Cleaner &amp; Renamer
 </string>
     <string name="icon_settings_font_size">
 Размер шрифта
+</string>
+    <string name="icon_settings_colorblind">
+Режим для дальтоников
 </string>
     <string name="icon_settings_apk_extract">
 Извлечение APK/XAPK

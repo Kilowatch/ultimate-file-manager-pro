@@ -11,6 +11,7 @@ import android.view.animation.Animation
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ import za.kilowatch.ultimatefilemanager.network.AdbDevice
 import za.kilowatch.ultimatefilemanager.network.AdbDeviceDiscovery
 import za.kilowatch.ultimatefilemanager.network.AdbManager
 import za.kilowatch.ultimatefilemanager.settings.AdbPreferenceManager
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 class AdbPairingTvActivity : AppCompatActivity() {
 
@@ -33,6 +35,7 @@ class AdbPairingTvActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adb_pairing_tv)
 
@@ -212,7 +215,7 @@ class AdbPairingTvActivity : AppCompatActivity() {
         val originalBgTint = btnNoPIN.backgroundTintList
         val originalTextColors = btnNoPIN.textColors
         btnNoPIN.text = getString(R.string.cancel)
-        btnNoPIN.backgroundTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_error))
+        btnNoPIN.backgroundTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.statusError(this))
         btnNoPIN.setTextColor(android.graphics.Color.WHITE)
         btnNoPIN.isEnabled = true
         btnNoPIN.setOnClickListener {
@@ -270,7 +273,7 @@ class AdbPairingTvActivity : AppCompatActivity() {
                     pins.forEach { it.text?.clear() }
                     statusText.clearAnimation()
                     statusText.text = getString(R.string.adb_status_denied)
-                    statusText.setTextColor(getColor(R.color.ufm_error))
+                    statusText.setTextColor(ColorblindPalette.statusError(this@AdbPairingTvActivity))
                     statusText.visibility = View.VISIBLE
                     headerStatusText.text = getString(R.string.adb_terminal_status_disconnected)
                     btnWithPin.isEnabled = true

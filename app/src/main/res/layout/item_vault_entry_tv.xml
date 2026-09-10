@@ -179,11 +179,11 @@
                     android:paddingHorizontal="24dp"
                     android:text="@string/vault_remove"
                     android:textSize="14sp"
-                    android:textColor="@color/ufm_denied"
+                    android:textColor="?attr/ufmDenied"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     app:cornerRadius="24dp"
-                    app:strokeColor="@color/ufm_denied"
+                    app:strokeColor="?attr/ufmDenied"
                     app:strokeWidth="1dp" />
 
             </LinearLayout>

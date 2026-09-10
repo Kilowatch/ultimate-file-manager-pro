@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -140,10 +141,10 @@ class WelcomeActivity : AppCompatActivity() {
 
         // TV: swap Continue button bg+text on focus
         if (isTv) {
-            val yellowText = getColor(R.color.tv_button_focused_yellow_text)
+            val yellowText = ColorblindPalette.focusFillText(this)
             val whiteText  = getColor(R.color.tv_text_primary)
             val yellowCsl  = android.content.res.ColorStateList.valueOf(
-                getColor(R.color.tv_button_focused_yellow)
+                ColorblindPalette.focusFill(this)
             )
             val glassCsl   = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
 

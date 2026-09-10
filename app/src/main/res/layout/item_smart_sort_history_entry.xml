@@ -83,7 +83,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="@string/smart_sort_history_delete"
-                android:textColor="@color/status_error"
+                android:textColor="?attr/ufmDenied"
                 android:textSize="12.5sp"
                 android:fontFamily="sans-serif-bold"
                 android:insetTop="0dp"
@@ -91,7 +91,7 @@
                 app:cornerRadius="10dp"
                 app:icon="@drawable/ic_delete"
                 app:iconSize="16dp"
-                app:iconTint="@color/status_error" />
+                app:iconTint="?attr/ufmDenied" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

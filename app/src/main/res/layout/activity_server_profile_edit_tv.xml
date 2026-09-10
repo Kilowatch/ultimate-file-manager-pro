@@ -127,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/passwords_do_not_match"
-                android:textColor="@color/tv_error"
+                android:textColor="?attr/ufmTvErrorRed"
                 android:textSize="12sp"
                 android:visibility="gone"
                 android:layout_marginTop="-8dp"
@@ -305,7 +305,7 @@
                 android:layout_height="52dp"
                 android:text="@string/delete"
                 android:textSize="16sp"
-                android:backgroundTint="@color/tv_error_red"
+                android:backgroundTint="?attr/ufmTvErrorRed"
                 app:cornerRadius="26dp"
                 android:focusable="true"
                 android:visibility="gone" />

@@ -2,11 +2,17 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Focused: Premium High-Visibility Yellow -->
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/tv_button_focused_yellow" />
-            <corners android:radius="20dp" />
-            <stroke android:width="3dp" android:color="@color/tv_button_focused_yellow_glow" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="?attr/ufmFocusFill" />
+                    <corners android:radius="20dp" />
+                    <stroke android:width="3dp" android:color="?attr/ufmFocusGlow" />
+                </shape>
+            </item>
+            <!-- FR-06 leading-edge marker (T011); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
+        </layer-list>
     </item>
     
     <!-- Unfocused: Translucent Frosted Glass (Theme-Aware) -->

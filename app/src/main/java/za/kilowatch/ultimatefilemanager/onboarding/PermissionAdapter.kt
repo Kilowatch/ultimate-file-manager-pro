@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * RecyclerView adapter for displaying permission cards on the Welcome Screen.
@@ -82,10 +83,10 @@ class PermissionAdapter(
             }
 
             if (isTv) {
-                val focusYellow = context.getColor(R.color.tv_button_focused_yellow)
+                val focusYellow = ColorblindPalette.focusFill(context)
                 val defaultBorder = context.getColor(R.color.tv_glass_border)
                 val defaultBg = context.getColor(R.color.tv_glass_white_10)
-                val yellowText = context.getColor(R.color.tv_button_focused_yellow_text)
+                val yellowText = ColorblindPalette.focusFillText(context)
                 val whiteText = context.getColor(R.color.tv_text_primary)
                 val secText = context.getColor(R.color.tv_text_secondary)
                 val accentCyan = context.getColor(R.color.tv_accent)
@@ -126,7 +127,7 @@ class PermissionAdapter(
                 PermissionStatus.GRANTED -> {
                     txtStatus.text = context.getString(R.string.status_granted)
                     if (isTv) {
-                        txtStatus.setTextColor(context.getColor(R.color.ufm_granted))
+                        txtStatus.setTextColor(ColorblindPalette.statusSuccess(context))
                         txtStatus.setBackgroundResource(R.drawable.bg_status_badge)
                         btnGrant.isEnabled = false
                         btnGrant.text = context.getString(R.string.status_granted)
@@ -156,7 +157,7 @@ class PermissionAdapter(
                 PermissionStatus.DENIED -> {
                     txtStatus.text = context.getString(R.string.status_denied)
                     if (isTv) {
-                        txtStatus.setTextColor(context.getColor(R.color.ufm_denied))
+                        txtStatus.setTextColor(ColorblindPalette.denied(context))
                         txtStatus.setBackgroundResource(R.drawable.bg_status_badge)
                         btnGrant.isEnabled = true
                         btnGrant.icon = null
@@ -192,7 +193,7 @@ class PermissionAdapter(
                     } else {
                         txtStatus.text = context.getString(R.string.status_required)
                         if (isTv) {
-                            txtStatus.setTextColor(context.getColor(R.color.ufm_pending))
+                            txtStatus.setTextColor(ColorblindPalette.statusWarning(context))
                             txtStatus.setBackgroundResource(R.drawable.bg_status_badge)
                         } else {
                             txtStatus.setTextColor(0xFFFFAA00.toInt())

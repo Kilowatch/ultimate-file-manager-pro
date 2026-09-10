@@ -1573,6 +1573,107 @@ Cadangan &amp; Pemulihan
     <string name="settings_section_privacy_diagnostics">
 Privasi &amp; Diagnostik
 </string>
+    <string name="settings_section_accessibility">
+Aksesibilitas
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+Mode Buta Warna
+</string>
+    <string name="colorblind_screen_subtitle">
+Bedakan keadaan fokus, terpilih, dan status tanpa mengandalkan warna.
+</string>
+    <string name="colorblind_subtitle_off">
+Nonaktif — warna standar
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · kontras %2$s
+</string>
+    <string name="colorblind_group_type">
+Jenis
+</string>
+    <string name="colorblind_group_strength">
+Kekuatan Kontras
+</string>
+    <string name="colorblind_group_strength_hint">
+Kekuatan yang lebih tinggi meningkatkan pemisahan terhadap latar belakang.
+</string>
+    <string name="colorblind_type_off">
+Nonaktif
+</string>
+    <string name="colorblind_type_off_desc">
+Pertahankan warna standar aplikasi.
+</string>
+    <string name="colorblind_type_red_green">
+Merah-Hijau
+</string>
+    <string name="colorblind_type_red_green_desc">
+Untuk protanopia dan deuteranopia. Keadaan merah dan hijau dipetakan ulang ke pasangan biru dan kuning kecokelatan.
+</string>
+    <string name="colorblind_type_blue_yellow">
+Biru-Kuning
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+Untuk tritanopia. Keadaan biru dan kuning dipetakan ulang ke pasangan magenta dan hijau.
+</string>
+    <string name="colorblind_type_high_contrast">
+Kontras Tinggi
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+Tidak mengasumsikan persepsi warna. Keadaan dipisahkan hanya berdasarkan kecerahan.
+</string>
+    <string name="colorblind_strength_low">
+Rendah
+</string>
+    <string name="colorblind_strength_low_desc">
+Kontras minimum 3:1.
+</string>
+    <string name="colorblind_strength_medium">
+Sedang
+</string>
+    <string name="colorblind_strength_medium_desc">
+Kontras minimum 4,5:1. Direkomendasikan.
+</string>
+    <string name="colorblind_strength_high">
+Tinggi
+</string>
+    <string name="colorblind_strength_high_desc">
+Kontras minimum 7:1.
+</string>
+    <string name="colorblind_preview_title">
+Pratinjau
+</string>
+    <string name="colorblind_preview_hint">
+Menampilkan warna fokus, terpilih, dan status yang dihasilkan oleh pengaturan ini.
+</string>
+    <string name="colorblind_preview_unfocused">
+Tidak fokus
+</string>
+    <string name="colorblind_preview_focused">
+Fokus
+</string>
+    <string name="colorblind_preview_selected">
+Terpilih
+</string>
+    <string name="colorblind_preview_success">
+Berhasil
+</string>
+    <string name="colorblind_preview_warning">
+Peringatan
+</string>
+    <string name="colorblind_preview_error">
+Kesalahan
+</string>
+    <string name="colorblind_status_success_desc">
+Berhasil
+</string>
+    <string name="colorblind_status_warning_desc">
+Peringatan
+</string>
+    <string name="colorblind_status_error_desc">
+Kesalahan
+</string>
     <string name="settings_search_bar_title">
 Bilah Pencarian Pengaturan
 </string>
@@ -10456,6 +10557,15 @@ Lencana Peringatan
     <string name="icon_status_check_circle">
 Lingkaran Centang
 </string>
+    <string name="icon_status_success">
+Status Berhasil
+</string>
+    <string name="icon_status_warning_glyph">
+Status Peringatan
+</string>
+    <string name="icon_status_error">
+Status Kesalahan
+</string>
     <string name="icon_status_shield_check">
 Perisai Centang
 </string>
@@ -10534,6 +10644,9 @@ Aplikasi Default
 </string>
     <string name="icon_settings_font_size">
 Ukuran Font
+</string>
+    <string name="icon_settings_colorblind">
+Mode Buta Warna
 </string>
     <string name="icon_settings_apk_extract">
 Ekstrak APK/XAPK

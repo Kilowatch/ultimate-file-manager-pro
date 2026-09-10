@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import java.util.Locale
 
 class NetworkThumbnailCustomLimitActivity : AppCompatActivity() {
@@ -39,7 +40,7 @@ class NetworkThumbnailCustomLimitActivity : AppCompatActivity() {
         btnBack?.setOnClickListener { finish() }
         if (btnBack is ImageView) {
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack.imageTintList = whiteCsl
             btnBack.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -68,7 +69,7 @@ class NetworkThumbnailCustomLimitActivity : AppCompatActivity() {
 
         refreshDisplay()
 
-        val focusText = getColor(R.color.tv_button_focused_yellow_text)
+        val focusText = ColorblindPalette.focusFillText(this)
 
         val focusListener = View.OnFocusChangeListener { v, hasFocus ->
             if (v is Button) {

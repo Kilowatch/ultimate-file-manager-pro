@@ -32,13 +32,16 @@ import za.kilowatch.ultimatefilemanager.archive.ArchivePreviewCache
 import za.kilowatch.ultimatefilemanager.archive.ArchiveToolsBottomSheet
 import za.kilowatch.ultimatefilemanager.archive.ExtractLocationDialog
 import za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
+import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.FileHeader
@@ -108,6 +111,7 @@ class ZipViewerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         isTv = DeviceUtils.isTvDevice(this)
@@ -154,14 +158,18 @@ class ZipViewerActivity : AppCompatActivity() {
 
         // TV D-pad scroll support
         if (isTv) {
-            // Yellow/black focus for Extract All button
-            val yellowColor = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+            // Focus fill/text for the action buttons, resolved through the palette
+            // (FR-05 / FR-07). Hoisted out of the listeners on purpose: every
+            // palette accessor is a theme.resolveAttribute call and these listeners
+            // fire on every D-pad move.
+            val yellowColor = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(this))
+            val focusText = ColorblindPalette.focusFillText(this)
             val defaultBtnBg = btnExtractAll.backgroundTintList
             val defaultBtnText = btnExtractAll.textColors
             btnExtractAll.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     btnExtractAll.backgroundTintList = yellowColor
-                    btnExtractAll.setTextColor(getColor(R.color.tv_button_focused_yellow_text))
+                    btnExtractAll.setTextColor(focusText)
                 } else {
                     btnExtractAll.backgroundTintList = defaultBtnBg
                     btnExtractAll.setTextColor(defaultBtnText)
@@ -173,7 +181,7 @@ class ZipViewerActivity : AppCompatActivity() {
             btnOptions.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     btnOptions.backgroundTintList = yellowColor
-                    btnOptions.setTextColor(getColor(R.color.tv_button_focused_yellow_text))
+                    btnOptions.setTextColor(focusText)
                 } else {
                     btnOptions.backgroundTintList = defaultBtnBg
                     btnOptions.setTextColor(defaultBtnText)
@@ -989,15 +997,24 @@ class ZipViewerActivity : AppCompatActivity() {
             val isTvDevice = DeviceUtils.isTvDevice(context)
             val isItemFocused = holder.itemView.hasFocus()
 
+            // FR-06 marker. Set once, ahead of every branch below, so a card
+            // recycled from a focused row cannot keep a stale bar; TvFocusHelper
+            // returns null when unfocused, which also clears it. The listener
+            // further down takes over for subsequent D-pad moves.
+            if (isTvDevice) cardView?.let { TvFocusHelper.applyMarker(it, isItemFocused) }
+
             if (isTvDevice && isItemFocused) {
-                cardView?.setCardBackgroundColor(context.getColor(R.color.tv_button_focused_yellow))
-                cardView?.strokeColor = context.getColor(R.color.tv_button_focused_yellow)
+                cardView?.setCardBackgroundColor(ColorblindPalette.focusFill(context))
+                cardView?.strokeColor = ColorblindPalette.focusFill(context)
             } else if (isSelected) {
                 if (cardView != null) {
-                    cardView.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
+                    cardView.setCardBackgroundColor(ColorblindPalette.selectionFill(context))
+                    // ufm_accent is deliberately left literal: it is a different
+                    // colour from ufmSelectionStroke, so routing it there would
+                    // repaint this border with the mode OFF.
                     cardView.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.ufm_accent)
                 } else {
-                    holder.itemView.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
+                    holder.itemView.setBackgroundColor(ColorblindPalette.selectionFill(context))
                 }
             } else {
                 if (cardView != null) {
@@ -1055,7 +1072,7 @@ class ZipViewerActivity : AppCompatActivity() {
 
             // TV focus handling: Text/icon turns black on yellow focus bg
             if (isTvDevice) {
-                val black = context.getColor(R.color.tv_button_focused_yellow_text)
+                val black = ColorblindPalette.focusFillText(context)
                 val primaryColor = context.getColor(R.color.mobile_text_primary)
                 val secondaryColor = context.getColor(R.color.mobile_text_secondary)
                 val iconColor = context.getColor(R.color.mobile_icon_tint)
@@ -1074,16 +1091,17 @@ class ZipViewerActivity : AppCompatActivity() {
                 }
 
                 holder.itemView.setOnFocusChangeListener { _, hasFocus ->
+                    cardView?.let { TvFocusHelper.applyMarker(it, hasFocus) }
                     if (hasFocus) {
                         focusedItem = item
-                        cardView?.setCardBackgroundColor(context.getColor(R.color.tv_button_focused_yellow))
-                        cardView?.strokeColor = context.getColor(R.color.tv_button_focused_yellow)
+                        cardView?.setCardBackgroundColor(ColorblindPalette.focusFill(context))
+                        cardView?.strokeColor = ColorblindPalette.focusFill(context)
                         holder.txtName.setTextColor(black)
                         holder.txtInfo.setTextColor(black)
                         holder.icon.imageTintList = blackCsl
                     } else {
                         if (selectedZipItems.contains(item)) {
-                            cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
+                            cardView?.setCardBackgroundColor(ColorblindPalette.selectionFill(context))
                             cardView?.strokeColor = androidx.core.content.ContextCompat.getColor(context, R.color.ufm_accent)
                         } else {
                             cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.mobile_glass_card))

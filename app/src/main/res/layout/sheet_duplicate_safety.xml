@@ -14,7 +14,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         app:srcCompat="@drawable/ic_warning_badge"
-        app:tint="@color/ufm_error" />
+        app:tint="?attr/ufmStatusError" />
 
     <TextView
         android:layout_width="match_parent"
@@ -44,7 +44,7 @@
             android:id="@+id/txtDangerousFiles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/ufm_error"
+            android:textColor="?attr/ufmStatusError"
             android:textSize="13sp"
             android:textStyle="italic"
             android:gravity="center" />
@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:text="@string/analyzer_delete_anyway"
-        app:backgroundTint="@color/ufm_error"
+        app:backgroundTint="?attr/ufmStatusError"
         app:cornerRadius="16dp"
         android:layout_marginBottom="8dp" />
 

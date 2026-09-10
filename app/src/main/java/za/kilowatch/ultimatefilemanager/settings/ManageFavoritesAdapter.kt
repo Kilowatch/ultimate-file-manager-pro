@@ -97,8 +97,8 @@ class ManageFavoritesAdapter(
         }
 
         private fun setupTvCardFocus(card: MaterialCardView, btnDelete: ImageView) {
-            val yellowFill  = itemView.context.getColor(R.color.tv_button_focused_yellow)
-            val blackText   = itemView.context.getColor(R.color.tv_button_focused_yellow_text)
+            val yellowFill  = ColorblindPalette.focusFill(card.context)
+            val blackText   = ColorblindPalette.focusFillText(card.context)
             val glassColor  = itemView.context.getColor(R.color.tv_glass_white_10)
             val primaryText = itemView.context.getColor(R.color.tv_text_primary)
             val secondText  = itemView.context.getColor(R.color.tv_text_secondary)
@@ -110,6 +110,12 @@ class ManageFavoritesAdapter(
             btnDelete.setColorFilter(secondText)
 
             card.setOnFocusChangeListener { _, hasFocus ->
+                // The FR-06 marker is NOT assigned here. This card declares
+                // `@drawable/selector_tv_card` as its XML foreground, and that selector's
+                // focused state already carries the marker. Writing to `foreground` would
+                // overwrite the whole selector, and since `marker()` returns null on blur
+                // the card would permanently lose its glow rings and accent border the
+                // first time it was focused -- with Colorblind Mode Off (FR-19).
                 if (hasFocus) {
                     card.setCardBackgroundColor(yellowFill)
                     txtLabel.setTextColor(blackText)
@@ -125,7 +131,7 @@ class ManageFavoritesAdapter(
 
             btnDelete.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    btnDelete.setColorFilter(itemView.context.getColor(R.color.tv_error_red))
+                    btnDelete.setColorFilter(ColorblindPalette.tvErrorRed(card.context))
                 } else {
                     if (card.hasFocus()) {
                         btnDelete.setColorFilter(blackText)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Focused: yellow highlight -->
-    <item android:state_focused="true" android:color="@color/tv_button_focused_yellow" />
+    <item android:state_focused="true" android:color="?attr/ufmFocusFill" />
     <!-- Normal: solid accent — always visible, never grey -->
     <item android:color="@color/tv_accent" />
 </selector>

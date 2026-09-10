@@ -437,8 +437,8 @@
                 android:textSize="11sp"
                 app:icon="@drawable/ic_delete"
                 app:iconSize="14dp"
-                app:iconTint="@color/ufm_denied"
-                android:textColor="@color/ufm_denied" />
+                app:iconTint="?attr/ufmDenied"
+                android:textColor="?attr/ufmDenied" />
 
         </LinearLayout>
     </ScrollView>

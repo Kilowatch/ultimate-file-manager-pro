@@ -30,6 +30,7 @@ import za.kilowatch.ultimatefilemanager.remote.PinDialogHelper
 import za.kilowatch.ultimatefilemanager.remote.RemoteManageActivity
 import za.kilowatch.ultimatefilemanager.remote.VpnWarningHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Displays tiles nested inside a single custom tile.
@@ -127,6 +128,7 @@ class CustomTileActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 

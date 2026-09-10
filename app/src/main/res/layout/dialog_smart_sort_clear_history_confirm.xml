@@ -30,7 +30,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_delete"
-                app:tint="@color/status_error"
+                app:tint="?attr/ufmDenied"
                 android:importantForAccessibility="no" />
         </FrameLayout>
 
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="@string/smart_sort_history_clear_all"
-                android:textColor="@color/status_error"
+                android:textColor="?attr/ufmDenied"
                 android:textSize="12sp"
                 android:fontFamily="sans-serif-medium" />
         </LinearLayout>
@@ -99,7 +99,7 @@
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:cornerRadius="12dp"
-            app:backgroundTint="@color/status_error" />
+            app:backgroundTint="?attr/ufmDenied" />
 
         <!-- Cancel Button -->
         <com.google.android.material.button.MaterialButton

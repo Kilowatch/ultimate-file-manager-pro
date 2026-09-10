@@ -224,7 +224,7 @@
         android:textColor="@color/white"
         app:icon="@drawable/ic_delete"
         app:iconTint="@color/white"
-        app:backgroundTint="@color/ufm_risk_manual"
+        app:backgroundTint="?attr/ufmRiskManual"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

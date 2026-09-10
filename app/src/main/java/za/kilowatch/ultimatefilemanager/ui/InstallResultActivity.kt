@@ -15,8 +15,10 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Translucent activity that hosts UFM's Glassmorphic installation result dialog.
@@ -30,6 +32,7 @@ class InstallResultActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
 
         val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -1)
@@ -70,7 +73,7 @@ class InstallResultActivity : AppCompatActivity() {
             txtMessage.text = getString(R.string.installation_successful_desc, displayName)
             imgIcon.setImageResource(android.R.drawable.stat_sys_download_done)
             imgIcon.imageTintList = ColorStateList.valueOf(
-                if (isTv) ContextCompat.getColor(this, R.color.tv_button_focused_yellow) else Color.parseColor("#10B981")
+                if (isTv) ColorblindPalette.focusFill(this) else Color.parseColor("#10B981")
             )
 
             val launchIntent = if (packageName.isNotBlank()) {

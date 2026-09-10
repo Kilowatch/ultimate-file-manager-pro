@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.LongPressDurationManager
 import za.kilowatch.ultimatefilemanager.ui.CircularProgressView
@@ -1036,8 +1037,8 @@ private fun ImageView.safeSetIcon(resId: Int) {
                         chart.percentLabel = "used"
                         chart.progress     = item.usagePercent
                         val progressColor  = when {
-                            item.usagePercent >= 90 -> ContextCompat.getColor(context, R.color.ufm_progress_critical)
-                            item.usagePercent >= 75 -> ContextCompat.getColor(context, R.color.ufm_progress_warning)
+                            item.usagePercent >= 90 -> ColorblindPalette.denied(context)
+                            item.usagePercent >= 75 -> ColorblindPalette.progressWarning(context)
                             else                    -> ContextCompat.getColor(context, R.color.tv_accent)
                         }
                         chart.setProgressColor(progressColor)

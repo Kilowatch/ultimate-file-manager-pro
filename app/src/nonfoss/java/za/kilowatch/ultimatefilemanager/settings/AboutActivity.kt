@@ -24,6 +24,7 @@ import za.kilowatch.ultimatefilemanager.support.SupportActivity
 import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.RootDetector
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * Screen that displays app information, contact details, and acknowledgments.
@@ -71,7 +72,7 @@ class AboutActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val yellowCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
@@ -124,10 +125,10 @@ class AboutActivity : AppCompatActivity() {
         txtRootStatus?.text = rootResult.getSummary(this)
         if (rootResult.isRooted) {
             imgRootStatusIcon?.setImageResource(R.drawable.ic_shield_alert)
-            imgRootStatusIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_denied))
+            imgRootStatusIcon?.imageTintList = ColorStateList.valueOf(ColorblindPalette.denied(this))
         } else {
             imgRootStatusIcon?.setImageResource(R.drawable.ic_shield_check)
-            imgRootStatusIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_granted))
+            imgRootStatusIcon?.imageTintList = ColorStateList.valueOf(ColorblindPalette.statusSuccess(this))
         }
 
         cardRootStatus?.setOnClickListener {
@@ -146,7 +147,7 @@ class AboutActivity : AppCompatActivity() {
 
         val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
         imgIcon?.setImageResource(if (result.isRooted) R.drawable.ic_shield_alert else R.drawable.ic_shield_check)
-        val tintColor = if (result.isRooted) getColor(R.color.ufm_denied) else getColor(R.color.ufm_granted)
+        val tintColor = if (result.isRooted) ColorblindPalette.denied(this) else ColorblindPalette.statusSuccess(this)
         imgIcon?.imageTintList = ColorStateList.valueOf(tintColor)
 
         val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)

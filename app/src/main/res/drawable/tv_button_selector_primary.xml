@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
-        <shape android:shape="oval">
-            <solid android:color="#FBBF24"/>
-        </shape>
+        <layer-list>
+            <item>
+                <!-- #FBBF24 == tv_button_focused_yellow (#FFFBBF24); converted
+                     so the colorblind presets can reach it. -->
+                <shape android:shape="oval">
+                    <solid android:color="?attr/ufmFocusFill"/>
+                </shape>
+            </item>
+            <!-- FR-06 leading-edge marker (T011); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
+        </layer-list>
     </item>
     <item>
         <shape android:shape="oval">

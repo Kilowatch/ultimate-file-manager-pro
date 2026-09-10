@@ -12,6 +12,7 @@ import coil3.gif.GifDecoder
 import coil3.svg.SvgDecoder
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.DynamicColorsOptions
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPrefs
 import za.kilowatch.ultimatefilemanager.settings.MaterialYouPrefs
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.network.AdbManager
@@ -110,9 +111,9 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
 
         super.onCreate()
 
-        // Pre-warm the locale & font-size SharedPreferences caches BEFORE the ANR
-        // watchdog is installed (CrashReportManager.installAnrWatchdog below) and
-        // before the first Activity cold-starts. Every Activity overrides
+        // Pre-warm the locale, font-size & colorblind SharedPreferences caches BEFORE
+        // the ANR watchdog is installed (CrashReportManager.installAnrWatchdog below)
+        // and before the first Activity cold-starts. Every Activity overrides
         // attachBaseContext() to wrap the base context via LocaleHelper.wrap() ->
         // FontSizeHelper.applyTo() -> getSavedSize() / LocaleHelper.applyTo() ->
         // getSavedLocale(), which synchronously reads the "ufm_prefs" file. On a
@@ -127,9 +128,18 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
         // here — before the watchdog arms and before any Activity attaches — loads
         // the file once and populates the in-memory caches, so every later
         // attachBaseContext is a pure cache read with no disk I/O on the main thread.
+        // ColorblindPrefs is warmed here for the same reason, one step later in the
+        // lifecycle: ThemeHelper.applyTheme() reads both colorblind values from the
+        // same "ufm_prefs" file, and every Activity calls it in onCreate() BEFORE
+        // super.onCreate(). That is a synchronous main-thread read on the critical
+        // cold-start path — exactly the shape of the ANR documented above. Reading
+        // them here means applyTheme() is a cache read even on the very first launch
+        // after install or after a settings restore.
         try {
             za.kilowatch.ultimatefilemanager.settings.FontSizeHelper.getSavedSize(this)
             za.kilowatch.ultimatefilemanager.settings.LocaleHelper.getSavedLocale(this)
+            za.kilowatch.ultimatefilemanager.settings.ColorblindPrefs.getType(this)
+            za.kilowatch.ultimatefilemanager.settings.ColorblindPrefs.getStrength(this)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to pre-warm locale/font prefs", e)
         }
@@ -173,11 +183,24 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
         // the Material You preference enabled. The precondition is evaluated per
         // activity-create, so toggling the setting + recreate() re-evaluates it.
         // TV always keeps the fixed brand palette (Theme.UltimateFileManager.Tv).
+        //
+        // Colorblind Mode suppresses Material You entirely while it is on (FR-22).
+        // The accessibility mode is a total rule, not a tie-break: a wallpaper
+        // colour appearing on ANY screen is the reported defect, and leaving
+        // DynamicColors applied would reintroduce it on every activity that
+        // creates after the overlay is applied. Ordering alone would not survive
+        // this, because DynamicColors runs per activity-create and would rewrite
+        // colorPrimary after ThemeHelper had already applied the overlay. Note
+        // this reads the Colorblind PREFERENCE, not the applied overlay, so the
+        // two suppression paths (here and ThemeHelper) agree on the same
+        // condition whether or not an Activity context is available.
         DynamicColors.applyToActivitiesIfAvailable(
             this,
             DynamicColorsOptions.Builder()
                 .setPrecondition { activity, _ ->
-                    MaterialYouPrefs.isEnabled(activity) && !DeviceUtils.isTvDevice(activity)
+                    MaterialYouPrefs.isEnabled(activity) &&
+                        !DeviceUtils.isTvDevice(activity) &&
+                        !ColorblindPrefs.isEnabled(activity)
                 }
                 .build()
         )

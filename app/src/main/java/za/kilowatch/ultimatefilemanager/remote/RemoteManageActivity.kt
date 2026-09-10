@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.ui.policy.ProminentDisclosureHelper
@@ -28,6 +29,7 @@ import java.net.NetworkInterface
 import java.util.Arrays
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Displays server IP:port and manages the embedded file server lifecycle.
@@ -87,6 +89,7 @@ class RemoteManageActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (DeviceUtils.isTvDevice(this)) {
@@ -268,14 +271,14 @@ class RemoteManageActivity : AppCompatActivity() {
         // Use prefs directly so badge is correct before the server has started.
         if (fileServer?.hasCustomCert() == true || hasCustomCertImported()) {
             imgShield.setImageResource(R.drawable.ic_shield_check)
-            imgShield.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_granted))
+            imgShield.imageTintList = ColorStateList.valueOf(ColorblindPalette.statusSuccess(this))
             txtStatus.text = getString(R.string.remote_ca_status_verified)
-            txtStatus.setTextColor(getColor(R.color.ufm_granted))
+            txtStatus.setTextColor(ColorblindPalette.statusSuccess(this))
         } else {
             imgShield.setImageResource(R.drawable.ic_shield_alert)
-            imgShield.imageTintList = ColorStateList.valueOf(getColor(R.color.ufm_denied))
+            imgShield.imageTintList = ColorStateList.valueOf(ColorblindPalette.denied(this))
             txtStatus.text = getString(R.string.remote_ca_status_unverified)
-            txtStatus.setTextColor(getColor(R.color.ufm_denied))
+            txtStatus.setTextColor(ColorblindPalette.denied(this))
         }
     }
 
@@ -301,8 +304,8 @@ class RemoteManageActivity : AppCompatActivity() {
         // TV: wire yellow focus highlight for Import/Remove CA button
         if (isTv) {
             val white = getColor(R.color.tv_text_primary)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
-            val yellow = getColor(R.color.tv_button_focused_yellow)
+            val black = ColorblindPalette.focusFillText(this)
+            val yellow = ColorblindPalette.focusFill(this)
             val yellowCsl = ColorStateList.valueOf(yellow)
             // Keep the gradient background as default; swap to yellow on focus
             val defaultBgTint: ColorStateList? = null  // gradient drawable, no tint override
@@ -478,8 +481,8 @@ class RemoteManageActivity : AppCompatActivity() {
         // TV: wire focus states for icon tint and button text
         if (DeviceUtils.isTvDevice(this)) {
             val white = getColor(R.color.tv_text_primary)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
-            val yellow = getColor(R.color.tv_button_focused_yellow)
+            val black = ColorblindPalette.focusFillText(this)
+            val yellow = ColorblindPalette.focusFill(this)
             val yellowCsl = ColorStateList.valueOf(yellow)
             val glassCsl  = ColorStateList.valueOf(0x26FFFFFF.toInt())
 
@@ -585,7 +588,7 @@ class RemoteManageActivity : AppCompatActivity() {
                     startingDialog.dismiss()
                     val txtStatus = findViewById<TextView>(R.id.txtStatus)
                     txtStatus?.text = getString(R.string.remote_server_error)
-                    txtStatus?.setTextColor(getColor(R.color.ufm_denied))
+                    txtStatus?.setTextColor(ColorblindPalette.denied(this))
                 }
             } catch (e: Exception) {
                 android.util.Log.e("RemoteManageActivity", "startServer failed", e)
@@ -593,7 +596,7 @@ class RemoteManageActivity : AppCompatActivity() {
                     startingDialog.dismiss()
                     val txtStatus = findViewById<TextView>(R.id.txtStatus)
                     txtStatus?.text = getString(R.string.remote_server_error)
-                    txtStatus?.setTextColor(getColor(R.color.ufm_denied))
+                    txtStatus?.setTextColor(ColorblindPalette.denied(this))
                 }
             }
         }, "file-server-start").start()

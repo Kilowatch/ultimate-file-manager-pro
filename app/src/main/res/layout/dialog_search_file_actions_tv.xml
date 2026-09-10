@@ -320,7 +320,7 @@
                     android:layout_height="22dp"
                     android:src="@drawable/ic_delete"
                     android:duplicateParentState="true"
-                    app:tint="@color/status_error"
+                    app:tint="?attr/ufmDenied"
                     android:importantForAccessibility="no" />
 
                 <TextView
@@ -328,7 +328,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:text="@string/action_delete"
-                    android:textColor="@color/status_error"
+                    android:textColor="?attr/ufmDenied"
                     android:textSize="16sp"
                     android:duplicateParentState="true"
                     android:fontFamily="sans-serif-medium" />

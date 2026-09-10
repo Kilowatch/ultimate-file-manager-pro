@@ -21,6 +21,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
@@ -1693,7 +1694,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         txtResult.visibility = View.VISIBLE
         val isError = !msg.contains(getString(R.string.network_testing))
         txtResult.setTextColor(
-            getColor(if (isError) R.color.status_error else R.color.ufm_primary_light)
+            if (isError) ColorblindPalette.denied(this) else getColor(R.color.ufm_primary_light)
         )
 
         // Show NFS debug log section when an NFS error is displayed

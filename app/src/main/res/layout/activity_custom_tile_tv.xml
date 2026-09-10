@@ -124,7 +124,7 @@
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="@string/action_done"
-                android:textColor="@color/tv_button_focused_yellow_text"
+                android:textColor="?attr/ufmFocusFillText"
                 android:fontFamily="sans-serif-bold"
                 android:textSize="14sp"
                 android:paddingHorizontal="20dp"

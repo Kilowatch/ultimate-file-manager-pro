@@ -37,6 +37,7 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.SideBySideVideoPreferenceManager
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import za.kilowatch.ultimatefilemanager.viewer.TwinWindowPlayerFragment
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -169,6 +170,7 @@ class TwinWindowActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         
         val isTv = DeviceUtils.isTvDevice(this)

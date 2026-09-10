@@ -13,7 +13,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/ic_folder"
-        app:tint="@color/tv_button_focused_yellow"
+        app:tint="?attr/ufmFocusFill"
         android:layout_marginBottom="10dp" />
 
     <TextView
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/new_folder_hint"
         app:boxBackgroundColor="@android:color/transparent"
-        app:boxStrokeColor="@color/tv_button_focused_yellow"
+        app:boxStrokeColor="?attr/ufmFocusFill"
         app:hintTextColor="@color/tv_text_hint"
         app:boxCornerRadiusTopStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
@@ -102,7 +102,7 @@
             app:backgroundTint="@null"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:textColor="@color/tv_button_focused_yellow_text"
+            android:textColor="?attr/ufmFocusFillText"
             android:textSize="15sp"
             android:paddingHorizontal="8dp"
             app:autoSizeTextType="uniform"

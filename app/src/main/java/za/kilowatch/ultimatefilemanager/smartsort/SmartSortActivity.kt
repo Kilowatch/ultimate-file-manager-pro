@@ -30,6 +30,7 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
 import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 
 data class StorageEntry(
@@ -145,6 +146,7 @@ class SmartSortActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         handledFontChange = savedInstanceState?.getBoolean("handledFontChange", false) ?: false
         handledLocaleChange = savedInstanceState?.getBoolean("handledLocaleChange", false) ?: false

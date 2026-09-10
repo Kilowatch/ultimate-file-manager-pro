@@ -173,7 +173,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_delete"
-                    app:tint="@color/tv_error_red"
+                    app:tint="?attr/ufmTvErrorRed"
                     android:importantForAccessibility="no" />
 
                 <TextView
@@ -182,7 +182,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="14dp"
                     android:text="@string/network_action_delete"
-                    android:textColor="@color/tv_error_red"
+                    android:textColor="?attr/ufmTvErrorRed"
                     android:textSize="15.5sp"
                     android:fontFamily="sans-serif-bold" />
             </LinearLayout>

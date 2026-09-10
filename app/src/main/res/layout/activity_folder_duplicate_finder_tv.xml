@@ -123,7 +123,7 @@
             android:layout_marginEnd="10dp"
             android:src="@drawable/ic_duplicate_finder"
             android:contentDescription="@null"
-            app:tint="@color/tv_button_focused_yellow" />
+            app:tint="?attr/ufmFocusFill" />
 
         <TextView
             android:id="@+id/txtScopeDescription"
@@ -169,7 +169,7 @@
             android:src="@drawable/ic_duplicate_finder"
             android:contentDescription="@null"
             android:layout_marginBottom="12dp"
-            app:tint="@color/tv_button_focused_yellow" />
+            app:tint="?attr/ufmFocusFill" />
 
         <TextView
             android:id="@+id/txtEmptyTitle"

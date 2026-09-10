@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ════════════════════════════════════════════════════════════════════════
+    Runtime-swappable palette attributes — Colorblind Accessibility Mode
+    ════════════════════════════════════════════════════════════════════════
+
+    WHY THIS FILE EXISTS
+
+    Colour resources referenced as `@color/...` in XML are resolved by the
+    asset manager during inflation and CANNOT be swapped at runtime. No theme
+    overlay, Resources wrapper, or configuration override can intercept them.
+    Only `?attr/` theme attributes are runtime-swappable.
+
+    Colorblind Mode therefore needs every colour it remaps to be reachable
+    through a theme attribute. These attributes are the indirection layer:
+
+      • The base themes (Base.Theme.UltimateFileManager / .Tv) define every
+        attribute below pointing at TODAY'S existing colour resource. With no
+        overlay applied, every converted site resolves to the identical colour
+        it renders today — the refactor is appearance-neutral by construction.
+
+      • The nine ThemeOverlay.UFM.Colorblind.<Type>.<Strength> styles remap
+        them. Applied via ThemeHelper.applyTheme(), which is the app's de-facto
+        base-class hook (74 call sites, one per Activity).
+
+    WHEN THE MODE IS OFF, NOTHING HERE CHANGES THE APP'S APPEARANCE.
+
+    TV is NOT attribute-driven today — it hardwires @color/tv_* ~3253 times
+    across 271 layouts. That is why this refactor targets the bounded focus
+    seam (the res/color/ ColorStateLists and res/drawable/selector_tv_*
+    drawables) rather than attempting a layout-wide sweep.
+
+    NOTE ON format="reference"
+
+    Only the three ufmStatus*Icon attributes are reference-typed. A status
+    glyph cannot be expressed as a colour, so it must carry a DRAWABLE; the
+    attribute's default points at the existing status drawable so the Off state
+    is unchanged.
+
+    WHERE EACH MECHANISM IS EXERCISED — every one of them is used by shipping
+    code in this repo, which is a deliberate constraint, not a coincidence:
+
+      • attr → COLOUR is proven: `?attr/` appears ~31 times in a colour
+        position across res/drawable and res/color (<solid android:color>,
+        android:strokeColor, android:tint).
+
+      • attr → DRAWABLE is proven: 274 uses of
+        android:background="?attr/selectableItemBackground[Borderless]".
+
+      • attr → DIMENSION appears NOWHERE — not in this file's consumers, and
+        not anywhere else in the project. Before this file existed there was
+        not a single `format="dimension"` theme attribute in the codebase.
+
+    THE ONE EXCEPTION, RECORDED RATHER THAN BURIED (added T011)
+
+    The FR-06 marker (ufm_focus_marker_bar.xml) positions its bar with
+    `android:width` + `android:gravity` on a layer-list <item>, and is itself
+    referenced as a LAYER inside other layer-lists. Measured repo-wide, BOTH
+    have zero precedent. They are standard framework features (LayerDrawable
+    item width/height/gravity: API 23; minSdk 26) and are expected to work, but
+    they are the only mechanisms in this feature that this codebase does not
+    already exercise — so they are flagged for confirmation during device
+    testing rather than claimed as proven. See ufm_focus_marker_bar.xml for the
+    rejected alternative and the reasoning.
+
+    Everything else in this refactor uses only the forms listed above.
+
+    That last point drives two scope decisions taken during T002/T011 research
+    and worth not re-litigating:
+
+    1. ufmFocusMarkerWidth does NOT exist. The FR-06 marker is
+       ufm_focus_marker_bar.xml: a FIXED-width <shape> whose only variable is
+       <solid android:color="?attr/ufmFocusMarkerColor" />. Off is a
+       TRANSPARENT colour, not a zero width — so no XML dimension reference is
+       needed and "Off" still requires no separate drawable and no branching.
+       Marker prominence therefore scales with strength by CONTRAST, not width.
+
+    2. ufmFocusStrokeWidth is resolved PROGRAMMATICALLY ONLY — via
+       Theme.resolveAttribute(...).getDimension() in TvFocusHelper, never via
+       android:width="?attr/…" in XML. It applies to the ~45 TV cards that
+       paint focus in code and have no stroke today, so there is no existing
+       value to preserve and no neutrality risk.
+
+    The consequence is that no existing drawable's <stroke android:width> is
+    converted. That is intentional: measured across the focus seam the widths
+    are 1 / 1.5 / 2 / 3dp, and several files use DIFFERENT widths for different
+    layers of the same focused state (selector_tv_card.xml uses 2dp/2dp/3dp as
+    a graduated glow). One attribute default cannot preserve those, and
+    flattening them would erase the glow structure — and in
+    selector_tv_button.xml the only <stroke> is the UNFOCUSED default border,
+    which is not a focus cue at all.
+-->
+<resources>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         FOCUS — FR-05 (clarity), FR-06 (non-colour cues), FR-07 (unification)
+         ════════════════════════════════════════════════════════════════════
+
+         Defaults point at today's TV focus palette. ufmFocusAccent exists to
+         unify the two focus hues that currently coexist (yellow for buttons
+         and list rows, blue for cards and colour swatches) onto one treatment
+         while the mode is on; outside the mode the two-hue behaviour is
+         preserved because each attribute keeps its own default.
+    -->
+    <attr name="ufmFocusFill" format="color" />          <!-- solid fill behind a focused element -->
+    <attr name="ufmFocusFillText" format="color" />      <!-- text/icon colour drawn ON that fill -->
+    <attr name="ufmFocusGlow" format="color" />          <!-- outer focus bloom -->
+    <attr name="ufmFocusStrokeColor" format="color" />   <!-- focus outline colour -->
+    <attr name="ufmFocusStrokeWidth" format="dimension" /><!-- outline weight for programmatic cards ONLY; resolved in Kotlin, never via android:width="?attr/…" -->
+    <attr name="ufmFocusMarkerColor" format="color" />   <!-- marker colour; TRANSPARENT = marker off (see ufm_focus_marker_bar) -->
+    <attr name="ufmFocusAccent" format="color" />         <!-- card/swatch focus accent (the "blue" family) -->
+    <attr name="ufmFocusAccentGlowOuter" format="color" /> <!-- blue-family outer focus ring (accent @ 50%) -->
+    <attr name="ufmFocusAccentGlow" format="color" />    <!-- blue-family mid focus ring (accent @ 40%) -->
+    <attr name="ufmFocusAccentSurface" format="color" /> <!-- blue-family translucent focused fill (accent @ 20%) -->
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         SELECTION — FR-08
+         Multi-select rows, active tab, active filter/sort chip, current
+         storage volume, current view mode, "currently applied" indicators.
+         ════════════════════════════════════════════════════════════════════ -->
+    <attr name="ufmSelectionFill" format="color" />      <!-- replaces ufm_selection_highlight -->
+    <attr name="ufmSelectionStroke" format="color" />    <!-- selected card/row border -->
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         STATUS & RISK — FR-10
+         Success / warning / error plus the storage risk tiers. The paired
+         Icon attributes carry a distinguishing GLYPH so the meaning survives
+         for a user who cannot perceive the remapped colours at all — this is
+         the redundancy that makes FR-10 work for achromatopsia, not decoration.
+         ════════════════════════════════════════════════════════════════════ -->
+    <attr name="ufmStatusSuccess" format="color" />      <!-- from ufm_granted / status_success / policy_green -->
+    <attr name="ufmStatusWarning" format="color" />      <!-- from ufm_pending / vpn_warning_amber -->
+    <attr name="ufmStatusError" format="color" />        <!-- from ufm_error -->
+    <attr name="ufmRiskSafe" format="color" />           <!-- from ufm_risk_safe -->
+    <attr name="ufmRiskModerate" format="color" />       <!-- from ufm_risk_moderate -->
+    <attr name="ufmRiskManual" format="color" />         <!-- from ufm_risk_manual -->
+    <attr name="ufmStatusSuccessIcon" format="reference" />
+    <attr name="ufmStatusWarningIcon" format="reference" />
+    <attr name="ufmStatusErrorIcon" format="reference" />
+
+    <!-- The four below were added in T014 after MEASURING, not assuming. The
+         registry's original comment claimed ufmStatusError covered
+         "ufm_error / ufm_denied / tv_error_red" — it does not. Those are three
+         DIFFERENT reds, and a layout sweep that pointed them all at one
+         attribute would have repainted two of them with the mode OFF:
+             ufm_error     #FFC62828  day and night (no night override)
+             ufm_denied    #FFC62828  day / #FFEF5350 night  (differs at night)
+             tv_error_red  #FF5252    day and night          (a different red entirely)
+             tv_error      #FFFF5252  (the same colour as tv_error_red)
+         Each therefore gets its own lever, defaulted to the exact resource it
+         replaces, so every conversion below is appearance-neutral. -->
+    <attr name="ufmDenied" format="color" />             <!-- from ufm_denied (night differs from ufm_error) -->
+    <attr name="ufmTvErrorRed" format="color" />         <!-- from tv_error_red / tv_error (both #FF5252) -->
+    <attr name="ufmStatusGlassGreen" format="color" />   <!-- from tv_glass_green — translucent status card fill -->
+    <attr name="ufmStatusGlassAmber" format="color" />   <!-- from tv_glass_amber — translucent status card fill -->
+
+    <!-- T017: the same trap a THIRD time, and the reason this section is long.
+
+         `ufmStatusSuccess` defaults to @color/ufm_granted and `ufmStatusWarning`
+         to @color/ufm_pending — but the app renders FIVE more greens/ambers that
+         are NOT those colours. Measured day/night, not assumed:
+
+             resource               day        night      why it cannot share
+             ufm_granted           #FF2E7D32  #FF4CAF50  (this IS ufmStatusSuccess)
+             policy_green          #FF2E7D32  #FF2E7D32  differs from it AT NIGHT
+             ufm_success           #4CAF50    #4CAF50    differs from it BOTH modes
+             ufm_pending           #FFE65100  #FFFFA726  (this IS ufmStatusWarning)
+             vpn_warning_amber     #FFFFA726  #FFFFA726  differs from it IN DAY
+             ufm_progress_warning  #FFEF6C00  #FFFFA726  differs from it in day
+
+         Under a red-green preset every one of these must move, or success and
+         warning stay indistinguishable for the user the feature exists for. But
+         pointing them at the shared attribute would repaint them with the mode
+         OFF. So each gets its own lever, defaulted to the exact resource it
+         replaces, and the overlays give them all the same success/warning hue.
+
+         The three *Surface attributes are the translucent pill/alert
+         backgrounds that sit BEHIND those foregrounds. They are converted as
+         pairs with their foregrounds on purpose: remapping a green label while
+         leaving its green-tinted pill untouched trades one colour clash for
+         another.
+
+         NOT added, because measurement showed it unnecessary: policy_red is
+         exactly #FFC62828, identical to ufm_error, so it converts onto the
+         existing ufmStatusError with no new attribute. The blue "info" family
+         (tv_glass_blue, policy_accent_light, ufm_accent_light) is deliberately
+         out of scope — see the T013 note on tv_accent: blue is the hue a
+         red-green-deficient user sees comparatively well, and info is not a
+         status or risk signal. -->
+    <attr name="ufmPolicyGreen" format="color" />        <!-- from policy_green; differs from ufm_granted at night -->
+    <attr name="ufmSuccess" format="color" />            <!-- from ufm_success (#4CAF50); differs both modes -->
+    <attr name="ufmVpnWarningAmber" format="color" />    <!-- from vpn_warning_amber; differs from ufm_pending by day -->
+    <attr name="ufmProgressWarning" format="color" />    <!-- from ufm_progress_warning; differs from ufm_pending by day -->
+    <attr name="ufmPolicyGreenSurface" format="color" /> <!-- from policy_green_bg — mobile success pill fill -->
+    <attr name="ufmPolicyRedSurface" format="color" />   <!-- from policy_red_bg — mobile danger pill fill -->
+    <attr name="ufmStatusGlassRed" format="color" />     <!-- from tv_glass_red — TV danger alert fill -->
+
+    <!-- Confirm action (checksum verify / compare) — a GREEN button. Green is
+         a safety signal that red-green deficiency collapses, so it is in scope.
+         Kept separate from ufmStatusSuccess because its resting colour is
+         checksum_btn_light_green (#4CAF50 day / #66BB6A night), which differs
+         from ufm_granted (#FF2E7D32 / #FF4CAF50) — sharing that attribute
+         would repaint the button with the mode OFF. -->
+    <attr name="ufmActionConfirm" format="color" />
+    <attr name="ufmActionConfirmText" format="color" />
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         STORAGE ANALYZER — FR-11
+         Category colours for the usage bar and breakdown. Consumers must
+         remain separable from EACH OTHER, not merely from the background, so
+         these are remapped as a set rather than individually.
+         ════════════════════════════════════════════════════════════════════ -->
+    <attr name="ufmAnalyzerImages" format="color" />     <!-- from ufm_analyzer_images -->
+    <attr name="ufmAnalyzerVideos" format="color" />     <!-- from ufm_analyzer_videos -->
+    <attr name="ufmAnalyzerAudio" format="color" />      <!-- from ufm_analyzer_audio -->
+    <attr name="ufmAnalyzerDocuments" format="color" />  <!-- from ufm_analyzer_documents -->
+    <attr name="ufmAnalyzerApks" format="color" />       <!-- from ufm_analyzer_apks -->
+    <attr name="ufmAnalyzerOther" format="color" />      <!-- from ufm_analyzer_other -->
+    <!-- The EMPTY TRACK behind the segments. Not a category, but it belongs to
+         the same set: a segment boundary is only readable if the surface it sits
+         on is separable from it, so the track has to be chosen against all six
+         segments at once, not independently of them. The base default is the
+         literal this view used to hardcode (#FFE0E0E0), so with the mode off the
+         bar is byte-identical to today. That default is genuinely poor in both
+         appearances (1.06:1 against the day page, and within 1.26:1 of the
+         brightest night segment), which is why the overlays move it. -->
+    <attr name="ufmAnalyzerTrack" format="color" />      <!-- from ufm_analyzer_track -->
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ADDED BY T061 — the colours the FR-21 coverage sweep found that the
+         original registry had no lever for.
+
+         These were NOT found by reading the layouts. They were found by
+         DERIVING the map (.plans/tools/derive_colour_map.py) and asking which
+         hue-bearing colours reach no attribute. A hand-written list cannot
+         answer that question, which is exactly how `status_error` and
+         `status_success` escaped the first sweep and left 115 files still
+         rendering original colours.
+
+         Every one below is defaulted to the EXACT resource it replaces, so
+         each conversion is appearance-neutral with the mode off (FR-19).
+         Where a colour could have borrowed an existing attribute instead, the
+         reason it does not is recorded per attribute — borrowing would have
+         merged two distinct signals onto one lever.
+         ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- A TRANSLUCENT delete/error wash (alpha 1A day, 33 night) used as
+         app:backgroundTint on the four TV delete buttons. It cannot borrow
+         ufmStatusError: that attribute is opaque, and an opaque red behind a
+         delete icon is a filled red button, not the faint wash the TV design
+         uses. The alpha has to survive the remap, so the palette carries a
+         translucent resource of its own. -->
+    <attr name="ufmDeleteTint" format="color" />
+
+    <!-- `ufm_progress_critical` is value-identical to BOTH ufm_error and
+         ufm_denied in day and night. It still gets its own lever rather than
+         borrowing one: "critical" and "denied" are different signals that
+         happen to share a hex today, and folding them together would make it
+         impossible to move one without the other later. Note the asymmetry
+         with ufmProgressWarning, which has had its own attribute since T017 —
+         giving the warning tier a lever and not the critical tier would be
+         incoherent. -->
+    <attr name="ufmProgressCritical" format="color" />
+
+    <!-- Shizuku's permission-denied label on TV (activity_shizuku_tv.xml, two
+         android:textColor sites). #FFD32F2F matches no existing attribute's
+         default in either appearance, so it needs its own lever to stay
+         byte-identical with the mode off. -->
+    <attr name="ufmShizukuError" format="color" />
+
+    <!-- The blue half of the TV focus family: selector_tv_button_blue.xml
+         paints focus #3B82F6 with a #993B82F6 halo. This is NOT tv_accent
+         (#0284C7) — a different blue — so it cannot ride ufmFocusAccent
+         without repainting the button with the mode off. It belongs in the
+         focus family (it is a focus fill and must move with the mode), hence
+         the ufmFocus* names rather than a generic blue accent name. -->
+    <attr name="ufmFocusBlue" format="color" />
+    <attr name="ufmFocusBlueGlow" format="color" />
+
+    <!-- selector_tv_icon_btn.xml focuses its icon button with the focus yellow
+         at 70% alpha (#B3FBBF24). This is genuinely different from
+         ufmFocusFill (#FFFBBF24) — opaque vs translucent — so the translucent
+         case needs its own lever for the mode-off state to be unchanged. -->
+    <attr name="ufmFocusFillTranslucent" format="color" />
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ADDED BY THE T072 REGRESSION — the two note colours, and the most
+         dangerous defect this pass produced.
+
+         Both are a DARK AMBER (#FFB45309, "Dark Amber for Light mode") by day,
+         and each becomes a DIFFERENT colour at night:
+
+             tv_note_color      day #FFB45309   night @color/tv_button_focused_yellow (#FFFBBF24)
+             mobile_note_color  day #FFB45309   night @color/ufm_pending            (#FFFFA726)
+
+         So neither is an alias of its night target. Each merely BORROWS that
+         colour at night. Name/alias resolution cannot express that: it followed
+         the night alias and mapped them onto ufmFocusFill and ufmStatusWarning,
+         whose defaults are the NIGHT colours in BOTH appearances.
+
+         The FR-19 pre-check then passed them, CIRCULARLY. It resolved the
+         colour through its alias and compared the result against the very
+         attribute the alias resolution had just chosen — the same value on
+         both sides. ~95 sites were repainted from #FFB45309 to #FFFBBF24 /
+         #FFE65100 with the mode OFF, which is the one criterion this entire
+         pass exists to preserve. check_neutrality.py caught it (189 failures)
+         where the applier's own guard could not, because it compares against
+         the COLOUR rather than against the mapping.
+
+         Each needs its own lever, defaulted to the exact resource it replaces,
+         so both appearances are preserved byte for byte. The overlays give them
+         the warning tier: every consumer is a note's textColor, tint or
+         strokeColor — an informational attention cue, not a focus fill. The
+         focus mapping was an artefact of the night alias, not a meaning. -->
+    <attr name="ufmTvNoteColor" format="color" />
+    <attr name="ufmMobileNoteColor" format="color" />
+
+    <!-- ────────────────────────────────────────────────────────────────────
+         ADDED BY T073 — the state colours that were rendering their hue with
+         the mode ON, found by measuring CHROMA rather than by reading names.
+
+         Both were invisible to every existing instrument, and for the same
+         reason: the gap report in derive_colour_map.py decides what needs a
+         lever from the colour's NAME (green|red|amber|error|danger|...). These
+         two names happen to contain no hue word, so neither was reported as a
+         gap, and neither was mapped. The file already confesses this blind spot
+         for one case ("the note colours were unmapped ... purely because 'note'
+         is not a hue word"); these are the same defect with no such luck.
+
+         What found them was check_unlevelled_hues.py, which asks the question
+         the name heuristic cannot: does this colour RENDER AS A HUE? The answer
+         is a property of the value, not of the identifier.
+
+         `shizuku_status_ok` is the sharper of the two, because the app already
+         has the mirror-image attribute: `ufmShizukuError` exists for
+         `shizuku_status_error`. The error half had a lever and the OK half did
+         not — and the OK half is GREEN, which is the exact hue the user
+         reported still being visible with the mode on.
+         ──────────────────────────────────────────────────────────────────── -->
+
+    <!-- #FF1B5E20, a deep green, set as a TextView colour in ShizukuTvActivity.
+         Rides the success tier: "service is enabled and active" is a success
+         state, and it is the counterpart of ufmShizukuError, which rides the
+         error tier. -->
+    <attr name="ufmShizukuOk" format="color" />
+
+    <!-- #FFB71C1C, the red of the stop/abort affordance (4 layout sites and one
+         adapter tint). Rides the error tier — stopping a transfer is a
+         destructive action, and it is the same role ufmDenied serves for delete.
+         It does NOT borrow ufmDenied: that attribute's default is #FFC62828, and
+         a different red behind the same action would change the mode-Off
+         appearance (FR-19). -->
+    <attr name="ufmStopButton" format="color" />
+
+    <!-- #FF00897B, the positive tier of the progress scale, and the tint of the
+         success icon (`ic_success.xml`) and the support success dialog.
+
+         It completes a family that had a hole in the middle: `ufmProgressCritical`
+         and `ufmProgressWarning` have both had levers since T017/T061, and the OK
+         tier had none. That is the third instance of the same asymmetry found in
+         this pass — `shizuku_status_error` had a lever and `shizuku_status_ok`
+         did not; `policy_green` had one and `policy_red` did not.
+
+         The value is identical to `ufm_primary` (#FF00897B), so this could have
+         been folded onto the brand accent instead. It is not, because the two are
+         read for different reasons — one is identity, one is "this succeeded" —
+         and the accent family is FR-22's layer, which the blind palette must be
+         able to MOVE rather than share. -->
+    <attr name="ufmProgressFill" format="color" />
+
+</resources>

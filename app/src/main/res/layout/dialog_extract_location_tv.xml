@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:text="@string/extract_set_location"
             android:background="@drawable/selector_tv_button_yellow"
-            android:textColor="@color/tv_button_focused_yellow_text"
+            android:textColor="?attr/ufmFocusFillText"
             android:focusable="true"
             android:layout_marginEnd="10dp" />
 

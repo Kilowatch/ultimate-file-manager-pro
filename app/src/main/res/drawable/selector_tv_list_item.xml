@@ -2,15 +2,21 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Focused: yellow background (matches TV design system) -->
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/tv_button_focused_yellow" />
-            <corners android:radius="12dp" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="?attr/ufmFocusFill" />
+                    <corners android:radius="12dp" />
+                </shape>
+            </item>
+            <!-- FR-06 leading-edge marker (T011); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
+        </layer-list>
     </item>
     <!-- Pressed: slightly darker yellow -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/tv_button_focused_yellow" />
+            <solid android:color="?attr/ufmFocusFill" />
             <corners android:radius="12dp" />
         </shape>
     </item>

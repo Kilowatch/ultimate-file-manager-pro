@@ -101,10 +101,15 @@ class ImportDetailsAdapter(
             holder.divider.setBackgroundColor(context.getColor(R.color.tv_divider))
             holder.txtHeaderTitle.setTextColor(context.getColor(R.color.tv_text_primary))
 
+            // Resolved once, not per D-pad move: every accessor is a
+            // `theme.resolveAttribute` call and this listener fires on each move.
+            val accentSurface = ColorblindPalette.focusAccentSurface(context)
+            val accentStroke = ColorblindPalette.focusStrokeColor(context)
+
             holder.cardCategory.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    holder.cardCategory.setCardBackgroundColor(ColorStateList.valueOf(context.getColor(R.color.tv_surface_focused)))
-                    holder.cardCategory.strokeColor = context.getColor(R.color.tv_focus_border_strong)
+                    holder.cardCategory.setCardBackgroundColor(ColorStateList.valueOf(accentSurface))
+                    holder.cardCategory.strokeColor = accentStroke
                 } else {
                     holder.cardCategory.setCardBackgroundColor(ColorStateList.valueOf(context.getColor(R.color.tv_glass_white_10)))
                     holder.cardCategory.strokeColor = context.getColor(R.color.tv_glass_border)

@@ -19,6 +19,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.json.JSONArray
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
@@ -291,7 +292,7 @@ class LicensesActivity : AppCompatActivity() {
             }
             if (isTv2) {
                 setOnFocusChangeListener { _, hasFocus ->
-                    strokeColor = getColor(if (hasFocus) R.color.tv_button_focused_yellow else R.color.tv_glass_white_20)
+                    strokeColor = if (hasFocus) ColorblindPalette.focusFill(this@LicensesActivity) else getColor(R.color.tv_glass_white_20)
                     strokeWidth = ((if (hasFocus) 2 else 1) * resources.displayMetrics.density).toInt()
                 }
             }
@@ -407,7 +408,7 @@ class LicensesActivity : AppCompatActivity() {
                 val iconSize = (22 * density).toInt()
                 layoutParams = android.widget.FrameLayout.LayoutParams(iconSize, iconSize, android.view.Gravity.CENTER)
                 setImageResource(R.drawable.ic_policy)
-                imageTintList = ColorStateList.valueOf(getColor(if (isTv) R.color.tv_button_focused_yellow else R.color.ufm_primary))
+                imageTintList = ColorStateList.valueOf(if (isTv) ColorblindPalette.focusFill(this@LicensesActivity) else getColor(R.color.ufm_primary))
             })
         }
 
@@ -498,8 +499,8 @@ class LicensesActivity : AppCompatActivity() {
                 setTextColor(getColor(R.color.tv_text_primary))
                 isFocusable = true
                 setOnFocusChangeListener { _, hasFocus ->
-                    backgroundTintList = ColorStateList.valueOf(getColor(if (hasFocus) R.color.tv_button_focused_yellow else R.color.tv_glass_white_20))
-                    setTextColor(getColor(if (hasFocus) R.color.tv_button_focused_yellow_text else R.color.tv_text_primary))
+                    backgroundTintList = ColorStateList.valueOf(if (hasFocus) ColorblindPalette.focusFill(this@LicensesActivity) else getColor(R.color.tv_glass_white_20))
+                    setTextColor(if (hasFocus) ColorblindPalette.focusFillText(this@LicensesActivity) else getColor(R.color.tv_text_primary))
                 }
             } else {
                 backgroundTintList = ColorStateList.valueOf(getColor(R.color.ufm_primary))

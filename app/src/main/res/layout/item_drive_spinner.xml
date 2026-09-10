@@ -47,7 +47,7 @@
         android:layout_height="16dp"
         android:layout_marginStart="8dp"
         android:src="@drawable/ic_lightning"
-        app:tint="@color/tv_button_focused_yellow"
+        app:tint="?attr/ufmFocusFill"
         android:visibility="gone"
         tools:visibility="visible" />
 

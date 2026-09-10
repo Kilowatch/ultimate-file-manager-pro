@@ -23,7 +23,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_delete"
-            app:tint="@color/ufm_denied"
+            app:tint="?attr/ufmDenied"
             android:contentDescription="@null" />
     </FrameLayout>
 
@@ -70,7 +70,7 @@
         android:textSize="14sp"
         android:fontFamily="sans-serif-bold"
         android:textAllCaps="false"
-        android:backgroundTint="@color/ufm_denied"
+        android:backgroundTint="?attr/ufmDenied"
         app:cornerRadius="12dp"
         app:icon="@drawable/ic_delete"
         app:iconGravity="textStart"

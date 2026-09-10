@@ -1573,6 +1573,107 @@ Sauvegarde et restauration
     <string name="settings_section_privacy_diagnostics">
 Confidentialité et diagnostics
 </string>
+    <string name="settings_section_accessibility">
+Accessibilité
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+Mode daltonien
+</string>
+    <string name="colorblind_screen_subtitle">
+Distinguez les états de focus, de sélection et de statut sans dépendre de la couleur.
+</string>
+    <string name="colorblind_subtitle_off">
+Désactivé — couleurs standard
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · contraste %2$s
+</string>
+    <string name="colorblind_group_type">
+Type
+</string>
+    <string name="colorblind_group_strength">
+Intensité du contraste
+</string>
+    <string name="colorblind_group_strength_hint">
+Une intensité plus élevée augmente la séparation avec l\\\'arrière-plan.
+</string>
+    <string name="colorblind_type_off">
+Désactivé
+</string>
+    <string name="colorblind_type_off_desc">
+Conserver les couleurs standard de l\\\'application.
+</string>
+    <string name="colorblind_type_red_green">
+Rouge-Vert
+</string>
+    <string name="colorblind_type_red_green_desc">
+Pour la protanopie et la deutéranopie. Les états rouge et vert sont remappés vers une paire bleu et ambre.
+</string>
+    <string name="colorblind_type_blue_yellow">
+Bleu-Jaune
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+Pour la tritanopie. Les états bleu et jaune sont remappés vers une paire magenta et vert.
+</string>
+    <string name="colorblind_type_high_contrast">
+Contraste élevé
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+Aucune perception des couleurs supposée. Les états sont séparés uniquement par la luminosité.
+</string>
+    <string name="colorblind_strength_low">
+Faible
+</string>
+    <string name="colorblind_strength_low_desc">
+Contraste minimum de 3:1.
+</string>
+    <string name="colorblind_strength_medium">
+Moyen
+</string>
+    <string name="colorblind_strength_medium_desc">
+Contraste minimum de 4,5:1. Recommandé.
+</string>
+    <string name="colorblind_strength_high">
+Élevé
+</string>
+    <string name="colorblind_strength_high_desc">
+Contraste minimum de 7:1.
+</string>
+    <string name="colorblind_preview_title">
+Aperçu
+</string>
+    <string name="colorblind_preview_hint">
+Affiche les couleurs de focus, de sélection et d\\\'état produites par ce paramètre.
+</string>
+    <string name="colorblind_preview_unfocused">
+Non ciblé
+</string>
+    <string name="colorblind_preview_focused">
+Ciblé
+</string>
+    <string name="colorblind_preview_selected">
+Sélectionné
+</string>
+    <string name="colorblind_preview_success">
+Succès
+</string>
+    <string name="colorblind_preview_warning">
+Avertissement
+</string>
+    <string name="colorblind_preview_error">
+Erreur
+</string>
+    <string name="colorblind_status_success_desc">
+Succès
+</string>
+    <string name="colorblind_status_warning_desc">
+Avertissement
+</string>
+    <string name="colorblind_status_error_desc">
+Erreur
+</string>
     <string name="settings_search_bar_title">
 Barre de recherche des paramètres
 </string>
@@ -10456,6 +10557,15 @@ Badge d\'avertissement
     <string name="icon_status_check_circle">
 Cercle de vérification
 </string>
+    <string name="icon_status_success">
+Statut Succès
+</string>
+    <string name="icon_status_warning_glyph">
+Statut Avertissement
+</string>
+    <string name="icon_status_error">
+Statut Erreur
+</string>
     <string name="icon_status_shield_check">
 Vérification du bouclier
 </string>
@@ -10534,6 +10644,9 @@ Applications par défaut
 </string>
     <string name="icon_settings_font_size">
 Taille de police
+</string>
+    <string name="icon_settings_colorblind">
+Mode daltonien
 </string>
     <string name="icon_settings_apk_extract">
 Extraction APK/XAPK

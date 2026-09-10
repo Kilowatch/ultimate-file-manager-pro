@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Focus/press selector for TV colour swatches.
-    Focused: yellow highlight border to indicate D-Pad focus.
+    Focused: BLUE accent highlight border to indicate D-Pad focus.
     Default: rounded rectangle with no border.
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Focused (D-Pad hover) -->
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent" />
-            <stroke
-                android:width="3dp"
-                android:color="@color/tv_accent" />
-            <corners android:radius="6dp" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                    <stroke
+                        android:width="3dp"
+                        android:color="?attr/ufmFocusAccent" />
+                    <corners android:radius="6dp" />
+                </shape>
+            </item>
+            <!-- FR-06 leading-edge marker (T012); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
+        </layer-list>
     </item>
 
     <!-- Pressed -->

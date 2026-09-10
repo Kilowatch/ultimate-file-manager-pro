@@ -22,6 +22,12 @@ import kotlinx.coroutines.withContext
  * ```kotlin
  * SyntaxHighlightEngine.applyHighlight(editable, language, context)
  * ```
+ *
+ * The optional `remap` parameter selects the Colorblind Mode syntax palette
+ * (FR-12). It defaults to `false`, so a caller that says nothing gets today's
+ * colours — and it is a **parameter on every entry point rather than a second
+ * method**, because the read-only viewer and the editor's edit mode call the same
+ * methods; only the caller knows which mode it is in.
  */
 object SyntaxHighlightEngine {
 
@@ -31,11 +37,21 @@ object SyntaxHighlightEngine {
      * @param text     The raw source code to highlight.
      * @param language The language definition (from [LanguageRegistry.detect]).
      * @param context  Android context for colour resolution.
+     * @param remap    `true` to use the Colorblind Mode syntax palette (FR-12).
+     *   **Pass `true` from the read-only viewer and `false` from edit mode.** The
+     *   caller must decide: entering edit mode calls this same method, so which
+     *   method ran cannot distinguish the two. While the mode is Off the flag has
+     *   no effect — see [SyntaxColorScheme.getColors].
      * @return A [SpannableString] with [ForegroundColorSpan]s applied.
      */
-    fun highlight(text: String, language: LanguageDef, context: Context): SpannableString {
+    fun highlight(
+        text: String,
+        language: LanguageDef,
+        context: Context,
+        remap: Boolean = false
+    ): SpannableString {
         val spans = tokenize(text, language)
-        return applySpans(text, spans, context)
+        return applySpans(text, spans, context, remap)
     }
 
     /**
@@ -45,9 +61,10 @@ object SyntaxHighlightEngine {
     suspend fun highlightAsync(
         text: String,
         language: LanguageDef,
-        context: Context
+        context: Context,
+        remap: Boolean = false
     ): SpannableString = withContext(Dispatchers.Default) {
-        highlight(text, language, context)
+        highlight(text, language, context, remap)
     }
 
     /**
@@ -63,11 +80,18 @@ object SyntaxHighlightEngine {
      * @param editable The current text buffer (e.g. `editText.text`).
      * @param language The language definition.
      * @param context  Android context for colour resolution.
+     * @param remap    `true` to use the Colorblind Mode syntax palette. Edit mode
+     *   passes `false` (FR-12) — **that is the whole reason this is a parameter
+     *   and not a different method**: the contract above is about *how* spans are
+     *   applied, and it must hold identically for either palette. Adding a second
+     *   code path for the colour would put the no-`setText` guarantee at risk on
+     *   the one path where it matters most.
      */
     fun applyHighlight(
         editable: Editable,
         language: LanguageDef,
-        context: Context
+        context: Context,
+        remap: Boolean = false
     ) {
         // 1. Strip all existing ForegroundColorSpans
         val existing = editable.getSpans(0, editable.length, ForegroundColorSpan::class.java)
@@ -78,7 +102,7 @@ object SyntaxHighlightEngine {
         // 2. Tokenize and apply new spans
         val text = editable.toString()
         val spans = tokenize(text, language)
-        val colors = SyntaxColorScheme.getColors(context)
+        val colors = SyntaxColorScheme.getColors(context, remap)
 
         for (span in spans) {
             val color = colors[span.type] ?: continue
@@ -122,10 +146,11 @@ object SyntaxHighlightEngine {
     private fun applySpans(
         text: String,
         spans: List<TokenSpan>,
-        context: Context
+        context: Context,
+        remap: Boolean
     ): SpannableString {
         val spannable = SpannableString(text)
-        val colors = SyntaxColorScheme.getColors(context)
+        val colors = SyntaxColorScheme.getColors(context, remap)
 
         for (span in spans) {
             val color = colors[span.type] ?: continue

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.TileColorBottomSheet
@@ -28,6 +29,7 @@ import za.kilowatch.ultimatefilemanager.storage.TileColorConfig
 import za.kilowatch.ultimatefilemanager.storage.TvTileDataHolder
 import za.kilowatch.ultimatefilemanager.storage.TileColorTvActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 
 class IconCustomizationActivity : AppCompatActivity() {
@@ -133,6 +135,7 @@ class IconCustomizationActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         isTv = DeviceUtils.isTvDevice(this)
@@ -423,6 +426,7 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("settings_breadcrumbs", getString(R.string.icon_settings_breadcrumbs), R.drawable.ic_home, emptyList()),
             IconItemData("settings_default_apps", getString(R.string.icon_settings_default_apps), R.drawable.ic_apps, emptyList()),
             IconItemData("settings_font_size", getString(R.string.icon_settings_font_size), R.drawable.ic_font_size, emptyList()),
+            IconItemData("settings_colorblind", getString(R.string.icon_settings_colorblind), R.drawable.ic_colorblind, emptyList()),
             IconItemData("settings_apk_extract", getString(R.string.icon_settings_apk_extract), R.drawable.ic_file_apk, emptyList()),
             IconItemData("settings_long_press", getString(R.string.icon_settings_long_press), R.drawable.ic_long_press, emptyList()),
             IconItemData("settings_controls_timeout", getString(R.string.icon_settings_controls_timeout), R.drawable.ic_controls_timeout, emptyList()),
@@ -487,14 +491,17 @@ class IconCustomizationActivity : AppCompatActivity() {
             )
         ))
 
-        // Status / Alert (5)
+        // Status / Alert (8)
         categories.add(IconCategoryData(
             "status", getString(R.string.category_status), listOf(
                 IconItemData("status_warning", getString(R.string.icon_status_warning), R.drawable.ic_warning, emptyList()),
                 IconItemData("status_warning_badge", getString(R.string.icon_status_warning_badge), R.drawable.ic_warning_badge, emptyList()),
                 IconItemData("status_check_circle", getString(R.string.icon_status_check_circle), R.drawable.ic_check_circle, emptyList()),
                 IconItemData("status_shield_check", getString(R.string.icon_status_shield_check), R.drawable.ic_shield_check, emptyList()),
-                IconItemData("status_shield_alert", getString(R.string.icon_status_shield_alert), R.drawable.ic_shield_alert, emptyList())
+                IconItemData("status_shield_alert", getString(R.string.icon_status_shield_alert), R.drawable.ic_shield_alert, emptyList()),
+                IconItemData("status_success", getString(R.string.icon_status_success), R.drawable.ic_status_success, emptyList()),
+                IconItemData("status_warning_glyph", getString(R.string.icon_status_warning_glyph), R.drawable.ic_status_warning, emptyList()),
+                IconItemData("status_error", getString(R.string.icon_status_error), R.drawable.ic_status_error, emptyList())
             )
         ))
 
@@ -649,7 +656,7 @@ class IconCustomizationActivity : AppCompatActivity() {
 
     private fun setupTvIconFocus(view: View) {
         val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-        val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+        val yellowCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
         if (view is ImageView) {
             view.imageTintList = whiteCsl
             view.setOnFocusChangeListener { _, hasFocus ->
@@ -664,8 +671,8 @@ class IconCustomizationActivity : AppCompatActivity() {
     }
 
     private fun setupTvButtonFocus(btn: MaterialButton) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val defaultText = getColor(R.color.tv_text_primary)
         val defaultBg = getColor(R.color.tv_glass_white_10)
 

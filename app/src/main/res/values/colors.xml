@@ -72,6 +72,13 @@
     <color name="ufm_analyzer_documents">#FF66BB6A</color>
     <color name="ufm_analyzer_apks">#FFFFA726</color>
     <color name="ufm_analyzer_other">#FF78909C</color>
+    <!-- The empty track behind the segments, not a category. ONE value, no
+         values-night override, and that is deliberate: `StorageBarView` hardcoded
+         `0xFFE0E0E0` at HEAD for both appearances (StorageBarView.kt:29), so a
+         night variant would change the mode-Off appearance at night and break
+         FR-19. The overlays replace it in all nine modes; the base theme keeps the
+         literal the view used to draw. -->
+    <color name="ufm_analyzer_track">#FFE0E0E0</color>
 
     <!-- Analyzer Risk Level Colors -->
     <color name="ufm_risk_safe">#FF2E7D32</color>       <!-- green -->

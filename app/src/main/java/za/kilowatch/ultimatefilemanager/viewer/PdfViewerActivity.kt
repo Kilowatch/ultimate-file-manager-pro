@@ -39,6 +39,7 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Built-in PDF viewer using Android's PdfRenderer API.
@@ -75,6 +76,7 @@ class PdfViewerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val isTv = DeviceUtils.isTvDevice(this)

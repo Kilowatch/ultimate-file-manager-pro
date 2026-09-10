@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.coroutineContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.network.FtpShareClient
 import za.kilowatch.ultimatefilemanager.network.NetworkFile
 import za.kilowatch.ultimatefilemanager.network.NetworkShare
@@ -888,10 +889,10 @@ object TransferConflictHelper {
         activity: Activity,
         vararg buttons: MaterialButton?
     ) {
-        val yellow    = activity.getColor(R.color.tv_button_focused_yellow)
+        val yellow    = ColorblindPalette.focusFill(activity)
         val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
         val glass     = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-        val black     = activity.getColor(R.color.tv_button_focused_yellow_text)
+        val black     = ColorblindPalette.focusFillText(activity)
         val white     = activity.getColor(R.color.tv_text_primary)
 
         for (btn in buttons) {

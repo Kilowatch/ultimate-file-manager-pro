@@ -30,6 +30,7 @@ import za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
 import za.kilowatch.ultimatefilemanager.settings.IconTapEditModePreferenceManager
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
@@ -968,8 +969,12 @@ class FileAdapter(
                 if (isGrid) {
                     itemView.findViewById<View>(R.id.viewSelectionOverlay)?.visibility = View.VISIBLE
                 } else {
-                    val colorRes = if (isFocused) R.color.tv_button_focused_yellow_glow else R.color.ufm_selection_highlight
-                    layoutRow.setBackgroundColor(ContextCompat.getColor(context, colorRes))
+                    // `ufmFocusGlow` defaults to @color/tv_button_focused_yellow_glow
+                    // in both base themes, so the focused branch is byte-identical
+                    // with the mode off.
+                    val color = if (isFocused) ColorblindPalette.focusGlow(context)
+                                else ColorblindPalette.selectionFill(context)
+                    layoutRow.setBackgroundColor(color)
                 }
             } else {
                 if (isGrid) {
@@ -1086,7 +1091,7 @@ class FileAdapter(
             // TV: black text/icons on focus (yellow bg handled by selector_tv_list_item)
             if (isTv) {
                 val ctx = itemView.context
-                val black     = ctx.getColor(R.color.tv_button_focused_yellow_text)
+                val black     = ColorblindPalette.focusFillText(ctx)
                 val white     = ctx.getColor(R.color.tv_text_primary)
                 val secondary = ctx.getColor(R.color.tv_text_secondary)
                 val hint      = ctx.getColor(R.color.tv_text_hint)

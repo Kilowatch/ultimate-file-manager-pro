@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
-            android:buttonTint="@color/tv_button_focused_yellow"
+            android:buttonTint="?attr/ufmFocusFill"
             android:saveEnabled="false" />
 
     </LinearLayout>

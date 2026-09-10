@@ -22,12 +22,14 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
 import android.view.LayoutInflater
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 class SmartSortTvActivity : AppCompatActivity() {
 
@@ -119,6 +121,7 @@ class SmartSortTvActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         handledFontChange = savedInstanceState?.getBoolean("handledFontChange", false) ?: false
         handledLocaleChange = savedInstanceState?.getBoolean("handledLocaleChange", false) ?: false
@@ -293,7 +296,7 @@ fixCategoryFocus(); fixCategoryFocus()
         val btnHistory = findViewById<MaterialButton>(R.id.btnTvHistory)
         val hasHistory = SmartSortHistoryManager.loadAll().any { it.folderPath == folderPath }
         if (hasHistory) {
-            val historyRed = getColor(R.color.ufm_error)
+            val historyRed = ColorblindPalette.statusError(this)
             btnHistory.setTextColor(historyRed)
             btnHistory.iconTint = android.content.res.ColorStateList.valueOf(historyRed)
         }
@@ -932,8 +935,8 @@ private fun updateSaveIcon() {
     }
 
     private fun setupTvFocus() {
-    val yb = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
-    val wt = getColor(R.color.tv_text_primary); val yt = getColor(R.color.tv_button_focused_yellow_text)
+    val yb = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(this))
+    val wt = getColor(R.color.tv_text_primary); val yt = ColorblindPalette.focusFillText(this)
     listOf(R.id.chipSortStandard, R.id.chipSortCustom, R.id.chipRootOnly, R.id.chipRecursive, R.id.chipFlatten, R.id.chipPreserve, R.id.chipModeType, R.id.chipModeSize, R.id.chipModeDate, R.id.chipIncludeOther, R.id.chipDupSkip, R.id.chipDupRename, R.id.chipDupOverwrite, R.id.chipExistingMerge, R.id.chipExistingSkip, R.id.chipExistingRename).forEach { id -> val chip = findViewById<Chip>(id) ?: return@forEach; chip.setOnFocusChangeListener { _, hf -> if (hf) { chip.chipBackgroundColor = yb; chip.setTextColor(yt) } else { chip.chipBackgroundColor = null; chip.setTextColor(wt) } } }
     (categoryButtonKeys.values.toList() + listOf(R.id.btnAddRule, R.id.btnPreview, R.id.btnStartSort)).forEach { id -> val btn = findViewById<MaterialButton>(id) ?: return@forEach; val dbg = btn.backgroundTintList; btn.setOnFocusChangeListener { _, hf -> if (hf) { btn.backgroundTintList = yb; btn.setTextColor(yt) } else { btn.backgroundTintList = dbg; btn.setTextColor(wt) } } }
     findViewById<ImageView>(R.id.btnSaveConfig)?.setOnFocusChangeListener { v, hf -> v.alpha = if (hf) 1.0f else 0.6f }

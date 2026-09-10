@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
@@ -63,7 +64,7 @@ class StartScreenPreferenceActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val blackCsl = ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -288,13 +289,19 @@ class StartScreenPreferenceActivity : AppCompatActivity() {
     }
 
     private fun setupTvCardFocus(card: MaterialCardView) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val glassColor = getColor(R.color.tv_glass_white_10)
         val primaryText = getColor(R.color.tv_text_primary)
         val secondaryText = getColor(R.color.tv_text_secondary)
 
         card.setOnFocusChangeListener { _, hasFocus ->
+            // The FR-06 marker is NOT assigned here. This card declares
+            // `@drawable/selector_tv_card` as its XML foreground, and that selector's
+            // focused state already carries the marker. Writing to `foreground` would
+            // overwrite the whole selector, and since `marker()` returns null on blur
+            // the card would permanently lose its glow rings and accent border the
+            // first time it was focused -- with Colorblind Mode Off (FR-19).
             val isSelected = (card.tag as String) == DefaultStartScreenPreferenceManager.getStartScreenId(this)
             val rb = card.findViewById<RadioButton>(R.id.rbSelect)
             val imgIcon = card.findViewById<ImageView>(R.id.imgIcon)
@@ -306,7 +313,7 @@ class StartScreenPreferenceActivity : AppCompatActivity() {
             } else {
                 card.setCardBackgroundColor(glassColor)
                 setCardTextColors(card, primaryText, secondaryText)
-                rb.buttonTintList = ColorStateList.valueOf(if (isSelected) getColor(R.color.tv_accent) else secondaryText)
+                rb.buttonTintList = ColorStateList.valueOf(if (isSelected) ColorblindPalette.focusAccent(this) else secondaryText)
                 imgIcon?.imageTintList = ColorStateList.valueOf(primaryText)
             }
         }

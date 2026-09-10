@@ -2,26 +2,39 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Focused and Checked (Active) -->
     <item android:state_checked="true" android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/tv_button_focused_yellow" />
-            <corners android:radius="12dp" />
-            <stroke android:width="3dp" android:color="@color/tv_accent" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="?attr/ufmFocusFill" />
+                    <corners android:radius="12dp" />
+                    <stroke android:width="3dp" android:color="?attr/ufmFocusAccent" />
+                </shape>
+            </item>
+            <!-- FR-06 leading-edge marker (T012); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
+        </layer-list>
     </item>
-    <!-- Checked (Active) but not focused -->
+    <!-- Checked (Active) but not focused — colour follows the focus palette for
+         consistency, but NO marker: the marker means "D-pad is here" (FR-06). -->
     <item android:state_checked="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/tv_button_focused_yellow" />
+            <solid android:color="?attr/ufmFocusFill" />
             <corners android:radius="12dp" />
-            <stroke android:width="2dp" android:color="@color/tv_accent" />
+            <stroke android:width="2dp" android:color="?attr/ufmFocusAccent" />
         </shape>
     </item>
     <!-- Focused but not checked -->
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/tv_button_focused_yellow" />
-            <corners android:radius="12dp" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="?attr/ufmFocusFill" />
+                    <corners android:radius="12dp" />
+                </shape>
+            </item>
+            <!-- FR-06 leading-edge marker (T012); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
+        </layer-list>
     </item>
     <!-- Default state -->
     <item>

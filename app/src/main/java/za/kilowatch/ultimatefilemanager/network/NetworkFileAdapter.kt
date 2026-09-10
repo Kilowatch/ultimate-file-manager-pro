@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -742,8 +743,8 @@ class NetworkFileAdapter(
                     val totalStr = Formatter.formatFileSize(context, file.size)
                     val normalColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
                     val tintColor = when {
-                        usedPct >= 90 -> ContextCompat.getColor(context, R.color.ufm_denied)    // red
-                        usedPct >= 75 -> ContextCompat.getColor(context, R.color.ufm_pending)   // orange
+                        usedPct >= 90 -> ColorblindPalette.denied(context)            // red
+                        usedPct >= 75 -> ColorblindPalette.statusWarning(context)     // orange
                         else          -> normalColor                                            // Material You / theme accent
                     }
                     imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
@@ -844,7 +845,7 @@ class NetworkFileAdapter(
             // TV: black text/icons on focus (yellow bg handled by selector_tv_list_item)
             if (isTv) {
                 val ctx = itemView.context
-                val black     = ctx.getColor(R.color.tv_button_focused_yellow_text)
+                val black     = ColorblindPalette.focusFillText(ctx)
                 val white     = ctx.getColor(R.color.tv_text_primary)
                 val secondary = ctx.getColor(R.color.tv_text_secondary)
                 val hint      = ctx.getColor(R.color.tv_text_hint)

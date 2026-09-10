@@ -25,6 +25,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.ApkExtractPreferenceManager
 import za.kilowatch.ultimatefilemanager.util.ApkMetadataExtractor
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -39,6 +40,7 @@ import java.util.zip.ZipOutputStream
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.ui.policy.ProminentDisclosureHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 /**
  * Displays installed applications with the ability to view details
@@ -69,6 +71,7 @@ class AppManagerActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (DeviceUtils.isTvDevice(this)) {
@@ -133,7 +136,7 @@ class AppManagerActivity : AppCompatActivity() {
         // Custom back button
         val btnBack = findViewById<ImageView>(R.id.btnAppsBack)
         val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-        val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+        val blackCsl = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
         btnBack?.imageTintList = whiteCsl
         btnBack?.setOnClickListener { navigateBack() }
         btnBack?.setOnFocusChangeListener { _, hasFocus ->
@@ -412,8 +415,8 @@ class AppManagerActivity : AppCompatActivity() {
 
         val bgColor = getColor(R.color.tv_bg_gradient_end)
         val white = getColor(R.color.tv_text_primary)
-        val black = getColor(R.color.tv_button_focused_yellow_text)
-        val yellow = getColor(R.color.tv_button_focused_yellow)
+        val black = ColorblindPalette.focusFillText(this)
+        val yellow = ColorblindPalette.focusFill(this)
         val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
         val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
 

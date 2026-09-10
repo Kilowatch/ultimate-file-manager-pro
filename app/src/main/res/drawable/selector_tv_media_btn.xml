@@ -9,16 +9,18 @@
             <item android:top="-6dp" android:bottom="-6dp" android:left="-6dp" android:right="-6dp">
                 <shape android:shape="rectangle">
                     <corners android:radius="18dp" />
-                    <solid android:color="@color/tv_button_focused_yellow_glow" />
+                    <solid android:color="?attr/ufmFocusGlow" />
                 </shape>
             </item>
             <!-- Yellow fill -->
             <item>
                 <shape android:shape="rectangle">
                     <corners android:radius="14dp" />
-                    <solid android:color="@color/tv_button_focused_yellow" />
+                    <solid android:color="?attr/ufmFocusFill" />
                 </shape>
             </item>
+            <!-- FR-06 leading-edge marker (T011); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
         </layer-list>
     </item>
 
@@ -26,7 +28,7 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <corners android:radius="14dp" />
-            <solid android:color="@color/tv_button_focused_yellow" />
+            <solid android:color="?attr/ufmFocusFill" />
         </shape>
     </item>
 

@@ -22,7 +22,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_share"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:layout_marginEnd="14dp"
             android:importantForAccessibility="no" />
 
@@ -71,7 +71,7 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/ic_share"
-                app:tint="@color/tv_button_focused_yellow"
+                app:tint="?attr/ufmFocusFill"
                 android:layout_marginEnd="16dp"
                 android:importantForAccessibility="no" />
 
@@ -126,7 +126,7 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/ic_copy"
-                app:tint="@color/tv_button_focused_yellow"
+                app:tint="?attr/ufmFocusFill"
                 android:layout_marginEnd="16dp"
                 android:importantForAccessibility="no" />
 

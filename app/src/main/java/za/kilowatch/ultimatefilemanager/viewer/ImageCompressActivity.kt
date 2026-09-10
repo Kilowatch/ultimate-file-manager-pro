@@ -38,6 +38,7 @@ import za.kilowatch.ultimatefilemanager.network.SmbShareClient
 import za.kilowatch.ultimatefilemanager.network.SshShareClient
 import za.kilowatch.ultimatefilemanager.network.TvShareClient
 import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.CopyHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -498,7 +499,7 @@ class ImageCompressActivity : AppCompatActivity() {
         val primaryColor = if (isTv) getColor(R.color.tv_text_primary) else getColor(R.color.mobile_card_text_primary)
         val secondaryColor = if (isTv) getColor(R.color.tv_text_secondary) else getColor(R.color.mobile_card_text_secondary)
         val successColor = getColor(R.color.ufm_primary)
-        val errorColor = getColor(R.color.ufm_denied)
+        val errorColor = ColorblindPalette.denied(this)
 
         var totalOriginal = 0L
         var totalCompressed = 0L

@@ -291,7 +291,7 @@
                 android:textSize="14sp"
                 android:fontFamily="sans-serif-bold"
                 android:textAllCaps="false"
-                android:backgroundTint="@color/mobile_stop_btn"
+                android:backgroundTint="?attr/ufmStopButton"
                 app:cornerRadius="12dp"
                 app:icon="@drawable/ic_close"
                 app:iconGravity="textStart"

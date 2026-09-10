@@ -19,7 +19,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="12dp"
         android:src="@drawable/ic_paste"
-        app:tint="@color/tv_button_focused_yellow"
+        app:tint="?attr/ufmFocusFill"
         android:contentDescription="@null" />
 
     <!-- Title -->
@@ -87,7 +87,7 @@
             android:layout_height="48dp"
             android:layout_weight="1.4"
             android:text="@string/clipboard_new_slot"
-            android:textColor="@color/tv_button_focused_yellow_text"
+            android:textColor="?attr/ufmFocusFillText"
             android:textSize="14sp"
             android:textStyle="bold"
             android:textAllCaps="false"
@@ -96,8 +96,8 @@
             app:iconGravity="textStart"
             app:iconPadding="8dp"
             app:iconSize="18dp"
-            app:iconTint="@color/tv_button_focused_yellow_text"
-            app:backgroundTint="@color/tv_button_focused_yellow"
+            app:iconTint="?attr/ufmFocusFillText"
+            app:backgroundTint="?attr/ufmFocusFill"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:focusable="true"

@@ -1573,6 +1573,107 @@ Ultimate File Manager Pro
     <string name="settings_section_privacy_diagnostics">
 الخصوصية والتشخيص
 </string>
+    <string name="settings_section_accessibility">
+إمكانية الوصول
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+وضع عمى الألوان
+</string>
+    <string name="colorblind_screen_subtitle">
+تمييز حالات التركيز والتحديد والحالة دون الاعتماد على اللون.
+</string>
+    <string name="colorblind_subtitle_off">
+إيقاف — الألوان القياسية
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · %2$s التباين
+</string>
+    <string name="colorblind_group_type">
+النوع
+</string>
+    <string name="colorblind_group_strength">
+قوة التباين
+</string>
+    <string name="colorblind_group_strength_hint">
+تزيد القوة الأعلى من التمييز عن الخلفية.
+</string>
+    <string name="colorblind_type_off">
+إيقاف
+</string>
+    <string name="colorblind_type_off_desc">
+الاحتفاظ بالألوان القياسية للتطبيق.
+</string>
+    <string name="colorblind_type_red_green">
+أحمر-أخضر
+</string>
+    <string name="colorblind_type_red_green_desc">
+لعمى اللون الأحمر والأخضر. يتم إعادة تعيين حالات الأحمر والأخضر إلى زوج أزرق وكهرماني.
+</string>
+    <string name="colorblind_type_blue_yellow">
+أزرق-أصفر
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+لعمى اللون الأزرق والأصفر. يتم إعادة تعيين حالات الأزرق والأصفر إلى زوج أرجواني وأخضر.
+</string>
+    <string name="colorblind_type_high_contrast">
+تباين عالي
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+لا يُفترض وجود إدراك للألوان. يتم فصل الحالات عن طريق الإضاءة فقط.
+</string>
+    <string name="colorblind_strength_low">
+منخفض
+</string>
+    <string name="colorblind_strength_low_desc">
+تباين أدنى 3:1.
+</string>
+    <string name="colorblind_strength_medium">
+متوسط
+</string>
+    <string name="colorblind_strength_medium_desc">
+تباين أدنى 4.5:1. موصى به.
+</string>
+    <string name="colorblind_strength_high">
+عالي
+</string>
+    <string name="colorblind_strength_high_desc">
+تباين أدنى 7:1.
+</string>
+    <string name="colorblind_preview_title">
+معاينة
+</string>
+    <string name="colorblind_preview_hint">
+يعرض ألوان التركيز والتحديد والحالة التي ينتجها هذا الإعداد.
+</string>
+    <string name="colorblind_preview_unfocused">
+غير مركّز
+</string>
+    <string name="colorblind_preview_focused">
+مركّز
+</string>
+    <string name="colorblind_preview_selected">
+محدد
+</string>
+    <string name="colorblind_preview_success">
+نجاح
+</string>
+    <string name="colorblind_preview_warning">
+تحذير
+</string>
+    <string name="colorblind_preview_error">
+خطأ
+</string>
+    <string name="colorblind_status_success_desc">
+نجاح
+</string>
+    <string name="colorblind_status_warning_desc">
+تحذير
+</string>
+    <string name="colorblind_status_error_desc">
+خطأ
+</string>
     <string name="settings_search_bar_title">
 شريط بحث الإعدادات
 </string>
@@ -10456,6 +10557,15 @@ XML / ترميز
     <string name="icon_status_check_circle">
 دائرة تأكيد
 </string>
+    <string name="icon_status_success">
+حالة نجاح
+</string>
+    <string name="icon_status_warning_glyph">
+حالة تحذير
+</string>
+    <string name="icon_status_error">
+حالة خطأ
+</string>
     <string name="icon_status_shield_check">
 درع تأكيد
 </string>
@@ -10534,6 +10644,9 @@ XML / ترميز
 </string>
     <string name="icon_settings_font_size">
 حجم الخط
+</string>
+    <string name="icon_settings_colorblind">
+وضع عمى الألوان
 </string>
     <string name="icon_settings_apk_extract">
 استخراج APK/XAPK

@@ -39,6 +39,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.AdbDevice
 import za.kilowatch.ultimatefilemanager.network.AdbDeviceDiscovery
@@ -49,6 +50,7 @@ import java.io.InputStreamReader
 import java.io.OutputStream
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
 class TerminalActivity : AppCompatActivity() {
 
@@ -71,6 +73,7 @@ class TerminalActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         isTv = DeviceUtils.isTvDevice(this)
 
@@ -512,7 +515,7 @@ class TerminalActivity : AppCompatActivity() {
                 txtAdbStatus?.apply {
                     clearAnimation()
                     text = getString(R.string.adb_status_denied)
-                    setTextColor(getColor(R.color.ufm_error))
+                    setTextColor(ColorblindPalette.statusError(this@TerminalActivity))
                     visibility = View.VISIBLE
                     invalidate()
                     requestLayout()
@@ -562,7 +565,7 @@ class TerminalActivity : AppCompatActivity() {
                     txtAdbStatus?.apply {
                         clearAnimation()
                         text = getString(R.string.adb_status_denied)
-                        setTextColor(getColor(R.color.ufm_error))
+                        setTextColor(ColorblindPalette.statusError(this@TerminalActivity))
                         visibility = View.VISIBLE
                         invalidate()
                         requestLayout()
@@ -664,7 +667,7 @@ class TerminalActivity : AppCompatActivity() {
                             statusText?.apply {
                                 clearAnimation()
                                 text = getString(R.string.adb_status_denied)
-                                setTextColor(getColor(R.color.ufm_error))
+                                setTextColor(ColorblindPalette.statusError(this@TerminalActivity))
                                 visibility = View.VISIBLE
                                 invalidate()
                                 requestLayout()
@@ -700,7 +703,7 @@ class TerminalActivity : AppCompatActivity() {
                         statusText?.apply {
                             clearAnimation()
                             text = getString(R.string.adb_status_denied)
-                            setTextColor(getColor(R.color.ufm_error))
+                            setTextColor(ColorblindPalette.statusError(this@TerminalActivity))
                             visibility = View.VISIBLE
                             invalidate()
                             requestLayout()

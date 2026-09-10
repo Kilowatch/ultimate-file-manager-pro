@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
@@ -266,25 +267,35 @@ class ChecksumManifestVerifyDialogFragment : DialogFragment() {
                     holder.txtDetail.visibility = View.GONE
                 }
                 EntryStatus.OK -> {
-                    holder.imgStatus.setImageResource(R.drawable.ic_check)
-                    holder.imgStatus.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_granted))
+                    // FR-10 glyph, mode-on only — `statusIconOr` hands back
+                    // ic_check untouched while the mode is off.
+                    holder.imgStatus.setImageResource(ColorblindPalette.statusIconOr(
+                        requireContext(), ColorblindPalette.StatusKind.SUCCESS, R.drawable.ic_check))
+                    holder.imgStatus.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.statusSuccess(requireContext()))
                     holder.txtStatusLabel.text = getString(R.string.checksum_manifest_status_ok)
-                    holder.txtStatusLabel.setTextColor(requireContext().getColor(R.color.ufm_granted))
+                    holder.txtStatusLabel.setTextColor(ColorblindPalette.statusSuccess(requireContext()))
                     holder.txtDetail.visibility = View.GONE
                 }
                 EntryStatus.FAILED -> {
-                    holder.imgStatus.setImageResource(R.drawable.ic_close)
-                    holder.imgStatus.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_error_red))
+                    holder.imgStatus.setImageResource(ColorblindPalette.statusIconOr(
+                        requireContext(), ColorblindPalette.StatusKind.ERROR, R.drawable.ic_close))
+                    holder.imgStatus.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.tvErrorRed(requireContext()))
                     holder.txtStatusLabel.text = getString(R.string.checksum_manifest_status_failed)
-                    holder.txtStatusLabel.setTextColor(requireContext().getColor(R.color.tv_error_red))
+                    holder.txtStatusLabel.setTextColor(ColorblindPalette.tvErrorRed(requireContext()))
                     holder.txtDetail.visibility = View.VISIBLE
                     holder.txtDetail.text = "Expected: ${item.expectedHash}\nActual:   ${item.actualHash ?: "none"}"
                 }
                 EntryStatus.MISSING -> {
-                    holder.imgStatus.setImageResource(R.drawable.ic_warning)
-                    holder.imgStatus.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_button_focused_yellow))
+                    // A warning status drawn with an amber tint, so this icon IS
+                    // the status indicator and takes the glyph. PENDING above is
+                    // left alone on purpose: ic_history is a neutral "not yet
+                    // done" mark, not a severity, and swapping it would misreport
+                    // a pending row as a warning.
+                    holder.imgStatus.setImageResource(ColorblindPalette.statusIconOr(
+                        requireContext(), ColorblindPalette.StatusKind.WARNING, R.drawable.ic_warning))
+                    holder.imgStatus.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(requireContext()))
                     holder.txtStatusLabel.text = getString(R.string.checksum_manifest_status_missing)
-                    holder.txtStatusLabel.setTextColor(requireContext().getColor(R.color.tv_button_focused_yellow))
+                    holder.txtStatusLabel.setTextColor(ColorblindPalette.focusFill(requireContext()))
                     holder.txtDetail.visibility = View.GONE
                 }
             }

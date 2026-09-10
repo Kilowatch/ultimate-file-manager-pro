@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@string/shizuku_not_installed"
-                android:textColor="@color/shizuku_status_error"
+                android:textColor="?attr/ufmShizukuError"
                 android:textSize="28sp"
                 android:fontFamily="sans-serif-black"
                 android:gravity="center"
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@string/shizuku_service_not_running"
-                android:textColor="@color/shizuku_status_error"
+                android:textColor="?attr/ufmShizukuError"
                 android:textSize="22sp"
                 android:fontFamily="sans-serif-black"
                 android:visibility="gone" />

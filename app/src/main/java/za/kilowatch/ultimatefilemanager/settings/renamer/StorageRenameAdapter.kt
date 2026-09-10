@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 data class RenameListItem(
     val deviceId: String,
@@ -66,12 +67,12 @@ class StorageRenameAdapter(
             
             if (item.isOnline) {
                 txtStatus.text = context.getString(R.string.status_online)
-                txtStatus.backgroundTintList = android.content.res.ColorStateList.valueOf(context.getColor(R.color.ufm_success))
+                txtStatus.backgroundTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.success(context))
                 imgIcon.alpha = 1.0f
                 txtTitle.alpha = 1.0f
             } else {
                 txtStatus.text = context.getString(R.string.status_offline)
-                txtStatus.backgroundTintList = android.content.res.ColorStateList.valueOf(context.getColor(R.color.ufm_error))
+                txtStatus.backgroundTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.statusError(context))
                 imgIcon.alpha = 0.5f
                 txtTitle.alpha = 0.7f
             }
@@ -92,14 +93,20 @@ class StorageRenameAdapter(
         }
 
         private fun setupTvCardFocus(card: MaterialCardView, context: Context) {
-            val yellowFill = context.getColor(R.color.tv_button_focused_yellow)
-            val blackText = context.getColor(R.color.tv_button_focused_yellow_text)
+            val yellowFill = ColorblindPalette.focusFill(context)
+            val blackText = ColorblindPalette.focusFillText(context)
             val glassColor = context.getColor(R.color.tv_glass_white_10)
             val primaryText = context.getColor(R.color.tv_text_primary)
             val secondText = context.getColor(R.color.tv_text_secondary)
-            val badgeTintNormal = if (getItem(adapterPosition).isOnline) context.getColor(R.color.ufm_success) else context.getColor(R.color.ufm_error)
+            val badgeTintNormal = if (getItem(adapterPosition).isOnline) ColorblindPalette.success(context) else ColorblindPalette.statusError(context)
 
             card.setOnFocusChangeListener { _, hasFocus ->
+                // The FR-06 marker is NOT assigned here. This card declares
+                // `@drawable/selector_tv_card` as its XML foreground, and that selector's
+                // focused state already carries the marker. Writing to `foreground` would
+                // overwrite the whole selector, and since `marker()` returns null on blur
+                // the card would permanently lose its glow rings and accent border the
+                // first time it was focused -- with Colorblind Mode Off (FR-19).
                 if (hasFocus) {
                     card.setCardBackgroundColor(yellowFill)
                     txtTitle.setTextColor(blackText)
@@ -113,7 +120,7 @@ class StorageRenameAdapter(
                     txtTitle.setTextColor(primaryText)
                     txtSubtitle.setTextColor(secondText)
                     txtSize.setTextColor(secondText)
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(context.getColor(R.color.tv_accent))
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusAccent(context))
                     txtStatus.setTextColor(context.getColor(android.R.color.white))
                     txtStatus.backgroundTintList = android.content.res.ColorStateList.valueOf(badgeTintNormal)
                 }
@@ -124,7 +131,7 @@ class StorageRenameAdapter(
             txtTitle.setTextColor(primaryText)
             txtSubtitle.setTextColor(secondText)
             txtSize.setTextColor(secondText)
-            imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(context.getColor(R.color.tv_accent))
+            imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusAccent(context))
             txtStatus.setTextColor(context.getColor(android.R.color.white))
             txtStatus.backgroundTintList = android.content.res.ColorStateList.valueOf(badgeTintNormal)
         }

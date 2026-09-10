@@ -319,7 +319,7 @@
         android:layout_marginTop="8dp"
         android:padding="10dp"
         android:text="@string/notice_some_storage_areas_are"
-        android:textColor="@color/ufm_risk_moderate"
+        android:textColor="?attr/ufmRiskModerate"
         android:textSize="13sp"
         android:gravity="center"
         android:background="@color/tv_glass_white_10"

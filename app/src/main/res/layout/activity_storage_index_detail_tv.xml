@@ -87,7 +87,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/ic_lightning"
-                app:tint="@color/tv_button_focused_yellow"
+                app:tint="?attr/ufmFocusFill"
                 android:importantForAccessibility="no" />
 
             <TextView
@@ -144,7 +144,7 @@
                     android:layout_height="36dp"
                     android:src="@drawable/ic_delete"
                     android:layout_marginEnd="@dimen/margin_lg"
-                    app:tint="@color/status_error"
+                    app:tint="?attr/ufmDenied"
                     android:importantForAccessibility="no" />
 
                 <LinearLayout
@@ -158,7 +158,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/storage_indexer_delete_records"
-                        android:textColor="@color/status_error"
+                        android:textColor="?attr/ufmDenied"
                         android:textSize="20sp"
                         android:fontFamily="sans-serif-bold" />
 

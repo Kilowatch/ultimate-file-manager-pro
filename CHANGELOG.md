@@ -5,6 +5,36 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] — 2026-09-10
+
+### Added
+- **Colorblind Accessibility Mode** for Mobile and Android TV:
+  - New **Accessibility** section in Settings — a sibling of Appearance & Customization, on both phone and TV — hosting Colorblind Mode.
+  - Three palettes: **Red-green** (protanopia and deuteranopia), **Blue-yellow** (tritanopia), and **General High Contrast**, a hue-independent option that also serves achromatopsia and low vision.
+  - Three **strength** presets — **Low**, **Medium**, **High** — raising the contrast floor of the focused element to 3:1, 4.5:1 and 7:1 against its background, so the mode works on both the light and dark appearance.
+  - A **live preview** on the settings screen showing unfocused, focused, selected, and success/warning/error samples side by side, updating as the type or strength changes.
+  - A **leading-edge marker bar** on D-pad focus for Android TV, so the focused row is identifiable by position and not only by colour.
+  - **Distinguishing status glyphs** for success, warning and error, so states stay separable even if the colours do not.
+  - A colorblind-safe **syntax highlighting** palette in the read-only code and document viewers. (The code editor's edit mode keeps its default theme.)
+  - Dedicated vector icons registered across Icon Customization and Toolbar Icons settings (`ic_colorblind`, plus the three status glyphs).
+- The selected type and strength persist across restarts and travel with an exported settings backup. Importing an older backup that predates the feature resolves cleanly to Off.
+
+### Changed
+- Focus, selection, status and Storage Analyzer colours across the app now resolve through theme attributes rather than fixed colour resources, so they can be remapped at runtime without an app restart.
+- With Colorblind Mode on, the two TV focus hues — yellow for buttons and list rows, blue for cards and swatches — are unified onto a single high-contrast treatment. With the mode off, the existing two-hue hierarchy is unchanged.
+- The Storage Analyzer's usage-bar track and segment colours are now chosen as a set, so segments stay separable from each other and not only from the background.
+- Changing the mode applies immediately through the app's existing live-refresh mechanism; as with the theme switcher, this briefly recreates the current screen and dismisses any open dialog.
+
+### Fixed
+- **Colorblind Mode could crash the app as soon as a palette was selected.** Choosing any type other than Off threw an internal resource error when the setting screen rebuilt itself, so the mode could not be switched back off without clearing app data. Fixed.
+- **TV focus rings were lost on the View-mode and Skip-length dialogs.** Focusing one of those cards replaced its focus treatment permanently — even with Colorblind Mode off. Fixed.
+- **Moderate and Manual-review risk levels shared one warning icon** in the Storage Analyzer, so the two were told apart by label alone. Manual review now has its own icon.
+
+### Notes
+- Setting the mode to **Off** restores the app's appearance exactly as it was, with no residual colour, outline or marker on any screen.
+- Media content — images, video frames, thumbnails, PDF and document renders — is never colour-filtered. Only the app's own interface is remapped.
+- **Excluded this release:** the media player, slideshow and twin-player screens, whose chrome is styled by hardcoded colour literals rather than colour resources. They keep their current colours.
+
 ## [2.0.0] — 2026-09-09
 
 ### Added

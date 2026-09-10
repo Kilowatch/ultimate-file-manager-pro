@@ -188,7 +188,7 @@
         android:layout_height="52dp"
         android:text="@string/theme_import_btn_select"
         android:background="@drawable/selector_tv_button_yellow"
-        android:textColor="@color/tv_button_focused_yellow_text"
+        android:textColor="?attr/ufmFocusFillText"
         android:focusable="true"
         android:layout_marginBottom="12dp" />
 

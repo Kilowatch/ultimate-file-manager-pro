@@ -1573,6 +1573,107 @@ Sicherung &amp; Wiederherstellung
     <string name="settings_section_privacy_diagnostics">
 Datenschutz &amp; Diagnose
 </string>
+    <string name="settings_section_accessibility">
+Barrierefreiheit
+</string>
+
+    <!-- Colorblind Accessibility Mode (FR-20) -->
+    <string name="colorblind_title">
+Farbenblindmodus
+</string>
+    <string name="colorblind_screen_subtitle">
+Fokussierte, ausgewählte und Statuszustände ohne Farbabhängigkeit unterscheiden.
+</string>
+    <string name="colorblind_subtitle_off">
+Aus — Standardfarben
+</string>
+    <string name="colorblind_subtitle_on">
+%1$s · %2$s Kontrast
+</string>
+    <string name="colorblind_group_type">
+Typ
+</string>
+    <string name="colorblind_group_strength">
+Kontraststärke
+</string>
+    <string name="colorblind_group_strength_hint">
+Eine höhere Stärke erhöht die Abgrenzung zum Hintergrund.
+</string>
+    <string name="colorblind_type_off">
+Aus
+</string>
+    <string name="colorblind_type_off_desc">
+Behält die Standardfarben der App bei.
+</string>
+    <string name="colorblind_type_red_green">
+Rot-Grün
+</string>
+    <string name="colorblind_type_red_green_desc">
+Für Protanopie und Deuteranopie. Rot- und Grünzustände werden auf ein Blau-Bernstein-Paar abgebildet.
+</string>
+    <string name="colorblind_type_blue_yellow">
+Blau-Gelb
+</string>
+    <string name="colorblind_type_blue_yellow_desc">
+Für Tritanopie. Blau- und Gelbzustände werden auf ein Magenta-Grün-Paar abgebildet.
+</string>
+    <string name="colorblind_type_high_contrast">
+Hoher Kontrast
+</string>
+    <string name="colorblind_type_high_contrast_desc">
+Keine Farbwahrnehmung angenommen. Zustände werden nur durch Helligkeit getrennt.
+</string>
+    <string name="colorblind_strength_low">
+Niedrig
+</string>
+    <string name="colorblind_strength_low_desc">
+3:1 Mindestkontrast.
+</string>
+    <string name="colorblind_strength_medium">
+Mittel
+</string>
+    <string name="colorblind_strength_medium_desc">
+4,5:1 Mindestkontrast. Empfohlen.
+</string>
+    <string name="colorblind_strength_high">
+Hoch
+</string>
+    <string name="colorblind_strength_high_desc">
+7:1 Mindestkontrast.
+</string>
+    <string name="colorblind_preview_title">
+Vorschau
+</string>
+    <string name="colorblind_preview_hint">
+Zeigt die fokussierten, ausgewählten und Statusfarben, die diese Einstellung erzeugt.
+</string>
+    <string name="colorblind_preview_unfocused">
+Nicht fokussiert
+</string>
+    <string name="colorblind_preview_focused">
+Fokussiert
+</string>
+    <string name="colorblind_preview_selected">
+Ausgewählt
+</string>
+    <string name="colorblind_preview_success">
+Erfolg
+</string>
+    <string name="colorblind_preview_warning">
+Warnung
+</string>
+    <string name="colorblind_preview_error">
+Fehler
+</string>
+    <string name="colorblind_status_success_desc">
+Erfolg
+</string>
+    <string name="colorblind_status_warning_desc">
+Warnung
+</string>
+    <string name="colorblind_status_error_desc">
+Fehler
+</string>
     <string name="settings_search_bar_title">
 Einstellungssuchleiste
 </string>
@@ -10456,6 +10557,15 @@ Warnhinweis
     <string name="icon_status_check_circle">
 Bestätigungskreis
 </string>
+    <string name="icon_status_success">
+Status Erfolg
+</string>
+    <string name="icon_status_warning_glyph">
+Status Warnung
+</string>
+    <string name="icon_status_error">
+Status Fehler
+</string>
     <string name="icon_status_shield_check">
 Schild mit Häkchen
 </string>
@@ -10534,6 +10644,9 @@ Standard-Apps
 </string>
     <string name="icon_settings_font_size">
 Schriftgröße
+</string>
+    <string name="icon_settings_colorblind">
+Farbenblindmodus
 </string>
     <string name="icon_settings_apk_extract">
 APK/XAPK extrahieren

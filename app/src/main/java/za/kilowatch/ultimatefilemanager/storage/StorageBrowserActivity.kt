@@ -78,6 +78,8 @@ import za.kilowatch.ultimatefilemanager.support.CrashReportDialogHelper
 import androidx.lifecycle.lifecycleScope
 import android.widget.RadioButton
 import com.google.android.material.card.MaterialCardView
+import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * Displays all available storage volumes (internal, SD card, USB) as cards.
@@ -1142,13 +1144,13 @@ class StorageBrowserActivity : AppCompatActivity() {
         dialog.show()
 
         if (isTv) {
-            val yellow = getColor(R.color.tv_button_focused_yellow)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ColorblindPalette.focusFill(this)
+            val black = ColorblindPalette.focusFillText(this)
             btnDecrypt.backgroundTintList = android.content.res.ColorStateList.valueOf(yellow)
             btnDecrypt.setTextColor(black)
             btnDecrypt.setOnFocusChangeListener { _, hasFocus ->
                 btnDecrypt.backgroundTintList =
-                    if (hasFocus) android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    if (hasFocus) android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFill(this))
                     else android.content.res.ColorStateList.valueOf(yellow)
             }
             btnDecrypt.requestFocus()
@@ -5223,7 +5225,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         btn.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 btn.setBackgroundResource(R.drawable.selector_tv_icon_btn)
-                btn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+                btn.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(this))
             } else {
                 updateToggleVisuals()
             }
@@ -5343,13 +5345,14 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     private fun setupTvCardFocusForDialog(card: MaterialCardView) {
-        val yellowFill = getColor(R.color.tv_button_focused_yellow)
-        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val yellowFill = ColorblindPalette.focusFill(this)
+        val blackText = ColorblindPalette.focusFillText(this)
         val glassColor = getColor(R.color.tv_glass_white_10)
         val primaryText = getColor(R.color.tv_text_primary)
         val secondaryText = getColor(R.color.tv_text_secondary)
 
         card.setOnFocusChangeListener { _, hasFocus ->
+            TvFocusHelper.applyMarker(card, hasFocus)
             if (hasFocus) {
                 card.setCardBackgroundColor(yellowFill)
                 setTvDialogCardTextColors(card, blackText, blackText)
@@ -5357,7 +5360,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             } else {
                 card.setCardBackgroundColor(glassColor)
                 setTvDialogCardTextColors(card, primaryText, secondaryText)
-                setTvDialogCardRadioTint(card, getColor(R.color.tv_accent))
+                setTvDialogCardRadioTint(card, ColorblindPalette.focusAccent(this))
             }
         }
     }

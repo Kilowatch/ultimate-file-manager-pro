@@ -59,7 +59,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/save"
         android:background="@drawable/selector_tv_button_yellow"
-        android:textColor="@color/tv_button_focused_yellow_text"
+        android:textColor="?attr/ufmFocusFillText"
         android:focusable="true"
         android:layout_marginBottom="12dp" />
 

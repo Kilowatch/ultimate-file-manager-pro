@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <solid android:color="#0DFFCC33" /> <!-- Very transparent yellow tint -->
-            <stroke
-                android:width="2dp"
-                android:color="@color/tv_button_focused_yellow" />
-            <corners android:radius="16dp" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="#0DFFCC33" /> <!-- Very transparent yellow tint -->
+                    <stroke
+                        android:width="2dp"
+                        android:color="?attr/ufmFocusFill" />
+                    <corners android:radius="16dp" />
+                </shape>
+            </item>
+            <!-- FR-06 leading-edge marker (T011); transparent when Off. -->
+            <item android:drawable="@drawable/ufm_focus_marker_bar" />
+        </layer-list>
     </item>
     <item>
         <shape android:shape="rectangle">

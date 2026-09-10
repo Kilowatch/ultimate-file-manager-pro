@@ -104,23 +104,25 @@ class TransferService : Service() {
             return START_NOT_STICKY
         }
 
+        // Guard: A genuine fresh start always arrives AFTER the holder has registered the active
+        // transfer. If onStartCommand is invoked with no active transfer (spurious intent, process
+        // restart, or stale intent), stop immediately and NEVER enter foreground or acquire locks.
+        // This guarantees TransferService never starts a dataSync foreground service from background.
+        if (!TransferManager.isActiveTransfers()) {
+            Log.w(TAG, "No active transfer on startCommand — stopping immediately to avoid invalid background FGS")
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
         val title = intent?.getStringExtra(EXTRA_TITLE) ?: getString(R.string.ufm_file_transfer)
         val text  = intent?.getStringExtra(EXTRA_TEXT)  ?: getString(R.string.transferring_files_1)
         publish(title, text, indeterminate = true, percent = null)
         acquireLocks()
 
-        // START_REDELIVER_INTENT: if the process is killed mid-transfer Android restarts
-        // the service and re-delivers the last intent. There is no surviving transfer in
-        // that case (the copy job lived in the dead process), so showing a zombie
-        // notification would be a lie — stop immediately instead (FR-08: no stale state).
-        // A genuine fresh start always arrives AFTER the holder has registered the active
-        // transfer, so this guard cannot misfire on a real transfer.
-        if (!TransferManager.isActiveTransfers()) {
-            Log.w(TAG, "No active transfer on start/redelivery — stopping to avoid zombie notification")
-            stopSelf()
-            return START_NOT_STICKY
-        }
-        return START_REDELIVER_INTENT
+        // START_NOT_STICKY: File transfers run in an application-scoped coroutine that dies with the process.
+        // Returning START_NOT_STICKY ensures the system never auto-restarts this service in the background
+        // upon reboot or process death, preventing ForegroundServiceStartNotAllowedException on Android 15+.
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {

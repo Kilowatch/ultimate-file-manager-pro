@@ -24,7 +24,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_lock"
-            app:tint="@color/tv_button_focused_yellow"
+            app:tint="?attr/ufmFocusFill"
             android:contentDescription="@null" />
     </FrameLayout>
 
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/policy_blocked_subtitle"
-        android:textColor="@color/tv_button_focused_yellow"
+        android:textColor="?attr/ufmFocusFill"
         android:textSize="13sp"
         android:textAllCaps="true"
         android:fontFamily="sans-serif-medium"

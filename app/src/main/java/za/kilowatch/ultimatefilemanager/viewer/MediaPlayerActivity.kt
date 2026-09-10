@@ -31,6 +31,7 @@ import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import android.widget.Toast
 import java.io.File
 
@@ -95,6 +96,7 @@ class MediaPlayerActivity : AppCompatActivity(), SurfaceHolder.Callback {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 

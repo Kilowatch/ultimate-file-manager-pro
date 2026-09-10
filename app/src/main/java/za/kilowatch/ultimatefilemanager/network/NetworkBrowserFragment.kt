@@ -33,6 +33,7 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
@@ -774,7 +775,7 @@ class NetworkBrowserFragment : Fragment() {
         btnSearchToggle = view.findViewById(R.id.btnSearchToggle)
         btnSearchToggle?.setImageResource(R.drawable.ic_search)
         if (isTv) {
-            btnSearchToggle?.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
+            btnSearchToggle?.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.denied(requireContext()))
         }
         layoutSearchRow = view.findViewById(R.id.layoutSearchRow)
         edtSearch = view.findViewById(R.id.edtSearch)
@@ -2038,7 +2039,7 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     private fun setupTvFocus(view: View) {
-        val iconTintFocused = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_button_focused_yellow_text))
+        val iconTintFocused = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(requireContext()))
         val iconTintDefault = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_text_primary))
 
         fun wireTvIconBtn(v: View?, onClick: () -> Unit) {
@@ -2061,9 +2062,7 @@ class NetworkBrowserFragment : Fragment() {
             } else {
                 val hasOverride = SortFilterPreferenceManager.hasFolderOverride(requireContext(), currentPath, share.id)
                 btnSortTv.imageTintList = android.content.res.ColorStateList.valueOf(
-                    requireContext().getColor(
-                        if (hasOverride) R.color.tv_button_focused_yellow else R.color.tv_text_primary
-                    )
+                    if (hasOverride) ColorblindPalette.focusFill(requireContext()) else requireContext().getColor(R.color.tv_text_primary)
                 )
             }
         }
@@ -2096,7 +2095,7 @@ class NetworkBrowserFragment : Fragment() {
         }
         // Update initial TV tint
         val btnSearch = view.findViewById<ImageView>(R.id.btnSearchToggle)
-        btnSearch?.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
+        btnSearch?.imageTintList = android.content.res.ColorStateList.valueOf(ColorblindPalette.denied(requireContext()))
 
         listOf(
             R.id.btnCloseSelection, R.id.btnCopy, R.id.btnMove, R.id.btnRename, R.id.btnFavorite,
@@ -2117,9 +2116,9 @@ class NetworkBrowserFragment : Fragment() {
             val btn = view.findViewById<com.google.android.material.button.MaterialButton>(id) ?: return@forEach
             btn.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    btn.setBackgroundColor(requireContext().getColor(R.color.tv_button_focused_yellow))
-                    btn.setTextColor(requireContext().getColor(R.color.tv_button_focused_yellow_text))
-                    btn.iconTint = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_button_focused_yellow_text))
+                    btn.setBackgroundColor(ColorblindPalette.focusFill(requireContext()))
+                    btn.setTextColor(ColorblindPalette.focusFillText(requireContext()))
+                    btn.iconTint = android.content.res.ColorStateList.valueOf(ColorblindPalette.focusFillText(requireContext()))
                 } else {
                     btn.setBackgroundColor(requireContext().getColor(R.color.tv_glass_white_10))
                     btn.setTextColor(requireContext().getColor(R.color.tv_text_primary))
@@ -2137,8 +2136,9 @@ class NetworkBrowserFragment : Fragment() {
         searchRow.visibility = if (isSearchVisible) View.VISIBLE else View.GONE
         
         if (isTv) {
-            val colorRes = if (isSearchVisible) R.color.ufm_granted else R.color.ufm_denied
-            btnToggle.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(colorRes))
+            val color = if (isSearchVisible) ColorblindPalette.statusSuccess(requireContext())
+                         else ColorblindPalette.denied(requireContext())
+            btnToggle.imageTintList = android.content.res.ColorStateList.valueOf(color)
         }
         
         if (isSearchVisible) {
@@ -2531,7 +2531,7 @@ class NetworkBrowserFragment : Fragment() {
         val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(ctx)
         if (hasFolderOverride) {
             btn.imageTintList = android.content.res.ColorStateList.valueOf(
-                ctx.getColor(if (isTv) za.kilowatch.ultimatefilemanager.R.color.tv_button_focused_yellow else za.kilowatch.ultimatefilemanager.R.color.ufm_primary))
+                if (isTv) ColorblindPalette.focusFill(ctx) else ctx.getColor(R.color.ufm_primary))
         } else {
             btn.imageTintList = android.content.res.ColorStateList.valueOf(
                 ctx.getColor(if (isTv) za.kilowatch.ultimatefilemanager.R.color.tv_text_primary else za.kilowatch.ultimatefilemanager.R.color.mobile_icon_tint))

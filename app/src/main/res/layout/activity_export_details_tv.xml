@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:padding="24dp"
         android:gravity="center"
-        android:textColor="@color/mobile_note_color"
+        android:textColor="?attr/ufmMobileNoteColor"
         android:textSize="18sp"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
@@ -117,7 +117,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_warning"
-                    app:tint="@color/mobile_note_color"
+                    app:tint="?attr/ufmMobileNoteColor"
                     android:layout_marginEnd="16dp"
                     android:contentDescription="@null" />
 

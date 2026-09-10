@@ -11,12 +11,19 @@ import za.kilowatch.ultimatefilemanager.util.ThemeColors
  *
  * Supports user-customized colors per theme via SharedPreferences.
  * If no custom color is set:
+ * - When Colorblind Mode is on, the Colorblind palette wins outright (FR-22),
+ *   ahead of both of the branches below.
  * - When Material You is enabled (mobile Android 12+), defaults to the dynamic
  *   palette (ThemeColors.primary(context)).
  * - When Material You is disabled, defaults to built-in constants:
  *     Light  → 0xFF1C2B3A (dark slate)
- *     Dark   → 0xFFE8C98A (warm gold/tan)
- *     AMOLED → 0xFF7DAECC (muted blue-gray)
+ *     Dark   → 0xFF7DAECC (muted blue-gray)
+ *     AMOLED → 0xFFE8C98A (warm gold/tan)
+ *
+ * > The Dark and AMOLED rows above were transposed until this pass: they listed
+ * > the two colours the wrong way round relative to [DEFAULT_DARK] and
+ * > [DEFAULT_AMOLED]. Corrected here rather than left to contradict the
+ * > constants it documents.
  *
  * Colors are cached in memory after first load so per-item calls during
  * RecyclerView scrolling incur zero I/O.
@@ -44,6 +51,9 @@ object DefaultIconColorManager {
     private var cachedAmoled: Int? = null
     private var cachedDynamic: Int? = null          // Material You default (colorPrimary)
     private var cachedDynamicTheme: Int = Int.MIN_VALUE   // theme mode it was resolved for
+    private var cachedColorblind: Int? = null       // Colorblind Mode default (overlay colorPrimary)
+    private var cachedColorblindTheme: Int = Int.MIN_VALUE
+    private var cachedColorblindNight: Boolean = false
 
     // ── Public API ──────────────────────────────────────────────────────────
 
@@ -149,16 +159,71 @@ object DefaultIconColorManager {
         cachedAmoled = null
         cachedDynamic = null
         cachedDynamicTheme = Int.MIN_VALUE
+        cachedColorblind = null
+        cachedColorblindTheme = Int.MIN_VALUE
+        // The null above already forces the next resolve() to recompute; this is
+        // reset alongside it so "invalidate everything" leaves no stale key
+        // behind for a future caller that checks the key before the value.
+        cachedColorblindNight = false
     }
 
     // ── Internal helpers ────────────────────────────────────────────────────
 
     /**
      * Resolve the correct color for the current theme.
-     * Order: Material You dynamic (if enabled) > user custom (when Material You off) > built-in default.
+     * Order: Colorblind Mode > Material You dynamic (if enabled) > user custom
+     * (when Material You off) > built-in default.
      */
     private fun resolve(context: Context): Int {
         val theme = ThemeHelper.getSavedTheme(context)
+
+        // 0. Colorblind Mode wins over BOTH of the branches below (FR-22).
+        //
+        // This branch exists because icon tints are applied in the adapters,
+        // AFTER inflation, so no theme overlay can reach them: the overlay fixes
+        // every `?attr/` read in XML and every ColorblindPalette accessor, but an
+        // explicit `setColorFilter(DefaultIconColorManager.getMobileIconTint(...))`
+        // bypasses the theme entirely. Without this, the user's custom Default
+        // Icon Color (branch 2) would keep painting icons while the mode is on --
+        // which is the "Default Icon Colors are still overwriting" half of the
+        // FR-22 report, seen on icons rather than on buttons.
+        //
+        // The value is read from `colorPrimary` rather than from a new palette
+        // accessor, so icons and buttons resolve to the SAME colour by
+        // construction. That is only meaningful because the Colorblind overlay
+        // now emits colorPrimary = that type-and-strength's focus fill (T080) and
+        // because Material You is suppressed while the mode is on (T077/T078) --
+        // otherwise this read would return the wallpaper's colour. Ordering here
+        // therefore depends on those two suppressions; they are not independent
+        // fixes for the same symptom, they are the precondition for this one.
+        //
+        // Cached per theme mode like the Material You branch below. `theme` alone
+        // is not a sufficient key for a type/strength change, which is why
+        // ColorblindActivity calls invalidateCache() when either changes -- the
+        // same call the Default Icon Color pickers already make.
+        //
+        // The night bit is part of the key, and it has to be. `theme` is the
+        // SAVED mode, so under THEME_SYSTEM it reads 2 both before and after the
+        // OS switches to night -- the type/strength key would not move, and the
+        // day-plate fill would keep being served on a night surface. That is an
+        // NFR-01 contrast failure that survives indefinitely rather than a
+        // cosmetic mismatch, because the value cached here is an already-resolved
+        // colour: it does depend on the configuration, the old key just could not
+        // see that.
+        if (ColorblindPrefs.isEnabled(context)) {
+            val isNight = (context.resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+            if (cachedColorblind == null ||
+                cachedColorblindTheme != theme ||
+                cachedColorblindNight != isNight
+            ) {
+                cachedColorblind = ThemeColors.primary(context)
+                cachedColorblindTheme = theme
+                cachedColorblindNight = isNight
+            }
+            return cachedColorblind!!
+        }
 
         // 1. Material You: default icon tint follows the active dynamic palette
         //    (colorPrimary). Mobile/Android 12+ only — TV always keeps the fixed

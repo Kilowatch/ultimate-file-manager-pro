@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.indexing.FileIndex
 import java.text.DecimalFormat
 
@@ -53,7 +54,7 @@ class DatabaseViewerAdapter(
                 val context = itemView.context
                 val primaryText = context.getColor(R.color.tv_text_primary)
                 val secondaryText = context.getColor(R.color.tv_text_secondary)
-                val yellowText = context.getColor(R.color.tv_button_focused_yellow_text)
+                val yellowText = ColorblindPalette.focusFillText(context)
                 
                 card.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
@@ -65,7 +66,7 @@ class DatabaseViewerAdapter(
                     } else {
                         txtFilename.setTextColor(primaryText)
                         txtPath.setTextColor(secondaryText)
-                        txtSize.setTextColor(context.getColor(R.color.tv_button_focused_yellow))
+                        txtSize.setTextColor(ColorblindPalette.focusFill(context))
                         txtType.setTextColor(secondaryText)
                         txtStorage.setTextColor(secondaryText)
                     }

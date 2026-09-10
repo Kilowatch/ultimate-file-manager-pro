@@ -10,6 +10,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.content.ContextCompat
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 
 /**
  * A premium donut-style circular progress indicator.
@@ -35,7 +36,7 @@ class CircularProgressView @JvmOverloads constructor(
         style = Paint.Style.STROKE
         strokeWidth = 10f
         strokeCap = Paint.Cap.ROUND
-        color = ContextCompat.getColor(context, R.color.ufm_progress_fill)
+        color = ColorblindPalette.progressFill(context)
     }
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
