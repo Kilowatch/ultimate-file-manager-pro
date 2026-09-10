@@ -5086,7 +5086,7 @@ ASS
 Розділ %1$d з %2$d
 </string>
     <string name="epub_loading">
-Завантаження книги&amp;#8230;
+Завантаження книги&#8230;
 </string>
     <string name="epub_error_open">
 Не вдалося відкрити файл EPUB
@@ -6189,7 +6189,7 @@ PIN-код сховища
 Зашифрувати цю папку та додати її до сховища?
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; Це зашифрує всі файли в папці та видалить оригінали.
+&#9888; Це зашифрує всі файли в папці та видалить оригінали.
 </string>
     <string name="remote_root">
 КОРІНЬ
@@ -6609,7 +6609,7 @@ PIN-код сховища
 Не вдалося отримати список ресурсів: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-Неправильний шлях. Для SMB введіть ім\'я ресурсу (наприклад, /ShareName або &amp;#92;&amp;#92;host&amp;#92;&amp;#92;Share&amp;#92;&amp;#92;Folder).
+Неправильний шлях. Для SMB введіть ім\'я ресурсу (наприклад, /ShareName або &#92;&#92;host&#92;&#92;Share&#92;&#92;Folder).
 </string>
     <string name="testing">
 Тестування…

@@ -1544,34 +1544,34 @@ Keine Einstellungen gefunden, die deiner Suche entsprechen
 
     <!-- Settings Sections -->
     <string name="settings_section_general">
-Allgemein &amp;amp; Oberfläche
+Allgemein &amp; Oberfläche
 </string>
     <string name="settings_section_appearance">
-Darstellung &amp;amp; Anpassung
+Darstellung &amp; Anpassung
 </string>
     <string name="settings_section_file_management">
-Dateinavigation &amp;amp; Dateiverwaltung
+Dateinavigation &amp; Dateiverwaltung
 </string>
     <string name="settings_section_controls">
-Steuerung &amp;amp; Gesten
+Steuerung &amp; Gesten
 </string>
     <string name="settings_section_twin_window">
 Doppelfenster (Twin Window)
 </string>
     <string name="settings_section_media_player">
-Mediaplayer &amp;amp; Wiedergabe
+Mediaplayer &amp; Wiedergabe
 </string>
     <string name="settings_section_thumbnails">
-Miniaturansichten &amp;amp; Cache
+Miniaturansichten &amp; Cache
 </string>
     <string name="settings_section_network_performance">
-Netzwerk &amp;amp; Leistung
+Netzwerk &amp; Leistung
 </string>
     <string name="settings_section_backup">
-Sicherung &amp;amp; Wiederherstellung
+Sicherung &amp; Wiederherstellung
 </string>
     <string name="settings_section_privacy_diagnostics">
-Datenschutz &amp;amp; Diagnose
+Datenschutz &amp; Diagnose
 </string>
     <string name="settings_search_bar_title">
 Einstellungssuchleiste
@@ -5086,7 +5086,7 @@ PDF-Seite
 Kapitel %1$d von %2$d
 </string>
     <string name="epub_loading">
-Buch wird geladen&amp;#8230;
+Buch wird geladen&#8230;
 </string>
     <string name="epub_error_open">
 EPUB-Datei konnte nicht geöffnet werden
@@ -6189,7 +6189,7 @@ Zum Tresor hinzufügen
 Diesen Ordner verschlüsseln und zum Tresor hinzufügen?
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; Dies verschlüsselt alle Dateien im Ordner und entfernt die Originale.
+&#9888; Dies verschlüsselt alle Dateien im Ordner und entfernt die Originale.
 </string>
     <string name="remote_root">
 ROOT
@@ -6609,7 +6609,7 @@ Screenshot fehlgeschlagen: %1$s
 Freigaben konnten nicht aufgelistet werden: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-\"Ungültiger Pfad. Für SMB geben Sie einen Freigabenamen ein (z.B. /Freigabename oder &amp;#92;&amp;#92;host&amp;#92;&amp;#92;Freigabe&amp;#92;&amp;#92;Ordner).\"
+\"Ungültiger Pfad. Für SMB geben Sie einen Freigabenamen ein (z.B. /Freigabename oder &#92;&#92;host&#92;&#92;Freigabe&#92;&#92;Ordner).\"
 </string>
     <string name="testing">
 Teste…

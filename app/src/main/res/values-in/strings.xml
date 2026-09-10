@@ -5086,7 +5086,7 @@ Halaman PDF
 Bab %1$d dari %2$d
 </string>
     <string name="epub_loading">
-Memuat buku&amp;#8230;
+Memuat buku&#8230;
 </string>
     <string name="epub_error_open">
 Tidak dapat membuka berkas EPUB
@@ -6189,7 +6189,7 @@ Tambahkan ke Brankas
 Enkripsi folder ini dan tambahkan ke brankas?
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; Ini akan mengenkripsi semua file dalam folder dan menghapus yang asli.
+&#9888; Ini akan mengenkripsi semua file dalam folder dan menghapus yang asli.
 </string>
     <string name="remote_root">
 ROOT
@@ -6609,7 +6609,7 @@ Tangkapan layar gagal: %1$s
 Tidak dapat mendaftar share: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-\"Jalur tidak valid. Untuk SMB masukkan nama share (mis. /NamaShare atau &amp;#92;&amp;#92;host&amp;#92;&amp;#92;Share&amp;#92;&amp;#92;Folder).\"
+\"Jalur tidak valid. Untuk SMB masukkan nama share (mis. /NamaShare atau &#92;&#92;host&#92;&#92;Share&#92;&#92;Folder).\"
 </string>
     <string name="testing">
 Menguji…
@@ -12156,7 +12156,7 @@ Ekstrak ke Folder Baru
 Nama folder
 </string>
     <string name="extract_select_folder">
-Ekstrak &amp;amp; Pilih Folder
+Ekstrak &amp; Pilih Folder
 </string>
     <string name="extract_select_folder_desc">
 Ekstrak file dan pilih tujuan menggunakan tombol Ekstrak Di Sini
@@ -13943,7 +13943,7 @@ Tab %d
 Tab \\\'%s\\\' ditutup (penyimpanan terputus)
 </string>
     <string name="backup_pref_tabs">
-Tab &amp;amp; sesi browser
+Tab &amp; sesi browser
 </string>
     <string name="tab_duplicated">
 Digandakan: %s

@@ -6189,7 +6189,7 @@ APK अपलोड हो रहा है…
 इस फ़ोल्डर को एन्क्रिप्ट करके वॉल्ट में जोड़ें?
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; यह फ़ोल्डर की सभी फ़ाइलों को एन्क्रिप्ट करेगा और मूल फ़ाइलों को हटा देगा।
+&#9888; यह फ़ोल्डर की सभी फ़ाइलों को एन्क्रिप्ट करेगा और मूल फ़ाइलों को हटा देगा।
 </string>
     <string name="remote_root">
 रूट
@@ -6609,7 +6609,7 @@ ADB के माध्यम से टीवी से कनेक्ट ह�
 शेयरों की सूची नहीं बना सका: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-\"अमान्य पथ। SMB के लिए एक शेयर नाम दर्ज करें (जैसे /ShareName या &amp;#92;&amp;#92;host&amp;#92;&amp;#92;Share&amp;#92;&amp;#92;Folder).\"
+\"अमान्य पथ। SMB के लिए एक शेयर नाम दर्ज करें (जैसे /ShareName या &#92;&#92;host&#92;&#92;Share&#92;&#92;Folder).\"
 </string>
     <string name="testing">
 परीक्षण हो रहा है…

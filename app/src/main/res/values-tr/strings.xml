@@ -5086,7 +5086,7 @@ PDF sayfası
 Bölüm %1$d / %2$d
 </string>
     <string name="epub_loading">
-Kitap yükleniyor&amp;#8230;
+Kitap yükleniyor&#8230;
 </string>
     <string name="epub_error_open">
 EPUB dosyası açılamadı
@@ -6189,7 +6189,7 @@ Kasaya Ekle
 Bu klasörü şifreleyip kasaya eklemek istiyor musunuz?
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; Bu, klasördeki tüm dosyaları şifreleyecek ve orijinalleri kaldıracak.
+&#9888; Bu, klasördeki tüm dosyaları şifreleyecek ve orijinalleri kaldıracak.
 </string>
     <string name="remote_root">
 ROOT
@@ -6609,7 +6609,7 @@ Ekran görüntüsü başarısız: %1$s
 Paylaşımlar listelenemedi: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-\\\"Geçersiz yol. SMB için bir paylaşım adı girin (ör. /ShareName veya &amp;#92;&amp;#92;host&amp;#92;&amp;#92;Paylaşım&amp;#92;&amp;#92;Klasör).\\\"
+\\\"Geçersiz yol. SMB için bir paylaşım adı girin (ör. /ShareName veya &#92;&#92;host&#92;&#92;Paylaşım&#92;&#92;Klasör).\\\"
 </string>
     <string name="testing">
 Test ediliyor…

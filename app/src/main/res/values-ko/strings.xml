@@ -5086,7 +5086,7 @@ PDF 페이지
 %2$d 중 %1$d장
 </string>
     <string name="epub_loading">
-책을 불러오는 중&amp;#8230;
+책을 불러오는 중&#8230;
 </string>
     <string name="epub_error_open">
 EPUB 파일을 열 수 없습니다.
@@ -6189,7 +6189,7 @@ APK 업로드 중…
 이 폴더를 암호화하고 볼트에 추가하시겠습니까?
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; 폴더의 모든 파일이 암호화되고 원본이 제거됩니다.
+&#9888; 폴더의 모든 파일이 암호화되고 원본이 제거됩니다.
 </string>
     <string name="remote_root">
 루트
@@ -6609,7 +6609,7 @@ ADB를 통해 TV에 연결 중… 메시지가 표시되면 TV에서 승인해 �
 공유 목록을 가져올 수 없음: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-\"잘못된 경로입니다. SMB의 경우 공유 이름을 입력하세요 (예: /ShareName 또는 &amp;#92;&amp;#92;호스트&amp;#92;&amp;#92;공유&amp;#92;&amp;#92;폴더).\"
+\"잘못된 경로입니다. SMB의 경우 공유 이름을 입력하세요 (예: /ShareName 또는 &#92;&#92;호스트&#92;&#92;공유&#92;&#92;폴더).\"
 </string>
     <string name="testing">
 테스트 중…

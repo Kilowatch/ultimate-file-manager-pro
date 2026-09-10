@@ -5086,7 +5086,7 @@ Page PDF
 Chapitre %1$d sur %2$d
 </string>
     <string name="epub_loading">
-Chargement du livre&amp;#8230;
+Chargement du livre&#8230;
 </string>
     <string name="epub_error_open">
 Impossible d\\\'ouvrir le fichier EPUB
@@ -6189,7 +6189,7 @@ Ajouter au coffre
 Chiffrer ce dossier et l\'ajouter au coffre ?
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; Cela chiffrera tous les fichiers du dossier et supprimera les originaux.
+&#9888; Cela chiffrera tous les fichiers du dossier et supprimera les originaux.
 </string>
     <string name="remote_root">
 RACINE
@@ -6609,7 +6609,7 @@ Capture d\'écran enregistrée : %1$s
 Impossible de lister les partages : %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-« Chemin invalide. Pour SMB, entrez un nom de partage (ex. /ShareName ou &amp;#92;&amp;#92;hôte&amp;#92;&amp;#92;Partage&amp;#92;&amp;#92;Dossier). »
+« Chemin invalide. Pour SMB, entrez un nom de partage (ex. /ShareName ou &#92;&#92;hôte&#92;&#92;Partage&#92;&#92;Dossier). »
 </string>
     <string name="testing">
 Test en cours…
@@ -10293,7 +10293,7 @@ Compresser l\'image
 Supprimer
 </string>
     <string name="icon_toolbar_exif_cleaner">
-Photo EXIF Cleaner &amp;amp; Renamer
+Photo EXIF Cleaner &amp; Renamer
 </string>
     <string name="export_pack">
 Exporter le pack
@@ -12233,7 +12233,7 @@ Plus d\\\'options
 
     <!-- Photo EXIF Inspector, Privacy Cleaner & Batch Renamer -->
     <string name="action_exif_cleaner_renamer">
-Photo EXIF Cleaner &amp;amp; Renamer
+Photo EXIF Cleaner &amp; Renamer
 </string>
     <string name="exif_tools_title">
 Photo EXIF Tools

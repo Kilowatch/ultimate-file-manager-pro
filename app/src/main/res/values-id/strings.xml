@@ -5086,7 +5086,7 @@ Halaman PDF
 Bab %1$d dari %2$d
 </string>
     <string name="epub_loading">
-Memuat buku&amp;#8230;
+Memuat buku&#8230;
 </string>
     <string name="epub_error_open">
 Tidak dapat membuka file EPUB
@@ -6189,7 +6189,7 @@ Tambahkan ke Brankas
 Enkripsi folder ini dan tambahkan ke brankas?
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; Ini akan mengenkripsi semua file di folder dan menghapus file asli.
+&#9888; Ini akan mengenkripsi semua file di folder dan menghapus file asli.
 </string>
     <string name="remote_root">
 ROOT
@@ -6609,7 +6609,7 @@ Tangkapan layar gagal: %1$s
 Tidak dapat mendaftar share: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-\"Jalur tidak valid. Untuk SMB masukkan nama share (misalnya /ShareName atau &amp;#92;&amp;#92;host&amp;#92;&amp;#92;Share&amp;#92;&amp;#92;Folder).\"
+\"Jalur tidak valid. Untuk SMB masukkan nama share (misalnya /ShareName atau &#92;&#92;host&#92;&#92;Share&#92;&#92;Folder).\"
 </string>
     <string name="testing">
 Menguji…

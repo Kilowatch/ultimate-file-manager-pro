@@ -5086,7 +5086,7 @@ PDFページ
 第%1$d章（全%2$d章）
 </string>
     <string name="epub_loading">
-書籍を読み込んでいます&amp;#8230;
+書籍を読み込んでいます&#8230;
 </string>
     <string name="epub_error_open">
 EPUBファイルを開くことができませんでした
@@ -6189,7 +6189,7 @@ APK をアップロード中…
 このフォルダを暗号化してボールトに追加しますか？
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; フォルダ内のすべてのファイルを暗号化し、元のファイルを削除します。
+&#9888; フォルダ内のすべてのファイルを暗号化し、元のファイルを削除します。
 </string>
     <string name="remote_root">
 ルート
@@ -6609,7 +6609,7 @@ ADB 経由でテレビに接続中… プロンプトが表示されたらテレ
 共有フォルダを一覧表示できませんでした: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-\"無効なパスです。SMB の場合は共有名を入力してください (例: /ShareName または &amp;#92;&amp;#92;host&amp;#92;&amp;#92;Share&amp;#92;&amp;#92;Folder)。\"
+\"無効なパスです。SMB の場合は共有名を入力してください (例: /ShareName または &#92;&#92;host&#92;&#92;Share&#92;&#92;Folder)。\"
 </string>
     <string name="testing">
 テスト中…
@@ -11797,7 +11797,7 @@ OK
 
     <!-- Support / Help & Support -->
     <string name="support_title">
-ヘルプ&amp;amp;サポート
+ヘルプ&amp;サポート
 </string>
     <string name="support_tile_subtitle">
 開発者に連絡
@@ -11887,7 +11887,7 @@ OK
 リクエストが多すぎます。しばらくしてからもう一度お試しください。
 </string>
     <string name="icon_support_help">
-ヘルプ&amp;amp;サポート
+ヘルプ&amp;サポート
 </string>
     <string name="cd_support_back">
 戻る

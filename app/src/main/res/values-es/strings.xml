@@ -5086,7 +5086,7 @@ Página PDF
 Capítulo %1$d de %2$d
 </string>
     <string name="epub_loading">
-Cargando libro&amp;#8230;
+Cargando libro&#8230;
 </string>
     <string name="epub_error_open">
 No se pudo abrir el archivo EPUB
@@ -6189,7 +6189,7 @@ Agregar a la bóveda
 ¿Cifrar esta carpeta y agregarla a la bóveda?
 </string>
     <string name="remote_vault_add_warning">
-&amp;#9888; Esto cifrará todos los archivos de la carpeta y eliminará los originales.
+&#9888; Esto cifrará todos los archivos de la carpeta y eliminará los originales.
 </string>
     <string name="remote_root">
 RAÍZ
@@ -6609,7 +6609,7 @@ Captura de pantalla fallida: %1$s
 No se pudieron listar los recursos compartidos: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-\"Ruta inválida. Para SMB ingresa un nombre de recurso (ej. /ShareName o &amp;#92;&amp;#92;host&amp;#92;&amp;#92;Share&amp;#92;&amp;#92;Folder).\"
+\"Ruta inválida. Para SMB ingresa un nombre de recurso (ej. /ShareName o &#92;&#92;host&#92;&#92;Share&#92;&#92;Folder).\"
 </string>
     <string name="testing">
 Probando…

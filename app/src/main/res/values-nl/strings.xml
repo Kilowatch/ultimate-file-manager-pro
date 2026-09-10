@@ -1156,9 +1156,7 @@ Verwijderen
 </string>
 
     <!-- Theme -->
-    <string name="theme_title">
-Verschijning
-</string>
+    <string name="theme_title">Uiterlijk</string>
     <string name="theme_tile_subtitle">
 Licht, donker, AMOLED of automatisch
 </string>
@@ -1799,9 +1797,7 @@ Groeperen op datum
     <string name="action_copy">
 Kopiëren
 </string>
-    <string name="action_move">
-Beweging
-</string>
+    <string name="action_move">Verplaats</string>
     <string name="action_rename">
 Hernoemen
 </string>
@@ -2301,9 +2297,7 @@ Limiet voor zoekresultaten ingesteld op %1$d
 </string>
 
     <!-- Policy Selection -->
-    <string name="policy_selection_title">
-Legaal
-</string>
+    <string name="policy_selection_title">Juridisch</string>
     <string name="policy_selection_subtitle">
 Juridisch en beleid
 </string>
@@ -2321,12 +2315,8 @@ Privacybeleid
     <string name="rate_us_title">
 Beoordeel ons
 </string>
-    <string name="rate_us_subtitle">
-Genieten van de app?
-</string>
-    <string name="rate_us_screen_title">
-Geniet je van Ultimate File Manager Pro?
-</string>
+    <string name="rate_us_subtitle">Vind je de app leuk?</string>
+    <string name="rate_us_screen_title">Wat vind je van Ultimate File Manager Pro?</string>
     <string name="rate_us_screen_body">
 Jouw feedback helpt ons de ontwikkeling van de app te verbeteren en ondersteunt deze rechtstreeks.\n
 \n
@@ -2352,9 +2342,7 @@ Beoordeel in de Amazon Appstore
     <string name="saf_tile_title">
 Openen met UFM
 </string>
-    <string name="saf_tile_subtitle">
-Verschijnen in bestandskiezers
-</string>
+    <string name="saf_tile_subtitle">Wordt getoond in bestandskiezers</string>
     <string name="saf_info_title">
 Openen met UFM
 </string>
@@ -2377,9 +2365,7 @@ Hoe het te gebruiken
     <string name="saf_info_step1">
 1. Open een app met de optie \'Bladeren\' of \'Bibliotheek toevoegen\'
 </string>
-    <string name="saf_info_step2">
-2. Wanneer de bestandskiezer verschijnt, zoekt u naar \'Ultimate File Manager Pro\' in de zijbalk
-</string>
+    <string name="saf_info_step2">2. Wanneer de bestandskiezer wordt getoond, zoekt u naar \'Ultimate File Manager Pro\' in de zijbalk</string>
     <string name="saf_info_step3">
 3. Navigeer door uw opslag en selecteer een bestand of map
 </string>
@@ -2439,10 +2425,7 @@ Maak verbinding met SMB-, FTP-, SFTP-, SCP- en NFS-shares op uw lokale netwerk o
     <string name="network_empty_title">
 Geen netwerkshares geconfigureerd
 </string>
-    <string name="network_empty_body">
-Tik op de knop + om een ​​SMB- of FTP-share toe te voegen.\n
-Geconfigureerde shares verschijnen in de bestandskiezer van elke app.
-</string>
+    <string name="network_empty_body">Tik op de knop + om een SMB- of FTP-share toe te voegen.\n\nGeconfigureerde shares worden getoond in de bestandskiezer van elke app.</string>
     <string name="network_edit_title_add">Share toevoegen</string>
     <string name="network_edit_title_edit">Share bewerken</string>
     <string name="network_field_type">
@@ -4280,9 +4263,7 @@ Plak hier
     <string name="thirdparty_library_attributions">
 Bibliotheken van derden
 </string>
-    <string name="legal_amp_policy">
-Juridisch en beleid
-</string>
+    <string name="legal_amp_policy">Juridische informatie en beleid</string>
     <string name="please_review_the_terms_before">
 Lees de voorwaarden voordat u verdergaat.
 </string>
@@ -7968,24 +7949,7 @@ Meer informatie
     <string name="gdrive_scope_error_title">
 Google Drive — Onvoldoende rechten
 </string>
-    <string name="gdrive_scope_error_guide">
-UFM was verbonden met je Google Drive-account, maar kreeg geen toestemming om je bestanden te bekijken.\n
-\n
-Dit probleem oplossen:\n
-\n
-1. Open de pagina met rechten voor uw Google-account:\n
-https://myaccount.google.com/permissions\n
-\n
-2. Zoek onder \'Apps en services van derden\' naar \'Ultimate File Manager\' (of \'UFM\')\n
-\n
-3. Tik erop en selecteer \'Toegang verwijderen\' of \'Alle verbindingen verwijderen\'\n
-\n
-4. Ga terug naar UFM en tik nogmaals op de Google Drive-verbinding\n
-\n
-5. Wanneer het inlogscherm van Google verschijnt, accepteer je alle gevraagde rechten\n
-\n
-6. Uw Drive-bestanden zouden nu correct moeten worden geladen
-</string>
+    <string name="gdrive_scope_error_guide">UFM was verbonden met je Google Drive-account, maar kreeg geen toestemming om je bestanden te bekijken.\n\nDit probleem oplossen:\n\n1. Open de pagina met rechten voor uw Google-account: https://myaccount.google.com/permissions\n\n2. Zoek onder \'Apps en services van derden\' naar \'Ultimate File Manager\' (of \'UFM\')\n\n3. Tik erop en selecteer \'Toegang verwijderen\' of \'Alle verbindingen verwijderen\'\n\n4. Ga terug naar UFM en tik nogmaals op de Google Drive-verbinding\n\n5. Wanneer het inlogscherm van Google verschijnt, accepteer je alle gevraagde rechten\n\n6. Uw Drive-bestanden zouden nu correct moeten worden geladen</string>
     <string name="gdrive_401_error_title">
 Google Drive — Ongeldige inloggegevens
 </string>
@@ -9307,11 +9271,7 @@ Deze TV is verkrijgbaar als afstandsbediening
     <string name="use_remote_auth_title">
 Accepteren op tv
 </string>
-    <string name="use_remote_auth_message">
-Om %1$s als afstandsbediening te gebruiken, moet je de ADB-verbindingsprompt op je tv accepteren.\n
-\n
-Zorg ervoor dat je tv aanstaat en dat je op \'Toestaan\' tikt wanneer het dialoogvenster verschijnt. Als u deze al eerder heeft geaccepteerd, komt de verbinding automatisch tot stand.
-</string>
+    <string name="use_remote_auth_message">Om %1$s als afstandsbediening te gebruiken, moet je de ADB-verbindingsprompt op je tv accepteren.\n\nZorg ervoor dat je tv aanstaat en dat je op \'Toestaan\' tikt wanneer het dialoogvenster verschijnt. Als u deze al eerder heeft geaccepteerd, komt de verbinding automatisch tot stand.</string>
     <string name="use_remote_failed_title">
 Verbinding mislukt
 </string>
@@ -10149,9 +10109,7 @@ Netwerkmap
     <string name="icon_toolbar_copy">
 Kopiëren
 </string>
-    <string name="icon_toolbar_move">
-Beweging
-</string>
+    <string name="icon_toolbar_move">Verplaats</string>
     <string name="icon_toolbar_rename">
 Hernoemen
 </string>
@@ -12522,9 +12480,7 @@ Gedeelde mappen
     <string name="dlna_info_notice">
 Stream foto\'s, muziek en video\'s naar smart-tv\'s en DLNA-mediaspelers op uw lokale Wi-Fi-netwerk, of laat andere apparaten media naar dit apparaat casten.
 </string>
-    <string name="dlna_settings_info_notice">
-Configureer hoe uw apparaat op het lokale netwerk verschijnt en kies mappen die u wilt delen. DLNA-mediashares zijn strikt alleen-lezen.
-</string>
+    <string name="dlna_settings_info_notice">Configureer hoe uw apparaat op het lokale netwerk wordt getoond en kies mappen die u wilt delen. DLNA-mediashares zijn strikt alleen-lezen.</string>
     <string name="dlna_empty_shared_folders_desc">
 Tik op \'Map toevoegen\' om interne opslag-, SD-kaart- of USB-mappen te selecteren die u via DLNA wilt weergeven.
 </string>

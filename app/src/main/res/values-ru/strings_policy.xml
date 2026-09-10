@@ -599,7 +599,7 @@ jxl-coder (io.github.awxkee) — библиотека декодирования
 APNG4Android (com.github.penfeizhou.android.animation) — основная библиотека для декодирования и отрисовки анимированных PNG-файлов на Android. (Apache-2.0)
 </item>
         <item>
-Shizuku и Shevery API (dev.rikka.shizuku:api &amp;amp; provider / com.hamondev.shevery) — библиотеки, обеспечивающие расширенный доступ к файловой системе через приложения Shizuku или Shevery Manager. (Apache-2.0)
+Shizuku и Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — библиотеки, обеспечивающие расширенный доступ к файловой системе через приложения Shizuku или Shevery Manager. (Apache-2.0)
 </item>
         <item>
 ViewPager2 — библиотека Android для перелистывания между фрагментами и макетами. (Apache-2.0)
