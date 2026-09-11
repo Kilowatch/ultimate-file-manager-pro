@@ -75,6 +75,7 @@ import za.kilowatch.ultimatefilemanager.archive.ArchiveOptionsDialog
 import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
 import za.kilowatch.ultimatefilemanager.remote.RemoteTransportPrefs
 import za.kilowatch.ultimatefilemanager.util.KeyboardShortcutHandler
+import za.kilowatch.ultimatefilemanager.util.TransferSummaryText
 import za.kilowatch.ultimatefilemanager.ui.KeyboardShortcutDialog
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -359,15 +360,29 @@ class NetworkBrowserActivity : AppCompatActivity() {
         
         val successCount = result.data?.getIntExtra("QT_SUCCESS_COUNT", -1) ?: -1
         val failCount = result.data?.getIntExtra("QT_FAIL_COUNT", -1) ?: -1
+        // 0, not -1, is the right default for the two newer extras: a result that predates them
+        // simply had nothing excluded, whereas the -1 guards above are sentinels meaning "this
+        // result carries no counts at all" and must not be blurred into a real zero.
+        val skippedCount = result.data?.getIntExtra("QT_SKIPPED_COUNT", 0) ?: 0
+        val message = result.data?.getStringExtra("QT_MESSAGE")
 
         // Destination: transfer was already executed inside the destination Activity.
         // Clipboard was cleared there too. Nothing more to do here.
         updatePasteFab()
         loadDirectory()
-        
+
         if (successCount >= 0 && failCount >= 0) {
-            if (failCount == 0 && successCount > 0) showPremiumSnackbar(getString(R.string.paste_success, successCount))
-            else if (failCount > 0) showPremiumSnackbar(getString(R.string.paste_error))
+            showPremiumSnackbar(
+                TransferSummaryText.pasteResult(
+                    context = this,
+                    successCount = successCount,
+                    failCount = failCount,
+                    skippedCount = skippedCount,
+                    message = message,
+                    // Quick Transfer has no extract route — it is a paste to a picked folder.
+                    isExtract = false
+                )
+            )
         }
     }
 
@@ -4738,13 +4753,17 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 updatePasteFab()
                 loadDirectory()
                 if (!summary.cancelled) {
-                    if (summary.failCount == 0 && summary.successCount > 0) {
-                        if (summary.isExtract) showPremiumSnackbar(getString(R.string.extract_move_success, summary.successCount))
-                        else showPremiumSnackbar(getString(R.string.paste_success, summary.successCount))
-                    } else if (summary.failCount > 0) {
-                        val detail = summary.message?.let { "\n$it" } ?: ""
-                        showPremiumSnackbar(getString(R.string.paste_error) + detail)
-                    }
+                    showPremiumSnackbar(
+                        TransferSummaryText.pasteResult(
+                            // `this` here is the anonymous TransferUi, not the Activity.
+                            context = this@NetworkBrowserActivity,
+                            successCount = summary.successCount,
+                            failCount = summary.failCount,
+                            skippedCount = summary.skippedCount,
+                            message = summary.message,
+                            isExtract = summary.isExtract
+                        )
+                    )
                 }
             }
         }

@@ -1752,13 +1752,13 @@ Disabilitato: nessun dato raccolto; consenso revocato
 Copia della cache
 </string>
     <string name="settings_cache_copy_subtitle_on">
-Abilitato: copia protetta, potrebbe essere più lenta
+Abilitato — i caricamenti vengono inizialmente scritti con un nome temporaneo
 </string>
     <string name="settings_cache_copy_subtitle_off">
-Disabilitato: copia standard (impostazione predefinita)
+Disabilitato — i caricamenti scrivono direttamente (predefinito)
 </string>
     <string name="settings_cache_copy_note">
-I file vengono scritti in una cache temporanea prima di essere inseriti nella destinazione. Questo è un metodo di copia più sicuro ma potrebbe richiedere ulteriore tempo.
+Si applica ai caricamenti verso condivisioni remote. Il file viene caricato con un nome temporaneo e rinominato al termine del trasferimento, così un caricamento interrotto non può sostituire l\\\'originale. Ignorato da S3, iDrive, WebDAV e NFS.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ Chiaro
 </string>
     <string name="conflict_skipped_n">
 File %1$d saltati: già esistenti nella destinazione
+</string>
+    <string name="preflight_skipped_too_large">
+Il file è troppo grande per il filesystem di destinazione
+</string>
+    <string name="preflight_excluded_title">
+Impossibile copiare alcuni file
+</string>
+    <string name="preflight_blocked_title">
+Il file è troppo grande per questa destinazione
+</string>
+    <string name="preflight_space_title">
+Spazio libero insufficiente
+</string>
+    <string name="preflight_space_warning">
+Mancano %1$s rispetto allo spazio libero su questa destinazione
+</string>
+    <string name="preflight_subtitle_batch">
+%1$d file su %2$d sono più grandi di quanto consenta il filesystem di destinazione. Gli altri verranno trasferiti.
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d file sono più grandi di quanto consenta il filesystem di destinazione, quindi nessuno di essi può essere trasferito.
+</string>
+    <string name="preflight_reason_too_large">
+Troppo grande
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — il filesystem di destinazione (%2$s) consente al massimo %3$s per file
+</string>
+    <string name="preflight_transfer_remaining">
+Trasferisci il resto
+</string>
+    <string name="preflight_proceed_anyway">
+Procedi comunque
+</string>
+    <string name="preflight_find_truncated">
+Trova i file danneggiati
+</string>
+    <string name="preflight_truncated_title">
+%1$d file si fermano esattamente al limite di dimensione della destinazione
+</string>
+    <string name="preflight_truncated_subtitle">
+%1$s di spazio inutilizzabile — questi file sono incompleti
+</string>
+    <string name="preflight_truncated_remove">
+Rimuovi %1$d file
+</string>
+    <string name="preflight_truncated_keep">
+Mantienili
+</string>
+    <string name="preflight_reason_truncated">
+Incompleto
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — esattamente il limite per file di %2$s, quindi il trasferimento che l\\\'ha scritto è stato interrotto qui
+</string>
+    <string name="preflight_skipped_summary">
+%1$d file ignorati: %2$s
+</string>
+    <string name="preflight_skipped_count">
+%1$d file ignorati
 </string>
     <string name="action_favorite">
 Preferito

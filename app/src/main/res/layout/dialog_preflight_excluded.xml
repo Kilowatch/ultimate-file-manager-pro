@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The pre-flight exclusion dialog — mobile (FR-04/05, FR-12/13, FR-14).
+
+    Same ids as dialog_preflight_excluded_tv.xml, so TransferPreflight.showExclusions()
+    is one code path for both form factors. The differences are the token set
+    (@color/mobile_text_*), the textAppearance usage mobile has and TV does not, and
+    the button styles.
+
+    One layout serves both cases the feature produces: the single-file hard block
+    (FR-04/05) and the batch exclusion list (FR-12/13). Title, subtitle, warning and
+    the confirm button's label are all set by the caller, and the confirm button is
+    hidden outright when there is nothing left to transfer (FR-14).
+
+    There is no focusable wrapper around the list here: a touch screen needs no focus
+    target, and the D-pad scroll listener is a TV-only concern.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp">
+
+    <!-- Header row: icon + title. Set at runtime. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_warning"
+            app:tint="?attr/ufmProgressWarning"
+            android:layout_marginEnd="12dp"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/txtPreflightTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/preflight_excluded_title"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@color/mobile_text_primary"
+            android:fontFamily="sans-serif-black" />
+    </LinearLayout>
+
+    <!-- One-line explanation. Set at runtime; gone when the title says it all. -->
+    <TextView
+        android:id="@+id/txtPreflightSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="@color/mobile_text_secondary"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="2 of 9 files are larger than the destination filesystem allows. The rest will be transferred." />
+
+    <!-- Free-space warning (FR-09). Not a refusal — the transfer can proceed — so it
+         is a separate line rather than the title. -->
+    <TextView
+        android:id="@+id/txtPreflightWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/ufmProgressWarning"
+        android:fontFamily="sans-serif-medium"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="2.1 GB short of the free space on this destination" />
+
+    <!-- The list. A fixed height by default so a long batch cannot push the buttons
+         off the screen; showExclusions() relaxes it to WRAP_CONTENT for a short list,
+         where a fixed box would just be empty space. -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollExcluded"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginBottom="14dp"
+        android:overScrollMode="never">
+
+        <!-- Rows are added by a plain addView() loop — no adapter. -->
+        <LinearLayout
+            android:id="@+id/layoutExcludedFiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Primary action, stacked above the secondary per UFMStandard. Swapped at
+         runtime between "Transfer the rest" (FR-13) and "Proceed anyway" (FR-09),
+         and hidden entirely when every file was excluded (FR-14). -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPreflightConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preflight_transfer_remaining"
+        android:layout_marginBottom="8dp"
+        app:backgroundTint="?attr/colorPrimary"
+        style="@style/Widget.Material3Expressive.Button" />
+
+    <!-- Cleanup entry (Q5). Leaves the current transfer behind and opens the scan for
+         files already truncated by this limit. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPreflightFindTruncated"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preflight_find_truncated"
+        android:layout_marginBottom="8dp"
+        style="@style/Widget.Material3Expressive.Button.TextButton" />
+
+    <!-- Cancel is always present and is the way out in every case, including the one
+         where nothing can be transferred. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPreflightCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        style="@style/Widget.Material3Expressive.Button.TextButton" />
+</LinearLayout>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The truncated-file cleanup offer — mobile (FR-21, FR-22, FR-23).
+
+    Reached from the exclusion dialog (Q5): the user has just been told what the
+    destination's per-file limit is, so this is the moment at which "and some files
+    here are already damage from it" means something.
+
+    Reuses item_preflight_excluded for its rows. The shape is identical — a name, a
+    reason pill and a detail line — and the difference is only what the pill says.
+
+    Two actions, and the destructive one is the primary: removing these files is
+    what the user came here to do. It is never the default and never happens without
+    this dialog — TruncatedFileScanner.scan() has no delete call in it, so the only
+    path to a deletion is the button below.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_warning"
+            app:tint="?attr/ufmProgressWarning"
+            android:layout_marginEnd="12dp"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/txtTruncatedTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@color/mobile_text_primary"
+            android:fontFamily="sans-serif-black"
+            tools:text="3 damaged files found" />
+    </LinearLayout>
+
+    <!-- What the number in the title adds up to. Set at runtime. -->
+    <TextView
+        android:id="@+id/txtTruncatedSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="@color/mobile_text_secondary"
+        tools:text="12.0 GB of space that cannot be used — these files stop exactly where the limit is" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollTruncated"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginBottom="14dp"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:id="@+id/layoutTruncatedFiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- The destructive action, and the primary one. Deletion goes through
+         TruncatedFileScanner.remove(), which re-reads each file's size first and
+         skips any that no longer sits at the ceiling — a file that changed between
+         the scan and this button is no longer the artifact that was offered. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnTruncatedRemove"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:backgroundTint="?attr/colorPrimary"
+        style="@style/Widget.Material3Expressive.Button"
+        tools:text="Remove 3 files" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnTruncatedKeep"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preflight_truncated_keep"
+        android:textColor="@color/mobile_text_secondary"
+        style="@style/Widget.Material3Expressive.Button.TextButton" />
+</LinearLayout>

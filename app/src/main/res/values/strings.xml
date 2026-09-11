@@ -614,9 +614,9 @@
 
     <!-- Cache Copying Toggle -->
     <string name="settings_cache_copy_title">Cache Copying</string>
-    <string name="settings_cache_copy_subtitle_on">Enabled — secure copy, may be slower</string>
-    <string name="settings_cache_copy_subtitle_off">Disabled — standard copy (default)</string>
-    <string name="settings_cache_copy_note">Files are written to a temporary cache before being placed at the destination. This is a more secure copy method but may add additional time.</string>
+    <string name="settings_cache_copy_subtitle_on">Enabled — uploads are written under a temporary name first</string>
+    <string name="settings_cache_copy_subtitle_off">Disabled — uploads write directly (default)</string>
+    <string name="settings_cache_copy_note">Applies to uploads to remote shares. The file is uploaded under a temporary name and renamed once the transfer completes, so an interrupted upload cannot replace the original. Ignored by S3, iDrive, WebDAV and NFS.</string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
     <string name="settings_quick_transfer_title">Quick Copy / Move</string>
@@ -744,6 +744,26 @@
     <string name="action_clear">Clear</string>
     <string name="conflict_zero_byte_warning">⚠ Destination is 0 B — overwriting is safe but verify source integrity first.</string>
     <string name="conflict_skipped_n">Skipped %1$d file(s) — already existed at destination</string>
+    <string name="preflight_skipped_too_large">File is too large for the destination filesystem</string>
+    <string name="preflight_excluded_title">Some files cannot be copied</string>
+    <string name="preflight_blocked_title">File is too large for this destination</string>
+    <string name="preflight_space_title">Not enough free space</string>
+    <string name="preflight_space_warning">%1$s short of the free space on this destination</string>
+    <string name="preflight_subtitle_batch">%1$d of %2$d files are larger than the destination filesystem allows. The rest will be transferred.</string>
+    <string name="preflight_subtitle_batch_all">%1$d files are larger than the destination filesystem allows, so none of them can be transferred.</string>
+    <string name="preflight_reason_too_large">Too large</string>
+    <string name="preflight_detail_file_size">%1$s — the destination filesystem (%2$s) allows at most %3$s per file</string>
+    <string name="preflight_transfer_remaining">Transfer the rest</string>
+    <string name="preflight_proceed_anyway">Proceed anyway</string>
+    <string name="preflight_find_truncated">Find damaged files</string>
+    <string name="preflight_truncated_title">%1$d file(s) stop exactly at the destination size limit</string>
+    <string name="preflight_truncated_subtitle">%1$s of space that cannot be used — these files are incomplete</string>
+    <string name="preflight_truncated_remove">Remove %1$d file(s)</string>
+    <string name="preflight_truncated_keep">Keep them</string>
+    <string name="preflight_reason_truncated">Incomplete</string>
+    <string name="preflight_detail_truncated">%1$s — exactly the per-file limit of %2$s, so the transfer that wrote it was cut off here</string>
+    <string name="preflight_skipped_summary">%1$d file(s) skipped: %2$s</string>
+    <string name="preflight_skipped_count">%1$d file(s) skipped</string>
     <string name="action_favorite">Favorite</string>
     <string name="favorite_name_title">Name Favorite</string>
     <string name="favorite_name_hint">Favorite name</string>

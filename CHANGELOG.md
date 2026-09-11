@@ -43,9 +43,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed legacy `com.hierynomus:smbj` and `eu.agno3.jcifs:jcifs-ng` dependencies and deprecated fallback clients.
 
 ### Fixed
+- Fixed ANR (App Freeze) caused by synchronous root staging and libsu shell lock contention when opening or sharing root-partition files.
+- Offloaded root staging sync-back in `onResume` to an asynchronous background worker.
+- Optimized `RootFile.list()` to use lightweight `ls -1a` queries, preventing shell serialization stalls during directory badge counting.
+- Fixed severe text truncation and vertical word wrapping in the Long Press Toolbar Icons settings screen on mobile by relocating the Quick Bar slot chip beneath the description and making chips contextually collapse when the Quick Bar is disabled.
 - **Colorblind Mode could crash the app as soon as a palette was selected.** Choosing any type other than Off threw an internal resource error when the setting screen rebuilt itself, so the mode could not be switched back off without clearing app data. Fixed.
 - **TV focus rings were lost on the View-mode and Skip-length dialogs.** Focusing one of those cards replaced its focus treatment permanently — even with Colorblind Mode off. Fixed.
 - **Moderate and Manual-review risk levels shared one warning icon** in the Storage Analyzer, so the two were told apart by label alone. Manual review now has its own icon.
+- **Transfers to a FAT32 destination could fail silently after copying for the full duration.** A single file larger than 4 GB cannot be stored on FAT32, but the app only reached that limit at the very end of the copy — 23 minutes in, on the reported case — where it failed and left a truncated file of exactly 4,294,967,295 bytes behind, with nothing in the log to explain it. The destination's filesystem is now checked before the transfer starts, and a file it cannot hold is refused immediately with a message naming the file, the filesystem and its per-file limit, instead of being attempted.
 
 ### Notes
 - Setting the mode to **Off** restores the app's appearance exactly as it was, with no residual colour, outline or marker on any screen.

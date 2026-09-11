@@ -1752,13 +1752,13 @@ HTTP, FTP, WebDAV 파일 서버 제어
 캐시 복사
 </string>
     <string name="settings_cache_copy_subtitle_on">
-활성화됨 — 안전한 복사, 속도가 느릴 수 있음
+사용 설정됨 — 업로드가 먼저 임시 이름으로 기록됩니다
 </string>
     <string name="settings_cache_copy_subtitle_off">
-비활성화됨 — 표준 복사 (기본값)
+사용 안 함 — 업로드가 직접 기록됩니다(기본값)
 </string>
     <string name="settings_cache_copy_note">
-파일이 대상에 배치되기 전에 임시 캐시에 기록됩니다. 이 방법은 더 안전하지만 추가 시간이 소요될 수 있습니다.
+원격 공유로의 업로드에 적용됩니다. 파일은 임시 이름으로 업로드되고 전송이 완료되면 이름이 변경되므로, 중단된 업로드가 원본을 대체할 수 없습니다. S3, iDrive, WebDAV, NFS에서는 무시됩니다.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ UFM 슬라이드 쇼
 </string>
     <string name="conflict_skipped_n">
 %1$d개 파일 건너뜀 — 대상에 이미 존재함
+</string>
+    <string name="preflight_skipped_too_large">
+대상 파일 시스템에 비해 파일이 너무 큽니다
+</string>
+    <string name="preflight_excluded_title">
+일부 파일을 복사할 수 없습니다
+</string>
+    <string name="preflight_blocked_title">
+이 대상에 비해 파일이 너무 큽니다
+</string>
+    <string name="preflight_space_title">
+남은 공간이 부족합니다
+</string>
+    <string name="preflight_space_warning">
+이 대상의 남은 공간이 %1$s만큼 부족합니다
+</string>
+    <string name="preflight_subtitle_batch">
+%2$d개 파일 중 %1$d개가 대상 파일 시스템에서 허용하는 크기보다 큽니다. 나머지는 전송됩니다.
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d개의 파일이 대상 파일 시스템에서 허용하는 크기보다 크므로, 어느 것도 전송할 수 없습니다.
+</string>
+    <string name="preflight_reason_too_large">
+너무 큼
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — 대상 파일 시스템(%2$s)은 파일당 최대 %3$s까지만 허용합니다
+</string>
+    <string name="preflight_transfer_remaining">
+나머지 전송
+</string>
+    <string name="preflight_proceed_anyway">
+그래도 진행
+</string>
+    <string name="preflight_find_truncated">
+손상된 파일 찾기
+</string>
+    <string name="preflight_truncated_title">
+%1$d개 파일이 대상 크기 제한에서 정확히 끝납니다
+</string>
+    <string name="preflight_truncated_subtitle">
+사용할 수 없는 공간 %1$s — 이 파일들은 불완전합니다
+</string>
+    <string name="preflight_truncated_remove">
+%1$d개 파일 삭제
+</string>
+    <string name="preflight_truncated_keep">
+유지
+</string>
+    <string name="preflight_reason_truncated">
+불완전
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — 파일당 제한인 %2$s과 정확히 일치하므로, 이를 기록하던 전송이 여기서 중단되었습니다
+</string>
+    <string name="preflight_skipped_summary">
+%1$d개 파일 건너뜀: %2$s
+</string>
+    <string name="preflight_skipped_count">
+%1$d개 파일 건너뜀
 </string>
     <string name="action_favorite">
 즐겨찾기

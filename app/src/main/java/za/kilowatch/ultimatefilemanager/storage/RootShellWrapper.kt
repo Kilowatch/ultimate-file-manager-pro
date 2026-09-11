@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.Context
+import android.os.Looper
 import android.util.Log
 import com.topjohnwu.superuser.Shell
 import za.kilowatch.ultimatefilemanager.settings.RootPreferenceManager
@@ -18,13 +19,18 @@ object RootShellWrapper {
 
     /**
      * Checks whether superuser shell is authorized and active.
+     * Guaranteed non-blocking on the main thread (never spawns or acquires su locks on UI thread).
      */
     fun isAuthorized(context: Context? = null): Boolean {
         if (context != null && !RootPreferenceManager.isRootEnabled(context)) {
             return false
         }
         return try {
-            Shell.isAppGrantedRoot() == true || (Shell.isAppGrantedRoot() == null && Shell.getShell().isRoot)
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                Shell.isAppGrantedRoot() == true || Shell.getCachedShell()?.isRoot == true
+            } else {
+                Shell.isAppGrantedRoot() == true || (Shell.isAppGrantedRoot() == null && Shell.getShell().isRoot)
+            }
         } catch (_: Exception) {
             false
         }
@@ -224,6 +230,18 @@ object RootShellWrapper {
         }
 
         return results
+    }
+
+    /**
+     * Fast directory child name listing using `ls -1a` without the heavy POSIX stat loop.
+     * Returns null if the directory cannot be listed or is inaccessible.
+     */
+    fun list(path: String): List<String>? {
+        val normPath = if (path.endsWith("/") && path.length > 1) path.trimEnd('/') else path
+        val safePath = escapeShellPath(normPath)
+        val (code, output) = runCommand("ls -1a '$safePath' 2>/dev/null")
+        if (code != 0) return null
+        return output.map { it.trim() }.filter { it.isNotEmpty() && it != "." && it != ".." }
     }
 
     /**

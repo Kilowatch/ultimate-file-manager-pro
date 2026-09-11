@@ -1752,13 +1752,13 @@ Devre dışı — hiçbir veri toplanmaz; onay geri çekildi
 Önbelleğe Kopyalama
 </string>
     <string name="settings_cache_copy_subtitle_on">
-Etkin — güvenli kopya, daha yavaş olabilir
+Etkin — yüklemeler önce geçici bir ad altında yazılır
 </string>
     <string name="settings_cache_copy_subtitle_off">
-Devre dışı — standart kopya (varsayılan)
+Devre dışı — yüklemeler doğrudan yazılır (varsayılan)
 </string>
     <string name="settings_cache_copy_note">
-Dosyalar hedefe yerleştirilmeden önce geçici bir önbelleğe yazılır. Bu daha güvenli bir kopyalama yöntemidir ancak ek süre ekleyebilir.
+Uzak paylaşımlara yapılan yüklemeler için geçerlidir. Dosya geçici bir adla yüklenir ve aktarım tamamlandığında yeniden adlandırılır; böylece kesintiye uğrayan bir yükleme orijinalin yerini alamaz. S3, iDrive, WebDAV ve NFS tarafından yok sayılır.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ Temizle
 </string>
     <string name="conflict_skipped_n">
 %1$d dosya atlandı — hedefte zaten mevcut
+</string>
+    <string name="preflight_skipped_too_large">
+Dosya, hedef dosya sistemi için çok büyük
+</string>
+    <string name="preflight_excluded_title">
+Bazı dosyalar kopyalanamıyor
+</string>
+    <string name="preflight_blocked_title">
+Dosya bu hedef için çok büyük
+</string>
+    <string name="preflight_space_title">
+Yeterli boş alan yok
+</string>
+    <string name="preflight_space_warning">
+Bu hedefteki boş alandan %1$s eksik
+</string>
+    <string name="preflight_subtitle_batch">
+%2$d dosyadan %1$d tanesi hedef dosya sisteminin izin verdiğinden daha büyük. Geri kalanı aktarılacak.
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d dosya, hedef dosya sisteminin izin verdiğinden daha büyük; bu nedenle hiçbiri aktarılamaz.
+</string>
+    <string name="preflight_reason_too_large">
+Çok büyük
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — hedef dosya sistemi (%2$s) dosya başına en fazla %3$s boyutuna izin veriyor
+</string>
+    <string name="preflight_transfer_remaining">
+Kalanı aktar
+</string>
+    <string name="preflight_proceed_anyway">
+Yine de devam et
+</string>
+    <string name="preflight_find_truncated">
+Bozuk dosyaları bul
+</string>
+    <string name="preflight_truncated_title">
+%1$d dosya tam olarak hedef boyut sınırında bitiyor
+</string>
+    <string name="preflight_truncated_subtitle">
+Kullanılamayan %1$s alan — bu dosyalar eksik
+</string>
+    <string name="preflight_truncated_remove">
+%1$d dosyayı kaldır
+</string>
+    <string name="preflight_truncated_keep">
+Onları sakla
+</string>
+    <string name="preflight_reason_truncated">
+Eksik
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — tam olarak %2$s dosya başına sınırı, yani onu yazan aktarım burada kesildi
+</string>
+    <string name="preflight_skipped_summary">
+%1$d dosya atlandı: %2$s
+</string>
+    <string name="preflight_skipped_count">
+%1$d dosya atlandı
 </string>
     <string name="action_favorite">
 Favori

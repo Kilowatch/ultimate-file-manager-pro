@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The pre-flight exclusion dialog — TV (FR-04/05, FR-12/13, FR-14).
+
+    One layout serves both cases the feature produces: the single-file hard block
+    (FR-04/05) and the batch exclusion list (FR-12/13). They are the same question
+    asked about a different number of files, and the only difference between them
+    is what the title and the primary button say — both of which are set by the
+    caller, not baked in here.
+
+    Paired with dialog_preflight_excluded.xml. Both are required: there is no
+    resource-qualifier mechanism for TV layouts here, so this file is selected at
+    runtime by DeviceUtils.isTvDevice().
+
+    700dp rather than the 650dp standard: this is a list, and the list convention
+    in this project is the wider fixed width. The width is what makes a filename
+    and its reason pill fit on one row without the pill being pushed off the edge
+    by a long name.
+
+    ## The scroll container is focusable, and that is deliberate
+
+    The rows inside (item_preflight_excluded_tv.xml) are not focusable — they are
+    read, not chosen — so the only focusable things would otherwise be the buttons
+    underneath the list. A remote could then never reach a list longer than the
+    dialog is tall, and FR-12 would be unsatisfiable for a large batch: the user
+    would be asked to confirm a reduced transfer without being able to read what
+    was excluded from it.
+
+    Making the container itself the focus target fixes that, and it is what makes
+    the D-pad key listener possible at all: setOnKeyListener is only ever consulted
+    for the view that holds focus, so attaching it to a `focusable="false"` scroll
+    view produces a listener that never runs. The container carries
+    selector_tv_scroll_card so that landing on it is visible.
+
+    The NestedScrollView inside stays focusable="false" — it is the thing being
+    driven, not the thing being focused.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="700dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Title. Set at runtime: "Some files cannot be copied" for a batch, or the
+         destination-blocks-this-file wording for a single hard block. -->
+    <TextView
+        android:id="@+id/txtPreflightTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preflight_excluded_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black" />
+
+    <!-- One-line explanation. Set at runtime; gone when the title says it all. -->
+    <TextView
+        android:id="@+id/txtPreflightSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="13sp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="2 of 9 files are larger than the destination filesystem allows. The rest will be transferred." />
+
+    <!-- The scrollable region. Focusable, so the D-pad can drive it; the key
+         listener lives in TransferPreflight.showExclusions().
+
+         A fixed 240dp — the same height the mobile layout gives its list — so a
+         long batch cannot grow the dialog past the screen and the two form
+         factors behave identically. showExclusions() relaxes *this* view to
+         WRAP_CONTENT for a short list, which is why the height is here and not
+         on the scroll view inside.
+
+         It is deliberately not `0dp` + weight. A weighted zero-height child is
+         given the parent's leftover space, which on a `wrap_content` dialog is
+         none, so the box did not follow its content and a one-row list rendered
+         as a full-height empty frame — `minHeight` does not save it either,
+         being inert under the EXACTLY measure spec that produces. -->
+    <FrameLayout
+        android:id="@+id/scrollContainer"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/selector_tv_scroll_card"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:padding="4dp">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollExcluded"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:overScrollMode="never">
+
+            <!-- Rows are added by a plain addView() loop — no adapter — matching
+                 how the compress-results dialog builds its list. -->
+            <LinearLayout
+                android:id="@+id/layoutExcludedFiles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
+
+    <!-- Free-space warning (FR-09). Separate from the title because it is not a
+         refusal — the transfer can proceed — and it is set only when FR-08 found
+         the total exceeding the free space. -->
+    <TextView
+        android:id="@+id/txtPreflightWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:textColor="?attr/ufmProgressWarning"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="2.1 GB short of the free space on this destination" />
+
+    <!-- Primary action, stacked above the secondary per UFMStandard. Swapped at
+         runtime between "Transfer the rest" (FR-13) and "Proceed anyway" (FR-09),
+         and hidden entirely when every file was excluded (FR-14) — there is no
+         reduced transfer to confirm. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPreflightConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/preflight_transfer_remaining"
+        android:textColor="@color/selector_tv_button_text_yellow"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/selector_tv_button_yellow"
+        app:backgroundTint="@null"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <!-- Cleanup entry (Q5). Secondary: it leaves the current transfer behind and
+         opens the scan for files already truncated by this limit. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPreflightFindTruncated"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/preflight_find_truncated"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+    <!-- Cancel is always present and always the way out: it is the only action
+         that is correct in every case, including the one where nothing can be
+         transferred. -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPreflightCancel"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/cancel"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+</LinearLayout>

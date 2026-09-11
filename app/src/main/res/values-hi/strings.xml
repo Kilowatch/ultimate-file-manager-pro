@@ -1752,13 +1752,13 @@ HTTP, FTP और WebDAV फ़ाइल सर्वर नियंत्रण
 कैश कॉपी करना
 </string>
     <string name="settings_cache_copy_subtitle_on">
-सक्षम — सुरक्षित कॉपी, धीमी हो सकती है
+सक्षम — अपलोड पहले एक अस्थायी नाम के अंतर्गत लिखे जाते हैं
 </string>
     <string name="settings_cache_copy_subtitle_off">
-अक्षम — मानक कॉपी (डिफ़ॉल्ट)
+अक्षम — अपलोड सीधे लिखते हैं (डिफ़ॉल्ट)
 </string>
     <string name="settings_cache_copy_note">
-फ़ाइलें गंतव्य पर रखे जाने से पहले एक अस्थायी कैश में लिखी जाती हैं। यह अधिक सुरक्षित कॉपी विधि है लेकिन इसमें अतिरिक्त समय लग सकता है।
+दूरस्थ शेयरों पर अपलोड पर लागू होता है। फ़ाइल एक अस्थायी नाम के तहत अपलोड की जाती है और स्थानांतरण पूरा होने पर इसका नाम बदल दिया जाता है, इसलिए एक बाधित अपलोड मूल को प्रतिस्थापित नहीं कर सकता। S3, iDrive, WebDAV और NFS द्वारा अनदेखा किया जाता है।
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ UFM स्लाइड शो
 </string>
     <string name="conflict_skipped_n">
 %1$d फ़ाइल(एँ) छोड़ी गईं — गंतव्य पर पहले से मौजूद थीं
+</string>
+    <string name="preflight_skipped_too_large">
+फ़ाइल गंतव्य फ़ाइल सिस्टम के लिए बहुत बड़ी है
+</string>
+    <string name="preflight_excluded_title">
+कुछ फ़ाइलें कॉपी नहीं की जा सकतीं
+</string>
+    <string name="preflight_blocked_title">
+फ़ाइल इस गंतव्य के लिए बहुत बड़ी है
+</string>
+    <string name="preflight_space_title">
+पर्याप्त खाली स्थान नहीं है
+</string>
+    <string name="preflight_space_warning">
+इस गंतव्य पर खाली स्थान %1$s कम है
+</string>
+    <string name="preflight_subtitle_batch">
+%2$d में से %1$d फ़ाइलें गंतव्य फ़ाइल सिस्टम की अनुमति से बड़ी हैं। शेष स्थानांतरित कर दी जाएँगी।
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d फ़ाइलें गंतव्य फ़ाइलसिस्टम की अनुमति से बड़ी हैं, इसलिए उनमें से कोई भी स्थानांतरित नहीं की जा सकती।
+</string>
+    <string name="preflight_reason_too_large">
+बहुत बड़ी
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — गंतव्य फ़ाइल सिस्टम (%2$s) प्रति फ़ाइल अधिकतम %3$s की अनुमति देता है
+</string>
+    <string name="preflight_transfer_remaining">
+शेष स्थानांतरित करें
+</string>
+    <string name="preflight_proceed_anyway">
+फिर भी जारी रखें
+</string>
+    <string name="preflight_find_truncated">
+क्षतिग्रस्त फ़ाइलें खोजें
+</string>
+    <string name="preflight_truncated_title">
+%1$d फ़ाइल(ें) गंतव्य आकार सीमा पर बिल्कुल रुक जाती हैं
+</string>
+    <string name="preflight_truncated_subtitle">
+%1$s स्थान जिसका उपयोग नहीं किया जा सकता — ये फ़ाइलें अधूरी हैं
+</string>
+    <string name="preflight_truncated_remove">
+%1$d फ़ाइल(ें) हटाएँ
+</string>
+    <string name="preflight_truncated_keep">
+उन्हें रखें
+</string>
+    <string name="preflight_reason_truncated">
+अधूरी
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — बिल्कुल %2$s की प्रति फ़ाइल सीमा, इसलिए इसे लिखने वाला स्थानांतरण यहाँ रोक दिया गया था
+</string>
+    <string name="preflight_skipped_summary">
+%1$d फ़ाइल(ें) छोड़ी गईं: %2$s
+</string>
+    <string name="preflight_skipped_count">
+%1$d फ़ाइल(ें) छोड़ी गईं
 </string>
     <string name="action_favorite">
 पसंदीदा

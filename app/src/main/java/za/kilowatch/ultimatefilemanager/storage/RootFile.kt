@@ -11,8 +11,8 @@ class RootFile(
     parentPath: String,
     val docName: String,
     private val isDir: Boolean = true,
-    private val docLength: Long = 0L,
-    private val docLastModified: Long = 0L,
+    private val docLength: Long = -1L,
+    private val docLastModified: Long = -1L,
     val posixPermissions: String = "",
     val owner: String = "",
     val group: String = "",
@@ -39,11 +39,11 @@ class RootFile(
     override fun isFile(): Boolean = !isDir
 
     override fun length(): Long {
-        return if (docLength > 0L) docLength else RootShellWrapper.getFileSize(posixPath)
+        return if (docLength >= 0L) docLength else RootShellWrapper.getFileSize(posixPath)
     }
 
     override fun lastModified(): Long {
-        return if (docLastModified > 0L) docLastModified else RootShellWrapper.getLastModified(posixPath)
+        return if (docLastModified >= 0L) docLastModified else RootShellWrapper.getLastModified(posixPath)
     }
 
     override fun exists(): Boolean {
@@ -54,7 +54,7 @@ class RootFile(
     override fun canWrite(): Boolean = true
 
     override fun list(): Array<String>? {
-        return listFiles()?.map { it.name }?.toTypedArray()
+        return RootShellWrapper.list(posixPath)?.toTypedArray()
     }
 
     override fun listFiles(): Array<File>? {

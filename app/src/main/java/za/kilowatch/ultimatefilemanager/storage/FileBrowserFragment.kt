@@ -425,8 +425,7 @@ class FileBrowserFragment : Fragment() {
         applyToolbarIconVisibility()
         updatePasteFab()
         context?.let { ctx ->
-            val syncedCount = za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPending(ctx)
-            if (syncedCount > 0) {
+            za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPendingAsync(ctx) { syncedCount ->
                 showFeedback(getString(R.string.root_file_saved_success, syncedCount))
             }
         }
@@ -3009,9 +3008,6 @@ class FileBrowserFragment : Fragment() {
         try {
             val extension = file.extension.lowercase()
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
-            if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(requireContext(), file.absolutePath)) {
-                za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(requireContext(), file.absolutePath)
-            }
             val uri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", file)
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, mimeType)
@@ -3594,9 +3590,6 @@ class FileBrowserFragment : Fragment() {
         try {
             val uris = ArrayList<Uri>()
             files.forEach { file ->
-                if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(ctx, file.absolutePath)) {
-                    za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(ctx, file.absolutePath)
-                }
                 uris.add(FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", file))
             }
             val intent = if (uris.size == 1) {

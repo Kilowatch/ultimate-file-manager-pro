@@ -31,17 +31,17 @@
             android:importantForAccessibility="no" />
     </FrameLayout>
 
-    <!-- Title & Subtitle -->
+    <!-- Title & Subtitle + Optional Quick Bar Chip -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginEnd="8dp">
+        android:layout_marginEnd="10dp">
 
         <TextView
             android:id="@+id/txtName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/mobile_card_text_primary"
             android:textSize="15.5sp"
@@ -50,41 +50,53 @@
 
         <TextView
             android:id="@+id/txtSubtitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="2.5dp"
             android:textColor="@color/mobile_text_secondary"
             android:textSize="12sp"
+            android:lineSpacingExtra="1.5dp"
             tools:text="Duplicate selected items to clipboard" />
-    </LinearLayout>
 
-    <!-- Quick Bar Add / Position Chip Button -->
-    <FrameLayout
-        android:id="@+id/btnQuickBarToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginEnd="10dp"
-        android:paddingHorizontal="10dp"
-        android:background="@drawable/bg_btn_icon_frosted"
-        android:clickable="true"
-        android:focusable="true">
-
-        <TextView
-            android:id="@+id/txtQuickBarStatus"
+        <!-- Quick Bar Add / Position Chip Button -->
+        <LinearLayout
+            android:id="@+id/btnQuickBarToggle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="11.5sp"
-            android:fontFamily="sans-serif-bold"
-            tools:text="+ Quick Bar" />
-    </FrameLayout>
+            android:layout_height="28dp"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="10dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/imgQuickBarStatusIcon"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/ic_add"
+                android:importantForAccessibility="no"
+                app:tint="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/txtQuickBarStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11.5sp"
+                android:fontFamily="sans-serif-bold"
+                tools:text="Add to Quick Bar" />
+        </LinearLayout>
+    </LinearLayout>
 
     <!-- Switch -->
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switchToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:clickable="false"
         android:focusable="false"
         app:useMaterialThemeColors="true" />

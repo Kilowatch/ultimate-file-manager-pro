@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    One file excluded from a transfer, with the reason (FR-12) — TV.
+
+    paired with item_preflight_excluded.xml. Both are required: there is no
+    resource-qualifier or flavour mechanism for TV layouts here, so this is
+    selected at runtime by DeviceUtils.isTvDevice().
+
+    Same structure as the mobile row; what changes is the token set (tv_text_*),
+    the sizes (TV is read at ten feet, so 15/12sp rather than 13/11sp), and the
+    padding. No divider: each row is its own glass card with a bottom margin, so
+    a divider between rows would double the separation the card already gives.
+    The card carries no focus treatment of its own — rows in this list are not
+    focusable — so the buttons in the hosting dialog remain the only things the
+    D-pad lands on, which is what keeps a long exclusion list traversable.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_glass"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_marginBottom="6dp"
+    android:focusable="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/imgExcludedIcon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_warning"
+            app:tint="?attr/ufmProgressWarning"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/txtExcludedFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            tools:text="Behind Enemy Lines (2001).mkv" />
+
+        <TextView
+            android:id="@+id/txtExcludedReason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_storage_badge"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            android:textColor="?attr/ufmProgressWarning"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-black"
+            android:singleLine="true"
+            tools:text="4 GiB limit" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtExcludedDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="12sp"
+        android:textColor="@color/tv_text_secondary"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="4.3 GB — the destination filesystem (FAT32) allows at most 4.0 GB per file" />
+</LinearLayout>

@@ -56,6 +56,39 @@ object TransferConflictHelper {
         val cancelled: Boolean = false
     )
 
+    // ── Partial-output cleanup (FR-17, FR-18, FR-20) ──────────────────────────
+
+    private const val TAG = "TransferConflictHelper"
+
+    /**
+     * Removes the partial output of a failed or cancelled transfer (FR-17).
+     *
+     * The single cleanup routine for every write-to-temp path in this file, so the two cache
+     * paths cannot drift apart in how they tidy up after themselves.
+     *
+     * Deletes **outright** via [File.delete] and is deliberately never routed to the recycle bin
+     * (`recycle/RecycleBinManager.moveToTrash`). FR-20: the recycle bin governs user-initiated
+     * deletion of user data, and a partial is neither user data nor deliberate — it is the debris
+     * of a failed operation. Preserving it wastes the very space the transfer was trying to use,
+     * and leaves behind an artifact indistinguishable from a complete file, which is precisely how
+     * the reported 4,294,967,295-byte `.mkv` came to look valid.
+     *
+     * Satisfies FR-18 by construction: every caller passes the temp file *it* created, so no
+     * pre-existing file is reachable through here.
+     *
+     * A deletion that fails is logged rather than swallowed (FR-26) — the one thing worse than a
+     * partial on disk is a partial on disk that nothing admits to.
+     */
+    internal fun discardPartial(file: File) {
+        try {
+            if (file.exists() && !file.delete()) {
+                android.util.Log.w(TAG, "Could not remove partial output: ${file.absolutePath}")
+            }
+        } catch (e: Exception) {
+            android.util.Log.w(TAG, "Could not remove partial output: ${file.absolutePath}", e)
+        }
+    }
+
     // ── TV device check ───────────────────────────────────────────────────────
 
     private fun isTv(context: Context) = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)
@@ -192,6 +225,15 @@ object TransferConflictHelper {
         src: File,
         dest: File,
         action: ConflictAction,
+        /**
+         * The operation's mount table (FR-04). Batch callers pass the one they read when the
+         * operation started, so it is read once per operation rather than once per file (NFR-01).
+         * Null means "no table in hand" — the gate reads one, which costs a single procfs read and
+         * is the right trade for the single-file callers.
+         *
+         * Declared before [onProgress] so the trailing-lambda call sites keep working unchanged.
+         */
+        mounts: List<MountEntry>? = null,
         onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)? = null
     ): File {
         val ctx = za.kilowatch.ultimatefilemanager.UfmApplication.instance
@@ -217,6 +259,40 @@ object TransferConflictHelper {
             return actualDest
         }
 
+        // Hoisted above the gate: the gate needs the size to have an opinion, and this used to be
+        // computed further down, past the two early returns below.
+        val sourceSize = if (isSrcSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, src.absolutePath)
+        } else if (isSrcRoot) {
+            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(src.absolutePath)
+        } else {
+            src.length()
+        }
+
+        // ── FR-04: the per-file gate ──────────────────────────────────────────────
+        //
+        // This sits deliberately *ahead* of the Root and Shizuku branches below, which return
+        // unconditionally — a gate placed any later would simply never run for those two access
+        // mechanisms, and Q2 requires the check to cover all three. That is also why the size
+        // read above had to move up with it.
+        //
+        // A SKIP is not a write, so a file that will not be transferred cannot exceed anything.
+        if (action != ConflictAction.SKIP) {
+            val verdict = TransferPreflight.evaluate(
+                context = ctx,
+                fileName = src.name,
+                fileSize = sourceSize,
+                dest = actualDest,
+                mounts = mounts ?: FilesystemCapabilities.readMountTable()
+            )
+            if (verdict is PreflightVerdict.Block) {
+                // FR-24 — the local→local counterpart of the log in the download gate below.
+                val block = PreflightBlockedException(verdict)
+                android.util.Log.w(FileTransferGuard.TAG, block.message, block)
+                throw block
+            }
+        }
+
         if (isSrcRoot && isDestRoot) {
             if (!actualDest.exists() || action == ConflictAction.OVERWRITE) {
                 if (action == ConflictAction.OVERWRITE && actualDest.exists()) {
@@ -236,14 +312,6 @@ object TransferConflictHelper {
                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.copy(src.absolutePath, actualDest.absolutePath)
             }
             return actualDest
-        }
-
-        val sourceSize = if (isSrcSaf) {
-            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(ctx, src.absolutePath)
-        } else if (isSrcRoot) {
-            za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.getFileSize(src.absolutePath)
-        } else {
-            src.length()
         }
 
         val destExists = if (isDestSaf) {
@@ -267,91 +335,133 @@ object TransferConflictHelper {
             }
 
             if (isDestRoot) {
-                // Root Destination direct superuser streaming
-                if (destExists && action == ConflictAction.OVERWRITE) {
-                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(actualDest.absolutePath)
-                }
+                // FR-27 (T033): stream to a sibling `*.ufm_tmp` through root, verify it, then `mv`
+                // it into place. The destination is never deleted first — `mv` within a directory
+                // is `rename(2)`, one operation that replaces atomically, and the temp is a sibling
+                // so it is the same filesystem by construction. Previously the original was deleted
+                // up front and the copy streamed straight into its name, so any failure mid-stream
+                // left the user's file gone and a partial in its place.
                 za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.remount(actualDest.absolutePath, rw = true)
-                val outStream = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openOutputStream(actualDest.absolutePath)
-                val bytesCopied = openInStream().use { inp ->
-                    outStream.use { out ->
-                        CopyHelper.copy(inp, out, sourceSize, onProgress)
+                val tempPath = "${actualDest.absolutePath}.ufm_tmp"
+                try {
+                    val outStream = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openOutputStream(tempPath)
+                    val bytesCopied = openInStream().use { inp ->
+                        outStream.use { out ->
+                            CopyHelper.copy(inp, out, sourceSize, onProgress)
+                        }
                     }
-                }
-                if (sourceSize > 0 && bytesCopied != sourceSize) {
-                    throw Exception("Copy integrity check failed: expected $sourceSize bytes, wrote $bytesCopied bytes to ${actualDest.name}")
-                }
-                if (sourceSize > 0 && bytesCopied <= 0L) {
-                    throw Exception("Copy failed: 0 bytes written for ${src.name}")
+                    if (sourceSize > 0 && bytesCopied != sourceSize) {
+                        throw Exception("Copy integrity check failed: expected $sourceSize bytes, wrote $bytesCopied bytes to ${actualDest.name}")
+                    }
+                    if (sourceSize > 0 && bytesCopied <= 0L) {
+                        throw Exception("Copy failed: 0 bytes written for ${src.name}")
+                    }
+                    if (!za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.move(tempPath, actualDest.absolutePath)) {
+                        throw java.io.IOException(
+                            "Could not replace ${actualDest.name}: moving the verified temporary file " +
+                                "into place failed (destination left unchanged)"
+                        )
+                    }
+                } catch (e: Exception) {
+                    // Only ever the temp: the destination was never opened for writing.
+                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(tempPath)
+                    throw e
                 }
             } else if (isDestSaf) {
-                // SAF Destination direct streaming
+                // FR-27 (T033): same shape as the Root branch — write a sibling `*.ufm_tmp`,
+                // verify it, then move it onto the destination.
+                //
+                // SAF has no atomic replace, and this is the one place the guarantee is weaker than
+                // the other four mechanisms. `DocumentsContract.renameDocument` is not required to
+                // overwrite an existing document — a provider may auto-uniquify the name instead —
+                // so the verified temp cannot be renamed *over* the destination. The destination is
+                // therefore deleted immediately before the rename: two metadata operations with no
+                // data streamed through the gap, against the previous behaviour where the original
+                // was deleted before a multi-gigabyte copy had written its first byte.
                 val destParent = actualDest.parent ?: ""
                 val destName = actualDest.name
-
-                if (destExists && action == ConflictAction.OVERWRITE) {
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(ctx, actualDest.absolutePath)
-                }
-
-                if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, actualDest.absolutePath)) {
-                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFile(ctx, destParent, destName)
-                }
-
-                val outStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(ctx, actualDest.absolutePath)
-                    ?: throw java.io.IOException("Cannot open SAF output stream for ${actualDest.absolutePath}")
-
-                val bytesCopied = openInStream().use { inp ->
-                    outStream.use { out ->
-                        CopyHelper.copy(inp, out, sourceSize, onProgress)
+                val tempName = "$destName.ufm_tmp"
+                val tempPath = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destParent, tempName)
+                var destinationRemoved = false
+                try {
+                    if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, tempPath)) {
+                        // The MIME type is passed explicitly: `createFile` would otherwise derive it
+                        // from the temp's own extension (`.ufm_tmp`), and the rename below carries
+                        // that type onto the finished file — leaving a `.mkv` typed as
+                        // `application/octet-stream`. The temp is created with the type the
+                        // destination is meant to have.
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFile(
+                            ctx, destParent, tempName,
+                            mimeType = MimeTypeHelper.getOrFallback(destName.substringAfterLast('.', ""))
+                        ) ?: throw java.io.IOException("Cannot create SAF temporary file at $tempPath")
                     }
-                }
 
-                if (sourceSize > 0 && bytesCopied != sourceSize) {
-                    throw Exception("Copy integrity check failed: expected $sourceSize bytes, wrote $bytesCopied bytes to ${actualDest.name}")
-                }
-                if (sourceSize > 0 && bytesCopied <= 0L) {
-                    throw Exception("Copy failed: 0 bytes written for ${src.name}")
+                    val outStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(ctx, tempPath)
+                        ?: throw java.io.IOException("Cannot open SAF output stream for $tempPath")
+
+                    val bytesCopied = openInStream().use { inp ->
+                        outStream.use { out ->
+                            CopyHelper.copy(inp, out, sourceSize, onProgress)
+                        }
+                    }
+
+                    if (sourceSize > 0 && bytesCopied != sourceSize) {
+                        throw Exception("Copy integrity check failed: expected $sourceSize bytes, wrote $bytesCopied bytes to ${actualDest.name}")
+                    }
+                    if (sourceSize > 0 && bytesCopied <= 0L) {
+                        throw Exception("Copy failed: 0 bytes written for ${src.name}")
+                    }
+
+                    if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, actualDest.absolutePath)) {
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(ctx, actualDest.absolutePath)
+                    }
+                    destinationRemoved = true
+
+                    if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(ctx, tempPath, destName)) {
+                        throw java.io.IOException("SAF rename of the verified temporary file did not succeed")
+                    }
+                    // A provider that honoured the request by uniquifying the name would leave the
+                    // new content under a different name and nothing at the destination. Better to
+                    // fail loudly here than to report a success that did not happen.
+                    if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, actualDest.absolutePath)) {
+                        throw java.io.IOException("the SAF provider renamed the temporary file to a different name")
+                    }
+                } catch (e: Exception) {
+                    if (destinationRemoved) {
+                        // The destination is already gone and this temp is now the ONLY complete
+                        // copy — it is verified output, not a partial, so discarding it (FR-17)
+                        // would destroy the user's data to tidy up. Keep it and say where it is.
+                        throw java.io.IOException(
+                            "Could not replace ${actualDest.name}: ${e.message}. The complete copy was " +
+                                "kept as $tempName, in the same folder.", e
+                        )
+                    }
+                    // Nothing was taken from the destination, so the temp is disposable and the
+                    // original is untouched (FR-27).
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(ctx, tempPath)
+                    throw e
                 }
             } else {
-                val useCacheCopy = za.kilowatch.ultimatefilemanager.settings.CacheCopyPreferenceManager.isEnabled(ctx)
-                if (useCacheCopy) {
-                    val tempFile = File(actualDest.parent, "${actualDest.name}.ufm_tmp")
-                    try {
-                        val copySucceeded = FileTransferGuard.guardedCopy(
-                            sourceName = src.name,
-                            sourceSize = sourceSize,
-                            verifyDestSize = { tempFile.length() },
-                            doCopy = {
-                                openInStream().use { inp ->
-                                    FileOutputStream(tempFile).use { out ->
-                                        CopyHelper.copy(inp, out, sourceSize, onProgress)
-                                    }
-                                }
-                            }
-                        )
-                        if (!copySucceeded) {
-                            throw Exception("Copy failed after retries: destination is 0 bytes for ${src.name}")
-                        }
-                        if (sourceSize > 0 && tempFile.length() != sourceSize) {
-                            throw Exception("Copy integrity check failed: expected $sourceSize bytes, got ${tempFile.length()}")
-                        }
-                        if (actualDest.exists()) actualDest.delete()
-                        if (!tempFile.renameTo(actualDest)) {
-                            tempFile.copyTo(actualDest, overwrite = true)
-                            tempFile.delete()
-                        }
-                    } catch (e: Exception) {
-                        tempFile.delete()
-                        throw e
-                    }
-                } else {
+                // FR-27: this is the only route, whatever the "Cache Copying" preference says.
+                //
+                // The direct-write alternative this used to fall back on was never merely a
+                // *faster* one — it was an unsafe one. `FileOutputStream(actualDest)` truncates the
+                // destination before the first byte, so a copy that fails part-way (source read
+                // error, destination full, cancellation) left the user's original file destroyed
+                // and replaced by a partial that still looks like a real file. That trade — a
+                // rewrite of an existing file either completes or leaves the original alone — is
+                // not something a preference should be able to opt out of, so the temp file is
+                // unconditional here. It costs one extra rename; it does mean an overwrite briefly
+                // needs room for both copies, which the pre-flight free-space check accounts for.
+                val tempFile = File(actualDest.parent, "${actualDest.name}.ufm_tmp")
+                try {
                     val copySucceeded = FileTransferGuard.guardedCopy(
                         sourceName = src.name,
                         sourceSize = sourceSize,
-                        verifyDestSize = { actualDest.length() },
+                        verifyDestSize = { tempFile.length() },
                         doCopy = {
                             openInStream().use { inp ->
-                                FileOutputStream(actualDest).use { out ->
+                                FileOutputStream(tempFile).use { out ->
                                     CopyHelper.copy(inp, out, sourceSize, onProgress)
                                 }
                             }
@@ -360,9 +470,43 @@ object TransferConflictHelper {
                     if (!copySucceeded) {
                         throw Exception("Copy failed after retries: destination is 0 bytes for ${src.name}")
                     }
-                    if (sourceSize > 0 && actualDest.length() != sourceSize) {
-                        throw Exception("Copy integrity check failed: expected $sourceSize bytes, got ${actualDest.length()}")
+                    if (sourceSize > 0 && tempFile.length() != sourceSize) {
+                        throw Exception("Copy integrity check failed: expected $sourceSize bytes, got ${tempFile.length()}")
                     }
+                    // FR-27: the rename IS the atomic replace, so the destination is never
+                    // deleted first. `rename(2)` swaps an existing destination in a single
+                    // metadata operation — there is no instant at which the destination does not
+                    // exist. Deleting first (what this used to do) opened exactly the window it
+                    // was meant to close: a rename or fallback-copy that then failed left the
+                    // user's file *gone*, with the temp deleted by the catch below.
+                    //
+                    // Verified on the target card (FAT32, via the `/storage/<volid>` FUSE mount)
+                    // before removing it: `mv temp dest` over an existing `dest` replaced it and
+                    // left no temp behind.
+                    if (!tempFile.renameTo(actualDest)) {
+                        // Deliberately no destructive fallback. A `copyTo(overwrite = true)` here
+                        // would truncate the destination and re-create the same hazard on the one
+                        // path where the rename has already proved the directory is not behaving
+                        // normally. Temp and destination are same-directory, so a rename failing
+                        // means the copy would fail too — better to leave the original in place
+                        // and say so than to destroy it trying.
+                        throw java.io.IOException(
+                            "Could not replace ${actualDest.name}: rename of the verified temporary " +
+                                "file failed (destination left unchanged)"
+                        )
+                    }
+                } catch (e: Exception) {
+                    // FR-24: file *and* destination. `guardedCopy` logs the file name for the
+                    // failures it detects, but not where the bytes were going, and the engine catches
+                    // further up only have the message — so this is the one place in the local copy
+                    // path that can name both ends of the transfer that just failed.
+                    android.util.Log.e(
+                        FileTransferGuard.TAG,
+                        "Copy failed: ${src.absolutePath} → ${actualDest.absolutePath}",
+                        e
+                    )
+                    discardPartial(tempFile)
+                    throw e
                 }
             }
         }
@@ -558,6 +702,10 @@ object TransferConflictHelper {
         srcFile: NetworkFile,
         dest: File,
         action: ConflictAction,
+        /**
+         * The operation's mount table (FR-04); see [copyLocalToLocalAtomic]. Null reads one here.
+         */
+        mounts: List<MountEntry>? = null,
         onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)? = null,
         onConnectionReady: ((AutoCloseable) -> Unit)? = null
     ): File {
@@ -587,38 +735,74 @@ object TransferConflictHelper {
             else -> dest
         }
 
+        // ── FR-04: the per-file gate, download path ───────────────────────────────
+        //
+        // Same placement rule as [copyLocalToLocalAtomic]: ahead of the Root and SAF branches
+        // below, which return unconditionally, so a gate any later would never run for them.
+        // The size is already in hand here — it comes from the network listing, so unlike the
+        // local path there is nothing to hoist.
+        if (action != ConflictAction.SKIP) {
+            val verdict = TransferPreflight.evaluate(
+                context = ctx,
+                fileName = srcFile.name,
+                fileSize = srcFile.size,
+                dest = actualDest,
+                mounts = mounts ?: FilesystemCapabilities.readMountTable()
+            )
+            if (verdict is PreflightVerdict.Block) {
+                // FR-24. Logged at the throw rather than from the exception's constructor, so that
+                // this type stays reachable from a JVM unit test — see the note on
+                // `PreflightBlockedException`. The exception's own message already names the file,
+                // its size, the limit and the filesystem, so nothing is re-derived here.
+                val block = PreflightBlockedException(verdict)
+                android.util.Log.w(FileTransferGuard.TAG, block.message, block)
+                throw block
+            }
+        }
+
         if (isDestRoot) {
-            val destExists = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(actualDest.absolutePath)
-            if (destExists && action == ConflictAction.OVERWRITE) {
-                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(actualDest.absolutePath)
-            }
+            // FR-27 (T033): sibling temp, verify, then `mv` into place — same shape as the
+            // local→local Root branch. The destination is never deleted first.
             za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.remount(actualDest.absolutePath, rw = true)
-            val outStream = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openOutputStream(actualDest.absolutePath)
-            val inStream = when (effectiveSrcShare.type) {
-                ShareType.SMB -> SmbShareClient.openInputStream(effectiveSrcShare, srcFile.path) { conn -> onConnectionReady?.invoke(conn) }
-                ShareType.FTP -> FtpShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                ShareType.TV  -> TvShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
-            }
-            val bytesCopied = withContext(Dispatchers.IO) {
-                inStream.use { inp ->
-                    outStream.use { out ->
-                        CopyHelper.copy(inp, out, srcFile.size, onProgress)
+            val tempPath = "${actualDest.absolutePath}.ufm_tmp"
+            try {
+                // Opened before the temp so a failed connection never leaves a stray temp behind.
+                val inStream = when (effectiveSrcShare.type) {
+                    ShareType.SMB -> SmbShareClient.openInputStream(effectiveSrcShare, srcFile.path) { conn -> onConnectionReady?.invoke(conn) }
+                    ShareType.FTP -> FtpShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                    ShareType.TV  -> TvShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                    ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                    ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                    ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                }
+                val outStream = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.openOutputStream(tempPath)
+                val bytesCopied = withContext(Dispatchers.IO) {
+                    inStream.use { inp ->
+                        outStream.use { out ->
+                            CopyHelper.copy(inp, out, srcFile.size, onProgress)
+                        }
                     }
                 }
-            }
-            if (srcFile.size > 0 && bytesCopied != srcFile.size) {
-                throw Exception("Download integrity check failed: expected ${srcFile.size} bytes, wrote $bytesCopied bytes to ${actualDest.name}")
-            }
-            if (srcFile.size > 0 && bytesCopied <= 0L) {
-                throw Exception("Download failed: 0 bytes written for ${srcFile.name}")
+                if (srcFile.size > 0 && bytesCopied != srcFile.size) {
+                    throw Exception("Download integrity check failed: expected ${srcFile.size} bytes, wrote $bytesCopied bytes to ${actualDest.name}")
+                }
+                if (srcFile.size > 0 && bytesCopied <= 0L) {
+                    throw Exception("Download failed: 0 bytes written for ${srcFile.name}")
+                }
+                if (!za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.move(tempPath, actualDest.absolutePath)) {
+                    throw java.io.IOException(
+                        "Could not replace ${actualDest.name}: moving the verified temporary file " +
+                            "into place failed (destination left unchanged)"
+                    )
+                }
+            } catch (e: Exception) {
+                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.delete(tempPath)
+                throw e
             }
             return actualDest
         }
@@ -627,58 +811,100 @@ object TransferConflictHelper {
             val destParent = actualDest.parent ?: ""
             val destName = actualDest.name
 
-            val destExists = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, actualDest.absolutePath)
-            if (destExists && action == ConflictAction.OVERWRITE) {
-                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(ctx, actualDest.absolutePath)
-            }
+            // FR-27 (T033): sibling temp, verify, then rename over the destination — same shape as
+            // the local→local SAF branch. SAF cannot replace atomically, so the destination is
+            // deleted only once the temp is complete, and the `destinationRemoved` flag below
+            // keeps the verified temp if the rename then fails.
+            val tempName = "$destName.ufm_tmp"
+            val tempPath = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destParent, tempName)
+            var destinationRemoved = false
+            try {
+                if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, tempPath)) {
+                    // Explicit MIME type — see the note on the local→local branch above: deriving it
+                    // from `.ufm_tmp` would leave the finished file typed as octet-stream.
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFile(
+                        ctx, destParent, tempName,
+                        mimeType = MimeTypeHelper.getOrFallback(destName.substringAfterLast('.', ""))
+                    ) ?: throw java.io.IOException("Cannot create SAF temporary file at $tempPath")
+                }
 
-            if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, actualDest.absolutePath)) {
-                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createFile(ctx, destParent, destName)
-            }
+                val inStream = when (effectiveSrcShare.type) {
+                    ShareType.SMB -> SmbShareClient.openInputStream(effectiveSrcShare, srcFile.path) { conn -> onConnectionReady?.invoke(conn) }
+                    ShareType.FTP -> FtpShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                    ShareType.TV  -> TvShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                    ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                    ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                    ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                    ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                }
+                val outStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(ctx, tempPath)
+                    ?: throw java.io.IOException("Cannot open SAF temporary output stream for $tempPath")
 
-            val outStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(ctx, actualDest.absolutePath)
-                ?: throw java.io.IOException("Cannot open SAF destination: ${actualDest.absolutePath}")
-
-            val inStream = when (effectiveSrcShare.type) {
-                ShareType.SMB -> SmbShareClient.openInputStream(effectiveSrcShare, srcFile.path) { conn -> onConnectionReady?.invoke(conn) }
-                ShareType.FTP -> FtpShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                ShareType.TV  -> TvShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
-            }
-            val bytesCopied = withContext(Dispatchers.IO) {
-                inStream.use { inp ->
-                    outStream.use { out ->
-                        CopyHelper.copy(inp, out, srcFile.size, onProgress)
+                val bytesCopied = withContext(Dispatchers.IO) {
+                    inStream.use { inp ->
+                        outStream.use { out ->
+                            CopyHelper.copy(inp, out, srcFile.size, onProgress)
+                        }
                     }
                 }
-            }
 
-            if (srcFile.size > 0 && bytesCopied != srcFile.size) {
-                throw Exception("Download integrity check failed: expected ${srcFile.size} bytes, wrote $bytesCopied bytes to ${actualDest.name}")
-            }
-            if (srcFile.size > 0 && bytesCopied <= 0L) {
-                throw Exception("Download failed: 0 bytes written for ${srcFile.name}")
+                if (srcFile.size > 0 && bytesCopied != srcFile.size) {
+                    throw Exception("Download integrity check failed: expected ${srcFile.size} bytes, wrote $bytesCopied bytes to ${actualDest.name}")
+                }
+                if (srcFile.size > 0 && bytesCopied <= 0L) {
+                    throw Exception("Download failed: 0 bytes written for ${srcFile.name}")
+                }
+
+                // The temp is complete and verified — only now is the original given up.
+                if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, actualDest.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(ctx, actualDest.absolutePath)
+                }
+                destinationRemoved = true
+
+                if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(ctx, tempPath, destName)) {
+                    throw java.io.IOException("SAF rename of the verified temporary file did not succeed")
+                }
+                if (!za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, actualDest.absolutePath)) {
+                    throw java.io.IOException("the SAF provider renamed the temporary file to a different name")
+                }
+            } catch (e: Exception) {
+                if (destinationRemoved) {
+                    // The destination is already gone and this temp is now the ONLY complete copy —
+                    // it is verified output, not a partial, so discarding it (FR-17) would destroy
+                    // the user's data to tidy up. Keep it and say where it is.
+                    throw java.io.IOException(
+                        "Could not replace ${actualDest.name}: ${e.message}. The complete copy was " +
+                            "kept as $tempName, in the same folder.", e
+                    )
+                }
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(ctx, tempPath)
+                throw e
             }
             return actualDest
         }
 
 
-        val useCacheCopy = za.kilowatch.ultimatefilemanager.settings.CacheCopyPreferenceManager.isEnabled(ctx)
-        val tempFile = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualDest.absolutePath)) {
+        // FR-27: a download never writes into the destination.
+        //
+        // `tempFile` used to be `actualDest` itself whenever the "Cache Copying" setting was off —
+        // which is its default — so a failed or cancelled download had already destroyed whatever
+        // was there, and the catch below could not clean up because it deliberately skipped the
+        // delete when `tempFile == actualDest`. Network sources fail mid-transfer routinely
+        // (timeout, dropped connection, cancellation), so the *default* path was the unsafe one.
+        val isShizukuDest =
+            za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualDest.absolutePath)
+        val tempFile = if (isShizukuDest) {
+            // Root/Shizuku destination: the app cannot write alongside `actualDest`, so the temp
+            // has to live where it *can* write and the shell moves it into place afterwards.
             val cacheDir = ctx.externalCacheDir ?: ctx.cacheDir
             File.createTempFile("ufm_dl_", ".tmp", cacheDir)
-        } else if (useCacheCopy) {
+        } else {
             val parentDir = actualDest.parentFile ?: (if (!actualDest.parent.isNullOrEmpty()) File(actualDest.parent!!) else ctx.cacheDir)
             File(parentDir, "${actualDest.name}.ufm_tmp")
-        } else {
-            actualDest
         }
         try {
             val downloadSucceeded = FileTransferGuard.guardedCopy(
@@ -750,20 +976,39 @@ object TransferConflictHelper {
             if (srcFile.size > 0 && tempFile.length() != srcFile.size) {
                 throw Exception("Download integrity check failed: expected ${srcFile.size} bytes, got ${tempFile.length()}")
             }
-            if (tempFile != actualDest) {
-                if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(actualDest.absolutePath)) {
-                    if (actualDest.exists()) za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(actualDest.absolutePath)
-                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.move(tempFile.absolutePath, actualDest.absolutePath)
-                } else {
-                    if (actualDest.exists()) actualDest.delete()
-                    if (!tempFile.renameTo(actualDest)) {
-                        tempFile.copyTo(actualDest, overwrite = true)
-                        tempFile.delete()
-                    }
+            // The verified download is now placed. Neither branch deletes the destination first:
+            // `mv` and `rename(2)` each replace it themselves, and the delete-first that used to
+            // precede them meant a failed move left the destination *gone* — for the Shizuku
+            // branch the result was discarded, so the user lost the file in silence.
+            if (isShizukuDest) {
+                if (!za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.move(tempFile.absolutePath, actualDest.absolutePath)) {
+                    // Residual: a cache-dir temp and a destination on another volume make `mv`
+                    // fall back to copy-then-unlink internally, so this one branch is not atomic —
+                    // it is nonetheless strictly better than deleting first, which guaranteed loss
+                    // on any failure. Device-verified in T031.
+                    throw java.io.IOException(
+                        "Could not place ${actualDest.name}: moving the verified download into " +
+                            "place failed (destination left unchanged)"
+                    )
                 }
+            } else if (!tempFile.renameTo(actualDest)) {
+                throw java.io.IOException(
+                    "Could not replace ${actualDest.name}: rename of the verified temporary file " +
+                        "failed (destination left unchanged)"
+                )
             }
         } catch (e: Exception) {
-            if (tempFile != actualDest) tempFile.delete()
+            // FR-24: the network→local counterpart of the log in `copyLocalToLocalAtomic`. Both
+            // ends are named here too — the remote source path is what identifies which of several
+            // similarly-named files on a share failed.
+            android.util.Log.e(
+                FileTransferGuard.TAG,
+                "Download failed: ${srcFile.path} (${effectiveSrcShare.name}) → ${actualDest.absolutePath}",
+                e
+            )
+            // `tempFile` is now always a real temp, so this always removes something — the old
+            // `tempFile != actualDest` guard made it a no-op on the default path.
+            discardPartial(tempFile)
             throw e
         }
         MediaScannerNotifier.scanFile(file = actualDest)
@@ -1215,6 +1460,20 @@ object TransferConflictHelper {
         }
     }
 
+    /**
+     * Local → local copy that bypasses the pre-flight gate and the conflict resolver.
+     *
+     * **No caller.** Verified by grep across `app/src/main` and `app/src/test`: the name appears
+     * only at this declaration. Every local→local copy in the app goes through
+     * [copyLocalToLocalAtomic], which is where FR-27's temp-verify-replace sequence lives — so
+     * this is not an alternative entry point that happens to be unused, it is the *old* one, and
+     * it writes straight to the destination. Two reasons to leave the marker rather than the
+     * function's absence: deleting it is a change to a file this feature only needed to amend,
+     * and a future caller reaching for the shorter name would silently reintroduce the overwrite
+     * hazard FR-27 exists to close. If you are here to call it: don't — call
+     * [copyLocalToLocalAtomic]. The reasoning is recorded in `.plans/tasks.md` under
+     * "Deferred / Not In Scope", which is gitignored, which is why it is repeated here.
+     */
     suspend fun copyLocalFileToLocal(
         src: File,
         dst: File,

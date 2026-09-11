@@ -62,20 +62,28 @@ class TransferService : Service() {
                 if (title != null) putExtra(EXTRA_TITLE, title)
                 if (text != null) putExtra(EXTRA_TEXT, text)
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start TransferService: ${e.message}")
             }
         }
 
         fun stop(context: Context) {
-            context.stopService(Intent(context, TransferService::class.java))
+            try {
+                context.stopService(Intent(context, TransferService::class.java))
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to stop TransferService: ${e.message}")
+            }
         }
 
         /**
          * Re-publish the live notification. No-op if the service is not currently up.
-         * Safe to call from any thread (the service posts to the main looper).
+         * Safe to call from any thread (dispatches to the main looper if needed).
          */
         fun update(context: Context, title: String, text: String, indeterminate: Boolean, percent: Int?) {
             activeInstance?.publish(title, text, indeterminate, percent)
@@ -97,26 +105,46 @@ class TransferService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         activeInstance = this
 
-        // Notification Cancel button → cancel the active transfer(s). The holder stops
-        // the service once no transfers remain, so nothing else to do here.
+        val title = intent?.getStringExtra(EXTRA_TITLE) ?: getString(R.string.ufm_file_transfer)
+        val text  = intent?.getStringExtra(EXTRA_TEXT)  ?: getString(R.string.transferring_files_1)
+
+        // Mandatory foreground transition: Whenever context.startForegroundService() is called,
+        // Android enforces that Service.startForeground() MUST be called immediately.
+        // Calling startForeground() synchronously right here satisfies the Android framework watchdog.
+        val notification = buildNotification(title, text, indeterminate = true, percent = null)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to enter foreground: ${e.message}")
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
+        // Notification Cancel button → cancel the active transfer(s).
         if (intent?.action == ACTION_CANCEL) {
             TransferManager.cancelAll()
             return START_NOT_STICKY
         }
 
-        // Guard: A genuine fresh start always arrives AFTER the holder has registered the active
-        // transfer. If onStartCommand is invoked with no active transfer (spurious intent, process
-        // restart, or stale intent), stop immediately and NEVER enter foreground or acquire locks.
-        // This guarantees TransferService never starts a dataSync foreground service from background.
+        // Guard: If onStartCommand runs with no active transfer or stream, stop cleanly.
+        // Because startForeground() has already been called above, calling stopForeground + stopSelf
+        // is guaranteed NOT to trigger ForegroundServiceDidNotStartInTimeException.
         if (!TransferManager.isActiveTransfers()) {
-            Log.w(TAG, "No active transfer on startCommand — stopping immediately to avoid invalid background FGS")
+            Log.w(TAG, "No active transfer or stream on startCommand — stopping cleanly")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+            } else {
+                @Suppress("DEPRECATION")
+                stopForeground(true)
+            }
             stopSelf()
             return START_NOT_STICKY
         }
 
-        val title = intent?.getStringExtra(EXTRA_TITLE) ?: getString(R.string.ufm_file_transfer)
-        val text  = intent?.getStringExtra(EXTRA_TEXT)  ?: getString(R.string.transferring_files_1)
-        publish(title, text, indeterminate = true, percent = null)
         acquireLocks()
 
         // START_NOT_STICKY: File transfers run in an application-scoped coroutine that dies with the process.
@@ -134,7 +162,24 @@ class TransferService : Service() {
     // ── Notification (build + foreground) ──────────────────────────────────────
 
     private fun publish(title: String, text: String, indeterminate: Boolean, percent: Int?) {
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        val notification = buildNotification(title, text, indeterminate, percent)
+        val action = Runnable {
+            try {
+                val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                nm.notify(NOTIFICATION_ID, notification)
+            } catch (_: Exception) {
+                // Service already stopping / app in background — ignore.
+            }
+        }
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            action.run()
+        } else {
+            mainHandler.post(action)
+        }
+    }
+
+    private fun buildNotification(title: String, text: String, indeterminate: Boolean, percent: Int?): android.app.Notification {
+        return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(text)
             .setSmallIcon(R.drawable.ic_network)
@@ -149,18 +194,6 @@ class TransferService : Service() {
             }
             .addAction(cancelAction())
             .build()
-
-        mainHandler.post {
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-                } else {
-                    startForeground(NOTIFICATION_ID, notification)
-                }
-            } catch (_: Exception) {
-                // Service already stopping / app in background — ignore.
-            }
-        }
     }
 
     private fun cancelAction(): NotificationCompat.Action {

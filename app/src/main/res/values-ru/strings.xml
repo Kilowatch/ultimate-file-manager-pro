@@ -1752,13 +1752,13 @@ Ultimate File Manager Pro
 Копирование с кэшированием
 </string>
     <string name="settings_cache_copy_subtitle_on">
-Включено — безопасное копирование, может быть медленнее
+Включено — загрузки сначала записываются под временным именем
 </string>
     <string name="settings_cache_copy_subtitle_off">
-Отключено — стандартное копирование (по умолчанию)
+Отключено — загрузки записываются напрямую (по умолчанию)
 </string>
     <string name="settings_cache_copy_note">
-Файлы записываются во временный кэш перед помещением в конечную папку. Это более безопасный метод копирования, но он может занимать дополнительное время.
+Применяется к загрузкам в удалённые общие ресурсы. Файл загружается под временным именем и переименовывается после завершения передачи, поэтому прерванная загрузка не может заменить оригинал. Игнорируется для S3, iDrive, WebDAV и NFS.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ UFM Slide Show
 </string>
     <string name="conflict_skipped_n">
 Пропущено %1$d файл(ов) — уже существует в назначении
+</string>
+    <string name="preflight_skipped_too_large">
+Файл слишком велик для файловой системы назначения
+</string>
+    <string name="preflight_excluded_title">
+Некоторые файлы не удалось скопировать
+</string>
+    <string name="preflight_blocked_title">
+Файл слишком велик для этого назначения
+</string>
+    <string name="preflight_space_title">
+Недостаточно свободного места
+</string>
+    <string name="preflight_space_warning">
+Не хватает %1$s свободного места на этом назначении
+</string>
+    <string name="preflight_subtitle_batch">
+%1$d из %2$d файлов превышают допустимый размер файловой системы назначения. Остальные будут переданы.
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d файлов превышают максимальный размер, допустимый в целевой файловой системе, поэтому ни один из них нельзя передать.
+</string>
+    <string name="preflight_reason_too_large">
+Слишком большой
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — файловая система назначения (%2$s) допускает не более %3$s на один файл
+</string>
+    <string name="preflight_transfer_remaining">
+Передать остальные
+</string>
+    <string name="preflight_proceed_anyway">
+Всё равно продолжить
+</string>
+    <string name="preflight_find_truncated">
+Найти повреждённые файлы
+</string>
+    <string name="preflight_truncated_title">
+%1$d файл(ов) обрываются ровно на пределе размера назначения
+</string>
+    <string name="preflight_truncated_subtitle">
+%1$s места, которое невозможно использовать — эти файлы неполные
+</string>
+    <string name="preflight_truncated_remove">
+Удалить %1$d файл(ов)
+</string>
+    <string name="preflight_truncated_keep">
+Оставить их
+</string>
+    <string name="preflight_reason_truncated">
+Неполные
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — ровно предел %2$s на один файл, значит передача, записавшая его, прервалась на этом месте
+</string>
+    <string name="preflight_skipped_summary">
+Пропущено файлов: %1$d: %2$s
+</string>
+    <string name="preflight_skipped_count">
+Пропущено файлов: %1$d
 </string>
     <string name="action_favorite">
 Избранное

@@ -23,10 +23,18 @@ import za.kilowatch.ultimatefilemanager.network.DropboxShareClient
 import za.kilowatch.ultimatefilemanager.network.S3ShareClient
 import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
 import za.kilowatch.ultimatefilemanager.network.NfsShareClient
+import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.util.DestinationCapabilities
+import za.kilowatch.ultimatefilemanager.util.ExclusionLog
 import za.kilowatch.ultimatefilemanager.util.FileTransferGuard
+import za.kilowatch.ultimatefilemanager.util.FilesystemCapabilities
+import za.kilowatch.ultimatefilemanager.util.PreflightBlockedException
+import za.kilowatch.ultimatefilemanager.util.PreflightVerdict
 import za.kilowatch.ultimatefilemanager.util.TransferConflictHelper
 import za.kilowatch.ultimatefilemanager.util.TransferManager
+import za.kilowatch.ultimatefilemanager.util.TransferPreflight
 import java.io.File
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -101,21 +109,219 @@ object LocalPasteEngine {
         fun isRoot(path: File): Boolean =
             path is RootFile || RootShellWrapper.isRootPath(path.absolutePath)
 
-        // ── Total file count ────────────────────────────────────────────────
+        /**
+         * Reports a file the destination cannot hold (FR-11, FR-15).
+         *
+         * A skip, never a failure: nothing was attempted and no byte was written, so counting it
+         * as a failure would both mis-report the outcome and teach the user to ignore a failure
+         * count that has refusals mixed into it.
+         */
+        fun notePreflightSkip() {
+            session.noteSkipped(appContext.getString(R.string.preflight_skipped_too_large))
+        }
+
+        // ── Pre-flight scan and total file count (FR-11, FR-12, FR-13) ──────
+        //
+        // One walk, not two. The count loop below already had to descend every local source, so
+        // evaluating each file as it is counted costs no extra traversal — which is what keeps
+        // this inside NFR-01. The mount table is read once here for the whole operation and
+        // reused by every file, never re-read per file.
+        val mounts = FilesystemCapabilities.readMountTable()
+        val exclusionLog = ExclusionLog()
+        // Keyed on the *source* path, not the destination. A KEEP_BOTH copy has its destination
+        // chosen later, at copy time, so a destination-keyed set would miss exactly the files
+        // whose name changed — and the miss would show up as progress reading "9 of 8".
+        val excludedSources = ConcurrentHashMap.newKeySet<String>()
+        // Total bytes that will actually be written, for the free-space check (FR-08). Excluded
+        // files are left out of it for the same reason they are left out of the count: they will
+        // not be written, so counting them would warn about space that is never needed.
+        var totalBytes = 0L
+
+        // Destination capabilities by probed path. The pre-scan asks the same question once per
+        // file, and on a root or Shizuku destination each answer costs a `stat -f` subprocess. The
+        // answer cannot change mid-operation for a given directory — it is a property of the mount
+        // the path resolves to — so it is asked once per directory instead. `TruncatedFileScanner`
+        // keeps the same cache for the same reason; this is the paste path catching up with it.
+        //
+        // Not a synchronized map, and deliberately so: the walk below is a single sequential
+        // recursion, so one directory is never probed from two places at once.
+        val capabilitiesByPath = ConcurrentHashMap<String, DestinationCapabilities>()
+
+        /** [FilesystemCapabilities.probe] once per directory, reused for every file inside it. */
+        suspend fun capabilitiesAt(path: File): DestinationCapabilities {
+            capabilitiesByPath[path.absolutePath]?.let { return it }
+            return FilesystemCapabilities.probe(appContext, path, mounts)
+                .also { capabilitiesByPath[path.absolutePath] = it }
+        }
+
+        /**
+         * Walks [source], counting the files that will actually transfer and recording the ones
+         * the destination provably cannot hold (FR-11).
+         *
+         * A refused file counts as zero: the count the progress text divides by is then truthful
+         * by construction, with no subtraction step to drift out of step with the transfer.
+         *
+         * Scanned against the **parent directory** rather than the not-yet-existing file, so the
+         * capability is read from a path that exists. This cannot disagree with the per-file gate
+         * about a *block*: the ceiling comes from the mount that the path resolves to, and a file
+         * and its parent always resolve to the same one.
+         */
+        suspend fun scanLocalItem(source: File, destBase: File): Int {
+            val isSrcSaf = isSaf(source)
+            val isSrcRoot = isRoot(source)
+
+            if (!source.isDirectory) {
+                val size = if (isSrcSaf) SafTreeManager.getFileSize(appContext, source.absolutePath)
+                           else if (isSrcRoot) RootShellWrapper.getFileSize(source.absolutePath)
+                           else source.length()
+                val verdict = TransferPreflight.evaluate(
+                    fileName = source.name,
+                    fileSize = size,
+                    capabilities = capabilitiesAt(destBase.parentFile ?: destBase)
+                )
+                if (verdict is PreflightVerdict.Block) {
+                    // FR-24: one line per file, because the pre-scan is the *only* record of a
+                    // refusal that never throws — nothing downstream will mention this file again,
+                    // since it leaves the walk and the progress arithmetic here. Guarded on the
+                    // return value so the log matches what the user is shown: `record` de-duplicates,
+                    // and a file reached twice is one row and one line.
+                    if (exclusionLog.record(destBase.absolutePath, verdict)) {
+                        android.util.Log.w(
+                            FileTransferGuard.TAG,
+                            "Pre-flight excluded: ${verdict.fileName} (${verdict.fileSize} bytes) → " +
+                                "${destBase.absolutePath} — exceeds the " +
+                                "${verdict.capabilities.maxFileSize} byte per-file limit of the " +
+                                "${verdict.capabilities.fsType} filesystem at " +
+                                "${verdict.capabilities.mountPath}"
+                        )
+                    }
+                    excludedSources.add(source.absolutePath)
+                    return 0
+                }
+                // FR-16: the whole tree is walked, so this sums the real bytes of the transfer and
+                // not just the sizes of the top-level entries the user selected.
+                if (size > 0L) totalBytes += size
+                return 1
+            }
+
+            val children = if (isSrcSaf) {
+                SafTreeManager.listFiles(appContext, source.absolutePath)
+            } else if (isSrcRoot) {
+                RootShellWrapper.listFiles(source.absolutePath)
+            } else {
+                source.listFiles()?.toList()
+            } ?: return 0
+
+            var count = 0
+            for (child in children) {
+                count += scanLocalItem(child, File(destBase, child.name))
+            }
+            return count
+        }
+
         var totalFiles = 0
         for (slot in ctx.slots) {
             for (item in slot.items) {
                 when (item) {
                     is FileClipboard.ClipItem.Local -> {
-                        if (item.file.isDirectory) totalFiles += TransferConflictHelper.countLocalFiles(item.file)
-                        else totalFiles++
+                        totalFiles += scanLocalItem(item.file, File(effectiveDestDir, item.file.name))
                     }
                     is FileClipboard.ClipItem.Remote -> {
+                        // Not scanned: descending a remote tree here would mean a network round
+                        // trip per directory before the transfer even starts. Remote sources are
+                        // still classified correctly — the copy gate refuses them and the catches
+                        // below record the skip (FR-15) — they just are not in the pre-transfer
+                        // list, which T017 addresses from the network side.
                         totalFiles++
                     }
                 }
             }
         }
+
+        // ── FR-08: total bytes against the destination's free space ──────────
+        //
+        // Operation-level, not per-file: FR-08 compares the sum of everything about to be written.
+        // The destination is probed once for the whole operation, off the mount table read above.
+        // Unknown free space yields Allow (FR-03), so a destination whose space cannot be read
+        // never produces a spurious warning.
+        val spaceVerdict = TransferPreflight.evaluateSpace(
+            totalBytes = totalBytes,
+            capabilities = capabilitiesAt(effectiveDestDir)
+        )
+        // Logged rather than only shown, because FR-09's warning is the one pre-flight outcome
+        // that is deliberately overridable — when a transfer then fails on space, this line is
+        // what distinguishes "warned and overridden" from "never warned".
+        if (spaceVerdict is PreflightVerdict.Warn) {
+            android.util.Log.w(
+                FileTransferGuard.TAG,
+                "Pre-flight: $totalBytes bytes to write, ${spaceVerdict.capabilities.freeBytes} " +
+                    "free at ${spaceVerdict.capabilities.mountPath} " +
+                    "(${spaceVerdict.capabilities.fsType}) — short by ${spaceVerdict.shortfallBytes}; " +
+                    "warning only, transfer not blocked"
+            )
+        }
+        // Not an `else if`: a transfer can be short on space *and* carrying exclusions, and the
+        // `else if` this replaces silently dropped the exclusion summary in exactly that case —
+        // the one case where logcat most needs to say both. The two verdicts are independent.
+        if (!exclusionLog.isEmpty) {
+            android.util.Log.i(
+                FileTransferGuard.TAG,
+                "Pre-flight: excluded ${exclusionLog.count} file(s) of ${exclusionLog.count + totalFiles}; " +
+                    "transferring $totalFiles ($totalBytes bytes)"
+            )
+        }
+
+        // ── FR-12: present the exclusions before any byte is written ──────────
+        //
+        // The one place this belongs: after the scan above, before the transfer below, which is
+        // what "once before the transfer starts" (FR-12) means.
+        //
+        // The transfer is NOT gated on the answer per file — those files are already out of the
+        // walk and out of `totalFiles`. The answer decides exactly two things: whether the
+        // operation proceeds at all when *everything* was excluded (FR-14, which the dialog
+        // expresses by having no confirm action), and whether the user accepts a shortfall on
+        // space (FR-10, which must be overridable).
+        //
+        // Not asked when there is nothing to say. A transfer with no exclusions and no space
+        // shortfall skips this entirely, so the ordinary case costs nothing (NFR-01) and the
+        // dialog only ever appears when it has something to tell the user.
+        val spaceWarning = spaceVerdict as? PreflightVerdict.Warn
+        if (!exclusionLog.isEmpty || spaceWarning != null) {
+            val proceed = session.showPreflightExclusions(
+                exclusions = exclusionLog.snapshot(),
+                // `totalFiles` is already the *reduced* count — the files that will actually be
+                // transferred — so zero here is FR-14: nothing left to confirm.
+                remainingFiles = totalFiles,
+                spaceWarning = spaceWarning,
+                // The Q5 cleanup scan searches where this transfer was going, which is the only
+                // place the limit can have left damage the user is being asked about.
+                scanRoot = effectiveDestDir
+            )
+            if (!proceed) {
+                // FR-14: with every file excluded the dialog has no confirm action, so this same
+                // unwind is reached by a user who declined nothing — there was no reduced transfer
+                // to refuse. Recording the skips first is what makes the summary truthful: without
+                // it `summaryFrom` reports 0/0/0, and 0/0/0 renders as a bare paste-error, telling
+                // the user the operation failed when in fact it was correctly refused and they were
+                // told why. `totalFiles == 0` is exactly the FR-14 state — `totalFiles` is already
+                // the reduced count, so nothing else can produce it, and a free-space warning needs
+                // bytes to exist at all.
+                if (totalFiles == 0) {
+                    repeat(exclusionLog.count) { notePreflightSkip() }
+                }
+                // FR-13: cancelling the reduced transfer cancels the operation. Thrown rather
+                // than returned because that is the idiom every other user-cancel in this engine
+                // uses (`askConflict`'s CANCEL below), and because the alternative — an early
+                // `return` — would skip the clipboard clear at the foot of this function, leaving
+                // the user's cut/copy still staged after they declined to act on it.
+                //
+                // Nothing is lost by unwinding here: this point is ahead of the transfer, so no
+                // byte has been written, no partial exists to clean up (FR-17), and
+                // `pendingIndices` is still empty, so there is no index work to flush.
+                throw CancellationException("Pre-flight exclusions declined by the user")
+            }
+        }
+
         val fileIndexCounter = AtomicInteger(0)
         val defaultConcurrency = za.kilowatch.ultimatefilemanager.settings.NetworkTransferPreferenceManager.getThreadCount(appContext)
         val semaphore = Semaphore(defaultConcurrency)
@@ -191,6 +397,10 @@ object LocalPasteEngine {
                                 File(effectiveDest, child.name)
                             }
                             processLocalItem(child, childDest, operation)
+                        } catch (e: PreflightBlockedException) {
+                            // FR-15: the gate refused it, so it is a skip — not the failure the
+                            // generic catch below would have recorded it as.
+                            notePreflightSkip()
                         } catch (e: CancellationException) {
                             throw e
                         } catch (e: Exception) {
@@ -219,6 +429,15 @@ object LocalPasteEngine {
                     FileTagsManager.onPathCopied(appContext, source.absolutePath, effectiveDest.absolutePath)
                 }
             } else {
+                // FR-11: the pre-flight scan already refused this file. Skipping it here rather
+                // than letting the copy gate refuse it is what keeps the progress index in step
+                // with `totalFiles`, which no longer includes it — the gate would still refuse it
+                // correctly, but only after the index below had already been advanced.
+                if (excludedSources.contains(source.absolutePath)) {
+                    notePreflightSkip()
+                    return
+                }
+
                 val currentIndex = fileIndexCounter.incrementAndGet()
                 val hasConflict = TransferConflictHelper.localFileExists(
                     destBase.parentFile ?: effectiveDestDir, destBase.name, appContext
@@ -369,6 +588,8 @@ object LocalPasteEngine {
                                         session.checkCancelled()
                                         try {
                                             processNetItem(child, childDest, share, operation)
+                                        } catch (e: PreflightBlockedException) {
+                                            notePreflightSkip()
                                         } catch (e: CancellationException) {
                                             throw e
                                         } catch (e: Exception) {
@@ -392,6 +613,8 @@ object LocalPasteEngine {
                                 File(effectiveDest, child.name)
                             }
                             processNetItem(child, childDest, share, operation)
+                        } catch (e: PreflightBlockedException) {
+                            notePreflightSkip()
                         } catch (e: CancellationException) {
                             throw e
                         } catch (e: Exception) {
@@ -498,6 +721,16 @@ object LocalPasteEngine {
                         is FileClipboard.ClipItem.Local -> {
                             try {
                                 processLocalItem(item.file, File(effectiveDestDir, item.file.name), item.operation)
+                            } catch (e: PreflightBlockedException) {
+                                // The top-level counterpart of the recursive-descent clause above.
+                                // A directory's children are caught as they descend, but a *file*
+                                // selected directly has no descent to pass through, so its refusal
+                                // arrives here — and without this clause the generic catch below
+                                // would record it as a failure (FR-15) carrying the exception's
+                                // English text (NFR-06). The pre-scan already excludes these, so
+                                // this is the gate's own refusal as a second line of defence, which
+                                // is exactly the case that must not be the one that misreports.
+                                notePreflightSkip()
                             } catch (e: CancellationException) {
                                 throw e
                             } catch (e: Exception) {
@@ -559,6 +792,8 @@ object LocalPasteEngine {
                                             session.checkCancelled()
                                             try {
                                                 processNetItem(item.file, File(currentDir, item.file.name), share, item.operation)
+                                            } catch (e: PreflightBlockedException) {
+                                                notePreflightSkip()
                                             } catch (e: CancellationException) {
                                                 throw e
                                             } catch (e: Exception) {
@@ -570,6 +805,8 @@ object LocalPasteEngine {
                                 } else {
                                     try {
                                         processNetItem(item.file, File(currentDir, item.file.name), share, item.operation)
+                                    } catch (e: PreflightBlockedException) {
+                                        notePreflightSkip()
                                     } catch (e: CancellationException) {
                                         throw e
                                     } catch (e: Exception) {

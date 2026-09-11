@@ -880,13 +880,7 @@ VPN actief
     <string name="vpn_warning_subtitle">
 Beheer op afstand niet beschikbaar
 </string>
-    <string name="vpn_warning_message">
-Remote Manager kan niet werken terwijl een VPN actief is. De VPN voorkomt detectie van het IP-adres van uw lokale netwerk.\n
-\n
-Als u een lokale DNS-blocker of ad-blocker (zoals AdGuard) gebruikt in plaats van een echte VPN, kunt u deze waarschuwing negeren en doorgaan.\n
-\n
-Anders koppelt u uw VPN los en probeert u het opnieuw.
-</string>
+    <string name="vpn_warning_message">Remote Manager kan niet werken terwijl een VPN actief is. De VPN voorkomt detectie van het IP-adres van uw lokale netwerk.\n\nAls u een lokale DNS-blocker of ad-blocker (zoals AdGuard) gebruikt in plaats van een echte VPN, kunt u deze waarschuwing negeren en doorgaan.\n\nAnders koppelt u uw VPN los en probeert u het opnieuw.</string>
     <string name="vpn_warning_close">
 Dichtbij
 </string>
@@ -1051,9 +1045,7 @@ Documenten
     <string name="analyzer_category_apks">
 APK\'s
 </string>
-    <string name="analyzer_category_other">
-Ander
-</string>
+    <string name="analyzer_category_other">Overig</string>
     <string name="analyzer_largest_files">
 Grootste bestanden
 </string>
@@ -1700,13 +1692,13 @@ Uitgeschakeld — geen gegevens verzameld; toestemming ingetrokken
 Cache kopiëren
 </string>
     <string name="settings_cache_copy_subtitle_on">
-Ingeschakeld: beveiligd kopiëren, kan langzamer zijn
+Ingeschakeld — uploads worden eerst onder een tijdelijke naam geschreven
 </string>
     <string name="settings_cache_copy_subtitle_off">
-Uitgeschakeld: standaardkopie (standaard)
+Uitgeschakeld — uploads worden direct geschreven (standaard)
 </string>
     <string name="settings_cache_copy_note">
-Bestanden worden naar een tijdelijke cache geschreven voordat ze op de bestemming worden geplaatst. Dit is een veiligere kopieermethode, maar kan extra tijd met zich meebrengen.
+Geldt voor uploads naar externe shares. Het bestand wordt onder een tijdelijke naam geüpload en hernoemd zodra de overdracht is voltooid, zodat een onderbroken upload het origineel niet kan vervangen. Genegeerd door S3, iDrive, WebDAV en NFS.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2058,6 +2050,66 @@ Duidelijk
 </string>
     <string name="conflict_skipped_n">
 %1$d bestand(en) overgeslagen: bestonden al op de bestemming
+</string>
+    <string name="preflight_skipped_too_large">
+Bestand is te groot voor het doelbestandssysteem
+</string>
+    <string name="preflight_excluded_title">
+Sommige bestanden kunnen niet worden gekopieerd
+</string>
+    <string name="preflight_blocked_title">
+Bestand is te groot voor deze bestemming
+</string>
+    <string name="preflight_space_title">
+Niet genoeg vrije ruimte
+</string>
+    <string name="preflight_space_warning">
+%1$s tekort aan vrije ruimte op deze bestemming
+</string>
+    <string name="preflight_subtitle_batch">
+%1$d van %2$d bestanden zijn groter dan het doelbestandssysteem toestaat. De rest wordt overgedragen.
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d bestanden zijn groter dan het doelbestandssysteem toestaat, dus geen ervan kan worden overgedragen.
+</string>
+    <string name="preflight_reason_too_large">
+Te groot
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — het doelbestandssysteem (%2$s) staat maximaal %3$s per bestand toe
+</string>
+    <string name="preflight_transfer_remaining">
+Draag de rest over
+</string>
+    <string name="preflight_proceed_anyway">
+Toch doorgaan
+</string>
+    <string name="preflight_find_truncated">
+Zoek beschadigde bestanden
+</string>
+    <string name="preflight_truncated_title">
+%1$d bestand(en) stoppen precies op de groottelimiet van de bestemming
+</string>
+    <string name="preflight_truncated_subtitle">
+%1$s aan ruimte die niet kan worden gebruikt — deze bestanden zijn onvolledig
+</string>
+    <string name="preflight_truncated_remove">
+Verwijder %1$d bestand(en)
+</string>
+    <string name="preflight_truncated_keep">
+Bewaar ze
+</string>
+    <string name="preflight_reason_truncated">
+Onvolledig
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — precies de limiet per bestand van %2$s, dus de overdracht die dit heeft geschreven is hier afgebroken
+</string>
+    <string name="preflight_skipped_summary">
+%1$d bestand(en) overgeslagen: %2$s
+</string>
+    <string name="preflight_skipped_count">
+%1$d bestand(en) overgeslagen
 </string>
     <string name="action_favorite">
 Favoriet
@@ -2541,9 +2593,7 @@ Volledige recursieve scan van alle bestanden en submappen
 </string>
 
     <!-- Network Shares -->
-    <string name="network_tile_title">
-Netwerkaandelen
-</string>
+    <string name="network_tile_title">Netwerk shares</string>
     <string name="network_tile_subtitle">
 SMB, FTP en meer
 </string>
@@ -3149,7 +3199,7 @@ Er zijn geen SMB-hosts gevonden op dit netwerk.
 Verbinding maken met host
 </string>
     <string name="smb_shares_title_generic">Beschikbare shares</string>
-    <string name="smb_shares_loading">Aandelen shares...</string>
+    <string name="smb_shares_loading">Shares laden...</string>
     <string name="smb_shares_none">
 Geen toegankelijke shares gevonden.
 </string>
@@ -4432,9 +4482,7 @@ SELECTEER DEZE MAP
     <string name="empty_folder">
 Lege map
 </string>
-    <string name="some_storages_are_not_indexed">
-Sommige opslagplaatsen zijn niet geïndexeerd. Zoeken kan traag zijn.
-</string>
+    <string name="some_storages_are_not_indexed">Sommige opslaglocaties zijn niet geïndexeerd. Zoeken kan traag zijn.</string>
     <string name="notice_some_storage_areas_are">
 Let op: Sommige opslagruimtes zijn niet geïndexeerd.
 </string>
@@ -5043,9 +5091,7 @@ Spoel 10 seconden terug
     <string name="play_pause">
 Afspelen / pauzeren
 </string>
-    <string name="forward_10_seconds">
-10 seconden vooruit
-</string>
+    <string name="forward_10_seconds">Spoel 10 seconden vooruit</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Audiotrack
@@ -6386,9 +6432,7 @@ Van %1$s → %2$s
     <string name="transfer_settings_biometric_subtitle">
 Verifieer om instellingen veilig over te dragen naar de tv
 </string>
-    <string name="transfer_settings_section_network">
-Netwerkaandelen
-</string>
+    <string name="transfer_settings_section_network">Netwerk Shares</string>
     <string name="transfer_settings_section_fileserver">
 Bestandsserver
 </string>
@@ -6621,9 +6665,7 @@ Screenshot mislukt: %1$s
     <string name="from_username">
 (van gebruikersnaam)
 </string>
-    <string name="could_not_list_shares_errormsg">
-Kan aandelen niet weergeven: %1$s
-</string>
+    <string name="could_not_list_shares_errormsg">Kan shares niet weergeven: %1$s</string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
 \"Ongeldig pad. Voer voor SMB een sharenaam in (bijvoorbeeld /ShareName of &#92;&#92;host&#92;&#92;Share&#92;&#92;Folder).\"
 </string>
@@ -7989,9 +8031,7 @@ Niet-ondersteunde archiefindeling: %1$s
     <string name="apng4android_comgithubpenfeizhou">
 APNG4Android (com.github.penfeizhou.android.animation)
 </string>
-    <string name="online_storages_title">
-Online-opslagplaatsen
-</string>
+    <string name="online_storages_title">Online-opslaglocaties</string>
     <string name="online_storages_subtitle">
 OneDrive, Google Drive en meer
 </string>
@@ -8088,33 +8128,11 @@ Google Drive — Onvoldoende rechten
     <string name="gdrive_401_error_title">
 Google Drive — Ongeldige inloggegevens
 </string>
-    <string name="gdrive_401_error_guide">
-UFM kan niet verifiëren met uw Google Drive-account. Het verbindingstoken is mogelijk verlopen of ongeldig.\n
-\n
-Dit probleem kunt u als volgt oplossen:\n
-\n
-1. Ga naar de online opslagplaatsen van UFM\n
-2. Zoek uw Google Drive-account in de lijst\n
-3. Tik erop en selecteer \'Verwijderen\' of \'Uitloggen\'\n
-4. Tik op \'Opslagruimte toevoegen\' en selecteer opnieuw Google Drive\n
-5. Voltooi het aanmeldingsproces en accepteer alle gevraagde machtigingen\n
-6. Uw Drive-bestanden zouden nu correct moeten worden geladen
-</string>
+    <string name="gdrive_401_error_guide">UFM kan niet verifiëren met uw Google Drive-account. Het verbindingstoken is mogelijk verlopen of ongeldig.\n\nDit probleem kunt u als volgt oplossen:\n\n1. Ga naar de online opslaglocaties van UFM\n\n2. Zoek uw Google Drive-account in de lijst\n\n3. Tik erop en selecteer \'Verwijderen\' of \'Uitloggen\'\n\n4. Tik op \'Opslagruimte toevoegen\' en selecteer opnieuw Google Drive\n\n5. Voltooi het aanmeldingsproces en accepteer alle gevraagde machtigingen\n\n6. Uw Drive-bestanden zouden nu correct moeten worden geladen</string>
     <string name="rclone_box_401_error_title">
 Box — Sessie verlopen
 </string>
-    <string name="rclone_box_401_error_guide">
-Uw Box.com-sessie is verlopen en kan niet automatisch worden verlengd.\n
-\n
-Dit probleem oplossen:\n
-\n
-1. Ga naar de online opslagplaatsen van UFM\n
-2. Zoek uw Box-account in de lijst\n
-3. Tik op \'Verwijderen\'\n
-4. Tik op \'Opslagruimte toevoegen\' → RClone → Box\n
-5. Voltooi het aanmeldingsproces\n
-6. Uw Box-bestanden zouden nu correct moeten worden geladen
-</string>
+    <string name="rclone_box_401_error_guide">Uw Box.com-sessie is verlopen en kan niet automatisch worden verlengd.\n\nDit probleem oplossen:\n\n1. Ga naar de online opslaglocatie van UFM\n\n2. Zoek uw Box-account in de lijst\n\n3. Tik op \'Verwijderen\'\n\n4. Tik op \'Opslaglocatie toevoegen\' → RClone → Box\n\n5. Voltooi het aanmeldingsproces\n\n6. Uw Box-bestanden zouden nu correct moeten worden geladen</string>
     <string name="onedrive_device_code_subtitle">
 Koppel uw tv met een ander apparaat
 </string>
@@ -11251,21 +11269,13 @@ Kies hoe ver u vooruit of achteruit wilt springen tijdens het zoeken tijdens het
     <string name="skip_length_option_20s">20s</string>
     <string name="skip_length_option_30s">30s</string>
     <string name="skip_length_option_disable">Uitschakelen</string>
-    <string name="skip_length_desc_3s">
-3 seconden overslaan
-</string>
-    <string name="skip_length_desc_5s">
-Spring met 5 seconden over
-</string>
+    <string name="skip_length_desc_3s">Overslaan met 3 seconden</string>
+    <string name="skip_length_desc_5s">Overslaan met 5 seconden</string>
     <string name="skip_length_desc_10s">
 Overslaan met 10 seconden (standaard)
 </string>
-    <string name="skip_length_desc_20s">
-Spring met 20 seconden over
-</string>
-    <string name="skip_length_desc_30s">
-Skip met 30 seconden
-</string>
+    <string name="skip_length_desc_20s">Overslaan met 20 seconden</string>
+    <string name="skip_length_desc_30s">Overslaan met 30 seconden</string>
     <string name="skip_length_desc_disable">
 Verberg knoppen voor vooruit en achteruit overslaan
 </string>
@@ -13830,11 +13840,7 @@ Selecteer Vergrendelingsfrequentie
     <string name="security_warning_title">
 Belangrijke veiligheidsmededeling
 </string>
-    <string name="security_warning_message">
-Als u uw pincode of wachtwoord vergeet en uw herstelsleutel verliest, wordt u permanent uitgesloten van Ultimate File Manager Pro.\n
-\n
-Noch KiloWatch, noch iemand anders kan uw inloggegevens herstellen of uw bestanden ontgrendelen. Zorg ervoor dat u uw herstelsleutel op een veilige plaats bewaart.
-</string>
+    <string name="security_warning_message">Als u uw pincode of wachtwoord vergeet en uw herstelsleutel verliest, wordt u permanent uitgesloten van Ultimate File Manager Pro.\n\nNoch KiloWatch, noch iemand anders kan uw inloggegevens herstellen of uw bestanden ontgrendelen. Zorg ervoor dat u uw herstelsleutel op een veilige plaats bewaart.</string>
     <string name="security_warning_confirm">
 Ik begrijp het: herstelsleutel tonen
 </string>

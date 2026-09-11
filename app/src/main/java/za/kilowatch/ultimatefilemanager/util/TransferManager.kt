@@ -131,7 +131,7 @@ object TransferManager {
         }
     }
 
-    fun isActiveTransfers(): Boolean = activeSet.isNotEmpty()
+    fun isActiveTransfers(): Boolean = activeSet.isNotEmpty() || streamActive
 
     fun cancel(handle: TransferHandle) {
         activeSet.forEach { if (it.handle == handle.id) cancelActive(it) }
@@ -186,7 +186,7 @@ object TransferManager {
         }
     }
 
-    private fun summaryFrom(
+    internal fun summaryFrom(
         impl: SessionImpl,
         cancelled: Boolean = false,
         aborted: Boolean = false,
@@ -194,7 +194,9 @@ object TransferManager {
     ): TransferSummary = TransferSummary(
         successCount = impl.successCount,
         failCount = if (aborted) impl.failCount + 1 else impl.failCount,
-        message = message ?: impl.lastError,
+        skippedCount = impl.skippedCount,
+        // A real failure outranks an exclusion: the error is the more urgent thing to report.
+        message = message ?: impl.lastError ?: impl.skipReason,
         cancelled = cancelled,
         aborted = aborted,
         opLabel = impl.opLabel,
@@ -206,6 +208,19 @@ object TransferManager {
             activeSet.remove(active)
             stopServiceIfIdle()
         }
+        // FR-24: one line per completed transfer, deliberately *after* the per-item lines rather
+        // than instead of them. logcat's buffer is finite, so a batch that failed item-by-item can
+        // roll its own earlier detail out of the window — this line is the outcome of record
+        // whichever of the per-item lines survived, and it is the one line that answers "what
+        // happened to that transfer?" without reading the whole run.
+        android.util.Log.i(
+            FileTransferGuard.TAG,
+            "Transfer finished (${summary.opLabel}): ${summary.successCount} ok, " +
+                "${summary.failCount} failed, ${summary.skippedCount} skipped" +
+                (if (summary.cancelled) ", cancelled" else "") +
+                (if (summary.aborted) ", aborted" else "") +
+                (summary.message?.let { " — $it" } ?: "")
+        )
         // Release the singleton UI reference now the transfer is done — prevents retaining a
         // destroyed Activity indefinitely. A recreated Activity re-attaches via observeActive.
         val ui = interactiveUi
@@ -235,6 +250,8 @@ object TransferManager {
     data class TransferSummary(
         val successCount: Int = 0,
         val failCount: Int = 0,
+        /** Files the pre-flight check excluded (FR-15). Neither transferred nor failed. */
+        val skippedCount: Int = 0,
         val message: String? = null,
         val cancelled: Boolean = false,
         val aborted: Boolean = false,
@@ -256,11 +273,19 @@ object TransferManager {
         val cancelled: Boolean
         fun checkCancelled()
 
-        /** Records a completed/skipped item. */
+        /** Records a completed item. Excluded items are recorded with [noteSkipped], not here. */
         fun noteSuccess()
 
         /** Records a failed item (keeps the first non-blank error for the summary). */
         fun noteFailure(message: String?)
+
+        /**
+         * Records an item the pre-flight check excluded, so it is reported rather than silently
+         * dropped (FR-15). Keeps the first non-blank reason for the summary.
+         *
+         * An exclusion is neither a success nor a failure: the file was never attempted.
+         */
+        fun noteSkipped(reason: String?)
 
         /** Runs [block]; retries transient connection/session failures per policy. */
         suspend fun <T> withFileRetry(fileName: String, block: suspend () -> T): T
@@ -274,6 +299,24 @@ object TransferManager {
             applyToAllRef: BooleanArray
         ): TransferConflictHelper.ConflictAction
 
+        /**
+         * Shows what the pre-flight check excluded and returns whether to go ahead (FR-12, FR-13).
+         *
+         * Routed through the session for the same reason [resolveConflict] is: the engines hold
+         * only an application context, and a dialog needs a live Activity. The session is the one
+         * place that knows whether there is a UI to ask at all.
+         *
+         * Returns **true** when there is no UI to ask — the exclusions have already been applied
+         * to the file list by the time this is called, so the only question left is whether to
+         * cancel, and a cancelled-looking default would abandon a transfer the user never refused.
+         */
+        suspend fun showPreflightExclusions(
+            exclusions: List<Exclusion>,
+            remainingFiles: Int,
+            spaceWarning: PreflightVerdict.Warn?,
+            scanRoot: java.io.File?
+        ): Boolean
+
         fun reportProgress(fileName: String, bytesCopied: Long, totalBytes: Long, fileIndex: Int, totalFiles: Int)
 
         /** Register the raw connection/streams currently in use so [cancelAll] can force them closed. */
@@ -285,7 +328,9 @@ object TransferManager {
 
     // ── Internal session implementation ────────────────────────────────────────
 
-    private class SessionImpl(val id: Long, val opLabel: String, val isExtract: Boolean) : TransferSession {
+    // `internal` rather than private so the unit tests can drive the counters directly; the
+    // engines only ever see this through the TransferSession interface.
+    internal class SessionImpl(val id: Long, val opLabel: String, val isExtract: Boolean) : TransferSession {
         @Volatile override var cancelled: Boolean = false
         private val _successCount = java.util.concurrent.atomic.AtomicInteger(0)
         val successCount: Int get() = _successCount.get()
@@ -293,7 +338,17 @@ object TransferManager {
         private val _failCount = java.util.concurrent.atomic.AtomicInteger(0)
         val failCount: Int get() = _failCount.get()
 
+        private val _skippedCount = java.util.concurrent.atomic.AtomicInteger(0)
+        val skippedCount: Int get() = _skippedCount.get()
+
         @Volatile var lastError: String? = null
+            private set
+
+        /**
+         * First non-blank reason an item was excluded, if any. Used for the summary message when
+         * nothing actually failed but files were left behind (FR-15).
+         */
+        @Volatile var skipReason: String? = null
             private set
 
         private val lock = Any()
@@ -314,10 +369,34 @@ object TransferManager {
         }
 
         override fun noteFailure(message: String?) {
-            _failCount.incrementAndGet()
+            val n = _failCount.incrementAndGet()
             synchronized(lock) {
                 if (lastError == null && !message.isNullOrBlank()) lastError = message
             }
+            // FR-24: every failure any route reports passes through here, so this is the one line
+            // that makes a failed transfer visible in logcat even when the failing code is one that
+            // logs nothing itself — a network upload, a SAF or Shizuku branch, a post-copy step.
+            // The caller's own messages are sometimes terse (`e.message` can be a bare errno
+            // string), so the running count is included: three failures carrying identical text
+            // read very differently from one.
+            android.util.Log.e(
+                FileTransferGuard.TAG,
+                "Transfer item failed (#$n): ${message ?: "no cause reported"}"
+            )
+        }
+
+        override fun noteSkipped(reason: String?) {
+            val n = _skippedCount.incrementAndGet()
+            synchronized(lock) {
+                if (skipReason == null && !reason.isNullOrBlank()) skipReason = reason
+            }
+            // Deliberately Log.i, not Log.e — a skip is not a failure, and the whole point of the
+            // separate channel is that it must not read like one (FR-15). The per-file detail is
+            // logged by whoever refused the file; this line is the running tally.
+            android.util.Log.i(
+                FileTransferGuard.TAG,
+                "Transfer item skipped (#$n): ${reason ?: "no reason reported"}"
+            )
         }
 
         fun requestCancel() {
@@ -442,6 +521,28 @@ object TransferManager {
             // No live UI (screen destroyed / app backgrounded) → safe default: keep both
             // by auto-unique-renaming the incoming file (decision #2).
             return TransferConflictHelper.ConflictAction.KEEP_BOTH
+        }
+
+        override suspend fun showPreflightExclusions(
+            exclusions: List<Exclusion>,
+            remainingFiles: Int,
+            spaceWarning: PreflightVerdict.Warn?,
+            scanRoot: java.io.File?
+        ): Boolean {
+            val ui = interactiveUi
+            val activity = ui?.activity
+            if (activity != null && !activity.isFinishing && !activity.isDestroyed) {
+                return TransferPreflight.showExclusions(
+                    activity, exclusions, remainingFiles, spaceWarning, scanRoot
+                )
+            }
+            // No live UI (screen destroyed / app backgrounded) → proceed. The files the
+            // destination refuses have already been excluded from the list by the caller, so
+            // nothing here can write a byte the destination cannot hold — the only outcome left
+            // to decide is whether to cancel, and there is nobody to ask. Defaulting to cancel
+            // would abandon a transfer the user never refused, which FR-10 forbids outright for
+            // the free-space case and which is no better for the exclusion case.
+            return true
         }
 
         override fun reportProgress(

@@ -1752,13 +1752,13 @@ HTTP、FTP、WebDAVファイルサーバーのコントロール
 キャッシュコピー
 </string>
     <string name="settings_cache_copy_subtitle_on">
-有効 — 安全なコピーですが、遅くなる場合があります
+有効 — アップロードはまず一時的な名前で書き込まれます
 </string>
     <string name="settings_cache_copy_subtitle_off">
-無効 — 標準コピー（デフォルト）
+無効 — アップロードは直接書き込まれます（デフォルト）
 </string>
     <string name="settings_cache_copy_note">
-ファイルは宛先に配置される前に一時キャッシュに書き込まれます。これはより安全なコピー方法ですが、追加の時間がかかる場合があります。
+リモート共有へのアップロードに適用されます。ファイルは一時的な名前でアップロードされ、転送が完了すると名前が変更されるため、中断されたアップロードが元のファイルを置き換えることはありません。S3、iDrive、WebDAV、NFS では無視されます。
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ UFMスライドショー
 </string>
     <string name="conflict_skipped_n">
 %1$d個のファイルをスキップしました — 宛先に既に存在していました
+</string>
+    <string name="preflight_skipped_too_large">
+ファイルが転送先のファイルシステムに対して大きすぎます
+</string>
+    <string name="preflight_excluded_title">
+一部のファイルをコピーできません
+</string>
+    <string name="preflight_blocked_title">
+ファイルがこの転送先に対して大きすぎます
+</string>
+    <string name="preflight_space_title">
+空き容量が不足しています
+</string>
+    <string name="preflight_space_warning">
+この転送先の空き容量が%1$s不足しています
+</string>
+    <string name="preflight_subtitle_batch">
+%2$d個のファイルのうち%1$d個が、転送先のファイルシステムで許可されているサイズを超えています。残りは転送されます。
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d 個のファイルは転送先のファイルシステムで許容されるサイズを超えているため、いずれも転送できません。
+</string>
+    <string name="preflight_reason_too_large">
+大きすぎます
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — 転送先のファイルシステム（%2$s）では1ファイルあたり最大%3$sです
+</string>
+    <string name="preflight_transfer_remaining">
+残りを転送
+</string>
+    <string name="preflight_proceed_anyway">
+そのまま続行
+</string>
+    <string name="preflight_find_truncated">
+破損したファイルを検索
+</string>
+    <string name="preflight_truncated_title">
+%1$d個のファイルが転送先のサイズ制限でちょうど止まっています
+</string>
+    <string name="preflight_truncated_subtitle">
+使用できない%1$sのスペース — これらのファイルは不完全です
+</string>
+    <string name="preflight_truncated_remove">
+%1$d個のファイルを削除
+</string>
+    <string name="preflight_truncated_keep">
+そのまま保持
+</string>
+    <string name="preflight_reason_truncated">
+不完全
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — %2$sの1ファイルあたりの上限にちょうど達しているため、これを書き込んだ転送はここで途切れました
+</string>
+    <string name="preflight_skipped_summary">
+%1$d個のファイルをスキップしました: %2$s
+</string>
+    <string name="preflight_skipped_count">
+%1$d個のファイルをスキップしました
 </string>
     <string name="action_favorite">
 お気に入り

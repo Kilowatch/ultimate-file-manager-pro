@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher
 import za.kilowatch.ultimatefilemanager.util.MediaScannerNotifier
@@ -398,6 +399,21 @@ object RootStagingManager {
             }
         }
         return syncedCount
+    }
+
+    /**
+     * Asynchronously scans all staged root files and syncs any that were modified back
+     * to their root destinations on an IO thread. Safe to call from UI lifecycle events (e.g. onResume).
+     */
+    fun syncAllPendingAsync(context: Context, onSynced: ((Int) -> Unit)? = null) {
+        scope.launch {
+            val count = syncAllPending(context)
+            if (count > 0 && onSynced != null) {
+                withContext(Dispatchers.Main) {
+                    onSynced(count)
+                }
+            }
+        }
     }
 
     /**

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    One file excluded from a transfer, with the reason (FR-12).
+
+    The row unit of dialog_preflight_excluded.xml. Modelled on
+    item_checksum_manifest_entry.xml, which is already exactly this shape: a glass
+    card, a middle-ellipsised filename taking the free width, and a pill on the
+    right.
+
+    The pill carries the *reason*, not a status word, because the reason is the
+    only thing that makes the row actionable — "Excluded" alone tells the user
+    nothing about whether to free space, pick another destination, or give up.
+
+    paired with item_preflight_excluded_tv.xml — both are required. There is no
+    resource-qualifier mechanism for TV here: the TV variant is a _tv-suffixed
+    file selected at runtime by DeviceUtils.isTvDevice().
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_glass"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:layout_marginBottom="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Non-decorative: it carries the "this could not be copied" meaning. -->
+        <ImageView
+            android:id="@+id/imgExcludedIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_warning"
+            app:tint="?attr/ufmProgressWarning"
+            android:importantForAccessibility="no" />
+
+        <!-- File name. ellipsize="middle" keeps the extension visible, which is how
+             the user tells a .mkv from a .srt at a glance. -->
+        <TextView
+            android:id="@+id/txtExcludedFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            tools:text="Behind Enemy Lines (2001).mkv" />
+
+        <!-- The reason pill. -->
+        <TextView
+            android:id="@+id/txtExcludedReason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_storage_badge"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:textColor="?attr/ufmProgressWarning"
+            android:textSize="10sp"
+            android:fontFamily="sans-serif-black"
+            android:singleLine="true"
+            tools:text="4 GiB limit" />
+    </LinearLayout>
+
+    <!-- Detail line: the size and the limit. gone by default — the dialog shows it
+         only when the reason needs the numbers to make sense. -->
+    <TextView
+        android:id="@+id/txtExcludedDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="11sp"
+        android:textColor="@color/mobile_text_secondary"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="4.3 GB — the destination filesystem (FAT32) allows at most 4.0 GB per file" />
+</LinearLayout>

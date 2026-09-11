@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Focus treatment for a scrollable region that the D-pad itself drives.
+
+    A TV list that overflows has to be reachable by a remote, and the only way a
+    NestedScrollView receives DPAD key events is for the view holding focus to be
+    the container the key listener is attached to. That container therefore has to
+    be focusable — and a focusable view with no focus state is a place the user can
+    land with no indication that they have landed there.
+
+    Modelled on selector_tv_policy_scroll, which is the same idea for the policy
+    screen, but generic: this one is not policy-specific and is reusable by any
+    scrollable glass region in a dialog.
+
+    Unfocused is fully transparent rather than a hairline border. The rows inside
+    are already glass cards with their own separation from the dialog behind them;
+    drawing a container around them when nothing is focused would put a box around
+    content that does not need one, and the border colour that looks right on the
+    light dialog is invisible on the dark one. Focus is the only state that needs
+    to be seen, so it is the only state drawn.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Focused: the shared blue-family glass surface (translucent accent fill,
+         2dp accent stroke, FR-06 leading-edge marker when Colorblind Mode is on). -->
+    <item android:state_focused="true" android:drawable="@drawable/bg_tv_glass_focused" />
+
+    <!-- Default: present but invisible — the region is still a focus target, it
+         just does not advertise itself until the D-pad arrives. -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</selector>

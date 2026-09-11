@@ -1739,13 +1739,13 @@ Inaktiverad — inga data insamlade; samtycke återkallat
 Cachekopiering
 </string>
     <string name="settings_cache_copy_subtitle_on">
-Aktiverad – säker kopia, kan vara långsammare
+Aktiverad — uppladdningar skrivs först under ett tillfälligt namn
 </string>
     <string name="settings_cache_copy_subtitle_off">
-Inaktiverad – standardkopia (standard)
+Inaktiverad — uppladdningar skrivs direkt (standard)
 </string>
     <string name="settings_cache_copy_note">
-Filer skrivs till en tillfällig cache innan de placeras på destinationen. Detta är en säkrare kopieringsmetod men kan lägga till ytterligare tid.
+Gäller uppladdningar till fjärranslutna delningar. Filen laddas upp under ett tillfälligt namn och döps om när överföringen har slutförts, så en avbruten uppladdning kan inte ersätta originalet. Ignoreras av S3, iDrive, WebDAV och NFS.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2103,6 +2103,66 @@ Rensa
 </string>
     <string name="conflict_skipped_n">
 Hoppade över %1$d fil(er) – fanns redan på destinationen
+</string>
+    <string name="preflight_skipped_too_large">
+Filen är för stor för målets filsystem
+</string>
+    <string name="preflight_excluded_title">
+Vissa filer kan inte kopieras
+</string>
+    <string name="preflight_blocked_title">
+Filen är för stor för den här destinationen
+</string>
+    <string name="preflight_space_title">
+Inte tillräckligt med ledigt utrymme
+</string>
+    <string name="preflight_space_warning">
+%1$s för lite ledigt utrymme på den här destinationen
+</string>
+    <string name="preflight_subtitle_batch">
+%1$d av %2$d filer är större än vad målets filsystem tillåter. Resten kommer att överföras.
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d filer är större än vad målfilssystemet tillåter, så ingen av dem kan överföras.
+</string>
+    <string name="preflight_reason_too_large">
+För stor
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — målets filsystem (%2$s) tillåter högst %3$s per fil
+</string>
+    <string name="preflight_transfer_remaining">
+Överför resten
+</string>
+    <string name="preflight_proceed_anyway">
+Fortsätt ändå
+</string>
+    <string name="preflight_find_truncated">
+Hitta skadade filer
+</string>
+    <string name="preflight_truncated_title">
+%1$d fil(er) slutar exakt vid målets storleksgräns
+</string>
+    <string name="preflight_truncated_subtitle">
+%1$s utrymme som inte kan användas — dessa filer är ofullständiga
+</string>
+    <string name="preflight_truncated_remove">
+Ta bort %1$d fil(er)
+</string>
+    <string name="preflight_truncated_keep">
+Behåll dem
+</string>
+    <string name="preflight_reason_truncated">
+Ofullständig
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — exakt gränsen per fil på %2$s, så överföringen som skrev den avbröts här
+</string>
+    <string name="preflight_skipped_summary">
+%1$d fil(er) hoppades över: %2$s
+</string>
+    <string name="preflight_skipped_count">
+%1$d fil(er) hoppades över
 </string>
     <string name="action_favorite">
 Favorit

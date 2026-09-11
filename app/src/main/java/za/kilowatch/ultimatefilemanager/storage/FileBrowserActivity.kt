@@ -70,6 +70,7 @@ import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
 import za.kilowatch.ultimatefilemanager.util.FolderScrollState
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.util.KeyboardShortcutHandler
+import za.kilowatch.ultimatefilemanager.util.TransferSummaryText
 import za.kilowatch.ultimatefilemanager.ui.KeyboardShortcutDialog
 
 /**
@@ -633,8 +634,7 @@ class FileBrowserActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val syncedCount = za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPending(this)
-        if (syncedCount > 0) {
+        za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPendingAsync(this) { syncedCount ->
             showPremiumSnackbar(getString(R.string.root_file_saved_success, syncedCount))
         }
         applyLeftHandedFabSettings()
@@ -1477,15 +1477,29 @@ class FileBrowserActivity : AppCompatActivity() {
 
         val successCount = result.data?.getIntExtra("QT_SUCCESS_COUNT", -1) ?: -1
         val failCount = result.data?.getIntExtra("QT_FAIL_COUNT", -1) ?: -1
+        // 0, not -1, is the right default for the two newer extras: a result that predates them
+        // simply had nothing excluded, whereas the -1 guards above are sentinels meaning "this
+        // result carries no counts at all" and must not be blurred into a real zero.
+        val skippedCount = result.data?.getIntExtra("QT_SKIPPED_COUNT", 0) ?: 0
+        val message = result.data?.getStringExtra("QT_MESSAGE")
 
         // Destination: transfer was already executed inside the destination Activity.
         // Clipboard was cleared there too. Nothing more to do here.
         updatePasteFab()
         loadDirectory(currentDir)
-        
+
         if (successCount >= 0 && failCount >= 0) {
-            if (failCount == 0 && successCount > 0) showPremiumSnackbar(getString(R.string.paste_success, successCount))
-            else if (failCount > 0) showPremiumSnackbar(getString(R.string.paste_error))
+            showPremiumSnackbar(
+                TransferSummaryText.pasteResult(
+                    context = this,
+                    successCount = successCount,
+                    failCount = failCount,
+                    skippedCount = skippedCount,
+                    message = message,
+                    // Quick Transfer has no extract route — it is a paste to a picked folder.
+                    isExtract = false
+                )
+            )
         }
     }
 
@@ -4283,9 +4297,6 @@ class FileBrowserActivity : AppCompatActivity() {
         try {
             val uris = ArrayList<Uri>()
             for (file in files) {
-                if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(this, file.absolutePath)) {
-                    za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(this, file.absolutePath)
-                }
                 val uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
                 uris.add(uri)
             }
@@ -4803,6 +4814,13 @@ class FileBrowserActivity : AppCompatActivity() {
                         putExtra(RESULT_SELECTED_LOCAL_PATH, effectiveDestDir.absolutePath)
                         putExtra("QT_SUCCESS_COUNT", summary.successCount)
                         putExtra("QT_FAIL_COUNT", summary.failCount)
+                        // FR-15 — the caller has no TransferSummary of its own, so the two pieces
+                        // it needs to report exclusions have to travel with the result. Without
+                        // these the reason is dropped for every Quick Transfer, which is the
+                        // transfer route most likely to hit a FAT32 card (the destination is
+                        // picked by hand, and an SD card is a normal thing to pick).
+                        putExtra("QT_SKIPPED_COUNT", summary.skippedCount)
+                        putExtra("QT_MESSAGE", summary.message)
                     }
                     setResult(RESULT_OK, result)
                     finish()
@@ -4813,12 +4831,17 @@ class FileBrowserActivity : AppCompatActivity() {
                 loadDirectory(currentDir)
                 InstantSyncWatcher.notifyDirectoryChanged(this@FileBrowserActivity, currentDir.absolutePath)
 
-                if (summary.failCount == 0 && summary.successCount > 0) {
-                    if (summary.isExtract) showPremiumSnackbar(getString(R.string.extract_move_success, summary.successCount))
-                    else showPremiumSnackbar(getString(R.string.paste_success, summary.successCount))
-                } else if (summary.failCount > 0) {
-                    showPremiumSnackbar(getString(R.string.paste_error))
-                }
+                showPremiumSnackbar(
+                    TransferSummaryText.pasteResult(
+                        // `this` here is the anonymous TransferUi, not the Activity.
+                        context = this@FileBrowserActivity,
+                        successCount = summary.successCount,
+                        failCount = summary.failCount,
+                        skippedCount = summary.skippedCount,
+                        message = summary.message,
+                        isExtract = summary.isExtract
+                    )
+                )
             }
         }
 
@@ -5443,16 +5466,11 @@ class FileBrowserActivity : AppCompatActivity() {
             val extension = file.extension.lowercase()
             val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
 
-            val uri: Uri = safDocUri ?: run {
-                if (za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(this, file.absolutePath)) {
-                    za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(this, file.absolutePath)
-                }
-                FileProvider.getUriForFile(
-                    this,
-                    "${packageName}.fileprovider",
-                    file
-                )
-            }
+            val uri: Uri = safDocUri ?: FileProvider.getUriForFile(
+                this,
+                "${packageName}.fileprovider",
+                file
+            )
 
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, mimeType)

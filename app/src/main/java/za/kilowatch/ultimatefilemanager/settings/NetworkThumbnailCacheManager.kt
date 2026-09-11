@@ -246,7 +246,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                     // ── Stream / download path ─────────────────────────────────────────────
                     try {
                         val inputStream: InputStream = when (share.type) {
-                            ShareType.SMB          -> SmbShareClient.openInputStream(share, networkFile.path)
+                            ShareType.SMB          -> SmbShareClient.openInputStream(share, networkFile.path, dedicated = false)
                             ShareType.FTP          -> FtpShareClient.openInputStream(share, networkFile.path)
                             ShareType.TV           -> TvShareClient.openInputStream(share, networkFile.path)
                             ShareType.SFTP,

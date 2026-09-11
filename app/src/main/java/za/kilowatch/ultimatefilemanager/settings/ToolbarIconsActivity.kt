@@ -357,6 +357,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
         switchMaster.setOnCheckedChangeListener { _, isChecked ->
             pm.setQuickBarEnabled(this, isChecked)
             activeSlotsCard.visibility = if (isChecked) View.VISIBLE else View.GONE
+            refreshCategoryQuickBarChips()
         }
         masterRow.setOnClickListener { switchMaster.isChecked = !switchMaster.isChecked }
 
@@ -379,6 +380,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 val switchToggle = row.findViewById<SwitchMaterial>(R.id.switchToggle)
                 val btnQuickBarToggle = row.findViewById<View>(R.id.btnQuickBarToggle)
                 val txtQuickBarStatus = row.findViewById<TextView>(R.id.txtQuickBarStatus)
+                val imgQuickBarStatusIcon = row.findViewById<ImageView>(R.id.imgQuickBarStatusIcon)
 
                 imgIcon.setImageResource(item.iconResId)
                 if (item.customIconKey != null) {
@@ -418,16 +420,26 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 }
 
                 val updateChipStatus = {
-                    val activeItems = pm.getQuickBarItems(this)
-                    val idx = activeItems.indexOf(targetActionId)
-                    if (idx >= 0) {
-                        txtQuickBarStatus.text = getString(R.string.quick_bar_in_quick_bar, idx + 1)
-                        btnQuickBarToggle.background = getDrawable(R.drawable.bg_chip_selected)
-                        txtQuickBarStatus.setTextColor(getColor(R.color.black))
+                    val isQuickBarOn = pm.isQuickBarEnabled(this)
+                    if (!isQuickBarOn) {
+                        btnQuickBarToggle.visibility = View.GONE
                     } else {
-                        txtQuickBarStatus.setText(R.string.quick_bar_add_to_quick_bar)
-                        btnQuickBarToggle.background = getDrawable(R.drawable.bg_btn_icon_frosted)
-                        txtQuickBarStatus.setTextColor(getColor(R.color.mobile_text_secondary))
+                        btnQuickBarToggle.visibility = View.VISIBLE
+                        val activeItems = pm.getQuickBarItems(this)
+                        val idx = activeItems.indexOf(targetActionId)
+                        if (idx >= 0) {
+                            txtQuickBarStatus.text = getString(R.string.quick_bar_in_quick_bar, idx + 1)
+                            btnQuickBarToggle.background = getDrawable(R.drawable.bg_chip_selected)
+                            txtQuickBarStatus.setTextColor(getColor(R.color.black))
+                            imgQuickBarStatusIcon?.setImageResource(R.drawable.ic_check)
+                            imgQuickBarStatusIcon?.imageTintList = ColorStateList.valueOf(getColor(R.color.black))
+                        } else {
+                            txtQuickBarStatus.setText(R.string.quick_bar_add_to_quick_bar)
+                            btnQuickBarToggle.background = getDrawable(R.drawable.bg_btn_icon_frosted)
+                            txtQuickBarStatus.setTextColor(getColor(R.color.mobile_text_secondary))
+                            imgQuickBarStatusIcon?.setImageResource(R.drawable.ic_add)
+                            imgQuickBarStatusIcon?.imageTintList = ColorStateList.valueOf(ThemeColors.primary(this))
+                        }
                     }
                 }
                 updateChipStatus()

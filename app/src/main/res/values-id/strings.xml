@@ -1752,13 +1752,13 @@ Nonaktif — tidak ada data yang dikumpulkan; persetujuan dicabut
 Penyalinan Cache
 </string>
     <string name="settings_cache_copy_subtitle_on">
-Diaktifkan — salinan aman, mungkin lebih lambat
+Diaktifkan — unggahan ditulis dengan nama sementara terlebih dahulu
 </string>
     <string name="settings_cache_copy_subtitle_off">
-Dinonaktifkan — salinan standar (default)
+Dinonaktifkan — unggahan ditulis langsung (default)
 </string>
     <string name="settings_cache_copy_note">
-File ditulis ke cache sementara sebelum ditempatkan di tujuan. Ini adalah metode penyalinan yang lebih aman tetapi dapat menambah waktu tambahan.
+Berlaku untuk unggahan ke berbagi jarak jauh. File diunggah dengan nama sementara dan diganti namanya setelah transfer selesai, sehingga unggahan yang terputus tidak dapat menggantikan file asli. Diabaikan oleh S3, iDrive, WebDAV dan NFS.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ Hapus
 </string>
     <string name="conflict_skipped_n">
 Melewatkan %1$d berkas — sudah ada di tujuan
+</string>
+    <string name="preflight_skipped_too_large">
+File terlalu besar untuk sistem file tujuan
+</string>
+    <string name="preflight_excluded_title">
+Beberapa file tidak dapat disalin
+</string>
+    <string name="preflight_blocked_title">
+File terlalu besar untuk tujuan ini
+</string>
+    <string name="preflight_space_title">
+Ruang kosong tidak cukup
+</string>
+    <string name="preflight_space_warning">
+Kurang %1$s dari ruang kosong di tujuan ini
+</string>
+    <string name="preflight_subtitle_batch">
+%1$d dari %2$d file lebih besar dari yang diizinkan sistem file tujuan. Sisanya akan ditransfer.
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d file lebih besar dari yang diizinkan sistem file tujuan, sehingga tidak ada yang dapat ditransfer.
+</string>
+    <string name="preflight_reason_too_large">
+Terlalu besar
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — sistem file tujuan (%2$s) mengizinkan paling banyak %3$s per file
+</string>
+    <string name="preflight_transfer_remaining">
+Transfer sisanya
+</string>
+    <string name="preflight_proceed_anyway">
+Tetap lanjutkan
+</string>
+    <string name="preflight_find_truncated">
+Cari file rusak
+</string>
+    <string name="preflight_truncated_title">
+%1$d file berhenti tepat pada batas ukuran tujuan
+</string>
+    <string name="preflight_truncated_subtitle">
+%1$s ruang yang tidak dapat digunakan — file-file ini tidak lengkap
+</string>
+    <string name="preflight_truncated_remove">
+Hapus %1$d file
+</string>
+    <string name="preflight_truncated_keep">
+Biarkan
+</string>
+    <string name="preflight_reason_truncated">
+Tidak lengkap
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — tepat pada batas per file dari %2$s, jadi transfer yang menulisnya terpotong di sini
+</string>
+    <string name="preflight_skipped_summary">
+%1$d file dilewati: %2$s
+</string>
+    <string name="preflight_skipped_count">
+%1$d file dilewati
 </string>
     <string name="action_favorite">
 Favorit

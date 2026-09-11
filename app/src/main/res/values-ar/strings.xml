@@ -1752,13 +1752,13 @@ Ultimate File Manager Pro
 النسخ المؤقت
 </string>
     <string name="settings_cache_copy_subtitle_on">
-مفعل — نسخ آمن، قد يكون أبطأ
+مفعّل — تُكتب عمليات الرفع باسم مؤقت أولًا
 </string>
     <string name="settings_cache_copy_subtitle_off">
-معطل — نسخ قياسي (افتراضي)
+معطّل — تتم عمليات الرفع مباشرةً (افتراضي)
 </string>
     <string name="settings_cache_copy_note">
-تتم كتابة الملفات إلى ذاكرة تخزين مؤقت قبل وضعها في الوجهة. هذه طريقة نسخ أكثر أمانًا ولكنها قد تستغرق وقتًا إضافيًا.
+ينطبق على عمليات الرفع إلى المشاركات البعيدة. يُرفع الملف باسم مؤقت ثم يُعاد تسميته بمجرد اكتمال النقل، لذا لا يمكن لعملية رفع متقطعة أن تستبدل الملف الأصلي. يتجاهله S3 وiDrive وWebDAV وNFS.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ APKs
 </string>
     <string name="conflict_skipped_n">
 تم تخطي %1$d ملف (ملفات) — موجودة بالفعل في الوجهة
+</string>
+    <string name="preflight_skipped_too_large">
+الملف كبير جدًا بالنسبة لنظام ملفات الوجهة
+</string>
+    <string name="preflight_excluded_title">
+لا يمكن نسخ بعض الملفات
+</string>
+    <string name="preflight_blocked_title">
+الملف كبير جدًا بالنسبة لهذه الوجهة
+</string>
+    <string name="preflight_space_title">
+لا توجد مساحة حرة كافية
+</string>
+    <string name="preflight_space_warning">
+ينقص %1$s من المساحة الحرة على هذه الوجهة
+</string>
+    <string name="preflight_subtitle_batch">
+%1$d من %2$d ملفًا أكبر من المسموح به في نظام ملفات الوجهة. سيتم نقل الباقي.
+</string>
+    <string name="preflight_subtitle_batch_all">
+هناك %1$d ملفات أكبر مما يسمح به نظام الملفات الوجهة، لذا لا يمكن نقل أي منها.
+</string>
+    <string name="preflight_reason_too_large">
+كبير جدًا
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — نظام ملفات الوجهة (%2$s) يسمح بحد أقصى %3$s لكل ملف
+</string>
+    <string name="preflight_transfer_remaining">
+نقل الباقي
+</string>
+    <string name="preflight_proceed_anyway">
+المتابعة على أي حال
+</string>
+    <string name="preflight_find_truncated">
+البحث عن الملفات التالفة
+</string>
+    <string name="preflight_truncated_title">
+%1$d ملف يتوقف تمامًا عند حد حجم الوجهة
+</string>
+    <string name="preflight_truncated_subtitle">
+%1$s من المساحة غير قابلة للاستخدام — هذه الملفات غير مكتملة
+</string>
+    <string name="preflight_truncated_remove">
+حذف %1$d ملف
+</string>
+    <string name="preflight_truncated_keep">
+الاحتفاظ بها
+</string>
+    <string name="preflight_reason_truncated">
+غير مكتمل
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — بالضبط حد الملف الواحد %2$s، لذا تم قطع النقل الذي كتبه هنا
+</string>
+    <string name="preflight_skipped_summary">
+تم تخطي %1$d ملف: %2$s
+</string>
+    <string name="preflight_skipped_count">
+تم تخطي %1$d ملف
 </string>
     <string name="action_favorite">
 مفضلة

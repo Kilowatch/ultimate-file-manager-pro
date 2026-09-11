@@ -56,14 +56,18 @@
                 android:text="@string/settings_toolbar_icons_title"
                 android:textColor="@color/mobile_text_primary"
                 android:textSize="18sp"
-                android:fontFamily="sans-serif-black" />
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="end" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/settings_toolbar_icons_subtitle"
                 android:textColor="@color/mobile_text_secondary"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:singleLine="true"
+                android:ellipsize="end" />
         </LinearLayout>
 
         <!-- Reset Defaults Action Button -->

@@ -59,14 +59,28 @@ object SmbShareClient {
         onConnectionReady: ((AutoCloseable) -> Unit)? = null
     ): InputStream {
         val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
-        val handleId = smbclient.Smbclient.smbOpenFile(
-            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
-            shareName, innerPath, "r", dedicated
-        )
+        val handleId = try {
+            smbclient.Smbclient.smbOpenFile(
+                share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+                shareName, innerPath, "r", dedicated
+            )
+        } catch (e: Exception) {
+            if (!dedicated) {
+                // If opening via pooled session fails, retry once with dedicated session
+                smbclient.Smbclient.smbOpenFile(
+                    share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+                    shareName, innerPath, "r", true
+                )
+            } else {
+                throw e
+            }
+        }
         val closeable = AutoCloseable {
             runCatching { smbclient.Smbclient.smbCloseFile(handleId) }
         }
         onConnectionReady?.invoke(closeable)
+
+        val fileSize = runCatching { smbclient.Smbclient.smbGetFileSize(handleId) }.getOrDefault(0L)
 
         return object : InputStream() {
             private var pos = 0L
@@ -81,17 +95,58 @@ object SmbShareClient {
             override fun read(b: ByteArray, off: Int, len: Int): Int {
                 if (closed) throw java.io.IOException("Stream closed")
                 if (len <= 0) return 0
-                val bytes = smbclient.Smbclient.smbReadAt(handleId, pos, len.toLong())
-                if (bytes.isEmpty()) return -1
-                System.arraycopy(bytes, 0, b, off, bytes.size)
-                pos += bytes.size
-                return bytes.size
+                if (off < 0 || len > b.size - off) throw IndexOutOfBoundsException("off=$off, len=$len, buffer=${b.size}")
+
+                if (fileSize > 0L && pos >= fileSize) {
+                    return -1
+                }
+
+                val toRead = if (fileSize > 0L) minOf(len.toLong(), fileSize - pos).toInt() else len
+                if (toRead <= 0) return -1
+
+                val bytes = try {
+                    smbclient.Smbclient.smbReadAt(handleId, pos, toRead.toLong())
+                } catch (e: Exception) {
+                    val msg = e.message.orEmpty()
+                    if (msg.contains("EOF", ignoreCase = true) ||
+                        msg.contains("STATUS_END_OF_FILE", ignoreCase = true) ||
+                        msg.contains("0xc0000011", ignoreCase = true) ||
+                        (fileSize > 0L && pos >= fileSize) ||
+                        pos > 0L) {
+                        return -1
+                    }
+                    throw java.io.IOException("SMB read failed at offset $pos: ${e.message}", e)
+                }
+
+                if (bytes == null || bytes.isEmpty()) {
+                    return -1
+                }
+
+                val bytesToCopy = minOf(bytes.size, len)
+                System.arraycopy(bytes, 0, b, off, bytesToCopy)
+                pos += bytesToCopy
+                return bytesToCopy
             }
 
             override fun skip(n: Long): Long {
+                if (closed) throw java.io.IOException("Stream closed")
                 if (n <= 0L) return 0L
-                pos += n
-                return n
+                val toSkip = if (fileSize > 0L) {
+                    minOf(n, maxOf(0L, fileSize - pos))
+                } else {
+                    n
+                }
+                pos += toSkip
+                return toSkip
+            }
+
+            override fun available(): Int {
+                if (closed) return 0
+                if (fileSize > 0L) {
+                    val remaining = fileSize - pos
+                    return remaining.coerceIn(0L, Int.MAX_VALUE.toLong()).toInt()
+                }
+                return 0
             }
 
             override fun close() {

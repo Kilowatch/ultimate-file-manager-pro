@@ -1752,13 +1752,13 @@ HTTP、FTP 和 WebDAV 文件服务器控件
 缓存复制
 </string>
     <string name="settings_cache_copy_subtitle_on">
-已启用 - 安全复制，可能会更慢
+已启用 — 上传会先以临时名称写入
 </string>
     <string name="settings_cache_copy_subtitle_off">
-禁用 — 标准副本（默认）
+已禁用 — 上传直接写入（默认）
 </string>
     <string name="settings_cache_copy_note">
-文件在放置到目的地之前会写入临时缓存。这是一种更安全的复制方法，但可能会增加额外的时间。
+适用于上传到远程共享。文件会先以临时名称上传，传输完成后再重命名，因此中断的上传不会覆盖原文件。S3、iDrive、WebDAV 和 NFS 会忽略此设置。
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ UFM幻灯片放映
 </string>
     <string name="conflict_skipped_n">
 已跳过 %1$d 文件 — 目的地已存在
+</string>
+    <string name="preflight_skipped_too_large">
+文件对于目标文件系统来说过大
+</string>
+    <string name="preflight_excluded_title">
+部分文件无法复制
+</string>
+    <string name="preflight_blocked_title">
+文件对于此目标位置来说过大
+</string>
+    <string name="preflight_space_title">
+可用空间不足
+</string>
+    <string name="preflight_space_warning">
+此目标的可用空间还差 %1$s
+</string>
+    <string name="preflight_subtitle_batch">
+%2$d 个文件中有 %1$d 个超出目标文件系统允许的大小，其余文件将继续传输。
+</string>
+    <string name="preflight_subtitle_batch_all">
+%1$d 个文件超出目标文件系统允许的大小，因此均无法传输。
+</string>
+    <string name="preflight_reason_too_large">
+过大
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — 目标文件系统（%2$s）每个文件最大允许 %3$s
+</string>
+    <string name="preflight_transfer_remaining">
+传输其余文件
+</string>
+    <string name="preflight_proceed_anyway">
+仍然继续
+</string>
+    <string name="preflight_find_truncated">
+查找损坏的文件
+</string>
+    <string name="preflight_truncated_title">
+%1$d 个文件恰好停在目标大小上限
+</string>
+    <string name="preflight_truncated_subtitle">
+%1$s 的空间无法使用 — 这些文件不完整
+</string>
+    <string name="preflight_truncated_remove">
+删除 %1$d 个文件
+</string>
+    <string name="preflight_truncated_keep">
+保留它们
+</string>
+    <string name="preflight_reason_truncated">
+不完整
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — 恰好等于 %2$s 的单文件上限，说明写入它的传输在此处被截断
+</string>
+    <string name="preflight_skipped_summary">
+已跳过 %1$d 个文件：%2$s
+</string>
+    <string name="preflight_skipped_count">
+已跳过 %1$d 个文件
 </string>
     <string name="action_favorite">
 最喜欢的

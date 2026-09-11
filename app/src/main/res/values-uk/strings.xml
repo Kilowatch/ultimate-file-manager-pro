@@ -1752,13 +1752,13 @@ Ultimate File Manager Pro
 Копіювання з кешуванням
 </string>
     <string name="settings_cache_copy_subtitle_on">
-Увімкнено — безпечне копіювання, може бути повільнішим
+Увімкнено — вивантаження спочатку записуються під тимчасовою назвою
 </string>
     <string name="settings_cache_copy_subtitle_off">
-Вимкнено — стандартне копіювання (за замовчуванням)
+Вимкнено — вивантаження записуються напряму (типово)
 </string>
     <string name="settings_cache_copy_note">
-Файли записуються в тимчасовий кеш перед розміщенням у цільовій папці. Це більш безпечний метод копіювання, але може зайняти додатковий час.
+Застосовується до вивантажень на віддалені спільні ресурси. Файл вивантажується під тимчасовою назвою та перейменовується після завершення передавання, тож перерване вивантаження не може замінити оригінал. Не застосовується до S3, iDrive, WebDAV і NFS.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2116,6 +2116,66 @@ UFM Slide Show
 </string>
     <string name="conflict_skipped_n">
 Пропущено %1$d файл(ів) — вже існують у призначенні
+</string>
+    <string name="preflight_skipped_too_large">
+Файл завеликий для файлової системи призначення
+</string>
+    <string name="preflight_excluded_title">
+Деякі файли неможливо скопіювати
+</string>
+    <string name="preflight_blocked_title">
+Файл завеликий для цього призначення
+</string>
+    <string name="preflight_space_title">
+Недостатньо вільного місця
+</string>
+    <string name="preflight_space_warning">
+Бракує %1$s вільного місця на цьому призначенні
+</string>
+    <string name="preflight_subtitle_batch">
+%1$d з %2$d файлів перевищують обмеження файлової системи призначення. Решту буде перенесено.
+</string>
+    <string name="preflight_subtitle_batch_all">
+Передати не вдасться жоден із %1$d файлів, оскільки вони перевищують обмеження файлової системи призначення.
+</string>
+    <string name="preflight_reason_too_large">
+Завеликий
+</string>
+    <string name="preflight_detail_file_size">
+%1$s — файлова система призначення (%2$s) дозволяє щонайбільше %3$s на файл
+</string>
+    <string name="preflight_transfer_remaining">
+Перенести решту
+</string>
+    <string name="preflight_proceed_anyway">
+Все одно продовжити
+</string>
+    <string name="preflight_find_truncated">
+Знайти пошкоджені файли
+</string>
+    <string name="preflight_truncated_title">
+%1$d файл(ів) зупиняються точно на обмеженні розміру призначення
+</string>
+    <string name="preflight_truncated_subtitle">
+%1$s місця, яке не можна використати — ці файли неповні
+</string>
+    <string name="preflight_truncated_remove">
+Видалити %1$d файл(ів)
+</string>
+    <string name="preflight_truncated_keep">
+Залишити їх
+</string>
+    <string name="preflight_reason_truncated">
+Неповний
+</string>
+    <string name="preflight_detail_truncated">
+%1$s — точно обмеження на файл %2$s, тому перенесення, яке його записало, було перервано тут
+</string>
+    <string name="preflight_skipped_summary">
+Пропущено %1$d файл(ів): %2$s
+</string>
+    <string name="preflight_skipped_count">
+Пропущено %1$d файл(ів)
 </string>
     <string name="action_favorite">
 Обране

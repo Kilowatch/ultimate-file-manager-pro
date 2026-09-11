@@ -806,13 +806,6 @@ object FileViewerRouter {
         val tag = "UFM.ExternalApp"
         val ext = extension.lowercase()
         android.util.Log.d(tag, "openWithExternalApp: ext=$ext preferred=$preferredPackage remember=$remember isNetwork=$isNetwork")
-
-        // -- Pre-stage root file if applicable --
-        val isRoot = za.kilowatch.ultimatefilemanager.storage.RootStagingManager.isRootFile(context, file.absolutePath)
-        if (isRoot) {
-            za.kilowatch.ultimatefilemanager.storage.RootStagingManager.stageFile(context, file.absolutePath)
-        }
-
         // -- Build URI --
         val mimeType: String
         val uri: Uri
