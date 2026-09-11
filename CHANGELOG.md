@@ -5,6 +5,11 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] — 2026-09-11
+
+### Fixed
+- Fixed a crash (`android.content.ActivityNotFoundException`) in `GoogleDriveAuthActivity` and `DropboxAuthActivity` when attempting to authenticate on devices without an active or installed web browser (e.g. Android 15/16 Private Spaces, debloated or restricted profiles). The OAuth flow now falls back to Device Code / Manual Code authorization flows and safely handles missing browser intents without crashing.
+
 ## [2.0.2] — 2026-09-11
 
 ### Added
@@ -16,9 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Mobile Auto-Update Dialog**:
   - Expanded release notes scrollable container to utilize available screen height.
   - Eliminated button text clipping across localized strings and long APK filenames.
-
-### Fixed
-- Fixed a crash (`android.content.ActivityNotFoundException`) in `GoogleDriveAuthActivity` and `DropboxAuthActivity` when attempting to authenticate on devices without an active or installed web browser (e.g. Android 15/16 Private Spaces, debloated or restricted profiles). The OAuth flow now falls back to Device Code / Manual Code authorization flows and safely handles missing browser intents without crashing.
 
 ## [2.0.1] — 2026-09-10
 
