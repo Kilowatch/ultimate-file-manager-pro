@@ -628,6 +628,11 @@ Anslutningen misslyckades\n
 \n
 Se till att din enhet är ansluten till nätverket eller att TV:n är påslagen och försök igen.
 </string>
+    <string name="network_server_connection_failed">
+Anslutningen misslyckades\n
+\n
+Det gick inte att ansluta till servern. Kontrollera att värden kan nås och att din enhet är ansluten till nätverket, försök sedan igen.
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1787,6 +1792,35 @@ Aktiverad – cachelagra innan öppning
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 Inaktiverad – direktström (standard)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+FTP &amp; SFTP flertrådning
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+Överföringstrådar
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d trådar — samtidiga anslutningar för snabbare överföringar
+</string>
+    <string name="settings_network_transfer_threads_single">
+1 tråd (enkeltrådad)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d trådar
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d trådar (Rekommenderad)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+FTP &amp; SFTP flertrådningsinställningar
+</string>
+    <string name="network_field_threads">
+Överföringstrådar
+</string>
+    <string name="network_threads_default">
+Standard (%1$d trådar)
 </string>
 
     <!-- Open Source Licenses -->

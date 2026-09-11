@@ -3,14 +3,9 @@ package za.kilowatch.ultimatefilemanager.network
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.util.Log
-import jcifs.CIFSContext
-import jcifs.config.PropertyConfiguration
-import jcifs.context.BaseContext
-import jcifs.smb.NtlmPasswordAuthenticator
-import jcifs.smb.SmbFile
+import org.json.JSONArray
 import java.net.InetSocketAddress
 import java.net.Socket
-import java.util.Properties
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -142,50 +137,25 @@ object SmbDiscovery {
                 "Share discovery cache miss: host=${cacheKey.host}, reason=${if (cached == null) "empty" else "expired"}"
             )
 
-        val props = Properties().apply {
-            setProperty("jcifs.smb.client.dfs.disabled", "true")
-            setProperty("jcifs.resolveOrder", "DNS")
-            setProperty("jcifs.smb.client.responseTimeout", "8000")
-            setProperty("jcifs.smb.client.soTimeout", "10000")
-            // jcifs-ng by default enforces IPC signing on the client side, which
-            // causes "IPC signing is enforced, but no signing is available" when
-            // connecting to open/guest shares on servers that advertise signing.
-            // Disabling client-side IPC signing enforcement fixes anonymous enumeration.
-            setProperty("jcifs.smb.client.ipcSigningEnforced", "false")
-            // Explicitly disable SMB1 fallback — only negotiate SMB2+.
-            // If this property is unrecognized (jcifs-ng < 2.1.x) it is silently ignored.
-            setProperty("jcifs.smb.client.minVersion", "SMB202")
-        }
-        val baseCtx: CIFSContext = BaseContext(PropertyConfiguration(props))
-        val auth = if (username.isBlank()) {
-            baseCtx.withGuestCrendentials()
-        } else {
-            val domainStr = domain.ifBlank { "WORKGROUP" }
-            baseCtx.withCredentials(NtlmPasswordAuthenticator(domainStr, username, password))
-        }
-
-        val url = "smb://$host/"
-        val smbFile = SmbFile(url, auth)
-        val shares = try {
-            smbFile.listFiles()
-            ?.mapNotNull { f ->
-                val n = f.name.trimEnd('/')
-                // Hide system / admin shares
-                if (n.endsWith("$") || n.equals("IPC\$", true) ||
-                    n.equals("print\$", true) || n.isBlank()
-                ) null
-                else n
+            val shares = try {
+                val json = smbclient.Smbclient.smbListShares(host, 445L, username, password, domain)
+                val jsonArray = JSONArray(json)
+                val result = mutableListOf<String>()
+                for (i in 0 until jsonArray.length()) {
+                    val n = jsonArray.getString(i).trim()
+                    if (n.isNotEmpty() && !n.endsWith("$") && !n.equals("IPC$", ignoreCase = true) && !n.equals("print$", ignoreCase = true)) {
+                        result.add(n)
+                    }
+                }
+                result.sorted()
+            } catch (e: Exception) {
+                Log.w(
+                    TAG,
+                    "Share discovery failed: host=${cacheKey.host}, durationMs=${System.currentTimeMillis() - startedAtMs}",
+                    e
+                )
+                throw e
             }
-            ?.sorted()
-                ?: emptyList()
-        } catch (e: Exception) {
-            Log.w(
-                TAG,
-                "Share discovery failed: host=${cacheKey.host}, durationMs=${System.currentTimeMillis() - startedAtMs}",
-                e
-            )
-            throw e
-        }
             val completedAtMs = System.currentTimeMillis()
             shareCache[cacheKey] = CachedShares(shares, completedAtMs)
             Log.d(

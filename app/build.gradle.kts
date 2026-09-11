@@ -371,11 +371,6 @@ dependencies {
     "googleImplementation"("com.android.billingclient:billing-ktx:8.3.0")
     // Amazon Appstore SDK 3.0.8 (Tip Jar — Amazon variants)
     "amazonImplementation"("com.amazon.device:amazon-appstore-sdk:3.0.8")
-    implementation("com.hierynomus:smbj:0.14.0")
-    // jcifs-ng 2.1.10 is the last release from the original AgNO3 maintainer.
-    // The actively maintained fork (kimmerin/jcifs-ng) has no published Maven artifacts yet.
-    // Re-evaluate if the fork publishes releases: https://github.com/kimmerin/jcifs-ng
-    implementation("eu.agno3.jcifs:jcifs-ng:2.1.10")
     implementation("commons-net:commons-net:3.11.1")
     implementation("org.apache.sshd:sshd-core:2.17.1")
     implementation("org.apache.sshd:sshd-sftp:2.17.1")
@@ -474,7 +469,7 @@ dependencies {
 
 
 
-    // RClone library for cloud storage support (Drime, Filen, MEGA)
+    // Native Go engine (RClone cloud storage + pure Go SMB2/3 client) via gomobile bind
     implementation(files("libs/rclone.aar"))
 
     testImplementation(libs.junit)

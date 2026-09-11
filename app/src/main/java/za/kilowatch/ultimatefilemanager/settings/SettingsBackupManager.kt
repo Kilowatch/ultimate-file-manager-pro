@@ -278,6 +278,7 @@ object SettingsBackupManager {
         add("recycle_bin_prefs",         context.getString(R.string.backup_pref_recycle_bin))
         add("apk_extract_prefs",         context.getString(R.string.backup_pref_apk_extract))
         add("cache_copy_prefs",          context.getString(R.string.backup_pref_cache_copy))
+        add("ufm_network_transfer_prefs",context.getString(R.string.backup_pref_network_transfer_threads))
         add("video_thumbnail_time_prefs",context.getString(R.string.backup_pref_video_thumb_time))
         add("autoplay_prefs",            context.getString(R.string.backup_pref_autoplay))
         add("ufm_player_prefs",          context.getString(R.string.backup_pref_ufm_player))
@@ -611,6 +612,7 @@ object SettingsBackupManager {
                 "recycle_bin_prefs"         to R.string.backup_pref_recycle_bin,
                 "tile_order_prefs"          to R.string.backup_pref_tile_order,
                 "cache_copy_prefs"          to R.string.backup_pref_cache_copy,
+                "ufm_network_transfer_prefs" to R.string.backup_pref_network_transfer_threads,
                 "autoplay_prefs"            to R.string.backup_pref_autoplay,
                 "ufm_player_prefs"          to R.string.backup_pref_ufm_player,
                 "breadcrumbs_prefs"         to R.string.backup_pref_breadcrumbs,

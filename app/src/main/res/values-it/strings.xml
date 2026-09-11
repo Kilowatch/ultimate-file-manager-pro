@@ -630,6 +630,11 @@ Connessione non riuscita\n
 \n
 Assicurati che il tuo dispositivo sia connesso alla rete o che la TV sia accesa e riprova.
 </string>
+    <string name="network_server_connection_failed">
+Connessione non riuscita\n
+\n
+Impossibile connettersi al server. Verifica che l\\\'host sia raggiungibile e che il tuo dispositivo sia connesso alla rete, quindi riprova.
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1800,6 +1805,35 @@ Abilitato: memorizza nella cache prima dell\'apertura
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 Disabilitato: streaming diretto (impostazione predefinita)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+Multithreading FTP e SFTP
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+Thread di trasferimento
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d thread — connessioni simultanee per trasferimenti più veloci
+</string>
+    <string name="settings_network_transfer_threads_single">
+1 thread (a thread singolo)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d thread
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d thread (consigliato)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+Impostazioni multithreading FTP e SFTP
+</string>
+    <string name="network_field_threads">
+Thread di trasferimento
+</string>
+    <string name="network_threads_default">
+Predefinito (%1$d thread)
 </string>
 
     <!-- Open Source Licenses -->

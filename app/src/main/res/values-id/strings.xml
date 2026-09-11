@@ -630,6 +630,11 @@ Koneksi Gagal\n
 \n
 Pastikan perangkat Anda terhubung ke jaringan atau TV menyala, lalu coba lagi.
 </string>
+    <string name="network_server_connection_failed">
+Koneksi Gagal\n
+\n
+Tidak dapat terhubung ke server. Harap verifikasi bahwa host dapat dijangkau dan perangkat Anda terhubung ke jaringan, lalu coba lagi.
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1800,6 +1805,35 @@ Diaktifkan — cache sebelum membuka
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 Dinonaktifkan — streaming langsung (default)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+Multi-threading FTP &amp; SFTP
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+Thread Transfer
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d thread — koneksi simultan untuk transfer lebih cepat
+</string>
+    <string name="settings_network_transfer_threads_single">
+1 thread (Single-threaded)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d thread
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d thread (Disarankan)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+Pengaturan Multi-threading FTP &amp; SFTP
+</string>
+    <string name="network_field_threads">
+Thread transfer
+</string>
+    <string name="network_threads_default">
+Default (%1$d thread)
 </string>
 
     <!-- Open Source Licenses -->

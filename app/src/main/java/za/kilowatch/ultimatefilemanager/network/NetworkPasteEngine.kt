@@ -10,7 +10,15 @@ import za.kilowatch.ultimatefilemanager.util.FileTransferGuard
 import za.kilowatch.ultimatefilemanager.util.TransferConflictHelper
 import za.kilowatch.ultimatefilemanager.util.TransferManager
 import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 /**
  * Paste-into-a-network-share engine, relocated verbatim from
@@ -111,11 +119,12 @@ object NetworkPasteEngine {
             }
         }
 
+        val conflictMutex = Mutex()
         suspend fun askConflict(
             name: String,
             isFolder: Boolean,
             remoteSize: Long
-        ): TransferConflictHelper.ConflictAction {
+        ): TransferConflictHelper.ConflictAction = conflictMutex.withLock {
             val existing = globalAction
             if (existing != null) return existing
             val action = session.resolveConflict(name, isFolder, remoteSize, applyToAllRef)
@@ -143,7 +152,9 @@ object NetworkPasteEngine {
                 }
             }
 
-            var fileIndex = 0
+            val fileIndexCounter = AtomicInteger(0)
+            val concurrency = if (share.type == ShareType.FTP || share.type == ShareType.SFTP) share.effectiveThreads(appContext).coerceIn(1, 8) else 1
+            val semaphore = Semaphore(concurrency)
 
             suspend fun processNetItem(
                 srcShare: NetworkShare,
@@ -175,7 +186,7 @@ object NetworkPasteEngine {
                     }
 
                     if (srcShare.id == share.id && op == FileClipboard.Operation.MOVE && (!hasConflict || effectiveDest != targetPath)) {
-                        session.reportProgress(itemName, 0, 0, fileIndex, totalFiles)
+                        session.reportProgress(itemName, 0, 0, fileIndexCounter.get(), totalFiles)
                             when (share.type) {
                                 ShareType.SMB          -> SmbShareClient.rename(share, source.path, effectiveDest)
                                 ShareType.SFTP, ShareType.SCP -> SshShareClient.rename(share, source.path, effectiveDest)
@@ -240,15 +251,40 @@ object NetworkPasteEngine {
                         }
                     } catch (_: Exception) { emptyList<NetworkFile>() }
 
-                    for (child in children) {
-                        session.checkCancelled()
-                        try {
-                            processNetItem(srcShare, child, op, effectiveDest, effectiveDestChildren)
-                        } catch (e: CancellationException) {
-                            throw e
-                        } catch (e: Exception) {
+                    if (concurrency > 1) {
+                        coroutineScope {
+                            for (child in children) {
+                                session.checkCancelled()
+                                if (child.isDirectory) {
+                                    processNetItem(srcShare, child, op, effectiveDest, effectiveDestChildren)
+                                } else {
+                                    launch(Dispatchers.IO) {
+                                        semaphore.withPermit {
+                                            session.checkCancelled()
+                                            try {
+                                                processNetItem(srcShare, child, op, effectiveDest, effectiveDestChildren)
+                                            } catch (e: CancellationException) {
+                                                throw e
+                                            } catch (e: Exception) {
+                                                session.checkCancelled()
+                                                session.noteFailure(e.message)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        for (child in children) {
                             session.checkCancelled()
-                            session.noteFailure(e.message)
+                            try {
+                                processNetItem(srcShare, child, op, effectiveDest, effectiveDestChildren)
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                session.checkCancelled()
+                                session.noteFailure(e.message)
+                            }
                         }
                     }
 
@@ -273,7 +309,7 @@ object NetworkPasteEngine {
                         FileTagsManager.onPathCopied(appContext, source.path, effectiveDest)
                     }
                 } else {
-                    fileIndex++
+                    val currentIndex = fileIndexCounter.incrementAndGet()
                     val hasConflict = TransferConflictHelper.networkFileExists(itemName, destChildren)
                     val resolvedAction = if (hasConflict) {
                         val remoteSize = TransferConflictHelper.getRemoteFileSize(share, targetPath)
@@ -287,7 +323,7 @@ object NetworkPasteEngine {
                         TransferConflictHelper.uniqueNetworkPath(cleanDest, itemName, destChildren)
                     else targetPath
 
-                    session.reportProgress(itemName, 0, source.size, fileIndex, totalFiles)
+                    session.reportProgress(itemName, 0, source.size, currentIndex, totalFiles)
 
                     if (srcShare.id == share.id && op == FileClipboard.Operation.MOVE && (!hasConflict || finalPath != targetPath)) {
                             when (share.type) {
@@ -308,16 +344,23 @@ object NetworkPasteEngine {
                         return
                     }
 
-                    session.withFileRetry(itemName) {
-                        TransferConflictHelper.copyNetworkFileToNetwork(
-                            srcShare, source, share, finalPath,
-                            { _, c, t, _, _ -> session.reportProgress(itemName, c, t, fileIndex, totalFiles) },
-                            fileIndex, totalFiles,
-                            { conn -> session.registerConnection(conn) },
-                            appContext.cacheDir
-                        )
+                    var connToUnregister: AutoCloseable? = null
+                    try {
+                        session.withFileRetry(itemName) {
+                            TransferConflictHelper.copyNetworkFileToNetwork(
+                                srcShare, source, share, finalPath,
+                                { _, c, t, _, _ -> session.reportProgress(itemName, c, t, currentIndex, totalFiles) },
+                                currentIndex, totalFiles,
+                                { conn ->
+                                    connToUnregister = conn
+                                    session.registerConnection(conn)
+                                },
+                                appContext.cacheDir
+                            )
+                        }
+                    } finally {
+                        connToUnregister?.let { session.unregisterConnection(it) }
                     }
-                    session.registerConnection(null)
 
                     if (op == FileClipboard.Operation.MOVE) {
                         val remoteDestSize = TransferConflictHelper.getRemoteFileSize(share, finalPath)
@@ -413,15 +456,40 @@ object NetworkPasteEngine {
                         source.listFiles()?.toList()
                     }
                     if (children != null) {
-                        for (child in children) {
-                            session.checkCancelled()
-                            try {
-                                processLocalItem(child, op, effectiveDest, effectiveDestChildren)
-                            } catch (e: CancellationException) {
-                                throw e
-                            } catch (e: Exception) {
+                        if (concurrency > 1) {
+                            coroutineScope {
+                                for (child in children) {
+                                    session.checkCancelled()
+                                    if (child.isDirectory) {
+                                        processLocalItem(child, op, effectiveDest, effectiveDestChildren)
+                                    } else {
+                                        launch(Dispatchers.IO) {
+                                            semaphore.withPermit {
+                                                session.checkCancelled()
+                                                try {
+                                                    processLocalItem(child, op, effectiveDest, effectiveDestChildren)
+                                                } catch (e: CancellationException) {
+                                                    throw e
+                                                } catch (e: Exception) {
+                                                    session.checkCancelled()
+                                                    session.noteFailure(e.message)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            for (child in children) {
                                 session.checkCancelled()
-                                session.noteFailure(e.message)
+                                try {
+                                    processLocalItem(child, op, effectiveDest, effectiveDestChildren)
+                                } catch (e: CancellationException) {
+                                    throw e
+                                } catch (e: Exception) {
+                                    session.checkCancelled()
+                                    session.noteFailure(e.message)
+                                }
                             }
                         }
                     }
@@ -454,22 +522,29 @@ object NetworkPasteEngine {
                         TransferConflictHelper.uniqueNetworkPath(cleanDest, itemName, destChildren)
                     else targetPath
 
-                    fileIndex++
+                    val currentIndex = fileIndexCounter.incrementAndGet()
                     val sourceSize = if (isSrcSaf) {
                         SafTreeManager.getFileSize(appContext, source.absolutePath)
                     } else {
                         source.length()
                     }
                     try {
-                        session.reportProgress(itemName, 0, sourceSize, fileIndex, totalFiles)
-                        session.withFileRetry(itemName) {
-                            TransferConflictHelper.uploadLocalToNetworkAtomic(
-                                source, share, finalPath,
-                                { c, t -> session.reportProgress(itemName, c, t, fileIndex, totalFiles) },
-                                { conn -> session.registerConnection(conn) }
-                            )
+                        session.reportProgress(itemName, 0, sourceSize, currentIndex, totalFiles)
+                        var connToUnregister: AutoCloseable? = null
+                        try {
+                            session.withFileRetry(itemName) {
+                                TransferConflictHelper.uploadLocalToNetworkAtomic(
+                                    source, share, finalPath,
+                                    { c, t -> session.reportProgress(itemName, c, t, currentIndex, totalFiles) },
+                                    { conn ->
+                                        connToUnregister = conn
+                                        session.registerConnection(conn)
+                                    }
+                                )
+                            }
+                        } finally {
+                            connToUnregister?.let { session.unregisterConnection(it) }
                         }
-                        session.registerConnection(null)
                         if (op == FileClipboard.Operation.MOVE || op == FileClipboard.Operation.EXTRACT) {
                             val remoteSize = TransferConflictHelper.getRemoteFileSize(share, finalPath)
                             val isSafeToDelete = if (remoteSize <= 0L && sourceSize > 0L) {
@@ -507,38 +582,94 @@ object NetworkPasteEngine {
             }
 
             // Process target slots
-            for (slot in targetSlots) {
-                for (item in slot.items) {
-                    session.checkCancelled()
-                    when (item) {
-                        is FileClipboard.ClipItem.Local -> {
-                            try {
-                                processLocalItem(item.file, item.operation, currentPath, currentFiles)
-                            } catch (e: CancellationException) {
-                                throw e
-                            } catch (e: Exception) {
-                                session.checkCancelled()
-                                session.noteFailure(e.message)
+            if (concurrency > 1) {
+                coroutineScope {
+                    for (slot in targetSlots) {
+                        for (item in slot.items) {
+                            session.checkCancelled()
+                            when (item) {
+                                is FileClipboard.ClipItem.Local -> {
+                                    if (item.file.isDirectory) {
+                                        processLocalItem(item.file, item.operation, currentPath, currentFiles)
+                                    } else {
+                                        launch(Dispatchers.IO) {
+                                            semaphore.withPermit {
+                                                session.checkCancelled()
+                                                try {
+                                                    processLocalItem(item.file, item.operation, currentPath, currentFiles)
+                                                } catch (e: CancellationException) {
+                                                    throw e
+                                                } catch (e: Exception) {
+                                                    session.checkCancelled()
+                                                    session.noteFailure(e.message)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                is FileClipboard.ClipItem.Remote -> {
+                                    val srcShare = resolveShare(item.sourceShareId, item.sourceRemotePath)
+                                    if (srcShare != null) {
+                                        if (item.file.isDirectory) {
+                                            processNetItem(srcShare, item.file, item.operation, currentPath, currentFiles)
+                                        } else {
+                                            launch(Dispatchers.IO) {
+                                                semaphore.withPermit {
+                                                    session.checkCancelled()
+                                                    try {
+                                                        processNetItem(srcShare, item.file, item.operation, currentPath, currentFiles)
+                                                    } catch (e: CancellationException) {
+                                                        throw e
+                                                    } catch (e: Exception) {
+                                                        session.checkCancelled()
+                                                        session.noteFailure(e.message)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        session.noteFailure(null)
+                                    }
+                                }
                             }
                         }
-                        is FileClipboard.ClipItem.Remote -> {
-                            val srcShare = resolveShare(item.sourceShareId, item.sourceRemotePath)
-                            if (srcShare != null) {
+                        FileClipboard.removeSlot(slot.id)
+                    }
+                }
+            } else {
+                for (slot in targetSlots) {
+                    for (item in slot.items) {
+                        session.checkCancelled()
+                        when (item) {
+                            is FileClipboard.ClipItem.Local -> {
                                 try {
-                                    processNetItem(srcShare, item.file, item.operation, currentPath, currentFiles)
+                                    processLocalItem(item.file, item.operation, currentPath, currentFiles)
                                 } catch (e: CancellationException) {
                                     throw e
                                 } catch (e: Exception) {
                                     session.checkCancelled()
                                     session.noteFailure(e.message)
                                 }
-                            } else {
-                                session.noteFailure(null)
+                            }
+                            is FileClipboard.ClipItem.Remote -> {
+                                val srcShare = resolveShare(item.sourceShareId, item.sourceRemotePath)
+                                if (srcShare != null) {
+                                    try {
+                                        processNetItem(srcShare, item.file, item.operation, currentPath, currentFiles)
+                                    } catch (e: CancellationException) {
+                                        throw e
+                                    } catch (e: Exception) {
+                                        session.checkCancelled()
+                                        session.noteFailure(e.message)
+                                    }
+                                } else {
+                                    session.noteFailure(null)
+                                }
                             }
                         }
                     }
+                    FileClipboard.removeSlot(slot.id)
                 }
-                FileClipboard.removeSlot(slot.id)
             }
 
             if (ctx.targetSlotId == null) {

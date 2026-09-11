@@ -116,7 +116,8 @@ class NetworkShareRepository private constructor(private val context: Context) {
                         hostKeyFingerprint = decryptOrPlain(o.optString("hostKeyFingerprint", ""), "hostKeyFingerprint").ifEmpty { null },
                         nfsVersion = o.optInt("nfsVersion", 0),
                         nfsAuthFlavor = o.optInt("nfsAuthFlavor", 1),
-                        exposeToSaf = o.optBoolean("exposeToSaf", true)
+                        exposeToSaf = o.optBoolean("exposeToSaf", true),
+                        parallelThreads = o.optInt("parallelThreads", 0)
                     )
                 )
             }
@@ -163,6 +164,7 @@ class NetworkShareRepository private constructor(private val context: Context) {
                 put("nfsVersion", s.nfsVersion)
                 put("nfsAuthFlavor", s.nfsAuthFlavor)
                 put("exposeToSaf", s.exposeToSaf)
+                put("parallelThreads", s.parallelThreads)
             })
         }
         file.writeText(arr.toString(2))

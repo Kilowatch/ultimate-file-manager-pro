@@ -630,6 +630,11 @@ NAS المنزلي
 \n
 يرجى التأكد من أن جهازك متصل بالشبكة أو أن التلفاز قيد التشغيل ثم حاول مرة أخرى.
 </string>
+    <string name="network_server_connection_failed">
+فشل الاتصال\n
+\n
+تعذر الاتصال بالخادم. يرجى التحقق من إمكانية الوصول إلى المضيف ومن اتصال جهازك بالشبكة، ثم أعد المحاولة.
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1800,6 +1805,35 @@ Ultimate File Manager Pro
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 معطل — دفق مباشر (افتراضي)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+تعدد الخيوط لـ FTP و SFTP
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+خيوط النقل
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d خيوط — اتصالات متزامنة لعمليات نقل أسرع
+</string>
+    <string name="settings_network_transfer_threads_single">
+خيط واحد (أحادي الخيط)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d خيوط
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d خيوط (مُوصى بها)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+إعدادات تعدد الخيوط في FTP و SFTP
+</string>
+    <string name="network_field_threads">
+خيوط النقل
+</string>
+    <string name="network_threads_default">
+افتراضي (%1$d خيوط)
 </string>
 
     <!-- Open Source Licenses -->

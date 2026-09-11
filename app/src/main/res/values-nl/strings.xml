@@ -592,6 +592,11 @@ DCIM
 Thuis-NAS
 </string>
     <string name="network_connection_restored_first">Verbinding mislukt\n\nZorg ervoor dat uw apparaat is verbonden met het netwerk of dat de tv is ingeschakeld en probeer het opnieuw.</string>
+    <string name="network_server_connection_failed">
+Verbinding mislukt\n
+\n
+Kan geen verbinding maken met de server. Controleer of de host bereikbaar is en of uw apparaat met het netwerk is verbonden, en probeer het daarna opnieuw.
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1748,6 +1753,35 @@ Ingeschakeld: cache vóór openen
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 Uitgeschakeld: directe stream (standaard)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+FTP- en SFTP-multithreading
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+Overdrachts-threads
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d threads — gelijktijdige verbindingen voor snellere overdrachten
+</string>
+    <string name="settings_network_transfer_threads_single">
+1 thread (single-threaded)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d threads
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d threads (aanbevolen)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+Instellingen voor FTP- en SFTP-multithreading
+</string>
+    <string name="network_field_threads">
+Overdrachts-threads
+</string>
+    <string name="network_threads_default">
+Standaard (%1$d threads)
 </string>
 
     <!-- Open Source Licenses -->

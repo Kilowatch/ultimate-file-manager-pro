@@ -630,6 +630,11 @@ Bağlantı Başarısız\n
 \n
 Lütfen cihazınızın ağa bağlı olduğundan veya TV\'nin açık olduğundan emin olun ve tekrar deneyin.
 </string>
+    <string name="network_server_connection_failed">
+Bağlantı başarısız\n
+\n
+Sunucuya bağlanılamıyor. Lütfen ana makinenin erişilebilir olduğunu ve cihazınızın ağa bağlı olduğunu doğrulayın, ardından tekrar deneyin.
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1800,6 +1805,35 @@ Etkin — açmadan önce önbelleğe al
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 Devre dışı — doğrudan akış (varsayılan)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+FTP ve SFTP Çoklu İş Parçacığı
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+Aktarım İş Parçacıkları
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d iş parçacığı — daha hızlı aktarımlar için eşzamanlı bağlantılar
+</string>
+    <string name="settings_network_transfer_threads_single">
+1 iş parçacığı (Tek iş parçacıklı)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d iş parçacığı
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d iş parçacığı (Önerilen)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+FTP ve SFTP Çoklu İş Parçacığı Ayarları
+</string>
+    <string name="network_field_threads">
+Aktarım iş parçacıkları
+</string>
+    <string name="network_threads_default">
+Varsayılan (%1$d iş parçacığı)
 </string>
 
     <!-- Open Source Licenses -->

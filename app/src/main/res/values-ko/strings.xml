@@ -630,6 +630,11 @@ Home NAS
 \n
 장치가 네트워크에 연결되어 있거나 TV가 켜져 있는지 확인하고 다시 시도하세요.
 </string>
+    <string name="network_server_connection_failed">
+연결 실패\n
+\n
+서버에 연결할 수 없습니다. 호스트에 연결할 수 있는지와 기기가 네트워크에 연결되어 있는지 확인한 후 다시 시도해 주세요.
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1800,6 +1805,35 @@ HTTP, FTP, WebDAV 파일 서버 제어
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 비활성화됨 — 직접 스트리밍 (기본값)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+FTP &amp; SFTP 멀티스레딩
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+전송 스레드
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d개 스레드 — 더 빠른 전송을 위한 동시 연결
+</string>
+    <string name="settings_network_transfer_threads_single">
+1개 스레드 (단일 스레드)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d개 스레드
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d개 스레드 (권장)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+FTP &amp; SFTP 멀티스레딩 설정
+</string>
+    <string name="network_field_threads">
+전송 스레드
+</string>
+    <string name="network_threads_default">
+기본값 (%1$d개 스레드)
 </string>
 
     <!-- Open Source Licenses -->

@@ -95,6 +95,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var switchNetworkOpenCache: SwitchMaterial
     private lateinit var txtNetworkOpenCacheSubtitle: TextView
+    private lateinit var txtNetworkTransferThreadsSubtitle: TextView
 
     private lateinit var switchRecycleBin: SwitchMaterial
     private lateinit var txtRecycleBinSubtitle: TextView
@@ -408,6 +409,12 @@ class SettingsActivity : AppCompatActivity() {
 
         cardNetworkOpenCache.setOnClickListener { toggleNetworkOpenCache() }
         switchNetworkOpenCache.setOnCheckedChangeListener(null)
+
+        // Network Transfer Threads (FTP / SFTP)
+        val cardNetworkTransferThreads = findViewById<View>(R.id.cardNetworkTransferThreads)
+        txtNetworkTransferThreadsSubtitle = findViewById(R.id.txtNetworkTransferThreadsSubtitle)
+        updateNetworkTransferThreadsSubtitle(NetworkTransferPreferenceManager.getThreadCount(this))
+        cardNetworkTransferThreads.setOnClickListener { showNetworkTransferThreadsDialog() }
 
         // Background TV Server toggle (TV only)
         val cardTvBackgroundServer = findViewById<View>(R.id.cardTvBackgroundServer)
@@ -1664,6 +1671,39 @@ class SettingsActivity : AppCompatActivity() {
         } else {
             getString(R.string.settings_network_open_cache_subtitle_off)
         }
+    }
+
+    private fun updateNetworkTransferThreadsSubtitle(threads: Int) {
+        txtNetworkTransferThreadsSubtitle.text = if (threads == 1) {
+            getString(R.string.settings_network_transfer_threads_single)
+        } else {
+            getString(R.string.settings_network_transfer_threads_subtitle, threads)
+        }
+    }
+
+    private fun showNetworkTransferThreadsDialog() {
+        val currentThreads = NetworkTransferPreferenceManager.getThreadCount(this)
+        val options = NetworkTransferPreferenceManager.AVAILABLE_THREAD_OPTIONS
+        val labels = options.map { threads ->
+            when (threads) {
+                1 -> getString(R.string.settings_network_transfer_threads_single)
+                4 -> getString(R.string.settings_network_transfer_threads_recommended, threads)
+                else -> getString(R.string.settings_network_transfer_threads_option, threads)
+            }
+        }.toTypedArray()
+
+        val selectedIndex = options.indexOf(currentThreads).coerceAtLeast(0)
+
+        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.settings_network_transfer_threads_dialog_title)
+            .setSingleChoiceItems(labels, selectedIndex) { dialog, which ->
+                val selectedThreads = options[which]
+                NetworkTransferPreferenceManager.setThreadCount(this, selectedThreads)
+                updateNetworkTransferThreadsSubtitle(selectedThreads)
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     private fun toggleTvBackgroundServer() {

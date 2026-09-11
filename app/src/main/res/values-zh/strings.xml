@@ -630,6 +630,11 @@ DCIM
 \n
 请确保您的设备已连接到网络或电视已打开，然后重试。
 </string>
+    <string name="network_server_connection_failed">
+连接失败\n
+\n
+无法连接到服务器。请确认主机可访问且您的设备已连接到网络，然后重试。
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1800,6 +1805,35 @@ HTTP、FTP 和 WebDAV 文件服务器控件
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 禁用 — 直接流（默认）
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+FTP 和 SFTP 多线程
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+传输线程
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d 个线程 — 同时连接以加快传输
+</string>
+    <string name="settings_network_transfer_threads_single">
+1 个线程（单线程）
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d 个线程
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d 个线程（推荐）
+</string>
+    <string name="backup_pref_network_transfer_threads">
+FTP 和 SFTP 多线程设置
+</string>
+    <string name="network_field_threads">
+传输线程
+</string>
+    <string name="network_threads_default">
+默认（%1$d 个线程）
 </string>
 
     <!-- Open Source Licenses -->

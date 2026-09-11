@@ -448,14 +448,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
         fun getOrOpenHandle(): za.kilowatch.ultimatefilemanager.network.IRandomAccessFile {
             if (handle == null) {
                 handle = when (share.type) {
-                    ShareType.SMB -> {
-                        try {
-                            za.kilowatch.ultimatefilemanager.network.SmbShareClient.openRandomAccessFile(share, path, isWrite)
-                        } catch (e: Exception) {
-                            za.kilowatch.ultimatefilemanager.util.GoRoLog.w("SmbShareClient openRandomAccessFile failed, falling back to JCIFS: ${e.message}")
-                            za.kilowatch.ultimatefilemanager.network.JcifsFallbackClient.openRandomAccessFile(share, path, isWrite)
-                        }
-                    }
+                    ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.openRandomAccessFile(share, path, isWrite)
                     ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.openRandomAccessFile(share, path)
                     ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openRandomAccessFile(share, path)
                     ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openRandomAccessFile(share, path)

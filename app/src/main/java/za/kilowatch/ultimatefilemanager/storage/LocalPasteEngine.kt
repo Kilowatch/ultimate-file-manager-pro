@@ -27,7 +27,15 @@ import za.kilowatch.ultimatefilemanager.util.FileTransferGuard
 import za.kilowatch.ultimatefilemanager.util.TransferConflictHelper
 import za.kilowatch.ultimatefilemanager.util.TransferManager
 import java.io.File
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 /**
  * Paste-into-LOCAL-storage engine, relocated verbatim from `FileBrowserActivity.performPaste`
@@ -73,11 +81,12 @@ object LocalPasteEngine {
         val applyToAllRef = booleanArrayOf(false)
         var globalAction: TransferConflictHelper.ConflictAction? = null
 
+        val conflictMutex = Mutex()
         suspend fun askConflict(
             name: String,
             isFolder: Boolean,
             destSize: Long
-        ): TransferConflictHelper.ConflictAction {
+        ): TransferConflictHelper.ConflictAction = conflictMutex.withLock {
             val existing = globalAction
             if (existing != null) return existing
             val action = session.resolveConflict(name, isFolder, destSize, applyToAllRef)
@@ -107,7 +116,9 @@ object LocalPasteEngine {
                 }
             }
         }
-        var fileIndex = 0
+        val fileIndexCounter = AtomicInteger(0)
+        val defaultConcurrency = za.kilowatch.ultimatefilemanager.settings.NetworkTransferPreferenceManager.getThreadCount(appContext)
+        val semaphore = Semaphore(defaultConcurrency)
 
         suspend fun processLocalItem(source: File, destBase: File, operation: FileClipboard.Operation) {
             session.checkCancelled()
@@ -208,7 +219,7 @@ object LocalPasteEngine {
                     FileTagsManager.onPathCopied(appContext, source.absolutePath, effectiveDest.absolutePath)
                 }
             } else {
-                fileIndex++
+                val currentIndex = fileIndexCounter.incrementAndGet()
                 val hasConflict = TransferConflictHelper.localFileExists(
                     destBase.parentFile ?: effectiveDestDir, destBase.name, appContext
                 )
@@ -225,13 +236,13 @@ object LocalPasteEngine {
                 val sourceSize = if (isSrcSaf) SafTreeManager.getFileSize(appContext, source.absolutePath)
                                  else if (isSrcRoot) RootShellWrapper.getFileSize(source.absolutePath)
                                  else source.length()
-                session.reportProgress(source.name, 0, sourceSize, fileIndex, totalFiles)
+                session.reportProgress(source.name, 0, sourceSize, currentIndex, totalFiles)
                 val finalDest = if (resolvedAction == TransferConflictHelper.ConflictAction.KEEP_BOTH)
                     TransferConflictHelper.uniqueLocalFile(destBase.parentFile ?: effectiveDestDir, destBase.name, appContext)
                 else destBase
                 val writtenDest = session.withFileRetry(source.name) {
                     TransferConflictHelper.copyLocalToLocalAtomic(source, finalDest, resolvedAction) { c, t ->
-                        session.reportProgress(source.name, c, t, fileIndex, totalFiles)
+                        session.reportProgress(source.name, c, t, currentIndex, totalFiles)
                     }
                 }
 
@@ -338,22 +349,55 @@ object LocalPasteEngine {
                     ShareType.NFS          -> NfsShareClient.listFiles(share, source.path)
                     ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
                 }
-                for (child in children) {
-                    session.checkCancelled()
-                    try {
-                        val childDest = if (isEffSaf) {
-                            SafFile(effectiveDest.absolutePath, child.name, child.isDirectory)
-                        } else if (isEffRoot) {
-                            RootFile(effectiveDest.absolutePath, child.name, child.isDirectory)
-                        } else {
-                            File(effectiveDest, child.name)
+                val concurrency = if (share.type == ShareType.FTP || share.type == ShareType.SFTP) share.effectiveThreads(appContext).coerceIn(1, 8) else 1
+                if (concurrency > 1) {
+                    coroutineScope {
+                        for (child in children) {
+                            session.checkCancelled()
+                            val childDest = if (isEffSaf) {
+                                SafFile(effectiveDest.absolutePath, child.name, child.isDirectory)
+                            } else if (isEffRoot) {
+                                RootFile(effectiveDest.absolutePath, child.name, child.isDirectory)
+                            } else {
+                                File(effectiveDest, child.name)
+                            }
+                            if (child.isDirectory) {
+                                processNetItem(child, childDest, share, operation)
+                            } else {
+                                launch(Dispatchers.IO) {
+                                    semaphore.withPermit {
+                                        session.checkCancelled()
+                                        try {
+                                            processNetItem(child, childDest, share, operation)
+                                        } catch (e: CancellationException) {
+                                            throw e
+                                        } catch (e: Exception) {
+                                            session.checkCancelled()
+                                            session.noteFailure(e.message)
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        processNetItem(child, childDest, share, operation)
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (e: Exception) {
+                    }
+                } else {
+                    for (child in children) {
                         session.checkCancelled()
-                        session.noteFailure(e.message)
+                        try {
+                            val childDest = if (isEffSaf) {
+                                SafFile(effectiveDest.absolutePath, child.name, child.isDirectory)
+                            } else if (isEffRoot) {
+                                RootFile(effectiveDest.absolutePath, child.name, child.isDirectory)
+                            } else {
+                                File(effectiveDest, child.name)
+                            }
+                            processNetItem(child, childDest, share, operation)
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (e: Exception) {
+                            session.checkCancelled()
+                            session.noteFailure(e.message)
+                        }
                     }
                 }
                 if (operation == FileClipboard.Operation.MOVE) {
@@ -377,7 +421,7 @@ object LocalPasteEngine {
                     FileTagsManager.onPathCopied(appContext, source.path, effectiveDest.absolutePath)
                 }
             } else {
-                fileIndex++
+                val currentIndex = fileIndexCounter.incrementAndGet()
                 val hasConflict = TransferConflictHelper.localFileExists(
                     destBase.parentFile ?: effectiveDestDir, destBase.name, appContext
                 )
@@ -391,15 +435,22 @@ object LocalPasteEngine {
                 if (resolvedAction == TransferConflictHelper.ConflictAction.CANCEL) throw CancellationException()
                 if (resolvedAction == TransferConflictHelper.ConflictAction.SKIP) { session.noteSuccess(); return }
 
-                session.reportProgress(source.name, 0, source.size, fileIndex, totalFiles)
-                val writtenDest = session.withFileRetry(source.name) {
-                    TransferConflictHelper.downloadNetworkToLocalAtomic(
-                        share, source, destBase, resolvedAction,
-                        onProgress = { c, t -> session.reportProgress(source.name, c, t, fileIndex, totalFiles) },
-                        onConnectionReady = { conn -> session.registerConnection(conn) }
-                    )
+                session.reportProgress(source.name, 0, source.size, currentIndex, totalFiles)
+                var connToUnregister: AutoCloseable? = null
+                val writtenDest = try {
+                    session.withFileRetry(source.name) {
+                        TransferConflictHelper.downloadNetworkToLocalAtomic(
+                            share, source, destBase, resolvedAction,
+                            onProgress = { c, t -> session.reportProgress(source.name, c, t, currentIndex, totalFiles) },
+                            onConnectionReady = { conn ->
+                                connToUnregister = conn
+                                session.registerConnection(conn)
+                            }
+                        )
+                    }
+                } finally {
+                    connToUnregister?.let { session.unregisterConnection(it) }
                 }
-                session.registerConnection(null)
 
                 val isEffDestRoot = isRoot(writtenDest)
                 if (!isEffDestRoot && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
@@ -439,82 +490,101 @@ object LocalPasteEngine {
         }
 
         // ── Process target slots ──────────────────────────────────────────
-        for (slot in ctx.slots) {
-            for (item in slot.items) {
-                session.checkCancelled()
-                when (item) {
-                    is FileClipboard.ClipItem.Local -> {
-                        try {
-                            processLocalItem(item.file, File(effectiveDestDir, item.file.name), item.operation)
-                        } catch (e: CancellationException) {
-                            throw e
-                        } catch (e: Exception) {
-                            session.checkCancelled()
-                            session.noteFailure(e.message)
-                        }
-                    }
-                    is FileClipboard.ClipItem.Remote -> {
-                        var share = NetworkShareRepository.getInstance(appContext).getById(item.sourceShareId)
-                        if (share?.isServerMode == true && item.sourceRemotePath.isNotEmpty()) {
-                            share = share.copy(remotePath = item.sourceRemotePath)
-                        }
-                        if (share == null) {
-                            val pairedDevice = PairingManager.getInstance(appContext).getPairedDevice(item.sourceShareId)
-                            if (pairedDevice != null && pairedDevice.isConnected) {
-                                share = NetworkShare(
-                                    id = pairedDevice.deviceId,
-                                    name = pairedDevice.name,
-                                    type = ShareType.TV,
-                                    host = pairedDevice.lastIp,
-                                    port = pairedDevice.lastPort
-                                )
-                            }
-                        }
-                        if (share == null) {
-                            val onlineStorage = OnlineStorageRepository.getInstance(appContext).getById(item.sourceShareId)
-                            if (onlineStorage != null) {
-                                share = NetworkShare(
-                                    id = onlineStorage.id,
-                                    name = onlineStorage.displayName,
-                                    type = when (onlineStorage.provider) {
-                                        OnlineStorageProvider.ONEDRIVE     -> ShareType.ONEDRIVE
-                                        OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                                        OnlineStorageProvider.DROPBOX      -> ShareType.DROPBOX
-                                        OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
-                                        OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
-                                        OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
-                                        OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
-                                    },
-                                    host = when (onlineStorage.provider) {
-                                        OnlineStorageProvider.RCLONE -> RCloneShareClient.RCLONE_HOST_MARKER
-                                        else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUrl ?: onlineStorage.email else onlineStorage.s3Endpoint ?: onlineStorage.email
-                                    },
-                                    username = when (onlineStorage.provider) {
-                                        OnlineStorageProvider.RCLONE -> onlineStorage.id
-                                        else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUsername ?: "" else onlineStorage.s3AccessKey ?: ""
-                                    },
-                                    password = if (onlineStorage.isWebDavProvider) onlineStorage.webDavPassword ?: "" else onlineStorage.s3SecretKey ?: "",
-                                    readOnly = false
-                                )
-                            }
-                        }
-
-                        if (share != null) {
+        coroutineScope {
+            for (slot in ctx.slots) {
+                for (item in slot.items) {
+                    session.checkCancelled()
+                    when (item) {
+                        is FileClipboard.ClipItem.Local -> {
                             try {
-                                processNetItem(item.file, File(currentDir, item.file.name), share, item.operation)
+                                processLocalItem(item.file, File(effectiveDestDir, item.file.name), item.operation)
                             } catch (e: CancellationException) {
                                 throw e
                             } catch (e: Exception) {
                                 session.checkCancelled()
                                 session.noteFailure(e.message)
                             }
-                        } else {
-                            session.noteFailure(null)
+                        }
+                        is FileClipboard.ClipItem.Remote -> {
+                            var share = NetworkShareRepository.getInstance(appContext).getById(item.sourceShareId)
+                            if (share?.isServerMode == true && item.sourceRemotePath.isNotEmpty()) {
+                                share = share.copy(remotePath = item.sourceRemotePath)
+                            }
+                            if (share == null) {
+                                val pairedDevice = PairingManager.getInstance(appContext).getPairedDevice(item.sourceShareId)
+                                if (pairedDevice != null && pairedDevice.isConnected) {
+                                    share = NetworkShare(
+                                        id = pairedDevice.deviceId,
+                                        name = pairedDevice.name,
+                                        type = ShareType.TV,
+                                        host = pairedDevice.lastIp,
+                                        port = pairedDevice.lastPort
+                                    )
+                                }
+                            }
+                            if (share == null) {
+                                val onlineStorage = OnlineStorageRepository.getInstance(appContext).getById(item.sourceShareId)
+                                if (onlineStorage != null) {
+                                    share = NetworkShare(
+                                        id = onlineStorage.id,
+                                        name = onlineStorage.displayName,
+                                        type = when (onlineStorage.provider) {
+                                            OnlineStorageProvider.ONEDRIVE     -> ShareType.ONEDRIVE
+                                            OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
+                                            OnlineStorageProvider.DROPBOX      -> ShareType.DROPBOX
+                                            OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
+                                            OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
+                                            OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
+                                            OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
+                                        },
+                                        host = when (onlineStorage.provider) {
+                                            OnlineStorageProvider.RCLONE -> RCloneShareClient.RCLONE_HOST_MARKER
+                                            else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUrl ?: onlineStorage.email else onlineStorage.s3Endpoint ?: onlineStorage.email
+                                        },
+                                        username = when (onlineStorage.provider) {
+                                            OnlineStorageProvider.RCLONE -> onlineStorage.id
+                                            else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUsername ?: "" else onlineStorage.s3AccessKey ?: ""
+                                        },
+                                        password = if (onlineStorage.isWebDavProvider) onlineStorage.webDavPassword ?: "" else onlineStorage.s3SecretKey ?: "",
+                                        readOnly = false
+                                    )
+                                }
+                            }
+
+                            if (share != null) {
+                                val itemConcurrency = if (share.type == ShareType.FTP || share.type == ShareType.SFTP) share.effectiveThreads(appContext).coerceIn(1, 8) else 1
+                                if (itemConcurrency > 1 && !item.file.isDirectory) {
+                                    launch(Dispatchers.IO) {
+                                        semaphore.withPermit {
+                                            session.checkCancelled()
+                                            try {
+                                                processNetItem(item.file, File(currentDir, item.file.name), share, item.operation)
+                                            } catch (e: CancellationException) {
+                                                throw e
+                                            } catch (e: Exception) {
+                                                session.checkCancelled()
+                                                session.noteFailure(e.message)
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    try {
+                                        processNetItem(item.file, File(currentDir, item.file.name), share, item.operation)
+                                    } catch (e: CancellationException) {
+                                        throw e
+                                    } catch (e: Exception) {
+                                        session.checkCancelled()
+                                        session.noteFailure(e.message)
+                                    }
+                                }
+                            } else {
+                                session.noteFailure(null)
+                            }
                         }
                     }
                 }
+                FileClipboard.removeSlot(slot.id)
             }
-            FileClipboard.removeSlot(slot.id)
         }
 
         if (ctx.targetSlotId == null) {

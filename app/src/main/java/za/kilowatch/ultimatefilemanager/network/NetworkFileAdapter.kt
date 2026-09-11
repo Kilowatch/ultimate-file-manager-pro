@@ -250,6 +250,7 @@ class NetworkFileAdapter(
                         }
                         counts[dir.path] = visibleCount
                     } catch (e: Exception) {
+                        if (e is kotlinx.coroutines.CancellationException) return@launch
                         za.kilowatch.ultimatefilemanager.util.GoRoLog.w("NetworkFileAdapter", "Failed to count files for directory ${dir.path}: ${e.message}")
                     }
                 }

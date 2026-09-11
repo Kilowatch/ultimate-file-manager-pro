@@ -2378,6 +2378,61 @@
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
                         <LinearLayout
+                            android:id="@+id/cardNetworkTransferThreads"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@drawable/selector_tv_card">
+
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_lightning"
+                                android:layout_marginEnd="@dimen/margin_lg"
+                                app:tint="@color/tv_icon_tint"
+                                android:contentDescription="@string/settings_network_transfer_threads_title" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_network_transfer_threads_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="22sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtNetworkTransferThreadsSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/tv_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+                        <LinearLayout
                             android:id="@+id/cardTvBackgroundServer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

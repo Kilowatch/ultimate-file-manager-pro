@@ -1156,7 +1156,7 @@ class NetworkBrowserFragment : Fragment() {
 
             try {
                 // Server-mode SMB: intercept at root to discover shares
-                val files = kotlinx.coroutines.withTimeout(15_000L) {
+                val files = kotlinx.coroutines.withTimeout(35_000L) {
                     if (share.type == ShareType.SMB && share.isServerMode) {
                         val cleanPath = currentPath.trimStart('/')
                         if (cleanPath.isEmpty()) {
@@ -1225,7 +1225,11 @@ class NetworkBrowserFragment : Fragment() {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     val errMsg = if (e is kotlinx.coroutines.TimeoutCancellationException) {
-                        getString(R.string.network_connection_restored_first)
+                        if (share.type == ShareType.TV) {
+                            getString(R.string.network_connection_restored_first)
+                        } else {
+                            getString(R.string.network_server_connection_failed)
+                        }
                     } else {
                         getString(R.string.error_loading_emessage, e.message ?: "Unknown error")
                     }

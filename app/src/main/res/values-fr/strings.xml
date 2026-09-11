@@ -630,6 +630,11 @@ NAS domestique
 \n
 Veuillez vous assurer que votre appareil est connecté au réseau ou que le téléviseur est allumé, puis réessayez.
 </string>
+    <string name="network_server_connection_failed">
+Échec de la connexion\n
+\n
+Impossible de se connecter au serveur. Veuillez vérifier que l’hôte est accessible et que votre appareil est connecté au réseau, puis réessayez.
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1800,6 +1805,35 @@ Activée — mise en cache avant ouverture
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 Désactivée — flux direct (par défaut)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+Multithreading FTP &amp;amp; SFTP
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+Threads de transfert
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d threads — connexions simultanées pour des transferts plus rapides
+</string>
+    <string name="settings_network_transfer_threads_single">
+1 thread (monothread)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d threads
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d threads (Recommandé)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+Paramètres de multithreading FTP &amp;amp; SFTP
+</string>
+    <string name="network_field_threads">
+Threads de transfert
+</string>
+    <string name="network_threads_default">
+Par défaut (%1$d threads)
 </string>
 
     <!-- Open Source Licenses -->

@@ -630,6 +630,11 @@ DCIM
 
 कृपया सुनिश्चित करें कि आपका उपकरण नेटवर्क से जुड़ा है या टीवी चालू है, और पुनः प्रयास करें।
 </string>
+    <string name="network_server_connection_failed">
+कनेक्शन विफल\n
+\n
+सर्वर से कनेक्ट नहीं हो सका। कृपया जांचें कि होस्ट पहुंच योग्य है और आपका डिवाइस नेटवर्क से कनेक्टेड है, फिर पुनः प्रयास करें।
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1800,6 +1805,35 @@ HTTP, FTP और WebDAV फ़ाइल सर्वर नियंत्रण
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 अक्षम — डायरेक्ट स्ट्रीम (डिफ़ॉल्ट)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+FTP और SFTP मल्टी-थ्रेडिंग
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+स्थानांतरण थ्रेड्स
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d थ्रेड्स — तेज़ स्थानांतरण के लिए एक साथ कनेक्शन
+</string>
+    <string name="settings_network_transfer_threads_single">
+1 थ्रेड (सिंगल-थ्रेडेड)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d थ्रेड्स
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d थ्रेड्स (अनुशंसित)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+FTP और SFTP मल्टी-थ्रेडिंग सेटिंग्स
+</string>
+    <string name="network_field_threads">
+स्थानांतरण थ्रेड्स
+</string>
+    <string name="network_threads_default">
+डिफ़ॉल्ट (%1$d थ्रेड्स)
 </string>
 
     <!-- Open Source Licenses -->

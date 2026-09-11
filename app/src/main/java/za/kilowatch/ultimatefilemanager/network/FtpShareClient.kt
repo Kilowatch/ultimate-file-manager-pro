@@ -3,6 +3,9 @@ package za.kilowatch.ultimatefilemanager.network
 import android.os.Looper
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -83,7 +86,8 @@ object FtpShareClient {
     }
 
     suspend fun openInputStream(share: NetworkShare, remotePath: String, startOffset: Long = 0): InputStream {
-        val ftp = buildClientOnIo(share)
+        val pooled = FtpSessionPool.borrow(share, dedicated = true)
+        val ftp = pooled.client
         val path = joinPath(share.remotePath, remotePath)
         ftp.setFileType(FTP.BINARY_FILE_TYPE)
         
@@ -93,16 +97,112 @@ object FtpShareClient {
         }
         
         val raw = ftp.retrieveFileStream(path)
-            ?: throw java.io.IOException("Could not open FTP stream: ${ftp.replyString}")
+            ?: run {
+                pooled.invalidate()
+                throw java.io.IOException("Could not open FTP stream: ${ftp.replyString}")
+            }
         return object : InputStream() {
             override fun read(): Int = raw.read()
             override fun read(b: ByteArray, off: Int, len: Int) = raw.read(b, off, len)
             override fun close() {
                 runCatching { raw.close() }
                 runCatching { ftp.completePendingCommand() }
-                runCatching { ftp.logout() }
-                runCatching { ftp.disconnect() }
+                pooled.release()
             }
+        }
+    }
+
+    /**
+     * Downloads a file in parallel segments using multiple FTP connections with REST offset.
+     * Writes directly to [destFile] via [java.nio.channels.FileChannel].
+     * Returns true if parallel download succeeded, or false if not applicable.
+     */
+    suspend fun downloadFileParallel(
+        share: NetworkShare,
+        remotePath: String,
+        destFile: java.io.File,
+        totalSize: Long,
+        threads: Int,
+        onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)? = null,
+        onConnectionReady: ((AutoCloseable) -> Unit)? = null
+    ): Boolean = withContext(Dispatchers.IO) {
+        if (threads <= 1 || totalSize < 5 * 1024 * 1024) return@withContext false
+
+        val fullPath = joinPath(share.remotePath, remotePath)
+        val raf = java.io.RandomAccessFile(destFile, "rw")
+        val channel = raf.channel
+        raf.setLength(totalSize)
+
+        val actualThreads = threads.coerceIn(2, 8)
+        val segmentSize = (totalSize + actualThreads - 1) / actualThreads
+        val totalBytesCopied = java.util.concurrent.atomic.AtomicLong(0L)
+
+        try {
+            coroutineScope {
+                val jobs = (0 until actualThreads).map { index ->
+                    val startOffset = index * segmentSize
+                    if (startOffset >= totalSize) return@map null
+                    val endOffset = minOf((index + 1) * segmentSize - 1, totalSize - 1)
+                    val expectedBytes = endOffset - startOffset + 1
+
+                    async(Dispatchers.IO) {
+                        val pooled = FtpSessionPool.borrow(share, dedicated = true)
+                        val ftp = pooled.client
+                        onConnectionReady?.invoke(pooled)
+
+                        try {
+                            ftp.setFileType(FTP.BINARY_FILE_TYPE)
+                            if (startOffset > 0) {
+                                ftp.setRestartOffset(startOffset)
+                            }
+                            val stream = ftp.retrieveFileStream(fullPath)
+                                ?: throw java.io.IOException("FTP retrieveFileStream failed at offset $startOffset: ${ftp.replyString}")
+
+                            val buffer = ByteArray(256 * 1024)
+                            var segmentRemaining = expectedBytes
+                            var currentWriteOffset = startOffset
+
+                            stream.use { input ->
+                                while (segmentRemaining > 0) {
+                                    ensureActive()
+                                    val toRead = minOf(buffer.size.toLong(), segmentRemaining).toInt()
+                                    val read = input.read(buffer, 0, toRead)
+                                    if (read < 0) break
+
+                                    val byteBuffer = java.nio.ByteBuffer.wrap(buffer, 0, read)
+                                    var writtenTotal = 0
+                                    while (byteBuffer.hasRemaining()) {
+                                        writtenTotal += channel.write(byteBuffer, currentWriteOffset + writtenTotal)
+                                    }
+
+                                    currentWriteOffset += read
+                                    segmentRemaining -= read
+                                    val currentTotal = totalBytesCopied.addAndGet(read.toLong())
+                                    onProgress?.invoke(currentTotal, totalSize)
+                                }
+                            }
+
+                            if (segmentRemaining > 0) {
+                                throw java.io.IOException("Incomplete segment $index: remaining $segmentRemaining bytes")
+                            }
+
+                            runCatching { ftp.completePendingCommand() }
+                            pooled.release()
+                        } catch (e: Exception) {
+                            pooled.invalidate()
+                            throw e
+                        }
+                    }
+                }.filterNotNull()
+
+                jobs.awaitAll()
+            }
+
+            channel.force(true)
+            true
+        } finally {
+            runCatching { channel.close() }
+            runCatching { raf.close() }
         }
     }
 
@@ -190,12 +290,16 @@ object FtpShareClient {
      * Closing the returned OutputStream also closes the FTP connection.
      */
     suspend fun openOutputStream(share: NetworkShare, remotePath: String): OutputStream {
-        val ftp = buildClientOnIo(share)
+        val pooled = FtpSessionPool.borrow(share, dedicated = true)
+        val ftp = pooled.client
         val fullPath = joinPath(share.remotePath, remotePath)
         za.kilowatch.ultimatefilemanager.util.GoRoLog.d("FtpClient", "OPEN OUTPUT STREAM fullPath: $fullPath (share.remotePath: ${share.remotePath}, remotePath: $remotePath)")
         ftp.setFileType(FTP.BINARY_FILE_TYPE)
         val raw = ftp.storeFileStream(fullPath)
-            ?: throw java.io.IOException("Could not open FTP write stream: ${ftp.replyString}")
+            ?: run {
+                pooled.invalidate()
+                throw java.io.IOException("Could not open FTP write stream: ${ftp.replyString}")
+            }
         return object : OutputStream() {
             override fun write(b: Int) = raw.write(b)
             override fun write(b: ByteArray, off: Int, len: Int) = raw.write(b, off, len)
@@ -203,8 +307,7 @@ object FtpShareClient {
             override fun close() {
                 runCatching { raw.close() }
                 runCatching { ftp.completePendingCommand() }
-                runCatching { ftp.logout() }
-                runCatching { ftp.disconnect() }
+                pooled.release()
             }
         }
     }
@@ -256,12 +359,16 @@ object FtpShareClient {
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private fun <T> withFtp(share: NetworkShare, block: (FTPClient) -> T): T {
-        val ftp = buildClient(share)
+        val pooled = runBlocking(Dispatchers.IO) {
+            FtpSessionPool.borrow(share)
+        }
         return try {
-            block(ftp)
-        } finally {
-            runCatching { ftp.logout() }
-            runCatching { ftp.disconnect() }
+            val result = block(pooled.client)
+            pooled.release()
+            result
+        } catch (e: Exception) {
+            pooled.invalidate()
+            throw e
         }
     }
 

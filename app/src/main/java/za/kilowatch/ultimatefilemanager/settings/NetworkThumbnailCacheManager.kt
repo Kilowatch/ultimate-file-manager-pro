@@ -186,14 +186,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                     val retriever = android.media.MediaMetadataRetriever()
                     try {
                         randomAccess = when (share.type) {
-                            ShareType.SMB          -> {
-                                try {
-                                    SmbShareClient.openRandomAccessFile(share, networkFile.path)
-                                } catch (e: Exception) {
-                                    GoRoLog.w("UFM_CACHE", "SmbShareClient openRandomAccessFile failed, falling back to JCIFS: ${e.message}")
-                                    JcifsFallbackClient.openRandomAccessFile(share, networkFile.path)
-                                }
-                            }
+                            ShareType.SMB          -> SmbShareClient.openRandomAccessFile(share, networkFile.path)
                             ShareType.SFTP,
                             ShareType.SCP          -> SshShareClient.openRandomAccessFile(share, networkFile.path)
                             ShareType.FTP          -> FtpShareClient.openRandomAccessFile(share, networkFile.path)

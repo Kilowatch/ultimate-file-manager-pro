@@ -630,6 +630,11 @@ Verbindung fehlgeschlagen\n
 \n
 Bitte stellen Sie sicher, dass Ihr Gerät mit dem Netzwerk verbunden oder der Fernseher eingeschaltet ist, und versuchen Sie es erneut.
 </string>
+    <string name="network_server_connection_failed">
+Verbindung fehlgeschlagen\n
+\n
+Die Verbindung zum Server konnte nicht hergestellt werden. Bitte überprüfen Sie, ob der Host erreichbar ist und Ihr Gerät mit dem Netzwerk verbunden ist, und versuchen Sie es dann erneut.
+</string>
 
     <!-- Storage Browser Section -->
     <string name="storage_section_devices">
@@ -1800,6 +1805,35 @@ Aktiviert – vor dem Öffnen zwischenspeichern
 </string>
     <string name="settings_network_open_cache_subtitle_off">
 Deaktiviert – direkter Stream (Standard)
+</string>
+
+    <!-- FTP & SFTP Multi-Threading Settings -->
+    <string name="settings_network_transfer_threads_title">
+FTP- &amp; SFTP-Multithreading
+</string>
+    <string name="settings_network_transfer_threads_dialog_title">
+Übertragungs-Threads
+</string>
+    <string name="settings_network_transfer_threads_subtitle">
+%1$d Threads — gleichzeitige Verbindungen für schnellere Übertragungen
+</string>
+    <string name="settings_network_transfer_threads_single">
+1 Thread (Einzelthread)
+</string>
+    <string name="settings_network_transfer_threads_option">
+%1$d Threads
+</string>
+    <string name="settings_network_transfer_threads_recommended">
+%1$d Threads (Empfohlen)
+</string>
+    <string name="backup_pref_network_transfer_threads">
+Einstellungen für FTP- &amp; SFTP-Multithreading
+</string>
+    <string name="network_field_threads">
+Übertragungs-Threads
+</string>
+    <string name="network_threads_default">
+Standard (%1$d Threads)
 </string>
 
     <!-- Open Source Licenses -->

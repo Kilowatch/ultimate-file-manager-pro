@@ -11,9 +11,19 @@ import java.security.MessageDigest
 import java.security.PublicKey
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider
 import org.apache.sshd.sftp.client.SftpClientFactory
+import org.apache.sshd.sftp.client.SftpClient
 import za.kilowatch.ultimatefilemanager.storage.VaultCrypto
 import java.io.File
+import java.io.RandomAccessFile
+import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicLong
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.withContext
 
 object SshShareClient {
     const val TAG = "SshShareClient"
@@ -187,6 +197,112 @@ object SshShareClient {
         }
 
         sftp.rmdir(path) // now directory should be empty
+    }
+
+    /**
+     * Downloads an SFTP file in parallel segments using multiple SFTP channels or connections.
+     * Writes directly to [destFile] via [java.nio.channels.FileChannel].
+     * Returns true if parallel download succeeded, or false if not applicable.
+     */
+    suspend fun downloadFileParallel(
+        share: NetworkShare,
+        remotePath: String,
+        destFile: File,
+        totalSize: Long,
+        threads: Int,
+        onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)? = null,
+        onConnectionReady: ((AutoCloseable) -> Unit)? = null
+    ): Boolean = withContext(Dispatchers.IO) {
+        if (threads <= 1 || totalSize < 5 * 1024 * 1024 || share.type != ShareType.SFTP) return@withContext false
+
+        val fullPath = effectivePath(share, remotePath)
+        val raf = RandomAccessFile(destFile, "rw")
+        val channel = raf.channel
+        raf.setLength(totalSize)
+
+        val actualThreads = threads.coerceIn(2, 8)
+        val segmentSize = (totalSize + actualThreads - 1) / actualThreads
+        val totalBytesCopied = AtomicLong(0L)
+
+        val primarySession = SshSessionPool.borrow(share, dedicated = true)
+        onConnectionReady?.invoke(primarySession)
+
+        try {
+            coroutineScope {
+                val jobs = (0 until actualThreads).map { index ->
+                    val startOffset = index * segmentSize
+                    if (startOffset >= totalSize) return@map null
+                    val endOffset = minOf((index + 1) * segmentSize - 1, totalSize - 1)
+                    val expectedBytes = endOffset - startOffset + 1
+
+                    async(Dispatchers.IO) {
+                        var dedicatedWorkerSession: SshSessionPool.PooledSession? = null
+                        val sftp: SftpClient = try {
+                            val client = SftpClientFactory.instance().createSftpClient(primarySession.session)
+                            onConnectionReady?.invoke(client)
+                            client
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Multiplexed SFTP channel failed on primary session, opening dedicated session: ${e.message}")
+                            val sess = SshSessionPool.borrow(share, dedicated = true)
+                            dedicatedWorkerSession = sess
+                            onConnectionReady?.invoke(sess)
+                            val client = SftpClientFactory.instance().createSftpClient(sess.session)
+                            onConnectionReady?.invoke(client)
+                            client
+                        }
+
+                        try {
+                            val handle = sftp.open(fullPath, java.util.EnumSet.of(SftpClient.OpenMode.Read))
+                            try {
+                                val buffer = ByteArray(256 * 1024)
+                                var segmentRemaining = expectedBytes
+                                var currentOffset = startOffset
+
+                                while (segmentRemaining > 0) {
+                                    ensureActive()
+                                    val toRead = minOf(buffer.size.toLong(), segmentRemaining).toInt()
+                                    val rd = sftp.read(handle, currentOffset, buffer, 0, toRead)
+                                    if (rd < 0) break
+                                    if (rd == 0) continue
+
+                                    val byteBuffer = ByteBuffer.wrap(buffer, 0, rd)
+                                    var writtenTotal = 0
+                                    while (byteBuffer.hasRemaining()) {
+                                        writtenTotal += channel.write(byteBuffer, currentOffset + writtenTotal)
+                                    }
+
+                                    currentOffset += rd
+                                    segmentRemaining -= rd
+                                    val currentTotal = totalBytesCopied.addAndGet(rd.toLong())
+                                    onProgress?.invoke(currentTotal, totalSize)
+                                }
+
+                                if (segmentRemaining > 0) {
+                                    throw java.io.IOException("Incomplete SFTP segment $index: remaining $segmentRemaining bytes")
+                                }
+                            } finally {
+                                runCatching { handle.close() }
+                            }
+                        } finally {
+                            runCatching { sftp.close() }
+                            dedicatedWorkerSession?.release()
+                        }
+                    }
+                }.filterNotNull()
+
+                jobs.awaitAll()
+            }
+
+            channel.force(true)
+            true
+        } catch (e: Exception) {
+            primarySession.invalidate()
+            throw e
+        } finally {
+            primarySession.release()
+            runCatching { channel.close() }
+            runCatching { raf.close() }
+        }
     }
 
     // ── Streaming I/O (dedicated, non-pooled sessions) ────────────────────────

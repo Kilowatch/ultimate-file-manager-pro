@@ -764,6 +764,134 @@
                         android:orientation="vertical"
                         android:padding="16dp">
 
+                        <!-- Transfer Threads Selector (FTP / SFTP / SCP) -->
+                        <LinearLayout
+                            android:id="@+id/layerTransferThreads"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="6dp"
+                                android:text="@string/network_field_threads"
+                                android:textColor="@color/tv_accent"
+                                android:textSize="12.5sp"
+                                android:fontFamily="sans-serif-black"
+                                android:textAllCaps="true"
+                                android:letterSpacing="0.05" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/chipThreadsDefault"
+                                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="48dp"
+                                    android:layout_weight="1.2"
+                                    android:layout_margin="2dp"
+                                    android:text="Default"
+                                    android:textSize="11.5sp"
+                                    android:checkable="true"
+                                    android:checked="true"
+                                    app:backgroundTint="@color/selector_protocol_bg"
+                                    app:iconTint="@color/selector_protocol_text"
+                                    android:textColor="@color/selector_protocol_text"
+                                    android:gravity="center"
+                                    app:cornerRadius="12dp"
+                                    app:strokeColor="@color/tv_glass_border"
+                                    android:focusable="true"
+                                    android:insetTop="0dp"
+                                    android:insetBottom="0dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/chipThreads1"
+                                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="48dp"
+                                    android:layout_weight="1"
+                                    android:layout_margin="2dp"
+                                    android:text="1"
+                                    android:textSize="12.5sp"
+                                    android:checkable="true"
+                                    app:backgroundTint="@color/selector_protocol_bg"
+                                    app:iconTint="@color/selector_protocol_text"
+                                    android:textColor="@color/selector_protocol_text"
+                                    android:gravity="center"
+                                    app:cornerRadius="12dp"
+                                    app:strokeColor="@color/tv_glass_border"
+                                    android:focusable="true"
+                                    android:insetTop="0dp"
+                                    android:insetBottom="0dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/chipThreads2"
+                                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="48dp"
+                                    android:layout_weight="1"
+                                    android:layout_margin="2dp"
+                                    android:text="2"
+                                    android:textSize="12.5sp"
+                                    android:checkable="true"
+                                    app:backgroundTint="@color/selector_protocol_bg"
+                                    app:iconTint="@color/selector_protocol_text"
+                                    android:textColor="@color/selector_protocol_text"
+                                    android:gravity="center"
+                                    app:cornerRadius="12dp"
+                                    app:strokeColor="@color/tv_glass_border"
+                                    android:focusable="true"
+                                    android:insetTop="0dp"
+                                    android:insetBottom="0dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/chipThreads4"
+                                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="48dp"
+                                    android:layout_weight="1"
+                                    android:layout_margin="2dp"
+                                    android:text="4"
+                                    android:textSize="12.5sp"
+                                    android:checkable="true"
+                                    app:backgroundTint="@color/selector_protocol_bg"
+                                    app:iconTint="@color/selector_protocol_text"
+                                    android:textColor="@color/selector_protocol_text"
+                                    android:gravity="center"
+                                    app:cornerRadius="12dp"
+                                    app:strokeColor="@color/tv_glass_border"
+                                    android:focusable="true"
+                                    android:insetTop="0dp"
+                                    android:insetBottom="0dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/chipThreads8"
+                                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="48dp"
+                                    android:layout_weight="1"
+                                    android:layout_margin="2dp"
+                                    android:text="8"
+                                    android:textSize="12.5sp"
+                                    android:checkable="true"
+                                    app:backgroundTint="@color/selector_protocol_bg"
+                                    app:iconTint="@color/selector_protocol_text"
+                                    android:textColor="@color/selector_protocol_text"
+                                    android:gravity="center"
+                                    app:cornerRadius="12dp"
+                                    app:strokeColor="@color/tv_glass_border"
+                                    android:focusable="true"
+                                    android:insetTop="0dp"
+                                    android:insetBottom="0dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
                         <!-- NFS Version Selector (NFS only) -->
                         <LinearLayout
                             android:id="@+id/layerNfsVersion"

@@ -18,12 +18,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - A colorblind-safe **syntax highlighting** palette in the read-only code and document viewers. (The code editor's edit mode keeps its default theme.)
   - Dedicated vector icons registered across Icon Customization and Toolbar Icons settings (`ic_colorblind`, plus the three status glyphs).
 - The selected type and strength persist across restarts and travel with an exported settings backup. Importing an older backup that predates the feature resolves cleanly to Off.
+- Multi-threaded transfer acceleration for FTP and SFTP:
+  - Parallel segmented downloads for large files (>= 5 MB) utilizing concurrent byte ranges via FTP REST offset and SFTP random-access reads directly into FileChannel.
+  - Concurrent multi-file batch uploads and downloads with bounded semaphore concurrency to maximize throughput on multi-file operations.
+  - FTP connection pool (FtpSessionPool) with automatic keep-alives and idle connection eviction to eliminate per-transfer TCP handshake overhead.
+  - Global transfer threads preference (1, 2, 4, 6, 8 threads; default 4) in Settings on mobile and Android TV, including settings backup and restore support.
+  - Per-share thread override option in the Network Share editor to customize concurrency per host.
+  - Thread-safe transfer conflict resolution and multi-socket cancellation across concurrent transfer workers.
 
 ### Changed
 - Focus, selection, status and Storage Analyzer colours across the app now resolve through theme attributes rather than fixed colour resources, so they can be remapped at runtime without an app restart.
 - With Colorblind Mode on, the two TV focus hues — yellow for buttons and list rows, blue for cards and swatches — are unified onto a single high-contrast treatment. With the mode off, the existing two-hue hierarchy is unchanged.
 - The Storage Analyzer's usage-bar track and segment colours are now chosen as a set, so segments stay separable from each other and not only from the background.
 - Changing the mode applies immediately through the app's existing live-refresh mechanism; as with the theme switcher, this briefly recreates the current screen and dismisses any open dialog.
+- Rebuilt the network SMB engine from the ground up with a unified, 16 KB-aligned native Go SMB2/3 client:
+  - Full session pooling, automatic keep-alives, and resilient reconnects across transfers and directory listings.
+  - Seekable random-access file streaming for instant video playback and thumbnail generation over SMB.
+  - Native share discovery replacing legacy SMB discovery mechanisms.
+- Increased network directory listing timeout from 15 seconds to 35 seconds to support spinning NAS hard drives waking from standby.
+- Fixed breadcrumb navigation bar duplicating share directory names (e.g., `Home > docker > docker > _projects`).
+- Improved network error feedback so non-TV shares display connection failure details instead of TV-specific warnings.
+
+### Removed
+- Removed legacy `com.hierynomus:smbj` and `eu.agno3.jcifs:jcifs-ng` dependencies and deprecated fallback clients.
 
 ### Fixed
 - **Colorblind Mode could crash the app as soon as a palette was selected.** Choosing any type other than Off threw an internal resource error when the setting screen rebuilt itself, so the mode could not be switched back off without clearing app data. Fixed.

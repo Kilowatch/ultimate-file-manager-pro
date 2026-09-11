@@ -278,24 +278,28 @@ object TransferManager {
 
         /** Register the raw connection/streams currently in use so [cancelAll] can force them closed. */
         fun registerConnection(connection: AutoCloseable?)
+        fun unregisterConnection(connection: AutoCloseable?) {}
         fun registerStreams(input: java.io.InputStream?, output: java.io.OutputStream?)
+        fun unregisterStreams(input: java.io.InputStream?, output: java.io.OutputStream?) {}
     }
 
     // ── Internal session implementation ────────────────────────────────────────
 
     private class SessionImpl(val id: Long, val opLabel: String, val isExtract: Boolean) : TransferSession {
         @Volatile override var cancelled: Boolean = false
-        @Volatile var successCount: Int = 0
-            private set
-        @Volatile var failCount: Int = 0
-            private set
+        private val _successCount = java.util.concurrent.atomic.AtomicInteger(0)
+        val successCount: Int get() = _successCount.get()
+
+        private val _failCount = java.util.concurrent.atomic.AtomicInteger(0)
+        val failCount: Int get() = _failCount.get()
+
         @Volatile var lastError: String? = null
             private set
 
         private val lock = Any()
-        private var connection: AutoCloseable? = null
-        private var input: java.io.InputStream? = null
-        private var output: java.io.OutputStream? = null
+        private val activeConnections = java.util.Collections.newSetFromMap(java.util.concurrent.ConcurrentHashMap<AutoCloseable, Boolean>())
+        private val activeInputs = java.util.Collections.newSetFromMap(java.util.concurrent.ConcurrentHashMap<java.io.InputStream, Boolean>())
+        private val activeOutputs = java.util.Collections.newSetFromMap(java.util.concurrent.ConcurrentHashMap<java.io.OutputStream, Boolean>())
 
         // notification throttle
         @Volatile private var lastNotifMs = 0L
@@ -306,12 +310,14 @@ object TransferManager {
         }
 
         override fun noteSuccess() {
-            successCount++
+            _successCount.incrementAndGet()
         }
 
         override fun noteFailure(message: String?) {
-            failCount++
-            if (lastError == null && !message.isNullOrBlank()) lastError = message
+            _failCount.incrementAndGet()
+            synchronized(lock) {
+                if (lastError == null && !message.isNullOrBlank()) lastError = message
+            }
         }
 
         fun requestCancel() {
@@ -321,23 +327,44 @@ object TransferManager {
 
         fun closeActiveIo() {
             synchronized(lock) {
-                connection?.let { runCatching { it.close() } }
-                connection = null
-                input?.let { runCatching { it.close() } }
-                input = null
-                output?.let { runCatching { it.close() } }
-                output = null
+                activeConnections.forEach { runCatching { it.close() } }
+                activeConnections.clear()
+                activeInputs.forEach { runCatching { it.close() } }
+                activeInputs.clear()
+                activeOutputs.forEach { runCatching { it.close() } }
+                activeOutputs.clear()
             }
         }
 
         override fun registerConnection(connection: AutoCloseable?) {
-            synchronized(lock) { this.connection = connection }
+            if (connection != null) {
+                synchronized(lock) {
+                    activeConnections.add(connection)
+                }
+            }
+        }
+
+        override fun unregisterConnection(connection: AutoCloseable?) {
+            if (connection != null) {
+                synchronized(lock) {
+                    activeConnections.remove(connection)
+                }
+            }
         }
 
         override fun registerStreams(input: java.io.InputStream?, output: java.io.OutputStream?) {
             synchronized(lock) {
-                this.input = input
-                this.output = output
+                if (input != null) activeInputs.add(input)
+                else activeInputs.clear()
+                if (output != null) activeOutputs.add(output)
+                else activeOutputs.clear()
+            }
+        }
+
+        override fun unregisterStreams(input: java.io.InputStream?, output: java.io.OutputStream?) {
+            synchronized(lock) {
+                if (input != null) activeInputs.remove(input)
+                if (output != null) activeOutputs.remove(output)
             }
         }
 

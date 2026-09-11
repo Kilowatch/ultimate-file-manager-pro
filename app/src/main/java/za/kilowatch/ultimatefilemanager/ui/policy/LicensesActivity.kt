@@ -206,8 +206,7 @@ class LicensesActivity : AppCompatActivity() {
     }
 
     private fun staticFallback() = listOf(
-        LibInfo(getString(R.string.jcifsng_euagno3), "2.1.10", "LGPL-2.1", "https://github.com/AgNO3/jcifs-ng"),
-        LibInfo(getString(R.string.smbj_hierynomus), "0.13.0", "Apache-2.0", "https://github.com/hierynomus/smbj"),
+        LibInfo("go-smb2 (github.com/cloudsoda/go-smb2)", "0.7.0", "Apache-2.0", "https://github.com/cloudsoda/go-smb2"),
         LibInfo(getString(R.string.apache_commons_net), "3.10.0", "Apache-2.0", "https://commons.apache.org/proper/commons-net/"),
         LibInfo(getString(R.string.apache_commons_compress), "1.26.1", "Apache-2.0", "https://commons.apache.org/proper/commons-compress/"),
         LibInfo(getString(R.string.zip4j_netlingalazip4j), "2.11.5", "Apache-2.0", "https://github.com/svenkubiak/zip4j"),

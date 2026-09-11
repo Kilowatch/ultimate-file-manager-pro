@@ -79,6 +79,7 @@ app/store/
 .plans/
 rclone/
 rclone-custom/
+smb-wrapper/
 CLAUDE.md
 build_rclone_aar.py
 GEMINI.md

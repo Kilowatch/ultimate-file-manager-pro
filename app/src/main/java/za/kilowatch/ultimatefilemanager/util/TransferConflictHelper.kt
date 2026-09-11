@@ -13,6 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.coroutineContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
@@ -62,6 +64,8 @@ object TransferConflictHelper {
     // PUBLIC API — show the conflict dialog
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+    private val conflictDialogMutex = Mutex()
+
     /**
      * Shows the conflict resolution dialog on the UI thread and suspends until the user
      * makes a choice.
@@ -82,86 +86,88 @@ object TransferConflictHelper {
         isFolder: Boolean,
         destSizeBytes: Long,
         applyToAllRef: BooleanArray   // single-element; [0] = current "apply to all" state
-    ): ConflictAction = withContext(Dispatchers.Main) {
-        val deferred = CompletableDeferred<ConflictAction>()
+    ): ConflictAction = conflictDialogMutex.withLock {
+        withContext(Dispatchers.Main) {
+            val deferred = CompletableDeferred<ConflictAction>()
 
-        val isTvMode = isTv(activity)
-        val layoutRes = if (isTvMode) R.layout.dialog_conflict_tv else R.layout.dialog_conflict_mobile
-        val view = LayoutInflater.from(activity).inflate(layoutRes, null, false)
+            val isTvMode = isTv(activity)
+            val layoutRes = if (isTvMode) R.layout.dialog_conflict_tv else R.layout.dialog_conflict_mobile
+            val view = LayoutInflater.from(activity).inflate(layoutRes, null, false)
 
-        // Bind views
-        val txtFileName    = view.findViewById<TextView>(R.id.txtConflictFileName)
-        val txtInfo        = view.findViewById<TextView>(R.id.txtConflictInfo)
-        val txtZeroByte    = view.findViewById<TextView>(R.id.txtZeroByteWarning)
-        val btnOverwrite   = view.findViewById<MaterialButton>(R.id.btnConflictOverwrite)
-        val btnSkip        = view.findViewById<MaterialButton>(R.id.btnConflictSkip)
-        val btnKeepBoth    = view.findViewById<MaterialButton>(R.id.btnConflictKeepBoth)
-        val btnCancel      = view.findViewById<MaterialButton>(R.id.btnConflictCancel)
+            // Bind views
+            val txtFileName    = view.findViewById<TextView>(R.id.txtConflictFileName)
+            val txtInfo        = view.findViewById<TextView>(R.id.txtConflictInfo)
+            val txtZeroByte    = view.findViewById<TextView>(R.id.txtZeroByteWarning)
+            val btnOverwrite   = view.findViewById<MaterialButton>(R.id.btnConflictOverwrite)
+            val btnSkip        = view.findViewById<MaterialButton>(R.id.btnConflictSkip)
+            val btnKeepBoth    = view.findViewById<MaterialButton>(R.id.btnConflictKeepBoth)
+            val btnCancel      = view.findViewById<MaterialButton>(R.id.btnConflictCancel)
 
-        // "Apply to all" — CheckBox on mobile; toggle Button on TV
-        val chkApplyToAll  = view.findViewById<CheckBox?>(R.id.chkApplyToAll)
-        val btnApplyToAll  = view.findViewById<MaterialButton?>(R.id.btnApplyToAll)
+            // "Apply to all" — CheckBox on mobile; toggle Button on TV
+            val chkApplyToAll  = view.findViewById<CheckBox?>(R.id.chkApplyToAll)
+            val btnApplyToAll  = view.findViewById<MaterialButton?>(R.id.btnApplyToAll)
 
-        txtFileName.text = fileName
-        txtInfo.text = if (isFolder)
-            activity.getString(R.string.conflict_message_folder, fileName)
-        else
-            activity.getString(R.string.conflict_message_file, fileName)
+            txtFileName.text = fileName
+            txtInfo.text = if (isFolder)
+                activity.getString(R.string.conflict_message_folder, fileName)
+            else
+                activity.getString(R.string.conflict_message_file, fileName)
 
-        if (destSizeBytes == 0L) {
-            txtZeroByte.visibility = View.VISIBLE
-        }
+            if (destSizeBytes == 0L) {
+                txtZeroByte.visibility = View.VISIBLE
+            }
 
-        // Sync initial "apply to all" visual state
-        chkApplyToAll?.isChecked = applyToAllRef[0]
-        btnApplyToAll?.alpha = if (applyToAllRef[0]) 1f else 0.5f
+            // Sync initial "apply to all" visual state
+            chkApplyToAll?.isChecked = applyToAllRef[0]
+            btnApplyToAll?.alpha = if (applyToAllRef[0]) 1f else 0.5f
 
-        chkApplyToAll?.setOnCheckedChangeListener { _, checked ->
-            applyToAllRef[0] = checked
-        }
-        btnApplyToAll?.setOnClickListener {
-            applyToAllRef[0] = !applyToAllRef[0]
-            btnApplyToAll.alpha = if (applyToAllRef[0]) 1f else 0.5f
-        }
+            chkApplyToAll?.setOnCheckedChangeListener { _, checked ->
+                applyToAllRef[0] = checked
+            }
+            btnApplyToAll?.setOnClickListener {
+                applyToAllRef[0] = !applyToAllRef[0]
+                btnApplyToAll.alpha = if (applyToAllRef[0]) 1f else 0.5f
+            }
 
-        // Apply TV yellow-focus styling
-        if (isTvMode) {
-            applyTvFocusStyle(activity, btnOverwrite, btnSkip, btnKeepBoth, btnCancel, btnApplyToAll)
-        }
+            // Apply TV yellow-focus styling
+            if (isTvMode) {
+                applyTvFocusStyle(activity, btnOverwrite, btnSkip, btnKeepBoth, btnCancel, btnApplyToAll)
+            }
 
-        fun pick(action: ConflictAction) {
-            if (!deferred.isCompleted) deferred.complete(action)
-        }
+            fun pick(action: ConflictAction) {
+                if (!deferred.isCompleted) deferred.complete(action)
+            }
 
-        btnOverwrite.setOnClickListener  { pick(ConflictAction.OVERWRITE)  }
-        btnSkip.setOnClickListener       { pick(ConflictAction.SKIP)       }
-        btnKeepBoth.setOnClickListener   { pick(ConflictAction.KEEP_BOTH)  }
-        btnCancel.setOnClickListener     { pick(ConflictAction.CANCEL)     }
+            btnOverwrite.setOnClickListener  { pick(ConflictAction.OVERWRITE)  }
+            btnSkip.setOnClickListener       { pick(ConflictAction.SKIP)       }
+            btnKeepBoth.setOnClickListener   { pick(ConflictAction.KEEP_BOTH)  }
+            btnCancel.setOnClickListener     { pick(ConflictAction.CANCEL)     }
 
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
-            .setView(view)
-            .setCancelable(false)
-            .create()
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
+                .setView(view)
+                .setCancelable(false)
+                .create()
 
-        dialog.window?.setBackgroundDrawable(
-            android.graphics.drawable.ColorDrawable(
-                android.graphics.Color.TRANSPARENT
+            dialog.window?.setBackgroundDrawable(
+                android.graphics.drawable.ColorDrawable(
+                    android.graphics.Color.TRANSPARENT
+                )
             )
-        )
 
-        dialog.show()
+            dialog.show()
 
-        // On TV: widen the dialog to ~48% of screen
-        if (isTvMode) {
-            dialog.window?.setLayout(
-                (activity.resources.displayMetrics.widthPixels * 0.48).toInt(),
-                android.view.WindowManager.LayoutParams.WRAP_CONTENT
-            )
+            // On TV: widen the dialog to ~48% of screen
+            if (isTvMode) {
+                dialog.window?.setLayout(
+                    (activity.resources.displayMetrics.widthPixels * 0.48).toInt(),
+                    android.view.WindowManager.LayoutParams.WRAP_CONTENT
+                )
+            }
+
+            val action = deferred.await()
+            dialog.dismiss()
+            action
         }
-
-        val action = deferred.await()
-        dialog.dismiss()
-        action
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -685,23 +691,53 @@ object TransferConflictHelper {
                             effectiveSrcShare, srcFile.path, tempFile, srcFile.size, onProgress
                         )
                     } else {
-                        val inStream = when (effectiveSrcShare.type) {
-                            ShareType.SMB -> SmbShareClient.openInputStream(effectiveSrcShare, srcFile.path) { conn -> onConnectionReady?.invoke(conn) }
-                            ShareType.FTP -> FtpShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                            ShareType.TV  -> TvShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                            ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                            ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(effectiveSrcShare, srcFile.path)
-                            ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                            ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                            ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                            ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
-                            ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                        val threads = effectiveSrcShare.effectiveThreads(ctx)
+                        val isParallelCandidate = (effectiveSrcShare.type == ShareType.FTP || effectiveSrcShare.type == ShareType.SFTP)
+                            && threads > 1 && srcFile.size >= 5 * 1024 * 1024
+                        var parallelHandled = false
+                        if (isParallelCandidate) {
+                            parallelHandled = when (effectiveSrcShare.type) {
+                                ShareType.FTP -> FtpShareClient.downloadFileParallel(
+                                    share = effectiveSrcShare,
+                                    remotePath = srcFile.path,
+                                    destFile = tempFile,
+                                    totalSize = srcFile.size,
+                                    threads = threads,
+                                    onProgress = onProgress,
+                                    onConnectionReady = onConnectionReady
+                                )
+                                ShareType.SFTP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.downloadFileParallel(
+                                    share = effectiveSrcShare,
+                                    remotePath = srcFile.path,
+                                    destFile = tempFile,
+                                    totalSize = srcFile.size,
+                                    threads = threads,
+                                    onProgress = onProgress,
+                                    onConnectionReady = onConnectionReady
+                                )
+                                else -> false
+                            }
                         }
-                        withContext(Dispatchers.IO) {
-                            inStream.use { inp ->
-                                FileOutputStream(tempFile).use { out ->
-                                    CopyHelper.copy(inp, out, srcFile.size, onProgress)
+
+                        if (!parallelHandled) {
+                            val inStream = when (effectiveSrcShare.type) {
+                                ShareType.SMB -> SmbShareClient.openInputStream(effectiveSrcShare, srcFile.path) { conn -> onConnectionReady?.invoke(conn) }
+                                ShareType.FTP -> FtpShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                                ShareType.TV  -> TvShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                                ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(effectiveSrcShare, srcFile.path)
+                                ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                                ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                                ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(effectiveSrcShare, srcFile.path).first
+                                ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                            }
+                            withContext(Dispatchers.IO) {
+                                inStream.use { inp ->
+                                    FileOutputStream(tempFile).use { out ->
+                                        CopyHelper.copy(inp, out, srcFile.size, onProgress)
+                                    }
                                 }
                             }
                         }
@@ -1330,8 +1366,9 @@ object TransferConflictHelper {
                         ?: za.kilowatch.ultimatefilemanager.network.SmbShareClient.listFiles(share, parent)
                             .firstOrNull { it.name == name }?.size ?: -1L
                 }
-                ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.listFiles(share, parent)
-                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.getFileSize(share, remotePath)
+                    ?: (za.kilowatch.ultimatefilemanager.network.FtpShareClient.listFiles(share, parent)
+                        .firstOrNull { it.name == name }?.size ?: -1L)
                 ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, parent)
                     .firstOrNull { it.name == name }?.size ?: -1L
                 ShareType.SFTP, ShareType.SCP ->

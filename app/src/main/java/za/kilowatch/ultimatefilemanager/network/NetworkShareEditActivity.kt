@@ -146,6 +146,14 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private var txtNfsDebugLog:  TextView? = null
     private var btnCopyDebugLog: View? = null
 
+    // Transfer threads views (FTP / SFTP / SCP)
+    private var layerTransferThreads: View? = null
+    private var chipThreadsDefault:   MaterialButton? = null
+    private var chipThreads1:         MaterialButton? = null
+    private var chipThreads2:         MaterialButton? = null
+    private var chipThreads4:         MaterialButton? = null
+    private var chipThreads8:         MaterialButton? = null
+
     private val pickKeyLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri?.let { handleKeyPicked(it) }
     }
@@ -275,6 +283,13 @@ class NetworkShareEditActivity : AppCompatActivity() {
         txtNfsDebugLog   = findViewById(R.id.txtNfsDebugLog)
         btnCopyDebugLog  = findViewById(R.id.btnCopyDebugLog)
 
+        layerTransferThreads = findViewById(R.id.layerTransferThreads)
+        chipThreadsDefault   = findViewById(R.id.chipThreadsDefault)
+        chipThreads1         = findViewById(R.id.chipThreads1)
+        chipThreads2         = findViewById(R.id.chipThreads2)
+        chipThreads4         = findViewById(R.id.chipThreads4)
+        chipThreads8         = findViewById(R.id.chipThreads8)
+
         swExposeToSaf    = findViewById(R.id.swExposeToSaf)
         findViewById<View?>(R.id.layoutTvExposeToSaf)?.setOnClickListener {
             swExposeToSaf?.let { sw -> sw.isChecked = !sw.isChecked }
@@ -343,12 +358,13 @@ class NetworkShareEditActivity : AppCompatActivity() {
             val isSsh = (checkedId == R.id.chipSftp || checkedId == R.id.chipScp)
             val isNfs = (checkedId == R.id.chipNfs)
             val isDlna = (checkedId == R.id.chipDlna)
+            val isFtpOrSftp = (checkedId == R.id.chipFtp || checkedId == R.id.chipSftp || checkedId == R.id.chipScp)
 
             if (isDlna) {
                 applyDlnaVisibility()
             } else {
                 // Restore normal visibility when switching away from DLNA
-                restoreNormalVisibility(isSmb, isSsh, isNfs)
+                restoreNormalVisibility(isSmb, isSsh, isNfs, isFtpOrSftp)
             }
 
             resetConnectionTested()
@@ -422,6 +438,15 @@ class NetworkShareEditActivity : AppCompatActivity() {
         accessButtons.forEach { btn ->
             btn?.setOnClickListener { clicked ->
                 accessButtons.forEach { it?.isChecked = (it == clicked) }
+            }
+        }
+
+        // ── Transfer Threads Selector ───────────────────────────────────────
+        val threadButtons = listOf(chipThreadsDefault, chipThreads1, chipThreads2, chipThreads4, chipThreads8)
+        chipThreadsDefault?.isChecked = true
+        threadButtons.forEach { btn ->
+            btn?.setOnClickListener { clicked ->
+                threadButtons.forEach { it?.isChecked = (it == clicked) }
             }
         }
     }
@@ -510,7 +535,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
     }
 
     /** Restore normal field visibility when switching away from DLNA. */
-    private fun restoreNormalVisibility(isSmb: Boolean, isSsh: Boolean, isNfs: Boolean) {
+    private fun restoreNormalVisibility(isSmb: Boolean, isSsh: Boolean, isNfs: Boolean, isFtpOrSftp: Boolean) {
         layerHost.visibility = View.VISIBLE
         layerPort.visibility = View.VISIBLE
         tilDomain.visibility = if (isSmb) View.VISIBLE else View.GONE
@@ -530,6 +555,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
         tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
         layerNfsVersion?.visibility = if (isNfs) View.VISIBLE else View.GONE
         btnScanNfsHosts.visibility = if (isNfs) View.VISIBLE else View.GONE
+
+        layerTransferThreads?.visibility = if (isFtpOrSftp) View.VISIBLE else View.GONE
 
         btnToggleSshAuth.visibility = if (isSsh) View.VISIBLE else View.GONE
         cardSshAuth.visibility = View.GONE
@@ -709,6 +736,18 @@ class NetworkShareEditActivity : AppCompatActivity() {
                 4 -> nfsButtons.forEach { it?.isChecked = (it?.id == R.id.chipNfs4) }
                 else -> nfsButtons.forEach { it?.isChecked = (it?.id == R.id.chipNfs3) } // default v3
             }
+        }
+
+        // Transfer threads selector visibility + state (FTP / SFTP / SCP)
+        val isFtpOrSftp = (share.type == ShareType.FTP || share.type == ShareType.SFTP || share.type == ShareType.SCP)
+        layerTransferThreads?.visibility = if (isFtpOrSftp) View.VISIBLE else View.GONE
+        val threadButtons = listOf(chipThreadsDefault, chipThreads1, chipThreads2, chipThreads4, chipThreads8)
+        when (share.parallelThreads) {
+            1 -> threadButtons.forEach { it?.isChecked = (it?.id == R.id.chipThreads1) }
+            2 -> threadButtons.forEach { it?.isChecked = (it?.id == R.id.chipThreads2) }
+            4 -> threadButtons.forEach { it?.isChecked = (it?.id == R.id.chipThreads4) }
+            8 -> threadButtons.forEach { it?.isChecked = (it?.id == R.id.chipThreads8) }
+            else -> threadButtons.forEach { it?.isChecked = (it?.id == R.id.chipThreadsDefault) }
         }
 
         // DLNA-specific visibility when editing an existing DLNA share
@@ -1535,7 +1574,16 @@ class NetworkShareEditActivity : AppCompatActivity() {
                     else                           -> 3
                 }
             } else 3,
-            exposeToSaf = swExposeToSaf?.isChecked ?: existingShare?.exposeToSaf ?: true
+            exposeToSaf = swExposeToSaf?.isChecked ?: existingShare?.exposeToSaf ?: true,
+            parallelThreads = if (type == ShareType.FTP || type == ShareType.SFTP || type == ShareType.SCP) {
+                when {
+                    chipThreads1?.isChecked == true -> 1
+                    chipThreads2?.isChecked == true -> 2
+                    chipThreads4?.isChecked == true -> 4
+                    chipThreads8?.isChecked == true -> 8
+                    else                            -> 0
+                }
+            } else 0
         )
     }
 

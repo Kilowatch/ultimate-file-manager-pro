@@ -3011,7 +3011,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             try {
                 // Server-mode SMB: intercept at root to discover shares
                 if (share.type == ShareType.SMB && share.isServerMode) {
-                    kotlinx.coroutines.withTimeout(15_000L) {
+                    kotlinx.coroutines.withTimeout(35_000L) {
                         val cleanPath = currentPath.trimStart('/')
                         if (cleanPath.isEmpty()) {
                             if (share.remotePath != originalRemotePath) {
@@ -3056,7 +3056,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                var files = kotlinx.coroutines.withTimeout(15_000L) {
+                var files = kotlinx.coroutines.withTimeout(35_000L) {
                     when (share.type) {
                         ShareType.SMB -> SmbShareClient.listFiles(share, currentPath)
                         ShareType.FTP -> FtpShareClient.listFiles(share, currentPath)
@@ -3123,7 +3123,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     val imgEmptyIcon = findViewById<View>(R.id.imgEmptyIcon)
 
                     if (isConnectionError) {
-                        tvEmptyState.text = getString(R.string.network_connection_restored_first)
+                        tvEmptyState.text = if (share.type == ShareType.TV) {
+                            getString(R.string.network_connection_restored_first)
+                        } else {
+                            getString(R.string.network_server_connection_failed)
+                        }
                         tvEmptyState.visibility = View.VISIBLE
                         cardGuide.visibility = View.GONE
                     } else if (isGDriveScopeError) {
@@ -7482,13 +7486,18 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                val parts = currentPath.split("/")
+                val parts = currentPath.split("/").filter { it.isNotEmpty() }
                 var accumulated = ""
+                var isFirstPart = true
                 for (part in parts) {
-                    if (part.isNotEmpty()) {
-                        accumulated = if (accumulated.isEmpty()) part else "$accumulated/$part"
-                        list.add(Pair(part, accumulated))
+                    if (isFirstPart && (part.equals(storageLabel, ignoreCase = true) || part.equals(share.name, ignoreCase = true))) {
+                        accumulated = part
+                        isFirstPart = false
+                        continue
                     }
+                    isFirstPart = false
+                    accumulated = if (accumulated.isEmpty()) part else "$accumulated/$part"
+                    list.add(Pair(part, accumulated))
                 }
             }
         }

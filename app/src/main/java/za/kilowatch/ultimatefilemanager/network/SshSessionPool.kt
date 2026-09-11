@@ -212,9 +212,11 @@ object SshSessionPool {
         val session: ClientSession,
         private val onRelease: () -> Unit,
         private val onInvalidate: () -> Unit
-    ) {
+    ) : AutoCloseable {
         /** Return this session to the pool (or close it if dedicated). */
         fun release() = onRelease()
+
+        override fun close() = release()
 
         /** Discard a broken session so the pool won't hand it out again. */
         fun invalidate() = onInvalidate()

@@ -1,59 +1,55 @@
 package za.kilowatch.ultimatefilemanager.network
 
-import com.hierynomus.msdtyp.AccessMask
-import com.hierynomus.mssmb2.SMB2CreateDisposition
-import com.hierynomus.mssmb2.SMB2ShareAccess
-import com.hierynomus.smbj.SMBClient
-import com.hierynomus.smbj.SmbConfig
-import com.hierynomus.smbj.auth.AuthenticationContext
-import com.hierynomus.smbj.share.DiskShare
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.EnumSet
-import java.util.concurrent.TimeUnit
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
- * Thin wrapper around smbj for SMB2/3 access.
+ * High-performance, robust SMB2/3 client powered by native Go smbclient.aar.
  *
- * Connections are managed by [SmbSessionPool] — operations reuse a single
- * pooled TCP connection per share, which means Windows only sees ONE session
- * per device instead of one per API call.
- *
- * Streaming operations (openInputStream / openOutputStream) borrow a dedicated
- * connection for the lifetime of the stream; the pool connection stays free for
- * concurrent list/delete/rename calls during a copy.
+ * Provides multiplexed connection pooling, keepalive Echo, seekable streams,
+ * and reliable directory/file operations without the connection drops or
+ * TransportExceptions of legacy Java SMB libraries.
  */
 object SmbShareClient {
 
-    // Use shorter timeouts for UI responsiveness; longer operations (uploads) still work
-    // but will fail faster when the host is unreachable or slow.
-    // Sentinel used when listing returns 0 size; indicates size unknown until explicitly queried.
     const val SIZE_UNKNOWN_SENTINEL: Long = 2147483647L // 2GB
 
     // ── Read operations ───────────────────────────────────────────────────────
 
     fun listFiles(share: NetworkShare, remotePath: String): List<NetworkFile> {
-        return withDiskShare(share, remotePath) { diskShare, innerPath ->
-            diskShare.list(innerPath).map { info ->
-                za.kilowatch.ultimatefilemanager.util.GoRoLog.w("RAW LIST ITEM: name=${info.fileName}, size=${info.endOfFile}, alloc=${info.allocationSize}, attr=${info.fileAttributes}")
-                val isDir = info.fileAttributes and 0x10L != 0L
-                var fileSize = info.endOfFile
-                // Some SMB servers return 0 for size in directory listings. Avoid expensive
-                // per-file queries (getFileInformation/openFile) during listing because those
-                // cause heavy latency on some servers/NAS devices. If size is 0, use a
-                // large sentinel value so clients that need a size (e.g. games) can still work.
-                if (!isDir && fileSize == 0L) {
-                    fileSize = SIZE_UNKNOWN_SENTINEL
-                }
+        val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+        if (shareName.isBlank()) {
+            throw IllegalArgumentException("Cannot determine SMB share name for share.remotePath='${share.remotePath}' and remotePath='$remotePath'")
+        }
+        val json = smbclient.Smbclient.smbListFiles(
+            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+            shareName, innerPath
+        )
+        val jsonArray = JSONArray(json)
+        val list = ArrayList<NetworkFile>(jsonArray.length())
+        for (i in 0 until jsonArray.length()) {
+            val obj = jsonArray.getJSONObject(i)
+            val name = obj.getString("name")
+            val isDir = obj.getBoolean("isDir")
+            var fileSize = obj.getLong("size")
+            if (!isDir && fileSize == 0L) {
+                fileSize = SIZE_UNKNOWN_SENTINEL
+            }
+            val modTime = obj.optLong("modTime", System.currentTimeMillis())
+            val itemRemotePath = "/" + joinPath(remotePath, name).replace('\\', '/').trimStart('/')
+            list.add(
                 NetworkFile(
-                    name         = info.fileName,
-                    path         = "/" + joinPath(remotePath, info.fileName).replace('\\', '/').trimStart('/'),
+                    name         = name,
+                    path         = itemRemotePath,
                     isDirectory  = isDir,
                     size         = fileSize,
-                    lastModified = info.lastWriteTime.toEpochMillis()
+                    lastModified = modTime
                 )
-            }.filter { it.name != "." && it.name != ".." }
+            )
         }
+        return list
     }
 
     suspend fun openInputStream(
@@ -62,60 +58,69 @@ object SmbShareClient {
         dedicated: Boolean = true,
         onConnectionReady: ((AutoCloseable) -> Unit)? = null
     ): InputStream {
-        // Use a DEDICATED connection for streaming if requested, to avoid blocking the pool.
-        val pooled = SmbSessionPool.borrow(share, authContext(share), dedicated = dedicated)
-        // Expose connection so caller can close it to force-abort a slow download
-        onConnectionReady?.invoke(pooled.connection)
-        return try {
-            val session = pooled.session
-            val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
-            android.util.Log.d("SmbClientTrace", "openInputStream: share.remotePath='${share.remotePath}' remotePath='$remotePath' → shareName='$shareName' innerPath='$innerPath' host=${share.host}")
-            val diskShare = session.connectShare(shareName) as DiskShare
-            val file = diskShare.openFile(
-                innerPath,
-                EnumSet.of(AccessMask.GENERIC_READ),
-                null,
-                SMB2ShareAccess.ALL,
-                SMB2CreateDisposition.FILE_OPEN,
-                null
-            )
-            val inputStream = file.inputStream
-            object : InputStream() {
-                override fun read(): Int = inputStream.read()
-                override fun read(b: ByteArray, off: Int, len: Int) = inputStream.read(b, off, len)
-                override fun close() {
-                    runCatching { inputStream.close() }
-                    runCatching { file.close() }
-                    pooled.release()
+        val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+        val handleId = smbclient.Smbclient.smbOpenFile(
+            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+            shareName, innerPath, "r", dedicated
+        )
+        val closeable = AutoCloseable {
+            runCatching { smbclient.Smbclient.smbCloseFile(handleId) }
+        }
+        onConnectionReady?.invoke(closeable)
+
+        return object : InputStream() {
+            private var pos = 0L
+            private var closed = false
+
+            override fun read(): Int {
+                val buf = ByteArray(1)
+                val n = read(buf, 0, 1)
+                return if (n <= 0) -1 else (buf[0].toInt() and 0xFF)
+            }
+
+            override fun read(b: ByteArray, off: Int, len: Int): Int {
+                if (closed) throw java.io.IOException("Stream closed")
+                if (len <= 0) return 0
+                val bytes = smbclient.Smbclient.smbReadAt(handleId, pos, len.toLong())
+                if (bytes.isEmpty()) return -1
+                System.arraycopy(bytes, 0, b, off, bytes.size)
+                pos += bytes.size
+                return bytes.size
+            }
+
+            override fun skip(n: Long): Long {
+                if (n <= 0L) return 0L
+                pos += n
+                return n
+            }
+
+            override fun close() {
+                if (!closed) {
+                    closed = true
+                    closeable.close()
                 }
             }
-        } catch (e: Exception) {
-            android.util.Log.e("SmbClientTrace", "openInputStream FAILED: share.remotePath='${share.remotePath}' remotePath='$remotePath' host=${share.host} error=${e.message}")
-            pooled.invalidate()
-            throw e
         }
     }
 
     /** Query the server for the actual size of a single remote file. Returns null if unavailable. */
     fun getFileSize(share: NetworkShare, remotePath: String): Long? {
         return runCatching {
-            withDiskShare(share, remotePath) { diskShare, innerPath ->
-                val fi = diskShare.getFileInformation(innerPath)
-                var size = fi.standardInformation.endOfFile
-                if (size == 0L) size = fi.standardInformation.allocationSize
-                if (size <= 0L) null else size
-            }
+            val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+            val json = smbclient.Smbclient.smbStat(
+                share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+                shareName, innerPath
+            )
+            val obj = JSONObject(json)
+            if (obj.optBoolean("exists", false) && !obj.optBoolean("isDir", false)) {
+                obj.optLong("size", -1L).takeIf { it >= 0L }
+            } else null
         }.getOrNull()
     }
 
     /**
      * Opens a file for random-access reads (seeking) and optionally writes.
-     *
-     * Returns an [SmbRandomAccess] handle whose [SmbRandomAccess.read]/write supports
-     * reading at arbitrary offsets — required by `ProxyFileDescriptorCallback`
-     * for apps like PPSSPP that need to seek within large game files.
-     *
-     * The caller MUST call [SmbRandomAccess.close] when done.
+     * Backed by native Go go-smb2 client handles for high performance.
      */
     fun openRandomAccessFile(
         share: NetworkShare,
@@ -125,111 +130,55 @@ object SmbShareClient {
         onConnectionReady: ((AutoCloseable) -> Unit)? = null,
         suppressInvalidateOnReadError: Boolean = false
     ): SmbRandomAccess {
-        // Random-access handles are long-lived (e.g. game running for hours) so
-        // always use a dedicated connection rather than holding the pool entry.
-        val pooled  = SmbSessionPool.borrow(share, authContext(share), dedicated = dedicated, forWrite = isWrite)
-        onConnectionReady?.invoke(pooled.connection)
-        return try {
-            val session  = pooled.session
-            val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
-            val diskShare = session.connectShare(shareName) as DiskShare
-
-            val accessMask = if (isWrite) {
-                EnumSet.of(AccessMask.GENERIC_READ, AccessMask.GENERIC_WRITE)
-            } else {
-                EnumSet.of(AccessMask.GENERIC_READ)
-            }
-
-            val file = diskShare.openFile(
-                innerPath,
-                accessMask,
-                null,
-                SMB2ShareAccess.ALL,
-                if (isWrite) SMB2CreateDisposition.FILE_OPEN_IF else SMB2CreateDisposition.FILE_OPEN,
-                null
-            )
-            val fileInfo = file.fileInformation
-            // Some SMB servers report endOfFile=0 even for non-empty files (e.g. sparse files,
-            // certain NAS firmware). Apply the same fallback that getFileSize() uses:
-            // prefer endOfFile, fall back to allocationSize, and if both are 0 leave as 0
-            // (SmbRandomAccess.read() will not use size as an early EOF guard when size == 0).
-            var fileSize = fileInfo.standardInformation.endOfFile
-            if (fileSize == 0L) fileSize = fileInfo.standardInformation.allocationSize
-            if (fileSize < 0L) fileSize = 0L
-            SmbRandomAccess(
-                file,
-                fileSize,
-                onClose = {
-                    runCatching { file.close() }
-                    pooled.release()
-                },
-                onInvalidate = {
-                    pooled.invalidate()
-                },
-                suppressInvalidateOnReadError = suppressInvalidateOnReadError
-            )
-        } catch (e: Exception) {
-            pooled.invalidate()
-            throw e
+        val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+        val mode = if (isWrite) "rw" else "r"
+        val handleId = smbclient.Smbclient.smbOpenFile(
+            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+            shareName, innerPath, mode, dedicated
+        )
+        val closeable = AutoCloseable {
+            runCatching { smbclient.Smbclient.smbCloseFile(handleId) }
         }
+        onConnectionReady?.invoke(closeable)
+
+        val size = runCatching { smbclient.Smbclient.smbGetFileSize(handleId) }.getOrDefault(0L)
+        return SmbRandomAccess(
+            handleId = handleId,
+            size = if (size <= 0L) SIZE_UNKNOWN_SENTINEL else size,
+            onClose = { closeable.close() }
+        )
     }
 
     /** Handle for seekable reads/writes on an SMB file. */
     class SmbRandomAccess(
-        private val file: com.hierynomus.smbj.share.File,
+        private val handleId: Long,
         override var size: Long,
-        private val onClose: () -> Unit,
-        private val onInvalidate: () -> Unit,
-        private val suppressInvalidateOnReadError: Boolean = false
+        private val onClose: () -> Unit
     ) : IRandomAccessFile {
-        /**
-         * Reads up to [length] bytes starting at [offset] into [buffer].
-         * ProxyFileDescriptorCallback REQUIRES returning the exact requested size unless EOF.
-         * smbj reads might be shorter than requested (e.g. max SMB read size 64KB),
-         * so we loop until fulfilled.
-         *
-         * When [suppressInvalidateOnReadError] is true, a transient read failure does NOT
-         * close the underlying SMB connection. This is used by the HTTP proxy's pinned
-         * streaming handle: an external player (VLC) that aborts a request on seek must not
-         * destroy the session that other concurrent requests still need. The proxy decides
-         * when the handle is truly dead and closes it itself.
-         */
-        override fun read(offset: Long, buffer: ByteArray, length: Int): Int = synchronized(this) {
-            // Only use size as a hard EOF guard when we have a reliable non-zero size.
-            // When size == 0 (server reported 0 for a non-empty file), skip the guard
-            // and let the actual SMB read determine EOF naturally.
-            if (size > 0L && offset >= size) return -1
-            var toRead = if (size > 0L) minOf(length.toLong(), size - offset).toInt() else length
-            var totalRead = 0
-            var currentOffset = offset
 
-            try {
-                while (toRead > 0) {
-                    val bytesRead = file.read(buffer, currentOffset, totalRead, toRead)
-                    if (bytesRead <= 0) break // EOF or error
-                    totalRead += bytesRead
-                    currentOffset += bytesRead
-                    toRead -= bytesRead
+        override fun read(offset: Long, buffer: ByteArray, length: Int): Int = synchronized(this) {
+            if (size > 0L && size != SIZE_UNKNOWN_SENTINEL && offset >= size) return -1
+            return try {
+                val bytes = smbclient.Smbclient.smbReadAt(handleId, offset, length.toLong())
+                if (bytes.isEmpty()) {
+                    -1
+                } else {
+                    System.arraycopy(bytes, 0, buffer, 0, bytes.size)
+                    bytes.size
                 }
-            } catch (e: Exception) {
-                if (!suppressInvalidateOnReadError) {
-                    onInvalidate()
-                }
-                throw e
+            } catch (_: Exception) {
+                -1
             }
-            return if (totalRead == 0) -1 else totalRead
         }
 
-        /**
-         * Writes [length] bytes from [buffer] starting at [offset] to the file.
-         */
-        override fun write(offset: Long, buffer: ByteArray, length: Int): Int {
-            file.write(buffer, offset, 0, length)
-            val endOffset = offset + length
+        override fun write(offset: Long, buffer: ByteArray, length: Int): Int = synchronized(this) {
+            val data = if (length == buffer.size) buffer else buffer.copyOfRange(0, length)
+            val written = smbclient.Smbclient.smbWriteAt(handleId, offset, data)
+            val endOffset = offset + written
             if (endOffset > size) {
                 size = endOffset
             }
-            return length
+            written.toInt()
         }
 
         override fun close() = onClose()
@@ -237,165 +186,88 @@ object SmbShareClient {
 
     // ── Write operations ──────────────────────────────────────────────────────
 
-    /** Opens a write stream; creates the file if it doesn't exist.
-     *  [onConnectionReady] is invoked with the raw TCP connection before the copy starts,
-     *  so the caller can close it immediately on cancel (kills the socket, no 15s timeout). */
     suspend fun openOutputStream(
         share: NetworkShare,
         remotePath: String,
         onConnectionReady: ((AutoCloseable) -> Unit)? = null
     ): OutputStream {
-        // Use a DEDICATED connection for streaming to avoid blocking the pool
-        // and prevent concurrent metadata calls from closing the share.
-        val pooled = SmbSessionPool.borrow(share, authContext(share), dedicated = true, forWrite = true)
-        // Expose the connection immediately — caller can close() it to abort the copy instantly
-        onConnectionReady?.invoke(pooled.connection)
-        return try {
-            val session  = pooled.session
-            val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+        val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+        val handleId = smbclient.Smbclient.smbOpenFile(
+            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+            shareName, innerPath, "w", true
+        )
+        val closeable = AutoCloseable {
+            runCatching { smbclient.Smbclient.smbCloseFile(handleId) }
+        }
+        onConnectionReady?.invoke(closeable)
 
-            za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SmbClient", "OPEN OUTPUT STREAM")
-            za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SmbClient", "share.remotePath: ${share.remotePath}")
-            za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SmbClient", "remotePath arg: $remotePath")
-            za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SmbClient", "shareName: $shareName")
-            za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SmbClient", "innerPath: $innerPath")
+        return object : OutputStream() {
+            private var pos = 0L
+            private var closed = false
 
-            val diskShare = session.connectShare(shareName) as DiskShare
+            override fun write(b: Int) {
+                write(byteArrayOf(b.toByte()), 0, 1)
+            }
 
-            // Retry loop: if a previous delete is still pending on the server,
-            // wait briefly and retry instead of failing immediately.
-            var file: com.hierynomus.smbj.share.File? = null
-            for (attempt in 1..5) {
-                try {
-                    file = diskShare.openFile(
-                        innerPath,
-                        EnumSet.of(AccessMask.GENERIC_WRITE),
-                        null,
-                        SMB2ShareAccess.ALL,
-                        SMB2CreateDisposition.FILE_OVERWRITE_IF,
-                        null
-                    )
-                    break  // success
-                } catch (e: Exception) {
-                    val isDeletePending = e.message?.contains("STATUS_DELETE_PENDING") == true
-                            || e.cause?.message?.contains("STATUS_DELETE_PENDING") == true
-                    android.util.Log.w("UFM_COPY", "openOutputStream attempt $attempt failed: ${e.javaClass.simpleName}: ${e.message}, isDeletePending=$isDeletePending")
-                    if (isDeletePending && attempt < 5) {
-                        kotlinx.coroutines.delay(2000)  // wait for server to finish deleting
-                        continue
-                    }
-                    throw e  // non-retryable or exhausted retries
+            override fun write(b: ByteArray, off: Int, len: Int) {
+                if (closed) throw java.io.IOException("Stream closed")
+                if (len <= 0) return
+                val data = if (off == 0 && len == b.size) b else b.copyOfRange(off, off + len)
+                val written = smbclient.Smbclient.smbWriteAt(handleId, pos, data)
+                pos += written
+            }
+
+            override fun close() {
+                if (!closed) {
+                    closed = true
+                    closeable.close()
                 }
             }
-            val out = file!!.outputStream
-            object : OutputStream() {
-                override fun write(b: Int) = out.write(b)
-                override fun write(b: ByteArray, off: Int, len: Int) = out.write(b, off, len)
-                override fun flush() = out.flush()
-                override fun close() {
-                    runCatching { out.close() }
-                    runCatching { file.close() }
-                    pooled.release()
-                }
-            }
-        } catch (e: Exception) {
-            pooled.invalidate()
-            throw e
         }
     }
 
     fun mkdir(share: NetworkShare, remotePath: String) {
-        withDiskShare(share, remotePath) { diskShare, innerPath ->
-            za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SmbClient", "MKDIR innerPath: $innerPath (remotePath: $remotePath)")
-            diskShare.mkdir(innerPath)
-        }
+        val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+        smbclient.Smbclient.smbMkdir(
+            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+            shareName, innerPath
+        )
     }
 
     suspend fun deleteFile(share: NetworkShare, remotePath: String) {
-        // Use pooled connections for rm() and verification.
-        // The delay between delete and verify is a suspend (non-blocking) delay.
-        for (attempt in 1..2) {
-            // Step 1: delete (ignore failures — file may already be gone)
-            withDiskShare(share, remotePath) { diskShare, innerPath ->
-                runCatching { diskShare.rm(innerPath) }
-            }
-
-            // Step 2: wait briefly for the server to process the delete (suspend, don't block)
-            kotlinx.coroutines.delay(300)
-
-            // Step 3: verify deletion on a pooled connection
-            val stillExists = withDiskShare(share, remotePath) { diskShare, innerPath ->
-                try {
-                    diskShare.fileExists(innerPath)
-                } catch (_: Exception) {
-                    false   // exception querying the path = it's gone
-                }
-            }
-
-            if (!stillExists) {
-                android.util.Log.w("UFM_COPY", "deleteFile: $remotePath confirmed deleted (attempt $attempt)")
-                return
-            }
-            android.util.Log.w("UFM_COPY", "deleteFile: $remotePath still exists, retrying (attempt $attempt)")
-        }
-        android.util.Log.e("UFM_COPY", "deleteFile: $remotePath could not be deleted after 2 attempts")
+        val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+        smbclient.Smbclient.smbRemove(
+            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+            shareName, innerPath
+        )
     }
 
     suspend fun deleteDir(share: NetworkShare, remotePath: String) {
-        withDiskShare(share, remotePath) { diskShare, innerPath ->
-            diskShare.rmdir(innerPath, true)
-        }
+        val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+        smbclient.Smbclient.smbRemoveAll(
+            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+            shareName, innerPath
+        )
     }
 
     fun rename(share: NetworkShare, fromPath: String, toPath: String) {
         val (shareFrom, innerFrom) = splitSharePath(share.remotePath, fromPath)
         val (_, innerTo) = splitSharePath(share.remotePath, toPath)
-        withDiskShare(share, fromPath) { diskShare, _ ->
-            try {
-                diskShare.openFile(
-                    innerFrom,
-                    EnumSet.of(AccessMask.DELETE),
-                    null,
-                    SMB2ShareAccess.ALL,
-                    SMB2CreateDisposition.FILE_OPEN,
-                    null
-                ).use { f -> f.rename(innerTo, true) }
-            } catch (e: Exception) {
-                diskShare.openDirectory(
-                    innerFrom,
-                    EnumSet.of(AccessMask.DELETE),
-                    null,
-                    SMB2ShareAccess.ALL,
-                    SMB2CreateDisposition.FILE_OPEN,
-                    null
-                ).use { d -> d.rename(innerTo, true) }
-            }
-        }
+        smbclient.Smbclient.smbRename(
+            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+            shareFrom, innerFrom, innerTo
+        )
     }
 
     // ── Test ──────────────────────────────────────────────────────────────────
 
-    /**
-     * Sentinel strings returned by [testConnection] and [friendlyMessage] when a well-known
-     * SMB error is detected.  The UI layer maps these to localised string resources so the
-     * user never sees a raw Windows/NTSTATUS message.
-     */
     object ErrorSentinel {
-        /** Windows limit: the server has reached its maximum concurrent SMB sessions. */
         const val MAX_CONNECTIONS = "ERR_SMB_MAX_CONNECTIONS"
     }
 
-    /**
-     * Maps a raw smbj / JCIFS exception message to a human-readable sentinel (or returns
-     * the original message if no mapping exists).  Call this anywhere you catch an SMB
-     * exception and want to surface it to the UI layer.
-     */
     fun friendlyMessage(raw: String?): String {
-        val msg = raw ?: return ErrorSentinel.MAX_CONNECTIONS // shouldn't happen, but safe
+        val msg = raw ?: return ErrorSentinel.MAX_CONNECTIONS
         return when {
-            // Windows error 0x47 / NT STATUS_REQUEST_NOT_ACCEPTED:
-            // "No more connections can be made to this remote computer at this time
-            //  because there are already as many connections as the computer can accept."
             msg.contains("no more connections", ignoreCase = true) ||
             msg.contains("STATUS_REQUEST_NOT_ACCEPTED", ignoreCase = true) ||
             msg.contains("0xc00000d0", ignoreCase = true) -> ErrorSentinel.MAX_CONNECTIONS
@@ -403,47 +275,16 @@ object SmbShareClient {
         }
     }
 
-    /** Returns null on success, or an error sentinel / message string on failure. */
     fun testConnection(share: NetworkShare): String? {
-        // Use a dedicated, short-timeout client so:
-        //  1. A slow NAS (spinning up its disk) fails in ≤10 s instead of ≤120 s.
-        //  2. The probe is never placed in the session pool, so a timeout can't
-        //     poison subsequent real sync operations.
-        // One retry with 2 s back-off handles transient NAS spin-up delays.
-        var lastError: String? = null
-        for (attempt in 1..2) {
-            if (attempt == 2) Thread.sleep(2000)
-            val client = SMBClient(SmbSessionPool.buildTestConfig())
-            val error = runCatching {
-                client.use { smb ->
-                    val conn    = smb.connect(share.host, share.effectivePort)
-                    val auth    = authContext(share)
-                    val session = conn.authenticate(auth)
-                    if (share.isServerMode || share.remotePath.isBlank()) {
-                        // In server mode, verifying authentication with the host is sufficient
-                        null
-                    } else {
-                        val (shareName, basePath) = splitSharePath(share.remotePath, "")
-                        val diskShare = session.connectShare(shareName) as DiskShare
-                        diskShare.use { ds -> ds.list(basePath.ifBlank { "" }) }
-                    }
-                }
-                null // success
-            }.getOrElse { e -> friendlyMessage(e.message ?: e.javaClass.simpleName) }
-
-            if (error == null) return null  // success on this attempt
-            lastError = error
-            android.util.Log.w("SmbShareClient",
-                "testConnection attempt $attempt failed: $lastError")
-        }
-        return lastError
+        val (shareName, _) = splitSharePath(share.remotePath, "")
+        val targetShare = if (share.isServerMode) "" else shareName
+        val err = smbclient.Smbclient.smbTestConnection(
+            share.host, share.effectivePort.toLong(), share.username, share.password, share.domain,
+            targetShare
+        )
+        return if (err.isNullOrBlank()) null else friendlyMessage(err)
     }
 
-    /**
-     * Returns true if [shareName] is readable with the given credentials.
-     * Used by the share browser to filter the listed shares to only those
-     * the current credentials can actually open.
-     */
     fun isShareAccessible(
         host: String,
         shareName: String,
@@ -451,108 +292,15 @@ object SmbShareClient {
         password: String,
         domain: String
     ): Boolean {
-        // Build a minimal NetworkShare pointing at the share root
-        val probe = NetworkShare(
-            host       = host,
-            type       = ShareType.SMB,
-            username   = username,
-            password   = password,
-            domain     = domain.ifBlank { "WORKGROUP" },
-            remotePath = "/$shareName"
+        val err = smbclient.Smbclient.smbTestConnection(
+            host, 445L, username, password, domain, shareName
         )
-        return runCatching {
-            withDiskShare(probe, maxAttempts = 1) { diskShare, _ -> diskShare.list("") }
-            true
-        }.getOrElse { false }
+        return err.isNullOrBlank()
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private fun isFatalTransportError(e: Throwable): Boolean {
-        if (e is com.hierynomus.protocol.transport.TransportException) return true
-        if (e is java.net.SocketException || e is java.io.EOFException) return true
-        val msg = e.message?.lowercase() ?: ""
-        if (e is java.io.IOException && (msg.contains("closed") || msg.contains("reset") || msg.contains("broken pipe"))) return true
-        if (e is com.hierynomus.mssmb2.SMBApiException) {
-            val status = e.status.value
-            return status == 0xC0000203L // STATUS_USER_SESSION_DELETED
-                    || status == 0xC00000C9L // STATUS_NETWORK_NAME_DELETED
-                    || status == 0xC000020CL // STATUS_CONNECTION_DISCONNECTED
-                    || status == 0xC000020DL // STATUS_CONNECTION_RESET
-        }
-        return false
-    }
-
-    private fun <T> withDiskShare(
-        share: NetworkShare,
-        remotePath: String = "",
-        maxAttempts: Int = 2,
-        block: (DiskShare, String) -> T
-    ): T {
-        var lastError: Exception? = null
-        for (attempt in 1..maxAttempts) {
-            val pooled = SmbSessionPool.borrow(share, authContext(share))
-            try {
-                val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
-                if (shareName.isBlank()) {
-                    pooled.release()
-                    throw IllegalArgumentException("Cannot determine SMB share name for share.remotePath='${share.remotePath}' and remotePath='$remotePath'")
-                }
-                val diskShare = pooled.session.connectShare(shareName) as DiskShare
-
-                if (!diskShare.isConnected) {
-                    pooled.invalidate()
-                    if (attempt < maxAttempts) {
-                        continue
-                    }
-                }
-
-                val result = diskShare.use { connectedShare ->
-                    block(connectedShare, innerPath)
-                }
-                pooled.release()
-                return result
-            } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    pooled.release()
-                    throw e
-                }
-                val fatal = isFatalTransportError(e)
-                if (fatal) {
-                    pooled.invalidate()
-                } else {
-                    pooled.release()
-                }
-                lastError = e
-                if (fatal && attempt < maxAttempts) {
-                    // Give the pool time to process the invalidation before retrying,
-                    // otherwise borrow() may race and return the same broken entry.
-                    Thread.sleep(150)
-                    continue
-                }
-                throw e
-            }
-        }
-        throw lastError ?: Exception("Unknown SMB error")
-    }
-
-    private fun authContext(share: NetworkShare): AuthenticationContext {
-        if (share.username.isBlank()) {
-            return AuthenticationContext("GUEST", "".toCharArray(), "")
-        }
-
-        val atIndex = share.username.indexOf('@')
-        return if (atIndex > 0) {
-            val localPart  = share.username.substring(0, atIndex)
-            val emailDomain = share.username.substring(atIndex + 1)
-            val effectiveDomain = if (share.domain.isNotBlank()) share.domain else emailDomain
-            AuthenticationContext(localPart, share.password.toCharArray(), effectiveDomain)
-        } else {
-            AuthenticationContext(share.username, share.password.toCharArray(), share.domain)
-        }
-    }
-
-    private fun splitSharePath(basePath: String, subPath: String): Pair<String, String> {
+    fun splitSharePath(basePath: String, subPath: String): Pair<String, String> {
         val cleanBase = basePath.replace('\\', '/').trim('/').trim()
         val cleanSub = subPath.replace('\\', '/').trim('/').trim()
 
