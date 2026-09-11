@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.network
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -93,7 +94,16 @@ class OnedriveDeviceCodeAuthActivity : AppCompatActivity() {
             val url = txtVerificationUrl.text.toString()
             val targetUrl = if (url.startsWith("http", ignoreCase = true)) url else "https://$url"
             val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(targetUrl))
-            startActivity(intent)
+            try {
+                startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                val clipboard = getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("OneDrive URL", targetUrl)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(this@OnedriveDeviceCodeAuthActivity, getString(R.string.apk_details_copied), Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                GoRoLog.e("OneDriveAuth", "Failed to open verification URL", e)
+            }
         }
 
         txtUserCode.setOnClickListener {

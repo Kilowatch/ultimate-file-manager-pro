@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Expanded release notes scrollable container to utilize available screen height.
   - Eliminated button text clipping across localized strings and long APK filenames.
 
+### Fixed
+- Fixed a crash (`android.content.ActivityNotFoundException`) in `GoogleDriveAuthActivity` and `DropboxAuthActivity` when attempting to authenticate on devices without an active or installed web browser (e.g. Android 15/16 Private Spaces, debloated or restricted profiles). The OAuth flow now falls back to Device Code / Manual Code authorization flows and safely handles missing browser intents without crashing.
+
 ## [2.0.1] — 2026-09-10
 
 ### Added

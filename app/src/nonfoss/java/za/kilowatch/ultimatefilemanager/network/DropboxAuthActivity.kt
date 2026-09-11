@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.network
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -107,7 +108,34 @@ class DropboxAuthActivity : AppCompatActivity() {
         GoRoLog.d("DropboxAuth", "clientId   : $clientId")
         GoRoLog.d("DropboxAuth", "redirectUri: $REDIRECT_URI")
         GoRoLog.d("DropboxAuth", "authUri    : $authUri")
-        CustomTabsIntent.Builder().build().launchUrl(this, authUri)
+
+        try {
+            CustomTabsIntent.Builder().build().launchUrl(this, authUri)
+        } catch (e: ActivityNotFoundException) {
+            // Some environments may not support Custom Tabs directly; attempt standard ACTION_VIEW
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, authUri))
+            } catch (e2: ActivityNotFoundException) {
+                GoRoLog.w("DropboxAuth", "No web browser found for OAuth, falling back to manual code flow", e2)
+                try {
+                    startActivity(Intent(this, DropboxManualCodeAuthActivity::class.java))
+                } catch (e3: Exception) {
+                    GoRoLog.e("DropboxAuth", "Failed to start DropboxManualCodeAuthActivity fallback", e3)
+                    showAuthErrorDialog(
+                        getString(R.string.no_browser_is_installed_on_this_device_visit_this_url_on_another_device_url, authUri.toString()),
+                        isPolicyBlocked = false
+                    )
+                    return
+                }
+                finish()
+            } catch (e2: Exception) {
+                GoRoLog.e("DropboxAuth", "Failed to launch standard browser intent for Dropbox auth", e2)
+                showAuthErrorDialog("Browser launch failed: ${e2.message}", isPolicyBlocked = false)
+            }
+        } catch (e: Exception) {
+            GoRoLog.e("DropboxAuth", "Failed to launch Custom Tabs for Dropbox auth", e)
+            showAuthErrorDialog("Browser launch failed: ${e.message}", isPolicyBlocked = false)
+        }
     }
 
     private fun handleRedirect(data: Uri) {
@@ -189,7 +217,7 @@ class DropboxAuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAuthErrorDialog(message: String) {
+    private fun showAuthErrorDialog(message: String, isPolicyBlocked: Boolean = true) {
         if (isFinishing || isDestroyed) return
 
         val layoutId = if (isTv) R.layout.dialog_policy_blocked_tv else R.layout.dialog_policy_blocked
@@ -201,6 +229,9 @@ class DropboxAuthActivity : AppCompatActivity() {
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
+        if (!isPolicyBlocked) {
+            dialogView.findViewById<TextView>(R.id.txtPolicyTitle)?.setText(R.string.add_online_storage_title)
+        }
         dialogView.findViewById<TextView>(R.id.txtPolicyDetails)?.text = message
         dialogView.findViewById<View>(R.id.btnPolicyOk).setOnClickListener {
             dialog.dismiss()

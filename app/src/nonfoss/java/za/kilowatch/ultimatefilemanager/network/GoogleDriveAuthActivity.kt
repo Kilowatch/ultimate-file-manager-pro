@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.network
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -132,7 +133,34 @@ class GoogleDriveAuthActivity : AppCompatActivity() {
         GoRoLog.d("GDriveAuth", "clientId   : $clientId")
         GoRoLog.d("GDriveAuth", "redirectUri: $REDIRECT_URI")
         GoRoLog.d("GDriveAuth", "authUri    : $authUri")
-        CustomTabsIntent.Builder().build().launchUrl(this, authUri)
+
+        try {
+            CustomTabsIntent.Builder().build().launchUrl(this, authUri)
+        } catch (e: ActivityNotFoundException) {
+            // Some environments may not support Custom Tabs directly; attempt standard ACTION_VIEW
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, authUri))
+            } catch (e2: ActivityNotFoundException) {
+                GoRoLog.w("GDriveAuth", "No web browser found for OAuth, falling back to Device Code Flow", e2)
+                try {
+                    startActivity(Intent(this, GoogleDriveDeviceCodeAuthActivity::class.java))
+                } catch (e3: Exception) {
+                    GoRoLog.e("GDriveAuth", "Failed to start GoogleDriveDeviceCodeAuthActivity fallback", e3)
+                    showAuthErrorDialog(
+                        getString(R.string.no_browser_is_installed_on_this_device_visit_this_url_on_another_device_url, authUri.toString()),
+                        isPolicyBlocked = false
+                    )
+                    return
+                }
+                finish()
+            } catch (e2: Exception) {
+                GoRoLog.e("GDriveAuth", "Failed to launch standard browser intent for Google Drive auth", e2)
+                showAuthErrorDialog("Browser launch failed: ${e2.message}", isPolicyBlocked = false)
+            }
+        } catch (e: Exception) {
+            GoRoLog.e("GDriveAuth", "Failed to launch Custom Tabs for Google Drive auth", e)
+            showAuthErrorDialog("Browser launch failed: ${e.message}", isPolicyBlocked = false)
+        }
     }
 
     private fun handleRedirect(data: Uri) {
@@ -216,8 +244,10 @@ class GoogleDriveAuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAuthErrorDialog(message: String) {
-        Toast.makeText(this, R.string.online_storages_policy_blocked_toast, Toast.LENGTH_LONG).show()
+    private fun showAuthErrorDialog(message: String, isPolicyBlocked: Boolean = true) {
+        if (isPolicyBlocked) {
+            Toast.makeText(this, R.string.online_storages_policy_blocked_toast, Toast.LENGTH_LONG).show()
+        }
         if (isFinishing || isDestroyed) return
 
         val layoutId = if (isTv) R.layout.dialog_policy_blocked_tv else R.layout.dialog_policy_blocked
@@ -229,6 +259,9 @@ class GoogleDriveAuthActivity : AppCompatActivity() {
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
+        if (!isPolicyBlocked) {
+            dialogView.findViewById<TextView>(R.id.txtPolicyTitle)?.setText(R.string.add_online_storage_title)
+        }
         dialogView.findViewById<TextView>(R.id.txtPolicyDetails)?.text = message
         dialogView.findViewById<View>(R.id.btnPolicyOk).setOnClickListener {
             dialog.dismiss()

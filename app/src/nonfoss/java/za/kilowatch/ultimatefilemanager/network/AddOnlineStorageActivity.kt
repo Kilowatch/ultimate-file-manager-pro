@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.network
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -288,7 +289,16 @@ class AddOnlineStorageActivity : AppCompatActivity() {
             val btnLearnMore = dialogView.findViewById<View>(R.id.btnGdriveScopeLearnMore)
             btnLearnMore.setOnClickListener {
                 val url = "https://developers.google.com/drive/api/guides/api-specific-auth#drive.file"
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                } catch (e: ActivityNotFoundException) {
+                    val clipboard = getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                    val clip = android.content.ClipData.newPlainText("Google Drive Scope URL", url)
+                    clipboard.setPrimaryClip(clip)
+                    Toast.makeText(this@AddOnlineStorageActivity, getString(R.string.apk_details_copied), Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    GoRoLog.e("AddOnlineStorage", "Failed to open learn more URL", e)
+                }
             }
 
             val focusColor = ColorblindPalette.focusFill(this)
