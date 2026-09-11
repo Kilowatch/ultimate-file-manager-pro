@@ -5,12 +5,21 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] — 2026-09-10
+## [2.0.2] — 2026-09-11
 
 ### Added
 - **Archive Visual Telemetry & Animations**:
   - Comprehensive visual telemetry and animation dialog for all archive operations (compress, extract, add, move, and delete) across Mobile and Android TV.
   - Real-time file count, byte throughput speed, countdown ETA, and smooth animated dual progress indicators during archive processing.
+
+### Changed
+- **Mobile Auto-Update Dialog**:
+  - Expanded release notes scrollable container to utilize available screen height.
+  - Eliminated button text clipping across localized strings and long APK filenames.
+
+## [2.0.1] — 2026-09-10
+
+### Added
 - **Direct Archive Insertion (Mobile)**:
   - Copy or move files and folders directly into existing archives without extracting them first.
   - Full support for writable archive formats: ZIP, 7Z, and TAR streams (including `.tar.gz`, `.tar.bz2`, `.tar.xz`, and `.tar.zst`).
