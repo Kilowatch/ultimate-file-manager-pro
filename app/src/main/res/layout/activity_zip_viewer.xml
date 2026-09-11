@@ -93,6 +93,27 @@
             app:iconTint="?attr/colorPrimary"
             app:iconSize="16dp"
             app:iconPadding="4dp" />
+
+        <!-- Add Files Button -->
+        <FrameLayout
+            android:id="@+id/btnAddFilesContainer"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnAddFiles"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_add"
+                android:contentDescription="@string/action_add_files"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
     </LinearLayout>
 
     <!-- Loading progress -->
@@ -165,6 +186,24 @@
         android:textColor="@color/white"
         android:fontFamily="sans-serif-bold"
         app:icon="@drawable/ic_settings"
+        app:iconTint="@color/white"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="16dp"
+        app:elevation="4dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Paste / Move into Archive FAB -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabPaste"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/action_paste"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-bold"
+        app:icon="@drawable/ic_paste"
         app:iconTint="@color/white"
         app:backgroundTint="?attr/colorPrimary"
         app:cornerRadius="16dp"

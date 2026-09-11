@@ -14181,6 +14181,58 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
     <string name="expose_to_saf_cloud_hint">
 Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+기존 아카이브에 추가…
+</string>
+    <string name="action_add_files">
+파일 추가
+</string>
+    <string name="copy_to_archive_count">
+아카이브에 복사 (%1$d)
+</string>
+    <string name="move_to_archive_count">
+아카이브로 이동 (%1$d)
+</string>
+    <string name="paste_into_archive">
+아카이브에 붙여넣기
+</string>
+    <string name="paste_into_archive_count">
+아카이브에 붙여넣기 (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+아카이브에 추가
+</string>
+    <string name="confirm_add_to_archive_msg">
+%1$d개 항목을 %2$s에 추가하시겠습니까?
+</string>
+    <string name="add_to_archive_success">
+%1$d개 항목이 %2$s에 추가되었습니다
+</string>
+    <string name="select_target_archive">
+아카이브 선택
+</string>
+    <string name="browse_other_archive">
+다른 아카이브 찾아보기…
+</string>
+    <string name="no_archives_found_in_folder">
+이 폴더에서 지원되는 아카이브를 찾을 수 없습니다
+</string>
+    <string name="archive_format_not_writable">
+이 아카이브 형식은 파일 추가를 지원하지 않습니다
+</string>
+    <string name="copy_to_archive">
+아카이브에 복사
+</string>
+    <string name="move_to_archive">
+아카이브로 이동
+</string>
+    <string name="adding_files_to_archive">
+아카이브에 파일 추가 중…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+아카이브에 추가
+</string>
 </resources>
 
 

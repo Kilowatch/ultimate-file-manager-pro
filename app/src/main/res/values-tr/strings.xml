@@ -14181,6 +14181,58 @@ Başlatıcıların ve harici uygulamaların (Projectivy gibi) bu ağ paylaşım�
     <string name="expose_to_saf_cloud_hint">
 Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+Mevcut Arşive Ekle…
+</string>
+    <string name="action_add_files">
+Dosya Ekle
+</string>
+    <string name="copy_to_archive_count">
+Arşive kopyala (%1$d)
+</string>
+    <string name="move_to_archive_count">
+Arşive taşı (%1$d)
+</string>
+    <string name="paste_into_archive">
+Arşive yapıştır
+</string>
+    <string name="paste_into_archive_count">
+Arşive yapıştır (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+Arşive Ekle
+</string>
+    <string name="confirm_add_to_archive_msg">
+%1$d öğe %2$s arşivine eklensin mi?
+</string>
+    <string name="add_to_archive_success">
+%1$d öğe %2$s arşivine eklendi
+</string>
+    <string name="select_target_archive">
+Arşiv Seç
+</string>
+    <string name="browse_other_archive">
+Başka bir arşive göz at…
+</string>
+    <string name="no_archives_found_in_folder">
+Bu klasörde desteklenen arşiv bulunamadı
+</string>
+    <string name="archive_format_not_writable">
+Bu arşiv biçimi dosya eklemeyi desteklemiyor
+</string>
+    <string name="copy_to_archive">
+Arşive Kopyala
+</string>
+    <string name="move_to_archive">
+Arşive Taşı
+</string>
+    <string name="adding_files_to_archive">
+Dosyalar arşive ekleniyor…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+Arşive Ekle
+</string>
 </resources>
 
 

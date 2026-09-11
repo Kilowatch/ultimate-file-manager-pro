@@ -1458,6 +1458,28 @@ class FileBrowserFragment : Fragment() {
                 })
             }
 
+            // Add to Existing Archive
+            list.add(FileToolsBottomSheet.ActionItem("add_to_existing_archive", getString(R.string.action_add_to_existing_archive), R.drawable.ic_compress, "toolbar_add_to_archive") {
+                (activity as? FileBrowserActivity)?.showAddToExistingArchive(selected)
+            })
+
+            // Paste into this Archive
+            if (count == 1 && za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isWritableArchive(selected.first()) && FileClipboard.hasItems()) {
+                val clipFiles = FileClipboard.files
+                val isMove = FileClipboard.slots.any { slot ->
+                    slot.items.any { it.operation == FileClipboard.Operation.MOVE }
+                }
+                val pasteLabel = if (isMove) {
+                    getString(R.string.move_to_archive_count, clipFiles.size)
+                } else {
+                    getString(R.string.copy_to_archive_count, clipFiles.size)
+                }
+                val pasteIcon = if (isMove) R.drawable.ic_move else R.drawable.ic_paste
+                list.add(FileToolsBottomSheet.ActionItem("paste_into_archive", pasteLabel, pasteIcon, "toolbar_paste_into_archive") {
+                    (activity as? FileBrowserActivity)?.confirmPasteIntoArchiveFromBrowser(selected.first())
+                })
+            }
+
             // Wallpaper (Single image file, mobile only)
             val isSingleImage = count == 1 && selected.first().isFile &&
                 selected.first().extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS

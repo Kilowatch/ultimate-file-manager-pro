@@ -14181,6 +14181,58 @@ Ermöglicht Launchern und externen Apps (wie Projectivy), Ordner zu durchsuchen 
     <string name="expose_to_saf_cloud_hint">
 Ermöglicht Launchern und externen Apps (wie Projectivy), Ordner zu durchsuchen und Medien von diesem Online-Speicher zu streamen.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+Zu vorhandenem Archiv hinzufügen…
+</string>
+    <string name="action_add_files">
+Dateien hinzufügen
+</string>
+    <string name="copy_to_archive_count">
+In Archiv kopieren (%1$d)
+</string>
+    <string name="move_to_archive_count">
+In Archiv verschieben (%1$d)
+</string>
+    <string name="paste_into_archive">
+In Archiv einfügen
+</string>
+    <string name="paste_into_archive_count">
+In Archiv einfügen (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+Zum Archiv hinzufügen
+</string>
+    <string name="confirm_add_to_archive_msg">
+%1$d Element(e) zu %2$s hinzufügen?
+</string>
+    <string name="add_to_archive_success">
+%1$d Element(e) zu %2$s hinzugefügt
+</string>
+    <string name="select_target_archive">
+Archiv auswählen
+</string>
+    <string name="browse_other_archive">
+Nach einem anderen Archiv suchen…
+</string>
+    <string name="no_archives_found_in_folder">
+In diesem Ordner wurden keine unterstützten Archive gefunden
+</string>
+    <string name="archive_format_not_writable">
+Dieses Archivformat unterstützt das Hinzufügen von Dateien nicht
+</string>
+    <string name="copy_to_archive">
+In Archiv kopieren
+</string>
+    <string name="move_to_archive">
+In Archiv verschieben
+</string>
+    <string name="adding_files_to_archive">
+Dateien werden zum Archiv hinzugefügt…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+Zum Archiv hinzufügen
+</string>
 </resources>
 
 

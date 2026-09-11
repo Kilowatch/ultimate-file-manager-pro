@@ -14180,6 +14180,58 @@ Expose to SAF &amp; Pickers
     <string name="expose_to_saf_cloud_hint">
 Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+添加到现有压缩包…
+</string>
+    <string name="action_add_files">
+添加文件
+</string>
+    <string name="copy_to_archive_count">
+复制到压缩包 (%1$d)
+</string>
+    <string name="move_to_archive_count">
+移动到压缩包 (%1$d)
+</string>
+    <string name="paste_into_archive">
+粘贴到压缩包
+</string>
+    <string name="paste_into_archive_count">
+粘贴到压缩包 (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+添加到压缩包
+</string>
+    <string name="confirm_add_to_archive_msg">
+将 %1$d 个项目添加到 %2$s？
+</string>
+    <string name="add_to_archive_success">
+%1$d 个项目已添加到 %2$s
+</string>
+    <string name="select_target_archive">
+选择压缩包
+</string>
+    <string name="browse_other_archive">
+浏览其他压缩包…
+</string>
+    <string name="no_archives_found_in_folder">
+此文件夹中未找到支持的压缩包
+</string>
+    <string name="archive_format_not_writable">
+此压缩包格式不支持添加文件
+</string>
+    <string name="copy_to_archive">
+复制到压缩包
+</string>
+    <string name="move_to_archive">
+移动到压缩包
+</string>
+    <string name="adding_files_to_archive">
+正在添加文件到压缩包…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+添加到压缩包
+</string>
 </resources>
 
 

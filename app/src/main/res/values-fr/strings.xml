@@ -14181,6 +14181,58 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
     <string name="expose_to_saf_cloud_hint">
 Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+Ajouter à une archive existante…
+</string>
+    <string name="action_add_files">
+Ajouter des fichiers
+</string>
+    <string name="copy_to_archive_count">
+Copier vers l\\\'archive (%1$d)
+</string>
+    <string name="move_to_archive_count">
+Déplacer vers l\\\'archive (%1$d)
+</string>
+    <string name="paste_into_archive">
+Coller dans l\\\'archive
+</string>
+    <string name="paste_into_archive_count">
+Coller dans l\\\'archive (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+Ajouter à l\\\'archive
+</string>
+    <string name="confirm_add_to_archive_msg">
+Ajouter %1$d élément(s) à %2$s ?
+</string>
+    <string name="add_to_archive_success">
+%1$d élément(s) ajouté(s) à %2$s
+</string>
+    <string name="select_target_archive">
+Sélectionner une archive
+</string>
+    <string name="browse_other_archive">
+Rechercher une autre archive…
+</string>
+    <string name="no_archives_found_in_folder">
+Aucune archive prise en charge dans ce dossier
+</string>
+    <string name="archive_format_not_writable">
+Ce format d\\\'archive ne prend pas en charge l\\\'ajout de fichiers
+</string>
+    <string name="copy_to_archive">
+Copier vers l\\\'archive
+</string>
+    <string name="move_to_archive">
+Déplacer vers l\\\'archive
+</string>
+    <string name="adding_files_to_archive">
+Ajout des fichiers à l\\\'archive…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+Ajouter à l\\\'archive
+</string>
 </resources>
 
 

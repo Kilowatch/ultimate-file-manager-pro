@@ -14181,6 +14181,58 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
     <string name="expose_to_saf_cloud_hint">
 Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+Tambahkan ke Arsip yang Ada…
+</string>
+    <string name="action_add_files">
+Tambahkan Berkas
+</string>
+    <string name="copy_to_archive_count">
+Salin ke arsip (%1$d)
+</string>
+    <string name="move_to_archive_count">
+Pindahkan ke arsip (%1$d)
+</string>
+    <string name="paste_into_archive">
+Tempel ke Arsip
+</string>
+    <string name="paste_into_archive_count">
+Tempel ke Arsip (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+Tambahkan ke Arsip
+</string>
+    <string name="confirm_add_to_archive_msg">
+Tambahkan %1$d item ke %2$s?
+</string>
+    <string name="add_to_archive_success">
+%1$d item ditambahkan ke %2$s
+</string>
+    <string name="select_target_archive">
+Pilih Arsip
+</string>
+    <string name="browse_other_archive">
+Telusuri arsip lain…
+</string>
+    <string name="no_archives_found_in_folder">
+Tidak ada arsip yang didukung di folder ini
+</string>
+    <string name="archive_format_not_writable">
+Format arsip ini tidak mendukung penambahan berkas
+</string>
+    <string name="copy_to_archive">
+Salin ke Arsip
+</string>
+    <string name="move_to_archive">
+Pindahkan ke Arsip
+</string>
+    <string name="adding_files_to_archive">
+Menambahkan berkas ke arsip…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+Tambahkan ke Arsip
+</string>
 </resources>
 
 

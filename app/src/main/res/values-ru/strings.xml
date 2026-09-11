@@ -14181,6 +14181,58 @@ For your security, try again after the timer expires
     <string name="expose_to_saf_cloud_hint">
 Позволяет программам запуска и внешним приложениям (например, Projectivy) просматривать папки и осуществлять потоковую передачу мультимедиа из этого онлайн-хранилища.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+Добавить в существующий архив…
+</string>
+    <string name="action_add_files">
+Добавить файлы
+</string>
+    <string name="copy_to_archive_count">
+Копировать в архив (%1$d)
+</string>
+    <string name="move_to_archive_count">
+Переместить в архив (%1$d)
+</string>
+    <string name="paste_into_archive">
+Вставить в архив
+</string>
+    <string name="paste_into_archive_count">
+Вставить в архив (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+Добавить в архив
+</string>
+    <string name="confirm_add_to_archive_msg">
+Добавить %1$d элемент(ов) в %2$s?
+</string>
+    <string name="add_to_archive_success">
+%1$d элемент(ов) добавлено в %2$s
+</string>
+    <string name="select_target_archive">
+Выбрать архив
+</string>
+    <string name="browse_other_archive">
+Выбрать другой архив…
+</string>
+    <string name="no_archives_found_in_folder">
+В этой папке не найдено поддерживаемых архивов
+</string>
+    <string name="archive_format_not_writable">
+Этот формат архива не поддерживает добавление файлов
+</string>
+    <string name="copy_to_archive">
+Копировать в архив
+</string>
+    <string name="move_to_archive">
+Переместить в архив
+</string>
+    <string name="adding_files_to_archive">
+Добавление файлов в архив…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+Добавить в архив
+</string>
 </resources>
 
 

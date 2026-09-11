@@ -63,8 +63,11 @@ class SevenZipViewerActivity : AppCompatActivity() {
     private lateinit var btnExtractAll: MaterialButton
     private lateinit var layoutEmpty: View
     private var fabArchiveTools: ExtendedFloatingActionButton? = null
+    private var fabPaste: ExtendedFloatingActionButton? = null
+    private var btnAddFiles: View? = null
 
     private var sevenZipFile: SevenZFile? = null
+    private var originalArchiveFile: File? = null
     private var sourceFile: File? = null
     private var currentPath = ""
     private var allEntries = listOf<SevenZArchiveEntry>()
@@ -80,6 +83,18 @@ class SevenZipViewerActivity : AppCompatActivity() {
     private var pendingSelectedSevenZipItems: List<SevenZipItem> = emptyList()
     private var pendingExtractAll: Boolean = false
     private var pendingOpMode: ExtractOpMode = ExtractOpMode.EXTRACT_ALL
+
+    private val addFilesPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val path = result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_PATH)
+                ?: result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
+            if (path != null) {
+                showConfirmAddPickedFile(File(path))
+            }
+        }
+    }
 
     /** Receives destination folder chosen via StorageBrowserActivity / FileBrowserActivity */
     private val extractDestLauncher = registerForActivityResult(
@@ -136,8 +151,15 @@ class SevenZipViewerActivity : AppCompatActivity() {
         btnExtractAll = findViewById(R.id.btnExtractAll)
         layoutEmpty = findViewById(R.id.layoutEmpty)
         fabArchiveTools = findViewById(R.id.fabArchiveTools)
+        fabPaste = findViewById(R.id.fabPaste)
+        btnAddFiles = findViewById(R.id.btnAddFiles)
 
         fabArchiveTools?.setOnClickListener { showArchiveToolsBottomSheet() }
+        fabPaste?.setOnClickListener { performPasteIntoArchive() }
+        btnAddFiles?.setOnClickListener { promptAddFilesToArchive() }
+        if (isTv) {
+            findViewById<View>(R.id.btnAddFilesContainer)?.visibility = View.GONE
+        }
 
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { navigateBack() }
 
@@ -150,13 +172,14 @@ class SevenZipViewerActivity : AppCompatActivity() {
         val filePath = intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH) ?: run {
             finish(); return
         }
-        sourceFile = File(filePath)
+        originalArchiveFile = File(filePath)
+        sourceFile = originalArchiveFile
         txtTitle.text = intent.getStringExtra(FileViewerRouter.EXTRA_FILE_NAME) ?: getString(R.string.archive_1)
 
         btnExtractAll.setOnClickListener { extractAll() }
         recyclerEntries.layoutManager = LinearLayoutManager(this)
         
-        load7z(sourceFile!!)
+        load7z(originalArchiveFile!!)
         
         if (isTv) {
             setupTvFocus()
@@ -253,6 +276,11 @@ class SevenZipViewerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        updatePasteFab()
+    }
+
     @Suppress("DEPRECATION")
     private fun createSevenZFile(file: File, password: String? = null): SevenZFile {
         val maxMemoryKb = (Runtime.getRuntime().maxMemory() / 1024).toInt()
@@ -325,7 +353,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
                         )
                     }
                 } else {
-                    val entries = ArchiveManager.getArchiveEntries(file, archivePassword)
+                    val entries = ArchiveManager.getArchiveEntries(targetFile, archivePassword)
                     allEntryInfos = entries
                 }
                 
@@ -427,7 +455,12 @@ class SevenZipViewerActivity : AppCompatActivity() {
                     items.add(SevenZipItem(dirName, true, entryInfo = null, entry = null))
                 }
             } else {
-                if (!entry.isDirectory) {
+                if (entry.isDirectory) {
+                    if (relativeName !in seenDirs) {
+                        seenDirs.add(relativeName)
+                        items.add(SevenZipItem(relativeName, true, entryInfo = entry, entry = null))
+                    }
+                } else {
                     items.add(SevenZipItem(relativeName, false, entryInfo = entry, entry = null))
                 }
             }
@@ -448,6 +481,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
                 }
             }
         }
+        updatePasteFab()
     }
 
     private fun toggleSelection(item: SevenZipItem) {
@@ -468,6 +502,188 @@ class SevenZipViewerActivity : AppCompatActivity() {
 
     private fun updateFabVisibility() {
         fabArchiveTools?.visibility = if (selectedSevenZipItems.isNotEmpty()) View.VISIBLE else View.GONE
+        updateFabPositions()
+    }
+
+    private fun updateFabPositions() {
+        val toolsVisible = fabArchiveTools?.visibility == View.VISIBLE
+        val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(this)
+        val density = resources.displayMetrics.density
+        val baseMargin = (16 * density).toInt()
+
+        fabArchiveTools?.let { tools ->
+            val lp = tools.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+            lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+            lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            if (isLeftHanded) {
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginStart = baseMargin
+                lp.marginEnd = 0
+            } else {
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginEnd = baseMargin
+                lp.marginStart = 0
+            }
+            tools.layoutParams = lp
+        }
+
+        fabPaste?.let { paste ->
+            val lp = paste.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+            if (toolsVisible) {
+                lp.bottomToTop = R.id.fabArchiveTools
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomMargin = (12 * density).toInt()
+            } else {
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomMargin = baseMargin
+            }
+            if (isLeftHanded) {
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginStart = baseMargin
+                lp.marginEnd = 0
+            } else {
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.marginEnd = baseMargin
+                lp.marginStart = 0
+            }
+            paste.layoutParams = lp
+        }
+    }
+
+    private fun updatePasteFab() {
+        if (isTv) {
+            fabPaste?.visibility = View.GONE
+            return
+        }
+        val count = za.kilowatch.ultimatefilemanager.storage.FileClipboard.totalItemCount()
+        if (count > 0) {
+            val isMove = za.kilowatch.ultimatefilemanager.storage.FileClipboard.slots.any { slot ->
+                slot.items.any { it.operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE }
+            }
+            fabPaste?.text = if (isMove) {
+                getString(R.string.move_to_archive_count, count)
+            } else {
+                getString(R.string.copy_to_archive_count, count)
+            }
+            fabPaste?.setIconResource(if (isMove) R.drawable.ic_move else R.drawable.ic_paste)
+            fabPaste?.visibility = View.VISIBLE
+        } else {
+            fabPaste?.visibility = View.GONE
+        }
+        updateFabPositions()
+    }
+
+    private fun performPasteIntoArchive() {
+        val file = sourceFile ?: return
+        val localFiles = za.kilowatch.ultimatefilemanager.storage.FileClipboard.files
+        if (localFiles.isEmpty()) return
+
+        val isMove = za.kilowatch.ultimatefilemanager.storage.FileClipboard.slots.any { slot ->
+            slot.items.any { it.operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE }
+        }
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(if (isMove) R.drawable.ic_move else R.drawable.ic_paste)
+        txtTitle?.text = getString(R.string.confirm_add_to_archive_title)
+        txtMessage?.text = getString(R.string.confirm_add_to_archive_msg, localFiles.size, file.name)
+        btnPositive?.text = if (isMove) getString(R.string.move_to_archive) else getString(R.string.copy_to_archive)
+        btnNegative?.visibility = View.VISIBLE
+        btnNegative?.text = getString(R.string.cancel)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            executePasteIntoArchive(file, localFiles, isMove)
+        }
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+    }
+
+    private fun executePasteIntoArchive(archiveFile: File, sources: List<File>, isMove: Boolean) {
+        val destFile = originalArchiveFile ?: archiveFile
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            val res = ArchiveManager.addFilesToArchive(
+                context = this@SevenZipViewerActivity,
+                archiveFile = destFile,
+                sourceFiles = sources,
+                targetDirInArchive = currentPath,
+                isMove = isMove,
+                password = archivePassword
+            )
+            withContext(Dispatchers.Main) {
+                progressBar.visibility = View.GONE
+                if (res.isSuccess) {
+                    val count = res.getOrDefault(sources.size)
+                    showSnackbar(getString(R.string.add_to_archive_success, count, destFile.name))
+                    za.kilowatch.ultimatefilemanager.storage.FileClipboard.clear()
+                    updatePasteFab()
+                    load7z(destFile)
+                } else {
+                    showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                }
+            }
+        }
+    }
+
+    private fun promptAddFilesToArchive() {
+        val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+        }
+        addFilesPickerLauncher.launch(intent)
+    }
+
+    private fun showConfirmAddPickedFile(pickedFile: File) {
+        val file = originalArchiveFile ?: sourceFile ?: return
+        val dialogView = layoutInflater.inflate(R.layout.dialog_support_message, null)
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(R.drawable.ic_add)
+        txtTitle?.text = getString(R.string.confirm_add_to_archive_title)
+        txtMessage?.text = getString(R.string.confirm_add_to_archive_msg, 1, file.name)
+        btnPositive?.text = getString(R.string.copy_to_archive)
+        btnNegative?.visibility = View.VISIBLE
+        btnNegative?.text = getString(R.string.move_to_archive)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            executePasteIntoArchive(file, listOf(pickedFile), isMove = false)
+        }
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+            executePasteIntoArchive(file, listOf(pickedFile), isMove = true)
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun showArchiveToolsBottomSheet() {

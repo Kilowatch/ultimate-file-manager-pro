@@ -260,6 +260,27 @@ class FileBrowserActivity : AppCompatActivity() {
         pendingCompressPassword    = null
     }
 
+    private var pendingAddToArchiveSources: List<File>? = null
+
+    private val archivePickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data = result.data
+            val path = data?.getStringExtra(RESULT_SELECTED_LOCAL_PATH) ?: data?.getStringExtra(RESULT_SELECTED_PATH)
+            val sources = pendingAddToArchiveSources
+            if (!path.isNullOrEmpty() && sources != null) {
+                val archiveFile = File(path)
+                if (za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isWritableArchive(archiveFile)) {
+                    confirmAddFilesToArchive(archiveFile, sources)
+                } else {
+                    showPremiumSnackbar(getString(R.string.archive_format_not_writable))
+                }
+            }
+        }
+        pendingAddToArchiveSources = null
+    }
+
     private val safTreeLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -2644,6 +2665,28 @@ class FileBrowserActivity : AppCompatActivity() {
             if (pm.isIconEnabled(this, pm.KEY_COMPRESS)) {
                 list.add(FileToolsBottomSheet.ActionItem("compress", getString(R.string.action_compress), R.drawable.ic_compress, "toolbar_compress") {
                     showArchiveOptions(selected)
+                })
+            }
+
+            // Add to Existing Archive
+            list.add(FileToolsBottomSheet.ActionItem("add_to_existing_archive", getString(R.string.action_add_to_existing_archive), R.drawable.ic_compress, "toolbar_add_to_archive") {
+                showAddToExistingArchive(selected)
+            })
+
+            // Paste into this Archive (if exactly 1 writable archive selected and clipboard has items)
+            if (selected.size == 1 && ArchiveManager.isWritableArchive(selected.first()) && FileClipboard.hasItems()) {
+                val clipFiles = FileClipboard.files
+                val isMove = FileClipboard.slots.any { slot ->
+                    slot.items.any { it.operation == FileClipboard.Operation.MOVE }
+                }
+                val pasteLabel = if (isMove) {
+                    getString(R.string.move_to_archive_count, clipFiles.size)
+                } else {
+                    getString(R.string.copy_to_archive_count, clipFiles.size)
+                }
+                val pasteIcon = if (isMove) R.drawable.ic_move else R.drawable.ic_paste
+                list.add(FileToolsBottomSheet.ActionItem("paste_into_archive", pasteLabel, pasteIcon, "toolbar_paste_into_archive") {
+                    confirmPasteIntoArchiveFromBrowser(selected.first())
                 })
             }
 
@@ -5967,6 +6010,146 @@ class FileBrowserActivity : AppCompatActivity() {
             putExtra(StorageBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
         }
         folderPickerLauncher.launch(intent)
+    }
+
+    fun showAddToExistingArchive(files: List<File>) {
+        if (files.isEmpty()) return
+        val currentArchives = currentDir.listFiles()?.filter { it.isFile && ArchiveManager.isWritableArchive(it) } ?: emptyList()
+        if (currentArchives.isEmpty()) {
+            launchArchivePicker(files)
+        } else {
+            val items = currentArchives.map { it.name }.toMutableList()
+            items.add(getString(R.string.browse_other_archive))
+
+            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setTitle(R.string.select_target_archive)
+                .setItems(items.toTypedArray()) { _, which ->
+                    if (which < currentArchives.size) {
+                        confirmAddFilesToArchive(currentArchives[which], files)
+                    } else {
+                        launchArchivePicker(files)
+                    }
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        }
+    }
+
+    fun launchArchivePicker(files: List<File>) {
+        pendingAddToArchiveSources = files
+        val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+            putExtra(EXTRA_PICKER_MODE, true)
+            putExtra(EXTRA_PICKER_EXTENSIONS, "zip,7z,tar,gz,tgz,bz2,tbz2,tbz,xz,txz,zst,tzst")
+        }
+        archivePickerLauncher.launch(intent)
+    }
+
+    fun confirmAddFilesToArchive(archiveFile: File, sources: List<File>) {
+        val count = sources.size
+        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.confirm_add_to_archive_title)
+            .setMessage(getString(R.string.confirm_add_to_archive_msg, count, archiveFile.name))
+            .setPositiveButton(R.string.copy_to_archive) { _, _ ->
+                executeAddFilesToArchive(archiveFile, sources, isMove = false)
+            }
+            .setNeutralButton(R.string.move_to_archive) { _, _ ->
+                executeAddFilesToArchive(archiveFile, sources, isMove = true)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    fun confirmPasteIntoArchiveFromBrowser(archiveFile: File) {
+        val sources = FileClipboard.files
+        if (sources.isEmpty()) return
+        val isMove = FileClipboard.slots.any { slot ->
+            slot.items.any { it.operation == FileClipboard.Operation.MOVE }
+        }
+        val count = sources.size
+        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.confirm_add_to_archive_title)
+            .setMessage(getString(R.string.confirm_add_to_archive_msg, count, archiveFile.name))
+            .setPositiveButton(if (isMove) R.string.move_to_archive else R.string.copy_to_archive) { _, _ ->
+                executeAddFilesToArchive(archiveFile, sources, isMove) {
+                    FileClipboard.clear()
+                    updatePasteFab()
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun executeAddFilesToArchive(
+        archiveFile: File,
+        sources: List<File>,
+        isMove: Boolean,
+        onSuccess: (() -> Unit)? = null
+    ) {
+        fileAdapter.exitSelectionMode()
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            val isTv = DeviceUtils.isTvDevice(this@FileBrowserActivity)
+            val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
+            val dialogView = layoutInflater.inflate(layoutRes, null)
+            val txtTitle = dialogView.findViewById<TextView>(R.id.txtProgressTitle)
+            val txtCurrentFile = dialogView.findViewById<TextView>(R.id.txtProgressCurrentFile)
+            txtTitle?.setText(R.string.adding_files_to_archive)
+            txtCurrentFile?.text = archiveFile.name
+
+            val progressDialog = MaterialAlertDialogBuilder(this@FileBrowserActivity, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(false)
+                .create()
+            progressDialog.show()
+            progressDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+            var password: String? = null
+            if (archiveFile.name.lowercase().endsWith(".zip")) {
+                try {
+                    val zf = net.lingala.zip4j.ZipFile(archiveFile)
+                    if (zf.isEncrypted) {
+                        val pwd = kotlinx.coroutines.suspendCancellableCoroutine<String?> { cont ->
+                            val dialog = za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog()
+                            dialog.setOnConfirm { pw -> if (cont.isActive) cont.resume(pw) }
+                            dialog.setOnCancel { if (cont.isActive) cont.resume(null) }
+                            dialog.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog.TAG)
+                        }
+                        if (pwd == null) {
+                            progressDialog.dismiss()
+                            return@launch
+                        }
+                        password = pwd
+                    }
+                } catch (_: Exception) {}
+            }
+
+            val res = withContext(Dispatchers.IO) {
+                ArchiveManager.addFilesToArchive(
+                    context = this@FileBrowserActivity,
+                    archiveFile = archiveFile,
+                    sourceFiles = sources,
+                    targetDirInArchive = "",
+                    isMove = isMove,
+                    password = password,
+                    onProgress = { cur, tot, name ->
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            txtCurrentFile?.text = "$cur/$tot: $name"
+                        }
+                    }
+                )
+            }
+
+            progressDialog.dismiss()
+
+            if (res.isSuccess) {
+                val count = res.getOrDefault(sources.size)
+                showPremiumSnackbar(getString(R.string.add_to_archive_success, count, archiveFile.name))
+                onSuccess?.invoke()
+                loadDirectory(currentDir)
+            } else {
+                showPremiumSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+            }
+        }
     }
 
     /** Resolves a share ID to a NetworkShare — checks SMB/FTP repo first, then paired TV/Phone devices. */

@@ -112,7 +112,8 @@ object ArchiveManager {
         } catch (e: Exception) {
             // Fallback to single stream entry
         }
-        val targetName = archiveFile.name.substringBeforeLast('.')
+        val cleanName = archiveFile.name.replace(Regex("^(view_7z_|view_zip_|stage_mod_arc_)\\d+_?"), "")
+        val targetName = getArchiveBaseName(cleanName)
         return listOf(ArchiveEntryInfo(targetName, false, archiveFile.length(), archiveFile.lastModified()))
     }
 
@@ -1463,6 +1464,350 @@ object ArchiveManager {
             }
             Result.success(Unit)
         } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Returns true if the given file is an archive format that supports adding/modifying files.
+     */
+    fun isWritableArchive(file: File): Boolean {
+        val name = file.name.lowercase()
+        return name.endsWith(".zip") ||
+               name.endsWith(".7z") ||
+               name.endsWith(".tar") ||
+               name.endsWith(".tar.gz") || name.endsWith(".tgz") || name.endsWith(".gz") ||
+               name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") || name.endsWith(".bz2") ||
+               name.endsWith(".tar.xz") || name.endsWith(".txz") || name.endsWith(".xz") ||
+               name.endsWith(".tar.zst") || name.endsWith(".tzst") || name.endsWith(".zst")
+    }
+
+    /**
+     * Universal non-extracting insertion into an archive.
+     * Supports ZIP, 7Z, TAR, and compressed TAR variants (.tar.gz, .tar.bz2, .tar.xz, .tar.zst, .gz, .bz2, .xz, .zst).
+     * If [isMove] is true, deletes source files upon successful addition.
+     */
+    suspend fun addFilesToArchive(
+        context: Context? = null,
+        archiveFile: File,
+        sourceFiles: List<File>,
+        targetDirInArchive: String = "",
+        isMove: Boolean = false,
+        password: String? = null,
+        onProgress: (current: Int, total: Int, fileName: String) -> Unit = { _, _, _ -> }
+    ): Result<Int> = withContext(Dispatchers.IO) {
+        val isArchiveSaf = archiveFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                           za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(archiveFile.absolutePath) ||
+                           (context != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, archiveFile.absolutePath))
+
+        val anySourceSaf = context != null && sourceFiles.any {
+            it is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(it.absolutePath) ||
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, it.absolutePath)
+        }
+
+        var tempArchiveFile: File? = null
+        var tempSourceDir: File? = null
+
+        try {
+            val effectiveArchive = if (isArchiveSaf && context != null) {
+                tempArchiveFile = File(context.cacheDir, "stage_mod_arc_${System.currentTimeMillis()}_${archiveFile.name}")
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, archiveFile.absolutePath)?.use { inStream ->
+                    tempArchiveFile.outputStream().use { outStream -> inStream.copyTo(outStream) }
+                } ?: return@withContext Result.failure(java.io.FileNotFoundException("Cannot access archive: ${archiveFile.name}"))
+                tempArchiveFile
+            } else {
+                archiveFile
+            }
+
+            val effectiveSources = if (anySourceSaf && context != null) {
+                tempSourceDir = File(context.cacheDir, "stage_add_src_${System.currentTimeMillis()}").apply { mkdirs() }
+                sourceFiles.map { sf ->
+                    val isSfSaf = sf is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                  za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(sf.absolutePath) ||
+                                  za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, sf.absolutePath)
+                    if (isSfSaf) {
+                        val staged = File(tempSourceDir, sf.name)
+                        val isDir = (sf as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.isDirectory() == true ||
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isDirectory(context, sf.absolutePath)
+                        if (isDir) {
+                            staged.mkdirs()
+                            val children = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.walkSafTopDown(context, sf.absolutePath)
+                            for (child in children) {
+                                val rel = child.absolutePath.removePrefix(sf.absolutePath).trimStart('/')
+                                if (rel.isEmpty()) continue
+                                val destChild = File(staged, rel)
+                                if (child.isDirectory) {
+                                    destChild.mkdirs()
+                                } else {
+                                    destChild.parentFile?.mkdirs()
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, child.absolutePath)?.use { inStream ->
+                                        destChild.outputStream().use { outStream -> inStream.copyTo(outStream) }
+                                    }
+                                }
+                            }
+                        } else {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(context, sf.absolutePath)?.use { inStream ->
+                                staged.outputStream().use { outStream -> inStream.copyTo(outStream) }
+                            }
+                        }
+                        staged
+                    } else {
+                        sf
+                    }
+                }
+            } else {
+                sourceFiles
+            }
+
+            val cleanTarget = targetDirInArchive.trim('/').replace('\\', '/')
+            val name = effectiveArchive.name.lowercase()
+            val res = when {
+                name.endsWith(".tar.gz") || name.endsWith(".tgz") || name.endsWith(".gz") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.GZIP, onProgress)
+                name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") || name.endsWith(".bz2") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.BZIP2, onProgress)
+                name.endsWith(".tar.xz") || name.endsWith(".txz") || name.endsWith(".xz") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.XZ, onProgress)
+                name.endsWith(".tar.zst") || name.endsWith(".tzst") || name.endsWith(".zst") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.ZSTD, onProgress)
+                name.endsWith(".tar") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.NONE, onProgress)
+                name.endsWith(".zip") -> addFilesToZip(effectiveArchive, effectiveSources, cleanTarget, password, onProgress)
+                name.endsWith(".7z") -> addFilesTo7z(effectiveArchive, effectiveSources, cleanTarget, password, onProgress)
+                else -> Result.failure(IllegalArgumentException("Unsupported archive format for adding files: ${archiveFile.name}"))
+            }
+
+            if (res.isSuccess) {
+                if (isArchiveSaf && tempArchiveFile != null && context != null) {
+                    TransferConflictHelper.copyLocalToLocalAtomic(
+                        tempArchiveFile,
+                        archiveFile,
+                        TransferConflictHelper.ConflictAction.OVERWRITE
+                    )
+                }
+
+                if (isMove) {
+                    for (sf in sourceFiles) {
+                        val isSfSaf = context != null && (sf is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                      za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(sf.absolutePath) ||
+                                      za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(context, sf.absolutePath))
+                        if (isSfSaf && context != null) {
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.delete(context, sf.absolutePath)
+                        } else {
+                            if (sf.isDirectory) {
+                                sf.deleteRecursively()
+                            } else {
+                                sf.delete()
+                            }
+                        }
+                    }
+                }
+            }
+            res
+        } catch (e: Exception) {
+            Result.failure(e)
+        } finally {
+            tempArchiveFile?.delete()
+            tempSourceDir?.deleteRecursively()
+        }
+    }
+
+    private fun addFilesToZip(
+        archiveFile: File,
+        sourceFiles: List<File>,
+        targetDirInArchive: String,
+        password: String?,
+        onProgress: (current: Int, total: Int, fileName: String) -> Unit
+    ): Result<Int> {
+        return try {
+            val zipFile = ZipFile(archiveFile)
+            if ((zipFile.isEncrypted || !password.isNullOrEmpty()) && password != null) {
+                zipFile.setPassword(password.toCharArray())
+            }
+
+            val isEncrypted = zipFile.isEncrypted || !password.isNullOrEmpty()
+
+            var count = 0
+            sourceFiles.forEachIndexed { index, file ->
+                onProgress(index + 1, sourceFiles.size, file.name)
+                val params = ZipParameters().apply {
+                    if (isEncrypted) {
+                        isEncryptFiles = true
+                        encryptionMethod = EncryptionMethod.AES
+                        aesKeyStrength = AesKeyStrength.KEY_STRENGTH_256
+                    }
+                }
+                if (file.isDirectory) {
+                    if (targetDirInArchive.isNotEmpty()) {
+                        params.rootFolderNameInZip = "$targetDirInArchive/${file.name}"
+                    }
+                    zipFile.addFolder(file, params)
+                } else {
+                    if (targetDirInArchive.isNotEmpty()) {
+                        params.fileNameInZip = "$targetDirInArchive/${file.name}"
+                    }
+                    zipFile.addFile(file, params)
+                }
+                count++
+            }
+            Result.success(count)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    private fun addFilesTo7z(
+        archiveFile: File,
+        sourceFiles: List<File>,
+        targetDirInArchive: String,
+        password: String?,
+        onProgress: (current: Int, total: Int, fileName: String) -> Unit
+    ): Result<Int> {
+        val tempFile = File(archiveFile.parentFile, "${archiveFile.name}.tmp_${System.currentTimeMillis()}")
+        if (tempFile.exists()) tempFile.delete()
+
+        return try {
+            val targetNames = sourceFiles.map {
+                if (targetDirInArchive.isEmpty()) it.name else "$targetDirInArchive/${it.name}"
+            }.toSet()
+
+            val inSevenZ = createSevenZFile(archiveFile, password)
+            val outSevenZ = if (password != null) SevenZOutputFile(tempFile, password.toCharArray()) else SevenZOutputFile(tempFile)
+
+            inSevenZ.use { inArchive ->
+                outSevenZ.use { outArchive ->
+                    var entry = inArchive.nextEntry
+                    while (entry != null) {
+                        val entryName = entry.name
+                        val isReplaced = targetNames.any { t -> entryName == t || entryName == "$t/" || entryName.startsWith("$t/") }
+                        if (!isReplaced) {
+                            val newEntry = outArchive.createArchiveEntry(File(entry.name), entry.name)
+                            newEntry.isDirectory = entry.isDirectory
+                            outArchive.putArchiveEntry(newEntry)
+                            if (!entry.isDirectory && entry.hasStream()) {
+                                val buffer = ByteArray(8192)
+                                var len: Int
+                                while (inArchive.read(buffer).also { len = it } > 0) {
+                                    outArchive.write(buffer, 0, len)
+                                }
+                            }
+                            outArchive.closeArchiveEntry()
+                        }
+                        entry = inArchive.nextEntry
+                    }
+
+                    sourceFiles.forEachIndexed { index, file ->
+                        onProgress(index + 1, sourceFiles.size, file.name)
+                        addFileTo7z(outArchive, file, targetDirInArchive)
+                    }
+                }
+            }
+
+            if (!tempFile.exists()) {
+                throw java.io.IOException("Failed to create updated 7z archive")
+            }
+
+            if (!archiveFile.delete()) {
+                Log.w(TAG, "Could not delete original 7z file before replacement")
+            }
+            if (!tempFile.renameTo(archiveFile)) {
+                tempFile.copyTo(archiveFile, overwrite = true)
+                tempFile.delete()
+            }
+
+            Result.success(sourceFiles.size)
+        } catch (e: Exception) {
+            tempFile.delete()
+            Result.failure(e)
+        }
+    }
+
+    private fun addFilesToTarStream(
+        archiveFile: File,
+        sourceFiles: List<File>,
+        targetDirInArchive: String,
+        compressor: CompressorStream,
+        onProgress: (current: Int, total: Int, fileName: String) -> Unit
+    ): Result<Int> {
+        val tempFile = File(archiveFile.parentFile, "${archiveFile.name}.tmp_${System.currentTimeMillis()}")
+        if (tempFile.exists()) tempFile.delete()
+
+        return try {
+            val targetNames = sourceFiles.map {
+                if (targetDirInArchive.isEmpty()) it.name else "$targetDirInArchive/${it.name}"
+            }.toSet()
+
+            var hadTarEntries = false
+            getDecompressedInputStream(archiveFile, compressor).use { decIn ->
+                TarArchiveInputStream(decIn).use { tarIn ->
+                    getCompressedOutputStream(tempFile, compressor).use { compOut ->
+                        TarArchiveOutputStream(compOut).use { tarOut ->
+                            tarOut.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX)
+                            tarOut.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX)
+
+                            try {
+                                var entry = tarIn.nextEntry
+                                while (entry != null) {
+                                    hadTarEntries = true
+                                    val entryName = entry.name
+                                    val isReplaced = targetNames.any { t -> entryName == t || entryName == "$t/" || entryName.startsWith("$t/") }
+                                    if (!isReplaced) {
+                                        tarOut.putArchiveEntry(entry)
+                                        if (!entry.isDirectory) {
+                                            tarIn.copyTo(tarOut)
+                                        }
+                                        tarOut.closeArchiveEntry()
+                                    }
+                                    entry = tarIn.nextEntry
+                                }
+                            } catch (e: Exception) {
+                                Log.w(TAG, "Archive is not a standard tar stream: ${e.message}")
+                            }
+
+                            if (!hadTarEntries && archiveFile.length() > 0L) {
+                                try {
+                                    getDecompressedInputStream(archiveFile, compressor).use { rawIn ->
+                                        val cleanName = archiveFile.name.replace(Regex("^stage_mod_arc_\\d+_"), "")
+                                        val singleName = getArchiveBaseName(cleanName)
+                                        if (!targetNames.contains(singleName)) {
+                                            val rawBytes = rawIn.readBytes()
+                                            if (rawBytes.isNotEmpty()) {
+                                                val rawEntry = org.apache.commons.compress.archivers.tar.TarArchiveEntry(singleName).apply {
+                                                    size = rawBytes.size.toLong()
+                                                    modTime = java.util.Date(archiveFile.lastModified())
+                                                }
+                                                tarOut.putArchiveEntry(rawEntry)
+                                                tarOut.write(rawBytes)
+                                                tarOut.closeArchiveEntry()
+                                            }
+                                        }
+                                    }
+                                } catch (ex: Exception) {
+                                    Log.w(TAG, "Could not import raw single stream into tar: ${ex.message}")
+                                }
+                            }
+
+                            sourceFiles.forEachIndexed { index, file ->
+                                onProgress(index + 1, sourceFiles.size, file.name)
+                                addFileToTar(tarOut, file, targetDirInArchive)
+                            }
+                            tarOut.finish()
+                        }
+                    }
+                }
+            }
+
+            if (!tempFile.exists()) {
+                throw java.io.IOException("Failed to create updated tar archive")
+            }
+
+            if (!archiveFile.delete()) {
+                Log.w(TAG, "Could not delete original tar file before replacement")
+            }
+            if (!tempFile.renameTo(archiveFile)) {
+                tempFile.copyTo(archiveFile, overwrite = true)
+                tempFile.delete()
+            }
+
+            Result.success(sourceFiles.size)
+        } catch (e: Exception) {
+            tempFile.delete()
             Result.failure(e)
         }
     }

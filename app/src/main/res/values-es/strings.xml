@@ -14193,6 +14193,58 @@ Permite que los lanzadores y aplicaciones externas (como Projectivy) exploren ca
     <string name="expose_to_saf_cloud_hint">
 Permite que los lanzadores y aplicaciones externas (como Projectivy) exploren carpetas y transmitan medios desde este almacenamiento en línea.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+Añadir a archivo existente…
+</string>
+    <string name="action_add_files">
+Añadir archivos
+</string>
+    <string name="copy_to_archive_count">
+Copiar al archivo (%1$d)
+</string>
+    <string name="move_to_archive_count">
+Mover al archivo (%1$d)
+</string>
+    <string name="paste_into_archive">
+Pegar en el archivo
+</string>
+    <string name="paste_into_archive_count">
+Pegar en el archivo (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+Añadir al archivo
+</string>
+    <string name="confirm_add_to_archive_msg">
+¿Añadir %1$d elemento(s) a %2$s?
+</string>
+    <string name="add_to_archive_success">
+%1$d elemento(s) añadido(s) a %2$s
+</string>
+    <string name="select_target_archive">
+Seleccionar archivo
+</string>
+    <string name="browse_other_archive">
+Examinar otro archivo…
+</string>
+    <string name="no_archives_found_in_folder">
+No se encontraron archivos compatibles en esta carpeta
+</string>
+    <string name="archive_format_not_writable">
+Este formato de archivo no admite añadir archivos
+</string>
+    <string name="copy_to_archive">
+Copiar al archivo
+</string>
+    <string name="move_to_archive">
+Mover al archivo
+</string>
+    <string name="adding_files_to_archive">
+Añadiendo archivos al archivo…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+Añadir al archivo
+</string>
 </resources>
 
 

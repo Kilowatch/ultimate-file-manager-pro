@@ -4990,6 +4990,24 @@
     <string name="expose_to_saf_subtitle">Make visible to system file pickers, Projectivy Launcher wallpapers, and external apps</string>
     <string name="expose_to_saf_network_hint">Allows launchers and external apps (like Projectivy) to browse folders and stream media from this network share.</string>
     <string name="expose_to_saf_cloud_hint">Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.</string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">Add to Existing Archive…</string>
+    <string name="action_add_files">Add Files</string>
+    <string name="copy_to_archive_count">Copy to archive (%1$d)</string>
+    <string name="move_to_archive_count">Move to archive (%1$d)</string>
+    <string name="paste_into_archive">Paste into Archive</string>
+    <string name="paste_into_archive_count">Paste into Archive (%1$d)</string>
+    <string name="confirm_add_to_archive_title">Add to Archive</string>
+    <string name="confirm_add_to_archive_msg">Add %1$d item(s) to %2$s?</string>
+    <string name="add_to_archive_success">%1$d item(s) added to %2$s</string>
+    <string name="select_target_archive">Select Archive</string>
+    <string name="browse_other_archive">Browse for another archive…</string>
+    <string name="no_archives_found_in_folder">No supported archives found in this folder</string>
+    <string name="archive_format_not_writable">This archive format does not support adding files</string>
+    <string name="copy_to_archive">Copy to Archive</string>
+    <string name="move_to_archive">Move to Archive</string>
+    <string name="adding_files_to_archive">Adding files to archive…</string>
+    <string name="icon_toolbar_add_to_archive">Add to Archive</string>
 </resources>
 
 

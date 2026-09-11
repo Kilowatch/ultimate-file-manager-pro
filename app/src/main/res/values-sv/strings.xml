@@ -14158,6 +14158,58 @@ Tillåter programstartare och externa appar (som Projectivy) att bläddra i mapp
     <string name="expose_to_saf_cloud_hint">
 Tillåter programstartare och externa appar (som Projectivy) att bläddra i mappar och strömma media från denna onlinelagring.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+Lägg till i befintligt arkiv…
+</string>
+    <string name="action_add_files">
+Lägg till filer
+</string>
+    <string name="copy_to_archive_count">
+Kopiera till arkiv (%1$d)
+</string>
+    <string name="move_to_archive_count">
+Flytta till arkiv (%1$d)
+</string>
+    <string name="paste_into_archive">
+Klistra in i arkiv
+</string>
+    <string name="paste_into_archive_count">
+Klistra in i arkiv (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+Lägg till i arkiv
+</string>
+    <string name="confirm_add_to_archive_msg">
+Lägg till %1$d objekt i %2$s?
+</string>
+    <string name="add_to_archive_success">
+%1$d objekt har lagts till i %2$s
+</string>
+    <string name="select_target_archive">
+Välj arkiv
+</string>
+    <string name="browse_other_archive">
+Bläddra efter ett annat arkiv…
+</string>
+    <string name="no_archives_found_in_folder">
+Inga arkiv som stöds hittades i den här mappen
+</string>
+    <string name="archive_format_not_writable">
+Det här arkivformatet stöder inte att lägga till filer
+</string>
+    <string name="copy_to_archive">
+Kopiera till arkiv
+</string>
+    <string name="move_to_archive">
+Flytta till arkiv
+</string>
+    <string name="adding_files_to_archive">
+Lägger till filer i arkivet…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+Lägg till i arkiv
+</string>
 </resources>
 
 

@@ -14181,6 +14181,58 @@ Set Password
     <string name="expose_to_saf_cloud_hint">
 يسمح للمشغلات والتطبيقات الخارجية (مثل Projectivy) بتصفح المجلدات ودفق الوسائط من وحدة التخزين عبر الإنترنت هذه.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+إضافة إلى أرشيف موجود…
+</string>
+    <string name="action_add_files">
+إضافة ملفات
+</string>
+    <string name="copy_to_archive_count">
+نسخ إلى الأرشيف (%1$d)
+</string>
+    <string name="move_to_archive_count">
+نقل إلى الأرشيف (%1$d)
+</string>
+    <string name="paste_into_archive">
+لصق في الأرشيف
+</string>
+    <string name="paste_into_archive_count">
+لصق في الأرشيف (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+إضافة إلى الأرشيف
+</string>
+    <string name="confirm_add_to_archive_msg">
+إضافة %1$d عنصر إلى %2$s؟
+</string>
+    <string name="add_to_archive_success">
+تمت إضافة %1$d عنصر إلى %2$s
+</string>
+    <string name="select_target_archive">
+اختيار أرشيف
+</string>
+    <string name="browse_other_archive">
+تصفح أرشيف آخر…
+</string>
+    <string name="no_archives_found_in_folder">
+لم يتم العثور على أرشيفات مدعومة في هذا المجلد
+</string>
+    <string name="archive_format_not_writable">
+تنسيق الأرشيف هذا لا يدعم إضافة ملفات
+</string>
+    <string name="copy_to_archive">
+نسخ إلى الأرشيف
+</string>
+    <string name="move_to_archive">
+نقل إلى الأرشيف
+</string>
+    <string name="adding_files_to_archive">
+جارٍ إضافة ملفات إلى الأرشيف…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+إضافة إلى الأرشيف
+</string>
 </resources>
 
 

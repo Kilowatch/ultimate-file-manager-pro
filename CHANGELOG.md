@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.1] — 2026-09-10
 
 ### Added
+- **Direct Archive Insertion (Mobile)**:
+  - Copy or move files and folders directly into existing archives without extracting them first.
+  - Full support for writable archive formats: ZIP, 7Z, and TAR streams (including `.tar.gz`, `.tar.bz2`, `.tar.xz`, and `.tar.zst`).
+  - Dynamic **Paste into Archive** floating action button in archive viewers indicating file count and copy/move mode from clipboard, with intelligent vertical stacking to prevent overlap with archive tools.
+  - Dedicated **Add Files** toolbar action in the archive viewer for in-place insertion from local storage.
+  - **Add to Existing Archive…** and **Paste into Archive** actions in the file browser multi-selection tools bottom sheet.
+  - Automatic AES password prompt support for encrypted ZIP archives, and source cleanup when performing move operations.
 - **Colorblind Accessibility Mode** for Mobile and Android TV:
   - New **Accessibility** section in Settings — a sibling of Appearance & Customization, on both phone and TV — hosting Colorblind Mode.
   - Three palettes: **Red-green** (protanopia and deuteranopia), **Blue-yellow** (tritanopia), and **General High Contrast**, a hue-independent option that also serves achromatopsia and low vision.

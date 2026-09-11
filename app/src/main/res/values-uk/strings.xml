@@ -14181,6 +14181,58 @@ SHA-256
     <string name="expose_to_saf_cloud_hint">
 Дозволяє програмам запуску та зовнішнім програмам (як-от Projectivy) переглядати папки та транслювати медіа з цього онлайн-сховища.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+Додати до наявного архіву…
+</string>
+    <string name="action_add_files">
+Додати файли
+</string>
+    <string name="copy_to_archive_count">
+Копіювати до архіву (%1$d)
+</string>
+    <string name="move_to_archive_count">
+Перемістити до архіву (%1$d)
+</string>
+    <string name="paste_into_archive">
+Вставити в архів
+</string>
+    <string name="paste_into_archive_count">
+Вставити в архів (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+Додати до архіву
+</string>
+    <string name="confirm_add_to_archive_msg">
+Додати %1$d елемент(ів) до %2$s?
+</string>
+    <string name="add_to_archive_success">
+%1$d елемент(ів) додано до %2$s
+</string>
+    <string name="select_target_archive">
+Вибрати архів
+</string>
+    <string name="browse_other_archive">
+Знайти інший архів…
+</string>
+    <string name="no_archives_found_in_folder">
+У цій папці не знайдено підтримуваних архівів
+</string>
+    <string name="archive_format_not_writable">
+Цей формат архіву не підтримує додавання файлів
+</string>
+    <string name="copy_to_archive">
+Копіювати до архіву
+</string>
+    <string name="move_to_archive">
+Перемістити до архіву
+</string>
+    <string name="adding_files_to_archive">
+Додавання файлів до архіву…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+Додати до архіву
+</string>
 </resources>
 
 

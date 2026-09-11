@@ -13943,6 +13943,58 @@ Hiermee kunnen opstartprogramma\'s en externe apps (zoals Projectivy) door mappe
     <string name="expose_to_saf_cloud_hint">
 Hiermee kunnen opstartprogramma\'s en externe apps (zoals Projectivy) door mappen bladeren en media streamen vanuit deze online opslag.
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+Toevoegen aan bestaand archief…
+</string>
+    <string name="action_add_files">
+Bestanden toevoegen
+</string>
+    <string name="copy_to_archive_count">
+Kopiëren naar archief (%1$d)
+</string>
+    <string name="move_to_archive_count">
+Verplaatsen naar archief (%1$d)
+</string>
+    <string name="paste_into_archive">
+Plakken in archief
+</string>
+    <string name="paste_into_archive_count">
+Plakken in archief (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+Toevoegen aan archief
+</string>
+    <string name="confirm_add_to_archive_msg">
+%1$d item(s) toevoegen aan %2$s?
+</string>
+    <string name="add_to_archive_success">
+%1$d item(s) toegevoegd aan %2$s
+</string>
+    <string name="select_target_archive">
+Archief selecteren
+</string>
+    <string name="browse_other_archive">
+Bladeren naar een ander archief…
+</string>
+    <string name="no_archives_found_in_folder">
+Geen ondersteunde archieven gevonden in deze map
+</string>
+    <string name="archive_format_not_writable">
+Dit archiefformaat ondersteunt het toevoegen van bestanden niet
+</string>
+    <string name="copy_to_archive">
+Kopiëren naar archief
+</string>
+    <string name="move_to_archive">
+Verplaatsen naar archief
+</string>
+    <string name="adding_files_to_archive">
+Bestanden toevoegen aan archief…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+Toevoegen aan archief
+</string>
 </resources>
 
 

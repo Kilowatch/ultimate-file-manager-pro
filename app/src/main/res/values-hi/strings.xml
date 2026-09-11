@@ -14181,6 +14181,58 @@ UFM को सुरक्षित करने के लिए 4 अंको
     <string name="expose_to_saf_cloud_hint">
 लॉन्चर और बाहरी ऐप्स (जैसे प्रोजेक्टिवी) को इस ऑनलाइन स्टोरेज से फ़ोल्डर्स ब्राउज़ करने और मीडिया स्ट्रीम करने की अनुमति देता है।
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+मौजूदा संग्रह में जोड़ें…
+</string>
+    <string name="action_add_files">
+फ़ाइलें जोड़ें
+</string>
+    <string name="copy_to_archive_count">
+संग्रह में कॉपी करें (%1$d)
+</string>
+    <string name="move_to_archive_count">
+संग्रह में ले जाएं (%1$d)
+</string>
+    <string name="paste_into_archive">
+संग्रह में पेस्ट करें
+</string>
+    <string name="paste_into_archive_count">
+संग्रह में पेस्ट करें (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+संग्रह में जोड़ें
+</string>
+    <string name="confirm_add_to_archive_msg">
+क्या %2$s में %1$d आइटम जोड़ें?
+</string>
+    <string name="add_to_archive_success">
+%2$s में %1$d आइटम जोड़े गए
+</string>
+    <string name="select_target_archive">
+संग्रह चुनें
+</string>
+    <string name="browse_other_archive">
+दूसरा संग्रह ब्राउज़ करें…
+</string>
+    <string name="no_archives_found_in_folder">
+इस फ़ोल्डर में कोई समर्थित संग्रह नहीं मिला
+</string>
+    <string name="archive_format_not_writable">
+यह संग्रह प्रारूप फ़ाइलें जोड़ने का समर्थन नहीं करता
+</string>
+    <string name="copy_to_archive">
+संग्रह में कॉपी करें
+</string>
+    <string name="move_to_archive">
+संग्रह में ले जाएं
+</string>
+    <string name="adding_files_to_archive">
+संग्रह में फ़ाइलें जोड़ी जा रही हैं…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+संग्रह में जोड़ें
+</string>
 </resources>
 
 

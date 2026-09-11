@@ -14181,6 +14181,58 @@ SAF とピッカーを公開する
     <string name="expose_to_saf_cloud_hint">
 ランチャーと外部アプリ (Projectivy など) がフォルダーを参照し、このオンライン ストレージからメディアをストリーミングできるようにします。
 </string>
+    <!-- Archive Modification (Copy / Move into Archive) -->
+    <string name="action_add_to_existing_archive">
+既存のアーカイブに追加…
+</string>
+    <string name="action_add_files">
+ファイルを追加
+</string>
+    <string name="copy_to_archive_count">
+アーカイブにコピー (%1$d)
+</string>
+    <string name="move_to_archive_count">
+アーカイブに移動 (%1$d)
+</string>
+    <string name="paste_into_archive">
+アーカイブに貼り付け
+</string>
+    <string name="paste_into_archive_count">
+アーカイブに貼り付け (%1$d)
+</string>
+    <string name="confirm_add_to_archive_title">
+アーカイブに追加
+</string>
+    <string name="confirm_add_to_archive_msg">
+%1$d 件の項目を %2$s に追加しますか？
+</string>
+    <string name="add_to_archive_success">
+%1$d 件の項目を %2$s に追加しました
+</string>
+    <string name="select_target_archive">
+アーカイブを選択
+</string>
+    <string name="browse_other_archive">
+別のアーカイブを参照…
+</string>
+    <string name="no_archives_found_in_folder">
+このフォルダにサポートされているアーカイブが見つかりません
+</string>
+    <string name="archive_format_not_writable">
+このアーカイブ形式はファイルの追加に対応していません
+</string>
+    <string name="copy_to_archive">
+アーカイブにコピー
+</string>
+    <string name="move_to_archive">
+アーカイブに移動
+</string>
+    <string name="adding_files_to_archive">
+アーカイブにファイルを追加中…
+</string>
+    <string name="icon_toolbar_add_to_archive">
+アーカイブに追加
+</string>
 </resources>
 
 
