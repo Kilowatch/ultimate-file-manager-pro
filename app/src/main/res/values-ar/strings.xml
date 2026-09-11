@@ -14233,6 +14233,70 @@ Set Password
     <string name="icon_toolbar_add_to_archive">
 إضافة إلى الأرشيف
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+جارٍ فك ضغط الأرشيف…
+</string>
+    <string name="archive_progress_compressing">
+جارٍ ضغط الملفات…
+</string>
+    <string name="archive_progress_adding">
+جارٍ الإضافة إلى الأرشيف…
+</string>
+    <string name="archive_progress_deleting">
+جارٍ الإزالة من الأرشيف…
+</string>
+    <string name="archive_progress_moving">
+جارٍ النقل من الأرشيف…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d ملفات
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s متبقي
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+إرسال إلى الخلفية
+</string>
+    <string name="archive_action_cancel">
+إلغاء العملية
+</string>
+    <string name="archive_cancel_confirm_title">
+إلغاء عملية الأرشيف؟
+</string>
+    <string name="archive_cancel_confirm_msg">
+هل أنت متأكد من الإلغاء؟ سيتم إزالة أي ملفات تمت معالجتها جزئيًا.
+</string>
+    <string name="archive_operation_cancelled">
+تم إلغاء عملية الأرشيف
+</string>
+    <string name="archive_cancelled">
+تم إلغاء عملية الأرشفة
+</string>
+    <string name="archive_badge_extracting">
+استخراج
+</string>
+    <string name="archive_badge_compressing">
+ضغط
+</string>
+    <string name="archive_badge_adding">
+إضافة
+</string>
+    <string name="archive_badge_modifying">
+تعديل
+</string>
+    <string name="archive_badge_deleting">
+حذف
+</string>
+    <string name="archive_current_file_label">
+الملف الحالي
+</string>
 </resources>
 
 

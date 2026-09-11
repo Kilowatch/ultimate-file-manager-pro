@@ -5008,6 +5008,28 @@
     <string name="move_to_archive">Move to Archive</string>
     <string name="adding_files_to_archive">Adding files to archive…</string>
     <string name="icon_toolbar_add_to_archive">Add to Archive</string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">Decompressing Archive…</string>
+    <string name="archive_progress_compressing">Compressing Files…</string>
+    <string name="archive_progress_adding">Adding to Archive…</string>
+    <string name="archive_progress_deleting">Removing from Archive…</string>
+    <string name="archive_progress_moving">Moving from Archive…</string>
+    <string name="archive_progress_files_count">%1$d / %2$d files</string>
+    <string name="archive_progress_data_count">%1$s / %2$s</string>
+    <string name="archive_progress_speed_eta">%1$s • %2$s remaining</string>
+    <string name="archive_progress_speed_only">%1$s</string>
+    <string name="archive_action_background">Send to Background</string>
+    <string name="archive_action_cancel">Cancel Operation</string>
+    <string name="archive_cancel_confirm_title">Cancel Archive Operation?</string>
+    <string name="archive_cancel_confirm_msg">Are you sure you want to cancel? Any partially processed files will be removed.</string>
+    <string name="archive_operation_cancelled">Archive operation cancelled</string>
+    <string name="archive_cancelled">Archive operation cancelled</string>
+    <string name="archive_badge_extracting">EXTRACTING</string>
+    <string name="archive_badge_compressing">COMPRESSING</string>
+    <string name="archive_badge_adding">ADDING</string>
+    <string name="archive_badge_modifying">MODIFYING</string>
+    <string name="archive_badge_deleting">DELETING</string>
+    <string name="archive_current_file_label">Current File</string>
 </resources>
 
 

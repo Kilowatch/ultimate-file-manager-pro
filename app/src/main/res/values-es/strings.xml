@@ -14245,6 +14245,70 @@ Añadiendo archivos al archivo…
     <string name="icon_toolbar_add_to_archive">
 Añadir al archivo
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+Descomprimiendo archivo…
+</string>
+    <string name="archive_progress_compressing">
+Comprimiendo archivos…
+</string>
+    <string name="archive_progress_adding">
+Añadiendo al archivo…
+</string>
+    <string name="archive_progress_deleting">
+Eliminando del archivo…
+</string>
+    <string name="archive_progress_moving">
+Moviendo desde el archivo…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d archivos
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s restantes
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+Enviar a segundo plano
+</string>
+    <string name="archive_action_cancel">
+Cancelar operación
+</string>
+    <string name="archive_cancel_confirm_title">
+¿Cancelar la operación de archivo?
+</string>
+    <string name="archive_cancel_confirm_msg">
+¿Seguro que quieres cancelar? Se eliminarán los archivos procesados parcialmente.
+</string>
+    <string name="archive_operation_cancelled">
+Operación de archivo cancelada
+</string>
+    <string name="archive_cancelled">
+Operación de archivado cancelada
+</string>
+    <string name="archive_badge_extracting">
+EXTRAYENDO
+</string>
+    <string name="archive_badge_compressing">
+COMPRIMIENDO
+</string>
+    <string name="archive_badge_adding">
+AÑADIENDO
+</string>
+    <string name="archive_badge_modifying">
+MODIFICANDO
+</string>
+    <string name="archive_badge_deleting">
+ELIMINANDO
+</string>
+    <string name="archive_current_file_label">
+Archivo actual
+</string>
 </resources>
 
 

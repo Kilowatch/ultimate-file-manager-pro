@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.ensureActive
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
@@ -47,6 +48,9 @@ import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
 import java.io.File
+import za.kilowatch.ultimatefilemanager.archive.ArchiveProgressDialog
+import za.kilowatch.ultimatefilemanager.archive.ArchiveOperationType
+import za.kilowatch.ultimatefilemanager.archive.ArchiveProgress
 import java.util.Locale
 import za.kilowatch.ultimatefilemanager.settings.SearchResultsLimitManager
 import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
@@ -3898,138 +3902,150 @@ class FileBrowserFragment : Fragment() {
 
         fileAdapter.exitSelectionMode()
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            val ctx = context ?: return@launch
-            val isTv = DeviceUtils.isTvDevice(ctx)
-            val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
-            val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
-            val txtTitle = dialogView.findViewById<TextView>(R.id.txtProgressTitle)
-            val txtCurrentFile = dialogView.findViewById<TextView>(R.id.txtProgressCurrentFile)
-            val progressFile = dialogView.findViewById<com.google.android.material.progressindicator.LinearProgressIndicator>(R.id.progressFile)
-            txtTitle?.setText(R.string.extract_progress_title)
-            txtCurrentFile?.text = archives.first().name
+        val ctx = context ?: return
+        val act = activity ?: return
+        val progressDialog = ArchiveProgressDialog(act)
+        var extractJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            extractJob?.cancel()
+        }
+        progressDialog.show(
+            operation = ArchiveOperationType.EXTRACT,
+            archiveName = archives.first().name,
+            totalFiles = archives.size
+        )
 
-            val progressDialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(false)
-                .create()
-            progressDialog.show()
-            progressDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-
+        extractJob = lifecycleScope.launch(Dispatchers.Main) {
             var extractedCount = 0
             var lastError: Exception? = null
+            var wasCancelled = false
             val tempExtractDir = if (isSelectFolderMode) {
                 File(ctx.cacheDir, "extract_temp_${System.currentTimeMillis()}").apply { mkdirs() }
             } else null
 
-            withContext(Dispatchers.IO) {
-                for (archive in archives) {
-                    var password: String? = null
-                    var success = false
-                    var attempts = 0
-                    withContext(Dispatchers.Main) {
-                        txtCurrentFile?.text = archive.name
-                    }
+            try {
+                withContext(Dispatchers.IO) {
+                    for (archive in archives) {
+                        ensureActive()
+                        var password: String? = null
+                        var success = false
+                        var attempts = 0
 
-                    val targetDest = if (isSelectFolderMode && tempExtractDir != null) {
-                        if (archives.size > 1) {
-                            File(tempExtractDir, za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archive.name)).apply { mkdirs() }
-                        } else {
-                            tempExtractDir
-                        }
-                    } else if (customDestFolder != null) {
-                        val isCustomSaf = customDestFolder is za.kilowatch.ultimatefilemanager.storage.SafFile ||
-                                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(customDestFolder.absolutePath) ||
-                                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, customDestFolder.absolutePath)
-                        if (archives.size > 1) {
-                            val subName = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archive.name)
-                            if (isCustomSaf) {
-                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(ctx, customDestFolder.absolutePath, subName)
-                                za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(customDestFolder.absolutePath, subName), isDir = true)
-                            } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(customDestFolder.absolutePath)) {
-                                za.kilowatch.ultimatefilemanager.storage.ShizukuFile(customDestFolder.absolutePath, subName, true).apply { if (!exists()) mkdirs() }
+                        val targetDest = if (isSelectFolderMode && tempExtractDir != null) {
+                            if (archives.size > 1) {
+                                File(tempExtractDir, za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archive.name)).apply { mkdirs() }
                             } else {
-                                File(customDestFolder, subName).apply { if (!exists()) mkdirs() }
+                                tempExtractDir
                             }
-                        } else {
-                            customDestFolder
-                        }
-                    } else {
-                        val baseParent = archive.parentFile ?: currentDir
-                        val isParentSaf = baseParent is za.kilowatch.ultimatefilemanager.storage.SafFile ||
-                                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(baseParent.absolutePath) ||
-                                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, baseParent.absolutePath)
-                        if (archives.size > 1) {
-                            val subName = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archive.name)
-                            if (isParentSaf) {
-                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(ctx, baseParent.absolutePath, subName)
-                                za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(baseParent.absolutePath, subName), isDir = true)
-                            } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(baseParent.absolutePath)) {
-                                za.kilowatch.ultimatefilemanager.storage.ShizukuFile(baseParent.absolutePath, subName, true).apply { if (!exists()) mkdirs() }
-                            } else {
-                                File(baseParent, subName).apply { if (!exists()) mkdirs() }
-                            }
-                        } else {
-                            baseParent
-                        }
-                    }
-
-                    while (!success && attempts < 3) {
-                        val act = activity ?: break
-                        val result = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.extract(
-                            ctx,
-                            archive,
-                            targetDest,
-                            password,
-                            onProgress = {},
-                            onConflict = { file, isFolder, destSizeBytes, applyToAllRef ->
-                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                    act,
-                                    file.name,
-                                    isFolder,
-                                    destSizeBytes,
-                                    applyToAllRef
-                                )
-                            }
-                        )
-
-                        if (result.isSuccess) {
-                            success = true
-                            extractedCount++
-                        } else {
-                            val ex = result.exceptionOrNull()
-                            lastError = ex as? Exception ?: Exception(ex?.message)
-                            val msg = ex?.message?.lowercase(java.util.Locale.ROOT) ?: ""
-                            val isEncryptedErr = msg.contains("password") || msg.contains("encrypt") ||
-                                    msg.contains("decrypt") || (ex is net.lingala.zip4j.exception.ZipException)
-
-                            if (attempts == 0 && (isEncryptedErr || password == null)) {
-                                val pwd = withContext(Dispatchers.Main) {
-                                    suspendCancellableCoroutine<String?> { cont ->
-                                        val dialog = za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog()
-                                        dialog.setOnConfirm { pw ->
-                                            if (cont.isActive) cont.resume(pw)
-                                        }
-                                        dialog.setOnCancel {
-                                            if (cont.isActive) cont.resume(null)
-                                        }
-                                        dialog.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog.TAG)
-                                    }
+                        } else if (customDestFolder != null) {
+                            val isCustomSaf = customDestFolder is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(customDestFolder.absolutePath) ||
+                                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, customDestFolder.absolutePath)
+                            if (archives.size > 1) {
+                                val subName = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archive.name)
+                                if (isCustomSaf) {
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(ctx, customDestFolder.absolutePath, subName)
+                                    za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(customDestFolder.absolutePath, subName), isDir = true)
+                                } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(customDestFolder.absolutePath)) {
+                                    za.kilowatch.ultimatefilemanager.storage.ShizukuFile(customDestFolder.absolutePath, subName, true).apply { if (!exists()) mkdirs() }
+                                } else {
+                                    File(customDestFolder, subName).apply { if (!exists()) mkdirs() }
                                 }
-                                if (pwd == null) {
+                            } else {
+                                customDestFolder
+                            }
+                        } else {
+                            val baseParent = archive.parentFile ?: currentDir
+                            val isParentSaf = baseParent is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(baseParent.absolutePath) ||
+                                             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, baseParent.absolutePath)
+                            if (archives.size > 1) {
+                                val subName = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archive.name)
+                                if (isParentSaf) {
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.mkdir(ctx, baseParent.absolutePath, subName)
+                                    za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(baseParent.absolutePath, subName), isDir = true)
+                                } else if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(baseParent.absolutePath)) {
+                                    za.kilowatch.ultimatefilemanager.storage.ShizukuFile(baseParent.absolutePath, subName, true).apply { if (!exists()) mkdirs() }
+                                } else {
+                                    File(baseParent, subName).apply { if (!exists()) mkdirs() }
+                                }
+                            } else {
+                                baseParent
+                            }
+                        }
+
+                        while (!success && attempts < 3) {
+                            ensureActive()
+                            val act = activity ?: break
+                            val result = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.extract(
+                                context = ctx,
+                                archiveFile = archive,
+                                destDir = targetDest,
+                                password = password,
+                                onArchiveProgress = { progress ->
+                                    activity?.runOnUiThread { progressDialog.update(progress) }
+                                },
+                                onProgress = {},
+                                onConflict = { file, isFolder, destSizeBytes, applyToAllRef ->
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                        act,
+                                        file.name,
+                                        isFolder,
+                                        destSizeBytes,
+                                        applyToAllRef
+                                    )
+                                }
+                            )
+
+                            if (result.isSuccess) {
+                                success = true
+                                extractedCount++
+                            } else {
+                                val ex = result.exceptionOrNull()
+                                if (ex is kotlinx.coroutines.CancellationException) {
+                                    throw ex
+                                }
+                                lastError = ex as? Exception ?: Exception(ex?.message)
+                                val msg = ex?.message?.lowercase(java.util.Locale.ROOT) ?: ""
+                                val isEncryptedErr = msg.contains("password") || msg.contains("encrypt") ||
+                                        msg.contains("decrypt") || (ex is net.lingala.zip4j.exception.ZipException)
+
+                                if (attempts == 0 && (isEncryptedErr || password == null)) {
+                                    val pwd = withContext(Dispatchers.Main) {
+                                        suspendCancellableCoroutine<String?> { cont ->
+                                            val dialog = za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog()
+                                            dialog.setOnConfirm { pw ->
+                                                if (cont.isActive) cont.resume(pw)
+                                            }
+                                            dialog.setOnCancel {
+                                                if (cont.isActive) cont.resume(null)
+                                            }
+                                            dialog.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog.TAG)
+                                        }
+                                    }
+                                    if (pwd == null) {
+                                        break
+                                    }
+                                    password = pwd
+                                    attempts++
+                                } else {
                                     break
                                 }
-                                password = pwd
-                                attempts++
-                            } else {
-                                break
                             }
                         }
                     }
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                wasCancelled = true
+            } finally {
+                progressDialog.dismiss()
             }
 
-            progressDialog.dismiss()
+            if (wasCancelled) {
+                tempExtractDir?.deleteRecursively()
+                android.widget.Toast.makeText(ctx, R.string.archive_cancelled, android.widget.Toast.LENGTH_SHORT).show()
+                return@launch
+            }
 
             if (isSelectFolderMode && tempExtractDir != null) {
                 if (extractedCount > 0) {

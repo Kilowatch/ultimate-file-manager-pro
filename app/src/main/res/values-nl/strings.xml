@@ -13995,6 +13995,70 @@ Bestanden toevoegen aan archief…
     <string name="icon_toolbar_add_to_archive">
 Toevoegen aan archief
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+Archief uitpakken…
+</string>
+    <string name="archive_progress_compressing">
+Bestanden comprimeren…
+</string>
+    <string name="archive_progress_adding">
+Toevoegen aan archief…
+</string>
+    <string name="archive_progress_deleting">
+Verwijderen uit archief…
+</string>
+    <string name="archive_progress_moving">
+Verplaatsen uit archief…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d bestanden
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s resterend
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+Naar achtergrond sturen
+</string>
+    <string name="archive_action_cancel">
+Bewerking annuleren
+</string>
+    <string name="archive_cancel_confirm_title">
+Archiefbewerking annuleren?
+</string>
+    <string name="archive_cancel_confirm_msg">
+Weet je zeker dat je wilt annuleren? Alle gedeeltelijk verwerkte bestanden worden verwijderd.
+</string>
+    <string name="archive_operation_cancelled">
+Archiefbewerking geannuleerd
+</string>
+    <string name="archive_cancelled">
+Archiefbewerking geannuleerd
+</string>
+    <string name="archive_badge_extracting">
+UITPAKKEN
+</string>
+    <string name="archive_badge_compressing">
+COMPRIMEREN
+</string>
+    <string name="archive_badge_adding">
+TOEVOEGEN
+</string>
+    <string name="archive_badge_modifying">
+AANPASSEN
+</string>
+    <string name="archive_badge_deleting">
+VERWIJDEREN
+</string>
+    <string name="archive_current_file_label">
+Huidig bestand
+</string>
 </resources>
 
 

@@ -14232,6 +14232,70 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
     <string name="icon_toolbar_add_to_archive">
 添加到压缩包
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+正在解压归档文件…
+</string>
+    <string name="archive_progress_compressing">
+正在压缩文件…
+</string>
+    <string name="archive_progress_adding">
+正在添加到归档文件…
+</string>
+    <string name="archive_progress_deleting">
+正在从归档文件中移除…
+</string>
+    <string name="archive_progress_moving">
+正在从归档文件中移动…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d 个文件
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+剩余 %1$s • %2$s
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+发送到后台
+</string>
+    <string name="archive_action_cancel">
+取消操作
+</string>
+    <string name="archive_cancel_confirm_title">
+取消归档操作？
+</string>
+    <string name="archive_cancel_confirm_msg">
+您确定要取消吗？任何已部分处理的文件都将被删除。
+</string>
+    <string name="archive_operation_cancelled">
+归档操作已取消
+</string>
+    <string name="archive_cancelled">
+归档操作已取消
+</string>
+    <string name="archive_badge_extracting">
+解压中
+</string>
+    <string name="archive_badge_compressing">
+压缩中
+</string>
+    <string name="archive_badge_adding">
+添加中
+</string>
+    <string name="archive_badge_modifying">
+修改中
+</string>
+    <string name="archive_badge_deleting">
+删除中
+</string>
+    <string name="archive_current_file_label">
+当前文件
+</string>
 </resources>
 
 

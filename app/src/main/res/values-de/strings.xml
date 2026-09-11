@@ -14233,6 +14233,70 @@ Dateien werden zum Archiv hinzugefügt…
     <string name="icon_toolbar_add_to_archive">
 Zum Archiv hinzufügen
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+Archiv wird entpackt…
+</string>
+    <string name="archive_progress_compressing">
+Dateien werden komprimiert…
+</string>
+    <string name="archive_progress_adding">
+Wird zum Archiv hinzugefügt…
+</string>
+    <string name="archive_progress_deleting">
+Wird aus dem Archiv entfernt…
+</string>
+    <string name="archive_progress_moving">
+Wird aus dem Archiv verschoben…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d Dateien
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s verbleibend
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+In den Hintergrund
+</string>
+    <string name="archive_action_cancel">
+Vorgang abbrechen
+</string>
+    <string name="archive_cancel_confirm_title">
+Archivvorgang abbrechen?
+</string>
+    <string name="archive_cancel_confirm_msg">
+Sind Sie sicher, dass Sie abbrechen möchten? Alle teilweise verarbeiteten Dateien werden entfernt.
+</string>
+    <string name="archive_operation_cancelled">
+Archivvorgang abgebrochen
+</string>
+    <string name="archive_cancelled">
+Archivvorgang abgebrochen
+</string>
+    <string name="archive_badge_extracting">
+ENTPACKEN
+</string>
+    <string name="archive_badge_compressing">
+KOMPRIMIEREN
+</string>
+    <string name="archive_badge_adding">
+HINZUFÜGEN
+</string>
+    <string name="archive_badge_modifying">
+ÄNDERN
+</string>
+    <string name="archive_badge_deleting">
+LÖSCHEN
+</string>
+    <string name="archive_current_file_label">
+Aktuelle Datei
+</string>
 </resources>
 
 

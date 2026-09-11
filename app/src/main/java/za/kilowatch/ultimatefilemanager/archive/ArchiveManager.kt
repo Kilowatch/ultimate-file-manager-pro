@@ -229,19 +229,41 @@ object ArchiveManager {
         }
     }
 
+    /**
+     * Recursively computes the total number of files and cumulative bytes for a list of files/folders.
+     */
+    fun calculateTotalFilesAndBytes(files: List<File>): Pair<Int, Long> {
+        var count = 0
+        var bytes = 0L
+        for (f in files) {
+            if (f.isDirectory) {
+                val children = f.listFiles()?.toList() ?: emptyList()
+                val (subCount, subBytes) = calculateTotalFilesAndBytes(children)
+                count += subCount
+                bytes += subBytes
+            } else {
+                count++
+                bytes += f.length()
+            }
+        }
+        return Pair(count.coerceAtLeast(1), bytes)
+    }
+
     suspend fun compress(
         sourceFiles: List<File>,
         destFile: File,
         password: String? = null,
         format: Format = Format.ZIP,
-        onProgress: (Int) -> Unit = {}
+        onProgress: (Int) -> Unit = {},
+        onArchiveProgress: ArchiveProgressListener? = null
     ): Result<Unit> = compress(
         context = null,
         sourceFiles = sourceFiles,
         destFile = destFile,
         password = password,
         format = format,
-        onProgress = onProgress
+        onProgress = onProgress,
+        onArchiveProgress = onArchiveProgress
     )
 
     suspend fun compress(
@@ -250,7 +272,8 @@ object ArchiveManager {
         destFile: File,
         password: String? = null,
         format: Format = Format.ZIP,
-        onProgress: (Int) -> Unit = {}
+        onProgress: (Int) -> Unit = {},
+        onArchiveProgress: ArchiveProgressListener? = null
     ): Result<Unit> = withContext(Dispatchers.IO) {
         val isDestSaf = context != null && (destFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                         za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destFile.absolutePath) ||
@@ -313,18 +336,20 @@ object ArchiveManager {
                 sourceFiles
             }
 
+            val (totalFiles, totalBytes) = calculateTotalFilesAndBytes(effectiveSources)
+
             when (format) {
-                Format.ZIP -> compressZip(effectiveSources, effectiveDest, password, onProgress)
-                Format.SEVEN_Z -> compress7z(effectiveSources, effectiveDest, password, onProgress)
-                Format.TAR -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.NONE, onProgress)
-                Format.TAR_GZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.GZIP, onProgress)
-                Format.TAR_BZ2 -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.BZIP2, onProgress)
-                Format.TAR_XZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.XZ, onProgress)
-                Format.TAR_ZST -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.ZSTD, onProgress)
-                Format.GZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.GZIP, onProgress)
-                Format.BZ2 -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.BZIP2, onProgress)
-                Format.XZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.XZ, onProgress)
-                Format.ZST -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.ZSTD, onProgress)
+                Format.ZIP -> compressZip(effectiveSources, effectiveDest, password, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.SEVEN_Z -> compress7z(effectiveSources, effectiveDest, password, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.TAR -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.NONE, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.TAR_GZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.GZIP, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.TAR_BZ2 -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.BZIP2, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.TAR_XZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.XZ, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.TAR_ZST -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.ZSTD, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.GZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.GZIP, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.BZ2 -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.BZIP2, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.XZ -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.XZ, totalFiles, totalBytes, onArchiveProgress, onProgress)
+                Format.ZST -> compressTarStream(effectiveSources, effectiveDest, CompressorStream.ZSTD, totalFiles, totalBytes, onArchiveProgress, onProgress)
             }
 
             if (isDestSaf && tempDestFile != null && context != null) {
@@ -353,6 +378,9 @@ object ArchiveManager {
         sourceFiles: List<File>,
         destFile: File,
         password: String?,
+        totalFiles: Int,
+        totalBytes: Long,
+        onArchiveProgress: ArchiveProgressListener?,
         onProgress: (Int) -> Unit
     ) {
         val zipFile = ZipFile(destFile)
@@ -365,20 +393,62 @@ object ArchiveManager {
             }
         }
 
-        sourceFiles.forEachIndexed { index, file ->
-            if (file.isDirectory) {
-                zipFile.addFolder(file, parameters)
-            } else {
-                zipFile.addFile(file, parameters)
+        var filesProcessed = 0
+        var bytesProcessed = 0L
+        val startTime = System.currentTimeMillis()
+
+        fun addFileRecursive(file: File, parentPath: String) {
+            if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Compression cancelled")
+            val params = ZipParameters(parameters)
+            if (parentPath.isNotEmpty()) {
+                if (file.isDirectory) params.rootFolderNameInZip = "$parentPath/${file.name}"
+                else params.fileNameInZip = "$parentPath/${file.name}"
             }
-            onProgress(((index + 1).toFloat() / sourceFiles.size * 100).toInt())
+            if (file.isDirectory) {
+                zipFile.addFolder(file, params)
+                file.listFiles()?.forEach { child ->
+                    addFileRecursive(child, if (parentPath.isEmpty()) file.name else "$parentPath/${file.name}")
+                }
+            } else {
+                zipFile.addFile(file, params)
+                filesProcessed++
+                bytesProcessed += file.length()
+                val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                          else ((filesProcessed * 100) / totalFiles.coerceAtLeast(1)).coerceIn(0, 100)
+                val elapsed = System.currentTimeMillis() - startTime
+                val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+                onArchiveProgress?.onProgress(
+                    ArchiveProgress(
+                        operation = ArchiveOperationType.COMPRESS,
+                        archiveName = destFile.name,
+                        currentFileName = file.name,
+                        fileIndex = filesProcessed,
+                        totalFiles = totalFiles,
+                        bytesProcessed = bytesProcessed,
+                        totalBytes = totalBytes,
+                        percentage = pct,
+                        speedBytesPerSec = speed,
+                        estimatedRemainingMs = eta
+                    )
+                )
+                onProgress(pct)
+            }
         }
+
+        sourceFiles.forEach { file ->
+            addFileRecursive(file, "")
+        }
+        onProgress(100)
     }
 
     private fun compress7z(
         sourceFiles: List<File>,
         destFile: File,
         password: String?,
+        totalFiles: Int,
+        totalBytes: Long,
+        onArchiveProgress: ArchiveProgressListener?,
         onProgress: (Int) -> Unit
     ) {
         val out = if (password != null) {
@@ -386,13 +456,15 @@ object ArchiveManager {
         } else {
             SevenZOutputFile(destFile)
         }
-        
+        val counter = LongArray(2) // [0] = files, [1] = bytes
+        val startTime = System.currentTimeMillis()
+
         out.use { sevenZOut ->
-            sourceFiles.forEachIndexed { index, file ->
-                addFileTo7z(sevenZOut, file, "")
-                onProgress(((index + 1).toFloat() / sourceFiles.size * 100).toInt())
+            sourceFiles.forEach { file ->
+                addFileTo7z(sevenZOut, file, "", destFile.name, totalFiles, totalBytes, counter, startTime, onArchiveProgress, onProgress)
             }
         }
+        onProgress(100)
     }
 
     private fun getCompressorOutputStream(file: File, compressor: CompressorStream): OutputStream {
@@ -410,15 +482,76 @@ object ArchiveManager {
         sourceFiles: List<File>,
         destFile: File,
         compressor: CompressorStream,
+        totalFiles: Int,
+        totalBytes: Long,
+        onArchiveProgress: ArchiveProgressListener?,
         onProgress: (Int) -> Unit
     ) {
+        val counter = LongArray(2)
+        val startTime = System.currentTimeMillis()
         getCompressorOutputStream(destFile, compressor).use { compOut ->
             TarArchiveOutputStream(compOut).use { tarOut ->
                 tarOut.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX)
-                sourceFiles.forEachIndexed { index, file ->
-                    addFileToTar(tarOut, file, "")
-                    onProgress(((index + 1).toFloat() / sourceFiles.size * 100).toInt())
+                sourceFiles.forEach { file ->
+                    addFileToTar(tarOut, file, "", destFile.name, totalFiles, totalBytes, counter, startTime, onArchiveProgress, onProgress)
                 }
+            }
+        }
+        onProgress(100)
+    }
+
+    private fun addFileToTar(
+        out: TarArchiveOutputStream,
+        file: File,
+        parentPath: String,
+        destArchiveName: String,
+        totalFiles: Int,
+        totalBytes: Long,
+        counter: LongArray,
+        startTime: Long,
+        onArchiveProgress: ArchiveProgressListener?,
+        onProgress: (Int) -> Unit
+    ) {
+        if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Compression cancelled")
+        val entryPath = if (parentPath.isEmpty()) file.name else "$parentPath/${file.name}"
+        val entry = TarArchiveEntry(file, entryPath)
+        out.putArchiveEntry(entry)
+        if (file.isFile) {
+            file.inputStream().use { input ->
+                val buffer = ByteArray(8192)
+                var len: Int
+                while (input.read(buffer).also { len = it } > 0) {
+                    if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Compression cancelled")
+                    out.write(buffer, 0, len)
+                    counter[1] += len
+                }
+            }
+            counter[0]++
+            val pct = if (totalBytes > 0) ((counter[1] * 100) / totalBytes).toInt().coerceIn(0, 100)
+                      else ((counter[0] * 100) / totalFiles.coerceAtLeast(1)).toInt().coerceIn(0, 100)
+            val elapsed = System.currentTimeMillis() - startTime
+            val speed = if (elapsed > 500) (counter[1] * 1000L) / elapsed else 0L
+            val eta = if (speed > 0 && totalBytes > counter[1]) ((totalBytes - counter[1]) * 1000L) / speed else 0L
+            onArchiveProgress?.onProgress(
+                ArchiveProgress(
+                    operation = ArchiveOperationType.COMPRESS,
+                    archiveName = destArchiveName,
+                    currentFileName = file.name,
+                    fileIndex = counter[0].toInt(),
+                    totalFiles = totalFiles,
+                    bytesProcessed = counter[1],
+                    totalBytes = totalBytes,
+                    percentage = pct,
+                    speedBytesPerSec = speed,
+                    estimatedRemainingMs = eta
+                )
+            )
+            onProgress(pct)
+        }
+        out.closeArchiveEntry()
+        if (file.isDirectory) {
+            file.listFiles()?.forEach { child ->
+                addFileToTar(out, child, entryPath, destArchiveName, totalFiles, totalBytes, counter, startTime, onArchiveProgress, onProgress)
             }
         }
     }
@@ -460,6 +593,7 @@ object ArchiveManager {
         archiveFile: File,
         destDir: File,
         password: String? = null,
+        onArchiveProgress: ArchiveProgressListener? = null,
         onProgress: (Int) -> Unit = {},
         onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ): Result<Unit> = withContext(Dispatchers.IO) {
@@ -493,18 +627,18 @@ object ArchiveManager {
 
             val name = effectiveArchive.name.lowercase()
             when {
-                name.endsWith(".tar.gz") || name.endsWith(".tgz") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.GZIP, onProgress, onConflict)
-                name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.BZIP2, onProgress, onConflict)
-                name.endsWith(".tar.xz") || name.endsWith(".txz") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.XZ, onProgress, onConflict)
-                name.endsWith(".tar.zst") || name.endsWith(".tzst") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.ZSTD, onProgress, onConflict)
-                name.endsWith(".tar") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.NONE, onProgress, onConflict)
-                name.endsWith(".rar") -> extractRar(effectiveArchive, effectiveDest, password, onProgress, onConflict)
-                name.endsWith(".gz") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.GZIP, onProgress, onConflict)
-                name.endsWith(".bz2") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.BZIP2, onProgress, onConflict)
-                name.endsWith(".xz") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.XZ, onProgress, onConflict)
-                name.endsWith(".zst") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.ZSTD, onProgress, onConflict)
-                effectiveArchive.extension.lowercase() == "zip" -> extractZip(context, effectiveArchive, effectiveDest, password, onProgress, onConflict)
-                effectiveArchive.extension.lowercase() == "7z" -> extract7z(context, effectiveArchive, effectiveDest, password, onProgress, onConflict)
+                name.endsWith(".tar.gz") || name.endsWith(".tgz") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.GZIP, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.BZIP2, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".tar.xz") || name.endsWith(".txz") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.XZ, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".tar.zst") || name.endsWith(".tzst") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.ZSTD, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".tar") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.NONE, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".rar") -> extractRar(effectiveArchive, effectiveDest, password, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".gz") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.GZIP, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".bz2") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.BZIP2, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".xz") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.XZ, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".zst") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.ZSTD, onArchiveProgress, onProgress, onConflict)
+                effectiveArchive.extension.lowercase() == "zip" -> extractZip(context, effectiveArchive, effectiveDest, password, onArchiveProgress, onProgress, onConflict)
+                effectiveArchive.extension.lowercase() == "7z" -> extract7z(context, effectiveArchive, effectiveDest, password, onArchiveProgress, onProgress, onConflict)
                 else -> throw IllegalArgumentException(context.getString(R.string.unsupported_archive_format_extension, effectiveArchive.extension))
             }
 
@@ -545,8 +679,9 @@ object ArchiveManager {
         archiveFile: File,
         destDir: File,
         compressor: CompressorStream,
-        onProgress: (Int) -> Unit,
-        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)?
+        onArchiveProgress: ArchiveProgressListener? = null,
+        onProgress: (Int) -> Unit = {},
+        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ) {
         var isTar = false
         try {
@@ -562,9 +697,9 @@ object ArchiveManager {
         }
 
         if (isTar) {
-            extractTarStream(archiveFile, destDir, compressor, onProgress, onConflict)
+            extractTarStream(archiveFile, destDir, compressor, onArchiveProgress, onProgress, onConflict)
         } else {
-            extractSingleStream(archiveFile, destDir, compressor, onProgress, onConflict)
+            extractSingleStream(archiveFile, destDir, compressor, onArchiveProgress, onProgress, onConflict)
         }
     }
 
@@ -585,32 +720,39 @@ object ArchiveManager {
         archiveFile: File,
         destDir: File,
         compressor: CompressorStream,
-        onProgress: (Int) -> Unit,
-        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)?
+        onArchiveProgress: ArchiveProgressListener? = null,
+        onProgress: (Int) -> Unit = {},
+        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ) {
         val canonicalDest = destDir.canonicalPath
         var applyToAllAction: TransferConflictHelper.ConflictAction? = null
+        val totalBytes = archiveFile.length()
+        var bytesProcessed = 0L
+        var entryIndex = 0
+        val startTime = System.currentTimeMillis()
 
         getDecompressedInputStream(archiveFile, compressor).use { decIn ->
             val tarIn = TarArchiveInputStream(decIn)
             var entry = tarIn.nextEntry
             while (entry != null) {
-                val outFile = File(destDir, entry.name)
+                if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
+                val currentEntry = entry
+                val outFile = File(destDir, currentEntry.name)
                 val canonicalOut = try {
                     outFile.canonicalPath
                 } catch (e: java.io.IOException) {
-                    Log.w(TAG, "Skipping entry with unresolvable path: ${entry.name}")
+                    Log.w(TAG, "Skipping entry with unresolvable path: ${currentEntry.name}")
                     entry = tarIn.nextEntry
                     continue
                 }
                 if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
-                    Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${entry.name}")
+                    Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${currentEntry.name}")
                     entry = tarIn.nextEntry
                     continue
                 }
 
                 var targetFile = outFile
-                if (entry.isDirectory) {
+                if (currentEntry.isDirectory) {
                     targetFile.mkdirs()
                 } else {
                     if (targetFile.exists()) {
@@ -644,9 +786,38 @@ object ArchiveManager {
 
                     targetFile.parentFile?.mkdirs()
                     targetFile.outputStream().use { output ->
-                        tarIn.copyTo(output)
+                        val buffer = ByteArray(16384)
+                        var len: Int
+                        while (tarIn.read(buffer).also { len = it } > 0) {
+                            if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
+                            output.write(buffer, 0, len)
+                            bytesProcessed += len
+                        }
                     }
                 }
+
+                entryIndex++
+                val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100) else 0
+                val elapsed = System.currentTimeMillis() - startTime
+                val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+
+                onArchiveProgress?.onProgress(
+                    ArchiveProgress(
+                        operation = ArchiveOperationType.EXTRACT,
+                        archiveName = archiveFile.name,
+                        currentFileName = currentEntry.name,
+                        fileIndex = entryIndex,
+                        totalFiles = 0,
+                        bytesProcessed = bytesProcessed,
+                        totalBytes = totalBytes,
+                        percentage = pct,
+                        speedBytesPerSec = speed,
+                        estimatedRemainingMs = eta
+                    )
+                )
+                onProgress(pct)
+
                 entry = tarIn.nextEntry
             }
         }
@@ -656,8 +827,9 @@ object ArchiveManager {
         archiveFile: File,
         destDir: File,
         compressor: CompressorStream,
-        onProgress: (Int) -> Unit,
-        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)?
+        onArchiveProgress: ArchiveProgressListener? = null,
+        onProgress: (Int) -> Unit = {},
+        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ) {
         val targetName = archiveFile.name.substringBeforeLast('.')
         var targetFile = File(destDir, targetName)
@@ -681,9 +853,38 @@ object ArchiveManager {
         }
 
         targetFile.parentFile?.mkdirs()
+        val totalBytes = archiveFile.length()
+        var bytesProcessed = 0L
+        val startTime = System.currentTimeMillis()
+
         getDecompressedInputStream(archiveFile, compressor).use { input ->
             targetFile.outputStream().use { output ->
-                input.copyTo(output)
+                val buffer = ByteArray(16384)
+                var len: Int
+                while (input.read(buffer).also { len = it } > 0) {
+                    if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
+                    output.write(buffer, 0, len)
+                    bytesProcessed += len
+                    val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100) else 0
+                    val elapsed = System.currentTimeMillis() - startTime
+                    val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                    val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+                    onArchiveProgress?.onProgress(
+                        ArchiveProgress(
+                            operation = ArchiveOperationType.EXTRACT,
+                            archiveName = archiveFile.name,
+                            currentFileName = targetName,
+                            fileIndex = 1,
+                            totalFiles = 1,
+                            bytesProcessed = bytesProcessed,
+                            totalBytes = totalBytes,
+                            percentage = pct,
+                            speedBytesPerSec = speed,
+                            estimatedRemainingMs = eta
+                        )
+                    )
+                    onProgress(pct)
+                }
             }
         }
     }
@@ -692,16 +893,23 @@ object ArchiveManager {
         archiveFile: File,
         destDir: File,
         password: String?,
-        onProgress: (Int) -> Unit,
-        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)?
+        onArchiveProgress: ArchiveProgressListener? = null,
+        onProgress: (Int) -> Unit = {},
+        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ) {
         val canonicalDest = destDir.canonicalPath
         var applyToAllAction: TransferConflictHelper.ConflictAction? = null
+        val startTime = System.currentTimeMillis()
 
         val archive = if (password != null) Archive(archiveFile, password) else Archive(archiveFile)
         archive.use { rar ->
             val headers = rar.fileHeaders
+            val totalFiles = headers.size
+            val totalBytes = headers.sumOf { it.unpSize }
+            var bytesProcessed = 0L
+
             headers.forEachIndexed { index, header ->
+                if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
                 val fileName = header.fileName.replace('\\', '/')
                 val outFile = File(destDir, fileName)
                 val canonicalOut = try {
@@ -749,8 +957,30 @@ object ArchiveManager {
                     targetFile.outputStream().use { output ->
                         rar.extractFile(header, output)
                     }
+                    bytesProcessed += header.unpSize
                 }
-                onProgress(((index + 1).toFloat() / headers.size * 100).toInt())
+
+                val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                          else (((index + 1) * 100) / headers.size.coerceAtLeast(1)).coerceIn(0, 100)
+                val elapsed = System.currentTimeMillis() - startTime
+                val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+
+                onArchiveProgress?.onProgress(
+                    ArchiveProgress(
+                        operation = ArchiveOperationType.EXTRACT,
+                        archiveName = archiveFile.name,
+                        currentFileName = fileName,
+                        fileIndex = index + 1,
+                        totalFiles = totalFiles,
+                        bytesProcessed = bytesProcessed,
+                        totalBytes = totalBytes,
+                        percentage = pct,
+                        speedBytesPerSec = speed,
+                        estimatedRemainingMs = eta
+                    )
+                )
+                onProgress(pct)
             }
         }
     }
@@ -760,24 +990,25 @@ object ArchiveManager {
         archiveFile: File,
         destDir: File,
         password: String?,
-        onProgress: (Int) -> Unit,
-        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)?
+        onArchiveProgress: ArchiveProgressListener? = null,
+        onProgress: (Int) -> Unit = {},
+        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ) {
         val zipFile = ZipFile(archiveFile)
         if (zipFile.isEncrypted && password != null) {
             zipFile.setPassword(password.toCharArray())
         }
 
-        if (onConflict == null) {
-            zipFile.extractAll(destDir.absolutePath)
-            return
-        }
-
         val canonicalDest = destDir.canonicalPath
         val headers = zipFile.fileHeaders
+        val totalFiles = headers.size
+        val totalBytes = headers.sumOf { it.uncompressedSize }
+        var bytesProcessed = 0L
+        val startTime = System.currentTimeMillis()
         var applyToAllAction: TransferConflictHelper.ConflictAction? = null
 
         headers.forEachIndexed { index, header ->
+            if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
             val outFile = File(destDir, header.fileName)
             val canonicalOut = try {
                 outFile.canonicalPath
@@ -798,7 +1029,11 @@ object ArchiveManager {
                         applyToAllAction!!
                     } else {
                         val applyToAllRef = booleanArrayOf(false)
-                        val act = onConflict(targetFile, false, targetFile.length(), applyToAllRef)
+                        val act = if (onConflict != null) {
+                            onConflict(targetFile, false, targetFile.length(), applyToAllRef)
+                        } else {
+                            TransferConflictHelper.ConflictAction.OVERWRITE
+                        }
                         if (applyToAllRef[0]) {
                             applyToAllAction = act
                         }
@@ -818,11 +1053,38 @@ object ArchiveManager {
                 targetFile.parentFile?.mkdirs()
                 zipFile.getInputStream(header).use { input ->
                     targetFile.outputStream().use { output ->
-                        input.copyTo(output)
+                        val buffer = ByteArray(16384)
+                        var len: Int
+                        while (input.read(buffer).also { len = it } > 0) {
+                            if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
+                            output.write(buffer, 0, len)
+                            bytesProcessed += len
+                        }
                     }
                 }
             }
-            onProgress(((index + 1).toFloat() / headers.size * 100).toInt())
+
+            val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                      else (((index + 1) * 100) / totalFiles.coerceAtLeast(1)).coerceIn(0, 100)
+            val elapsed = System.currentTimeMillis() - startTime
+            val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+            val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+
+            onArchiveProgress?.onProgress(
+                ArchiveProgress(
+                    operation = ArchiveOperationType.EXTRACT,
+                    archiveName = archiveFile.name,
+                    currentFileName = header.fileName,
+                    fileIndex = index + 1,
+                    totalFiles = totalFiles,
+                    bytesProcessed = bytesProcessed,
+                    totalBytes = totalBytes,
+                    percentage = pct,
+                    speedBytesPerSec = speed,
+                    estimatedRemainingMs = eta
+                )
+            )
+            onProgress(pct)
         }
     }
 
@@ -831,33 +1093,44 @@ object ArchiveManager {
         archiveFile: File,
         destDir: File,
         password: String?,
-        onProgress: (Int) -> Unit,
-        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)?
+        onArchiveProgress: ArchiveProgressListener? = null,
+        onProgress: (Int) -> Unit = {},
+        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ) {
         val sevenZFile = createSevenZFile(archiveFile, password)
 
         sevenZFile.use { archive ->
             val canonicalDest = destDir.canonicalPath
-            var entry = archive.nextEntry
+            val entries = archive.entries.toList()
+            val totalFiles = entries.size
+            val totalBytes = entries.sumOf { it.size }
+            var bytesProcessed = 0L
+            val startTime = System.currentTimeMillis()
             var applyToAllAction: TransferConflictHelper.ConflictAction? = null
+            var entryIndex = 0
 
+            var entry = archive.nextEntry
             while (entry != null) {
-                val outFile = File(destDir, entry.name)
+                if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
+                val currentEntry = entry
+                val outFile = File(destDir, currentEntry.name)
                 val canonicalOut = try {
                     outFile.canonicalPath
                 } catch (e: java.io.IOException) {
-                    Log.w(TAG, "Skipping entry with unresolvable path: ${entry.name}")
+                    Log.w(TAG, "Skipping entry with unresolvable path: ${currentEntry.name}")
                     entry = archive.nextEntry
+                    entryIndex++
                     continue
                 }
                 if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
-                    Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${entry.name}")
+                    Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${currentEntry.name}")
                     entry = archive.nextEntry
+                    entryIndex++
                     continue
                 }
 
                 var targetFile = outFile
-                if (entry.isDirectory) {
+                if (currentEntry.isDirectory) {
                     targetFile.mkdirs()
                 } else {
                     if (targetFile.exists()) {
@@ -879,6 +1152,7 @@ object ArchiveManager {
                         when (action) {
                             TransferConflictHelper.ConflictAction.SKIP -> {
                                 entry = archive.nextEntry
+                                entryIndex++
                                 continue
                             }
                             TransferConflictHelper.ConflictAction.CANCEL -> throw kotlinx.coroutines.CancellationException("Extraction cancelled by user")
@@ -891,15 +1165,98 @@ object ArchiveManager {
 
                     targetFile.parentFile?.mkdirs()
                     targetFile.outputStream().use { output ->
-                        val buffer = ByteArray(8192)
+                        val buffer = ByteArray(16384)
                         var len: Int
                         while (archive.read(buffer).also { len = it } > 0) {
+                            if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
                             output.write(buffer, 0, len)
+                            bytesProcessed += len
                         }
                     }
                 }
+
+                entryIndex++
+                val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                          else ((entryIndex * 100) / totalFiles.coerceAtLeast(1)).coerceIn(0, 100)
+                val elapsed = System.currentTimeMillis() - startTime
+                val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+
+                onArchiveProgress?.onProgress(
+                    ArchiveProgress(
+                        operation = ArchiveOperationType.EXTRACT,
+                        archiveName = archiveFile.name,
+                        currentFileName = currentEntry.name,
+                        fileIndex = entryIndex,
+                        totalFiles = totalFiles,
+                        bytesProcessed = bytesProcessed,
+                        totalBytes = totalBytes,
+                        percentage = pct,
+                        speedBytesPerSec = speed,
+                        estimatedRemainingMs = eta
+                    )
+                )
+                onProgress(pct)
+
                 entry = archive.nextEntry
             }
+        }
+    }
+
+    private fun addFileTo7z(
+        out: SevenZOutputFile,
+        file: File,
+        parentPath: String,
+        destArchiveName: String,
+        totalFiles: Int,
+        totalBytes: Long,
+        counter: LongArray,
+        startTime: Long,
+        onArchiveProgress: ArchiveProgressListener?,
+        onProgress: (Int) -> Unit
+    ) {
+        if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Compression cancelled")
+        val entryPath = if (parentPath.isEmpty()) file.name else "$parentPath/${file.name}"
+        val entry = out.createArchiveEntry(file, entryPath)
+        out.putArchiveEntry(entry)
+        
+        if (file.isDirectory) {
+            out.closeArchiveEntry()
+            file.listFiles()?.forEach { child ->
+                addFileTo7z(out, child, entryPath, destArchiveName, totalFiles, totalBytes, counter, startTime, onArchiveProgress, onProgress)
+            }
+        } else {
+            FileInputStream(file).use { input ->
+                val buffer = ByteArray(8192)
+                var len: Int
+                while (input.read(buffer).also { len = it } > 0) {
+                    if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Compression cancelled")
+                    out.write(buffer, 0, len)
+                    counter[1] += len
+                }
+            }
+            out.closeArchiveEntry()
+            counter[0]++
+            val pct = if (totalBytes > 0) ((counter[1] * 100) / totalBytes).toInt().coerceIn(0, 100)
+                      else ((counter[0] * 100) / totalFiles.coerceAtLeast(1)).toInt().coerceIn(0, 100)
+            val elapsed = System.currentTimeMillis() - startTime
+            val speed = if (elapsed > 500) (counter[1] * 1000L) / elapsed else 0L
+            val eta = if (speed > 0 && totalBytes > counter[1]) ((totalBytes - counter[1]) * 1000L) / speed else 0L
+            onArchiveProgress?.onProgress(
+                ArchiveProgress(
+                    operation = ArchiveOperationType.COMPRESS,
+                    archiveName = destArchiveName,
+                    currentFileName = file.name,
+                    fileIndex = counter[0].toInt(),
+                    totalFiles = totalFiles,
+                    bytesProcessed = counter[1],
+                    totalBytes = totalBytes,
+                    percentage = pct,
+                    speedBytesPerSec = speed,
+                    estimatedRemainingMs = eta
+                )
+            )
+            onProgress(pct)
         }
     }
 
@@ -1494,6 +1851,7 @@ object ArchiveManager {
         targetDirInArchive: String = "",
         isMove: Boolean = false,
         password: String? = null,
+        onArchiveProgress: ArchiveProgressListener? = null,
         onProgress: (current: Int, total: Int, fileName: String) -> Unit = { _, _, _ -> }
     ): Result<Int> = withContext(Dispatchers.IO) {
         val isArchiveSaf = archiveFile is za.kilowatch.ultimatefilemanager.storage.SafFile ||
@@ -1563,13 +1921,13 @@ object ArchiveManager {
             val cleanTarget = targetDirInArchive.trim('/').replace('\\', '/')
             val name = effectiveArchive.name.lowercase()
             val res = when {
-                name.endsWith(".tar.gz") || name.endsWith(".tgz") || name.endsWith(".gz") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.GZIP, onProgress)
-                name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") || name.endsWith(".bz2") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.BZIP2, onProgress)
-                name.endsWith(".tar.xz") || name.endsWith(".txz") || name.endsWith(".xz") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.XZ, onProgress)
-                name.endsWith(".tar.zst") || name.endsWith(".tzst") || name.endsWith(".zst") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.ZSTD, onProgress)
-                name.endsWith(".tar") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.NONE, onProgress)
-                name.endsWith(".zip") -> addFilesToZip(effectiveArchive, effectiveSources, cleanTarget, password, onProgress)
-                name.endsWith(".7z") -> addFilesTo7z(effectiveArchive, effectiveSources, cleanTarget, password, onProgress)
+                name.endsWith(".tar.gz") || name.endsWith(".tgz") || name.endsWith(".gz") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.GZIP, isMove, onArchiveProgress, onProgress)
+                name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") || name.endsWith(".bz2") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.BZIP2, isMove, onArchiveProgress, onProgress)
+                name.endsWith(".tar.xz") || name.endsWith(".txz") || name.endsWith(".xz") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.XZ, isMove, onArchiveProgress, onProgress)
+                name.endsWith(".tar.zst") || name.endsWith(".tzst") || name.endsWith(".zst") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.ZSTD, isMove, onArchiveProgress, onProgress)
+                name.endsWith(".tar") -> addFilesToTarStream(effectiveArchive, effectiveSources, cleanTarget, CompressorStream.NONE, isMove, onArchiveProgress, onProgress)
+                name.endsWith(".zip") -> addFilesToZip(effectiveArchive, effectiveSources, cleanTarget, password, isMove, onArchiveProgress, onProgress)
+                name.endsWith(".7z") -> addFilesTo7z(effectiveArchive, effectiveSources, cleanTarget, password, isMove, onArchiveProgress, onProgress)
                 else -> Result.failure(IllegalArgumentException("Unsupported archive format for adding files: ${archiveFile.name}"))
             }
 
@@ -1613,6 +1971,8 @@ object ArchiveManager {
         sourceFiles: List<File>,
         targetDirInArchive: String,
         password: String?,
+        isMove: Boolean,
+        onArchiveProgress: ArchiveProgressListener?,
         onProgress: (current: Int, total: Int, fileName: String) -> Unit
     ): Result<Int> {
         return try {
@@ -1622,9 +1982,13 @@ object ArchiveManager {
             }
 
             val isEncrypted = zipFile.isEncrypted || !password.isNullOrEmpty()
+            val (totalFiles, totalBytes) = calculateTotalFilesAndBytes(sourceFiles)
+            var bytesProcessed = 0L
+            val startTime = System.currentTimeMillis()
 
             var count = 0
             sourceFiles.forEachIndexed { index, file ->
+                if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Operation cancelled")
                 onProgress(index + 1, sourceFiles.size, file.name)
                 val params = ZipParameters().apply {
                     if (isEncrypted) {
@@ -1645,6 +2009,28 @@ object ArchiveManager {
                     zipFile.addFile(file, params)
                 }
                 count++
+                val fileByteSize = if (file.isFile) file.length() else 0L
+                bytesProcessed += fileByteSize
+                val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                          else (((index + 1) * 100) / sourceFiles.size.coerceAtLeast(1)).coerceIn(0, 100)
+                val elapsed = System.currentTimeMillis() - startTime
+                val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+
+                onArchiveProgress?.onProgress(
+                    ArchiveProgress(
+                        operation = if (isMove) ArchiveOperationType.MOVE else ArchiveOperationType.ADD,
+                        archiveName = archiveFile.name,
+                        currentFileName = file.name,
+                        fileIndex = count,
+                        totalFiles = totalFiles,
+                        bytesProcessed = bytesProcessed,
+                        totalBytes = totalBytes,
+                        percentage = pct,
+                        speedBytesPerSec = speed,
+                        estimatedRemainingMs = eta
+                    )
+                )
             }
             Result.success(count)
         } catch (e: Exception) {
@@ -1657,6 +2043,8 @@ object ArchiveManager {
         sourceFiles: List<File>,
         targetDirInArchive: String,
         password: String?,
+        isMove: Boolean,
+        onArchiveProgress: ArchiveProgressListener?,
         onProgress: (current: Int, total: Int, fileName: String) -> Unit
     ): Result<Int> {
         val tempFile = File(archiveFile.parentFile, "${archiveFile.name}.tmp_${System.currentTimeMillis()}")
@@ -1669,6 +2057,9 @@ object ArchiveManager {
 
             val inSevenZ = createSevenZFile(archiveFile, password)
             val outSevenZ = if (password != null) SevenZOutputFile(tempFile, password.toCharArray()) else SevenZOutputFile(tempFile)
+            val (totalFiles, totalBytes) = calculateTotalFilesAndBytes(sourceFiles)
+            val counter = LongArray(2)
+            val startTime = System.currentTimeMillis()
 
             inSevenZ.use { inArchive ->
                 outSevenZ.use { outArchive ->
@@ -1693,8 +2084,20 @@ object ArchiveManager {
                     }
 
                     sourceFiles.forEachIndexed { index, file ->
+                        if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Operation cancelled")
                         onProgress(index + 1, sourceFiles.size, file.name)
-                        addFileTo7z(outArchive, file, targetDirInArchive)
+                        addFileTo7z(
+                            out = outArchive,
+                            file = file,
+                            parentPath = targetDirInArchive,
+                            destArchiveName = archiveFile.name,
+                            totalFiles = totalFiles,
+                            totalBytes = totalBytes,
+                            counter = counter,
+                            startTime = startTime,
+                            onArchiveProgress = onArchiveProgress,
+                            onProgress = { }
+                        )
                     }
                 }
             }
@@ -1723,6 +2126,8 @@ object ArchiveManager {
         sourceFiles: List<File>,
         targetDirInArchive: String,
         compressor: CompressorStream,
+        isMove: Boolean,
+        onArchiveProgress: ArchiveProgressListener?,
         onProgress: (current: Int, total: Int, fileName: String) -> Unit
     ): Result<Int> {
         val tempFile = File(archiveFile.parentFile, "${archiveFile.name}.tmp_${System.currentTimeMillis()}")
@@ -1734,6 +2139,10 @@ object ArchiveManager {
             }.toSet()
 
             var hadTarEntries = false
+            val (totalFiles, totalBytes) = calculateTotalFilesAndBytes(sourceFiles)
+            val counter = LongArray(2)
+            val startTime = System.currentTimeMillis()
+
             getDecompressedInputStream(archiveFile, compressor).use { decIn ->
                 TarArchiveInputStream(decIn).use { tarIn ->
                     getCompressedOutputStream(tempFile, compressor).use { compOut ->
@@ -1784,8 +2193,20 @@ object ArchiveManager {
                             }
 
                             sourceFiles.forEachIndexed { index, file ->
+                                if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Operation cancelled")
                                 onProgress(index + 1, sourceFiles.size, file.name)
-                                addFileToTar(tarOut, file, targetDirInArchive)
+                                addFileToTar(
+                                    out = tarOut,
+                                    file = file,
+                                    parentPath = targetDirInArchive,
+                                    destArchiveName = archiveFile.name,
+                                    totalFiles = totalFiles,
+                                    totalBytes = totalBytes,
+                                    counter = counter,
+                                    startTime = startTime,
+                                    onArchiveProgress = onArchiveProgress,
+                                    onProgress = { }
+                                )
                             }
                             tarOut.finish()
                         }

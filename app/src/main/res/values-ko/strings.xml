@@ -14233,6 +14233,70 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
     <string name="icon_toolbar_add_to_archive">
 아카이브에 추가
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+압축 해제 중…
+</string>
+    <string name="archive_progress_compressing">
+파일 압축 중…
+</string>
+    <string name="archive_progress_adding">
+압축 파일에 추가 중…
+</string>
+    <string name="archive_progress_deleting">
+압축 파일에서 제거 중…
+</string>
+    <string name="archive_progress_moving">
+압축 파일에서 이동 중…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d개 파일
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s 남음
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+백그라운드로 보내기
+</string>
+    <string name="archive_action_cancel">
+작업 취소
+</string>
+    <string name="archive_cancel_confirm_title">
+압축 작업을 취소하시겠습니까?
+</string>
+    <string name="archive_cancel_confirm_msg">
+정말 취소하시겠습니까? 일부 처리된 파일은 삭제됩니다.
+</string>
+    <string name="archive_operation_cancelled">
+압축 작업이 취소되었습니다
+</string>
+    <string name="archive_cancelled">
+압축 작업이 취소되었습니다
+</string>
+    <string name="archive_badge_extracting">
+압축 해제 중
+</string>
+    <string name="archive_badge_compressing">
+압축 중
+</string>
+    <string name="archive_badge_adding">
+추가 중
+</string>
+    <string name="archive_badge_modifying">
+수정 중
+</string>
+    <string name="archive_badge_deleting">
+삭제 중
+</string>
+    <string name="archive_current_file_label">
+현재 파일
+</string>
 </resources>
 
 

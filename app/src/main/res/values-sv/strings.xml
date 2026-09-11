@@ -14210,6 +14210,70 @@ Lägger till filer i arkivet…
     <string name="icon_toolbar_add_to_archive">
 Lägg till i arkiv
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+Packar upp arkiv…
+</string>
+    <string name="archive_progress_compressing">
+Komprimerar filer…
+</string>
+    <string name="archive_progress_adding">
+Lägger till i arkiv…
+</string>
+    <string name="archive_progress_deleting">
+Tar bort från arkiv…
+</string>
+    <string name="archive_progress_moving">
+Flyttar från arkiv…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d filer
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s återstår
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+Kör i bakgrunden
+</string>
+    <string name="archive_action_cancel">
+Avbryt åtgärden
+</string>
+    <string name="archive_cancel_confirm_title">
+Avbryta arkivåtgärden?
+</string>
+    <string name="archive_cancel_confirm_msg">
+Är du säker på att du vill avbryta? Delvis behandlade filer tas bort.
+</string>
+    <string name="archive_operation_cancelled">
+Arkivåtgärden avbröts
+</string>
+    <string name="archive_cancelled">
+Arkivåtgärden avbröts
+</string>
+    <string name="archive_badge_extracting">
+PACKAR UPP
+</string>
+    <string name="archive_badge_compressing">
+KOMPRIMERAR
+</string>
+    <string name="archive_badge_adding">
+LÄGGER TILL
+</string>
+    <string name="archive_badge_modifying">
+ÄNDRAR
+</string>
+    <string name="archive_badge_deleting">
+TAR BORT
+</string>
+    <string name="archive_current_file_label">
+Aktuell fil
+</string>
 </resources>
 
 

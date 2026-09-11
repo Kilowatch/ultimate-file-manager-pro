@@ -14233,6 +14233,70 @@ Aggiunta di file all\\\'archivio…
     <string name="icon_toolbar_add_to_archive">
 Aggiungi all\\\'archivio
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+Decompressione archivio…
+</string>
+    <string name="archive_progress_compressing">
+Compressione file…
+</string>
+    <string name="archive_progress_adding">
+Aggiunta all\\\'archivio…
+</string>
+    <string name="archive_progress_deleting">
+Rimozione dall\\\'archivio…
+</string>
+    <string name="archive_progress_moving">
+Spostamento dall\\\'archivio…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d file
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s rimanenti
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+Invia in background
+</string>
+    <string name="archive_action_cancel">
+Annulla operazione
+</string>
+    <string name="archive_cancel_confirm_title">
+Annullare l\\\'operazione sull\\\'archivio?
+</string>
+    <string name="archive_cancel_confirm_msg">
+Vuoi davvero annullare? I file parzialmente elaborati verranno rimossi.
+</string>
+    <string name="archive_operation_cancelled">
+Operazione sull\\\'archivio annullata
+</string>
+    <string name="archive_cancelled">
+Operazione di archiviazione annullata
+</string>
+    <string name="archive_badge_extracting">
+ESTRAZIONE
+</string>
+    <string name="archive_badge_compressing">
+COMPRESSIONE
+</string>
+    <string name="archive_badge_adding">
+AGGIUNTA
+</string>
+    <string name="archive_badge_modifying">
+MODIFICA
+</string>
+    <string name="archive_badge_deleting">
+ELIMINAZIONE
+</string>
+    <string name="archive_current_file_label">
+File corrente
+</string>
 </resources>
 
 

@@ -14233,6 +14233,70 @@ SHA-256
     <string name="icon_toolbar_add_to_archive">
 Додати до архіву
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+Розпакування архіву…
+</string>
+    <string name="archive_progress_compressing">
+Стиснення файлів…
+</string>
+    <string name="archive_progress_adding">
+Додавання до архіву…
+</string>
+    <string name="archive_progress_deleting">
+Видалення з архіву…
+</string>
+    <string name="archive_progress_moving">
+Переміщення з архіву…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d файлів
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • залишилося %2$s
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+Перевести у фон
+</string>
+    <string name="archive_action_cancel">
+Скасувати операцію
+</string>
+    <string name="archive_cancel_confirm_title">
+Скасувати операцію з архівом?
+</string>
+    <string name="archive_cancel_confirm_msg">
+Ви впевнені, що хочете скасувати? Частково оброблені файли буде видалено.
+</string>
+    <string name="archive_operation_cancelled">
+Операцію з архівом скасовано
+</string>
+    <string name="archive_cancelled">
+Операцію архівування скасовано
+</string>
+    <string name="archive_badge_extracting">
+РОЗПАКУВАННЯ
+</string>
+    <string name="archive_badge_compressing">
+СТИСНЕННЯ
+</string>
+    <string name="archive_badge_adding">
+ДОДАВАННЯ
+</string>
+    <string name="archive_badge_modifying">
+ЗМІНЕННЯ
+</string>
+    <string name="archive_badge_deleting">
+ВИДАЛЕННЯ
+</string>
+    <string name="archive_current_file_label">
+Поточний файл
+</string>
 </resources>
 
 

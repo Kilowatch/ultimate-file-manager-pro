@@ -14233,6 +14233,70 @@ Menambahkan berkas ke arsip…
     <string name="icon_toolbar_add_to_archive">
 Tambahkan ke Arsip
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+Mendekompresi Arsip…
+</string>
+    <string name="archive_progress_compressing">
+Mengompresi File…
+</string>
+    <string name="archive_progress_adding">
+Menambahkan ke Arsip…
+</string>
+    <string name="archive_progress_deleting">
+Menghapus dari Arsip…
+</string>
+    <string name="archive_progress_moving">
+Memindahkan dari Arsip…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d file
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s tersisa
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+Kirim ke Latar Belakang
+</string>
+    <string name="archive_action_cancel">
+Batalkan Operasi
+</string>
+    <string name="archive_cancel_confirm_title">
+Batalkan Operasi Arsip?
+</string>
+    <string name="archive_cancel_confirm_msg">
+Apakah Anda yakin ingin membatalkan? File yang diproses sebagian akan dihapus.
+</string>
+    <string name="archive_operation_cancelled">
+Operasi arsip dibatalkan
+</string>
+    <string name="archive_cancelled">
+Operasi arsip dibatalkan
+</string>
+    <string name="archive_badge_extracting">
+MENGEKSTRAK
+</string>
+    <string name="archive_badge_compressing">
+MENGKOMPRESI
+</string>
+    <string name="archive_badge_adding">
+MENAMBAHKAN
+</string>
+    <string name="archive_badge_modifying">
+MEMODIFIKASI
+</string>
+    <string name="archive_badge_deleting">
+MENGHAPUS
+</string>
+    <string name="archive_current_file_label">
+File Saat Ini
+</string>
 </resources>
 
 

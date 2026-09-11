@@ -14233,6 +14233,70 @@ For your security, try again after the timer expires
     <string name="icon_toolbar_add_to_archive">
 Добавить в архив
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+Распаковка архива…
+</string>
+    <string name="archive_progress_compressing">
+Сжатие файлов…
+</string>
+    <string name="archive_progress_adding">
+Добавление в архив…
+</string>
+    <string name="archive_progress_deleting">
+Удаление из архива…
+</string>
+    <string name="archive_progress_moving">
+Извлечение из архива…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d файлов
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • осталось %2$s
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+Свернуть в фоновый режим
+</string>
+    <string name="archive_action_cancel">
+Отменить операцию
+</string>
+    <string name="archive_cancel_confirm_title">
+Отменить операцию с архивом?
+</string>
+    <string name="archive_cancel_confirm_msg">
+Вы уверены, что хотите отменить? Все частично обработанные файлы будут удалены.
+</string>
+    <string name="archive_operation_cancelled">
+Операция с архивом отменена
+</string>
+    <string name="archive_cancelled">
+Операция с архивом отменена
+</string>
+    <string name="archive_badge_extracting">
+РАСПАКОВКА
+</string>
+    <string name="archive_badge_compressing">
+СЖАТИЕ
+</string>
+    <string name="archive_badge_adding">
+ДОБАВЛЕНИЕ
+</string>
+    <string name="archive_badge_modifying">
+ИЗМЕНЕНИЕ
+</string>
+    <string name="archive_badge_deleting">
+УДАЛЕНИЕ
+</string>
+    <string name="archive_current_file_label">
+Текущий файл
+</string>
 </resources>
 
 

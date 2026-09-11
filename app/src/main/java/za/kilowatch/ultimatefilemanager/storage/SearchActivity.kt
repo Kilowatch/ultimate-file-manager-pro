@@ -47,6 +47,9 @@ import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.indexing.SearchSuggestion
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
+import za.kilowatch.ultimatefilemanager.archive.ArchiveProgressDialog
+import za.kilowatch.ultimatefilemanager.archive.ArchiveOperationType
+import za.kilowatch.ultimatefilemanager.archive.ArchiveProgress
 import android.app.Activity
 import android.text.format.Formatter
 import android.widget.Toast
@@ -1354,75 +1357,97 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun performExtract(file: File, customDestFolder: File? = null, isSelectFolderMode: Boolean) {
-        scope.launch(Dispatchers.Main) {
-            val progressDialog = MaterialAlertDialogBuilder(this@SearchActivity, R.style.UFM_Dialog)
-                .setTitle(R.string.extract_progress_title)
-                .setMessage(file.name)
-                .setCancelable(false)
-                .create()
-            progressDialog.show()
+        val progressDialog = ArchiveProgressDialog(this@SearchActivity)
+        var extractJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            extractJob?.cancel()
+        }
+        progressDialog.show(
+            operation = ArchiveOperationType.EXTRACT,
+            archiveName = file.name,
+            totalFiles = 1
+        )
 
+        extractJob = scope.launch(Dispatchers.Main) {
             var password: String? = null
             var success = false
             var attempts = 0
             var lastError: Exception? = null
+            var wasCancelled = false
             val tempExtractDir = if (isSelectFolderMode) {
                 File(cacheDir, "extract_temp_${System.currentTimeMillis()}").apply { mkdirs() }
             } else null
             val targetDest = tempExtractDir ?: customDestFolder ?: (file.parentFile ?: filesDir)
 
-            withContext(Dispatchers.IO) {
-                while (!success && attempts < 3) {
-                    val result = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.extract(
-                        this@SearchActivity,
-                        file,
-                        targetDest,
-                        password,
-                        onProgress = {},
-                        onConflict = { conflictFile, isFolder, destSizeBytes, applyToAllRef ->
-                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                this@SearchActivity,
-                                conflictFile.name,
-                                isFolder,
-                                destSizeBytes,
-                                applyToAllRef
-                            )
-                        }
-                    )
-
-                    if (result.isSuccess) {
-                        success = true
-                    } else {
-                        val ex = result.exceptionOrNull()
-                        lastError = ex as? Exception ?: Exception(ex?.message)
-                        val msg = ex?.message?.lowercase(java.util.Locale.ROOT) ?: ""
-                        val isEncryptedErr = msg.contains("password") || msg.contains("encrypt") ||
-                                msg.contains("decrypt") || (ex is net.lingala.zip4j.exception.ZipException)
-
-                        if (attempts == 0 && (isEncryptedErr || password == null)) {
-                            val pwd = withContext(Dispatchers.Main) {
-                                suspendCancellableCoroutine<String?> { cont ->
-                                    val dialog = za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog()
-                                    dialog.setOnConfirm { pw ->
-                                        if (cont.isActive) cont.resume(pw)
-                                    }
-                                    dialog.setOnCancel {
-                                        if (cont.isActive) cont.resume(null)
-                                    }
-                                    dialog.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog.TAG)
-                                }
+            try {
+                withContext(Dispatchers.IO) {
+                    while (!success && attempts < 3) {
+                        ensureActive()
+                        val result = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.extract(
+                            context = this@SearchActivity,
+                            archiveFile = file,
+                            destDir = targetDest,
+                            password = password,
+                            onArchiveProgress = { progress ->
+                                runOnUiThread { progressDialog.update(progress) }
+                            },
+                            onProgress = {},
+                            onConflict = { conflictFile, isFolder, destSizeBytes, applyToAllRef ->
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                    this@SearchActivity,
+                                    conflictFile.name,
+                                    isFolder,
+                                    destSizeBytes,
+                                    applyToAllRef
+                                )
                             }
-                            if (pwd == null) break
-                            password = pwd
-                            attempts++
+                        )
+
+                        if (result.isSuccess) {
+                            success = true
                         } else {
-                            break
+                            val ex = result.exceptionOrNull()
+                            if (ex is kotlinx.coroutines.CancellationException) {
+                                throw ex
+                            }
+                            lastError = ex as? Exception ?: Exception(ex?.message)
+                            val msg = ex?.message?.lowercase(java.util.Locale.ROOT) ?: ""
+                            val isEncryptedErr = msg.contains("password") || msg.contains("encrypt") ||
+                                    msg.contains("decrypt") || (ex is net.lingala.zip4j.exception.ZipException)
+
+                            if (attempts == 0 && (isEncryptedErr || password == null)) {
+                                val pwd = withContext(Dispatchers.Main) {
+                                    suspendCancellableCoroutine<String?> { cont ->
+                                        val dialog = za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog()
+                                        dialog.setOnConfirm { pw ->
+                                            if (cont.isActive) cont.resume(pw)
+                                        }
+                                        dialog.setOnCancel {
+                                            if (cont.isActive) cont.resume(null)
+                                        }
+                                        dialog.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog.TAG)
+                                    }
+                                }
+                                if (pwd == null) break
+                                password = pwd
+                                attempts++
+                            } else {
+                                break
+                            }
                         }
                     }
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                wasCancelled = true
+            } finally {
+                progressDialog.dismiss()
             }
 
-            progressDialog.dismiss()
+            if (wasCancelled) {
+                tempExtractDir?.deleteRecursively()
+                showSnackbar(getString(R.string.archive_cancelled))
+                return@launch
+            }
 
             if (isSelectFolderMode && tempExtractDir != null) {
                 if (success) {

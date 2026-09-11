@@ -14233,6 +14233,70 @@ UFM को सुरक्षित करने के लिए 4 अंको
     <string name="icon_toolbar_add_to_archive">
 संग्रह में जोड़ें
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+आर्काइव डीकंप्रेस हो रहा है…
+</string>
+    <string name="archive_progress_compressing">
+फ़ाइलें कंप्रेस कर रहा है…
+</string>
+    <string name="archive_progress_adding">
+आर्काइव में जोड़ रहा है…
+</string>
+    <string name="archive_progress_deleting">
+आर्काइव से हटा रहा है…
+</string>
+    <string name="archive_progress_moving">
+आर्काइव से स्थानांतरित कर रहा है…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d फ़ाइलें
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s शेष
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+पृष्ठभूमि में भेजें
+</string>
+    <string name="archive_action_cancel">
+ऑपरेशन रद्द करें
+</string>
+    <string name="archive_cancel_confirm_title">
+आर्काइव ऑपरेशन रद्द करें?
+</string>
+    <string name="archive_cancel_confirm_msg">
+क्या आप वाकई रद्द करना चाहते हैं? आंशिक रूप से संसाधित सभी फ़ाइलें हटा दी जाएंगी।
+</string>
+    <string name="archive_operation_cancelled">
+आर्काइव ऑपरेशन रद्द किया गया
+</string>
+    <string name="archive_cancelled">
+आर्काइव संचालन रद्द किया गया
+</string>
+    <string name="archive_badge_extracting">
+एक्सट्रैक्ट कर रहा है
+</string>
+    <string name="archive_badge_compressing">
+कंप्रेस कर रहा है
+</string>
+    <string name="archive_badge_adding">
+जोड़ रहा है
+</string>
+    <string name="archive_badge_modifying">
+संशोधित कर रहा है
+</string>
+    <string name="archive_badge_deleting">
+हटा रहा है
+</string>
+    <string name="archive_current_file_label">
+वर्तमान फ़ाइल
+</string>
 </resources>
 
 

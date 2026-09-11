@@ -3728,9 +3728,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 tempArchive = tempArchiveFile
 
                 withContext(Dispatchers.Main) { statusText.setText(R.string.compressing) }
-                ArchiveManager.compress(localFiles, tempArchiveFile, password, format) { progress ->
-                    runOnUiThread { dialogProgress.progress = 50 + (progress / 2) }
-                }
+                ArchiveManager.compress(
+                    sourceFiles = localFiles,
+                    destFile = tempArchiveFile,
+                    password = password,
+                    format = format,
+                    onProgress = { progress ->
+                        runOnUiThread { dialogProgress.progress = 50 + (progress / 2) }
+                    }
+                )
 
                 // 3. Deliver to chosen destination
                 when (dest) {
@@ -4095,9 +4101,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         archiveFile = tempArchiveFile,
                         destDir = localExtractedDir,
                         password = null,
-                        onProgress = { p ->
+                        onArchiveProgress = { p ->
                             runOnUiThread {
-                                dialogProgress.progress = 30 + ((p * 0.3f) + (index * 30)).toInt()
+                                dialogProgress.progress = (30 + ((p.percentage * 0.3f) + (index * 30))).toInt().coerceIn(0, 100)
+                                if (p.currentFileName.isNotEmpty()) {
+                                    statusText.text = "${getString(R.string.archive_extracting)}: ${p.currentFileName}"
+                                }
                             }
                         }
                     )

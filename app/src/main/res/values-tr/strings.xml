@@ -14233,6 +14233,70 @@ Dosyalar arşive ekleniyor…
     <string name="icon_toolbar_add_to_archive">
 Arşive Ekle
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+Arşiv Açılıyor…
+</string>
+    <string name="archive_progress_compressing">
+Dosyalar Sıkıştırılıyor…
+</string>
+    <string name="archive_progress_adding">
+Arşive Ekleniyor…
+</string>
+    <string name="archive_progress_deleting">
+Arşivden Kaldırılıyor…
+</string>
+    <string name="archive_progress_moving">
+Arşivden Taşınıyor…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d dosya
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • %2$s kaldı
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+Arka Plana Gönder
+</string>
+    <string name="archive_action_cancel">
+İşlemi İptal Et
+</string>
+    <string name="archive_cancel_confirm_title">
+Arşiv İşlemi İptal Edilsin mi?
+</string>
+    <string name="archive_cancel_confirm_msg">
+İptal etmek istediğinizden emin misiniz? Kısmen işlenmiş dosyalar kaldırılacaktır.
+</string>
+    <string name="archive_operation_cancelled">
+Arşiv işlemi iptal edildi
+</string>
+    <string name="archive_cancelled">
+Arşiv işlemi iptal edildi
+</string>
+    <string name="archive_badge_extracting">
+ÇIKARILIYOR
+</string>
+    <string name="archive_badge_compressing">
+SIKIŞTIRILIYOR
+</string>
+    <string name="archive_badge_adding">
+EKLENİYOR
+</string>
+    <string name="archive_badge_modifying">
+DEĞİŞTİRİLİYOR
+</string>
+    <string name="archive_badge_deleting">
+SİLİNİYOR
+</string>
+    <string name="archive_current_file_label">
+Geçerli Dosya
+</string>
 </resources>
 
 

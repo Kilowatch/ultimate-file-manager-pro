@@ -14233,6 +14233,70 @@ SAF とピッカーを公開する
     <string name="icon_toolbar_add_to_archive">
 アーカイブに追加
 </string>
+    <!-- Archive Visual Progress & Telemetry Dialog -->
+    <string name="archive_progress_extracting">
+アーカイブを展開中…
+</string>
+    <string name="archive_progress_compressing">
+ファイルを圧縮中…
+</string>
+    <string name="archive_progress_adding">
+アーカイブに追加中…
+</string>
+    <string name="archive_progress_deleting">
+アーカイブから削除中…
+</string>
+    <string name="archive_progress_moving">
+アーカイブから移動中…
+</string>
+    <string name="archive_progress_files_count">
+%1$d / %2$d ファイル
+</string>
+    <string name="archive_progress_data_count">
+%1$s / %2$s
+</string>
+    <string name="archive_progress_speed_eta">
+%1$s • 残り %2$s
+</string>
+    <string name="archive_progress_speed_only">
+%1$s
+</string>
+    <string name="archive_action_background">
+バックグラウンドに送る
+</string>
+    <string name="archive_action_cancel">
+操作をキャンセル
+</string>
+    <string name="archive_cancel_confirm_title">
+アーカイブ操作をキャンセルしますか？
+</string>
+    <string name="archive_cancel_confirm_msg">
+キャンセルしてもよろしいですか？途中まで処理されたファイルは削除されます。
+</string>
+    <string name="archive_operation_cancelled">
+アーカイブ操作をキャンセルしました
+</string>
+    <string name="archive_cancelled">
+アーカイブ操作がキャンセルされました
+</string>
+    <string name="archive_badge_extracting">
+展開中
+</string>
+    <string name="archive_badge_compressing">
+圧縮中
+</string>
+    <string name="archive_badge_adding">
+追加中
+</string>
+    <string name="archive_badge_modifying">
+変更中
+</string>
+    <string name="archive_badge_deleting">
+削除中
+</string>
+    <string name="archive_current_file_label">
+現在のファイル
+</string>
 </resources>
 
 

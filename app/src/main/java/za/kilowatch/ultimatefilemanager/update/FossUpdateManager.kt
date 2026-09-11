@@ -367,12 +367,25 @@ object FossUpdateManager {
         dialog.show()
 
         val displayMetrics = activity.resources.displayMetrics
+        val isLandscape = activity.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
         val targetWidth = if (isTv) {
             (displayMetrics.widthPixels * 0.55).toInt()
+        } else if (isLandscape) {
+            (displayMetrics.widthPixels * 0.92).toInt()
         } else {
-            (displayMetrics.widthPixels * 0.90).toInt()
+            (displayMetrics.widthPixels * 0.95).toInt()
         }
-        dialog.window?.setLayout(targetWidth, android.view.WindowManager.LayoutParams.WRAP_CONTENT)
+
+        val targetHeight = if (isTv) {
+            android.view.WindowManager.LayoutParams.WRAP_CONTENT
+        } else if (isLandscape) {
+            (displayMetrics.heightPixels * 0.92).toInt()
+        } else {
+            (displayMetrics.heightPixels * 0.86).toInt()
+        }
+
+        dialog.window?.setLayout(targetWidth, targetHeight)
     }
 
     /**

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android TV Archive Action Progress & Telemetry Dialog - UFMStandard Glass
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="650dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp">
+
+    <!-- Header Row: Operation Badge, Title, Archive Name -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="18dp">
+
+        <!-- Animated Hero Container -->
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="16dp">
+
+            <!-- Outer Glow Rings for Pulse Animation -->
+            <View
+                android:id="@+id/viewGlowRing2"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_icon_circle_accent"
+                android:alpha="0.2" />
+
+            <View
+                android:id="@+id/viewGlowRing1"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_icon_circle_accent"
+                android:alpha="0.35" />
+
+            <ImageView
+                android:id="@+id/imgArchiveProgressIcon"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_extract"
+                android:padding="6dp"
+                app:tint="?attr/ufmFocusFill"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtArchiveBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_badge_step_pill"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:textSize="11sp"
+                android:textColor="?attr/ufmFocusFill"
+                android:fontFamily="sans-serif-black"
+                android:text="@string/archive_badge_extracting"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/txtArchiveProgressTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/archive_progress_extracting"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:id="@+id/txtArchiveName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="archive.tar.gz" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Percentage & File Counter Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/txtArchivePercentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="36sp"
+            android:fontFamily="sans-serif-black"
+            android:includeFontPadding="false" />
+
+        <TextView
+            android:id="@+id/txtArchiveFilesCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14sp"
+            android:fontFamily="monospace"
+            tools:text="142 / 1,250 files" />
+    </LinearLayout>
+
+    <!-- Primary Linear Progress Bar -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressArchiveTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        app:trackThickness="10dp"
+        app:trackCornerRadius="5dp"
+        android:progress="0"
+        app:indicatorColor="?attr/ufmFocusFill" />
+
+    <!-- Current File Sub-Progress Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="14dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/archive_current_file_label"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="10dp" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressArchiveCurrentFile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:trackThickness="5dp"
+            app:trackCornerRadius="3dp"
+            android:progress="0"
+            app:indicatorColor="?attr/ufmFocusFill"
+            android:alpha="0.75" />
+    </LinearLayout>
+
+    <!-- Telemetry Status Card -->
+    <LinearLayout
+        android:id="@+id/layoutCurrentFileCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="14dp"
+        android:layout_marginBottom="22dp">
+
+        <!-- Current File Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/txtFileBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_badge_step_pill"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="?attr/ufmFocusFill"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginEnd="10dp"
+                tools:text="KT" />
+
+            <TextView
+                android:id="@+id/txtProgressCurrentFile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                android:fontFamily="monospace"
+                tools:text="src/components/Header.kt" />
+        </LinearLayout>
+
+        <!-- Stats Row: Size, Speed, ETA -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtProgressDataSize"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+                tools:text="45 MB / 180 MB" />
+
+            <TextView
+                android:id="@+id/txtProgressSpeedEta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12sp"
+                android:fontFamily="monospace"
+                tools:text="18 MB/s • ~7s" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Embedded Action Buttons (TV Standard: D-pad focusable) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnProgressCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:minWidth="130dp"
+            android:background="@drawable/selector_tv_button"
+            android:textColor="@color/tv_button_text_selector"
+            android:text="@string/cancel"
+            android:focusable="true"
+            android:layout_marginEnd="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnProgressBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:minWidth="180dp"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:textColor="@color/tv_button_focused_yellow_text"
+            android:text="@string/archive_action_background"
+            android:focusable="true" />
+    </LinearLayout>
+
+</LinearLayout>

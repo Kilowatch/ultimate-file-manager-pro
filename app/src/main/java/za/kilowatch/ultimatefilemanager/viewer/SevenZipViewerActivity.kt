@@ -25,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.ensureActive
 import org.apache.commons.compress.MemoryLimitException
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
@@ -48,6 +49,9 @@ import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.io.File
 import java.util.Locale
+import za.kilowatch.ultimatefilemanager.archive.ArchiveProgressDialog
+import za.kilowatch.ultimatefilemanager.archive.ArchiveOperationType
+import za.kilowatch.ultimatefilemanager.archive.ArchiveProgress
 
 /**
  * Built-in 7z browser using Apache Commons Compress.
@@ -620,26 +624,52 @@ class SevenZipViewerActivity : AppCompatActivity() {
 
     private fun executePasteIntoArchive(archiveFile: File, sources: List<File>, isMove: Boolean) {
         val destFile = originalArchiveFile ?: archiveFile
-        progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch(Dispatchers.IO) {
-            val res = ArchiveManager.addFilesToArchive(
-                context = this@SevenZipViewerActivity,
-                archiveFile = destFile,
-                sourceFiles = sources,
-                targetDirInArchive = currentPath,
-                isMove = isMove,
-                password = archivePassword
+        val progressDialog = ArchiveProgressDialog(this).apply {
+            show(
+                operation = if (isMove) ArchiveOperationType.MOVE else ArchiveOperationType.ADD,
+                archiveName = destFile.name,
+                totalFiles = sources.size
             )
-            withContext(Dispatchers.Main) {
-                progressBar.visibility = View.GONE
-                if (res.isSuccess) {
-                    val count = res.getOrDefault(sources.size)
-                    showSnackbar(getString(R.string.add_to_archive_success, count, destFile.name))
-                    za.kilowatch.ultimatefilemanager.storage.FileClipboard.clear()
-                    updatePasteFab()
-                    load7z(destFile)
-                } else {
-                    showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+        }
+        var opJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            opJob?.cancel()
+        }
+
+        opJob = lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val res = ArchiveManager.addFilesToArchive(
+                    context = this@SevenZipViewerActivity,
+                    archiveFile = destFile,
+                    sourceFiles = sources,
+                    targetDirInArchive = currentPath,
+                    isMove = isMove,
+                    password = archivePassword,
+                    onArchiveProgress = { progress ->
+                        runOnUiThread { progressDialog.update(progress) }
+                    }
+                )
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    if (res.isSuccess) {
+                        val count = res.getOrDefault(sources.size)
+                        showSnackbar(getString(R.string.add_to_archive_success, count, destFile.name))
+                        za.kilowatch.ultimatefilemanager.storage.FileClipboard.clear()
+                        updatePasteFab()
+                        load7z(destFile)
+                    } else {
+                        showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                    }
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    showSnackbar(getString(R.string.archive_cancelled))
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
                 }
             }
         }
@@ -775,17 +805,59 @@ class SevenZipViewerActivity : AppCompatActivity() {
 
     private fun doExtractMultipleItems(items: List<SevenZipItem>, destDir: File) {
         val file = sourceFile ?: return
-        progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch(Dispatchers.IO) {
+        val progressDialog = ArchiveProgressDialog(this).apply {
+            show(
+                operation = ArchiveOperationType.EXTRACT,
+                archiveName = file.name,
+                totalFiles = items.size
+            )
+        }
+        var extractJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            extractJob?.cancel()
+        }
+
+        extractJob = lifecycleScope.launch(Dispatchers.IO) {
             var successCount = 0
+            val startTime = System.currentTimeMillis()
+            val totalBytes = items.sumOf { it.uncompressedSize }
+            var bytesProcessed = 0L
+
             try {
-                for (item in items) {
+                items.forEachIndexed { index, item ->
+                    coroutineContext.ensureActive()
                     val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                              else ((index * 100) / items.size.coerceAtLeast(1)).coerceIn(0, 100)
+                    val elapsed = System.currentTimeMillis() - startTime
+                    val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                    val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+
+                    runOnUiThread {
+                        progressDialog.update(
+                            ArchiveProgress(
+                                operation = ArchiveOperationType.EXTRACT,
+                                archiveName = file.name,
+                                currentFileName = item.name,
+                                fileIndex = index + 1,
+                                totalFiles = items.size,
+                                bytesProcessed = bytesProcessed,
+                                totalBytes = totalBytes,
+                                percentage = pct,
+                                speedBytesPerSec = speed,
+                                estimatedRemainingMs = eta
+                            )
+                        )
+                    }
+
                     val res = ArchiveManager.extractArchiveEntry(file, entryPath, destDir, archivePassword, this@SevenZipViewerActivity)
-                    if (res.isSuccess) successCount++
+                    if (res.isSuccess) {
+                        successCount++
+                        bytesProcessed += item.uncompressedSize
+                    }
                 }
                 withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
+                    progressDialog.dismiss()
                     if (successCount > 0) {
                         showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
                     } else {
@@ -793,9 +865,15 @@ class SevenZipViewerActivity : AppCompatActivity() {
                     }
                     clearSelection()
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    showSnackbar(getString(R.string.archive_cancelled))
+                    clearSelection()
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
+                    progressDialog.dismiss()
                     showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
                     clearSelection()
                 }
@@ -805,17 +883,59 @@ class SevenZipViewerActivity : AppCompatActivity() {
 
     private fun doMoveOutMultipleItems(items: List<SevenZipItem>, destDir: File) {
         val file = sourceFile ?: return
-        progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch(Dispatchers.IO) {
+        val progressDialog = ArchiveProgressDialog(this).apply {
+            show(
+                operation = ArchiveOperationType.MOVE,
+                archiveName = file.name,
+                totalFiles = items.size
+            )
+        }
+        var moveJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            moveJob?.cancel()
+        }
+
+        moveJob = lifecycleScope.launch(Dispatchers.IO) {
             var successCount = 0
+            val startTime = System.currentTimeMillis()
+            val totalBytes = items.sumOf { it.uncompressedSize }
+            var bytesProcessed = 0L
+
             try {
-                for (item in items) {
+                items.forEachIndexed { index, item ->
+                    coroutineContext.ensureActive()
                     val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                              else ((index * 100) / items.size.coerceAtLeast(1)).coerceIn(0, 100)
+                    val elapsed = System.currentTimeMillis() - startTime
+                    val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                    val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+
+                    runOnUiThread {
+                        progressDialog.update(
+                            ArchiveProgress(
+                                operation = ArchiveOperationType.MOVE,
+                                archiveName = file.name,
+                                currentFileName = item.name,
+                                fileIndex = index + 1,
+                                totalFiles = items.size,
+                                bytesProcessed = bytesProcessed,
+                                totalBytes = totalBytes,
+                                percentage = pct,
+                                speedBytesPerSec = speed,
+                                estimatedRemainingMs = eta
+                            )
+                        )
+                    }
+
                     val res = ArchiveManager.moveArchiveEntry(file, entryPath, destDir, archivePassword, this@SevenZipViewerActivity)
-                    if (res.isSuccess) successCount++
+                    if (res.isSuccess) {
+                        successCount++
+                        bytesProcessed += item.uncompressedSize
+                    }
                 }
                 withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
+                    progressDialog.dismiss()
                     if (successCount > 0) {
                         showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
                         load7z(file)
@@ -824,9 +944,15 @@ class SevenZipViewerActivity : AppCompatActivity() {
                     }
                     clearSelection()
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    showSnackbar(getString(R.string.archive_cancelled))
+                    clearSelection()
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
+                    progressDialog.dismiss()
                     showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
                     clearSelection()
                 }
@@ -873,26 +999,57 @@ class SevenZipViewerActivity : AppCompatActivity() {
 
     private fun doDeleteSevenZipItems(items: List<SevenZipItem>) {
         val file = sourceFile ?: return
-        progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch(Dispatchers.IO) {
+        val progressDialog = ArchiveProgressDialog(this).apply {
+            show(
+                operation = ArchiveOperationType.DELETE,
+                archiveName = file.name,
+                totalFiles = items.size
+            )
+        }
+        var delJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            delJob?.cancel()
+        }
+
+        delJob = lifecycleScope.launch(Dispatchers.IO) {
             try {
                 var deletedAny = false
-                for (item in items) {
+                items.forEachIndexed { index, item ->
+                    coroutineContext.ensureActive()
                     val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val pct = ((index + 1) * 100) / items.size.coerceAtLeast(1)
+                    runOnUiThread {
+                        progressDialog.update(
+                            ArchiveProgress(
+                                operation = ArchiveOperationType.DELETE,
+                                archiveName = file.name,
+                                currentFileName = item.name,
+                                fileIndex = index + 1,
+                                totalFiles = items.size,
+                                percentage = pct
+                            )
+                        )
+                    }
                     val res = ArchiveManager.deleteArchiveEntry(file, entryPath, archivePassword)
                     if (res.isSuccess) deletedAny = true
                 }
                 withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
+                    progressDialog.dismiss()
                     if (deletedAny) {
                         showSnackbar(getString(R.string.archive_delete_success, if (items.size == 1) items.first().name else "${items.size} items"))
                         load7z(file)
                     }
                     clearSelection()
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    showSnackbar(getString(R.string.archive_cancelled))
+                    clearSelection()
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
+                    progressDialog.dismiss()
                     showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
                     clearSelection()
                 }
@@ -1156,16 +1313,40 @@ class SevenZipViewerActivity : AppCompatActivity() {
 
     private fun doExtractAll(destDir: File) {
         val file = sourceFile ?: return
-        progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch(Dispatchers.IO) {
-            val res = ArchiveManager.extract(this@SevenZipViewerActivity, file, destDir, archivePassword)
+        val progressDialog = ArchiveProgressDialog(this).apply {
+            show(
+                operation = ArchiveOperationType.EXTRACT,
+                archiveName = file.name,
+                totalFiles = 0
+            )
+        }
+        var extractJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            extractJob?.cancel()
+        }
+
+        extractJob = lifecycleScope.launch(Dispatchers.IO) {
+            val res = ArchiveManager.extract(
+                context = this@SevenZipViewerActivity,
+                archiveFile = file,
+                destDir = destDir,
+                password = archivePassword,
+                onArchiveProgress = { progress ->
+                    runOnUiThread { progressDialog.update(progress) }
+                }
+            )
             withContext(Dispatchers.Main) {
-                progressBar.visibility = View.GONE
+                progressDialog.dismiss()
                 if (res.isSuccess) {
                     showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
                 } else {
-                    val msg = res.exceptionOrNull()?.message ?: ""
-                    showSnackbar("${getString(R.string.archive_extract_error)}: $msg")
+                    val ex = res.exceptionOrNull()
+                    if (ex is kotlinx.coroutines.CancellationException) {
+                        showSnackbar(getString(R.string.archive_cancelled))
+                    } else {
+                        val msg = ex?.message ?: ""
+                        showSnackbar("${getString(R.string.archive_extract_error)}: $msg")
+                    }
                 }
             }
         }
@@ -1237,7 +1418,9 @@ class SevenZipViewerActivity : AppCompatActivity() {
         val isDirectory: Boolean,
         val entryInfo: ArchiveManager.ArchiveEntryInfo? = null,
         val entry: SevenZArchiveEntry? = null
-    )
+    ) {
+        val uncompressedSize: Long get() = entryInfo?.uncompressedSize ?: entry?.size ?: 0L
+    }
 
     inner class SevenZipAdapter(val items: List<SevenZipItem>) : RecyclerView.Adapter<SevenZipAdapter.VH>() {
         inner class VH(v: View) : RecyclerView.ViewHolder(v) {
