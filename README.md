@@ -25,7 +25,7 @@
 - [Download Releases](#-download-releases)
 - [Features](#-features)
 - [FOSS Edition vs. Store Edition](#-foss-edition-vs-store-edition)
-- [App Size & Storage Footprint](#-app-size--storage-footprint-185-mb)
+- [App Size & Storage Footprint](#-app-size--storage-footprint)
 - [Windows Companion App](#-windows-companion-app)
 - [Building the Android App](#-building-the-android-app)
 - [Community & Support](#-community--support)
@@ -117,21 +117,22 @@ To comply with open-source software guidelines and maximize privacy, the **FOSS 
 
 ---
 
-## 📦 App Size & Storage Footprint (~185 MB)
+## 📦 App Size & Storage Footprint
 
-When installed, Ultimate File Manager Pro uses around **185 MB** of device storage. Instead of a barebones file explorer that relies on 3rd-party apps or remote cloud servers, UFM is a **complete, 100% offline, all-in-one standalone suite**:
+The standalone FOSS release is packaged as a universal, all-in-one APK (**~240 MB**) that includes native support for all 4 major Android CPU architectures (**ARM64**, **ARMv7**, **x86_64**, and **x86**). When installed on a device, only the device's specific architecture is used, resulting in an installed device footprint of **~100–185 MB**.
 
-| Component | Approx. Size | What It Does |
-| :--- | :---: | :--- |
-| 🎬 **Multimedia & Video Engine** | **~45 MB** | Built-in player (MKV, MP4, AVI) & instant video thumbnail generator |
-| ⚡ **Android Speed Optimization** | **~45 MB** | Device-level pre-compilation for instant launch and smooth scrolling |
-| ☁️ **Cloud & Storage Engine** | **~40 MB** | Native backends for MEGA, Filen, Drime, Koofr, WebDAV, Go SMB & NFS |
-| 🖥️ **PC Web Server & Network Suite** | **~25 MB** | Built-in Wi-Fi server for wireless PC file transfers & FTP/SFTP |
-| 📄 **Document, PDF & Image Viewers** | **~15 MB** | In-app PDF reader, Office file previews, AVIF & JPEG XL support |
-| 🗜️ **Archive Studio & Resources** | **~15 MB** | Built-in ZIP, 7Z, RAR, ZSTD tools + 14 complete language translations |
-| **TOTAL INSTALLED FOOTPRINT** | **~185 MB** | **Saves 300 MB+ compared to installing 5+ separate apps** |
+Instead of a barebones file explorer that offloads file operations to external cloud servers or requires 3rd-party companion apps, UFM is a **complete, 100% offline, privacy-first standalone workstation**:
 
-> 📖 *For a detailed non-technical breakdown, see [`size.md`](size.md).*
+| Component / Layer | Download Size | Installed Footprint | What It Does |
+| :--- | :---: | :---: | :--- |
+| ☁️ **Native Go Cloud & SMB Engine** | **~96 MB** *(All 4 ABIs)* | **~24 MB** | High-performance Go runtime, Rclone cloud sync & pure Go SMB2/3 |
+| 🎬 **FFmpeg Video Thumbnailer** | **~42 MB** *(ARM ABIs)* | **~22 MB** | Built-in offline MKV, MP4, AVI, FLV thumbnail generator |
+| 🖼️ **Modern Image Decoders (JXL & AVIF)** | **~75 MB** *(All 4 ABIs)* | **~17 MB** | Native JPEG XL and AVIF image decoding engines |
+| 🗜️ **Archives, NFS & Network Engine** | **~4 MB** *(All 4 ABIs)* | **~1 MB** | High-speed ZSTD compression, native NFS v2/v3/v4 mounts |
+| ⚡ **App Core, UI & Translations** | **~25 MB** | **~35–80 MB** *(with ART cache)* | 18 full language translations, PDF/Office viewers, Wi-Fi PC server |
+| **TOTAL FOOTPRINT** | **~240 MB** *(Universal APK)* | **~100–185 MB** *(Device)* | **Saves 300 MB+ compared to installing 5+ separate apps** |
+
+> 📖 *For a detailed non-technical and technical cross-architecture breakdown, see [`size.md`](size.md).*
 
 ---
 
