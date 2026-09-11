@@ -36,7 +36,8 @@ class PlayerGestureController(
     private val onSingleTap: () -> Unit,
     private val onLongPress: () -> Unit,
     private val hideControls: () -> Unit,
-    private val resetHideTimer: () -> Unit
+    private val resetHideTimer: () -> Unit,
+    private val getSideControlsLayout: (() -> View?)? = null
 ) {
 
     private enum class GestureType {
@@ -125,10 +126,12 @@ class PlayerGestureController(
         // Double-check TV or disabled
         if (DeviceUtils.isTvDevice(activity)) return false
 
-        // Check if touch starts on topBar or controlsLayout
+        // Check if touch starts on topBar, controlsLayout, or sideControlsLayout
         if (event.action == MotionEvent.ACTION_DOWN) {
+            val sideView = getSideControlsLayout?.invoke()
             isTouchInsideControls = isEventInsideVisibleView(topBar, event) ||
-                                   isEventInsideVisibleView(controlsLayout, event)
+                                   isEventInsideVisibleView(controlsLayout, event) ||
+                                   (sideView != null && isEventInsideVisibleView(sideView, event))
             if (isTouchInsideControls) {
                 return false
             }

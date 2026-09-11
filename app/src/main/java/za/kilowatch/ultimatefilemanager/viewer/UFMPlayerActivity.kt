@@ -499,10 +499,17 @@ class UFMPlayerActivity : AppCompatActivity() {
         za.kilowatch.ultimatefilemanager.settings.ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
 
-        // Edge-to-edge
+        // Edge-to-edge with dark/black system bars
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        window.statusBarColor = android.graphics.Color.TRANSPARENT
-        window.navigationBarColor = android.graphics.Color.TRANSPARENT
+        window.statusBarColor = android.graphics.Color.BLACK
+        window.navigationBarColor = android.graphics.Color.BLACK
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+            window.isStatusBarContrastEnforced = false
+        }
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.isAppearanceLightStatusBars = false
+        insetsController.isAppearanceLightNavigationBars = false
 
         isTv = DeviceUtils.isTvDevice(this)
         setContentView(if (isTv) R.layout.activity_ufm_player_tv else R.layout.activity_ufm_player)
@@ -668,6 +675,9 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.isAppearanceLightStatusBars = false
+        insetsController.isAppearanceLightNavigationBars = false
         updateSkipButtonVisibility()
         isPiP = false
         val ext = (intent.getStringExtra("initialPath") ?: intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH) ?: "").substringAfterLast('.', "").lowercase()
@@ -815,6 +825,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             // Just hide the UI controls that are irrelevant in PiP mode
             controlsLayout.visibility = GONE
             topBar.visibility = GONE
+            sideControlsLayout?.visibility = GONE
             gestureOverlay?.let {
                 it.hideAll(true)
                 it.visibility = GONE
@@ -823,8 +834,59 @@ class UFMPlayerActivity : AppCompatActivity() {
             // Returned from PiP — player is already attached, just restore UI
             controlsLayout.visibility = VISIBLE
             topBar.visibility = VISIBLE
+            sideControlsLayout?.visibility = VISIBLE
             gestureOverlay?.visibility = VISIBLE
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (isTv || isPiP) return
+
+        val wasSheetShowing = isShowingSheet
+        val sheetMode = currentSheetMode
+        if (isShowingSheet) {
+            dismissTrackSheet()
+        }
+
+        // Re-inflate layout matching current orientation (portrait layout vs layout-land)
+        setContentView(R.layout.activity_ufm_player)
+        initViews()
+
+        // Re-attach player to newly inflated PlayerView
+        playbackService?.getPlayer()?.let { p ->
+            player = p
+            playerView.player = p
+            p.currentTracks?.let { detectAndUpdateTracks(it) }
+        }
+
+        // Restore playback state / UI text
+        val currentPos = mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
+        val dur = mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+        if (dur > 0) {
+            seekBar.max = dur.toInt()
+            seekBar.progress = currentPos.toInt()
+            updateTimeLabels(currentPos.toInt(), dur.toInt())
+        }
+        updatePlayPauseIcon()
+        val initialPath = intent.getStringExtra("initialPath")
+            ?: intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH)
+            ?: intent.data?.path
+            ?: intent.dataString
+            ?: ""
+        val fileName = initialPath.substringAfterLast('/')
+        txtTitle.text = if (fileName.isNotEmpty()) fileName else "Media Title"
+        txtTitle.isSelected = true
+
+        if (wasSheetShowing && sheetMode != -1) {
+            showTrackSheet(sheetMode)
+        }
+
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.isAppearanceLightStatusBars = false
+        insetsController.isAppearanceLightNavigationBars = false
+
+        resetHideTimer()
     }
 
     // ── Init Views ──────────────────────────────────────────────────
@@ -848,6 +910,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         loadingSpinner = findViewById(R.id.loadingSpinner)
         bufferingLayout = findViewById(R.id.bufferingLayout)
         controlsLayout = findViewById(R.id.controlsLayout)
+        sideControlsLayout = findViewById(R.id.sideControlsLayout)
         topBar = findViewById(R.id.topBar)
         btnAudioTrack = findViewById(R.id.btnAudioTrack)
         btnSubtitles = findViewById(R.id.btnSubtitles)
@@ -898,6 +961,9 @@ class UFMPlayerActivity : AppCompatActivity() {
                     },
                     resetHideTimer = {
                         resetHideTimer()
+                    },
+                    getSideControlsLayout = {
+                        sideControlsLayout
                     }
                 )
 
@@ -942,11 +1008,21 @@ class UFMPlayerActivity : AppCompatActivity() {
                     topBar.setPadding(sidePadding, topPadding, sidePadding, dp(8))
                 }
 
+                val sc = findViewById<View>(R.id.sideControlsLayout)
+                if (sc != null && !isTv) {
+                    val leftMargin = (systemBars.left + dp(16)).coerceAtLeast(dp(16))
+                    (sc.layoutParams as? android.widget.FrameLayout.LayoutParams)?.let { lp ->
+                        lp.marginStart = leftMargin
+                        sc.layoutParams = lp
+                    }
+                }
+
                 val cl = findViewById<View>(R.id.controlsLayout)
                 if (cl != null) {
-                    val bottomPadding = if (isTv) dp(48) else (systemBars.bottom + dp(24))
-                    val sidePadding = if (isTv) dp(48) else (systemBars.left + dp(24))
-                    cl.setPadding(sidePadding, cl.paddingTop, sidePadding, bottomPadding)
+                    val bottomPadding = if (isTv) dp(48) else (systemBars.bottom + dp(16))
+                    val leftPadding = if (isTv) dp(48) else (systemBars.left + dp(20))
+                    val rightPadding = if (isTv) dp(48) else (systemBars.right + dp(20))
+                    cl.setPadding(leftPadding, cl.paddingTop, rightPadding, bottomPadding)
                 }
                 WindowInsetsCompat.CONSUMED
             }

@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Thread-safe transfer conflict resolution and multi-socket cancellation across concurrent transfer workers.
 
 ### Changed
+- Redesigned mobile landscape video player layout in UFM Player to match TV horizontal layout with a floating left side dock and single-tier bottom transport controls.
 - Focus, selection, status and Storage Analyzer colours across the app now resolve through theme attributes rather than fixed colour resources, so they can be remapped at runtime without an app restart.
 - With Colorblind Mode on, the two TV focus hues — yellow for buttons and list rows, blue for cards and swatches — are unified onto a single high-contrast treatment. With the mode off, the existing two-hue hierarchy is unchanged.
 - The Storage Analyzer's usage-bar track and segment colours are now chosen as a set, so segments stay separable from each other and not only from the background.
@@ -43,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed legacy `com.hierynomus:smbj` and `eu.agno3.jcifs:jcifs-ng` dependencies and deprecated fallback clients.
 
 ### Fixed
+- Fixed white system navigation bar during video playback in UFM Player, enforcing pure black navigation and status bars.
 - Fixed ANR (App Freeze) caused by synchronous root staging and libsu shell lock contention when opening or sharing root-partition files.
 - Offloaded root staging sync-back in `onResume` to an asynchronous background worker.
 - Optimized `RootFile.list()` to use lightweight `ls -1a` queries, preventing shell serialization stalls during directory badge counting.
