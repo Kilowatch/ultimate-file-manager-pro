@@ -28,6 +28,7 @@
 - [App Size & Storage Footprint](#-app-size--storage-footprint)
 - [Windows Companion App](#-windows-companion-app)
 - [Building the Android App](#-building-the-android-app)
+- [AI Usage & Quality Assurance](#-ai-usage--quality-assurance)
 - [Community & Support](#-community--support)
 - [License](#-license)
 
@@ -38,6 +39,9 @@
 **Ultimate File Manager Pro (UFM)** is a high-performance, feature-packed dual-pane file manager designed for power users across **Android Mobile**, **Android TV / Fire TV**, and **Windows PC**. Built with privacy, efficiency, and speed in mind, UFM allows seamless side-by-side file operations, LAN auto-discovery, remote PC pairing, and multi-protocol network storage access.
 
 This repository contains the official **Free and Open Source Software (FOSS)** edition of UFM.
+
+> [!NOTE]
+> **Development & Quality Assurance:** AI assistance is utilized during development—primarily for UX/UI design—accounting for only about 20% of the application. All code is thoroughly inspected and must pass strict QA, UAT, and security reviews before being committed. [Learn more about our verification steps below](#-ai-usage--quality-assurance).
 
 ---
 
@@ -181,6 +185,79 @@ To compile UFM from source using Gradle:
 ./gradlew assembleTvFossRelease
 ```
 *Note: Signed release packages require configured signing keys in `app/build.gradle.kts` or `apksigner`.*
+
+---
+
+## 🛡️ AI Usage & Quality Assurance
+
+Ultimate File Manager Pro maintains a transparent and disciplined approach to software development. While artificial intelligence is leveraged to accelerate development workflows, human oversight, rigorous engineering, and uncompromising security standards govern every single commit.
+
+### 🤖 Role and Scope of AI (~20% of the Application)
+
+AI tooling accounts for **approximately 20%** of the project's overall codebase, focused primarily on:
+- **UX/UI Design & Ergonomics**: Designing modern layout structures, theme palettes (including high-contrast and colorblind modes), responsive dual-pane split views, and TV Leanback UI cards.
+- **UI Prototyping & Styling**: Refining CSS/Tauri styles for the Windows companion and XML layouts for Android mobile and TV.
+- **Micro-Interactions & Polish**: Scaffolding visual transitions, focus states, and user feedback cues.
+
+> [!IMPORTANT]
+> **Critical Systems Are 100% Human-Architected**: AI is never used autonomously for security-critical logic, low-level I/O primitives, cryptographic handshakes (TLS pinning / PIN pairing), background transfer engines, or protocol implementations (Go SMB/Rclone, SFTP, NFS, WebDAV, AWS S3).
+
+### 🔍 How We Do It: The 4-Step Verification Gate
+
+Every contribution—whether AI-assisted or human-written—must advance through four mandatory validation stages before it can be merged or committed to the repository:
+
+```
+┌────────────────────────┐
+│  AI / Developer Draft  │
+└───────────┬────────────┘
+            │
+            ▼
+┌────────────────────────┐
+│ 1. Code Inspection     │ ──► Manual review, static analysis & architectural validation
+└───────────┬────────────┘
+            │
+            ▼
+┌────────────────────────┐
+│ 2. Quality Assurance   │ ──► Automated unit tests, syntax linters & layout regression
+└───────────┬────────────┘
+            │
+            ▼
+┌────────────────────────┐
+│ 3. User Acceptance     │ ──► Real-device testing (Phone, Tablet, TV remote, PC)
+└───────────┬────────────┘
+            │
+            ▼
+┌────────────────────────┐
+│ 4. Security Audit      │ ──► Zero-telemetry audit, scoped storage, R8 rules & pre-commit gate
+└───────────┬────────────┘
+            │
+            ▼
+┌────────────────────────┐
+│   Committed to Repo    │
+└────────────────────────┘
+```
+
+#### 1. 👁️ Step 1: Code Inspection & Human Peer Review
+- **Full Source Inspection**: Every generated line or suggestion is critically audited line-by-line by human maintainers before entering the codebase.
+- **Architectural Conformance**: Code must adhere strictly to repository patterns, including dual-pane coordination, clean separation of concerns, and Kotlin/Rust best practices.
+- **Anti-Bloat & Dependency Minimization**: Generated code is stripped of unnecessary abstractions, unused dependencies, or boilerplate that could inflate APK/binary size or degrade runtime performance.
+
+#### 2. 🧪 Step 2: Quality Assurance (QA)
+- **Automated Test Execution**: All existing unit and integration tests (such as transfer preflight checks, conflict resolution, and state engines) are run to verify zero regressions.
+- **Cross-Form-Factor Consistency**: Layouts are validated across dynamic aspect ratios, split-screen multi-window modes, and orientations (portrait and landscape).
+- **TV D-Pad Focus Validation**: Android TV interfaces undergo specialized focus-engine verification to ensure smooth 5-way D-pad navigation without dead zones or focus traps.
+
+#### 3. 📱 Step 3: User Acceptance Testing (UAT)
+- **Physical Hardware Testing**: Builds are deployed and tested on physical hardware—including Android smartphones, tablets, Android TV / Fire TV streaming sticks/boxes, and Windows 10/11 desktops.
+- **Real-World File Workflows**: Core file operations are tested under actual operating conditions: handling thousands of files, large multi-gigabyte transfers over local Wi-Fi, background task persistence, and network disconnect/resume scenarios.
+- **Touch & Remote Ergonomics**: Real-world usability checks ensure touch targets meet accessibility standards on mobile, while remote navigation feels natural and fast on TV screens.
+
+#### 4. 🔒 Step 4: Security & Privacy Audits (Pre-Commit Gate)
+- **Zero-Telemetry & Privacy Enforcement**: The FOSS build is verified to ensure zero analytics SDKs, trackers, third-party network pings, or background data collection are present.
+- **Least-Privilege Scoped Storage**: Permissions are audited to guarantee UFM only requests the exact Android permissions required for user-selected storage access.
+- **Cryptographic & Network Safety**: TLS certificate pinning and PIN authentication logic for the Windows companion app are audited for tamper resistance.
+- **R8 / ProGuard Optimization Audits**: Custom keep rules are reviewed to prevent reflection vulnerabilities and maintain >80% optimization, obfuscation, and shrinking scores without leaking symbols.
+- **Commit Gate Sign-Off**: Only after passing all four verification levels is code authorized to be committed to the repository.
 
 ---
 
