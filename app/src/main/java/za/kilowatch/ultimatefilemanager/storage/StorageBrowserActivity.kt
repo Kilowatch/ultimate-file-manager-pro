@@ -1328,6 +1328,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     private fun setupViews() {
         recyclerStorage = findViewById(R.id.recyclerStorage)
+        (recyclerStorage.itemAnimator as? androidx.recyclerview.widget.SimpleItemAnimator)?.supportsChangeAnimations = false
         layoutEmptyStorage = findViewById(R.id.layoutEmptyStorage)
         lottieEmptyStorage = findViewById(R.id.lottieEmptyStorage)
 
@@ -5123,12 +5124,6 @@ class StorageBrowserActivity : AppCompatActivity() {
             val cols = MainMenuViewModeManager.loadColumnCount(this)
             val size = MainMenuViewModeManager.loadItemSize(this)
 
-            if (::storageAdapter.isInitialized) {
-                storageAdapter.viewMode = mode
-                storageAdapter.itemSize = size
-                storageAdapter.gridColumnCount = cols
-            }
-
             // Remove any previously attached TV grid listeners before switching mode
             tvSnapHelper?.attachToRecyclerView(null)
             tvSnapHelper = null
@@ -5201,10 +5196,13 @@ class StorageBrowserActivity : AppCompatActivity() {
                 tvSnapHelper = snapHelper
             }
 
-            updateToggleVisuals()
             if (::storageAdapter.isInitialized) {
-                storageAdapter.notifyDataSetChanged()
+                storageAdapter.viewMode = mode
+                storageAdapter.itemSize = size
+                storageAdapter.gridColumnCount = cols
             }
+
+            updateToggleVisuals()
         }
 
         if (animate && ::recyclerStorage.isInitialized) {

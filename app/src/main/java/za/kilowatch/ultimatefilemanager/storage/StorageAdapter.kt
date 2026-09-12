@@ -65,12 +65,6 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
     init {
         stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        setHasStableIds(true)
-    }
-
-    override fun getItemId(position: Int): Long {
-        val item = items.getOrNull(position) ?: return RecyclerView.NO_ID
-        return item.id.hashCode().toLong()
     }
 
     var onTileFocused: ((StorageItem) -> Unit)? = null
@@ -84,6 +78,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
     var onCategoryHeaderToggled: ((categoryId: String, isExpanded: Boolean) -> Unit)? = null
 
     fun setTileColors(colors: Map<String, TileColorConfig>) {
+        if (tileColors == colors) return
         tileColors = colors
         notifyDataSetChanged()
     }
@@ -93,6 +88,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
     }
 
     fun setTileIcons(icons: Map<String, String>) {
+        if (tileIcons == icons) return
         tileIcons = icons
         notifyDataSetChanged()
     }
@@ -102,6 +98,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
     }
 
     fun setTileIconRes(res: Map<String, Int>) {
+        if (tileIconRes == res) return
         tileIconRes = res
         notifyDataSetChanged()
     }
@@ -109,6 +106,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
     /** When true, tiles pulse and show a hide (X) button if they are hideable. */
     var isEditMode: Boolean = false
         set(value) {
+            if (field == value) return
             field = value
             notifyDataSetChanged()
         }
@@ -330,6 +328,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
     var viewMode = MainMenuViewModeManager.ViewMode.LIST
         set(value) {
+            if (field == value) return
             field = value
             refreshDisplayedList()
             notifyDataSetChanged()
@@ -337,12 +336,14 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
     var itemSize = MainMenuViewModeManager.ItemSize.MEDIUM
         set(value) {
+            if (field == value) return
             field = value
             notifyDataSetChanged()
         }
 
     var gridColumnCount = 3
         set(value) {
+            if (field == value) return
             field = value
             notifyDataSetChanged()
         }
@@ -354,6 +355,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
      */
     var gridItemHeightPx: Int = -1
         set(value) {
+            if (field == value) return
             field = value
             notifyDataSetChanged()
         }
@@ -371,6 +373,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
      */
     var isColorPickMode: Boolean = false
         set(value) {
+            if (field == value) return
             field = value
             notifyDataSetChanged()
         }

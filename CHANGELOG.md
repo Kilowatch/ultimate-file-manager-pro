@@ -5,6 +5,12 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5] — 2026-09-12
+
+### Fixed
+- **Storage & Main Menu**: Fixed `IllegalArgumentException` ("Called attach on a child which is not detached") in `StorageBrowserActivity` by removing stable IDs from `StorageAdapter`, eliminating scrap re-attachment collisions during view mode transitions, LayoutManager swaps, and tile reordering.
+- **Main Menu**: Guarded tile color, icon, and view mode setters against redundant `notifyDataSetChanged()` calls to prevent dataset thrashing, and disabled cross-fade change animations on the main storage grid.
+
 ## [2.0.4] — 2026-09-12
 
 ### Added
