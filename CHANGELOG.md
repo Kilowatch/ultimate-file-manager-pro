@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Remote Web UI**: "Select All" / "Deselect All" button in the selection action bar.
 
 ### Fixed
+- **Storage & Main Menu**: Fixed mobile storage tiles remaining stuck at a shrunken scale after being dragged and released in Edit Mode.
 - **Remote Web UI**: Fixed selection state where selected files were not visually indicated due to DOM ID encoding mismatch; added high-contrast row background wash, accent border, and filled checkmark indicators.
 - **Remote File Server & WebShare**: Fixed download network error on large files (>100MB) caused by Netty's default 10-second response write timeout; tuned TLS proxy buffers and enabled TCP keepalive.
 - **Remote Web UI**: Fixed double percent sign display (`%%`) in download and upload progress indicators.

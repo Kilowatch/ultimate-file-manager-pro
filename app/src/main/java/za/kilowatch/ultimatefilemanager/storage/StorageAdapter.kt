@@ -18,6 +18,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
@@ -409,6 +411,26 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
     override fun getItemCount(): Int = items.size
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        holder.itemView.animate().cancel()
+        holder.itemView.scaleX = 1f
+        holder.itemView.scaleY = 1f
+        holder.itemView.translationX = 0f
+        holder.itemView.translationY = 0f
+        holder.itemView.elevation = 0f
+        if (holder is StorageViewHolder) {
+            holder.itemView.findViewById<View>(R.id.cardStorage)?.let { card ->
+                card.animate().cancel()
+                card.scaleX = 1f
+                card.scaleY = 1f
+                card.translationX = 0f
+                card.translationY = 0f
+                card.elevation = 0f
+            }
+        }
+    }
+
     inner class CategoryHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val iconContainer: FrameLayout? = itemView.findViewById(R.id.iconContainerHeader)
         private val imgIcon: ImageView = itemView.findViewById(R.id.imgCategoryIcon)
@@ -725,29 +747,40 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
                 // Subtle pulse animation (MOBILE ONLY - Disable on TV to avoid "shatter")
                 if (!isTv) {
+                    card.animate().cancel()
+                    card.scaleX = 1f
+                    card.scaleY = 1f
                     card.animate()
                         .scaleX(1.02f)
                         .scaleY(1.02f)
-                        .setDuration(400)
-                        .setInterpolator(android.view.animation.CycleInterpolator(1f))
+                        .setDuration(200)
+                        .setInterpolator(DecelerateInterpolator())
                         .withEndAction {
                             if (isEditMode) {
                                 card.animate()
-                                    .scaleX(1.02f)
-                                    .scaleY(1.02f)
-                                    .setDuration(400)
-                                    .setInterpolator(android.view.animation.CycleInterpolator(1f))
+                                    .scaleX(1f)
+                                    .scaleY(1f)
+                                    .setDuration(200)
+                                    .setInterpolator(AccelerateDecelerateInterpolator())
                                     .start()
+                            } else {
+                                card.scaleX = 1f
+                                card.scaleY = 1f
                             }
                         }
                         .start()
                 } else {
                     // TV specific: just ensure we are at base scale
-                    card.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
+                    card.animate().cancel()
+                    card.scaleX = 1f
+                    card.scaleY = 1f
                 }
             } else {
                 btnHideTile.visibility = View.GONE
-                card.animate().scaleX(1f).scaleY(1f).setDuration(200).start()
+                card.animate().cancel()
+                card.scaleX = 1f
+                card.scaleY = 1f
+                card.elevation = 0f
             }
 
             // Ã¢â€ â‚¬Ã¢â€ â‚¬ Mobile: configurable touch-hold Ã¢â€ â€™ start drag Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬

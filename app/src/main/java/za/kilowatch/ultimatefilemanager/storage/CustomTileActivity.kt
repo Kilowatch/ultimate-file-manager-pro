@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import android.view.animation.DecelerateInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -372,6 +373,21 @@ class CustomTileActivity : AppCompatActivity() {
         updateHiddenBadge()
         isSelectingTileForColor = false
         storageAdapter.isColorPickMode = false
+        if (::recyclerStorage.isInitialized) {
+            for (i in 0 until recyclerStorage.childCount) {
+                val child = recyclerStorage.getChildAt(i) ?: continue
+                child.animate().cancel()
+                child.scaleX = 1f
+                child.scaleY = 1f
+                child.elevation = 0f
+                child.findViewById<View>(R.id.cardStorage)?.let { card ->
+                    card.animate().cancel()
+                    card.scaleX = 1f
+                    card.scaleY = 1f
+                    card.elevation = 0f
+                }
+            }
+        }
         showPremiumSnackbar(getString(R.string.tile_configuration_saved))
     }
 
@@ -740,15 +756,31 @@ class CustomTileActivity : AppCompatActivity() {
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
                 if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && viewHolder != null) {
-                    viewHolder.itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(150).start()
+                    viewHolder.itemView.animate().cancel()
+                    viewHolder.itemView.animate()
+                        .scaleX(1.05f)
+                        .scaleY(1.05f)
+                        .setDuration(150)
+                        .setInterpolator(DecelerateInterpolator())
+                        .start()
                     viewHolder.itemView.elevation = 24f
                 }
             }
 
             override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
                 super.clearView(recyclerView, viewHolder)
-                viewHolder.itemView.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
+                viewHolder.itemView.animate().cancel()
+                viewHolder.itemView.scaleX = 1f
+                viewHolder.itemView.scaleY = 1f
                 viewHolder.itemView.elevation = 0f
+                (viewHolder as? StorageAdapter.StorageViewHolder)?.let { svh ->
+                    svh.itemView.findViewById<View>(R.id.cardStorage)?.let { card ->
+                        card.animate().cancel()
+                        card.scaleX = 1f
+                        card.scaleY = 1f
+                        card.elevation = 0f
+                    }
+                }
 
                 val orderedIds = storageAdapter.getRawItems().map { it.id }
                 CustomTileManager.saveTileOrder(this@CustomTileActivity, customTileId, orderedIds)
