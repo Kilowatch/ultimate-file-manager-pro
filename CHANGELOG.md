@@ -5,6 +5,18 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] — 2026-09-12
+
+### Added
+- **Media Player**: Added technical information (i) button and inspector dialog to view container format, video codec, resolution, FPS, bitrate, HDR standard, color space, bit depth, multi-track audio stream details, and subtitle tracks (positioned on the left floating dock for landscape/TV and at the bottom left before shuffle for portrait).
+- **Remote Web UI**: Multi-file batch download support packaging selected files and folders into a ZIP archive with real-time compression progress and streaming download.
+- **Remote Web UI**: "Select All" / "Deselect All" button in the selection action bar.
+
+### Fixed
+- **Remote Web UI**: Fixed selection state where selected files were not visually indicated due to DOM ID encoding mismatch; added high-contrast row background wash, accent border, and filled checkmark indicators.
+- **Remote File Server & WebShare**: Fixed download network error on large files (>100MB) caused by Netty's default 10-second response write timeout; tuned TLS proxy buffers and enabled TCP keepalive.
+- **Remote Web UI**: Fixed double percent sign display (`%%`) in download and upload progress indicators.
+
 ## [2.0.3] — 2026-09-11
 
 ### Fixed

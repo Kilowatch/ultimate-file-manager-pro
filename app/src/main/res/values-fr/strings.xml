@@ -5730,6 +5730,15 @@ Téléverser
     <string name="remote_items_selected">
 éléments sélectionnés
 </string>
+    <string name="remote_btn_select_all">
+Tout sélectionner
+</string>
+    <string name="remote_btn_deselect_all">
+Tout désélectionner
+</string>
+    <string name="remote_btn_download">
+Télécharger
+</string>
     <string name="remote_btn_copy">
 Copier
 </string>
@@ -14296,6 +14305,110 @@ SUPPRESSION
 </string>
     <string name="archive_current_file_label">
 Fichier actuel
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+Informations sur le média
+</string>
+    <string name="video_info_section_general">
+Général
+</string>
+    <string name="video_info_section_video">
+Flux vidéo
+</string>
+    <string name="video_info_section_audio">
+Pistes audio
+</string>
+    <string name="video_info_section_subtitles">
+Sous-titres
+</string>
+    <string name="video_info_container">
+Conteneur
+</string>
+    <string name="video_info_filename">
+Nom du fichier
+</string>
+    <string name="video_info_path">
+Emplacement
+</string>
+    <string name="video_info_size">
+Taille du fichier
+</string>
+    <string name="video_info_duration">
+Durée
+</string>
+    <string name="video_info_overall_bitrate">
+Débit global
+</string>
+    <string name="video_info_codec">
+Codec
+</string>
+    <string name="video_info_resolution">
+Résolution
+</string>
+    <string name="video_info_framerate">
+Fréquence d\\\'images
+</string>
+    <string name="video_info_bitrate">
+Débit
+</string>
+    <string name="video_info_hdr">
+Plage dynamique
+</string>
+    <string name="video_info_color_space">
+Espace colorimétrique
+</string>
+    <string name="video_info_color_range">
+Plage de couleurs
+</string>
+    <string name="video_info_bit_depth">
+Profondeur de bits
+</string>
+    <string name="video_info_pixel_format">
+Format des pixels
+</string>
+    <string name="video_info_channels">
+Canaux
+</string>
+    <string name="video_info_sample_rate">
+Fréquence d\\\'échantillonnage
+</string>
+    <string name="video_info_language">
+Langue
+</string>
+    <string name="video_info_source">
+Source
+</string>
+    <string name="video_info_active">
+Actif
+</string>
+    <string name="video_info_copy">
+Copier les informations techniques
+</string>
+    <string name="video_info_copied">
+Détails techniques copiés dans le presse-papiers
+</string>
+    <string name="video_info_not_available">
+N/D
+</string>
+    <string name="video_info_no_video">
+Aucun flux vidéo détecté
+</string>
+    <string name="video_info_no_audio">
+Aucune piste audio détectée
+</string>
+    <string name="video_info_no_subtitles">
+Aucun sous-titre détecté
+</string>
+    <string name="video_info_track_audio">
+Piste audio %1$d
+</string>
+    <string name="video_info_track_subtitle">
+Sous-titre %1$d
+</string>
+    <string name="player_toast_info">
+Informations sur le média
 </string>
 </resources>
 

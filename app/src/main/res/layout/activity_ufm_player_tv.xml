@@ -187,8 +187,23 @@
             android:src="@drawable/ic_shuffle"
             android:focusable="true"
             android:nextFocusUp="@+id/btnRepeat"
+            android:nextFocusDown="@+id/btnInfo"
             android:nextFocusRight="@+id/btnPrev"
             android:contentDescription="Shuffle" />
+
+        <ImageButton
+            android:id="@+id/btnInfo"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/tv_button_selector"
+            android:src="@drawable/ic_about"
+            android:focusable="true"
+            android:nextFocusUp="@+id/btnShuffle"
+            android:nextFocusRight="@+id/btnPrev"
+            android:contentDescription="@string/video_info_title" />
     </LinearLayout>
 
     <!-- Track Selection Sheet (TV Left Side Modal Panel) -->
@@ -213,7 +228,8 @@
             android:textStyle="bold"
             android:text="@string/audio_track" />
 
-        <ScrollView
+        <za.kilowatch.ultimatefilemanager.viewer.MaxHeightScrollView
+            android:id="@+id/trackSheetScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -224,7 +240,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
-        </ScrollView>
+        </za.kilowatch.ultimatefilemanager.viewer.MaxHeightScrollView>
     </LinearLayout>
 
     <!-- Bottom Controls Overlay for TV -->

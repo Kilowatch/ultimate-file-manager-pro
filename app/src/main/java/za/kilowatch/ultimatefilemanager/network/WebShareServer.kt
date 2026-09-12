@@ -27,6 +27,7 @@ import java.util.Date
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLServerSocket
+import io.ktor.server.engine.connector
 import io.ktor.server.request.receiveParameters
 import io.ktor.server.response.header
 import io.ktor.server.response.respondOutputStream
@@ -276,7 +277,18 @@ object WebShareServer {
         val sslContext = generateSelfSignedCert(context)
         if (sslContext != null) sslPort = findFreePort()
 
-        val serverInstance = embeddedServer(Netty, port = ktorPort, host = "127.0.0.1") {
+        val serverInstance = embeddedServer(
+            factory = Netty,
+            configure = {
+                connector {
+                    port = ktorPort
+                    host = "127.0.0.1"
+                }
+                responseWriteTimeoutSeconds = 0
+                requestReadTimeoutSeconds = 0
+                tcpKeepAlive = true
+            }
+        ) {
             routing {
                 // Serve localized flag SVGs
                 get("/api/flags/{code}") {

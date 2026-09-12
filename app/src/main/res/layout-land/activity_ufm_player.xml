@@ -192,6 +192,18 @@
             android:src="@drawable/ic_shuffle"
             android:contentDescription="Shuffle"
             app:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/btnInfo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_about"
+            android:contentDescription="@string/video_info_title"
+            app:tint="@android:color/white" />
     </LinearLayout>
 
     <!-- Track Selection Sheet (Left Side Modal Panel in Landscape) -->
@@ -216,18 +228,19 @@
             android:textStyle="bold"
             android:text="@string/audio_track" />
 
-        <ScrollView
+        <za.kilowatch.ultimatefilemanager.viewer.MaxHeightScrollView
+            android:id="@+id/trackSheetScrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:maxHeight="220dp">
+            android:maxHeight="200dp">
 
             <LinearLayout
                 android:id="@+id/trackSheetList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
-        </ScrollView>
+        </za.kilowatch.ultimatefilemanager.viewer.MaxHeightScrollView>
     </LinearLayout>
 
     <!-- Bottom Controls Overlay -->

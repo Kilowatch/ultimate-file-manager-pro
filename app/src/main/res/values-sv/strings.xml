@@ -5714,6 +5714,15 @@ Ladda upp
     <string name="remote_items_selected">
 valda objekt
 </string>
+    <string name="remote_btn_select_all">
+Markera alla
+</string>
+    <string name="remote_btn_deselect_all">
+Avmarkera alla
+</string>
+    <string name="remote_btn_download">
+Ladda ner
+</string>
     <string name="remote_btn_copy">
 Kopiera
 </string>
@@ -14273,6 +14282,110 @@ TAR BORT
 </string>
     <string name="archive_current_file_label">
 Aktuell fil
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+Mediainformation
+</string>
+    <string name="video_info_section_general">
+Allmänt
+</string>
+    <string name="video_info_section_video">
+Videoström
+</string>
+    <string name="video_info_section_audio">
+Ljudspår
+</string>
+    <string name="video_info_section_subtitles">
+Undertexter
+</string>
+    <string name="video_info_container">
+Behållare
+</string>
+    <string name="video_info_filename">
+Filnamn
+</string>
+    <string name="video_info_path">
+Plats
+</string>
+    <string name="video_info_size">
+Filstorlek
+</string>
+    <string name="video_info_duration">
+Varaktighet
+</string>
+    <string name="video_info_overall_bitrate">
+Total bitrate
+</string>
+    <string name="video_info_codec">
+Kodek
+</string>
+    <string name="video_info_resolution">
+Upplösning
+</string>
+    <string name="video_info_framerate">
+Bildfrekvens
+</string>
+    <string name="video_info_bitrate">
+Bitrate
+</string>
+    <string name="video_info_hdr">
+Dynamiskt omfång
+</string>
+    <string name="video_info_color_space">
+Färgrymd
+</string>
+    <string name="video_info_color_range">
+Färgomfång
+</string>
+    <string name="video_info_bit_depth">
+Bitdjup
+</string>
+    <string name="video_info_pixel_format">
+Pixelformat
+</string>
+    <string name="video_info_channels">
+Kanaler
+</string>
+    <string name="video_info_sample_rate">
+Samplingsfrekvens
+</string>
+    <string name="video_info_language">
+Språk
+</string>
+    <string name="video_info_source">
+Källa
+</string>
+    <string name="video_info_active">
+Aktiv
+</string>
+    <string name="video_info_copy">
+Kopiera teknisk information
+</string>
+    <string name="video_info_copied">
+Teknisk information kopierad till urklipp
+</string>
+    <string name="video_info_not_available">
+N/A
+</string>
+    <string name="video_info_no_video">
+Ingen videoström hittades
+</string>
+    <string name="video_info_no_audio">
+Inga ljudspår hittades
+</string>
+    <string name="video_info_no_subtitles">
+Inga undertexter hittades
+</string>
+    <string name="video_info_track_audio">
+Ljudspår %1$d
+</string>
+    <string name="video_info_track_subtitle">
+Undertext %1$d
+</string>
+    <string name="player_toast_info">
+Mediainformation
 </string>
 </resources>
 

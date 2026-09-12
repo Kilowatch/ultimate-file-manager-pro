@@ -147,8 +147,11 @@
             android:id="@+id/trackSheetLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
             android:orientation="vertical"
-            android:padding="8dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_tv_modal_panel"
+            android:elevation="16dp"
             android:visibility="gone">
 
             <TextView
@@ -156,21 +159,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:text="@string/audio_track" />
 
-            <ScrollView
+            <za.kilowatch.ultimatefilemanager.viewer.MaxHeightScrollView
+                android:id="@+id/trackSheetScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginTop="8dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:maxHeight="220dp">
 
                 <LinearLayout
                     android:id="@+id/trackSheetList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
-            </ScrollView>
+            </za.kilowatch.ultimatefilemanager.viewer.MaxHeightScrollView>
         </LinearLayout>
 
         <!-- Seek Bar Row -->
@@ -267,7 +272,7 @@
 
         </LinearLayout>
 
-        <!-- Secondary controls row: shuffle · repeat · audio track · subtitles -->
+        <!-- Secondary controls row: info · shuffle · repeat · audio track · subtitles -->
         <LinearLayout
             android:id="@+id/secondaryControlsRow"
             android:layout_width="match_parent"
@@ -277,9 +282,19 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/btnInfo"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_about"
+                android:contentDescription="@string/video_info_title"
+                app:tint="@android:color/white" />
+
+            <ImageButton
                 android:id="@+id/btnShuffle"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
+                android:layout_marginStart="2dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_shuffle"
                 app:tint="@android:color/white" />

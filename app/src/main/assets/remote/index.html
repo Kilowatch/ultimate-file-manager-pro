@@ -565,6 +565,17 @@
       border-color: var(--primary-light);
     }
 
+    .item-row.selected {
+      background: rgba(0, 137, 123, 0.18);
+      border-color: var(--primary-light);
+      box-shadow: inset 4px 0 0 var(--primary-light);
+    }
+
+    .item-row.selected:hover {
+      background: rgba(0, 137, 123, 0.28);
+      border-color: var(--primary-light);
+    }
+
     .item-icon-box {
       width: 48px;
       height: 48px;
@@ -683,10 +694,11 @@
     }
 
     .checkbox-round {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       border: 2px solid var(--text-sec);
+      background: rgba(255, 255, 255, 0.03);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -696,16 +708,26 @@
       transition: all 0.2s;
     }
 
+    .checkbox-round:hover {
+      border-color: var(--primary-light);
+      background: rgba(0, 137, 123, 0.12);
+    }
+
     .checkbox-round.checked {
       background: var(--primary);
-      border-color: var(--primary);
+      border-color: var(--primary-light);
+      box-shadow: 0 0 8px rgba(77, 182, 172, 0.45);
     }
 
     .checkbox-round.checked::after {
       content: '✓';
       color: white;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .fab {
@@ -1625,6 +1647,9 @@
     <span id="l_msg_select_density">{{remote_msg_select_density}}</span>
     <span id="l_msg_abi_architecture">{{remote_msg_abi_architecture}}</span>
     <span id="l_btn_install_selected">{{remote_btn_install_selected}}</span>
+    <span id="l_btn_select_all">{{remote_btn_select_all}}</span>
+    <span id="l_btn_deselect_all">{{remote_btn_deselect_all}}</span>
+    <span id="l_btn_download">{{remote_btn_download}}</span>
     <span id="l_msg_loading_vault_folders">{{remote_msg_loading_vault_folders}}</span>
     <span id="l_msg_error_prefix">{{remote_msg_error_prefix}}</span>
     <span id="l_msg_chunk_failed">{{remote_msg_chunk_failed}}</span>
@@ -1759,6 +1784,8 @@
         <span id="selectionCount">0</span> {{remote_items_selected}}
       </div>
       <div class="selection-actions">
+        <button class="action-btn outline btn-select-all" id="btnSelectAll" onclick="toggleSelectAll()">{{remote_btn_select_all}}</button>
+        <button class="action-btn outline btn-download" onclick="doDownloadSelected()">{{remote_btn_download}}</button>
         <button class="action-btn outline btn-copy" onclick="doCopy()">{{remote_btn_copy}}</button>
         <button class="action-btn outline btn-cut" onclick="doCut()">{{remote_btn_cut}}</button>
         <button class="action-btn outline btn-del" onclick="doDeleteSelected()"
@@ -2025,7 +2052,7 @@
 
     function getString(id) {
       var el = document.getElementById('l_' + id);
-      return el ? el.textContent : '';
+      return el ? el.textContent.replace(/%%/g, '%') : '';
     }
 
     var remoteStrings = {
@@ -2116,6 +2143,9 @@
       msg_select_density: getString('msg_select_density'),
       msg_abi_architecture: getString('msg_abi_architecture'),
       btn_install_selected: getString('l_btn_install_selected'),
+      btn_select_all: getString('l_btn_select_all'),
+      btn_deselect_all: getString('l_btn_deselect_all'),
+      btn_download: getString('l_btn_download'),
       msg_loading_vault_folders: getString('msg_loading_vault_folders'),
       msg_error_prefix: getString('msg_error_prefix'),
       msg_chunk_failed: getString('msg_chunk_failed'),
@@ -2133,6 +2163,7 @@
 
     /* ── File Operations State ── */
     var selectedFiles = []; // array of paths
+    var currentItems = []; // items currently in folder
     var clipboard = { mode: '', files: [] }; // mode: 'copy' | 'cut'
 
     /* ── Drag/Drop helper ── */
@@ -2340,44 +2371,90 @@
       bar.innerHTML = html;
     }
 
+    function getItemKey(path) {
+      return encodeURIComponent(path).replace(/[^a-zA-Z0-9]/g, '_');
+    }
+
     function toggleSelect(path, isDir, event) {
       if (event) {
         event.stopPropagation();
       }
       var idx = selectedFiles.indexOf(path);
+      var isNowSelected = false;
       if (idx > -1) {
         selectedFiles.splice(idx, 1);
+        isNowSelected = false;
       } else {
         selectedFiles.push(path);
+        isNowSelected = true;
       }
 
-      var checkbox = document.getElementById('cb_' + btoa(path).replace(/[=]/g, ''));
+      var itemKey = getItemKey(path);
+      var checkbox = document.getElementById('cb_' + itemKey) || (event && event.currentTarget);
+      var row = document.getElementById('row_' + itemKey) || (checkbox && checkbox.closest('.item-row'));
+
       if (checkbox) {
-        if (idx > -1) checkbox.classList.remove('checked');
-        else checkbox.classList.add('checked');
+        if (isNowSelected) checkbox.classList.add('checked');
+        else checkbox.classList.remove('checked');
+      }
+      if (row) {
+        if (isNowSelected) row.classList.add('selected');
+        else row.classList.remove('selected');
       }
       updateSelectionUI();
+    }
+
+    function toggleSelectAll() {
+      if (!currentItems || currentItems.length === 0) return;
+      var allSelected = (selectedFiles.length === currentItems.length);
+      if (allSelected) {
+        clearSelection();
+      } else {
+        selectedFiles = currentItems.map(function (itm) { return itm.path; });
+        updateSelectionUI();
+        var checkboxes = document.querySelectorAll('.checkbox-round');
+        for (var i = 0; i < checkboxes.length; i++) checkboxes[i].classList.add('checked');
+        var rows = document.querySelectorAll('.item-row');
+        for (var j = 0; j < rows.length; j++) {
+          if (!rows[j].getAttribute('onclick') || rows[j].getAttribute('onclick').indexOf('goBack') === -1) {
+            rows[j].classList.add('selected');
+          }
+        }
+      }
     }
 
     function clearSelection() {
       selectedFiles = [];
       updateSelectionUI();
-      // re-render to clear visual checkboxes
       var checkboxes = document.querySelectorAll('.checkbox-round');
       for (var i = 0; i < checkboxes.length; i++) checkboxes[i].classList.remove('checked');
+      var rows = document.querySelectorAll('.item-row.selected');
+      for (var j = 0; j < rows.length; j++) rows[j].classList.remove('selected');
     }
 
     function updateSelectionUI() {
       var bar = document.getElementById('selectionBar');
+      var btnSelectAll = document.getElementById('btnSelectAll');
       if (selectedFiles.length > 0) {
         bar.classList.add('active');
         document.getElementById('selectionCount').innerText = selectedFiles.length;
+        if (btnSelectAll && currentItems && currentItems.length > 0) {
+          if (selectedFiles.length === currentItems.length) {
+            btnSelectAll.innerText = remoteStrings.btn_deselect_all || 'Deselect All';
+          } else {
+            btnSelectAll.innerText = remoteStrings.btn_select_all || 'Select All';
+          }
+        }
       } else {
         bar.classList.remove('active');
+        if (btnSelectAll) {
+          btnSelectAll.innerText = remoteStrings.btn_select_all || 'Select All';
+        }
       }
     }
 
     function renderFiles(items) {
+      currentItems = items || [];
       var list = document.getElementById('fileList');
       var html = '';
 
@@ -2398,9 +2475,11 @@
           var meta2 = f.isDirectory ? (f.childCountFormatted || '') : formatDate(f.lastModified);
 
           var isSelected = selectedFiles.indexOf(f.path) > -1;
-          var cbId = 'cb_' + btoa(encodeURIComponent(f.path)).replace(/[=]/g, '');
+          var itemKey = getItemKey(f.path);
+          var rowId = 'row_' + itemKey;
+          var cbId = 'cb_' + itemKey;
 
-          html += '<div class="item-row" onclick="' + clickAction + '" style="animation-delay:' + (i * 0.01) + 's">'
+          html += '<div class="item-row' + (isSelected ? ' selected' : '') + '" id="' + rowId + '" onclick="' + clickAction + '" style="animation-delay:' + (i * 0.01) + 's">'
             + '<div class="checkbox-round ' + (isSelected ? 'checked' : '') + '" id="' + cbId + '" onclick="toggleSelect(\'' + sp + '\', ' + f.isDirectory + ', event)"></div>'
             + '<div class="item-icon-box">' + icon + '</div>'
             + '<div class="item-details">'
@@ -2743,6 +2822,109 @@
       });
     }
 
+    function startZipDownloadJob(jobId, total, label) {
+      var overlay = document.getElementById('dlOverlay');
+      var dlIcon = document.getElementById('dlIcon');
+      var dlTitle = document.getElementById('dlTitle');
+      var dlStatus = document.getElementById('dlStatus');
+      var dlDetail = document.getElementById('dlDetail');
+      var dlBar = document.getElementById('dlBar');
+
+      window._folderDlJobId = jobId;
+      dlTitle.textContent = remoteStrings.msg_compressing_name.replace('%s', label);
+      dlStatus.textContent = remoteStrings.msg_zip_progress.replace('%1$d', '0').replace('%2$d', total);
+      dlDetail.textContent = remoteStrings.msg_zip_wait;
+      dlBar.className = 'dl-bar';
+      dlBar.style.width = '0%';
+
+      function pollProgress() {
+        api('/api/download-folder-status?jobId=' + jobId).then(function (s) {
+          if (!s) return;
+
+          if (s.status === 'compressing') {
+            var pct = total > 0 ? Math.round(s.current / total * 100) : 0;
+            dlBar.style.width = pct + '%';
+            dlStatus.textContent = remoteStrings.msg_zip_progress.replace('%1$d', s.current).replace('%2$d', total);
+            dlDetail.textContent = remoteStrings.msg_current_file.replace('%1$s', s.currentFile || '…');
+            window._folderDlPollTimer = setTimeout(pollProgress, 500);
+          }
+          else if (s.status === 'done') {
+            dlIcon.innerHTML = '&#11015;';
+            dlTitle.textContent = remoteStrings.downloading_zip;
+            dlStatus.textContent = remoteStrings.msg_zip_progress.replace('%1$d', total).replace('%2$d', total);
+            dlDetail.textContent = remoteStrings.msg_starting_download;
+            dlBar.style.width = '100%';
+
+            var xhr = new XMLHttpRequest();
+            window._folderDlXhr = xhr;
+            xhr.open('GET', '/api/download-folder-file?jobId=' + jobId, true);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+            xhr.responseType = 'blob';
+
+            xhr.onprogress = function (e) {
+              if (e.lengthComputable) {
+                var dpct = Math.round(e.loaded / e.total * 100);
+                dlStatus.textContent = remoteStrings.msg_downloading_pct.replace('%1$d', dpct).replace('%%', '%');
+                dlDetail.textContent = remoteStrings.msg_of.replace('%1$s', formatBytes(e.loaded)).replace('%2$s', formatBytes(e.total));
+                dlBar.style.width = dpct + '%';
+              } else {
+                dlStatus.textContent = remoteStrings.msg_downloading_pct.replace(/…\s*%1\$d%{1,2}/, '… ') + formatBytes(e.loaded);
+              }
+            };
+
+            xhr.onload = function () {
+              window._folderDlXhr = null;
+              if (xhr.status === 200) {
+                var disposition = xhr.getResponseHeader('Content-Disposition') || '';
+                var matches = disposition.match(/filename="(.+?)"/);
+                var filename = matches ? matches[1] : (label + '.zip');
+
+                var blob = xhr.response;
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                dlIcon.innerHTML = '&#9989;';
+                dlTitle.textContent = remoteStrings.msg_download_complete;
+                dlStatus.textContent = filename;
+                dlDetail.textContent = remoteStrings.msg_files_compressed_saved.replace('%1$d', total);
+                dlBar.style.width = '100%';
+                setTimeout(function () { overlay.classList.remove('show'); }, 1500);
+              } else {
+                dlTitle.textContent = remoteStrings.msg_download_failed;
+                dlStatus.textContent = remoteStrings.msg_server_error;
+                dlBar.style.width = '0%';
+              }
+            };
+
+            xhr.onerror = function () {
+              window._folderDlXhr = null;
+              dlTitle.textContent = remoteStrings.msg_download_failed;
+              dlStatus.textContent = remoteStrings.msg_network_error;
+              dlBar.style.width = '0%';
+            };
+
+            xhr.send();
+          }
+          else if (s.status === 'error') {
+            dlTitle.textContent = remoteStrings.msg_compression_failed;
+            dlStatus.textContent = s.error || 'Unknown error';
+            dlBar.className = 'dl-bar';
+            dlBar.style.width = '0%';
+          }
+          else if (s.status === 'cancelled') {
+            overlay.classList.remove('show');
+          }
+        });
+      }
+      pollProgress();
+    }
+
     function downloadFolder(p) {
       var overlay = document.getElementById('dlOverlay');
       var dlIcon = document.getElementById('dlIcon');
@@ -2762,7 +2944,6 @@
       window._folderDlJobId = null;
       window._folderDlPollTimer = null;
 
-      // Phase 1: Start the background ZIP job
       api('/api/download-folder-start?path=' + encodeURIComponent(p)).then(function (result) {
         if (!result || !result.jobId) {
           dlTitle.textContent = remoteStrings.msg_download_failed;
@@ -2771,108 +2952,58 @@
           dlBar.style.width = '0%';
           return;
         }
+        startZipDownloadJob(result.jobId, result.total || 0, result.folderName || remoteStrings.msg_folder_label);
+      });
+    }
 
-        var jobId = result.jobId;
-        var total = result.total || 0;
-        var folderName = result.folderName || remoteStrings.msg_folder_label;
-        window._folderDlJobId = jobId;
+    function doDownloadSelected() {
+      if (!selectedFiles || selectedFiles.length === 0) return;
 
-        dlTitle.textContent = remoteStrings.msg_compressing_name.replace('%s', folderName);
-        dlStatus.textContent = remoteStrings.msg_zip_progress.replace('%1$d', '0').replace('%2$d', total);
-        dlDetail.textContent = remoteStrings.msg_zip_wait;
+      // If exactly 1 regular file is selected, download directly without extra compression
+      if (selectedFiles.length === 1 && currentItems) {
+        var single = currentItems.find(function (itm) { return itm.path === selectedFiles[0]; });
+        if (single && !single.isDirectory) {
+          download(single.path);
+          return;
+        }
+      }
+
+      var overlay = document.getElementById('dlOverlay');
+      var dlIcon = document.getElementById('dlIcon');
+      var dlTitle = document.getElementById('dlTitle');
+      var dlStatus = document.getElementById('dlStatus');
+      var dlDetail = document.getElementById('dlDetail');
+      var dlBar = document.getElementById('dlBar');
+
+      // Reset and show modal
+      dlIcon.innerHTML = '&#128230;';
+      dlTitle.textContent = remoteStrings.msg_preparing_download;
+      dlStatus.textContent = remoteStrings.msg_starting_compression;
+      dlDetail.textContent = '';
+      dlBar.className = 'dl-bar indeterminate';
+      dlBar.style.width = '30%';
+      overlay.classList.add('show');
+      window._folderDlJobId = null;
+      window._folderDlPollTimer = null;
+
+      api('/api/download-multiple-start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paths: selectedFiles })
+      }).then(function (result) {
+        if (!result || !result.jobId) {
+          dlTitle.textContent = remoteStrings.msg_download_failed;
+          dlStatus.textContent = (result && result.error) ? result.error : remoteStrings.msg_could_not_start_compression;
+          dlBar.className = 'dl-bar';
+          dlBar.style.width = '0%';
+          return;
+        }
+        startZipDownloadJob(result.jobId, result.total || 0, result.folderName || 'archive');
+      }).catch(function (err) {
+        dlTitle.textContent = remoteStrings.msg_download_failed;
+        dlStatus.textContent = remoteStrings.msg_network_error;
         dlBar.className = 'dl-bar';
         dlBar.style.width = '0%';
-
-        // Phase 2: Poll for progress every 500ms
-        function pollProgress() {
-          api('/api/download-folder-status?jobId=' + jobId).then(function (s) {
-            if (!s) return;
-
-            if (s.status === 'compressing') {
-              var pct = total > 0 ? Math.round(s.current / total * 100) : 0;
-              dlBar.style.width = pct + '%';
-              dlStatus.textContent = remoteStrings.msg_zip_progress.replace('%1$d', s.current).replace('%2$d', total);
-              dlDetail.textContent = remoteStrings.msg_current_file.replace('%1$s', s.currentFile || '…');
-              window._folderDlPollTimer = setTimeout(pollProgress, 500);
-            }
-            else if (s.status === 'done') {
-              // Phase 3: Compression done - download the file
-              dlIcon.innerHTML = '&#11015;';
-              dlTitle.textContent = remoteStrings.downloading_zip;
-              dlStatus.textContent = remoteStrings.msg_zip_progress.replace('%1$d', total).replace('%2$d', total);
-              dlDetail.textContent = remoteStrings.msg_starting_download;
-              dlBar.style.width = '100%';
-
-              // Use XHR to download with progress tracking
-              var xhr = new XMLHttpRequest();
-              window._folderDlXhr = xhr;
-              xhr.open('GET', '/api/download-folder-file?jobId=' + jobId, true);
-              xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-              xhr.responseType = 'blob';
-
-              xhr.onprogress = function (e) {
-                if (e.lengthComputable) {
-                  var dpct = Math.round(e.loaded / e.total * 100);
-                  dlStatus.textContent = remoteStrings.msg_downloading_pct.replace('%1$d', dpct);
-                  dlDetail.textContent = remoteStrings.msg_of.replace('%1$s', formatBytes(e.loaded)).replace('%2$s', formatBytes(e.total));
-                  dlBar.style.width = dpct + '%';
-                } else {
-                  dlStatus.textContent = remoteStrings.msg_downloading_pct.replace('… %1$d%%', '… ') + formatBytes(e.loaded);
-                }
-              };
-
-              xhr.onload = function () {
-                window._folderDlXhr = null;
-                if (xhr.status === 200) {
-                  var disposition = xhr.getResponseHeader('Content-Disposition') || '';
-                  var matches = disposition.match(/filename="(.+?)"/);
-                  var filename = matches ? matches[1] : (folderName + '.zip');
-
-                  var blob = xhr.response;
-                  var url = URL.createObjectURL(blob);
-                  var a = document.createElement('a');
-                  a.href = url;
-                  a.download = filename;
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
-                  URL.revokeObjectURL(url);
-
-                  // Auto-close modal
-                  dlIcon.innerHTML = '&#9989;';
-                  dlTitle.textContent = remoteStrings.msg_download_complete;
-                  dlStatus.textContent = filename;
-                  dlDetail.textContent = remoteStrings.msg_files_compressed_saved.replace('%1$d', total);
-                  dlBar.style.width = '100%';
-                  setTimeout(function () { overlay.classList.remove('show'); }, 1500);
-                } else {
-                  dlTitle.textContent = remoteStrings.msg_download_failed;
-                  dlStatus.textContent = remoteStrings.msg_server_error;
-                  dlBar.style.width = '0%';
-                }
-              };
-
-              xhr.onerror = function () {
-                window._folderDlXhr = null;
-                dlTitle.textContent = remoteStrings.msg_download_failed;
-                dlStatus.textContent = remoteStrings.msg_network_error;
-                dlBar.style.width = '0%';
-              };
-
-              xhr.send();
-            }
-            else if (s.status === 'error') {
-              dlTitle.textContent = remoteStrings.msg_compression_failed;
-              dlStatus.textContent = s.error || 'Unknown error';
-              dlBar.className = 'dl-bar';
-              dlBar.style.width = '0%';
-            }
-            else if (s.status === 'cancelled') {
-              overlay.classList.remove('show');
-            }
-          });
-        }
-        pollProgress();
       });
     }
 
@@ -2999,7 +3130,7 @@
         if (e.lengthComputable) {
           var pct = Math.round(e.loaded / e.total * 100);
           bar.style.width = pct + '%';
-          status.textContent = remoteStrings.msg_downloading_pct.replace('%1$d', pct); 
+          status.textContent = remoteStrings.msg_downloading_pct.replace('%1$d', pct).replace('%%', '%'); 
         }
       };
 
@@ -3180,7 +3311,7 @@
         if (e.lengthComputable) {
           var pct = Math.round(e.loaded / e.total * 100);
           bar.style.width = pct + '%';
-          document.getElementById('xapkStatus').textContent = remoteStrings.msg_downloading_pct.replace('%1$d', pct);
+          document.getElementById('xapkStatus').textContent = remoteStrings.msg_downloading_pct.replace('%1$d', pct).replace('%%', '%');
         }
       };
 

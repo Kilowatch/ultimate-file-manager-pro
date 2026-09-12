@@ -5730,6 +5730,15 @@ Unggah
     <string name="remote_items_selected">
 item dipilih
 </string>
+    <string name="remote_btn_select_all">
+Pilih Semua
+</string>
+    <string name="remote_btn_deselect_all">
+Batalkan Semua Pilihan
+</string>
+    <string name="remote_btn_download">
+Unduh
+</string>
     <string name="remote_btn_copy">
 Salin
 </string>
@@ -14296,6 +14305,110 @@ MENGHAPUS
 </string>
     <string name="archive_current_file_label">
 File Saat Ini
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+Informasi Media
+</string>
+    <string name="video_info_section_general">
+Umum
+</string>
+    <string name="video_info_section_video">
+Stream Video
+</string>
+    <string name="video_info_section_audio">
+Trek Audio
+</string>
+    <string name="video_info_section_subtitles">
+Subtitle
+</string>
+    <string name="video_info_container">
+Kontainer
+</string>
+    <string name="video_info_filename">
+Nama File
+</string>
+    <string name="video_info_path">
+Lokasi
+</string>
+    <string name="video_info_size">
+Ukuran File
+</string>
+    <string name="video_info_duration">
+Durasi
+</string>
+    <string name="video_info_overall_bitrate">
+Bitrate Keseluruhan
+</string>
+    <string name="video_info_codec">
+Codec
+</string>
+    <string name="video_info_resolution">
+Resolusi
+</string>
+    <string name="video_info_framerate">
+Frame Rate
+</string>
+    <string name="video_info_bitrate">
+Bitrate
+</string>
+    <string name="video_info_hdr">
+Rentang Dinamis
+</string>
+    <string name="video_info_color_space">
+Ruang Warna
+</string>
+    <string name="video_info_color_range">
+Rentang Warna
+</string>
+    <string name="video_info_bit_depth">
+Kedalaman Bit
+</string>
+    <string name="video_info_pixel_format">
+Format Piksel
+</string>
+    <string name="video_info_channels">
+Saluran
+</string>
+    <string name="video_info_sample_rate">
+Sample Rate
+</string>
+    <string name="video_info_language">
+Bahasa
+</string>
+    <string name="video_info_source">
+Sumber
+</string>
+    <string name="video_info_active">
+Aktif
+</string>
+    <string name="video_info_copy">
+Salin Info Teknis
+</string>
+    <string name="video_info_copied">
+Detail teknis disalin ke clipboard
+</string>
+    <string name="video_info_not_available">
+N/A
+</string>
+    <string name="video_info_no_video">
+Tidak ada stream video yang terdeteksi
+</string>
+    <string name="video_info_no_audio">
+Tidak ada trek audio yang terdeteksi
+</string>
+    <string name="video_info_no_subtitles">
+Tidak ada subtitle yang terdeteksi
+</string>
+    <string name="video_info_track_audio">
+Trek Audio %1$d
+</string>
+    <string name="video_info_track_subtitle">
+Subtitle %1$d
+</string>
+    <string name="player_toast_info">
+Informasi Media
 </string>
 </resources>
 

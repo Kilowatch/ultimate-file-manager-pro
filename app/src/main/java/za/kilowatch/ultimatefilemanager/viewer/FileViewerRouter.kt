@@ -360,6 +360,7 @@ object FileViewerRouter {
         val intent = Intent(context, UFMPlayerActivity::class.java).apply {
             putExtra(EXTRA_FILE_PATH, file.absolutePath)
             putExtra("initialPath", file.absolutePath)
+            putExtra("initialSize", file.length())
             putExtra("playlistCacheKey", cacheKey)
             putExtra("playlistDir", file.parent ?: "") // fallback scan dir
             if (contentUri != null) putExtra(EXTRA_CONTENT_URI, contentUri.toString())

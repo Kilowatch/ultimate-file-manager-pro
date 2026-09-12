@@ -192,6 +192,7 @@ class UFMPlaybackService : Service() {
         fun onPlaybackStateChanged(isPlaying: Boolean, state: Int, isLocal: Boolean)
         fun onMetadataChanged(metadata: MediaMetadata)
         fun onQueueChanged(queue: List<QueueItem>)
+        fun onTracksChanged(tracks: androidx.media3.common.Tracks) {}
         fun onError(error: String)
     }
 
@@ -199,10 +200,18 @@ class UFMPlaybackService : Service() {
 
     fun registerCallback(callback: PlaybackCallback) {
         playbackCallback = callback
-        // Push current state immediately
+        // Push current track and state immediately
+        queueManager.currentItem?.let { item ->
+            callback.onTrackChanged(item)
+        }
         player?.let { p ->
             callback.onPlaybackStateChanged(p.isPlaying, p.playbackState, isCurrentLocal)
             callback.onProgressUpdate(p.currentPosition, p.duration)
+            p.currentTracks?.let { tracks ->
+                if (!tracks.isEmpty) {
+                    callback.onTracksChanged(tracks)
+                }
+            }
         }
         callback.onQueueChanged(queueManager.queue)
     }
@@ -298,10 +307,22 @@ class UFMPlaybackService : Service() {
         // Build QueueItems from the path list
         val items = paths.mapIndexed { index, path ->
             val ext = path.substringAfterLast('.', "").lowercase()
+            val computedSize = if (fileSize > 0L && index == startIndex) {
+                fileSize
+            } else if (shareId.isNullOrEmpty() && (provider == null || provider == "local")) {
+                if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, path)) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this, path).coerceAtLeast(0L)
+                } else {
+                    try { File(path).length() } catch (_: Exception) { 0L }
+                }
+            } else {
+                0L
+            }
             QueueItem(
                 path = path,
                 isVideo = !FileViewerRouter.isAudio(ext),
-                fileSize = fileSize,
+                fileSize = computedSize,
                 shareId = shareId,
                 shareHost = shareHost,
                 shareUsername = shareUsername,
@@ -636,6 +657,10 @@ class UFMPlaybackService : Service() {
             val item = queueManager.currentItem
             playbackCallback?.onTrackChanged(item)
             if (item != null) extractMetadata(item)
+        }
+
+        override fun onTracksChanged(tracks: androidx.media3.common.Tracks) {
+            playbackCallback?.onTracksChanged(tracks)
         }
     }
 

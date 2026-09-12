@@ -36,6 +36,7 @@ import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
+import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.request.httpMethod
@@ -83,6 +84,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 import java.net.InetAddress
 import java.net.NetworkInterface
 import java.security.KeyPairGenerator
@@ -532,7 +534,18 @@ class FileServer(
             sslContext.init(arrayOf(pinned), null, SecureRandom())
 
             val localPort = findFreePort()
-            ktorServer = embeddedServer(Netty, port = localPort, host = "127.0.0.1") {
+            ktorServer = embeddedServer(
+                factory = Netty,
+                configure = {
+                    connector {
+                        port = localPort
+                        host = "127.0.0.1"
+                    }
+                    responseWriteTimeoutSeconds = 0
+                    requestReadTimeoutSeconds = 0
+                    tcpKeepAlive = true
+                }
+            ) {
                 routing {
                     post("/api/auth") { withContext(Dispatchers.IO) { handleAuth(KtorSession(call)).send(call) } }
                     get("/api/logo") { withContext(Dispatchers.IO) { handleLogo().send(call) } }
@@ -569,6 +582,7 @@ class FileServer(
                                     uri == "/api/upload-stream" && isPost -> handleStreamUpload(session)
                                     uri == "/api/download-ticket" && isPost -> handleDownloadTicket(session)
                                     uri == "/api/download" -> handleDownload(session)
+                                    uri == "/api/download-multiple-start" && isPost -> handleDownloadMultipleStart(session)
                                     uri == "/api/download-folder-start" -> handleDownloadFolderStart(session)
                                     uri == "/api/download-folder-status" -> handleDownloadFolderStatus(session)
                                     uri == "/api/download-folder-file" -> handleDownloadFolderFile(session)
@@ -665,22 +679,34 @@ class FileServer(
 
     private fun proxyToKtor(clientSocket: java.net.Socket, targetHost: String, targetPort: Int) {
         clientSocket.soTimeout = 0
+        clientSocket.tcpNoDelay = true
+        clientSocket.sendBufferSize = 512 * 1024
+        clientSocket.receiveBufferSize = 512 * 1024
         var targetSocket: java.net.Socket? = null
         try {
             targetSocket = java.net.Socket(targetHost, targetPort)
             targetSocket.soTimeout = 0
+            targetSocket.tcpNoDelay = true
+            targetSocket.sendBufferSize = 512 * 1024
+            targetSocket.receiveBufferSize = 512 * 1024
             val clientIn = clientSocket.getInputStream()
             val clientOut = clientSocket.getOutputStream()
             val targetIn = targetSocket.getInputStream()
             val targetOut = targetSocket.getOutputStream()
 
             val c2t = thread(name = "proxy-c2t", start = false) {
-                try { clientIn.copyTo(targetOut, bufferSize = 256 * 1024) } catch (_: Exception) {}
+                try {
+                    clientIn.copyTo(targetOut, bufferSize = 256 * 1024)
+                    targetOut.flush()
+                } catch (_: Exception) {}
                 runCatching { targetSocket?.close() }
                 runCatching { clientSocket.close() }
             }
             val t2c = thread(name = "proxy-t2c", start = false) {
-                try { targetIn.copyTo(clientOut, bufferSize = 256 * 1024) } catch (_: Exception) {}
+                try {
+                    targetIn.copyTo(clientOut, bufferSize = 256 * 1024)
+                    clientOut.flush()
+                } catch (_: Exception) {}
                 runCatching { clientSocket.close() }
                 runCatching { targetSocket?.close() }
             }
@@ -754,9 +780,15 @@ class FileServer(
                     val ct = ContentType.parse(contentType)
                     val stream = body()
                     if (length > 0L) {
-                        call.respondOutputStream(ct, status, length) { stream.use { it.copyTo(this, bufferSize = 256 * 1024) } }
+                        call.respondOutputStream(ct, status, length) {
+                            stream.use { it.copyTo(this, bufferSize = 256 * 1024) }
+                            flush()
+                        }
                     } else {
-                        call.respondOutputStream(ct, status) { stream.use { it.copyTo(this, bufferSize = 256 * 1024) } }
+                        call.respondOutputStream(ct, status) {
+                            stream.use { it.copyTo(this, bufferSize = 256 * 1024) }
+                            flush()
+                        }
                     }
                 }
             }
@@ -984,9 +1016,9 @@ class FileServer(
     /** Consume a single-use download ticket from the ?ticket= query parameter.
      *  Only valid for download endpoints. Returns true if a valid ticket was consumed. */
     private fun consumeDownloadTicket(session: KtorSession, uri: String): Boolean {
-        val downloadEndpoints = setOf("/api/download", "/api/download-folder-start",
-            "/api/download-folder-status", "/api/download-folder-file",
-            "/api/download-folder-cancel", "/api/apps/extract")
+        val downloadEndpoints = setOf("/api/download", "/api/download-multiple-start",
+            "/api/download-folder-start", "/api/download-folder-status",
+            "/api/download-folder-file", "/api/download-folder-cancel", "/api/apps/extract")
         if (uri !in downloadEndpoints) return false
         val ticketParam = session.parms["ticket"]
         if (ticketParam.isNullOrBlank()) return false
@@ -3390,6 +3422,227 @@ class FileServer(
         )
     }
 
+    private suspend fun openNetworkItemStream(share: za.kilowatch.ultimatefilemanager.network.NetworkShare, filePath: String): InputStream? {
+        return when (share.type) {
+            za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.openInputStream(share, filePath)
+            za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.openInputStream(share, filePath)
+            za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(share, filePath).first
+            za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(share, filePath).first
+            za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(share, filePath).first
+            za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(share, filePath).first
+            za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, filePath).first
+            za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(share, filePath)
+            za.kilowatch.ultimatefilemanager.network.ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.openInputStream(share, filePath)
+            za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(share, filePath)
+            za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.openInputStream(share, filePath)
+            else -> null
+        }
+    }
+
+    private fun handleDownloadMultipleStart(session: KtorSession): KtorResult = runBlocking(Dispatchers.IO) {
+        val body = mutableMapOf<String, String>()
+        session.parseBody(body)
+        val json = try {
+            JSONObject(body["postData"] ?: "{}")
+        } catch (e: Exception) {
+            return@runBlocking jsonResponse(Status.BAD_REQUEST, "error" to "Invalid JSON payload")
+        }
+
+        val pathsArray = json.optJSONArray("paths")
+        if (pathsArray == null || pathsArray.length() == 0) {
+            return@runBlocking jsonResponse(Status.BAD_REQUEST, "error" to "No files selected")
+        }
+
+        val paths = mutableListOf<String>()
+        for (i in 0 until pathsArray.length()) {
+            val p = pathsArray.optString(i)
+            if (p.isNotBlank()) paths.add(p)
+        }
+        if (paths.isEmpty()) {
+            return@runBlocking jsonResponse(Status.BAD_REQUEST, "error" to "No files selected")
+        }
+
+        class BatchZipEntry(
+            val entryPath: String,
+            val displayName: String,
+            val isDirectory: Boolean = false,
+            val streamProvider: (suspend () -> InputStream?)? = null
+        )
+
+        val itemsToZip = mutableListOf<BatchZipEntry>()
+        val usedEntryNames = mutableSetOf<String>()
+
+        fun uniqueEntryName(base: String): String {
+            var candidate = base
+            var counter = 1
+            val isDir = base.endsWith('/')
+            val clean = if (isDir) base.trimEnd('/') else base
+            val ext = if (!isDir && clean.contains('.')) "." + clean.substringAfterLast('.') else ""
+            val nameWithoutExt = if (!isDir && clean.contains('.')) clean.substringBeforeLast('.') else clean
+            while (candidate in usedEntryNames) {
+                candidate = if (isDir) "${nameWithoutExt}_$counter/" else "${nameWithoutExt} ($counter)$ext"
+                counter++
+            }
+            usedEntryNames.add(candidate)
+            return candidate
+        }
+
+        var volumeLabel = "storage"
+        var archiveLabel = "files"
+
+        for (srcPath in paths) {
+            if (srcPath.startsWith("net:")) {
+                val prefix = "net:"
+                val idEnd = srcPath.indexOf('/', prefix.length).takeIf { it != -1 } ?: srcPath.length
+                val shareId = srcPath.substring(prefix.length, idEnd)
+                val share = resolveShare(shareId) ?: continue
+                volumeLabel = share.name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
+                val networkPath = if (idEnd < srcPath.length) srcPath.substring(idEnd + 1) else ""
+
+                val netFiles = try {
+                    walkNetworkRecursive(share, networkPath)
+                } catch (_: Exception) {
+                    emptyList()
+                }
+
+                if (netFiles.isNotEmpty()) {
+                    val folderName = networkPath.substringAfterLast('/', "folder").ifEmpty { "folder" }
+                    for (nf in netFiles) {
+                        val rel = if (nf.path.startsWith(networkPath)) nf.path.substring(networkPath.length).trimStart('/') else nf.name
+                        val entry = uniqueEntryName("$folderName/$rel")
+                        itemsToZip.add(BatchZipEntry(entry, nf.name) {
+                            openNetworkItemStream(share, nf.path)
+                        })
+                    }
+                } else {
+                    val fileName = networkPath.substringAfterLast('/', "file").ifEmpty { "file" }
+                    val entry = uniqueEntryName(fileName)
+                    itemsToZip.add(BatchZipEntry(entry, fileName) {
+                        openNetworkItemStream(share, networkPath)
+                    })
+                }
+            } else if (srcPath.startsWith("saf://") || SafTreeManager.hasTreePermissionForPath(context, srcPath)) {
+                volumeLabel = "saf"
+                val isDir = SafTreeManager.isDirectory(context, srcPath)
+                val displayName = srcPath.substringAfterLast('/')
+                if (isDir) {
+                    val files = SafTreeManager.listFiles(context, srcPath)
+                    if (files.isEmpty()) {
+                        itemsToZip.add(BatchZipEntry(uniqueEntryName("$displayName/"), displayName, isDirectory = true))
+                    } else {
+                        fun walkSaf(dirPath: String, relPrefix: String) {
+                            val children = SafTreeManager.listFiles(context, dirPath)
+                            if (children.isEmpty()) {
+                                itemsToZip.add(BatchZipEntry(uniqueEntryName("$relPrefix/"), dirPath.substringAfterLast('/'), isDirectory = true))
+                            } else {
+                                for (child in children) {
+                                    val childName = child.name
+                                    val childRel = if (relPrefix.isEmpty()) childName else "$relPrefix/$childName"
+                                    if (child.isDirectory) {
+                                        walkSaf(child.absolutePath, childRel)
+                                    } else {
+                                        val entry = uniqueEntryName(childRel)
+                                        itemsToZip.add(BatchZipEntry(entry, childName) {
+                                            SafTreeManager.openInputStream(context, child.absolutePath)
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                        walkSaf(srcPath, displayName)
+                    }
+                } else {
+                    val entry = uniqueEntryName(displayName)
+                    itemsToZip.add(BatchZipEntry(entry, displayName) {
+                        SafTreeManager.openInputStream(context, srcPath)
+                    })
+                }
+            } else {
+                val file = File(srcPath)
+                if (!isPathAllowed(file.absolutePath) || !file.exists() || !file.canRead()) {
+                    continue
+                }
+                volumeLabel = getVolumeLabel(srcPath)
+                archiveLabel = file.parentFile?.name?.replace(Regex("[^a-zA-Z0-9_-]"), "_")?.ifEmpty { "files" } ?: "files"
+
+                if (file.isDirectory) {
+                    val folderName = file.name
+                    val children = file.walkTopDown().filter { it.canRead() }.toList()
+                    val filesOnly = children.filter { it.isFile }
+                    if (filesOnly.isEmpty()) {
+                        itemsToZip.add(BatchZipEntry(uniqueEntryName("$folderName/"), folderName, isDirectory = true))
+                    } else {
+                        for (cf in filesOnly) {
+                            val rel = cf.relativeTo(file).path.replace('\\', '/')
+                            val entry = uniqueEntryName("$folderName/$rel")
+                            itemsToZip.add(BatchZipEntry(entry, cf.name) {
+                                FileInputStream(cf)
+                            })
+                        }
+                    }
+                } else {
+                    val entry = uniqueEntryName(file.name)
+                    itemsToZip.add(BatchZipEntry(entry, file.name) {
+                        FileInputStream(file)
+                    })
+                }
+            }
+        }
+
+        if (itemsToZip.isEmpty()) {
+            return@runBlocking jsonResponse(Status.BAD_REQUEST, "error" to "No readable files found in selection")
+        }
+
+        val jobId = UUID.randomUUID().toString()
+        val job = ZipJob(total = itemsToZip.size)
+        val dateStr = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val safeArchiveLabel = archiveLabel.replace(Regex("[^a-zA-Z0-9_-]"), "_")
+        val zipFileName = "ufm_zip_${volumeLabel}_${safeArchiveLabel}_${dateStr}.zip"
+        job.zipFileName = zipFileName
+        zipJobs[jobId] = job
+
+        Thread {
+            val tmpZip = File(context.cacheDir, zipFileName)
+            try {
+                ZipOutputStream(FileOutputStream(tmpZip)).use { zos ->
+                    for ((index, item) in itemsToZip.withIndex()) {
+                        if (job.cancelled) {
+                            tmpZip.delete()
+                            job.status = "cancelled"
+                            return@Thread
+                        }
+                        job.current = index + 1
+                        job.currentFile = item.displayName
+
+                        zos.putNextEntry(ZipEntry(item.entryPath))
+                        if (!item.isDirectory && item.streamProvider != null) {
+                            runBlocking {
+                                item.streamProvider.invoke()?.use { input ->
+                                    input.copyTo(zos, bufferSize = 256 * 1024)
+                                }
+                            }
+                        }
+                        zos.closeEntry()
+                    }
+                }
+                job.zipFile = tmpZip
+                job.status = "done"
+            } catch (e: Exception) {
+                Log.e(TAG, "Batch ZIP Error", e)
+                tmpZip.delete()
+                job.status = "error"
+                job.error = e.message
+            }
+        }.start()
+
+        return@runBlocking jsonResponse(
+            Status.OK,
+            "jobId" to jobId,
+            "total" to itemsToZip.size,
+            "folderName" to archiveLabel
+        )
+    }
+
     private fun handleDownloadFolderStatus(session: KtorSession): KtorResult {
         val jobId = session.parms["jobId"] ?: return jsonResponse(
             Status.BAD_REQUEST, "error" to "Missing 'jobId' parameter"
@@ -3420,12 +3673,11 @@ class FileServer(
         }
 
         val zipFile = job.zipFile!!
-        zipJobs.remove(jobId) // Clear job once download starts
         return KtorResult.Stream(
             status = Status.OK,
             contentType = "application/zip",
             headers = mapOf("Content-Disposition" to "attachment; filename=\"${job.zipFileName}\""),
-            body = { DeletingFileInputStream(zipFile) },
+            body = { DeletingFileInputStream(zipFile) { zipJobs.remove(jobId) } },
             length = zipFile.length()
         )
     }
@@ -4226,7 +4478,7 @@ class FileServer(
                 var resId = localizedCtx.resources.getIdentifier(resName, "string", localizedCtx.packageName)
                 if (resId == 0) resId = context.resources.getIdentifier(resName, "string", context.packageName)
                 if (resId != 0) {
-                    localizedCtx.getString(resId).replace("'", "&#39;")
+                    localizedCtx.getString(resId).replace("'", "&#39;").replace("%%", "%")
                 } else {
                     match.value
                 }
@@ -4273,11 +4525,15 @@ class FileServer(
      * Custom FileInputStream that deletes the underlying file when closed.
      * Used for streaming temporary files (ZIPs, XAPKs) to the browser.
      */
-    private class DeletingFileInputStream(private val file: File) : FileInputStream(file) {
+    private class DeletingFileInputStream(
+        private val file: File,
+        private val onClosed: (() -> Unit)? = null
+    ) : FileInputStream(file) {
         override fun close() {
             try {
                 super.close()
             } finally {
+                onClosed?.invoke()
                 if (file.exists()) {
                     val deleted = file.delete()
                     Log.d("DeletingFIS", "Temp file ${file.name} deleted: $deleted")

@@ -5730,6 +5730,15 @@ UFM لا يدعم اختيار هذه المجلدات عبر منتقي الن�
     <string name="remote_items_selected">
 العناصر المحددة
 </string>
+    <string name="remote_btn_select_all">
+تحديد الكل
+</string>
+    <string name="remote_btn_deselect_all">
+إلغاء تحديد الكل
+</string>
+    <string name="remote_btn_download">
+تنزيل
+</string>
     <string name="remote_btn_copy">
 نسخ
 </string>
@@ -14296,6 +14305,110 @@ Set Password
 </string>
     <string name="archive_current_file_label">
 الملف الحالي
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+معلومات الوسائط
+</string>
+    <string name="video_info_section_general">
+عام
+</string>
+    <string name="video_info_section_video">
+مسار الفيديو
+</string>
+    <string name="video_info_section_audio">
+مسارات الصوت
+</string>
+    <string name="video_info_section_subtitles">
+الترجمات
+</string>
+    <string name="video_info_container">
+الحاوية
+</string>
+    <string name="video_info_filename">
+اسم الملف
+</string>
+    <string name="video_info_path">
+الموقع
+</string>
+    <string name="video_info_size">
+حجم الملف
+</string>
+    <string name="video_info_duration">
+المدة
+</string>
+    <string name="video_info_overall_bitrate">
+معدل البت الإجمالي
+</string>
+    <string name="video_info_codec">
+الترميز
+</string>
+    <string name="video_info_resolution">
+الدقة
+</string>
+    <string name="video_info_framerate">
+معدل الإطارات
+</string>
+    <string name="video_info_bitrate">
+معدل البت
+</string>
+    <string name="video_info_hdr">
+النطاق الديناميكي
+</string>
+    <string name="video_info_color_space">
+مساحة اللون
+</string>
+    <string name="video_info_color_range">
+نطاق اللون
+</string>
+    <string name="video_info_bit_depth">
+عمق البت
+</string>
+    <string name="video_info_pixel_format">
+تنسيق البكسل
+</string>
+    <string name="video_info_channels">
+القنوات
+</string>
+    <string name="video_info_sample_rate">
+معدل العينات
+</string>
+    <string name="video_info_language">
+اللغة
+</string>
+    <string name="video_info_source">
+المصدر
+</string>
+    <string name="video_info_active">
+نشط
+</string>
+    <string name="video_info_copy">
+نسخ المعلومات التقنية
+</string>
+    <string name="video_info_copied">
+تم نسخ التفاصيل التقنية إلى الحافظة
+</string>
+    <string name="video_info_not_available">
+غير متاح
+</string>
+    <string name="video_info_no_video">
+لم يتم العثور على مسار فيديو
+</string>
+    <string name="video_info_no_audio">
+لم يتم العثور على مسارات صوتية
+</string>
+    <string name="video_info_no_subtitles">
+لم يتم العثور على ترجمات
+</string>
+    <string name="video_info_track_audio">
+مسار الصوت %1$d
+</string>
+    <string name="video_info_track_subtitle">
+الترجمة %1$d
+</string>
+    <string name="player_toast_info">
+معلومات الوسائط
 </string>
 </resources>
 

@@ -5730,6 +5730,15 @@ Subir
     <string name="remote_items_selected">
 elementos seleccionados
 </string>
+    <string name="remote_btn_select_all">
+Seleccionar todo
+</string>
+    <string name="remote_btn_deselect_all">
+Deseleccionar todo
+</string>
+    <string name="remote_btn_download">
+Descargar
+</string>
     <string name="remote_btn_copy">
 Copiar
 </string>
@@ -14308,6 +14317,110 @@ ELIMINANDO
 </string>
     <string name="archive_current_file_label">
 Archivo actual
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+Información multimedia
+</string>
+    <string name="video_info_section_general">
+General
+</string>
+    <string name="video_info_section_video">
+Flujo de video
+</string>
+    <string name="video_info_section_audio">
+Pistas de audio
+</string>
+    <string name="video_info_section_subtitles">
+Subtítulos
+</string>
+    <string name="video_info_container">
+Contenedor
+</string>
+    <string name="video_info_filename">
+Nombre de archivo
+</string>
+    <string name="video_info_path">
+Ubicación
+</string>
+    <string name="video_info_size">
+Tamaño del archivo
+</string>
+    <string name="video_info_duration">
+Duración
+</string>
+    <string name="video_info_overall_bitrate">
+Tasa de bits total
+</string>
+    <string name="video_info_codec">
+Códec
+</string>
+    <string name="video_info_resolution">
+Resolución
+</string>
+    <string name="video_info_framerate">
+Velocidad de fotogramas
+</string>
+    <string name="video_info_bitrate">
+Tasa de bits
+</string>
+    <string name="video_info_hdr">
+Rango dinámico
+</string>
+    <string name="video_info_color_space">
+Espacio de color
+</string>
+    <string name="video_info_color_range">
+Rango de color
+</string>
+    <string name="video_info_bit_depth">
+Profundidad de bits
+</string>
+    <string name="video_info_pixel_format">
+Formato de píxel
+</string>
+    <string name="video_info_channels">
+Canales
+</string>
+    <string name="video_info_sample_rate">
+Frecuencia de muestreo
+</string>
+    <string name="video_info_language">
+Idioma
+</string>
+    <string name="video_info_source">
+Fuente
+</string>
+    <string name="video_info_active">
+Activo
+</string>
+    <string name="video_info_copy">
+Copiar información técnica
+</string>
+    <string name="video_info_copied">
+Detalles técnicos copiados al portapapeles
+</string>
+    <string name="video_info_not_available">
+N/D
+</string>
+    <string name="video_info_no_video">
+No se detectó flujo de video
+</string>
+    <string name="video_info_no_audio">
+No se detectaron pistas de audio
+</string>
+    <string name="video_info_no_subtitles">
+No se detectaron subtítulos
+</string>
+    <string name="video_info_track_audio">
+Pista de audio %1$d
+</string>
+    <string name="video_info_track_subtitle">
+Subtítulo %1$d
+</string>
+    <string name="player_toast_info">
+Información multimedia
 </string>
 </resources>
 

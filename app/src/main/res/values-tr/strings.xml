@@ -5730,6 +5730,15 @@ Yükle
     <string name="remote_items_selected">
 öğeler seçildi
 </string>
+    <string name="remote_btn_select_all">
+Tümünü seç
+</string>
+    <string name="remote_btn_deselect_all">
+Tümünü seçme
+</string>
+    <string name="remote_btn_download">
+İndir
+</string>
     <string name="remote_btn_copy">
 Kopyala
 </string>
@@ -14296,6 +14305,110 @@ SİLİNİYOR
 </string>
     <string name="archive_current_file_label">
 Geçerli Dosya
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+Medya Bilgisi
+</string>
+    <string name="video_info_section_general">
+Genel
+</string>
+    <string name="video_info_section_video">
+Video Akışı
+</string>
+    <string name="video_info_section_audio">
+Ses Parçaları
+</string>
+    <string name="video_info_section_subtitles">
+Altyazılar
+</string>
+    <string name="video_info_container">
+Kapsayıcı
+</string>
+    <string name="video_info_filename">
+Dosya Adı
+</string>
+    <string name="video_info_path">
+Konum
+</string>
+    <string name="video_info_size">
+Dosya Boyutu
+</string>
+    <string name="video_info_duration">
+Süre
+</string>
+    <string name="video_info_overall_bitrate">
+Genel Bit Hızı
+</string>
+    <string name="video_info_codec">
+Kodek
+</string>
+    <string name="video_info_resolution">
+Çözünürlük
+</string>
+    <string name="video_info_framerate">
+Kare Hızı
+</string>
+    <string name="video_info_bitrate">
+Bit Hızı
+</string>
+    <string name="video_info_hdr">
+Dinamik Aralık
+</string>
+    <string name="video_info_color_space">
+Renk Uzayı
+</string>
+    <string name="video_info_color_range">
+Renk Aralığı
+</string>
+    <string name="video_info_bit_depth">
+Bit Derinliği
+</string>
+    <string name="video_info_pixel_format">
+Piksel Biçimi
+</string>
+    <string name="video_info_channels">
+Kanallar
+</string>
+    <string name="video_info_sample_rate">
+Örnekleme Hızı
+</string>
+    <string name="video_info_language">
+Dil
+</string>
+    <string name="video_info_source">
+Kaynak
+</string>
+    <string name="video_info_active">
+Etkin
+</string>
+    <string name="video_info_copy">
+Teknik Bilgileri Kopyala
+</string>
+    <string name="video_info_copied">
+Teknik ayrıntılar panoya kopyalandı
+</string>
+    <string name="video_info_not_available">
+Yok
+</string>
+    <string name="video_info_no_video">
+Video akışı algılanamadı
+</string>
+    <string name="video_info_no_audio">
+Ses parçası algılanamadı
+</string>
+    <string name="video_info_no_subtitles">
+Altyazı algılanamadı
+</string>
+    <string name="video_info_track_audio">
+Ses Parçası %1$d
+</string>
+    <string name="video_info_track_subtitle">
+Altyazı %1$d
+</string>
+    <string name="player_toast_info">
+Medya Bilgisi
 </string>
 </resources>
 

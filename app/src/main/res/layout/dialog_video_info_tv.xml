@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="680dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <!-- Header Icon -->
+    <ImageView
+        android:id="@+id/imgHeaderIcon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:src="@drawable/ic_file_video"
+        app:tint="?attr/colorPrimary"
+        android:layout_marginBottom="6dp"
+        android:importantForAccessibility="no" />
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/video_info_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="2dp" />
+
+    <!-- File Meta -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/txtMediaTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:maxWidth="400dp"
+            tools:text="sample_movie.mkv" />
+
+        <TextView
+            android:id="@+id/txtMediaSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="13sp"
+            android:layout_marginStart="8dp"
+            tools:text="• MKV · 2.4 GB" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/dividerHorizontal"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Scrollable Body -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="380dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ── SECTION 1: VIDEO STREAM ───────────────────────────── -->
+            <LinearLayout
+                android:id="@+id/layoutVideoSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_info_section_video"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:layout_marginBottom="6dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_tv_glass_card"
+                    android:padding="12dp">
+
+                    <!-- Codec -->
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_codec"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtVideoCodec"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            tools:text="HEVC / H.265 (Main 10)" />
+                    </TableRow>
+
+                    <!-- Resolution -->
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_resolution"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtResolution"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            android:fontFamily="monospace"
+                            tools:text="3840 × 2160 (4K UHD · 16:9)" />
+                    </TableRow>
+
+                    <!-- Frame Rate -->
+                    <TableRow
+                        android:id="@+id/rowFrameRate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_framerate"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtFrameRate"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            tools:text="23.976 fps" />
+                    </TableRow>
+
+                    <!-- Video Bitrate -->
+                    <TableRow
+                        android:id="@+id/rowVideoBitrate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_bitrate"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtVideoBitrate"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            tools:text="14.2 Mbps" />
+                    </TableRow>
+
+                    <!-- HDR -->
+                    <TableRow
+                        android:id="@+id/rowHdr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_hdr"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtHdr"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            tools:text="HDR10 (PQ / SMPTE ST 2084)" />
+                    </TableRow>
+
+                    <!-- Color Space & Range -->
+                    <TableRow
+                        android:id="@+id/rowColorSpace"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_color_space"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtColorSpace"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            tools:text="BT.2020 (Limited Range)" />
+                    </TableRow>
+
+                    <!-- Bit Depth -->
+                    <TableRow
+                        android:id="@+id/rowBitDepth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_bit_depth"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtBitDepth"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            tools:text="10-bit (YUV 4:2:0)" />
+                    </TableRow>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ── SECTION 2: AUDIO TRACKS ───────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:id="@+id/lblAudioSection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_info_section_audio"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:layout_marginBottom="6dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutAudioTracksContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/txtNoAudio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_info_no_audio"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="13sp"
+                    android:fontStyle="italic"
+                    android:padding="8dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- ── SECTION 3: SUBTITLES ──────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:id="@+id/lblSubtitlesSection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_info_section_subtitles"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:layout_marginBottom="6dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutSubtitleTracksContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/txtNoSubtitles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_info_no_subtitles"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="13sp"
+                    android:fontStyle="italic"
+                    android:padding="8dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- ── SECTION 4: GENERAL & FILE INFO ────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_info_section_general"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:layout_marginBottom="6dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_tv_glass_card"
+                    android:padding="12dp">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_container"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtContainer"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            tools:text="MKV (Matroska)" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_size"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtFileSize"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            tools:text="2.45 GB (2,631,234,567 bytes)" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_duration"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtDuration"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            tools:text="01:45:23" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/rowOverallBitrate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_overall_bitrate"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtOverallBitrate"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="13sp"
+                            tools:text="15.6 Mbps (Estimated)" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/video_info_path"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/txtLocation"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="12sp"
+                            android:ellipsize="start"
+                            android:singleLine="true"
+                            tools:text="/storage/emulated/0/Movies/film.mkv" />
+                    </TableRow>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ── TV BUTTON ROW ─────────────────────────────────────────── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/btnCopySpecs"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/tv_button_selector"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="14sp"
+            android:text="@string/video_info_copy"
+            android:focusable="true"
+            android:nextFocusRight="@+id/btnClose" />
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:minWidth="100dp"
+            android:background="@drawable/tv_button_selector"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="14sp"
+            android:text="@string/close"
+            android:focusable="true"
+            android:nextFocusLeft="@+id/btnCopySpecs" />
+    </LinearLayout>
+
+</LinearLayout>

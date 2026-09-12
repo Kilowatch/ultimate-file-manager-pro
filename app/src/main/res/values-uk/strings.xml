@@ -5730,6 +5730,15 @@ Ultimate File Manager Pro Remote
     <string name="remote_items_selected">
 елементів вибрано
 </string>
+    <string name="remote_btn_select_all">
+Вибрати все
+</string>
+    <string name="remote_btn_deselect_all">
+Скасувати вибір
+</string>
+    <string name="remote_btn_download">
+Завантажити
+</string>
     <string name="remote_btn_copy">
 Копіювати
 </string>
@@ -14296,6 +14305,110 @@ SHA-256
 </string>
     <string name="archive_current_file_label">
 Поточний файл
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+Інформація про медіа
+</string>
+    <string name="video_info_section_general">
+Загальне
+</string>
+    <string name="video_info_section_video">
+Відеопотік
+</string>
+    <string name="video_info_section_audio">
+Аудіодоріжки
+</string>
+    <string name="video_info_section_subtitles">
+Субтитри
+</string>
+    <string name="video_info_container">
+Контейнер
+</string>
+    <string name="video_info_filename">
+Ім\\\'я файлу
+</string>
+    <string name="video_info_path">
+Розташування
+</string>
+    <string name="video_info_size">
+Розмір файлу
+</string>
+    <string name="video_info_duration">
+Тривалість
+</string>
+    <string name="video_info_overall_bitrate">
+Загальний бітрейт
+</string>
+    <string name="video_info_codec">
+Кодек
+</string>
+    <string name="video_info_resolution">
+Роздільна здатність
+</string>
+    <string name="video_info_framerate">
+Частота кадрів
+</string>
+    <string name="video_info_bitrate">
+Бітрейт
+</string>
+    <string name="video_info_hdr">
+Динамічний діапазон
+</string>
+    <string name="video_info_color_space">
+Колірний простір
+</string>
+    <string name="video_info_color_range">
+Колірний діапазон
+</string>
+    <string name="video_info_bit_depth">
+Глибина кольору
+</string>
+    <string name="video_info_pixel_format">
+Формат пікселів
+</string>
+    <string name="video_info_channels">
+Канали
+</string>
+    <string name="video_info_sample_rate">
+Частота дискретизації
+</string>
+    <string name="video_info_language">
+Мова
+</string>
+    <string name="video_info_source">
+Джерело
+</string>
+    <string name="video_info_active">
+Активний
+</string>
+    <string name="video_info_copy">
+Копіювати технічну інформацію
+</string>
+    <string name="video_info_copied">
+Технічні деталі скопійовано до буфера обміну
+</string>
+    <string name="video_info_not_available">
+Н/Д
+</string>
+    <string name="video_info_no_video">
+Відеопотік не виявлено
+</string>
+    <string name="video_info_no_audio">
+Аудіодоріжки не виявлено
+</string>
+    <string name="video_info_no_subtitles">
+Субтитри не виявлено
+</string>
+    <string name="video_info_track_audio">
+Аудіодоріжка %1$d
+</string>
+    <string name="video_info_track_subtitle">
+Субтитр %1$d
+</string>
+    <string name="player_toast_info">
+Інформація про медіа
 </string>
 </resources>
 

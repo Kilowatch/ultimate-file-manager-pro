@@ -2016,6 +2016,9 @@
     <string name="remote_new_folder">New Folder</string>
     <string name="remote_upload">Upload</string>
     <string name="remote_items_selected">items selected</string>
+    <string name="remote_btn_select_all">Select All</string>
+    <string name="remote_btn_deselect_all">Deselect All</string>
+    <string name="remote_btn_download">Download</string>
     <string name="remote_btn_copy">Copy</string>
     <string name="remote_btn_cut">Cut</string>
     <string name="remote_btn_delete">Delete</string>
@@ -5030,6 +5033,42 @@
     <string name="archive_badge_modifying">MODIFYING</string>
     <string name="archive_badge_deleting">DELETING</string>
     <string name="archive_current_file_label">Current File</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">Media Information</string>
+    <string name="video_info_section_general">General</string>
+    <string name="video_info_section_video">Video Stream</string>
+    <string name="video_info_section_audio">Audio Tracks</string>
+    <string name="video_info_section_subtitles">Subtitles</string>
+    <string name="video_info_container">Container</string>
+    <string name="video_info_filename">Filename</string>
+    <string name="video_info_path">Location</string>
+    <string name="video_info_size">File Size</string>
+    <string name="video_info_duration">Duration</string>
+    <string name="video_info_overall_bitrate">Overall Bitrate</string>
+    <string name="video_info_codec">Codec</string>
+    <string name="video_info_resolution">Resolution</string>
+    <string name="video_info_framerate">Frame Rate</string>
+    <string name="video_info_bitrate">Bitrate</string>
+    <string name="video_info_hdr">Dynamic Range</string>
+    <string name="video_info_color_space">Color Space</string>
+    <string name="video_info_color_range">Color Range</string>
+    <string name="video_info_bit_depth">Bit Depth</string>
+    <string name="video_info_pixel_format">Pixel Format</string>
+    <string name="video_info_channels">Channels</string>
+    <string name="video_info_sample_rate">Sample Rate</string>
+    <string name="video_info_language">Language</string>
+    <string name="video_info_source">Source</string>
+    <string name="video_info_active">Active</string>
+    <string name="video_info_copy">Copy Technical Info</string>
+    <string name="video_info_copied">Technical details copied to clipboard</string>
+    <string name="video_info_not_available">N/A</string>
+    <string name="video_info_no_video">No video stream detected</string>
+    <string name="video_info_no_audio">No audio tracks detected</string>
+    <string name="video_info_no_subtitles">No subtitles detected</string>
+    <string name="video_info_track_audio">Audio Track %1$d</string>
+    <string name="video_info_track_subtitle">Subtitle %1$d</string>
+    <string name="player_toast_info">Media Information</string>
 </resources>
 
 

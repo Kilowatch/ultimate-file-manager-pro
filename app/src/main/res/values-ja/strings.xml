@@ -5730,6 +5730,15 @@ XAPKをインストール
     <string name="remote_items_selected">
 アイテム選択中
 </string>
+    <string name="remote_btn_select_all">
+すべて選択
+</string>
+    <string name="remote_btn_deselect_all">
+すべて選択解除
+</string>
+    <string name="remote_btn_download">
+ダウンロード
+</string>
     <string name="remote_btn_copy">
 コピー
 </string>
@@ -14296,6 +14305,110 @@ SAF とピッカーを公開する
 </string>
     <string name="archive_current_file_label">
 現在のファイル
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+メディア情報
+</string>
+    <string name="video_info_section_general">
+一般
+</string>
+    <string name="video_info_section_video">
+映像ストリーム
+</string>
+    <string name="video_info_section_audio">
+音声トラック
+</string>
+    <string name="video_info_section_subtitles">
+字幕
+</string>
+    <string name="video_info_container">
+コンテナ
+</string>
+    <string name="video_info_filename">
+ファイル名
+</string>
+    <string name="video_info_path">
+場所
+</string>
+    <string name="video_info_size">
+ファイルサイズ
+</string>
+    <string name="video_info_duration">
+再生時間
+</string>
+    <string name="video_info_overall_bitrate">
+全体ビットレート
+</string>
+    <string name="video_info_codec">
+コーデック
+</string>
+    <string name="video_info_resolution">
+解像度
+</string>
+    <string name="video_info_framerate">
+フレームレート
+</string>
+    <string name="video_info_bitrate">
+ビットレート
+</string>
+    <string name="video_info_hdr">
+ダイナミックレンジ
+</string>
+    <string name="video_info_color_space">
+色空間
+</string>
+    <string name="video_info_color_range">
+色範囲
+</string>
+    <string name="video_info_bit_depth">
+ビット深度
+</string>
+    <string name="video_info_pixel_format">
+ピクセルフォーマット
+</string>
+    <string name="video_info_channels">
+チャンネル
+</string>
+    <string name="video_info_sample_rate">
+サンプルレート
+</string>
+    <string name="video_info_language">
+言語
+</string>
+    <string name="video_info_source">
+ソース
+</string>
+    <string name="video_info_active">
+アクティブ
+</string>
+    <string name="video_info_copy">
+技術情報をコピー
+</string>
+    <string name="video_info_copied">
+技術情報をクリップボードにコピーしました
+</string>
+    <string name="video_info_not_available">
+N/A
+</string>
+    <string name="video_info_no_video">
+映像ストリームが検出されませんでした
+</string>
+    <string name="video_info_no_audio">
+音声トラックが検出されませんでした
+</string>
+    <string name="video_info_no_subtitles">
+字幕が検出されませんでした
+</string>
+    <string name="video_info_track_audio">
+音声トラック %1$d
+</string>
+    <string name="video_info_track_subtitle">
+字幕 %1$d
+</string>
+    <string name="player_toast_info">
+メディア情報
 </string>
 </resources>
 

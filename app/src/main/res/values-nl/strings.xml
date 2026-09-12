@@ -5599,6 +5599,15 @@ Uploaden
     <string name="remote_items_selected">
 geselecteerde artikelen
 </string>
+    <string name="remote_btn_select_all">
+Alles selecteren
+</string>
+    <string name="remote_btn_deselect_all">
+Alles deselecteren
+</string>
+    <string name="remote_btn_download">
+Downloaden
+</string>
     <string name="remote_btn_copy">
 Kopiëren
 </string>
@@ -14058,6 +14067,110 @@ VERWIJDEREN
 </string>
     <string name="archive_current_file_label">
 Huidig bestand
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+Media-informatie
+</string>
+    <string name="video_info_section_general">
+Algemeen
+</string>
+    <string name="video_info_section_video">
+Videostream
+</string>
+    <string name="video_info_section_audio">
+Audiosporen
+</string>
+    <string name="video_info_section_subtitles">
+Ondertitels
+</string>
+    <string name="video_info_container">
+Container
+</string>
+    <string name="video_info_filename">
+Bestandsnaam
+</string>
+    <string name="video_info_path">
+Locatie
+</string>
+    <string name="video_info_size">
+Bestandsgrootte
+</string>
+    <string name="video_info_duration">
+Duur
+</string>
+    <string name="video_info_overall_bitrate">
+Totale bitrate
+</string>
+    <string name="video_info_codec">
+Codec
+</string>
+    <string name="video_info_resolution">
+Resolutie
+</string>
+    <string name="video_info_framerate">
+Framerate
+</string>
+    <string name="video_info_bitrate">
+Bitrate
+</string>
+    <string name="video_info_hdr">
+Dynamisch bereik
+</string>
+    <string name="video_info_color_space">
+Kleurruimte
+</string>
+    <string name="video_info_color_range">
+Kleurbereik
+</string>
+    <string name="video_info_bit_depth">
+Bitdiepte
+</string>
+    <string name="video_info_pixel_format">
+Pixelformaat
+</string>
+    <string name="video_info_channels">
+Kanalen
+</string>
+    <string name="video_info_sample_rate">
+Samplefrequentie
+</string>
+    <string name="video_info_language">
+Taal
+</string>
+    <string name="video_info_source">
+Bron
+</string>
+    <string name="video_info_active">
+Actief
+</string>
+    <string name="video_info_copy">
+Technische info kopiëren
+</string>
+    <string name="video_info_copied">
+Technische details gekopieerd naar klembord
+</string>
+    <string name="video_info_not_available">
+N.v.t.
+</string>
+    <string name="video_info_no_video">
+Geen videostream gedetecteerd
+</string>
+    <string name="video_info_no_audio">
+Geen audiosporen gedetecteerd
+</string>
+    <string name="video_info_no_subtitles">
+Geen ondertitels gedetecteerd
+</string>
+    <string name="video_info_track_audio">
+Audiospoor %1$d
+</string>
+    <string name="video_info_track_subtitle">
+Ondertitel %1$d
+</string>
+    <string name="player_toast_info">
+Media-informatie
 </string>
 </resources>
 

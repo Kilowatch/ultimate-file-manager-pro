@@ -115,6 +115,7 @@ class UFMPlayerActivity : AppCompatActivity() {
     private lateinit var topBar: View
     private lateinit var btnAudioTrack: ImageButton
     private lateinit var btnSubtitles: ImageButton
+    private lateinit var btnInfo: ImageButton
     private lateinit var btnSkipBack: ImageButton
     private lateinit var btnSkipForward: ImageButton
     private lateinit var subtitleView: SubtitleView
@@ -211,6 +212,7 @@ class UFMPlayerActivity : AppCompatActivity() {
     private var remotePathExtra: String = ""
     private var initialFileSize: Long = 0L
     private var sizesMap: Map<String, Long> = emptyMap()
+    private var initialPath: String = ""
 
     // ── State ───────────────────────────────────────────────────────
     private var isShowingSheet = false
@@ -243,11 +245,16 @@ class UFMPlayerActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as? UFMPlaybackService.LocalBinder ?: return
             playbackService = binder.getService().also { svc ->
+                if (currentTrackInfo == null) {
+                    currentTrackInfo = svc.queueManager.currentItem
+                }
                 // If service queue has only 1 item and activity has full playlist, sync it
                 if (svc.queueManager.size <= 1 && playlist.size > 1) {
                     val items = playlist.map { path ->
                         val ext = path.substringAfterLast('.', "").lowercase()
-                        val size = sizesMap[path] ?: if (shareId.isEmpty()) File(path).length() else (if (path == playlist.getOrNull(currentIndex)) initialFileSize else 0L)
+                        val size = sizesMap[path] ?: if (shareId.isEmpty()) {
+                            try { File(path).length() } catch (_: Exception) { 0L }
+                        } else (if (path == playlist.getOrNull(currentIndex)) initialFileSize else 0L)
                         QueueItem(
                             path = path,
                             isVideo = !FileViewerRouter.isAudio(ext),
@@ -264,14 +271,20 @@ class UFMPlayerActivity : AppCompatActivity() {
                 }
 
                 // Set player reference for track operations
-                player = svc.getPlayer()
-                playerView.player = player
+                val p = svc.getPlayer()
+                player = p
+                playerView.player = p
+                p?.removeListener(activityPlayerListener)
+                p?.addListener(activityPlayerListener)
+                p?.currentTracks?.let { tracks ->
+                    if (!tracks.isEmpty) detectAndUpdateTracks(tracks)
+                }
                 // Register to receive callbacks
                 svc.registerCallback(playbackCallback)
                 // Push current state
                 updatePlayPauseIcon()
-                svc.getPlayer()?.let { p ->
-                    if (p.isPlaying) handler.post(progressUpdater)
+                p?.let { pl ->
+                    if (pl.isPlaying) handler.post(progressUpdater)
                 }
                 // Update queue display
                 playbackCallback.onQueueChanged(svc.queueManager.queue)
@@ -280,6 +293,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
+            player?.removeListener(activityPlayerListener)
             player = null
             playerView.player = null
             playbackService = null
@@ -287,7 +301,15 @@ class UFMPlayerActivity : AppCompatActivity() {
         }
     }
 
-    // ── Callback from Service ───────────────────────────────────────
+    // ── Track & Playback Listeners ─────────────────────────────────
+
+    private val activityPlayerListener = object : Player.Listener {
+        override fun onTracksChanged(tracks: Tracks) {
+            runOnUiThread {
+                detectAndUpdateTracks(tracks)
+            }
+        }
+    }
 
     private val playbackCallback = object : UFMPlaybackService.PlaybackCallback {
         override fun onProgressUpdate(position: Long, duration: Long) {
@@ -409,6 +431,12 @@ class UFMPlayerActivity : AppCompatActivity() {
             }
         }
 
+        override fun onTracksChanged(tracks: Tracks) {
+            runOnUiThread {
+                detectAndUpdateTracks(tracks)
+            }
+        }
+
         override fun onError(error: String) {
             runOnUiThread {
                 bufferingLayout.visibility = View.GONE
@@ -520,7 +548,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         shareUsername = intent.getStringExtra("shareUsername") ?: ""
         shareName = intent.getStringExtra("shareName") ?: ""
         provider = intent.getStringExtra("provider") ?: ""
-        val initialPath = intent.getStringExtra("initialPath")
+        initialPath = intent.getStringExtra("initialPath")
             ?: intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH)
             ?: intent.data?.path
             ?: intent.dataString
@@ -529,6 +557,12 @@ class UFMPlayerActivity : AppCompatActivity() {
             za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH
         ) ?: ""
         initialFileSize = intent.getLongExtra("initialSize", 0L)
+        if (initialFileSize <= 0L && initialPath.isNotEmpty()) {
+            try {
+                val f = File(initialPath)
+                if (f.exists() && f.isFile) initialFileSize = f.length()
+            } catch (_: Exception) {}
+        }
         @Suppress("UNCHECKED_CAST")
         sizesMap = (intent.getSerializableExtra("sizesMap") as? java.util.HashMap<String, Long>) ?: emptyMap()
         // Prefer cache to avoid TransactionTooLargeException for large folders
@@ -718,6 +752,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             unbindService(serviceConnection)
             bound = false
         }
+        player?.removeListener(activityPlayerListener)
         mjpegPlayer?.release()
         mjpegPlayer = null
         playbackService = null
@@ -857,6 +892,8 @@ class UFMPlayerActivity : AppCompatActivity() {
         playbackService?.getPlayer()?.let { p ->
             player = p
             playerView.player = p
+            p.removeListener(activityPlayerListener)
+            p.addListener(activityPlayerListener)
             p.currentTracks?.let { detectAndUpdateTracks(it) }
         }
 
@@ -914,6 +951,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         topBar = findViewById(R.id.topBar)
         btnAudioTrack = findViewById(R.id.btnAudioTrack)
         btnSubtitles = findViewById(R.id.btnSubtitles)
+        btnInfo = findViewById(R.id.btnInfo)
         btnSkipBack = findViewById(R.id.btnSkipBack)
         btnSkipForward = findViewById(R.id.btnSkipForward)
         subtitleView = findViewById(R.id.subtitleView)
@@ -1105,7 +1143,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         }
 
         // Button click handlers — all go through service
-        listOf<View>(btnPlayPause, btnNext, btnPrev, btnShuffle, btnRepeat, btnAudioTrack, btnSubtitles).forEach {
+        listOf<View>(btnPlayPause, btnNext, btnPrev, btnShuffle, btnRepeat, btnAudioTrack, btnSubtitles, btnInfo).forEach {
             it.setOnClickListener { _ -> resetHideTimer() }
         }
 
@@ -1188,6 +1226,12 @@ class UFMPlayerActivity : AppCompatActivity() {
             resetHideTimer()
             toggleTrackSheet(MODE_SUBTITLE)
             PlayerToastHelper.show(this, getString(R.string.player_toast_subtitles))
+        }
+
+        btnInfo.setOnClickListener {
+            resetHideTimer()
+            showVideoInfoDialog()
+            PlayerToastHelper.show(this, getString(R.string.player_toast_info))
         }
 
         updateSkipButtonVisibility()
@@ -1293,6 +1337,45 @@ class UFMPlayerActivity : AppCompatActivity() {
             playbackService?.setPlaybackSpeed(speed)
             PlayerToastHelper.show(this, getString(R.string.player_speed_toast, "${speed}x"))
         }.show(supportFragmentManager, PlaybackSpeedBottomSheet.TAG)
+    }
+
+    private fun showVideoInfoDialog() {
+        handler.removeCallbacks(hideControlsRunnable)
+        val currentTracks = player?.currentTracks
+        val currentSvcItem = playbackService?.queueManager?.currentItem
+        val effectiveTrackInfo = currentTrackInfo ?: currentSvcItem
+        if (currentTrackInfo == null && effectiveTrackInfo != null) {
+            currentTrackInfo = effectiveTrackInfo
+        }
+        val activePath = effectiveTrackInfo?.path?.takeIf { it.isNotEmpty() }
+            ?: playlist.getOrNull(currentIndex)?.takeIf { it.isNotEmpty() }
+            ?: initialPath.takeIf { it.isNotEmpty() }
+            ?: player?.currentMediaItem?.localConfiguration?.uri?.let { uri ->
+                if (uri.scheme == "ufm") uri.toString().removePrefix("ufm://").replace("%20", " ")
+                else uri.path ?: uri.toString()
+            } ?: ""
+        val activeSize = effectiveTrackInfo?.fileSize?.takeIf { it > 0L }
+            ?: sizesMap[activePath]?.takeIf { it > 0L }
+            ?: (if (activePath == initialPath || playlist.size <= 1) initialFileSize.takeIf { it > 0L } else null)
+            ?: 0L
+
+        val details = VideoInfoExtractor.extract(
+            context = this,
+            player = player,
+            currentTrackInfo = effectiveTrackInfo,
+            tracks = currentTracks,
+            externalSubtitles = externalSubtitleInfos,
+            fallbackPath = activePath,
+            fallbackFileSize = activeSize
+        )
+        isShowingSheet = true
+        val dialog = VideoInfoDialogFragment.newInstance(details).apply {
+            onDismissCallback = {
+                isShowingSheet = false
+                resetHideTimer()
+            }
+        }
+        dialog.show(supportFragmentManager, VideoInfoDialogFragment.TAG)
     }
 
     private fun updatePlayPauseIcon() {
@@ -1750,6 +1833,36 @@ class UFMPlayerActivity : AppCompatActivity() {
             }
         }
 
+        val scrollView = findViewById<MaxHeightScrollView?>(R.id.trackSheetScrollView)
+        if (scrollView != null) {
+            val screenHeight = resources.displayMetrics.heightPixels
+            val dp = resources.displayMetrics.density
+            val defaultMaxDp = if (isTv) 320f else 220f
+            val defaultMaxPx = (defaultMaxDp * dp).toInt()
+            val maxAllowedPx = if (!isTv && resources.configuration.orientation != android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+                // Ensure on mobile vertical that the track list never expands upwards towards topBar:
+                // Cap at 32% of screen height or 220dp, whichever is smaller, with a 130dp floor
+                minOf(defaultMaxPx, (screenHeight * 0.32f).toInt()).coerceAtLeast((130 * dp).toInt())
+            } else {
+                defaultMaxPx
+            }
+            scrollView.maxHeightPx = maxAllowedPx
+            scrollView.scrollTo(0, 0)
+
+            val selectedIdx = if (mode == MODE_AUDIO) {
+                currentAudioTracks.indexOfFirst { it.isSelected }
+            } else {
+                currentSubtitleTracks.indexOfFirst { it.isSelected }
+            }
+            if (selectedIdx > 0 && selectedIdx < trackSheetList.childCount) {
+                scrollView.post {
+                    trackSheetList.getChildAt(selectedIdx)?.let { child ->
+                        scrollView.smoothScrollTo(0, child.top)
+                    }
+                }
+            }
+        }
+
         if (isTv) {
             val childCount = trackSheetList.childCount
             for (i in 0 until childCount) {
@@ -1797,7 +1910,13 @@ class UFMPlayerActivity : AppCompatActivity() {
             isFocusable = isTv
             isEnabled = enabled
             alpha = if (enabled) 1.0f else 0.5f
-            if (isTv) background = resources.getDrawable(R.drawable.selector_tv_list_item, theme)
+            if (isTv) {
+                background = resources.getDrawable(R.drawable.selector_tv_list_item, theme)
+            } else {
+                val outValue = android.util.TypedValue()
+                theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
+                setBackgroundResource(outValue.resourceId)
+            }
         }
 
         val checkSize = if (isTv) (28 * dp).toInt() else (20 * dp).toInt()

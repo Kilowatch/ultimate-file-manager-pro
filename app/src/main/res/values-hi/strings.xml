@@ -5730,6 +5730,15 @@ XAPK इंस्टॉल करें
     <string name="remote_items_selected">
 आइटम चयनित
 </string>
+    <string name="remote_btn_select_all">
+सभी चुनें
+</string>
+    <string name="remote_btn_deselect_all">
+सभी अचयनित करें
+</string>
+    <string name="remote_btn_download">
+डाउनलोड करें
+</string>
     <string name="remote_btn_copy">
 कॉपी करें
 </string>
@@ -14296,6 +14305,110 @@ UFM को सुरक्षित करने के लिए 4 अंको
 </string>
     <string name="archive_current_file_label">
 वर्तमान फ़ाइल
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+मीडिया जानकारी
+</string>
+    <string name="video_info_section_general">
+सामान्य
+</string>
+    <string name="video_info_section_video">
+वीडियो स्ट्रीम
+</string>
+    <string name="video_info_section_audio">
+ऑडियो ट्रैक
+</string>
+    <string name="video_info_section_subtitles">
+उपशीर्षक
+</string>
+    <string name="video_info_container">
+कंटेनर
+</string>
+    <string name="video_info_filename">
+फ़ाइल नाम
+</string>
+    <string name="video_info_path">
+स्थान
+</string>
+    <string name="video_info_size">
+फ़ाइल आकार
+</string>
+    <string name="video_info_duration">
+अवधि
+</string>
+    <string name="video_info_overall_bitrate">
+कुल बिटरेट
+</string>
+    <string name="video_info_codec">
+कोडेक
+</string>
+    <string name="video_info_resolution">
+रिज़ॉल्यूशन
+</string>
+    <string name="video_info_framerate">
+फ़्रेम दर
+</string>
+    <string name="video_info_bitrate">
+बिटरेट
+</string>
+    <string name="video_info_hdr">
+डायनामिक रेंज
+</string>
+    <string name="video_info_color_space">
+रंग स्थान
+</string>
+    <string name="video_info_color_range">
+रंग सीमा
+</string>
+    <string name="video_info_bit_depth">
+बिट गहराई
+</string>
+    <string name="video_info_pixel_format">
+पिक्सेल प्रारूप
+</string>
+    <string name="video_info_channels">
+चैनल
+</string>
+    <string name="video_info_sample_rate">
+नमूना दर
+</string>
+    <string name="video_info_language">
+भाषा
+</string>
+    <string name="video_info_source">
+स्रोत
+</string>
+    <string name="video_info_active">
+सक्रिय
+</string>
+    <string name="video_info_copy">
+तकनीकी जानकारी कॉपी करें
+</string>
+    <string name="video_info_copied">
+तकनीकी विवरण क्लिपबोर्ड पर कॉपी किए गए
+</string>
+    <string name="video_info_not_available">
+उपलब्ध नहीं
+</string>
+    <string name="video_info_no_video">
+कोई वीडियो स्ट्रीम नहीं मिली
+</string>
+    <string name="video_info_no_audio">
+कोई ऑडियो ट्रैक नहीं मिला
+</string>
+    <string name="video_info_no_subtitles">
+कोई उपशीर्षक नहीं मिला
+</string>
+    <string name="video_info_track_audio">
+ऑडियो ट्रैक %1$d
+</string>
+    <string name="video_info_track_subtitle">
+उपशीर्षक %1$d
+</string>
+    <string name="player_toast_info">
+मीडिया जानकारी
 </string>
 </resources>
 

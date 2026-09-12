@@ -5730,6 +5730,15 @@ UFM не поддерживает выбор этих папок через си
     <string name="remote_items_selected">
 выбрано элементов
 </string>
+    <string name="remote_btn_select_all">
+Выбрать все
+</string>
+    <string name="remote_btn_deselect_all">
+Снять выделение
+</string>
+    <string name="remote_btn_download">
+Скачать
+</string>
     <string name="remote_btn_copy">
 Копировать
 </string>
@@ -14296,6 +14305,110 @@ For your security, try again after the timer expires
 </string>
     <string name="archive_current_file_label">
 Текущий файл
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+Информация о медиа
+</string>
+    <string name="video_info_section_general">
+Общее
+</string>
+    <string name="video_info_section_video">
+Видеопоток
+</string>
+    <string name="video_info_section_audio">
+Аудиодорожки
+</string>
+    <string name="video_info_section_subtitles">
+Субтитры
+</string>
+    <string name="video_info_container">
+Контейнер
+</string>
+    <string name="video_info_filename">
+Имя файла
+</string>
+    <string name="video_info_path">
+Расположение
+</string>
+    <string name="video_info_size">
+Размер файла
+</string>
+    <string name="video_info_duration">
+Длительность
+</string>
+    <string name="video_info_overall_bitrate">
+Общий битрейт
+</string>
+    <string name="video_info_codec">
+Кодек
+</string>
+    <string name="video_info_resolution">
+Разрешение
+</string>
+    <string name="video_info_framerate">
+Частота кадров
+</string>
+    <string name="video_info_bitrate">
+Битрейт
+</string>
+    <string name="video_info_hdr">
+Динамический диапазон
+</string>
+    <string name="video_info_color_space">
+Цветовое пространство
+</string>
+    <string name="video_info_color_range">
+Цветовой диапазон
+</string>
+    <string name="video_info_bit_depth">
+Битовая глубина
+</string>
+    <string name="video_info_pixel_format">
+Формат пикселей
+</string>
+    <string name="video_info_channels">
+Каналы
+</string>
+    <string name="video_info_sample_rate">
+Частота дискретизации
+</string>
+    <string name="video_info_language">
+Язык
+</string>
+    <string name="video_info_source">
+Источник
+</string>
+    <string name="video_info_active">
+Активна
+</string>
+    <string name="video_info_copy">
+Копировать техническую информацию
+</string>
+    <string name="video_info_copied">
+Технические данные скопированы в буфер обмена
+</string>
+    <string name="video_info_not_available">
+Н/Д
+</string>
+    <string name="video_info_no_video">
+Видеопоток не обнаружен
+</string>
+    <string name="video_info_no_audio">
+Аудиодорожки не обнаружены
+</string>
+    <string name="video_info_no_subtitles">
+Субтитры не обнаружены
+</string>
+    <string name="video_info_track_audio">
+Аудиодорожка %1$d
+</string>
+    <string name="video_info_track_subtitle">
+Субтитры %1$d
+</string>
+    <string name="player_toast_info">
+Информация о медиа
 </string>
 </resources>
 

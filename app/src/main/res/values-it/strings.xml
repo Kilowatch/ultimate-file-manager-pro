@@ -5730,6 +5730,15 @@ Caricamento
     <string name="remote_items_selected">
 elementi selezionati
 </string>
+    <string name="remote_btn_select_all">
+Seleziona tutto
+</string>
+    <string name="remote_btn_deselect_all">
+Deseleziona tutto
+</string>
+    <string name="remote_btn_download">
+Scarica
+</string>
     <string name="remote_btn_copy">
 Copia
 </string>
@@ -14296,6 +14305,110 @@ ELIMINAZIONE
 </string>
     <string name="archive_current_file_label">
 File corrente
+</string>
+
+    <!-- Video Technical Information (i) Inspector -->
+    <string name="video_info_title">
+Informazioni sui media
+</string>
+    <string name="video_info_section_general">
+Generale
+</string>
+    <string name="video_info_section_video">
+Flusso video
+</string>
+    <string name="video_info_section_audio">
+Tracce audio
+</string>
+    <string name="video_info_section_subtitles">
+Sottotitoli
+</string>
+    <string name="video_info_container">
+Contenitore
+</string>
+    <string name="video_info_filename">
+Nome file
+</string>
+    <string name="video_info_path">
+Percorso
+</string>
+    <string name="video_info_size">
+Dimensione file
+</string>
+    <string name="video_info_duration">
+Durata
+</string>
+    <string name="video_info_overall_bitrate">
+Bitrate complessivo
+</string>
+    <string name="video_info_codec">
+Codec
+</string>
+    <string name="video_info_resolution">
+Risoluzione
+</string>
+    <string name="video_info_framerate">
+Frame rate
+</string>
+    <string name="video_info_bitrate">
+Bitrate
+</string>
+    <string name="video_info_hdr">
+Gamma dinamica
+</string>
+    <string name="video_info_color_space">
+Spazio colore
+</string>
+    <string name="video_info_color_range">
+Intervallo colore
+</string>
+    <string name="video_info_bit_depth">
+Profondità bit
+</string>
+    <string name="video_info_pixel_format">
+Formato pixel
+</string>
+    <string name="video_info_channels">
+Canali
+</string>
+    <string name="video_info_sample_rate">
+Frequenza di campionamento
+</string>
+    <string name="video_info_language">
+Lingua
+</string>
+    <string name="video_info_source">
+Sorgente
+</string>
+    <string name="video_info_active">
+Attivo
+</string>
+    <string name="video_info_copy">
+Copia informazioni tecniche
+</string>
+    <string name="video_info_copied">
+Dettagli tecnici copiati negli appunti
+</string>
+    <string name="video_info_not_available">
+N/D
+</string>
+    <string name="video_info_no_video">
+Nessun flusso video rilevato
+</string>
+    <string name="video_info_no_audio">
+Nessuna traccia audio rilevata
+</string>
+    <string name="video_info_no_subtitles">
+Nessun sottotitolo rilevato
+</string>
+    <string name="video_info_track_audio">
+Traccia audio %1$d
+</string>
+    <string name="video_info_track_subtitle">
+Sottotitolo %1$d
+</string>
+    <string name="player_toast_info">
+Informazioni sui media
 </string>
 </resources>
 
