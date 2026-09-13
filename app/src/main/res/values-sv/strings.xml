@@ -14387,6 +14387,65 @@ Undertext %1$d
     <string name="player_toast_info">
 Mediainformation
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+Senaste filer
+</string>
+    <string name="recent_files_subtitle">
+Nyligen ändrade lokala filer
+</string>
+    <string name="recent_files_disclosure">
+Spåra nyligen ändrade filer i lokal lagring — lagrar endast filnamn, storlekar och tidsstämplar, inte filinnehåll.
+</string>
+    <string name="recent_files_setting_title">
+Spåra senaste filer
+</string>
+    <string name="recent_empty_title">
+Inga senaste filer
+</string>
+    <string name="recent_empty_desc">
+Nyligen ändrade filer i lokal lagring visas här.
+</string>
+    <string name="recent_saf_empty_title">
+Inga mappar beviljade
+</string>
+    <string name="recent_saf_empty_desc">
+Under Begränsad åtkomst, bevilja åtkomst till mappar så att senaste filer kan upptäckas.
+</string>
+    <string name="recent_saf_grant_btn">
+Bevilja mappåtkomst
+</string>
+    <string name="recent_clear_history">
+Rensa historik för senaste
+</string>
+    <string name="recent_history_cleared">
+Historik för senaste filer rensad
+</string>
+    <string name="recent_filter_all">
+Alla
+</string>
+    <string name="recent_filter_documents">
+Dokument
+</string>
+    <string name="recent_filter_images">
+Bilder
+</string>
+    <string name="recent_filter_videos">
+Videor
+</string>
+    <string name="recent_filter_audio">
+Ljud
+</string>
+    <string name="recent_filter_archives">
+Arkiv
+</string>
+    <string name="recent_open_location">
+Öppna filplats
+</string>
+    <string name="icon_tile_recent_files">
+Panel för senaste filer
+</string>
 </resources>
 
 

@@ -14410,6 +14410,65 @@ UFM को सुरक्षित करने के लिए 4 अंको
     <string name="player_toast_info">
 मीडिया जानकारी
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+हाल की फ़ाइलें
+</string>
+    <string name="recent_files_subtitle">
+हाल ही में संशोधित स्थानीय फ़ाइलें
+</string>
+    <string name="recent_files_disclosure">
+स्थानीय संग्रहण में हाल ही में संशोधित फ़ाइलों को ट्रैक करें — केवल फ़ाइल नाम, आकार और टाइमस्टैम्प संग्रहीत करता है, फ़ाइल सामग्री नहीं।
+</string>
+    <string name="recent_files_setting_title">
+हाल की फ़ाइलों को ट्रैक करें
+</string>
+    <string name="recent_empty_title">
+कोई हाल की फ़ाइल नहीं
+</string>
+    <string name="recent_empty_desc">
+स्थानीय संग्रहण में हाल ही में संशोधित फ़ाइलें यहाँ दिखाई देंगी।
+</string>
+    <string name="recent_saf_empty_title">
+कोई फ़ोल्डर अनुमत नहीं
+</string>
+    <string name="recent_saf_empty_desc">
+सीमित पहुँच के अंतर्गत, फ़ोल्डरों तक पहुँच प्रदान करें ताकि हाल की फ़ाइलों का पता लगाया जा सके।
+</string>
+    <string name="recent_saf_grant_btn">
+फ़ोल्डर पहुँच प्रदान करें
+</string>
+    <string name="recent_clear_history">
+हाल का इतिहास साफ़ करें
+</string>
+    <string name="recent_history_cleared">
+हाल की फ़ाइलों का इतिहास साफ़ कर दिया गया
+</string>
+    <string name="recent_filter_all">
+सभी
+</string>
+    <string name="recent_filter_documents">
+दस्तावेज़
+</string>
+    <string name="recent_filter_images">
+छवियाँ
+</string>
+    <string name="recent_filter_videos">
+वीडियो
+</string>
+    <string name="recent_filter_audio">
+ऑडियो
+</string>
+    <string name="recent_filter_archives">
+संग्रह
+</string>
+    <string name="recent_open_location">
+फ़ाइल स्थान खोलें
+</string>
+    <string name="icon_tile_recent_files">
+हाल की फ़ाइलें टाइल
+</string>
 </resources>
 
 

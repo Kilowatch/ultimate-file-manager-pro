@@ -14410,6 +14410,65 @@ For your security, try again after the timer expires
     <string name="player_toast_info">
 Информация о медиа
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+Недавние файлы
+</string>
+    <string name="recent_files_subtitle">
+Недавно изменённые локальные файлы
+</string>
+    <string name="recent_files_disclosure">
+Отслеживать недавно изменённые файлы во всём локальном хранилище — сохраняются только имена, размеры и временные метки файлов, но не их содержимое.
+</string>
+    <string name="recent_files_setting_title">
+Отслеживать недавние файлы
+</string>
+    <string name="recent_empty_title">
+Нет недавних файлов
+</string>
+    <string name="recent_empty_desc">
+Недавно изменённые файлы в локальном хранилище появятся здесь.
+</string>
+    <string name="recent_saf_empty_title">
+Нет предоставленных папок
+</string>
+    <string name="recent_saf_empty_desc">
+При ограниченном доступе предоставьте доступ к папкам, чтобы можно было обнаруживать недавние файлы.
+</string>
+    <string name="recent_saf_grant_btn">
+Предоставить доступ к папкам
+</string>
+    <string name="recent_clear_history">
+Очистить историю недавних файлов
+</string>
+    <string name="recent_history_cleared">
+История недавних файлов очищена
+</string>
+    <string name="recent_filter_all">
+Все
+</string>
+    <string name="recent_filter_documents">
+Документы
+</string>
+    <string name="recent_filter_images">
+Изображения
+</string>
+    <string name="recent_filter_videos">
+Видео
+</string>
+    <string name="recent_filter_audio">
+Аудио
+</string>
+    <string name="recent_filter_archives">
+Архивы
+</string>
+    <string name="recent_open_location">
+Открыть расположение файла
+</string>
+    <string name="icon_tile_recent_files">
+Плитка «Недавние файлы»
+</string>
 </resources>
 
 

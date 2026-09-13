@@ -14409,6 +14409,65 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
     <string name="player_toast_info">
 媒体信息
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+最近文件
+</string>
+    <string name="recent_files_subtitle">
+最近修改的本地文件
+</string>
+    <string name="recent_files_disclosure">
+跟踪本地存储中最近修改的文件 — 仅存储文件名、大小和时间戳，不存储文件内容。
+</string>
+    <string name="recent_files_setting_title">
+跟踪最近文件
+</string>
+    <string name="recent_empty_title">
+没有最近文件
+</string>
+    <string name="recent_empty_desc">
+本地存储中最近修改的文件将显示在此处。
+</string>
+    <string name="recent_saf_empty_title">
+未授予任何文件夹
+</string>
+    <string name="recent_saf_empty_desc">
+在受限访问模式下，授予文件夹访问权限，以便检测最近文件。
+</string>
+    <string name="recent_saf_grant_btn">
+授予文件夹访问权限
+</string>
+    <string name="recent_clear_history">
+清除最近记录
+</string>
+    <string name="recent_history_cleared">
+最近文件记录已清除
+</string>
+    <string name="recent_filter_all">
+全部
+</string>
+    <string name="recent_filter_documents">
+文档
+</string>
+    <string name="recent_filter_images">
+图片
+</string>
+    <string name="recent_filter_videos">
+视频
+</string>
+    <string name="recent_filter_audio">
+音频
+</string>
+    <string name="recent_filter_archives">
+压缩包
+</string>
+    <string name="recent_open_location">
+打开文件位置
+</string>
+    <string name="icon_tile_recent_files">
+最近文件磁贴
+</string>
 </resources>
 
 

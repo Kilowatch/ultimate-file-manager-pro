@@ -94,6 +94,82 @@
             android:lineSpacingMultiplier="1.2" />
     </LinearLayout>
 
+    <!-- Recent Files Settings Card -->
+    <LinearLayout
+        android:id="@+id/cardRecents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/tv_safe_horizontal"
+        android:layout_marginTop="12dp"
+        android:padding="16dp"
+        android:background="@drawable/bg_glass_card"
+        app:layout_constraintTop_toBottomOf="@id/cardInfo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/rowRecentsToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:focusable="true"
+            android:clickable="true"
+            android:padding="8dp"
+            android:background="@drawable/selector_tv_list_item">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recent_files_setting_title"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:duplicateParentState="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/recent_files_disclosure"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="13sp"
+                    android:lineSpacingMultiplier="1.15"
+                    android:duplicateParentState="true" />
+            </LinearLayout>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switchRecents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:focusable="false"
+                android:clickable="false"
+                android:duplicateParentState="true" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClearRecentsHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/selector_tv_button"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="13sp"
+            android:text="@string/recent_clear_history"
+            android:focusable="true"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="@color/tv_button_text_selector" />
+    </LinearLayout>
+
     <!-- Section Header: Detected Storage -->
     <TextView
         android:id="@+id/labelSectionStorages"
@@ -108,7 +184,7 @@
         android:paddingStart="@dimen/tv_safe_horizontal"
         android:paddingTop="16dp"
         android:paddingBottom="10dp"
-        app:layout_constraintTop_toBottomOf="@id/cardInfo"
+        app:layout_constraintTop_toBottomOf="@id/cardRecents"
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Storage Items List -->

@@ -14410,6 +14410,65 @@ N/A
     <string name="player_toast_info">
 メディア情報
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+最近のファイル
+</string>
+    <string name="recent_files_subtitle">
+最近変更されたローカルファイル
+</string>
+    <string name="recent_files_disclosure">
+ローカルストレージ全体で最近変更されたファイルを追跡します。ファイル名、サイズ、タイムスタンプのみを保存し、ファイルの内容は保存しません。
+</string>
+    <string name="recent_files_setting_title">
+最近のファイルを追跡
+</string>
+    <string name="recent_empty_title">
+最近のファイルはありません
+</string>
+    <string name="recent_empty_desc">
+ローカルストレージ上の最近変更されたファイルがここに表示されます。
+</string>
+    <string name="recent_saf_empty_title">
+許可されたフォルダはありません
+</string>
+    <string name="recent_saf_empty_desc">
+制限付きアクセスの下では、最近のファイルを検出できるようにフォルダへのアクセスを許可してください。
+</string>
+    <string name="recent_saf_grant_btn">
+フォルダアクセスを許可
+</string>
+    <string name="recent_clear_history">
+最近の履歴を消去
+</string>
+    <string name="recent_history_cleared">
+最近のファイル履歴を消去しました
+</string>
+    <string name="recent_filter_all">
+すべて
+</string>
+    <string name="recent_filter_documents">
+ドキュメント
+</string>
+    <string name="recent_filter_images">
+画像
+</string>
+    <string name="recent_filter_videos">
+動画
+</string>
+    <string name="recent_filter_audio">
+オーディオ
+</string>
+    <string name="recent_filter_archives">
+アーカイブ
+</string>
+    <string name="recent_open_location">
+ファイルの場所を開く
+</string>
+    <string name="icon_tile_recent_files">
+最近のファイルタイル
+</string>
 </resources>
 
 

@@ -14422,6 +14422,65 @@ Subtítulo %1$d
     <string name="player_toast_info">
 Información multimedia
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+Archivos recientes
+</string>
+    <string name="recent_files_subtitle">
+Archivos locales modificados recientemente
+</string>
+    <string name="recent_files_disclosure">
+Rastrea los archivos modificados recientemente en el almacenamiento local: solo guarda los nombres, tamaños y marcas de tiempo de los archivos, no su contenido.
+</string>
+    <string name="recent_files_setting_title">
+Rastrear archivos recientes
+</string>
+    <string name="recent_empty_title">
+No hay archivos recientes
+</string>
+    <string name="recent_empty_desc">
+Los archivos modificados recientemente en el almacenamiento local aparecerán aquí.
+</string>
+    <string name="recent_saf_empty_title">
+No se han concedido carpetas
+</string>
+    <string name="recent_saf_empty_desc">
+Con Acceso limitado, concede acceso a carpetas para que se puedan detectar los archivos recientes.
+</string>
+    <string name="recent_saf_grant_btn">
+Conceder acceso a carpetas
+</string>
+    <string name="recent_clear_history">
+Borrar historial de recientes
+</string>
+    <string name="recent_history_cleared">
+Historial de archivos recientes borrado
+</string>
+    <string name="recent_filter_all">
+Todos
+</string>
+    <string name="recent_filter_documents">
+Documentos
+</string>
+    <string name="recent_filter_images">
+Imágenes
+</string>
+    <string name="recent_filter_videos">
+Vídeos
+</string>
+    <string name="recent_filter_audio">
+Audio
+</string>
+    <string name="recent_filter_archives">
+Archivos comprimidos
+</string>
+    <string name="recent_open_location">
+Abrir ubicación del archivo
+</string>
+    <string name="icon_tile_recent_files">
+Tarjeta de archivos recientes
+</string>
 </resources>
 
 

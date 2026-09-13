@@ -14410,6 +14410,65 @@ Altyazı %1$d
     <string name="player_toast_info">
 Medya Bilgisi
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+Son Dosyalar
+</string>
+    <string name="recent_files_subtitle">
+Yakın zamanda değiştirilen yerel dosyalar
+</string>
+    <string name="recent_files_disclosure">
+Yerel depolama genelinde yakın zamanda değiştirilen dosyaları izleyin — yalnızca dosya adlarını, boyutlarını ve zaman damgalarını saklar, dosya içeriğini değil.
+</string>
+    <string name="recent_files_setting_title">
+Son Dosyaları İzle
+</string>
+    <string name="recent_empty_title">
+Son Dosya Yok
+</string>
+    <string name="recent_empty_desc">
+Yerel depolamada yakın zamanda değiştirilen dosyalar burada görünecek.
+</string>
+    <string name="recent_saf_empty_title">
+Klasör İzni Verilmedi
+</string>
+    <string name="recent_saf_empty_desc">
+Sınırlı Erişim altında, son dosyaların algılanabilmesi için klasörlere erişim izni verin.
+</string>
+    <string name="recent_saf_grant_btn">
+Klasör Erişimine İzin Ver
+</string>
+    <string name="recent_clear_history">
+Son Dosyalar Geçmişini Temizle
+</string>
+    <string name="recent_history_cleared">
+Son dosyalar geçmişi temizlendi
+</string>
+    <string name="recent_filter_all">
+Tümü
+</string>
+    <string name="recent_filter_documents">
+Belgeler
+</string>
+    <string name="recent_filter_images">
+Görseller
+</string>
+    <string name="recent_filter_videos">
+Videolar
+</string>
+    <string name="recent_filter_audio">
+Ses
+</string>
+    <string name="recent_filter_archives">
+Arşivler
+</string>
+    <string name="recent_open_location">
+Dosya Konumunu Aç
+</string>
+    <string name="icon_tile_recent_files">
+Son Dosyalar Kutucuğu
+</string>
 </resources>
 
 

@@ -17,11 +17,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.materialswitch.MaterialSwitch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.indexing.recents.RecentsRepository
+import za.kilowatch.ultimatefilemanager.indexing.recents.RecentsSettingsManager
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.indexing.IndexingManager
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
@@ -40,6 +44,7 @@ class StorageIndexerActivity : AppCompatActivity() {
     private lateinit var adapter: StorageIndexerAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var txtSubtitle: TextView
+    private lateinit var switchRecents: MaterialSwitch
 
     // Persisted through recreate() to prevent looping when restartPending is still true.
     private var handledFontChange = false
@@ -89,6 +94,27 @@ class StorageIndexerActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
 
+        // Recent Files settings card
+        switchRecents = findViewById(R.id.switchRecents)
+        val btnClearRecents = findViewById<View>(R.id.btnClearRecentsHistory)
+        val rowRecentsToggle = findViewById<View?>(R.id.rowRecentsToggle)
+
+        switchRecents.isChecked = RecentsSettingsManager.isEnabled(this)
+        switchRecents.setOnCheckedChangeListener { _, isChecked ->
+            RecentsSettingsManager.setEnabled(this, isChecked)
+        }
+
+        rowRecentsToggle?.setOnClickListener {
+            switchRecents.toggle()
+        }
+
+        btnClearRecents.setOnClickListener {
+            lifecycleScope.launch {
+                RecentsRepository.getInstance(this@StorageIndexerActivity).clearHistory()
+                Toast.makeText(this@StorageIndexerActivity, R.string.recent_history_cleared, Toast.LENGTH_SHORT).show()
+            }
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = StorageIndexerAdapter(
             isTv = isTv,
@@ -110,6 +136,9 @@ class StorageIndexerActivity : AppCompatActivity() {
             handledFontChange = true
             recreate()
             return
+        }
+        if (::switchRecents.isInitialized) {
+            switchRecents.isChecked = RecentsSettingsManager.isEnabled(this)
         }
         loadStorages()
     }

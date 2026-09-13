@@ -425,6 +425,15 @@ object LocalPasteEngine {
                         }
                     } catch (_: Exception) {}
                     FileTagsManager.onPathMoved(appContext, source.absolutePath, effectiveDest.absolutePath)
+                    try {
+                        za.kilowatch.ultimatefilemanager.indexing.recents.RecentsRepository.getInstance(appContext).onFileMoved(source.absolutePath, effectiveDest)
+                        appContext.contentResolver.delete(
+                            android.provider.MediaStore.Files.getContentUri("external"),
+                            "${android.provider.MediaStore.MediaColumns.DATA} = ?",
+                            arrayOf(source.absolutePath)
+                        )
+                        za.kilowatch.ultimatefilemanager.util.MediaScannerNotifier.scanFile(appContext, effectiveDest.absolutePath)
+                    } catch (_: Exception) {}
                 } else {
                     FileTagsManager.onPathCopied(appContext, source.absolutePath, effectiveDest.absolutePath)
                 }

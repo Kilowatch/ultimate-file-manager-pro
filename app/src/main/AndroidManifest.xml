@@ -244,6 +244,12 @@
             android:exported="false"
             android:label="@string/shizuku_title" />
 
+        <!-- Recent Files -->
+        <activity
+            android:name=".storage.recents.RecentFilesActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize" />
+
         <!-- Search Files -->
         <activity
             android:name=".storage.SearchActivity"

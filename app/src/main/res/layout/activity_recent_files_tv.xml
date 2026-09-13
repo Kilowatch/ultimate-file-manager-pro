@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".storage.recents.RecentFilesActivity">
+
+    <!-- 72dp TV Glass Header Bar -->
+    <FrameLayout
+        android:id="@+id/layoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- TV Normal Header Bar -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderNormal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp">
+
+            <!-- Focusable D-pad Back Button -->
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/back"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+
+            <!-- Title + Subtitle -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recent_files_title"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="22sp"
+                    android:fontFamily="sans-serif-black" />
+
+                <TextView
+                    android:id="@+id/txtHeaderSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recent_files_subtitle"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- TV View Toggle Button -->
+            <ImageView
+                android:id="@+id/btnViewToggle"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_view_list"
+                android:contentDescription="@string/view_mode"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+
+            <!-- TV More / Clear Button -->
+            <ImageView
+                android:id="@+id/btnMenu"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_more_vert"
+                android:contentDescription="@string/menu_more_options"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+        </LinearLayout>
+
+        <!-- TV Selection Header Bar -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderSelection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/action_clear_selection"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+
+            <TextView
+                android:id="@+id/txtSelectionCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="16dp"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-black" />
+
+            <!-- Action Tools Button for Selection -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTvActions"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/selector_tv_button_yellow"
+                android:textColor="@color/selector_tv_button_text_yellow"
+                android:textSize="13sp"
+                android:text="@string/action_tools"
+                android:focusable="true"
+                app:icon="@drawable/ic_gear"
+                app:iconTint="@color/selector_tv_button_text_yellow" />
+
+            <ImageView
+                android:id="@+id/btnSelectAll"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_select_all"
+                android:contentDescription="@string/action_select_all"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/selector_tv_icon_tint_yellow" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- TV Category Tabs -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginHorizontal="16dp"
+        android:background="@android:color/transparent"
+        app:tabTextColor="@color/tv_text_secondary"
+        app:tabSelectedTextColor="?attr/ufmFocusAccent"
+        app:tabIndicatorColor="?attr/ufmFocusAccent"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="scrollable"
+        app:tabGravity="start"
+        android:nextFocusDown="@+id/viewPager"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- TV Refreshing / Scanning Status Card -->
+    <LinearLayout
+        android:id="@+id/layoutRefreshStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_recents_status_glass_tv"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ProgressBar
+                android:id="@+id/progressRefreshSpinner"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:indeterminate="true" />
+
+            <TextView
+                android:id="@+id/txtRefreshStatusTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="Scanning 3 of 12 folders: Download" />
+
+            <TextView
+                android:id="@+id/txtRefreshEta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textColor="?attr/ufmFocusAccent"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="~2s left" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressRefreshPercent"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="6dp"
+            android:max="100"
+            android:progress="0" />
+    </LinearLayout>
+
+    <!-- TV Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/progressLoading"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutRefreshStatus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- TV ViewPager2 for Category Pages -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:nextFocusUp="@+id/tabLayout"
+        app:layout_constraintTop_toBottomOf="@id/progressLoading"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

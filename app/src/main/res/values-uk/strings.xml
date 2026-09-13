@@ -14410,6 +14410,65 @@ SHA-256
     <string name="player_toast_info">
 Інформація про медіа
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+Нещодавні файли
+</string>
+    <string name="recent_files_subtitle">
+Нещодавно змінені локальні файли
+</string>
+    <string name="recent_files_disclosure">
+Відстежувати нещодавно змінені файли в локальному сховищі — зберігаються лише імена файлів, розміри та часові позначки, а не вміст файлів.
+</string>
+    <string name="recent_files_setting_title">
+Відстежувати нещодавні файли
+</string>
+    <string name="recent_empty_title">
+Немає нещодавніх файлів
+</string>
+    <string name="recent_empty_desc">
+Нещодавно змінені файли в локальному сховищі з’являться тут.
+</string>
+    <string name="recent_saf_empty_title">
+Не надано доступ до папок
+</string>
+    <string name="recent_saf_empty_desc">
+У режимі обмеженого доступу надайте доступ до папок, щоб виявляти нещодавні файли.
+</string>
+    <string name="recent_saf_grant_btn">
+Надати доступ до папок
+</string>
+    <string name="recent_clear_history">
+Очистити історію нещодавніх
+</string>
+    <string name="recent_history_cleared">
+Історію нещодавніх файлів очищено
+</string>
+    <string name="recent_filter_all">
+Усі
+</string>
+    <string name="recent_filter_documents">
+Документи
+</string>
+    <string name="recent_filter_images">
+Зображення
+</string>
+    <string name="recent_filter_videos">
+Відео
+</string>
+    <string name="recent_filter_audio">
+Аудіо
+</string>
+    <string name="recent_filter_archives">
+Архіви
+</string>
+    <string name="recent_open_location">
+Відкрити розташування файлу
+</string>
+    <string name="icon_tile_recent_files">
+Плитка нещодавніх файлів
+</string>
 </resources>
 
 

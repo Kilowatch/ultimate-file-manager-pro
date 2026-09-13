@@ -494,7 +494,7 @@ class FileAdapter(
         }
     }
 
-    private fun toggleSelection(file: File) {
+    fun toggleSelection(file: File) {
         val path = file.absolutePath
         if (path in selectedPaths) {
             selectedPaths.remove(path)

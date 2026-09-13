@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.6] — 2026-09-13
 
+### Added
+- **Recent Files**: Added a "Recent Files" tile to the main menu (under the Storage category, positioned directly below Twin Window) and dedicated browser activity for Android Mobile and Android TV.
+  - **Smooth ViewPager2 Navigation**: Swipeable tab pages across 6 categories: All, Documents, Images, Videos, Audio, and Archives.
+  - **Storage Indexer Instant Synergy**: Instantaneous (~15ms) refresh when local storages are indexed by UFM's Storage Indexer, retrieving files directly from SQLite without crawling the filesystem.
+  - **Live Refresh Progress & Dynamic ETA**: Frosted glass status banner displaying real-time folder indexing progress, percentage bar, and countdown of estimated seconds remaining when a scan runs.
+  - **Scan Performance Optimization**: In-flight 30-day cutoff filter skipping older files during walk-through, saving memory and eliminating slow Android FUSE path stat calls.
+  - **Full File Management Parity**: Complete multi-selection edit mode, floating quick action bar / TV tools dialog, unified Grid/List view mode persistence across storage tabs, and real-time synchronization on rename, move, and delete.
+
 ### Fixed
 - **Text Viewer & Editor**: Fixed an ANR (App Freeze >5000ms) on Android 15 (SDK 35) during layout measurement (`TextView.onMeasure` -> `desired` -> `Layout.computeDrawingBoundingBox` -> `TemporaryBuffer.obtain`). Applied explicit precomputed width (`MeasureSpec.EXACTLY`) to `txtContent` and `txtLineNumbers` based on monospace font metrics, completely bypassing main-thread bounding-box glyph walks.
 - **Text Viewer & Editor**: Fixed a bug where files with lines exceeding 16 KB (such as minified JSON/JS, base64, or single-line data files) bypassed pagination chunking and loaded unbounded line lengths into `EditText`, choking HarfBuzz shaping. Lines exceeding 2,000 characters are now safely segmented with aligned line numbers, and edit mode is capped at 64 KB with exact layout widths.

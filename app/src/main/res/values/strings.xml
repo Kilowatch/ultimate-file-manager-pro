@@ -5069,6 +5069,32 @@
     <string name="video_info_track_audio">Audio Track %1$d</string>
     <string name="video_info_track_subtitle">Subtitle %1$d</string>
     <string name="player_toast_info">Media Information</string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">Recent Files</string>
+    <string name="recent_files_subtitle">Recently modified local files</string>
+    <string name="recent_files_disclosure">Track recently modified files across local storage — stores file names, sizes, and timestamps only, not file content.</string>
+    <string name="recent_files_setting_title">Track Recent Files</string>
+    <string name="recent_empty_title">No Recent Files</string>
+    <string name="recent_empty_desc">Recently modified files on local storage will appear here.</string>
+    <string name="recent_saf_empty_title">No Folders Granted</string>
+    <string name="recent_saf_empty_desc">Under Limited Access, grant access to folders so recent files can be detected.</string>
+    <string name="recent_saf_grant_btn">Grant Folder Access</string>
+    <string name="recent_clear_history">Clear Recents History</string>
+    <string name="recent_history_cleared">Recent files history cleared</string>
+    <string name="recent_filter_all">All</string>
+    <string name="recent_filter_documents">Documents</string>
+    <string name="recent_filter_images">Images</string>
+    <string name="recent_filter_videos">Videos</string>
+    <string name="recent_filter_audio">Audio</string>
+    <string name="recent_filter_archives">Archives</string>
+    <string name="recent_open_location">Open File Location</string>
+    <string name="icon_tile_recent_files">Recent Files Tile</string>
+    <string name="recent_refreshing_status">Scanning %1$d of %2$d folders: %3$s</string>
+    <string name="recent_refreshing_preparing">Checking for recent files…</string>
+    <string name="recent_refreshing_eta">~%1$ds left</string>
+    <string name="recent_refreshing_eta_finishing">Almost done…</string>
+    <string name="recent_refresh_complete">Recent files up to date</string>
 </resources>
 
 

@@ -133,6 +133,14 @@ object RecycleBinManager {
             }
 
             if (success) {
+                try {
+                    za.kilowatch.ultimatefilemanager.indexing.recents.RecentsRepository.getInstance(context).removePath(origPath)
+                    context.contentResolver.delete(
+                        android.provider.MediaStore.Files.getContentUri("external"),
+                        "${android.provider.MediaStore.MediaColumns.DATA} = ?",
+                        arrayOf(origPath)
+                    )
+                } catch (_: Exception) {}
                 dao.insert(RecycleBinEntity(
                     originalPath = origPath,
                     trashPath = trashFile.absolutePath,

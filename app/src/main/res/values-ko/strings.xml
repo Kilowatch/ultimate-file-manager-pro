@@ -14410,6 +14410,65 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
     <string name="player_toast_info">
 미디어 정보
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+최근 파일
+</string>
+    <string name="recent_files_subtitle">
+최근에 수정된 로컬 파일
+</string>
+    <string name="recent_files_disclosure">
+로컬 저장소 전반에서 최근에 수정된 파일을 추적합니다. 파일 이름, 크기, 타임스탬프만 저장하며 파일 내용은 저장하지 않습니다.
+</string>
+    <string name="recent_files_setting_title">
+최근 파일 추적
+</string>
+    <string name="recent_empty_title">
+최근 파일 없음
+</string>
+    <string name="recent_empty_desc">
+로컬 저장소에서 최근에 수정된 파일이 여기에 표시됩니다.
+</string>
+    <string name="recent_saf_empty_title">
+권한이 부여된 폴더 없음
+</string>
+    <string name="recent_saf_empty_desc">
+제한된 액세스 상태에서는 최근 파일을 감지할 수 있도록 폴더 액세스 권한을 부여하세요.
+</string>
+    <string name="recent_saf_grant_btn">
+폴더 액세스 권한 부여
+</string>
+    <string name="recent_clear_history">
+최근 기록 지우기
+</string>
+    <string name="recent_history_cleared">
+최근 파일 기록이 지워졌습니다
+</string>
+    <string name="recent_filter_all">
+전체
+</string>
+    <string name="recent_filter_documents">
+문서
+</string>
+    <string name="recent_filter_images">
+이미지
+</string>
+    <string name="recent_filter_videos">
+동영상
+</string>
+    <string name="recent_filter_audio">
+오디오
+</string>
+    <string name="recent_filter_archives">
+압축 파일
+</string>
+    <string name="recent_open_location">
+파일 위치 열기
+</string>
+    <string name="icon_tile_recent_files">
+최근 파일 타일
+</string>
 </resources>
 
 

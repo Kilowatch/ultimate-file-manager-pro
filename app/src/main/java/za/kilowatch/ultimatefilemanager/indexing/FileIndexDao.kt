@@ -184,6 +184,19 @@ interface FileIndexDao {
         limit: Int
     ): List<FileIndex>
 
+    /**
+     * Fast query to get top recently modified files across all indexed storages.
+     * Uses idx_lastModified index for instant retrieval.
+     */
+    @Query("""
+        SELECT * FROM file_index
+        WHERE isDirectory = 0 AND isHidden = 0 AND filename NOT LIKE '.%'
+        ORDER BY lastModified DESC
+        LIMIT :limit
+    """)
+    suspend fun getTopRecentlyModifiedFiles(limit: Int): List<FileIndex>
+
+
     @Query("""
         SELECT * FROM file_index
         WHERE indexedAt >= :sinceTimestamp

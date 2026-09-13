@@ -126,10 +126,14 @@ private fun ImageView.safeSetIcon(resId: Int) {
         item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isTwinWindowTile || item.isShizukuTile || item.isTerminalTile || item.isFileServerTile || item.isSupportTile || item.isAboutTile ||
         item.isNotepadTile || item.isRecycleBinTile || item.isScannerTile ||
         item.isSmartSortTile || item.isOnlineStoragesTile || item.isFavoriteTile ||
+        item.isRecentFilesTile ||
         item.isSettingsTile || item.isCustomTile
 
     fun defaultCategoryForTile(item: StorageItem): String {
         return when {
+            // Category 1: Storage (explicitly include Recent Files)
+            item.isRecentFilesTile -> MainMenuViewModeManager.CATEGORY_STORAGE
+
             // Category 2: Connect
             item.isNetworkTile || item.isOnlineStoragesTile || item.isFileServerTile ||
             item.isPairedDevicesTile || item.isTvRemoteTile || item.isRemoteTile -> MainMenuViewModeManager.CATEGORY_CONNECT
@@ -978,7 +982,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                     item.isSearchTile || item.isAnalyzerTile ||
                     item.isVaultTile  || item.isLegalTile   || item.isRateUsTile || item.isSafTile ||
                     item.isNetworkTile || item.isNetworkRoot || item.isPairedDevicesTile ||
-                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile || item.isAddStorageLocationTile || item.isSafCustomLocation
+                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isRecentFilesTile || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile || item.isAddStorageLocationTile || item.isSafCustomLocation
 
             if (isSpecialTile) {
                 circularProgress?.visibility = View.GONE
@@ -989,6 +993,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 applyCustomIcon(item, imgIcon)
                 txtLabel.text = item.label
                 txtCapacity.text = when {
+                    item.isRecentFilesTile -> item.subtitle ?: context.getString(R.string.recent_files_subtitle)
                     item.isAddStorageLocationTile -> context.getString(R.string.add_storage_location_subtitle)
                     item.isSafCustomLocation -> item.subtitle ?: context.getString(R.string.saf_storage)
                     item.isTwinWindowTile -> context.getString(R.string.twin_window_subtitle)

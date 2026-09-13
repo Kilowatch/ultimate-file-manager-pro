@@ -53,6 +53,7 @@ data class StorageItem(
     val isNotepadTile: Boolean = false,
     val isScannerTile: Boolean = false,
     val isSmartSortTile: Boolean = false,
+    val isRecentFilesTile: Boolean = false,
     val isSupportTile: Boolean = false,
     val isAddStorageLocationTile: Boolean = false,
     val isSafCustomLocation: Boolean = false,
@@ -101,7 +102,7 @@ data class StorageItem(
          isOnlineStoragesTile || isFileServerTile || isAboutTile ||
          isRecycleBinTile || isLegalTile || isRateUsTile || isTipJarTile ||
          isNotepadTile || isScannerTile || isSmartSortTile || isSupportTile ||
-         isAddStorageLocationTile || isSafCustomLocation))
+         isRecentFilesTile || isAddStorageLocationTile || isSafCustomLocation))
 
 
     val usagePercent: Int get() {

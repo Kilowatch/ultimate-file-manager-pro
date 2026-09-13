@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".storage.recents.RecentFilesActivity">
+
+    <!-- Fixed 56dp Glass Header Bar -->
+    <FrameLayout
+        android:id="@+id/layoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Normal Header Bar -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderNormal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp">
+
+            <!-- Back Button in Frosted Squircle -->
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted">
+
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="@string/cd_back"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="@color/mobile_icon_tint" />
+            </FrameLayout>
+
+            <!-- Title + Subtitle -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recent_files_title"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-black"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/txtHeaderSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recent_files_subtitle"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+            </LinearLayout>
+
+            <!-- View Mode Button (Grid / List) -->
+            <!-- View Mode Toggle Button -->
+            <ImageView
+                android:id="@+id/btnViewToggle"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_view_list"
+                android:contentDescription="@string/cd_view_toggle"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Overflow Menu Button -->
+            <ImageView
+                android:id="@+id/btnMenu"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_more_vert"
+                android:contentDescription="@string/toggle_options"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+        </LinearLayout>
+
+        <!-- Contextual Selection Header Bar -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderSelection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:visibility="gone">
+
+            <!-- Close Selection Button -->
+            <ImageView
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/action_clear_selection"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Selection Count -->
+            <TextView
+                android:id="@+id/txtSelectionCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="1 selected" />
+
+            <!-- Select All / Deselect All Button -->
+            <ImageView
+                android:id="@+id/btnSelectAll"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_select_all"
+                android:contentDescription="@string/action_select_all"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Category Tabs -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@android:color/transparent"
+        app:tabTextColor="@color/mobile_text_secondary"
+        app:tabSelectedTextColor="?attr/colorPrimary"
+        app:tabIndicatorColor="?attr/colorPrimary"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="scrollable"
+        app:tabGravity="start"
+        app:tabRippleColor="@color/mobile_glass_ripple"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Refreshing / Scanning Status Card -->
+    <LinearLayout
+        android:id="@+id/layoutRefreshStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_recents_status_glass"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ProgressBar
+                android:id="@+id/progressRefreshSpinner"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:indeterminate="true" />
+
+            <TextView
+                android:id="@+id/txtRefreshStatusTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="Scanning 3 of 12 folders: Download" />
+
+            <TextView
+                android:id="@+id/txtRefreshEta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="~2s left" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressRefreshPercent"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginTop="6dp"
+            android:max="100"
+            android:progress="0" />
+    </LinearLayout>
+
+    <!-- Indeterminate Loading Progress (Initial load) -->
+    <ProgressBar
+        android:id="@+id/progressLoading"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutRefreshStatus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ViewPager2 for Category Pages -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/progressLoading"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Floating Quick Action Bar (Mobile Multi-select) -->
+    <za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar
+        android:id="@+id/floatingQuickBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Extended FAB for Single Tool Sheet Actions -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabTools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/action_tools"
+        android:visibility="gone"
+        app:icon="@drawable/ic_gear"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

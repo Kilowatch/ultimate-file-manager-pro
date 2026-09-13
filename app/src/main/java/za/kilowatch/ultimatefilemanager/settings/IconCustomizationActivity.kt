@@ -617,6 +617,7 @@ class IconCustomizationActivity : AppCompatActivity() {
 
         val featureTiles = mutableListOf(
             FeatureTile("twin_window_tile", R.string.twin_window_title, R.drawable.ic_twin_window),
+            FeatureTile("recent_files_tile", R.string.recent_files_title, R.drawable.ic_history),
             FeatureTile("notepad_tile", R.string.notepad, R.drawable.ic_notepad),
             FeatureTile("scanner_tile", R.string.scanner_title, R.drawable.ic_scanner),
             FeatureTile("apps_tile", R.string.perm_query_apps_title, R.drawable.ic_apps),

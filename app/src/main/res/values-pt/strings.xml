@@ -14410,6 +14410,65 @@ Legenda %1$d
     <string name="player_toast_info">
 Informações de Mídia
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+Arquivos recentes
+</string>
+    <string name="recent_files_subtitle">
+Arquivos locais modificados recentemente
+</string>
+    <string name="recent_files_disclosure">
+Monitora os arquivos modificados recentemente em todo o armazenamento local — armazena apenas nomes, tamanhos e datas dos arquivos, não o conteúdo.
+</string>
+    <string name="recent_files_setting_title">
+Monitorar arquivos recentes
+</string>
+    <string name="recent_empty_title">
+Nenhum arquivo recente
+</string>
+    <string name="recent_empty_desc">
+Os arquivos modificados recentemente no armazenamento local aparecerão aqui.
+</string>
+    <string name="recent_saf_empty_title">
+Nenhuma pasta autorizada
+</string>
+    <string name="recent_saf_empty_desc">
+No modo Acesso Limitado, conceda acesso a pastas para que os arquivos recentes possam ser detectados.
+</string>
+    <string name="recent_saf_grant_btn">
+Conceder acesso a pastas
+</string>
+    <string name="recent_clear_history">
+Limpar histórico de recentes
+</string>
+    <string name="recent_history_cleared">
+Histórico de arquivos recentes limpo
+</string>
+    <string name="recent_filter_all">
+Todos
+</string>
+    <string name="recent_filter_documents">
+Documentos
+</string>
+    <string name="recent_filter_images">
+Imagens
+</string>
+    <string name="recent_filter_videos">
+Vídeos
+</string>
+    <string name="recent_filter_audio">
+Áudio
+</string>
+    <string name="recent_filter_archives">
+Compactados
+</string>
+    <string name="recent_open_location">
+Abrir local do arquivo
+</string>
+    <string name="icon_tile_recent_files">
+Bloco de arquivos recentes
+</string>
 </resources>
 
 

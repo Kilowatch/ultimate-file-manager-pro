@@ -14172,6 +14172,65 @@ Ondertitel %1$d
     <string name="player_toast_info">
 Media-informatie
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+Recente bestanden
+</string>
+    <string name="recent_files_subtitle">
+Onlangs gewijzigde lokale bestanden
+</string>
+    <string name="recent_files_disclosure">
+Volg onlangs gewijzigde bestanden op lokale opslag — slaat alleen bestandsnamen, groottes en tijdstempels op, niet de bestandsinhoud.
+</string>
+    <string name="recent_files_setting_title">
+Recente bestanden bijhouden
+</string>
+    <string name="recent_empty_title">
+Geen recente bestanden
+</string>
+    <string name="recent_empty_desc">
+Onlangs gewijzigde bestanden op lokale opslag verschijnen hier.
+</string>
+    <string name="recent_saf_empty_title">
+Geen mappen gemachtigd
+</string>
+    <string name="recent_saf_empty_desc">
+Onder Beperkte toegang moet u toegang tot mappen verlenen zodat recente bestanden kunnen worden gedetecteerd.
+</string>
+    <string name="recent_saf_grant_btn">
+Toegang tot mappen verlenen
+</string>
+    <string name="recent_clear_history">
+Recente geschiedenis wissen
+</string>
+    <string name="recent_history_cleared">
+Recente geschiedenis gewist
+</string>
+    <string name="recent_filter_all">
+Alle
+</string>
+    <string name="recent_filter_documents">
+Documenten
+</string>
+    <string name="recent_filter_images">
+Afbeeldingen
+</string>
+    <string name="recent_filter_videos">
+Video\'s
+</string>
+    <string name="recent_filter_audio">
+Audio
+</string>
+    <string name="recent_filter_archives">
+Archieven
+</string>
+    <string name="recent_open_location">
+Bestandslocatie openen
+</string>
+    <string name="icon_tile_recent_files">
+Tegel Recente bestanden
+</string>
 </resources>
 
 

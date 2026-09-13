@@ -5,6 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+import za.kilowatch.ultimatefilemanager.indexing.recents.RecentFileDao
+import za.kilowatch.ultimatefilemanager.indexing.recents.RecentFileEntity
+
 /**
  * UFM Indexing Database - SQLite-backed Room database for high-performance file indexing.
  *
@@ -13,6 +16,7 @@ import androidx.room.RoomDatabase
  * - Quick folder navigation without filesystem scans
  * - Duplicate detection via content hashing
  * - Storage analytics and visualization
+ * - Recents index for recently modified local files
  *
  * The database supports:
  * - Internal storage
@@ -22,10 +26,12 @@ import androidx.room.RoomDatabase
  * - Cloud storage (future expansion)
  *
  * Version 1: Initial schema with FileIndex table
+ * Version 3: Added FTS4 virtual table
+ * Version 4: Added RecentFileEntity table
  */
 @Database(
-    entities = [FileIndex::class, FileSearchFts::class],
-    version = 3,       // v3: added FTS4 virtual table for instant filename search
+    entities = [FileIndex::class, FileSearchFts::class, RecentFileEntity::class],
+    version = 4,
     exportSchema = false
 )
 abstract class UfmIndexingDatabase : RoomDatabase() {
@@ -34,6 +40,11 @@ abstract class UfmIndexingDatabase : RoomDatabase() {
      * Get the FileIndex DAO for database operations.
      */
     abstract fun fileIndexDao(): FileIndexDao
+
+    /**
+     * Get the RecentFile DAO for recents index operations.
+     */
+    abstract fun recentFileDao(): RecentFileDao
 
     companion object {
         private const val DATABASE_NAME = "ufm_indexing.db"

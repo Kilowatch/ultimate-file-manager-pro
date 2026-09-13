@@ -14410,6 +14410,65 @@ Set Password
     <string name="player_toast_info">
 معلومات الوسائط
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+الملفات الأخيرة
+</string>
+    <string name="recent_files_subtitle">
+ملفات محلية عُدّلت مؤخرًا
+</string>
+    <string name="recent_files_disclosure">
+تتبّع الملفات التي عُدّلت مؤخرًا في وحدة التخزين المحلية — يخزّن أسماء الملفات وأحجامها والطوابع الزمنية فقط، وليس محتوى الملفات.
+</string>
+    <string name="recent_files_setting_title">
+تتبّع الملفات الأخيرة
+</string>
+    <string name="recent_empty_title">
+لا توجد ملفات أخيرة
+</string>
+    <string name="recent_empty_desc">
+ستظهر هنا الملفات التي عُدّلت مؤخرًا في وحدة التخزين المحلية.
+</string>
+    <string name="recent_saf_empty_title">
+لم يُمنح أي مجلد
+</string>
+    <string name="recent_saf_empty_desc">
+في وضع الوصول المحدود، امنح الوصول إلى المجلدات ليتمكن التطبيق من اكتشاف الملفات الأخيرة.
+</string>
+    <string name="recent_saf_grant_btn">
+منح الوصول إلى المجلدات
+</string>
+    <string name="recent_clear_history">
+مسح سجل الملفات الأخيرة
+</string>
+    <string name="recent_history_cleared">
+تم مسح سجل الملفات الأخيرة
+</string>
+    <string name="recent_filter_all">
+الكل
+</string>
+    <string name="recent_filter_documents">
+المستندات
+</string>
+    <string name="recent_filter_images">
+الصور
+</string>
+    <string name="recent_filter_videos">
+الفيديوهات
+</string>
+    <string name="recent_filter_audio">
+الصوتيات
+</string>
+    <string name="recent_filter_archives">
+الملفات المضغوطة
+</string>
+    <string name="recent_open_location">
+فتح موقع الملف
+</string>
+    <string name="icon_tile_recent_files">
+بطاقة الملفات الأخيرة
+</string>
 </resources>
 
 

@@ -557,6 +557,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
             // â”€â”€ Feature shortcut tiles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             items.add(StorageItem(id = "twin_window_tile", label = context.getString(R.string.twin_window_title), iconRes = R.drawable.ic_twin_window, totalBytes = 0, usedBytes = 0, mountPath = "", isTwinWindowTile = true))
+            items.add(StorageItem(id = "recent_files_tile", label = context.getString(R.string.recent_files_title), iconRes = R.drawable.ic_history, totalBytes = 0, usedBytes = 0, mountPath = "", isRecentFilesTile = true, subtitle = context.getString(R.string.recent_files_subtitle)))
             items.add(StorageItem(id = "notepad_tile", label = context.getString(R.string.notepad), iconRes = R.drawable.ic_notepad, totalBytes = 0, usedBytes = 0, mountPath = "", isNotepadTile = true, subtitle = context.getString(R.string.notepad_tile_subtitle)))
             if (!isTv) {
                 items.add(StorageItem(id = "scanner_tile", label = context.getString(R.string.scanner_title), iconRes = R.drawable.ic_scanner, totalBytes = 0, usedBytes = 0, mountPath = "", isScannerTile = true, subtitle = context.getString(R.string.scanner_tile_subtitle)))
@@ -1736,6 +1737,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val resolvedSubtitle: String = when {
             item.subtitle != null                -> item.subtitle
             item.isTwinWindowTile              -> getString(R.string.twin_window_subtitle)
+            item.isRecentFilesTile             -> getString(R.string.recent_files_subtitle)
              item.isNotepadTile                 -> getString(R.string.notepad_tile_subtitle)
              item.isScannerTile                 -> getString(R.string.scanner_tile_subtitle)
             item.isSmartSortTile               -> getString(R.string.smart_sort_tile_subtitle)
@@ -2061,6 +2063,10 @@ class StorageBrowserActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
                 }
+            }
+            item.isRecentFilesTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.storage.recents.RecentFilesActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_itemlabel, getString(R.string.recent_files_title)))
             }
             item.isSearchTile -> {
                 startActivity(Intent(this, SearchActivity::class.java))
@@ -3987,6 +3993,21 @@ class StorageBrowserActivity : AppCompatActivity() {
                     usedBytes = 0,
                     mountPath = "",
                     isTwinWindowTile = true
+                ))
+            }
+
+            // Add Recent Files tile (directly below twin window, if enabled)
+            if (showFeatureTiles && za.kilowatch.ultimatefilemanager.indexing.recents.RecentsSettingsManager.isEnabled(this@StorageBrowserActivity)) {
+                val insertIdx = if (storageItems.isNotEmpty()) 1 else 0
+                storageItems.add(insertIdx, StorageItem(
+                    id = "recent_files_tile",
+                    label = getString(R.string.recent_files_title),
+                    iconRes = R.drawable.ic_history,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isRecentFilesTile = true,
+                    subtitle = getString(R.string.recent_files_subtitle)
                 ))
             }
 

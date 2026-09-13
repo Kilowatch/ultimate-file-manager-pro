@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- TV Category Files Recycler -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerCategoryFiles"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="48dp"
+        tools:listitem="@layout/item_file_tv" />
+
+    <!-- TV Category Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutPageEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="32dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgPageEmpty"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_history"
+            android:alpha="0.4"
+            app:tint="@color/tv_icon_tint"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/txtPageEmptyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/recent_empty_title"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/txtPageEmptyDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/recent_empty_desc"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14sp"
+            android:gravity="center" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPageGrantSaf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:textColor="@color/selector_tv_button_text_yellow"
+            android:text="@string/recent_saf_grant_btn"
+            android:focusable="true"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</FrameLayout>

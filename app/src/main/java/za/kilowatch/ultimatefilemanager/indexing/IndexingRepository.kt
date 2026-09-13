@@ -215,6 +215,25 @@ class IndexingRepository(
     }
 
     /**
+     * Returns true if all currently mounted local storage volumes are fully indexed.
+     * Matches the exact volume resolution used by StorageIndexerActivity.
+     */
+    fun areAllLocalStoragesFullyIndexed(): Boolean {
+        val sm = context.getSystemService(Context.STORAGE_SERVICE) as? android.os.storage.StorageManager ?: return false
+        val mountedVolumes = sm.storageVolumes.filter {
+            it.state == android.os.Environment.MEDIA_MOUNTED && (it.isPrimary || it.uuid != null)
+        }
+        if (mountedVolumes.isEmpty()) return false
+        return mountedVolumes.all { volume ->
+            val path = if (volume.isPrimary) "/storage/emulated/0" else "/storage/${volume.uuid}"
+            val storageId = resolveStorageForPath(path).first
+            isStorageFullyIndexed(storageId)
+        }
+    }
+
+
+
+    /**
      * Mark a storage as fully indexed. Called internally by [FileIndexingService] after a
      * first-time full scan completes.
      */

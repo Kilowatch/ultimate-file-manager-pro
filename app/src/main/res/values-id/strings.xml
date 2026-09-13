@@ -14410,6 +14410,65 @@ Subtitle %1$d
     <string name="player_toast_info">
 Informasi Media
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+File Terbaru
+</string>
+    <string name="recent_files_subtitle">
+File lokal yang baru saja diubah
+</string>
+    <string name="recent_files_disclosure">
+Lacak file yang baru saja diubah di penyimpanan lokal — hanya menyimpan nama file, ukuran, dan stempel waktu, bukan konten file.
+</string>
+    <string name="recent_files_setting_title">
+Lacak File Terbaru
+</string>
+    <string name="recent_empty_title">
+Tidak Ada File Terbaru
+</string>
+    <string name="recent_empty_desc">
+File yang baru saja diubah di penyimpanan lokal akan muncul di sini.
+</string>
+    <string name="recent_saf_empty_title">
+Tidak Ada Folder yang Diberi Izin
+</string>
+    <string name="recent_saf_empty_desc">
+Dalam Akses Terbatas, berikan akses ke folder agar file terbaru dapat terdeteksi.
+</string>
+    <string name="recent_saf_grant_btn">
+Beri Akses Folder
+</string>
+    <string name="recent_clear_history">
+Hapus Riwayat Terbaru
+</string>
+    <string name="recent_history_cleared">
+Riwayat file terbaru telah dihapus
+</string>
+    <string name="recent_filter_all">
+Semua
+</string>
+    <string name="recent_filter_documents">
+Dokumen
+</string>
+    <string name="recent_filter_images">
+Gambar
+</string>
+    <string name="recent_filter_videos">
+Video
+</string>
+    <string name="recent_filter_audio">
+Audio
+</string>
+    <string name="recent_filter_archives">
+Arsip
+</string>
+    <string name="recent_open_location">
+Buka Lokasi File
+</string>
+    <string name="icon_tile_recent_files">
+Tile File Terbaru
+</string>
 </resources>
 
 

@@ -14410,6 +14410,65 @@ Sottotitolo %1$d
     <string name="player_toast_info">
 Informazioni sui media
 </string>
+
+    <!-- ── Recent Files ────────────────────────────────────────── -->
+    <string name="recent_files_title">
+File recenti
+</string>
+    <string name="recent_files_subtitle">
+File locali modificati di recente
+</string>
+    <string name="recent_files_disclosure">
+Tieni traccia dei file modificati di recente nella memoria locale: salva solo nomi, dimensioni e date dei file, non il loro contenuto.
+</string>
+    <string name="recent_files_setting_title">
+Tieni traccia dei file recenti
+</string>
+    <string name="recent_empty_title">
+Nessun file recente
+</string>
+    <string name="recent_empty_desc">
+I file modificati di recente nella memoria locale appariranno qui.
+</string>
+    <string name="recent_saf_empty_title">
+Nessuna cartella autorizzata
+</string>
+    <string name="recent_saf_empty_desc">
+Con l\\\'accesso limitato, autorizza l\\\'accesso alle cartelle per poter rilevare i file recenti.
+</string>
+    <string name="recent_saf_grant_btn">
+Autorizza accesso alle cartelle
+</string>
+    <string name="recent_clear_history">
+Cancella cronologia recenti
+</string>
+    <string name="recent_history_cleared">
+Cronologia dei file recenti cancellata
+</string>
+    <string name="recent_filter_all">
+Tutti
+</string>
+    <string name="recent_filter_documents">
+Documenti
+</string>
+    <string name="recent_filter_images">
+Immagini
+</string>
+    <string name="recent_filter_videos">
+Video
+</string>
+    <string name="recent_filter_audio">
+Audio
+</string>
+    <string name="recent_filter_archives">
+Archivi
+</string>
+    <string name="recent_open_location">
+Apri posizione file
+</string>
+    <string name="icon_tile_recent_files">
+Riquadro file recenti
+</string>
 </resources>
 
 
