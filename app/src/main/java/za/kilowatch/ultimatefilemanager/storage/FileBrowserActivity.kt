@@ -398,6 +398,8 @@ class FileBrowserActivity : AppCompatActivity() {
         const val EXTRA_SHARE_DEST_PICKER = "extra_share_dest_picker"
         /** When true the user is picking a local folder for network thumbnail caching */
         const val EXTRA_NETWORK_CACHE_PICKER = "extra_network_cache_picker"
+        /** When true the user is picking a local folder for local media thumbnail caching */
+        const val EXTRA_LOCAL_CACHE_PICKER = "extra_local_cache_picker"
         const val RESULT_URI = "result_uri"
         const val RESULT_LABEL = "result_label"
         const val RESULT_TYPE = "result_type"
@@ -441,6 +443,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isImageCompressDestPickerMode = false
     private var isGifCreatorDestPickerMode = false
     private var isNetworkCachePickerMode = false
+    private var isLocalCachePickerMode = false
     private var isShareDestPickerMode = false
     private var isNotepadFolderPicker = false
     private var isScannerFolderPicker = false
@@ -600,6 +603,7 @@ class FileBrowserActivity : AppCompatActivity() {
         isGifCreatorDestPickerMode = intent.getBooleanExtra(EXTRA_GIF_CREATOR_DEST_PICKER, false)
         isLocationPickerMode = intent.getBooleanExtra(EXTRA_LOCATION_PICKER, false)
         isNetworkCachePickerMode = intent.getBooleanExtra(EXTRA_NETWORK_CACHE_PICKER, false)
+        isLocalCachePickerMode = intent.getBooleanExtra(EXTRA_LOCAL_CACHE_PICKER, false)
         isQuickTransferPickerMode = intent.getBooleanExtra(EXTRA_QUICK_TRANSFER_PICKER, false)
         isShareDestPickerMode = intent.getBooleanExtra(EXTRA_SHARE_DEST_PICKER, false)
         isNotepadFolderPicker = intent.getBooleanExtra(EXTRA_NOTEPAD_FOLDER_PICKER, false)
@@ -1220,17 +1224,36 @@ class FileBrowserActivity : AppCompatActivity() {
         showFolderConfirmDialog(
             heroIconRes = R.drawable.ic_folder,
             title = getString(R.string.nt_use_this_folder_for_caching),
-            subtitle = "Network Thumbnail Cache",
+            subtitle = getString(R.string.nt_cache_folder_guide_title),
             folderName = folderName,
             path = path,
-            description = getString(R.string.nt_cache_limit_title),
+            description = getString(R.string.nt_confirm_cache_folder_msg, path),
             actionText = getString(R.string.nt_use_this_folder_for_caching),
             actionIconRes = R.drawable.ic_folder
         ) {
-            val cacheDir = java.io.File(path, ".ufm_network_thumbnails")
-            cacheDir.mkdirs()
             val result = Intent().apply {
-                putExtra(RESULT_SELECTED_LOCAL_PATH, cacheDir.absolutePath)
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
+            }
+            setResult(RESULT_OK, result)
+            finish()
+        }
+    }
+
+    private fun showConfirmLocalCacheFolderDialog() {
+        val path = currentDir.absolutePath
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.lt_use_this_folder_for_caching),
+            subtitle = getString(R.string.lt_cache_folder_guide_title),
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.lt_confirm_cache_folder_msg, path),
+            actionText = getString(R.string.lt_use_this_folder_for_caching),
+            actionIconRes = R.drawable.ic_folder
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
             setResult(RESULT_OK, result)
             finish()
@@ -1672,13 +1695,25 @@ class FileBrowserActivity : AppCompatActivity() {
         val updateAdapter = {
             action()
             restoreScroll()
+            if (::currentDir.isInitialized) {
+                val currentFolder = currentDir.absolutePath
+                val items = fileAdapter.getFiles()
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val mgr = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager(applicationContext)
+                        mgr.warmCacheForFolder(currentFolder)
+                        if (items.isNotEmpty()) {
+                            mgr.pruneStaleThumbnails(currentFolder, items)
+                        }
+                    } catch (_: Throwable) {}
+                }
+            }
         }
 
         if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(this)) {
             val isForward = currentPath.length > (oldPath?.length ?: 0)
             za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateFolderTransition(recyclerFiles, isForward) {
-                action()
-                restoreScroll()
+                updateAdapter()
             }
         } else {
             updateAdapter()
@@ -2286,7 +2321,7 @@ class FileBrowserActivity : AppCompatActivity() {
         // Picker mode FAB setup: configure and return early to avoid overwriting FAB click listeners
         if (isExtractDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode ||
             isGifCreatorDestPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode ||
-            isAdvancedSyncDestPickerMode || isLocationPickerMode || isNetworkCachePickerMode ||
+            isAdvancedSyncDestPickerMode || isLocationPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode ||
             isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
             isScannerFolderPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker ||
             isKeyfilePickerMode || isCertPickerMode || isSmartSortPickerMode) {
@@ -4438,7 +4473,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private fun updatePasteFab() {
         if (isExtractDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode ||
             isGifCreatorDestPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode ||
-            isAdvancedSyncDestPickerMode || isLocationPickerMode || isNetworkCachePickerMode ||
+            isAdvancedSyncDestPickerMode || isLocationPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode ||
             isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
             isScannerFolderPicker || isAutoBackupFolderPicker || isKeyfilePickerMode ||
             isCertPickerMode || isSupportAttachmentPicker || isSmartSortPickerMode) {
@@ -4518,6 +4553,12 @@ class FileBrowserActivity : AppCompatActivity() {
                 fabPaste.setIconResource(R.drawable.ic_folder)
                 fabPaste.visibility = View.VISIBLE
                 fabPaste.setOnClickListener { showConfirmNetworkCacheFolderDialog() }
+            }
+            isLocalCachePickerMode -> {
+                fabPaste.setText(R.string.lt_use_this_folder_for_caching)
+                fabPaste.setIconResource(R.drawable.ic_folder)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmLocalCacheFolderDialog() }
             }
             isQuickTransferPickerMode -> {
                 val isMove = intent.getStringExtra(EXTRA_QUICK_TRANSFER_OP) == "MOVE"

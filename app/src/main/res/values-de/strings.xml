@@ -4934,6 +4934,65 @@ Cache-Ordner auswählen
 5 GB
 </string>
 
+    <!-- Local Media Thumbnails -->
+    <string name="settings_local_thumbnails_title">
+Medien-Vorschaubilder
+</string>
+    <string name="settings_local_thumbnails_subtitle">
+Dauerhaftes Caching für lokale Medien und Speicher
+</string>
+    <string name="lt_enable_title">
+Medien-Vorschaubilder aktivieren
+</string>
+    <string name="lt_enable_desc">
+Vorschaubilder für lokale Videos, Audio-Cover, APKs und Kamerabilder generieren und zwischenspeichern.
+</string>
+    <string name="lt_cache_limit_title">
+Cache-Größenlimit
+</string>
+    <string name="lt_cache_limit_desc">
+Maximaler Speicherplatz für das lokale Zwischenspeichern von Vorschaubildern.
+</string>
+    <string name="lt_cache_folder_title">
+Cache-Verzeichnis
+</string>
+    <string name="lt_cache_folder_desc">
+Wählen Sie aus, wo die lokalen Vorschaubild-Cache-Dateien gespeichert werden sollen (Interner Speicher oder SD-Karte).
+</string>
+    <string name="lt_clear_cache_title">
+Gesamten Cache löschen
+</string>
+    <string name="lt_clear_cache_desc">
+Alle zwischengespeicherten lokalen Vorschaubilder löschen und die Datenbank zurücksetzen.
+</string>
+    <string name="lt_clear_cache_confirm_title">
+Lokalen Cache löschen?
+</string>
+    <string name="lt_clear_cache_confirm_msg">
+Dadurch werden alle zwischengespeicherten Vorschaubilder für den lokalen Speicher dauerhaft gelöscht. Sie werden beim Durchsuchen neu generiert.
+</string>
+    <string name="lt_stats_title">
+Cache-Statistiken
+</string>
+    <string name="lt_stats_size">
+Aktuelle Nutzung: %1$s / %2$d MB (%3$d Elemente)
+</string>
+    <string name="lt_select_folder">
+Cache-Ordner auswählen
+</string>
+    <string name="lt_cache_folder_guide_title">
+Lokaler Vorschaubild-Cache-Ordner
+</string>
+    <string name="lt_cache_folder_guide_msg">
+Wählen Sie ein benutzerdefiniertes Verzeichnis auf Ihrem internen Speicher oder einer externen SD-Karte, in dem dauerhafte lokale Vorschaubilddateien (.webp) gespeichert werden.
+</string>
+    <string name="lt_use_this_folder_for_caching">
+Diesen Ordner für lokalen Vorschaubild-Cache verwenden
+</string>
+    <string name="lt_confirm_cache_folder_msg">
+Miniaturansichten für Ihre lokalen Dateien werden in diesem Ordner gespeichert: %s
+</string>
+
     <string name="got_it">
 VERSTANDEN
 </string>
@@ -12422,6 +12481,28 @@ Durch Tippen auf ein Ordner- oder Dateisymbol wird das Element normal geöffnet.
 </string>
     <string name="backup_pref_icon_tap_edit_mode">
 Einstellungen für den Bearbeitungsmodus beim Antippen von Symbolen
+</string>
+
+    <!-- Selection Checkbox Display (Mobile) -->
+    <string name="settings_selection_checkbox_title">
+Auswahl-Kontrollkästchen
+</string>
+    <string name="settings_selection_checkbox_subtitle_enabled">
+Kontrollkästchen sind im Auswahlmodus sichtbar
+</string>
+    <string name="settings_selection_checkbox_subtitle_disabled">
+Kontrollkästchen ausgeblendet (Auswahl wird durch Zeilenhervorhebung angezeigt)
+</string>
+    <string name="backup_pref_selection_checkbox">
+Anzeigeeinstellungen für Auswahl-Kontrollkästchen
+</string>
+
+    <!-- Tab Quick Transfer -->
+    <string name="transfer_to_tab_title">
+Zum Tab übertragen
+</string>
+    <string name="transfer_to_tab_prompt">
+Ziel-Tab für %1$s Element(e) auswählen:
 </string>
 
     <!-- GIF Creator -->

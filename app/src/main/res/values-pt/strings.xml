@@ -4934,6 +4934,65 @@ Selecionar Pasta de Cache
 5 GB
 </string>
 
+    <!-- Local Media Thumbnails -->
+    <string name="settings_local_thumbnails_title">
+Miniaturas de mídia
+</string>
+    <string name="settings_local_thumbnails_subtitle">
+Cache persistente para mídia e armazenamento local
+</string>
+    <string name="lt_enable_title">
+Ativar miniaturas de mídia
+</string>
+    <string name="lt_enable_desc">
+Gere e armazene em cache miniaturas para vídeos locais, capas de áudio, APKs e imagens da câmera.
+</string>
+    <string name="lt_cache_limit_title">
+Limite de tamanho do cache
+</string>
+    <string name="lt_cache_limit_desc">
+Espaço máximo de armazenamento a usar para o cache de miniaturas local.
+</string>
+    <string name="lt_cache_folder_title">
+Diretório do cache
+</string>
+    <string name="lt_cache_folder_desc">
+Selecione onde armazenar os arquivos de cache de miniaturas local (Armazenamento interno ou Cartão SD).
+</string>
+    <string name="lt_clear_cache_title">
+Limpar todo o cache
+</string>
+    <string name="lt_clear_cache_desc">
+Exclua todas as miniaturas locais em cache e redefina o banco de dados.
+</string>
+    <string name="lt_clear_cache_confirm_title">
+Limpar o cache local?
+</string>
+    <string name="lt_clear_cache_confirm_msg">
+Isso excluirá permanentemente todas as miniaturas em cache do armazenamento local. Elas serão regeneradas conforme você navegar.
+</string>
+    <string name="lt_stats_title">
+Estatísticas do cache
+</string>
+    <string name="lt_stats_size">
+Uso atual: %1$s / %2$d MB (%3$d itens)
+</string>
+    <string name="lt_select_folder">
+Selecionar pasta de cache
+</string>
+    <string name="lt_cache_folder_guide_title">
+Pasta de cache de miniaturas local
+</string>
+    <string name="lt_cache_folder_guide_msg">
+Escolha um diretório personalizado no seu armazenamento interno ou cartão SD externo onde os arquivos de miniaturas locais persistentes (.webp) serão salvos.
+</string>
+    <string name="lt_use_this_folder_for_caching">
+Use esta pasta para cache de miniaturas local
+</string>
+    <string name="lt_confirm_cache_folder_msg">
+As miniaturas dos seus arquivos locais serão armazenadas nesta pasta: %s
+</string>
+
     <string name="got_it">
 ENTENDI
 </string>
@@ -12422,6 +12481,28 @@ Tocar no ícone de uma pasta ou arquivo abre o item normalmente
 </string>
     <string name="backup_pref_icon_tap_edit_mode">
 Configurações do modo de edição ao tocar no ícone
+</string>
+
+    <!-- Selection Checkbox Display (Mobile) -->
+    <string name="settings_selection_checkbox_title">
+Caixas de seleção
+</string>
+    <string name="settings_selection_checkbox_subtitle_enabled">
+As caixas de seleção ficam visíveis no modo de seleção
+</string>
+    <string name="settings_selection_checkbox_subtitle_disabled">
+Caixas de seleção ocultas (a seleção é indicada pelo realce da linha)
+</string>
+    <string name="backup_pref_selection_checkbox">
+Configurações de exibição das caixas de seleção
+</string>
+
+    <!-- Tab Quick Transfer -->
+    <string name="transfer_to_tab_title">
+Transferir para aba
+</string>
+    <string name="transfer_to_tab_prompt">
+Selecione a aba de destino para %1$s item(ns):
 </string>
 
     <!-- GIF Creator -->

@@ -84,7 +84,6 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchHiddenFiles: SwitchMaterial
     private lateinit var txtHiddenFilesSubtitle: TextView
 
-    private lateinit var switchMediaThumbnails: SwitchMaterial
     private lateinit var txtMediaThumbnailsSubtitle: TextView
 
     private lateinit var switchCacheCopy: SwitchMaterial
@@ -365,17 +364,16 @@ class SettingsActivity : AppCompatActivity() {
         cardRecycleBin.setOnClickListener { toggleRecycleBin() }
         switchRecycleBin.setOnCheckedChangeListener(null)
 
-        // Media Thumbnails toggle
+        // Media Thumbnails row
         val cardMediaThumbnails = findViewById<View>(R.id.cardMediaThumbnails)
-        switchMediaThumbnails = findViewById(R.id.switchMediaThumbnails)
         txtMediaThumbnailsSubtitle = findViewById(R.id.txtMediaThumbnailsSubtitle)
 
         val thumbnailsEnabled = za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager.isEnabled(this)
-        switchMediaThumbnails.isChecked = thumbnailsEnabled
         updateThumbnailsSubtitle(thumbnailsEnabled)
 
-        cardMediaThumbnails.setOnClickListener { toggleMediaThumbnails() }
-        switchMediaThumbnails.setOnCheckedChangeListener(null)
+        cardMediaThumbnails.setOnClickListener {
+            startActivity(Intent(this, LocalThumbnailSettingsActivity::class.java))
+        }
 
         // Cache Copying toggle
         val cardCacheCopy = findViewById<View>(R.id.cardCacheCopy)
@@ -1019,9 +1017,8 @@ class SettingsActivity : AppCompatActivity() {
         syncAllFilesAccessStatus()
 
         // Refresh media thumbnails subtitle
-        if (::switchMediaThumbnails.isInitialized) {
+        if (::txtMediaThumbnailsSubtitle.isInitialized) {
             val enabled = za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager.isEnabled(this)
-            switchMediaThumbnails.isChecked = enabled
             updateThumbnailsSubtitle(enabled)
         }
 
@@ -1559,13 +1556,6 @@ class SettingsActivity : AppCompatActivity() {
         } else {
             getString(R.string.settings_recycle_bin_summary)
         }
-    }
-
-    private fun toggleMediaThumbnails() {
-        val newValue = !switchMediaThumbnails.isChecked
-        switchMediaThumbnails.isChecked = newValue
-        za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager.setEnabled(this, newValue)
-        updateThumbnailsSubtitle(newValue)
     }
 
     private fun toggleTwinWindowLayout() {

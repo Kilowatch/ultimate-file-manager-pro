@@ -2017,13 +2017,13 @@
                                                         android:textSize="14sp" />
                                                 </LinearLayout>
 
-                                                <com.google.android.material.switchmaterial.SwitchMaterial
-                                                    android:id="@+id/switchMediaThumbnails"
-                                                    android:layout_width="wrap_content"
-                                                    android:layout_height="wrap_content"
-                                                    android:checked="false"
-                                                    android:clickable="false"
-                                                    android:focusable="false" />
+                                                <ImageView
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:src="@drawable/ic_arrow_down"
+                                                    android:rotation="-90"
+                                                    app:tint="@color/tv_text_secondary"
+                                                    android:contentDescription="@null" />
                         </LinearLayout>
                         <View
                             android:layout_width="match_parent"

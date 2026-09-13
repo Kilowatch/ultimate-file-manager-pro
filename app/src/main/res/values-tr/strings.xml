@@ -4934,6 +4934,65 @@ Dizin seçilmedi
 5 GB
 </string>
 
+    <!-- Local Media Thumbnails -->
+    <string name="settings_local_thumbnails_title">
+Medya Küçük Resimleri
+</string>
+    <string name="settings_local_thumbnails_subtitle">
+Yerel medya ve depolama için kalıcı önbellekleme
+</string>
+    <string name="lt_enable_title">
+Medya Küçük Resimlerini Etkinleştir
+</string>
+    <string name="lt_enable_desc">
+Yerel videolar, ses kapakları, APK\\\'lar ve kamera görüntüleri için küçük resim oluşturun ve önbelleğe alın.
+</string>
+    <string name="lt_cache_limit_title">
+Önbellek Boyutu Sınırı
+</string>
+    <string name="lt_cache_limit_desc">
+Yerel küçük resim önbellekleme için kullanılacak maksimum depolama alanı.
+</string>
+    <string name="lt_cache_folder_title">
+Önbellek Dizini
+</string>
+    <string name="lt_cache_folder_desc">
+Yerel küçük resim önbellek dosyalarının nerede saklanacağını seçin (Dahili Depolama veya SD Kart).
+</string>
+    <string name="lt_clear_cache_title">
+Tüm Önbelleği Temizle
+</string>
+    <string name="lt_clear_cache_desc">
+Önbelleğe alınmış tüm yerel küçük resimleri silin ve veritabanını sıfırlayın.
+</string>
+    <string name="lt_clear_cache_confirm_title">
+Yerel Önbellek Temizlensin mi?
+</string>
+    <string name="lt_clear_cache_confirm_msg">
+Bu işlem, yerel depolama için önbelleğe alınmış tüm küçük resimleri kalıcı olarak silecek. Gezinirken yeniden oluşturulacaklar.
+</string>
+    <string name="lt_stats_title">
+Önbellek İstatistikleri
+</string>
+    <string name="lt_stats_size">
+Mevcut kullanım: %1$s / %2$d MB (%3$d öğe)
+</string>
+    <string name="lt_select_folder">
+Önbellek Klasörünü Seç
+</string>
+    <string name="lt_cache_folder_guide_title">
+Yerel Küçük Resim Önbellek Klasörü
+</string>
+    <string name="lt_cache_folder_guide_msg">
+Kalıcı yerel küçük resim dosyalarının (.webp) kaydedileceği, dahili depolamanızda veya harici SD kartınızda özel bir dizin seçin.
+</string>
+    <string name="lt_use_this_folder_for_caching">
+Bu klasörü yerel küçük resim önbelleği için kullan
+</string>
+    <string name="lt_confirm_cache_folder_msg">
+Yerel dosyalarınız için küçük resimler bu klasörde saklanacak: %s
+</string>
+
     <string name="got_it">
 ANLAŞILDI
 </string>
@@ -12422,6 +12481,28 @@ Liste görünümünde bir klasör veya dosya simgesine dokunmak öğeyi normal �
 </string>
     <string name="backup_pref_icon_tap_edit_mode">
 Simge Dokunma Düzenleme Modu Ayarları
+</string>
+
+    <!-- Selection Checkbox Display (Mobile) -->
+    <string name="settings_selection_checkbox_title">
+Seçim onay kutuları
+</string>
+    <string name="settings_selection_checkbox_subtitle_enabled">
+Seçim modunda onay kutuları görünür
+</string>
+    <string name="settings_selection_checkbox_subtitle_disabled">
+Onay kutuları gizli (seçim, satır vurgusuyla gösterilir)
+</string>
+    <string name="backup_pref_selection_checkbox">
+Seçim Onay Kutusu Görüntüleme Ayarları
+</string>
+
+    <!-- Tab Quick Transfer -->
+    <string name="transfer_to_tab_title">
+Sekmeye aktar
+</string>
+    <string name="transfer_to_tab_prompt">
+%1$s öğe için hedef sekme seçin:
 </string>
 
     <!-- GIF Creator -->

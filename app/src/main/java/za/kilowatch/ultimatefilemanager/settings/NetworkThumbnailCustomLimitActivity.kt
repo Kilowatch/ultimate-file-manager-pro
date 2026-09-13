@@ -55,7 +55,13 @@ class NetworkThumbnailCustomLimitActivity : AppCompatActivity() {
         val btnSave = findViewById<Button>(R.id.btnSave)
         val btnCancel = findViewById<Button>(R.id.btnCancel)
 
-        currentMb = NetworkThumbnailPreferenceManager.getCacheLimitMb(this)
+        val mode = intent.getStringExtra("mode") ?: "network"
+
+        currentMb = if (mode == "local") {
+            ThumbnailPreferenceManager.getCacheLimitMb(this)
+        } else {
+            NetworkThumbnailPreferenceManager.getCacheLimitMb(this)
+        }
         useGb = currentMb >= 1024
 
         fun refreshDisplay() {
@@ -113,7 +119,11 @@ class NetworkThumbnailCustomLimitActivity : AppCompatActivity() {
         }
 
         btnSave.setOnClickListener {
-            NetworkThumbnailPreferenceManager.setCacheLimitMb(this, currentMb)
+            if (mode == "local") {
+                ThumbnailPreferenceManager.setCacheLimitMb(this, currentMb)
+            } else {
+                NetworkThumbnailPreferenceManager.setCacheLimitMb(this, currentMb)
+            }
             finish()
         }
 
@@ -140,5 +150,11 @@ class NetworkThumbnailCustomLimitActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putBoolean("font_handled", handledFontChange)
         outState.putBoolean("locale_handled", handledLocaleChange)
+    }
+
+    companion object {
+        const val EXTRA_MODE = "mode"
+        const val MODE_LOCAL = "local"
+        const val MODE_NETWORK = "network"
     }
 }

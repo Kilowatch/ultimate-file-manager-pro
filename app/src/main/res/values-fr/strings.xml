@@ -4934,6 +4934,65 @@ Sélectionner le dossier du cache
 5 Go
 </string>
 
+    <!-- Local Media Thumbnails -->
+    <string name="settings_local_thumbnails_title">
+Miniatures des médias
+</string>
+    <string name="settings_local_thumbnails_subtitle">
+Mise en cache persistante pour les médias et le stockage locaux
+</string>
+    <string name="lt_enable_title">
+Activer les miniatures des médias
+</string>
+    <string name="lt_enable_desc">
+Générer et mettre en cache les miniatures pour les vidéos locales, les pochettes audio, les APK et les images de l\\\'appareil photo.
+</string>
+    <string name="lt_cache_limit_title">
+Limite de taille du cache
+</string>
+    <string name="lt_cache_limit_desc">
+Espace de stockage maximal à utiliser pour la mise en cache des miniatures locales.
+</string>
+    <string name="lt_cache_folder_title">
+Répertoire du cache
+</string>
+    <string name="lt_cache_folder_desc">
+Sélectionnez l\\\'emplacement de stockage des fichiers de cache des miniatures locales (Interne ou Carte SD).
+</string>
+    <string name="lt_clear_cache_title">
+Effacer tout le cache
+</string>
+    <string name="lt_clear_cache_desc">
+Supprimer toutes les miniatures locales en cache et réinitialiser la base de données.
+</string>
+    <string name="lt_clear_cache_confirm_title">
+Effacer le cache local ?
+</string>
+    <string name="lt_clear_cache_confirm_msg">
+Cela supprimera définitivement toutes les miniatures en cache pour le stockage local. Elles seront régénérées lors de votre navigation.
+</string>
+    <string name="lt_stats_title">
+Statistiques du cache
+</string>
+    <string name="lt_stats_size">
+Utilisation actuelle : %1$s / %2$d Mo (%3$d éléments)
+</string>
+    <string name="lt_select_folder">
+Sélectionner le dossier de cache
+</string>
+    <string name="lt_cache_folder_guide_title">
+Dossier de cache local des vignettes
+</string>
+    <string name="lt_cache_folder_guide_msg">
+Choisissez un répertoire personnalisé sur votre stockage interne ou votre carte SD externe où les fichiers persistants de vignettes locales (.webp) seront enregistrés.
+</string>
+    <string name="lt_use_this_folder_for_caching">
+Utilisez ce dossier pour le cache local des vignettes
+</string>
+    <string name="lt_confirm_cache_folder_msg">
+Les vignettes de vos fichiers locaux seront stockées dans ce dossier : %s
+</string>
+
     <string name="got_it">
 COMPRIS
 </string>
@@ -12422,6 +12481,28 @@ Toucher l\\\'icône d\\\'un dossier ou d\\\'un fichier ouvre l\\\'élément norm
 </string>
     <string name="backup_pref_icon_tap_edit_mode">
 Paramètres du mode d\\\'édition par appui sur l\\\'icône
+</string>
+
+    <!-- Selection Checkbox Display (Mobile) -->
+    <string name="settings_selection_checkbox_title">
+Cases à cocher de sélection
+</string>
+    <string name="settings_selection_checkbox_subtitle_enabled">
+Les cases à cocher sont visibles en mode sélection
+</string>
+    <string name="settings_selection_checkbox_subtitle_disabled">
+Cases à cocher masquées (sélection indiquée par la surbrillance de la ligne)
+</string>
+    <string name="backup_pref_selection_checkbox">
+Paramètres d\\\'affichage des cases à cocher de sélection
+</string>
+
+    <!-- Tab Quick Transfer -->
+    <string name="transfer_to_tab_title">
+Transférer vers l\\\'onglet
+</string>
+    <string name="transfer_to_tab_prompt">
+Sélectionner l\\\'onglet de destination pour %1$s élément(s) :
 </string>
 
     <!-- GIF Creator -->

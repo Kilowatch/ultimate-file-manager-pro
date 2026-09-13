@@ -54,7 +54,11 @@ class NetworkFileAdapter(
     private val cacheManager = NetworkThumbnailCacheManager(context)
 
     companion object {
-        private val thumbnailPathCache = mutableMapOf<String, String>()
+        private val thumbnailPathCache = java.util.concurrent.ConcurrentHashMap<String, String>()
+
+        fun putCachedPath(path: String, diskPath: String) {
+            thumbnailPathCache[path] = diskPath
+        }
 
         fun clearCacheForPath(path: String) {
             thumbnailPathCache.remove(path)
@@ -268,9 +272,10 @@ class NetworkFileAdapter(
             }
         }
 
-        // Prune stale cache entries for this folder asynchronously
+        // Pre-warm thumbnail cache and prune stale entries asynchronously
         if (NetworkThumbnailPreferenceManager.isEnabled(context)) {
             adapterScope.launch(Dispatchers.IO) {
+                cacheManager.warmCacheForFiles(share, newFiles)
                 cacheManager.pruneStaleThumbnails(share, newFiles)
             }
         }
@@ -814,9 +819,20 @@ class NetworkFileAdapter(
                     }
                 }
             } else {
-                imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, file.name.substringAfterLast('.', "")))
-                val fileTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
-                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(fileTintColor)
+                val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                val isVideo = ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS
+                val isApk = ext in listOf("apk", "xapk", "apks")
+                val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
+                val isCached = isEnabled && isMedia && (
+                    thumbnailPathCache[file.path]?.let { File(it).exists() } == true ||
+                    cacheManager.getExistingDiskThumbnail(share, file)?.also { thumbnailPathCache[file.path] = it } != null
+                )
+
+                if (!isCached) {
+                    imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, file.name.substringAfterLast('.', "")))
+                    val fileTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(fileTintColor)
+                }
                 if (!isGrid) {
                     val sizeStr = if (file.size == SmbShareClient.SIZE_UNKNOWN_SENTINEL) {
                         Formatter.formatFileSize(context, 0L)
@@ -1077,6 +1093,7 @@ class NetworkFileAdapter(
             za.kilowatch.ultimatefilemanager.util.GoRoLog.d("UFM_CACHE", "🚀 [GoRo] Attempting loadThumbnail for: ${file.name}, scope_active=${adapterScope.isActive}")
 
             val cachedPath = thumbnailPathCache[file.path]
+                ?: cacheManager.getExistingDiskThumbnail(share, file)?.also { thumbnailPathCache[file.path] = it }
             if (cachedPath != null && File(cachedPath).exists()) {
                 imgIcon.imageTintList = null
                 iconContainer?.setBackgroundResource(0)
@@ -1095,9 +1112,8 @@ class NetworkFileAdapter(
                 val fileTypeImage = fileTypeDrawable?.asImage()
 
                 coilDisposable = imgIcon.load(File(cachedPath)) {
-                    crossfade(200)
+                    crossfade(false)
                     allowHardware(false)
-                    placeholder(placeholderImage)
                     error(fileTypeImage ?: placeholderImage)
                     if (!isGridMode) {
                         scale(Scale.FILL)
@@ -1155,7 +1171,7 @@ class NetworkFileAdapter(
                         // Only apply if this ViewHolder is still bound to the same file
                         if (imgIcon.tag == file.path) {
                             coilDisposable = imgIcon.load(File(thumbnailPath)) {
-                                crossfade(200)
+                                crossfade(false)
                                 allowHardware(false)
                                 placeholder(placeholderImage)
                                 error(fileTypeImage ?: placeholderImage)

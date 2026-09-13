@@ -4934,6 +4934,65 @@ OK
 5 GB
 </string>
 
+    <!-- Local Media Thumbnails -->
+    <string name="settings_local_thumbnails_title">
+メディアサムネイル
+</string>
+    <string name="settings_local_thumbnails_subtitle">
+ローカルメディアとストレージの永続キャッシュ
+</string>
+    <string name="lt_enable_title">
+メディアサムネイルを有効化
+</string>
+    <string name="lt_enable_desc">
+ローカル動画、音声のカバーアート、APK、カメラ画像のサムネイルを生成してキャッシュします。
+</string>
+    <string name="lt_cache_limit_title">
+キャッシュサイズの上限
+</string>
+    <string name="lt_cache_limit_desc">
+ローカルサムネイルのキャッシュに使用する最大ストレージ容量。
+</string>
+    <string name="lt_cache_folder_title">
+キャッシュディレクトリ
+</string>
+    <string name="lt_cache_folder_desc">
+ローカルサムネイルのキャッシュファイルの保存先を選択します（内部ストレージまたはSDカード）。
+</string>
+    <string name="lt_clear_cache_title">
+すべてのキャッシュを削除
+</string>
+    <string name="lt_clear_cache_desc">
+キャッシュされたローカルサムネイルをすべて削除し、データベースをリセットします。
+</string>
+    <string name="lt_clear_cache_confirm_title">
+ローカルキャッシュを削除しますか？
+</string>
+    <string name="lt_clear_cache_confirm_msg">
+ローカルストレージのキャッシュ済みサムネイルをすべて完全に削除します。閲覧時に再生成されます。
+</string>
+    <string name="lt_stats_title">
+キャッシュ統計
+</string>
+    <string name="lt_stats_size">
+現在の使用量: %1$s / %2$d MB（%3$d 件）
+</string>
+    <string name="lt_select_folder">
+キャッシュフォルダを選択
+</string>
+    <string name="lt_cache_folder_guide_title">
+ローカルサムネイルキャッシュフォルダ
+</string>
+    <string name="lt_cache_folder_guide_msg">
+内部ストレージまたは外部SDカード上のカスタムディレクトリを選択してください。ここには永続的なローカルサムネイルファイル（.webp）が保存されます。
+</string>
+    <string name="lt_use_this_folder_for_caching">
+このフォルダをローカルサムネイルキャッシュに使用する
+</string>
+    <string name="lt_confirm_cache_folder_msg">
+ローカルファイルのサムネイルはこのフォルダに保存されます: %s
+</string>
+
     <string name="got_it">
 了解
 </string>
@@ -12422,6 +12481,28 @@ UFMが前回のセッション中に応答しなくなりました。修正に�
 </string>
     <string name="backup_pref_icon_tap_edit_mode">
 アイコンタップ編集モードの設定
+</string>
+
+    <!-- Selection Checkbox Display (Mobile) -->
+    <string name="settings_selection_checkbox_title">
+選択チェックボックス
+</string>
+    <string name="settings_selection_checkbox_subtitle_enabled">
+選択モードでチェックボックスを表示します
+</string>
+    <string name="settings_selection_checkbox_subtitle_disabled">
+チェックボックスを非表示（選択は行のハイライトで表示）
+</string>
+    <string name="backup_pref_selection_checkbox">
+選択チェックボックスの表示設定
+</string>
+
+    <!-- Tab Quick Transfer -->
+    <string name="transfer_to_tab_title">
+タブへ転送
+</string>
+    <string name="transfer_to_tab_prompt">
+%1$s 件の項目の転送先タブを選択:
 </string>
 
     <!-- GIF Creator -->

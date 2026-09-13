@@ -2968,6 +2968,19 @@ class FileBrowserFragment : Fragment() {
                 updateEmptyState(sorted.isEmpty())
                 updatePasteFab()
                 restoreScroll()
+                if (::currentDir.isInitialized) {
+                    val currentFolder = currentDir.absolutePath
+                    val items = sorted.toList()
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        try {
+                            val mgr = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager(safeContext)
+                            mgr.warmCacheForFolder(currentFolder)
+                            if (items.isNotEmpty()) {
+                                mgr.pruneStaleThumbnails(currentFolder, items)
+                            }
+                        } catch (_: Throwable) {}
+                    }
+                }
             }
         }
 

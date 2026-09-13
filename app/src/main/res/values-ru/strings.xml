@@ -4934,6 +4934,65 @@ OK
 5 ГБ
 </string>
 
+    <!-- Local Media Thumbnails -->
+    <string name="settings_local_thumbnails_title">
+Миниатюры медиафайлов
+</string>
+    <string name="settings_local_thumbnails_subtitle">
+Постоянное кэширование для локальных медиафайлов и хранилища
+</string>
+    <string name="lt_enable_title">
+Включить миниатюры медиафайлов
+</string>
+    <string name="lt_enable_desc">
+Создавать и кэшировать миниатюры для локальных видео, обложек аудио, APK-файлов и изображений с камеры.
+</string>
+    <string name="lt_cache_limit_title">
+Ограничение размера кэша
+</string>
+    <string name="lt_cache_limit_desc">
+Максимальное пространство для кэширования локальных миниатюр.
+</string>
+    <string name="lt_cache_folder_title">
+Каталог кэша
+</string>
+    <string name="lt_cache_folder_desc">
+Выберите место для хранения файлов кэша локальных миниатюр (Внутренняя память или SD-карта).
+</string>
+    <string name="lt_clear_cache_title">
+Очистить весь кэш
+</string>
+    <string name="lt_clear_cache_desc">
+Удалить все кэшированные локальные миниатюры и сбросить базу данных.
+</string>
+    <string name="lt_clear_cache_confirm_title">
+Очистить локальный кэш?
+</string>
+    <string name="lt_clear_cache_confirm_msg">
+Это навсегда удалит все кэшированные миниатюры для локального хранилища. Они будут созданы заново при просмотре.
+</string>
+    <string name="lt_stats_title">
+Статистика кэша
+</string>
+    <string name="lt_stats_size">
+Текущее использование: %1$s / %2$d МБ (%3$d элементов)
+</string>
+    <string name="lt_select_folder">
+Выбрать папку кэша
+</string>
+    <string name="lt_cache_folder_guide_title">
+Папка локального кэша миниатюр
+</string>
+    <string name="lt_cache_folder_guide_msg">
+Выберите свой каталог во внутренней памяти или на внешней SD-карте, где будут сохраняться постоянные файлы локальных миниатюр (.webp).
+</string>
+    <string name="lt_use_this_folder_for_caching">
+Использовать эту папку для локального кэша миниатюр
+</string>
+    <string name="lt_confirm_cache_folder_msg">
+Миниатюры для ваших локальных файлов будут сохраняться в этой папке: %s
+</string>
+
     <string name="got_it">
 ПОНЯТНО
 </string>
@@ -12422,6 +12481,28 @@ UFM перестал отвечать во время вашего послед�
 </string>
     <string name="backup_pref_icon_tap_edit_mode">
 Настройки режима редактирования по нажатию на значок
+</string>
+
+    <!-- Selection Checkbox Display (Mobile) -->
+    <string name="settings_selection_checkbox_title">
+Флажки выбора
+</string>
+    <string name="settings_selection_checkbox_subtitle_enabled">
+Флажки отображаются в режиме выбора
+</string>
+    <string name="settings_selection_checkbox_subtitle_disabled">
+Флажки скрыты (выбор показан подсветкой строки)
+</string>
+    <string name="backup_pref_selection_checkbox">
+Настройки отображения флажков выбора
+</string>
+
+    <!-- Tab Quick Transfer -->
+    <string name="transfer_to_tab_title">
+Передать на вкладку
+</string>
+    <string name="transfer_to_tab_prompt">
+Выберите вкладку назначения для %1$s элемент(ов):
 </string>
 
     <!-- GIF Creator -->

@@ -63,6 +63,13 @@ class FileAdapter(
 
     companion object {
         private val videoCache = android.util.LruCache<String, android.graphics.Bitmap>(64)
+        val thumbnailPathCache = java.util.concurrent.ConcurrentHashMap<String, String>()
+
+        fun putCachedPath(path: String, localPath: String) {
+            thumbnailPathCache[path] = localPath
+        }
+
+        fun getCachedPath(path: String): String? = thumbnailPathCache[path]
 
         fun getVideoThumbnail(path: String): android.graphics.Bitmap? = videoCache.get(path)
 
@@ -72,6 +79,7 @@ class FileAdapter(
 
         fun clearCacheForPath(path: String) {
             videoCache.remove(path)
+            thumbnailPathCache.remove(path)
             za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.clearCacheForPath(path)
         }
 
@@ -83,6 +91,7 @@ class FileAdapter(
                     videoCache.remove(key)
                 }
             }
+            thumbnailPathCache.keys.filter { it == folderPath || it.startsWith(prefix) }.forEach { thumbnailPathCache.remove(it) }
             za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.clearCacheForFolder(folderPath)
         }
     }
@@ -129,6 +138,7 @@ class FileAdapter(
     }
 
     private val files = mutableListOf<File>()
+    fun getFiles(): List<File> = files.toList()
     private val items = mutableListOf<ListItem>()
     var isGroupedByDate = false
     private val selectedPaths = mutableSetOf<String>()
@@ -276,6 +286,20 @@ class FileAdapter(
                 removeBufferRows()
             }
             onSelectionChanged(selectedPaths.size)
+        }
+
+        // Pre-warm local thumbnail cache and prune stale thumbnails asynchronously
+        val ctx = attachedContext
+        if (ctx != null && ThumbnailPreferenceManager.isEnabled(ctx)) {
+            val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager.getInstance(ctx)
+            @OptIn(DelicateCoroutinesApi::class)
+            GlobalScope.launch(Dispatchers.IO) {
+                cacheManager.warmCacheForFiles(filesCopy)
+                val parentPath = filesCopy.firstOrNull()?.parent
+                if (parentPath != null) {
+                    cacheManager.pruneStaleThumbnails(parentPath, filesCopy)
+                }
+            }
         }
 
         // Pre-compute directory child counts and total folder sizes off the main thread
@@ -877,7 +901,13 @@ class FileAdapter(
                 val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
                 val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
 
-                if (!isGrid && showThumbnails && (isImage || isVideo || isApk || (isAudio && !za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(file.absolutePath)))) {
+                val isMedia = isImage || isVideo || isApk || (isAudio && !za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(file.absolutePath))
+                val isCached = showThumbnails && isMedia && (
+                    thumbnailPathCache[file.absolutePath]?.let { File(it).exists() } == true ||
+                    za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager.getInstance(context).getExistingDiskThumbnail(file)?.also { thumbnailPathCache[file.absolutePath] = it } != null
+                )
+
+                if (!isGrid && showThumbnails && isMedia) {
                     // ── Thumbnail mode ────────────────────────────────────────
                     // Zero out image padding and clear the circle bg so the
                     // thumbnail crops to fill the full row height.
@@ -895,7 +925,7 @@ class FileAdapter(
                     }
 
                     isDisplayingThumbnail = true
-                    if (isFastNavigating) {
+                    if (isFastNavigating && !isCached) {
                         hasLoadedThumbnail = false
                         if (isAudio) {
                             imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
@@ -938,7 +968,7 @@ class FileAdapter(
                     txtSize.text = Formatter.formatFileSize(context, file.lengthCached())
                     txtSize.visibility = View.VISIBLE
                 } else {
-                    if (showThumbnails && (isImage || isVideo || isApk || (isAudio && !za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(file.absolutePath)))) {
+                    if (showThumbnails && isMedia) {
                         iconContainer?.setBackgroundResource(0)
                         imgIcon.setPadding(0, 0, 0, 0)
                         imgIcon.clipToOutline = true
@@ -948,7 +978,7 @@ class FileAdapter(
                                 outline.setRoundRect(0, 0, view.width, view.height, radius)
                             }
                         }
-                        if (isFastNavigating) {
+                        if (isFastNavigating && !isCached) {
                             hasLoadedThumbnail = false
                             if (isAudio) {
                                 imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
@@ -969,7 +999,16 @@ class FileAdapter(
                             loadThumbnail(file)
                         }
                     } else {
-                        loadThumbnail(file)
+                        iconContainer?.setBackgroundResource(0)
+                        imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
+                        val tintColor = if (isTv) {
+                            DefaultIconColorManager.getTvIconTint(context)
+                        } else {
+                            DefaultIconColorManager.getMobileIconTint(context)
+                        }
+                        imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                        imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                        imgIcon.clipToOutline = false
                     }
                 }
             }
@@ -1244,41 +1283,70 @@ class FileAdapter(
                     ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(itemView.context, file.absolutePath)
             } else null
 
-            if (isImage) {
-                // Coil can decode standard images natively. For RAW/specialized images that Coil
-                // cannot decode directly, fallback to Exif embedded preview or FFmpeg frame extraction.
-                imgIcon.tag = file.absolutePath
-                val loadTarget: Any = safDocUri ?: file
-                coilDisposable = imgIcon.load(loadTarget) {
+            imgIcon.tag = file.absolutePath
+            val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager.getInstance(itemView.context)
+            val cachedPath = thumbnailPathCache[file.absolutePath]
+                ?: cacheManager.getExistingDiskThumbnail(file)?.also { thumbnailPathCache[file.absolutePath] = it }
+
+            if (cachedPath != null && File(cachedPath).exists()) {
+                coilDisposable = imgIcon.load(File(cachedPath)) {
                     size(128, 128)
                     precision(Precision.INEXACT)
-                    if (isTv) {
-                        crossfade(false)
-                        allowHardware(true)
-                    } else {
-                        crossfade(200)
-                        allowHardware(false)
-                    }
+                    crossfade(false)
+                    allowHardware(!isTv)
                     scale(Scale.FILL)
-                    placeholder(placeholderImage)
                     error(placeholderImage)
-                    listener(
-                        onError = { _, _ ->
-                            if (imgIcon.tag == file.absolutePath) {
-                                @OptIn(DelicateCoroutinesApi::class)
-                                videoJob = GlobalScope.launch(Dispatchers.IO) {
-                                    val bmp = extractRawOrImageThumbnail(file, 512)
-                                    if (bmp != null) {
-                                        withContext(Dispatchers.Main) {
+                }
+                return
+            }
+
+            if (isImage) {
+                @OptIn(DelicateCoroutinesApi::class)
+                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                    val thumbPath = cacheManager.getThumbnail(file)
+                    withContext(Dispatchers.Main) {
+                        if (imgIcon.tag == file.absolutePath) {
+                            if (thumbPath != null && File(thumbPath).exists()) {
+                                thumbnailPathCache[file.absolutePath] = thumbPath
+                                coilDisposable = imgIcon.load(File(thumbPath)) {
+                                    size(128, 128)
+                                    precision(Precision.INEXACT)
+                                    crossfade(false)
+                                    allowHardware(!isTv)
+                                    scale(Scale.FILL)
+                                    error(placeholderImage)
+                                }
+                            } else {
+                                val loadTarget: Any = safDocUri ?: file
+                                coilDisposable = imgIcon.load(loadTarget) {
+                                    size(128, 128)
+                                    precision(Precision.INEXACT)
+                                    crossfade(false)
+                                    allowHardware(!isTv)
+                                    scale(Scale.FILL)
+                                    placeholder(placeholderImage)
+                                    error(placeholderImage)
+                                    listener(
+                                        onError = { _, _ ->
                                             if (imgIcon.tag == file.absolutePath) {
-                                                imgIcon.setImageBitmap(bmp)
+                                                @OptIn(DelicateCoroutinesApi::class)
+                                                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                                                    val bmp = extractRawOrImageThumbnail(file, 512)
+                                                    if (bmp != null) {
+                                                        withContext(Dispatchers.Main) {
+                                                            if (imgIcon.tag == file.absolutePath) {
+                                                                imgIcon.setImageBitmap(bmp)
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
-                                    }
+                                    )
                                 }
                             }
                         }
-                    )
+                    }
                 }
             } else if (isApk) {
                 // APK / XAPK / APKS: extract the app icon via the shared helper
@@ -1288,15 +1356,28 @@ class FileAdapter(
 
                 @OptIn(DelicateCoroutinesApi::class)
                 videoJob = GlobalScope.launch(Dispatchers.IO) {
-                    val drawable = resolveApkIcon(file)
-
-                    withContext(Dispatchers.Main) {
-                        if (imgIcon.tag == file.absolutePath) {
-                            stopPulse()
-                            if (drawable != null) {
-                                coilDisposable = imgIcon.load(drawable) {
-                                    crossfade(150)
-                                    allowHardware(false)
+                    val thumbPath = cacheManager.getThumbnail(file)
+                    if (thumbPath != null && File(thumbPath).exists()) {
+                        thumbnailPathCache[file.absolutePath] = thumbPath
+                        withContext(Dispatchers.Main) {
+                            if (imgIcon.tag == file.absolutePath) {
+                                stopPulse()
+                                coilDisposable = imgIcon.load(File(thumbPath)) {
+                                    crossfade(false)
+                                    allowHardware(!isTv)
+                                }
+                            }
+                        }
+                    } else {
+                        val drawable = resolveApkIcon(file)
+                        withContext(Dispatchers.Main) {
+                            if (imgIcon.tag == file.absolutePath) {
+                                stopPulse()
+                                if (drawable != null) {
+                                    coilDisposable = imgIcon.load(drawable) {
+                                        crossfade(false)
+                                        allowHardware(false)
+                                    }
                                 }
                             }
                         }
@@ -1333,14 +1414,31 @@ class FileAdapter(
 
                     @OptIn(DelicateCoroutinesApi::class)
                     videoJob = GlobalScope.launch(Dispatchers.IO) {
-                        val bmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractCover(itemView.context, file, 256)
-                        if (bmp != null) {
+                        val thumbPath = cacheManager.getThumbnail(file)
+                        if (thumbPath != null && File(thumbPath).exists()) {
+                            thumbnailPathCache[file.absolutePath] = thumbPath
                             withContext(Dispatchers.Main) {
                                 if (imgIcon.tag == file.absolutePath) {
-                                    imgIcon.setImageBitmap(bmp)
+                                    coilDisposable = imgIcon.load(File(thumbPath)) {
+                                        crossfade(false)
+                                        allowHardware(!isTv)
+                                        scale(Scale.FILL)
+                                    }
                                     imgIcon.imageTintList = null
                                     imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
                                     imgIcon.clipToOutline = true
+                                }
+                            }
+                        } else {
+                            val bmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractCover(itemView.context, file, 256)
+                            if (bmp != null) {
+                                withContext(Dispatchers.Main) {
+                                    if (imgIcon.tag == file.absolutePath) {
+                                        imgIcon.setImageBitmap(bmp)
+                                        imgIcon.imageTintList = null
+                                        imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
+                                        imgIcon.clipToOutline = true
+                                    }
                                 }
                             }
                         }
@@ -1360,103 +1458,118 @@ class FileAdapter(
 
                     @OptIn(DelicateCoroutinesApi::class)
                     videoJob = GlobalScope.launch(Dispatchers.IO) {
-                        var bitmap: android.graphics.Bitmap? = null
-                        val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
-                        val isMjpeg = file.extension.lowercase() in listOf("mjpeg", "mjpg", "mjp")
-                        if (isSaf) {
-                            if (isMjpeg) {
-                                bitmap = decodeMjpegThumbnail(file, 512)
-                            } else {
-                                if (safDocUri != null) {
-                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                                        try {
-                                            bitmap = itemView.context.contentResolver.loadThumbnail(
-                                                safDocUri,
-                                                android.util.Size(512, 512),
-                                                null
-                                            )
-                                        } catch (_: Throwable) {}
-                                    }
-
-                                    if (bitmap == null) {
-                                        try {
-                                            val retriever = android.media.MediaMetadataRetriever()
-                                            try {
-                                                retriever.setDataSource(itemView.context, safDocUri)
-                                                val durationMs = retriever.extractMetadata(
-                                                    android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
-                                                )?.toLongOrNull() ?: 0L
-                                                val durationUs = durationMs * 1000L
-                                                val timeUs = if (durationUs > 0) durationUs * pct / 100L else 0L
-                                                val raw = retriever.getFrameAtTime(
-                                                    timeUs,
-                                                    android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC
-                                                )
-                                                if (raw != null) {
-                                                    val maxPx = 512
-                                                    val w = raw.width; val h = raw.height
-                                                    bitmap = if (w <= maxPx && h <= maxPx) raw else {
-                                                        val scale = maxPx.toFloat() / maxOf(w, h)
-                                                        android.graphics.Bitmap.createScaledBitmap(raw,
-                                                            (w * scale).toInt().coerceAtLeast(1),
-                                                            (h * scale).toInt().coerceAtLeast(1), true)
-                                                    }
-                                                }
-                                            } finally {
-                                                try { retriever.release() } catch (_: Exception) {}
-                                            }
-                                        } catch (_: Throwable) {}
+                        val thumbPath = cacheManager.getThumbnail(file)
+                        if (thumbPath != null && File(thumbPath).exists()) {
+                            thumbnailPathCache[file.absolutePath] = thumbPath
+                            withContext(Dispatchers.Main) {
+                                if (imgIcon.tag == file.absolutePath) {
+                                    stopPulse()
+                                    coilDisposable = imgIcon.load(File(thumbPath)) {
+                                        crossfade(false)
+                                        allowHardware(!isTv)
+                                        scale(Scale.FILL)
                                     }
                                 }
                             }
                         } else {
-                            bitmap = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
-                                file.absolutePath, pct, 512, 512
-                            )
+                            var bitmap: android.graphics.Bitmap? = null
+                            val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
+                            val isMjpeg = file.extension.lowercase() in listOf("mjpeg", "mjpg", "mjp")
+                            if (isSaf) {
+                                if (isMjpeg) {
+                                    bitmap = decodeMjpegThumbnail(file, 512)
+                                } else {
+                                    if (safDocUri != null) {
+                                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                            try {
+                                                bitmap = itemView.context.contentResolver.loadThumbnail(
+                                                    safDocUri,
+                                                    android.util.Size(512, 512),
+                                                    null
+                                                )
+                                            } catch (_: Throwable) {}
+                                        }
 
-                            if (bitmap == null) {
-                                bitmap = try {
-                                    val retriever = android.media.MediaMetadataRetriever()
-                                    try {
-                                        retriever.setDataSource(file.absolutePath)
-                                        val durationMs = retriever.extractMetadata(
-                                            android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
-                                        )?.toLongOrNull() ?: 0L
-                                        val durationUs = durationMs * 1000L
-                                        val timeUs = if (durationUs > 0) durationUs * pct / 100L else 0L
-                                        val raw = retriever.getFrameAtTime(
-                                            timeUs,
-                                            android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC
-                                        )
-                                        if (raw != null) {
-                                            val maxPx = 512
-                                            val w = raw.width; val h = raw.height
-                                            if (w <= maxPx && h <= maxPx) raw else {
-                                                val scale = maxPx.toFloat() / maxOf(w, h)
-                                                android.graphics.Bitmap.createScaledBitmap(raw,
-                                                    (w * scale).toInt().coerceAtLeast(1),
-                                                    (h * scale).toInt().coerceAtLeast(1), true)
-                                            }
-                                        } else null
-                                    } finally {
-                                        try { retriever.release() } catch (_: Exception) {}
+                                        if (bitmap == null) {
+                                            try {
+                                                val retriever = android.media.MediaMetadataRetriever()
+                                                try {
+                                                    retriever.setDataSource(itemView.context, safDocUri)
+                                                    val durationMs = retriever.extractMetadata(
+                                                        android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
+                                                    )?.toLongOrNull() ?: 0L
+                                                    val durationUs = durationMs * 1000L
+                                                    val timeUs = if (durationUs > 0) durationUs * pct / 100L else 0L
+                                                    val raw = retriever.getFrameAtTime(
+                                                        timeUs,
+                                                        android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC
+                                                    )
+                                                    if (raw != null) {
+                                                        val maxPx = 512
+                                                        val w = raw.width; val h = raw.height
+                                                        bitmap = if (w <= maxPx && h <= maxPx) raw else {
+                                                            val scale = maxPx.toFloat() / maxOf(w, h)
+                                                            android.graphics.Bitmap.createScaledBitmap(raw,
+                                                                (w * scale).toInt().coerceAtLeast(1),
+                                                                (h * scale).toInt().coerceAtLeast(1), true)
+                                                        }
+                                                    }
+                                                } finally {
+                                                    try { retriever.release() } catch (_: Exception) {}
+                                                }
+                                            } catch (_: Throwable) {}
+                                        }
                                     }
-                                } catch (_: Throwable) { null }
-                            }
-                            if (bitmap == null) {
-                                bitmap = decodeMjpegThumbnail(file, 512)
-                            }
-                        }
+                                }
+                            } else {
+                                bitmap = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
+                                    file.absolutePath, pct, 512, 512
+                                )
 
-                        withContext(Dispatchers.Main) {
-                            if (imgIcon.tag == file.absolutePath) {
-                                stopPulse()
-                                if (bitmap != null) {
-                                    videoCache.put(file.absolutePath, bitmap)
-                                    coilDisposable = imgIcon.load(bitmap) {
-                                        crossfade(150)
-                                        allowHardware(false)
-                                        scale(Scale.FILL)
+                                if (bitmap == null) {
+                                    bitmap = try {
+                                        val retriever = android.media.MediaMetadataRetriever()
+                                        try {
+                                            retriever.setDataSource(file.absolutePath)
+                                            val durationMs = retriever.extractMetadata(
+                                                android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
+                                            )?.toLongOrNull() ?: 0L
+                                            val durationUs = durationMs * 1000L
+                                            val timeUs = if (durationUs > 0) durationUs * pct / 100L else 0L
+                                            val raw = retriever.getFrameAtTime(
+                                                timeUs,
+                                                android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC
+                                            )
+                                            if (raw != null) {
+                                                val maxPx = 512
+                                                val w = raw.width; val h = raw.height
+                                                if (w <= maxPx && h <= maxPx) raw else {
+                                                    val scale = maxPx.toFloat() / maxOf(w, h)
+                                                    android.graphics.Bitmap.createScaledBitmap(raw,
+                                                        (w * scale).toInt().coerceAtLeast(1),
+                                                        (h * scale).toInt().coerceAtLeast(1), true)
+                                                }
+                                            } else null
+                                        } finally {
+                                            try { retriever.release() } catch (_: Exception) {}
+                                        }
+                                    } catch (_: Throwable) { null }
+                                }
+                                if (bitmap == null) {
+                                    bitmap = decodeMjpegThumbnail(file, 512)
+                                }
+                            }
+
+                            withContext(Dispatchers.Main) {
+                                if (imgIcon.tag == file.absolutePath) {
+                                    stopPulse()
+                                    if (bitmap != null) {
+                                        videoCache.put(file.absolutePath, bitmap)
+                                        coilDisposable = imgIcon.load(bitmap) {
+                                            crossfade(false)
+                                            allowHardware(false)
+                                            scale(Scale.FILL)
+                                        }
                                     }
                                 }
                             }
@@ -1703,43 +1816,84 @@ class FileAdapter(
 
             val placeholderImage = ContextCompat.getDrawable(itemView.context, R.drawable.ic_photo_video)?.asImage()
 
-            if (isImage) {
-                imgIcon.tag = file.absolutePath
-                val loadTarget: Any = safDocUri ?: file
-                coilDisposable = imgIcon.load(loadTarget) {
+            val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager.getInstance(context)
+            val cachedPath = thumbnailPathCache[file.absolutePath]
+                ?: cacheManager.getExistingDiskThumbnail(file)?.also { thumbnailPathCache[file.absolutePath] = it }
+
+            if (cachedPath != null && File(cachedPath).exists()) {
+                coilDisposable = imgIcon.load(File(cachedPath)) {
                     size(384, 384)
                     precision(Precision.INEXACT)
-                    if (isTv) {
-                        crossfade(false)
-                        allowHardware(true)
-                    } else {
-                        crossfade(150)
-                        allowHardware(false)
-                    }
+                    crossfade(false)
+                    allowHardware(!isTv)
                     scale(Scale.FILL)
-                    placeholder(placeholderImage)
                     error(placeholderImage)
                     listener(
                         onSuccess = { _, _ ->
                             if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
-                        },
-                        onError = { _, _ ->
-                            if (imgIcon.tag == file.absolutePath) {
-                                @OptIn(DelicateCoroutinesApi::class)
-                                videoJob = GlobalScope.launch(Dispatchers.IO) {
-                                    val bmp = extractRawOrImageThumbnail(file, 512)
-                                    if (bmp != null) {
-                                        withContext(Dispatchers.Main) {
+                        }
+                    )
+                }
+                return
+            }
+
+            if (isImage) {
+                imgIcon.tag = file.absolutePath
+                @OptIn(DelicateCoroutinesApi::class)
+                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                    val thumbPath = cacheManager.getThumbnail(file)
+                    withContext(Dispatchers.Main) {
+                        if (imgIcon.tag == file.absolutePath) {
+                            if (thumbPath != null && File(thumbPath).exists()) {
+                                thumbnailPathCache[file.absolutePath] = thumbPath
+                                coilDisposable = imgIcon.load(File(thumbPath)) {
+                                    size(384, 384)
+                                    precision(Precision.INEXACT)
+                                    crossfade(false)
+                                    allowHardware(!isTv)
+                                    scale(Scale.FILL)
+                                    error(placeholderImage)
+                                    listener(
+                                        onSuccess = { _, _ ->
+                                            if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
+                                        }
+                                    )
+                                }
+                            } else {
+                                val loadTarget: Any = safDocUri ?: file
+                                coilDisposable = imgIcon.load(loadTarget) {
+                                    size(384, 384)
+                                    precision(Precision.INEXACT)
+                                    crossfade(false)
+                                    allowHardware(!isTv)
+                                    scale(Scale.FILL)
+                                    placeholder(placeholderImage)
+                                    error(placeholderImage)
+                                    listener(
+                                        onSuccess = { _, _ ->
+                                            if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
+                                        },
+                                        onError = { _, _ ->
                                             if (imgIcon.tag == file.absolutePath) {
-                                                imgIcon.setImageBitmap(bmp)
-                                                if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
+                                                @OptIn(DelicateCoroutinesApi::class)
+                                                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                                                    val bmp = extractRawOrImageThumbnail(file, 512)
+                                                    if (bmp != null) {
+                                                        withContext(Dispatchers.Main) {
+                                                            if (imgIcon.tag == file.absolutePath) {
+                                                                imgIcon.setImageBitmap(bmp)
+                                                                if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
-                                    }
+                                    )
                                 }
                             }
                         }
-                    )
+                    }
                 }
             } else if (isApk) {
                 // APK / XAPK / APKS: extract the app icon via the shared helper
@@ -1750,25 +1904,38 @@ class FileAdapter(
 
                 @OptIn(DelicateCoroutinesApi::class)
                 videoJob = GlobalScope.launch(Dispatchers.IO) {
-                    val drawable = resolveApkIcon(file)
-
-                    withContext(Dispatchers.Main) {
-                        if (imgIcon.tag == file.absolutePath) {
-                            stopPulse()
-                            if (drawable != null) {
-                                coilDisposable = imgIcon.load(drawable) {
-                                    if (isTv) {
-                                        crossfade(false)
-                                        allowHardware(true)
-                                    } else {
-                                        crossfade(150)
-                                        allowHardware(false)
-                                    }
+                    val thumbPath = cacheManager.getThumbnail(file)
+                    if (thumbPath != null && File(thumbPath).exists()) {
+                        thumbnailPathCache[file.absolutePath] = thumbPath
+                        withContext(Dispatchers.Main) {
+                            if (imgIcon.tag == file.absolutePath) {
+                                stopPulse()
+                                coilDisposable = imgIcon.load(File(thumbPath)) {
+                                    crossfade(false)
+                                    allowHardware(!isTv)
                                     listener(
                                         onSuccess = { _, _ ->
                                             if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
                                         }
                                     )
+                                }
+                            }
+                        }
+                    } else {
+                        val drawable = resolveApkIcon(file)
+                        withContext(Dispatchers.Main) {
+                            if (imgIcon.tag == file.absolutePath) {
+                                stopPulse()
+                                if (drawable != null) {
+                                    coilDisposable = imgIcon.load(drawable) {
+                                        crossfade(false)
+                                        allowHardware(!isTv)
+                                        listener(
+                                            onSuccess = { _, _ ->
+                                                if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -1805,15 +1972,37 @@ class FileAdapter(
 
                     @OptIn(DelicateCoroutinesApi::class)
                     videoJob = GlobalScope.launch(Dispatchers.IO) {
-                        val bmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractCover(context, file, 384)
-                        if (bmp != null) {
+                        val thumbPath = cacheManager.getThumbnail(file)
+                        if (thumbPath != null && File(thumbPath).exists()) {
+                            thumbnailPathCache[file.absolutePath] = thumbPath
                             withContext(Dispatchers.Main) {
                                 if (imgIcon.tag == file.absolutePath) {
-                                    imgIcon.setImageBitmap(bmp)
+                                    coilDisposable = imgIcon.load(File(thumbPath)) {
+                                        crossfade(false)
+                                        allowHardware(!isTv)
+                                        scale(Scale.FILL)
+                                        listener(
+                                            onSuccess = { _, _ ->
+                                                if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
+                                            }
+                                        )
+                                    }
                                     imgIcon.imageTintList = null
                                     imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
                                     imgIcon.clipToOutline = true
-                                    if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
+                                }
+                            }
+                        } else {
+                            val bmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractCover(context, file, 384)
+                            if (bmp != null) {
+                                withContext(Dispatchers.Main) {
+                                    if (imgIcon.tag == file.absolutePath) {
+                                        imgIcon.setImageBitmap(bmp)
+                                        imgIcon.imageTintList = null
+                                        imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
+                                        imgIcon.clipToOutline = true
+                                        if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
+                                    }
                                 }
                             }
                         }
@@ -1834,99 +2023,114 @@ class FileAdapter(
                     
                     @OptIn(DelicateCoroutinesApi::class)
                     videoJob = GlobalScope.launch(Dispatchers.IO) {
-                        var bitmap: android.graphics.Bitmap? = null
-                        val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
-                        val isMjpeg = file.extension.lowercase() in listOf("mjpeg", "mjpg", "mjp")
-                        if (isSaf) {
-                            if (isMjpeg) {
-                                bitmap = decodeMjpegThumbnail(file, 480)
-                            } else {
-                                if (safDocUri != null) {
-                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                                        try {
-                                            bitmap = itemView.context.contentResolver.loadThumbnail(
-                                                safDocUri,
-                                                android.util.Size(480, 480),
-                                                null
-                                            )
-                                        } catch (_: Throwable) {}
-                                    }
-
-                                    if (bitmap == null) {
-                                        try {
-                                            val retriever = android.media.MediaMetadataRetriever()
-                                            try {
-                                                retriever.setDataSource(itemView.context, safDocUri)
-                                                val durationMs = retriever.extractMetadata(
-                                                    android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
-                                                )?.toLongOrNull() ?: 0L
-                                                val durationUs = durationMs * 1000L
-                                                val timeUs = if (durationUs > 0) durationUs * pct / 100L else 0L
-                                                val raw = retriever.getFrameAtTime(
-                                                    timeUs,
-                                                    android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC
-                                                )
-                                                if (raw != null) {
-                                                    val maxPx = 480
-                                                    val w = raw.width; val h = raw.height
-                                                    bitmap = if (w <= maxPx && h <= maxPx) raw else {
-                                                        val scale = maxPx.toFloat() / maxOf(w, h)
-                                                        android.graphics.Bitmap.createScaledBitmap(raw,
-                                                            (w * scale).toInt().coerceAtLeast(1),
-                                                            (h * scale).toInt().coerceAtLeast(1), true)
-                                                    }
-                                                }
-                                            } finally {
-                                                try { retriever.release() } catch (_: Exception) {}
-                                            }
-                                        } catch (_: Throwable) {}
-                                    }
-                                }
-                            }
-                        } else {
-                            bitmap = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
-                                file.absolutePath, pct, 480, 480
-                            )
-
-                            if (bitmap == null) {
-                                bitmap = try {
-                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                                        android.media.ThumbnailUtils.createVideoThumbnail(
-                                            file, android.util.Size(480, 480), null
-                                        )
-                                    } else {
-                                        @Suppress("DEPRECATION")
-                                        android.media.ThumbnailUtils.createVideoThumbnail(
-                                            file.absolutePath,
-                                            android.provider.MediaStore.Video.Thumbnails.MINI_KIND
-                                        )
-                                    }
-                                } catch (_: Throwable) { null }
-                            }
-                            if (bitmap == null) {
-                                bitmap = decodeMjpegThumbnail(file, 480)
-                            }
-                        }
-
-                        withContext(Dispatchers.Main) {
-                            if (imgIcon.tag == file.absolutePath) {
-                                stopPulse()
-                                if (bitmap != null) {
-                                    videoCache.put(file.absolutePath, bitmap)
-                                    coilDisposable = imgIcon.load(bitmap) {
-                                        if (isTv) {
-                                            crossfade(false)
-                                            allowHardware(true)
-                                        } else {
-                                            crossfade(150)
-                                            allowHardware(false)
-                                        }
+                        val thumbPath = cacheManager.getThumbnail(file)
+                        if (thumbPath != null && File(thumbPath).exists()) {
+                            thumbnailPathCache[file.absolutePath] = thumbPath
+                            withContext(Dispatchers.Main) {
+                                if (imgIcon.tag == file.absolutePath) {
+                                    stopPulse()
+                                    coilDisposable = imgIcon.load(File(thumbPath)) {
+                                        crossfade(false)
+                                        allowHardware(!isTv)
                                         scale(Scale.FILL)
                                         listener(
                                             onSuccess = { _, _ ->
                                                 if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
                                             }
                                         )
+                                    }
+                                }
+                            }
+                        } else {
+                            var bitmap: android.graphics.Bitmap? = null
+                            val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
+                            val isMjpeg = file.extension.lowercase() in listOf("mjpeg", "mjpg", "mjp")
+                            if (isSaf) {
+                                if (isMjpeg) {
+                                    bitmap = decodeMjpegThumbnail(file, 480)
+                                } else {
+                                    if (safDocUri != null) {
+                                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                            try {
+                                                bitmap = itemView.context.contentResolver.loadThumbnail(
+                                                    safDocUri,
+                                                    android.util.Size(480, 480),
+                                                    null
+                                                )
+                                            } catch (_: Throwable) {}
+                                        }
+
+                                        if (bitmap == null) {
+                                            try {
+                                                val retriever = android.media.MediaMetadataRetriever()
+                                                try {
+                                                    retriever.setDataSource(itemView.context, safDocUri)
+                                                    val durationMs = retriever.extractMetadata(
+                                                        android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
+                                                    )?.toLongOrNull() ?: 0L
+                                                    val durationUs = durationMs * 1000L
+                                                    val timeUs = if (durationUs > 0) durationUs * pct / 100L else 0L
+                                                    val raw = retriever.getFrameAtTime(
+                                                        timeUs,
+                                                        android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC
+                                                    )
+                                                    if (raw != null) {
+                                                        val maxPx = 480
+                                                        val w = raw.width; val h = raw.height
+                                                        bitmap = if (w <= maxPx && h <= maxPx) raw else {
+                                                            val scale = maxPx.toFloat() / maxOf(w, h)
+                                                            android.graphics.Bitmap.createScaledBitmap(raw,
+                                                                (w * scale).toInt().coerceAtLeast(1),
+                                                                (h * scale).toInt().coerceAtLeast(1), true)
+                                                        }
+                                                    }
+                                                } finally {
+                                                    try { retriever.release() } catch (_: Exception) {}
+                                                }
+                                            } catch (_: Throwable) {}
+                                        }
+                                    }
+                                }
+                            } else {
+                                bitmap = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
+                                    file.absolutePath, pct, 480, 480
+                                )
+
+                                if (bitmap == null) {
+                                    bitmap = try {
+                                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                            android.media.ThumbnailUtils.createVideoThumbnail(
+                                                file, android.util.Size(480, 480), null
+                                            )
+                                        } else {
+                                            @Suppress("DEPRECATION")
+                                            android.media.ThumbnailUtils.createVideoThumbnail(
+                                                file.absolutePath,
+                                                android.provider.MediaStore.Video.Thumbnails.MINI_KIND
+                                            )
+                                        }
+                                    } catch (_: Throwable) { null }
+                                }
+                                if (bitmap == null) {
+                                    bitmap = decodeMjpegThumbnail(file, 480)
+                                }
+                            }
+
+                            withContext(Dispatchers.Main) {
+                                if (imgIcon.tag == file.absolutePath) {
+                                    stopPulse()
+                                    if (bitmap != null) {
+                                        videoCache.put(file.absolutePath, bitmap)
+                                        coilDisposable = imgIcon.load(bitmap) {
+                                            crossfade(false)
+                                            allowHardware(!isTv)
+                                            scale(Scale.FILL)
+                                            listener(
+                                                onSuccess = { _, _ ->
+                                                    if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
+                                                }
+                                            )
+                                        }
                                     }
                                 }
                             }

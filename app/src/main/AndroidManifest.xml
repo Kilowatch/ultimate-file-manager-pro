@@ -375,6 +375,12 @@
             android:exported="false"
             android:label="@string/settings_network_thumbnails_title" />
 
+        <!-- Local Media Thumbnails Settings -->
+        <activity
+            android:name=".settings.LocalThumbnailSettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_local_thumbnails_title" />
+
         <!-- APK / XAPK Extract Settings -->
         <activity
             android:name=".settings.ExtractApkSettingsActivity"

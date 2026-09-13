@@ -2560,6 +2560,13 @@ class NetworkBrowserFragment : Fragment() {
         submitAdapterList {
             fileAdapter.submitList(sortedAndFiltered)
             layoutEmpty?.visibility = if (sortedAndFiltered.isEmpty()) View.VISIBLE else View.GONE
+            val currentFolder = currentPath
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(requireContext().applicationContext)
+                        .warmCacheForFolder(share.id, currentFolder)
+                } catch (_: Throwable) {}
+            }
         }
 
         if (isTv) {

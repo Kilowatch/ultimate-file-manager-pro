@@ -3582,6 +3582,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
             progressBar.visibility = View.GONE
             if (displayFiles.isEmpty()) layoutEmpty.visibility = View.VISIBLE else recyclerFiles.visibility = View.VISIBLE
             restoreScroll()
+            val currentFolder = currentPath
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(applicationContext)
+                        .warmCacheForFolder(share.id, currentFolder)
+                } catch (_: Throwable) {}
+            }
         }
 
         if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(this)) {

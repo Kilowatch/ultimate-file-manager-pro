@@ -868,43 +868,27 @@ class SafPickerActivity : AppCompatActivity() {
                             error(placeholderImage)
                         }
                     } else if (isVideo) {
-                        // Video: extract frame on a background coroutine
                         icon.setImageResource(R.drawable.ic_photo_video)
+                        val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager(itemView.context)
                         videoJob = lifecycleScope.launch(Dispatchers.IO) {
-                            val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
-                            var bitmap: android.graphics.Bitmap? = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
-                                file.absolutePath, pct, 256, 256
-                            )
-
-                            if (bitmap == null) {
-                                bitmap = try {
-                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                                        android.media.ThumbnailUtils.createVideoThumbnail(
-                                            file, android.util.Size(256, 256), null
-                                        )
-                                    } else {
-                                        @Suppress("DEPRECATION")
-                                        android.media.ThumbnailUtils.createVideoThumbnail(
-                                            file.absolutePath,
-                                            android.provider.MediaStore.Video.Thumbnails.MINI_KIND
-                                        )
-                                    }
-                                } catch (_: Throwable) { null }
-                            }
-
-                            withContext(Dispatchers.Main) {
-                                if (bitmap != null && isActive) {
-                                    coilDisposable = icon.load(bitmap) {
-                                        size(128, 128)
-                                        precision(Precision.INEXACT)
-                                        if (isTv) {
-                                            crossfade(false)
-                                            allowHardware(true)
-                                        } else {
-                                            crossfade(150)
-                                            allowHardware(false)
+                            val cachedPath = cacheManager.getThumbnail(file)
+                            if (cachedPath != null && isActive) {
+                                withContext(Dispatchers.Main) {
+                                    if (isActive) {
+                                        coilDisposable = icon.load(File(cachedPath)) {
+                                            size(128, 128)
+                                            precision(Precision.INEXACT)
+                                            if (isTv) {
+                                                crossfade(false)
+                                                allowHardware(true)
+                                            } else {
+                                                crossfade(150)
+                                                allowHardware(false)
+                                            }
+                                            scale(Scale.FILL)
+                                            placeholder(placeholderImage)
+                                            error(placeholderImage)
                                         }
-                                        scale(Scale.FILL)
                                     }
                                 }
                             }

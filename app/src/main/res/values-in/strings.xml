@@ -4934,6 +4934,65 @@ Pilih Folder Cache
 5 GB
 </string>
 
+    <!-- Local Media Thumbnails -->
+    <string name="settings_local_thumbnails_title">
+Thumbnail Media
+</string>
+    <string name="settings_local_thumbnails_subtitle">
+Cache persisten untuk media &amp; penyimpanan lokal
+</string>
+    <string name="lt_enable_title">
+Aktifkan Thumbnail Media
+</string>
+    <string name="lt_enable_desc">
+Buat dan cache thumbnail untuk video lokal, sampul audio, APK, dan gambar kamera.
+</string>
+    <string name="lt_cache_limit_title">
+Batas Ukuran Cache
+</string>
+    <string name="lt_cache_limit_desc">
+Ruang penyimpanan maksimum untuk cache thumbnail lokal.
+</string>
+    <string name="lt_cache_folder_title">
+Direktori Cache
+</string>
+    <string name="lt_cache_folder_desc">
+Pilih lokasi penyimpanan file cache thumbnail lokal (Internal atau Kartu SD).
+</string>
+    <string name="lt_clear_cache_title">
+Hapus Semua Cache
+</string>
+    <string name="lt_clear_cache_desc">
+Hapus semua thumbnail lokal yang di-cache dan setel ulang basis data.
+</string>
+    <string name="lt_clear_cache_confirm_title">
+Hapus Cache Lokal?
+</string>
+    <string name="lt_clear_cache_confirm_msg">
+Ini akan menghapus semua thumbnail yang di-cache untuk penyimpanan lokal secara permanen. Thumbnail akan dibuat ulang saat Anda menelusuri.
+</string>
+    <string name="lt_stats_title">
+Statistik Cache
+</string>
+    <string name="lt_stats_size">
+Penggunaan saat ini: %1$s / %2$d MB (%3$d item)
+</string>
+    <string name="lt_select_folder">
+Pilih Folder Cache
+</string>
+    <string name="lt_cache_folder_guide_title">
+Folder Cache Thumbnail Lokal
+</string>
+    <string name="lt_cache_folder_guide_msg">
+Pilih direktori khusus di penyimpanan internal atau kartu SD eksternal Anda tempat file thumbnail lokal (.webp) akan disimpan secara permanen.
+</string>
+    <string name="lt_use_this_folder_for_caching">
+Gunakan folder ini untuk cache thumbnail lokal
+</string>
+    <string name="lt_confirm_cache_folder_msg">
+Gambar mini untuk file lokal Anda akan disimpan di folder ini: %s
+</string>
+
     <string name="got_it">
 MENGERTI
 </string>
@@ -12422,6 +12481,28 @@ Mengetuk ikon folder atau file akan membuka item tersebut secara normal
 </string>
     <string name="backup_pref_icon_tap_edit_mode">
 Pengaturan Mode Edit Ketuk Ikon
+</string>
+
+    <!-- Selection Checkbox Display (Mobile) -->
+    <string name="settings_selection_checkbox_title">
+Kotak centang pilihan
+</string>
+    <string name="settings_selection_checkbox_subtitle_enabled">
+Kotak centang terlihat dalam mode pilihan
+</string>
+    <string name="settings_selection_checkbox_subtitle_disabled">
+Kotak centang disembunyikan (pilihan ditunjukkan dengan sorotan baris)
+</string>
+    <string name="backup_pref_selection_checkbox">
+Pengaturan Tampilan Kotak Centang Pilihan
+</string>
+
+    <!-- Tab Quick Transfer -->
+    <string name="transfer_to_tab_title">
+Transfer ke tab
+</string>
+    <string name="transfer_to_tab_prompt">
+Pilih tab tujuan untuk %1$s item:
 </string>
 
     <!-- GIF Creator -->

@@ -149,8 +149,14 @@ class CacheLimitDialogFragment : BottomSheetDialogFragment() {
             isProgrammaticUpdate = false
         }
 
+        val mode = arguments?.getString(ARG_MODE, MODE_NETWORK) ?: MODE_NETWORK
+
         // Initialize with current preference
-        val currentMb = NetworkThumbnailPreferenceManager.getCacheLimitMb(requireContext())
+        val currentMb = if (mode == MODE_LOCAL) {
+            ThumbnailPreferenceManager.getCacheLimitMb(requireContext())
+        } else {
+            NetworkThumbnailPreferenceManager.getCacheLimitMb(requireContext())
+        }
         isProgrammaticUpdate = true
         when (currentMb) {
             500 -> {
@@ -224,8 +230,13 @@ class CacheLimitDialogFragment : BottomSheetDialogFragment() {
                 return@setOnClickListener
             }
             val resultMb = if (isGb) (valueDouble * 1024.0).toInt() else valueDouble.toInt()
-            NetworkThumbnailPreferenceManager.setCacheLimitMb(requireContext(), resultMb)
-            (activity as? NetworkThumbnailSettingsActivity)?.updateUI()
+            if (mode == MODE_LOCAL) {
+                ThumbnailPreferenceManager.setCacheLimitMb(requireContext(), resultMb)
+                (activity as? LocalThumbnailSettingsActivity)?.updateUI()
+            } else {
+                NetworkThumbnailPreferenceManager.setCacheLimitMb(requireContext(), resultMb)
+                (activity as? NetworkThumbnailSettingsActivity)?.updateUI()
+            }
             dismiss()
         }
 
@@ -234,5 +245,16 @@ class CacheLimitDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "CacheLimitDialog"
+        const val ARG_MODE = "arg_mode"
+        const val MODE_NETWORK = "network"
+        const val MODE_LOCAL = "local"
+
+        fun newInstance(mode: String = MODE_NETWORK): CacheLimitDialogFragment {
+            return CacheLimitDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_MODE, mode)
+                }
+            }
+        }
     }
 }

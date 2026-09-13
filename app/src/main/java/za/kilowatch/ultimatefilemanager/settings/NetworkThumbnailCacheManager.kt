@@ -142,6 +142,69 @@ class NetworkThumbnailCacheManager(private val context: Context) {
     }
 
     /**
+     * Fast synchronous check for existing remote thumbnail file on disk.
+     * Returns absolute path of cached .webp if present and non-empty.
+     */
+    fun getExistingDiskThumbnail(share: NetworkShare, networkFile: NetworkFile): String? {
+        if (!NetworkThumbnailPreferenceManager.isEnabled(context)) return null
+        try {
+            val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)
+            val normPath = normalizePath(networkFile.path)
+            val md = MessageDigest.getInstance("MD5")
+            val input = share.id + normPath
+            val hashBytes = md.digest(input.toByteArray())
+            val hashName = hashBytes.joinToString("") { "%02x".format(it) } + ".webp"
+            val destFile = File(cacheFolderPath, hashName)
+            if (destFile.exists() && destFile.length() > 0) {
+                return destFile.absolutePath
+            }
+        } catch (_: Exception) {}
+        return null
+    }
+
+    /**
+     * Pre-warms the in-memory thumbnail cache for an entire network folder using Room DB queries.
+     */
+    suspend fun warmCacheForFolder(shareId: String, parentFolder: String) = withContext(Dispatchers.IO) {
+        try {
+            val normFolder = normalizePath(parentFolder)
+            val rawFolder = parentFolder.trimStart('/')
+            val entries = (db.dao().getByParentFolder(shareId, normFolder) + db.dao().getByParentFolder(shareId, rawFolder)).distinctBy { it.localFileName }
+            val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)
+            for (entry in entries) {
+                val f = File(cacheFolderPath, entry.localFileName)
+                if (f.exists() && f.length() > 0) {
+                    za.kilowatch.ultimatefilemanager.network.NetworkFileAdapter.putCachedPath(entry.networkPath, f.absolutePath)
+                }
+            }
+        } catch (_: Throwable) {}
+    }
+
+    /**
+     * Pre-warms in-memory cache directly from the files in the directory.
+     * Computes deterministic MD5 filenames and registers any existing .webp files in memory.
+     */
+    suspend fun warmCacheForFiles(share: NetworkShare, files: List<NetworkFile>) = withContext(Dispatchers.IO) {
+        if (files.isEmpty() || !NetworkThumbnailPreferenceManager.isEnabled(context)) return@withContext
+        try {
+            val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)
+            val cacheFolder = File(cacheFolderPath)
+            val md = MessageDigest.getInstance("MD5")
+            for (file in files) {
+                if (file.isDirectory) continue
+                val normPath = normalizePath(file.path)
+                val input = share.id + normPath
+                val hashBytes = md.digest(input.toByteArray())
+                val hashName = hashBytes.joinToString("") { "%02x".format(it) } + ".webp"
+                val f = File(cacheFolder, hashName)
+                if (f.exists() && f.length() > 0) {
+                    za.kilowatch.ultimatefilemanager.network.NetworkFileAdapter.putCachedPath(file.path, f.absolutePath)
+                }
+            }
+        } catch (_: Throwable) {}
+    }
+
+    /**
      * Retrieves the stream and caches the thumbnail to disk.
      * Returns the absolute path of the generated cache file, or null if failed/limit reached.
      *
@@ -544,11 +607,12 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                 }
 
                 // Add to DB
-                val parentFolder = if (networkFile.path.contains("/")) {
+                val rawParent = if (networkFile.path.contains("/")) {
                     networkFile.path.substringBeforeLast("/", "")
                 } else {
                     ""
                 }
+                val parentFolder = if (rawParent.isNotEmpty()) normalizePath(rawParent) else ""
                 val entity = NetworkThumbnailEntity(
                     shareId = share.id,
                     networkPath = networkFile.path,

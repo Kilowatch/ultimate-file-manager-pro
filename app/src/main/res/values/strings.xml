@@ -1745,6 +1745,27 @@
     <string name="nt_limit_2gb">2 GB</string>
     <string name="nt_limit_5gb">5 GB</string>
 
+    <!-- Local Media Thumbnails -->
+    <string name="settings_local_thumbnails_title">Media Thumbnails</string>
+    <string name="settings_local_thumbnails_subtitle">Persistent caching for local media &amp; storage</string>
+    <string name="lt_enable_title">Enable Media Thumbnails</string>
+    <string name="lt_enable_desc">Generate and cache thumbnails for local videos, audio covers, APKs, and camera images.</string>
+    <string name="lt_cache_limit_title">Cache Size Limit</string>
+    <string name="lt_cache_limit_desc">Maximum storage space to use for local thumbnail caching.</string>
+    <string name="lt_cache_folder_title">Cache Directory</string>
+    <string name="lt_cache_folder_desc">Select where to store the local thumbnail cache files (Internal or SD Card).</string>
+    <string name="lt_clear_cache_title">Clear All Cache</string>
+    <string name="lt_clear_cache_desc">Delete all cached local thumbnails and reset the database.</string>
+    <string name="lt_clear_cache_confirm_title">Clear Local Cache?</string>
+    <string name="lt_clear_cache_confirm_msg">This will permanently delete all cached thumbnails for local storage. They will be regenerated as you browse.</string>
+    <string name="lt_stats_title">Cache Statistics</string>
+    <string name="lt_stats_size">Current usage: %1$s / %2$d MB (%3$d items)</string>
+    <string name="lt_select_folder">Select Cache Folder</string>
+    <string name="lt_cache_folder_guide_title">Local Thumbnail Cache Folder</string>
+    <string name="lt_cache_folder_guide_msg">Choose a custom directory on your internal storage or external SD card where persistent local thumbnail files (.webp) will be saved.</string>
+    <string name="lt_use_this_folder_for_caching">Use this folder for local thumbnail cache</string>
+    <string name="lt_confirm_cache_folder_msg">Thumbnails for your local files will be stored in this folder: %s</string>
+
     <string name="got_it">GOT IT</string>
     <string name="decrypting_00">Decrypting 0/0…</string>
     <string name="extracted_str">•</string>

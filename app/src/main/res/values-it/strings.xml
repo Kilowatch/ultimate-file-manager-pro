@@ -4934,6 +4934,65 @@ Seleziona Cartella cache
 5GB
 </string>
 
+    <!-- Local Media Thumbnails -->
+    <string name="settings_local_thumbnails_title">
+Miniature multimediali
+</string>
+    <string name="settings_local_thumbnails_subtitle">
+Cache persistente per media e archiviazione locali
+</string>
+    <string name="lt_enable_title">
+Abilita miniature multimediali
+</string>
+    <string name="lt_enable_desc">
+Genera e memorizza nella cache le miniature per video locali, copertine audio, APK e immagini della fotocamera.
+</string>
+    <string name="lt_cache_limit_title">
+Limite dimensione cache
+</string>
+    <string name="lt_cache_limit_desc">
+Spazio di archiviazione massimo da utilizzare per la cache delle miniature locali.
+</string>
+    <string name="lt_cache_folder_title">
+Cartella cache
+</string>
+    <string name="lt_cache_folder_desc">
+Seleziona dove memorizzare i file della cache delle miniature locali (Interna o Scheda SD).
+</string>
+    <string name="lt_clear_cache_title">
+Cancella tutta la cache
+</string>
+    <string name="lt_clear_cache_desc">
+Elimina tutte le miniature locali memorizzate nella cache e reimposta il database.
+</string>
+    <string name="lt_clear_cache_confirm_title">
+Cancellare la cache locale?
+</string>
+    <string name="lt_clear_cache_confirm_msg">
+Questa operazione eliminerà definitivamente tutte le miniature memorizzate nella cache per l\'archiviazione locale. Verranno rigenerate durante la navigazione.
+</string>
+    <string name="lt_stats_title">
+Statistiche cache
+</string>
+    <string name="lt_stats_size">
+Utilizzo attuale: %1$s / %2$d MB (%3$d elementi)
+</string>
+    <string name="lt_select_folder">
+Seleziona cartella cache
+</string>
+    <string name="lt_cache_folder_guide_title">
+Cartella cache locale delle miniature
+</string>
+    <string name="lt_cache_folder_guide_msg">
+Scegli una cartella personalizzata nella memoria interna o sulla scheda SD esterna in cui verranno salvati i file permanenti delle miniature locali (.webp).
+</string>
+    <string name="lt_use_this_folder_for_caching">
+Usa questa cartella per la cache locale delle miniature
+</string>
+    <string name="lt_confirm_cache_folder_msg">
+Le anteprime dei tuoi file locali verranno archiviate in questa cartella: %s
+</string>
+
     <string name="got_it">
 FATTO
 </string>
@@ -12422,6 +12481,28 @@ Toccando l\'icona di una cartella o di un file l\'elemento si apre normalmente
 </string>
     <string name="backup_pref_icon_tap_edit_mode">
 Icona Toccare Impostazioni modalità Modifica
+</string>
+
+    <!-- Selection Checkbox Display (Mobile) -->
+    <string name="settings_selection_checkbox_title">
+Caselle di controllo
+</string>
+    <string name="settings_selection_checkbox_subtitle_enabled">
+Le caselle di controllo sono visibili in modalità selezione
+</string>
+    <string name="settings_selection_checkbox_subtitle_disabled">
+Caselle di controllo nascoste (selezione mostrata dall\'evidenziazione della riga)
+</string>
+    <string name="backup_pref_selection_checkbox">
+Impostazioni visualizzazione caselle di controllo
+</string>
+
+    <!-- Tab Quick Transfer -->
+    <string name="transfer_to_tab_title">
+Trasferisci alla scheda
+</string>
+    <string name="transfer_to_tab_prompt">
+Seleziona la scheda di destinazione per %1$s elemento/i:
 </string>
 
     <!-- GIF Creator -->

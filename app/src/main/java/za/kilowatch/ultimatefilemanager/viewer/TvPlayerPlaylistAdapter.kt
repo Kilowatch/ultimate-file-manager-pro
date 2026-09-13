@@ -235,11 +235,27 @@ class TvPlayerPlaylistAdapter(
 
             // ── Priority 1: Local filesystem file ──────────────────────
             if (isLocalFile) {
-                // 1a. Native FFmpeg extraction
+                // 1a. Check persistent local thumbnail disk cache
                 ensureActive()
-                bitmap = FFmpegThumbnailHelper.extractVideoFrame(path, pct, 512, 512)
-                za.kilowatch.ultimatefilemanager.util.GoRoLog.d(tag,
-                    "  FFmpeg result=${bitmap != null} path=$path")
+                try {
+                    val localCacheMgr = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager(ctx)
+                    val cachedLocalPath = localCacheMgr.getCachedThumbnailPath(localFile)
+                    if (cachedLocalPath != null && File(cachedLocalPath).exists()) {
+                        bitmap = BitmapFactory.decodeFile(cachedLocalPath)
+                        za.kilowatch.ultimatefilemanager.util.GoRoLog.d(tag,
+                            "  Local cached hit: $cachedLocalPath for $path")
+                    }
+                } catch (ce: kotlinx.coroutines.CancellationException) {
+                    throw ce
+                } catch (_: Throwable) {}
+
+                // 1b. Native FFmpeg extraction
+                if (bitmap == null) {
+                    ensureActive()
+                    bitmap = FFmpegThumbnailHelper.extractVideoFrame(path, pct, 512, 512)
+                    za.kilowatch.ultimatefilemanager.util.GoRoLog.d(tag,
+                        "  FFmpeg result=${bitmap != null} path=$path")
+                }
 
                 // 1b. MediaMetadataRetriever at configured percentage
                 if (bitmap == null) {
