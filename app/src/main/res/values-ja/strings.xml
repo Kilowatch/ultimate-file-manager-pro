@@ -10066,6 +10066,15 @@ PDF（マルチページのみ）
     <string name="scanner_saving_message">
 ドキュメントの保存をお待ちください...
 </string>
+    <string name="scanner_importing_title">
+画像をインポート中
+</string>
+    <string name="scanner_importing_message">
+画像を読み込んでいます。しばらくお待ちください...
+</string>
+    <string name="scanner_import_partial_error">
+%1$d 件の画像を読み込めませんでした
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 バックアップと復元

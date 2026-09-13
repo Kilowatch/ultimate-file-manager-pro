@@ -10066,6 +10066,15 @@ PDF (лише багатосторінковий)
     <string name="scanner_saving_message">
 Зачекайте, поки зберігається ваш документ...
 </string>
+    <string name="scanner_importing_title">
+Імпортування зображень
+</string>
+    <string name="scanner_importing_message">
+Будь ласка, зачекайте, поки завантажуються зображення...
+</string>
+    <string name="scanner_import_partial_error">
+Не вдалося завантажити %1$d зображень
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 Резервне копіювання та відновлення

@@ -10066,6 +10066,15 @@ Salvando documento
     <string name="scanner_saving_message">
 Aguarde enquanto seu documento é salvo...
 </string>
+    <string name="scanner_importing_title">
+Importando imagens
+</string>
+    <string name="scanner_importing_message">
+Aguarde enquanto as imagens são carregadas...
+</string>
+    <string name="scanner_import_partial_error">
+Falha ao carregar %1$d imagem(ns)
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 Backup e Restauração

@@ -78,6 +78,7 @@ class DocumentScannerActivity : AppCompatActivity() {
     private var pendingFileName: String? = null
     private var pagesAdapter: PagesAdapter? = null
     private var cameraPhotoUri: Uri? = null
+    private var cameraPhotoFile: File? = null
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicture()
@@ -85,23 +86,16 @@ class DocumentScannerActivity : AppCompatActivity() {
         if (success) {
             val uri = cameraPhotoUri
             if (uri != null) {
-                loadBitmapFromUri(uri)
-                // Clean up temp file after loading
-                try {
-                    val file = File(uri.path ?: "")
-                    if (file.exists()) file.delete()
-                } catch (_: Exception) {}
-                updatePagesUi()
+                loadBitmapsFromUris(listOf(uri), isCamera = true)
             }
         }
     }
 
     private val galleryLauncher = registerForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) { uri ->
-        if (uri != null) {
-            loadBitmapFromUri(uri)
-            updatePagesUi()
+        ActivityResultContracts.GetMultipleContents()
+    ) { uris ->
+        if (!uris.isNullOrEmpty()) {
+            loadBitmapsFromUris(uris)
         }
     }
 
@@ -159,8 +153,13 @@ class DocumentScannerActivity : AppCompatActivity() {
 
         pagesRecycler.layoutManager = LinearLayoutManager(this)
         pagesAdapter = PagesAdapter(scannedBitmaps) { index ->
-            scannedBitmaps.removeAt(index)
-            updatePagesUi()
+            if (index in scannedBitmaps.indices) {
+                val removed = scannedBitmaps.removeAt(index)
+                if (!removed.isRecycled) {
+                    removed.recycle()
+                }
+                updatePagesUi()
+            }
         }
         pagesRecycler.adapter = pagesAdapter
 
@@ -194,6 +193,7 @@ class DocumentScannerActivity : AppCompatActivity() {
 
     private fun launchCamera() {
         val photoFile = createTempPhotoFile()
+        cameraPhotoFile = photoFile
         val uri = FileProvider.getUriForFile(
             this,
             "${packageName}.fileprovider",
@@ -233,22 +233,100 @@ class DocumentScannerActivity : AppCompatActivity() {
         return appDir.absolutePath
     }
 
-    private fun loadBitmapFromUri(uri: Uri) {
-        try {
-            val inputStream = contentResolver.openInputStream(uri)
-            var bitmap = BitmapFactory.decodeStream(inputStream)
-            inputStream?.close()
-            if (bitmap != null) {
-                // Read EXIF orientation and rotate the bitmap so it displays upright
-                val rotation = readExifRotation(uri)
-                if (rotation != 0) {
-                    val matrix = Matrix().apply { postRotate(rotation.toFloat()) }
-                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    private fun loadBitmapsFromUris(uris: List<Uri>, isCamera: Boolean = false) {
+        if (uris.isEmpty()) return
+
+        val progressView = layoutInflater.inflate(R.layout.dialog_scanner_progress, null)
+        val tvTitle = progressView.findViewById<TextView>(R.id.txtProgressTitle)
+        val tvMessage = progressView.findViewById<TextView>(R.id.txtProgressMessage)
+        val imgIcon = progressView.findViewById<ImageView>(R.id.imgProgressIcon)
+
+        tvTitle?.setText(R.string.scanner_importing_title)
+        tvMessage?.setText(R.string.scanner_importing_message)
+        imgIcon?.setImageResource(R.drawable.ic_file_image)
+
+        val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(progressView)
+            .setCancelable(false)
+            .create()
+        progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        progressDialog.show()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val loadedBitmaps = mutableListOf<Bitmap>()
+            var failedCount = 0
+
+            for (uri in uris) {
+                val bmp = decodeSampledBitmapFromUri(uri)
+                if (bmp != null) {
+                    loadedBitmaps.add(bmp)
+                } else {
+                    failedCount++
                 }
-                scannedBitmaps.add(bitmap)
             }
-        } catch (e: Exception) {
-            Toast.makeText(this, getString(R.string.scanner_save_error, e.message), Toast.LENGTH_SHORT).show()
+
+            if (isCamera) {
+                try {
+                    cameraPhotoFile?.let { if (it.exists()) it.delete() }
+                    cameraPhotoFile = null
+                } catch (_: Exception) {}
+            }
+
+            withContext(Dispatchers.Main) {
+                if (!isFinishing && !isDestroyed && progressDialog.isShowing) {
+                    progressDialog.dismiss()
+                }
+                if (loadedBitmaps.isNotEmpty()) {
+                    scannedBitmaps.addAll(loadedBitmaps)
+                    updatePagesUi()
+                    pagesRecycler.scrollToPosition(scannedBitmaps.size - 1)
+                }
+                if (failedCount > 0) {
+                    Toast.makeText(
+                        this@DocumentScannerActivity,
+                        getString(R.string.scanner_import_partial_error, failedCount),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun decodeSampledBitmapFromUri(uri: Uri, maxDim: Int = 2048): Bitmap? {
+        return try {
+            val boundsOpts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            contentResolver.openInputStream(uri)?.use { stream ->
+                BitmapFactory.decodeStream(stream, null, boundsOpts)
+            }
+            val rawWidth = boundsOpts.outWidth
+            val rawHeight = boundsOpts.outHeight
+            if (rawWidth <= 0 || rawHeight <= 0) return null
+
+            var inSampleSize = 1
+            while (rawWidth / inSampleSize > maxDim || rawHeight / inSampleSize > maxDim) {
+                inSampleSize *= 2
+            }
+
+            val decodeOpts = BitmapFactory.Options().apply {
+                this.inSampleSize = inSampleSize
+                inPreferredConfig = Bitmap.Config.ARGB_8888
+            }
+            var bitmap = contentResolver.openInputStream(uri)?.use { stream ->
+                BitmapFactory.decodeStream(stream, null, decodeOpts)
+            } ?: return null
+
+            val rotation = readExifRotation(uri)
+            if (rotation != 0) {
+                val matrix = Matrix().apply { postRotate(rotation.toFloat()) }
+                val rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+                if (rotated != bitmap) {
+                    bitmap.recycle()
+                    bitmap = rotated
+                }
+            }
+            bitmap
+        } catch (_: Exception) {
+            null
         }
     }
 
@@ -592,6 +670,16 @@ class DocumentScannerActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        for (bmp in scannedBitmaps) {
+            if (!bmp.isRecycled) {
+                bmp.recycle()
+            }
+        }
+        scannedBitmaps.clear()
     }
 
     private class PagesAdapter(

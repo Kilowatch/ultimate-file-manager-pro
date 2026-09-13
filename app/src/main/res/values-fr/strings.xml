@@ -10066,6 +10066,15 @@ Enregistrement du document
     <string name="scanner_saving_message">
 Veuillez patienter pendant l\'enregistrement de votre document...
 </string>
+    <string name="scanner_importing_title">
+Importation d\'images
+</string>
+    <string name="scanner_importing_message">
+Veuillez patienter pendant le chargement des images...
+</string>
+    <string name="scanner_import_partial_error">
+Échec du chargement de %1$d image(s)
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 Sauvegarde et restauration

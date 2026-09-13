@@ -10066,6 +10066,15 @@ PDF (केवल बहु-पृष्ठ)
     <string name="scanner_saving_message">
 कृपया प्रतीक्षा करें जब तक आपका दस्तावेज़ सहेजा जा रहा है...
 </string>
+    <string name="scanner_importing_title">
+छवियाँ आयात की जा रही हैं
+</string>
+    <string name="scanner_importing_message">
+छवियाँ लोड होने तक कृपया प्रतीक्षा करें...
+</string>
+    <string name="scanner_import_partial_error">
+%1$d छवि(याँ) लोड करने में विफल
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 बैकअप और पुनर्स्थापना

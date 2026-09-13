@@ -10066,6 +10066,15 @@ PDF(다중 페이지 전용)
     <string name="scanner_saving_message">
 문서가 저장되는 동안 기다려 주세요...
 </string>
+    <string name="scanner_importing_title">
+이미지 가져오는 중
+</string>
+    <string name="scanner_importing_message">
+이미지를 불러오는 동안 잠시 기다려 주세요...
+</string>
+    <string name="scanner_import_partial_error">
+%1$d개의 이미지를 불러오지 못했습니다
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 백업 및 복원

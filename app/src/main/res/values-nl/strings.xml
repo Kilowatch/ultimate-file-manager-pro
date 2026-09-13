@@ -1928,9 +1928,7 @@ Kopiëren
     <string name="action_rename">
 Hernoemen
 </string>
-    <string name="action_share">
-Deel
-</string>
+    <string name="action_share">Share</string>
     <string name="action_open">
 Open
 </string>
@@ -2632,9 +2630,7 @@ NFS
     <string name="network_type_dlna">
 DLNA
 </string>
-    <string name="network_field_name">
-Sharenaam (bijvoorbeeld hoofd-NAS)
-</string>
+    <string name="network_field_name">Sharenaam</string>
     <string name="network_field_host">
 Host/IP-adres
 </string>
@@ -9880,6 +9876,15 @@ Document opslaan
     <string name="scanner_saving_message">
 Een ogenblik geduld terwijl uw document wordt opgeslagen...
 </string>
+    <string name="scanner_importing_title">
+Afbeeldingen importeren
+</string>
+    <string name="scanner_importing_message">
+Een ogenblik geduld terwijl afbeeldingen worden geladen...
+</string>
+    <string name="scanner_import_partial_error">
+Kan %1$d afbeelding(en) niet laden
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 Back-up en herstel
@@ -14089,9 +14094,7 @@ Veld mag niet leeg zijn
     <string name="storage_cloud">Cloud</string>
     
     <!-- SAF & External File Pickers Exposure -->
-    <string name="expose_to_saf_title">
-Stel u bloot aan SAF &amp; Pickers
-</string>
+    <string name="expose_to_saf_title">Toegankelijk maken voor SAF &amp; Pickers</string>
     <string name="expose_to_saf_subtitle">
 Maak het zichtbaar voor systeembestandkiezers, Projectivy Launcher-achtergronden en externe apps
 </string>

@@ -10066,6 +10066,15 @@ PDF (متعدد الصفحات فقط)
     <string name="scanner_saving_message">
 يرجى الانتظار أثناء حفظ المستند...
 </string>
+    <string name="scanner_importing_title">
+جارٍ استيراد الصور
+</string>
+    <string name="scanner_importing_message">
+يرجى الانتظار أثناء تحميل الصور...
+</string>
+    <string name="scanner_import_partial_error">
+فشل تحميل %1$d صورة/صور
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 النسخ الاحتياطي والاستعادة

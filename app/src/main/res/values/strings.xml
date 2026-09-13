@@ -3511,6 +3511,9 @@
     <string name="scanner_capture_gallery">Choose from Gallery</string>
     <string name="scanner_saving_title">Saving document</string>
     <string name="scanner_saving_message">Please wait while your document is saved...</string>
+    <string name="scanner_importing_title">Importing images</string>
+    <string name="scanner_importing_message">Please wait while images are loaded...</string>
+    <string name="scanner_import_partial_error">Failed to load %1$d image(s)</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">Backup &amp; Restore</string>
     <string name="backup_restore_subtitle">Export or import app settings</string>

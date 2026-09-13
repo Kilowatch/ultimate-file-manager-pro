@@ -10066,6 +10066,15 @@ PDF（仅限多页）
     <string name="scanner_saving_message">
 正在保存您的文档，请稍候...
 </string>
+    <string name="scanner_importing_title">
+正在导入图片
+</string>
+    <string name="scanner_importing_message">
+正在加载图片，请稍候……
+</string>
+    <string name="scanner_import_partial_error">
+无法加载 %1$d 张图片
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 备份与恢复

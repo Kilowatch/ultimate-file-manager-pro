@@ -10066,6 +10066,15 @@ Dokument wird gespeichert
     <string name="scanner_saving_message">
 Bitte warten, während Ihr Dokument gespeichert wird...
 </string>
+    <string name="scanner_importing_title">
+Bilder werden importiert
+</string>
+    <string name="scanner_importing_message">
+Bitte warten, während die Bilder geladen werden...
+</string>
+    <string name="scanner_import_partial_error">
+Fehler beim Laden von %1$d Bild(ern)
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 Sichern &amp; Wiederherstellen

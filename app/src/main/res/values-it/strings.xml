@@ -10066,6 +10066,15 @@ Salvataggio del documento
     <string name="scanner_saving_message">
 Per favore attendi mentre il tuo documento viene salvato...
 </string>
+    <string name="scanner_importing_title">
+Importazione immagini
+</string>
+    <string name="scanner_importing_message">
+Attendi mentre le immagini vengono caricate...
+</string>
+    <string name="scanner_import_partial_error">
+Impossibile caricare %1$d immagine/i
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 Backup e; Ripristinare

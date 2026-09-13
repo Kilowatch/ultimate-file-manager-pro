@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.6] — 2026-09-13
 
 ### Added
+- **Document Scanner (Mobile)**: Added support for selecting multiple images simultaneously when choosing "Choose from Gallery":
+  - **Batch Gallery Selection**: Switched to multi-content selection contract, allowing users to pick any number of images in a single operation.
+  - **Background Decoding & Safe Downsampling**: Offloaded image processing to background IO with automatic downsampling (`MAX_DIM = 2048px`) to prevent Out-Of-Memory crashes on high-resolution camera photos.
+  - **Import Progress Dialog**: Added visual frosted glass loading feedback displaying "Importing images..." during batch decode.
+  - **Memory Lifecycle Management**: Immediate bitmap recycling upon removing pages and on activity destruction to prevent memory leaks.
 - **Music Tagger / Audio Tag Editor (Mobile Only)**: Added a native audio metadata inspector and tag editor for Android Mobile:
   - **Comprehensive Format Support**: Read and write metadata tags across MP3 (ID3v1, ID3v2.3, ID3v2.4), FLAC (Vorbis Comments), M4A/AAC (MP4 tags), OGG Vorbis, OPUS, WAV, and WMA using Jaudiotagger 2.2.3.
   - **Full Tag Editing & Lyrics**: Edit Title, Artist, Album, Album Artist, Year, Genre, Track Number / Total Tracks, Disc Number / Total Discs, Composer, Comment, and embedded unsynchronized lyrics.

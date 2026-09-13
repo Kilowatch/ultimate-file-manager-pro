@@ -10066,6 +10066,15 @@ Menyimpan dokumen
     <string name="scanner_saving_message">
 Harap tunggu sementara dokumen Anda disimpan...
 </string>
+    <string name="scanner_importing_title">
+Mengimpor gambar
+</string>
+    <string name="scanner_importing_message">
+Harap tunggu selagi gambar dimuat...
+</string>
+    <string name="scanner_import_partial_error">
+Gagal memuat %1$d gambar
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 Cadangkan &amp; Pulihkan

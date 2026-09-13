@@ -10066,6 +10066,15 @@ Belge kaydediliyor
     <string name="scanner_saving_message">
 Belgeniz kaydedilirken lütfen bekleyin...
 </string>
+    <string name="scanner_importing_title">
+Resimler içe aktarılıyor
+</string>
+    <string name="scanner_importing_message">
+Resimler yüklenirken lütfen bekleyin...
+</string>
+    <string name="scanner_import_partial_error">
+%1$d resim yüklenemedi
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 Yedekleme ve Geri Yükleme

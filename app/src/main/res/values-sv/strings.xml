@@ -10047,6 +10047,15 @@ Sparar dokument
     <string name="scanner_saving_message">
 Vänta medan ditt dokument sparas...
 </string>
+    <string name="scanner_importing_title">
+Importerar bilder
+</string>
+    <string name="scanner_importing_message">
+Vänta medan bilderna laddas...
+</string>
+    <string name="scanner_import_partial_error">
+Kunde inte ladda %1$d bild(er)
+</string>
     <!-- Backup & Restore -->
     <string name="backup_restore_title">
 Säkerhetskopiering och återställning
