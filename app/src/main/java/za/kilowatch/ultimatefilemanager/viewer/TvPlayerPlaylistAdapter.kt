@@ -207,7 +207,9 @@ class TvPlayerPlaylistAdapter(
         holder.thumbnailJob?.cancel()
 
         // 1. Check in-memory caches
-        val cached = thumbnailCache.get(path) ?: FileAdapter.getVideoThumbnail(path)
+        val cached = thumbnailCache.get(path)
+            ?: FileAdapter.getVideoThumbnail(path)
+            ?: za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.getCachedArt(path)
         if (cached != null) {
             holder.imgThumbnail.setImageBitmap(cached)
             holder.imgFallbackIcon.visibility = View.GONE
@@ -448,22 +450,9 @@ class TvPlayerPlaylistAdapter(
             }
 
             // ── Priority 4: Audio album art fallback ───────────────────
-            if (bitmap == null && !item.isVideo && isLocalFile) {
+            if (bitmap == null && !item.isVideo) {
                 ensureActive()
-                bitmap = try {
-                    val retriever = MediaMetadataRetriever()
-                    try {
-                        retriever.setDataSource(path)
-                        val art = retriever.embeddedPicture
-                        if (art != null) {
-                            BitmapFactory.decodeByteArray(art, 0, art.size)
-                        } else null
-                    } finally {
-                        try { retriever.release() } catch (_: Throwable) {}
-                    }
-                } catch (ce: kotlinx.coroutines.CancellationException) {
-                    throw ce
-                } catch (_: Throwable) { null }
+                bitmap = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractCover(ctx, path, 512)
             }
 
             za.kilowatch.ultimatefilemanager.util.GoRoLog.d(tag,

@@ -577,6 +577,7 @@ class MusicTaggerActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     progressDialog.dismiss()
                     if (success) {
+                        za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.clearCacheForPath(file.absolutePath)
                         runCatching { za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge.onFileSaved?.invoke(file) }
                         Toast.makeText(this@MusicTaggerActivity, getString(R.string.music_tag_save_success), Toast.LENGTH_SHORT).show()
                         finish()
@@ -611,6 +612,7 @@ class MusicTaggerActivity : AppCompatActivity() {
                     progressDialog.dismiss()
                     if (successCount > 0) {
                         for (f in files) {
+                            za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.clearCacheForPath(f.absolutePath)
                             runCatching { za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge.onFileSaved?.invoke(f) }
                         }
                         Toast.makeText(this@MusicTaggerActivity, getString(R.string.music_tag_batch_success, successCount), Toast.LENGTH_SHORT).show()

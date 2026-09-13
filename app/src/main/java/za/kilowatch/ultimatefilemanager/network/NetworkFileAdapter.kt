@@ -630,8 +630,9 @@ class NetworkFileAdapter(
             val ext = file.name.substringAfterLast('.', "").lowercase()
             val imageExts = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val apkExts   = setOf("apk", "xapk", "apks")
-            val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts
-            val isThumbnail = !file.isDirectory && isEnabled && isMedia
+            val isAudio   = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
+            val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts || isAudio
+            val isThumbnail = !file.isDirectory && isEnabled && (isMedia && (!isAudio || !za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(file.path)))
 
             // Apply dynamic list mode scaling
             if (!isGrid) {
@@ -702,8 +703,9 @@ class NetworkFileAdapter(
             txtName.text = displayName
 
             // Reset image/tint state
+            val isShowingArt = isAudio && (thumbnailPathCache[file.path] != null || za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.getCachedArt(file.path) != null)
             imgIcon.scaleType = if (isGrid) {
-                if (file.isDirectory || ext in apkExts || (ext !in imageExts && ext !in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS)) {
+                if (file.isDirectory || ext in apkExts || (ext !in imageExts && ext !in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS && !isShowingArt)) {
                     ImageView.ScaleType.FIT_CENTER
                 } else {
                     ImageView.ScaleType.CENTER_CROP
@@ -860,13 +862,15 @@ class NetworkFileAdapter(
                 }
 
                 itemView.setOnFocusChangeListener { _, hasFocus ->
+                    val isShowingAudioArt = isAudio && (thumbnailPathCache[file.path] != null || za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.getCachedArt(file.path) != null)
+                    val shouldTint = !isThumbnail || (isAudio && !isShowingAudioArt)
                     if (hasFocus) {
                         if (!isGrid) {
                             txtName.setTextColor(black)
                             txtDetails.setTextColor(black)
                             itemView.findViewById<TextView>(R.id.txtFileSize)?.setTextColor(black)
                         }
-                        if (!isThumbnail) imgIcon.imageTintList = blackCsl
+                        if (shouldTint) imgIcon.imageTintList = blackCsl
                     } else {
                         if (isGrid) {
                             applyGridTextColor(file)
@@ -875,7 +879,7 @@ class NetworkFileAdapter(
                             txtDetails.setTextColor(secondary)
                             itemView.findViewById<TextView>(R.id.txtFileSize)?.setTextColor(hint)
                         }
-                        if (!isThumbnail) imgIcon.imageTintList = accentCsl
+                        if (shouldTint) imgIcon.imageTintList = accentCsl
                     }
                 }
             }
@@ -960,20 +964,55 @@ class NetworkFileAdapter(
             val ext = file.name.substringAfterLast('.', "").lowercase()
             val imageExts = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val apkExts   = setOf("apk", "xapk", "apks")
+            val isAudio   = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
             // VIDEO_EXTENSIONS is the single authoritative list shared with NetworkThumbnailCacheManager
-            val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts
+            val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts || isAudio
             if (!isMedia) {
                 za.kilowatch.ultimatefilemanager.util.GoRoLog.d("UFM_CACHE", "🚀 [GoRo] Skipping non-media file: ${file.name}")
                 imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, file.name.substringAfterLast('.', "")))
                 return
             }
 
+            if (isAudio && za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(file.path)) {
+                imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, ext))
+                val tintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                imgIcon.clipToOutline = false
+                return
+            }
+
+            val isGridMode = ViewModeManager.isGrid(viewMode)
+
+            // Fast-path: in-memory decoded bitmap
+            if (isAudio) {
+                val cachedBmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.getCachedArt(file.path)
+                if (cachedBmp != null && !cachedBmp.isRecycled) {
+                    imgIcon.setImageBitmap(cachedBmp)
+                    imgIcon.imageTintList = null
+                    iconContainer?.setBackgroundResource(0)
+                    imgIcon.setPadding(0, 0, 0, 0)
+                    imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
+                    imgIcon.clipToOutline = true
+                    imgIcon.outlineProvider = object : android.view.ViewOutlineProvider() {
+                        override fun getOutline(view: View, outline: android.graphics.Outline) {
+                            val radius = 10f * view.context.resources.displayMetrics.density
+                            outline.setRoundRect(0, 0, view.width, view.height, radius)
+                        }
+                    }
+                    if (isGridMode) {
+                        updateTextColorForDrawable(imgIcon.drawable, true)
+                    }
+                    return
+                }
+            }
+
             za.kilowatch.ultimatefilemanager.util.GoRoLog.d("UFM_CACHE", "🚀 [GoRo] Attempting loadThumbnail for: ${file.name}, scope_active=${adapterScope.isActive}")
 
             val cachedPath = thumbnailPathCache[file.path]
-            val isGridMode = ViewModeManager.isGrid(viewMode)
             if (cachedPath != null && File(cachedPath).exists()) {
                 imgIcon.imageTintList = null
+                iconContainer?.setBackgroundResource(0)
                 imgIcon.setPadding(0, 0, 0, 0)
                 imgIcon.scaleType = if (ext in apkExts) ImageView.ScaleType.FIT_CENTER else ImageView.ScaleType.CENTER_CROP
                 imgIcon.clipToOutline = true
@@ -985,7 +1024,7 @@ class NetworkFileAdapter(
                 }
 
                 val placeholderImage = ContextCompat.getDrawable(context, R.drawable.ic_photo_video)?.asImage()
-                val fileTypeDrawable = ContextCompat.getDrawable(context, FileTypeIconProvider.iconForExtension(ext))
+                val fileTypeDrawable = ContextCompat.getDrawable(context, FileTypeIconProvider.iconForExtension(context, ext))
                 val fileTypeImage = fileTypeDrawable?.asImage()
 
                 coilDisposable = imgIcon.load(File(cachedPath)) {
@@ -1007,7 +1046,15 @@ class NetworkFileAdapter(
                 return
             }
 
-            imgIcon.setImageResource(R.drawable.ic_photo_video)
+            if (isAudio) {
+                imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, ext))
+                val tintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                imgIcon.clipToOutline = false
+            } else {
+                imgIcon.setImageResource(R.drawable.ic_photo_video)
+            }
 
             thumbnailJob = adapterScope.launch(start = CoroutineStart.UNDISPATCHED) {
                 try {
@@ -1035,7 +1082,7 @@ class NetworkFileAdapter(
                         }
 
                         // Prepare a file-type fallback drawable for Coil `error`
-                        val fileTypeDrawable = ContextCompat.getDrawable(context, FileTypeIconProvider.iconForExtension(ext))
+                        val fileTypeDrawable = ContextCompat.getDrawable(context, FileTypeIconProvider.iconForExtension(context, ext))
                         val fileTypeImage = fileTypeDrawable?.asImage()
 
                         // Only apply if this ViewHolder is still bound to the same file
@@ -1058,24 +1105,32 @@ class NetworkFileAdapter(
                             }
                         }
                     } else if (isActive) {
+                        if (isAudio) {
+                            za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.markNoArt(file.path)
+                        }
                         // Ensure we show the standard file-type icon and apply the usual tint
                         // Clear tag because we're showing a static drawable
                         imgIcon.tag = null
-                        imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(ext))
+                        imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, ext))
                         imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
                             if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
                         )
                         imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                        imgIcon.clipToOutline = false
                     }
                 } catch (e: Exception) {
                     za.kilowatch.ultimatefilemanager.util.GoRoLog.e("UFM_CACHE", "🚀 [GoRo] Exception in loadThumbnail for ${file.name}", e)
                     // Fallback to default icon on error
                     if (isActive) {
-                        imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(ext))
+                        if (isAudio) {
+                            za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.markNoArt(file.path)
+                        }
+                        imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, ext))
                         imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
                             if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
                         )
                         imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                        imgIcon.clipToOutline = false
                     }
                 } finally {
                     if (imgIcon.tag == file.path) {
@@ -1093,6 +1148,10 @@ class NetworkFileAdapter(
                 return
             }
             if (drawable == null) {
+                txtName.setTextColor(0xFFFFFFFF.toInt())
+                return
+            }
+            if (drawable is android.graphics.drawable.BitmapDrawable && (drawable.bitmap == null || drawable.bitmap.isRecycled)) {
                 txtName.setTextColor(0xFFFFFFFF.toInt())
                 return
             }
@@ -1149,8 +1208,10 @@ class NetworkFileAdapter(
             val ext = file.name.substringAfterLast('.', "").lowercase()
             val imageExts = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val apkExts   = setOf("apk", "xapk", "apks")
+            val isAudio   = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
             val isEnabled = NetworkThumbnailPreferenceManager.isEnabled(context)
-            val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts
+            val isShowingArt = isAudio && (thumbnailPathCache[file.path] != null || za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.getCachedArt(file.path) != null)
+            val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts || (isAudio && isShowingArt)
             val hasThumbnail = !file.isDirectory && isEnabled && isMedia
 
             updateTextColorForDrawable(imgIcon.drawable, hasThumbnail && imgIcon.drawable != null && imgIcon.tag == file.path)

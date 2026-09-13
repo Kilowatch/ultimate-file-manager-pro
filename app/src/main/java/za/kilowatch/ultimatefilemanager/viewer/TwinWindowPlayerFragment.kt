@@ -21,6 +21,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.datasource.DataSource
@@ -520,23 +524,27 @@ class TwinWindowPlayerFragment : Fragment() {
     }
 
     private fun extractAudioPoster() {
-        Thread {
-            try {
-                val retriever = MediaMetadataRetriever()
-                retriever.setDataSource(filePath)
-                val art = retriever.embeddedPicture
-                if (art != null) {
-                    val bmp = android.graphics.BitmapFactory.decodeByteArray(art, 0, art.size)
-                    requireActivity().runOnUiThread {
-                        if (!isRemoving && isAdded) {
-                            audioPoster.setImageBitmap(bmp)
-                            audioPlaceholder.visibility = View.GONE
-                        }
+        val path = filePath
+        val ctx = context ?: return
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val bmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractCover(ctx, path, 1024)
+            withContext(Dispatchers.Main) {
+                if (!isRemoving && isAdded) {
+                    if (bmp != null) {
+                        audioPoster.setImageBitmap(bmp)
+                        audioPoster.scaleType = ImageView.ScaleType.FIT_CENTER
+                        audioPoster.visibility = View.VISIBLE
+                        audioPosterScrim.visibility = View.GONE
+                        audioPlaceholder.visibility = View.GONE
+                    } else {
+                        audioPoster.setImageDrawable(null)
+                        audioPoster.visibility = View.GONE
+                        audioPosterScrim.visibility = View.GONE
+                        audioPlaceholder.visibility = View.VISIBLE
                     }
                 }
-                retriever.release()
-            } catch (_: Exception) {}
-        }.start()
+            }
+        }
     }
 
     private fun togglePlayPause() {

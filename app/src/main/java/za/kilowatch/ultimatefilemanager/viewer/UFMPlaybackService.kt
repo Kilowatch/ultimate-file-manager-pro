@@ -793,6 +793,11 @@ class UFMPlaybackService : Service() {
             .setDeleteIntent(stopPendingIntent())
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
 
+        val currentArtwork = item?.path?.let { za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.getCachedArt(it) }
+        if (currentArtwork != null) {
+            builder.setLargeIcon(currentArtwork)
+        }
+
         // Add seekbar + time for expanded notification
         if (dur > 0 && dur < Long.MAX_VALUE) {
             builder.setProgress(dur.toInt(), pos.toInt(), false)
@@ -936,17 +941,89 @@ class UFMPlaybackService : Service() {
                         retriever.setDataSource(CommonMediaDataSource(randomAccessFile))
                     }
                 } else {
-                    retriever.setDataSource(item.path)
+                    val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(item.path) ||
+                                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, item.path) ||
+                                item.path.startsWith("content://")
+                    if (isSaf) {
+                        val uri = if (item.path.startsWith("content://")) Uri.parse(item.path)
+                        else za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this, item.path)
+                        if (uri != null) {
+                            retriever.setDataSource(this, uri)
+                        } else {
+                            retriever.setDataSource(item.path)
+                        }
+                    } else {
+                        retriever.setDataSource(item.path)
+                    }
                 }
 
                 val title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                 val artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
                 val album = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
 
+                var artBytes = retriever.embeddedPicture
+                if (artBytes == null && isAudio) {
+                    if (networkShare != null) {
+                        try {
+                            val (effShare, effPath) = if (networkShare!!.type == za.kilowatch.ultimatefilemanager.network.ShareType.SMB && networkShare!!.isServerMode) {
+                                val basePath = if (networkShare!!.remotePath.isNotEmpty()) networkShare!!.remotePath
+                                else {
+                                    val trimmed = item.path.trimStart('/')
+                                    if (trimmed.contains('/')) "/" + trimmed.substringBefore('/') else "/$trimmed"
+                                }
+                                val eff = networkShare!!.copy(remotePath = basePath)
+                                val prefix = basePath.trimStart('/')
+                                val clean = item.path.trimStart('/')
+                                val sub = when {
+                                    clean.startsWith("$prefix/") -> clean.removePrefix("$prefix/")
+                                    clean == prefix -> ""
+                                    else -> clean
+                                }
+                                Pair(eff, sub)
+                            } else {
+                                Pair(networkShare!!, item.path)
+                            }
+                            if (item.path.endsWith(".flac", ignoreCase = true)) {
+                                kotlinx.coroutines.runBlocking {
+                                    val stream = when (effShare.type) {
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.openInputStream(effShare, effPath, dedicated = false)
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.openInputStream(effShare, effPath)
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.openInputStream(effShare, effPath)
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.SFTP,
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(effShare, effPath)
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(effShare, effPath).first
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(effShare, effPath).first
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(effShare, effPath).first
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3,
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(effShare, effPath).first
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(effShare, effPath).first
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(effShare, effPath)
+                                        za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.openInputStream(effShare, effPath)
+                                    }
+                                    stream.use { s ->
+                                        artBytes = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractFlacArtwork(s)
+                                    }
+                                }
+                            }
+                        } catch (e: Exception) {
+                            GoRoLog.d("UFMPlaybackService", "Network audio art fallback failed: ${e.message}")
+                        }
+                    } else {
+                        artBytes = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractArtworkBytes(this, item.path)
+                    }
+                }
+
                 val builder = MediaMetadata.Builder()
                 title?.let { builder.setTitle(it) }
                 artist?.let { builder.setArtist(it) }
                 album?.let { builder.setAlbumTitle(it) }
+                artBytes?.let {
+                    builder.setArtworkData(it, MediaMetadata.PICTURE_TYPE_FRONT_COVER)
+                    val bmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.decodeSampledBitmap(it, 512)
+                    if (bmp != null) {
+                        za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.putCachedArt(item.path, bmp)
+                    }
+                }
 
                 val metadata = builder.build()
 

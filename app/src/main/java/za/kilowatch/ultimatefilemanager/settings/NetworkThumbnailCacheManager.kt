@@ -60,6 +60,27 @@ class NetworkThumbnailCacheManager(private val context: Context) {
         return if (clean.startsWith("/")) clean else "/$clean"
     }
 
+    private fun resolveEffectiveShareAndPath(share: NetworkShare, path: String): Pair<NetworkShare, String> {
+        if (share.type == ShareType.SMB && share.isServerMode) {
+            val basePath = if (share.remotePath.isNotEmpty()) {
+                share.remotePath
+            } else {
+                val trimmed = path.trimStart('/')
+                if (trimmed.contains('/')) "/" + trimmed.substringBefore('/') else "/$trimmed"
+            }
+            val eff = share.copy(remotePath = basePath)
+            val prefix = basePath.trimStart('/')
+            val clean = path.trimStart('/')
+            val sub = when {
+                clean.startsWith("$prefix/") -> clean.removePrefix("$prefix/")
+                clean == prefix -> ""
+                else -> clean
+            }
+            return Pair(eff, sub)
+        }
+        return Pair(share, path)
+    }
+
     /**
      * Main entry point for the adapter to get a thumbnail.
      * Tries cache first, then generates and caches if missing.
@@ -102,6 +123,25 @@ class NetworkThumbnailCacheManager(private val context: Context) {
     }
 
     /**
+     * Evicts a cached thumbnail from database and disk (e.g. after tags or cover art are updated).
+     */
+    suspend fun evictThumbnail(shareId: String, networkPath: String) = withContext(Dispatchers.IO) {
+        val normPath = normalizePath(networkPath)
+        val entity = db.dao().get(shareId, normPath)
+            ?: db.dao().get(shareId, networkPath)
+            ?: db.dao().get(shareId, networkPath.trimStart('/'))
+        if (entity != null) {
+            val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)
+            val file = File(cacheFolderPath, entity.localFileName)
+            if (file.exists()) {
+                file.delete()
+            }
+            db.dao().delete(shareId, entity.networkPath)
+            GoRoLog.d("UFM_CACHE", "Evicted cached thumbnail for $networkPath")
+        }
+    }
+
+    /**
      * Retrieves the stream and caches the thumbnail to disk.
      * Returns the absolute path of the generated cache file, or null if failed/limit reached.
      *
@@ -134,8 +174,9 @@ class NetworkThumbnailCacheManager(private val context: Context) {
         val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
         val isVideo = ext in VIDEO_EXTENSIONS
         val isApk = ext in listOf("apk", "xapk", "apks")
+        val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
 
-        if (!isImage && !isVideo && !isApk) return@withContext null
+        if (!isImage && !isVideo && !isApk && !isAudio) return@withContext null
 
         // RClone: whole-file downloads are avoided when range reads work. When they do,
         // large/4K videos flow into the SMB-style random-access retriever below (no full
@@ -159,7 +200,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
         val hashName = hashBytes.joinToString("") { "%02x".format(it) } + ".webp"
         val destFile = File(cacheFolder, hashName)
 
-        val tempFile = if (isVideo || isApk) File(context.cacheDir, "temp_thumb_${System.currentTimeMillis()}.$ext") else null
+        val tempFile = if (isVideo || isApk || isAudio) File(context.cacheDir, "temp_thumb_${System.currentTimeMillis()}.$ext") else null
 
         var finalBitmap: Bitmap? = null
 
@@ -171,13 +212,97 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                 GoRoLog.d("UFM_CACHE", "Semaphore acquired for: ${networkFile.path}")
                 GoRoLog.d("UFM_CACHE", "Generating thumbnail for: ${networkFile.path} on share: ${share.id}")
 
-                val rCloneRangeOk = za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(share) &&
-                    za.kilowatch.ultimatefilemanager.network.RCloneShareClient.supportsRangeReads(share, networkFile.path, networkFile.size)
-                val isRandomAccessCapable = share.type in listOf(
+                val (effectiveShare, effectivePath) = resolveEffectiveShareAndPath(share, networkFile.path)
+
+                val rCloneRangeOk = za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(effectiveShare) &&
+                    za.kilowatch.ultimatefilemanager.network.RCloneShareClient.supportsRangeReads(effectiveShare, effectivePath, networkFile.size)
+                val isRandomAccessCapable = effectiveShare.type in listOf(
                     ShareType.SMB, ShareType.SFTP, ShareType.SCP, ShareType.FTP, ShareType.NFS,
                     ShareType.GOOGLE_DRIVE, ShareType.ONEDRIVE
                 ) || rCloneRangeOk
                 val skipRetriever = ext in SKIP_RETRIEVER_EXTENSIONS
+
+                if (isAudio) {
+                    // Fast path for FLAC via stream (reads only initial metadata blocks)
+                    if (ext == "flac") {
+                        try {
+                            val flacStream: InputStream = when (effectiveShare.type) {
+                                ShareType.SMB          -> SmbShareClient.openInputStream(effectiveShare, effectivePath, dedicated = false)
+                                ShareType.FTP          -> FtpShareClient.openInputStream(effectiveShare, effectivePath)
+                                ShareType.TV           -> TvShareClient.openInputStream(effectiveShare, effectivePath)
+                                ShareType.SFTP,
+                                ShareType.SCP          -> SshShareClient.openInputStream(effectiveShare, effectivePath)
+                                ShareType.ONEDRIVE     -> OnedriveShareClient.openInputStream(effectiveShare, effectivePath).first
+                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(effectiveShare, effectivePath).first
+                                ShareType.DROPBOX      -> DropboxShareClient.openInputStream(effectiveShare, effectivePath).first
+                                ShareType.AWS_S3,
+                                ShareType.IDRIVE_E2    -> S3ShareClient.openInputStream(effectiveShare, effectivePath).first
+                                ShareType.WEBDAV       -> WebDavShareClient.openInputStream(effectiveShare, effectivePath).first
+                                ShareType.NFS          -> NfsShareClient.openInputStream(effectiveShare, effectivePath)
+                                ShareType.DLNA         -> DlnaShareClient.openInputStream(effectiveShare, effectivePath)
+                            }
+                            flacStream.use { stream ->
+                                val artBytes = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractFlacArtwork(stream)
+                                if (artBytes != null && artBytes.isNotEmpty()) {
+                                    val rawBmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.decodeSampledBitmap(artBytes, THUMB_MAX_PX)
+                                    finalBitmap = rawBmp?.let { scaleBitmap(it) }
+                                }
+                            }
+                        } catch (e: Exception) {
+                            GoRoLog.d("UFM_CACHE", "FLAC stream thumbnail extraction failed: ${e.message}")
+                        }
+                    }
+
+                    // Random-access path for audio (MP3, M4A, etc. via MediaMetadataRetriever)
+                    if (finalBitmap == null && isRandomAccessCapable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        var randomAccess: IRandomAccessFile? = null
+                        var dataSource: RemoteMediaDataSource? = null
+                        val retriever = android.media.MediaMetadataRetriever()
+                        try {
+                            randomAccess = when (effectiveShare.type) {
+                                ShareType.SMB          -> SmbShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                ShareType.SFTP,
+                                ShareType.SCP          -> SshShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                ShareType.FTP          -> FtpShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                ShareType.DROPBOX      -> DropboxShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                ShareType.AWS_S3,
+                                ShareType.IDRIVE_E2    -> S3ShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                ShareType.ONEDRIVE     -> OnedriveShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                ShareType.NFS          -> NfsShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                ShareType.DLNA         -> DlnaShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                ShareType.WEBDAV       -> WebDavShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                                else -> null
+                            }
+                            if (randomAccess != null) {
+                                val ds = RemoteMediaDataSource(randomAccess)
+                                dataSource = ds
+                                withTimeout(RETRIEVER_TIMEOUT_MS) {
+                                    try {
+                                        retriever.setDataSource(ds)
+                                        val picture = retriever.embeddedPicture
+                                        if (picture != null && picture.isNotEmpty()) {
+                                            val rawBmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.decodeSampledBitmap(picture, THUMB_MAX_PX)
+                                            finalBitmap = rawBmp?.let { scaleBitmap(it) }
+                                        }
+                                    } catch (oom: OutOfMemoryError) {
+                                        finalBitmap?.recycle()
+                                        finalBitmap = null
+                                        System.gc()
+                                    } catch (e: Exception) {
+                                        GoRoLog.d("UFM_CACHE", "Audio MediaMetadataRetriever failed: ${e.message}")
+                                    }
+                                }
+                            }
+                        } catch (e: Exception) {
+                            GoRoLog.d("UFM_CACHE", "Remote Random Access audio thumbnail failed: ${e.message}")
+                        } finally {
+                            try { retriever.release() } catch (_: Exception) {}
+                            try { dataSource?.close() } catch (_: Exception) {}
+                            randomAccess?.close()
+                        }
+                    }
+                }
 
                 if (isVideo && isRandomAccessCapable && !skipRetriever && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // ── Random-access path (SMB / SFTP / FTP / cloud) ─────────────────────
@@ -185,19 +310,19 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                     var dataSource: RemoteMediaDataSource? = null
                     val retriever = android.media.MediaMetadataRetriever()
                     try {
-                        randomAccess = when (share.type) {
-                            ShareType.SMB          -> SmbShareClient.openRandomAccessFile(share, networkFile.path)
+                        randomAccess = when (effectiveShare.type) {
+                            ShareType.SMB          -> SmbShareClient.openRandomAccessFile(effectiveShare, effectivePath)
                             ShareType.SFTP,
-                            ShareType.SCP          -> SshShareClient.openRandomAccessFile(share, networkFile.path)
-                            ShareType.FTP          -> FtpShareClient.openRandomAccessFile(share, networkFile.path)
-                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(share, networkFile.path)
-                            ShareType.DROPBOX      -> DropboxShareClient.openRandomAccessFile(share, networkFile.path)
+                            ShareType.SCP          -> SshShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                            ShareType.FTP          -> FtpShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                            ShareType.DROPBOX      -> DropboxShareClient.openRandomAccessFile(effectiveShare, effectivePath)
                             ShareType.AWS_S3,
-                            ShareType.IDRIVE_E2    -> S3ShareClient.openRandomAccessFile(share, networkFile.path)
-                            ShareType.ONEDRIVE     -> OnedriveShareClient.openRandomAccessFile(share, networkFile.path)
-                            ShareType.NFS          -> NfsShareClient.openRandomAccessFile(share, networkFile.path)
-                            ShareType.DLNA       -> DlnaShareClient.openRandomAccessFile(share, networkFile.path)
-                            ShareType.WEBDAV       -> WebDavShareClient.openRandomAccessFile(share, networkFile.path) // redirects RClone to RCloneShareClient
+                            ShareType.IDRIVE_E2    -> S3ShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                            ShareType.ONEDRIVE     -> OnedriveShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                            ShareType.NFS          -> NfsShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                            ShareType.DLNA         -> DlnaShareClient.openRandomAccessFile(effectiveShare, effectivePath)
+                            ShareType.WEBDAV       -> WebDavShareClient.openRandomAccessFile(effectiveShare, effectivePath) // redirects RClone to RCloneShareClient
                             else -> throw IllegalStateException("Unsupported RandomAccess ShareType")
                         }
                         val ds = RemoteMediaDataSource(randomAccess)
@@ -245,20 +370,20 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                 if (finalBitmap == null) {
                     // ── Stream / download path ─────────────────────────────────────────────
                     try {
-                        val inputStream: InputStream = when (share.type) {
-                            ShareType.SMB          -> SmbShareClient.openInputStream(share, networkFile.path, dedicated = false)
-                            ShareType.FTP          -> FtpShareClient.openInputStream(share, networkFile.path)
-                            ShareType.TV           -> TvShareClient.openInputStream(share, networkFile.path)
+                        val inputStream: InputStream = when (effectiveShare.type) {
+                            ShareType.SMB          -> SmbShareClient.openInputStream(effectiveShare, effectivePath, dedicated = false)
+                            ShareType.FTP          -> FtpShareClient.openInputStream(effectiveShare, effectivePath)
+                            ShareType.TV           -> TvShareClient.openInputStream(effectiveShare, effectivePath)
                             ShareType.SFTP,
-                            ShareType.SCP          -> SshShareClient.openInputStream(share, networkFile.path)
-                            ShareType.ONEDRIVE     -> OnedriveShareClient.openInputStream(share, networkFile.path).first
-                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, networkFile.path).first
-                            ShareType.DROPBOX      -> DropboxShareClient.openInputStream(share, networkFile.path).first
+                            ShareType.SCP          -> SshShareClient.openInputStream(effectiveShare, effectivePath)
+                            ShareType.ONEDRIVE     -> OnedriveShareClient.openInputStream(effectiveShare, effectivePath).first
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(effectiveShare, effectivePath).first
+                            ShareType.DROPBOX      -> DropboxShareClient.openInputStream(effectiveShare, effectivePath).first
                             ShareType.AWS_S3,
-                            ShareType.IDRIVE_E2    -> S3ShareClient.openInputStream(share, networkFile.path).first
-                            ShareType.WEBDAV       -> WebDavShareClient.openInputStream(share, networkFile.path).first
-                            ShareType.NFS          -> NfsShareClient.openInputStream(share, networkFile.path)
-                            ShareType.DLNA       -> DlnaShareClient.openInputStream(share, networkFile.path)
+                            ShareType.IDRIVE_E2    -> S3ShareClient.openInputStream(effectiveShare, effectivePath).first
+                            ShareType.WEBDAV       -> WebDavShareClient.openInputStream(effectiveShare, effectivePath).first
+                            ShareType.NFS          -> NfsShareClient.openInputStream(effectiveShare, effectivePath)
+                            ShareType.DLNA         -> DlnaShareClient.openInputStream(effectiveShare, effectivePath)
                         }
 
                         inputStream.use { stream: InputStream ->
@@ -312,14 +437,13 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                                 }
 
                             } else if (tempFile != null) {
-                                // Video or APK: download into a temp file
+                                // Video, APK, or Audio: download into a temp file
                                 FileOutputStream(tempFile).use { fos: FileOutputStream ->
                                     val data = ByteArray(16384)
                                     var totalRead = 0
                                     var bytesRead: Int
-                                    // 50 MB limit for APKs; 10 MB for non-random-access video fallback
-                                    // (first 10 MB typically contains the MOOV atom and keyframes)
-                                    val limitSize = if (isApk) 50 * 1024 * 1024 else 10 * 1024 * 1024
+                                    // 50 MB limit for APKs; 5 MB for audio; 10 MB for non-random-access video fallback
+                                    val limitSize = if (isApk) 50 * 1024 * 1024 else if (isAudio) 5 * 1024 * 1024 else 10 * 1024 * 1024
                                     while (stream.read(data, 0, data.size).also { bytesRead = it } != -1) {
                                         fos.write(data, 0, bytesRead)
                                         totalRead += bytesRead
@@ -327,7 +451,25 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                                     }
                                 }
 
-                                if (isApk) {
+                                if (isAudio) {
+                                    if (ext == "flac") {
+                                        val artBytes = try {
+                                            tempFile.inputStream().use { za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractFlacArtwork(it) }
+                                        } catch (_: Exception) { null }
+                                        if (artBytes != null && artBytes.isNotEmpty()) {
+                                            val rawBmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.decodeSampledBitmap(artBytes, THUMB_MAX_PX)
+                                            finalBitmap = rawBmp?.let { scaleBitmap(it) }
+                                        }
+                                    }
+                                    if (finalBitmap == null) {
+                                        val tags = za.kilowatch.ultimatefilemanager.audio.AudioTagManager.readTags(context, tempFile)
+                                        val artBytes = tags?.artworkBytes
+                                        if (artBytes != null && artBytes.isNotEmpty()) {
+                                            val rawBmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.decodeSampledBitmap(artBytes, THUMB_MAX_PX)
+                                            finalBitmap = rawBmp?.let { scaleBitmap(it) }
+                                        }
+                                    }
+                                } else if (isApk) {
                                     val pm = context.packageManager
                                     val pi = pm.getPackageArchiveInfo(tempFile.absolutePath, 0)
                                     if (pi != null) {
@@ -387,10 +529,18 @@ class NetworkThumbnailCacheManager(private val context: Context) {
             }
         } // ── end semaphore.withPermit ──────────────────────────────────────────
 
+        if (isAudio && finalBitmap == null) {
+            za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.markNoArt(networkFile.path)
+        }
+
         if (finalBitmap != null) {
             try {
                 FileOutputStream(destFile).use { out: FileOutputStream ->
                     finalBitmap?.compress(Bitmap.CompressFormat.WEBP, 80, out)
+                }
+
+                if (isAudio) {
+                    za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.putCachedArt(networkFile.path, finalBitmap!!)
                 }
 
                 // Add to DB
@@ -425,8 +575,6 @@ class NetworkThumbnailCacheManager(private val context: Context) {
             } catch (e: Exception) {
                 GoRoLog.e("UFM_CACHE", "Failed to write cache file", e)
                 destFile.delete()
-            } finally {
-                finalBitmap?.recycle()
             }
         } else {
             GoRoLog.w("UFM_CACHE", "Final bitmap was null for ${networkFile.path}")

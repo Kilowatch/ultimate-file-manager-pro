@@ -6556,6 +6556,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                             ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                         }
                                     }
+                                    za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.clearCacheForPath(remotePath)
+                                    za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(this@NetworkBrowserActivity).evictThumbnail(capturedShare.id, remotePath)
                                     withContext(Dispatchers.Main) {
                                         loadDirectory()
                                     }

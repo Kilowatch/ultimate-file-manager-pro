@@ -23,8 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Live Refresh Progress & Dynamic ETA**: Frosted glass status banner displaying real-time folder indexing progress, percentage bar, and countdown of estimated seconds remaining when a scan runs.
   - **Scan Performance Optimization**: In-flight 30-day cutoff filter skipping older files during walk-through, saving memory and eliminating slow Android FUSE path stat calls.
   - **Full File Management Parity**: Complete multi-selection edit mode, floating quick action bar / TV tools dialog, unified Grid/List view mode persistence across storage tabs, and real-time synchronization on rename, move, and delete.
+- **Audio Embedded Artwork & Media Player Cover Art (Mobile & TV)**:
+  - **File List & Grid Icons**: Audio files with embedded album artwork automatically display the cover art as their thumbnail icon across list and grid views. Seamlessly falls back to the standard music note icon with your chosen accent color if no artwork is present.
+  - **UFM Media Player Screen**: Replaced the generic note placeholder icon with the full embedded album artwork displayed in the center of the screen when playing audio tracks.
+  - **Lock Screen & Notifications**: Media notifications, lock screens, and Android Auto now display the embedded album artwork during audio playback.
+  - **Comprehensive Storage & SAF Support**: Fully supports local storage, removable SD cards, and USB OTG drives (via Storage Access Framework with zero-copy native file descriptors), as well as network shares and cloud drives.
+  - **Fluid 60fps Scrolling**: Two-level LRU memory caching (`artCache` for decoded bitmaps and `noArtCache` for negative hits) ensures smooth scrolling with zero I/O stutter in folders with hundreds of music tracks.
+  - **TV & Viewer Integration**: Added embedded cover art support to the Android TV playlist drawer, Twin-Window Player, and standalone Media Player.
+  - **Cache Invalidation**: Automatically purges cached album art whenever tags or artwork are updated in the Music Tag Editor.
 
 ### Fixed
+- **UFM Playback Service**: Fixed a metadata extraction issue on removable SD cards and USB OTG drives where `MediaMetadataRetriever` failed to resolve SAF Document URIs from direct file paths.
 - **Text Viewer & Editor**: Fixed an ANR (App Freeze >5000ms) on Android 15 (SDK 35) during layout measurement (`TextView.onMeasure` -> `desired` -> `Layout.computeDrawingBoundingBox` -> `TemporaryBuffer.obtain`). Applied explicit precomputed width (`MeasureSpec.EXACTLY`) to `txtContent` and `txtLineNumbers` based on monospace font metrics, completely bypassing main-thread bounding-box glyph walks.
 - **Text Viewer & Editor**: Fixed a bug where files with lines exceeding 16 KB (such as minified JSON/JS, base64, or single-line data files) bypassed pagination chunking and loaded unbounded line lengths into `EditText`, choking HarfBuzz shaping. Lines exceeding 2,000 characters are now safely segmented with aligned line numbers, and edit mode is capped at 64 KB with exact layout widths.
 

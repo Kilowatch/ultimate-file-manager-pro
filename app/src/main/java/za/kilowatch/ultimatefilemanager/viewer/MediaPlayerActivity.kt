@@ -26,6 +26,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -141,6 +145,34 @@ class MediaPlayerActivity : AppCompatActivity(), SurfaceHolder.Callback {
         } else {
             surfaceView.visibility = View.GONE
             audioPlaceholder.visibility = View.VISIBLE
+            val icArt = findViewById<ImageView>(R.id.icAudioArt)
+            if (icArt != null) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val bmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractCover(this@MediaPlayerActivity, path, 512)
+                    withContext(Dispatchers.Main) {
+                        if (!isFinishing && !isDestroyed) {
+                            if (bmp != null) {
+                                icArt.setImageBitmap(bmp)
+                                icArt.imageTintList = null
+                                icArt.alpha = 1.0f
+                                icArt.clipToOutline = true
+                                icArt.outlineProvider = object : android.view.ViewOutlineProvider() {
+                                    override fun getOutline(view: View, outline: android.graphics.Outline) {
+                                        val radius = 12f * view.context.resources.displayMetrics.density
+                                        outline.setRoundRect(0, 0, view.width, view.height, radius)
+                                    }
+                                }
+                            } else {
+                                icArt.setImageResource(R.drawable.ic_audio)
+                                val tintColor = if (isTv) getColor(R.color.tv_text_secondary) else getColor(R.color.mobile_text_secondary)
+                                icArt.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                                icArt.alpha = if (isTv) 0.4f else 0.5f
+                                icArt.clipToOutline = false
+                            }
+                        }
+                    }
+                }
+            }
             initMediaPlayer(path)
         }
     }

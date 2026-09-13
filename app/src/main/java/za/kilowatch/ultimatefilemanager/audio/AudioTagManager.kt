@@ -7,7 +7,11 @@ import org.jaudiotagger.tag.FieldKey
 import org.jaudiotagger.tag.Tag
 import org.jaudiotagger.tag.images.Artwork
 import org.jaudiotagger.tag.images.ArtworkFactory
+import org.jaudiotagger.tag.flac.FlacTag
+import org.jaudiotagger.tag.reference.PictureTypes
+import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag
 import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
+import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
 import java.io.InputStream
 import java.util.Locale
@@ -92,6 +96,7 @@ object AudioTagManager {
                 fileSizeBytes = if (canDirectRead) file.length() else SafTreeManager.getFileSize(context, file.absolutePath)
             )
         } catch (e: Exception) {
+            GoRoLog.w("AudioTagManager", "Failed to read tags from ${fileToRead.name}: ${e.message}")
             null
         } finally {
             if (!canDirectRead) {
@@ -165,13 +170,50 @@ object AudioTagManager {
             setOrDelete(FieldKey.LYRICS, data.lyrics)
 
             if (removeArtwork) {
-                tag.deleteArtworkField()
-            } else if (updateArtwork && data.artworkBytes != null) {
-                tag.deleteArtworkField()
-                val artwork = ArtworkFactory.getNew()
-                artwork.binaryData = data.artworkBytes
-                artwork.mimeType = data.artworkMime ?: "image/jpeg"
-                tag.setField(artwork)
+                runCatching { tag.deleteArtworkField() }
+            } else if (updateArtwork) {
+                val artBytes = data.artworkBytes
+                if (artBytes != null) {
+                    runCatching { tag.deleteArtworkField() }
+                    val (width, height, mime) = try {
+                        val opts = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                        android.graphics.BitmapFactory.decodeByteArray(artBytes, 0, artBytes.size, opts)
+                        Triple(
+                            if (opts.outWidth > 0) opts.outWidth else 0,
+                            if (opts.outHeight > 0) opts.outHeight else 0,
+                            opts.outMimeType ?: (data.artworkMime ?: "image/jpeg")
+                        )
+                    } catch (_: Throwable) {
+                        Triple(0, 0, data.artworkMime ?: "image/jpeg")
+                    }
+
+                    when (tag) {
+                        is FlacTag -> {
+                            val picField = tag.createArtworkField(
+                                artBytes,
+                                PictureTypes.DEFAULT_ID,
+                                mime,
+                                "",
+                                width,
+                                height,
+                                24,
+                                0
+                            )
+                            tag.setField(picField)
+                        }
+                        is VorbisCommentTag -> {
+                            tag.setArtworkField(artBytes, mime)
+                        }
+                        else -> {
+                            val artwork = ArtworkFactory.getNew()
+                            artwork.binaryData = artBytes
+                            artwork.mimeType = mime
+                            if (width > 0) artwork.width = width
+                            if (height > 0) artwork.height = height
+                            tag.setField(artwork)
+                        }
+                    }
+                }
             }
 
             audioFile.commit()
@@ -197,6 +239,7 @@ object AudioTagManager {
             MediaScannerConnection.scanFile(context, arrayOf(targetFile.absolutePath), null, null)
             true
         } catch (e: Exception) {
+            GoRoLog.e("AudioTagManager", "Failed to write tags for ${targetFile.name}: ${e.message}", e)
             if (!canDirectWrite) {
                 fileToModify.delete()
             }

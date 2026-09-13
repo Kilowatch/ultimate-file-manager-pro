@@ -346,12 +346,50 @@ class UFMPlayerActivity : AppCompatActivity() {
                     // Switch audio/video mode
                     val isAudio = trackInfo.isVideo.not()
                     if (isAudio) {
-                        audioPoster.visibility = View.VISIBLE
-                        audioPosterScrim.visibility = View.VISIBLE
-                        audioPlaceholder.visibility = View.VISIBLE
                         playerView.visibility = View.GONE
                         btnSubtitles.visibility = View.GONE
+
+                        val cached = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.getCachedArt(trackInfo.path)
+                        if (cached != null) {
+                            audioPoster.setImageBitmap(cached)
+                            audioPoster.scaleType = ImageView.ScaleType.FIT_CENTER
+                            audioPoster.visibility = View.VISIBLE
+                            audioPosterScrim.visibility = View.GONE
+                            audioPlaceholder.visibility = View.GONE
+                        } else if (za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(trackInfo.path)) {
+                            audioPoster.setImageDrawable(null)
+                            audioPoster.visibility = View.GONE
+                            audioPosterScrim.visibility = View.GONE
+                            audioPlaceholder.visibility = View.VISIBLE
+                        } else {
+                            audioPoster.setImageDrawable(null)
+                            audioPoster.visibility = View.GONE
+                            audioPosterScrim.visibility = View.GONE
+                            audioPlaceholder.visibility = View.VISIBLE
+
+                            val trackPath = trackInfo.path
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val bmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.extractCover(this@UFMPlayerActivity, trackPath, 1024)
+                                withContext(Dispatchers.Main) {
+                                    if (currentTrackInfo?.path == trackPath) {
+                                        if (bmp != null) {
+                                            audioPoster.setImageBitmap(bmp)
+                                            audioPoster.scaleType = ImageView.ScaleType.FIT_CENTER
+                                            audioPoster.visibility = View.VISIBLE
+                                            audioPosterScrim.visibility = View.GONE
+                                            audioPlaceholder.visibility = View.GONE
+                                        } else {
+                                            audioPoster.setImageDrawable(null)
+                                            audioPoster.visibility = View.GONE
+                                            audioPosterScrim.visibility = View.GONE
+                                            audioPlaceholder.visibility = View.VISIBLE
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     } else {
+                        audioPoster.setImageDrawable(null)
                         audioPoster.visibility = View.GONE
                         audioPosterScrim.visibility = View.GONE
                         audioPlaceholder.visibility = View.GONE
@@ -415,8 +453,16 @@ class UFMPlayerActivity : AppCompatActivity() {
         override fun onMetadataChanged(metadata: MediaMetadata) {
             runOnUiThread {
                 metadata.title?.toString()?.let { txtTitle.text = it }
-                // Poster extraction happens in the service, but if we get a bitmap here
-                // we could set it on audioPoster. For now, the service handles it internally.
+                metadata.artworkData?.let { bytes ->
+                    val bmp = za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.decodeSampledBitmap(bytes, 1024)
+                    if (bmp != null) {
+                        audioPoster.setImageBitmap(bmp)
+                        audioPoster.scaleType = ImageView.ScaleType.FIT_CENTER
+                        audioPoster.visibility = View.VISIBLE
+                        audioPosterScrim.visibility = View.GONE
+                        audioPlaceholder.visibility = View.GONE
+                    }
+                }
             }
         }
 
