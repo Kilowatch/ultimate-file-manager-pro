@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tab bar clipboard indicator badges reflecting active cut or copy operations for each tab.
 - Quick Transfer mode in Tab view: when enabled, transfers immediately between 2 open tabs or prompts with a tab selection sheet when more than 2 tabs are open.
 - Mobile setting to show/hide selection checkboxes in edit mode (disabled by default on mobile, always visible on TV).
+- "New Folder" and "New File" options in Tab mode 3-dots overflow menu, dispatching directly to the active Local or Network tab.
+- Contextual selection header (Close/X button, dynamic selection count, and Select All/Deselect All toggle) overlapping the header bar in Tab mode with per-tab selection state isolation.
+
+### Changed
+- Synchronized selection Tools FAB (FileToolsBottomSheet) and Floating Quick Action Bar (FloatingQuickActionBar) across all storage types (Local, SAF, Network, Online Cloud) and container environments (Standalone, Tabbed, and Twin Window Mode).
+- Made FileBrowserFragment and NetworkBrowserFragment fully self-contained without concrete activity casts, ensuring reliable execution inside TabbedBrowserActivity and TwinWindowActivity.
+- Preserved Twin Window pane-to-pane transfer and cross-pane file comparison (compare_twin).
 
 ## [2.0.6] — 2026-09-13
 

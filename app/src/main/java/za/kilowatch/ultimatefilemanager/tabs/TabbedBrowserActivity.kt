@@ -119,6 +119,11 @@ class TabbedBrowserActivity : AppCompatActivity(),
     private lateinit var btnSort: ImageView
     private lateinit var btnTwinWindow: ImageView
     private lateinit var btnOptionsToggle: ImageView
+    private lateinit var layoutHeaderNormal: LinearLayout
+    private lateinit var layoutHeaderSelection: LinearLayout
+    private lateinit var btnCloseSelection: ImageView
+    private lateinit var txtSelectionCount: TextView
+    private lateinit var btnSelectAll: ImageView
     private lateinit var layoutSearchRow: LinearLayout
     private lateinit var edtSearch: EditText
     private lateinit var btnSearchClear: ImageView
@@ -237,11 +242,31 @@ class TabbedBrowserActivity : AppCompatActivity(),
         btnSort = findViewById(R.id.btnSort)
         btnTwinWindow = findViewById(R.id.btnTwinWindow)
         btnOptionsToggle = findViewById(R.id.btnOptionsToggle)
+        layoutHeaderNormal = findViewById(R.id.layoutHeaderNormal)
+        layoutHeaderSelection = findViewById(R.id.layoutHeaderSelection)
+        btnCloseSelection = findViewById(R.id.btnCloseSelection)
+        txtSelectionCount = findViewById(R.id.txtSelectionCount)
+        btnSelectAll = findViewById(R.id.btnSelectAll)
         layoutSearchRow = findViewById(R.id.layoutSearchRow)
         edtSearch = findViewById(R.id.edtSearch)
         btnSearchClear = findViewById(R.id.btnSearchClear)
         layoutBreadcrumbsScroll = findViewById(R.id.layoutBreadcrumbsScroll)
         layoutBreadcrumbs = findViewById(R.id.layoutBreadcrumbs)
+
+        btnCloseSelection.setOnClickListener {
+            val frag = getActiveFragment()
+            if (frag is FileBrowserFragment) frag.exitSelectionMode()
+            else if (frag is NetworkBrowserFragment) frag.exitSelectionMode()
+        }
+
+        btnSelectAll.setOnClickListener {
+            val frag = getActiveFragment()
+            if (frag is FileBrowserFragment) {
+                if (frag.isAllSelected()) frag.deselectAll() else frag.selectAll()
+            } else if (frag is NetworkBrowserFragment) {
+                if (frag.isAllSelected()) frag.deselectAll() else frag.selectAll()
+            }
+        }
 
         // Top Back button: goes up a level; stays at root if already at root
         btnBack.setOnClickListener {
@@ -333,6 +358,23 @@ class TabbedBrowserActivity : AppCompatActivity(),
         // System back gesture / hardware back: returns directly to Main Menu, preserving open tabs
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                val activeFrag = getActiveFragment()
+                if (activeFrag is FileBrowserFragment && activeFrag.isSelectionMode()) {
+                    activeFrag.exitSelectionMode()
+                    return
+                }
+                if (activeFrag is NetworkBrowserFragment && activeFrag.isSelectionMode()) {
+                    activeFrag.exitSelectionMode()
+                    return
+                }
+                if (layoutSearchRow.visibility == View.VISIBLE) {
+                    layoutSearchRow.visibility = View.GONE
+                    edtSearch.setText("")
+                    if (activeFrag is FileBrowserFragment) activeFrag.search("")
+                    else if (activeFrag is NetworkBrowserFragment) activeFrag.search("")
+                    return
+                }
+
                 TabSessionManager.saveSession(this@TabbedBrowserActivity, tabs, activeTabId ?: "")
                 val intent = Intent(this@TabbedBrowserActivity, StorageBrowserActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -466,6 +508,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
                         updatePasteFab()
                         TabSessionManager.saveSession(this@TabbedBrowserActivity, tabs, tab.id)
                     }
+                    syncActiveTabSelectionState()
                 }
             }
         })
@@ -569,6 +612,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
         }
         updateBadgeAndBreadcrumbs(tab)
         updatePasteFab()
+        syncActiveTabSelectionState()
         TabSessionManager.saveSession(this, tabs, tab.id)
     }
 
@@ -1987,6 +2031,15 @@ class TabbedBrowserActivity : AppCompatActivity(),
         showClipboardSheet()
     }
 
+    override fun onSelectionChanged(fragment: FileBrowserFragment, isSelectionMode: Boolean, count: Int, isAllSelected: Boolean) {
+        val currentTab = getActiveTab()
+        val isCurrent = (currentTab != null && fragment.getTabId().isNotEmpty() && fragment.getTabId() == currentTab.id)
+            || fragment === getActiveFragment()
+        if (isCurrent) {
+            updateSelectionHeader(isSelectionMode, count, isAllSelected)
+        }
+    }
+
     // ── NetworkOperationsListener Implementation ────────────────────────
     override fun onNetworkCopyRequested(fragment: NetworkBrowserFragment, files: List<NetworkFile>) {
         if (files.isEmpty()) return
@@ -2028,6 +2081,52 @@ class TabbedBrowserActivity : AppCompatActivity(),
         showClipboardSheet()
     }
 
+    override fun onNetworkSelectionChanged(fragment: NetworkBrowserFragment, isSelectionMode: Boolean, count: Int, isAllSelected: Boolean) {
+        val currentTab = getActiveTab()
+        val isCurrent = (currentTab != null && fragment.getTabId().isNotEmpty() && fragment.getTabId() == currentTab.id)
+            || fragment === getActiveFragment()
+        if (isCurrent) {
+            updateSelectionHeader(isSelectionMode, count, isAllSelected)
+        }
+    }
+
+    fun updateSelectionHeader(isSelectionMode: Boolean, count: Int, isAllSelected: Boolean) {
+        if (isSelectionMode) {
+            layoutHeaderNormal.visibility = View.GONE
+            layoutHeaderSelection.visibility = View.VISIBLE
+            txtSelectionCount.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
+            btnSelectAll.setImageResource(if (isAllSelected) R.drawable.ic_deselect_all else R.drawable.ic_select_all)
+            btnSelectAll.contentDescription = getString(if (isAllSelected) R.string.action_deselect_all else R.string.action_select_all)
+        } else {
+            layoutHeaderNormal.visibility = View.VISIBLE
+            layoutHeaderSelection.visibility = View.GONE
+        }
+    }
+
+    private fun syncActiveTabSelectionState() {
+        fun doSync() {
+            val frag = getActiveFragment()
+            val isSelection = when (frag) {
+                is FileBrowserFragment -> frag.isSelectionMode()
+                is NetworkBrowserFragment -> frag.isSelectionMode()
+                else -> false
+            }
+            val count = when (frag) {
+                is FileBrowserFragment -> frag.getSelectedCount()
+                is NetworkBrowserFragment -> frag.getSelectedCount()
+                else -> 0
+            }
+            val isAll = when (frag) {
+                is FileBrowserFragment -> frag.isAllSelected()
+                is NetworkBrowserFragment -> frag.isAllSelected()
+                else -> false
+            }
+            updateSelectionHeader(isSelection, count, isAll)
+        }
+        doSync()
+        window?.decorView?.post { doSync() }
+    }
+
     private fun showOptionsMenu(anchor: View) {
         val popupView = layoutInflater.inflate(R.layout.popup_header_options_menu, null)
         val popupWidth = (215 * resources.displayMetrics.density).toInt()
@@ -2048,6 +2147,26 @@ class TabbedBrowserActivity : AppCompatActivity(),
             popupWindow.dismiss()
             showNewTabDialog()
         }
+
+        val itemNewFolder = popupView.findViewById<View>(R.id.menuItemNewFolder)
+        itemNewFolder?.visibility = View.VISIBLE
+        itemNewFolder?.setOnClickListener {
+            popupWindow.dismiss()
+            val frag = getActiveFragment()
+            if (frag is FileBrowserFragment) frag.showCreateFolderDialog()
+            else if (frag is NetworkBrowserFragment) frag.showCreateFolderDialog()
+        }
+
+        val itemNewFile = popupView.findViewById<View>(R.id.menuItemNewFile)
+        itemNewFile?.visibility = View.VISIBLE
+        itemNewFile?.setOnClickListener {
+            popupWindow.dismiss()
+            val frag = getActiveFragment()
+            if (frag is FileBrowserFragment) frag.showCreateTextFileDialog()
+            else if (frag is NetworkBrowserFragment) frag.showCreateTextFileDialog()
+        }
+
+        popupView.findViewById<View>(R.id.dividerNewItems)?.visibility = View.VISIBLE
 
         val itemRenameTab = popupView.findViewById<View>(R.id.menuItemRenameTab)
         itemRenameTab?.visibility = if (getActiveTab() != null) View.VISIBLE else View.GONE
@@ -2144,17 +2263,36 @@ class TabbedBrowserActivity : AppCompatActivity(),
     private fun getActiveTab(): TabModel? = tabs.firstOrNull { it.id == activeTabId }
 
     private fun getActiveFragment(): Fragment? {
-        val pos = tabs.indexOfFirst { it.id == activeTabId }
-        if (pos < 0) return null
-        val itemId = tabPagerAdapter.getItemId(pos)
-        return supportFragmentManager.findFragmentByTag("f$itemId")
+        val currentTab = getActiveTab() ?: return null
+        return supportFragmentManager.fragments.firstOrNull { f ->
+            when (f) {
+                is FileBrowserFragment -> f.getTabId() == currentTab.id
+                is NetworkBrowserFragment -> f.getTabId() == currentTab.id
+                else -> false
+            }
+        } ?: run {
+            val pos = tabs.indexOfFirst { it.id == currentTab.id }
+            if (pos >= 0) {
+                val itemId = tabPagerAdapter.getItemId(pos)
+                supportFragmentManager.findFragmentByTag("f$itemId")
+            } else null
+        }
     }
 
     private fun getFragmentForTab(tab: TabModel): Fragment? {
-        val pos = tabs.indexOfFirst { it.id == tab.id }
-        if (pos < 0) return null
-        val itemId = tabPagerAdapter.getItemId(pos)
-        return supportFragmentManager.findFragmentByTag("f$itemId")
+        return supportFragmentManager.fragments.firstOrNull { f ->
+            when (f) {
+                is FileBrowserFragment -> f.getTabId() == tab.id
+                is NetworkBrowserFragment -> f.getTabId() == tab.id
+                else -> false
+            }
+        } ?: run {
+            val pos = tabs.indexOfFirst { it.id == tab.id }
+            if (pos >= 0) {
+                val itemId = tabPagerAdapter.getItemId(pos)
+                supportFragmentManager.findFragmentByTag("f$itemId")
+            } else null
+        }
     }
 
     // ── ViewPager2 FragmentStateAdapter ─────────────────────────────────
@@ -2174,7 +2312,8 @@ class TabbedBrowserActivity : AppCompatActivity(),
                         mountPath = tab.rootPath,
                         label = tab.storageLabel,
                         isTwinWindow = false,
-                        initialPath = tab.currentPath
+                        initialPath = tab.currentPath,
+                        tabId = tab.id
                     ).apply {
                         onDirectoryChanged = { file ->
                             onTabDirectoryChanged(tab, file.absolutePath)
@@ -2185,7 +2324,8 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     NetworkBrowserFragment.newInstance(
                         shareId = tab.shareId ?: "",
                         initialPath = tab.currentPath,
-                        isTwinWindow = false
+                        isTwinWindow = false,
+                        tabId = tab.id
                     ).apply {
                         onDirectoryChanged = { path ->
                             onTabDirectoryChanged(tab, path)

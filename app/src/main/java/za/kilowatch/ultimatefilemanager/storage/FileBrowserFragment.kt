@@ -51,6 +51,13 @@ import java.io.File
 import za.kilowatch.ultimatefilemanager.archive.ArchiveProgressDialog
 import za.kilowatch.ultimatefilemanager.archive.ArchiveOperationType
 import za.kilowatch.ultimatefilemanager.archive.ArchiveProgress
+import za.kilowatch.ultimatefilemanager.archive.ArchiveOptionsDialog
+import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
+import com.google.android.material.snackbar.Snackbar
+import za.kilowatch.ultimatefilemanager.network.NetworkShare
+import za.kilowatch.ultimatefilemanager.network.ShareType
+import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
+import za.kilowatch.ultimatefilemanager.network.PairingManager
 import java.util.Locale
 import za.kilowatch.ultimatefilemanager.settings.SearchResultsLimitManager
 import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
@@ -209,6 +216,62 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
+    private var onFolderPicked: ((File) -> Unit)? = null
+    private var pendingCompressSourceFiles: List<File>? = null
+    private var pendingCompressFileName: String? = null
+    private var pendingCompressFormat: ArchiveManager.Format? = null
+    private var pendingCompressPassword: String? = null
+    private var pendingAddToArchiveSources: List<File>? = null
+
+    private val folderPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            val data = result.data ?: return@registerForActivityResult
+            val localPath = data.getStringExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
+                ?: data.getStringExtra(FileBrowserActivity.RESULT_SELECTED_PATH)
+            if (localPath != null) {
+                val pickedFile = if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(localPath)) {
+                    za.kilowatch.ultimatefilemanager.storage.SafFile(localPath, isDir = true)
+                } else {
+                    File(localPath)
+                }
+                onFolderPicked?.invoke(pickedFile)
+                onFolderPicked = null
+                return@registerForActivityResult
+            }
+            val shareId = data.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.RESULT_SELECTED_COMPRESS_SHARE_ID)
+            val netPath = data.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.RESULT_SELECTED_COMPRESS_NET_PATH)
+            if (shareId != null && netPath != null) {
+                val src  = pendingCompressSourceFiles ?: return@registerForActivityResult
+                val name = pendingCompressFileName    ?: return@registerForActivityResult
+                val fmt  = pendingCompressFormat      ?: return@registerForActivityResult
+                val share = resolveShareById(shareId)
+                if (share != null) {
+                    performNetworkUploadCompress(src, share, netPath, name, fmt, pendingCompressPassword)
+                }
+            }
+        }
+        onFolderPicked = null
+        pendingCompressSourceFiles = null
+    }
+
+    private val archivePickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            val data = result.data ?: return@registerForActivityResult
+            val archivePath = data.getStringExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
+                ?: data.getStringExtra(FileBrowserActivity.RESULT_SELECTED_PATH)
+            if (archivePath != null) {
+                val sources = pendingAddToArchiveSources ?: return@registerForActivityResult
+                confirmAddFilesToArchive(File(archivePath), sources)
+            }
+        }
+        pendingAddToArchiveSources = null
+    }
+
+
 
 
 
@@ -265,6 +328,7 @@ class FileBrowserFragment : Fragment() {
         private const val ARG_IS_TWIN_WINDOW = "arg_is_twin_window"
         private const val ARG_INITIAL_PATH = "arg_initial_path"
         private const val ARG_REQUEST_INITIAL_FOCUS = "arg_request_initial_focus"
+        private const val ARG_TAB_ID = "arg_tab_id"
 
         fun newInstance(
             mountPath: String,
@@ -274,7 +338,8 @@ class FileBrowserFragment : Fragment() {
             hideBack: Boolean = false,
             isTwinWindow: Boolean = true,
             initialPath: String = "",
-            requestInitialFocus: Boolean = false
+            requestInitialFocus: Boolean = false,
+            tabId: String = ""
         ): FileBrowserFragment {
             return FileBrowserFragment().apply {
                 arguments = Bundle().apply {
@@ -286,6 +351,7 @@ class FileBrowserFragment : Fragment() {
                     putBoolean(ARG_IS_TWIN_WINDOW, isTwinWindow)
                     if (initialPath.isNotEmpty()) putString(ARG_INITIAL_PATH, initialPath)
                     putBoolean(ARG_REQUEST_INITIAL_FOCUS, requestInitialFocus)
+                    if (tabId.isNotEmpty()) putString(ARG_TAB_ID, tabId)
                 }
             }
         }
@@ -416,7 +482,7 @@ class FileBrowserFragment : Fragment() {
                 if (currentNorm == targetNorm || currentNorm.startsWith("$targetNorm/") || targetNorm.startsWith("$currentNorm/")) {
                     android.util.Log.d("FileBrowserFragment", "folderChangedReceiver: Auto-refreshing $currentNorm")
                     android.os.Handler(android.os.Looper.getMainLooper()).post {
-                        loadDirectory(currentDir)
+                        loadDirectory(currentDir, preserveSelection = true)
                     }
                 }
             }
@@ -435,7 +501,7 @@ class FileBrowserFragment : Fragment() {
         }
         // Refresh file list on return from child activities (e.g. Settings toggle)
         if (::currentDir.isInitialized && !isSearchActive) {
-            loadDirectory(currentDir)
+            loadDirectory(currentDir, preserveSelection = true)
         }
         context?.let { ctx ->
             try {
@@ -1414,7 +1480,51 @@ class FileBrowserFragment : Fragment() {
                 }
             }
 
-            // 6. Compress Image
+            // 5. Favorite
+            if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) {
+                list.add(FileToolsBottomSheet.ActionItem("favorite", getString(R.string.action_favorite), R.drawable.ic_star, "toolbar_favorite") {
+                    showFavoriteDialog(selected.first())
+                })
+            }
+
+            // 6. Compress
+            if (pm.isIconEnabled(context, pm.KEY_COMPRESS)) {
+                list.add(FileToolsBottomSheet.ActionItem("compress", getString(R.string.action_compress), R.drawable.ic_compress, "toolbar_compress") {
+                    showArchiveOptions(selected)
+                })
+            }
+
+            // Add to Existing Archive
+            list.add(FileToolsBottomSheet.ActionItem("add_to_existing_archive", getString(R.string.action_add_to_existing_archive), R.drawable.ic_compress, "toolbar_add_to_archive") {
+                showAddToExistingArchive(selected)
+            })
+
+            // Paste into this Archive
+            if (count == 1 && za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isWritableArchive(selected.first()) && FileClipboard.hasItems()) {
+                val clipFiles = FileClipboard.files
+                val isMove = FileClipboard.slots.any { slot ->
+                    slot.items.any { it.operation == FileClipboard.Operation.MOVE }
+                }
+                val pasteLabel = if (isMove) {
+                    getString(R.string.move_to_archive_count, clipFiles.size)
+                } else {
+                    getString(R.string.copy_to_archive_count, clipFiles.size)
+                }
+                val pasteIcon = if (isMove) R.drawable.ic_move else R.drawable.ic_paste
+                list.add(FileToolsBottomSheet.ActionItem("paste_into_archive", pasteLabel, pasteIcon, "toolbar_paste_into_archive") {
+                    confirmPasteIntoArchiveFromBrowser(selected.first())
+                })
+            }
+
+            // Extract Here
+            val hasArchiveSelected = selected.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
+            if (hasArchiveSelected && pm.isIconEnabled(context, pm.KEY_EXTRACT)) {
+                list.add(FileToolsBottomSheet.ActionItem("extract_here", getString(R.string.action_extract_here), R.drawable.ic_extract, "toolbar_extract") {
+                    performExtractHere(selected)
+                })
+            }
+
+            // 7. Compress Image
             val allImages = selected.isNotEmpty() && selected.all {
                 it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             }
@@ -1454,35 +1564,6 @@ class FileBrowserFragment : Fragment() {
                 })
             }
 
-            // Extract Here
-            val hasArchiveSelected = selected.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
-            if (hasArchiveSelected && pm.isIconEnabled(context, pm.KEY_EXTRACT)) {
-                list.add(FileToolsBottomSheet.ActionItem("extract_here", getString(R.string.action_extract_here), R.drawable.ic_extract, "toolbar_extract") {
-                    performExtractHere(selected)
-                })
-            }
-
-            // Add to Existing Archive
-            list.add(FileToolsBottomSheet.ActionItem("add_to_existing_archive", getString(R.string.action_add_to_existing_archive), R.drawable.ic_compress, "toolbar_add_to_archive") {
-                (activity as? FileBrowserActivity)?.showAddToExistingArchive(selected)
-            })
-
-            // Paste into this Archive
-            if (count == 1 && za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isWritableArchive(selected.first()) && FileClipboard.hasItems()) {
-                val clipFiles = FileClipboard.files
-                val isMove = FileClipboard.slots.any { slot ->
-                    slot.items.any { it.operation == FileClipboard.Operation.MOVE }
-                }
-                val pasteLabel = if (isMove) {
-                    getString(R.string.move_to_archive_count, clipFiles.size)
-                } else {
-                    getString(R.string.copy_to_archive_count, clipFiles.size)
-                }
-                val pasteIcon = if (isMove) R.drawable.ic_move else R.drawable.ic_paste
-                list.add(FileToolsBottomSheet.ActionItem("paste_into_archive", pasteLabel, pasteIcon, "toolbar_paste_into_archive") {
-                    (activity as? FileBrowserActivity)?.confirmPasteIntoArchiveFromBrowser(selected.first())
-                })
-            }
 
             // Wallpaper (Single image file, mobile only)
             val isSingleImage = count == 1 && selected.first().isFile &&
@@ -1645,6 +1726,20 @@ class FileBrowserFragment : Fragment() {
                             java.util.ArrayList(selected.map { it.absolutePath })
                         )
                     })
+                })
+            }
+
+            // Copy Encrypted
+            if (pm.isIconEnabled(context, pm.KEY_COPY_ENCRYPT)) {
+                list.add(FileToolsBottomSheet.ActionItem("copy_encrypt", getString(R.string.action_copy_encrypt), R.drawable.ic_copy, "toolbar_copy_encrypt") {
+                    showVaultPickerForEncrypt(selected, isMove = false)
+                })
+            }
+
+            // Move Encrypted
+            if (pm.isIconEnabled(context, pm.KEY_MOVE_ENCRYPT)) {
+                list.add(FileToolsBottomSheet.ActionItem("move_encrypt", getString(R.string.action_move_encrypt), R.drawable.ic_move, "toolbar_move_encrypt") {
+                    showVaultPickerForEncrypt(selected, isMove = true)
                 })
             }
 
@@ -2083,16 +2178,10 @@ class FileBrowserFragment : Fragment() {
                 val shareable = selected.filter { it.isFile }
                 if (shareable.isNotEmpty()) shareFiles(shareable)
             }
-            pm.ACTION_COMPRESS -> {
-                if (isTwinWindow) {
-                    onActionRequested?.invoke("compress")
-                } else {
-                    (activity as? FileBrowserActivity)?.showArchiveOptions(selected)
-                }
-            }
+            pm.ACTION_COMPRESS -> showArchiveOptions(selected)
             pm.ACTION_EXTRACT -> performExtractHere(selected)
             pm.ACTION_FAVORITE -> {
-                if (count == 1) (activity as? FileBrowserActivity)?.showFavoriteDialog(selected.first())
+                if (count == 1) showFavoriteDialog(selected.first())
             }
             pm.ACTION_SELECT_ALL -> {
                 if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
@@ -2183,8 +2272,8 @@ class FileBrowserFragment : Fragment() {
                     }
                 }
             }
-            pm.ACTION_COPY_ENCRYPT -> (activity as? FileBrowserActivity)?.showVaultPickerForEncrypt(selected, isMove = false)
-            pm.ACTION_MOVE_ENCRYPT -> (activity as? FileBrowserActivity)?.showVaultPickerForEncrypt(selected, isMove = true)
+            pm.ACTION_COPY_ENCRYPT -> showVaultPickerForEncrypt(selected, isMove = false)
+            pm.ACTION_MOVE_ENCRYPT -> showVaultPickerForEncrypt(selected, isMove = true)
             pm.ACTION_IMAGE_COMPRESS -> {
                 startActivity(Intent(requireContext(), za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity::class.java).apply {
                     putStringArrayListExtra(
@@ -2351,6 +2440,7 @@ class FileBrowserFragment : Fragment() {
         
         val showSelection = fileAdapter.isSelectionMode
         val isTv = DeviceUtils.isTvDevice(requireContext())
+        (activity as? FileOperationsListener)?.onSelectionChanged(this, showSelection, count, fileAdapter.isAllSelected())
         if (!isTv) {
             val layoutHeaderNormal = view?.findViewById<View>(R.id.layoutHeaderNormal)
             val layoutHeaderSelection = view?.findViewById<View>(R.id.layoutHeaderSelection)
@@ -2557,7 +2647,7 @@ class FileBrowserFragment : Fragment() {
                dir.absolutePath.matches(Regex("^/storage/[^/]+/?$"))
     }
 
-    private fun loadDirectory(directory: File) {
+    private fun loadDirectory(directory: File, preserveSelection: Boolean = false) {
         val ctx = context ?: return
         val isTv = DeviceUtils.isTvDevice(ctx)
         val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
@@ -2672,6 +2762,12 @@ class FileBrowserFragment : Fragment() {
             }
         }
 
+        // Exit selection mode when navigating or after an operation. Preserve it only
+        // when reloading the same directory on resume (background/foreground or tab switch).
+        if (fileAdapter.isSelectionMode && !preserveSelection) {
+            fileAdapter.exitSelectionMode()
+        }
+
         if (isRoot) {
             folderFlowJob?.cancel()
             lifecycleScope.launch(Dispatchers.IO) {
@@ -2688,8 +2784,6 @@ class FileBrowserFragment : Fragment() {
         }
 
         val isRestrictedRoot = isRestrictedStorageRoot(targetDir, rootPath)
-
-        if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
 
         // In restricted mode at the storage root, list granted SAF folders directly
         if (isRestrictedRoot) {
@@ -3232,7 +3326,7 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
-    private fun showCreateTextFileDialog() {
+    fun showCreateTextFileDialog() {
         val ctx = requireContext()
         val isOnTv = DeviceUtils.isTvDevice(ctx)
         val layoutRes = if (isOnTv) R.layout.dialog_create_text_file_tv else R.layout.dialog_create_text_file
@@ -3379,9 +3473,16 @@ class FileBrowserFragment : Fragment() {
         if (act is FileBrowserActivity) {
             act.showPremiumSnackbar(message)
         } else {
-            context?.let { android.widget.Toast.makeText(it, message, android.widget.Toast.LENGTH_SHORT).show() }
+            view?.let {
+                Snackbar.make(it, message, Snackbar.LENGTH_LONG).show()
+            } ?: context?.let { android.widget.Toast.makeText(it, message, android.widget.Toast.LENGTH_SHORT).show() }
         }
     }
+
+    fun showPremiumSnackbar(message: String) {
+        showFeedback(message)
+    }
+
 
     private fun createTextFileInFragment(baseName: String) {
         val ctx = context ?: return
@@ -3450,7 +3551,7 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
-    private fun showCreateFolderDialog() {
+    fun showCreateFolderDialog() {
         val ctx = requireContext()
         val isOnTv = DeviceUtils.isTvDevice(ctx)
         val layoutRes = if (isOnTv) R.layout.dialog_create_folder_tv else R.layout.dialog_create_folder
@@ -3808,15 +3909,22 @@ class FileBrowserFragment : Fragment() {
         fun onMoveRequested(fragment: FileBrowserFragment, files: List<File>)
         fun onRenameRequested(fragment: FileBrowserFragment, file: File?)
         fun onPasteRequested(fragment: FileBrowserFragment, destination: File)
+        fun onSelectionChanged(fragment: FileBrowserFragment, isSelectionMode: Boolean, count: Int, isAllSelected: Boolean) {}
     }
 
     fun getCurrentDir() = currentDir
     fun getRootPath(): String = rootPath
     fun getStorageLabel(): String = storageLabel
     fun getSelectedFiles() = fileAdapter.getSelectedFiles()
+    fun isSelectionMode(): Boolean = fileAdapter.isSelectionMode
+    fun getSelectedCount(): Int = fileAdapter.getSelectedFiles().size
+    fun isAllSelected(): Boolean = fileAdapter.isAllSelected()
+    fun selectAll() = fileAdapter.selectAll()
+    fun deselectAll() = fileAdapter.deselectAll()
     fun exitSelectionMode() = fileAdapter.exitSelectionMode()
     fun refresh() = loadDirectory(currentDir)
     fun getStorageId() = storageId
+    fun getTabId(): String = arguments?.getString(ARG_TAB_ID) ?: ""
     fun getStorageType() = storageType
     fun navigateTo(directory: File) {
         saveCurrentFolderScroll()
@@ -4342,6 +4450,837 @@ class FileBrowserFragment : Fragment() {
             .show()
     }
 
+    fun showFavoriteDialog(file: File) {
+        val ctx = context ?: return
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val layoutRes = if (isOnTv) R.layout.dialog_add_favorite_tv else R.layout.dialog_add_favorite
+        val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtOriginalName = dialogView.findViewById<TextView>(R.id.txtOriginalName)
+        val edtFavoriteName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFavoriteName)
+        val btnSaveFavorite = dialogView.findViewById<View>(R.id.btnSaveFavorite)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtOriginalName?.text = file.name
+        edtFavoriteName?.setText(file.name)
+        edtFavoriteName?.selectAll()
+
+        btnSaveFavorite?.setOnClickListener {
+            val name = edtFavoriteName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                showPremiumSnackbar(getString(R.string.favorite_name_empty))
+            } else {
+                val favorite = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.FavoriteItem(
+                    id = "fav_${System.currentTimeMillis()}",
+                    path = file.absolutePath,
+                    label = name,
+                    isFolder = file.isDirectory,
+                    isNetwork = false
+                )
+                za.kilowatch.ultimatefilemanager.settings.FavoritesManager.addFavorite(ctx, favorite)
+                fileAdapter.exitSelectionMode()
+                showPremiumSnackbar(getString(R.string.favorite_added))
+                dialog.dismiss()
+            }
+        }
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        if (isOnTv) {
+            btnSaveFavorite?.requestFocus()
+        }
+    }
+
+    fun showArchiveOptions(files: List<File>) {
+        val dialog = ArchiveOptionsDialog()
+        dialog.setOnConfirm { filename, format, password, useCurrentFolder ->
+            if (useCurrentFolder) {
+                performCompression(files, currentDir, filename, format, password)
+            } else {
+                pendingCompressSourceFiles = files
+                pendingCompressFileName    = filename
+                pendingCompressFormat      = format
+                pendingCompressPassword    = password
+                pickDestinationFolder { destDir ->
+                    performCompression(files, destDir, filename, format, password)
+                }
+            }
+        }
+        dialog.show(parentFragmentManager, "ArchiveOptions")
+    }
+
+    private fun pickDestinationFolder(callback: (File) -> Unit) {
+        onFolderPicked = callback
+        val intent = Intent(requireContext(), StorageBrowserActivity::class.java).apply {
+            putExtra(StorageBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+        }
+        folderPickerLauncher.launch(intent)
+    }
+
+    private fun performCompression(sourceFiles: List<File>, destDir: File, customFileName: String, format: ArchiveManager.Format, password: String?) {
+        val act = activity ?: return
+        val ctx = context ?: return
+        val fileName = customFileName
+        val extension = format.displayName
+        val isDestSaf = destDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destDir.absolutePath) ||
+                        za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, destDir.absolutePath)
+
+        var destFile = if (isDestSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destDir.absolutePath, "$fileName$extension"))
+        } else {
+            File(destDir, "$fileName$extension")
+        }
+        var counter = 1
+        if (isDestSaf) {
+            while (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, destFile.absolutePath)) {
+                destFile = za.kilowatch.ultimatefilemanager.storage.SafFile(za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destDir.absolutePath, "$fileName ($counter)$extension"))
+                counter++
+            }
+        } else {
+            while (destFile.exists()) {
+                destFile = File(destDir, "$fileName ($counter)$extension")
+                counter++
+            }
+        }
+
+        val progressDialog = ArchiveProgressDialog(act).apply {
+            show(
+                operation = ArchiveOperationType.COMPRESS,
+                archiveName = destFile.name,
+                totalFiles = sourceFiles.size
+            )
+        }
+
+        var compressJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            compressJob?.cancel()
+        }
+
+        compressJob = lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                ArchiveManager.compress(
+                    context = ctx,
+                    sourceFiles = sourceFiles,
+                    destFile = destFile,
+                    password = password,
+                    format = format,
+                    onArchiveProgress = { progress ->
+                        activity?.runOnUiThread { progressDialog.update(progress) }
+                    },
+                    onProgress = {}
+                )
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    fileAdapter.exitSelectionMode()
+                    loadDirectory(currentDir)
+                    showPremiumSnackbar(getString(R.string.compression_completed_destfilename, destFile.name))
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        syncFolderWithIndex(destDir)
+                    }
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    destFile.delete()
+                    showPremiumSnackbar(getString(R.string.archive_cancelled))
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    destFile.delete()
+                    showPremiumSnackbar(getString(R.string.compression_failed_emessage))
+                }
+            }
+        }
+    }
+
+    private fun performNetworkUploadCompress(
+        sourceFiles: List<File>,
+        share: NetworkShare,
+        remotePath: String,
+        customFileName: String,
+        format: ArchiveManager.Format,
+        password: String?
+    ) {
+        val ctx = context ?: return
+        val dialogView = android.widget.LinearLayout(ctx).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(48, 32, 48, 8)
+        }
+        val statusText = android.widget.TextView(ctx).apply {
+            text = getString(R.string.compressing_2)
+            textSize = 14f
+        }
+        val dialogProgress = android.widget.ProgressBar(ctx, null, android.R.attr.progressBarStyleHorizontal).apply {
+            isIndeterminate = false; max = 100; progress = 0
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = 16; bottomMargin = 8 }
+        }
+        dialogView.addView(statusText)
+        dialogView.addView(dialogProgress)
+
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setTitle(R.string.compressing_uploading)
+            .setView(dialogView)
+            .setCancelable(false)
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+        dialog.show()
+
+        val job = lifecycleScope.launch(Dispatchers.IO) {
+            val extension = format.displayName
+            val archiveName = "$customFileName$extension"
+            val tempArchive = File(ctx.cacheDir, "comp_upload_${System.currentTimeMillis()}$extension")
+
+            try {
+                ArchiveManager.compress(
+                    context = ctx,
+                    sourceFiles = sourceFiles,
+                    destFile = tempArchive,
+                    password = password,
+                    format = format,
+                    onArchiveProgress = { progress ->
+                        activity?.runOnUiThread {
+                            dialogProgress.progress = progress.percentage
+                            statusText.text = "${getString(R.string.archive_progress_compressing)} ${progress.percentage}%"
+                        }
+                    },
+                    onProgress = {}
+                )
+
+                withContext(Dispatchers.Main) {
+                    statusText.text = getString(R.string.uploading_to_sharename, share.name)
+                    dialogProgress.isIndeterminate = true
+                }
+
+                val cleanRemotePath = stripSharePrefix(share, remotePath)
+                val destPath = if (cleanRemotePath.isEmpty()) archiveName else "$cleanRemotePath/$archiveName"
+                val inStream = tempArchive.inputStream()
+                try {
+                    when (share.type) {
+                        ShareType.TV ->
+                            za.kilowatch.ultimatefilemanager.network.TvShareClient.uploadStream(share, destPath, inStream, tempArchive.length())
+                        ShareType.SMB ->
+                            za.kilowatch.ultimatefilemanager.network.SmbShareClient.openOutputStream(share, destPath)
+                                .use { out -> inStream.copyTo(out) }
+                        ShareType.FTP ->
+                            za.kilowatch.ultimatefilemanager.network.FtpShareClient.openOutputStream(share, destPath)
+                                .use { out -> inStream.copyTo(out) }
+                        ShareType.SFTP, ShareType.SCP ->
+                            za.kilowatch.ultimatefilemanager.network.SshShareClient.openOutputStream(share, destPath)
+                                .use { out -> inStream.copyTo(out) }
+                        ShareType.ONEDRIVE ->
+                            za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openOutputStream(share, destPath)
+                                .use { out -> inStream.copyTo(out) }
+                        ShareType.GOOGLE_DRIVE ->
+                            za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openOutputStream(share, destPath)
+                                .use { out -> inStream.copyTo(out) }
+                        ShareType.DROPBOX ->
+                            za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openOutputStream(share, destPath)
+                                .use { out -> inStream.copyTo(out) }
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 ->
+                            za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(share, destPath)
+                                .use { out -> inStream.copyTo(out) }
+                        ShareType.WEBDAV ->
+                            za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, destPath)
+                                .use { out -> inStream.copyTo(out) }
+                        ShareType.NFS ->
+                            za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(share, destPath)
+                                .use { out -> inStream.copyTo(out) }
+                        ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                    }
+                } finally {
+                    inStream.close()
+                }
+
+                withContext(Dispatchers.Main) {
+                    dialog.dismiss()
+                    fileAdapter.exitSelectionMode()
+                    showPremiumSnackbar(getString(R.string.compression_complete_archivename_sharename))
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    dialog.dismiss()
+                    showPremiumSnackbar(getString(R.string.compression_failed_emessage))
+                }
+            } finally {
+                tempArchive.delete()
+            }
+        }
+
+        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.setOnClickListener {
+            job.cancel()
+            dialog.dismiss()
+            showPremiumSnackbar(getString(R.string.compression_cancelled))
+        }
+    }
+
+    private fun resolveShareById(id: String): NetworkShare? {
+        val ctx = context ?: return null
+        val fromRepo = NetworkShareRepository.getInstance(ctx).getById(id)
+        if (fromRepo != null) return fromRepo
+        val dev = PairingManager.getInstance(ctx).getPairedDevice(id)
+        if (dev != null) return NetworkShare(
+            id = dev.deviceId, name = dev.name,
+            type = ShareType.TV,
+            host = dev.lastIp, port = dev.lastPort, readOnly = false
+        )
+        return null
+    }
+
+    private fun stripSharePrefix(share: NetworkShare, path: String): String {
+        if (!share.isServerMode || share.remotePath.isEmpty()) return path
+        val prefix = share.remotePath.trimStart('/')
+        val clean = path.trimStart('/')
+        return when {
+            clean.startsWith("$prefix/") -> clean.removePrefix("$prefix/")
+            clean == prefix              -> ""
+            else                         -> clean
+        }
+    }
+
+    fun showAddToExistingArchive(files: List<File>) {
+        val ctx = context ?: return
+        if (files.isEmpty()) return
+        val currentArchives = currentDir.listFiles()?.filter { it.isFile && ArchiveManager.isWritableArchive(it) } ?: emptyList()
+        if (currentArchives.isEmpty()) {
+            launchArchivePicker(files)
+        } else {
+            val items = currentArchives.map { it.name }.toMutableList()
+            items.add(getString(R.string.browse_other_archive))
+
+            MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+                .setTitle(R.string.select_target_archive)
+                .setItems(items.toTypedArray()) { _, which ->
+                    if (which < currentArchives.size) {
+                        confirmAddFilesToArchive(currentArchives[which], files)
+                    } else {
+                        launchArchivePicker(files)
+                    }
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        }
+    }
+
+    fun launchArchivePicker(files: List<File>) {
+        pendingAddToArchiveSources = files
+        val intent = Intent(requireContext(), StorageBrowserActivity::class.java).apply {
+            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+            putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, "zip,7z,tar,gz,tgz,bz2,tbz2,tbz,xz,txz,zst,tzst")
+        }
+        archivePickerLauncher.launch(intent)
+    }
+
+    fun confirmAddFilesToArchive(archiveFile: File, sources: List<File>) {
+        val ctx = context ?: return
+        val count = sources.size
+        MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setTitle(R.string.confirm_add_to_archive_title)
+            .setMessage(getString(R.string.confirm_add_to_archive_msg, count, archiveFile.name))
+            .setPositiveButton(R.string.copy_to_archive) { _, _ ->
+                executeAddFilesToArchive(archiveFile, sources, isMove = false)
+            }
+            .setNeutralButton(R.string.move_to_archive) { _, _ ->
+                executeAddFilesToArchive(archiveFile, sources, isMove = true)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    fun confirmPasteIntoArchiveFromBrowser(archiveFile: File) {
+        val ctx = context ?: return
+        val sources = FileClipboard.files
+        if (sources.isEmpty()) return
+        val isMove = FileClipboard.slots.any { slot ->
+            slot.items.any { it.operation == FileClipboard.Operation.MOVE }
+        }
+        val count = sources.size
+        MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setTitle(R.string.confirm_add_to_archive_title)
+            .setMessage(getString(R.string.confirm_add_to_archive_msg, count, archiveFile.name))
+            .setPositiveButton(if (isMove) R.string.move_to_archive else R.string.copy_to_archive) { _, _ ->
+                executeAddFilesToArchive(archiveFile, sources, isMove) {
+                    FileClipboard.clear()
+                    updatePasteFab()
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun executeAddFilesToArchive(
+        archiveFile: File,
+        sources: List<File>,
+        isMove: Boolean,
+        onSuccess: (() -> Unit)? = null
+    ) {
+        val act = activity ?: return
+        val ctx = context ?: return
+        fileAdapter.exitSelectionMode()
+
+        val progressDialog = ArchiveProgressDialog(act)
+        var addJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            addJob?.cancel()
+        }
+        progressDialog.show(
+            operation = if (isMove) ArchiveOperationType.MOVE else ArchiveOperationType.ADD,
+            archiveName = archiveFile.name,
+            totalFiles = sources.size
+        )
+
+        addJob = lifecycleScope.launch(Dispatchers.Main) {
+            var password: String? = null
+            if (archiveFile.name.lowercase().endsWith(".zip")) {
+                try {
+                    val zf = net.lingala.zip4j.ZipFile(archiveFile)
+                    if (zf.isEncrypted) {
+                        val pwd = kotlinx.coroutines.suspendCancellableCoroutine<String?> { cont ->
+                            val dialog = za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog()
+                            dialog.setOnConfirm { pw -> if (cont.isActive) cont.resume(pw) }
+                            dialog.setOnCancel { if (cont.isActive) cont.resume(null) }
+                            dialog.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog.TAG)
+                        }
+                        if (pwd == null) {
+                            progressDialog.dismiss()
+                            return@launch
+                        }
+                        password = pwd
+                    }
+                } catch (_: Exception) {}
+            }
+
+            var wasCancelled = false
+            val res = try {
+                withContext(Dispatchers.IO) {
+                    ArchiveManager.addFilesToArchive(
+                        context = ctx,
+                        archiveFile = archiveFile,
+                        sourceFiles = sources,
+                        targetDirInArchive = "",
+                        isMove = isMove,
+                        password = password,
+                        onArchiveProgress = { progress ->
+                            activity?.runOnUiThread { progressDialog.update(progress) }
+                        },
+                        onProgress = { _, _, _ -> }
+                    )
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                wasCancelled = true
+                Result.failure(e)
+            } finally {
+                progressDialog.dismiss()
+            }
+
+            if (wasCancelled) {
+                showPremiumSnackbar(getString(R.string.archive_cancelled))
+                return@launch
+            }
+
+            if (res.isSuccess) {
+                val count = res.getOrDefault(sources.size)
+                showPremiumSnackbar(getString(R.string.add_to_archive_success, count, archiveFile.name))
+                onSuccess?.invoke()
+                loadDirectory(currentDir)
+            } else {
+                showPremiumSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+            }
+        }
+    }
+
+    fun showVaultPickerForEncrypt(files: List<File>, isMove: Boolean) {
+        val folders = files.filter { it.isDirectory }
+        val fileItems = files.filter { it.isFile }
+
+        if (folders.isNotEmpty()) {
+            showFolderEncryptWarning(folders, fileItems, isMove)
+        } else {
+            showVaultPickerForFiles(fileItems, isMove)
+        }
+    }
+
+    private fun showFolderEncryptWarning(folders: List<File>, extraFiles: List<File>, isMove: Boolean) {
+        val ctx = context ?: return
+        val folderNames = folders.joinToString(", ") { it.name }
+        val message = getString(R.string.vault_folder_encrypt_warning, folderNames)
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+
+        val layoutRes = if (isOnTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+        val dialogView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+        val imgIcon = dialogView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDialogMessage)
+        val btnPositive = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+        val btnNegative = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+
+        imgIcon?.setImageResource(R.drawable.ic_lock)
+        txtTitle?.setText(R.string.vault_folder_encrypt_title)
+        txtMessage?.text = message
+        btnPositive?.setText(R.string.vault_folder_encrypt_confirm)
+        btnNegative?.visibility = View.VISIBLE
+        btnNegative?.setText(android.R.string.cancel)
+
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        btnPositive?.setOnClickListener {
+            dialog.dismiss()
+            showVaultPickerForFiles(folders + extraFiles, isMove)
+        }
+
+        btnNegative?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        if (isOnTv) {
+            btnPositive?.requestFocus()
+        }
+    }
+
+    private fun showVaultPickerForFiles(files: List<File>, isMove: Boolean) {
+        val ctx = context ?: return
+        val vaultDir = File(ctx.filesDir, "vault")
+        val entries = mutableListOf<VaultEntry>()
+
+        if (vaultDir.exists() && vaultDir.isDirectory) {
+            vaultDir.listFiles()?.forEach { entryDir ->
+                if (entryDir.isDirectory) {
+                    readVaultEntry(entryDir)?.let { entries.add(it) }
+                }
+            }
+        }
+
+        if (entries.isEmpty()) {
+            val isOnTv = DeviceUtils.isTvDevice(ctx)
+            val layoutRes = if (isOnTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+            val noVaultView = LayoutInflater.from(ctx).inflate(layoutRes, null)
+            val imgIcon = noVaultView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+            val txtTitle = noVaultView.findViewById<TextView>(R.id.txtDialogTitle)
+            val txtMessage = noVaultView.findViewById<TextView>(R.id.txtDialogMessage)
+            val btnPositive = noVaultView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogPositive)
+            val btnNegative = noVaultView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDialogNegative)
+
+            imgIcon?.setImageResource(R.drawable.ic_lock)
+            txtTitle?.setText(R.string.encrypt_no_vaults)
+            txtMessage?.setText(R.string.encrypt_create_first)
+            btnPositive?.setText(R.string.encrypt_create_vault)
+            btnNegative?.visibility = View.VISIBLE
+            btnNegative?.setText(android.R.string.cancel)
+
+            val noVaultDialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+                .setView(noVaultView)
+                .create()
+
+            btnPositive?.setOnClickListener {
+                noVaultDialog.dismiss()
+                startActivity(Intent(ctx, VaultActivity::class.java))
+            }
+
+            btnNegative?.setOnClickListener {
+                noVaultDialog.dismiss()
+            }
+
+            noVaultDialog.show()
+            noVaultDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            return
+        }
+
+        val vaultNames = entries.map { it.displayName }.toTypedArray()
+        val title = if (isMove) getString(R.string.encrypt_move_title)
+                    else getString(R.string.encrypt_copy_title)
+
+        val white     = androidx.core.content.ContextCompat.getColor(ctx, R.color.tv_text_primary)
+        val black     = ColorblindPalette.focusFillText(ctx)
+        val yellow    = ColorblindPalette.focusFill(ctx)
+        val yellowCsl = android.content.res.ColorStateList.valueOf(yellow)
+        val glassCsl  = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+
+        val focusedDrawable = android.graphics.drawable.ColorDrawable(yellow)
+        val normalDrawable  = android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+        val rowSelector = android.graphics.drawable.StateListDrawable().apply {
+            addState(intArrayOf(android.R.attr.state_focused), focusedDrawable)
+            addState(intArrayOf(android.R.attr.state_pressed), focusedDrawable)
+            addState(intArrayOf(), normalDrawable)
+        }
+
+        val adapter = object : android.widget.ArrayAdapter<String>(
+            ctx, android.R.layout.simple_list_item_1, vaultNames.toList()
+        ) {
+            override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                val view = super.getView(position, convertView, parent)
+                val tv = view.findViewById<android.widget.TextView>(android.R.id.text1)
+                tv.textSize = 17f
+                tv.setPadding(48, 36, 48, 36)
+                tv.isFocusable = false
+                val textCsl = android.content.res.ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_focused),
+                        intArrayOf(android.R.attr.state_pressed),
+                        intArrayOf()
+                    ),
+                    intArrayOf(black, black, white)
+                )
+                tv.setTextColor(textCsl)
+                view.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                return view
+            }
+        }
+
+        val container = android.widget.LinearLayout(ctx).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        }
+
+        val subtitle = android.widget.TextView(ctx).apply {
+            text = getString(R.string.encrypt_select_vault)
+            setTextColor(0xB3FFFFFF.toInt())
+            textSize = 13f
+            setPadding(48, 16, 48, 8)
+        }
+        container.addView(subtitle)
+
+        val topDivider = android.view.View(ctx).apply {
+            setBackgroundColor(0x1AFFFFFF.toInt())
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT, 1
+            )
+        }
+        container.addView(topDivider)
+
+        val listView = android.widget.ListView(ctx).apply {
+            this.adapter = adapter
+            divider = android.graphics.drawable.ColorDrawable(0x1AFFFFFF.toInt())
+            dividerHeight = 1
+            setSelector(rowSelector)
+            isFocusable = true
+            isFocusableInTouchMode = false
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        container.addView(listView)
+
+        var selectedIndex = if (entries.size == 1) 0 else -1
+
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setTitle(title)
+            .setView(container)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                if (selectedIndex >= 0) {
+                    encryptFilesToVault(files, entries[selectedIndex], isMove)
+                }
+            }
+            .create()
+
+        listView.setOnItemClickListener { _, view, which, _ ->
+            for (i in 0 until listView.childCount) {
+                listView.getChildAt(i)?.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            }
+            view.setBackgroundColor(0x33FBBF24.toInt())
+            selectedIndex = which
+            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
+                isEnabled = true
+                backgroundTintList = yellowCsl
+            }
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(
+            android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+        )
+        val titleView = dialog.findViewById<android.widget.TextView>(
+            com.google.android.material.R.id.alertTitle
+        ) ?: dialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
+        titleView?.setTextColor(white)
+
+        val okEnabled = selectedIndex >= 0
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
+            isEnabled = okEnabled
+            backgroundTintList = android.content.res.ColorStateList.valueOf(
+                if (okEnabled) yellow else 0x66FBBF24.toInt()
+            )
+            setTextColor(black)
+            if (DeviceUtils.isTvDevice(ctx)) {
+                setOnFocusChangeListener { _, hasFocus ->
+                    backgroundTintList = if (hasFocus) yellowCsl
+                        else android.content.res.ColorStateList.valueOf(if (isEnabled) yellow else 0x66FBBF24.toInt())
+                    setTextColor(black)
+                }
+            }
+        }
+
+        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
+            backgroundTintList = glassCsl
+            setTextColor(white)
+            if (DeviceUtils.isTvDevice(ctx)) {
+                setOnFocusChangeListener { _, hasFocus ->
+                    backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                    setTextColor(if (hasFocus) black else white)
+                }
+            }
+        }
+    }
+
+    private fun encryptFilesToVault(files: List<File>, entry: VaultEntry, isMove: Boolean) {
+        val ctx = context ?: return
+        val entryDir = File(ctx.filesDir, "vault/${entry.id}")
+
+        val progressView = LayoutInflater.from(ctx).inflate(R.layout.dialog_vault_progress, null)
+        val txtProgress = progressView.findViewById<TextView>(R.id.txtVaultProgress)
+        val progressBar = progressView.findViewById<android.widget.ProgressBar>(R.id.progressVault)
+
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setTitle(if (isMove) R.string.encrypt_move_title else R.string.encrypt_copy_title)
+            .setView(progressView)
+            .setCancelable(false)
+            .create()
+        dialog.show()
+
+        dialog.window?.setBackgroundDrawable(
+            android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+        )
+        val titleView = dialog.findViewById<android.widget.TextView>(
+            com.google.android.material.R.id.alertTitle
+        ) ?: dialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
+        titleView?.setTextColor(androidx.core.content.ContextCompat.getColor(ctx, R.color.tv_text_primary))
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            val success = withContext(Dispatchers.IO) {
+                try {
+                    val filesToEncrypt = files.filter { !isSystemFile(it) }
+                    val total = filesToEncrypt.size.coerceAtLeast(1)
+                    var count = 0
+
+                    filesToEncrypt.forEach { file ->
+                        val relativePath = file.name
+                        val encryptedFile = File(entryDir, "$relativePath.enc")
+                        encryptedFile.parentFile?.mkdirs()
+                        VaultCrypto.encryptFile(file, encryptedFile)
+
+                        count++
+                        val percent = ((count.toFloat() / total.toFloat()) * 100).toInt()
+                        activity?.runOnUiThread {
+                            txtProgress.text = getString(R.string.encrypt_progress, count, total)
+                            progressBar.progress = percent
+                        }
+                    }
+
+                    val existingFiles = entry.files.toMutableList()
+                    filesToEncrypt.forEach { file ->
+                        if (!existingFiles.contains(file.name)) {
+                            existingFiles.add(file.name)
+                        }
+                    }
+
+                    val metadata = org.json.JSONObject().apply {
+                        put("id", entry.id)
+                        put("displayName", "enc:" + VaultCrypto.encryptString(entry.displayName))
+                        put("originalRoot", "enc:" + VaultCrypto.encryptString(entry.originalRoot))
+                        put("filesPayload", VaultCrypto.encryptStrings(existingFiles))
+                        put("files", org.json.JSONArray(existingFiles.map { "enc:" + VaultCrypto.encryptString(it) }))
+                    }
+                    val tempMeta = File(entryDir, "metadata.json.tmp")
+                    tempMeta.writeText(metadata.toString())
+                    val finalMeta = File(entryDir, "metadata.json")
+                    finalMeta.delete()
+                    tempMeta.renameTo(finalMeta)
+
+                    if (isMove) {
+                        filesToEncrypt.forEach { file ->
+                            if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(file.absolutePath)) {
+                                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(file.absolutePath)
+                            } else if (file.isDirectory) {
+                                file.deleteRecursively()
+                            } else {
+                                file.delete()
+                            }
+                        }
+                    }
+
+                    true
+                } catch (e: Exception) {
+                    false
+                }
+            }
+
+            dialog.dismiss()
+            fileAdapter.exitSelectionMode()
+            loadDirectory(currentDir)
+
+            if (success) {
+                showPremiumSnackbar(getString(R.string.encrypt_success, files.size))
+            } else {
+                showPremiumSnackbar(getString(R.string.encrypt_error))
+            }
+        }
+    }
+
+    private fun isSystemFile(file: File): Boolean {
+        val path = file.absolutePath.lowercase()
+        val systemPaths = listOf(
+            "/system/", "/proc/", "/sys/", "/dev/", "/data/system/",
+            "/data/dalvik-cache/", "/data/app/"
+        )
+        if (systemPaths.any { path.startsWith(it) }) return true
+        val systemFilePatterns = listOf(
+            ".nomedia", "thumbs.db", "desktop.ini", ".ds_store"
+        )
+        return systemFilePatterns.any { file.name.lowercase() == it.lowercase() }
+    }
+
+    private fun readVaultEntry(dir: File): VaultEntry? {
+        val metadataFile = File(dir, "metadata.json")
+        val fileToRead = if (metadataFile.exists()) metadataFile else File(dir, "metadata.json.bak")
+        if (!fileToRead.exists()) return null
+        return try {
+            val json = org.json.JSONObject(fileToRead.readText())
+            val rawName = json.getString("displayName")
+            val displayName = if (rawName.startsWith("enc:")) VaultCrypto.decryptString(rawName.removePrefix("enc:")) else rawName
+            val rawRoot = json.optString("originalRoot", "")
+            val originalRoot = if (rawRoot.startsWith("enc:")) VaultCrypto.decryptString(rawRoot.removePrefix("enc:")) else rawRoot
+
+            val files: List<String> = if (json.has("filesPayload")) {
+                VaultCrypto.decryptStrings(json.getString("filesPayload"))
+            } else if (json.has("files")) {
+                val filesJson = json.getJSONArray("files")
+                val list = ArrayList<String>(filesJson.length())
+                for (i in 0 until filesJson.length()) {
+                    val rawF = filesJson.getString(i)
+                    list.add(if (rawF.startsWith("enc:")) VaultCrypto.decryptString(rawF.removePrefix("enc:")) else rawF)
+                }
+                list
+            } else {
+                emptyList()
+            }
+            VaultEntry(
+                id = json.getString("id"),
+                displayName = displayName,
+                originalRoot = originalRoot,
+                files = files
+            )
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     fun handleKeyEvent(event: KeyEvent): Boolean {
         if (!isTv && ::keyboardShortcutHandler.isInitialized && keyboardShortcutHandler.handleKeyEvent(event)) {
             return true
@@ -4349,3 +5288,4 @@ class FileBrowserFragment : Fragment() {
         return false
     }
 }
+

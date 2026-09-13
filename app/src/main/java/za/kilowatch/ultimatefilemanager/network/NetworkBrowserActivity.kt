@@ -2825,6 +2825,121 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     downloadNetworkAudioAndLaunchTagger(audioFiles)
                 }
             }
+            pm.ACTION_COPY_ENCRYPT -> {
+                val encryptable = selected.filter { !it.isDirectory }
+                if (encryptable.isNotEmpty()) {
+                    showNetworkVaultPicker(encryptable, isMove = false)
+                }
+            }
+            pm.ACTION_MOVE_ENCRYPT -> {
+                val encryptable = selected.filter { !it.isDirectory }
+                if (encryptable.isNotEmpty()) {
+                    showNetworkVaultPicker(encryptable, isMove = true)
+                }
+            }
+            pm.ACTION_IMAGE_COMPRESS -> {
+                val netImages = selected.filter {
+                    !it.isDirectory && it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                }
+                if (netImages.isNotEmpty()) {
+                    downloadNetworkImagesAndCompress(netImages)
+                }
+            }
+            pm.ACTION_CREATE_GIF -> {
+                val netImages = selected.filter {
+                    !it.isDirectory && it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                }
+                if (netImages.size >= 2) {
+                    downloadNetworkImagesAndCreateGif(netImages)
+                }
+            }
+            pm.ACTION_EXIF_TOOLS -> {
+                val netImages = selected.filter {
+                    !it.isDirectory && it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                }
+                if (netImages.isNotEmpty() && !DeviceUtils.isTvDevice(this)) {
+                    downloadNetworkImagesAndLaunchExifTools(netImages)
+                }
+            }
+            pm.ACTION_SET_HOME_WALLPAPER -> {
+                if (count == 1 && !selected.first().isDirectory && !DeviceUtils.isTvDevice(this)) {
+                    setNetworkWallpaper(selected.first(), android.app.WallpaperManager.FLAG_SYSTEM)
+                }
+            }
+            pm.ACTION_SET_LOCK_WALLPAPER -> {
+                if (count == 1 && !selected.first().isDirectory && !DeviceUtils.isTvDevice(this)) {
+                    setNetworkWallpaper(selected.first(), android.app.WallpaperManager.FLAG_LOCK)
+                }
+            }
+            pm.ACTION_SET_RINGTONE -> {
+                if (count == 1 && !selected.first().isDirectory && !DeviceUtils.isTvDevice(this)) {
+                    setNetworkSystemSound(selected.first(), android.media.RingtoneManager.TYPE_RINGTONE)
+                }
+            }
+            pm.ACTION_SET_NOTIFICATION -> {
+                if (count == 1 && !selected.first().isDirectory && !DeviceUtils.isTvDevice(this)) {
+                    setNetworkSystemSound(selected.first(), android.media.RingtoneManager.TYPE_NOTIFICATION)
+                }
+            }
+            pm.ACTION_SET_ALARM -> {
+                if (count == 1 && !selected.first().isDirectory && !DeviceUtils.isTvDevice(this)) {
+                    setNetworkSystemSound(selected.first(), android.media.RingtoneManager.TYPE_ALARM)
+                }
+            }
+            "protect", pm.ACTION_PROTECT_UNPROTECT -> {
+                val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this, share.id)
+                val targetProtect = hasUnprotected
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@NetworkBrowserActivity, file.path, share.id, protected = targetProtect)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory()
+                        val msg = if (targetProtect) getString(R.string.toast_protected_success, selected.size) else getString(R.string.toast_unprotected_success, selected.size)
+                        showPremiumSnackbar(msg)
+                    }
+                }
+            }
+            "unprotect" -> {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@NetworkBrowserActivity, file.path, share.id, protected = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory()
+                        showPremiumSnackbar(getString(R.string.toast_unprotected_success, selected.size))
+                    }
+                }
+            }
+            "pin", pm.ACTION_PIN_UNPIN -> {
+                val hasUnpinned = fileAdapter.hasAnySelectedUnpinned(this, share.id)
+                val targetPin = hasUnpinned
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@NetworkBrowserActivity, file.path, share.id, pinned = targetPin)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory()
+                        val msg = if (targetPin) getString(R.string.toast_pinned_success, selected.size) else getString(R.string.toast_unpinned_success, selected.size)
+                        showPremiumSnackbar(msg)
+                    }
+                }
+            }
+            "unpin" -> {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@NetworkBrowserActivity, file.path, share.id, pinned = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory()
+                        showPremiumSnackbar(getString(R.string.toast_unpinned_success, selected.size))
+                    }
+                }
+            }
             pm.ACTION_MORE -> {
                 fabTools?.performClick()
             }
@@ -2861,6 +2976,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     val state = za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar.SelectionState(
                         selectedCount = count,
                         isAllSelected = isAll,
+                        hasProtected = fileAdapter.hasAnySelectedProtected(this, share.id),
+                        hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this, share.id),
+                        hasPinned = fileAdapter.hasAnySelectedPinned(this, share.id),
+                        hasUnpinned = fileAdapter.hasAnySelectedUnpinned(this, share.id),
+                        hasArchiveSelected = netFiles.isNotEmpty() && netFiles.any {
+                            ArchiveManager.isSupportedArchiveExtension(it.name.substringAfterLast('.'))
+                        },
                         allImagesSelected = netFiles.isNotEmpty() && netFiles.all {
                             !it.isDirectory && it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                         },

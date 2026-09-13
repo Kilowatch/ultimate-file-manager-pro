@@ -146,6 +146,55 @@
 
             </LinearLayout>
         </LinearLayout>
+
+        <!-- Contextual Selection Header (revealed in selection mode on mobile) -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderSelection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <!-- Close Selection Button (X) -->
+            <ImageView
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/action_clear_selection"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Dynamic Selection Count -->
+            <TextView
+                android:id="@+id/txtSelectionCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="1 selected" />
+
+            <!-- Select All / Deselect All Toggle Icon -->
+            <ImageView
+                android:id="@+id/btnSelectAll"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_select_all"
+                android:contentDescription="@string/action_select_all"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Modern Search Row -->
