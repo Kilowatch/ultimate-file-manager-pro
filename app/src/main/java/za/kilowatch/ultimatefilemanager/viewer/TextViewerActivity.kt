@@ -70,6 +70,9 @@ class TextViewerActivity : AppCompatActivity() {
 
     private var textSize = 13f
     private lateinit var scaleDetector: ScaleGestureDetector
+    private var contentCharWidth = 0f
+    private var lineNumCharWidth = 0f
+    private var lastMaxChars = 0
 
     private var allChunks: List<String> = emptyList()
     private var allLineNumChunks: List<String> = emptyList()
@@ -83,6 +86,47 @@ class TextViewerActivity : AppCompatActivity() {
     private var isOfficeFile = false
     private var isTv = false
     private var imeWasVisible = false
+
+    private fun updateCharWidths() {
+        contentCharWidth = txtContent.paint.measureText("M")
+        lineNumCharWidth = txtLineNumbers.paint.measureText("9")
+    }
+
+    /**
+     * Applies explicit widths (MeasureSpec.EXACTLY) to txtContent and txtLineNumbers
+     * so TextView.onMeasure bypasses desired(mLayout) and Layout.computeDrawingBoundingBox
+     * on the main thread (saving >5000ms on large documents / Android 15).
+     */
+    private fun applyExactWidths(maxChars: Int, maxDigits: Int) {
+        val density = resources.displayMetrics.density
+        val viewportWidth = hScrollView.width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels
+
+        val lineNumWidth = if (maxDigits > 0 && txtLineNumbers.visibility != View.GONE) {
+            val padding = txtLineNumbers.paddingStart + txtLineNumbers.paddingEnd
+            (maxDigits * lineNumCharWidth + padding + 8 * density).toInt()
+        } else {
+            0
+        }
+
+        if (txtLineNumbers.visibility != View.GONE && lineNumWidth > 0) {
+            val lp = txtLineNumbers.layoutParams
+            if (lp != null && lp.width != lineNumWidth) {
+                lp.width = lineNumWidth
+                txtLineNumbers.layoutParams = lp
+            }
+        }
+
+        val contentPadding = txtContent.paddingStart + txtContent.paddingEnd
+        val minContentWidth = (viewportWidth - lineNumWidth).coerceAtLeast(0)
+        val calculatedContentWidth = (maxChars * contentCharWidth + contentPadding + 16 * density).toInt()
+        val targetContentWidth = maxOf(calculatedContentWidth, minContentWidth)
+
+        val lp = txtContent.layoutParams
+        if (lp != null && lp.width != targetContentWidth) {
+            lp.width = targetContentWidth
+            txtContent.layoutParams = lp
+        }
+    }
 
     // ── Syntax highlighting fields ─────────────────────────────────────
     private var currentLanguage: LanguageDef? = null
@@ -160,6 +204,7 @@ class TextViewerActivity : AppCompatActivity() {
         txtPageIndicator = findViewById(R.id.txtPageIndicator)
         btnEdit = findViewById(R.id.btnEdit)
         btnSave = findViewById(R.id.btnSave)
+        updateCharWidths()
 
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { onBackPressed() }
 
@@ -189,6 +234,30 @@ class TextViewerActivity : AppCompatActivity() {
                 textSize = (textSize * detector.scaleFactor).coerceIn(8f, 40f)
                 txtContent.textSize = textSize
                 txtLineNumbers.textSize = textSize
+                updateCharWidths()
+                if (isEditMode) {
+                    val maxChars = txtContent.text?.lineSequence()?.maxOfOrNull { line ->
+                        var len = 0
+                        for (ch in line) len += if (ch == '\t') 4 else 1
+                        len
+                    } ?: 0
+                    applyExactWidths(maxChars, 0)
+                } else {
+                    val chunk = allChunks.getOrElse(currentPage) { "" }
+                    val maxChars = chunk.lineSequence().maxOfOrNull { line ->
+                        var len = 0
+                        for (ch in line) len += if (ch == '\t') 4 else 1
+                        len
+                    } ?: 0
+                    val lineNums = if (allLineNumChunks.isNotEmpty()) allLineNumChunks.getOrElse(currentPage) { "" } else ""
+                    val maxDigits = if (lineNums.isNotEmpty()) {
+                        lineNums.lineSequence()
+                            .map { it.trim() }
+                            .filter { it.isNotEmpty() && it.all { c -> c.isDigit() } }
+                            .maxOfOrNull { it.length } ?: 0
+                    } else 0
+                    applyExactWidths(maxChars, maxDigits)
+                }
                 return true
             }
         })
@@ -322,10 +391,11 @@ class TextViewerActivity : AppCompatActivity() {
         // Refuse to enter edit mode for very large documents. A single wrap-content
         // EditText holding the whole file forces TextView.onMeasure to walk every glyph
         // on the main thread (Layout.getDesiredWidthWithLimit -> TextLine.metrics ->
-        // Paint.getRunAdvance); on low-end Android TV boxes (e.g. ZTE OTT Xview+ AV1,
-        // SDK 30) that exceeds the ANR watchdog's 5s budget and freezes the app. Viewing
-        // stays available via pagination; only editing is capped.
-        val fullText = if (!isEditMode) allChunks.joinToString("\n") else ""
+        // Paint.getRunAdvance or Layout.computeDrawingBoundingBox in Android 15);
+        // on low-end Android TV boxes and mid-range mobile devices that exceeds the
+        // ANR watchdog's 5s budget and freezes the app. Viewing stays available via
+        // pagination; only editing is capped.
+        val fullText = if (!isEditMode) currentText.ifEmpty { allChunks.joinToString("\n") } else ""
         if (!isEditMode && fullText.toByteArray(Charsets.UTF_8).size > EDIT_MAX_BYTES) {
             Toast.makeText(
                 this,
@@ -337,6 +407,14 @@ class TextViewerActivity : AppCompatActivity() {
 
         isEditMode = !isEditMode
         if (isEditMode) {
+            val maxChars = fullText.lineSequence().maxOfOrNull { line ->
+                var len = 0
+                for (ch in line) len += if (ch == '\t') 4 else 1
+                len
+            } ?: 0
+            lastMaxChars = maxChars
+            applyExactWidths(maxChars, 0)
+
             txtContent.setText(fullText)
             txtContent.textSize = textSize
             // ── Restore EditText editing capabilities (mobile and TV) ─────
@@ -408,6 +486,17 @@ class TextViewerActivity : AppCompatActivity() {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                 override fun afterTextChanged(s: Editable?) {
+                    s?.let { editable ->
+                        val curMax = editable.lineSequence().maxOfOrNull { line ->
+                            var len = 0
+                            for (ch in line) len += if (ch == '\t') 4 else 1
+                            len
+                        } ?: 0
+                        if (curMax > lastMaxChars) {
+                            lastMaxChars = curMax
+                            applyExactWidths(curMax, 0)
+                        }
+                    }
                     highlightDebounceRunnable?.let { r ->
                         highlightDebounceHandler?.removeCallbacks(r)
                         highlightDebounceHandler?.postDelayed(r, 300)
@@ -446,22 +535,32 @@ class TextViewerActivity : AppCompatActivity() {
             }
             btnSave.visibility = View.GONE
             txtContent.background = null
+            updateModifiedState()
+            if (isModified) {
+                currentText = txtContent.text.toString()
+                allChunks = splitIntoChunks(currentText, PAGE_BYTE_SIZE)
+                val indicatorsHidden = GridIndicatorsPreferenceManager.isHidden(this@TextViewerActivity)
+                allLineNumChunks = if (!indicatorsHidden) {
+                    buildLineNumberChunks(currentText, PAGE_BYTE_SIZE)
+                } else {
+                    emptyList()
+                }
+            }
             paginationBar.visibility = if (allChunks.size > 1) View.VISIBLE else View.GONE
             txtLineNumbers.visibility = if (!GridIndicatorsPreferenceManager.isHidden(this)) View.VISIBLE else View.GONE
-            updateModifiedState()
-            showPage(currentPage)
+            showPage(currentPage.coerceIn(0, allChunks.lastIndex.coerceAtLeast(0)))
         }
     }
 
     private fun updateModifiedState() {
         val newText = txtContent.text.toString()
-        val fullText = allChunks.joinToString("\n")
-        isModified = newText != fullText
+        val original = currentText.ifEmpty { allChunks.joinToString("\n") }
+        isModified = newText != original
     }
 
     private fun showSaveDialog() {
         if (!isModified && !isEditMode) return
-        val newText = if (isEditMode) txtContent.text.toString() else allChunks.joinToString("\n")
+        val newText = if (isEditMode) txtContent.text.toString() else currentText.ifEmpty { allChunks.joinToString("\n") }
         if (newText.isBlank()) {
             Toast.makeText(this, R.string.cannot_save_empty_file, Toast.LENGTH_SHORT).show()
             return
@@ -617,9 +716,19 @@ class TextViewerActivity : AppCompatActivity() {
                     getString(R.string.file_saved, targetFile.name), Toast.LENGTH_SHORT).show()
                 isModified = false
                 if (targetFile.absolutePath == originalFilePath) {
+                    currentText = content
+                    allChunks = splitIntoChunks(content, PAGE_BYTE_SIZE)
+                    val indicatorsHidden = GridIndicatorsPreferenceManager.isHidden(this@TextViewerActivity)
+                    allLineNumChunks = if (!indicatorsHidden) {
+                        buildLineNumberChunks(content, PAGE_BYTE_SIZE)
+                    } else {
+                        emptyList()
+                    }
                     isEditMode = false
                     btnSave.visibility = View.GONE
                     txtContent.background = null
+                    paginationBar.visibility = if (allChunks.size > 1) View.VISIBLE else View.GONE
+                    txtLineNumbers.visibility = if (!indicatorsHidden) View.VISIBLE else View.GONE
                     if (!isTv) {
                         txtContent.isEnabled = true
                         txtContent.setTextIsSelectable(true)
@@ -634,7 +743,7 @@ class TextViewerActivity : AppCompatActivity() {
                         txtContent.isFocusable = false
                         txtContent.isFocusableInTouchMode = false
                     }
-                    showPage(currentPage)
+                    showPage(currentPage.coerceIn(0, allChunks.lastIndex.coerceAtLeast(0)))
                 }
             }
         } catch (e: Exception) {
@@ -957,6 +1066,18 @@ class TextViewerActivity : AppCompatActivity() {
         } else ""
 
         lifecycleScope.launch(Dispatchers.Default) {
+            val maxChars = chunk.lineSequence().maxOfOrNull { line ->
+                var len = 0
+                for (ch in line) len += if (ch == '\t') 4 else 1
+                len
+            } ?: 0
+            val maxDigits = if (lineNums.isNotEmpty()) {
+                lineNums.lineSequence()
+                    .map { it.trim() }
+                    .filter { it.isNotEmpty() && it.all { c -> c.isDigit() } }
+                    .maxOfOrNull { it.length } ?: 0
+            } else 0
+
             // ── Syntax highlighting for code files ────────────────
             if (isHighlightedFile && currentLanguage != null && chunk.isNotEmpty()) {
                 val lang = currentLanguage!!
@@ -972,6 +1093,7 @@ class TextViewerActivity : AppCompatActivity() {
                 )
                 withContext(Dispatchers.Main) {
                     if (isEditMode) return@withContext
+                    applyExactWidths(maxChars, maxDigits)
                     txtContent.setText(spannable, android.widget.TextView.BufferType.SPANNABLE)
                     txtLineNumbers.text = lineNums
                     txtContent.textSize = textSize
@@ -989,6 +1111,7 @@ class TextViewerActivity : AppCompatActivity() {
                 val precomputed = PrecomputedTextCompat.create(chunk, params)
                 withContext(Dispatchers.Main) {
                     if (isEditMode) return@withContext
+                    applyExactWidths(maxChars, maxDigits)
                     txtContent.setText(precomputed, android.widget.TextView.BufferType.SPANNABLE)
                     txtLineNumbers.text = lineNums
                     txtContent.textSize = textSize
@@ -1009,47 +1132,71 @@ class TextViewerActivity : AppCompatActivity() {
         btnNextPage.alpha = if (currentPage < total - 1) 1f else 0.3f
     }
 
+    private fun splitLineIntoSegments(line: String, maxChars: Int): List<String> {
+        if (line.length <= maxChars) return listOf(line)
+        val result = mutableListOf<String>()
+        var start = 0
+        while (start < line.length) {
+            val end = (start + maxChars).coerceAtMost(line.length)
+            result.add(line.substring(start, end))
+            start = end
+        }
+        return result
+    }
+
     private fun splitIntoChunks(text: String, chunkBytes: Int): List<String> {
-        if (text.toByteArray(Charsets.UTF_8).size <= chunkBytes) return listOf(text)
         val lines = text.lines()
         val chunks = mutableListOf<String>()
         val buf = StringBuilder()
         var bufBytes = 0
-        for (line in lines) {
-            val lineWithNl = line + "\n"
-            val lineBytes = lineWithNl.toByteArray(Charsets.UTF_8).size
-            if (bufBytes + lineBytes > chunkBytes && buf.isNotEmpty()) {
-                chunks.add(buf.toString().trimEnd('\n'))
-                buf.clear()
-                bufBytes = 0
+        for (rawLine in lines) {
+            val segments = if (rawLine.length > MAX_LINE_CHARS) {
+                splitLineIntoSegments(rawLine, MAX_LINE_CHARS)
+            } else {
+                listOf(rawLine)
             }
-            buf.append(lineWithNl)
-            bufBytes += lineBytes
+            for (line in segments) {
+                val lineWithNl = line + "\n"
+                val lineBytes = lineWithNl.toByteArray(Charsets.UTF_8).size
+                if (bufBytes + lineBytes > chunkBytes && buf.isNotEmpty()) {
+                    chunks.add(buf.toString().trimEnd('\n'))
+                    buf.clear()
+                    bufBytes = 0
+                }
+                buf.append(lineWithNl)
+                bufBytes += lineBytes
+            }
         }
         if (buf.isNotEmpty()) chunks.add(buf.toString().trimEnd('\n'))
         return chunks.ifEmpty { listOf("") }
     }
 
     private fun buildLineNumberChunks(text: String, chunkBytes: Int): List<String> {
-        if (text.toByteArray(Charsets.UTF_8).size <= chunkBytes) {
-            val lineCount = text.lines().size
-            return listOf((1..lineCount).joinToString("\n") { it.toString() })
-        }
         val lines = text.lines()
         val result = mutableListOf<String>()
         val buf = StringBuilder()
         var bufBytes = 0
         val lineNumBuf = StringBuilder()
-        for ((idx, line) in lines.withIndex()) {
-            val lineWithNl = line + "\n"
-            val lineBytes = lineWithNl.toByteArray(Charsets.UTF_8).size
-            if (bufBytes + lineBytes > chunkBytes && buf.isNotEmpty()) {
-                result.add(lineNumBuf.toString().trimEnd('\n'))
-                buf.clear(); lineNumBuf.clear(); bufBytes = 0
+        for ((idx, rawLine) in lines.withIndex()) {
+            val segments = if (rawLine.length > MAX_LINE_CHARS) {
+                splitLineIntoSegments(rawLine, MAX_LINE_CHARS)
+            } else {
+                listOf(rawLine)
             }
-            buf.append(lineWithNl)
-            lineNumBuf.append("${idx + 1}\n")
-            bufBytes += lineBytes
+            for ((segIdx, line) in segments.withIndex()) {
+                val lineWithNl = line + "\n"
+                val lineBytes = lineWithNl.toByteArray(Charsets.UTF_8).size
+                if (bufBytes + lineBytes > chunkBytes && buf.isNotEmpty()) {
+                    result.add(lineNumBuf.toString().trimEnd('\n'))
+                    buf.clear()
+                    lineNumBuf.clear()
+                    bufBytes = 0
+                }
+                buf.append(lineWithNl)
+                val lineLabel = if (segIdx == 0) "${idx + 1}" else ""
+                lineNumBuf.append("$lineLabel\n")
+                bufBytes += lineBytes
+            }
         }
         if (lineNumBuf.isNotEmpty()) result.add(lineNumBuf.toString().trimEnd('\n'))
         return result.ifEmpty { listOf("") }
@@ -1508,6 +1655,12 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     companion object {
+        // Maximum characters on a single visual line before soft-chunking.
+        // Unbroken lines longer than this (e.g. minified JSON/JS, base64)
+        // are split into continuation segments to prevent HarfBuzz shaping
+        // hangs and TemporaryBuffer pool thrashing.
+        private const val MAX_LINE_CHARS = 2000
+
         // Pages are deliberately small: the content EditText has wrap_content width, so
         // every layout pass re-measures the whole page's glyphs on the main thread
         // (TextView.onMeasure -> Layout.getDesiredWidthWithLimit -> TextLine.metrics).
@@ -1517,8 +1670,9 @@ class TextViewerActivity : AppCompatActivity() {
 
         // Documents larger than this (UTF-8 bytes) cannot be opened in edit mode:
         // setText() of the whole document on the main thread re-lays-out every glyph,
-        // freezing the app for >5s on slow devices. Viewing stays paginated.
-        private const val EDIT_MAX_BYTES = 128 * 1024
+        // freezing the app for >5s on slow devices or Android 15 (Layout.computeDrawingBoundingBox).
+        // Viewing stays paginated.
+        private const val EDIT_MAX_BYTES = 64 * 1024
 
         private val OFFICE_WORD_LEGACY = setOf("doc", "dot")
         private val OFFICE_WORD_OOXML = setOf("docx", "docm", "dotx", "dotm")

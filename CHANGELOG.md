@@ -5,6 +5,12 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.6] — 2026-09-13
+
+### Fixed
+- **Text Viewer & Editor**: Fixed an ANR (App Freeze >5000ms) on Android 15 (SDK 35) during layout measurement (`TextView.onMeasure` -> `desired` -> `Layout.computeDrawingBoundingBox` -> `TemporaryBuffer.obtain`). Applied explicit precomputed width (`MeasureSpec.EXACTLY`) to `txtContent` and `txtLineNumbers` based on monospace font metrics, completely bypassing main-thread bounding-box glyph walks.
+- **Text Viewer & Editor**: Fixed a bug where files with lines exceeding 16 KB (such as minified JSON/JS, base64, or single-line data files) bypassed pagination chunking and loaded unbounded line lengths into `EditText`, choking HarfBuzz shaping. Lines exceeding 2,000 characters are now safely segmented with aligned line numbers, and edit mode is capped at 64 KB with exact layout widths.
+
 ## [2.0.5] — 2026-09-12
 
 ### Fixed
