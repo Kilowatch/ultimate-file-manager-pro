@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -73,6 +74,7 @@ import za.kilowatch.ultimatefilemanager.network.TvShareClient
 import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.SettingsActivity
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserFragment
@@ -884,8 +886,18 @@ class TabbedBrowserActivity : AppCompatActivity(),
 
     private fun handleCopyOrCut(selected: List<File>, isMove: Boolean) {
         if (selected.isEmpty()) return
-        val op = if (isMove) FileClipboard.Operation.MOVE else FileClipboard.Operation.COPY
         val activeTab = getActiveTab()
+        if (QuickTransferPreferenceManager.isEnabled(this)) {
+            val otherTabs = tabs.filter { it.id != activeTab?.id }
+            if (otherTabs.size == 1) {
+                performQuickTransferToTab(selectedLocal = selected, selectedRemote = null, isMove = isMove, targetTab = otherTabs.first())
+                return
+            } else if (otherTabs.size > 1) {
+                showQuickTransferTabPickerDialog(selectedLocal = selected, selectedRemote = null, isMove = isMove, candidateTabs = otherTabs)
+                return
+            }
+        }
+        val op = if (isMove) FileClipboard.Operation.MOVE else FileClipboard.Operation.COPY
         val currentPath = activeTab?.currentPath ?: ""
         val recentSlot = FileClipboard.getRecentSlot()
 
@@ -961,8 +973,18 @@ class TabbedBrowserActivity : AppCompatActivity(),
 
     private fun handleNetworkCopyOrCut(selected: List<NetworkFile>, isMove: Boolean, share: NetworkShare) {
         if (selected.isEmpty()) return
-        val op = if (isMove) FileClipboard.Operation.MOVE else FileClipboard.Operation.COPY
         val activeTab = getActiveTab()
+        if (QuickTransferPreferenceManager.isEnabled(this)) {
+            val otherTabs = tabs.filter { it.id != activeTab?.id }
+            if (otherTabs.size == 1) {
+                performQuickTransferToTab(selectedLocal = null, selectedRemote = selected, isMove = isMove, targetTab = otherTabs.first(), share = share)
+                return
+            } else if (otherTabs.size > 1) {
+                showQuickTransferTabPickerDialog(selectedLocal = null, selectedRemote = selected, isMove = isMove, candidateTabs = otherTabs, share = share)
+                return
+            }
+        }
+        val op = if (isMove) FileClipboard.Operation.MOVE else FileClipboard.Operation.COPY
         val currentPath = activeTab?.currentPath ?: ""
         val effectiveRemotePath = when {
             share.remotePath.isNotBlank() -> share.remotePath
@@ -1039,6 +1061,98 @@ class TabbedBrowserActivity : AppCompatActivity(),
 
             dialog.show()
         }
+    }
+
+    private fun performQuickTransferToTab(
+        selectedLocal: List<File>?,
+        selectedRemote: List<NetworkFile>?,
+        isMove: Boolean,
+        targetTab: TabModel,
+        share: NetworkShare? = null
+    ) {
+        val activeFrag = getActiveFragment()
+        if (activeFrag is FileBrowserFragment) {
+            activeFrag.exitSelectionMode()
+        } else if (activeFrag is NetworkBrowserFragment) {
+            activeFrag.exitSelectionMode()
+        }
+
+        val op = if (isMove) FileClipboard.Operation.MOVE else FileClipboard.Operation.COPY
+        val activeTab = getActiveTab()
+        val currentPath = activeTab?.currentPath ?: ""
+
+        if (!selectedLocal.isNullOrEmpty()) {
+            FileClipboard.pushLocalSlot(selectedLocal, op, currentPath)
+            val pushedSlotId = FileClipboard.slots.lastOrNull()?.id
+            performPasteSlots(targetSlotId = pushedSlotId, overrideTargetTab = targetTab)
+        } else if (!selectedRemote.isNullOrEmpty() && share != null) {
+            val effectiveRemotePath = when {
+                share.remotePath.isNotBlank() -> share.remotePath
+                currentPath.isNotBlank() -> currentPath
+                else -> ""
+            }
+            FileClipboard.pushRemoteSlot(selectedRemote, op, share.id, effectiveRemotePath, customLabel = share.name)
+            val pushedSlotId = FileClipboard.slots.lastOrNull()?.id
+            performPasteSlots(targetSlotId = pushedSlotId, overrideTargetTab = targetTab)
+        }
+    }
+
+    private fun showQuickTransferTabPickerDialog(
+        selectedLocal: List<File>?,
+        selectedRemote: List<NetworkFile>?,
+        isMove: Boolean,
+        candidateTabs: List<TabModel>,
+        share: NetworkShare? = null
+    ) {
+        val count = selectedLocal?.size ?: selectedRemote?.size ?: 0
+        val dialogView = layoutInflater.inflate(R.layout.dialog_clipboard_add_or_new, null)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtAddOrNewTitle)
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtAddOrNewSubtitle)
+        val recycler = dialogView.findViewById<RecyclerView>(R.id.recyclerExistingSlots)
+        val btnNewSlot = dialogView.findViewById<MaterialButton>(R.id.btnNewSlot)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancelAddOrNew)
+
+        txtTitle.text = getString(R.string.transfer_to_tab_title)
+        txtSubtitle.text = getString(R.string.transfer_to_tab_prompt, count)
+        btnNewSlot.visibility = View.GONE
+
+        val dialog = BottomSheetDialog(this).apply {
+            setContentView(dialogView)
+        }
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+
+        recycler.layoutManager = LinearLayoutManager(this)
+        class TabChoiceViewHolder(val v: View) : RecyclerView.ViewHolder(v) {
+            val imgIcon: ImageView? = v.findViewById(R.id.imgSlotChoiceIcon)
+            val txtLabel: TextView = v.findViewById(R.id.txtSlotLabel)
+            val txtSummary: TextView = v.findViewById(R.id.txtSlotSummary)
+            val card: View = v.findViewById(R.id.cardSlotChoice)
+        }
+
+        recycler.adapter = object : RecyclerView.Adapter<TabChoiceViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabChoiceViewHolder {
+                val v = layoutInflater.inflate(R.layout.item_clipboard_slot_choice, parent, false)
+                return TabChoiceViewHolder(v)
+            }
+
+            override fun getItemCount(): Int = candidateTabs.size
+
+            override fun onBindViewHolder(holder: TabChoiceViewHolder, position: Int) {
+                val tab = candidateTabs[position]
+                holder.txtLabel.text = tab.title
+                holder.txtSummary.text = tab.currentPath
+                holder.imgIcon?.setImageResource(tab.getIconRes())
+                holder.imgIcon?.imageTintList = ColorStateList.valueOf(tab.getAccentColor())
+
+                holder.card.setOnClickListener {
+                    dialog.dismiss()
+                    performQuickTransferToTab(selectedLocal, selectedRemote, isMove, tab, share)
+                }
+            }
+        }
+
+        dialog.show()
     }
 
     private fun resolveShare(shareId: String?, remotePath: String = "", filePath: String = ""): NetworkShare? {
@@ -1300,9 +1414,9 @@ class TabbedBrowserActivity : AppCompatActivity(),
         dialog.show()
     }
 
-    private fun performPasteSlots(targetSlotId: Long? = null) {
+    private fun performPasteSlots(targetSlotId: Long? = null, overrideTargetTab: TabModel? = null) {
         val activeTab = getActiveTab() ?: return
-        val activeFrag = getActiveFragment() ?: return
+        val targetTab = overrideTargetTab ?: activeTab
         val targetSlots = if (targetSlotId != null) FileClipboard.slots.filter { it.id == targetSlotId } else FileClipboard.slots.toList()
         if (targetSlots.isEmpty()) return
 
@@ -1363,10 +1477,10 @@ class TabbedBrowserActivity : AppCompatActivity(),
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val targetIsLocal = activeTab.storageType == StorageType.LOCAL || activeTab.storageType == StorageType.SAF
+                val targetIsLocal = targetTab.storageType == StorageType.LOCAL || targetTab.storageType == StorageType.SAF
                 if (targetIsLocal) {
-                    val destPath = activeTab.currentPath
-                    val isDestSaf = activeTab.storageType == StorageType.SAF ||
+                    val destPath = targetTab.currentPath
+                    val isDestSaf = targetTab.storageType == StorageType.SAF ||
                         SafTreeManager.isSafPath(destPath) ||
                         SafTreeManager.hasTreePermissionForPath(this@TabbedBrowserActivity, destPath)
 
@@ -1569,8 +1683,8 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     }
                 } else {
                     // Target is Network / Cloud
-                    val dstShare = resolveShare(activeTab.shareId, activeTab.currentPath) ?: return@launch
-                    val rawDst = activeTab.currentPath
+                    val dstShare = resolveShare(targetTab.shareId, targetTab.currentPath) ?: return@launch
+                    val rawDst = targetTab.currentPath
                     val dstPath = if (dstShare.type == ShareType.TV) rawDst else rawDst.removePrefix(dstShare.docIdPrefix).removePrefix("/")
 
                     suspend fun processNetTarget(item: FileClipboard.ClipItem, currentDestPath: String) {
@@ -1807,10 +1921,19 @@ class TabbedBrowserActivity : AppCompatActivity(),
                 withContext(Dispatchers.Main) {
                     runCatching { dialog.dismiss() }
                     updatePasteFab()
+                    val activeFrag = getActiveFragment()
                     if (activeFrag is FileBrowserFragment) {
                         activeFrag.refresh()
                     } else if (activeFrag is NetworkBrowserFragment) {
                         activeFrag.loadDirectory()
+                    }
+                    if (overrideTargetTab != null) {
+                        val targetFrag = getFragmentForTab(overrideTargetTab)
+                        if (targetFrag is FileBrowserFragment) {
+                            targetFrag.refresh()
+                        } else if (targetFrag is NetworkBrowserFragment) {
+                            targetFrag.loadDirectory()
+                        }
                     }
                     if (!isCancelled) {
                         Toast.makeText(this@TabbedBrowserActivity, getString(R.string.transfer_complete), Toast.LENGTH_SHORT).show()
@@ -2022,6 +2145,13 @@ class TabbedBrowserActivity : AppCompatActivity(),
 
     private fun getActiveFragment(): Fragment? {
         val pos = tabs.indexOfFirst { it.id == activeTabId }
+        if (pos < 0) return null
+        val itemId = tabPagerAdapter.getItemId(pos)
+        return supportFragmentManager.findFragmentByTag("f$itemId")
+    }
+
+    private fun getFragmentForTab(tab: TabModel): Fragment? {
+        val pos = tabs.indexOfFirst { it.id == tab.id }
         if (pos < 0) return null
         val itemId = tabPagerAdapter.getItemId(pos)
         return supportFragmentManager.findFragmentByTag("f$itemId")

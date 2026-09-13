@@ -61,7 +61,7 @@
     <color name="ufm_progress_critical">#FFC62828</color>
 
     <!-- Selection -->
-    <color name="ufm_selection_highlight">#2200897B</color>
+    <color name="ufm_selection_highlight">#4800897B</color>
     <color name="text_selection_highlight">#4033B5E5</color>
     <color name="ufm_delete_tint">#1AC62828</color>
 

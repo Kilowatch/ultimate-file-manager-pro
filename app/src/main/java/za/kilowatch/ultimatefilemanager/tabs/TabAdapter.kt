@@ -58,13 +58,19 @@ class TabAdapter(
 
     private var attachedRecyclerView: RecyclerView? = null
 
+    private val clipboardListener = za.kilowatch.ultimatefilemanager.storage.FileClipboard.ClipboardChangeListener {
+        notifyDataSetChanged()
+    }
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         attachedRecyclerView = recyclerView
+        za.kilowatch.ultimatefilemanager.storage.FileClipboard.addListener(clipboardListener)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
+        za.kilowatch.ultimatefilemanager.storage.FileClipboard.removeListener(clipboardListener)
         attachedRecyclerView = null
     }
 
@@ -185,6 +191,7 @@ class TabAdapter(
         private val imgIcon: ImageView = itemView.findViewById(R.id.imgTabIcon)
         private val txtTitle: TextView = itemView.findViewById(R.id.txtTabTitle)
         private val edtTitle: EditText = itemView.findViewById(R.id.edtTabTitle)
+        private val imgTabClipBadge: ImageView? = itemView.findViewById(R.id.imgTabClipBadge)
 
         private var startX = 0f
         private var startY = 0f
@@ -225,6 +232,31 @@ class TabAdapter(
             }
 
             imgIcon.setImageResource(tab.getIconRes())
+
+            // Clipboard indicator badge (Cut/Copy)
+            val clipOp = za.kilowatch.ultimatefilemanager.storage.FileClipboard.hasItemsFromPath(
+                tab.currentPath,
+                tab.shareId
+            )
+            if (clipOp != null) {
+                imgTabClipBadge?.apply {
+                    visibility = View.VISIBLE
+                    if (clipOp == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE) {
+                        setBackgroundResource(R.drawable.bg_badge_bubble_cut)
+                        setImageResource(R.drawable.ic_cut)
+                    } else {
+                        setBackgroundResource(R.drawable.bg_badge_bubble_copy)
+                        setImageResource(R.drawable.ic_copy)
+                    }
+                    imageTintList = ColorStateList.valueOf(Color.parseColor("#0F172A"))
+                }
+            } else {
+                imgTabClipBadge?.apply {
+                    visibility = View.GONE
+                    setImageDrawable(null)
+                    background = null
+                }
+            }
 
             // Editing State
             if (tab.isEditing) {

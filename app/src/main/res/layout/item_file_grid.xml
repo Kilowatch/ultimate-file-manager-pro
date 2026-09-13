@@ -48,6 +48,20 @@
                 android:background="?attr/colorPrimaryContainer"
                 android:visibility="gone" />
 
+            <!-- Cut/Copy Badge at Top-Left of grid card (Bubble) -->
+            <ImageView
+                android:id="@+id/imgClipboardBadge"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="top|start"
+                android:layout_margin="6dp"
+                android:padding="3dp"
+                android:elevation="4dp"
+                android:visibility="gone"
+                tools:background="@drawable/bg_badge_bubble_cut"
+                tools:src="@drawable/ic_cut"
+                tools:visibility="visible" />
+
             <!-- Badge overlay in top-right corner of grid card -->
             <LinearLayout
                 android:layout_width="wrap_content"

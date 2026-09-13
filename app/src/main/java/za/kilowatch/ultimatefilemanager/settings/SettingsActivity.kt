@@ -133,6 +133,9 @@ class SettingsActivity : AppCompatActivity() {
     private var switchIconTapEditMode: SwitchMaterial? = null
     private var txtIconTapEditModeSubtitle: TextView? = null
 
+    private var switchSelectionCheckbox: SwitchMaterial? = null
+    private var txtSelectionCheckboxSubtitle: TextView? = null
+
     private lateinit var switchScrollingText: SwitchMaterial
     private lateinit var txtScrollingTextSubtitle: TextView
 
@@ -596,6 +599,20 @@ class SettingsActivity : AppCompatActivity() {
 
             cardIconTapEditMode.setOnClickListener { toggleIconTapEditMode() }
             switchIconTapEditMode?.setOnCheckedChangeListener(null)
+        }
+
+        // Selection Checkboxes toggle (Mobile Only)
+        val cardSelectionCheckbox = findViewById<View>(R.id.cardSelectionCheckbox)
+        if (cardSelectionCheckbox != null) {
+            switchSelectionCheckbox = findViewById(R.id.switchSelectionCheckbox)
+            txtSelectionCheckboxSubtitle = findViewById(R.id.txtSelectionCheckboxSubtitle)
+
+            val selectionCheckboxEnabled = SelectionCheckboxPreferenceManager.isEnabled(this)
+            switchSelectionCheckbox?.isChecked = selectionCheckboxEnabled
+            updateSelectionCheckboxSubtitle(selectionCheckboxEnabled)
+
+            cardSelectionCheckbox.setOnClickListener { toggleSelectionCheckbox() }
+            switchSelectionCheckbox?.setOnCheckedChangeListener(null)
         }
 
         // Scrolling Text toggle
@@ -1119,6 +1136,13 @@ class SettingsActivity : AppCompatActivity() {
             val enabled = IconTapEditModePreferenceManager.isEnabled(this)
             sw.isChecked = enabled
             updateIconTapEditModeSubtitle(enabled)
+        }
+
+        // Refresh Selection Checkbox subtitle
+        switchSelectionCheckbox?.let { sw ->
+            val enabled = SelectionCheckboxPreferenceManager.isEnabled(this)
+            sw.isChecked = enabled
+            updateSelectionCheckboxSubtitle(enabled)
         }
 
         // Refresh Scrolling Text subtitle
@@ -1958,6 +1982,22 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.settings_icon_tap_edit_mode_subtitle_enabled)
         } else {
             getString(R.string.settings_icon_tap_edit_mode_subtitle_disabled)
+        }
+    }
+
+    private fun toggleSelectionCheckbox() {
+        val sw = switchSelectionCheckbox ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        SelectionCheckboxPreferenceManager.setEnabled(this, newValue)
+        updateSelectionCheckboxSubtitle(newValue)
+    }
+
+    private fun updateSelectionCheckboxSubtitle(enabled: Boolean) {
+        txtSelectionCheckboxSubtitle?.text = if (enabled) {
+            getString(R.string.settings_selection_checkbox_subtitle_enabled)
+        } else {
+            getString(R.string.settings_selection_checkbox_subtitle_disabled)
         }
     }
 

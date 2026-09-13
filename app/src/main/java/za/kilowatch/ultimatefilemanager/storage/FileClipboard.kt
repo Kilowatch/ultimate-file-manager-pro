@@ -54,6 +54,89 @@ object FileClipboard {
     private val _slots: MutableList<Slot> = mutableListOf()
     val slots: List<Slot> get() = _slots.toList()
 
+    /** Listener notified whenever items or slots in FileClipboard change. */
+    fun interface ClipboardChangeListener {
+        fun onClipboardChanged()
+    }
+
+    private val listeners = java.util.concurrent.CopyOnWriteArrayList<ClipboardChangeListener>()
+
+    fun addListener(listener: ClipboardChangeListener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener)
+        }
+    }
+
+    fun removeListener(listener: ClipboardChangeListener) {
+        listeners.remove(listener)
+    }
+
+    /** Fast in-memory cache of local file paths -> operation */
+    private val localClipMap = java.util.concurrent.ConcurrentHashMap<String, Operation>()
+    /** Fast in-memory cache of "$shareId:$remotePath" -> operation */
+    private val remoteClipMap = java.util.concurrent.ConcurrentHashMap<String, Operation>()
+
+    private fun rebuildIndexAndNotify() {
+        localClipMap.clear()
+        remoteClipMap.clear()
+        for (slot in _slots) {
+            for (item in slot.items) {
+                when (item) {
+                    is ClipItem.Local -> localClipMap[item.file.absolutePath] = item.operation
+                    is ClipItem.Remote -> remoteClipMap["${item.sourceShareId}:${item.file.path}"] = item.operation
+                }
+            }
+        }
+        val mainLooper = android.os.Looper.getMainLooper()
+        if (android.os.Looper.myLooper() == mainLooper) {
+            listeners.forEach { it.onClipboardChanged() }
+        } else {
+            android.os.Handler(mainLooper).post {
+                listeners.forEach { it.onClipboardChanged() }
+            }
+        }
+    }
+
+    /** Returns the staged operation (COPY / MOVE / EXTRACT) if [file] is in clipboard, or null. */
+    fun getLocalOperation(file: File): Operation? = localClipMap[file.absolutePath]
+
+    /** Returns the staged operation if network file is in clipboard, or null. */
+    fun getRemoteOperation(shareId: String, path: String): Operation? = remoteClipMap["$shareId:$path"]
+
+    /**
+     * Checks if any staged clipboard item originated from [path] (or [shareId] if remote).
+     * Used by tab pills and breadcrumbs to display indicator badges.
+     */
+    fun hasItemsFromPath(path: String, shareId: String? = null): Operation? {
+        if (path.isEmpty()) return null
+        if (shareId != null) {
+            val prefix = if (path.endsWith("/")) path else "$path/"
+            for (slot in _slots) {
+                for (item in slot.items) {
+                    if (item is ClipItem.Remote && item.sourceShareId == shareId) {
+                        val itemPath = item.file.path
+                        if (itemPath == path || itemPath.startsWith(prefix) || item.sourceRemotePath == path) {
+                            return item.operation
+                        }
+                    }
+                }
+            }
+        } else {
+            val cleanPath = if (path.endsWith(File.separator)) path else path + File.separator
+            for (slot in _slots) {
+                for (item in slot.items) {
+                    if (item is ClipItem.Local) {
+                        val itemPath = item.file.absolutePath
+                        if (itemPath == path || itemPath.startsWith(cleanPath) || item.file.parent == path) {
+                            return item.operation
+                        }
+                    }
+                }
+            }
+        }
+        return null
+    }
+
     /** Temporary directory for staged extraction files awaiting folder selection. */
     var activeTempExtractDir: File? = null
         private set
@@ -93,6 +176,7 @@ object FileClipboard {
         val items = selectedFiles.map<File, ClipItem> { ClipItem.Local(it, op) }.toMutableList()
         val slot = Slot(System.currentTimeMillis(), label, items)
         _slots.add(slot)
+        rebuildIndexAndNotify()
         return true
     }
 
@@ -121,6 +205,7 @@ object FileClipboard {
         val clipItems = items.map<NetworkFile, ClipItem> { ClipItem.Remote(it, op, shareId, sourceRemotePath) }.toMutableList()
         val slot = Slot(System.currentTimeMillis(), label, clipItems)
         _slots.add(slot)
+        rebuildIndexAndNotify()
         return true
     }
 
@@ -138,6 +223,7 @@ object FileClipboard {
         if (slot.hasLocal && slot.hasRemote) {
             slot.label = "Combined (${slot.totalCount} items)"
         }
+        rebuildIndexAndNotify()
     }
 
     /**
@@ -160,6 +246,7 @@ object FileClipboard {
         if (slot.hasLocal && slot.hasRemote) {
             slot.label = "Combined (${slot.totalCount} items)"
         }
+        rebuildIndexAndNotify()
     }
 
     /**
@@ -170,6 +257,7 @@ object FileClipboard {
         if (_slots.isEmpty()) {
             clearTempDir()
         }
+        rebuildIndexAndNotify()
     }
 
     /**
@@ -180,6 +268,8 @@ object FileClipboard {
         slot.items.remove(item)
         if (slot.items.isEmpty()) {
             removeSlot(slotId)
+        } else {
+            rebuildIndexAndNotify()
         }
     }
 
@@ -206,6 +296,7 @@ object FileClipboard {
         val items = extractedFiles.map<File, ClipItem> { ClipItem.Local(it, Operation.EXTRACT) }.toMutableList()
         val slot = Slot(System.currentTimeMillis(), "Extract (${extractedFiles.size} items)", items)
         _slots.add(slot)
+        rebuildIndexAndNotify()
     }
 
     fun clearTempDir() {
@@ -227,6 +318,7 @@ object FileClipboard {
         if (_slots.isEmpty()) {
             clearTempDir()
         }
+        rebuildIndexAndNotify()
     }
 
     fun removeNetwork(file: NetworkFile) {
@@ -239,6 +331,7 @@ object FileClipboard {
         if (_slots.isEmpty()) {
             clearTempDir()
         }
+        rebuildIndexAndNotify()
     }
 
     fun hasItems(): Boolean = _slots.any { it.items.isNotEmpty() }
@@ -248,5 +341,6 @@ object FileClipboard {
     fun clear() {
         _slots.clear()
         clearTempDir()
+        rebuildIndexAndNotify()
     }
 }

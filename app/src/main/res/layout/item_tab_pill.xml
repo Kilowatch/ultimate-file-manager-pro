@@ -59,4 +59,16 @@
             tools:text="Tab 1" />
     </FrameLayout>
 
+    <!-- Clipboard indicator badge (Cut/Copy) -->
+    <ImageView
+        android:id="@+id/imgTabClipBadge"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="4dp"
+        android:padding="2dp"
+        android:visibility="gone"
+        tools:background="@drawable/bg_badge_bubble_cut"
+        tools:src="@drawable/ic_cut"
+        tools:visibility="visible" />
+
 </LinearLayout>

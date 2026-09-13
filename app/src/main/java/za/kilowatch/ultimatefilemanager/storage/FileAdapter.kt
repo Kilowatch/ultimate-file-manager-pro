@@ -112,13 +112,19 @@ class FileAdapter(
 
     private var attachedContext: android.content.Context? = null
 
+    private val clipboardListener = FileClipboard.ClipboardChangeListener {
+        notifyDataSetChanged()
+    }
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         attachedContext = recyclerView.context
+        FileClipboard.addListener(clipboardListener)
     }
     
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
+        FileClipboard.removeListener(clipboardListener)
         attachedContext = null
     }
 
@@ -989,7 +995,8 @@ class FileAdapter(
 
             // Selection state
             val isSelected = file.absolutePath in selectedPaths
-            checkSelect.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
+            val showCheckbox = isSelectionMode && (isTv || za.kilowatch.ultimatefilemanager.settings.SelectionCheckboxPreferenceManager.isEnabled(context))
+            checkSelect.visibility = if (showCheckbox) View.VISIBLE else View.GONE
             checkSelect.isChecked = isSelected
 
             // Highlight selected rows / cards
@@ -1010,6 +1017,57 @@ class FileAdapter(
                     itemView.findViewById<View>(R.id.viewSelectionOverlay)?.visibility = View.GONE
                 } else {
                     layoutRow.setBackgroundColor(0x00000000) // transparent
+                }
+            }
+
+            // Clipboard Cut/Copy visual highlighting (Option A - MT Manager Classic)
+            val clipOp = FileClipboard.getLocalOperation(file)
+            val imgClipBadge = itemView.findViewById<ImageView>(R.id.imgClipboardBadge)
+
+            when (clipOp) {
+                FileClipboard.Operation.MOVE -> {
+                    // Cut: 100% opacity (no washed out row/folder), amber filename text, amber bubble badge at top-left
+                    layoutRow.alpha = 1.0f
+                    val amberColor = ContextCompat.getColor(context, R.color.mobile_note_color)
+                    txtName.setTextColor(amberColor)
+                    imgClipBadge?.apply {
+                        visibility = View.VISIBLE
+                        setBackgroundResource(R.drawable.bg_badge_bubble_cut)
+                        setImageResource(R.drawable.ic_cut)
+                        imageTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#0F172A"))
+                    }
+                    if (!isSelected && !isFocused && !isGrid) {
+                        layoutRow.setBackgroundColor(androidx.core.graphics.ColorUtils.setAlphaComponent(amberColor, 0x30)) // ~19% warm amber fill
+                    }
+                }
+                FileClipboard.Operation.COPY -> {
+                    // Copy: 100% opacity, sky blue filename text, sky blue bubble badge at top-left, distinct cobalt blue tint if not selected
+                    layoutRow.alpha = 1.0f
+                    val copyTextColor = ContextCompat.getColor(context, R.color.tv_accent)
+                    val copyRowBg = androidx.core.graphics.ColorUtils.setAlphaComponent(android.graphics.Color.parseColor("#2563EB"), 0x30)
+                    txtName.setTextColor(copyTextColor)
+                    imgClipBadge?.apply {
+                        visibility = View.VISIBLE
+                        setBackgroundResource(R.drawable.bg_badge_bubble_copy)
+                        setImageResource(R.drawable.ic_copy)
+                        imageTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#0F172A"))
+                    }
+                    if (!isSelected && !isFocused && !isGrid) {
+                        layoutRow.setBackgroundColor(copyRowBg)
+                    }
+                }
+                else -> {
+                    // Normal state reset (Crucial for ViewHolder recycling!)
+                    layoutRow.alpha = 1.0f
+                    imgClipBadge?.apply {
+                        visibility = View.GONE
+                        setImageDrawable(null)
+                        background = null
+                    }
+                    txtName.setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.mobile_text_primary))
+                    if (!isSelected && !isFocused && !isGrid) {
+                        layoutRow.setBackgroundColor(0x00000000)
+                    }
                 }
             }
 

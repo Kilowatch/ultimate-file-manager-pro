@@ -4357,6 +4357,16 @@
     <string name="settings_icon_tap_edit_mode_subtitle_disabled">Tapping a folder or file icon opens the item normally</string>
     <string name="backup_pref_icon_tap_edit_mode">Icon Tap Edit Mode Settings</string>
 
+    <!-- Selection Checkbox Display (Mobile) -->
+    <string name="settings_selection_checkbox_title">Selection checkboxes</string>
+    <string name="settings_selection_checkbox_subtitle_enabled">Checkboxes are visible in selection mode</string>
+    <string name="settings_selection_checkbox_subtitle_disabled">Checkboxes hidden (selection shown by row highlight)</string>
+    <string name="backup_pref_selection_checkbox">Selection Checkbox Display Settings</string>
+
+    <!-- Tab Quick Transfer -->
+    <string name="transfer_to_tab_title">Transfer to tab</string>
+    <string name="transfer_to_tab_prompt">Select destination tab for %1$s item(s):</string>
+
     <!-- GIF Creator -->
     <string name="action_create_gif">Create GIF</string>
     <string name="gif_creator_title">Create Animated GIF</string>

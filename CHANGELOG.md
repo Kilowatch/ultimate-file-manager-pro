@@ -5,6 +5,14 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.7] — 2026-09-13
+
+### Added
+- In-list visual highlighting during Cut (50% opacity, amber name, top-left scissors badge) and Copy (cyan name, top-left copy badge, subtle background tint) operations across Local, SAF, Network, and Online Cloud storage.
+- Tab bar clipboard indicator badges reflecting active cut or copy operations for each tab.
+- Quick Transfer mode in Tab view: when enabled, transfers immediately between 2 open tabs or prompts with a tab selection sheet when more than 2 tabs are open.
+- Mobile setting to show/hide selection checkboxes in edit mode (disabled by default on mobile, always visible on TV).
+
 ## [2.0.6] — 2026-09-13
 
 ### Added

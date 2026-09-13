@@ -136,8 +136,13 @@ class NetworkFileAdapter(
         }
     }
 
+    private val clipboardListener = za.kilowatch.ultimatefilemanager.storage.FileClipboard.ClipboardChangeListener {
+        notifyDataSetChanged()
+    }
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
+        za.kilowatch.ultimatefilemanager.storage.FileClipboard.addListener(clipboardListener)
         val filter = IntentFilter("za.kilowatch.ultimatefilemanager.ACTION_NETWORK_THUMBNAIL_CREATED")
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(thumbnailReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
@@ -148,6 +153,7 @@ class NetworkFileAdapter(
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
+        za.kilowatch.ultimatefilemanager.storage.FileClipboard.removeListener(clipboardListener)
         try {
             context.unregisterReceiver(thumbnailReceiver)
         } catch (_: Exception) {}
@@ -517,6 +523,7 @@ class NetworkFileAdapter(
         private val circularDisk: za.kilowatch.ultimatefilemanager.ui.CircularProgressView? =
             itemView.findViewById(R.id.circularDiskUsage)
         private val iconContainer: View? = itemView.findViewById(R.id.iconContainer)
+        private val imgClipboardBadge: ImageView? = itemView.findViewById(R.id.imgClipboardBadge)
         private val context: Context = itemView.context
 
         init {
@@ -826,22 +833,82 @@ class NetworkFileAdapter(
                 }
             }
             
-            val isSelected = selectedFiles.contains(file)
-            if (isSelectionMode) {
-                checkSelect?.visibility = View.VISIBLE
-                checkSelect?.isChecked = isSelected
+            val isSelected = isSelectionMode && selectedFiles.contains(file)
+            val isFocused = isSelectionMode && bindingAdapterPosition == longPressAnchorIndex
+            val showCheckbox = isSelectionMode && (isTv || za.kilowatch.ultimatefilemanager.settings.SelectionCheckboxPreferenceManager.isEnabled(context))
+            checkSelect?.visibility = if (showCheckbox) View.VISIBLE else View.GONE
+            checkSelect?.isChecked = isSelected
+
+            val layoutRow = itemView.findViewById<View>(R.id.layoutFileRow) ?: itemView
+
+            if (isSelected || isFocused) {
                 if (isGrid) {
-                    itemView.findViewById<View>(R.id.viewSelectionOverlay)?.visibility = if (isSelected) View.VISIBLE else View.GONE
+                    itemView.findViewById<View>(R.id.viewSelectionOverlay)?.apply {
+                        visibility = View.VISIBLE
+                        setBackgroundColor(za.kilowatch.ultimatefilemanager.settings.ColorblindPalette.selectionFill(context))
+                    }
                 } else {
-                    itemView.isActivated = isSelected
+                    val color = if (isFocused) za.kilowatch.ultimatefilemanager.settings.ColorblindPalette.focusGlow(context)
+                                else za.kilowatch.ultimatefilemanager.settings.ColorblindPalette.selectionFill(context)
+                    layoutRow.setBackgroundColor(color)
                 }
             } else {
-                checkSelect?.visibility = View.GONE
-                checkSelect?.isChecked = false
                 if (isGrid) {
                     itemView.findViewById<View>(R.id.viewSelectionOverlay)?.visibility = View.GONE
                 } else {
-                    itemView.isActivated = false
+                    layoutRow.setBackgroundColor(0x00000000)
+                }
+            }
+
+            // Clipboard Cut/Copy visual highlighting (Option A - MT Manager Classic)
+            val clipOp = za.kilowatch.ultimatefilemanager.storage.FileClipboard.getRemoteOperation(share.id, file.path)
+
+            when (clipOp) {
+                za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE -> {
+                    // Cut: 100% opacity (no washed out row/folder), amber filename text, amber bubble badge at top-left
+                    layoutRow.alpha = 1.0f
+                    val amberColor = ContextCompat.getColor(context, R.color.mobile_note_color)
+                    txtName.setTextColor(amberColor)
+                    imgClipboardBadge?.apply {
+                        visibility = View.VISIBLE
+                        setBackgroundResource(R.drawable.bg_badge_bubble_cut)
+                        setImageResource(R.drawable.ic_cut)
+                        imageTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#0F172A"))
+                    }
+                    if (!isSelected && !isFocused && !isGrid) {
+                        layoutRow.setBackgroundColor(androidx.core.graphics.ColorUtils.setAlphaComponent(amberColor, 0x30)) // ~19% warm amber fill
+                    }
+                }
+                za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.COPY -> {
+                    // Copy: 100% opacity, sky blue filename text, sky blue bubble badge at top-left, distinct cobalt blue tint if not selected
+                    layoutRow.alpha = 1.0f
+                    val copyTextColor = ContextCompat.getColor(context, R.color.tv_accent)
+                    val copyRowBg = androidx.core.graphics.ColorUtils.setAlphaComponent(android.graphics.Color.parseColor("#2563EB"), 0x30)
+                    txtName.setTextColor(copyTextColor)
+                    imgClipboardBadge?.apply {
+                        visibility = View.VISIBLE
+                        setBackgroundResource(R.drawable.bg_badge_bubble_copy)
+                        setImageResource(R.drawable.ic_copy)
+                        imageTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#0F172A"))
+                    }
+                    if (!isSelected && !isFocused && !isGrid) {
+                        layoutRow.setBackgroundColor(copyRowBg)
+                    }
+                }
+                else -> {
+                    // Normal state reset (Crucial for ViewHolder recycling!)
+                    layoutRow.alpha = 1.0f
+                    imgClipboardBadge?.apply {
+                        visibility = View.GONE
+                        setImageDrawable(null)
+                        background = null
+                    }
+                    if (!isSelected && !isFocused && !isGrid) {
+                        layoutRow.setBackgroundColor(0x00000000)
+                    }
+                    if (!isTv) {
+                        txtName.setTextColor(ContextCompat.getColor(context, R.color.mobile_text_primary))
+                    }
                 }
             }
 

@@ -21,7 +21,9 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:paddingHorizontal="8dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <!-- Selection Checkbox (hidden by default) -->
         <androidx.appcompat.widget.AppCompatCheckBox
@@ -42,6 +44,8 @@
             android:layout_height="34dp"
             android:background="@drawable/bg_icon_circle_accent"
             android:layout_marginVertical="5dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:transitionName="file_icon_placeholder">
 
             <ImageView
@@ -61,6 +65,21 @@
                 android:layout_gravity="bottom|end"
                 android:src="@drawable/ic_lightning"
                 android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- Cut/Copy Badge at Top-Left (Bubble) -->
+            <ImageView
+                android:id="@+id/imgClipboardBadge"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="top|start"
+                android:layout_marginTop="-2dp"
+                android:layout_marginStart="-2dp"
+                android:padding="2.5dp"
+                android:elevation="4dp"
+                android:visibility="gone"
+                tools:background="@drawable/bg_badge_bubble_cut"
+                tools:src="@drawable/ic_cut"
                 tools:visibility="visible" />
         </FrameLayout>
 

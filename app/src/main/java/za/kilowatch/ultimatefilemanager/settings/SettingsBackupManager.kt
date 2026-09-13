@@ -294,6 +294,7 @@ object SettingsBackupManager {
         add("ufm_file_tags",             context.getString(R.string.backup_pref_file_tags))
         add("analytics_prefs",           context.getString(R.string.backup_pref_analytics))
         add("icon_tap_edit_mode_prefs",  context.getString(R.string.backup_pref_icon_tap_edit_mode))
+        add("selection_checkbox_prefs", context.getString(R.string.backup_pref_selection_checkbox))
         add("ufm_keyboard_shortcuts_prefs", context.getString(R.string.backup_pref_keyboard_shortcuts))
         add("ufm_saf_locations_prefs",   context.getString(R.string.backup_pref_saf_locations))
         add("adb_preferences",           context.getString(R.string.backup_pref_adb_settings))
@@ -627,6 +628,7 @@ object SettingsBackupManager {
                 "ufm_file_tags"             to R.string.backup_pref_file_tags,
                 "analytics_prefs"           to R.string.backup_pref_analytics,
                 "icon_tap_edit_mode_prefs"  to R.string.backup_pref_icon_tap_edit_mode,
+                "selection_checkbox_prefs" to R.string.backup_pref_selection_checkbox,
                 "ufm_keyboard_shortcuts_prefs" to R.string.backup_pref_keyboard_shortcuts,
                 "ufm_saf_locations_prefs"   to R.string.backup_pref_saf_locations,
                 "adb_preferences"           to R.string.backup_pref_adb_settings,
