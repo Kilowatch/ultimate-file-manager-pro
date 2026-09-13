@@ -84,9 +84,10 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                 pm.ACTION_EXIF_TOOLS -> pm.isIconEnabled(context, pm.KEY_EXIF_TOOLS)
                 pm.ACTION_SET_HOME_WALLPAPER -> pm.isIconEnabled(context, pm.KEY_SET_HOME_WALLPAPER) && state.allImagesSelected && state.selectedCount == 1
                 pm.ACTION_SET_LOCK_WALLPAPER -> pm.isIconEnabled(context, pm.KEY_SET_LOCK_WALLPAPER) && state.allImagesSelected && state.selectedCount == 1
-                pm.ACTION_SET_RINGTONE -> pm.isIconEnabled(context, pm.KEY_SET_RINGTONE) && state.allAudioSelected
-                pm.ACTION_SET_NOTIFICATION -> pm.isIconEnabled(context, pm.KEY_SET_NOTIFICATION) && state.allAudioSelected
-                pm.ACTION_SET_ALARM -> pm.isIconEnabled(context, pm.KEY_SET_ALARM) && state.allAudioSelected
+                pm.ACTION_SET_RINGTONE -> pm.isIconEnabled(context, pm.KEY_SET_RINGTONE) && state.allAudioSelected && state.selectedCount == 1
+                pm.ACTION_SET_NOTIFICATION -> pm.isIconEnabled(context, pm.KEY_SET_NOTIFICATION) && state.allAudioSelected && state.selectedCount == 1
+                pm.ACTION_SET_ALARM -> pm.isIconEnabled(context, pm.KEY_SET_ALARM) && state.allAudioSelected && state.selectedCount == 1
+                pm.ACTION_MUSIC_TAGGER -> pm.isIconEnabled(context, pm.KEY_MUSIC_TAGGER) && state.allAudioSelected
                 pm.ACTION_SELECT_ALL -> pm.isIconEnabled(context, pm.KEY_SELECT_ALL)
                 pm.ACTION_INVERT_SELECTION -> pm.isIconEnabled(context, pm.KEY_INVERT_SELECTION)
                 pm.ACTION_CHECKSUM -> pm.isIconEnabled(context, pm.KEY_CHECKSUM)
@@ -236,6 +237,11 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                     resolvedIconRes = R.drawable.ic_alarm_sound
                     resolvedNameRes = R.string.action_set_alarm
                     customIconKey = "toolbar_set_alarm"
+                }
+                pm.ACTION_MUSIC_TAGGER -> {
+                    resolvedIconRes = R.drawable.ic_music_tag
+                    resolvedNameRes = R.string.action_music_tagger
+                    customIconKey = "toolbar_music_tagger"
                 }
                 pm.ACTION_DUPLICATE_FINDER -> {
                     resolvedIconRes = R.drawable.ic_duplicate_finder

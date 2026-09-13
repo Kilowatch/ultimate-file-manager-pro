@@ -251,6 +251,9 @@ GIF 생성기 — 선택한 이미지에서 맞춤 프레임 속도, 크기 조�
         <item>
 사진 EXIF ​​도구 — 사진 EXIF ​​및 GPS 메타데이터를 검사하고, 개인 위치 태그 및 장치 정보를 삭제하고, 캡처 타임스탬프와 카메라 메타데이터를 사용하여 사진 이름을 일괄적으로 바꿉니다.
 </item>
+        <item>
+음악 태그 편집기 (모바일) — 오디오 파일 내에서 직접 오디오 메타데이터 (제목, 아티스트, 앨범, 연도, 장르, 가사) 및 포함된 앨범 아트를 검사, 편집, 정리 및 일괄 업데이트합니다.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — Amazon 기기에서 선택적 인앱 팁 구매를 처�
 </item>
         <item>
 Amazon Appstore SDK — Amazon 장치에서 선택적 인앱 팁 구매를 처리합니다. (소유권)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1055,6 +1061,9 @@ S3 / S3 호환 저장소 자격 증명(AWS S3, MinIO, IDrive E2 등)
         <item>
 미디어 재생 상태
 </item>
+        <item>
+오디오 메타데이터 및 음악 태그
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1110,6 +1119,9 @@ S3 버킷 연결을 위한 액세스 키 ID 및 시크릿 액세스 키 · 앱 �
 </item>
         <item>
 쿠키(ufm_lang)는 세션 전체와 브라우저 재시작 시 귀하의 언어 선택을 기억합니다. · 웹 브라우저 저장
+</item>
+        <item>
+로컬 오디오 파일에 직접 기록되는 제목, 아티스트, 앨범, 연도, 장르, 가사 및 앨범 아트 · 사용자 기기 저장공간 (오디오 파일 내에 직접)
 </item>
     </string-array>
 
@@ -1184,6 +1196,9 @@ PIN 또는 복구 코드
 </item>
         <item>
 핵심 앱 기능 제공
+</item>
+        <item>
+로컬 오디오 파일 내에서 직접 오디오 메타데이터 및 포함된 앨범 아트를 읽고 쓰기
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

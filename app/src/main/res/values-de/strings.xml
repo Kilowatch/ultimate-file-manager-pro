@@ -4229,6 +4229,9 @@ Ausgewähltes Audio als Benachrichtigungston festlegen
     <string name="toolbar_desc_set_alarm">
 Ausgewähltes Audio als Alarmton festlegen
 </string>
+    <string name="toolbar_desc_music_tagger">
+Audio-Tags, Liedtexte und Cover bearbeiten
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Doppelte Dateien suchen und erkennen
 </string>
@@ -12252,6 +12255,152 @@ Als Benachrichtigungston festlegen
     <string name="icon_toolbar_set_alarm">
 Als Alarmton festlegen
 </string>
+    <string name="action_music_tagger">
+Musik-Tag-Editor
+</string>
+    <string name="icon_toolbar_music_tagger">
+Musik-Tag-Editor
+</string>
+    <string name="music_tagger_title">
+Musik-Tag-Editor
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d Tracks ausgewählt
+</string>
+    <string name="music_tag_cover_art">
+Album-Cover
+</string>
+    <string name="music_tag_btn_change_art">
+Cover ändern
+</string>
+    <string name="music_tag_btn_remove_art">
+Entfernen
+</string>
+    <string name="music_tag_btn_save_art">
+Cover speichern
+</string>
+    <string name="music_tag_btn_autofill_filename">
+Automatisch aus Dateinamen füllen
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+Aus Tags umbenennen
+</string>
+    <string name="music_tag_batch_options_header">
+Stapeloptionen
+</string>
+    <string name="music_tag_auto_number_tracks">
+Tracks automatisch fortlaufend nummerieren (1 bis N)
+</string>
+    <string name="music_tag_core_tags_header">
+Audio-Tags
+</string>
+    <string name="music_tag_hint_title">
+Titel
+</string>
+    <string name="music_tag_hint_artist">
+Künstler
+</string>
+    <string name="music_tag_hint_album">
+Album
+</string>
+    <string name="music_tag_hint_album_artist">
+Album-Interpret
+</string>
+    <string name="music_tag_hint_year">
+Jahr
+</string>
+    <string name="music_tag_hint_genre">
+Genre
+</string>
+    <string name="music_tag_hint_track">
+Track
+</string>
+    <string name="music_tag_hint_total_tracks">
+Gesamt
+</string>
+    <string name="music_tag_hint_disc">
+Disc
+</string>
+    <string name="music_tag_hint_total_discs">
+Gesamt
+</string>
+    <string name="music_tag_advanced_header">
+Erweiterte Tags &amp; Liedtexte
+</string>
+    <string name="music_tag_hint_composer">
+Komponist
+</string>
+    <string name="music_tag_hint_comment">
+Kommentar
+</string>
+    <string name="music_tag_hint_lyrics">
+Eingebettete Liedtexte (USLT)
+</string>
+    <string name="music_tag_technical_header">
+Audiodatei-Details
+</string>
+    <string name="music_tag_tech_format">
+Format
+</string>
+    <string name="music_tag_tech_bitrate">
+Bitrate
+</string>
+    <string name="music_tag_tech_sample_rate">
+Abtastrate
+</string>
+    <string name="music_tag_tech_duration">
+Dauer
+</string>
+    <string name="music_tag_tech_path">
+Dateipfad
+</string>
+    <string name="music_tag_btn_save">
+Tags speichern
+</string>
+    <string name="music_tag_btn_apply_batch">
+Auf %d Tracks anwenden
+</string>
+    <string name="music_tag_save_success">
+Audio-Tags erfolgreich gespeichert
+</string>
+    <string name="music_tag_save_error">
+Audio-Tags konnten nicht gespeichert werden: %s
+</string>
+    <string name="music_tag_batch_success">
+Tags für %d Tracks aktualisiert
+</string>
+    <string name="music_tag_art_extracted">
+Album-Cover gespeichert: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+Album-Cover konnte nicht extrahiert werden
+</string>
+    <string name="music_tag_rename_confirm_title">
+Datei aus Tags umbenennen
+</string>
+    <string name="music_tag_rename_confirm_msg">
+Datei umbenennen in:
+
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+Tags automatisch aus Dateinamen gefüllt
+</string>
+    <string name="music_tag_autofill_no_match">
+Künstler oder Titel konnten nicht aus dem Dateinamen ermittelt werden
+</string>
+    <string name="properties_section_audio_tags">
+Audio-Tags
+</string>
+    <string name="properties_btn_edit_audio_tags">
+Audio-Tags bearbeiten
+</string>
+    <string name="music_tag_specs">
+Technische Daten
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Zum Bearbeiten auf das Symbol tippen
@@ -14468,6 +14617,21 @@ Dateispeicherort öffnen
 </string>
     <string name="icon_tile_recent_files">
 Kachel für zuletzt verwendete Dateien
+</string>
+    <string name="recent_refreshing_status">
+Ordner %1$d von %2$d wird durchsucht: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+Suche nach neuen Dateien…
+</string>
+    <string name="recent_refreshing_eta">
+Noch ca. %1$d s
+</string>
+    <string name="recent_refreshing_eta_finishing">
+Fast fertig…
+</string>
+    <string name="recent_refresh_complete">
+Neueste Dateien sind aktuell
 </string>
 </resources>
 

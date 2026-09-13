@@ -465,6 +465,7 @@ dependencies {
     implementation("com.tom-roush:pdfbox-android:2.0.27.0") {
         exclude(group = "org.bouncycastle")
     }
+    implementation(libs.jaudiotagger)
     // libnfs: native NFS v2/v3/v4 client via JNI (built from source in src/main/cpp/)
 
 
@@ -516,6 +517,7 @@ licensee {
     ignoreDependencies("com.microsoft.device.display", "display-mask")
     ignoreDependencies("org.tukaani", "xz")
     ignoreDependencies("com.github.MuntashirAkon", "libadb-android")
+    ignoreDependencies("com.github.AdrienPoupa", "jaudiotagger")
     // Amazon Appstore SDK uses a proprietary license; managed outside Gradle licensee.
     ignoreDependencies("com.amazon.device", "amazon-appstore-sdk")
 }

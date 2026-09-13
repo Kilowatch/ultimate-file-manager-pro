@@ -251,6 +251,9 @@ Outils EXIF photo — inspectez les métadonnées EXIF et GPS des photos, efface
         <item>
 Outils Photo EXIF : inspectez les métadonnées EXIF ​​et GPS des photos, nettoyez les géolocalisations privées et les informations sur l\'appareil, et renommez les photos par lots à l\'aide des horodatages de capture et des métadonnées de l\'appareil photo.
 </item>
+        <item>
+Éditeur de balises musicales (Mobile) — inspectez, modifiez, nettoyez et mettez à jour par lots les métadonnées audio (titre, artiste, album, année, genre, paroles) et la pochette directement dans les fichiers audio.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — traite les achats facultatifs de pourboires in-app sur l
 </item>
         <item>
 Amazon Appstore SDK : traite les achats facultatifs de pourboires dans l\'application sur les appareils Amazon. (Propriétaire)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ Sélection de la langue (Cookie)
         <item>
 État de lecture multimédia
 </item>
+        <item>
+Métadonnées audio et balises musicales
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ Un cookie (ufm_lang) mémorise votre choix de langue pendant la session et aprè
 </item>
         <item>
 Un cookie (ufm_lang) mémorise votre choix de langue tout au long de la session et lors des redémarrages du navigateur · Stockage du navigateur Web
+</item>
+        <item>
+Titre, artiste, album, année, genre, paroles et pochette enregistrés directement dans les fichiers audio locaux · Stockage de l\'appareil utilisateur (directement dans les fichiers audio)
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ Fournir les fonctionnalités principales de l\\\'application
 </item>
         <item>
 Fournir les fonctionnalités de base de l\'application
+</item>
+        <item>
+Lire et écrire des métadonnées audio et des pochettes intégrées directement dans les fichiers audio locaux
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

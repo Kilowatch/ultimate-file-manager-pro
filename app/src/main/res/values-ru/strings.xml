@@ -4229,6 +4229,9 @@ NFSv4
     <string name="toolbar_desc_set_alarm">
 Установить выбранный звук в качестве звука будильника
 </string>
+    <string name="toolbar_desc_music_tagger">
+Редактирование аудиотегов, текста песен и обложек альбомов
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Сканировать и находить дубликаты файлов
 </string>
@@ -12252,6 +12255,152 @@ UFM перестал отвечать во время вашего послед�
     <string name="icon_toolbar_set_alarm">
 Установить как звук будильника
 </string>
+    <string name="action_music_tagger">
+Редактор музыкальных тегов
+</string>
+    <string name="icon_toolbar_music_tagger">
+Редактор музыкальных тегов
+</string>
+    <string name="music_tagger_title">
+Редактор музыкальных тегов
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+Выбрано треков: %d
+</string>
+    <string name="music_tag_cover_art">
+Обложка альбома
+</string>
+    <string name="music_tag_btn_change_art">
+Изменить обложку
+</string>
+    <string name="music_tag_btn_remove_art">
+Удалить
+</string>
+    <string name="music_tag_btn_save_art">
+Сохранить обложку
+</string>
+    <string name="music_tag_btn_autofill_filename">
+Автозаполнение из имени файла
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+Переименовать по тегам
+</string>
+    <string name="music_tag_batch_options_header">
+Пакетные операции
+</string>
+    <string name="music_tag_auto_number_tracks">
+Автонумерация треков по порядку (от 1 до N)
+</string>
+    <string name="music_tag_core_tags_header">
+Аудиотеги
+</string>
+    <string name="music_tag_hint_title">
+Название
+</string>
+    <string name="music_tag_hint_artist">
+Исполнитель
+</string>
+    <string name="music_tag_hint_album">
+Альбом
+</string>
+    <string name="music_tag_hint_album_artist">
+Исполнитель альбома
+</string>
+    <string name="music_tag_hint_year">
+Год
+</string>
+    <string name="music_tag_hint_genre">
+Жанр
+</string>
+    <string name="music_tag_hint_track">
+Трек
+</string>
+    <string name="music_tag_hint_total_tracks">
+Всего
+</string>
+    <string name="music_tag_hint_disc">
+Диск
+</string>
+    <string name="music_tag_hint_total_discs">
+Всего
+</string>
+    <string name="music_tag_advanced_header">
+Дополнительные теги и текст песни
+</string>
+    <string name="music_tag_hint_composer">
+Композитор
+</string>
+    <string name="music_tag_hint_comment">
+Комментарий
+</string>
+    <string name="music_tag_hint_lyrics">
+Встроенный текст песни (USLT)
+</string>
+    <string name="music_tag_technical_header">
+Сведения об аудиофайле
+</string>
+    <string name="music_tag_tech_format">
+Формат
+</string>
+    <string name="music_tag_tech_bitrate">
+Битрейт
+</string>
+    <string name="music_tag_tech_sample_rate">
+Частота дискретизации
+</string>
+    <string name="music_tag_tech_duration">
+Длительность
+</string>
+    <string name="music_tag_tech_path">
+Путь к файлу
+</string>
+    <string name="music_tag_btn_save">
+Сохранить теги
+</string>
+    <string name="music_tag_btn_apply_batch">
+Применить к трекам: %d
+</string>
+    <string name="music_tag_save_success">
+Аудиотеги успешно сохранены
+</string>
+    <string name="music_tag_save_error">
+Не удалось сохранить аудиотеги: %s
+</string>
+    <string name="music_tag_batch_success">
+Теги обновлены для треков: %d
+</string>
+    <string name="music_tag_art_extracted">
+Обложка альбома сохранена: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+Не удалось извлечь обложку альбома
+</string>
+    <string name="music_tag_rename_confirm_title">
+Переименовать файл по тегам
+</string>
+    <string name="music_tag_rename_confirm_msg">
+Переименовать файл в:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+Теги автоматически заполнены из имени файла
+</string>
+    <string name="music_tag_autofill_no_match">
+Не удалось определить исполнителя или название из имени файла
+</string>
+    <string name="properties_section_audio_tags">
+Аудиотеги
+</string>
+    <string name="properties_btn_edit_audio_tags">
+Редактировать аудиотеги
+</string>
+    <string name="music_tag_specs">
+Технические характеристики
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Нажмите на значок, чтобы редактировать
@@ -14468,6 +14617,21 @@ For your security, try again after the timer expires
 </string>
     <string name="icon_tile_recent_files">
 Плитка «Недавние файлы»
+</string>
+    <string name="recent_refreshing_status">
+Сканирование папки %1$d из %2$d: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+Проверка недавних файлов…
+</string>
+    <string name="recent_refreshing_eta">
+Осталось ~%1$d с
+</string>
+    <string name="recent_refreshing_eta_finishing">
+Почти готово…
+</string>
+    <string name="recent_refresh_complete">
+Список недавних файлов обновлён
 </string>
 </resources>
 

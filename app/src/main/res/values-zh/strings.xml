@@ -4229,6 +4229,9 @@ UFM 颜色代码
     <string name="toolbar_desc_set_alarm">
 将所选音频设为闹钟铃声
 </string>
+    <string name="toolbar_desc_music_tagger">
+编辑音频标签、歌词和专辑封面
+</string>
     <string name="toolbar_desc_duplicate_finder">
 扫描并检测重复文件
 </string>
@@ -12252,6 +12255,152 @@ UFM 在您上次会话期间停止响应。您想发送冻结报告来帮助我�
     <string name="icon_toolbar_set_alarm">
 设为闹钟铃声
 </string>
+    <string name="action_music_tagger">
+音乐标签编辑器
+</string>
+    <string name="icon_toolbar_music_tagger">
+音乐标签编辑器
+</string>
+    <string name="music_tagger_title">
+音乐标签编辑器
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+已选择 %d 首曲目
+</string>
+    <string name="music_tag_cover_art">
+专辑封面
+</string>
+    <string name="music_tag_btn_change_art">
+更换封面
+</string>
+    <string name="music_tag_btn_remove_art">
+移除
+</string>
+    <string name="music_tag_btn_save_art">
+保存封面
+</string>
+    <string name="music_tag_btn_autofill_filename">
+从文件名自动填充
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+根据标签重命名
+</string>
+    <string name="music_tag_batch_options_header">
+批量选项
+</string>
+    <string name="music_tag_auto_number_tracks">
+按顺序自动编号曲目（1 到 N）
+</string>
+    <string name="music_tag_core_tags_header">
+音频标签
+</string>
+    <string name="music_tag_hint_title">
+标题
+</string>
+    <string name="music_tag_hint_artist">
+艺术家
+</string>
+    <string name="music_tag_hint_album">
+专辑
+</string>
+    <string name="music_tag_hint_album_artist">
+专辑艺术家
+</string>
+    <string name="music_tag_hint_year">
+年份
+</string>
+    <string name="music_tag_hint_genre">
+流派
+</string>
+    <string name="music_tag_hint_track">
+音轨
+</string>
+    <string name="music_tag_hint_total_tracks">
+总数
+</string>
+    <string name="music_tag_hint_disc">
+碟片
+</string>
+    <string name="music_tag_hint_total_discs">
+总数
+</string>
+    <string name="music_tag_advanced_header">
+高级标签与歌词
+</string>
+    <string name="music_tag_hint_composer">
+作曲家
+</string>
+    <string name="music_tag_hint_comment">
+注释
+</string>
+    <string name="music_tag_hint_lyrics">
+内嵌歌词 (USLT)
+</string>
+    <string name="music_tag_technical_header">
+音频文件详情
+</string>
+    <string name="music_tag_tech_format">
+格式
+</string>
+    <string name="music_tag_tech_bitrate">
+比特率
+</string>
+    <string name="music_tag_tech_sample_rate">
+采样率
+</string>
+    <string name="music_tag_tech_duration">
+时长
+</string>
+    <string name="music_tag_tech_path">
+文件路径
+</string>
+    <string name="music_tag_btn_save">
+保存标签
+</string>
+    <string name="music_tag_btn_apply_batch">
+应用到 %d 首曲目
+</string>
+    <string name="music_tag_save_success">
+音频标签保存成功
+</string>
+    <string name="music_tag_save_error">
+保存音频标签失败：%s
+</string>
+    <string name="music_tag_batch_success">
+已更新 %d 首曲目的标签
+</string>
+    <string name="music_tag_art_extracted">
+专辑封面已保存：%s
+</string>
+    <string name="music_tag_art_extract_failed">
+提取专辑封面失败
+</string>
+    <string name="music_tag_rename_confirm_title">
+根据标签重命名文件
+</string>
+    <string name="music_tag_rename_confirm_msg">
+将文件重命名为：\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+已从文件名自动填充标签
+</string>
+    <string name="music_tag_autofill_no_match">
+无法从文件名检测到艺术家或标题
+</string>
+    <string name="properties_section_audio_tags">
+音频标签
+</string>
+    <string name="properties_btn_edit_audio_tags">
+编辑音频标签
+</string>
+    <string name="music_tag_specs">
+技术规格
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 点击图标进行编辑
@@ -14467,6 +14616,21 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
 </string>
     <string name="icon_tile_recent_files">
 最近文件磁贴
+</string>
+    <string name="recent_refreshing_status">
+正在扫描 %1$d/%2$d 个文件夹：%3$s
+</string>
+    <string name="recent_refreshing_preparing">
+正在检查最近文件…
+</string>
+    <string name="recent_refreshing_eta">
+剩余约 %1$d 秒
+</string>
+    <string name="recent_refreshing_eta_finishing">
+即将完成…
+</string>
+    <string name="recent_refresh_complete">
+最近文件已是最新
 </string>
 </resources>
 

@@ -251,6 +251,9 @@ Strumenti EXIF ​​​​foto: controlla i metadati EXIF ​​e GPS delle fot
         <item>
 Strumenti EXIF ​​​​foto: controlla i metadati EXIF ​​e GPS delle foto, cancella i geotag privati ​​e le informazioni del dispositivo e rinomina in batch le foto utilizzando i timestamp di acquisizione e i metadati della fotocamera.
 </item>
+        <item>
+Editor tag musicali (dispositivi mobili): controlla, modifica, ripulisci e aggiorna in batch i metadati audio (titolo, artista, album, anno, genere, testi) e le copertine degli album direttamente nei file audio.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ SDK Amazon Appstore: elabora gli acquisti di suggerimenti in-app opzionali sui d
 </item>
         <item>
 SDK Amazon Appstore: elabora gli acquisti di suggerimenti in-app opzionali sui dispositivi Amazon. (Proprietario)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ Stato di riproduzione multimediale
         <item>
 Stato di riproduzione multimediale
 </item>
+        <item>
+Metadati audio e tag musicali
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ Un cookie (ufm_lang) ricorda la scelta della lingua durante tutta la sessione e 
 </item>
         <item>
 Un cookie (ufm_lang) ricorda la scelta della lingua durante tutta la sessione e tra i riavvii del browser · Memorizzazione del browser Web
+</item>
+        <item>
+Titolo, artista, album, anno, genere, testi e copertina dell\'album scritti direttamente nei file audio locali · Memoria del dispositivo dell\'utente (direttamente all\'interno dei file audio)
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ Fornire le funzionalità principali dell\'app
 </item>
         <item>
 Fornire le funzionalità principali dell\'app
+</item>
+        <item>
+Leggere e scrivere metadati audio e copertine incorporate direttamente all\'interno dei file audio locali
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

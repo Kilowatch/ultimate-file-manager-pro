@@ -251,6 +251,9 @@ Alat EXIF Foto — periksa metadata EXIF dan GPS foto, hapus geotag privat dan i
         <item>
 Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
 </item>
+        <item>
+Editor Tag Musik (Seluler) — memeriksa, mengedit, membersihkan, dan memperbarui metadata audio secara massal (judul, artis, album, tahun, genre, lirik) dan sampul album langsung di dalam file audio.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — memproses pembelian tip dalam aplikasi yang opsional di 
 </item>
         <item>
 Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ Status Pemutaran Media
         <item>
 Media Playback State
 </item>
+        <item>
+Metadata Audio &amp; Tag Musik
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ Cookie (ufm_lang) mengingat pilihan bahasa Anda selama sesi dan saat memulai ula
 </item>
         <item>
 A cookie (ufm_lang) remembers your language choice throughout the session and across browser restarts · Web browser storage
+</item>
+        <item>
+Judul, artis, album, tahun, genre, lirik, dan sampul album ditulis langsung ke file audio lokal · Penyimpanan perangkat pengguna (langsung di dalam file audio)
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ Menyediakan fungsi inti aplikasi
 </item>
         <item>
 Provide core app functionality
+</item>
+        <item>
+Membaca dan menulis metadata audio dan sampul album yang disematkan langsung di dalam file audio lokal
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

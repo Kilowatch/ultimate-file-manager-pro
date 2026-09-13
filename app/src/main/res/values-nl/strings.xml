@@ -4110,6 +4110,9 @@ Geselecteerde audio instellen als meldingsgeluid
     <string name="toolbar_desc_set_alarm">
 Geselecteerde audio instellen als alarmgeluid
 </string>
+    <string name="toolbar_desc_music_tagger">
+Audio-tags, songteksten en albumhoezen bewerken
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Scan en detecteer dubbele bestanden
 </string>
@@ -12050,6 +12053,152 @@ Instellen als meldingsgeluid
     <string name="icon_toolbar_set_alarm">
 Instellen als alarmgeluid
 </string>
+    <string name="action_music_tagger">
+Muziektag-editor
+</string>
+    <string name="icon_toolbar_music_tagger">
+Muziektag-editor
+</string>
+    <string name="music_tagger_title">
+Muziektag-editor
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d nummers geselecteerd
+</string>
+    <string name="music_tag_cover_art">
+Albumhoes
+</string>
+    <string name="music_tag_btn_change_art">
+Hoes wijzigen
+</string>
+    <string name="music_tag_btn_remove_art">
+Verwijderen
+</string>
+    <string name="music_tag_btn_save_art">
+Hoes opslaan
+</string>
+    <string name="music_tag_btn_autofill_filename">
+Automatisch invullen vanuit bestandsnaam
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+Hernoemen op basis van tags
+</string>
+    <string name="music_tag_batch_options_header">
+Batch-opties
+</string>
+    <string name="music_tag_auto_number_tracks">
+Nummers automatisch opeenvolgend nummeren (1 tot N)
+</string>
+    <string name="music_tag_core_tags_header">
+Audio-tags
+</string>
+    <string name="music_tag_hint_title">
+Titel
+</string>
+    <string name="music_tag_hint_artist">
+Artiest
+</string>
+    <string name="music_tag_hint_album">
+Album
+</string>
+    <string name="music_tag_hint_album_artist">
+Albumartiest
+</string>
+    <string name="music_tag_hint_year">
+Jaar
+</string>
+    <string name="music_tag_hint_genre">
+Genre
+</string>
+    <string name="music_tag_hint_track">
+Nummer
+</string>
+    <string name="music_tag_hint_total_tracks">
+Totaal
+</string>
+    <string name="music_tag_hint_disc">
+Schijf
+</string>
+    <string name="music_tag_hint_total_discs">
+Totaal
+</string>
+    <string name="music_tag_advanced_header">
+Geavanceerde tags en songteksten
+</string>
+    <string name="music_tag_hint_composer">
+Componist
+</string>
+    <string name="music_tag_hint_comment">
+Opmerking
+</string>
+    <string name="music_tag_hint_lyrics">
+Ingebedde songteksten (USLT)
+</string>
+    <string name="music_tag_technical_header">
+Details van audiobestand
+</string>
+    <string name="music_tag_tech_format">
+Formaat
+</string>
+    <string name="music_tag_tech_bitrate">
+Bitrate
+</string>
+    <string name="music_tag_tech_sample_rate">
+Samplefrequentie
+</string>
+    <string name="music_tag_tech_duration">
+Duur
+</string>
+    <string name="music_tag_tech_path">
+Bestandspad
+</string>
+    <string name="music_tag_btn_save">
+Tags opslaan
+</string>
+    <string name="music_tag_btn_apply_batch">
+Toepassen op %d nummers
+</string>
+    <string name="music_tag_save_success">
+Audio-tags succesvol opgeslagen
+</string>
+    <string name="music_tag_save_error">
+Opslaan van audio-tags mislukt: %s
+</string>
+    <string name="music_tag_batch_success">
+Tags bijgewerkt voor %d nummers
+</string>
+    <string name="music_tag_art_extracted">
+Albumhoes opgeslagen: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+Albumhoes extraheren mislukt
+</string>
+    <string name="music_tag_rename_confirm_title">
+Bestand hernoemen op basis van tags
+</string>
+    <string name="music_tag_rename_confirm_msg">
+Bestand hernoemen naar:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+Tags automatisch ingevuld vanuit bestandsnaam
+</string>
+    <string name="music_tag_autofill_no_match">
+Kon artiest of titel niet detecteren uit bestandsnaam
+</string>
+    <string name="properties_section_audio_tags">
+Audio-tags
+</string>
+    <string name="properties_btn_edit_audio_tags">
+Audio-tags bewerken
+</string>
+    <string name="music_tag_specs">
+Technische specificaties
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Tik op het pictogram om te bewerken
@@ -14230,6 +14379,21 @@ Bestandslocatie openen
 </string>
     <string name="icon_tile_recent_files">
 Tegel Recente bestanden
+</string>
+    <string name="recent_refreshing_status">
+Scannen van %1$d van %2$d mappen: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+Controleren op recente bestanden…
+</string>
+    <string name="recent_refreshing_eta">
+~%1$ds resterend
+</string>
+    <string name="recent_refreshing_eta_finishing">
+Bijna klaar…
+</string>
+    <string name="recent_refresh_complete">
+Recente bestanden zijn up-to-date
 </string>
 </resources>
 

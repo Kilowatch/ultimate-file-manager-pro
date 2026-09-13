@@ -4229,6 +4229,9 @@ ZIPまたは7Zアーカイブを作成
     <string name="toolbar_desc_set_alarm">
 選択した音声をアラーム音として設定
 </string>
+    <string name="toolbar_desc_music_tagger">
+オーディオタグ、歌詞、アルバムアートを編集
+</string>
     <string name="toolbar_desc_duplicate_finder">
 重複ファイルをスキャンして検出
 </string>
@@ -12252,6 +12255,152 @@ UFMが前回のセッション中に応答しなくなりました。修正に�
     <string name="icon_toolbar_set_alarm">
 アラーム音として設定
 </string>
+    <string name="action_music_tagger">
+音楽タグエディター
+</string>
+    <string name="icon_toolbar_music_tagger">
+音楽タグエディター
+</string>
+    <string name="music_tagger_title">
+音楽タグエディター
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d 件のトラックを選択中
+</string>
+    <string name="music_tag_cover_art">
+アルバムカバーアート
+</string>
+    <string name="music_tag_btn_change_art">
+アートを変更
+</string>
+    <string name="music_tag_btn_remove_art">
+削除
+</string>
+    <string name="music_tag_btn_save_art">
+アートを保存
+</string>
+    <string name="music_tag_btn_autofill_filename">
+ファイル名から自動入力
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+タグから名前を変更
+</string>
+    <string name="music_tag_batch_options_header">
+一括オプション
+</string>
+    <string name="music_tag_auto_number_tracks">
+トラックに連番を自動付与（1～N）
+</string>
+    <string name="music_tag_core_tags_header">
+オーディオタグ
+</string>
+    <string name="music_tag_hint_title">
+タイトル
+</string>
+    <string name="music_tag_hint_artist">
+アーティスト
+</string>
+    <string name="music_tag_hint_album">
+アルバム
+</string>
+    <string name="music_tag_hint_album_artist">
+アルバムアーティスト
+</string>
+    <string name="music_tag_hint_year">
+年
+</string>
+    <string name="music_tag_hint_genre">
+ジャンル
+</string>
+    <string name="music_tag_hint_track">
+トラック
+</string>
+    <string name="music_tag_hint_total_tracks">
+合計
+</string>
+    <string name="music_tag_hint_disc">
+ディスク
+</string>
+    <string name="music_tag_hint_total_discs">
+合計
+</string>
+    <string name="music_tag_advanced_header">
+詳細タグと歌詞
+</string>
+    <string name="music_tag_hint_composer">
+作曲者
+</string>
+    <string name="music_tag_hint_comment">
+コメント
+</string>
+    <string name="music_tag_hint_lyrics">
+埋め込み歌詞（USLT）
+</string>
+    <string name="music_tag_technical_header">
+オーディオファイルの詳細
+</string>
+    <string name="music_tag_tech_format">
+形式
+</string>
+    <string name="music_tag_tech_bitrate">
+ビットレート
+</string>
+    <string name="music_tag_tech_sample_rate">
+サンプルレート
+</string>
+    <string name="music_tag_tech_duration">
+再生時間
+</string>
+    <string name="music_tag_tech_path">
+ファイルパス
+</string>
+    <string name="music_tag_btn_save">
+タグを保存
+</string>
+    <string name="music_tag_btn_apply_batch">
+%d 件のトラックに適用
+</string>
+    <string name="music_tag_save_success">
+オーディオタグを保存しました
+</string>
+    <string name="music_tag_save_error">
+オーディオタグの保存に失敗しました: %s
+</string>
+    <string name="music_tag_batch_success">
+%d 件のトラックのタグを更新しました
+</string>
+    <string name="music_tag_art_extracted">
+アルバムアートを保存しました: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+アルバムアートの抽出に失敗しました
+</string>
+    <string name="music_tag_rename_confirm_title">
+タグからファイル名を変更
+</string>
+    <string name="music_tag_rename_confirm_msg">
+ファイル名を変更:
+
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+ファイル名からタグを自動入力しました
+</string>
+    <string name="music_tag_autofill_no_match">
+ファイル名からアーティストまたはタイトルを検出できませんでした
+</string>
+    <string name="properties_section_audio_tags">
+オーディオタグ
+</string>
+    <string name="properties_btn_edit_audio_tags">
+オーディオタグを編集
+</string>
+    <string name="music_tag_specs">
+技術仕様
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 アイコンをタップして編集
@@ -14468,6 +14617,21 @@ N/A
 </string>
     <string name="icon_tile_recent_files">
 最近のファイルタイル
+</string>
+    <string name="recent_refreshing_status">
+%2$d 個のフォルダーのうち %1$d をスキャン中: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+最近のファイルを確認中…
+</string>
+    <string name="recent_refreshing_eta">
+残り約 %1$d 秒
+</string>
+    <string name="recent_refreshing_eta_finishing">
+まもなく完了…
+</string>
+    <string name="recent_refresh_complete">
+最近のファイルは最新です
 </string>
 </resources>
 

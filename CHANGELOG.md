@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.6] — 2026-09-13
 
 ### Added
+- **Music Tagger / Audio Tag Editor (Mobile Only)**: Added a native audio metadata inspector and tag editor for Android Mobile:
+  - **Comprehensive Format Support**: Read and write metadata tags across MP3 (ID3v1, ID3v2.3, ID3v2.4), FLAC (Vorbis Comments), M4A/AAC (MP4 tags), OGG Vorbis, OPUS, WAV, and WMA using Jaudiotagger 2.2.3.
+  - **Full Tag Editing & Lyrics**: Edit Title, Artist, Album, Album Artist, Year, Genre, Track Number / Total Tracks, Disc Number / Total Discs, Composer, Comment, and embedded unsynchronized lyrics.
+  - **Album Cover Art Management**: View, change via photo picker, extract/save to storage, or remove embedded artwork.
+  - **Batch Tag Updates**: Select multiple audio files to update common tags (Artist, Album, Year, Genre, etc.) across albums or playlists with per-field selective update checkboxes, auto-track numbering (1 to N), and a horizontal carousel to inspect individual tracks.
+  - **Filename Auto-Fill & Tag Renaming**: Auto-fill tags from common filename conventions (`01 - Artist - Title`, `Artist - Title`, etc.) and dynamically rename audio files using metadata patterns (`%track% - %artist% - %title%`) with FAT32/NTFS character sanitization.
+  - **Technical Specs**: Inspect audio file properties including format, bitrate (kbps), sample rate (Hz), channels (Stereo/Mono), and duration.
+  - **Contextual Show/Hide Integration**: Integrated into the Floating Quick Action Bar and "Tools" menu, strictly shown only when all selected items are audio files on mobile (`!DeviceUtils.isTvDevice`).
+  - **File Details & Media Player Integration**: Direct "Edit Audio Tags" action button added to the File Properties sheet and local audio player details dialog.
 - **Recent Files**: Added a "Recent Files" tile to the main menu (under the Storage category, positioned directly below Twin Window) and dedicated browser activity for Android Mobile and Android TV.
   - **Smooth ViewPager2 Navigation**: Swipeable tab pages across 6 categories: All, Documents, Images, Videos, Audio, and Archives.
   - **Storage Indexer Instant Synergy**: Instantaneous (~15ms) refresh when local storages are indexed by UFM's Storage Indexer, retrieving files directly from SQLite without crawling the filesystem.

@@ -251,6 +251,9 @@ Foto EXIF-verktyg — inspektera foto EXIF- och GPS-metadata, skrubba bort priva
         <item>
 Foto EXIF-verktyg — inspektera foto EXIF- och GPS-metadata, skrubba bort privata geotaggar och enhetsinformation och byt namn på bilder i grupp med hjälp av tidsstämplar och kamerametadata.
 </item>
+        <item>
+Musiktaggredigerare (Mobil) — inspektera, redigera, rensa och batchuppdatera ljudmetadata (titel, artist, album, år, genre, låttexter) och inbäddat omslag direkt i ljudfiler.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — behandlar valfria tipsköp i appen på Amazon-enheter. (
 </item>
         <item>
 Amazon Appstore SDK — behandlar valfria tipsköp i appen på Amazon-enheter. (Egendomsskyddad)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ Mediauppspelningstillstånd
         <item>
 Mediauppspelningstillstånd
 </item>
+        <item>
+Ljudmetadata och musiktaggar
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ En cookie (ufm_lang) kommer ihåg ditt språkval under hela sessionen och över 
 </item>
         <item>
 En cookie (ufm_lang) kommer ihåg ditt språkval under hela sessionen och över omstarter av webbläsare · Webbläsarlagring
+</item>
+        <item>
+Titel, artist, album, år, genre, låttexter och omslag skrivna direkt till lokala ljudfiler · Användarens enhetslagring (direkt i ljudfiler)
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ Tillhandahåll grundläggande appfunktioner
 </item>
         <item>
 Tillhandahåll grundläggande appfunktioner
+</item>
+        <item>
+Läsa och skriva ljudmetadata och inbäddat omslag direkt i lokala ljudfiler
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

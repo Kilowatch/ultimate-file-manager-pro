@@ -105,6 +105,7 @@
         <item>UFM Media Player — play audio and video files with background playback, notification controls, Picture-in-Picture mode, and playlist management.</item>
         <item>GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.</item>
         <item>Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.</item>
+        <item>Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -249,6 +250,7 @@
         <item>gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)</item>
         <item>AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)</item>
         <item>Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)</item>
+        <item>jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
@@ -419,6 +421,7 @@
         <item>Indexed File Metadata (SQLite/Room)</item>
         <item>Language Selection (Cookie)</item>
         <item>Media Playback State</item>
+        <item>Audio Metadata &amp; Music Tags</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>Secure access to encrypted files · Android SharedPreferences</item>
@@ -439,6 +442,7 @@
         <item>File metadata (names, sizes, dates) for fast browsing and search stored in a local SQLite/Room database — can be managed via Settings -> Storage Indexer · App private storage</item>
         <item>Current queue, playback position, and player settings for resuming where you left off · Android SharedPreferences</item>
         <item>A cookie (ufm_lang) remembers your language choice throughout the session and across browser restarts · Web browser storage</item>
+        <item>Title, artist, album, year, genre, lyrics, and cover art written directly to local audio files · User device storage (directly inside audio files)</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->
@@ -473,6 +477,7 @@
         <item>Execute superuser file operations on rooted devices when Root Access is explicitly enabled</item>
         <item>Create and maintain file indexing for fast browsing and search (manageable via Settings -> Storage Indexer)</item>
         <item>Provide core app functionality</item>
+        <item>Read and write audio metadata and embedded cover art directly within local audio files</item>
     </string-array>
     <string-array name="pp_use_analytics">
         <item>Understand how features are used</item>

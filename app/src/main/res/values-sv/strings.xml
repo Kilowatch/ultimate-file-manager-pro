@@ -4213,6 +4213,9 @@ Ställ in vald ljudfil som aviseringsljud
     <string name="toolbar_desc_set_alarm">
 Ställ in vald ljudfil som alarmljud
 </string>
+    <string name="toolbar_desc_music_tagger">
+Redigera ljudtaggar, låttexter och albumomslag
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Skanna och upptäck dubbletter av filer
 </string>
@@ -12229,6 +12232,152 @@ Ställ in som aviseringsljud
     <string name="icon_toolbar_set_alarm">
 Ställ in som alarmljud
 </string>
+    <string name="action_music_tagger">
+Musiktaggredigerare
+</string>
+    <string name="icon_toolbar_music_tagger">
+Musiktaggredigerare
+</string>
+    <string name="music_tagger_title">
+Musiktaggredigerare
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d spår valda
+</string>
+    <string name="music_tag_cover_art">
+Albumomslag
+</string>
+    <string name="music_tag_btn_change_art">
+Byt omslag
+</string>
+    <string name="music_tag_btn_remove_art">
+Ta bort
+</string>
+    <string name="music_tag_btn_save_art">
+Spara omslag
+</string>
+    <string name="music_tag_btn_autofill_filename">
+Fyll i automatiskt från filnamn
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+Byt namn från taggar
+</string>
+    <string name="music_tag_batch_options_header">
+Batchalternativ
+</string>
+    <string name="music_tag_auto_number_tracks">
+Numrera spår automatiskt i följd (1 till N)
+</string>
+    <string name="music_tag_core_tags_header">
+Ljudtaggar
+</string>
+    <string name="music_tag_hint_title">
+Titel
+</string>
+    <string name="music_tag_hint_artist">
+Artist
+</string>
+    <string name="music_tag_hint_album">
+Album
+</string>
+    <string name="music_tag_hint_album_artist">
+Albumartist
+</string>
+    <string name="music_tag_hint_year">
+År
+</string>
+    <string name="music_tag_hint_genre">
+Genre
+</string>
+    <string name="music_tag_hint_track">
+Spår
+</string>
+    <string name="music_tag_hint_total_tracks">
+Totalt
+</string>
+    <string name="music_tag_hint_disc">
+Skiva
+</string>
+    <string name="music_tag_hint_total_discs">
+Totalt
+</string>
+    <string name="music_tag_advanced_header">
+Avancerade taggar och låttexter
+</string>
+    <string name="music_tag_hint_composer">
+Kompositör
+</string>
+    <string name="music_tag_hint_comment">
+Kommentar
+</string>
+    <string name="music_tag_hint_lyrics">
+Inbäddade låttexter (USLT)
+</string>
+    <string name="music_tag_technical_header">
+Information om ljudfil
+</string>
+    <string name="music_tag_tech_format">
+Format
+</string>
+    <string name="music_tag_tech_bitrate">
+Bithastighet
+</string>
+    <string name="music_tag_tech_sample_rate">
+Samplingsfrekvens
+</string>
+    <string name="music_tag_tech_duration">
+Längd
+</string>
+    <string name="music_tag_tech_path">
+Filsökväg
+</string>
+    <string name="music_tag_btn_save">
+Spara taggar
+</string>
+    <string name="music_tag_btn_apply_batch">
+Tillämpa på %d spår
+</string>
+    <string name="music_tag_save_success">
+Ljudtaggarna sparades
+</string>
+    <string name="music_tag_save_error">
+Kunde inte spara ljudtaggarna: %s
+</string>
+    <string name="music_tag_batch_success">
+Uppdaterade taggar för %d spår
+</string>
+    <string name="music_tag_art_extracted">
+Albumomslag sparat: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+Kunde inte extrahera albumomslaget
+</string>
+    <string name="music_tag_rename_confirm_title">
+Byt namn på fil från taggar
+</string>
+    <string name="music_tag_rename_confirm_msg">
+Byt namn på fil till:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+Taggar ifyllda automatiskt från filnamnet
+</string>
+    <string name="music_tag_autofill_no_match">
+Kunde inte identifiera artist eller titel från filnamnet
+</string>
+    <string name="properties_section_audio_tags">
+Ljudtaggar
+</string>
+    <string name="properties_btn_edit_audio_tags">
+Redigera ljudtaggar
+</string>
+    <string name="music_tag_specs">
+Tekniska specifikationer
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Tryck på ikonen för att redigera
@@ -14445,6 +14594,21 @@ Arkiv
 </string>
     <string name="icon_tile_recent_files">
 Panel för senaste filer
+</string>
+    <string name="recent_refreshing_status">
+Skannar %1$d av %2$d mappar: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+Söker efter senaste filer…
+</string>
+    <string name="recent_refreshing_eta">
+~%1$ds kvar
+</string>
+    <string name="recent_refreshing_eta_finishing">
+Nästan klart…
+</string>
+    <string name="recent_refresh_complete">
+Senaste filerna är uppdaterade
 </string>
 </resources>
 

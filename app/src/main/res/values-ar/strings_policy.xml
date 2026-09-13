@@ -251,6 +251,9 @@ Ultimate File Manager Pro هو تطبيق Android مجاني — متوفر عل
         <item>
 أدوات Photo EXIF ​​- فحص البيانات التعريفية للصور EXIF ​​وGPS، وتنظيف العلامات الجغرافية الخاصة ومعلومات الجهاز، وإعادة تسمية الصور دفعة واحدة باستخدام الطوابع الزمنية للالتقاط والبيانات التعريفية للكاميرا.
 </item>
+        <item>
+محرر علامات الموسيقى (الهاتف) — فحص وتعديل وتنظيف وتحديث البيانات الوصفية للملفات الصوتية (العنوان، الفنان، الألبوم، السنة، النوع، الكلمات) وغلاف الألبوم مباشرة داخل الملفات الصوتية.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — تعالج عمليات شراء البقشيش الاخ
 </item>
         <item>
 Amazon Appstore SDK - يعالج عمليات شراء النصائح الاختيارية داخل التطبيق على أجهزة Amazon. (الملكية)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1055,6 +1061,9 @@ Remote File Server: عرض قائمة التطبيقات المثبتة والب
         <item>
 حالة تشغيل الوسائط
 </item>
+        <item>
+البيانات الوصفية للصوت وعلامات الموسيقى
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1110,6 +1119,9 @@ Remote File Server: عرض قائمة التطبيقات المثبتة والب
 </item>
         <item>
 يتذكر ملف تعريف الارتباط (ufm_lang) اختيارك للغة طوال الجلسة وعبر عمليات إعادة تشغيل المتصفح. · تخزين متصفح الويب
+</item>
+        <item>
+العنوان والفنان والألبوم والسنة والنوع والكلمات وغلاف الألبوم المكتوبة مباشرة على الملفات الصوتية المحلية · سعة تخزين جهاز المستخدم (داخل ملفات الصوت مباشرة)
 </item>
     </string-array>
 
@@ -1184,6 +1196,9 @@ Remote File Server: عرض قائمة التطبيقات المثبتة والب
 </item>
         <item>
 توفير وظائف التطبيق الأساسية
+</item>
+        <item>
+قراءة البيانات الوصفية للصوت وغلاف الألبوم المضمن وكتابتها مباشرة داخل ملفات الصوت المحلية
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

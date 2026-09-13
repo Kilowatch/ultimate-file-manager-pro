@@ -1694,6 +1694,18 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 }
             }
 
+            // Music Tagger (All selected items are audio files, mobile only)
+            val allNetworkAudio = selected.isNotEmpty() && selected.all {
+                !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.name.substringAfterLast('.'))
+            }
+            if (allNetworkAudio && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this) && pm.isIconEnabled(this, pm.KEY_MUSIC_TAGGER)) {
+                list.add(FileToolsBottomSheet.ActionItem("music_tagger", getString(R.string.action_music_tagger), R.drawable.ic_music_tag, "toolbar_music_tagger") {
+                    downloadNetworkAudioAndLaunchTagger(selected.filter {
+                        !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.name.substringAfterLast('.'))
+                    })
+                })
+            }
+
             // System Sound (Single network audio file, mobile only)
             val isSingleNetworkAudio = count == 1 && !selected.first().isDirectory &&
                 za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(selected.first().name.substringAfterLast('.'))
@@ -2804,6 +2816,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
                 }
             }
+            pm.ACTION_MUSIC_TAGGER -> {
+                val audioFiles = selected.filter {
+                    !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.name.substringAfterLast('.'))
+                }
+                if (audioFiles.isNotEmpty()) {
+                    fileAdapter.exitSelectionMode()
+                    downloadNetworkAudioAndLaunchTagger(audioFiles)
+                }
+            }
             pm.ACTION_MORE -> {
                 fabTools?.performClick()
             }
@@ -2836,9 +2857,16 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 }
 
                 if (isQuickBarOn && showActions) {
+                    val netFiles = fileAdapter.getSelectedFiles()
                     val state = za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar.SelectionState(
                         selectedCount = count,
-                        isAllSelected = isAll
+                        isAllSelected = isAll,
+                        allImagesSelected = netFiles.isNotEmpty() && netFiles.all {
+                            !it.isDirectory && it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                        },
+                        allAudioSelected = netFiles.isNotEmpty() && netFiles.all {
+                            !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.name.substringAfterLast('.'))
+                        }
                     )
                     floatingQuickBar?.bindSelection(state)
                     floatingQuickBar?.showAnimated { updateFabPositions() }
@@ -6461,6 +6489,124 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     snack.dismiss()
                     showPremiumSnackbar(getString(R.string.compress_image_error, files.first().name, e.message ?: ""))
+                }
+            }
+        }
+    }
+
+    /**
+     * Downloads selected audio files to a local temp cache directory and launches MusicTaggerActivity.
+     * Integrates with [za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge] to upload modified audio tags or sync remote file renames.
+     */
+    fun downloadNetworkAudioAndLaunchTagger(files: List<NetworkFile>) {
+        if (files.isEmpty()) return
+        val snack = Snackbar.make(findViewById(R.id.main), getString(R.string.fetching_filename, files.first().name), Snackbar.LENGTH_INDEFINITE)
+        snack.show()
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val tempDir = java.io.File(cacheDir, "music_tagger_${System.currentTimeMillis()}")
+                tempDir.mkdirs()
+                val localPaths = java.util.ArrayList<String>()
+                val remotePathMap = java.util.concurrent.ConcurrentHashMap<String, String>()
+
+                for (nf in files) {
+                    val tempFile = java.io.File(tempDir, nf.name)
+                    val inp = when (share.type) {
+                        ShareType.SMB -> SmbShareClient.openInputStream(share, nf.path)
+                        ShareType.FTP -> FtpShareClient.openInputStream(share, nf.path)
+                        ShareType.TV  -> TvShareClient.openInputStream(share, nf.path)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, nf.path)
+                        ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, nf.path).first
+                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, nf.path).first
+                        ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, nf.path).first
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, nf.path).first
+                        ShareType.WEBDAV -> WebDavShareClient.openInputStream(share, nf.path).first
+                        ShareType.NFS -> NfsShareClient.openInputStream(share, nf.path)
+                        ShareType.DLNA -> DlnaShareClient.openInputStream(share, nf.path)
+                    }
+                    if (inp != null) {
+                        inp.use { input ->
+                            java.io.FileOutputStream(tempFile).use { out -> input.copyTo(out) }
+                        }
+                        localPaths.add(tempFile.absolutePath)
+                        remotePathMap[tempFile.absolutePath] = nf.path
+                    }
+                }
+
+                if (localPaths.isNotEmpty()) {
+                    val capturedShare = share
+                    za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge.onFileSaved = { savedFile ->
+                        val remotePath = remotePathMap[savedFile.absolutePath]
+                        if (remotePath != null && !capturedShare.readOnly) {
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                try {
+                                    val fis = java.io.FileInputStream(savedFile)
+                                    fis.use { input ->
+                                        when (capturedShare.type) {
+                                            ShareType.SMB -> SmbShareClient.openOutputStream(capturedShare, remotePath).use { out -> input.copyTo(out) }
+                                            ShareType.FTP -> FtpShareClient.openOutputStream(capturedShare, remotePath).use { out -> input.copyTo(out) }
+                                            ShareType.SFTP, ShareType.SCP -> withContext(Dispatchers.IO) { SshShareClient.openOutputStream(capturedShare, remotePath).use { out -> input.copyTo(out) } }
+                                            ShareType.TV -> TvShareClient.uploadStream(capturedShare, remotePath, input, savedFile.length())
+                                            ShareType.ONEDRIVE -> OnedriveShareClient.openOutputStream(capturedShare, remotePath).use { out -> input.copyTo(out) }
+                                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(capturedShare, remotePath).use { out -> input.copyTo(out) }
+                                            ShareType.DROPBOX -> DropboxShareClient.openOutputStream(capturedShare, remotePath).use { out -> input.copyTo(out) }
+                                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openOutputStream(capturedShare, remotePath).use { out -> input.copyTo(out) }
+                                            ShareType.WEBDAV -> WebDavShareClient.openOutputStream(capturedShare, remotePath).use { out -> input.copyTo(out) }
+                                            ShareType.NFS -> withContext(Dispatchers.IO) { NfsShareClient.openOutputStream(capturedShare, remotePath).use { out -> input.copyTo(out) } }
+                                            ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                                        }
+                                    }
+                                    withContext(Dispatchers.Main) {
+                                        loadDirectory()
+                                    }
+                                } catch (_: Exception) { }
+                            }
+                        }
+                    }
+
+                    za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge.onFileRenamed = { oldFile, newFile ->
+                        val oldRemotePath = remotePathMap[oldFile.absolutePath]
+                        if (oldRemotePath != null && !capturedShare.readOnly) {
+                            val parent = if (oldRemotePath.contains('/')) oldRemotePath.substringBeforeLast('/') else ""
+                            val newRemotePath = if (parent.isEmpty()) newFile.name else "$parent/${newFile.name}"
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                try {
+                                    when (capturedShare.type) {
+                                        ShareType.SMB -> SmbShareClient.rename(capturedShare, oldRemotePath, newRemotePath)
+                                        ShareType.FTP -> FtpShareClient.rename(capturedShare, oldRemotePath, newRemotePath)
+                                        ShareType.TV  -> TvShareClient.rename(capturedShare, oldRemotePath, newRemotePath)
+                                        ShareType.SFTP, ShareType.SCP -> SshShareClient.rename(capturedShare, oldRemotePath, newRemotePath)
+                                        ShareType.ONEDRIVE -> OnedriveShareClient.rename(capturedShare, oldRemotePath, newRemotePath)
+                                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.rename(capturedShare, oldRemotePath, newRemotePath)
+                                        ShareType.DROPBOX -> DropboxShareClient.rename(capturedShare, oldRemotePath, newRemotePath)
+                                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(capturedShare, oldRemotePath, newRemotePath)
+                                        ShareType.WEBDAV -> WebDavShareClient.rename(capturedShare, oldRemotePath, newRemotePath, false)
+                                        ShareType.NFS -> NfsShareClient.rename(capturedShare, oldRemotePath, newRemotePath)
+                                        ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                                    }
+                                    remotePathMap.remove(oldFile.absolutePath)
+                                    remotePathMap[newFile.absolutePath] = newRemotePath
+                                    withContext(Dispatchers.Main) {
+                                        loadDirectory()
+                                    }
+                                } catch (_: Exception) { }
+                            }
+                        }
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    snack.dismiss()
+                    if (localPaths.isNotEmpty()) {
+                        startActivity(android.content.Intent(this@NetworkBrowserActivity, za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java).apply {
+                            putStringArrayListExtra(za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity.EXTRA_FILE_PATHS, localPaths)
+                        })
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    snack.dismiss()
+                    showPremiumSnackbar(getString(R.string.music_tag_save_error, e.message ?: ""))
                 }
             }
         }

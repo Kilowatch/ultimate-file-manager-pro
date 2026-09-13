@@ -251,6 +251,9 @@ GIFクリエーター — 選択した画像からアニメーションGIFファ
         <item>
 写真 EXIF ツール — 写真の EXIF と GPS メタデータを検査し、プライベート ジオタグとデバイス情報をスクラブし、キャプチャ タイムスタンプとカメラ メタデータを使用して写真の名前をバッチ変更します。
 </item>
+        <item>
+音楽タグエディター（モバイル） — 音声メタデータ（タイトル、アーティスト、アルバム、年、ジャンル、歌詞）および埋め込みアルバムアートを音声ファイル内で直接検査、編集、クリーンアップ、一括更新します。
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — Amazonデバイスでの任意のアプリ内チップ�
 </item>
         <item>
 Amazon Appstore SDK — Amazon デバイスでのオプションのアプリ内チップ購入を処理します。 (独自)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1055,6 +1061,9 @@ S3 / S3互換ストレージの認証情報（AWS S3、MinIO、IDrive E2など�
         <item>
 メディアの再生状態
 </item>
+        <item>
+音声メタデータと音楽タグ
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1110,6 +1119,9 @@ Cookie（ufm_lang）により、セッション間およびブラウザ再起動
 </item>
         <item>
 Cookie (ufm_lang) は、セッション中およびブラウザの再起動後も選択した言語を記憶します · Web ブラウザのストレージ
+</item>
+        <item>
+ローカルの音声ファイルに直接書き込まれるタイトル、アーティスト、アルバム、年、ジャンル、歌詞、アルバムアート · ユーザーのデバイスストレージ（音声ファイル内に直接）
 </item>
     </string-array>
 
@@ -1184,6 +1196,9 @@ PINまたは復旧コード
 </item>
         <item>
 アプリのコア機能を提供する
+</item>
+        <item>
+ローカルの音声ファイル内の音声メタデータおよび埋め込みアルバムアートを直接読み書きする
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

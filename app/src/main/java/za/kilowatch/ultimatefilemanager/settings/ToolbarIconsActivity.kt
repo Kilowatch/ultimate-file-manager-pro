@@ -148,6 +148,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
                     ToolbarItem(R.drawable.ic_ringtone, R.string.action_set_ringtone, R.string.toolbar_desc_set_ringtone, ToolbarIconsPreferenceManager.KEY_SET_RINGTONE, "toolbar_set_ringtone", mobileOnly = true),
                     ToolbarItem(R.drawable.ic_notification_sound, R.string.action_set_notification, R.string.toolbar_desc_set_notification, ToolbarIconsPreferenceManager.KEY_SET_NOTIFICATION, "toolbar_set_notification", mobileOnly = true),
                     ToolbarItem(R.drawable.ic_alarm_sound, R.string.action_set_alarm, R.string.toolbar_desc_set_alarm, ToolbarIconsPreferenceManager.KEY_SET_ALARM, "toolbar_set_alarm", mobileOnly = true),
+                    ToolbarItem(R.drawable.ic_music_tag, R.string.action_music_tagger, R.string.toolbar_desc_music_tagger, ToolbarIconsPreferenceManager.KEY_MUSIC_TAGGER, "toolbar_music_tagger", mobileOnly = true),
                     ToolbarItem(R.drawable.ic_duplicate_finder, R.string.action_duplicate_finder, R.string.toolbar_desc_duplicate_finder, ToolbarIconsPreferenceManager.KEY_DUPLICATE_FINDER, "toolbar_duplicate_finder"),
                     ToolbarItem(R.drawable.ic_folder_large_files, R.string.action_large_files_finder, R.string.toolbar_desc_large_files_finder, ToolbarIconsPreferenceManager.KEY_LARGE_FILES_FINDER, "toolbar_large_files_finder"),
                     ToolbarItem(R.drawable.ic_checksum, R.string.action_checksum, R.string.toolbar_desc_checksum, ToolbarIconsPreferenceManager.KEY_CHECKSUM, "toolbar_checksum")
@@ -187,6 +188,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.ACTION_SET_RINGTONE -> QuickActionDef(pm.ACTION_SET_RINGTONE, R.string.action_set_ringtone, R.drawable.ic_ringtone, "toolbar_set_ringtone")
             pm.ACTION_SET_NOTIFICATION -> QuickActionDef(pm.ACTION_SET_NOTIFICATION, R.string.action_set_notification, R.drawable.ic_notification_sound, "toolbar_set_notification")
             pm.ACTION_SET_ALARM -> QuickActionDef(pm.ACTION_SET_ALARM, R.string.action_set_alarm, R.drawable.ic_alarm_sound, "toolbar_set_alarm")
+            pm.ACTION_MUSIC_TAGGER -> QuickActionDef(pm.ACTION_MUSIC_TAGGER, R.string.action_music_tagger, R.drawable.ic_music_tag, "toolbar_music_tagger")
             pm.ACTION_DUPLICATE_FINDER -> QuickActionDef(pm.ACTION_DUPLICATE_FINDER, R.string.action_duplicate_finder, R.drawable.ic_duplicate_finder, "toolbar_duplicate_finder")
             pm.ACTION_LARGE_FILES_FINDER -> QuickActionDef(pm.ACTION_LARGE_FILES_FINDER, R.string.action_large_files_finder, R.drawable.ic_folder_large_files, "toolbar_large_files_finder")
             pm.ACTION_CREATE_NEW -> QuickActionDef(pm.ACTION_CREATE_NEW, R.string.cd_create_new, R.drawable.ic_create_new, "toolbar_create_new")
@@ -227,6 +229,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.KEY_SET_RINGTONE -> pm.ACTION_SET_RINGTONE
             pm.KEY_SET_NOTIFICATION -> pm.ACTION_SET_NOTIFICATION
             pm.KEY_SET_ALARM -> pm.ACTION_SET_ALARM
+            pm.KEY_MUSIC_TAGGER -> pm.ACTION_MUSIC_TAGGER
             pm.KEY_DUPLICATE_FINDER -> pm.ACTION_DUPLICATE_FINDER
             pm.KEY_LARGE_FILES_FINDER -> pm.ACTION_LARGE_FILES_FINDER
             pm.KEY_CHECKSUM -> pm.ACTION_CHECKSUM

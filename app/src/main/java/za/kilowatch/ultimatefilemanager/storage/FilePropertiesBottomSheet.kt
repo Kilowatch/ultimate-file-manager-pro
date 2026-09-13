@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.storage
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.format.Formatter
@@ -100,6 +101,18 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
     private lateinit var btnApkManifest: MaterialButton
     private lateinit var btnApkCertificate: MaterialButton
     private lateinit var btnApkInstallAction: MaterialButton
+
+    // Audio details views (Mobile Only)
+    private lateinit var layoutAudioTagDetails: View
+    private lateinit var btnEditAudioTags: MaterialButton
+    private lateinit var rowAudioTitle: View
+    private lateinit var txtAudioTitle: TextView
+    private lateinit var rowAudioArtist: View
+    private lateinit var txtAudioArtist: TextView
+    private lateinit var rowAudioAlbum: View
+    private lateinit var txtAudioAlbum: TextView
+    private lateinit var rowAudioTechSpecs: View
+    private lateinit var txtAudioTechSpecs: TextView
 
     private var filePaths: ArrayList<String> = arrayListOf()
     private var isDirList: BooleanArray = booleanArrayOf()
@@ -284,6 +297,17 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
         btnApkManifest = view.findViewById(R.id.btnApkManifest)
         btnApkCertificate = view.findViewById(R.id.btnApkCertificate)
         btnApkInstallAction = view.findViewById(R.id.btnApkInstallAction)
+
+        layoutAudioTagDetails = view.findViewById(R.id.layoutAudioTagDetails)
+        btnEditAudioTags = view.findViewById(R.id.btnEditAudioTags)
+        rowAudioTitle = view.findViewById(R.id.rowAudioTitle)
+        txtAudioTitle = view.findViewById(R.id.txtAudioTitle)
+        rowAudioArtist = view.findViewById(R.id.rowAudioArtist)
+        txtAudioArtist = view.findViewById(R.id.txtAudioArtist)
+        rowAudioAlbum = view.findViewById(R.id.rowAudioAlbum)
+        txtAudioAlbum = view.findViewById(R.id.txtAudioAlbum)
+        rowAudioTechSpecs = view.findViewById(R.id.rowAudioTechSpecs)
+        txtAudioTechSpecs = view.findViewById(R.id.txtAudioTechSpecs)
 
         setupWindowsProperties()
     }
@@ -558,9 +582,19 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                 layoutApkDetails.visibility = View.GONE
             }
 
+            // 8. Audio Tags (Single audio file, mobile only)
+            val ext = name.substringAfterLast('.', "").lowercase()
+            val isAudio = !isDirectory && !isNetwork && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
+            if (isMobile && isAudio) {
+                loadAudioTagDetails(path)
+            } else {
+                layoutAudioTagDetails.visibility = View.GONE
+            }
+
         } else {
             // Multiple Items Selected
             layoutApkDetails.visibility = View.GONE
+            layoutAudioTagDetails.visibility = View.GONE
             dividerRoot.visibility = View.GONE
             tableRootProperties.visibility = View.GONE
 
@@ -1196,6 +1230,70 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             } catch (e: Exception) {
                 android.widget.Toast.makeText(requireContext(), "Failed to start install: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun loadAudioTagDetails(path: String) {
+        val ctx = context?.applicationContext ?: return
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val tagData = za.kilowatch.ultimatefilemanager.audio.AudioTagManager.readTags(ctx, path)
+            withContext(Dispatchers.Main) {
+                if (!isAdded || tagData == null) {
+                    layoutAudioTagDetails.visibility = View.GONE
+                    return@withContext
+                }
+                displayAudioTagDetails(path, tagData)
+            }
+        }
+    }
+
+    private fun displayAudioTagDetails(path: String, data: za.kilowatch.ultimatefilemanager.audio.AudioTagData) {
+        layoutAudioTagDetails.visibility = View.VISIBLE
+
+        if (data.title.isNotEmpty()) {
+            rowAudioTitle.visibility = View.VISIBLE
+            txtAudioTitle.text = data.title
+        } else {
+            rowAudioTitle.visibility = View.GONE
+        }
+
+        if (data.artist.isNotEmpty()) {
+            rowAudioArtist.visibility = View.VISIBLE
+            txtAudioArtist.text = data.artist
+        } else {
+            rowAudioArtist.visibility = View.GONE
+        }
+
+        if (data.album.isNotEmpty()) {
+            rowAudioAlbum.visibility = View.VISIBLE
+            txtAudioAlbum.text = data.album
+        } else {
+            rowAudioAlbum.visibility = View.GONE
+        }
+
+        val specs = buildList {
+            if (data.format.isNotEmpty()) add(data.format)
+            if (data.bitrate.isNotEmpty()) add(data.bitrate)
+            if (data.sampleRate.isNotEmpty()) add(data.sampleRate)
+            val dur = data.formattedDuration()
+            if (dur != "--:--") add(dur)
+        }.joinToString(" • ")
+
+        if (specs.isNotEmpty()) {
+            rowAudioTechSpecs.visibility = View.VISIBLE
+            txtAudioTechSpecs.text = specs
+        } else {
+            rowAudioTechSpecs.visibility = View.GONE
+        }
+
+        btnEditAudioTags.setOnClickListener {
+            dismissAllowingStateLoss()
+            startActivity(Intent(requireContext(), za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java).apply {
+                putStringArrayListExtra(
+                    za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity.EXTRA_FILE_PATHS,
+                    arrayListOf(path)
+                )
+            })
         }
     }
 }

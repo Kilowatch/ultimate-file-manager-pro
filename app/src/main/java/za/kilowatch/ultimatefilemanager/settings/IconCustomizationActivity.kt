@@ -592,7 +592,8 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("toolbar_set_notification", getString(R.string.icon_toolbar_set_notification), R.drawable.ic_notification_sound, emptyList()),
             IconItemData("toolbar_set_alarm", getString(R.string.icon_toolbar_set_alarm), R.drawable.ic_alarm_sound, emptyList()),
             IconItemData("toolbar_exif_cleaner", getString(R.string.icon_toolbar_exif_cleaner), R.drawable.ic_exif_cleaner, emptyList()),
-            IconItemData("toolbar_checksum", getString(R.string.icon_toolbar_checksum), R.drawable.ic_checksum, emptyList())
+            IconItemData("toolbar_checksum", getString(R.string.icon_toolbar_checksum), R.drawable.ic_checksum, emptyList()),
+            IconItemData("toolbar_music_tagger", getString(R.string.icon_toolbar_music_tagger), R.drawable.ic_music_tag, emptyList())
         )
     }
 

@@ -412,4 +412,15 @@
 -keepclassmembers class com.topjohnwu.superuser.** { *; }
 -dontwarn com.topjohnwu.superuser.**
 
+# ── jaudiotagger (com.github.AdrienPoupa:jaudiotagger) ─────────────────────
+# Preserve reflection points for audio format tag factories without blanket wildcards
+-dontwarn java.awt.**
+-dontwarn org.jaudiotagger.**
+-keepclassmembers class org.jaudiotagger.tag.** {
+    public <init>(...);
+}
+-keepclassmembers class org.jaudiotagger.audio.** {
+    public <init>(...);
+}
+
 

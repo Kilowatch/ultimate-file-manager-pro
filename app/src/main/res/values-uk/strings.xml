@@ -4229,6 +4229,9 @@ OK
     <string name="toolbar_desc_set_alarm">
 Встановити вибраний аудіофайл як звук будильника
 </string>
+    <string name="toolbar_desc_music_tagger">
+Редагування аудіотегів, текстів пісень та обкладинок альбомів
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Сканувати та виявляти дублікати файлів
 </string>
@@ -12252,6 +12255,152 @@ UFM перестав відповідати під час вашого оста�
     <string name="icon_toolbar_set_alarm">
 Встановити як звук будильника
 </string>
+    <string name="action_music_tagger">
+Редактор музичних тегів
+</string>
+    <string name="icon_toolbar_music_tagger">
+Редактор музичних тегів
+</string>
+    <string name="music_tagger_title">
+Редактор музичних тегів
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+Вибрано треків: %d
+</string>
+    <string name="music_tag_cover_art">
+Обкладинка альбому
+</string>
+    <string name="music_tag_btn_change_art">
+Змінити обкладинку
+</string>
+    <string name="music_tag_btn_remove_art">
+Видалити
+</string>
+    <string name="music_tag_btn_save_art">
+Зберегти обкладинку
+</string>
+    <string name="music_tag_btn_autofill_filename">
+Автозаповнення з назви файлу
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+Перейменувати за тегами
+</string>
+    <string name="music_tag_batch_options_header">
+Пакетні параметри
+</string>
+    <string name="music_tag_auto_number_tracks">
+Автоматично нумерувати треки послідовно (від 1 до N)
+</string>
+    <string name="music_tag_core_tags_header">
+Аудіотеги
+</string>
+    <string name="music_tag_hint_title">
+Назва
+</string>
+    <string name="music_tag_hint_artist">
+Виконавець
+</string>
+    <string name="music_tag_hint_album">
+Альбом
+</string>
+    <string name="music_tag_hint_album_artist">
+Виконавець альбому
+</string>
+    <string name="music_tag_hint_year">
+Рік
+</string>
+    <string name="music_tag_hint_genre">
+Жанр
+</string>
+    <string name="music_tag_hint_track">
+Трек
+</string>
+    <string name="music_tag_hint_total_tracks">
+Усього
+</string>
+    <string name="music_tag_hint_disc">
+Диск
+</string>
+    <string name="music_tag_hint_total_discs">
+Усього
+</string>
+    <string name="music_tag_advanced_header">
+Розширені теги та тексти пісень
+</string>
+    <string name="music_tag_hint_composer">
+Композитор
+</string>
+    <string name="music_tag_hint_comment">
+Коментар
+</string>
+    <string name="music_tag_hint_lyrics">
+Вбудований текст пісні (USLT)
+</string>
+    <string name="music_tag_technical_header">
+Відомості про аудіофайл
+</string>
+    <string name="music_tag_tech_format">
+Формат
+</string>
+    <string name="music_tag_tech_bitrate">
+Бітрейт
+</string>
+    <string name="music_tag_tech_sample_rate">
+Частота дискретизації
+</string>
+    <string name="music_tag_tech_duration">
+Тривалість
+</string>
+    <string name="music_tag_tech_path">
+Шлях до файлу
+</string>
+    <string name="music_tag_btn_save">
+Зберегти теги
+</string>
+    <string name="music_tag_btn_apply_batch">
+Застосувати до треків: %d
+</string>
+    <string name="music_tag_save_success">
+Аудіотеги успішно збережено
+</string>
+    <string name="music_tag_save_error">
+Не вдалося зберегти аудіотеги: %s
+</string>
+    <string name="music_tag_batch_success">
+Оновлено теги для треків: %d
+</string>
+    <string name="music_tag_art_extracted">
+Обкладинку збережено: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+Не вдалося витягти обкладинку альбому
+</string>
+    <string name="music_tag_rename_confirm_title">
+Перейменувати файл за тегами
+</string>
+    <string name="music_tag_rename_confirm_msg">
+Перейменувати файл на:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+Теги автоматично заповнено з назви файлу
+</string>
+    <string name="music_tag_autofill_no_match">
+Не вдалося визначити виконавця чи назву з імені файлу
+</string>
+    <string name="properties_section_audio_tags">
+Аудіотеги
+</string>
+    <string name="properties_btn_edit_audio_tags">
+Редагувати аудіотеги
+</string>
+    <string name="music_tag_specs">
+Технічні характеристики
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Торкніться значка, щоб редагувати
@@ -14468,6 +14617,21 @@ SHA-256
 </string>
     <string name="icon_tile_recent_files">
 Плитка нещодавніх файлів
+</string>
+    <string name="recent_refreshing_status">
+Сканування %1$d з %2$d папок: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+Перевірка останніх файлів…
+</string>
+    <string name="recent_refreshing_eta">
+Залишилося ~%1$d с
+</string>
+    <string name="recent_refreshing_eta_finishing">
+Майже готово…
+</string>
+    <string name="recent_refresh_complete">
+Список останніх файлів оновлено
 </string>
 </resources>
 

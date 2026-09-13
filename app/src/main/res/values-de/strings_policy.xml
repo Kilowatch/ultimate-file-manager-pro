@@ -251,6 +251,9 @@ Foto-EXIF-Tools — Untersuchen Sie EXIF- und GPS-Metadaten von Fotos, entfernen
         <item>
 Foto-EXIF-Tools – Überprüfen Sie Foto-EXIF- und GPS-Metadaten, bereinigen Sie private Geotags und Geräteinformationen und benennen Sie Fotos mithilfe von Aufnahmezeitstempeln und Kamerametadaten stapelweise um.
 </item>
+        <item>
+Musik-Tag-Editor (Mobil) — Überprüfen, Bearbeiten, Bereinigen und stapelweises Aktualisieren von Audio-Metadaten (Titel, Interpret, Album, Jahr, Genre, Songtexte) und eingebetteten Albumcovern direkt in Audiodateien.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — verarbeitet optionale In-App-Trinkgeld-Käufe auf Amazon
 </item>
         <item>
 Amazon Appstore SDK – verarbeitet optionale In-App-Trinkgeldkäufe auf Amazon-Geräten. (Eigentümer)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ Wiedergabestatus
         <item>
 Medienwiedergabestatus
 </item>
+        <item>
+Audio-Metadaten &amp; Musik-Tags
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ Ein Cookie (ufm_lang) merkt sich Ihre Sprachauswahl während der Sitzung und üb
 </item>
         <item>
 Ein Cookie (ufm_lang) merkt sich Ihre Sprachauswahl während der gesamten Sitzung und bei jedem Browser-Neustart. · Speicherung im Webbrowser
+</item>
+        <item>
+Titel, Interpret, Album, Jahr, Genre, Songtexte und Albumcover, die direkt in lokale Audiodateien geschrieben werden · Gerätespeicher des Benutzers (direkt in Audiodateien)
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ Bereitstellung der Kernfunktionen der App
 </item>
         <item>
 Bereitstellung zentraler App-Funktionen
+</item>
+        <item>
+Audio-Metadaten und eingebettete Albumcover direkt in lokalen Audiodateien lesen und schreiben
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

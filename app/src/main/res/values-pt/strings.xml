@@ -4229,6 +4229,9 @@ Definir o áudio selecionado como som de notificação
     <string name="toolbar_desc_set_alarm">
 Definir o áudio selecionado como som de alarme
 </string>
+    <string name="toolbar_desc_music_tagger">
+Editar tags de áudio, letras e capa do álbum
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Escanear e detectar arquivos duplicados
 </string>
@@ -12252,6 +12255,152 @@ Definir como som de notificação
     <string name="icon_toolbar_set_alarm">
 Definir como som de alarme
 </string>
+    <string name="action_music_tagger">
+Editor de Tags de Música
+</string>
+    <string name="icon_toolbar_music_tagger">
+Editor de Tags de Música
+</string>
+    <string name="music_tagger_title">
+Editor de Tags de Música
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d Faixas Selecionadas
+</string>
+    <string name="music_tag_cover_art">
+Capa do Álbum
+</string>
+    <string name="music_tag_btn_change_art">
+Alterar Capa
+</string>
+    <string name="music_tag_btn_remove_art">
+Remover
+</string>
+    <string name="music_tag_btn_save_art">
+Salvar Capa
+</string>
+    <string name="music_tag_btn_autofill_filename">
+Preencher automaticamente com base no nome do arquivo
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+Renomear com base nas tags
+</string>
+    <string name="music_tag_batch_options_header">
+Opções em Lote
+</string>
+    <string name="music_tag_auto_number_tracks">
+Numerar faixas automaticamente em sequência (1 a N)
+</string>
+    <string name="music_tag_core_tags_header">
+Tags de Áudio
+</string>
+    <string name="music_tag_hint_title">
+Título
+</string>
+    <string name="music_tag_hint_artist">
+Artista
+</string>
+    <string name="music_tag_hint_album">
+Álbum
+</string>
+    <string name="music_tag_hint_album_artist">
+Artista do Álbum
+</string>
+    <string name="music_tag_hint_year">
+Ano
+</string>
+    <string name="music_tag_hint_genre">
+Gênero
+</string>
+    <string name="music_tag_hint_track">
+Faixa
+</string>
+    <string name="music_tag_hint_total_tracks">
+Total
+</string>
+    <string name="music_tag_hint_disc">
+Disco
+</string>
+    <string name="music_tag_hint_total_discs">
+Total
+</string>
+    <string name="music_tag_advanced_header">
+Tags Avançadas e Letras
+</string>
+    <string name="music_tag_hint_composer">
+Compositor
+</string>
+    <string name="music_tag_hint_comment">
+Comentário
+</string>
+    <string name="music_tag_hint_lyrics">
+Letras Incorporadas (USLT)
+</string>
+    <string name="music_tag_technical_header">
+Detalhes do Arquivo de Áudio
+</string>
+    <string name="music_tag_tech_format">
+Formato
+</string>
+    <string name="music_tag_tech_bitrate">
+Taxa de bits
+</string>
+    <string name="music_tag_tech_sample_rate">
+Taxa de Amostragem
+</string>
+    <string name="music_tag_tech_duration">
+Duração
+</string>
+    <string name="music_tag_tech_path">
+Caminho do Arquivo
+</string>
+    <string name="music_tag_btn_save">
+Salvar Tags
+</string>
+    <string name="music_tag_btn_apply_batch">
+Aplicar a %d Faixas
+</string>
+    <string name="music_tag_save_success">
+Tags de áudio salvas com sucesso
+</string>
+    <string name="music_tag_save_error">
+Falha ao salvar tags de áudio: %s
+</string>
+    <string name="music_tag_batch_success">
+Tags atualizadas para %d faixas
+</string>
+    <string name="music_tag_art_extracted">
+Capa do álbum salva: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+Falha ao extrair a capa do álbum
+</string>
+    <string name="music_tag_rename_confirm_title">
+Renomear Arquivo com base nas Tags
+</string>
+    <string name="music_tag_rename_confirm_msg">
+Renomear arquivo para:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+Tags preenchidas automaticamente pelo nome do arquivo
+</string>
+    <string name="music_tag_autofill_no_match">
+Não foi possível detectar o artista ou título pelo nome do arquivo
+</string>
+    <string name="properties_section_audio_tags">
+Tags de Áudio
+</string>
+    <string name="properties_btn_edit_audio_tags">
+Editar Tags de Áudio
+</string>
+    <string name="music_tag_specs">
+Especificações Técnicas
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Toque no ícone para editar
@@ -14468,6 +14617,21 @@ Abrir local do arquivo
 </string>
     <string name="icon_tile_recent_files">
 Bloco de arquivos recentes
+</string>
+    <string name="recent_refreshing_status">
+Verificando %1$d de %2$d pastas: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+Verificando arquivos recentes…
+</string>
+    <string name="recent_refreshing_eta">
+~%1$ds restantes
+</string>
+    <string name="recent_refreshing_eta_finishing">
+Quase pronto…
+</string>
+    <string name="recent_refresh_complete">
+Arquivos recentes atualizados
 </string>
 </resources>
 

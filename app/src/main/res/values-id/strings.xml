@@ -4229,6 +4229,9 @@ Setel audio yang dipilih sebagai suara notifikasi
     <string name="toolbar_desc_set_alarm">
 Setel audio yang dipilih sebagai suara alarm
 </string>
+    <string name="toolbar_desc_music_tagger">
+Edit tag audio, lirik, dan sampul album
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Pindai dan deteksi file duplikat
 </string>
@@ -12252,6 +12255,152 @@ Setel sebagai Suara Notifikasi
     <string name="icon_toolbar_set_alarm">
 Setel sebagai Suara Alarm
 </string>
+    <string name="action_music_tagger">
+Editor Tag Musik
+</string>
+    <string name="icon_toolbar_music_tagger">
+Editor Tag Musik
+</string>
+    <string name="music_tagger_title">
+Editor Tag Musik
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d Trek Dipilih
+</string>
+    <string name="music_tag_cover_art">
+Sampul Album
+</string>
+    <string name="music_tag_btn_change_art">
+Ubah Sampul
+</string>
+    <string name="music_tag_btn_remove_art">
+Hapus
+</string>
+    <string name="music_tag_btn_save_art">
+Simpan Sampul
+</string>
+    <string name="music_tag_btn_autofill_filename">
+Isi Otomatis dari Nama File
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+Ganti Nama dari Tag
+</string>
+    <string name="music_tag_batch_options_header">
+Opsi Batch
+</string>
+    <string name="music_tag_auto_number_tracks">
+Beri nomor trek secara berurutan (1 hingga N)
+</string>
+    <string name="music_tag_core_tags_header">
+Tag Audio
+</string>
+    <string name="music_tag_hint_title">
+Judul
+</string>
+    <string name="music_tag_hint_artist">
+Artis
+</string>
+    <string name="music_tag_hint_album">
+Album
+</string>
+    <string name="music_tag_hint_album_artist">
+Artis Album
+</string>
+    <string name="music_tag_hint_year">
+Tahun
+</string>
+    <string name="music_tag_hint_genre">
+Genre
+</string>
+    <string name="music_tag_hint_track">
+Trek
+</string>
+    <string name="music_tag_hint_total_tracks">
+Total
+</string>
+    <string name="music_tag_hint_disc">
+Disk
+</string>
+    <string name="music_tag_hint_total_discs">
+Total
+</string>
+    <string name="music_tag_advanced_header">
+Tag Lanjutan &amp; Lirik
+</string>
+    <string name="music_tag_hint_composer">
+Komposer
+</string>
+    <string name="music_tag_hint_comment">
+Komentar
+</string>
+    <string name="music_tag_hint_lyrics">
+Lirik Tertanam (USLT)
+</string>
+    <string name="music_tag_technical_header">
+Detail File Audio
+</string>
+    <string name="music_tag_tech_format">
+Format
+</string>
+    <string name="music_tag_tech_bitrate">
+Bitrate
+</string>
+    <string name="music_tag_tech_sample_rate">
+Sample Rate
+</string>
+    <string name="music_tag_tech_duration">
+Durasi
+</string>
+    <string name="music_tag_tech_path">
+Jalur File
+</string>
+    <string name="music_tag_btn_save">
+Simpan Tag
+</string>
+    <string name="music_tag_btn_apply_batch">
+Terapkan ke %d Trek
+</string>
+    <string name="music_tag_save_success">
+Tag audio berhasil disimpan
+</string>
+    <string name="music_tag_save_error">
+Gagal menyimpan tag audio: %s
+</string>
+    <string name="music_tag_batch_success">
+Tag diperbarui untuk %d trek
+</string>
+    <string name="music_tag_art_extracted">
+Sampul album disimpan: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+Gagal mengekstrak sampul album
+</string>
+    <string name="music_tag_rename_confirm_title">
+Ganti Nama File dari Tag
+</string>
+    <string name="music_tag_rename_confirm_msg">
+Ganti nama file menjadi:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+Tag diisi otomatis dari nama file
+</string>
+    <string name="music_tag_autofill_no_match">
+Tidak dapat mendeteksi artis atau judul dari nama file
+</string>
+    <string name="properties_section_audio_tags">
+Tag Audio
+</string>
+    <string name="properties_btn_edit_audio_tags">
+Edit Tag Audio
+</string>
+    <string name="music_tag_specs">
+Spesifikasi Teknis
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Ketuk ikon untuk mengedit
@@ -14468,6 +14617,21 @@ Buka Lokasi File
 </string>
     <string name="icon_tile_recent_files">
 Tile File Terbaru
+</string>
+    <string name="recent_refreshing_status">
+Memindai %1$d dari %2$d folder: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+Memeriksa file terbaru…
+</string>
+    <string name="recent_refreshing_eta">
+~%1$ds lagi
+</string>
+    <string name="recent_refreshing_eta_finishing">
+Hampir selesai…
+</string>
+    <string name="recent_refresh_complete">
+File terbaru sudah mutakhir
 </string>
 </resources>
 

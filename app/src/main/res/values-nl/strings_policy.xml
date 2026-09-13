@@ -251,6 +251,9 @@ Foto-EXIF-tools — inspecteer EXIF- en GPS-metagegevens van foto\'s, wis privé
         <item>
 Foto-EXIF-tools — inspecteer EXIF- en GPS-metagegevens van foto\'s, wis privé-geotags en apparaatinformatie en hernoem foto\'s in batch met behulp van vastgelegde tijdstempels en camera-metagegevens.
 </item>
+        <item>
+Muziektag-editor (Mobiel) — audiodatagegevens (titel, artiest, album, jaar, genre, songteksten) en ingesloten albumhoezen rechtstreeks in audiobestanden inspecteren, bewerken, opschonen en batchgewijs bijwerken.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK - verwerkt optionele in-app-tipaankopen op Amazon-apparaten.
 </item>
         <item>
 Amazon Appstore SDK - verwerkt optionele in-app-tipaankopen op Amazon-apparaten. (eigendom)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ Media-afspeelstatus
         <item>
 Media-afspeelstatus
 </item>
+        <item>
+Audiometagegevens &amp; muziektags
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ Een cookie (ufm_lang) onthoudt uw taalkeuze tijdens de sessie en bij het opnieuw
 </item>
         <item>
 Een cookie (ufm_lang) onthoudt uw taalkeuze tijdens de sessie en bij het opnieuw opstarten van de browser. · Opslag van de webbrowser
+</item>
+        <item>
+Titel, artiest, album, jaar, genre, songteksten en albumhoezen die rechtstreeks naar lokale audiobestanden worden geschreven · Apparaatopslag van gebruiker (rechtstreeks in audiobestanden)
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ Bied kernapp-functionaliteit aan
 </item>
         <item>
 Bied kernapp-functionaliteit aan
+</item>
+        <item>
+Audiometagegevens en ingesloten albumhoezen rechtstreeks in lokale audiobestanden lezen en schrijven
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

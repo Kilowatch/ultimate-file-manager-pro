@@ -4229,6 +4229,9 @@ Establecer el audio seleccionado como sonido de notificación
     <string name="toolbar_desc_set_alarm">
 Establecer el audio seleccionado como sonido de alarma
 </string>
+    <string name="toolbar_desc_music_tagger">
+Editar etiquetas de audio, letras y carátula del álbum
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Escanear y detectar archivos duplicados
 </string>
@@ -12264,6 +12267,152 @@ Establecer como sonido de notificación
     <string name="icon_toolbar_set_alarm">
 Establecer como sonido de alarma
 </string>
+    <string name="action_music_tagger">
+Editor de etiquetas de música
+</string>
+    <string name="icon_toolbar_music_tagger">
+Editor de etiquetas de música
+</string>
+    <string name="music_tagger_title">
+Editor de etiquetas de música
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d pistas seleccionadas
+</string>
+    <string name="music_tag_cover_art">
+Carátula del álbum
+</string>
+    <string name="music_tag_btn_change_art">
+Cambiar carátula
+</string>
+    <string name="music_tag_btn_remove_art">
+Eliminar
+</string>
+    <string name="music_tag_btn_save_art">
+Guardar carátula
+</string>
+    <string name="music_tag_btn_autofill_filename">
+Rellenar automáticamente desde el nombre del archivo
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+Renombrar desde etiquetas
+</string>
+    <string name="music_tag_batch_options_header">
+Opciones por lotes
+</string>
+    <string name="music_tag_auto_number_tracks">
+Numerar pistas automáticamente de forma secuencial (1 a N)
+</string>
+    <string name="music_tag_core_tags_header">
+Etiquetas de audio
+</string>
+    <string name="music_tag_hint_title">
+Título
+</string>
+    <string name="music_tag_hint_artist">
+Artista
+</string>
+    <string name="music_tag_hint_album">
+Álbum
+</string>
+    <string name="music_tag_hint_album_artist">
+Artista del álbum
+</string>
+    <string name="music_tag_hint_year">
+Año
+</string>
+    <string name="music_tag_hint_genre">
+Género
+</string>
+    <string name="music_tag_hint_track">
+Pista
+</string>
+    <string name="music_tag_hint_total_tracks">
+Total
+</string>
+    <string name="music_tag_hint_disc">
+Disco
+</string>
+    <string name="music_tag_hint_total_discs">
+Total
+</string>
+    <string name="music_tag_advanced_header">
+Etiquetas avanzadas y letras
+</string>
+    <string name="music_tag_hint_composer">
+Compositor
+</string>
+    <string name="music_tag_hint_comment">
+Comentario
+</string>
+    <string name="music_tag_hint_lyrics">
+Letras incrustadas (USLT)
+</string>
+    <string name="music_tag_technical_header">
+Detalles del archivo de audio
+</string>
+    <string name="music_tag_tech_format">
+Formato
+</string>
+    <string name="music_tag_tech_bitrate">
+Tasa de bits
+</string>
+    <string name="music_tag_tech_sample_rate">
+Frecuencia de muestreo
+</string>
+    <string name="music_tag_tech_duration">
+Duración
+</string>
+    <string name="music_tag_tech_path">
+Ruta del archivo
+</string>
+    <string name="music_tag_btn_save">
+Guardar etiquetas
+</string>
+    <string name="music_tag_btn_apply_batch">
+Aplicar a %d pistas
+</string>
+    <string name="music_tag_save_success">
+Etiquetas de audio guardadas correctamente
+</string>
+    <string name="music_tag_save_error">
+Error al guardar las etiquetas de audio: %s
+</string>
+    <string name="music_tag_batch_success">
+Etiquetas actualizadas para %d pistas
+</string>
+    <string name="music_tag_art_extracted">
+Carátula del álbum guardada: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+Error al extraer la carátula del álbum
+</string>
+    <string name="music_tag_rename_confirm_title">
+Renombrar archivo desde etiquetas
+</string>
+    <string name="music_tag_rename_confirm_msg">
+Renombrar archivo a:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+Etiquetas rellenadas automáticamente desde el nombre del archivo
+</string>
+    <string name="music_tag_autofill_no_match">
+No se pudo detectar el artista o el título desde el nombre del archivo
+</string>
+    <string name="properties_section_audio_tags">
+Etiquetas de audio
+</string>
+    <string name="properties_btn_edit_audio_tags">
+Editar etiquetas de audio
+</string>
+    <string name="music_tag_specs">
+Especificaciones técnicas
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Toca el icono para editar
@@ -14480,6 +14629,21 @@ Abrir ubicación del archivo
 </string>
     <string name="icon_tile_recent_files">
 Tarjeta de archivos recientes
+</string>
+    <string name="recent_refreshing_status">
+Escaneando %1$d de %2$d carpetas: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+Comprobando archivos recientes…
+</string>
+    <string name="recent_refreshing_eta">
+~%1$ds restantes
+</string>
+    <string name="recent_refreshing_eta_finishing">
+Casi terminado…
+</string>
+    <string name="recent_refresh_complete">
+Archivos recientes actualizados
 </string>
 </resources>
 

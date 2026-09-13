@@ -37,6 +37,7 @@ object ToolbarIconsPreferenceManager {
     const val KEY_SET_RINGTONE = "pref_icon_set_ringtone"
     const val KEY_SET_NOTIFICATION = "pref_icon_set_notification"
     const val KEY_SET_ALARM = "pref_icon_set_alarm"
+    const val KEY_MUSIC_TAGGER = "pref_icon_music_tagger"
 
     const val KEY_QUICK_BAR_ENABLED = "pref_quick_bar_enabled"
     const val KEY_QUICK_BAR_ITEMS = "pref_quick_bar_items"
@@ -63,6 +64,7 @@ object ToolbarIconsPreferenceManager {
     const val ACTION_SET_RINGTONE = "set_ringtone"
     const val ACTION_SET_NOTIFICATION = "set_notification"
     const val ACTION_SET_ALARM = "set_alarm"
+    const val ACTION_MUSIC_TAGGER = "music_tagger"
     const val ACTION_DUPLICATE_FINDER = "duplicate_finder"
     const val ACTION_LARGE_FILES_FINDER = "large_files_finder"
     const val ACTION_CREATE_NEW = "create_new"

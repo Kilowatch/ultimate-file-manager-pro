@@ -251,6 +251,9 @@ Fotoğraf EXIF Araçları — fotoğraf EXIF ve GPS meta verilerini inceleyin, �
         <item>
 Fotoğraf EXIF ​​Araçları — fotoğraf EXIF ​​ve GPS meta verilerini inceleyin, özel coğrafi etiketleri ve cihaz bilgilerini temizleyin ve yakalama zaman damgalarını ve kamera meta verilerini kullanarak fotoğrafları toplu olarak yeniden adlandırın.
 </item>
+        <item>
+Müzik Etiketi Düzenleyici (Mobil) — ses dosyalarının doğrudan içindeki ses meta verilerini (başlık, sanatçı, albüm, yıl, tür, şarkı sözleri) ve gömülü albüm resmini inceleyin, düzenleyin, temizleyin ve toplu olarak güncelleyin.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahş
 </item>
         <item>
 Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi ipucu satın alımlarını işler. (Tescilli)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ Medya Oynatma Durumu
         <item>
 Medya Oynatma Durumu
 </item>
+        <item>
+Ses Meta Verileri ve Müzik Etiketleri
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ Bir çerez (ufm_lang), oturum boyunca ve tarayıcı yeniden başlatmalarında di
 </item>
         <item>
 Bir çerez (ufm_lang), oturum boyunca ve tarayıcı yeniden başlatıldığında dil seçiminizi hatırlar · Web tarayıcısı depolama alanı
+</item>
+        <item>
+Doğrudan yerel ses dosyalarına yazılan başlık, sanatçı, albüm, yıl, tür, şarkı sözleri ve albüm resmi · Kullanıcı cihazı depolama alanı (doğrudan ses dosyalarının içinde)
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ Temel uygulama işlevselliği sağla
 </item>
         <item>
 Temel uygulama işlevselliğini sağlayın
+</item>
+        <item>
+Ses meta verilerini ve gömülü albüm resmini doğrudan yerel ses dosyalarının içinde okuma ve yazma
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

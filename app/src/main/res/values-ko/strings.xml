@@ -4229,6 +4229,9 @@ ZIP 또는 7Z 아카이브 만들기
     <string name="toolbar_desc_set_alarm">
 선택한 오디오를 알람음으로 설정
 </string>
+    <string name="toolbar_desc_music_tagger">
+오디오 태그, 가사, 앨범 아트 편집
+</string>
     <string name="toolbar_desc_duplicate_finder">
 중복 파일 검사 및 감지
 </string>
@@ -12252,6 +12255,152 @@ UFM이 마지막 사용 중 응답하지 않았습니다. 문제 해결을 위�
     <string name="icon_toolbar_set_alarm">
 알람음으로 설정
 </string>
+    <string name="action_music_tagger">
+음악 태그 편집기
+</string>
+    <string name="icon_toolbar_music_tagger">
+음악 태그 편집기
+</string>
+    <string name="music_tagger_title">
+음악 태그 편집기
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d개 트랙 선택됨
+</string>
+    <string name="music_tag_cover_art">
+앨범 커버 아트
+</string>
+    <string name="music_tag_btn_change_art">
+아트 변경
+</string>
+    <string name="music_tag_btn_remove_art">
+제거
+</string>
+    <string name="music_tag_btn_save_art">
+아트 저장
+</string>
+    <string name="music_tag_btn_autofill_filename">
+파일 이름에서 자동 채우기
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+태그에서 이름 바꾸기
+</string>
+    <string name="music_tag_batch_options_header">
+일괄 옵션
+</string>
+    <string name="music_tag_auto_number_tracks">
+트랙에 순차적으로 자동 번호 매기기 (1부터 N까지)
+</string>
+    <string name="music_tag_core_tags_header">
+오디오 태그
+</string>
+    <string name="music_tag_hint_title">
+제목
+</string>
+    <string name="music_tag_hint_artist">
+아티스트
+</string>
+    <string name="music_tag_hint_album">
+앨범
+</string>
+    <string name="music_tag_hint_album_artist">
+앨범 아티스트
+</string>
+    <string name="music_tag_hint_year">
+연도
+</string>
+    <string name="music_tag_hint_genre">
+장르
+</string>
+    <string name="music_tag_hint_track">
+트랙
+</string>
+    <string name="music_tag_hint_total_tracks">
+총
+</string>
+    <string name="music_tag_hint_disc">
+디스크
+</string>
+    <string name="music_tag_hint_total_discs">
+총
+</string>
+    <string name="music_tag_advanced_header">
+고급 태그 및 가사
+</string>
+    <string name="music_tag_hint_composer">
+작곡가
+</string>
+    <string name="music_tag_hint_comment">
+코멘트
+</string>
+    <string name="music_tag_hint_lyrics">
+내장 가사 (USLT)
+</string>
+    <string name="music_tag_technical_header">
+오디오 파일 세부 정보
+</string>
+    <string name="music_tag_tech_format">
+형식
+</string>
+    <string name="music_tag_tech_bitrate">
+비트레이트
+</string>
+    <string name="music_tag_tech_sample_rate">
+샘플 레이트
+</string>
+    <string name="music_tag_tech_duration">
+재생 시간
+</string>
+    <string name="music_tag_tech_path">
+파일 경로
+</string>
+    <string name="music_tag_btn_save">
+태그 저장
+</string>
+    <string name="music_tag_btn_apply_batch">
+%d개 트랙에 적용
+</string>
+    <string name="music_tag_save_success">
+오디오 태그가 성공적으로 저장되었습니다
+</string>
+    <string name="music_tag_save_error">
+오디오 태그 저장 실패: %s
+</string>
+    <string name="music_tag_batch_success">
+%d개 트랙의 태그를 업데이트했습니다
+</string>
+    <string name="music_tag_art_extracted">
+앨범 아트 저장됨: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+앨범 아트 추출 실패
+</string>
+    <string name="music_tag_rename_confirm_title">
+태그에서 파일 이름 바꾸기
+</string>
+    <string name="music_tag_rename_confirm_msg">
+파일 이름을 다음으로 바꾸기:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+파일 이름에서 태그 자동 채움
+</string>
+    <string name="music_tag_autofill_no_match">
+파일 이름에서 아티스트 또는 제목을 감지할 수 없습니다
+</string>
+    <string name="properties_section_audio_tags">
+오디오 태그
+</string>
+    <string name="properties_btn_edit_audio_tags">
+오디오 태그 편집
+</string>
+    <string name="music_tag_specs">
+기술 사양
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 아이콘을 탭하여 편집
@@ -14468,6 +14617,21 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
 </string>
     <string name="icon_tile_recent_files">
 최근 파일 타일
+</string>
+    <string name="recent_refreshing_status">
+%2$d개 폴더 중 %1$d 스캔 중: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+최근 파일 확인 중…
+</string>
+    <string name="recent_refreshing_eta">
+약 %1$d초 남음
+</string>
+    <string name="recent_refreshing_eta_finishing">
+거의 완료…
+</string>
+    <string name="recent_refresh_complete">
+최근 파일 최신 상태
 </string>
 </resources>
 

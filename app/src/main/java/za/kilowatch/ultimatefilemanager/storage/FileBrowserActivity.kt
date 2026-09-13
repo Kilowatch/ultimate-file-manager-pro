@@ -2890,6 +2890,21 @@ class FileBrowserActivity : AppCompatActivity() {
                 }
             }
 
+            // Music Tagger (All selected items are audio files, mobile only)
+            val allAudio = selected.isNotEmpty() && selected.all {
+                it.isFile && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.extension)
+            }
+            if (allAudio && !DeviceUtils.isTvDevice(this) && pm.isIconEnabled(this, pm.KEY_MUSIC_TAGGER)) {
+                list.add(FileToolsBottomSheet.ActionItem("music_tagger", getString(R.string.action_music_tagger), R.drawable.ic_music_tag, "toolbar_music_tagger") {
+                    startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java).apply {
+                        putStringArrayListExtra(
+                            za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity.EXTRA_FILE_PATHS,
+                            ArrayList(selected.map { it.absolutePath })
+                        )
+                    })
+                })
+            }
+
             // 8. Copy Encrypted
             if (pm.isIconEnabled(this, pm.KEY_COPY_ENCRYPT)) {
                 list.add(FileToolsBottomSheet.ActionItem("copy_encrypt", getString(R.string.action_copy_encrypt), R.drawable.ic_copy, "toolbar_copy_encrypt") {
@@ -3532,6 +3547,18 @@ class FileBrowserActivity : AppCompatActivity() {
                         .show(supportFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
                 }
             }
+            pm.ACTION_MUSIC_TAGGER -> {
+                val audioFiles = selected.filter { it.isFile && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.extension) }
+                if (audioFiles.isNotEmpty()) {
+                    fileAdapter.exitSelectionMode()
+                    startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java).apply {
+                        putStringArrayListExtra(
+                            za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity.EXTRA_FILE_PATHS,
+                            ArrayList(audioFiles.map { it.absolutePath })
+                        )
+                    })
+                }
+            }
             pm.ACTION_MORE -> {
                 fabTools?.performClick()
             }
@@ -3578,8 +3605,9 @@ class FileBrowserActivity : AppCompatActivity() {
                         allImagesSelected = imgFiles.isNotEmpty() && imgFiles.all {
                             it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                         },
-                        allAudioSelected = imgFiles.isNotEmpty() && imgFiles.size == 1 &&
-                            za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(imgFiles.first().extension)
+                        allAudioSelected = imgFiles.isNotEmpty() && imgFiles.all {
+                            it.isFile && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.extension)
+                        }
                     )
                     floatingQuickBar?.bindSelection(state)
                     floatingQuickBar?.showAnimated { updateFabPositions() }

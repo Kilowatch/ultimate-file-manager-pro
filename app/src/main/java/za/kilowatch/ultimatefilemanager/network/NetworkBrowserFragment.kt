@@ -588,6 +588,18 @@ class NetworkBrowserFragment : Fragment() {
                     })
                 }
             }
+            // Music Tagger (All selected items are audio files, mobile only)
+            val allNetworkAudio = selected.isNotEmpty() && selected.all {
+                !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.name.substringAfterLast('.'))
+            }
+            if (allNetworkAudio && !DeviceUtils.isTvDevice(requireContext()) && pm.isIconEnabled(context, pm.KEY_MUSIC_TAGGER)) {
+                list.add(FileToolsBottomSheet.ActionItem("music_tagger", getString(R.string.action_music_tagger), R.drawable.ic_music_tag, "toolbar_music_tagger") {
+                    val netAudio = selected.filter {
+                        !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.name.substringAfterLast('.'))
+                    }
+                    (activity as? NetworkBrowserActivity)?.downloadNetworkAudioAndLaunchTagger(netAudio)
+                })
+            }
 
             // System Sound (Single network audio file, mobile only)
             val isSingleNetworkAudio = count == 1 && !selected.first().isDirectory &&
@@ -1371,6 +1383,15 @@ class NetworkBrowserFragment : Fragment() {
                         .show(parentFragmentManager, za.kilowatch.ultimatefilemanager.checksum.ChecksumDialogFragment.TAG)
                 }
             }
+            pm.ACTION_MUSIC_TAGGER -> {
+                val audioFiles = selected.filter {
+                    !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.name.substringAfterLast('.'))
+                }
+                if (audioFiles.isNotEmpty()) {
+                    fileAdapter.exitSelectionMode()
+                    (activity as? NetworkBrowserActivity)?.downloadNetworkAudioAndLaunchTagger(audioFiles)
+                }
+            }
             pm.ACTION_MORE -> {
                 fabTools?.performClick()
             }
@@ -1405,9 +1426,16 @@ class NetworkBrowserFragment : Fragment() {
                 }
 
                 if (isQuickBarOn && showActions) {
+                    val netFiles = fileAdapter.getSelectedFiles()
                     val state = za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar.SelectionState(
                         selectedCount = count,
-                        isAllSelected = isAll
+                        isAllSelected = isAll,
+                        allImagesSelected = netFiles.isNotEmpty() && netFiles.all {
+                            !it.isDirectory && it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                        },
+                        allAudioSelected = netFiles.isNotEmpty() && netFiles.all {
+                            !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.name.substringAfterLast('.'))
+                        }
                     )
                     floatingQuickBar?.bindSelection(state)
                     floatingQuickBar?.showAnimated { updateFabPositions() }

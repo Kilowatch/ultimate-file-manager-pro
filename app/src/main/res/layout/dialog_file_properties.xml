@@ -377,6 +377,142 @@
                 android:layout_marginBottom="16dp" />
         </LinearLayout>
 
+        <!-- Audio Metadata & Tags Section (Mobile Only) -->
+        <LinearLayout
+            android:id="@+id/layoutAudioTagDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/properties_section_audio_tags"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEditAudioTags"
+                    style="@style/Widget.Material3Expressive.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:minHeight="0dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="0dp"
+                    android:text="@string/properties_btn_edit_audio_tags"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    app:cornerRadius="18dp"
+                    app:icon="@drawable/ic_music_tag"
+                    app:iconSize="16dp"
+                    app:iconPadding="6dp"
+                    app:iconGravity="textStart" />
+            </LinearLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1">
+
+                <TableRow
+                    android:id="@+id/rowAudioTitle"
+                    android:layout_marginBottom="6dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/music_tag_hint_title"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="13sp"
+                        android:paddingEnd="16dp" />
+                    <TextView
+                        android:id="@+id/txtAudioTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:text="Song Title" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/rowAudioArtist"
+                    android:layout_marginBottom="6dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/music_tag_hint_artist"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="13sp"
+                        android:paddingEnd="16dp" />
+                    <TextView
+                        android:id="@+id/txtAudioArtist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="13sp"
+                        tools:text="Artist Name" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/rowAudioAlbum"
+                    android:layout_marginBottom="6dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/music_tag_hint_album"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="13sp"
+                        android:paddingEnd="16dp" />
+                    <TextView
+                        android:id="@+id/txtAudioAlbum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="13sp"
+                        tools:text="Album Name" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/rowAudioTechSpecs"
+                    android:layout_marginBottom="6dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/music_tag_specs"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="13sp"
+                        android:paddingEnd="16dp" />
+                    <TextView
+                        android:id="@+id/txtAudioTechSpecs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="12sp"
+                        android:fontFamily="monospace"
+                        tools:text="FLAC • 320 kbps • 44.1 kHz" />
+                </TableRow>
+            </TableLayout>
+
+            <!-- Divider after Audio Details -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/dividerHorizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
+
         <!-- General Info Section (Grid/Table style rows) -->
         <TableLayout
             android:layout_width="match_parent"

@@ -251,6 +251,9 @@ Herramientas EXIF de fotos: inspecciona los metadatos EXIF y GPS de las fotos, e
         <item>
 Herramientas Photo EXIF: inspeccione los metadatos EXIF ​​y GPS de las fotografías, elimine etiquetas geográficas privadas e información del dispositivo y cambie el nombre de las fotografías por lotes utilizando marcas de tiempo de captura y metadatos de la cámara.
 </item>
+        <item>
+Editor de etiquetas de música (móvil): inspeccione, edite, limpie y actualice por lotes los metadatos de audio (título, artista, álbum, año, género, letras) y la portada del álbum directamente en los archivos de audio.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK: procesa las compras opcionales de propinas dentro de la apl
 </item>
         <item>
 SDK de Amazon Appstore: procesa compras opcionales de propinas dentro de la aplicación en dispositivos Amazon. (Propiedad)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ Estado de reproducción multimedia
         <item>
 Estado de reproducción multimedia
 </item>
+        <item>
+Metadatos de audio y etiquetas de música
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ Una cookie (ufm_lang) recuerda tu elección de idioma durante la sesión y entre
 </item>
         <item>
 Una cookie (ufm_lang) recuerda su elección de idioma durante la sesión y cuando se reinicia el navegador · Almacenamiento del navegador web
+</item>
+        <item>
+Título, artista, álbum, año, género, letras y portada del álbum escritos directamente en los archivos de audio locales · Almacenamiento del dispositivo del usuario (directamente dentro de los archivos de audio)
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ Proporcionar funcionalidad principal de la app
 </item>
         <item>
 Proporcionar la funcionalidad principal de la aplicación
+</item>
+        <item>
+Leer y escribir metadatos de audio y portadas integradas directamente en los archivos de audio locales
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

@@ -251,6 +251,9 @@ Ferramentas de EXIF de Fotos — inspecione metadados EXIF e GPS das fotos, remo
         <item>
 Ferramentas EXIF ​​​​de fotos - inspecione metadados EXIF ​​​​e GPS de fotos, limpe geotags privadas e informações do dispositivo e renomeie fotos em lote usando carimbos de data / hora de captura e metadados de câmera.
 </item>
+        <item>
+Editor de tags de música (dispositivos móveis) — inspecione, edite, limpe e atualize em lote os metadados de áudio (título, artista, álbum, ano, gênero, letras) e a capa do álbum diretamente nos arquivos de áudio.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — processa compras opcionais de gorjetas no aplicativo em 
 </item>
         <item>
 SDK da Amazon Appstore — processa compras opcionais de gorjetas no aplicativo em dispositivos Amazon. (Proprietário)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ Estado de Reprodução de Mídia
         <item>
 Estado de reprodução de mídia
 </item>
+        <item>
+Metadados de áudio e tags de música
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ Um cookie (ufm_lang) lembra sua escolha de idioma durante a sessão e reiniciali
 </item>
         <item>
 Um cookie (ufm_lang) lembra sua escolha de idioma durante a sessão e durante as reinicializações do navegador · Armazenamento do navegador da Web
+</item>
+        <item>
+Título, artista, álbum, ano, gênero, letras e capa do álbum gravados diretamente nos arquivos de áudio locais · Armazenamento do dispositivo do usuário (diretamente dentro dos arquivos de áudio)
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ Fornecer funcionalidade principal do aplicativo
 </item>
         <item>
 Fornece funcionalidade principal do aplicativo
+</item>
+        <item>
+Ler e gravar metadados de áudio e capas de álbuns incorporadas diretamente nos arquivos de áudio locais
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

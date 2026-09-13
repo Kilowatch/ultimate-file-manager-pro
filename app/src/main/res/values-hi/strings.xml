@@ -4229,6 +4229,9 @@ ZIP या 7Z संग्रह बनाएं
     <string name="toolbar_desc_set_alarm">
 चयनित ऑडियो को अलार्म ध्वनि के रूप में सेट करें
 </string>
+    <string name="toolbar_desc_music_tagger">
+ऑडियो टैग, गीत के बोल और एल्बम आर्ट संपादित करें
+</string>
     <string name="toolbar_desc_duplicate_finder">
 डुप्लिकेट फ़ाइलों को स्कैन और पहचानें
 </string>
@@ -12252,6 +12255,152 @@ UFM ने आपके पिछले सत्र में प्रति�
     <string name="icon_toolbar_set_alarm">
 अलार्म ध्वनि के रूप में सेट करें
 </string>
+    <string name="action_music_tagger">
+संगीत टैग संपादक
+</string>
+    <string name="icon_toolbar_music_tagger">
+संगीत टैग संपादक
+</string>
+    <string name="music_tagger_title">
+संगीत टैग संपादक
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d ट्रैक चयनित
+</string>
+    <string name="music_tag_cover_art">
+एल्बम कवर आर्ट
+</string>
+    <string name="music_tag_btn_change_art">
+आर्ट बदलें
+</string>
+    <string name="music_tag_btn_remove_art">
+हटाएं
+</string>
+    <string name="music_tag_btn_save_art">
+आर्ट सहेजें
+</string>
+    <string name="music_tag_btn_autofill_filename">
+फ़ाइल नाम से स्वतः भरें
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+टैग से नाम बदलें
+</string>
+    <string name="music_tag_batch_options_header">
+बैच विकल्प
+</string>
+    <string name="music_tag_auto_number_tracks">
+ट्रैक को क्रमिक रूप से स्वतः क्रमांकित करें (1 से N तक)
+</string>
+    <string name="music_tag_core_tags_header">
+ऑडियो टैग
+</string>
+    <string name="music_tag_hint_title">
+शीर्षक
+</string>
+    <string name="music_tag_hint_artist">
+कलाकार
+</string>
+    <string name="music_tag_hint_album">
+एल्बम
+</string>
+    <string name="music_tag_hint_album_artist">
+एल्बम कलाकार
+</string>
+    <string name="music_tag_hint_year">
+वर्ष
+</string>
+    <string name="music_tag_hint_genre">
+शैली
+</string>
+    <string name="music_tag_hint_track">
+ट्रैक
+</string>
+    <string name="music_tag_hint_total_tracks">
+कुल
+</string>
+    <string name="music_tag_hint_disc">
+डिस्क
+</string>
+    <string name="music_tag_hint_total_discs">
+कुल
+</string>
+    <string name="music_tag_advanced_header">
+उन्नत टैग और गीत के बोल
+</string>
+    <string name="music_tag_hint_composer">
+संगीतकार
+</string>
+    <string name="music_tag_hint_comment">
+टिप्पणी
+</string>
+    <string name="music_tag_hint_lyrics">
+एम्बेडेड गीत के बोल (USLT)
+</string>
+    <string name="music_tag_technical_header">
+ऑडियो फ़ाइल विवरण
+</string>
+    <string name="music_tag_tech_format">
+प्रारूप
+</string>
+    <string name="music_tag_tech_bitrate">
+बिटरेट
+</string>
+    <string name="music_tag_tech_sample_rate">
+नमूना दर
+</string>
+    <string name="music_tag_tech_duration">
+अवधि
+</string>
+    <string name="music_tag_tech_path">
+फ़ाइल पथ
+</string>
+    <string name="music_tag_btn_save">
+टैग सहेजें
+</string>
+    <string name="music_tag_btn_apply_batch">
+%d ट्रैक पर लागू करें
+</string>
+    <string name="music_tag_save_success">
+ऑडियो टैग सफलतापूर्वक सहेजे गए
+</string>
+    <string name="music_tag_save_error">
+ऑडियो टैग सहेजने में विफल: %s
+</string>
+    <string name="music_tag_batch_success">
+%d ट्रैक के टैग अपडेट किए गए
+</string>
+    <string name="music_tag_art_extracted">
+एल्बम आर्ट सहेजा गया: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+एल्बम आर्ट निकालने में विफल
+</string>
+    <string name="music_tag_rename_confirm_title">
+टैग से फ़ाइल का नाम बदलें
+</string>
+    <string name="music_tag_rename_confirm_msg">
+फ़ाइल का नाम बदलकर रखें:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+फ़ाइल नाम से टैग स्वतः भरे गए
+</string>
+    <string name="music_tag_autofill_no_match">
+फ़ाइल नाम से कलाकार या शीर्षक का पता नहीं लगा सका
+</string>
+    <string name="properties_section_audio_tags">
+ऑडियो टैग
+</string>
+    <string name="properties_btn_edit_audio_tags">
+ऑडियो टैग संपादित करें
+</string>
+    <string name="music_tag_specs">
+तकनीकी विवरण
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 संपादन के लिए आइकन पर टैप करें
@@ -14468,6 +14617,21 @@ UFM को सुरक्षित करने के लिए 4 अंको
 </string>
     <string name="icon_tile_recent_files">
 हाल की फ़ाइलें टाइल
+</string>
+    <string name="recent_refreshing_status">
+%2$d में से %1$d फ़ोल्डर स्कैन किए जा रहे हैं: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+हाल की फ़ाइलों की जाँच की जा रही है…
+</string>
+    <string name="recent_refreshing_eta">
+~%1$d सेकंड शेष
+</string>
+    <string name="recent_refreshing_eta_finishing">
+लगभग पूर्ण…
+</string>
+    <string name="recent_refresh_complete">
+हाल की फ़ाइलें अद्यतित हैं
 </string>
 </resources>
 

@@ -467,6 +467,22 @@
             android:gravity="end">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditAudioTags"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/properties_btn_edit_audio_tags"
+                app:icon="@drawable/ic_music_tag"
+                app:iconSize="18dp"
+                app:backgroundTint="#33FFFFFF"
+                android:textColor="@android:color/white"
+                app:iconTint="@android:color/white"
+                android:textSize="13sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCopySpecs"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"

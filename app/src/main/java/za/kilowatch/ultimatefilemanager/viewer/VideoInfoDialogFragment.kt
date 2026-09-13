@@ -3,6 +3,8 @@ package za.kilowatch.ultimatefilemanager.viewer
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import java.io.File
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -250,6 +252,23 @@ class VideoInfoDialogFragment : DialogFragment() {
         }
 
         // Actions
+        val btnEditAudioTags = root.findViewById<View?>(R.id.btnEditAudioTags)
+        val isLocalAudio = !data.hasVideo && !isTv && data.filePath.isNotEmpty() && File(data.filePath).exists()
+        if (isLocalAudio) {
+            btnEditAudioTags?.visibility = View.VISIBLE
+            btnEditAudioTags?.setOnClickListener {
+                dismiss()
+                context.startActivity(Intent(context, MusicTaggerActivity::class.java).apply {
+                    putStringArrayListExtra(
+                        MusicTaggerActivity.EXTRA_FILE_PATHS,
+                        arrayListOf(data.filePath)
+                    )
+                })
+            }
+        } else {
+            btnEditAudioTags?.visibility = View.GONE
+        }
+
         val btnCopy = root.findViewById<View>(R.id.btnCopySpecs)
         btnCopy.setOnClickListener {
             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager

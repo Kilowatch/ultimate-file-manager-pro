@@ -251,6 +251,9 @@ GIF Creator — 使用自定义帧速率、调整大小选项和拖放帧重新�
         <item>
 照片 EXIF 工具 — 检查照片 EXIF 和 GPS 元数据，清除私人地理标签和设备信息，并使用拍摄时间戳和相机元数据批量重命名照片。
 </item>
+        <item>
+音乐标签编辑器（移动端） — 直接在音频文件内查看、编辑、清理和批量更新音频元数据（标题、艺术家、专辑、年份、流派、歌词）及内嵌专辑封面。
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — processes optional in-app tip purchases on Amazon device
 </item>
         <item>
 Amazon Appstore SDK — 处理 Amazon 设备上可选的应用内小费购买。 （所有权）
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1057,6 +1063,9 @@ S3 / S3兼容的存储凭证（AWS S3、MinIO、IDrive E2等）
         <item>
 媒体播放状态
 </item>
+        <item>
+音频元数据和音乐标签
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1112,6 +1121,9 @@ cookie (ufm_lang) 会在整个会话期间和跨浏览器重新启动时记住�
 </item>
         <item>
 cookie (ufm_lang) 会在整个会话期间和跨浏览器重新启动时记住您的语言选择 · Web 浏览器存储
+</item>
+        <item>
+标题、艺术家、专辑、年份、流派、歌词和专辑封面直接写入本地音频文件 · 用户设备存储空间（直接保存在音频文件内部）
 </item>
     </string-array>
 
@@ -1186,6 +1198,9 @@ cookie (ufm_lang) 会在整个会话期间和跨浏览器重新启动时记住�
 </item>
         <item>
 提供核心应用功能
+</item>
+        <item>
+直接在本地音频文件内部读写音频元数据和内嵌专辑封面
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

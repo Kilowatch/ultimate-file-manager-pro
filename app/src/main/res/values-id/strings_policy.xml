@@ -251,6 +251,9 @@ Alat EXIF Foto — periksa metadata EXIF dan GPS foto, bersihkan geotag pribadi 
         <item>
 Alat EXIF ​​Foto — memeriksa EXIF ​​foto dan metadata GPS, menghapus geotag pribadi dan informasi perangkat, dan mengganti nama foto secara batch menggunakan stempel waktu pengambilan dan metadata kamera.
 </item>
+        <item>
+Editor Tag Musik (Seluler) — memeriksa, mengedit, membersihkan, dan memperbarui metadata audio secara massal (judul, artis, album, tahun, genre, lirik) dan sampul album langsung di dalam file audio.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -642,6 +645,9 @@ Amazon Appstore SDK — memproses pembelian tip opsional dalam aplikasi di peran
 </item>
         <item>
 Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di perangkat Amazon. (Hak milik)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
 </item>
     </string-array>
 
@@ -1055,6 +1061,9 @@ Status Pemutaran Media
         <item>
 Status Pemutaran Media
 </item>
+        <item>
+Metadata Audio &amp; Tag Musik
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
@@ -1110,6 +1119,9 @@ Cookie (ufm_lang) mengingat pilihan bahasa Anda selama sesi dan di seluruh resta
 </item>
         <item>
 Cookie (ufm_lang) mengingat pilihan bahasa Anda sepanjang sesi dan saat browser dimulai ulang · Penyimpanan browser web
+</item>
+        <item>
+Judul, artis, album, tahun, genre, lirik, dan sampul album ditulis langsung ke file audio lokal · Penyimpanan perangkat pengguna (langsung di dalam file audio)
 </item>
     </string-array>
 
@@ -1184,6 +1196,9 @@ Menyediakan fungsionalitas inti aplikasi
 </item>
         <item>
 Menyediakan fungsionalitas aplikasi inti
+</item>
+        <item>
+Membaca dan menulis metadata audio dan sampul album yang disematkan langsung di dalam file audio lokal
 </item>
     </string-array>
     <string-array name="pp_use_analytics">

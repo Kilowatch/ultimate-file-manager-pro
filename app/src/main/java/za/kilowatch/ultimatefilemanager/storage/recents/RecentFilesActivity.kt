@@ -488,8 +488,9 @@ class RecentFilesActivity : AppCompatActivity() {
                         allImagesSelected = imgFiles.isNotEmpty() && imgFiles.all {
                             it.extension.lowercase() in FileViewerRouter.IMAGE_EXTENSIONS
                         },
-                        allAudioSelected = imgFiles.isNotEmpty() && imgFiles.size == 1 &&
-                            FileViewerRouter.isAudio(imgFiles.first().extension)
+                        allAudioSelected = imgFiles.isNotEmpty() && imgFiles.all {
+                            it.isFile && FileViewerRouter.isAudio(it.extension)
+                        }
                     )
                     floatingQuickBar?.bindSelection(state)
                     floatingQuickBar?.showAnimated()
@@ -906,6 +907,21 @@ class RecentFilesActivity : AppCompatActivity() {
             }
         }
 
+        // Audio → Music Tagger (All selected items are audio files, mobile only)
+        val allAudio = selected.isNotEmpty() && selected.all {
+            it.isFile && FileViewerRouter.isAudio(it.extension)
+        }
+        if (allAudio && !isTv && pm.isIconEnabled(this, pm.KEY_MUSIC_TAGGER)) {
+            list.add(FileToolsBottomSheet.ActionItem("music_tagger", getString(R.string.action_music_tagger), R.drawable.ic_music_tag, "toolbar_music_tagger") {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java).apply {
+                    putStringArrayListExtra(
+                        za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity.EXTRA_FILE_PATHS,
+                        ArrayList(selected.map { it.absolutePath })
+                    )
+                })
+            })
+        }
+
         // 12. Hide / Unhide
         val hasVisible = fileAdapter.hasAnySelectedVisible()
         if (hasVisible && pm.isIconEnabled(this, pm.KEY_HIDE)) {
@@ -1279,6 +1295,18 @@ class RecentFilesActivity : AppCompatActivity() {
                     val sources = files.map { LocalFileSource(it) }
                     ChecksumDialogFragment.newInstance(sources)
                         .show(supportFragmentManager, ChecksumDialogFragment.TAG)
+                }
+            }
+            pm.ACTION_MUSIC_TAGGER -> {
+                val audioFiles = selected.filter { it.isFile && FileViewerRouter.isAudio(it.extension) }
+                if (audioFiles.isNotEmpty()) {
+                    fileAdapter.exitSelectionMode()
+                    startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java).apply {
+                        putStringArrayListExtra(
+                            za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity.EXTRA_FILE_PATHS,
+                            ArrayList(audioFiles.map { it.absolutePath })
+                        )
+                    })
                 }
             }
             pm.ACTION_MORE -> {

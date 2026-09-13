@@ -328,6 +328,18 @@ class SearchActivity : AppCompatActivity() {
                         if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
                     }
                     pm.ACTION_INVERT_SELECTION -> fileAdapter.invertSelection()
+                    pm.ACTION_MUSIC_TAGGER -> {
+                        val audioFiles = selectedFiles.filter { it.isFile && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.extension) }
+                        if (audioFiles.isNotEmpty()) {
+                            fileAdapter.exitSelectionMode()
+                            startActivity(android.content.Intent(this@SearchActivity, za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java).apply {
+                                putStringArrayListExtra(
+                                    za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity.EXTRA_FILE_PATHS,
+                                    ArrayList(audioFiles.map { it.absolutePath })
+                                )
+                            })
+                        }
+                    }
                     pm.ACTION_MORE -> {
                         FilePropertiesBottomSheet.newInstanceForLocalFiles(selectedFiles)
                             .show(supportFragmentManager, FilePropertiesBottomSheet.TAG)
@@ -2152,9 +2164,13 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 if (count > 0) {
+                    val imgFiles = fileAdapter.getSelectedFiles()
                     val state = FloatingQuickActionBar.SelectionState(
                         selectedCount = count,
-                        isAllSelected = isAll
+                        isAllSelected = isAll,
+                        allAudioSelected = imgFiles.isNotEmpty() && imgFiles.all {
+                            it.isFile && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.extension)
+                        }
                     )
                     floatingQuickBar?.bindSelection(state)
                     floatingQuickBar?.showAnimated()

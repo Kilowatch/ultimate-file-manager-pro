@@ -4229,6 +4229,9 @@ Seçilen sesi bildirim sesi olarak ayarla
     <string name="toolbar_desc_set_alarm">
 Seçilen sesi alarm sesi olarak ayarla
 </string>
+    <string name="toolbar_desc_music_tagger">
+Ses etiketlerini, şarkı sözlerini ve albüm kapağını düzenleyin
+</string>
     <string name="toolbar_desc_duplicate_finder">
 Yinelenen dosyaları tara ve algıla
 </string>
@@ -12252,6 +12255,152 @@ Bildirim sesi olarak ayarla
     <string name="icon_toolbar_set_alarm">
 Alarm sesi olarak ayarla
 </string>
+    <string name="action_music_tagger">
+Müzik Etiket Düzenleyici
+</string>
+    <string name="icon_toolbar_music_tagger">
+Müzik Etiket Düzenleyici
+</string>
+    <string name="music_tagger_title">
+Müzik Etiket Düzenleyici
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+%d Parça Seçildi
+</string>
+    <string name="music_tag_cover_art">
+Albüm Kapak Resmi
+</string>
+    <string name="music_tag_btn_change_art">
+Kapağı Değiştir
+</string>
+    <string name="music_tag_btn_remove_art">
+Kaldır
+</string>
+    <string name="music_tag_btn_save_art">
+Kapağı Kaydet
+</string>
+    <string name="music_tag_btn_autofill_filename">
+Dosya Adından Otomatik Doldur
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+Etiketlerden Yeniden Adlandır
+</string>
+    <string name="music_tag_batch_options_header">
+Toplu İşlem Seçenekleri
+</string>
+    <string name="music_tag_auto_number_tracks">
+Parçaları sırayla otomatik numaralandır (1\\\'den N\\\'e)
+</string>
+    <string name="music_tag_core_tags_header">
+Ses Etiketleri
+</string>
+    <string name="music_tag_hint_title">
+Başlık
+</string>
+    <string name="music_tag_hint_artist">
+Sanatçı
+</string>
+    <string name="music_tag_hint_album">
+Albüm
+</string>
+    <string name="music_tag_hint_album_artist">
+Albüm Sanatçısı
+</string>
+    <string name="music_tag_hint_year">
+Yıl
+</string>
+    <string name="music_tag_hint_genre">
+Tür
+</string>
+    <string name="music_tag_hint_track">
+Parça
+</string>
+    <string name="music_tag_hint_total_tracks">
+Toplam
+</string>
+    <string name="music_tag_hint_disc">
+Disk
+</string>
+    <string name="music_tag_hint_total_discs">
+Toplam
+</string>
+    <string name="music_tag_advanced_header">
+Gelişmiş Etiketler ve Şarkı Sözleri
+</string>
+    <string name="music_tag_hint_composer">
+Besteci
+</string>
+    <string name="music_tag_hint_comment">
+Yorum
+</string>
+    <string name="music_tag_hint_lyrics">
+Gömülü Şarkı Sözleri (USLT)
+</string>
+    <string name="music_tag_technical_header">
+Ses Dosyası Ayrıntıları
+</string>
+    <string name="music_tag_tech_format">
+Biçim
+</string>
+    <string name="music_tag_tech_bitrate">
+Bit Hızı
+</string>
+    <string name="music_tag_tech_sample_rate">
+Örnekleme Hızı
+</string>
+    <string name="music_tag_tech_duration">
+Süre
+</string>
+    <string name="music_tag_tech_path">
+Dosya Yolu
+</string>
+    <string name="music_tag_btn_save">
+Etiketleri Kaydet
+</string>
+    <string name="music_tag_btn_apply_batch">
+%d Parçaya Uygula
+</string>
+    <string name="music_tag_save_success">
+Ses etiketleri başarıyla kaydedildi
+</string>
+    <string name="music_tag_save_error">
+Ses etiketleri kaydedilemedi: %s
+</string>
+    <string name="music_tag_batch_success">
+%d parçanın etiketleri güncellendi
+</string>
+    <string name="music_tag_art_extracted">
+Albüm kapağı kaydedildi: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+Albüm kapağı çıkarılamadı
+</string>
+    <string name="music_tag_rename_confirm_title">
+Dosyayı Etiketlerden Yeniden Adlandır
+</string>
+    <string name="music_tag_rename_confirm_msg">
+Dosyayı şu şekilde yeniden adlandır:\n
+\n
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+Etiketler dosya adından otomatik dolduruldu
+</string>
+    <string name="music_tag_autofill_no_match">
+Dosya adından sanatçı veya başlık algılanamadı
+</string>
+    <string name="properties_section_audio_tags">
+Ses Etiketleri
+</string>
+    <string name="properties_btn_edit_audio_tags">
+Ses Etiketlerini Düzenle
+</string>
+    <string name="music_tag_specs">
+Teknik Özellikler
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 Düzenlemek için simgeye dokunun
@@ -14468,6 +14617,21 @@ Dosya Konumunu Aç
 </string>
     <string name="icon_tile_recent_files">
 Son Dosyalar Kutucuğu
+</string>
+    <string name="recent_refreshing_status">
+%2$d klasörden %1$d. taranıyor: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+Son dosyalar kontrol ediliyor…
+</string>
+    <string name="recent_refreshing_eta">
+~%1$d sn kaldı
+</string>
+    <string name="recent_refreshing_eta_finishing">
+Neredeyse bitti…
+</string>
+    <string name="recent_refresh_complete">
+Son dosyalar güncel
 </string>
 </resources>
 

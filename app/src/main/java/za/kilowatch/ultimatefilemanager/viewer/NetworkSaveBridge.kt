@@ -13,9 +13,16 @@ import java.io.File
 object NetworkSaveBridge {
 
     /**
-     * Called by [TextViewerActivity] after a local file save completes.
+     * Called by [TextViewerActivity] or [MusicTaggerActivity] after a local file save completes.
      * Implementations should upload [savedFile] to the appropriate
      * network share / online storage provider.
      */
     var onFileSaved: ((savedFile: File) -> Unit)? = null
+
+    /**
+     * Called by [MusicTaggerActivity] after a file is renamed locally.
+     * Implementations should rename the file in the remote location.
+     */
+    var onFileRenamed: ((oldFile: File, newFile: File) -> Unit)? = null
 }
+

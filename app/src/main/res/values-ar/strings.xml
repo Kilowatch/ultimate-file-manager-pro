@@ -4229,6 +4229,9 @@ NFSv4
     <string name="toolbar_desc_set_alarm">
 تعيين الصوت المحدد كصوت المنبه
 </string>
+    <string name="toolbar_desc_music_tagger">
+تحرير علامات الصوت وكلمات الأغاني وصورة الغلاف
+</string>
     <string name="toolbar_desc_duplicate_finder">
 فحص واكتشاف الملفات المكررة
 </string>
@@ -12252,6 +12255,152 @@ UFM Spreadsheet Viewer
     <string name="icon_toolbar_set_alarm">
 تعيين كصوت المنبه
 </string>
+    <string name="action_music_tagger">
+محرر علامات الموسيقى
+</string>
+    <string name="icon_toolbar_music_tagger">
+محرر علامات الموسيقى
+</string>
+    <string name="music_tagger_title">
+محرر علامات الموسيقى
+</string>
+    <string name="music_tag_single_track">
+%s
+</string>
+    <string name="music_tag_tracks_selected">
+تم تحديد %d مسارًا
+</string>
+    <string name="music_tag_cover_art">
+صورة غلاف الألبوم
+</string>
+    <string name="music_tag_btn_change_art">
+تغيير الصورة
+</string>
+    <string name="music_tag_btn_remove_art">
+إزالة
+</string>
+    <string name="music_tag_btn_save_art">
+حفظ الصورة
+</string>
+    <string name="music_tag_btn_autofill_filename">
+ملء تلقائي من اسم الملف
+</string>
+    <string name="music_tag_btn_rename_from_tags">
+إعادة تسمية من العلامات
+</string>
+    <string name="music_tag_batch_options_header">
+خيارات الدفعة
+</string>
+    <string name="music_tag_auto_number_tracks">
+ترقيم المسارات تلقائيًا بالتسلسل (من 1 إلى N)
+</string>
+    <string name="music_tag_core_tags_header">
+علامات الصوت
+</string>
+    <string name="music_tag_hint_title">
+العنوان
+</string>
+    <string name="music_tag_hint_artist">
+الفنان
+</string>
+    <string name="music_tag_hint_album">
+الألبوم
+</string>
+    <string name="music_tag_hint_album_artist">
+فنان الألبوم
+</string>
+    <string name="music_tag_hint_year">
+السنة
+</string>
+    <string name="music_tag_hint_genre">
+النوع
+</string>
+    <string name="music_tag_hint_track">
+المقطع
+</string>
+    <string name="music_tag_hint_total_tracks">
+الإجمالي
+</string>
+    <string name="music_tag_hint_disc">
+القرص
+</string>
+    <string name="music_tag_hint_total_discs">
+الإجمالي
+</string>
+    <string name="music_tag_advanced_header">
+علامات متقدمة وكلمات الأغاني
+</string>
+    <string name="music_tag_hint_composer">
+الملحن
+</string>
+    <string name="music_tag_hint_comment">
+تعليق
+</string>
+    <string name="music_tag_hint_lyrics">
+كلمات الأغاني المضمنة (USLT)
+</string>
+    <string name="music_tag_technical_header">
+تفاصيل ملف الصوت
+</string>
+    <string name="music_tag_tech_format">
+التنسيق
+</string>
+    <string name="music_tag_tech_bitrate">
+معدل البت
+</string>
+    <string name="music_tag_tech_sample_rate">
+معدل العينة
+</string>
+    <string name="music_tag_tech_duration">
+المدة
+</string>
+    <string name="music_tag_tech_path">
+مسار الملف
+</string>
+    <string name="music_tag_btn_save">
+حفظ العلامات
+</string>
+    <string name="music_tag_btn_apply_batch">
+تطبيق على %d مسار
+</string>
+    <string name="music_tag_save_success">
+تم حفظ علامات الصوت بنجاح
+</string>
+    <string name="music_tag_save_error">
+فشل حفظ علامات الصوت: %s
+</string>
+    <string name="music_tag_batch_success">
+تم تحديث العلامات لـ %d مسار
+</string>
+    <string name="music_tag_art_extracted">
+تم حفظ صورة الغلاف: %s
+</string>
+    <string name="music_tag_art_extract_failed">
+فشل استخراج صورة الغلاف
+</string>
+    <string name="music_tag_rename_confirm_title">
+إعادة تسمية الملف من العلامات
+</string>
+    <string name="music_tag_rename_confirm_msg">
+إعادة تسمية الملف إلى:
+
+%s
+</string>
+    <string name="music_tag_autofill_detected">
+تم ملء العلامات تلقائيًا من اسم الملف
+</string>
+    <string name="music_tag_autofill_no_match">
+تعذر اكتشاف الفنان أو العنوان من اسم الملف
+</string>
+    <string name="properties_section_audio_tags">
+علامات الصوت
+</string>
+    <string name="properties_btn_edit_audio_tags">
+تحرير علامات الصوت
+</string>
+    <string name="music_tag_specs">
+المواصفات الفنية
+</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
 اضغط على الأيقونة للتعديل
@@ -14468,6 +14617,21 @@ Set Password
 </string>
     <string name="icon_tile_recent_files">
 بطاقة الملفات الأخيرة
+</string>
+    <string name="recent_refreshing_status">
+جارٍ فحص %1$d من %2$d مجلد: %3$s
+</string>
+    <string name="recent_refreshing_preparing">
+جارٍ التحقق من الملفات الحديثة…
+</string>
+    <string name="recent_refreshing_eta">
+متبقي ~%1$d ثانية
+</string>
+    <string name="recent_refreshing_eta_finishing">
+على وشك الانتهاء…
+</string>
+    <string name="recent_refresh_complete">
+الملفات الحديثة محدثة
 </string>
 </resources>
 
