@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.7] — 2026-09-13
 
 ### Added
+- **FOSS In-App Auto-Update (Mobile)**: Added in-app download and direct APK installation flow for FOSS mobile releases:
+  - **In-App Streaming Download**: Downloads update APKs directly within the app using OkHttp into an isolated cache directory (`foss_update/`), eliminating external browser redirects and duplicate file downloads.
+  - **Live Progress Feedback**: Added an integrated `LinearProgressIndicator` with real-time percentage and byte progress inside the update dialog, along with download cancellation support.
+  - **PackageInstaller Session Install**: Automatically triggers Android's native `PackageInstaller` session prompt upon download completion to update UFM seamlessly.
+  - **Pending Update Persistence & Resume**: Detects previously downloaded APKs on app open and prompts to install directly without re-downloading.
+  - **Automatic Cache Management**: Purges cached APK files once successfully installed or if the pending update becomes obsolete.
+  - **Simulation Testing Support**: Added a `simulateOldVersion` toggle in `build.gradle.kts` for verifying the update detection and installation flow.
 - Mobile: Configurable multi-line file name wrapping options (2 lines, 3 lines, unlimited, or single-line truncate) alongside the default marquee scroll, with smart delimiter wrapping across Local, Tab, SAF, Network, and Online Cloud storage.
 - In-list visual highlighting during Cut (50% opacity, amber name, top-left scissors badge) and Copy (cyan name, top-left copy badge, subtle background tint) operations across Local, SAF, Network, and Online Cloud storage.
 - Tab bar clipboard indicator badges reflecting active cut or copy operations for each tab.

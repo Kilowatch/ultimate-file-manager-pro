@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -19,10 +20,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
@@ -30,6 +33,8 @@ import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.FossUpdatePreferenceManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.PackageInstallerHelper
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 /**
@@ -48,14 +53,28 @@ object FossUpdateManager {
 
     private const val NOTIFICATION_CHANNEL_ID = "ufm_app_updates"
     private const val NOTIFICATION_ID = 8842
+    private const val UPDATE_CACHE_DIR = "foss_update"
 
     // Throttle automatic app-open checks to at most once per 4 hours
     private const val THROTTLE_INTERVAL_MS = 4 * 60 * 60 * 1000L
+
+    /** Active OkHttp download call — used for cancellation on dialog dismiss. */
+    private var activeDownloadCall: Call? = null
 
     private val httpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .connectTimeout(12, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
+            .build()
+    }
+
+    /** Dedicated client for APK downloads — longer timeouts for large files. */
+    private val downloadClient: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.MINUTES)
+            .followRedirects(true)
+            .followSslRedirects(true)
             .build()
     }
 
@@ -250,10 +269,31 @@ object FossUpdateManager {
     /**
      * Non-blocking check triggered when the app is launched or re-opened.
      * Only runs if BuildConfig.IS_FOSS is true and auto check is enabled in settings.
+     *
+     * Also checks for a previously downloaded APK pending install.
      */
     fun checkOnAppOpen(activity: Activity) {
         if (!BuildConfig.IS_FOSS) return
         if (!FossUpdatePreferenceManager.isAutoCheckEnabled(activity)) return
+
+        // Check for a cached APK that was downloaded but not yet installed
+        val pendingVersion = FossUpdatePreferenceManager.getPendingUpdateVersion(activity)
+        val pendingPath = FossUpdatePreferenceManager.getPendingUpdatePath(activity)
+        if (pendingVersion.isNotBlank() && pendingPath.isNotBlank()) {
+            val pendingFile = File(pendingPath)
+            if (pendingFile.exists() && pendingFile.length() > 0) {
+                if (isNewerVersion(pendingVersion, BuildConfig.VERSION_NAME)) {
+                    // We have a valid cached APK — try to install it directly
+                    if (!activity.isFinishing && !activity.isDestroyed) {
+                        tryInstallCachedApk(activity, pendingFile, pendingVersion)
+                    }
+                    return
+                }
+            }
+            // Cached APK is stale or missing — clean up
+            FossUpdatePreferenceManager.clearPendingUpdate(activity)
+            pendingFile.delete()
+        }
 
         val lastCheck = FossUpdatePreferenceManager.getLastCheckTime(activity)
         val now = System.currentTimeMillis()
@@ -281,6 +321,23 @@ object FossUpdateManager {
                 }
             }
         }
+    }
+
+    /**
+     * Prompts the user to install a previously downloaded APK.
+     */
+    private fun tryInstallCachedApk(activity: Activity, apkFile: File, version: String) {
+        MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
+            .setTitle(activity.getString(R.string.update_available_title, version))
+            .setMessage(activity.getString(R.string.update_download_complete))
+            .setPositiveButton(R.string.update_download_complete) { dialog, _ ->
+                dialog.dismiss()
+                installDownloadedApk(activity, apkFile, version)
+            }
+            .setNegativeButton(R.string.update_btn_remind_later) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     /**
@@ -334,6 +391,7 @@ object FossUpdateManager {
         val btnDownload = dialogView.findViewById<MaterialButton>(R.id.btnDownloadUpdate)
         val btnViewRelease = dialogView.findViewById<MaterialButton>(R.id.btnViewRelease)
         val btnRemindLater = dialogView.findViewById<MaterialButton>(R.id.btnRemindLater)
+        val progressBar = dialogView.findViewById<LinearProgressIndicator>(R.id.progressDownload)
 
         txtTitle?.text = activity.getString(R.string.update_available_title, release.version)
         txtVersionDiff?.text = activity.getString(R.string.update_version_comparison, BuildConfig.VERSION_NAME, release.version)
@@ -349,9 +407,15 @@ object FossUpdateManager {
         btnDownload?.text = activity.getString(R.string.update_btn_download, targetApkName)
 
         btnDownload?.setOnClickListener {
-            dialog.dismiss()
-            val downloadUrl = release.getTargetApkUrl(activity)
-            openUrl(activity, downloadUrl)
+            if (isTv) {
+                // TV: keep browser-based download (different interaction model)
+                dialog.dismiss()
+                val downloadUrl = release.getTargetApkUrl(activity)
+                openUrl(activity, downloadUrl)
+            } else {
+                // Mobile: in-app download + auto-install
+                startInAppDownload(activity, release, btnDownload, progressBar, btnViewRelease, btnRemindLater, dialog)
+            }
         }
 
         btnViewRelease?.setOnClickListener {
@@ -362,6 +426,11 @@ object FossUpdateManager {
         btnRemindLater?.setOnClickListener {
             dialog.dismiss()
             FossUpdatePreferenceManager.dismissVersion(activity, release.version)
+        }
+
+        // Cancel download if dialog is dismissed
+        dialog.setOnDismissListener {
+            cancelDownload()
         }
 
         dialog.show()
@@ -386,6 +455,220 @@ object FossUpdateManager {
         }
 
         dialog.window?.setLayout(targetWidth, targetHeight)
+    }
+
+    /**
+     * Starts the in-app download flow for mobile FOSS builds.
+     *
+     * 1. Checks install-from-unknown-sources permission
+     * 2. Downloads APK via OkHttp with streaming progress
+     * 3. Updates button text and progress bar in real time
+     * 4. On completion, triggers PackageInstaller session install
+     */
+    private fun startInAppDownload(
+        activity: Activity,
+        release: ReleaseInfo,
+        btnDownload: MaterialButton,
+        progressBar: LinearProgressIndicator?,
+        btnViewRelease: MaterialButton?,
+        btnRemindLater: MaterialButton?,
+        dialog: android.app.Dialog
+    ) {
+        // Gate: check install permission before downloading
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+            !activity.packageManager.canRequestPackageInstalls()) {
+            Toast.makeText(activity, R.string.update_install_permission_required, Toast.LENGTH_LONG).show()
+            val permIntent = Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
+                data = Uri.parse("package:${activity.packageName}")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            activity.startActivity(permIntent)
+            return
+        }
+
+        // Lock the UI into download state
+        btnDownload.isEnabled = false
+        btnDownload.text = activity.getString(R.string.update_downloading, 0)
+        progressBar?.visibility = View.VISIBLE
+        progressBar?.progress = 0
+        btnViewRelease?.isEnabled = false
+        btnRemindLater?.isEnabled = false
+
+        val downloadUrl = release.getTargetApkUrl(activity)
+        val targetApkName = release.getTargetApkName(activity)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val result = downloadApk(activity, downloadUrl, targetApkName) { progress ->
+                // Progress callback — runs on IO thread, post to main
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (!activity.isFinishing && !activity.isDestroyed) {
+                        btnDownload.text = activity.getString(R.string.update_downloading, progress)
+                        progressBar?.setProgressCompat(progress, true)
+                    }
+                }
+            }
+
+            if (activity.isFinishing || activity.isDestroyed) return@launch
+
+            if (result != null) {
+                // Download successful
+                btnDownload.text = activity.getString(R.string.update_preparing_install)
+                progressBar?.setProgressCompat(100, true)
+
+                // Persist the pending update for resume on next app open
+                FossUpdatePreferenceManager.setPendingUpdate(activity, release.version, result.absolutePath)
+
+                // Dismiss dialog and trigger install
+                dialog.setOnDismissListener(null) // Prevent cancelDownload() on dismiss
+                dialog.dismiss()
+
+                installDownloadedApk(activity, result, release.version)
+            } else {
+                // Download failed or was cancelled
+                btnDownload.isEnabled = true
+                btnDownload.text = activity.getString(R.string.update_download_failed)
+                progressBar?.visibility = View.GONE
+                btnViewRelease?.isEnabled = true
+                btnRemindLater?.isEnabled = true
+
+                // Allow retry on next click
+                btnDownload.setOnClickListener {
+                    startInAppDownload(activity, release, btnDownload, progressBar, btnViewRelease, btnRemindLater, dialog)
+                }
+            }
+        }
+    }
+
+    /**
+     * Downloads an APK from the given URL to the app's private cache directory.
+     * Returns the downloaded File on success, or null on failure/cancellation.
+     *
+     * @param progressCallback Called with download percentage (0-100) on the IO thread.
+     */
+    private suspend fun downloadApk(
+        context: Context,
+        url: String,
+        fileName: String,
+        progressCallback: (Int) -> Unit
+    ): File? = withContext(Dispatchers.IO) {
+        val cacheDir = File(context.cacheDir, UPDATE_CACHE_DIR)
+        cacheDir.mkdirs()
+
+        // Clean up any previous download
+        val targetFile = File(cacheDir, fileName)
+        val tempFile = File(cacheDir, "$fileName.tmp")
+        tempFile.delete()
+
+        try {
+            val request = Request.Builder()
+                .url(url)
+                .header("User-Agent", "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}")
+                .build()
+
+            val call = downloadClient.newCall(request)
+            activeDownloadCall = call
+
+            val response = call.execute()
+            if (!response.isSuccessful) {
+                Log.w(TAG, "Download failed: HTTP ${response.code}")
+                return@withContext null
+            }
+
+            val body = response.body ?: run {
+                Log.w(TAG, "Download failed: empty response body")
+                return@withContext null
+            }
+
+            val contentLength = body.contentLength()
+            var bytesRead = 0L
+            var lastReportedProgress = -1
+
+            tempFile.outputStream().use { output ->
+                body.byteStream().use { input ->
+                    val buffer = ByteArray(8192)
+                    var read: Int
+                    while (input.read(buffer).also { read = it } != -1) {
+                        output.write(buffer, 0, read)
+                        bytesRead += read
+
+                        if (contentLength > 0) {
+                            val progress = ((bytesRead * 100) / contentLength).toInt().coerceIn(0, 100)
+                            if (progress != lastReportedProgress) {
+                                lastReportedProgress = progress
+                                progressCallback(progress)
+                            }
+                        }
+                    }
+                }
+            }
+
+            activeDownloadCall = null
+
+            // Rename temp → final atomically
+            targetFile.delete()
+            if (tempFile.renameTo(targetFile)) {
+                Log.d(TAG, "APK downloaded successfully: ${targetFile.absolutePath} (${targetFile.length()} bytes)")
+                return@withContext targetFile
+            } else {
+                Log.w(TAG, "Failed to rename temp file to target")
+                tempFile.delete()
+                return@withContext null
+            }
+        } catch (e: Exception) {
+            activeDownloadCall = null
+            tempFile.delete()
+            if (e is java.io.IOException && e.message?.contains("Canceled") == true) {
+                Log.d(TAG, "Download cancelled by user")
+            } else {
+                Log.w(TAG, "Download failed: ${e.message}", e)
+            }
+            return@withContext null
+        }
+    }
+
+    /**
+     * Triggers PackageInstaller session to install the downloaded APK.
+     * On success, Android will show the system install confirmation dialog.
+     */
+    private fun installDownloadedApk(context: Context, apkFile: File, version: String) {
+        try {
+            PackageInstallerHelper.installApk(context, apkFile)
+            Log.d(TAG, "Install session committed for v$version")
+        } catch (e: SecurityException) {
+            // Install permission not granted — guide user
+            Toast.makeText(context, R.string.update_install_permission_required, Toast.LENGTH_LONG).show()
+            Log.w(TAG, "Install permission denied: ${e.message}")
+        } catch (e: Exception) {
+            Toast.makeText(context, R.string.update_download_failed, Toast.LENGTH_LONG).show()
+            Log.e(TAG, "Install failed: ${e.message}", e)
+            FossUpdatePreferenceManager.clearPendingUpdate(context)
+        }
+    }
+
+    /**
+     * Cancels the active download, if any. Safe to call from any thread.
+     */
+    private fun cancelDownload() {
+        activeDownloadCall?.let { call ->
+            if (!call.isCanceled()) {
+                call.cancel()
+                Log.d(TAG, "Download cancelled")
+            }
+        }
+        activeDownloadCall = null
+    }
+
+    /**
+     * Cleans up the update cache directory.
+     * Call on app startup or after a successful install.
+     */
+    fun cleanupUpdateCache(context: Context) {
+        val cacheDir = File(context.cacheDir, UPDATE_CACHE_DIR)
+        if (cacheDir.exists()) {
+            cacheDir.deleteRecursively()
+            Log.d(TAG, "Update cache cleaned")
+        }
+        FossUpdatePreferenceManager.clearPendingUpdate(context)
     }
 
     /**

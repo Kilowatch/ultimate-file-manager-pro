@@ -4918,6 +4918,14 @@
     <string name="backup_pref_foss_update">Update Check Settings</string>
     <string name="icon_settings_foss_update">Check for Updates</string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">Downloading… %1$d%%</string>
+    <string name="update_download_complete">Install Update</string>
+    <string name="update_download_failed">Download Failed — Tap to Retry</string>
+    <string name="update_preparing_install">Preparing Install…</string>
+    <string name="update_install_permission_required">Allow installing from UFM to continue</string>
+    <string name="update_download_cancelled">Download cancelled</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">App Details</string>
     <string name="apk_details_version">Version:</string>

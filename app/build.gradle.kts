@@ -97,6 +97,26 @@ val appVersionCode = 274          // Mobile versionCode; TV = this + 1
 val appVersionName = "2.0.7"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
+// TODO: REMOVE — Set to true to simulate an older version for auto-update testing
+val simulateOldVersion = false
+
+val effectiveAppVersionCode = if (simulateOldVersion) {
+    appVersionCode - 8
+} else {
+    appVersionCode
+}
+
+val effectiveAppVersionName = if (simulateOldVersion) {
+    try {
+        val parts = appVersionName.split(".").map { it.toInt() }
+        "${parts[0]}.${parts[1]}.${maxOf(0, parts[2] - 4)}"
+    } catch (_: Exception) {
+        "2.0.0"
+    }
+} else {
+    appVersionName
+}
+
 
 android {
     namespace = "za.kilowatch.ultimatefilemanager"
@@ -140,14 +160,14 @@ android {
         create("mobile") {
             dimension = "device"
             // Mobile version: leanback not required (allows phones/tablets)
-            versionCode = appVersionCode
-            versionName = appVersionName
+            versionCode = effectiveAppVersionCode
+            versionName = effectiveAppVersionName
         }
         create("tv") {
             dimension = "device"
             // TV version: always one ahead of mobile so both can coexist on the same account
-            versionCode = appVersionCode + 1
-            versionName = appVersionName
+            versionCode = effectiveAppVersionCode + 1
+            versionName = effectiveAppVersionName
         }
 
         // ── Store dimension ───────────────────────────────────────────────────────
@@ -190,7 +210,6 @@ android {
         }
 
     }
-
 
     buildTypes {
         debug {

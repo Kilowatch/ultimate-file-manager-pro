@@ -114,6 +114,17 @@
             app:cornerRadius="14dp"
             app:elevation="0dp" />
 
+        <!-- Download progress bar (hidden until download starts) -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressDownload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"
+            app:trackCornerRadius="4dp"
+            app:indicatorColor="?attr/colorPrimary"
+            app:trackColor="#1AFFFFFF" />
+
         <!-- Secondary & Dismiss Buttons Row -->
         <LinearLayout
             android:layout_width="match_parent"

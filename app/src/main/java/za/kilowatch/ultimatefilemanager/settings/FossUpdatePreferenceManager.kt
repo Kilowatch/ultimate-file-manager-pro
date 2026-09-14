@@ -18,6 +18,8 @@ object FossUpdatePreferenceManager {
     private const val KEY_LAST_CHECK_TIME = "foss_update_last_check_timestamp"
     private const val KEY_LAST_NOTIFIED_VERSION = "foss_update_last_notified_version"
     private const val KEY_DISMISSED_VERSION = "foss_update_dismissed_version"
+    private const val KEY_PENDING_UPDATE_VERSION = "foss_update_pending_version"
+    private const val KEY_PENDING_UPDATE_PATH = "foss_update_pending_path"
 
     fun isAutoCheckEnabled(context: Context): Boolean =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -62,6 +64,34 @@ object FossUpdatePreferenceManager {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putString(KEY_DISMISSED_VERSION, version)
+            .apply()
+    }
+
+    /**
+     * Stores the version and file path of a downloaded APK that is pending install.
+     * Allows resuming the install flow on next app open without re-downloading.
+     */
+    fun setPendingUpdate(context: Context, version: String, filePath: String) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putString(KEY_PENDING_UPDATE_VERSION, version)
+            .putString(KEY_PENDING_UPDATE_PATH, filePath)
+            .apply()
+    }
+
+    fun getPendingUpdateVersion(context: Context): String =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getString(KEY_PENDING_UPDATE_VERSION, "") ?: ""
+
+    fun getPendingUpdatePath(context: Context): String =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getString(KEY_PENDING_UPDATE_PATH, "") ?: ""
+
+    fun clearPendingUpdate(context: Context) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .remove(KEY_PENDING_UPDATE_VERSION)
+            .remove(KEY_PENDING_UPDATE_PATH)
             .apply()
     }
 }
