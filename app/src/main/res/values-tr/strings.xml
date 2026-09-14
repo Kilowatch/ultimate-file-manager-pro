@@ -415,6 +415,44 @@ Dosya adları taştığında kayar
     <string name="settings_scrolling_text_subtitle_off">
 Dosya adları kısaltılır
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Dosya adı gösterimi
+</string>
+    <string name="settings_file_name_display_desc">
+Liste görünümlerinde dosya adlarının ne kadar süreyle gösterileceğini seçin
+</string>
+    <string name="settings_file_name_display_marquee">
+Kayan yazı (1 satır)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Tam adı göstermek için yatay olarak kaydırır (varsayılan)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 satır
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Uzun adları en fazla 2 satıra sarar
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 satır
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Uzun adları en fazla 3 satıra sarar
+</string>
+    <string name="settings_file_name_display_unlimited">
+Sınırsız satır
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Tam adı gerektiği kadar satıra sarar
+</string>
+    <string name="settings_file_name_display_truncate">
+Tek satır (Kısaltılmış)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Kaydırma yapmadan üç nokta (…) ile kısaltır
+</string>
     <string name="settings_grid_indicators_title">
 Satır numaralarını ve sütun başlıklarını gizle
 </string>

@@ -415,6 +415,44 @@ Dateinamen scrollen bei Überlauf
     <string name="settings_scrolling_text_subtitle_off">
 Dateinamen werden abgeschnitten
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Dateinamen-Anzeige
+</string>
+    <string name="settings_file_name_display_desc">
+Wählen Sie, wie lange Dateinamen in Listenansichten angezeigt werden
+</string>
+    <string name="settings_file_name_display_marquee">
+Laufschrift (1 Zeile)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Scrollt horizontal, um den vollständigen Namen anzuzeigen (Standard)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 Zeilen
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Bricht lange Namen auf bis zu 2 Zeilen um
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 Zeilen
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Bricht lange Namen auf bis zu 3 Zeilen um
+</string>
+    <string name="settings_file_name_display_unlimited">
+Unbegrenzte Zeilen
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Bricht den vollständigen Namen auf so viele Zeilen um, wie nötig
+</string>
+    <string name="settings_file_name_display_truncate">
+Einzelne Zeile (abgeschnitten)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Kürzt mit Auslassungspunkten (…), ohne zu scrollen
+</string>
     <string name="settings_grid_indicators_title">
 Zeilennummern und Spaltenüberschriften ausblenden
 </string>

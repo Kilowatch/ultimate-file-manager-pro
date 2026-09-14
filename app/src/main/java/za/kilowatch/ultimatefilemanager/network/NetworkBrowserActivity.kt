@@ -728,6 +728,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
         if (isTransferring) return  // Don't interfere with active transfers — TransferManager owns the service
         updatePasteFab()
         applyToolbarIconVisibility()
+        if (::fileAdapter.isInitialized) {
+            fileAdapter.notifyDataSetChanged()
+        }
         
         // Clean up standard share temp dir if returning from standard share
         standardShareTempDir?.let { tempDir ->

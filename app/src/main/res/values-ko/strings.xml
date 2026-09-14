@@ -415,6 +415,44 @@ UFM 플레이어에서 자동 다음 재생
     <string name="settings_scrolling_text_subtitle_off">
 파일 이름이 잘림
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+파일 이름 표시
+</string>
+    <string name="settings_file_name_display_desc">
+목록 보기에서 긴 파일 이름을 표시하는 방법을 선택하세요
+</string>
+    <string name="settings_file_name_display_marquee">
+흐르는 스크롤 (1줄)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+전체 이름이 보이도록 가로로 스크롤합니다 (기본값)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2줄
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+긴 이름을 최대 2줄로 줄 바꿈하여 표시합니다
+</string>
+    <string name="settings_file_name_display_3_lines">
+3줄
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+긴 이름을 최대 3줄로 줄 바꿈하여 표시합니다
+</string>
+    <string name="settings_file_name_display_unlimited">
+줄 수 제한 없음
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+필요한 만큼 여러 줄로 전체 이름을 표시합니다
+</string>
+    <string name="settings_file_name_display_truncate">
+한 줄 (잘림)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+스크롤 없이 말줄임표(…)로 잘라서 표시합니다
+</string>
     <string name="settings_grid_indicators_title">
 줄 번호 및 열 머리글 숨기기
 </string>

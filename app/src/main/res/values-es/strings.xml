@@ -415,6 +415,44 @@ Los nombres de archivo se desplazan cuando se desbordan
     <string name="settings_scrolling_text_subtitle_off">
 Los nombres de archivo se truncan
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Visualización del nombre de archivo
+</string>
+    <string name="settings_file_name_display_desc">
+Elige cómo se muestran los nombres de archivo largos en las vistas de lista
+</string>
+    <string name="settings_file_name_display_marquee">
+Desplazamiento continuo (1 línea)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Se desplaza horizontalmente para mostrar el nombre completo (predeterminado)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 líneas
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Ajusta los nombres largos en hasta 2 líneas
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 líneas
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Ajusta los nombres largos en hasta 3 líneas
+</string>
+    <string name="settings_file_name_display_unlimited">
+Líneas ilimitadas
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Ajusta el nombre completo en tantas líneas como sea necesario
+</string>
+    <string name="settings_file_name_display_truncate">
+Una línea (truncada)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Trunca con puntos suspensivos (…) sin desplazamiento
+</string>
     <string name="settings_grid_indicators_title">
 Ocultar números de línea y encabezados de columna
 </string>

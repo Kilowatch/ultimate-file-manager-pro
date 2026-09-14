@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.7] — 2026-09-13
 
 ### Added
+- Mobile: Configurable multi-line file name wrapping options (2 lines, 3 lines, unlimited, or single-line truncate) alongside the default marquee scroll, with smart delimiter wrapping across Local, Tab, SAF, Network, and Online Cloud storage.
 - In-list visual highlighting during Cut (50% opacity, amber name, top-left scissors badge) and Copy (cyan name, top-left copy badge, subtle background tint) operations across Local, SAF, Network, and Online Cloud storage.
 - Tab bar clipboard indicator badges reflecting active cut or copy operations for each tab.
 - Quick Transfer mode in Tab view: when enabled, transfers immediately between 2 open tabs or prompts with a tab selection sheet when more than 2 tabs are open.

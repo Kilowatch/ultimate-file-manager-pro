@@ -415,6 +415,44 @@ UFM प्लेयर में अगला स्वतः चलाएँ
     <string name="settings_scrolling_text_subtitle_off">
 फ़ाइल नाम ट्रंकेट होते हैं
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+फ़ाइल नाम प्रदर्शन
+</string>
+    <string name="settings_file_name_display_desc">
+चुनें कि सूची दृश्यों में फ़ाइल नाम कैसे प्रदर्शित किए जाएँ
+</string>
+    <string name="settings_file_name_display_marquee">
+मार्की स्क्रॉल (1 पंक्ति)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+पूरा नाम दिखाने के लिए क्षैतिज रूप से स्क्रॉल करता है (डिफ़ॉल्ट)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 पंक्तियाँ
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+लंबे नामों को 2 पंक्तियों तक लपेटता है
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 पंक्तियाँ
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+लंबे नामों को 3 पंक्तियों तक लपेटता है
+</string>
+    <string name="settings_file_name_display_unlimited">
+असीमित पंक्तियाँ
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+आवश्यकतानुसार कई पंक्तियों में पूरा नाम लपेटता है
+</string>
+    <string name="settings_file_name_display_truncate">
+एकल पंक्ति (काटा गया)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+बिना स्क्रॉल किए इलिप्सिस (…) के साथ काटता है
+</string>
     <string name="settings_grid_indicators_title">
 लाइन नंबर और कॉलम हेडर छुपाएँ
 </string>

@@ -415,6 +415,44 @@ Folder path copied to clipboard
     <string name="settings_scrolling_text_subtitle_off">
 文件名被截断
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+文件名显示
+</string>
+    <string name="settings_file_name_display_desc">
+选择文件名在列表视图中的显示长度
+</string>
+    <string name="settings_file_name_display_marquee">
+跑马灯滚动（1 行）
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+水平滚动以显示完整名称（默认）
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 行
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+长名称最多换行显示 2 行
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 行
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+长名称最多换行显示 3 行
+</string>
+    <string name="settings_file_name_display_unlimited">
+不限行数
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+根据完整名称长度自动换行显示
+</string>
+    <string name="settings_file_name_display_truncate">
+单行（截断）
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+以省略号（…）截断，不滚动
+</string>
     <string name="settings_grid_indicators_title">
 隐藏行号和列标题
 </string>

@@ -30,6 +30,7 @@ import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
 import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
+import za.kilowatch.ultimatefilemanager.settings.FileNameDisplayHelper
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import coil3.load
 import coil3.asImage
@@ -448,6 +449,15 @@ class NetworkFileAdapter(
 
     override fun getItemCount() = items.size
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        if (holder is ViewHolder) {
+            holder.itemView.findViewById<TextView>(R.id.txtFileName)?.let {
+                ScrollingTextHelper.cancelScrolling(it)
+            }
+        }
+    }
+
     inner class EmptyBufferViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind() {
             val isGrid = ViewModeManager.isGrid(viewMode)
@@ -528,6 +538,7 @@ class NetworkFileAdapter(
         private val circularDisk: za.kilowatch.ultimatefilemanager.ui.CircularProgressView? =
             itemView.findViewById(R.id.circularDiskUsage)
         private val iconContainer: View? = itemView.findViewById(R.id.iconContainer)
+        private val layoutRow: View? = itemView.findViewById(R.id.layoutFileRow)
         private val imgClipboardBadge: ImageView? = itemView.findViewById(R.id.imgClipboardBadge)
         private val context: Context = itemView.context
 
@@ -617,7 +628,9 @@ class NetworkFileAdapter(
         private fun stopPulse() {
             imgIcon.clearAnimation()
             imgIcon.alpha = 1.0f
-        }        fun bind(file: NetworkFile) {
+        }
+
+        fun bind(file: NetworkFile) {
             // Cancel any previous Coil request or thumbnail job attached to this ViewHolder
             // to avoid stale images on recycled ViewHolders.
             try { itemView.findViewById<ImageView>(R.id.imgFileIcon)?.let { (it as ImageView).let { /* no-op */ } } } catch (e: Exception) {}
@@ -625,6 +638,8 @@ class NetworkFileAdapter(
             coilDisposable?.dispose()
             coilDisposable = null
             thumbnailJob?.cancel()
+            thumbnailJob = null
+            ScrollingTextHelper.cancelScrolling(txtName)
 
             // Pinned status indicator
             val isItemPinned = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context, file.path, share.id)
@@ -650,28 +665,31 @@ class NetworkFileAdapter(
             if (!isGrid) {
                 itemView.minimumHeight = 0
                 val density = context.resources.displayMetrics.density
-                val heightDp = when (viewMode) {
+
+                val heightDp = if (isCompact) 44 else when (viewMode) {
                     ViewModeManager.ViewMode.LIST_SMALL -> 48
                     ViewModeManager.ViewMode.LIST_MEDIUM -> 64
                     ViewModeManager.ViewMode.LIST_LARGE -> 80
                     ViewModeManager.ViewMode.LIST_XLARGE -> 96
                     else -> 64
                 }
-                val iconSizeDp = when (viewMode) {
+
+                val iconSizeDp = if (isCompact) 34 else when (viewMode) {
                     ViewModeManager.ViewMode.LIST_SMALL -> 36
                     ViewModeManager.ViewMode.LIST_MEDIUM -> 48
                     ViewModeManager.ViewMode.LIST_LARGE -> 56
                     ViewModeManager.ViewMode.LIST_XLARGE -> 64
                     else -> 48
                 }
-                val titleSp = when (viewMode) {
+
+                val titleSp = if (isCompact) 12f else when (viewMode) {
                     ViewModeManager.ViewMode.LIST_SMALL -> 14f
                     ViewModeManager.ViewMode.LIST_MEDIUM -> 16f
                     ViewModeManager.ViewMode.LIST_LARGE -> 18f
                     ViewModeManager.ViewMode.LIST_XLARGE -> 20f
                     else -> 16f
                 }
-                val subtitleSp = when (viewMode) {
+                val subtitleSp = if (isCompact) 10f else when (viewMode) {
                     ViewModeManager.ViewMode.LIST_SMALL -> 11f
                     ViewModeManager.ViewMode.LIST_MEDIUM -> 12f
                     ViewModeManager.ViewMode.LIST_LARGE -> 13f
@@ -679,9 +697,11 @@ class NetworkFileAdapter(
                     else -> 12f
                 }
 
-                itemView.minimumHeight = (heightDp * density + 0.5f).toInt()
+                val minHeightPx = (heightDp * density + 0.5f).toInt()
+                itemView.minimumHeight = minHeightPx
+                layoutRow?.minimumHeight = minHeightPx
                 val params = itemView.layoutParams
-                if (params != null) {
+                if (params != null && params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT
                     itemView.layoutParams = params
                 }
@@ -689,11 +709,10 @@ class NetworkFileAdapter(
                 iconContainer?.let { container ->
                     val iconParams = container.layoutParams as? ViewGroup.MarginLayoutParams
                     if (iconParams != null) {
-                        val rowHeightPx = (heightDp * density + 0.5f).toInt()
-                        val marginPx = (3 * density + 0.5f).toInt()
-                        val containerSizePx = rowHeightPx - 2 * marginPx
-                        iconParams.width = containerSizePx
-                        iconParams.height = containerSizePx
+                        val iconSizePx = (iconSizeDp * density + 0.5f).toInt()
+                        val marginPx = (4 * density + 0.5f).toInt()
+                        iconParams.width = iconSizePx
+                        iconParams.height = iconSizePx
                         iconParams.topMargin = marginPx
                         iconParams.bottomMargin = marginPx
                         container.layoutParams = iconParams
@@ -967,11 +986,8 @@ class NetworkFileAdapter(
                 }
             }
 
-            // ── Scrolling text for long file names (list only, not grid) ─────
-            if (!isGrid) {
-                val scrollingEnabled = ScrollingTextPreferenceManager.isEnabled(context)
-                ScrollingTextHelper.applyScrollingText(txtName, scrollingEnabled)
-            }
+            // ── File name presentation (marquee, multi-line, or grid) ───────
+            FileNameDisplayHelper.applyFileNameDisplay(txtName, file.name, isTv, isGrid)
 
             if (isGrid) {
                 applyGridTextColor(file)

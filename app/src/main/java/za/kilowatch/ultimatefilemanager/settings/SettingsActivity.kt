@@ -135,7 +135,7 @@ class SettingsActivity : AppCompatActivity() {
     private var switchSelectionCheckbox: SwitchMaterial? = null
     private var txtSelectionCheckboxSubtitle: TextView? = null
 
-    private lateinit var switchScrollingText: SwitchMaterial
+    private var switchScrollingText: SwitchMaterial? = null
     private lateinit var txtScrollingTextSubtitle: TextView
 
     private lateinit var switchGridIndicators: SwitchMaterial
@@ -613,17 +613,21 @@ class SettingsActivity : AppCompatActivity() {
             switchSelectionCheckbox?.setOnCheckedChangeListener(null)
         }
 
-        // Scrolling Text toggle
+        // Scrolling Text / File Name Display
         val cardScrollingText = findViewById<View>(R.id.cardScrollingText)
         switchScrollingText = findViewById(R.id.switchScrollingText)
         txtScrollingTextSubtitle = findViewById(R.id.txtScrollingTextSubtitle)
 
-        val scrollingTextEnabled = ScrollingTextPreferenceManager.isEnabled(this)
-        switchScrollingText.isChecked = scrollingTextEnabled
-        updateScrollingTextSubtitle(scrollingTextEnabled)
-
-        cardScrollingText.setOnClickListener { toggleScrollingText() }
-        switchScrollingText.setOnCheckedChangeListener(null)
+        if (isTv) {
+            val scrollingTextEnabled = ScrollingTextPreferenceManager.isEnabled(this)
+            switchScrollingText?.isChecked = scrollingTextEnabled
+            updateScrollingTextSubtitle(scrollingTextEnabled)
+            cardScrollingText.setOnClickListener { toggleScrollingText() }
+            switchScrollingText?.setOnCheckedChangeListener(null)
+        } else {
+            updateFileNameDisplaySubtitle()
+            cardScrollingText.setOnClickListener { showFileNameDisplayDialog() }
+        }
 
         // Left-handed FAB toggle (Mobile Only)
         val cardLeftHandedFab = findViewById<View>(R.id.cardLeftHandedFab)
@@ -1142,11 +1146,15 @@ class SettingsActivity : AppCompatActivity() {
             updateSelectionCheckboxSubtitle(enabled)
         }
 
-        // Refresh Scrolling Text subtitle
-        if (::switchScrollingText.isInitialized) {
-            val enabled = ScrollingTextPreferenceManager.isEnabled(this)
-            switchScrollingText.isChecked = enabled
-            updateScrollingTextSubtitle(enabled)
+        // Refresh Scrolling Text / File Name Display subtitle
+        if (isTv) {
+            switchScrollingText?.let { sw ->
+                val enabled = ScrollingTextPreferenceManager.isEnabled(this)
+                sw.isChecked = enabled
+                updateScrollingTextSubtitle(enabled)
+            }
+        } else {
+            updateFileNameDisplaySubtitle()
         }
 
         // Refresh Left-handed FAB subtitle
@@ -1992,8 +2000,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun toggleScrollingText() {
-        val newValue = !switchScrollingText.isChecked
-        switchScrollingText.isChecked = newValue
+        val sw = switchScrollingText ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
         ScrollingTextPreferenceManager.setEnabled(this, newValue)
         updateScrollingTextSubtitle(newValue)
     }
@@ -2004,6 +2013,57 @@ class SettingsActivity : AppCompatActivity() {
         } else {
             getString(R.string.settings_scrolling_text_subtitle_off)
         }
+    }
+
+    private fun updateFileNameDisplaySubtitle() {
+        if (!::txtScrollingTextSubtitle.isInitialized) return
+        val mode = ScrollingTextPreferenceManager.getMode(this)
+        txtScrollingTextSubtitle.text = when (mode) {
+            ScrollingTextPreferenceManager.MODE_MARQUEE -> getString(R.string.settings_file_name_display_marquee)
+            ScrollingTextPreferenceManager.MODE_MULTILINE_2 -> getString(R.string.settings_file_name_display_2_lines)
+            ScrollingTextPreferenceManager.MODE_MULTILINE_3 -> getString(R.string.settings_file_name_display_3_lines)
+            ScrollingTextPreferenceManager.MODE_MULTILINE_UNLIMITED -> getString(R.string.settings_file_name_display_unlimited)
+            ScrollingTextPreferenceManager.MODE_TRUNCATE -> getString(R.string.settings_file_name_display_truncate)
+            else -> getString(R.string.settings_file_name_display_marquee)
+        }
+    }
+
+    private fun showFileNameDisplayDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_file_name_display, null)
+        val currentMode = ScrollingTextPreferenceManager.getMode(this)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val options = listOf(
+            Triple(R.id.btnModeMarquee, R.id.checkModeMarquee, ScrollingTextPreferenceManager.MODE_MARQUEE),
+            Triple(R.id.btnMode2Lines, R.id.checkMode2Lines, ScrollingTextPreferenceManager.MODE_MULTILINE_2),
+            Triple(R.id.btnMode3Lines, R.id.checkMode3Lines, ScrollingTextPreferenceManager.MODE_MULTILINE_3),
+            Triple(R.id.btnModeUnlimited, R.id.checkModeUnlimited, ScrollingTextPreferenceManager.MODE_MULTILINE_UNLIMITED),
+            Triple(R.id.btnModeTruncate, R.id.checkModeTruncate, ScrollingTextPreferenceManager.MODE_TRUNCATE)
+        )
+
+        options.forEach { (btnId, checkId, mode) ->
+            val btn = dialogView.findViewById<View>(btnId)
+            val check = dialogView.findViewById<ImageView>(checkId)
+            val isSelected = currentMode == mode
+            check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+
+            btn?.setOnClickListener {
+                ScrollingTextPreferenceManager.setMode(this, mode)
+                updateFileNameDisplaySubtitle()
+                dialog.dismiss()
+            }
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun toggleLeftHandedFab() {

@@ -415,6 +415,44 @@ Nama file bergulir saat meluap
     <string name="settings_scrolling_text_subtitle_off">
 Nama file dipotong
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Tampilan nama file
+</string>
+    <string name="settings_file_name_display_desc">
+Pilih bagaimana nama file yang panjang ditampilkan dalam tampilan daftar
+</string>
+    <string name="settings_file_name_display_marquee">
+Gulir marquee (1 baris)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Menggulir secara horizontal untuk menampilkan nama lengkap (default)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 baris
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Membungkus nama panjang hingga 2 baris
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 baris
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Membungkus nama panjang hingga 3 baris
+</string>
+    <string name="settings_file_name_display_unlimited">
+Baris tak terbatas
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Membungkus nama lengkap sebanyak baris yang diperlukan
+</string>
+    <string name="settings_file_name_display_truncate">
+Satu baris (Terpotong)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Memotong dengan elipsis (…) tanpa menggulir
+</string>
     <string name="settings_grid_indicators_title">
 Sembunyikan nomor baris dan header kolom
 </string>

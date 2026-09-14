@@ -415,6 +415,44 @@
     <string name="settings_scrolling_text_subtitle_off">
 أسماء الملفات مقتطعة
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+عرض اسم الملف
+</string>
+    <string name="settings_file_name_display_desc">
+اختر كيفية عرض أسماء الملفات الطويلة في عروض القائمة
+</string>
+    <string name="settings_file_name_display_marquee">
+تمرير متحرك (سطر واحد)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+يمرر أفقيًا لكشف الاسم الكامل (افتراضي)
+</string>
+    <string name="settings_file_name_display_2_lines">
+سطران
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+يلف الأسماء الطويلة على ما يصل إلى سطرين
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 أسطر
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+يلف الأسماء الطويلة على ما يصل إلى 3 أسطر
+</string>
+    <string name="settings_file_name_display_unlimited">
+أسطر غير محدودة
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+يلف الاسم الكامل على عدد الأسطر اللازمة
+</string>
+    <string name="settings_file_name_display_truncate">
+سطر واحد (مقتطع)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+يقتطع مع علامة الحذف (…) دون تمرير
+</string>
     <string name="settings_grid_indicators_title">
 إخفاء أرقام الأسطر ورؤوس الأعمدة
 </string>

@@ -415,6 +415,44 @@ I nomi dei file scorrono quando sono in eccesso
     <string name="settings_scrolling_text_subtitle_off">
 I nomi dei file vengono troncati
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Visualizzazione nome file
+</string>
+    <string name="settings_file_name_display_desc">
+Scegli per quanta parte i nomi file vengono mostrati nelle viste elenco
+</string>
+    <string name="settings_file_name_display_marquee">
+Scorrimento continuo (1 riga)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Scorre orizzontalmente per mostrare il nome completo (predefinito)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 righe
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Manda a capo i nomi lunghi su un massimo di 2 righe
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 righe
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Manda a capo i nomi lunghi su un massimo di 3 righe
+</string>
+    <string name="settings_file_name_display_unlimited">
+Righe illimitate
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Manda a capo il nome completo sul numero di righe necessario
+</string>
+    <string name="settings_file_name_display_truncate">
+Riga singola (troncato)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Tronca con puntini di sospensione (…) senza scorrimento
+</string>
     <string name="settings_grid_indicators_title">
 Nascondi i numeri di riga e le intestazioni di colonna
 </string>

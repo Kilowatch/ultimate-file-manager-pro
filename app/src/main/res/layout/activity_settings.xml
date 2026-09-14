@@ -997,14 +997,12 @@
                                                         android:textSize="12sp" />
                                                 </LinearLayout>
 
-                                                <!-- Toggle Switch -->
-                                                <com.google.android.material.switchmaterial.SwitchMaterial
-                                                    android:id="@+id/switchScrollingText"
-                                                    android:layout_width="wrap_content"
-                                                    android:layout_height="wrap_content"
-                                                    android:checked="true"
-                                                    android:clickable="false"
-                                                    android:focusable="false" />
+                                                <ImageView
+                                                    android:layout_width="20dp"
+                                                    android:layout_height="20dp"
+                                                    android:src="@drawable/ic_chevron_right"
+                                                    app:tint="@color/mobile_text_secondary"
+                                                    android:contentDescription="@null" />
                         </LinearLayout>
                         <View
                             android:layout_width="match_parent"

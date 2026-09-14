@@ -415,6 +415,44 @@ USB-накопичувач
     <string name="settings_scrolling_text_subtitle_off">
 Назви файлів обрізаються
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Відображення імен файлів
+</string>
+    <string name="settings_file_name_display_desc">
+Виберіть, як відображати довгі імена файлів у списках
+</string>
+    <string name="settings_file_name_display_marquee">
+Біжучий рядок (1 рядок)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Прокручується горизонтально, щоб показати повне ім\\\'я (за замовчуванням)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 рядки
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Переносить довгі імена на до 2 рядків
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 рядки
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Переносить довгі імена на до 3 рядків
+</string>
+    <string name="settings_file_name_display_unlimited">
+Необмежена кількість рядків
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Переносить повне ім\\\'я на стільки рядків, скільки потрібно
+</string>
+    <string name="settings_file_name_display_truncate">
+Один рядок (обрізаний)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Обрізає з трикрапкою (…) без прокрутки
+</string>
     <string name="settings_grid_indicators_title">
 Приховати номери рядків та заголовки стовпців
 </string>

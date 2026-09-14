@@ -69,6 +69,8 @@ import coil3.size.Scale
 import za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
+import za.kilowatch.ultimatefilemanager.settings.FileNameDisplayHelper
+import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import kotlinx.coroutines.Job
 
 private val VIDEO_EXTENSIONS = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
@@ -689,6 +691,7 @@ class SafPickerActivity : AppCompatActivity() {
                 coilDisposable = null
                 videoJob?.cancel()
                 videoJob = null
+                ScrollingTextHelper.cancelScrolling(title)
                 hasLoadedThumbnail = false
                 boundItem = null
             }
@@ -703,6 +706,7 @@ class SafPickerActivity : AppCompatActivity() {
                 hasLoadedThumbnail = false
 
                 title.text = item.label
+                FileNameDisplayHelper.applyFileNameDisplay(title, item.label, isTv)
                 subtitle.text = if (item.isRoot) getString(R.string.storage_volume) else if (item.isDir) "Folder" else "File"
 
                 itemView.findViewById<View>(R.id.txtFileSize)?.visibility = View.GONE

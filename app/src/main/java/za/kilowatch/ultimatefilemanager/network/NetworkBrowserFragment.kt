@@ -300,6 +300,9 @@ class NetworkBrowserFragment : Fragment() {
         applyLeftHandedFabSettings()
         applyToolbarIconVisibility()
         updatePasteFab()
+        if (::fileAdapter.isInitialized) {
+            fileAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

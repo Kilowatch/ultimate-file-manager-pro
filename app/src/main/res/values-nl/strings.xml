@@ -385,6 +385,44 @@ Bestandsnamen scrollen als ze overlopen
     <string name="settings_scrolling_text_subtitle_off">
 Bestandsnamen worden afgekapt
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Weergave bestandsnaam
+</string>
+    <string name="settings_file_name_display_desc">
+Kies hoe bestandsnamen worden weergegeven in lijstweergaven
+</string>
+    <string name="settings_file_name_display_marquee">
+Lopende tekst (1 regel)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Scrollt horizontaal om de volledige naam te tonen (standaard)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 regels
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Verdeelt lange namen over maximaal 2 regels
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 regels
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Verdeelt lange namen over maximaal 3 regels
+</string>
+    <string name="settings_file_name_display_unlimited">
+Onbeperkt aantal regels
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Verdeelt de volledige naam over zoveel regels als nodig
+</string>
+    <string name="settings_file_name_display_truncate">
+Eén regel (afgekapt)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Kapt af met ellips (…) zonder te scrollen
+</string>
     <string name="settings_grid_indicators_title">
 Regelnummers en kolomkoppen verbergen
 </string>

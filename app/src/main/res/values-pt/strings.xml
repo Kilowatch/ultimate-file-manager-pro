@@ -415,6 +415,44 @@ Os nomes dos arquivos rolam quando transbordam
     <string name="settings_scrolling_text_subtitle_off">
 Os nomes dos arquivos são truncados
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Exibição do nome do arquivo
+</string>
+    <string name="settings_file_name_display_desc">
+Escolha como os nomes de arquivo longos são exibidos nas visualizações de lista
+</string>
+    <string name="settings_file_name_display_marquee">
+Rolagem contínua (1 linha)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Rola horizontalmente para revelar o nome completo (padrão)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 linhas
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Quebra nomes longos em até 2 linhas
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 linhas
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Quebra nomes longos em até 3 linhas
+</string>
+    <string name="settings_file_name_display_unlimited">
+Linhas ilimitadas
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Quebra o nome completo em quantas linhas forem necessárias
+</string>
+    <string name="settings_file_name_display_truncate">
+Linha única (truncado)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Trunca com reticências (…) sem rolagem
+</string>
     <string name="settings_grid_indicators_title">
 Ocultar números de linha e cabeçalhos de coluna
 </string>

@@ -10,7 +10,7 @@
     android:id="@+id/cardFile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="54dp"
+    android:minHeight="44dp"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/selector_tv_list_item">
@@ -18,9 +18,11 @@
     <LinearLayout
         android:id="@+id/layoutFileRow"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="44dp"
         android:orientation="horizontal"
         android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
         android:gravity="center_vertical"
         android:clipChildren="false"
         android:clipToPadding="false">
@@ -43,7 +45,7 @@
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:background="@drawable/bg_icon_circle_accent"
-            android:layout_marginVertical="5dp"
+            android:layout_marginVertical="2dp"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:transitionName="file_icon_placeholder">

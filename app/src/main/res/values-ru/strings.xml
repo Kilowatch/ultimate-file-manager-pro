@@ -415,6 +415,44 @@ USB-накопитель
     <string name="settings_scrolling_text_subtitle_off">
 Имена файлов обрезаются
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Отображение имён файлов
+</string>
+    <string name="settings_file_name_display_desc">
+Выберите, как отображаются длинные имена файлов в списках
+</string>
+    <string name="settings_file_name_display_marquee">
+Прокрутка бегущей строкой (1 строка)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Прокручивает по горизонтали, показывая полное имя (по умолчанию)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 строки
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Переносит длинные имена максимум на 2 строки
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 строки
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Переносит длинные имена максимум на 3 строки
+</string>
+    <string name="settings_file_name_display_unlimited">
+Неограниченное число строк
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Переносит полное имя на столько строк, сколько потребуется
+</string>
+    <string name="settings_file_name_display_truncate">
+Одна строка (с обрезкой)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Обрезает с многоточием (…) без прокрутки
+</string>
     <string name="settings_grid_indicators_title">
 Скрыть номера строк и заголовки столбцов
 </string>

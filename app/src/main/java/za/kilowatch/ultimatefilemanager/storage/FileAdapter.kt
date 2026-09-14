@@ -34,6 +34,7 @@ import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
+import za.kilowatch.ultimatefilemanager.settings.FileNameDisplayHelper
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.text.SimpleDateFormat
@@ -703,6 +704,7 @@ class FileAdapter(
             videoJob?.cancel()
             videoJob = null
             stopPulse()
+            ScrollingTextHelper.cancelScrolling(txtName)
             imgIcon.tag = null
             hasLoadedThumbnail = false
             boundFile = null
@@ -768,28 +770,31 @@ class FileAdapter(
             if (!isGrid) {
                 itemView.minimumHeight = 0
                 val density = context.resources.displayMetrics.density
-                val heightDp = when (viewMode) {
+
+                val heightDp = if (isCompact) 44 else when (viewMode) {
                     ViewModeManager.ViewMode.LIST_SMALL -> 48
                     ViewModeManager.ViewMode.LIST_MEDIUM -> 64
                     ViewModeManager.ViewMode.LIST_LARGE -> 80
                     ViewModeManager.ViewMode.LIST_XLARGE -> 96
                     else -> 64
                 }
-                val iconSizeDp = when (viewMode) {
+
+                val iconSizeDp = if (isCompact) 34 else when (viewMode) {
                     ViewModeManager.ViewMode.LIST_SMALL -> 36
                     ViewModeManager.ViewMode.LIST_MEDIUM -> 48
                     ViewModeManager.ViewMode.LIST_LARGE -> 56
                     ViewModeManager.ViewMode.LIST_XLARGE -> 64
                     else -> 48
                 }
-                val titleSp = when (viewMode) {
+
+                val titleSp = if (isCompact) 12f else when (viewMode) {
                     ViewModeManager.ViewMode.LIST_SMALL -> 14f
                     ViewModeManager.ViewMode.LIST_MEDIUM -> 16f
                     ViewModeManager.ViewMode.LIST_LARGE -> 18f
                     ViewModeManager.ViewMode.LIST_XLARGE -> 20f
                     else -> 16f
                 }
-                val subtitleSp = when (viewMode) {
+                val subtitleSp = if (isCompact) 10f else when (viewMode) {
                     ViewModeManager.ViewMode.LIST_SMALL -> 11f
                     ViewModeManager.ViewMode.LIST_MEDIUM -> 12f
                     ViewModeManager.ViewMode.LIST_LARGE -> 13f
@@ -797,7 +802,9 @@ class FileAdapter(
                     else -> 12f
                 }
 
-                itemView.minimumHeight = (heightDp * density + 0.5f).toInt()
+                val minHeightPx = (heightDp * density + 0.5f).toInt()
+                itemView.minimumHeight = minHeightPx
+                layoutRow.minimumHeight = minHeightPx
                 val params = itemView.layoutParams
                 if (params != null && params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -807,11 +814,10 @@ class FileAdapter(
                 iconContainer?.let { container ->
                     val iconParams = container.layoutParams as? ViewGroup.MarginLayoutParams
                     if (iconParams != null) {
-                        val rowHeightPx = (heightDp * density + 0.5f).toInt()
-                        val marginPx = (3 * density + 0.5f).toInt()
-                        val containerSizePx = rowHeightPx - 2 * marginPx
-                        iconParams.width = containerSizePx
-                        iconParams.height = containerSizePx
+                        val iconSizePx = (iconSizeDp * density + 0.5f).toInt()
+                        val marginPx = (4 * density + 0.5f).toInt()
+                        iconParams.width = iconSizePx
+                        iconParams.height = iconSizePx
                         iconParams.topMargin = marginPx
                         iconParams.bottomMargin = marginPx
                         container.layoutParams = iconParams
@@ -1253,11 +1259,8 @@ class FileAdapter(
                 }
             }
 
-            // ── Scrolling text for long file names (list only, not grid) ─────
-            if (!isGrid) {
-                val scrollingEnabled = ScrollingTextPreferenceManager.isEnabled(context)
-                ScrollingTextHelper.applyScrollingText(txtName, scrollingEnabled)
-            }
+            // ── File name presentation (marquee, multi-line, or grid) ───────
+            FileNameDisplayHelper.applyFileNameDisplay(txtName, file.name, isTv, isGrid)
 
             if (isGrid) {
                 applyGridTextColor(file)

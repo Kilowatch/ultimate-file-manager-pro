@@ -413,6 +413,44 @@ Filnamn rullar när de svämmar över
     <string name="settings_scrolling_text_subtitle_off">
 Filnamnen är trunkerade
 </string>
+
+    <!-- File Name Display (Mobile) -->
+    <string name="settings_file_name_display_title">
+Visning av filnamn
+</string>
+    <string name="settings_file_name_display_desc">
+Välj hur länge filnamn visas i listvyer
+</string>
+    <string name="settings_file_name_display_marquee">
+Rullande text (1 rad)
+</string>
+    <string name="settings_file_name_display_marquee_desc">
+Rullar vågrätt för att visa hela namnet (standard)
+</string>
+    <string name="settings_file_name_display_2_lines">
+2 rader
+</string>
+    <string name="settings_file_name_display_2_lines_desc">
+Radbryter långa namn över upp till 2 rader
+</string>
+    <string name="settings_file_name_display_3_lines">
+3 rader
+</string>
+    <string name="settings_file_name_display_3_lines_desc">
+Radbryter långa namn över upp till 3 rader
+</string>
+    <string name="settings_file_name_display_unlimited">
+Obegränsat antal rader
+</string>
+    <string name="settings_file_name_display_unlimited_desc">
+Radbryter hela namnet över så många rader som behövs
+</string>
+    <string name="settings_file_name_display_truncate">
+En rad (avkortad)
+</string>
+    <string name="settings_file_name_display_truncate_desc">
+Kortar av med ellips (…) utan att rulla
+</string>
     <string name="settings_grid_indicators_title">
 Dölj radnummer och kolumnrubriker
 </string>
