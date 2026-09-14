@@ -171,7 +171,7 @@ class TwinWindowActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         ThemeHelper.applyTheme(this)
-        super.onCreate(savedInstanceState)
+        super.onCreate(null)
         
         val isTv = DeviceUtils.isTvDevice(this)
         val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
@@ -193,9 +193,8 @@ class TwinWindowActivity : AppCompatActivity() {
             view.updatePadding(left = bars.left, top = bars.top, right = bars.right, bottom = bars.bottom)
             
             val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
-            val isVerticalMode = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this@TwinWindowActivity)
-            val p1Id = if (isVerticalMode) R.id.paneLeft else R.id.paneTop
-            val p2Id = if (isVerticalMode) R.id.paneRight else R.id.paneBottom
+            val p1Id = R.id.pane1
+            val p2Id = R.id.pane2
             
             val pane1 = findViewById<View>(p1Id)
             val pane2 = findViewById<View>(p2Id)
@@ -496,12 +495,7 @@ class TwinWindowActivity : AppCompatActivity() {
 
 
     private fun replacePane(index: Int, fragment: Fragment) {
-        val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
-        val paneId = if (index == 1) {
-            if (isVerticalSplit) R.id.paneLeft else R.id.paneTop
-        } else {
-            if (isVerticalSplit) R.id.paneRight else R.id.paneBottom
-        }
+        val paneId = if (index == 1) R.id.pane1 else R.id.pane2
 
         if (index == 1) pane1 = fragment else pane2 = fragment
 
@@ -2039,21 +2033,16 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     private fun getPane1(): Fragment? {
-        val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
-        val id = if (isVerticalSplit) R.id.paneLeft else R.id.paneTop
-        return supportFragmentManager.findFragmentById(id) ?: pane1
+        return supportFragmentManager.findFragmentById(R.id.pane1) ?: pane1
     }
 
     private fun getPane2(): Fragment? {
-        val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
-        val id = if (isVerticalSplit) R.id.paneRight else R.id.paneBottom
-        return supportFragmentManager.findFragmentById(id) ?: pane2
+        return supportFragmentManager.findFragmentById(R.id.pane2) ?: pane2
     }
 
     private fun switchActivePane() {
-        val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
-        val p1Id = if (isVerticalSplit) R.id.paneLeft else R.id.paneTop
-        val p2Id = if (isVerticalSplit) R.id.paneRight else R.id.paneBottom
+        val p1Id = R.id.pane1
+        val p2Id = R.id.pane2
         val inPane1 = findViewById<View>(p1Id)?.hasFocus() == true
         val targetFragment = if (inPane1) getPane2() else getPane1()
         targetFragment?.view?.findViewById<View>(R.id.recyclerFiles)?.requestFocus()
@@ -2061,9 +2050,8 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     private fun focusPane(paneNumber: Int) {
-        val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
-        val p1Id = if (isVerticalSplit) R.id.paneLeft else R.id.paneTop
-        val p2Id = if (isVerticalSplit) R.id.paneRight else R.id.paneBottom
+        val p1Id = R.id.pane1
+        val p2Id = R.id.pane2
         val targetFragment = if (paneNumber == 1) getPane1() else getPane2()
         val targetContainerId = if (paneNumber == 1) p1Id else p2Id
         targetFragment?.view?.findViewById<View>(R.id.recyclerFiles)?.requestFocus()
@@ -2105,8 +2093,8 @@ class TwinWindowActivity : AppCompatActivity() {
             if (!isVerticalSplit) {
                 val isLeftOrRight = event.keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT || event.keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT
                 if (isLeftOrRight && event.action == android.view.KeyEvent.ACTION_DOWN) {
-                    val p1Id = R.id.paneTop
-                    val p2Id = R.id.paneBottom
+                    val p1Id = R.id.pane1
+                    val p2Id = R.id.pane2
                     val focusedView = currentFocus
                     val inPane1 = findViewById<View>(p1Id)?.hasFocus() == true
                     val inPane2 = findViewById<View>(p2Id)?.hasFocus() == true
@@ -2137,8 +2125,8 @@ class TwinWindowActivity : AppCompatActivity() {
                     }
                 } else if (isLeftOrRight && event.action == android.view.KeyEvent.ACTION_UP) {
                     val focusedView = currentFocus
-                    val inPane1 = findViewById<View>(R.id.paneTop)?.hasFocus() == true
-                    val inPane2 = findViewById<View>(R.id.paneBottom)?.hasFocus() == true
+                    val inPane1 = findViewById<View>(R.id.pane1)?.hasFocus() == true
+                    val inPane2 = findViewById<View>(R.id.pane2)?.hasFocus() == true
                     val activeFragment = if (inPane1) getPane1() else if (inPane2) getPane2() else null
                     if (activeFragment != null) {
                         val activeRecycler = activeFragment.view?.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerFiles)
@@ -2152,12 +2140,8 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     private fun getFocusedFragment(): Fragment? {
-        val isVerticalSplit = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
-        val p1Id = if (isVerticalSplit) R.id.paneLeft else R.id.paneTop
-        val p2Id = if (isVerticalSplit) R.id.paneRight else R.id.paneBottom
-
-        if (findViewById<View>(p1Id)?.hasFocus() == true) return getPane1()
-        if (findViewById<View>(p2Id)?.hasFocus() == true) return getPane2()
+        if (findViewById<View>(R.id.pane1)?.hasFocus() == true) return getPane1()
+        if (findViewById<View>(R.id.pane2)?.hasFocus() == true) return getPane2()
 
         // Fallback: if neither has focus (e.g. focus is on a title), return pane 1
         return getPane1()

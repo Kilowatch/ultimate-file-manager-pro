@@ -16,7 +16,7 @@
 
     <!-- Left Pane -->
     <FrameLayout
-        android:id="@+id/paneLeft"
+        android:id="@+id/pane1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,11 +31,11 @@
         android:layout_height="match_parent"
         android:background="@color/tv_accent"
         app:layout_constraintStart_toEndOf="@+id/splitGuideline"
-        app:layout_constraintEnd_toStartOf="@+id/paneRight" />
+        app:layout_constraintEnd_toStartOf="@+id/pane2" />
 
     <!-- Right Pane -->
     <FrameLayout
-        android:id="@+id/paneRight"
+        android:id="@+id/pane2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"

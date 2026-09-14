@@ -225,7 +225,14 @@ class AdbManager private constructor() {
                     }
 
                     override fun onResume(owner: LifecycleOwner) {
-                        if (!isRemoteMode) resetInactivityTimer()
+                        if (!isRemoteMode) {
+                            resetInactivityTimer()
+                            val host = connectedHost
+                            val port = connectedPort
+                            if (host != null && isConnected()) {
+                                AdbSessionForegroundService.start(host, port)
+                            }
+                        }
                     }
 
                     override fun onDestroy(owner: LifecycleOwner) {

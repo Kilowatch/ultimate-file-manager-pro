@@ -46,11 +46,70 @@ class AdbSessionForegroundService : Service() {
         fun start(host: String, port: Int) {
             try {
                 val context = UfmApplication.instance.applicationContext
+                val isForeground = try {
+                    androidx.lifecycle.ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(
+                        androidx.lifecycle.Lifecycle.State.STARTED
+                    )
+                } catch (_: Exception) {
+                    true
+                }
+
                 val intent = Intent(context, AdbSessionForegroundService::class.java).apply {
                     putExtra(EXTRA_HOST, host)
                     putExtra(EXTRA_PORT, port)
                 }
-                ContextCompat.startForegroundService(context, intent)
+
+                if (isForeground) {
+                    ContextCompat.startForegroundService(context, intent)
+                } else {
+                    // On Android 14+ (API 34+), starting a connectedDevice FGS while backgrounded is restricted
+                    // by OS policy (ForegroundServiceStartNotAllowedException). Post fallback notification directly
+                    // so status is visible, and the FGS will be promoted when the app resumes into foreground.
+                    try {
+                        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                        val channel = NotificationChannel(
+                            CHANNEL_ID,
+                            context.getString(R.string.adb_session_notification_channel_name),
+                            NotificationManager.IMPORTANCE_LOW
+                        ).apply {
+                            description = context.getString(R.string.adb_session_notification_channel_desc)
+                            setShowBadge(false)
+                            enableVibration(false)
+                        }
+                        nm.createNotificationChannel(channel)
+                        val disconnectIntent = Intent(context, AdbDisconnectReceiver::class.java).apply {
+                            action = ACTION_DISCONNECT
+                        }
+                        val disconnectPendingIntent = PendingIntent.getBroadcast(
+                            context,
+                            1,
+                            disconnectIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        )
+                        val openIntent = PendingIntent.getActivity(
+                            context,
+                            0,
+                            Intent(context, TerminalActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            },
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        )
+                        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+                            .setSmallIcon(R.drawable.ic_terminal)
+                            .setContentTitle(context.getString(R.string.adb_session_notification_title))
+                            .setContentText(context.getString(R.string.adb_session_notification_desc, host, port))
+                            .setContentIntent(openIntent)
+                            .addAction(R.drawable.ic_close, context.getString(R.string.disconnect), disconnectPendingIntent)
+                            .setOngoing(true)
+                            .setSilent(true)
+                            .setPriority(NotificationCompat.PRIORITY_LOW)
+                            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                            .build()
+                        nm.notify(NOTIFICATION_ID, notification)
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Fallback notification post in background failed: ${e.message}")
+                    }
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start ADB session foreground service", e)
             }
@@ -78,18 +137,7 @@ class AdbSessionForegroundService : Service() {
         super.onCreate()
         Log.d(TAG, "Service created")
         createNotificationChannel()
-        val notification = buildNotification(currentHost, currentPort)
-        try {
-            ServiceCompat.startForeground(
-                this,
-                NOTIFICATION_ID,
-                notification,
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "startForeground failed for ADB session service", e)
-            stopSelf()
-        }
+        promoteToForeground(currentHost, currentPort)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -105,7 +153,9 @@ class AdbSessionForegroundService : Service() {
             } catch (_: Exception) {}
             val nm = getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
             nm?.cancel(NOTIFICATION_ID)
-            stopSelf()
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                stopSelf()
+            }
             return START_NOT_STICKY
         }
 
@@ -114,10 +164,44 @@ class AdbSessionForegroundService : Service() {
         if (!host.isNullOrBlank()) {
             currentHost = host
             currentPort = port
-            updateNotification(currentHost, currentPort)
         }
 
+        // Mandatory foreground transition: satisfy startForegroundService() contract on every start command
+        promoteToForeground(currentHost, currentPort)
+
         return START_NOT_STICKY
+    }
+
+    private fun promoteToForeground(host: String, port: Int) {
+        val notification = buildNotification(host, port)
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                ServiceCompat.startForeground(
+                    this,
+                    NOTIFICATION_ID,
+                    notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+                )
+            } else {
+                ServiceCompat.startForeground(
+                    this,
+                    NOTIFICATION_ID,
+                    notification,
+                    0
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "startForeground failed for ADB session service: ${e.message}", e)
+            try {
+                val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                nm.notify(NOTIFICATION_ID, notification)
+            } catch (_: Exception) {}
+            // Post stopSelf to main looper rather than calling it synchronously inside the binder transaction,
+            // preventing RemoteServiceException$ForegroundServiceDidNotStartInTimeException
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                stopSelf()
+            }
+        }
     }
 
     override fun onDestroy() {

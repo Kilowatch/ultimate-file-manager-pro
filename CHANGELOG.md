@@ -5,6 +5,12 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.8] — 2026-09-14
+
+### Fixed
+- **Twin Window Crash on Recreate / Split Change**: Fixed `IllegalArgumentException: No view found for id ... (paneBottom)` in `TwinWindowActivity` by standardizing pane container IDs (`pane1` and `pane2`) across all mobile and TV horizontal/vertical layouts, and discarding stale fragment state on recreation so orientation and split preference switches never attempt to restore fragments into missing containers.
+- **ADB Session Foreground Service Watchdog Crash**: Fixed `RemoteServiceException$ForegroundServiceDidNotStartInTimeException` in `AdbSessionForegroundService` by promoting to foreground on every `onStartCommand` invocation, guarding background starts on Android 14+ (SDK 34–36) via `ProcessLifecycleOwner`, and deferring service termination to the main looper to prevent immediate ActiveServices binder contract violations.
+
 ## [2.0.7] — 2026-09-13
 
 ### Added
