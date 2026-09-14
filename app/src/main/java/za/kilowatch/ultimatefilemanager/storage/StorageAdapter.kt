@@ -80,7 +80,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
     fun setTileColors(colors: Map<String, TileColorConfig>) {
         if (tileColors == colors) return
         tileColors = colors
-        notifyDataSetChanged()
+        safeNotifyDataSetChanged()
     }
 
     fun getTileColor(tileId: String): TileColorConfig {
@@ -90,7 +90,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
     fun setTileIcons(icons: Map<String, String>) {
         if (tileIcons == icons) return
         tileIcons = icons
-        notifyDataSetChanged()
+        safeNotifyDataSetChanged()
     }
 
     fun getTileIcon(tileId: String): String? {
@@ -100,7 +100,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
     fun setTileIconRes(res: Map<String, Int>) {
         if (tileIconRes == res) return
         tileIconRes = res
-        notifyDataSetChanged()
+        safeNotifyDataSetChanged()
     }
 
     /** When true, tiles pulse and show a hide (X) button if they are hideable. */
@@ -108,7 +108,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
         set(value) {
             if (field == value) return
             field = value
-            notifyDataSetChanged()
+            safeNotifyDataSetChanged()
         }
 
     /**
@@ -171,10 +171,37 @@ private fun ImageView.safeSetIcon(resId: Int) {
     }
 
     private var adapterContext: android.content.Context? = null
+    private var attachedRecyclerView: RecyclerView? = null
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
+        attachedRecyclerView = recyclerView
         adapterContext = recyclerView.context
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        if (attachedRecyclerView == recyclerView) {
+            attachedRecyclerView = null
+        }
+    }
+
+    /**
+     * Safely dispatches [notifyDataSetChanged]. If the attached [RecyclerView] is
+     * currently computing a layout or scrolling, the notification is posted to the
+     * looper queue to prevent [IllegalStateException].
+     */
+    fun safeNotifyDataSetChanged() {
+        val rv = attachedRecyclerView
+        if (rv != null && rv.isComputingLayout) {
+            rv.post {
+                if (attachedRecyclerView == rv) {
+                    notifyDataSetChanged()
+                }
+            }
+        } else {
+            notifyDataSetChanged()
+        }
     }
 
     fun refreshDisplayedList(context: android.content.Context? = null) {
@@ -248,14 +275,14 @@ private fun ImageView.safeSetIcon(resId: Int) {
         rawItems.clear()
         rawItems.addAll(newItems.filter { !it.isCategoryHeader })
         refreshDisplayedList(context)
-        notifyDataSetChanged()
+        safeNotifyDataSetChanged()
     }
 
     fun addItem(item: StorageItem) {
         if (item.isCategoryHeader) return
         rawItems.add(item)
         refreshDisplayedList()
-        notifyDataSetChanged()
+        safeNotifyDataSetChanged()
     }
 
     fun removeById(id: String) {
@@ -263,7 +290,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
         if (rawIdx >= 0) {
             rawItems.removeAt(rawIdx)
             refreshDisplayedList()
-            notifyDataSetChanged()
+            safeNotifyDataSetChanged()
         }
     }
 
@@ -318,7 +345,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
             }
         }
         refreshDisplayedList(ctx)
-        notifyDataSetChanged()
+        safeNotifyDataSetChanged()
     }
 
     fun getItems(): List<StorageItem> = items.toList()
@@ -335,21 +362,21 @@ private fun ImageView.safeSetIcon(resId: Int) {
             if (field == value) return
             field = value
             refreshDisplayedList()
-            notifyDataSetChanged()
+            safeNotifyDataSetChanged()
         }
 
     var itemSize = MainMenuViewModeManager.ItemSize.MEDIUM
         set(value) {
             if (field == value) return
             field = value
-            notifyDataSetChanged()
+            safeNotifyDataSetChanged()
         }
 
     var gridColumnCount = 3
         set(value) {
             if (field == value) return
             field = value
-            notifyDataSetChanged()
+            safeNotifyDataSetChanged()
         }
 
     /**
@@ -361,7 +388,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
         set(value) {
             if (field == value) return
             field = value
-            notifyDataSetChanged()
+            safeNotifyDataSetChanged()
         }
 
     /**
@@ -379,7 +406,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
         set(value) {
             if (field == value) return
             field = value
-            notifyDataSetChanged()
+            safeNotifyDataSetChanged()
         }
 
     override fun getItemViewType(position: Int): Int {
@@ -564,7 +591,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                     MainMenuViewModeManager.setCategoryExpanded(context, catId, newExpanded)
                     onCategoryHeaderToggled?.invoke(catId, newExpanded)
                     refreshDisplayedList(context)
-                    notifyDataSetChanged()
+                    safeNotifyDataSetChanged()
                 }
             }
 

@@ -2987,27 +2987,35 @@ class StorageBrowserActivity : AppCompatActivity() {
                     }
                 }
 
-                if (droppedItem != null && targetId != null && !droppedItem.isCustomTile) {
-                    // Dropped onto a custom tile â€” move it inside
-                    CustomTileManager.setTileParent(this@StorageBrowserActivity, droppedItem.id, targetId)
-                    // Add to custom tile's internal order
-                    val order = CustomTileManager.loadTileOrder(this@StorageBrowserActivity, targetId).toMutableList()
-                    if (droppedItem.id !in order) {
-                        order.add(droppedItem.id)
-                        CustomTileManager.saveTileOrder(this@StorageBrowserActivity, targetId, order)
+                val applyDrop = {
+                    if (droppedItem != null && targetId != null && !droppedItem.isCustomTile) {
+                        // Dropped onto a custom tile — move it inside
+                        CustomTileManager.setTileParent(this@StorageBrowserActivity, droppedItem.id, targetId)
+                        // Add to custom tile's internal order
+                        val order = CustomTileManager.loadTileOrder(this@StorageBrowserActivity, targetId).toMutableList()
+                        if (droppedItem.id !in order) {
+                            order.add(droppedItem.id)
+                            CustomTileManager.saveTileOrder(this@StorageBrowserActivity, targetId, order)
+                        }
+                        val ctData = CustomTileManager.loadCustomTiles(this@StorageBrowserActivity).find { it.id == targetId }
+                        showPremiumSnackbar(getString(R.string.custom_tile_moved_to, ctData?.title ?: targetId))
+                        loadStorageVolumes()
+                    } else if (droppedItem?.isCustomTile == true && targetId != null) {
+                        // Cannot nest custom tiles
+                        showPremiumSnackbar(getString(R.string.custom_tile_cannot_nest))
+                    } else {
+                        // Normal reorder drop — persist the new order
+                        val orderedIds = storageAdapter.getRawItems().map { it.id }
+                        TileOrderManager.save(this@StorageBrowserActivity, orderedIds)
+                        storageAdapter.onDragFinished(this@StorageBrowserActivity, droppedItem)
+                        showPremiumSnackbar(getString(R.string.tile_order_saved))
                     }
-                    val ctData = CustomTileManager.loadCustomTiles(this@StorageBrowserActivity).find { it.id == targetId }
-                    showPremiumSnackbar(getString(R.string.custom_tile_moved_to, ctData?.title ?: targetId))
-                    loadStorageVolumes()
-                } else if (droppedItem?.isCustomTile == true && targetId != null) {
-                    // Cannot nest custom tiles
-                    showPremiumSnackbar(getString(R.string.custom_tile_cannot_nest))
+                }
+
+                if (recyclerView.isComputingLayout) {
+                    recyclerView.post { applyDrop() }
                 } else {
-                    // Normal reorder drop — persist the new order
-                    val orderedIds = storageAdapter.getRawItems().map { it.id }
-                    TileOrderManager.save(this@StorageBrowserActivity, orderedIds)
-                    storageAdapter.onDragFinished(this@StorageBrowserActivity, droppedItem)
-                    showPremiumSnackbar(getString(R.string.tile_order_saved))
+                    applyDrop()
                 }
             }
 

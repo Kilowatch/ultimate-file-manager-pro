@@ -32,6 +32,7 @@ import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageItem
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.safeDismiss
 
 /**
  * Storage Indexer Activity — hub for managing indexing across all storage devices.
@@ -341,15 +342,15 @@ class StorageIndexerActivity : AppCompatActivity() {
             storageType = storageType,
             onProgress = { current, _ ->
                 runOnUiThread {
-                    if (dialog.isShowing) {
+                    if (!isFinishing && !isDestroyed && dialog.isShowing) {
                         txtProgressStats.text = "Indexed $current Files"
                     }
                 }
             },
             onComplete = {
                 runOnUiThread {
-                    if (dialog.isShowing) {
-                        dialog.dismiss()
+                    dialog.safeDismiss(this)
+                    if (!isFinishing && !isDestroyed) {
                         loadStorages() // Refresh list to show lightning bolt
                         navigateToFileBrowser(item, storageId, storageType)
                     }
@@ -357,7 +358,7 @@ class StorageIndexerActivity : AppCompatActivity() {
             },
             onError = { e ->
                 runOnUiThread {
-                    if (dialog.isShowing) {
+                    if (!isFinishing && !isDestroyed && dialog.isShowing) {
                         txtProgressStats.text = "Error: ${e.message}"
                         // Two different reds (the TV red is #FF5252, status_error
                         // resolves to ufm_denied), so they keep their own levers.

@@ -24,6 +24,7 @@ import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.ui.policy.ProminentDisclosureHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.safeDismiss
 import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.util.Arrays
@@ -562,7 +563,8 @@ class RemoteManageActivity : AppCompatActivity() {
                 server.start()
                 fileServer = server
                 runOnUiThread {
-                    startingDialog.dismiss()
+                    startingDialog.safeDismiss(this)
+                    if (isFinishing || isDestroyed) return@runOnUiThread
                     val ip = getDeviceIpAddress()
                     if (currentMode == ConnectionMode.WINDOWS_APP) {
                         findViewById<TextView>(R.id.txtServerUrl)?.text = ip
@@ -585,7 +587,8 @@ class RemoteManageActivity : AppCompatActivity() {
                 // fails to start and must never take down the app with it.
                 android.util.Log.e("RemoteManageActivity", "startServer failed (device verifier rejected Netty bytecode)", e)
                 runOnUiThread {
-                    startingDialog.dismiss()
+                    startingDialog.safeDismiss(this)
+                    if (isFinishing || isDestroyed) return@runOnUiThread
                     val txtStatus = findViewById<TextView>(R.id.txtStatus)
                     txtStatus?.text = getString(R.string.remote_server_error)
                     txtStatus?.setTextColor(ColorblindPalette.denied(this))
@@ -593,7 +596,8 @@ class RemoteManageActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 android.util.Log.e("RemoteManageActivity", "startServer failed", e)
                 runOnUiThread {
-                    startingDialog.dismiss()
+                    startingDialog.safeDismiss(this)
+                    if (isFinishing || isDestroyed) return@runOnUiThread
                     val txtStatus = findViewById<TextView>(R.id.txtStatus)
                     txtStatus?.text = getString(R.string.remote_server_error)
                     txtStatus?.setTextColor(ColorblindPalette.denied(this))

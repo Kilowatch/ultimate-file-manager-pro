@@ -782,10 +782,18 @@ class CustomTileActivity : AppCompatActivity() {
                     }
                 }
 
-                val orderedIds = storageAdapter.getRawItems().map { it.id }
-                CustomTileManager.saveTileOrder(this@CustomTileActivity, customTileId, orderedIds)
-                storageAdapter.onDragFinished(this@CustomTileActivity)
-                showPremiumSnackbar(getString(R.string.tile_order_saved))
+                val applyDrop = {
+                    val orderedIds = storageAdapter.getRawItems().map { it.id }
+                    CustomTileManager.saveTileOrder(this@CustomTileActivity, customTileId, orderedIds)
+                    storageAdapter.onDragFinished(this@CustomTileActivity)
+                    showPremiumSnackbar(getString(R.string.tile_order_saved))
+                }
+
+                if (recyclerView.isComputingLayout) {
+                    recyclerView.post { applyDrop() }
+                } else {
+                    applyDrop()
+                }
             }
 
             override fun isLongPressDragEnabled() = false

@@ -99,7 +99,27 @@ class TransferService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        activeInstance = this
         createChannel()
+
+        // Establish foreground state immediately on creation so the system contract
+        // of context.startForegroundService() is satisfied unconditionally, even if
+        // onStartCommand is delayed or stopService is dispatched in quick succession.
+        val notification = buildNotification(
+            getString(R.string.ufm_file_transfer),
+            getString(R.string.transferring_files_1),
+            indeterminate = true,
+            percent = null
+        )
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to enter foreground in onCreate: ${e.message}")
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -108,9 +128,7 @@ class TransferService : Service() {
         val title = intent?.getStringExtra(EXTRA_TITLE) ?: getString(R.string.ufm_file_transfer)
         val text  = intent?.getStringExtra(EXTRA_TEXT)  ?: getString(R.string.transferring_files_1)
 
-        // Mandatory foreground transition: Whenever context.startForegroundService() is called,
-        // Android enforces that Service.startForeground() MUST be called immediately.
-        // Calling startForeground() synchronously right here satisfies the Android framework watchdog.
+        // Mandatory foreground transition: update notification with explicit title/text
         val notification = buildNotification(title, text, indeterminate = true, percent = null)
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -119,9 +137,7 @@ class TransferService : Service() {
                 startForeground(NOTIFICATION_ID, notification)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to enter foreground: ${e.message}")
-            stopSelf()
-            return START_NOT_STICKY
+            Log.e(TAG, "Failed to update foreground notification: ${e.message}")
         }
 
         // Notification Cancel button → cancel the active transfer(s).
@@ -131,17 +147,17 @@ class TransferService : Service() {
         }
 
         // Guard: If onStartCommand runs with no active transfer or stream, stop cleanly.
-        // Because startForeground() has already been called above, calling stopForeground + stopSelf
-        // is guaranteed NOT to trigger ForegroundServiceDidNotStartInTimeException.
+        // Post stopSelf to the main looper rather than calling stopForeground(STOP_FOREGROUND_REMOVE)
+        // synchronously right after startForeground(). Stripping the foreground flag in the same
+        // binder transaction causes Android framework (SDK 26-34) ActiveServices to treat the
+        // startForegroundService() contract as violated, throwing RemoteServiceException.
         if (!TransferManager.isActiveTransfers()) {
-            Log.w(TAG, "No active transfer or stream on startCommand — stopping cleanly")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                stopForeground(STOP_FOREGROUND_REMOVE)
-            } else {
-                @Suppress("DEPRECATION")
-                stopForeground(true)
+            Log.w(TAG, "No active transfer or stream on startCommand — scheduling clean stop")
+            mainHandler.post {
+                if (!TransferManager.isActiveTransfers()) {
+                    stopSelf()
+                }
             }
-            stopSelf()
             return START_NOT_STICKY
         }
 
@@ -156,6 +172,12 @@ class TransferService : Service() {
     override fun onDestroy() {
         activeInstance = null
         releaseLocks()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            @Suppress("DEPRECATION")
+            stopForeground(true)
+        }
         super.onDestroy()
     }
 

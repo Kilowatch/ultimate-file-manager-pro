@@ -28,6 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made FileBrowserFragment and NetworkBrowserFragment fully self-contained without concrete activity casts, ensuring reliable execution inside TabbedBrowserActivity and TwinWindowActivity.
 - Preserved Twin Window pane-to-pane transfer and cross-pane file comparison (compare_twin).
 
+### Fixed
+- **Storage & Main Menu**: Fixed `IllegalStateException` ("Cannot call this method while RecyclerView is computing a layout or scrolling") in `StorageBrowserActivity` and `CustomTileActivity` by deferring drag-and-drop finish callbacks and wrapping adapter notifications via `safeNotifyDataSetChanged()` whenever the RecyclerView is computing layout.
+- **Transfer Service**: Fixed `RemoteServiceException` / `ForegroundServiceDidNotStartInTimeException` in `TransferService` by promoting `startForeground()` directly into `onCreate()` and deferring `stopSelf()` when no transfers are active on start, preventing immediate foreground-state stripping before the system server handshake completes.
+- **Dialogs & Asynchronous Tasks**: Fixed `IllegalArgumentException` ("View not attached to window manager") by introducing `Dialog.safeDismiss()` with activity lifecycle verification and safe window detachment handling across background operations (indexing and remote management).
+
 ## [2.0.6] — 2026-09-13
 
 ### Added
