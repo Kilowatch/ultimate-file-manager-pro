@@ -94,9 +94,9 @@ object ViewModeManager {
         val widthDp = context.resources.configuration.screenWidthDp
         if (widthDp > 0) {
             val targetDp = when (mode) {
-                ViewMode.GRID_SMALL  -> 95f
-                ViewMode.GRID_MEDIUM -> 130f
-                ViewMode.GRID_LARGE  -> 195f
+                ViewMode.GRID_SMALL,
+                ViewMode.GRID_MEDIUM,
+                ViewMode.GRID_LARGE  -> za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.getGridStyle(context, mode).targetWidthDp.toFloat()
                 else -> return 1
             }
             return (widthDp / targetDp).let { kotlin.math.round(it).toInt() }.coerceAtLeast(1)

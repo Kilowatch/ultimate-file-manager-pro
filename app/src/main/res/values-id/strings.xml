@@ -13971,6 +13971,26 @@ Perbarui Pengaturan Periksa
 Periksa Pembaruan
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+Mengunduh… %1$d%%
+</string>
+    <string name="update_download_complete">
+Pasang Pembaruan
+</string>
+    <string name="update_download_failed">
+Unduhan Gagal — Ketuk untuk Coba Lagi
+</string>
+    <string name="update_preparing_install">
+Menyiapkan Pemasangan…
+</string>
+    <string name="update_install_permission_required">
+Izinkan pemasangan dari UFM untuk melanjutkan
+</string>
+    <string name="update_download_cancelled">
+Unduhan dibatalkan
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 Detail Aplikasi
@@ -14760,6 +14780,137 @@ Hampir selesai…
 </string>
     <string name="recent_refresh_complete">
 File terbaru sudah mutakhir
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+Tampilan (Daftar &amp; Kisi)
+</string>
+    <string name="view_appearance_subtitle">
+Sesuaikan kepadatan baris, kolom kisi, ukuran, dan jarak
+</string>
+    <string name="view_appearance_section_list">
+Prasetel Tampilan Daftar
+</string>
+    <string name="view_appearance_section_grid">
+Prasetel Tampilan Kisi
+</string>
+    <string name="view_customize_title">
+Sesuaikan %1$s
+</string>
+    <string name="stepper_thumbnail_size">
+Ukuran Thumbnail
+</string>
+    <string name="stepper_thumbnail_size_desc">
+Lebar dan tinggi kotak ikon/thumbnail
+</string>
+    <string name="stepper_horizontal_padding">
+Padding Horizontal
+</string>
+    <string name="stepper_horizontal_padding_desc">
+Padding dalam baris kiri dan kanan
+</string>
+    <string name="stepper_vertical_padding">
+Padding Vertikal
+</string>
+    <string name="stepper_vertical_padding_desc">
+Padding dalam baris atas dan bawah
+</string>
+    <string name="stepper_row_spacing">
+Jarak Antar Baris
+</string>
+    <string name="stepper_row_spacing_desc">
+Jarak antar baris daftar yang berurutan
+</string>
+    <string name="stepper_text_primary">
+Ukuran Teks Nama Berkas
+</string>
+    <string name="stepper_text_primary_desc">
+Ukuran font untuk nama berkas atau folder
+</string>
+    <string name="stepper_text_secondary">
+Ukuran Teks Detail
+</string>
+    <string name="stepper_text_secondary_desc">
+Ukuran font untuk ukuran, tanggal, dan jumlah item
+</string>
+    <string name="stepper_icon_corner_radius">
+Radius Sudut Ikon
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+Pembulatan sudut untuk ikon dan thumbnail
+</string>
+    <string name="stepper_grid_col_width">
+Lebar Target Kolom
+</string>
+    <string name="stepper_grid_col_width_desc">
+Lebar sel target (mengontrol jumlah kolom)
+</string>
+    <string name="stepper_card_margin">
+Jarak Antar Kartu
+</string>
+    <string name="stepper_card_margin_desc">
+Jarak antar kartu yang berdekatan di kisi
+</string>
+    <string name="stepper_card_corner_radius">
+Radius Sudut Kartu
+</string>
+    <string name="stepper_card_corner_radius_desc">
+Pembulatan sudut untuk wadah kartu
+</string>
+    <string name="stepper_grid_caption_size">
+Ukuran Teks Keterangan
+</string>
+    <string name="stepper_grid_caption_size_desc">
+Ukuran font untuk overlay keterangan nama berkas
+</string>
+    <string name="stepper_grid_icon_padding">
+Padding Dalam Ikon
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+Padding di dalam kartu untuk folder dan ikon generik
+</string>
+    <string name="view_reset_to_default">
+Atur Ulang ke Default
+</string>
+    <string name="view_reset_confirm_title">
+Atur Ulang ke Default?
+</string>
+    <string name="view_reset_confirm_msg">
+Kembalikan pengaturan %1$s ke default pabrik?
+</string>
+    <string name="view_discard_confirm_title">
+Buang Perubahan?
+</string>
+    <string name="view_discard_confirm_msg">
+Anda memiliki penyesuaian yang belum disimpan. Yakin ingin keluar tanpa menyimpan?
+</string>
+    <string name="view_saved_toast">
+Gaya %1$s disimpan
+</string>
+    <string name="btn_save_settings">
+Simpan
+</string>
+    <string name="live_preview_label">
+PRATINJAU LANGSUNG
+</string>
+    <string name="live_preview_sample_filename">
+Quarterly_Financial_Report_2026_Final.pdf
+</string>
+    <string name="live_preview_sample_info">
+3,8 MB · Diubah hari ini, 13.45
+</string>
+    <string name="live_preview_sample_size">
+3,8 MB
+</string>
+    <string name="cd_decrement">
+Kurangi nilai
+</string>
+    <string name="cd_increment">
+Tambah nilai
+</string>
+    <string name="cd_edit_preset">
+Edit gaya prasetel
 </string>
 </resources>
 

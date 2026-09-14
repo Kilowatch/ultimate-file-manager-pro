@@ -13971,6 +13971,26 @@ Aggiorna le impostazioni di controllo
 Controlla gli aggiornamenti
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+Download in corso… %1$d%%
+</string>
+    <string name="update_download_complete">
+Installa aggiornamento
+</string>
+    <string name="update_download_failed">
+Download non riuscito — Tocca per riprovare
+</string>
+    <string name="update_preparing_install">
+Preparazione installazione…
+</string>
+    <string name="update_install_permission_required">
+Consenti installazione da UFM per continuare
+</string>
+    <string name="update_download_cancelled">
+Download annullato
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 Dettagli dell\'app
@@ -14760,6 +14780,137 @@ Quasi finito…
 </string>
     <string name="recent_refresh_complete">
 File recenti aggiornati
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+Aspetto vista (elenco e griglia)
+</string>
+    <string name="view_appearance_subtitle">
+Personalizza densità righe, colonne griglia, dimensioni e spaziatura
+</string>
+    <string name="view_appearance_section_list">
+Preset vista elenco
+</string>
+    <string name="view_appearance_section_grid">
+Preset vista griglia
+</string>
+    <string name="view_customize_title">
+Personalizza %1$s
+</string>
+    <string name="stepper_thumbnail_size">
+Dimensione miniatura
+</string>
+    <string name="stepper_thumbnail_size_desc">
+Larghezza e altezza del riquadro icona/miniatura
+</string>
+    <string name="stepper_horizontal_padding">
+Spaziatura orizzontale
+</string>
+    <string name="stepper_horizontal_padding_desc">
+Spaziatura interna sinistra e destra della riga
+</string>
+    <string name="stepper_vertical_padding">
+Spaziatura verticale
+</string>
+    <string name="stepper_vertical_padding_desc">
+Spaziatura interna superiore e inferiore della riga
+</string>
+    <string name="stepper_row_spacing">
+Spaziatura tra righe
+</string>
+    <string name="stepper_row_spacing_desc">
+Spazio tra righe consecutive dell\'elenco
+</string>
+    <string name="stepper_text_primary">
+Dimensione testo nome file
+</string>
+    <string name="stepper_text_primary_desc">
+Dimensione carattere per il nome del file o della cartella
+</string>
+    <string name="stepper_text_secondary">
+Dimensione testo dettagli
+</string>
+    <string name="stepper_text_secondary_desc">
+Dimensione carattere per dimensione, data e numero di elementi
+</string>
+    <string name="stepper_icon_corner_radius">
+Raggio angolo icona
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+Arrotondamento angoli per icone e miniature
+</string>
+    <string name="stepper_grid_col_width">
+Larghezza target colonna
+</string>
+    <string name="stepper_grid_col_width_desc">
+Larghezza target cella (controlla il numero di colonne)
+</string>
+    <string name="stepper_card_margin">
+Spaziatura tra schede
+</string>
+    <string name="stepper_card_margin_desc">
+Spazio tra schede adiacenti nella griglia
+</string>
+    <string name="stepper_card_corner_radius">
+Raggio angolo scheda
+</string>
+    <string name="stepper_card_corner_radius_desc">
+Arrotondamento angoli per il contenitore della scheda
+</string>
+    <string name="stepper_grid_caption_size">
+Dimensione testo didascalia
+</string>
+    <string name="stepper_grid_caption_size_desc">
+Dimensione carattere per la sovrapposizione della didascalia del nome file
+</string>
+    <string name="stepper_grid_icon_padding">
+Spaziatura interna icona
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+Spaziatura interna alla scheda per cartelle e icone generiche
+</string>
+    <string name="view_reset_to_default">
+Ripristina predefiniti
+</string>
+    <string name="view_reset_confirm_title">
+Ripristinare i predefiniti?
+</string>
+    <string name="view_reset_confirm_msg">
+Ripristinare le impostazioni di %1$s ai valori predefiniti di fabbrica?
+</string>
+    <string name="view_discard_confirm_title">
+Annullare le modifiche?
+</string>
+    <string name="view_discard_confirm_msg">
+Hai personalizzazioni non salvate. Sei sicuro di voler uscire senza salvare?
+</string>
+    <string name="view_saved_toast">
+Stile %1$s salvato
+</string>
+    <string name="btn_save_settings">
+Salva
+</string>
+    <string name="live_preview_label">
+ANTEPRIMA DAL VIVO
+</string>
+    <string name="live_preview_sample_filename">
+Quarterly_Financial_Report_2026_Final.pdf
+</string>
+    <string name="live_preview_sample_info">
+3.8 MB · Modificato oggi, 13:45
+</string>
+    <string name="live_preview_sample_size">
+3.8 MB
+</string>
+    <string name="cd_decrement">
+Diminuisci valore
+</string>
+    <string name="cd_increment">
+Aumenta valore
+</string>
+    <string name="cd_edit_preset">
+Modifica stile preset
 </string>
 </resources>
 

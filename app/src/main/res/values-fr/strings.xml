@@ -13971,6 +13971,26 @@ Mettre à jour les paramètres de vérification
 Vérifier les mises à jour
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+Téléchargement… %1$d%%
+</string>
+    <string name="update_download_complete">
+Installer la mise à jour
+</string>
+    <string name="update_download_failed">
+Échec du téléchargement — Appuyez pour réessayer
+</string>
+    <string name="update_preparing_install">
+Préparation de l\\\'installation…
+</string>
+    <string name="update_install_permission_required">
+Autorisez l\\\'installation depuis UFM pour continuer
+</string>
+    <string name="update_download_cancelled">
+Téléchargement annulé
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 Détails de l\'application
@@ -14760,6 +14780,137 @@ Presque terminé…
 </string>
     <string name="recent_refresh_complete">
 Fichiers récents à jour
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+Apparence de la vue (Liste et Grille)
+</string>
+    <string name="view_appearance_subtitle">
+Personnalisez la densité des lignes, les colonnes de la grille, les tailles et l\\\'espacement
+</string>
+    <string name="view_appearance_section_list">
+Préréglages de la vue Liste
+</string>
+    <string name="view_appearance_section_grid">
+Préréglages de la vue Grille
+</string>
+    <string name="view_customize_title">
+Personnaliser %1$s
+</string>
+    <string name="stepper_thumbnail_size">
+Taille des vignettes
+</string>
+    <string name="stepper_thumbnail_size_desc">
+Largeur et hauteur de la zone d\\\'icône/vignette
+</string>
+    <string name="stepper_horizontal_padding">
+Marge intérieure horizontale
+</string>
+    <string name="stepper_horizontal_padding_desc">
+Marge intérieure gauche et droite des lignes
+</string>
+    <string name="stepper_vertical_padding">
+Marge intérieure verticale
+</string>
+    <string name="stepper_vertical_padding_desc">
+Marge intérieure supérieure et inférieure des lignes
+</string>
+    <string name="stepper_row_spacing">
+Espacement des lignes
+</string>
+    <string name="stepper_row_spacing_desc">
+Écart entre les lignes consécutives de la liste
+</string>
+    <string name="stepper_text_primary">
+Taille du texte des noms de fichiers
+</string>
+    <string name="stepper_text_primary_desc">
+Taille de police pour le nom du fichier ou du dossier
+</string>
+    <string name="stepper_text_secondary">
+Taille du texte des détails
+</string>
+    <string name="stepper_text_secondary_desc">
+Taille de police pour la taille, la date et le nombre d\\\'éléments
+</string>
+    <string name="stepper_icon_corner_radius">
+Rayon des coins des icônes
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+Arrondi des coins pour les icônes et les vignettes
+</string>
+    <string name="stepper_grid_col_width">
+Largeur cible des colonnes
+</string>
+    <string name="stepper_grid_col_width_desc">
+Largeur cible des cellules (contrôle le nombre de colonnes)
+</string>
+    <string name="stepper_card_margin">
+Espacement des cartes
+</string>
+    <string name="stepper_card_margin_desc">
+Écart entre les cartes adjacentes dans la grille
+</string>
+    <string name="stepper_card_corner_radius">
+Rayon des coins des cartes
+</string>
+    <string name="stepper_card_corner_radius_desc">
+Arrondi des coins pour le conteneur de carte
+</string>
+    <string name="stepper_grid_caption_size">
+Taille du texte des légendes
+</string>
+    <string name="stepper_grid_caption_size_desc">
+Taille de police pour la légende superposée du nom de fichier
+</string>
+    <string name="stepper_grid_icon_padding">
+Marge intérieure des icônes
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+Marge à l\\\'intérieur de la carte pour les dossiers et les icônes génériques
+</string>
+    <string name="view_reset_to_default">
+Réinitialiser par défaut
+</string>
+    <string name="view_reset_confirm_title">
+Réinitialiser aux valeurs par défaut ?
+</string>
+    <string name="view_reset_confirm_msg">
+Restaurer les paramètres %1$s aux valeurs d\\\'usine ?
+</string>
+    <string name="view_discard_confirm_title">
+Abandonner les modifications ?
+</string>
+    <string name="view_discard_confirm_msg">
+Vous avez des personnalisations non enregistrées. Voulez-vous vraiment quitter sans enregistrer ?
+</string>
+    <string name="view_saved_toast">
+Style %1$s enregistré
+</string>
+    <string name="btn_save_settings">
+Enregistrer
+</string>
+    <string name="live_preview_label">
+APERÇU EN DIRECT
+</string>
+    <string name="live_preview_sample_filename">
+Quarterly_Financial_Report_2026_Final.pdf
+</string>
+    <string name="live_preview_sample_info">
+3,8 Mo · Modifié aujourd\\\'hui, 13:45
+</string>
+    <string name="live_preview_sample_size">
+3,8 Mo
+</string>
+    <string name="cd_decrement">
+Diminuer la valeur
+</string>
+    <string name="cd_increment">
+Augmenter la valeur
+</string>
+    <string name="cd_edit_preset">
+Modifier le style du préréglage
 </string>
 </resources>
 

@@ -13761,6 +13761,26 @@ Update Controleer instellingen
 Controleer op updates
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+Downloaden… %1$d%%
+</string>
+    <string name="update_download_complete">
+Update installeren
+</string>
+    <string name="update_download_failed">
+Download mislukt — Tik om opnieuw te proberen
+</string>
+    <string name="update_preparing_install">
+Installatie voorbereiden…
+</string>
+    <string name="update_install_permission_required">
+Sta installeren vanaf UFM toe om door te gaan
+</string>
+    <string name="update_download_cancelled">
+Download geannuleerd
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 App-details
@@ -14516,6 +14536,137 @@ Bijna klaar…
 </string>
     <string name="recent_refresh_complete">
 Recente bestanden zijn up-to-date
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+Uiterlijk van weergave (lijst en raster)
+</string>
+    <string name="view_appearance_subtitle">
+Pas rijdichtheid, rasterkolommen, formaten en tussenruimte aan
+</string>
+    <string name="view_appearance_section_list">
+Voorinstellingen voor lijstweergave
+</string>
+    <string name="view_appearance_section_grid">
+Voorinstellingen voor rasterweergave
+</string>
+    <string name="view_customize_title">
+Pas %1$s aan
+</string>
+    <string name="stepper_thumbnail_size">
+Miniatuurgrootte
+</string>
+    <string name="stepper_thumbnail_size_desc">
+Breedte en hoogte van het pictogram- of miniatuurvak
+</string>
+    <string name="stepper_horizontal_padding">
+Horizontale opvulling
+</string>
+    <string name="stepper_horizontal_padding_desc">
+Opvulling links en rechts binnen de rij
+</string>
+    <string name="stepper_vertical_padding">
+Verticale opvulling
+</string>
+    <string name="stepper_vertical_padding_desc">
+Opvulling boven en onder binnen de rij
+</string>
+    <string name="stepper_row_spacing">
+Rijafstand
+</string>
+    <string name="stepper_row_spacing_desc">
+Tussenruimte tussen opeenvolgende lijstrijen
+</string>
+    <string name="stepper_text_primary">
+Lettergrootte van bestandsnaam
+</string>
+    <string name="stepper_text_primary_desc">
+Lettergrootte voor de bestands- of mapnaam
+</string>
+    <string name="stepper_text_secondary">
+Lettergrootte van details
+</string>
+    <string name="stepper_text_secondary_desc">
+Lettergrootte voor grootte, datum en aantal items
+</string>
+    <string name="stepper_icon_corner_radius">
+Hoekafronding van pictogram
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+Hoekafronding voor pictogrammen en miniaturen
+</string>
+    <string name="stepper_grid_col_width">
+Doelbreedte van kolom
+</string>
+    <string name="stepper_grid_col_width_desc">
+Doelbreedte van cel (bepaalt aantal kolommen)
+</string>
+    <string name="stepper_card_margin">
+Tussenruimte tussen kaarten
+</string>
+    <string name="stepper_card_margin_desc">
+Tussenruimte tussen aangrenzende kaarten in raster
+</string>
+    <string name="stepper_card_corner_radius">
+Hoekafronding van kaart
+</string>
+    <string name="stepper_card_corner_radius_desc">
+Hoekafronding voor de kaartcontainer
+</string>
+    <string name="stepper_grid_caption_size">
+Lettergrootte van bijschrift
+</string>
+    <string name="stepper_grid_caption_size_desc">
+Lettergrootte voor bijschrift van bestandsnaam
+</string>
+    <string name="stepper_grid_icon_padding">
+Inwendige opvulling van pictogram
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+Opvulling binnen kaart voor mappen en algemene pictogrammen
+</string>
+    <string name="view_reset_to_default">
+Standaardwaarden herstellen
+</string>
+    <string name="view_reset_confirm_title">
+Standaardwaarden herstellen?
+</string>
+    <string name="view_reset_confirm_msg">
+%1$s-instellingen terugzetten naar fabrieksinstellingen?
+</string>
+    <string name="view_discard_confirm_title">
+Wijzigingen verwerpen?
+</string>
+    <string name="view_discard_confirm_msg">
+Je hebt niet-opgeslagen aanpassingen. Weet je zeker dat je wilt afsluiten zonder op te slaan?
+</string>
+    <string name="view_saved_toast">
+%1$s-stijl opgeslagen
+</string>
+    <string name="btn_save_settings">
+Opslaan
+</string>
+    <string name="live_preview_label">
+LIVE VOORBEELD
+</string>
+    <string name="live_preview_sample_filename">
+Kwartaalrapport_Financieel_2026_Definitief.pdf
+</string>
+    <string name="live_preview_sample_info">
+3,8 MB · Vandaag gewijzigd, 13:45
+</string>
+    <string name="live_preview_sample_size">
+3,8 MB
+</string>
+    <string name="cd_decrement">
+Waarde verlagen
+</string>
+    <string name="cd_increment">
+Waarde verhogen
+</string>
+    <string name="cd_edit_preset">
+Stijl van voorinstelling bewerken
 </string>
 </resources>
 

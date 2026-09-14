@@ -609,14 +609,19 @@ class FileAdapter(
                 val cellWidth = parentWidth / maxOf(1, spanCount)
                 cellWidth + (10 * density).toInt()
             } else {
-                val heightDp = when (viewMode) {
-                    ViewModeManager.ViewMode.LIST_SMALL -> 48
-                    ViewModeManager.ViewMode.LIST_MEDIUM -> 64
-                    ViewModeManager.ViewMode.LIST_LARGE -> 80
-                    ViewModeManager.ViewMode.LIST_XLARGE -> 96
-                    else -> if (isCompact) 44 else 64
+                val heightPx = if (isTv || isCompact) {
+                    val heightDp = if (isCompact) 44 else when (viewMode) {
+                        ViewModeManager.ViewMode.LIST_SMALL -> 48
+                        ViewModeManager.ViewMode.LIST_MEDIUM -> 64
+                        ViewModeManager.ViewMode.LIST_LARGE -> 80
+                        ViewModeManager.ViewMode.LIST_XLARGE -> 96
+                        else -> 64
+                    }
+                    (heightDp * density).toInt()
+                } else {
+                    za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.computeMinRowHeightPx(context, viewMode)
                 }
-                (heightDp * density).toInt()
+                heightPx
             }
             val lp = itemView.layoutParams as? RecyclerView.LayoutParams
                 ?: RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, heightPx)
@@ -766,67 +771,147 @@ class FileAdapter(
             videoJob?.cancel()
             videoJob = null
 
-            // Apply dynamic list mode scaling
+            // Apply dynamic list or grid mode scaling
             if (!isGrid) {
                 itemView.minimumHeight = 0
                 val density = context.resources.displayMetrics.density
 
-                val heightDp = if (isCompact) 44 else when (viewMode) {
-                    ViewModeManager.ViewMode.LIST_SMALL -> 48
-                    ViewModeManager.ViewMode.LIST_MEDIUM -> 64
-                    ViewModeManager.ViewMode.LIST_LARGE -> 80
-                    ViewModeManager.ViewMode.LIST_XLARGE -> 96
-                    else -> 64
-                }
+                if (!isTv && !isCompact) {
+                    val listStyle = za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.getListStyle(context, viewMode)
+                    val minHeightPx = za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.computeMinRowHeightPx(context, viewMode)
+                    itemView.minimumHeight = minHeightPx
+                    layoutRow.minimumHeight = minHeightPx
 
-                val iconSizeDp = if (isCompact) 34 else when (viewMode) {
-                    ViewModeManager.ViewMode.LIST_SMALL -> 36
-                    ViewModeManager.ViewMode.LIST_MEDIUM -> 48
-                    ViewModeManager.ViewMode.LIST_LARGE -> 56
-                    ViewModeManager.ViewMode.LIST_XLARGE -> 64
-                    else -> 48
-                }
-
-                val titleSp = if (isCompact) 12f else when (viewMode) {
-                    ViewModeManager.ViewMode.LIST_SMALL -> 14f
-                    ViewModeManager.ViewMode.LIST_MEDIUM -> 16f
-                    ViewModeManager.ViewMode.LIST_LARGE -> 18f
-                    ViewModeManager.ViewMode.LIST_XLARGE -> 20f
-                    else -> 16f
-                }
-                val subtitleSp = if (isCompact) 10f else when (viewMode) {
-                    ViewModeManager.ViewMode.LIST_SMALL -> 11f
-                    ViewModeManager.ViewMode.LIST_MEDIUM -> 12f
-                    ViewModeManager.ViewMode.LIST_LARGE -> 13f
-                    ViewModeManager.ViewMode.LIST_XLARGE -> 14f
-                    else -> 12f
-                }
-
-                val minHeightPx = (heightDp * density + 0.5f).toInt()
-                itemView.minimumHeight = minHeightPx
-                layoutRow.minimumHeight = minHeightPx
-                val params = itemView.layoutParams
-                if (params != null && params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
-                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                    itemView.layoutParams = params
-                }
-
-                iconContainer?.let { container ->
-                    val iconParams = container.layoutParams as? ViewGroup.MarginLayoutParams
-                    if (iconParams != null) {
-                        val iconSizePx = (iconSizeDp * density + 0.5f).toInt()
-                        val marginPx = (4 * density + 0.5f).toInt()
-                        iconParams.width = iconSizePx
-                        iconParams.height = iconSizePx
-                        iconParams.topMargin = marginPx
-                        iconParams.bottomMargin = marginPx
-                        container.layoutParams = iconParams
+                    val params = itemView.layoutParams
+                    if (params != null) {
+                        if (params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                            params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                        }
+                        if (params is ViewGroup.MarginLayoutParams) {
+                            params.bottomMargin = (listStyle.itemSpacingDp * density + 0.5f).toInt()
+                        }
+                        itemView.layoutParams = params
                     }
-                }
 
-                txtName.textSize = titleSp
-                txtInfo.textSize = subtitleSp
-                txtSize.textSize = subtitleSp
+                    val padHPx = (listStyle.itemPaddingHorizontalDp * density + 0.5f).toInt()
+                    val padVPx = (listStyle.itemPaddingVerticalDp * density + 0.5f).toInt()
+                    layoutRow.setPadding(padHPx, padVPx, padHPx, padVPx)
+
+                    iconContainer?.let { container ->
+                        val iconParams = container.layoutParams as? ViewGroup.MarginLayoutParams
+                        if (iconParams != null) {
+                            val iconSizePx = (listStyle.thumbnailSizeDp * density + 0.5f).toInt()
+                            val marginPx = (4 * density + 0.5f).toInt()
+                            iconParams.width = iconSizePx
+                            iconParams.height = iconSizePx
+                            iconParams.topMargin = marginPx
+                            iconParams.bottomMargin = marginPx
+                            container.layoutParams = iconParams
+
+                            val radiusPx = listStyle.iconCornerRadiusDp * density
+                            container.clipToOutline = radiusPx > 0f
+                            container.outlineProvider = object : android.view.ViewOutlineProvider() {
+                                override fun getOutline(v: android.view.View, outline: android.graphics.Outline) {
+                                    outline.setRoundRect(0, 0, v.width, v.height, radiusPx)
+                                }
+                            }
+                            container.invalidateOutline()
+
+                            imgIcon.clipToOutline = radiusPx > 0f
+                            imgIcon.outlineProvider = object : android.view.ViewOutlineProvider() {
+                                override fun getOutline(v: android.view.View, outline: android.graphics.Outline) {
+                                    outline.setRoundRect(0, 0, v.width, v.height, radiusPx)
+                                }
+                            }
+                            imgIcon.invalidateOutline()
+                        }
+                    }
+
+                    txtName.textSize = listStyle.primaryTextSizeSp.toFloat()
+                    txtInfo.textSize = listStyle.secondaryTextSizeSp.toFloat()
+                    txtSize.textSize = listStyle.secondaryTextSizeSp.toFloat()
+                } else {
+                    val heightDp = if (isCompact) 44 else when (viewMode) {
+                        ViewModeManager.ViewMode.LIST_SMALL -> 48
+                        ViewModeManager.ViewMode.LIST_MEDIUM -> 64
+                        ViewModeManager.ViewMode.LIST_LARGE -> 80
+                        ViewModeManager.ViewMode.LIST_XLARGE -> 96
+                        else -> 64
+                    }
+
+                    val iconSizeDp = if (isCompact) 34 else when (viewMode) {
+                        ViewModeManager.ViewMode.LIST_SMALL -> 36
+                        ViewModeManager.ViewMode.LIST_MEDIUM -> 48
+                        ViewModeManager.ViewMode.LIST_LARGE -> 56
+                        ViewModeManager.ViewMode.LIST_XLARGE -> 64
+                        else -> 48
+                    }
+
+                    val titleSp = if (isCompact) 12f else when (viewMode) {
+                        ViewModeManager.ViewMode.LIST_SMALL -> 14f
+                        ViewModeManager.ViewMode.LIST_MEDIUM -> 16f
+                        ViewModeManager.ViewMode.LIST_LARGE -> 18f
+                        ViewModeManager.ViewMode.LIST_XLARGE -> 20f
+                        else -> 16f
+                    }
+                    val subtitleSp = if (isCompact) 10f else when (viewMode) {
+                        ViewModeManager.ViewMode.LIST_SMALL -> 11f
+                        ViewModeManager.ViewMode.LIST_MEDIUM -> 12f
+                        ViewModeManager.ViewMode.LIST_LARGE -> 13f
+                        ViewModeManager.ViewMode.LIST_XLARGE -> 14f
+                        else -> 12f
+                    }
+
+                    val minHeightPx = (heightDp * density + 0.5f).toInt()
+                    itemView.minimumHeight = minHeightPx
+                    layoutRow.minimumHeight = minHeightPx
+                    val params = itemView.layoutParams
+                    if (params != null && params.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                        params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                        itemView.layoutParams = params
+                    }
+
+                    iconContainer?.let { container ->
+                        val iconParams = container.layoutParams as? ViewGroup.MarginLayoutParams
+                        if (iconParams != null) {
+                            val iconSizePx = (iconSizeDp * density + 0.5f).toInt()
+                            val marginPx = (4 * density + 0.5f).toInt()
+                            iconParams.width = iconSizePx
+                            iconParams.height = iconSizePx
+                            iconParams.topMargin = marginPx
+                            iconParams.bottomMargin = marginPx
+                            container.layoutParams = iconParams
+                        }
+                    }
+
+                    txtName.textSize = titleSp
+                    txtInfo.textSize = subtitleSp
+                    txtSize.textSize = subtitleSp
+                }
+            } else if (!isTv) {
+                // Apply dynamic grid mode scaling on mobile
+                val gridStyle = za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.getGridStyle(context, viewMode)
+                val density = context.resources.displayMetrics.density
+                (itemView as? com.google.android.material.card.MaterialCardView)?.let { card ->
+                    val radiusPx = gridStyle.cardCornerRadiusDp * density
+                    if (radiusPx <= 0.5f) {
+                        card.radius = 0f
+                        card.clipToOutline = false
+                        card.outlineProvider = null
+                    } else {
+                        card.radius = radiusPx
+                        card.clipToOutline = true
+                        card.outlineProvider = object : android.view.ViewOutlineProvider() {
+                            override fun getOutline(view: android.view.View, outline: android.graphics.Outline) {
+                                outline.setRoundRect(0, 0, view.width, view.height, radiusPx)
+                            }
+                        }
+                        card.invalidateOutline()
+                    }
+                    val marginPx = (gridStyle.cardMarginDp * density + 0.5f).toInt()
+                    (card.layoutParams as? ViewGroup.MarginLayoutParams)?.setMargins(marginPx, marginPx, marginPx, marginPx)
+                }
+                txtName.textSize = gridStyle.primaryTextSizeSp.toFloat()
             }
 
             // Assign a stable, position-specific transitionName to the icon container
@@ -880,6 +965,11 @@ class FileAdapter(
                     DefaultIconColorManager.getMobileIconTint(context)
                 }
                 imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                if (isGrid && !isTv) {
+                    val gridStyle = za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.getGridStyle(context, viewMode)
+                    val iconPadPx = (gridStyle.iconPaddingDp * context.resources.displayMetrics.density + 0.5f).toInt()
+                    imgIcon.setPadding(iconPadPx, iconPadPx, iconPadPx, iconPadPx)
+                }
                 if (!isGrid) {
                     val childCount = childCountCache[file.absolutePath] ?: 0
                     val itemsText = "$childCount item${if (childCount != 1) "s" else ""}"
@@ -922,10 +1012,15 @@ class FileAdapter(
                     imgIcon.scaleType = if (isApk) ImageView.ScaleType.FIT_CENTER else ImageView.ScaleType.CENTER_CROP
                     imgIcon.imageTintList = null
                     
-                    imgIcon.clipToOutline = true
+                    val density = context.resources.displayMetrics.density
+                    val radius = if (!isTv && !isGrid) {
+                        za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.getListStyle(context, viewMode).iconCornerRadiusDp * density
+                    } else {
+                        10f * density
+                    }
+                    imgIcon.clipToOutline = radius > 0f
                     imgIcon.outlineProvider = object : android.view.ViewOutlineProvider() {
                         override fun getOutline(view: android.view.View, outline: android.graphics.Outline) {
-                            val radius = 10f * view.context.resources.displayMetrics.density
                             outline.setRoundRect(0, 0, view.width, view.height, radius)
                         }
                     }
@@ -1015,6 +1110,11 @@ class FileAdapter(
                         imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
                         imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                         imgIcon.clipToOutline = false
+                        if (isGrid && !isTv) {
+                            val gridStyle = za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.getGridStyle(context, viewMode)
+                            val iconPadPx = (gridStyle.iconPaddingDp * context.resources.displayMetrics.density + 0.5f).toInt()
+                            imgIcon.setPadding(iconPadPx, iconPadPx, iconPadPx, iconPadPx)
+                        }
                     }
                 }
             }

@@ -5200,6 +5200,51 @@
     <string name="recent_refreshing_eta">~%1$ds left</string>
     <string name="recent_refreshing_eta_finishing">Almost done…</string>
     <string name="recent_refresh_complete">Recent files up to date</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">View Appearance (List &amp; Grid)</string>
+    <string name="view_appearance_subtitle">Customize row density, grid columns, sizes, and spacing</string>
+    <string name="view_appearance_section_list">List View Presets</string>
+    <string name="view_appearance_section_grid">Grid View Presets</string>
+    <string name="view_customize_title">Customize %1$s</string>
+    <string name="stepper_thumbnail_size">Thumbnail Size</string>
+    <string name="stepper_thumbnail_size_desc">Width and height of the icon/thumbnail box</string>
+    <string name="stepper_horizontal_padding">Horizontal Padding</string>
+    <string name="stepper_horizontal_padding_desc">Left and right inner row padding</string>
+    <string name="stepper_vertical_padding">Vertical Padding</string>
+    <string name="stepper_vertical_padding_desc">Top and bottom inner row padding</string>
+    <string name="stepper_row_spacing">Row Spacing</string>
+    <string name="stepper_row_spacing_desc">Gap between consecutive list rows</string>
+    <string name="stepper_text_primary">Filename Text Size</string>
+    <string name="stepper_text_primary_desc">Font size for the file or folder name</string>
+    <string name="stepper_text_secondary">Details Text Size</string>
+    <string name="stepper_text_secondary_desc">Font size for size, date, and items count</string>
+    <string name="stepper_icon_corner_radius">Icon Corner Radius</string>
+    <string name="stepper_icon_corner_radius_desc">Corner rounding for icons and thumbnails</string>
+    <string name="stepper_grid_col_width">Column Target Width</string>
+    <string name="stepper_grid_col_width_desc">Target cell width (controls number of columns)</string>
+    <string name="stepper_card_margin">Card Spacing</string>
+    <string name="stepper_card_margin_desc">Gap between adjacent cards in grid</string>
+    <string name="stepper_card_corner_radius">Card Corner Radius</string>
+    <string name="stepper_card_corner_radius_desc">Corner rounding for the card container</string>
+    <string name="stepper_grid_caption_size">Caption Text Size</string>
+    <string name="stepper_grid_caption_size_desc">Font size for filename caption overlay</string>
+    <string name="stepper_grid_icon_padding">Icon Inner Padding</string>
+    <string name="stepper_grid_icon_padding_desc">Padding inside card for folder and generic icons</string>
+    <string name="view_reset_to_default">Reset to Default</string>
+    <string name="view_reset_confirm_title">Reset to Defaults?</string>
+    <string name="view_reset_confirm_msg">Restore %1$s settings back to factory defaults?</string>
+    <string name="view_discard_confirm_title">Discard Changes?</string>
+    <string name="view_discard_confirm_msg">You have unsaved customizations. Are you sure you want to exit without saving?</string>
+    <string name="view_saved_toast">%1$s style saved</string>
+    <string name="btn_save_settings">Save</string>
+    <string name="live_preview_label">LIVE PREVIEW</string>
+    <string name="live_preview_sample_filename">Quarterly_Financial_Report_2026_Final.pdf</string>
+    <string name="live_preview_sample_info">3.8 MB · Modified today, 13:45</string>
+    <string name="live_preview_sample_size">3.8 MB</string>
+    <string name="cd_decrement">Decrease value</string>
+    <string name="cd_increment">Increase value</string>
+    <string name="cd_edit_preset">Edit preset styling</string>
 </resources>
 
 

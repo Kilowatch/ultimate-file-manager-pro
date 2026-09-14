@@ -13971,6 +13971,26 @@ GitHub에서 새 릴리스(v%1$s)를 사용할 수 있습니다. 다운로드하
 업데이트 확인
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+다운로드 중… %1$d%%
+</string>
+    <string name="update_download_complete">
+업데이트 설치
+</string>
+    <string name="update_download_failed">
+다운로드 실패 — 다시 시도하려면 탭하세요
+</string>
+    <string name="update_preparing_install">
+설치 준비 중…
+</string>
+    <string name="update_install_permission_required">
+계속하려면 UFM에서 설치를 허용하세요
+</string>
+    <string name="update_download_cancelled">
+다운로드 취소됨
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 앱 세부정보
@@ -14760,6 +14780,137 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
 </string>
     <string name="recent_refresh_complete">
 최근 파일 최신 상태
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+보기 모양 (목록 및 그리드)
+</string>
+    <string name="view_appearance_subtitle">
+행 밀도, 그리드 열, 크기 및 간격 사용자 지정
+</string>
+    <string name="view_appearance_section_list">
+목록 보기 사전 설정
+</string>
+    <string name="view_appearance_section_grid">
+그리드 보기 사전 설정
+</string>
+    <string name="view_customize_title">
+%1$s 사용자 지정
+</string>
+    <string name="stepper_thumbnail_size">
+썸네일 크기
+</string>
+    <string name="stepper_thumbnail_size_desc">
+아이콘/썸네일 상자의 너비와 높이
+</string>
+    <string name="stepper_horizontal_padding">
+가로 패딩
+</string>
+    <string name="stepper_horizontal_padding_desc">
+행 내부의 왼쪽 및 오른쪽 패딩
+</string>
+    <string name="stepper_vertical_padding">
+세로 패딩
+</string>
+    <string name="stepper_vertical_padding_desc">
+행 내부의 위쪽 및 아래쪽 패딩
+</string>
+    <string name="stepper_row_spacing">
+행 간격
+</string>
+    <string name="stepper_row_spacing_desc">
+연속된 목록 행 사이의 간격
+</string>
+    <string name="stepper_text_primary">
+파일 이름 텍스트 크기
+</string>
+    <string name="stepper_text_primary_desc">
+파일 또는 폴더 이름의 글꼴 크기
+</string>
+    <string name="stepper_text_secondary">
+세부 정보 텍스트 크기
+</string>
+    <string name="stepper_text_secondary_desc">
+크기, 날짜 및 항목 수의 글꼴 크기
+</string>
+    <string name="stepper_icon_corner_radius">
+아이콘 모서리 반경
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+아이콘과 썸네일의 모서리 둥글기
+</string>
+    <string name="stepper_grid_col_width">
+열 목표 너비
+</string>
+    <string name="stepper_grid_col_width_desc">
+목표 셀 너비 (열 수 제어)
+</string>
+    <string name="stepper_card_margin">
+카드 간격
+</string>
+    <string name="stepper_card_margin_desc">
+그리드에서 인접한 카드 사이의 간격
+</string>
+    <string name="stepper_card_corner_radius">
+카드 모서리 반경
+</string>
+    <string name="stepper_card_corner_radius_desc">
+카드 컨테이너의 모서리 둥글기
+</string>
+    <string name="stepper_grid_caption_size">
+캡션 텍스트 크기
+</string>
+    <string name="stepper_grid_caption_size_desc">
+파일 이름 캡션 오버레이의 글꼴 크기
+</string>
+    <string name="stepper_grid_icon_padding">
+아이콘 내부 패딩
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+폴더 및 일반 아이콘을 위한 카드 내부 패딩
+</string>
+    <string name="view_reset_to_default">
+기본값으로 재설정
+</string>
+    <string name="view_reset_confirm_title">
+기본값으로 재설정하시겠습니까?
+</string>
+    <string name="view_reset_confirm_msg">
+%1$s 설정을 공장 기본값으로 복원하시겠습니까?
+</string>
+    <string name="view_discard_confirm_title">
+변경 사항을 취소하시겠습니까?
+</string>
+    <string name="view_discard_confirm_msg">
+저장되지 않은 사용자 지정이 있습니다. 저장하지 않고 종료하시겠습니까?
+</string>
+    <string name="view_saved_toast">
+%1$s 스타일 저장됨
+</string>
+    <string name="btn_save_settings">
+저장
+</string>
+    <string name="live_preview_label">
+실시간 미리보기
+</string>
+    <string name="live_preview_sample_filename">
+Quarterly_Financial_Report_2026_Final.pdf
+</string>
+    <string name="live_preview_sample_info">
+3.8 MB · 오늘 13:45에 수정됨
+</string>
+    <string name="live_preview_sample_size">
+3.8 MB
+</string>
+    <string name="cd_decrement">
+값 감소
+</string>
+    <string name="cd_increment">
+값 증가
+</string>
+    <string name="cd_edit_preset">
+사전 설정 스타일 편집
 </string>
 </resources>
 

@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.7] — 2026-09-13
 
 ### Added
+- **Customizable View Appearance (Mobile)**: Granular customization for file browsing List and Grid views:
+  - **List View Presets**: Customizable thumbnail size (24–72 dp), horizontal/vertical row padding, row spacing, primary/secondary text sizes, and icon corner radius across Small, Medium, Large, and Extra Large presets.
+  - **Grid View Presets**: Customizable column target width (60–240 dp with responsive multi-column calculations), card spacing, card corner radius, caption text size, and icon padding across Small, Medium, and Large presets.
+  - **Live Preview & Draft Flow**: Real-time preview card rendering actual list and grid item layouts, with explicit save, unsaved change discard prompt, and one-tap factory reset.
+  - **Universal Storage Support**: Operates across Local, SAF, Network (SMB, FTP, SFTP, WebDAV), Online Cloud (RClone), Tabbed Mode, and Twin Window Mode, while isolating Main Menu storage cards and Settings rows.
 - **FOSS In-App Auto-Update (Mobile)**: Added in-app download and direct APK installation flow for FOSS mobile releases:
   - **In-App Streaming Download**: Downloads update APKs directly within the app using OkHttp into an isolated cache directory (`foss_update/`), eliminating external browser redirects and duplicate file downloads.
   - **Live Progress Feedback**: Added an integrated `LinearProgressIndicator` with real-time percentage and byte progress inside the update dialog, along with download cancellation support.

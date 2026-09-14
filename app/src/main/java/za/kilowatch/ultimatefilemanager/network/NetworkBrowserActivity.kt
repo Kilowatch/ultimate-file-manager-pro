@@ -729,7 +729,14 @@ class NetworkBrowserActivity : AppCompatActivity() {
         updatePasteFab()
         applyToolbarIconVisibility()
         if (::fileAdapter.isInitialized) {
-            fileAdapter.notifyDataSetChanged()
+            val savedMode = ViewModeManager.load(this)
+            val currentSpan = (recyclerFiles.layoutManager as? androidx.recyclerview.widget.GridLayoutManager)?.spanCount
+            val targetSpan = if (ViewModeManager.isGrid(savedMode)) ViewModeManager.spanCount(this, savedMode) else 1
+            if (fileAdapter.viewMode != savedMode || (ViewModeManager.isGrid(savedMode) && currentSpan != targetSpan)) {
+                applyViewMode(savedMode)
+            } else {
+                fileAdapter.notifyDataSetChanged()
+            }
         }
         
         // Clean up standard share temp dir if returning from standard share

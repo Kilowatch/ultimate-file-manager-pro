@@ -13971,6 +13971,26 @@ GitHub 上提供了新版本 (v%1$s)。点击即可下载。
 检查更新
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+正在下载… %1$d%%
+</string>
+    <string name="update_download_complete">
+安装更新
+</string>
+    <string name="update_download_failed">
+下载失败 — 点按重试
+</string>
+    <string name="update_preparing_install">
+正在准备安装…
+</string>
+    <string name="update_install_permission_required">
+允许从 UFM 安装以继续
+</string>
+    <string name="update_download_cancelled">
+下载已取消
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 应用详情
@@ -14759,6 +14779,137 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
 </string>
     <string name="recent_refresh_complete">
 最近文件已是最新
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+视图外观（列表和网格）
+</string>
+    <string name="view_appearance_subtitle">
+自定义行密度、网格列数、大小和间距
+</string>
+    <string name="view_appearance_section_list">
+列表视图预设
+</string>
+    <string name="view_appearance_section_grid">
+网格视图预设
+</string>
+    <string name="view_customize_title">
+自定义 %1$s
+</string>
+    <string name="stepper_thumbnail_size">
+缩略图大小
+</string>
+    <string name="stepper_thumbnail_size_desc">
+图标/缩略图框的宽度和高度
+</string>
+    <string name="stepper_horizontal_padding">
+水平内边距
+</string>
+    <string name="stepper_horizontal_padding_desc">
+行内部左右内边距
+</string>
+    <string name="stepper_vertical_padding">
+垂直内边距
+</string>
+    <string name="stepper_vertical_padding_desc">
+行内部上下内边距
+</string>
+    <string name="stepper_row_spacing">
+行间距
+</string>
+    <string name="stepper_row_spacing_desc">
+连续列表行之间的间隙
+</string>
+    <string name="stepper_text_primary">
+文件名文字大小
+</string>
+    <string name="stepper_text_primary_desc">
+文件或文件夹名称的字体大小
+</string>
+    <string name="stepper_text_secondary">
+详细信息文字大小
+</string>
+    <string name="stepper_text_secondary_desc">
+大小、日期和项目数量的字体大小
+</string>
+    <string name="stepper_icon_corner_radius">
+图标圆角半径
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+图标和缩略图的圆角
+</string>
+    <string name="stepper_grid_col_width">
+列目标宽度
+</string>
+    <string name="stepper_grid_col_width_desc">
+目标单元格宽度（控制列数）
+</string>
+    <string name="stepper_card_margin">
+卡片间距
+</string>
+    <string name="stepper_card_margin_desc">
+网格中相邻卡片之间的间隙
+</string>
+    <string name="stepper_card_corner_radius">
+卡片圆角半径
+</string>
+    <string name="stepper_card_corner_radius_desc">
+卡片容器的圆角
+</string>
+    <string name="stepper_grid_caption_size">
+说明文字大小
+</string>
+    <string name="stepper_grid_caption_size_desc">
+文件名说明文字叠加层的字体大小
+</string>
+    <string name="stepper_grid_icon_padding">
+图标内部内边距
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+文件夹和通用图标在卡片内部的内边距
+</string>
+    <string name="view_reset_to_default">
+恢复默认
+</string>
+    <string name="view_reset_confirm_title">
+恢复默认设置？
+</string>
+    <string name="view_reset_confirm_msg">
+将 %1$s 设置恢复为出厂默认值？
+</string>
+    <string name="view_discard_confirm_title">
+放弃更改？
+</string>
+    <string name="view_discard_confirm_msg">
+您有未保存的自定义设置。确定要不保存并退出吗？
+</string>
+    <string name="view_saved_toast">
+%1$s 样式已保存
+</string>
+    <string name="btn_save_settings">
+保存
+</string>
+    <string name="live_preview_label">
+实时预览
+</string>
+    <string name="live_preview_sample_filename">
+季度财务报告_2026_最终.pdf
+</string>
+    <string name="live_preview_sample_info">
+3.8 MB · 今天 13:45 修改
+</string>
+    <string name="live_preview_sample_size">
+3.8 MB
+</string>
+    <string name="cd_decrement">
+减小值
+</string>
+    <string name="cd_increment">
+增大值
+</string>
+    <string name="cd_edit_preset">
+编辑预设样式
 </string>
 </resources>
 

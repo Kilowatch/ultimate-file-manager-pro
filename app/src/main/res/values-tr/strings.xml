@@ -13971,6 +13971,26 @@ Kontrol Ayarlarını Güncelle
 Güncellemeleri Kontrol Et
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+İndiriliyor… %1$d%%
+</string>
+    <string name="update_download_complete">
+Güncellemeyi Yükle
+</string>
+    <string name="update_download_failed">
+İndirme Başarısız — Yeniden Denemek İçin Dokun
+</string>
+    <string name="update_preparing_install">
+Yükleme Hazırlanıyor…
+</string>
+    <string name="update_install_permission_required">
+Devam etmek için UFM\\\'den yüklemeye izin verin
+</string>
+    <string name="update_download_cancelled">
+İndirme iptal edildi
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 Uygulama Ayrıntıları
@@ -14760,6 +14780,137 @@ Neredeyse bitti…
 </string>
     <string name="recent_refresh_complete">
 Son dosyalar güncel
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+Görünüm Ayarları (Liste ve Izgara)
+</string>
+    <string name="view_appearance_subtitle">
+Satır yoğunluğunu, ızgara sütunlarını, boyutları ve aralıkları özelleştirin
+</string>
+    <string name="view_appearance_section_list">
+Liste Görünümü Ön Ayarları
+</string>
+    <string name="view_appearance_section_grid">
+Izgara Görünümü Ön Ayarları
+</string>
+    <string name="view_customize_title">
+%1$s Özelleştir
+</string>
+    <string name="stepper_thumbnail_size">
+Küçük Resim Boyutu
+</string>
+    <string name="stepper_thumbnail_size_desc">
+Simge/küçük resim kutusunun genişliği ve yüksekliği
+</string>
+    <string name="stepper_horizontal_padding">
+Yatay İç Boşluk
+</string>
+    <string name="stepper_horizontal_padding_desc">
+Satırın sol ve sağ iç boşluğu
+</string>
+    <string name="stepper_vertical_padding">
+Dikey İç Boşluk
+</string>
+    <string name="stepper_vertical_padding_desc">
+Satırın üst ve alt iç boşluğu
+</string>
+    <string name="stepper_row_spacing">
+Satır Aralığı
+</string>
+    <string name="stepper_row_spacing_desc">
+Ardışık liste satırları arasındaki boşluk
+</string>
+    <string name="stepper_text_primary">
+Dosya Adı Metin Boyutu
+</string>
+    <string name="stepper_text_primary_desc">
+Dosya veya klasör adı için yazı tipi boyutu
+</string>
+    <string name="stepper_text_secondary">
+Ayrıntı Metin Boyutu
+</string>
+    <string name="stepper_text_secondary_desc">
+Boyut, tarih ve öğe sayısı için yazı tipi boyutu
+</string>
+    <string name="stepper_icon_corner_radius">
+Simge Köşe Yuvarlaklığı
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+Simgeler ve küçük resimler için köşe yuvarlaklığı
+</string>
+    <string name="stepper_grid_col_width">
+Hedef Sütun Genişliği
+</string>
+    <string name="stepper_grid_col_width_desc">
+Hedef hücre genişliği (sütun sayısını belirler)
+</string>
+    <string name="stepper_card_margin">
+Kart Aralığı
+</string>
+    <string name="stepper_card_margin_desc">
+Izgaradaki bitişik kartlar arasındaki boşluk
+</string>
+    <string name="stepper_card_corner_radius">
+Kart Köşe Yuvarlaklığı
+</string>
+    <string name="stepper_card_corner_radius_desc">
+Kart kapsayıcısı için köşe yuvarlaklığı
+</string>
+    <string name="stepper_grid_caption_size">
+Başlık Metin Boyutu
+</string>
+    <string name="stepper_grid_caption_size_desc">
+Dosya adı başlık katmanı için yazı tipi boyutu
+</string>
+    <string name="stepper_grid_icon_padding">
+Simge İç Boşluğu
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+Klasör ve genel simgeler için kart içi boşluk
+</string>
+    <string name="view_reset_to_default">
+Varsayılana Sıfırla
+</string>
+    <string name="view_reset_confirm_title">
+Varsayılanlara Sıfırlansın mı?
+</string>
+    <string name="view_reset_confirm_msg">
+%1$s ayarları fabrika varsayılanlarına geri yüklensin mi?
+</string>
+    <string name="view_discard_confirm_title">
+Değişiklikler Atılsın mı?
+</string>
+    <string name="view_discard_confirm_msg">
+Kaydedilmemiş özelleştirmeleriniz var. Kaydetmeden çıkmak istediğinizden emin misiniz?
+</string>
+    <string name="view_saved_toast">
+%1$s stili kaydedildi
+</string>
+    <string name="btn_save_settings">
+Kaydet
+</string>
+    <string name="live_preview_label">
+CANLI ÖNİZLEME
+</string>
+    <string name="live_preview_sample_filename">
+Quarterly_Financial_Report_2026_Final.pdf
+</string>
+    <string name="live_preview_sample_info">
+3.8 MB · Bugün değiştirildi, 13:45
+</string>
+    <string name="live_preview_sample_size">
+3.8 MB
+</string>
+    <string name="cd_decrement">
+Değeri azalt
+</string>
+    <string name="cd_increment">
+Değeri artır
+</string>
+    <string name="cd_edit_preset">
+Ön ayar stilini düzenle
 </string>
 </resources>
 

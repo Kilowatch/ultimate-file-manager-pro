@@ -13948,6 +13948,26 @@ Update Check Settings
 Sök efter uppdateringar
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+Laddar ner… %1$d%%
+</string>
+    <string name="update_download_complete">
+Installera uppdatering
+</string>
+    <string name="update_download_failed">
+Nedladdning misslyckades — Tryck för att försöka igen
+</string>
+    <string name="update_preparing_install">
+Förbereder installation…
+</string>
+    <string name="update_install_permission_required">
+Tillåt installation från UFM för att fortsätta
+</string>
+    <string name="update_download_cancelled">
+Nedladdning avbruten
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 Appdetaljer
@@ -14737,6 +14757,137 @@ Nästan klart…
 </string>
     <string name="recent_refresh_complete">
 Senaste filerna är uppdaterade
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+Vyutseende (lista och rutnät)
+</string>
+    <string name="view_appearance_subtitle">
+Anpassa radtäthet, rutnätskolumner, storlekar och avstånd
+</string>
+    <string name="view_appearance_section_list">
+Förval för listvy
+</string>
+    <string name="view_appearance_section_grid">
+Förval för rutnätsvy
+</string>
+    <string name="view_customize_title">
+Anpassa %1$s
+</string>
+    <string name="stepper_thumbnail_size">
+Miniatyrstorlek
+</string>
+    <string name="stepper_thumbnail_size_desc">
+Bredd och höjd för ikon-/miniatyrrutan
+</string>
+    <string name="stepper_horizontal_padding">
+Horisontell utfyllnad
+</string>
+    <string name="stepper_horizontal_padding_desc">
+Vänster och höger inre radutfyllnad
+</string>
+    <string name="stepper_vertical_padding">
+Vertikal utfyllnad
+</string>
+    <string name="stepper_vertical_padding_desc">
+Övre och nedre inre radutfyllnad
+</string>
+    <string name="stepper_row_spacing">
+Radavstånd
+</string>
+    <string name="stepper_row_spacing_desc">
+Mellanrum mellan efterföljande listrader
+</string>
+    <string name="stepper_text_primary">
+Textstorlek för filnamn
+</string>
+    <string name="stepper_text_primary_desc">
+Teckenstorlek för fil- eller mappnamn
+</string>
+    <string name="stepper_text_secondary">
+Textstorlek för detaljer
+</string>
+    <string name="stepper_text_secondary_desc">
+Teckenstorlek för storlek, datum och antal objekt
+</string>
+    <string name="stepper_icon_corner_radius">
+Hörnradie för ikon
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+Hörnrundning för ikoner och miniatyrer
+</string>
+    <string name="stepper_grid_col_width">
+Målbredd för kolumn
+</string>
+    <string name="stepper_grid_col_width_desc">
+Målcellbredd (styr antalet kolumner)
+</string>
+    <string name="stepper_card_margin">
+Kortavstånd
+</string>
+    <string name="stepper_card_margin_desc">
+Mellanrum mellan intilliggande kort i rutnätet
+</string>
+    <string name="stepper_card_corner_radius">
+Hörnradie för kort
+</string>
+    <string name="stepper_card_corner_radius_desc">
+Hörnrundning för kortbehållaren
+</string>
+    <string name="stepper_grid_caption_size">
+Textstorlek för bildtext
+</string>
+    <string name="stepper_grid_caption_size_desc">
+Teckenstorlek för filnamnsöverlägg
+</string>
+    <string name="stepper_grid_icon_padding">
+Inre utfyllnad för ikon
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+Utfyllnad inuti kort för mapp- och allmänna ikoner
+</string>
+    <string name="view_reset_to_default">
+Återställ till standard
+</string>
+    <string name="view_reset_confirm_title">
+Återställ till standard?
+</string>
+    <string name="view_reset_confirm_msg">
+Återställ %1$s-inställningar till fabriksstandard?
+</string>
+    <string name="view_discard_confirm_title">
+Ignorera ändringar?
+</string>
+    <string name="view_discard_confirm_msg">
+Du har osparade anpassningar. Är du säker på att du vill avsluta utan att spara?
+</string>
+    <string name="view_saved_toast">
+%1$s-stil sparad
+</string>
+    <string name="btn_save_settings">
+Spara
+</string>
+    <string name="live_preview_label">
+LIVE-FÖRHANDSVISNING
+</string>
+    <string name="live_preview_sample_filename">
+Kvartals_Finansiell_Rapport_2026_Slutlig.pdf
+</string>
+    <string name="live_preview_sample_info">
+3,8 MB · Ändrad idag, 13:45
+</string>
+    <string name="live_preview_sample_size">
+3,8 MB
+</string>
+    <string name="cd_decrement">
+Minska värde
+</string>
+    <string name="cd_increment">
+Öka värde
+</string>
+    <string name="cd_edit_preset">
+Redigera förvalsstil
 </string>
 </resources>
 

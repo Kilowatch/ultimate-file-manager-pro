@@ -13971,6 +13971,26 @@ Ultimate File Manager Pro v%1$s هو الإصدار الأحدث.
 التحقق من وجود تحديثات
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+جارٍ التنزيل… %1$d%%
+</string>
+    <string name="update_download_complete">
+تثبيت التحديث
+</string>
+    <string name="update_download_failed">
+فشل التنزيل — انقر لإعادة المحاولة
+</string>
+    <string name="update_preparing_install">
+جارٍ التحضير للتثبيت…
+</string>
+    <string name="update_install_permission_required">
+السماح بالتثبيت من UFM للمتابعة
+</string>
+    <string name="update_download_cancelled">
+تم إلغاء التنزيل
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 تفاصيل التطبيق
@@ -14760,6 +14780,137 @@ Set Password
 </string>
     <string name="recent_refresh_complete">
 الملفات الحديثة محدثة
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+مظهر العرض (قائمة وشبكة)
+</string>
+    <string name="view_appearance_subtitle">
+تخصيص كثافة الصفوف، أعمدة الشبكة، الأحجام، والمسافات
+</string>
+    <string name="view_appearance_section_list">
+إعدادات عرض القائمة المسبقة
+</string>
+    <string name="view_appearance_section_grid">
+إعدادات عرض الشبكة المسبقة
+</string>
+    <string name="view_customize_title">
+تخصيص %1$s
+</string>
+    <string name="stepper_thumbnail_size">
+حجم الصورة المصغرة
+</string>
+    <string name="stepper_thumbnail_size_desc">
+عرض وارتفاع مربع الأيقونة/الصورة المصغرة
+</string>
+    <string name="stepper_horizontal_padding">
+الحشو الأفقي
+</string>
+    <string name="stepper_horizontal_padding_desc">
+الحشو الداخلي الأيسر والأيمن للصف
+</string>
+    <string name="stepper_vertical_padding">
+الحشو الرأسي
+</string>
+    <string name="stepper_vertical_padding_desc">
+الحشو الداخلي العلوي والسفلي للصف
+</string>
+    <string name="stepper_row_spacing">
+تباعد الصفوف
+</string>
+    <string name="stepper_row_spacing_desc">
+المسافة بين صفوف القائمة المتتالية
+</string>
+    <string name="stepper_text_primary">
+حجم نص اسم الملف
+</string>
+    <string name="stepper_text_primary_desc">
+حجم الخط لاسم الملف أو المجلد
+</string>
+    <string name="stepper_text_secondary">
+حجم نص التفاصيل
+</string>
+    <string name="stepper_text_secondary_desc">
+حجم الخط للحجم، التاريخ، وعدد العناصر
+</string>
+    <string name="stepper_icon_corner_radius">
+نصف قطر زاوية الأيقونة
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+استدارة الزوايا للأيقونات والصور المصغرة
+</string>
+    <string name="stepper_grid_col_width">
+العرض المستهدف للعمود
+</string>
+    <string name="stepper_grid_col_width_desc">
+عرض الخلية المستهدف (يتحكم في عدد الأعمدة)
+</string>
+    <string name="stepper_card_margin">
+تباعد البطاقات
+</string>
+    <string name="stepper_card_margin_desc">
+المسافة بين البطاقات المتجاورة في الشبكة
+</string>
+    <string name="stepper_card_corner_radius">
+نصف قطر زاوية البطاقة
+</string>
+    <string name="stepper_card_corner_radius_desc">
+استدارة الزوايا لحاوية البطاقة
+</string>
+    <string name="stepper_grid_caption_size">
+حجم نص التسمية التوضيحية
+</string>
+    <string name="stepper_grid_caption_size_desc">
+حجم الخط لتراكب تسمية اسم الملف
+</string>
+    <string name="stepper_grid_icon_padding">
+الحشو الداخلي للأيقونة
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+الحشو داخل البطاقة للمجلدات والأيقونات العامة
+</string>
+    <string name="view_reset_to_default">
+إعادة التعيين إلى الافتراضي
+</string>
+    <string name="view_reset_confirm_title">
+إعادة التعيين إلى الإعدادات الافتراضية؟
+</string>
+    <string name="view_reset_confirm_msg">
+استعادة إعدادات %1$s إلى إعدادات المصنع الافتراضية؟
+</string>
+    <string name="view_discard_confirm_title">
+تجاهل التغييرات؟
+</string>
+    <string name="view_discard_confirm_msg">
+لديك تخصيصات غير محفوظة. هل أنت متأكد أنك تريد الخروج دون حفظ؟
+</string>
+    <string name="view_saved_toast">
+تم حفظ نمط %1$s
+</string>
+    <string name="btn_save_settings">
+حفظ
+</string>
+    <string name="live_preview_label">
+معاينة مباشرة
+</string>
+    <string name="live_preview_sample_filename">
+Quarterly_Financial_Report_2026_Final.pdf
+</string>
+    <string name="live_preview_sample_info">
+3.8 ميجابايت · عُدّل اليوم، 13:45
+</string>
+    <string name="live_preview_sample_size">
+3.8 ميجابايت
+</string>
+    <string name="cd_decrement">
+تقليل القيمة
+</string>
+    <string name="cd_increment">
+زيادة القيمة
+</string>
+    <string name="cd_edit_preset">
+تعديل نمط الإعداد المسبق
 </string>
 </resources>
 

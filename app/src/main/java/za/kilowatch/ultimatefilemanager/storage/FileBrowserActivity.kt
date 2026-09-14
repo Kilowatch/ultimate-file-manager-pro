@@ -667,10 +667,18 @@ class FileBrowserActivity : AppCompatActivity() {
         }
         applyLeftHandedFabSettings()
         applyToolbarIconVisibility()
+        val savedMode = ViewModeManager.load(this)
+        val currentSpan = (recyclerFiles.layoutManager as? androidx.recyclerview.widget.GridLayoutManager)?.spanCount
+        val targetSpan = if (ViewModeManager.isGrid(savedMode)) ViewModeManager.spanCount(this, savedMode) else 1
+        if (fileAdapter.viewMode != savedMode || (ViewModeManager.isGrid(savedMode) && currentSpan != targetSpan)) {
+            applyViewMode(savedMode)
+        }
         // Refresh file list so files created/modified in child activities
         // (image viewer, text viewer, etc.) appear immediately on return
         if (::currentDir.isInitialized && !isSearchActive) {
             loadDirectory(currentDir, preserveSelection = true)
+        } else if (isSearchActive) {
+            fileAdapter.notifyDataSetChanged()
         }
         // Show/hide paste FAB based on clipboard state or picker modes
         updatePasteFab()

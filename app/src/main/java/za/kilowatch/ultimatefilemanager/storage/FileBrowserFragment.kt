@@ -495,6 +495,12 @@ class FileBrowserFragment : Fragment() {
         applyToolbarIconVisibility()
         updatePasteFab()
         context?.let { ctx ->
+            val savedMode = ViewModeManager.load(ctx)
+            val currentSpan = (recyclerFiles.layoutManager as? androidx.recyclerview.widget.GridLayoutManager)?.spanCount
+            val targetSpan = if (ViewModeManager.isGrid(savedMode)) ViewModeManager.spanCount(ctx, savedMode) else 1
+            if (fileAdapter.viewMode != savedMode || (ViewModeManager.isGrid(savedMode) && currentSpan != targetSpan)) {
+                applyViewMode(savedMode)
+            }
             za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPendingAsync(ctx) { syncedCount ->
                 showFeedback(getString(R.string.root_file_saved_success, syncedCount))
             }
@@ -502,6 +508,8 @@ class FileBrowserFragment : Fragment() {
         // Refresh file list on return from child activities (e.g. Settings toggle)
         if (::currentDir.isInitialized && !isSearchActive) {
             loadDirectory(currentDir, preserveSelection = true)
+        } else if (isSearchActive) {
+            fileAdapter.notifyDataSetChanged()
         }
         context?.let { ctx ->
             try {

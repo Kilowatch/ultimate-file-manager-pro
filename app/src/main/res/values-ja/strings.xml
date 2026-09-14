@@ -13971,6 +13971,26 @@ GitHub で見る
 アップデートをチェックする
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+ダウンロード中… %1$d%%
+</string>
+    <string name="update_download_complete">
+アップデートをインストール
+</string>
+    <string name="update_download_failed">
+ダウンロード失敗 — タップして再試行
+</string>
+    <string name="update_preparing_install">
+インストールの準備中…
+</string>
+    <string name="update_install_permission_required">
+続行するにはUFMからのインストールを許可してください
+</string>
+    <string name="update_download_cancelled">
+ダウンロードがキャンセルされました
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 アプリの詳細
@@ -14760,6 +14780,137 @@ N/A
 </string>
     <string name="recent_refresh_complete">
 最近のファイルは最新です
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+表示の外観 (リスト＆グリッド)
+</string>
+    <string name="view_appearance_subtitle">
+行の密度、グリッドの列数、サイズ、間隔をカスタマイズ
+</string>
+    <string name="view_appearance_section_list">
+リスト表示のプリセット
+</string>
+    <string name="view_appearance_section_grid">
+グリッド表示のプリセット
+</string>
+    <string name="view_customize_title">
+%1$sをカスタマイズ
+</string>
+    <string name="stepper_thumbnail_size">
+サムネイルサイズ
+</string>
+    <string name="stepper_thumbnail_size_desc">
+アイコン/サムネイルボックスの幅と高さ
+</string>
+    <string name="stepper_horizontal_padding">
+水平パディング
+</string>
+    <string name="stepper_horizontal_padding_desc">
+行の左右の内側パディング
+</string>
+    <string name="stepper_vertical_padding">
+垂直パディング
+</string>
+    <string name="stepper_vertical_padding_desc">
+行の上下の内側パディング
+</string>
+    <string name="stepper_row_spacing">
+行間隔
+</string>
+    <string name="stepper_row_spacing_desc">
+連続するリスト行の間隔
+</string>
+    <string name="stepper_text_primary">
+ファイル名の文字サイズ
+</string>
+    <string name="stepper_text_primary_desc">
+ファイルまたはフォルダ名のフォントサイズ
+</string>
+    <string name="stepper_text_secondary">
+詳細テキストのサイズ
+</string>
+    <string name="stepper_text_secondary_desc">
+サイズ、日付、アイテム数のフォントサイズ
+</string>
+    <string name="stepper_icon_corner_radius">
+アイコンの角丸
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+アイコンとサムネイルの角丸
+</string>
+    <string name="stepper_grid_col_width">
+列の目標幅
+</string>
+    <string name="stepper_grid_col_width_desc">
+セルの目標幅 (列数を制御)
+</string>
+    <string name="stepper_card_margin">
+カード間隔
+</string>
+    <string name="stepper_card_margin_desc">
+グリッド内の隣接カード間の間隔
+</string>
+    <string name="stepper_card_corner_radius">
+カードの角丸
+</string>
+    <string name="stepper_card_corner_radius_desc">
+カードコンテナの角丸
+</string>
+    <string name="stepper_grid_caption_size">
+キャプションの文字サイズ
+</string>
+    <string name="stepper_grid_caption_size_desc">
+ファイル名キャプションオーバーレイのフォントサイズ
+</string>
+    <string name="stepper_grid_icon_padding">
+アイコンの内側パディング
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+フォルダと一般アイコンのカード内パディング
+</string>
+    <string name="view_reset_to_default">
+デフォルトにリセット
+</string>
+    <string name="view_reset_confirm_title">
+デフォルトにリセットしますか？
+</string>
+    <string name="view_reset_confirm_msg">
+%1$sの設定を工場出荷時のデフォルトに戻しますか？
+</string>
+    <string name="view_discard_confirm_title">
+変更を破棄しますか？
+</string>
+    <string name="view_discard_confirm_msg">
+保存されていないカスタマイズがあります。保存せずに終了してもよろしいですか？
+</string>
+    <string name="view_saved_toast">
+%1$sスタイルを保存しました
+</string>
+    <string name="btn_save_settings">
+保存
+</string>
+    <string name="live_preview_label">
+ライブプレビュー
+</string>
+    <string name="live_preview_sample_filename">
+Quarterly_Financial_Report_2026_Final.pdf
+</string>
+    <string name="live_preview_sample_info">
+3.8 MB · 今日 13:45 に変更
+</string>
+    <string name="live_preview_sample_size">
+3.8 MB
+</string>
+    <string name="cd_decrement">
+値を減らす
+</string>
+    <string name="cd_increment">
+値を増やす
+</string>
+    <string name="cd_edit_preset">
+プリセットのスタイルを編集
 </string>
 </resources>
 

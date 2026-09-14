@@ -13971,6 +13971,26 @@ Ultimate File Manager Pro v%1$s – це остання версія.
 Перевірте наявність оновлень
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+Завантаження… %1$d%%
+</string>
+    <string name="update_download_complete">
+Встановити оновлення
+</string>
+    <string name="update_download_failed">
+Завантаження не вдалося — торкніться, щоб повторити
+</string>
+    <string name="update_preparing_install">
+Підготовка до встановлення…
+</string>
+    <string name="update_install_permission_required">
+Дозвольте встановлення з UFM, щоб продовжити
+</string>
+    <string name="update_download_cancelled">
+Завантаження скасовано
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 Деталі програми
@@ -14760,6 +14780,137 @@ SHA-256
 </string>
     <string name="recent_refresh_complete">
 Список останніх файлів оновлено
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+Зовнішній вигляд (список і сітка)
+</string>
+    <string name="view_appearance_subtitle">
+Налаштуйте щільність рядків, стовпці сітки, розміри та відступи
+</string>
+    <string name="view_appearance_section_list">
+Шаблони списку
+</string>
+    <string name="view_appearance_section_grid">
+Шаблони сітки
+</string>
+    <string name="view_customize_title">
+Налаштувати %1$s
+</string>
+    <string name="stepper_thumbnail_size">
+Розмір мініатюри
+</string>
+    <string name="stepper_thumbnail_size_desc">
+Ширина та висота поля значка/мініатюри
+</string>
+    <string name="stepper_horizontal_padding">
+Горизонтальні відступи
+</string>
+    <string name="stepper_horizontal_padding_desc">
+Внутрішні відступи рядка зліва та справа
+</string>
+    <string name="stepper_vertical_padding">
+Вертикальні відступи
+</string>
+    <string name="stepper_vertical_padding_desc">
+Внутрішні відступи рядка зверху та знизу
+</string>
+    <string name="stepper_row_spacing">
+Відступ між рядками
+</string>
+    <string name="stepper_row_spacing_desc">
+Проміжок між послідовними рядками списку
+</string>
+    <string name="stepper_text_primary">
+Розмір тексту назви файлу
+</string>
+    <string name="stepper_text_primary_desc">
+Розмір шрифту для назви файлу або папки
+</string>
+    <string name="stepper_text_secondary">
+Розмір тексту деталей
+</string>
+    <string name="stepper_text_secondary_desc">
+Розмір шрифту для розміру, дати та кількості елементів
+</string>
+    <string name="stepper_icon_corner_radius">
+Радіус заокруглення значка
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+Заокруглення кутів значків і мініатюр
+</string>
+    <string name="stepper_grid_col_width">
+Цільова ширина стовпця
+</string>
+    <string name="stepper_grid_col_width_desc">
+Цільова ширина комірки (керує кількістю стовпців)
+</string>
+    <string name="stepper_card_margin">
+Відступ між картками
+</string>
+    <string name="stepper_card_margin_desc">
+Проміжок між сусідніми картками в сітці
+</string>
+    <string name="stepper_card_corner_radius">
+Радіус заокруглення картки
+</string>
+    <string name="stepper_card_corner_radius_desc">
+Заокруглення кутів контейнера картки
+</string>
+    <string name="stepper_grid_caption_size">
+Розмір тексту підпису
+</string>
+    <string name="stepper_grid_caption_size_desc">
+Розмір шрифту для накладеного підпису назви файлу
+</string>
+    <string name="stepper_grid_icon_padding">
+Внутрішні відступи значка
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+Відступи всередині картки для папок і загальних значків
+</string>
+    <string name="view_reset_to_default">
+Скинути до типових
+</string>
+    <string name="view_reset_confirm_title">
+Скинути до типових?
+</string>
+    <string name="view_reset_confirm_msg">
+Відновити налаштування %1$s до заводських?
+</string>
+    <string name="view_discard_confirm_title">
+Скасувати зміни?
+</string>
+    <string name="view_discard_confirm_msg">
+У вас є незбережені налаштування. Ви впевнені, що хочете вийти без збереження?
+</string>
+    <string name="view_saved_toast">
+Стиль %1$s збережено
+</string>
+    <string name="btn_save_settings">
+Зберегти
+</string>
+    <string name="live_preview_label">
+ЖИВИЙ ПЕРЕГЛЯД
+</string>
+    <string name="live_preview_sample_filename">
+Квартальний_фінансовий_звіт_2026_остаточний.pdf
+</string>
+    <string name="live_preview_sample_info">
+3.8 МБ · Змінено сьогодні, 13:45
+</string>
+    <string name="live_preview_sample_size">
+3.8 МБ
+</string>
+    <string name="cd_decrement">
+Зменшити значення
+</string>
+    <string name="cd_increment">
+Збільшити значення
+</string>
+    <string name="cd_edit_preset">
+Редагувати стиль шаблону
 </string>
 </resources>
 

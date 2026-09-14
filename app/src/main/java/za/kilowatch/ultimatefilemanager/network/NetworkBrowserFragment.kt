@@ -301,7 +301,16 @@ class NetworkBrowserFragment : Fragment() {
         applyToolbarIconVisibility()
         updatePasteFab()
         if (::fileAdapter.isInitialized) {
-            fileAdapter.notifyDataSetChanged()
+            context?.let { ctx ->
+                val savedMode = ViewModeManager.load(ctx)
+                val currentSpan = (recyclerFiles.layoutManager as? androidx.recyclerview.widget.GridLayoutManager)?.spanCount
+                val targetSpan = if (ViewModeManager.isGrid(savedMode)) ViewModeManager.spanCount(ctx, savedMode) else 1
+                if (fileAdapter.viewMode != savedMode || (ViewModeManager.isGrid(savedMode) && currentSpan != targetSpan)) {
+                    applyViewMode(savedMode)
+                } else {
+                    fileAdapter.notifyDataSetChanged()
+                }
+            }
         }
     }
 

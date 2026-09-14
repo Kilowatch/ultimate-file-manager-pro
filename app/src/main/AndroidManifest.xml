@@ -296,6 +296,12 @@
             android:name=".settings.FontSizeActivity"
             android:exported="false" />
 
+        <!-- View Appearance Customization (List & Grid) -->
+        <activity
+            android:name=".settings.ViewStyleDetailActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustNothing" />
+
         <!-- Colorblind Accessibility Mode (FR-20) -->
         <activity
             android:name=".settings.ColorblindActivity"

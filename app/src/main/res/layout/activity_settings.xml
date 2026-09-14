@@ -625,6 +625,561 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="64dp"
                             android:background="@color/mobile_glass_stroke" />
+
+                        <!-- View Appearance (List & Grid) -->
+                        <LinearLayout
+                            android:id="@+id/cardViewAppearance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackground">
+
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_view_list"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@string/view_appearance_title" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="@dimen/margin_md">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/view_appearance_title"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtViewAppearanceSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/view_appearance_subtitle"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <!-- Accordion Expand Chevron -->
+                            <ImageView
+                                android:id="@+id/imgExpandViewAppearance"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_arrow_down"
+                                app:tint="@color/mobile_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+
+                        <!-- Expandable Container for View Appearance Presets -->
+                        <LinearLayout
+                            android:id="@+id/layoutViewAppearancePresets"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <!-- Section: List View Presets -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/view_appearance_section_list"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-black"
+                                android:layout_marginStart="64dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="4dp" />
+
+                            <!-- List: Small -->
+                            <LinearLayout
+                                android:id="@+id/rowPresetListSmall"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="10dp"
+                                android:paddingStart="64dp"
+                                android:paddingEnd="16dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <ImageView
+                                    android:id="@+id/checkPresetListSmall"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_check_circle"
+                                    app:tint="?attr/colorPrimary"
+                                    android:visibility="invisible" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/view_mode_title_list_small"
+                                        android:textColor="@color/mobile_card_text_primary"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtSpecsListSmall"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mobile_text_secondary"
+                                        android:textSize="11sp"
+                                        android:text="36 dp · 14 sp / 11 sp" />
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/btnEditPresetListSmall"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:clickable="true"
+                                    android:focusable="true">
+
+                                    <ImageView
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_gear"
+                                        app:tint="?attr/colorPrimary"
+                                        android:contentDescription="@string/cd_edit_preset" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <!-- List: Medium -->
+                            <LinearLayout
+                                android:id="@+id/rowPresetListMedium"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="10dp"
+                                android:paddingStart="64dp"
+                                android:paddingEnd="16dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <ImageView
+                                    android:id="@+id/checkPresetListMedium"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_check_circle"
+                                    app:tint="?attr/colorPrimary"
+                                    android:visibility="invisible" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/view_mode_title_list_medium"
+                                        android:textColor="@color/mobile_card_text_primary"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtSpecsListMedium"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mobile_text_secondary"
+                                        android:textSize="11sp"
+                                        android:text="48 dp · 16 sp / 12 sp" />
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/btnEditPresetListMedium"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:clickable="true"
+                                    android:focusable="true">
+
+                                    <ImageView
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_gear"
+                                        app:tint="?attr/colorPrimary"
+                                        android:contentDescription="@string/cd_edit_preset" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <!-- List: Large -->
+                            <LinearLayout
+                                android:id="@+id/rowPresetListLarge"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="10dp"
+                                android:paddingStart="64dp"
+                                android:paddingEnd="16dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <ImageView
+                                    android:id="@+id/checkPresetListLarge"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_check_circle"
+                                    app:tint="?attr/colorPrimary"
+                                    android:visibility="invisible" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/view_mode_title_list_large"
+                                        android:textColor="@color/mobile_card_text_primary"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtSpecsListLarge"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mobile_text_secondary"
+                                        android:textSize="11sp"
+                                        android:text="56 dp · 18 sp / 13 sp" />
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/btnEditPresetListLarge"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:clickable="true"
+                                    android:focusable="true">
+
+                                    <ImageView
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_gear"
+                                        app:tint="?attr/colorPrimary"
+                                        android:contentDescription="@string/cd_edit_preset" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <!-- List: Extra Large -->
+                            <LinearLayout
+                                android:id="@+id/rowPresetListXLarge"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="10dp"
+                                android:paddingStart="64dp"
+                                android:paddingEnd="16dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <ImageView
+                                    android:id="@+id/checkPresetListXLarge"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_check_circle"
+                                    app:tint="?attr/colorPrimary"
+                                    android:visibility="invisible" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/view_mode_title_list_xlarge"
+                                        android:textColor="@color/mobile_card_text_primary"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtSpecsListXLarge"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mobile_text_secondary"
+                                        android:textSize="11sp"
+                                        android:text="64 dp · 20 sp / 14 sp" />
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/btnEditPresetListXLarge"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:clickable="true"
+                                    android:focusable="true">
+
+                                    <ImageView
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_gear"
+                                        app:tint="?attr/colorPrimary"
+                                        android:contentDescription="@string/cd_edit_preset" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="64dp"
+                                android:layout_marginVertical="6dp"
+                                android:background="@color/mobile_glass_stroke" />
+
+                            <!-- Section: Grid View Presets -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/view_appearance_section_grid"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-black"
+                                android:layout_marginStart="64dp"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginBottom="4dp" />
+
+                            <!-- Grid: Small -->
+                            <LinearLayout
+                                android:id="@+id/rowPresetGridSmall"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="10dp"
+                                android:paddingStart="64dp"
+                                android:paddingEnd="16dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <ImageView
+                                    android:id="@+id/checkPresetGridSmall"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_check_circle"
+                                    app:tint="?attr/colorPrimary"
+                                    android:visibility="invisible" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/view_mode_title_grid_small"
+                                        android:textColor="@color/mobile_card_text_primary"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtSpecsGridSmall"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mobile_text_secondary"
+                                        android:textSize="11sp"
+                                        android:text="95 dp cell · 4 dp gap" />
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/btnEditPresetGridSmall"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:clickable="true"
+                                    android:focusable="true">
+
+                                    <ImageView
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_gear"
+                                        app:tint="?attr/colorPrimary"
+                                        android:contentDescription="@string/cd_edit_preset" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <!-- Grid: Medium -->
+                            <LinearLayout
+                                android:id="@+id/rowPresetGridMedium"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="10dp"
+                                android:paddingStart="64dp"
+                                android:paddingEnd="16dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <ImageView
+                                    android:id="@+id/checkPresetGridMedium"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_check_circle"
+                                    app:tint="?attr/colorPrimary"
+                                    android:visibility="invisible" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/view_mode_title_grid_medium"
+                                        android:textColor="@color/mobile_card_text_primary"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtSpecsGridMedium"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mobile_text_secondary"
+                                        android:textSize="11sp"
+                                        android:text="130 dp cell · 6 dp gap" />
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/btnEditPresetGridMedium"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:clickable="true"
+                                    android:focusable="true">
+
+                                    <ImageView
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_gear"
+                                        app:tint="?attr/colorPrimary"
+                                        android:contentDescription="@string/cd_edit_preset" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                            <!-- Grid: Large -->
+                            <LinearLayout
+                                android:id="@+id/rowPresetGridLarge"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="10dp"
+                                android:paddingStart="64dp"
+                                android:paddingEnd="16dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <ImageView
+                                    android:id="@+id/checkPresetGridLarge"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_check_circle"
+                                    app:tint="?attr/colorPrimary"
+                                    android:visibility="invisible" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/view_mode_title_grid_large"
+                                        android:textColor="@color/mobile_card_text_primary"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtSpecsGridLarge"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mobile_text_secondary"
+                                        android:textSize="11sp"
+                                        android:text="195 dp cell · 8 dp gap" />
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:id="@+id/btnEditPresetGridLarge"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:clickable="true"
+                                    android:focusable="true">
+
+                                    <ImageView
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_gear"
+                                        app:tint="?attr/colorPrimary"
+                                        android:contentDescription="@string/cd_edit_preset" />
+                                </FrameLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="64dp"
+                            android:background="@color/mobile_glass_stroke" />
                         <LinearLayout
                             android:id="@+id/cardIcons"
                             android:layout_width="match_parent"

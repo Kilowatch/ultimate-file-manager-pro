@@ -13971,6 +13971,26 @@ GitHub पर देखें
 अद्यतन के लिए जाँच
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+डाउनलोड हो रहा है… %1$d%%
+</string>
+    <string name="update_download_complete">
+अपडेट इंस्टॉल करें
+</string>
+    <string name="update_download_failed">
+डाउनलोड विफल — पुनः प्रयास करने के लिए टैप करें
+</string>
+    <string name="update_preparing_install">
+इंस्टॉल की तैयारी हो रही है…
+</string>
+    <string name="update_install_permission_required">
+जारी रखने के लिए UFM से इंस्टॉल करने की अनुमति दें
+</string>
+    <string name="update_download_cancelled">
+डाउनलोड रद्द किया गया
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 ऐप विवरण
@@ -14760,6 +14780,137 @@ UFM को सुरक्षित करने के लिए 4 अंको
 </string>
     <string name="recent_refresh_complete">
 हाल की फ़ाइलें अद्यतित हैं
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+दिखावट देखें (सूची और ग्रिड)
+</string>
+    <string name="view_appearance_subtitle">
+पंक्ति घनत्व, ग्रिड कॉलम, आकार और अंतराल को अनुकूलित करें
+</string>
+    <string name="view_appearance_section_list">
+सूची दृश्य प्रीसेट
+</string>
+    <string name="view_appearance_section_grid">
+ग्रिड दृश्य प्रीसेट
+</string>
+    <string name="view_customize_title">
+%1$s को अनुकूलित करें
+</string>
+    <string name="stepper_thumbnail_size">
+थंबनेल आकार
+</string>
+    <string name="stepper_thumbnail_size_desc">
+आइकन/थंबनेल बॉक्स की चौड़ाई और ऊंचाई
+</string>
+    <string name="stepper_horizontal_padding">
+क्षैतिज पैडिंग
+</string>
+    <string name="stepper_horizontal_padding_desc">
+बाएं और दाएं आंतरिक पंक्ति पैडिंग
+</string>
+    <string name="stepper_vertical_padding">
+ऊर्ध्वाधर पैडिंग
+</string>
+    <string name="stepper_vertical_padding_desc">
+ऊपर और नीचे आंतरिक पंक्ति पैडिंग
+</string>
+    <string name="stepper_row_spacing">
+पंक्ति अंतराल
+</string>
+    <string name="stepper_row_spacing_desc">
+लगातार सूची पंक्तियों के बीच का अंतर
+</string>
+    <string name="stepper_text_primary">
+फ़ाइल नाम टेक्स्ट आकार
+</string>
+    <string name="stepper_text_primary_desc">
+फ़ाइल या फ़ोल्डर नाम के लिए फ़ॉन्ट आकार
+</string>
+    <string name="stepper_text_secondary">
+विवरण टेक्स्ट आकार
+</string>
+    <string name="stepper_text_secondary_desc">
+आकार, दिनांक और आइटम गणना के लिए फ़ॉन्ट आकार
+</string>
+    <string name="stepper_icon_corner_radius">
+आइकन कॉर्नर त्रिज्या
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+आइकन और थंबनेल के लिए कोना गोलाई
+</string>
+    <string name="stepper_grid_col_width">
+कॉलम लक्ष्य चौड़ाई
+</string>
+    <string name="stepper_grid_col_width_desc">
+लक्ष्य सेल चौड़ाई (कॉलम की संख्या नियंत्रित करता है)
+</string>
+    <string name="stepper_card_margin">
+कार्ड अंतराल
+</string>
+    <string name="stepper_card_margin_desc">
+ग्रिड में आसन्न कार्डों के बीच का अंतर
+</string>
+    <string name="stepper_card_corner_radius">
+कार्ड कॉर्नर त्रिज्या
+</string>
+    <string name="stepper_card_corner_radius_desc">
+कार्ड कंटेनर के लिए कोना गोलाई
+</string>
+    <string name="stepper_grid_caption_size">
+कैप्शन टेक्स्ट आकार
+</string>
+    <string name="stepper_grid_caption_size_desc">
+फ़ाइल नाम कैप्शन ओवरले के लिए फ़ॉन्ट आकार
+</string>
+    <string name="stepper_grid_icon_padding">
+आइकन आंतरिक पैडिंग
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+फ़ोल्डर और सामान्य आइकन के लिए कार्ड के अंदर पैडिंग
+</string>
+    <string name="view_reset_to_default">
+डिफ़ॉल्ट पर रीसेट करें
+</string>
+    <string name="view_reset_confirm_title">
+डिफ़ॉल्ट पर रीसेट करें?
+</string>
+    <string name="view_reset_confirm_msg">
+%1$s सेटिंग्स को फ़ैक्टरी डिफ़ॉल्ट पर पुनर्स्थापित करें?
+</string>
+    <string name="view_discard_confirm_title">
+परिवर्तनों को छोड़ दें?
+</string>
+    <string name="view_discard_confirm_msg">
+आपके पास सहेजे नहीं गए अनुकूलन हैं। क्या आप वाकई बिना सहेजे बाहर निकलना चाहते हैं?
+</string>
+    <string name="view_saved_toast">
+%1$s शैली सहेजी गई
+</string>
+    <string name="btn_save_settings">
+सहेजें
+</string>
+    <string name="live_preview_label">
+लाइव पूर्वावलोकन
+</string>
+    <string name="live_preview_sample_filename">
+Quarterly_Financial_Report_2026_Final.pdf
+</string>
+    <string name="live_preview_sample_info">
+3.8 MB · आज संशोधित, 13:45
+</string>
+    <string name="live_preview_sample_size">
+3.8 MB
+</string>
+    <string name="cd_decrement">
+मान घटाएं
+</string>
+    <string name="cd_increment">
+मान बढ़ाएं
+</string>
+    <string name="cd_edit_preset">
+प्रीसेट शैली संपादित करें
 </string>
 </resources>
 

@@ -13971,6 +13971,26 @@ Prüfeinstellungen aktualisieren
 Suchen Sie nach Updates
 </string>
 
+    <!-- FOSS In-App Update Download & Install -->
+    <string name="update_downloading">
+Wird heruntergeladen… %1$d%%
+</string>
+    <string name="update_download_complete">
+Update installieren
+</string>
+    <string name="update_download_failed">
+Download fehlgeschlagen – Zum Wiederholen tippen
+</string>
+    <string name="update_preparing_install">
+Installation wird vorbereitet…
+</string>
+    <string name="update_install_permission_required">
+Installation aus UFM zulassen, um fortzufahren
+</string>
+    <string name="update_download_cancelled">
+Download abgebrochen
+</string>
+
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
 App-Details
@@ -14760,6 +14780,137 @@ Fast fertig…
 </string>
     <string name="recent_refresh_complete">
 Neueste Dateien sind aktuell
+</string>
+
+    <!-- Customizable View Appearance (List & Grid) -->
+    <string name="view_appearance_title">
+Ansichtsdarstellung (Liste &amp; Raster)
+</string>
+    <string name="view_appearance_subtitle">
+Zeilendichte, Rasterspalten, Größen und Abstände anpassen
+</string>
+    <string name="view_appearance_section_list">
+Voreinstellungen für Listenansicht
+</string>
+    <string name="view_appearance_section_grid">
+Voreinstellungen für Rasteransicht
+</string>
+    <string name="view_customize_title">
+%1$s anpassen
+</string>
+    <string name="stepper_thumbnail_size">
+Vorschaubildgröße
+</string>
+    <string name="stepper_thumbnail_size_desc">
+Breite und Höhe des Symbol-/Vorschaubildfelds
+</string>
+    <string name="stepper_horizontal_padding">
+Horizontaler Innenabstand
+</string>
+    <string name="stepper_horizontal_padding_desc">
+Innenabstand links und rechts in der Zeile
+</string>
+    <string name="stepper_vertical_padding">
+Vertikaler Innenabstand
+</string>
+    <string name="stepper_vertical_padding_desc">
+Innenabstand oben und unten in der Zeile
+</string>
+    <string name="stepper_row_spacing">
+Zeilenabstand
+</string>
+    <string name="stepper_row_spacing_desc">
+Abstand zwischen aufeinanderfolgenden Listenzeilen
+</string>
+    <string name="stepper_text_primary">
+Textgröße für Dateinamen
+</string>
+    <string name="stepper_text_primary_desc">
+Schriftgröße für Datei- oder Ordnernamen
+</string>
+    <string name="stepper_text_secondary">
+Textgröße für Details
+</string>
+    <string name="stepper_text_secondary_desc">
+Schriftgröße für Größe, Datum und Elementanzahl
+</string>
+    <string name="stepper_icon_corner_radius">
+Eckenradius der Symbole
+</string>
+    <string name="stepper_icon_corner_radius_desc">
+Eckenrundung für Symbole und Vorschaubilder
+</string>
+    <string name="stepper_grid_col_width">
+Zielbreite der Spalte
+</string>
+    <string name="stepper_grid_col_width_desc">
+Zielbreite der Zelle (steuert die Anzahl der Spalten)
+</string>
+    <string name="stepper_card_margin">
+Kartenabstand
+</string>
+    <string name="stepper_card_margin_desc">
+Abstand zwischen benachbarten Karten im Raster
+</string>
+    <string name="stepper_card_corner_radius">
+Eckenradius der Karte
+</string>
+    <string name="stepper_card_corner_radius_desc">
+Eckenrundung für den Kartencontainer
+</string>
+    <string name="stepper_grid_caption_size">
+Textgröße der Beschriftung
+</string>
+    <string name="stepper_grid_caption_size_desc">
+Schriftgröße für die Dateinamen-Beschriftung im Overlay
+</string>
+    <string name="stepper_grid_icon_padding">
+Innenabstand des Symbols
+</string>
+    <string name="stepper_grid_icon_padding_desc">
+Innenabstand in der Karte für Ordner- und allgemeine Symbole
+</string>
+    <string name="view_reset_to_default">
+Auf Standard zurücksetzen
+</string>
+    <string name="view_reset_confirm_title">
+Auf Standardeinstellungen zurücksetzen?
+</string>
+    <string name="view_reset_confirm_msg">
+%1$s-Einstellungen auf Werkseinstellungen zurücksetzen?
+</string>
+    <string name="view_discard_confirm_title">
+Änderungen verwerfen?
+</string>
+    <string name="view_discard_confirm_msg">
+Sie haben ungespeicherte Anpassungen. Möchten Sie wirklich beenden, ohne zu speichern?
+</string>
+    <string name="view_saved_toast">
+%1$s-Stil gespeichert
+</string>
+    <string name="btn_save_settings">
+Speichern
+</string>
+    <string name="live_preview_label">
+LIVE-VORSCHAU
+</string>
+    <string name="live_preview_sample_filename">
+Quartals_Finanzbericht_2026_Final.pdf
+</string>
+    <string name="live_preview_sample_info">
+3,8 MB · Heute geändert, 13:45
+</string>
+    <string name="live_preview_sample_size">
+3,8 MB
+</string>
+    <string name="cd_decrement">
+Wert verringern
+</string>
+    <string name="cd_increment">
+Wert erhöhen
+</string>
+    <string name="cd_edit_preset">
+Stil der Voreinstellung bearbeiten
 </string>
 </resources>
 

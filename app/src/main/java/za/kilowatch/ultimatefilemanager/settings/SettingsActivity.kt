@@ -30,6 +30,8 @@ import za.kilowatch.ultimatefilemanager.security.SecurityDialogHelper
 import za.kilowatch.ultimatefilemanager.security.SecurityMode
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
+import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
+import za.kilowatch.ultimatefilemanager.storage.ViewModeManager.ViewMode
 
 /**
  * Settings hub screen.
@@ -235,6 +237,9 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<View>(R.id.cardColorblind)?.setOnClickListener {
             startActivity(Intent(this, ColorblindActivity::class.java))
         }
+
+        // View Appearance section (Mobile Only)
+        setupViewAppearanceSection()
 
         // File Tags row (Mobile Only)
         val cardFileTags = findViewById<View>(R.id.cardFileTags)
@@ -1256,6 +1261,7 @@ class SettingsActivity : AppCompatActivity() {
             val secManager = AppSecurityManager.getInstance(this)
             updateSecurityUi(secManager.isSecurityEnabled(), secManager.getSecurityMode())
         }
+        updateViewAppearanceUI()
     }
 
     private fun updateApkExtractSubtitle() {
@@ -2866,4 +2872,95 @@ class SettingsActivity : AppCompatActivity() {
             .setNegativeButton(R.string.btn_cancel, null)
             .show()
     }
+
+    private fun setupViewAppearanceSection() {
+        if (isTv) return
+        val cardViewAppearance = findViewById<View>(R.id.cardViewAppearance) ?: return
+        val layoutPresets = findViewById<View>(R.id.layoutViewAppearancePresets)
+        val imgChevron = findViewById<ImageView>(R.id.imgExpandViewAppearance)
+
+        cardViewAppearance.setOnClickListener {
+            val isExpanded = layoutPresets?.visibility == View.VISIBLE
+            layoutPresets?.visibility = if (isExpanded) View.GONE else View.VISIBLE
+            imgChevron?.animate()?.rotation(if (isExpanded) 0f else 180f)?.setDuration(200)?.start()
+        }
+
+        val presetRows = listOf(
+            Triple(R.id.rowPresetListSmall, R.id.btnEditPresetListSmall, ViewMode.LIST_SMALL),
+            Triple(R.id.rowPresetListMedium, R.id.btnEditPresetListMedium, ViewMode.LIST_MEDIUM),
+            Triple(R.id.rowPresetListLarge, R.id.btnEditPresetListLarge, ViewMode.LIST_LARGE),
+            Triple(R.id.rowPresetListXLarge, R.id.btnEditPresetListXLarge, ViewMode.LIST_XLARGE),
+            Triple(R.id.rowPresetGridSmall, R.id.btnEditPresetGridSmall, ViewMode.GRID_SMALL),
+            Triple(R.id.rowPresetGridMedium, R.id.btnEditPresetGridMedium, ViewMode.GRID_MEDIUM),
+            Triple(R.id.rowPresetGridLarge, R.id.btnEditPresetGridLarge, ViewMode.GRID_LARGE)
+        )
+
+        for ((rowId, editBtnId, mode) in presetRows) {
+            findViewById<View>(rowId)?.setOnClickListener {
+                ViewModeManager.save(this, mode)
+                updateViewAppearanceUI()
+            }
+            findViewById<View>(editBtnId)?.setOnClickListener {
+                val intent = Intent(this, ViewStyleDetailActivity::class.java).apply {
+                    putExtra(ViewStyleDetailActivity.EXTRA_VIEW_MODE, mode.name)
+                }
+                startActivity(intent)
+            }
+        }
+
+        updateViewAppearanceUI()
+    }
+
+    private fun updateViewAppearanceUI() {
+        if (isTv) return
+        val currentMode = ViewModeManager.load(this)
+
+        val currentLabel = when (currentMode) {
+            ViewMode.LIST_SMALL -> "List: Small"
+            ViewMode.LIST_MEDIUM -> "List: Medium"
+            ViewMode.LIST_LARGE -> "List: Large"
+            ViewMode.LIST_XLARGE -> "List: Extra Large"
+            ViewMode.GRID_SMALL -> "Grid: Small"
+            ViewMode.GRID_MEDIUM -> "Grid: Medium"
+            ViewMode.GRID_LARGE -> "Grid: Large"
+        }
+        findViewById<TextView>(R.id.txtViewAppearanceSubtitle)?.text = "Active: $currentLabel"
+
+        val checks = mapOf(
+            ViewMode.LIST_SMALL to R.id.checkPresetListSmall,
+            ViewMode.LIST_MEDIUM to R.id.checkPresetListMedium,
+            ViewMode.LIST_LARGE to R.id.checkPresetListLarge,
+            ViewMode.LIST_XLARGE to R.id.checkPresetListXLarge,
+            ViewMode.GRID_SMALL to R.id.checkPresetGridSmall,
+            ViewMode.GRID_MEDIUM to R.id.checkPresetGridMedium,
+            ViewMode.GRID_LARGE to R.id.checkPresetGridLarge
+        )
+        for ((mode, checkId) in checks) {
+            findViewById<View>(checkId)?.visibility = if (mode == currentMode) View.VISIBLE else View.INVISIBLE
+        }
+
+        val listModes = listOf(
+            ViewMode.LIST_SMALL to R.id.txtSpecsListSmall,
+            ViewMode.LIST_MEDIUM to R.id.txtSpecsListMedium,
+            ViewMode.LIST_LARGE to R.id.txtSpecsListLarge,
+            ViewMode.LIST_XLARGE to R.id.txtSpecsListXLarge
+        )
+        for ((mode, txtId) in listModes) {
+            val style = ViewStyleManager.getListStyle(this, mode)
+            findViewById<TextView>(txtId)?.text =
+                "${style.thumbnailSizeDp} dp · ${style.primaryTextSizeSp} sp / ${style.secondaryTextSizeSp} sp"
+        }
+
+        val gridModes = listOf(
+            ViewMode.GRID_SMALL to R.id.txtSpecsGridSmall,
+            ViewMode.GRID_MEDIUM to R.id.txtSpecsGridMedium,
+            ViewMode.GRID_LARGE to R.id.txtSpecsGridLarge
+        )
+        for ((mode, txtId) in gridModes) {
+            val style = ViewStyleManager.getGridStyle(this, mode)
+            findViewById<TextView>(txtId)?.text =
+                "${style.targetWidthDp} dp cell · ${style.cardMarginDp} dp gap"
+        }
+    }
 }
+
