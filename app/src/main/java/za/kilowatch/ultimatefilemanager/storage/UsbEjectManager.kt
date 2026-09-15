@@ -39,10 +39,10 @@ object UsbEjectManager {
 
     /**
      * How long [awaitFdsDrained] polls before giving up and proceeding with the unmount anyway.
-     * 15 s covers the GC + finalization path reliably; the user already knows 20 s works, so
-     * this is well inside that window while still being far shorter than a manual wait.
+     * 25 s is beyond the 20+ s the user confirmed works for a natural close, and the repeated
+     * GC hints inside the poll loop should cause an early exit well before this deadline.
      */
-    private const val AWAIT_FDS_TIMEOUT_MS = 15_000L
+    private const val AWAIT_FDS_TIMEOUT_MS = 25_000L
 
     /**
      * Volume uuids with a removal currently running — the FR-10 re-entrancy guard.
@@ -388,48 +388,68 @@ object UsbEjectManager {
      * Waits until no open descriptor of this process points into [mountPath], or until
      * [AWAIT_FDS_TIMEOUT_MS] elapses.
      *
-     * Hints the GC first because the surviving descriptor is almost always a native directory
-     * stream (opendir / readdir) backed by a Java object whose finalizer closes it. Without
-     * the hint the GC may not run before the unmount command is issued, and vold will then
-     * SIGINT this process. The poll loop reads /proc/self/fd directly — the same table vold
-     * inspects — so proceeding when the poll returns clean is a precise guarantee, not a guess.
+     * The surviving descriptor is almost always a native directory stream (opendir/readdir)
+     * that was opened by an indexing job walking the SD card. When the job is cancelled
+     * (stage 2 of releaseAll), cooperative cancellation can only fire at suspension points —
+     * a native `list()` call that is executing at cancellation time runs to completion first.
+     * The stream is then closed by the finalizer of the underlying DirectoryStream object once
+     * GC collects it.
+     *
+     * ART only runs GC under heap pressure; a single `System.gc()` hint at the start is
+     * routinely ignored. This function therefore re-issues the GC hint on every poll tick
+     * so finalization actually happens rather than waiting for natural heap pressure — which
+     * is exactly what UI interactions (the second tap that works around the crash) provide.
+     *
+     * The poll loop reads /proc/self/fd directly — the same table vold inspects — so
+     * proceeding when the loop returns clean is a precise guarantee, not a guess.
      */
     private suspend fun awaitFdsDrained(
         mountPath: String,
         pollMs: Long = 250L,
+        gcEveryN: Int = 2,          // call gc() + runFinalization() every N polls
         timeoutMs: Long = AWAIT_FDS_TIMEOUT_MS
     ) {
         if (mountPath.isEmpty()) return
         val root = mountPath.trimEnd('/')
 
-        // Nudge the GC to finalize native directory streams.
-        @Suppress("ExplicitGarbageCollectionCall")
-        System.gc()
-        System.runFinalization()
-
         val deadline = System.currentTimeMillis() + timeoutMs
         var lastSurvivors: List<String> = emptyList()
+        var pollCount = 0
 
-        withContext(Dispatchers.IO) {
+        val drained = withContext(Dispatchers.IO) {
             while (System.currentTimeMillis() < deadline) {
                 val survivors = openFdsUnder(root)
                 if (survivors.isEmpty()) {
-                    Log.i(TAG, "awaitFdsDrained: volume $root is clean")
-                    return@withContext
+                    Log.i(TAG, "awaitFdsDrained: volume $root is clean after $pollCount poll(s)")
+                    return@withContext true
                 }
                 lastSurvivors = survivors
+
+                // Re-issue GC hint on every N-th tick. ART ignores a single hint when the
+                // heap is under no pressure; repeated hints raise the probability that the
+                // GC thread actually fires and runs the finalizer that closes the directory
+                // stream. The delay() between ticks gives the GC thread time to run.
+                if (++pollCount % gcEveryN == 0) {
+                    @Suppress("ExplicitGarbageCollectionCall")
+                    System.gc()
+                    System.runFinalization()
+                }
+
                 delay(pollMs)
             }
+            false // timed out
         }
 
-        // Timeout: proceed anyway — user already consented. Log what was left so it appears
-        // in a crash report if vold SIGINTs us.
-        Log.w(
-            TAG,
-            "awaitFdsDrained: timed out after ${timeoutMs}ms; " +
-                "${lastSurvivors.size} fd(s) still open on $mountPath — proceeding anyway"
-        )
-        lastSurvivors.forEach { Log.w(TAG, "  surviving fd: $it") }
+        if (!drained) {
+            // Timeout: proceed anyway — user already consented. Log what was left so it
+            // appears in a crash report if vold SIGINTs us.
+            Log.w(
+                TAG,
+                "awaitFdsDrained: timed out after ${timeoutMs}ms ($pollCount polls); " +
+                    "${lastSurvivors.size} fd(s) still open on $mountPath — proceeding anyway"
+            )
+            lastSurvivors.forEach { Log.w(TAG, "  surviving fd: $it") }
+        }
     }
 
     /**
