@@ -35,6 +35,7 @@ import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.FileNameDisplayHelper
+import za.kilowatch.ultimatefilemanager.util.AppIconBadgeHelper
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.text.SimpleDateFormat
@@ -683,6 +684,7 @@ class FileAdapter(
         private val checkSelect: CheckBox = itemView.findViewById(R.id.checkSelect)
         private val layoutRow: View = itemView.findViewById(R.id.layoutFileRow)
         private val imgIndexedBadge: ImageView = itemView.findViewById(R.id.imgIndexedBadge)
+        private val imgAppBadge: ImageView? = itemView.findViewById(R.id.imgAppBadge)
         // iconContainer has a transitionName set dynamically per position for shared element transitions
         private val iconContainer: View? = itemView.findViewById(R.id.iconContainer)
 
@@ -700,6 +702,11 @@ class FileAdapter(
          */
         private var videoJob: kotlinx.coroutines.Job? = null
 
+        /**
+         * Tracks a background coroutine loading an app icon badge for Android/data folders.
+         */
+        private var appBadgeJob: kotlinx.coroutines.Job? = null
+
         private var boundFile: File? = null
         private var hasLoadedThumbnail: Boolean = false
 
@@ -708,9 +715,14 @@ class FileAdapter(
             coilDisposable = null
             videoJob?.cancel()
             videoJob = null
+            appBadgeJob?.cancel()
+            appBadgeJob = null
             stopPulse()
             ScrollingTextHelper.cancelScrolling(txtName)
             imgIcon.tag = null
+            imgAppBadge?.setImageDrawable(null)
+            imgAppBadge?.tag = null
+            imgAppBadge?.visibility = View.GONE
             hasLoadedThumbnail = false
             boundFile = null
         }
@@ -770,6 +782,8 @@ class FileAdapter(
             coilDisposable = null
             videoJob?.cancel()
             videoJob = null
+            appBadgeJob?.cancel()
+            appBadgeJob = null
 
             // Apply dynamic list or grid mode scaling
             if (!isGrid) {
@@ -939,6 +953,9 @@ class FileAdapter(
             txtSize.text = ""
             txtSize.visibility = View.GONE
             imgIndexedBadge.visibility = View.GONE
+            imgAppBadge?.setImageDrawable(null)
+            imgAppBadge?.tag = null
+            imgAppBadge?.visibility = View.GONE
             stopPulse()
             imgIcon.imageTintList = null
             imgIcon.scaleType = if (isGrid) {
@@ -970,6 +987,39 @@ class FileAdapter(
                     val iconPadPx = (gridStyle.iconPaddingDp * context.resources.displayMetrics.density + 0.5f).toInt()
                     imgIcon.setPadding(iconPadPx, iconPadPx, iconPadPx, iconPadPx)
                 }
+
+                // App Package Badge on top-right of Android/data folders (Mobile only)
+                if (!isTv && AppIconBadgeHelper.isAppFolder(file, true)) {
+                    val pkg = file.name.trim()
+                    val cached = AppIconBadgeHelper.getCachedIcon(pkg)
+                    if (cached != null) {
+                        imgAppBadge?.setImageDrawable(cached)
+                        imgAppBadge?.visibility = View.VISIBLE
+                    } else if (AppIconBadgeHelper.isKnownNotFound(pkg)) {
+                        imgAppBadge?.visibility = View.GONE
+                    } else {
+                        imgAppBadge?.tag = pkg
+                        imgAppBadge?.visibility = View.GONE
+                        @OptIn(DelicateCoroutinesApi::class)
+                        appBadgeJob = GlobalScope.launch(Dispatchers.IO) {
+                            val icon = AppIconBadgeHelper.loadIcon(context, pkg)
+                            withContext(Dispatchers.Main) {
+                                if (imgAppBadge?.tag == pkg) {
+                                    if (icon != null) {
+                                        imgAppBadge.setImageDrawable(icon)
+                                        imgAppBadge.visibility = View.VISIBLE
+                                    } else {
+                                        imgAppBadge.visibility = View.GONE
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    imgAppBadge?.visibility = View.GONE
+                    imgAppBadge?.setImageDrawable(null)
+                }
+
                 if (!isGrid) {
                     val childCount = childCountCache[file.absolutePath] ?: 0
                     val itemsText = "$childCount item${if (childCount != 1) "s" else ""}"

@@ -108,11 +108,10 @@ class UFMPlaybackService : Service() {
         } catch (e: Exception) {
             // Catches ForegroundServiceStartNotAllowedException on Android 12+ (SDK 31+) if resumed/started from background
             GoRoLog.e("UFMPlaybackService", "startForeground failed (likely background start restriction): ${e.message}", e)
-            try {
-                notificationManager.notify(NOTIFICATION_ID, notification)
-            } catch (t: Throwable) {
-                GoRoLog.e("UFMPlaybackService", "Fallback notification post failed", t)
-            }
+            // If startForeground fails, the service MUST stop immediately to fulfill the platform contract
+            // and prevent ForegroundServiceDidNotStartInTimeException.
+            safeStopForeground(true)
+            stopSelf()
         }
     }
 
@@ -155,12 +154,23 @@ class UFMPlaybackService : Service() {
         fun start(context: Context, intent: Intent) {
             val serviceIntent = Intent(context, UFMPlaybackService::class.java).apply {
                 putExtras(intent.extras ?: Bundle())
+                intent.data?.let { data = it }
                 action = ACTION_PLAY
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(serviceIntent)
-            } else {
+            try {
+                // When started from a foreground activity, standard startService avoids the strict
+                // 5-second startForeground() watchdog timeout crash.
                 context.startService(serviceIntent)
+            } catch (e: Exception) {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        context.startForegroundService(serviceIntent)
+                    } else {
+                        context.startService(serviceIntent)
+                    }
+                } catch (t: Throwable) {
+                    GoRoLog.e("UFMPlaybackService", "Failed to start playback service", t)
+                }
             }
         }
 
@@ -226,12 +236,24 @@ class UFMPlaybackService : Service() {
         super.onCreate()
         alive.set(true)
         createNotificationChannel()
+        safeStartForeground(buildNotification())
         registerHeadsetPlugReceiver()
     }
 
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Guarantee foreground state is satisfied immediately
+        if (!isForegroundService) {
+            safeStartForeground(buildNotification())
+        }
+
+        if (intent == null && queueManager.isEmpty) {
+            safeStopForeground(true)
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
         when (intent?.action) {
             ACTION_PLAY -> handlePlayAction(intent)
             ACTION_PAUSE -> pause()
@@ -309,7 +331,7 @@ class UFMPlaybackService : Service() {
             val ext = path.substringAfterLast('.', "").lowercase()
             val computedSize = if (fileSize > 0L && index == startIndex) {
                 fileSize
-            } else if (shareId.isNullOrEmpty() && (provider == null || provider == "local")) {
+            } else if (index == startIndex && shareId.isNullOrEmpty() && (provider == null || provider == "local")) {
                 if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, path)) {
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getFileSize(this, path).coerceAtLeast(0L)
@@ -872,10 +894,18 @@ class UFMPlaybackService : Service() {
     // ── Intent Handling ─────────────────────────────────────────────
 
     private fun handlePlayAction(intent: Intent) {
-        val initialPath = intent.getStringExtra("initialPath") ?: intent.getStringExtra("extra_file_path") ?: run {
-            GoRoLog.e("UFMPlaybackService", "handlePlayAction: no initialPath or extra_file_path in intent")
-            return
-        }
+        val initialPath = intent.getStringExtra("initialPath")
+            ?: intent.getStringExtra("extra_file_path")
+            ?: intent.data?.path
+            ?: intent.dataString
+            ?: run {
+                GoRoLog.e("UFMPlaybackService", "handlePlayAction: no initialPath, extra_file_path, or data in intent")
+                if (queueManager.isEmpty) {
+                    safeStopForeground(true)
+                    stopSelf()
+                }
+                return
+            }
         // Prefer cache written by FileViewerRouter / UFMPlayerActivity (avoids TransactionTooLargeException)
         val cacheKey = intent.getStringExtra("playlistCacheKey")
             ?.takeIf { it.isNotBlank() }

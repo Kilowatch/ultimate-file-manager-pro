@@ -599,6 +599,9 @@ class UFMPlayerActivity : AppCompatActivity() {
             ?: intent.data?.path
             ?: intent.dataString
             ?: ""
+        if (initialPath.isNotEmpty()) {
+            intent.putExtra("initialPath", initialPath)
+        }
         remotePathExtra = intent.getStringExtra(
             za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH
         ) ?: ""
@@ -744,7 +747,14 @@ class UFMPlayerActivity : AppCompatActivity() {
             }
         } else {
             // Start & bind to the playback service
-            UFMPlaybackService.start(this, intent)
+            if (initialPath.isNotEmpty()) {
+                intent.putExtra("initialPath", initialPath)
+                UFMPlaybackService.start(this, intent)
+            } else if (!UFMPlaybackService.isServiceAlive()) {
+                za.kilowatch.ultimatefilemanager.util.GoRoLog.w("UFMPlayerActivity", "Launched with empty initialPath and playback service is not alive")
+                finish()
+                return
+            }
             bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         }
 

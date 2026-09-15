@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.8] — 2026-09-14
 
+### Added
+- Display installed application icons as badges on the top-right corner of folders in `Android/data`, `Android/obb`, and `Android/media` on mobile.
+
 ### Fixed
+- **Media Playback Foreground Service Watchdog Crash**: Fixed `RemoteServiceException$ForegroundServiceDidNotStartInTimeException` in `UFMPlaybackService` on Android SDK 36 (Android 14+) by invoking `safeStartForeground` immediately in `onCreate()` and at the top of `onStartCommand()`, gracefully calling `stopSelf()` if foreground promotion fails, preferring `startService()` over `startForegroundService()` from foreground activities, guarding against empty playback commands when re-entering from the mini-player or notifications, resolving `intent.data` paths, and avoiding synchronous SAF file size queries on the main looper for large playlists.
 - **Twin Window Crash on Recreate / Split Change**: Fixed `IllegalArgumentException: No view found for id ... (paneBottom)` in `TwinWindowActivity` by standardizing pane container IDs (`pane1` and `pane2`) across all mobile and TV horizontal/vertical layouts, and discarding stale fragment state on recreation so orientation and split preference switches never attempt to restore fragments into missing containers.
 - **ADB Session Foreground Service Watchdog Crash**: Fixed `RemoteServiceException$ForegroundServiceDidNotStartInTimeException` in `AdbSessionForegroundService` by promoting to foreground on every `onStartCommand` invocation, guarding background starts on Android 14+ (SDK 34–36) via `ProcessLifecycleOwner`, and deferring service termination to the main looper to prevent immediate ActiveServices binder contract violations.
 

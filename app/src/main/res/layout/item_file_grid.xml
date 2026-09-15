@@ -99,6 +99,21 @@
                     app:tint="@android:color/white" />
             </LinearLayout>
 
+            <!-- App Package Badge at Top-Right for Android/data folders -->
+            <ImageView
+                android:id="@+id/imgAppBadge"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="6dp"
+                android:background="@drawable/bg_badge_app_icon"
+                android:padding="2dp"
+                android:elevation="4dp"
+                android:visibility="gone"
+                android:contentDescription="@null"
+                tools:src="@mipmap/ic_launcher"
+                tools:visibility="visible" />
+
             <!-- Indexed Badge (Lightning Bolt) -->
             <ImageView
                 android:id="@+id/imgIndexedBadge"

@@ -83,6 +83,22 @@
                 tools:background="@drawable/bg_badge_bubble_cut"
                 tools:src="@drawable/ic_cut"
                 tools:visibility="visible" />
+
+            <!-- App Package Badge at Top-Right for Android/data folders -->
+            <ImageView
+                android:id="@+id/imgAppBadge"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="-2dp"
+                android:layout_marginEnd="-2dp"
+                android:background="@drawable/bg_badge_app_icon"
+                android:padding="1dp"
+                android:elevation="4dp"
+                android:visibility="gone"
+                android:contentDescription="@null"
+                tools:src="@mipmap/ic_launcher"
+                tools:visibility="visible" />
         </FrameLayout>
 
         <!-- Name + Info -->
