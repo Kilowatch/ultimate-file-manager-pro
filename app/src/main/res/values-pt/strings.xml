@@ -5309,17 +5309,8 @@ Reduzir
     <string name="fit_to_screen">
 Ajustar à tela
 </string>
-    <string name="audio">
-Áudio
-</string>
-    <string name="rewind_10_seconds">
-Retroceder 10 segundos
-</string>
     <string name="play_pause">
 Reproduzir / Pausar
-</string>
-    <string name="forward_10_seconds">
-Avançar 10 segundos
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ Não foi possível abrir o gerenciador. Instale o Shizuku ou Shevery primeiro.
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-Erro de reprodução: não é possível abrir o arquivo
-</string>
-    <string name="playback_error_server">
-Erro de reprodução: o servidor de mídia morreu
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ Abrir Configurações de armazenamento
 </string>
     <string name="safely_remove_menu_item">
 Remover unidade com segurança
+</string>
+    <string name="safely_remove_in_progress">
+Uma remoção já está em andamento.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+Unidade ainda em uso
+</string>
+    <string name="volume_still_in_use_msg">
+O aplicativo ainda tem %1$s aberto. Desmontar agora pode deixar dados não gravados ou causar erros.
+</string>
+    <string name="volume_still_in_use_fd">
+Arquivos abertos: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+Arquivos mapeados em memória: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+Pastas monitoradas: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+Etapas de liberação que falharam: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+Desmontar mesmo assim
+</string>
+    <string name="volume_still_in_use_keep">
+Manter montado
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+Painel fechado — seu armazenamento foi desconectado.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+Armazenamento desconectado. Retornando ao Menu principal.
 </string>
     <string name="cd_safely_remove">
 Remover unidade com segurança

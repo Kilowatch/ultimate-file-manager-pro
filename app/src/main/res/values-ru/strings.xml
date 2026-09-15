@@ -5309,17 +5309,8 @@ APK готов к установке
     <string name="fit_to_screen">
 По размеру экрана
 </string>
-    <string name="audio">
-Аудио
-</string>
-    <string name="rewind_10_seconds">
-Перемотка назад 10 секунд
-</string>
     <string name="play_pause">
 Воспроизведение / Пауза
-</string>
-    <string name="forward_10_seconds">
-Перемотка вперед 10 секунд
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ ADB / беспроводная отладка
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-Ошибка воспроизведения: невозможно открыть файл
-</string>
-    <string name="playback_error_server">
-Ошибка воспроизведения: медиа-сервер завершил работу
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ USB-накопитель отключён. Переключено на внут�
 </string>
     <string name="safely_remove_menu_item">
 Безопасно извлечь диск
+</string>
+    <string name="safely_remove_in_progress">
+Извлечение уже выполняется.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+Диск всё ещё используется
+</string>
+    <string name="volume_still_in_use_msg">
+Приложение всё ещё держит %1$s открытым. Размонтирование сейчас может привести к потере несохранённых данных или ошибкам.
+</string>
+    <string name="volume_still_in_use_fd">
+Открытые файлы: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+Файлы, отображённые в память: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+Отслеживаемые папки: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+Шаги освобождения, завершившиеся ошибкой: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+Размонтировать всё равно
+</string>
+    <string name="volume_still_in_use_keep">
+Оставить смонтированным
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+Панель закрыта — её накопитель был отключён.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+Накопитель отключён. Возврат в главное меню.
 </string>
     <string name="cd_safely_remove">
 Безопасно извлечь диск

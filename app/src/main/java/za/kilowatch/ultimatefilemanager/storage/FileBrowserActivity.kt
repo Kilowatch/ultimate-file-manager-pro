@@ -82,7 +82,7 @@ import za.kilowatch.ultimatefilemanager.ui.KeyboardShortcutDialog
  * multi-select via long-press, batch delete, copy, move,
  * rename, share, sort, and filter.
  */
-class FileBrowserActivity : AppCompatActivity() {
+class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
     private val isTv by lazy { DeviceUtils.isTvDevice(this) }
     private lateinit var keyboardShortcutHandler: KeyboardShortcutHandler
@@ -7279,28 +7279,54 @@ class FileBrowserActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * The [StorageItem] describing the drive this browser is showing. The eject flow is handed
+     * it so that what the user sees and what gets unmounted cannot disagree.
+     */
+    private fun currentDriveItem(): StorageItem = StorageItem(
+        id = storageId.ifEmpty {
+            if (MockUsbStorageManager.isMockUsbPath(this, rootPath)) {
+                MockUsbStorageManager.MOCK_USB_ID
+            } else {
+                "removable"
+            }
+        },
+        label = storageLabel.ifEmpty { getString(R.string.mock_usb_title) },
+        iconRes = R.drawable.ic_storage_usb,
+        totalBytes = 0L,
+        usedBytes = 0L,
+        mountPath = rootPath,
+        isRemovable = true
+    )
+
+    /**
+     * FR-05 for the standalone browser: this Activity *is* the volume's UI, so its FR-06
+     * destination — the Main Menu — is reached by finishing, which is also what the existing
+     * FR-08(c) path in [checkRemovableDriveMounted] already does for a drive pulled outside
+     * the app.
+     *
+     * The adapter's pending jobs are cancelled by the caller *before* the release starts, not
+     * here: doing it at this point would be too late, since this runs after the descriptor
+     * sweep and a warm-cache job could have reopened a file in between. What is left for this
+     * method is the move itself.
+     */
+    override fun navigateOutOfVolume(onDone: () -> Unit) {
+        if (!isFinishing && !isDestroyed) {
+            finish()
+        }
+        onDone()
+    }
+
     private fun safelyRemoveCurrentDrive() {
         if (::fileAdapter.isInitialized) {
             fileAdapter.cancelPendingJobs()
         }
-        val item = za.kilowatch.ultimatefilemanager.storage.StorageItem(
-            id = storageId.ifEmpty {
-                if (za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbPath(this, rootPath)) {
-                    za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.MOCK_USB_ID
-                } else {
-                    "removable"
-                }
-            },
-            label = storageLabel.ifEmpty { getString(R.string.mock_usb_title) },
-            iconRes = R.drawable.ic_storage_usb,
-            totalBytes = 0L,
-            usedBytes = 0L,
-            mountPath = rootPath,
-            isRemovable = true
-        )
-        za.kilowatch.ultimatefilemanager.storage.UsbEjectManager.safelyRemove(this, item) { success: Boolean ->
+        UsbEjectManager.safelyRemove(this, currentDriveItem(), this) { success: Boolean ->
+            // FR-06 is satisfied by navigateOutOfVolume, which has already run by the time a
+            // successful unmount reports back; finish() here covers the paths that do not go
+            // through it, and is a no-op when they have.
             if (success) {
-                finish()
+                if (!isFinishing && !isDestroyed) finish()
             }
         }
     }

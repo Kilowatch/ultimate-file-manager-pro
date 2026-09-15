@@ -5309,17 +5309,8 @@ Zoom arrière
     <string name="fit_to_screen">
 Ajuster à l\'écran
 </string>
-    <string name="audio">
-Audio
-</string>
-    <string name="rewind_10_seconds">
-Reculer de 10 secondes
-</string>
     <string name="play_pause">
 Lecture / Pause
-</string>
-    <string name="forward_10_seconds">
-Avancer de 10 secondes
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ Impossible d\'ouvrir le gestionnaire. Veuillez d\'abord installer Shizuku ou She
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-Erreur de lecture : impossible d\\\'ouvrir le fichier
-</string>
-    <string name="playback_error_server">
-Erreur de lecture : le serveur multimédia est mort
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ Ouvrir les paramètres de stockage
 </string>
     <string name="safely_remove_menu_item">
 Retirer le lecteur en toute sécurité
+</string>
+    <string name="safely_remove_in_progress">
+Un retrait est déjà en cours.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+Lecteur toujours en cours d\'utilisation
+</string>
+    <string name="volume_still_in_use_msg">
+L\'application a encore %1$s ouvert. Démonter maintenant pourrait laisser des données non écrites ou provoquer des erreurs.
+</string>
+    <string name="volume_still_in_use_fd">
+Fichiers ouverts : %1$d
+</string>
+    <string name="volume_still_in_use_map">
+Fichiers mappés en mémoire : %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+Dossiers surveillés : %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+Étapes de libération ayant échoué : %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+Démonter quand même
+</string>
+    <string name="volume_still_in_use_keep">
+Le garder monté
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+Volet fermé — son stockage a été déconnecté.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+Stockage déconnecté. Retour au menu principal.
 </string>
     <string name="cd_safely_remove">
 Retirer le lecteur en toute sécurité

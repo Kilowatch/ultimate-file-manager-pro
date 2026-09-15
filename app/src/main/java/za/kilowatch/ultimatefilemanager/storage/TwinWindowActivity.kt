@@ -30,6 +30,7 @@ import za.kilowatch.ultimatefilemanager.settings.ApkExtractPreferenceManager
 import za.kilowatch.ultimatefilemanager.util.ApkMetadataExtractor
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import za.kilowatch.ultimatefilemanager.util.TransferConflictHelper
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -54,6 +55,8 @@ import kotlin.math.abs
 class TwinWindowActivity : AppCompatActivity() {
 
     companion object {
+        private const val TAG_TWIN = "TwinWindowActivity"
+
         /** Optional: pre-seed pane 1 with a specific local path (e.g. from FileBrowserActivity) */
         const val EXTRA_TOP_LOCAL_PATH  = "twin_top_local_path"
         /** Optional: label for the local path pane (e.g. "Internal Storage") */
@@ -72,6 +75,32 @@ class TwinWindowActivity : AppCompatActivity() {
 
     private var pane1: Fragment? = null
     private var pane2: Fragment? = null
+
+    /**
+     * FR-08(c): listens for a volume disappearing from under a pane. Registered for the whole
+     * Activity lifetime rather than in `onStart`, so a removal that lands while the app is
+     * backgrounded is still seen — the prune is deferred to the next resume rather than lost.
+     */
+    private var volumeReceiver: android.content.BroadcastReceiver? = null
+
+    override fun onResume() {
+        super.onResume()
+        // Re-checks unconditionally, which covers three cases in one path: a removal that arrived
+        // while this Activity was backgrounded (the receiver deliberately did nothing then), a
+        // removal that happened before this Activity existed (process death, or starting Twin
+        // Window after the drive was already pulled — no broadcast could reach us), and the
+        // ordinary case where there is simply nothing to prune.
+        prunePanesOnRemovedVolumes(null)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        volumeReceiver?.let {
+            try {
+                unregisterReceiver(it)
+            } catch (_: Exception) {}
+        }
+    }
 
     // Tracks pane 1's original type for restoration after closing the player.
     // Pane 1 can be seeded as either local (default) or network (via intent extras).
@@ -221,6 +250,8 @@ class TwinWindowActivity : AppCompatActivity() {
             
             insets
         }
+        registerVolumeReceiver()
+
         // Initialize panes — pane 1 can be seeded by the caller, pane 2 restores last selection
         val defaultStorages = getDefaultStoragePair()
         val defaultPane1 = defaultStorages.first
@@ -683,6 +714,124 @@ class TwinWindowActivity : AppCompatActivity() {
 
     private fun collapsePanes() {
         animateGuideline(0.5f)
+    }
+
+    /**
+     * Closes pane [index] and promotes the surviving pane to the full window (FR-06).
+     *
+     * Reached only through FR-08(c) — a volume removed outside the app while a pane is browsing
+     * it. Twin Window has no eject entry point (FR-13 excludes it), so this never runs while the
+     * user is driving the window, which is what makes closing a pane out from under them
+     * acceptable here and nowhere else.
+     *
+     * `expandPane` takes the *surviving* index, not the closed one: it maps index 1 to a
+     * guideline at 1f (pane 1 fills the window) and index 2 to 0f (pane 2 fills it), and both
+     * the vertical and horizontal twin layouts constrain their panes off the same guideline, so
+     * the one call works for either orientation.
+     *
+     * The removal is an async `commit()` rather than `commitNow()` deliberately. FR-08(c)
+     * explicitly covers a removal that arrives while the app is backgrounded, and `commitNow()`
+     * throws `IllegalStateException` once state has been saved. Hiding the container makes the
+     * brief window before the transaction executes invisible instead of leaving a half-drawn
+     * pane, and the fragment field is nulled so [getPane1]/[getPane2] report no pane once the
+     * removal has run.
+     */
+    private fun closePane(index: Int) {
+        val closingPaneId = if (index == 1) R.id.pane1 else R.id.pane2
+        val survivingIndex = if (index == 1) 2 else 1
+
+        supportFragmentManager.findFragmentById(closingPaneId)?.let { fragment ->
+            supportFragmentManager.beginTransaction().remove(fragment).commit()
+        }
+        if (index == 1) pane1 = null else pane2 = null
+
+        findViewById<View>(closingPaneId)?.visibility = View.GONE
+        expandPane(survivingIndex)
+    }
+
+    /**
+     * FR-08(c): closes whatever pane is showing a volume that has gone away.
+     *
+     * [removedPath] is the path the OS named in the broadcast, when there was one; it is
+     * authoritative and lets the pane be matched without guessing. It is null on the `onResume`
+     * re-check, which has to fall back to asking whether the mount is still there.
+     *
+     * While the Activity is not started nothing is done at all — not even the prune. FR-08(c)'s
+     * backgrounded clause allows the removal to proceed and requires the explanation to appear
+     * when the user next looks, and deferring the whole action is what makes that work: closing a
+     * pane or finishing the Activity while it is invisible would consume the removal with no way
+     * to report it, and `onResume` re-runs this to do the work in the foreground.
+     */
+    private fun prunePanesOnRemovedVolumes(removedPath: String?) {
+        if (!lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+            Log.d(TAG_TWIN, "Volume removal received while not started; deferring to onResume")
+            return
+        }
+
+        val pane1Affected = isPaneOnRemovedVolume(getPane1(), removedPath)
+        val pane2Affected = isPaneOnRemovedVolume(getPane2(), removedPath)
+        if (!pane1Affected && !pane2Affected) return
+
+        if (pane1Affected && pane2Affected) {
+            // Both panes were on it, so FR-06's Twin Window destination — collapse to the
+            // surviving pane — has no survivor to collapse to. Fall back to the Main Menu, which
+            // is what the other containers do when the last surface on a volume is closed.
+            Log.i(TAG_TWIN, "Both panes were on the removed volume; returning to the Main Menu")
+            Toast.makeText(
+                this,
+                getString(R.string.twin_window_storage_unavailable_exit),
+                Toast.LENGTH_LONG
+            ).show()
+            val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+            finish()
+            return
+        }
+
+        val closedIndex = if (pane1Affected) 1 else 2
+        Log.i(TAG_TWIN, "Volume removed; closing pane $closedIndex")
+        closePane(closedIndex)
+        Toast.makeText(
+            this,
+            getString(R.string.twin_window_storage_unavailable_closed),
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    /**
+     * Whether [fragment] is a local pane rooted on a volume that is no longer available.
+     *
+     * Network and cloud panes hold no local volume, so they are never affected — which is also
+     * why the `is FileBrowserFragment` test is the whole of that case rather than a per-type list.
+     * [UsbEjectManager.isRemovablePath] excludes internal storage and SAF trees, so a drive going
+     * away can never close a pane that was never on it.
+     */
+    private fun isPaneOnRemovedVolume(fragment: Fragment?, removedPath: String?): Boolean {
+        if (fragment !is FileBrowserFragment) return false
+        val root = fragment.getRootPath()
+        if (root.isEmpty()) return false
+        if (!UsbEjectManager.isRemovablePath(this, root)) return false
+        if (removedPath != null) {
+            return root == removedPath || root.startsWith("$removedPath/")
+        }
+        return !File(root).exists()
+    }
+
+    private fun registerVolumeReceiver() {
+        val filter = android.content.IntentFilter().apply {
+            addAction(Intent.ACTION_MEDIA_UNMOUNTED)
+            addAction(Intent.ACTION_MEDIA_EJECT)
+            addAction(Intent.ACTION_MEDIA_REMOVED)
+            addDataScheme("file")
+        }
+        volumeReceiver = object : android.content.BroadcastReceiver() {
+            override fun onReceive(context: android.content.Context?, intent: Intent?) {
+                prunePanesOnRemovedVolumes(intent?.data?.path)
+            }
+        }
+        registerReceiver(volumeReceiver, filter)
     }
 
     private fun animateGuideline(targetPercent: Float) {

@@ -5309,17 +5309,8 @@ APK جاهز للتثبيت
     <string name="fit_to_screen">
 ملاءمة للشاشة
 </string>
-    <string name="audio">
-صوت
-</string>
-    <string name="rewind_10_seconds">
-رجوع 10 ثوانٍ
-</string>
     <string name="play_pause">
 تشغيل / إيقاف مؤقت
-</string>
-    <string name="forward_10_seconds">
-تقديم 10 ثوانٍ
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ ADB / تصحيح الأخطاء اللاسلكي
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-خطأ في التشغيل: لا يمكن فتح الملف
-</string>
-    <string name="playback_error_server">
-خطأ في التشغيل: خادم الوسائط توقف
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ Quarterly_Financial_Report_2026_Final.pdf
 </string>
     <string name="safely_remove_menu_item">
 إخراج المحرك بأمان
+</string>
+    <string name="safely_remove_in_progress">
+توجد عملية إزالة قيد التنفيذ بالفعل.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+وحدة التخزين لا تزال قيد الاستخدام
+</string>
+    <string name="volume_still_in_use_msg">
+لا يزال التطبيق يحتفظ بـ %1$s مفتوحًا. قد يؤدي إلغاء التحميل الآن إلى عدم كتابة البيانات أو إلى حدوث أخطاء.
+</string>
+    <string name="volume_still_in_use_fd">
+الملفات المفتوحة: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+الملفات المعيّنة في الذاكرة: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+المجلدات المراقبة: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+خطوات التحرير التي فشلت: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+إلغاء التحميل على أي حال
+</string>
+    <string name="volume_still_in_use_keep">
+إبقاءه محمّلًا
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+أُغلق الجزء — تم فصل وحدة التخزين الخاصة به.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+تم فصل وحدة التخزين. جارٍ العودة إلى القائمة الرئيسية.
 </string>
     <string name="cd_safely_remove">
 إخراج المحرك بأمان

@@ -23,11 +23,147 @@ import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
 import java.io.File
 
 /**
+ * Process-wide, ref-counted registry of [FileObserver]s used by [RecentsChangeWatcher].
+ *
+ * Exists so that watcher teardown can be driven from outside any instance: the eject
+ * release phase holds no reference to a `RecentsChangeWatcher`, and the class is created
+ * per-Activity so several may be alive at once. Ref-counting means a directory watched by
+ * two live instances gets one underlying observer, and it is torn down only when the last
+ * subscriber releases it — or when [releaseVolume] force-stops everything under a volume.
+ *
+ * All state is guarded by the monitor on this object; [FileObserver] callbacks arrive on
+ * the observer's own thread, so [dispatch] takes the same monitor and never calls back
+ * into the registry while holding it.
+ */
+private object FileObserverRegistry {
+
+    private const val TAG = "RecentsFsWatcher"
+
+    private val MASK = FileObserver.CREATE or FileObserver.MODIFY or
+            FileObserver.MOVED_TO or FileObserver.DELETE
+
+    private class Entry(val observer: FileObserver) {
+        val listeners = mutableListOf<() -> Unit>()
+    }
+
+    /** Absolute directory path -> shared observer and its subscribers. */
+    private val entries = mutableMapOf<String, Entry>()
+
+    /** Registers [listener] for [dir], creating and starting the observer on first use. */
+    @Synchronized
+    fun acquire(dir: File, listener: () -> Unit) {
+        val key = dir.absolutePath
+
+        entries[key]?.let { entry ->
+            if (entry.listeners.none { it === listener }) entry.listeners.add(listener)
+            return
+        }
+
+        if (!dir.exists() || !dir.canRead()) return
+
+        try {
+            val observer = createObserver(dir)
+            observer.startWatching()
+            entries[key] = Entry(observer).apply { listeners.add(listener) }
+        } catch (e: Exception) {
+            GoRoLog.w(TAG, "Failed to start FileObserver on $key: ${e.message}")
+        }
+    }
+
+    /** Removes [listener] everywhere; stops any observer left with no subscribers. */
+    @Synchronized
+    fun release(listener: () -> Unit) {
+        val it = entries.iterator()
+        while (it.hasNext()) {
+            val entry = it.next().value
+            entry.listeners.removeAll { it === listener }
+            if (entry.listeners.isEmpty()) {
+                try { entry.observer.stopWatching() } catch (_: Exception) { }
+                it.remove()
+            }
+        }
+    }
+
+    /**
+     * Force-stops every observer whose directory is [volumePath] itself or lies beneath it,
+     * regardless of how many listeners it still has. Returns the number stopped.
+     *
+     * Callers holding a now-stale listener are unaffected: a later [release] simply finds
+     * nothing to remove, and a later [acquire] re-registers from scratch.
+     */
+    @Synchronized
+    fun releaseVolume(volumePath: String): Int {
+        val root = volumePath.trimEnd('/')
+        if (root.isEmpty()) return 0
+        val prefix = "$root/"
+
+        var stopped = 0
+        val it = entries.iterator()
+        while (it.hasNext()) {
+            val entry = it.next()
+            val key = entry.key
+            if (key == root || key.startsWith(prefix)) {
+                try { entry.value.observer.stopWatching() } catch (_: Exception) { }
+                it.remove()
+                stopped++
+            }
+        }
+        return stopped
+    }
+
+    /**
+     * Absolute paths of every directory still registered at or beneath [volumePath].
+     *
+     * This is the **only** window onto inotify state in the process: a watch descriptor
+     * readlinks as `anon_inode:inotify` and appears in no `/proc/self/maps` line, so neither
+     * the descriptor sweep nor the map scan can see one. A non-empty result after
+     * [releaseVolume] therefore explains an unmount that fails with the mount busy while both
+     * of those scans come back clean — and it is the one surviving-claim class that FR-09
+     * could not otherwise report.
+     */
+    @Synchronized
+    fun activeUnder(volumePath: String): List<String> {
+        val root = volumePath.trimEnd('/')
+        if (root.isEmpty()) return emptyList()
+        val prefix = "$root/"
+        return entries.keys.filter { it == root || it.startsWith(prefix) }
+    }
+
+    private fun createObserver(dir: File): FileObserver {
+        val onFsEvent: (String?) -> Unit = { path ->
+            if (path == null || !path.startsWith(".")) dispatch(dir.absolutePath)
+        }
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            object : FileObserver(dir, MASK) {
+                override fun onEvent(event: Int, path: String?) = onFsEvent(path)
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            object : FileObserver(dir.absolutePath, MASK) {
+                override fun onEvent(event: Int, path: String?) = onFsEvent(path)
+            }
+        }
+    }
+
+    @Synchronized
+    private fun dispatch(key: String) {
+        entries[key]?.listeners?.toList()?.forEach { listener ->
+            try { listener() } catch (e: Exception) {
+                GoRoLog.w(TAG, "FileObserver listener failed for $key: ${e.message}")
+            }
+        }
+    }
+}
+
+/**
  * Live change detection for Recent Files:
  * 1. MediaStore observer for instant system-wide file modifications.
  * 2. FileObserver on primary user directories with a 500ms debounce.
  * 3. ContentObserver for persisted SAF trees in Limited tier.
  * 4. BroadcastReceiver for media unmount / eject events.
+ *
+ * The observers from (2) live in a process-wide, ref-counted registry rather than in this
+ * instance, so the eject release phase can stop them without holding a reference here.
  */
 class RecentsChangeWatcher(
     private val context: Context,
@@ -37,14 +173,43 @@ class RecentsChangeWatcher(
     companion object {
         private const val TAG = "RecentsChangeWatcher"
         private const val DEBOUNCE_MS = 500L
+
+        /**
+         * Stops filesystem watching for [volumePath] and everything beneath it, for every
+         * live watcher instance. Safe to call from any thread, at any time, and with no
+         * instance in hand — that is the point: the eject release phase has neither.
+         *
+         * Note this does **not** make the app survive an eject on its own. inotify watch
+         * descriptors readlink as `anon_inode:inotify` and can never appear as a path
+         * symlink, so `vold` cannot see them and they cannot be the cause of a kill. What
+         * they can do is keep an inode reference that leaves the mount busy and fails the
+         * unmount — a different symptom. This call is hygiene, not the fix.
+         *
+         * @return the number of underlying observers stopped.
+         */
+        fun stopWatchingVolume(volumePath: String): Int =
+            FileObserverRegistry.releaseVolume(volumePath)
+
+        /**
+         * Directories still watched under [volumePath] — the read-only companion to
+         * [stopWatchingVolume], used by the release phase to *measure* that the stop worked
+         * rather than assume it. See [FileObserverRegistry.activeUnder].
+         */
+        fun activeWatchesUnder(volumePath: String): List<String> =
+            FileObserverRegistry.activeUnder(volumePath)
     }
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var debounceJob: Job? = null
-    private val fileObservers = mutableListOf<FileObserver>()
     private var mediaStoreObserver: ContentObserver? = null
     private val safObservers = mutableMapOf<Uri, ContentObserver>()
     private var mediaReceiver: BroadcastReceiver? = null
+
+    /**
+     * Stable identity for this instance's registration in the shared registry. Held as a
+     * field so `release` can match it by reference; a fresh lambda per call would not.
+     */
+    private val onFsEvent: () -> Unit = { triggerDebouncedUpdate() }
 
     private fun triggerDebouncedUpdate() {
         debounceJob?.cancel()
@@ -104,31 +269,7 @@ class RecentsChangeWatcher(
         }
 
         for (dir in watchDirs) {
-            if (!dir.exists() || !dir.canRead()) continue
-            try {
-                val observer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    object : FileObserver(dir, CREATE or MODIFY or MOVED_TO or DELETE) {
-                        override fun onEvent(event: Int, path: String?) {
-                            if (path != null && !path.startsWith(".")) {
-                                triggerDebouncedUpdate()
-                            }
-                        }
-                    }
-                } else {
-                    @Suppress("DEPRECATION")
-                    object : FileObserver(dir.absolutePath, CREATE or MODIFY or MOVED_TO or DELETE) {
-                        override fun onEvent(event: Int, path: String?) {
-                            if (path != null && !path.startsWith(".")) {
-                                triggerDebouncedUpdate()
-                            }
-                        }
-                    }
-                }
-                observer.startWatching()
-                fileObservers.add(observer)
-            } catch (e: Exception) {
-                GoRoLog.w(TAG, "Failed to start FileObserver on ${dir.path}: ${e.message}")
-            }
+            FileObserverRegistry.acquire(dir, onFsEvent)
         }
 
         // 3. Register ContentObserver for SAF trees (Limited tier)
@@ -191,10 +332,7 @@ class RecentsChangeWatcher(
             mediaStoreObserver = null
         }
 
-        fileObservers.forEach {
-            try { it.stopWatching() } catch (_: Exception) { }
-        }
-        fileObservers.clear()
+        FileObserverRegistry.release(onFsEvent)
 
         safObservers.values.forEach {
             try { context.contentResolver.unregisterContentObserver(it) } catch (_: Exception) { }

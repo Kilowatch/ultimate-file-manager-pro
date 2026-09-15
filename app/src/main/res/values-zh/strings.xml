@@ -5309,17 +5309,8 @@ XAPK 内未找到 APK 文件
     <string name="fit_to_screen">
 适合屏幕
 </string>
-    <string name="audio">
-声音的
-</string>
-    <string name="rewind_10_seconds">
-快退 10 秒
-</string>
     <string name="play_pause">
 播放/暂停
-</string>
-    <string name="forward_10_seconds">
-快进 10 秒
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ ADB/无线调试
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-播放错误：无法打开文件
-</string>
-    <string name="playback_error_server">
-播放错误：媒体服务器死亡
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14954,6 +14939,47 @@ USB 驱动器已断开连接。已切换到内部存储。
 </string>
     <string name="safely_remove_menu_item">
 安全移除驱动器
+</string>
+    <string name="safely_remove_in_progress">
+移除操作已在进行中。
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+驱动器仍在使用中
+</string>
+    <string name="volume_still_in_use_msg">
+该应用仍打开着 %1$s。现在卸载可能导致数据未写入或引发错误。
+</string>
+    <string name="volume_still_in_use_fd">
+打开的文件：%1$d
+</string>
+    <string name="volume_still_in_use_map">
+内存映射文件：%1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+监视的文件夹：%1$d
+</string>
+    <string name="volume_still_in_use_failed">
+失败的释放步骤：%1$d
+</string>
+    <string name="volume_still_in_use_continue">
+仍然卸载
+</string>
+    <string name="volume_still_in_use_keep">
+保持挂载
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+窗格已关闭 — 其存储已断开连接。
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+存储已断开连接。正在返回主菜单。
 </string>
     <string name="cd_safely_remove">
 安全移除驱动器

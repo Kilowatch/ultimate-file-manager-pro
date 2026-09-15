@@ -56,6 +56,35 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
          */
         lateinit var applicationScope: kotlinx.coroutines.CoroutineScope
             private set
+
+        private const val VIEWER_CLOSE_TIMEOUT_MS = 2_000L
+        private const val VIEWER_CLOSE_POLL_MS = 50L
+
+        /**
+         * Activities that hold content open and must therefore be closed before a volume is
+         * unmounted. Listed explicitly because the viewers share no common base class — each
+         * extends `AppCompatActivity` directly, so there is no type to test against.
+         *
+         * Keep in sync with `viewer/FileViewerRouter`, which is the single place that decides
+         * what opens as a viewer. `MediaPlayerActivity` is absent because it was unreachable and
+         * has been deleted (T022). `TwinWindowPlayerFragment` is absent
+         * because it is a fragment inside `TwinWindowActivity`, which must survive an eject —
+         * its player is released by that fragment's own teardown (T010).
+         */
+        private val VIEWER_ACTIVITIES: Set<Class<*>> = setOf(
+            za.kilowatch.ultimatefilemanager.viewer.ImageViewerActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.PdfViewerActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.UFMPlayerActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.SlideShowActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.TextViewerActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.EpubViewerActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.SevenZipViewerActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.SpreadsheetViewerActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java
+        )
     }
 
     private val TAG = "UfmApplication"
@@ -587,4 +616,74 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             }
         }
     }
+
+    /**
+     * Release-eject stage 2: stop background playback, drop Coil's decoded-bitmap cache, and
+     * finish every live viewer — then invoke [onDone] once they are actually gone.
+     *
+     * Called by the volume release phase *before* the unmount is issued. Closing is
+     * unconditional and not scoped to the volume being removed (FR-01, decided in the 2nd
+     * planning pass): a viewer that misreports which volume it holds would be a false
+     * negative, and one false negative is enough for `vold` to SIGINT the process. The
+     * accepted cost is that ejecting a card while viewing internal-storage content also
+     * closes that viewer.
+     *
+     * [onDone] fires on the main thread only once every viewer has been destroyed — the point
+     * being that `onDestroy` is where a viewer's `ParcelFileDescriptor`/player/`ImageLoader`
+     * is released. Finishing without waiting would let the unmount race the teardown. A
+     * timeout bounds the wait so a viewer that refuses to die cannot hang the eject; the
+     * inspection stage afterwards reports whatever actually survived.
+     *
+     * Must be called from the main thread.
+     */
+    fun closeAllViewers(onDone: () -> Unit, timeoutMs: Long = VIEWER_CLOSE_TIMEOUT_MS) {
+        val handler = android.os.Handler(android.os.Looper.getMainLooper())
+        handler.post {
+            // Playback first: stopService() tears the player and its fd down, whereas
+            // ACTION_PAUSE would keep both alive and defeat the purpose.
+            try {
+                za.kilowatch.ultimatefilemanager.viewer.UFMPlaybackService.stop(this)
+            } catch (e: Exception) {
+                GoRoLog.w(TAG, "closeAllViewers: playback stop failed: ${e.message}")
+            }
+
+            // Decoded bitmaps can outlive their views via the process-wide Coil cache. There is
+            // no per-volume eviction API, so this is wholesale — accepted in the 2nd planning
+            // pass because it costs only a re-decode on the next browse (NFR-01).
+            try {
+                SingletonImageLoader.get(this).memoryCache?.clear()
+            } catch (e: Exception) {
+                GoRoLog.w(TAG, "closeAllViewers: Coil cache clear failed: ${e.message}")
+            }
+
+            liveViewerActivities().forEach { activity ->
+                if (!activity.isFinishing) {
+                    try { activity.finish() } catch (e: Exception) {
+                        GoRoLog.w(TAG, "closeAllViewers: finish failed for ${activity::class.java.simpleName}: ${e.message}")
+                    }
+                }
+            }
+
+            val deadline = android.os.SystemClock.uptimeMillis() + timeoutMs
+            val poll = object : Runnable {
+                override fun run() {
+                    if (liveViewerActivities().isEmpty()) {
+                        onDone()
+                        return
+                    }
+                    if (android.os.SystemClock.uptimeMillis() >= deadline) {
+                        GoRoLog.w(TAG, "closeAllViewers: timed out with ${liveViewerActivities().size} viewer(s) alive")
+                        onDone()
+                        return
+                    }
+                    handler.postDelayed(this, VIEWER_CLOSE_POLL_MS)
+                }
+            }
+            handler.post(poll)
+        }
+    }
+
+    /** Live viewer activities, i.e. those in [VIEWER_ACTIVITIES] that are not already gone. */
+    private fun liveViewerActivities(): List<android.app.Activity> =
+        aliveActivities.filter { it::class.java in VIEWER_ACTIVITIES && !it.isDestroyed }
 }

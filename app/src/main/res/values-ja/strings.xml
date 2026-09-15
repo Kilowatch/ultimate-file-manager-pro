@@ -5309,17 +5309,8 @@ PINを生成中…
     <string name="fit_to_screen">
 画面に合わせる
 </string>
-    <string name="audio">
-音声
-</string>
-    <string name="rewind_10_seconds">
-10秒戻す
-</string>
     <string name="play_pause">
 再生/一時停止
-</string>
-    <string name="forward_10_seconds">
-10秒進む
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ ADB / ワイヤレスデバッグ
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-再生エラー: ファイルを開けません
-</string>
-    <string name="playback_error_server">
-再生エラー: メディアサーバーが応答しなくなりました
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ USB ドライブが切断されました。内部ストレージに切り替え�
 </string>
     <string name="safely_remove_menu_item">
 ドライブを安全に取り外す
+</string>
+    <string name="safely_remove_in_progress">
+取り外しはすでに進行中です。
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+ドライブはまだ使用中です
+</string>
+    <string name="volume_still_in_use_msg">
+アプリはまだ%1$sを開いています。今アンマウントすると、データが書き込まれないままになったり、エラーが発生する可能性があります。
+</string>
+    <string name="volume_still_in_use_fd">
+開いているファイル: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+メモリマップされたファイル: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+監視中のフォルダ: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+失敗した解放ステップ: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+それでもアンマウントする
+</string>
+    <string name="volume_still_in_use_keep">
+マウントしたままにする
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+ペインが閉じられました — そのストレージは切断されました。
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+ストレージが切断されました。メインメニューに戻ります。
 </string>
     <string name="cd_safely_remove">
 ドライブを安全に取り外す

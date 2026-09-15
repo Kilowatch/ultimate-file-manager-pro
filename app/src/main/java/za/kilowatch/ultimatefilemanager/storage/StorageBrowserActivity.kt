@@ -1,4 +1,4 @@
-package za.kilowatch.ultimatefilemanager.storage
+﻿package za.kilowatch.ultimatefilemanager.storage
 
 import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
 
@@ -177,6 +177,16 @@ class StorageBrowserActivity : AppCompatActivity() {
     private val knownMountPaths = mutableSetOf<String>()
     private val handler = Handler(Looper.getMainLooper())
     private var lastShizukuLaunchTime = 0L
+    /**
+     * Tracks the currently-running [loadStorageVolumes] coroutine so that any
+     * in-flight scan can be cancelled before a new one starts.  Without this,
+     * rapid successive calls (e.g. onResume → StorageVolumeCallback → broadcast
+     * receiver all firing within 500 ms) launch multiple concurrent coroutines
+     * that all call [StorageAdapter.submitList] + [StorageAdapter.safeNotifyDataSetChanged]
+     * on the main thread in quick succession, causing the
+     * "attach on child which is not detached" RecyclerView crash.
+     */
+    private var loadStorageJob: kotlinx.coroutines.Job? = null
 
 
     private var tvSnapHelper: androidx.recyclerview.widget.SnapHelper? = null
@@ -1615,7 +1625,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                         loadStorageVolumes()
                     }
                 } else {
-                    UsbEjectManager.safelyRemove(this@StorageBrowserActivity, item) {
+                    // Null host: this is the Main Menu, which has no in-volume UI to leave.
+                    UsbEjectManager.safelyRemove(this@StorageBrowserActivity, item, null) {
                         loadStorageVolumes()
                     }
                 }
@@ -3710,7 +3721,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                         }
                     }
                     selected == getString(R.string.safely_remove_menu_item) -> {
-                        UsbEjectManager.safelyRemove(this@StorageBrowserActivity, item) {
+                        // Null host: this is the Main Menu, which has no in-volume UI to leave.
+                        UsbEjectManager.safelyRemove(this@StorageBrowserActivity, item, null) {
                             loadStorageVolumes()
                         }
                     }
@@ -3978,7 +3990,10 @@ class StorageBrowserActivity : AppCompatActivity() {
         val capturedIsImageCompressDestPickerMode = isImageCompressDestPickerMode
         val capturedIsGifCreatorDestPickerMode = isGifCreatorDestPickerMode
 
-        lifecycleScope.launch(Dispatchers.IO) {
+        // Cancel any previous in-flight scan so we never have two concurrent coroutines
+        // both racing to call submitList / notifyDataSetChanged on the adapter.
+        loadStorageJob?.cancel()
+        loadStorageJob = lifecycleScope.launch(Dispatchers.IO) {
             val storageManager = getSystemService(Context.STORAGE_SERVICE) as StorageManager
             val volumes = storageManager.storageVolumes
             val storageItems = mutableListOf<StorageItem>()
@@ -4411,12 +4426,24 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             if (showFeatureTiles) {
-                // Add APK / XAPK Extracts tile â€” only if the folder is non-empty
-                val extractsDir = File(
-                    getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS),
-                    "UFM-Extracted"
-                )
-                if (extractsDir.exists() && extractsDir.listFiles()?.isNotEmpty() == true) {
+                // Add APK / XAPK Extracts tile -- only if the folder is non-empty.
+                // IMPORTANT: getExternalFilesDir() calls vold.setupAppDir() via IPC.
+                // When an SD card that was previously browsed is then unmounted, vold
+                // invalidates the external volume slot and throws
+                // ServiceSpecificException(code -22 = EINVAL). Left uncaught this
+                // exception kills the entire IO coroutine and crashes the process --
+                // which is exactly why the crash ONLY occurs after browsing storage.
+                // Wrap in try/catch so we gracefully skip the tile instead.
+                val extractsDir = try {
+                    File(
+                        getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS),
+                        "UFM-Extracted"
+                    )
+                } catch (e: Exception) {
+                    Log.w(TAG, "getExternalFilesDir failed (volume likely unmounted): ${e.message}")
+                    null
+                }
+                if (extractsDir != null && extractsDir.exists() && extractsDir.listFiles()?.isNotEmpty() == true) {
                     val fileCount = extractsDir.listFiles()?.size ?: 0
                     storageItems.add(StorageItem(
                         id = "extracts_tile",
@@ -4717,9 +4744,15 @@ class StorageBrowserActivity : AppCompatActivity() {
                 updateHiddenBadge()
                 // Reload colors and icons every time so changes made inside
                 // custom tiles are picked up when tiles return to main menu.
-                storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
-                storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
-                storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
+                // Use the batched helper – at most ONE notifyDataSetChanged is
+                // emitted instead of the previous three, which prevents rapid
+                // successive layout invalidations that caused the
+                // "attach on child which is not detached" RecyclerView crash.
+                storageAdapter.updateTileDecorations(
+                    colors  = TileColorManager.loadTileColors(this@StorageBrowserActivity),
+                    icons   = TileIconManager.getAllTileIcons(this@StorageBrowserActivity),
+                    iconRes = TileIconManager.getAllTileIconRes(this@StorageBrowserActivity)
+                )
 
                 if (savedScrollPosition == RecyclerView.NO_POSITION) {
                     val lm = recyclerStorage.layoutManager as? LinearLayoutManager
@@ -5268,10 +5301,15 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
 
                 if (mode == MainMenuViewModeManager.ViewMode.LIST) {
+                    // Clear the pool before swapping the LayoutManager so no stale
+                    // ViewHolder can be re-attached by the new LayoutManager, which
+                    // would throw "attach on child which is not detached".
+                    recyclerStorage.recycledViewPool.clear()
                     recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                     if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
                 } else if (mode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED) {
                     val gridLayoutManager = GridLayoutManager(this, 1)
+                    recyclerStorage.recycledViewPool.clear()
                     recyclerStorage.layoutManager = gridLayoutManager
                     if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
                 } else {
@@ -5282,6 +5320,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                             return if (item?.isCategoryHeader == true) cols else 1
                         }
                     }
+                    recyclerStorage.recycledViewPool.clear()
                     recyclerStorage.layoutManager = gridLayoutManager
 
                     if (isTv) {

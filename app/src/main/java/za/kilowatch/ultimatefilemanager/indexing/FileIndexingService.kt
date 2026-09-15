@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
@@ -36,8 +37,27 @@ class FileIndexingService(
 
     private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
 
-    // Active indexing jobs keyed by storageId
+    // Active indexing jobs. A whole-storage run ([startFirstTimeIndex]) is keyed by the bare
+    // storageId; the per-path live jobs from [indexFile]/[indexFolder] are keyed by
+    // [liveJobKey] so they cannot clobber — or be clobbered by — a full index of the same
+    // storage. Every lookup that takes a storageId resolves the key through [storageIdOfJobKey],
+    // so both forms are found and cancelled together.
     private val activeIndexingJobs = ConcurrentHashMap<String, Job>()
+
+    /**
+     * Separator between the storageId and the per-path suffix in a live job key.
+     *
+     * A NUL is used because it cannot occur in a storage identifier or a filesystem path, so
+     * a plain storageId key (`"7DE2-1219"`) can never be confused with a live key
+     * (`"7DE2-1219\u0000folder:/storage/.../x"`) by a prefix test.
+     */
+    private val liveJobKeySep = '\u0000'
+
+    private fun liveJobKey(storageId: String, kind: String, target: String): String =
+        "$storageId$liveJobKeySep$kind:$target"
+
+    /** The storageId a job key belongs to, for both the plain and the live key form. */
+    private fun storageIdOfJobKey(key: String): String = key.substringBefore(liveJobKeySep)
 
     // Progress throttling
     private var lastProgressNotifyTs: Long = 0
@@ -146,7 +166,11 @@ class FileIndexingService(
                 GoRoLog.e(TAG, "Error during first-time index for $storageId: ${e.message}", e)
                 notifyIndexingError(storageId, e)
             } finally {
-                activeIndexingJobs.remove(storageId)
+                // Conditional removal, as in indexFile/indexFolder: this call cancels and
+                // replaces the previous job for the same storageId, so an unconditional
+                // remove here could evict the replacement while it is still running — which
+                // would also make awaitIdle return before the work had actually stopped.
+                activeIndexingJobs.remove(storageId, coroutineContext[Job])
             }
         }
 
@@ -401,9 +425,17 @@ class FileIndexingService(
 
     /**
      * Index a single file. Called by [MediaStoreChangeObserver] for individual file events.
+     *
+     * Registered in [activeIndexingJobs] under a per-path key so the eject release phase can
+     * cancel it and await its completion — without this it was fire-and-forget on
+     * [serviceScope] and survived every cancellation, leaving a walk running against a volume
+     * that was about to disappear.
      */
     fun indexFile(file: File, storageId: String, storageType: String) {
-        serviceScope.launch {
+        val key = liveJobKey(storageId, "file", file.absolutePath)
+        activeIndexingJobs.remove(key)?.cancel()
+
+        val job = serviceScope.launch {
             try {
                 if (file.exists()) {
                     val fileIndex = metadataExtractor.extractMetadata(file, storageId, storageType)
@@ -412,16 +444,26 @@ class FileIndexingService(
                 }
             } catch (e: Exception) {
                 GoRoLog.e(TAG, "Error indexing file ${file.name}: ${e.message}")
+            } finally {
+                // Conditional removal: a newer job may already have claimed this key, and an
+                // unconditional remove here would evict it while it is still running.
+                activeIndexingJobs.remove(key, coroutineContext[Job])
             }
         }
+
+        activeIndexingJobs[key] = job
     }
 
     /**
      * Index all immediate children of a folder (non-recursive shallow scan).
      * Called by [MediaStoreChangeObserver] when a directory creation/change is detected.
+     * Registered in [activeIndexingJobs] for the same reason as [indexFile].
      */
     fun indexFolder(folderPath: String, storageId: String, storageType: String) {
-        serviceScope.launch {
+        val key = liveJobKey(storageId, "folder", folderPath)
+        activeIndexingJobs.remove(key)?.cancel()
+
+        val job = serviceScope.launch {
             try {
                 val fileIndices = mutableListOf<FileIndex>()
                 var count = 0
@@ -443,15 +485,21 @@ class FileIndexingService(
                 GoRoLog.i(TAG, "Folder indexed: $folderPath ($count entries)")
             } catch (e: Exception) {
                 GoRoLog.e(TAG, "Error indexing folder $folderPath: ${e.message}")
+            } finally {
+                activeIndexingJobs.remove(key, coroutineContext[Job])
             }
         }
+
+        activeIndexingJobs[key] = job
     }
 
     // ============ JOB MANAGEMENT ============
 
     fun cancelIndexing(storageId: String) {
-        activeIndexingJobs[storageId]?.cancel()
-        activeIndexingJobs.remove(storageId)
+        // Cancels both the whole-storage run and every live per-path job for this storage.
+        activeIndexingJobs.keys
+            .filter { storageIdOfJobKey(it) == storageId }
+            .forEach { key -> activeIndexingJobs.remove(key)?.cancel() }
     }
 
     fun cancelAllIndexing() {
@@ -459,10 +507,39 @@ class FileIndexingService(
         activeIndexingJobs.clear()
     }
 
-    fun isIndexing(storageId: String): Boolean = activeIndexingJobs[storageId]?.isActive ?: false
+    fun isIndexing(storageId: String): Boolean =
+        activeIndexingJobs.any { storageIdOfJobKey(it.key) == storageId && it.value.isActive }
 
     fun getActiveIndexingStorages(): List<String> =
-        activeIndexingJobs.filter { it.value.isActive }.keys.toList()
+        activeIndexingJobs.filter { it.value.isActive }
+            .keys.map { storageIdOfJobKey(it) }
+            .distinct()
+
+    /**
+     * Suspends until no indexing job remains for [storageId], or [timeoutMs] elapses.
+     *
+     * FR-04 requires background volume work to be cancelled **and awaited** before the unmount
+     * is issued — cancelling alone leaves a job mid-walk with descriptors still open. The loop
+     * re-checks after joining because a finishing job can register another.
+     *
+     * Never throws: a timeout is logged and returns. The caller proceeds to the inspection
+     * stage, which reports whatever actually survived rather than assuming this succeeded.
+     */
+    suspend fun awaitIdle(storageId: String, timeoutMs: Long = 5_000L) {
+        val completed = withTimeoutOrNull(timeoutMs) {
+            while (true) {
+                val pending = activeIndexingJobs
+                    .filterKeys { storageIdOfJobKey(it) == storageId }
+                    .values.toList()
+                if (pending.isEmpty()) break
+                pending.forEach { job -> try { job.join() } catch (_: Exception) { } }
+            }
+            true
+        }
+        if (completed == null) {
+            GoRoLog.w(TAG, "awaitIdle timed out after ${timeoutMs}ms for $storageId")
+        }
+    }
 
     // ============ MAINTENANCE ============
 

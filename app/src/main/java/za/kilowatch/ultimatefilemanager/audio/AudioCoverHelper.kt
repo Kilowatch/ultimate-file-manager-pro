@@ -68,6 +68,36 @@ object AudioCoverHelper {
     }
 
     /**
+     * Drop cached cover art for every file at or beneath [volumePath], ahead of an eject.
+     *
+     * Mirrors [clearCacheForFolder] but sweeps an entire volume and `recycle()`s the bitmaps
+     * rather than only evicting them, so the native memory is released before the unmount
+     * instead of waiting for GC. [getCachedArt] already treats a recycled entry as a miss, so
+     * a bitmap recycled here cannot be handed out afterwards.
+     *
+     * Matching uses a path-segment boundary, so `/storage/7DE2-1219` does not sweep the
+     * sibling `/storage/7DE2-12190`.
+     */
+    fun clearVolumeCaches(volumePath: String) {
+        val root = volumePath.trimEnd(File.separatorChar)
+        if (root.isEmpty()) return
+        val prefix = root + File.separator
+
+        val keys = artCache.snapshot().keys
+        for (key in keys) {
+            if (key == root || key.startsWith(prefix)) {
+                artCache.remove(key)?.recycle()
+            }
+        }
+        val noKeys = noArtCache.snapshot().keys
+        for (key in noKeys) {
+            if (key == root || key.startsWith(prefix)) {
+                noArtCache.remove(key)
+            }
+        }
+    }
+
+    /**
      * Extracts raw embedded picture bytes. Works across Local and SAF storages.
      * Uses FLAC fast-path for .flac files, MediaMetadataRetriever native fast-path first,
      * and falls back to AudioTagManager streaming.

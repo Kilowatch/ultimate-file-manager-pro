@@ -46,6 +46,16 @@ object InstantSyncWatcher {
     private val debounceRunnables = mutableMapOf<String, Runnable>()
 
     /**
+     * Profile ID -> normalized local source folder being watched.
+     *
+     * [FileObserver] exposes no way to read back the directory it was constructed with, so
+     * the path is recorded here to let [stopWatchingVolume] decide which profiles belong to
+     * a volume. Kept in lockstep with [watchers]: both are written in [startWatching] and
+     * cleared in [stopWatching].
+     */
+    private val watchPaths = mutableMapOf<String, String>()
+
+    /**
      * Profile IDs that received a file-system event while a sync was already running.
      * At most one pending re-trigger is stored per profile — rapid arrivals during a
      * sync collapse into a single follow-up run.
@@ -82,6 +92,7 @@ object InstantSyncWatcher {
         val observer = createObserver(context, profile, dir)
         observer.startWatching()
         watchers[profile.id] = observer
+        watchPaths[profile.id] = dir.absolutePath
 
         val handler = Handler(Looper.getMainLooper())
         debounceHandlers[profile.id] = handler
@@ -139,11 +150,59 @@ object InstantSyncWatcher {
      */
     fun stopWatching(profileId: String) {
         pendingTriggers.remove(profileId)
+        watchPaths.remove(profileId)
         watchers.remove(profileId)?.apply {
             stopWatching()
             Log.d(TAG, "Stopped watching profile $profileId")
         }
         debounceHandlers.remove(profileId)?.removeCallbacks(debounceRunnables.remove(profileId) ?: return)
+    }
+
+    /**
+     * Stop watching every profile whose local source folder is [volumePath] itself or lies
+     * beneath it, and clear their pending re-triggers. Returns the number stopped.
+     *
+     * Called by the eject release phase. As with [RecentsChangeWatcher.stopWatchingVolume],
+     * this is hygiene rather than the fix: an inotify watch descriptor readlinks as
+     * `anon_inode:inotify`, so `vold` cannot see it and it cannot be why the process is
+     * killed. What a lingering watch can do is keep an inode reference that leaves the mount
+     * busy and fails the unmount.
+     *
+     * Paths are compared in the same normalized (canonical) form [startWatching] recorded
+     * them in, with a segment-boundary check so a sibling like `/storage/7DE2-12190` is not
+     * matched by `/storage/7DE2-1219`.
+     */
+    fun stopWatchingVolume(volumePath: String): Int {
+        val root = normalizePath(volumePath)
+        if (root.isEmpty()) return 0
+        val prefix = "$root/"
+
+        val ids = watchPaths.filterValues { it == root || it.startsWith(prefix) }.keys.toList()
+        ids.forEach { stopWatching(it) }
+        if (ids.isNotEmpty()) {
+            Log.d(TAG, "Stopped ${ids.size} instant-sync watcher(s) under $root")
+        }
+        return ids.size
+    }
+
+    /**
+     * Source folders still watched at or beneath [volumePath] — the read-only companion to
+     * [stopWatchingVolume], so the release phase can *measure* that the stop took effect
+     * rather than assume it.
+     *
+     * This is the only way to observe inotify state: a watch descriptor readlinks as
+     * `anon_inode:inotify` and never appears in `/proc/self/maps`, so neither scan in
+     * `VolumeClaimInspector` can see one. A non-empty result here explains a mount that
+     * refuses to release while both of those come back clean.
+     *
+     * Uses the same normalized form and the same segment-boundary check as
+     * [stopWatchingVolume], so the two agree on what "under this volume" means.
+     */
+    fun activeWatchesUnder(volumePath: String): List<String> {
+        val root = normalizePath(volumePath)
+        if (root.isEmpty()) return emptyList()
+        val prefix = "$root/"
+        return watchPaths.values.filter { it == root || it.startsWith(prefix) }
     }
 
     /**
@@ -153,6 +212,7 @@ object InstantSyncWatcher {
         pendingTriggers.clear()
         val ids = watchers.keys.toList()
         ids.forEach { stopWatching(it) }
+        watchPaths.clear()
     }
 
     /**

@@ -67,7 +67,10 @@ class ImageViewerActivity : AppCompatActivity() {
     private var currentImageFile: File? = null
     private var isDrawMode = false
 
-    private val coilLoader by lazy {
+    // Held as an explicit Lazy (rather than `by lazy`) so onDestroy can tell whether it was
+    // ever initialized before shutting it down — an Activity that never loaded an image must
+    // not construct an ImageLoader just to shut it down.
+    private val coilLoaderLazy = lazy {
         ImageLoader.Builder(this)
             .components {
                 if (Build.VERSION.SDK_INT >= 28) {
@@ -82,6 +85,8 @@ class ImageViewerActivity : AppCompatActivity() {
             }
             .build()
     }
+
+    private val coilLoader by coilLoaderLazy
 
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -156,6 +161,41 @@ class ImageViewerActivity : AppCompatActivity() {
         }
 
         setupViewer()
+    }
+
+    /**
+     * Release everything this Activity holds that could keep a file open or mapped.
+     *
+     * This viewer is closed by the eject release phase before a removable volume is unmounted,
+     * and it previously had no `onDestroy` at all. Two things leaked without one:
+     *
+     *  - [coilLoader] is a **per-Activity** `ImageLoader` (not the app-wide singleton), so
+     *    nothing else ever shuts it down. It owns dispatcher threads and its own memory cache,
+     *    which retains bitmaps decoded from the volume for the life of the process.
+     *  - the displayed bitmap arrives via `BitmapFactory`/EXIF/FFmpeg rather than Coil, so it
+     *    is referenced only by the `ImageView`. Dropping the view reference is not enough on
+     *    its own; recycling frees the native memory before the unmount rather than at the next
+     *    GC.
+     *
+     * Safe here specifically because the Activity is being destroyed and nothing will draw the
+     * bitmap again — recycling a bitmap that is still displayed would throw.
+     */
+    override fun onDestroy() {
+        try {
+            val displayed = (imageView.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap
+            imageView.setImageDrawable(null)
+            if (displayed != null && !displayed.isRecycled) displayed.recycle()
+        } catch (e: Exception) {
+            za.kilowatch.ultimatefilemanager.util.GoRoLog.w("ImageViewerActivity", "onDestroy: bitmap release failed: ${e.message}")
+        }
+
+        try {
+            if (coilLoaderLazy.isInitialized()) coilLoader.shutdown()
+        } catch (e: Exception) {
+            za.kilowatch.ultimatefilemanager.util.GoRoLog.w("ImageViewerActivity", "onDestroy: ImageLoader shutdown failed: ${e.message}")
+        }
+
+        super.onDestroy()
     }
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {

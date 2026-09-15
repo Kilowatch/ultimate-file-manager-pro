@@ -5309,17 +5309,8 @@ TV का नाम बदलकर %1$s कर दिया गया
     <string name="fit_to_screen">
 स्क्रीन में फिट करें
 </string>
-    <string name="audio">
-ऑडियो
-</string>
-    <string name="rewind_10_seconds">
-10 सेकंड पीछे ले जाएं
-</string>
     <string name="play_pause">
 चलाएं / रोकें
-</string>
-    <string name="forward_10_seconds">
-10 सेकंड आगे बढ़ाएं
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ ADB / वायरलेस डिबगिंग
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-प्लेबैक त्रुटि: फ़ाइल नहीं खोल सकता
-</string>
-    <string name="playback_error_server">
-प्लेबैक त्रुटि: मीडिया सर्वर क्रैश हो गया
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ USB ड्राइव डिस्कनेक्ट हो गया। आं
 </string>
     <string name="safely_remove_menu_item">
 ड्राइव को सुरक्षित रूप से निकालें
+</string>
+    <string name="safely_remove_in_progress">
+एक हटाने की प्रक्रिया पहले से जारी है।
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+ड्राइव अभी भी उपयोग में है
+</string>
+    <string name="volume_still_in_use_msg">
+ऐप के पास अभी भी %1$s खुला हुआ है। अभी अनमाउंट करने पर डेटा अलिखित रह सकता है या त्रुटियाँ हो सकती हैं।
+</string>
+    <string name="volume_still_in_use_fd">
+खुली फ़ाइलें: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+मेमोरी-मैप्ड फ़ाइलें: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+निगरानी में रखे फ़ोल्डर: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+विफल रहे रिलीज़ चरण: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+फिर भी अनमाउंट करें
+</string>
+    <string name="volume_still_in_use_keep">
+इसे माउंट रहने दें
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+पैन बंद हो गया — इसका स्टोरेज डिस्कनेक्ट हो गया था।
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+स्टोरेज डिस्कनेक्ट हो गया। मुख्य मेनू पर लौट रहे हैं।
 </string>
     <string name="cd_safely_remove">
 ड्राइव को सुरक्षित रूप से निकालें

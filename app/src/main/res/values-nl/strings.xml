@@ -5178,16 +5178,9 @@ Uitzoomen
     <string name="fit_to_screen">
 Aanpassen aan scherm
 </string>
-    <string name="audio">
-Audio
-</string>
-    <string name="rewind_10_seconds">
-Spoel 10 seconden terug
-</string>
     <string name="play_pause">
 Afspelen / pauzeren
 </string>
-    <string name="forward_10_seconds">Spoel 10 seconden vooruit</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Audiotrack
@@ -8538,12 +8531,6 @@ Kan beheerder niet openen. Installeer eerst Shizuku of Shevery.
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-Afspeelfout: kan bestand niet openen
-</string>
-    <string name="playback_error_server">
-Afspeelfout: mediaserver is overleden
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14711,6 +14698,47 @@ Opslaginstellingen openen
 </string>
     <string name="safely_remove_menu_item">
 Schijf veilig verwijderen
+</string>
+    <string name="safely_remove_in_progress">
+Er is al een verwijdering gaande.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+Station nog in gebruik
+</string>
+    <string name="volume_still_in_use_msg">
+De app heeft %1$s nog open. Nu ontkoppelen kan ertoe leiden dat gegevens niet worden weggeschreven of fouten veroorzaken.
+</string>
+    <string name="volume_still_in_use_fd">
+Open bestanden: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+Geheugengekoppelde bestanden: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+Bewaakte mappen: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+Mislukte vrijgave-stappen: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+Toch ontkoppelen
+</string>
+    <string name="volume_still_in_use_keep">
+Gekoppeld houden
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+Paneel gesloten — de opslag is losgekoppeld.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+Opslag losgekoppeld. Terug naar het Hoofdmenu.
 </string>
     <string name="cd_safely_remove">
 Schijf veilig verwijderen

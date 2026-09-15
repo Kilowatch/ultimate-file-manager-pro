@@ -5309,17 +5309,8 @@ Perkecil
     <string name="fit_to_screen">
 Sesuaikan dengan layar
 </string>
-    <string name="audio">
-Audio
-</string>
-    <string name="rewind_10_seconds">
-Mundur 10 detik
-</string>
     <string name="play_pause">
 Putar / Jeda
-</string>
-    <string name="forward_10_seconds">
-Maju 10 detik
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ Tidak dapat membuka manajer. Harap instal Shizuku atau Shevery terlebih dahulu.
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-Kesalahan pemutaran: tidak dapat membuka file
-</string>
-    <string name="playback_error_server">
-Kesalahan pemutaran: server media mati
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ Buka Pengaturan Penyimpanan
 </string>
     <string name="safely_remove_menu_item">
 Lepas Drive dengan Aman
+</string>
+    <string name="safely_remove_in_progress">
+Penghapusan sedang berlangsung.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+Drive Masih Digunakan
+</string>
+    <string name="volume_still_in_use_msg">
+Aplikasi masih membuka %1$s. Melepas mount sekarang dapat menyebabkan data tidak tertulis atau menimbulkan error.
+</string>
+    <string name="volume_still_in_use_fd">
+File terbuka: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+File yang dipetakan ke memori: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+Folder yang dipantau: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+Langkah pelepasan yang gagal: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+Lepas Mount Saja
+</string>
+    <string name="volume_still_in_use_keep">
+Tetap Ter-mount
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+Panel ditutup — penyimpanannya terputus.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+Penyimpanan terputus. Kembali ke Menu Utama.
 </string>
     <string name="cd_safely_remove">
 Lepas drive dengan aman

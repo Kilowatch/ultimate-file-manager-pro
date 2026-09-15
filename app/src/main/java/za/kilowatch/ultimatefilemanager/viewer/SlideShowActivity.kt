@@ -147,7 +147,7 @@ class SlideShowActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private val coilLoader by lazy {
+    private val coilLoaderLazy = lazy {
         ImageLoader.Builder(this)
             .components {
                 if (Build.VERSION.SDK_INT >= 28) {
@@ -162,6 +162,8 @@ class SlideShowActivity : AppCompatActivity() {
             }
             .build()
     }
+
+    private val coilLoader by coilLoaderLazy
 
     private val hideControlsRunnable = Runnable {
         hideControls()
@@ -1537,6 +1539,15 @@ class SlideShowActivity : AppCompatActivity() {
         super.onDestroy()
         handler.removeCallbacks(slideshowRunnable)
         resetPlayer()
+        // Shut down the per-Activity ImageLoader. Nothing else owns it — the app-wide Coil
+        // singleton is a different instance — so without this its dispatcher threads and the
+        // bitmaps it decoded from the volume outlive the Activity for the process lifetime.
+        // Done before the unmount so the native memory is freed rather than left to GC.
+        try {
+            if (coilLoaderLazy.isInitialized()) coilLoader.shutdown()
+        } catch (e: Exception) {
+            za.kilowatch.ultimatefilemanager.util.GoRoLog.w("SlideShowActivity", "onDestroy: ImageLoader shutdown failed: ${e.message}")
+        }
         // Clean up slideshow temp cache images
         val cacheFiles = cacheDir.listFiles { f -> f.name.startsWith("ufm_slideshow_") }
         cacheFiles?.forEach { it.delete() }

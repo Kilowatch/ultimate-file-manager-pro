@@ -97,6 +97,94 @@ class FileAdapter(
             thumbnailPathCache.keys.filter { it == folderPath || it.startsWith(prefix) }.forEach { thumbnailPathCache.remove(it) }
             za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.clearCacheForFolder(folderPath)
         }
+
+        /**
+         * Drop every cached artifact derived from [volumePath] — decoded video frames, the
+         * thumbnail path map, and audio cover art — ahead of an eject.
+         *
+         * Differs from [clearCacheForFolder] in one deliberate way: bitmaps are `recycle()`d,
+         * not merely evicted. An evicted bitmap's native memory is retained until GC runs,
+         * and an eject cannot wait for that.
+         *
+         * **Precondition:** no view may still be displaying one of these bitmaps. The release
+         * sequence closes viewers and detaches adapters before reaching this stage, which is
+         * what makes recycling safe; drawing a recycled bitmap throws. Do not call this from
+         * a browsing path.
+         *
+         * Matching uses a path-segment boundary, so `/storage/7DE2-1219` does not sweep the
+         * sibling `/storage/7DE2-12190`.
+         */
+        fun clearVolumeCaches(volumePath: String) {
+            val root = volumePath.trimEnd(java.io.File.separatorChar)
+            if (root.isEmpty()) return
+            val prefix = root + java.io.File.separator
+
+            val keys = videoCache.snapshot().keys
+            for (key in keys) {
+                if (key == root || key.startsWith(prefix)) {
+                    videoCache.remove(key)?.recycle()
+                }
+            }
+            thumbnailPathCache.keys.filter { it == root || it.startsWith(prefix) }
+                .forEach { thumbnailPathCache.remove(it) }
+            za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.clearVolumeCaches(root)
+        }
+
+        /**
+         * Weak references to every live adapter, so the eject path can reach adapters it
+         * does not own.
+         *
+         * The releaser holds a `Context` and a `VolumeIdentity`, never an adapter. That is
+         * fine for the standalone browser, which cancels its adapter before the release
+         * starts — but the Tab and Twin hosts are `FileBrowserFragment` /
+         * `NetworkBrowserFragment`, whose adapters the releaser cannot reach at all. Without
+         * this registry their warm-cache and child-count jobs would keep running through the
+         * release, and a job that opens a file *after* the descriptor-close stage leaves a
+         * claim the unmount will find. Stage 4's re-scan catches a reopened descriptor but
+         * **not** a mapping, and a mapping is plan R1 — the one claim Java cannot release.
+         *
+         * Weak so a destroyed Activity's adapter is collectable without an explicit
+         * unregister; a leak here would be worse than the bug it prevents. The map is
+         * wrapped in a lock because the `newSetFromMap` view of a `WeakHashMap` is not
+         * itself thread-safe, and adapters are registered on the main thread while the
+         * eject path reads from a coroutine.
+         */
+        private val liveAdapters: MutableSet<FileAdapter> =
+            java.util.Collections.newSetFromMap(java.util.WeakHashMap<FileAdapter, Boolean>())
+        private val liveAdaptersLock = Any()
+
+        /**
+         * Cancels pending background jobs on every live adapter whose current listing lies
+         * under [volumePath]. Called by the release sequence's quiesce stage.
+         *
+         * **Attribution uses [files] rather than a tracked directory, deliberately.** Every
+         * job [cancelPendingJobs] cancels derives from the listing the adapter is currently
+         * showing — [submitList] launches `warmCacheJob` with that exact `filesCopy` and
+         * builds `childCountJob` from its directories. So if no listed path is under the
+         * volume, neither job can touch it, and an adapter showing an *empty* directory on
+         * the volume creates neither job (`dirs` is empty, and `warmCacheForFiles(emptyList())`
+         * has no `parentPath` to prune). Attribution is therefore exact in both directions
+         * with no extra state to keep in sync.
+         */
+        fun cancelPendingJobsUnder(volumePath: String) {
+            val root = volumePath.trimEnd(java.io.File.separatorChar)
+            if (root.isEmpty()) return
+            val prefix = root + java.io.File.separator
+
+            val snapshot: List<FileAdapter>
+            synchronized(liveAdaptersLock) { snapshot = liveAdapters.toList() }
+
+            var cancelled = 0
+            for (adapter in snapshot) {
+                if (adapter.isShowingPathUnder(root, prefix)) {
+                    adapter.cancelPendingJobs()
+                    cancelled++
+                }
+            }
+            if (cancelled > 0) {
+                GoRoLog.i("FileAdapter", "Cancelled pending jobs on $cancelled adapter(s) under $root")
+            }
+        }
     }
 
     var viewMode: ViewModeManager.ViewMode = ViewModeManager.ViewMode.LIST_MEDIUM
@@ -188,6 +276,30 @@ class FileAdapter(
     private data class FileMeta(val isDirectory: Boolean, val size: Long, val lastModified: Long)
 
     private var fileMetaCache = mutableMapOf<String, FileMeta>()
+
+    init {
+        // Register for the eject path's volume-scoped cancellation. Placed after `files`
+        // only for readability — it touches nothing but companion state, and the companion
+        // is initialised on class load, before any instance exists. Weak, so no unregister
+        // is needed or wanted.
+        synchronized(liveAdaptersLock) { liveAdapters.add(this) }
+    }
+
+    /**
+     * True when any path this adapter is currently listing lies under the given volume root.
+     * [root] and [prefix] are pre-computed by [cancelPendingJobsUnder] so the trimming and
+     * separator concatenation happen once per eject rather than once per listed file.
+     *
+     * Matching uses a path-segment boundary, matching [clearVolumeCaches]: `/storage/7DE2-1219`
+     * must not match the sibling `/storage/7DE2-12190`.
+     */
+    private fun isShowingPathUnder(root: String, prefix: String): Boolean {
+        for (f in files) {
+            val path = f.absolutePath
+            if (path == root || path.startsWith(prefix)) return true
+        }
+        return false
+    }
 
     private fun File.isDirectoryCached(): Boolean = fileMetaCache[absolutePath]?.isDirectory ?: isDirectory
     private fun File.lengthCached(): Long = fileMetaCache[absolutePath]?.size ?: length()

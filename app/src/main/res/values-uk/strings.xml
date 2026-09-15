@@ -5309,17 +5309,8 @@ APK готовий до встановлення
     <string name="fit_to_screen">
 Підібрати до екрана
 </string>
-    <string name="audio">
-Аудіо
-</string>
-    <string name="rewind_10_seconds">
-Перемотати назад на 10 секунд
-</string>
     <string name="play_pause">
 Відтворення / Пауза
-</string>
-    <string name="forward_10_seconds">
-Перемотати вперед на 10 секунд
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ ADB / Бездротове налагодження
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-Помилка відтворення: не вдалося відкрити файл
-</string>
-    <string name="playback_error_server">
-Помилка відтворення: медіа-сервер зупинився
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ USB-накопичувач від’єднано. Переключено на в
 </string>
     <string name="safely_remove_menu_item">
 Безпечно вилучити диск
+</string>
+    <string name="safely_remove_in_progress">
+Від\\\'єднання вже виконується.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+Диск все ще використовується
+</string>
+    <string name="volume_still_in_use_msg">
+Додаток все ще має відкритим %1$s. Від\\\'єднання зараз може залишити дані незаписаними або спричинити помилки.
+</string>
+    <string name="volume_still_in_use_fd">
+Відкриті файли: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+Файли, відображені в пам\\\'ять: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+Відстежувані папки: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+Кроки звільнення, які не вдалися: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+Від\\\'єднати все одно
+</string>
+    <string name="volume_still_in_use_keep">
+Залишити приєднаним
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+Панель закрито — її сховище від\\\'єднано.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+Сховище від\\\'єднано. Повернення до Головного меню.
 </string>
     <string name="cd_safely_remove">
 Безпечно вилучити диск

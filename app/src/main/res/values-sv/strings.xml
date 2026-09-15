@@ -5293,17 +5293,8 @@ Zooma ut
     <string name="fit_to_screen">
 Anpassa till skärmen
 </string>
-    <string name="audio">
-Ljud
-</string>
-    <string name="rewind_10_seconds">
-Spola tillbaka 10 sekunder
-</string>
     <string name="play_pause">
 Spela / Pausa
-</string>
-    <string name="forward_10_seconds">
-Framåt 10 sekunder
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8706,12 +8697,6 @@ Det gick inte att öppna manager. Installera Shizuku eller Shevery först.
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-Uppspelningsfel: kan inte öppna filen
-</string>
-    <string name="playback_error_server">
-Uppspelningsfel: mediaservern dog
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14932,6 +14917,47 @@ Alla databuffertar har tömts säkert till enheten. Tryck nedan för att öppna 
 </string>
     <string name="safely_remove_menu_item">
 Ta bort enheten säkert
+</string>
+    <string name="safely_remove_in_progress">
+En borttagning pågår redan.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+Enheten används fortfarande
+</string>
+    <string name="volume_still_in_use_msg">
+Appen har fortfarande %1$s öppen. Att avmontera nu kan lämna data oskrivna eller orsaka fel.
+</string>
+    <string name="volume_still_in_use_fd">
+Öppna filer: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+Minnesmappade filer: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+Övervakade mappar: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+Frigöringssteg som misslyckades: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+Avmontera ändå
+</string>
+    <string name="volume_still_in_use_keep">
+Behåll den monterad
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+Rutan stängdes — dess lagring kopplades bort.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+Lagring frånkopplad. Återgår till huvudmenyn.
 </string>
     <string name="cd_safely_remove">
 Ta bort enheten säkert

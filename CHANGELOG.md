@@ -5,6 +5,16 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Removal Warning When a Drive Is Still in Use**: Before an elevated unmount, UFM now inspects the target volume and reports what still holds it open — open files, memory-mapped files, and watched folders. `Unmount Anyway` proceeds; `Keep It Mounted` aborts without touching the volume. Previously the unmount was issued with no warning, even when the app itself still held a reference.
+- **Twin Window Handles Storage Removal**: If a volume is disconnected while Twin Window is open, the pane showing it is closed and the surviving pane is promoted. If both panes were on that volume, UFM returns to the Main Menu. A message explains what happened in both cases.
+
+### Fixed
+- **Safe Removal No Longer Terminates the App**: Ejecting an SD card, USB drive or external HDD could close UFM instantly, with no error message and no crash report. Android's `vold` daemon signals every process still holding a reference to a volume before unmounting it, and because UFM issues the unmount itself, it was signalled by its own request. The release sequence now enumerates open file descriptors and closes every one under the target volume regardless of which part of the app opened it, re-inspects the volume afterwards to prove it is clear, and only then flushes buffered writes to disk.
+- **Tabbed Browsing Explains Tabs Closed by Storage Removal**: When storage was disconnected while UFM was in the background, the affected tabs were closed before the user returned, so the message explaining why was never seen. Tabs are now pruned on return to the foreground, so the explanation is shown.
+
 ## [2.0.8] — 2026-09-14
 
 ### Added

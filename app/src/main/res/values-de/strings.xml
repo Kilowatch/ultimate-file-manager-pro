@@ -5309,17 +5309,8 @@ Verkleinern
     <string name="fit_to_screen">
 An Bildschirm anpassen
 </string>
-    <string name="audio">
-Audio
-</string>
-    <string name="rewind_10_seconds">
-10 Sekunden zurück
-</string>
     <string name="play_pause">
 Wiedergabe / Pause
-</string>
-    <string name="forward_10_seconds">
-10 Sekunden vor
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ Manager konnte nicht geöffnet werden. Bitte installieren Sie zuerst Shizuku ode
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-Wiedergabefehler: Datei kann nicht geöffnet werden
-</string>
-    <string name="playback_error_server">
-Wiedergabefehler: Medienserver abgestürzt
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ Speichereinstellungen öffnen
 </string>
     <string name="safely_remove_menu_item">
 Laufwerk sicher entfernen
+</string>
+    <string name="safely_remove_in_progress">
+Ein Entfernen ist bereits im Gange.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+Laufwerk wird noch verwendet
+</string>
+    <string name="volume_still_in_use_msg">
+Die App hat %1$s noch geöffnet. Wenn Sie jetzt aushängen, werden Daten möglicherweise nicht geschrieben oder es kann zu Fehlern kommen.
+</string>
+    <string name="volume_still_in_use_fd">
+Geöffnete Dateien: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+Speicherzugeordnete Dateien: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+Überwachte Ordner: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+Fehlgeschlagene Freigabeschritte: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+Trotzdem aushängen
+</string>
+    <string name="volume_still_in_use_keep">
+Eingehängt lassen
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+Bereich geschlossen — der zugehörige Speicher wurde getrennt.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+Speicher getrennt. Zurück zum Hauptmenü.
 </string>
     <string name="cd_safely_remove">
 Laufwerk sicher entfernen

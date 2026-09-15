@@ -5309,17 +5309,8 @@ Uzaklaştır
     <string name="fit_to_screen">
 Ekrana sığdır
 </string>
-    <string name="audio">
-Ses
-</string>
-    <string name="rewind_10_seconds">
-10 saniye geri sar
-</string>
     <string name="play_pause">
 Oynat / Duraklat
-</string>
-    <string name="forward_10_seconds">
-10 saniye ileri sar
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ Yönetici açılamadı. Lütfen önce Shizuku veya Shevery\\\'yi kurun.
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-Oynatma hatası: dosya açılamıyor
-</string>
-    <string name="playback_error_server">
-Oynatma hatası: medya sunucusu çöktü
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ Depolama Ayarları\\\'nı Aç
 </string>
     <string name="safely_remove_menu_item">
 Sürücüyü Güvenle Çıkar
+</string>
+    <string name="safely_remove_in_progress">
+Bir çıkarma işlemi zaten devam ediyor.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+Sürücü Hâlâ Kullanımda
+</string>
+    <string name="volume_still_in_use_msg">
+Uygulamada hâlâ %1$s açık. Şimdi bağlantıyı keserseniz, verilerin yazılmamasına veya hatalara neden olabilir.
+</string>
+    <string name="volume_still_in_use_fd">
+Açık dosyalar: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+Bellek eşlemeli dosyalar: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+İzlenen klasörler: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+Başarısız serbest bırakma adımları: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+Yine de Bağlantıyı Kes
+</string>
+    <string name="volume_still_in_use_keep">
+Bağlı Tut
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+Bölme kapatıldı — depolama bağlantısı kesildi.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+Depolama bağlantısı kesildi. Ana Menüye dönülüyor.
 </string>
     <string name="cd_safely_remove">
 Sürücüyü güvenle çıkar

@@ -185,24 +185,63 @@ private fun ImageView.safeSetIcon(resId: Int) {
         if (attachedRecyclerView == recyclerView) {
             attachedRecyclerView = null
         }
+        // Reset the pending-notify flag so it can't get stuck if the adapter
+        // is detached while a post() is still queued.
+        notifyScheduled = false
     }
 
     /**
-     * Safely dispatches [notifyDataSetChanged]. If the attached [RecyclerView] is
-     * currently computing a layout or scrolling, the notification is posted to the
-     * looper queue to prevent [IllegalStateException].
+     * Deduplication flag: true while a [notifyDataSetChanged] is already posted
+     * and waiting in the RecyclerView's message queue.
+     */
+    private var notifyScheduled = false
+
+    /**
+     * Safely dispatches [notifyDataSetChanged].
+     *
+     * **Always posts to the next looper frame** via [RecyclerView.post], which:
+     *  1. Guarantees the notification never fires *inside* an active layout pass
+     *     ([RecyclerView.isComputingLayout]) or while one is already queued
+     *     ([RecyclerView.isLayoutRequested]), preventing the
+     *     *"attach on child which is not detached"* [IllegalArgumentException].
+     *  2. **Deduplicates** rapid-fire calls — `updateTileDecorations` + `submitList` +
+     *     view-mode changes can all trigger this within the same main-thread batch;
+     *     the [notifyScheduled] flag ensures only ONE actual rebind is issued per frame.
      */
     fun safeNotifyDataSetChanged() {
         val rv = attachedRecyclerView
-        if (rv != null && rv.isComputingLayout) {
-            rv.post {
-                if (attachedRecyclerView == rv) {
-                    notifyDataSetChanged()
-                }
-            }
-        } else {
+        if (rv == null) {
+            // No RecyclerView attached yet — safe to call directly.
             notifyDataSetChanged()
+            return
         }
+        if (!notifyScheduled) {
+            notifyScheduled = true
+            rv.post {
+                notifyScheduled = false
+                if (attachedRecyclerView != null) notifyDataSetChanged()
+            }
+        }
+        // else: a notification is already queued for the next frame — no-op.
+    }
+
+    /**
+     * Batch-updates tile colors, icons, and icon resources in a single pass, emitting
+     * at most ONE [notifyDataSetChanged] at the end instead of three separate ones.
+     * Use this instead of calling [setTileColors] / [setTileIcons] / [setTileIconRes]
+     * individually when all three values are available at the same time (e.g. inside
+     * [za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity.loadStorageVolumes]).
+     */
+    fun updateTileDecorations(
+        colors: Map<String, TileColorConfig>,
+        icons: Map<String, String>,
+        iconRes: Map<String, Int>
+    ) {
+        var changed = false
+        if (tileColors != colors) { tileColors = colors; changed = true }
+        if (tileIcons  != icons)  { tileIcons  = icons;  changed = true }
+        if (tileIconRes != iconRes) { tileIconRes = iconRes; changed = true }
+        if (changed) safeNotifyDataSetChanged()
     }
 
     fun refreshDisplayedList(context: android.content.Context? = null) {

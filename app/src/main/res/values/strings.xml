@@ -1874,10 +1874,7 @@
     <string name="zoom_in">Zoom in</string>
     <string name="zoom_out">Zoom out</string>
     <string name="fit_to_screen">Fit to screen</string>
-    <string name="audio">Audio</string>
-    <string name="rewind_10_seconds">Rewind 10 seconds</string>
     <string name="play_pause">Play / Pause</string>
-    <string name="forward_10_seconds">Forward 10 seconds</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">Audio Track</string>
     <string name="subtitles">Subtitles</string>
@@ -3010,8 +3007,6 @@
     <string name="shizuku_manager_open_error">Could not open manager. Please install Shizuku or Shevery first.</string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">Playback error: cannot open file</string>
-    <string name="playback_error_server">Playback error: media server died</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">File Server</string>
@@ -5261,6 +5256,25 @@
     <string name="safely_remove_open_settings_desc">All data buffers have been safely flushed to the drive. Tap below to open Android Storage Settings and tap the Eject icon (⏏).</string>
     <string name="safely_remove_open_settings_btn">Open Storage Settings</string>
     <string name="safely_remove_menu_item">Safely Remove Drive</string>
+    <string name="safely_remove_in_progress">A removal is already in progress.</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">Drive Still in Use</string>
+    <string name="volume_still_in_use_msg">The app still has %1$s open. Unmounting now may leave data unwritten or cause errors.</string>
+    <string name="volume_still_in_use_fd">Open files: %1$d</string>
+    <string name="volume_still_in_use_map">Memory-mapped files: %1$d</string>
+    <string name="volume_still_in_use_watcher">Watched folders: %1$d</string>
+    <string name="volume_still_in_use_failed">Release steps that failed: %1$d</string>
+    <string name="volume_still_in_use_continue">Unmount Anyway</string>
+    <string name="volume_still_in_use_keep">Keep It Mounted</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">Pane closed — its storage was disconnected.</string>
+    <string name="twin_window_storage_unavailable_exit">Storage disconnected. Returning to the Main Menu.</string>
     <string name="cd_safely_remove">Safely remove drive</string>
     <string name="mock_usb_title">USB Drive (Simulated OTG)</string>
     <string name="mock_usb_subtitle">OTG Flash Drive (Mock / Test)</string>

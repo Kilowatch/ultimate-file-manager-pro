@@ -79,10 +79,14 @@ import za.kilowatch.ultimatefilemanager.settings.SettingsActivity
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserFragment
 import za.kilowatch.ultimatefilemanager.storage.FileClipboard
+import za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager
 import za.kilowatch.ultimatefilemanager.storage.SafFile
 import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
+import za.kilowatch.ultimatefilemanager.storage.StorageItem
 import za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity
+import za.kilowatch.ultimatefilemanager.storage.UsbEjectManager
+import za.kilowatch.ultimatefilemanager.storage.VolumeEjectHost
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.TransferConflictHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
@@ -92,7 +96,8 @@ import kotlinx.coroutines.ensureActive
 
 class TabbedBrowserActivity : AppCompatActivity(),
     FileBrowserFragment.FileOperationsListener,
-    NetworkBrowserFragment.NetworkOperationsListener {
+    NetworkBrowserFragment.NetworkOperationsListener,
+    VolumeEjectHost {
 
     companion object {
         const val EXTRA_INITIAL_PATH = "extra_initial_path"
@@ -105,6 +110,14 @@ class TabbedBrowserActivity : AppCompatActivity(),
 
     private val tabs = mutableListOf<TabModel>()
     private var activeTabId: String? = null
+
+    /**
+     * The tab whose volume is mid-eject, captured by [ejectVolumeInTab] and consumed by
+     * [navigateOutOfVolume]. Only ever one, because FR-10 forbids a second eject of the same
+     * volume while the first is running.
+     */
+    private var ejectingTabId: String? = null
+
     private lateinit var tabAdapter: TabAdapter
     private lateinit var tabPagerAdapter: TabPagerAdapter
     private lateinit var tabTouchHelper: ItemTouchHelper
@@ -2201,11 +2214,102 @@ class TabbedBrowserActivity : AppCompatActivity(),
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
+        val itemEject = popupView.findViewById<View>(R.id.menuItemEjectDrive)
+        val ejectTab = getActiveTab()?.takeIf { UsbEjectManager.isRemovablePath(this, it.rootPath) }
+        if (ejectTab != null) {
+            itemEject?.visibility = View.VISIBLE
+            itemEject?.setOnClickListener {
+                popupWindow.dismiss()
+                ejectVolumeInTab(ejectTab)
+            }
+        } else {
+            // Hidden for internal storage, SAF trees and network shares alike — the menu item
+            // is declared in the shared popup layout, so it must be turned off explicitly.
+            itemEject?.visibility = View.GONE
+        }
+
         val xOffset = -(popupWidth - anchor.width)
         popupWindow.showAsDropDown(anchor, xOffset, (4 * resources.displayMetrics.density).toInt())
     }
 
+    /**
+     * FR-13: starts the Safely Remove flow for the removable volume the tab is showing.
+     */
+    private fun ejectVolumeInTab(tab: TabModel) {
+        // Captured now, not read back in [navigateOutOfVolume]: the user can switch tabs while
+        // the FR-09 dialog is on screen, and navigate-out must close the tab whose volume is
+        // being removed rather than whichever one is focused by then.
+        ejectingTabId = tab.id
+
+        val isMock = MockUsbStorageManager.isMockUsbPath(this, tab.rootPath)
+        val item = StorageItem(
+            id = if (isMock) {
+                MockUsbStorageManager.MOCK_USB_ID
+            } else {
+                tab.rootPath.removePrefix("/storage/").substringBefore('/').ifBlank { tab.rootPath }
+            },
+            label = tab.storageLabel,
+            iconRes = R.drawable.ic_storage_usb,
+            totalBytes = 0L,
+            usedBytes = 0L,
+            mountPath = tab.rootPath,
+            isRemovable = true
+        )
+        UsbEjectManager.safelyRemove(this, item, this) { }
+    }
+
+    /**
+     * FR-05 for Tab mode: close the tab whose volume is being removed, and exit to the Main
+     * Menu if it was the last one — which is FR-06's destination for this container.
+     *
+     * Idempotent by construction: the captured id is cleared on the first call, so a retry finds
+     * nothing to close and cannot close a second tab. A tab already pruned by the FR-08(c)
+     * unmount broadcast makes [closeTabById] return false, which is likewise not a failure.
+     */
+    override fun navigateOutOfVolume(onDone: () -> Unit) {
+        val tabId = ejectingTabId
+        ejectingTabId = null
+        if (tabId != null) {
+            closeTabById(tabId, exitToMainMenu = true)
+        }
+        onDone()
+    }
+
     private fun closeAllTabs() {
+        exitToMainMenuAndFinish()
+    }
+
+    /**
+     * Closes the tab identified by [tabId], if it is still open.
+     *
+     * [exitToMainMenu] selects the destination when this was the last tab. The default keeps
+     * the existing behaviour of handing the location to a standalone browser
+     * ([closeLastTabAndKeepOpenAtLocation]); the eject flow passes `true` because FR-06 requires
+     * the **Main Menu** instead — the volume that tab was showing is about to disappear, so
+     * re-opening a standalone browser on it is exactly wrong.
+     *
+     * Returns false when no tab with that id is open, which is how the eject flow stays
+     * idempotent: a tab already pruned by the FR-08(c) unmount broadcast must not throw and must
+     * not be counted as a failed navigate-out.
+     */
+    fun closeTabById(tabId: String, exitToMainMenu: Boolean = false): Boolean {
+        val position = tabs.indexOfFirst { it.id == tabId }
+        if (position < 0) return false
+        if (tabs.size > 1 || !exitToMainMenu) {
+            closeTab(tabs[position], position)
+        } else {
+            exitToMainMenuAndFinish()
+        }
+        return true
+    }
+
+    /**
+     * Closes the tabbed session and returns to the Main Menu (FR-06).
+     *
+     * The `CLEAR_TOP or SINGLE_TOP` flags reuse the Main Menu instance already in the task
+     * rather than stacking a second one, so Back from there still leaves the app.
+     */
+    private fun exitToMainMenuAndFinish() {
         TabSessionManager.clearSession(this)
         tabs.clear()
         tabAdapter.notifyDataSetChanged()
@@ -2227,7 +2331,29 @@ class TabbedBrowserActivity : AppCompatActivity(),
         }
     }
 
+    /**
+     * Prunes tabs whose storage has gone away, and announces what closed.
+     *
+     * **The whole prune is deferred while the Activity is not started, not just the message.**
+     * [registerMediaReceiver] registers in `onCreate`, so this still runs while the app is in
+     * the background, and a [Snackbar] shown on a stopped Activity is not reliably seen —
+     * FR-08(c) requires the user be told, so the removal must not be consumed invisibly. Pruning
+     * here and deferring only the announcement would need a field to carry "what closed" across
+     * to the next foreground; deferring the prune itself re-derives that from [tabs] on
+     * `onResume`, which is already wired to re-run this. Same shape as
+     * `TwinWindowActivity.prunePanesOnRemovedVolumes`.
+     *
+     * One consequence, accepted: [TabSessionManager.saveSession] is likewise deferred, so a
+     * process death while backgrounded leaves a stale session on disk. That is harmless — the
+     * next launch prunes it through this same path — and it matches Twin Window's behaviour.
+     */
     private fun validateAndPruneStorageTabs() {
+        if (!lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+            za.kilowatch.ultimatefilemanager.util.GoRoLog.d(
+                "TabbedBrowser", "Storage change received while not started; deferring to onResume"
+            )
+            return
+        }
         val (valid, closed) = TabSessionManager.validateAndPrune(this, tabs)
         if (closed.isNotEmpty()) {
             tabs.clear()

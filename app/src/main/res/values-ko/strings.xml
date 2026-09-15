@@ -5309,17 +5309,8 @@ TV를 찾을 수 없습니다. TV에서 앱이 열려 있는지 확인하세요.
     <string name="fit_to_screen">
 화면에 맞추기
 </string>
-    <string name="audio">
-오디오
-</string>
-    <string name="rewind_10_seconds">
-10초 되감기
-</string>
     <string name="play_pause">
 재생 / 일시정지
-</string>
-    <string name="forward_10_seconds">
-10초 앞으로
 </string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
@@ -8722,12 +8713,6 @@ ADB / 무선 디버깅
 </string>
 
     <!-- Media Player errors -->
-    <string name="playback_error_source">
-재생 오류: 파일을 열 수 없음
-</string>
-    <string name="playback_error_server">
-재생 오류: 미디어 서버가 종료됨
-</string>
 
     <!-- File Server (FTP/SFTP Hosting) -->
     <string name="file_server_title">
@@ -14955,6 +14940,47 @@ USB 드라이브 연결이 끊어졌습니다. 내부 저장소로 전환했습�
 </string>
     <string name="safely_remove_menu_item">
 드라이브 안전하게 제거
+</string>
+    <string name="safely_remove_in_progress">
+이미 제거 작업이 진행 중입니다.
+</string>
+
+    <!-- FR-09: shown instead of unmounting when the volume is still in use.
+         The detail lines are label:value on purpose — the project ships 18 locales and
+         uses no <plurals> resources anywhere, so phrasing that avoids plural agreement
+         keeps every translation correct without introducing a new resource type. -->
+    <string name="volume_still_in_use_title">
+드라이브가 아직 사용 중입니다
+</string>
+    <string name="volume_still_in_use_msg">
+앱이 아직 %1$s을(를) 열어 둔 상태입니다. 지금 마운트를 해제하면 데이터가 기록되지 않거나 오류가 발생할 수 있습니다.
+</string>
+    <string name="volume_still_in_use_fd">
+열린 파일: %1$d
+</string>
+    <string name="volume_still_in_use_map">
+메모리 매핑된 파일: %1$d
+</string>
+    <string name="volume_still_in_use_watcher">
+모니터링 중인 폴더: %1$d
+</string>
+    <string name="volume_still_in_use_failed">
+실패한 해제 단계: %1$d
+</string>
+    <string name="volume_still_in_use_continue">
+그래도 마운트 해제
+</string>
+    <string name="volume_still_in_use_keep">
+마운트 유지
+</string>
+
+    <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
+         No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
+    <string name="twin_window_storage_unavailable_closed">
+창이 닫혔습니다 — 해당 저장소의 연결이 해제되었습니다.
+</string>
+    <string name="twin_window_storage_unavailable_exit">
+저장소 연결이 해제되었습니다. 메인 메뉴로 돌아갑니다.
 </string>
     <string name="cd_safely_remove">
 드라이브를 안전하게 제거

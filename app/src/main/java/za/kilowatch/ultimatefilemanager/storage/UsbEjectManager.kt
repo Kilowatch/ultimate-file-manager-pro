@@ -9,13 +9,17 @@ import android.util.Log
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.TransferManager
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.coroutines.resume
 
 /**
  * Manages the safe removal (eject) lifecycle for USB flash drives, external HDDs,
@@ -31,6 +35,21 @@ import za.kilowatch.ultimatefilemanager.util.TransferManager
 object UsbEjectManager {
 
     private const val TAG = "UsbEjectManager"
+
+    /**
+     * Volume uuids with a removal currently running — the FR-10 re-entrancy guard.
+     *
+     * A concurrent `keySet`, so [MutableSet.add] is atomic: two rapid taps on Safely Remove
+     * cannot both pass the check. Keyed per volume, not globally, because FR-10 forbids only a
+     * *second request for the same volume* — two different volumes ejecting at once each sweep
+     * their own descriptors and do not interfere.
+     *
+     * Held for the whole user-facing flow, including while the FR-09 dialog or the Storage
+     * Settings fallback is on screen. Releasing it earlier would let a second request start
+     * while the first was still waiting on the user, which is exactly the re-entrancy FR-10
+     * rules out.
+     */
+    private val inFlightVolumes: MutableSet<String> = ConcurrentHashMap.newKeySet()
 
     /**
      * Checks if this [StorageItem] represents a removable drive eligible for safe removal.
@@ -81,6 +100,30 @@ object UsbEjectManager {
             }
         }
         success
+    }
+
+    /**
+     * FR-13: whether a *local path* sits on a volume that can be ejected.
+     *
+     * Tab mode has to decide this from the active tab's `rootPath` alone. A tab is created from
+     * an intent extra, from session restore, or from the storage picker, and none of those carry
+     * the `EXTRA_IS_REMOVABLE` flag the standalone browser is launched with — so deriving it
+     * from the path is what makes the eject entry point work on every route in, including a
+     * restored session.
+     *
+     * The rule is the filesystem's own: Android addresses removable media as `/storage/<volume
+     * id>` (`/storage/7DE2-1219`), while the one non-removable volume any tab can reach is
+     * primary storage, reachable as `/storage/emulated/0` and `/storage/self/primary`. SAF paths
+     * (`saf://…`) and network shares do not start with `/storage/` at all, so they are excluded
+     * by the same branch rather than by a per-storage-type rule that could fall out of date.
+     */
+    fun isRemovablePath(context: Context, path: String): Boolean {
+        val root = path.trimEnd('/')
+        if (root.isEmpty()) return false
+        if (MockUsbStorageManager.isMockUsbPath(context, path)) return true
+        if (!root.startsWith("/storage/")) return false
+        val volumeId = root.removePrefix("/storage/").substringBefore('/')
+        return volumeId.isNotEmpty() && volumeId != "emulated" && volumeId != "self"
     }
 
     /**
@@ -203,13 +246,14 @@ object UsbEjectManager {
     fun safelyRemove(
         activity: Activity,
         item: StorageItem,
+        host: VolumeEjectHost?,
         onFinished: (Boolean) -> Unit
     ) {
         MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
             .setTitle(activity.getString(R.string.safely_remove_title, item.label))
             .setMessage(activity.getString(R.string.safely_remove_confirm_msg, item.label))
             .setPositiveButton(R.string.safely_remove_action) { _, _ ->
-                checkTransfersAndProceed(activity, item, onFinished)
+                checkTransfersAndProceed(activity, item, host, onFinished)
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
@@ -218,6 +262,7 @@ object UsbEjectManager {
     private fun checkTransfersAndProceed(
         activity: Activity,
         item: StorageItem,
+        host: VolumeEjectHost?,
         onFinished: (Boolean) -> Unit
     ) {
         if (TransferManager.isActiveTransfers()) {
@@ -225,81 +270,167 @@ object UsbEjectManager {
                 .setTitle(R.string.safely_remove_transfer_active_title)
                 .setMessage(R.string.safely_remove_transfer_active_msg)
                 .setPositiveButton(R.string.safely_remove_action) { _, _ ->
-                    performSafeRemoval(activity, item, onFinished)
+                    performSafeRemoval(activity, item, host, onFinished)
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
         } else {
-            performSafeRemoval(activity, item, onFinished)
+            performSafeRemoval(activity, item, host, onFinished)
         }
     }
 
     private fun performSafeRemoval(
         activity: Activity,
         item: StorageItem,
+        host: VolumeEjectHost?,
         onFinished: (Boolean) -> Unit
     ) {
+        val volume = VolumeIdentity.from(item)
+
+        // FR-10. Checked before the "flushing" toast so a rejected request produces no
+        // misleading progress message.
+        if (!inFlightVolumes.add(volume.uuid)) {
+            Log.d(TAG, "Removal of ${volume.uuid} already in progress; ignoring request")
+            Toast.makeText(activity, R.string.safely_remove_in_progress, Toast.LENGTH_SHORT).show()
+            onFinished(false)
+            return
+        }
+
         Toast.makeText(activity, R.string.safely_remove_flushing, Toast.LENGTH_SHORT).show()
 
         CoroutineScope(Dispatchers.Main).launch {
-            // 1. Cancel background indexing / watchers on this volume
             try {
-                val targetUuid = item.id.removePrefix("unmounted_").trim()
-                if (targetUuid.isNotEmpty() && targetUuid != "removable") {
-                    za.kilowatch.ultimatefilemanager.indexing.FileIndexingService.getInstance(activity).cancelIndexing(targetUuid)
-                    za.kilowatch.ultimatefilemanager.indexing.FileIndexingService.getInstance(activity).cancelIndexing("sdcard_$targetUuid")
-                }
-            } catch (_: Exception) {}
+                // Release every claim this process holds before asking vold to unmount. vold
+                // scans /proc/<pid>/fd and /proc/<pid>/maps of every process — including the
+                // one that issued the command — and SIGINTs anything still holding a
+                // reference, so skipping this kills the app with no Java stack trace.
+                // This replaces the old cancelIndexing block and the delay(150): the wait is
+                // now a measurement of what actually got released, not a fixed guess.
+                val report = VolumeClaimReleaser.releaseAll(activity, volume)
 
-            // 2. Flush Linux kernel file buffers to physical media
-            flushBuffers()
-
-            // 3. Short pause to let kernel / FUSE release closed file descriptors
-            kotlinx.coroutines.delay(150)
-
-            // 2. Handle Mock Drive case
-            if (MockUsbStorageManager.isMockUsbItem(item)) {
-                MockUsbStorageManager.unmountMockUsb(activity)
-                Toast.makeText(activity, R.string.safely_remove_mock_success, Toast.LENGTH_LONG).show()
-                onFinished(true)
-                return@launch
-            }
-
-            // 3. Handle Elevated (Shizuku / Root) case
-            if (isElevatedAvailable(activity)) {
-                val success = unmountElevated(activity, item)
-                if (success) {
-                    Toast.makeText(
-                        activity,
-                        activity.getString(R.string.safely_remove_success, item.label),
-                        Toast.LENGTH_LONG
-                    ).show()
+                // Mock drive: nothing real to unmount, so it never reaches the FR-09 gate.
+                if (MockUsbStorageManager.isMockUsbItem(item)) {
+                    MockUsbStorageManager.unmountMockUsb(activity)
+                    Toast.makeText(activity, R.string.safely_remove_mock_success, Toast.LENGTH_LONG).show()
                     onFinished(true)
                     return@launch
                 }
-            }
 
-            // 4. Standard Non-Root case: Data is flushed, guide user to system storage settings
-            showStandardSettingsDialog(activity, item, onFinished)
+                // FR-09: the release could not free everything, so do not unmount out from
+                // under a live reference without asking. Cancel keeps the volume mounted.
+                if (report.hasSurvivingClaims) {
+                    Log.w(TAG, "Volume ${volume.uuid} still in use before unmount; asking the user")
+                    val proceed = VolumeStillInUseDialog.show(activity, volume, report)
+                    if (!proceed) {
+                        Log.i(TAG, "User chose to keep ${volume.uuid} mounted")
+                        onFinished(false)
+                        return@launch
+                    }
+                }
+
+                onFinished(unmountOrGuide(activity, item, host))
+            } catch (e: CancellationException) {
+                // A cancelled eject must not report an outcome, but must still free the guard.
+                throw e
+            } catch (e: Exception) {
+                Log.w(TAG, "Safe removal of ${volume.uuid} failed", e)
+                onFinished(false)
+            } finally {
+                inFlightVolumes.remove(volume.uuid)
+            }
         }
     }
 
-    private fun showStandardSettingsDialog(
+    /**
+     * Unmounts through Shizuku/Root when available, and otherwise guides the user to Android
+     * Storage Settings. Returns true when the volume is actually unmounted — including the
+     * non-root case, where ["Open Storage Settings"] counts as handing the eject off to the OS.
+     *
+     * Suspends while the fallback dialog is on screen so the FR-10 guard stays held until the
+     * user has answered, rather than being released the moment the dialog appears.
+     *
+     * This is also where FR-05 happens, because "before the unmount is issued" has a different
+     * moment on each path: for the elevated path it is immediately before the `sm unmount`
+     * command, and for the non-root path it is the instant the user is handed to Android. Both
+     * leave the volume *after* the FR-09 and fallback dialogs, which need a live Activity —
+     * which is why this cannot simply run at the top of the release.
+     */
+    private suspend fun unmountOrGuide(
         activity: Activity,
         item: StorageItem,
-        onFinished: (Boolean) -> Unit
-    ) {
-        MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
-            .setTitle(R.string.safely_remove_open_settings_title)
-            .setMessage(R.string.safely_remove_open_settings_desc)
-            .setPositiveButton(R.string.safely_remove_open_settings_btn) { _, _ ->
-                openSystemStorageSettings(activity)
-                onFinished(true)
+        host: VolumeEjectHost?
+    ): Boolean {
+        // Guarantees the host is asked to leave at most once across the two paths below, since
+        // a failed elevated unmount falls through to the dialog that would ask again.
+        var left = false
+        suspend fun leaveVolume() {
+            if (left) return
+            left = true
+            if (!VolumeClaimReleaser.navigateOut(host)) {
+                Log.w(TAG, "Host did not confirm it left ${item.label}; continuing anyway")
             }
-            .setNegativeButton(R.string.cancel) { _, _ ->
-                onFinished(false)
+        }
+
+        if (isElevatedAvailable(activity)) {
+            // FR-05 / FR-02: the command below is the unmount, so this is the last moment at
+            // which the app may still be sitting on the volume.
+            leaveVolume()
+            if (unmountElevated(activity, item)) {
+                Toast.makeText(
+                    activity,
+                    activity.getString(R.string.safely_remove_success, item.label),
+                    Toast.LENGTH_LONG
+                ).show()
+                return true
             }
-            .show()
+            // The elevated unmount failed, so the user is about to be offered the Storage
+            // Settings fallback — which needs a live Activity that a departed host cannot give.
+            if (activity.isFinishing || activity.isDestroyed) {
+                Log.w(
+                    TAG,
+                    "Elevated unmount of ${item.label} failed after the host had already left; " +
+                        "no fallback UI available"
+                )
+                return false
+            }
+        }
+
+        val handedOff = showStandardSettingsDialog(activity, item)
+        if (handedOff) leaveVolume()
+        return handedOff
+    }
+
+    /**
+     * Non-root fallback. Kept on `.setPositiveButton()` / `.setNegativeButton()` rather than
+     * the UFMStandard embedded-button glass dialog: FR-11 leaves the neighbouring
+     * `safely_remove_*` dialogs untouched, and restyling this one alone would make it
+     * inconsistent with the confirm dialog that opens the very same flow.
+     */
+    private suspend fun showStandardSettingsDialog(
+        activity: Activity,
+        item: StorageItem
+    ): Boolean = withContext(Dispatchers.Main) {
+        suspendCancellableCoroutine { continuation ->
+            val dialog = MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
+                .setTitle(R.string.safely_remove_open_settings_title)
+                .setMessage(R.string.safely_remove_open_settings_desc)
+                .setPositiveButton(R.string.safely_remove_open_settings_btn) { _, _ ->
+                    openSystemStorageSettings(activity)
+                    if (continuation.isActive) continuation.resume(true)
+                }
+                .setNegativeButton(R.string.cancel) { _, _ ->
+                    if (continuation.isActive) continuation.resume(false)
+                }
+                .setOnCancelListener {
+                    if (continuation.isActive) continuation.resume(false)
+                }
+                .create()
+
+            dialog.show()
+            continuation.invokeOnCancellation {
+                activity.runOnUiThread { dialog.dismiss() }
+            }
+        }
     }
 
     /**
