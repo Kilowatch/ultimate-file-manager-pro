@@ -52,10 +52,7 @@ class ShareReceiverActivity : AppCompatActivity() {
     private lateinit var btnBack: View
 
     private var isTv = false
-    private var sharedUris: List<Uri> = emptyList()
-    private var sharedFileName: String = ""
-    private var sharedMimeType: String = "*/*"
-    private var sharedFileSize: Long = 0L
+    private var sharedItems: List<SharedItem> = emptyList()
     private var callingAppName: String = ""
 
     // Picked destination
@@ -137,40 +134,20 @@ class ShareReceiverActivity : AppCompatActivity() {
             return
         }
 
-        when (intent.action) {
-            Intent.ACTION_SEND -> {
-                val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableExtra(Intent.EXTRA_STREAM)
-                }
-                if (uri != null) {
-                    sharedUris = listOf(uri)
-                }
-            }
-            Intent.ACTION_SEND_MULTIPLE -> {
-                val uris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
-                }
-                if (uris != null) {
-                    sharedUris = uris
-                }
-            }
-        }
-
-        if (sharedUris.isEmpty()) {
+        val rawUris = ShareReceiverHelper.extractUris(intent)
+        if (rawUris.isEmpty()) {
             layoutEmpty.visibility = View.VISIBLE
             return
         }
 
-        sharedMimeType = intent.type ?: "*/*"
+        val defaultMime = intent.type ?: "*/*"
+        sharedItems = ShareReceiverHelper.resolveAllItems(contentResolver, rawUris, defaultMime)
+        if (sharedItems.isEmpty()) {
+            layoutEmpty.visibility = View.VISIBLE
+            return
+        }
 
         resolveCallingApp()
-        resolveFileInfo()
         showFileInfo()
     }
 
@@ -187,60 +164,38 @@ class ShareReceiverActivity : AppCompatActivity() {
         }
     }
 
-    private fun resolveFileInfo() {
-        val uri = sharedUris.firstOrNull() ?: return
-        sharedFileName = ""
-        sharedFileSize = 0L
-
-        try {
-            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                if (cursor.moveToFirst()) {
-                    val nameIdx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    if (nameIdx >= 0) {
-                        sharedFileName = cursor.getString(nameIdx) ?: ""
-                    }
-                    val sizeIdx = cursor.getColumnIndex(OpenableColumns.SIZE)
-                    if (sizeIdx >= 0) {
-                        sharedFileSize = cursor.getLong(sizeIdx)
-                    }
-                }
-            }
-        } catch (_: Exception) {}
-
-        if (sharedFileName.isEmpty()) {
-            sharedFileName = uri.lastPathSegment ?: "file"
-        }
-
-        val ext = sharedFileName.substringAfterLast('.', "").lowercase()
-        if (sharedMimeType == "*/*" && ext.isNotEmpty()) {
-            val guessed = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
-            if (guessed != null) sharedMimeType = guessed
-        }
-    }
-
     private fun showFileInfo() {
         layoutFileInfo.visibility = View.VISIBLE
 
-        txtFileName.text = if (sharedUris.size == 1) {
-            sharedFileName
-        } else {
-            getString(R.string.share_receive_multiple_files, sharedUris.size)
-        }
+        val totalFiles = sharedItems.size
+        val totalSize = sharedItems.sumOf { it.fileSize }
 
-        txtFileSize.text = if (sharedUris.size == 1 && sharedFileSize > 0) {
-            android.text.format.Formatter.formatFileSize(this, sharedFileSize)
+        if (totalFiles == 1) {
+            val item = sharedItems.first()
+            txtFileName.text = item.fileName
+            if (item.fileSize > 0) {
+                txtFileSize.text = android.text.format.Formatter.formatFileSize(this, item.fileSize)
+                txtFileSize.visibility = View.VISIBLE
+            } else {
+                txtFileSize.visibility = View.GONE
+            }
+            val ext = item.fileName.substringAfterLast('.', "").lowercase()
+            imgFileIcon.setImageResource(
+                if (ext.isNotEmpty()) FileTypeIconProvider.iconForExtension(this, ext)
+                else R.drawable.ic_file_generic
+            )
         } else {
-            ""
+            txtFileName.text = getString(R.string.share_receive_multiple_files, totalFiles)
+            if (totalSize > 0) {
+                txtFileSize.text = android.text.format.Formatter.formatFileSize(this, totalSize)
+                txtFileSize.visibility = View.VISIBLE
+            } else {
+                txtFileSize.visibility = View.GONE
+            }
+            imgFileIcon.setImageResource(R.drawable.ic_file_generic)
         }
-        txtFileSize.visibility = if (txtFileSize.text.isNotEmpty()) View.VISIBLE else View.GONE
 
         txtFileSource.text = getString(R.string.share_receive_from, callingAppName)
-
-        val ext = sharedFileName.substringAfterLast('.', "").lowercase()
-        imgFileIcon.setImageResource(
-            if (ext.isNotEmpty()) FileTypeIconProvider.iconForExtension(this, ext)
-            else R.drawable.ic_file_generic
-        )
     }
 
     private fun launchDestinationPicker() {
@@ -266,42 +221,106 @@ class ShareReceiverActivity : AppCompatActivity() {
     }
 
     private fun performSave() {
-        val uri = sharedUris.firstOrNull() ?: return
+        if (sharedItems.isEmpty()) return
         progressBar.visibility = View.VISIBLE
         btnSave.isEnabled = false
 
+        val totalCount = sharedItems.size
+        val originalBtnText = btnSave.text
+
         lifecycleScope.launch(Dispatchers.IO) {
+            var successCount = 0
+            val errors = mutableListOf<String>()
+
             try {
                 if (selectedLocalPath != null) {
-                    saveToLocal(uri, selectedLocalPath!!)
+                    val destDir = selectedLocalPath!!
+                    sharedItems.forEachIndexed { index, item ->
+                        withContext(Dispatchers.Main) {
+                            btnSave.text = if (totalCount > 1) {
+                                "${getString(R.string.share_receive_saving)} (${index + 1}/$totalCount)"
+                            } else {
+                                getString(R.string.share_receive_saving)
+                            }
+                        }
+                        try {
+                            saveToLocal(item, destDir)
+                            successCount++
+                        } catch (e: Exception) {
+                            errors.add("${item.fileName}: ${e.message}")
+                        }
+                    }
                 } else if (selectedShareId != null && selectedNetPath != null) {
-                    saveToNetwork(uri, selectedShareId!!, selectedNetPath!!)
+                    val shareId = selectedShareId!!
+                    val netPath = selectedNetPath!!
+                    var share = resolveShareById(shareId) ?: throw IllegalStateException("Share not found: $shareId")
+                    val innerPath = if (share.isServerMode && netPath.isNotEmpty()) {
+                        val segments = netPath.trimStart('/').split("/", limit = 2)
+                        share = share.copy(remotePath = "/${segments[0]}")
+                        segments.getOrElse(1) { "" }
+                    } else {
+                        netPath
+                    }
+
+                    sharedItems.forEachIndexed { index, item ->
+                        withContext(Dispatchers.Main) {
+                            btnSave.text = if (totalCount > 1) {
+                                "${getString(R.string.share_receive_saving)} (${index + 1}/$totalCount)"
+                            } else {
+                                getString(R.string.share_receive_saving)
+                            }
+                        }
+                        try {
+                            saveToNetwork(item, share, innerPath)
+                            successCount++
+                        } catch (e: Exception) {
+                            errors.add("${item.fileName}: ${e.message}")
+                        }
+                    }
                 } else {
                     throw IllegalStateException("No destination selected")
                 }
 
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
-                    Snackbar.make(findViewById(R.id.main), R.string.share_receive_success, Snackbar.LENGTH_LONG).show()
-                    finishAfterDelay()
+                    if (errors.isEmpty()) {
+                        val msg = if (totalCount == 1) {
+                            getString(R.string.share_receive_success)
+                        } else {
+                            getString(R.string.share_receive_multiple_success, successCount)
+                        }
+                        Snackbar.make(findViewById(R.id.main), msg, Snackbar.LENGTH_LONG).show()
+                        finishAfterDelay()
+                    } else if (successCount > 0) {
+                        btnSave.isEnabled = true
+                        btnSave.text = originalBtnText
+                        val msg = "Saved $successCount of $totalCount files (${errors.size} failed)"
+                        Snackbar.make(findViewById(R.id.main), msg, Snackbar.LENGTH_LONG).show()
+                    } else {
+                        btnSave.isEnabled = true
+                        btnSave.text = originalBtnText
+                        val err = errors.firstOrNull() ?: "Unknown error"
+                        Snackbar.make(findViewById(R.id.main), "${getString(R.string.share_receive_error)}: $err", Snackbar.LENGTH_LONG).show()
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     btnSave.isEnabled = true
-                    Snackbar.make(findViewById(R.id.main), getString(R.string.share_receive_error) + ": ${e.message}", Snackbar.LENGTH_LONG).show()
+                    btnSave.text = originalBtnText
+                    Snackbar.make(findViewById(R.id.main), "${getString(R.string.share_receive_error)}: ${e.message}", Snackbar.LENGTH_LONG).show()
                 }
             }
         }
     }
 
-    private fun saveToLocal(uri: Uri, destDirPath: String) {
+    private fun saveToLocal(item: SharedItem, destDirPath: String) {
         val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destDirPath) ||
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, destDirPath)
         if (isSaf) {
-            val nameWithoutExt = sharedFileName.substringBeforeLast('.')
-            val ext = sharedFileName.substringAfterLast('.', "")
-            var finalName = sharedFileName
+            val nameWithoutExt = item.fileName.substringBeforeLast('.')
+            val ext = if (item.fileName.contains('.') && !item.fileName.startsWith('.')) item.fileName.substringAfterLast('.') else ""
+            var finalName = item.fileName
             var counter = 1
             while (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(this, za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destDirPath, finalName))) {
                 finalName = if (ext.isEmpty()) "${nameWithoutExt}_($counter)" else "${nameWithoutExt}_($counter).$ext"
@@ -310,44 +329,39 @@ class ShareReceiverActivity : AppCompatActivity() {
             val targetSafPath = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(destDirPath, finalName)
             val outStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openOutputStream(this, targetSafPath)
                 ?: throw java.io.IOException("Cannot open SAF output stream for $targetSafPath")
-            contentResolver.openInputStream(uri)?.use { input ->
+            contentResolver.openInputStream(item.uri)?.use { input ->
                 outStream.use { output ->
                     input.copyTo(output)
                 }
-            }
+            } ?: throw java.io.IOException("Cannot read shared file: ${item.fileName}")
         } else {
             val dir = File(destDirPath)
             if (!dir.exists()) dir.mkdirs()
-            val destFile = File(dir, sharedFileName)
+            val destFile = File(dir, item.fileName)
             var uniqueFile = destFile
             var counter = 1
             while (uniqueFile.exists()) {
-                val nameWithoutExt = sharedFileName.substringBeforeLast('.')
-                val ext = sharedFileName.substringAfterLast('.', "")
+                val nameWithoutExt = item.fileName.substringBeforeLast('.')
+                val ext = if (item.fileName.contains('.') && !item.fileName.startsWith('.')) item.fileName.substringAfterLast('.') else ""
                 uniqueFile = File(dir, if (ext.isEmpty()) "${nameWithoutExt}_($counter)" else "${nameWithoutExt}_($counter).$ext")
                 counter++
             }
-            contentResolver.openInputStream(uri)?.use { input ->
+            contentResolver.openInputStream(item.uri)?.use { input ->
                 FileOutputStream(uniqueFile).use { output ->
                     input.copyTo(output)
                 }
-            }
+            } ?: throw java.io.IOException("Cannot read shared file: ${item.fileName}")
+
+            // Notify MediaStore so new file is indexed immediately
+            za.kilowatch.ultimatefilemanager.util.MediaScannerNotifier.scanFile(this, uniqueFile)
         }
     }
 
-    private suspend fun saveToNetwork(uri: Uri, shareId: String, netPath: String) {
-        var share = resolveShareById(shareId) ?: throw IllegalStateException("Share not found: $shareId")
-        val innerPath = if (share.isServerMode && netPath.isNotEmpty()) {
-            val segments = netPath.trimStart('/').split("/", limit = 2)
-            share = share.copy(remotePath = "/${segments[0]}")
-            segments.getOrElse(1) { "" }
-        } else {
-            netPath
-        }
-        val remoteFilePath = if (innerPath.isEmpty()) sharedFileName else "$innerPath/$sharedFileName"
+    private suspend fun saveToNetwork(item: SharedItem, share: NetworkShare, innerPath: String) {
+        val remoteFilePath = if (innerPath.isEmpty()) item.fileName else "$innerPath/${item.fileName}"
 
         withContext(Dispatchers.IO) {
-            contentResolver.openInputStream(uri)?.use { input ->
+            contentResolver.openInputStream(item.uri)?.use { input ->
                 when (share.type) {
                     ShareType.SMB -> {
                         za.kilowatch.ultimatefilemanager.network.SmbShareClient.openOutputStream(share, remoteFilePath)
@@ -362,7 +376,7 @@ class ShareReceiverActivity : AppCompatActivity() {
                             .use { output -> input.copyTo(output) }
                     }
                     ShareType.TV -> {
-                        za.kilowatch.ultimatefilemanager.network.TvShareClient.uploadStream(share, remoteFilePath, input, sharedFileSize)
+                        za.kilowatch.ultimatefilemanager.network.TvShareClient.uploadStream(share, remoteFilePath, input, item.fileSize)
                     }
                     ShareType.ONEDRIVE -> {
                         za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openOutputStream(share, remoteFilePath)
@@ -384,10 +398,6 @@ class ShareReceiverActivity : AppCompatActivity() {
                         za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, remoteFilePath)
                             .use { output -> input.copyTo(output) }
                     }
-                    ShareType.WEBDAV -> {
-                        za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, remoteFilePath)
-                            .use { output -> input.copyTo(output) }
-                    }
                     ShareType.NFS -> {
                         za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(share, remoteFilePath)
                             .use { output -> input.copyTo(output) }
@@ -396,7 +406,7 @@ class ShareReceiverActivity : AppCompatActivity() {
                         throw UnsupportedOperationException("Cannot save to DLNA share — read-only")
                     }
                 }
-            }
+            } ?: throw java.io.IOException("Cannot read shared file: ${item.fileName}")
         }
     }
 

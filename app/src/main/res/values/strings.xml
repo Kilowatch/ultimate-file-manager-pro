@@ -1993,6 +1993,7 @@
     <string name="share_receive_selected">Destination: %s</string>
     <string name="share_receive_save_to_path">Save to %s</string>
     <string name="share_receive_multiple_files">%d files</string>
+    <string name="share_receive_multiple_success">%d files saved successfully</string>
     <string name="choose_a_volume_to_browse">Choose a volume to browse</string>
     <string name="unable_to_decode_image">Unable to decode image</string>
     <string name="folder">Folder</string>
@@ -5245,6 +5246,37 @@
     <string name="cd_decrement">Decrease value</string>
     <string name="cd_increment">Increase value</string>
     <string name="cd_edit_preset">Edit preset styling</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">Safely Remove %1$s?</string>
+    <string name="safely_remove_confirm_msg">Ensure all files are written and safely detach \"%1$s\".</string>
+    <string name="safely_remove_action">Safely Remove</string>
+    <string name="safely_remove_transfer_active_title">Active Transfer in Progress</string>
+    <string name="safely_remove_transfer_active_msg">Files are currently being transferred to or from this drive. Removing it now may cause data corruption or failed operations.</string>
+    <string name="safely_remove_flushing">Flushing write buffers...</string>
+    <string name="safely_remove_success">\"%1$s\" has been safely unmounted. You may now disconnect the OTG cable.</string>
+    <string name="safely_remove_mock_success">Mock USB Drive safely unmounted. You can remount it in Settings.</string>
+    <string name="safely_remove_unmounted_switched">USB Drive disconnected. Switched to Internal Storage.</string>
+    <string name="safely_remove_open_settings_title">Complete Eject in Settings</string>
+    <string name="safely_remove_open_settings_desc">All data buffers have been safely flushed to the drive. Tap below to open Android Storage Settings and tap the Eject icon (⏏).</string>
+    <string name="safely_remove_open_settings_btn">Open Storage Settings</string>
+    <string name="safely_remove_menu_item">Safely Remove Drive</string>
+    <string name="cd_safely_remove">Safely remove drive</string>
+    <string name="mock_usb_title">USB Drive (Simulated OTG)</string>
+    <string name="mock_usb_subtitle">OTG Flash Drive (Mock / Test)</string>
+    <string name="mock_usb_setting_title">Simulate USB OTG Drive</string>
+    <string name="mock_usb_setting_desc">Simulate a connected USB flash drive or external HDD for testing safe removal and file operations.</string>
+    <string name="mock_usb_remount_action">Remount Mock USB Drive</string>
+    <string name="mock_usb_remounted_toast">Mock USB Drive mounted</string>
+    <string name="storage_unmounted">Unmounted</string>
+    <string name="storage_unmounted_tap_to_mount">Unmounted • Tap to mount</string>
+    <string name="cd_remount_storage">Mount storage volume</string>
+    <string name="storage_remounting">Mounting storage volume...</string>
+    <string name="storage_remount_success">\"%1$s\" mounted successfully.</string>
+    <string name="storage_mount_title">Mount %1$s?</string>
+    <string name="storage_mount_desc">To remount \"%1$s\", Android OS Storage Settings will open. Tap this drive in the list and select \"Mount\".</string>
+    <string name="storage_mount_btn">Open Storage Settings</string>
+    <string name="safely_remove_unmount_action">Mount Drive</string>
 </resources>
 
 

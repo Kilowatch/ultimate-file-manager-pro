@@ -5661,6 +5661,9 @@ Simpan ke %s
     <string name="share_receive_multiple_files">
 %d file
 </string>
+    <string name="share_receive_multiple_success">
+%d file berhasil disimpan
+</string>
     <string name="choose_a_volume_to_browse">
 Pilih volume untuk dijelajahi
 </string>
@@ -14911,6 +14914,95 @@ Tambah nilai
 </string>
     <string name="cd_edit_preset">
 Edit gaya prasetel
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+Keluarkan %1$s dengan Aman?
+</string>
+    <string name="safely_remove_confirm_msg">
+Pastikan semua file telah ditulis dan lepaskan \"%1$s\" dengan aman.
+</string>
+    <string name="safely_remove_action">
+Keluarkan dengan Aman
+</string>
+    <string name="safely_remove_transfer_active_title">
+Transfer Aktif Sedang Berlangsung
+</string>
+    <string name="safely_remove_transfer_active_msg">
+File sedang ditransfer ke atau dari drive ini. Mengeluarkannya sekarang dapat menyebabkan korupsi data atau operasi yang gagal.
+</string>
+    <string name="safely_remove_flushing">
+Mengosongkan buffer penulisan...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" telah dilepas dengan aman. Anda sekarang dapat memutuskan kabel OTG.
+</string>
+    <string name="safely_remove_mock_success">
+Mock USB Drive dilepas dengan aman. Anda dapat memasangnya kembali di Pengaturan.
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB Drive terputus. Beralih ke Penyimpanan Internal.
+</string>
+    <string name="safely_remove_open_settings_title">
+Selesaikan Eject di Pengaturan
+</string>
+    <string name="safely_remove_open_settings_desc">
+Semua buffer data telah dikosongkan dengan aman ke drive. Ketuk di bawah untuk membuka Pengaturan Penyimpanan Android dan ketuk ikon Eject (⏏).
+</string>
+    <string name="safely_remove_open_settings_btn">
+Buka Pengaturan Penyimpanan
+</string>
+    <string name="safely_remove_menu_item">
+Keluarkan Drive dengan Aman
+</string>
+    <string name="cd_safely_remove">
+Keluarkan drive dengan aman
+</string>
+    <string name="mock_usb_title">
+USB Drive (OTG Simulasi)
+</string>
+    <string name="mock_usb_subtitle">
+OTG Flash Drive (Mock / Test)
+</string>
+    <string name="mock_usb_setting_title">
+Simulasikan USB OTG Drive
+</string>
+    <string name="mock_usb_setting_desc">
+Simulasikan USB flash drive atau HDD eksternal yang terhubung untuk menguji pelepasan aman dan operasi file.
+</string>
+    <string name="mock_usb_remount_action">
+Pasang Kembali Mock USB Drive
+</string>
+    <string name="mock_usb_remounted_toast">
+Mock USB Drive terpasang
+</string>
+    <string name="storage_unmounted">
+Tidak Terpasang
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+Tidak Terpasang • Ketuk untuk memasang
+</string>
+    <string name="cd_remount_storage">
+Pasang volume penyimpanan
+</string>
+    <string name="storage_remounting">
+Memasang volume penyimpanan...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" berhasil dipasang.
+</string>
+    <string name="storage_mount_title">
+Pasang %1$s?
+</string>
+    <string name="storage_mount_desc">
+Untuk memasang kembali \"%1$s\", Pengaturan Penyimpanan Android OS akan terbuka. Ketuk drive ini dalam daftar dan pilih \"Pasang\".
+</string>
+    <string name="storage_mount_btn">
+Buka Pengaturan Penyimpanan
+</string>
+    <string name="safely_remove_unmount_action">
+Pasang Drive
 </string>
 </resources>
 

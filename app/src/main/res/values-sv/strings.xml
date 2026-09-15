@@ -5645,6 +5645,9 @@ Spara till %s
     <string name="share_receive_multiple_files">
 %d filer
 </string>
+    <string name="share_receive_multiple_success">
+%d filer har sparats
+</string>
     <string name="choose_a_volume_to_browse">
 Välj en volym att bläddra i
 </string>
@@ -14888,6 +14891,95 @@ Minska värde
 </string>
     <string name="cd_edit_preset">
 Redigera förvalsstil
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+Ta bort %1$s på ett säkert sätt?
+</string>
+    <string name="safely_remove_confirm_msg">
+Se till att alla filer har skrivits och koppla bort \"%1$s\" på ett säkert sätt.
+</string>
+    <string name="safely_remove_action">
+Ta bort säkert
+</string>
+    <string name="safely_remove_transfer_active_title">
+Aktiv överföring pågår
+</string>
+    <string name="safely_remove_transfer_active_msg">
+Filer överförs för närvarande till eller från den här enheten. Att ta bort den nu kan orsaka datakorruption eller misslyckade åtgärder.
+</string>
+    <string name="safely_remove_flushing">
+Tömmer skrivbuffertar...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" har avmonterats på ett säkert sätt. Du kan nu koppla bort OTG-kabeln.
+</string>
+    <string name="safely_remove_mock_success">
+Simulerad USB-enhet har avmonterats på ett säkert sätt. Du kan montera den igen i Inställningar.
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB-enheten frånkopplad. Bytte till intern lagring.
+</string>
+    <string name="safely_remove_open_settings_title">
+Slutför utmatningen i Inställningar
+</string>
+    <string name="safely_remove_open_settings_desc">
+Alla databuffertar har tömts säkert till enheten. Tryck nedan för att öppna Androids lagringsinställningar och tryck på utmatningsikonen (⏏).
+</string>
+    <string name="safely_remove_open_settings_btn">
+Öppna lagringsinställningar
+</string>
+    <string name="safely_remove_menu_item">
+Ta bort enheten säkert
+</string>
+    <string name="cd_safely_remove">
+Ta bort enheten säkert
+</string>
+    <string name="mock_usb_title">
+USB-enhet (simulerad OTG)
+</string>
+    <string name="mock_usb_subtitle">
+OTG-flashminne (simulerad / test)
+</string>
+    <string name="mock_usb_setting_title">
+Simulera USB OTG-enhet
+</string>
+    <string name="mock_usb_setting_desc">
+Simulera ett anslutet USB-minne eller en extern hårddisk för att testa säker borttagning och filåtgärder.
+</string>
+    <string name="mock_usb_remount_action">
+Montera om simulerad USB-enhet
+</string>
+    <string name="mock_usb_remounted_toast">
+Simulerad USB-enhet monterad
+</string>
+    <string name="storage_unmounted">
+Avmonterad
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+Avmonterad • Tryck för att montera
+</string>
+    <string name="cd_remount_storage">
+Montera lagringsvolym
+</string>
+    <string name="storage_remounting">
+Monterar lagringsvolym...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" har monterats.
+</string>
+    <string name="storage_mount_title">
+Montera %1$s?
+</string>
+    <string name="storage_mount_desc">
+För att montera om \"%1$s\" öppnas Android OS lagringsinställningar. Tryck på den här enheten i listan och välj \"Montera\".
+</string>
+    <string name="storage_mount_btn">
+Öppna lagringsinställningar
+</string>
+    <string name="safely_remove_unmount_action">
+Montera enhet
 </string>
 </resources>
 

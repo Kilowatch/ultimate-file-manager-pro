@@ -5661,6 +5661,9 @@ Hedef: %s
     <string name="share_receive_multiple_files">
 %d dosyaları
 </string>
+    <string name="share_receive_multiple_success">
+%d dosya başarıyla kaydedildi
+</string>
     <string name="choose_a_volume_to_browse">
 Göz atmak için bir birim seçin
 </string>
@@ -14911,6 +14914,95 @@ Değeri artır
 </string>
     <string name="cd_edit_preset">
 Ön ayar stilini düzenle
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+%1$s güvenle çıkarılsın mı?
+</string>
+    <string name="safely_remove_confirm_msg">
+Tüm dosyaların yazıldığından emin olun ve \"%1$s\" aygıtını güvenle ayırın.
+</string>
+    <string name="safely_remove_action">
+Güvenle Çıkar
+</string>
+    <string name="safely_remove_transfer_active_title">
+Etkin Aktarım Sürüyor
+</string>
+    <string name="safely_remove_transfer_active_msg">
+Şu anda bu sürücüye veya bu sürücüden dosya aktarılıyor. Şimdi çıkarılması veri bozulmasına veya işlem hatalarına yol açabilir.
+</string>
+    <string name="safely_remove_flushing">
+Yazma arabellekleri boşaltılıyor...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" güvenle çıkarıldı. Artık OTG kablosunu çıkarabilirsiniz.
+</string>
+    <string name="safely_remove_mock_success">
+Sahte USB Sürücüsü güvenle çıkarıldı. Ayarlar\\\'dan yeniden bağlayabilirsiniz.
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB Sürücüsü bağlantısı kesildi. Dahili Depolama\\\'ya geçildi.
+</string>
+    <string name="safely_remove_open_settings_title">
+Ayarlar\\\'da Çıkarmayı Tamamla
+</string>
+    <string name="safely_remove_open_settings_desc">
+Tüm veri arabellekleri sürücüye güvenle boşaltıldı. Android Depolama Ayarları\\\'nı açmak için aşağıya dokunun ve Çıkar simgesine (⏏) dokunun.
+</string>
+    <string name="safely_remove_open_settings_btn">
+Depolama Ayarları\\\'nı Aç
+</string>
+    <string name="safely_remove_menu_item">
+Sürücüyü Güvenle Çıkar
+</string>
+    <string name="cd_safely_remove">
+Sürücüyü güvenle çıkar
+</string>
+    <string name="mock_usb_title">
+USB Sürücüsü (Simüle OTG)
+</string>
+    <string name="mock_usb_subtitle">
+OTG Flaş Sürücüsü (Sahte / Test)
+</string>
+    <string name="mock_usb_setting_title">
+USB OTG Sürücüsünü Simüle Et
+</string>
+    <string name="mock_usb_setting_desc">
+Güvenli çıkarma ve dosya işlemlerini test etmek için bağlı bir USB flaş sürücüsünü veya harici HDD\\\'yi simüle edin.
+</string>
+    <string name="mock_usb_remount_action">
+Sahte USB Sürücüsünü Yeniden Bağla
+</string>
+    <string name="mock_usb_remounted_toast">
+Sahte USB Sürücüsü bağlandı
+</string>
+    <string name="storage_unmounted">
+Bağlantı kesildi
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+Bağlantı kesildi • Bağlamak için dokunun
+</string>
+    <string name="cd_remount_storage">
+Depolama birimini bağla
+</string>
+    <string name="storage_remounting">
+Depolama birimi bağlanıyor...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" başarıyla bağlandı.
+</string>
+    <string name="storage_mount_title">
+%1$s bağlansın mı?
+</string>
+    <string name="storage_mount_desc">
+\"%1$s\" öğesini yeniden bağlamak için Android işletim sistemi Depolama Ayarları açılacak. Listeden bu sürücüye dokunun ve \"Bağla\" seçeneğini seçin.
+</string>
+    <string name="storage_mount_btn">
+Depolama Ayarları\\\'nı Aç
+</string>
+    <string name="safely_remove_unmount_action">
+Sürücüyü Bağla
 </string>
 </resources>
 

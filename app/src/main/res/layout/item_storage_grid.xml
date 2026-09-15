@@ -118,5 +118,19 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Eject Button -->
+        <ImageView
+            android:id="@+id/btnEjectTile"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_eject"
+            android:background="@drawable/bg_btn_icon_frosted"
+            app:tint="@color/mobile_icon_tint"
+            android:visibility="gone"
+            android:contentDescription="@string/cd_safely_remove"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

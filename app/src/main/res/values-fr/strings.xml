@@ -5661,6 +5661,9 @@ Enregistrer dans %s
     <string name="share_receive_multiple_files">
 Fichiers %d
 </string>
+    <string name="share_receive_multiple_success">
+%d fichiers enregistrés avec succès
+</string>
     <string name="choose_a_volume_to_browse">
 Choisissez un volume à parcourir
 </string>
@@ -14911,6 +14914,95 @@ Augmenter la valeur
 </string>
     <string name="cd_edit_preset">
 Modifier le style du préréglage
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+Retirer %1$s en toute sécurité ?
+</string>
+    <string name="safely_remove_confirm_msg">
+Assurez-vous que tous les fichiers sont bien écrits, puis détachez \"%1$s\" en toute sécurité.
+</string>
+    <string name="safely_remove_action">
+Retirer en toute sécurité
+</string>
+    <string name="safely_remove_transfer_active_title">
+Transfert en cours
+</string>
+    <string name="safely_remove_transfer_active_msg">
+Des fichiers sont en cours de transfert vers ou depuis ce lecteur. Le retirer maintenant peut entraîner une corruption des données ou l\\\'échec des opérations.
+</string>
+    <string name="safely_remove_flushing">
+Vidage des tampons d\\\'écriture...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" a été démonté en toute sécurité. Vous pouvez maintenant débrancher le câble OTG.
+</string>
+    <string name="safely_remove_mock_success">
+Lecteur USB simulé démonté en toute sécurité. Vous pouvez le remonter dans les Paramètres.
+</string>
+    <string name="safely_remove_unmounted_switched">
+Lecteur USB déconnecté. Basculement vers le stockage interne.
+</string>
+    <string name="safely_remove_open_settings_title">
+Terminer l\\\'éjection dans les Paramètres
+</string>
+    <string name="safely_remove_open_settings_desc">
+Tous les tampons de données ont été vidés en toute sécurité vers le lecteur. Appuyez ci-dessous pour ouvrir les paramètres de stockage Android, puis appuyez sur l\\\'icône d\\\'éjection (⏏).
+</string>
+    <string name="safely_remove_open_settings_btn">
+Ouvrir les paramètres de stockage
+</string>
+    <string name="safely_remove_menu_item">
+Retirer le lecteur en toute sécurité
+</string>
+    <string name="cd_safely_remove">
+Retirer le lecteur en toute sécurité
+</string>
+    <string name="mock_usb_title">
+Lecteur USB (OTG simulé)
+</string>
+    <string name="mock_usb_subtitle">
+Clé USB OTG (simulée / test)
+</string>
+    <string name="mock_usb_setting_title">
+Simuler un lecteur USB OTG
+</string>
+    <string name="mock_usb_setting_desc">
+Simulez une clé USB ou un disque dur externe connecté pour tester le retrait en toute sécurité et les opérations sur les fichiers.
+</string>
+    <string name="mock_usb_remount_action">
+Remonter le lecteur USB simulé
+</string>
+    <string name="mock_usb_remounted_toast">
+Lecteur USB simulé monté
+</string>
+    <string name="storage_unmounted">
+Démonté
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+Démonté • Appuyez pour monter
+</string>
+    <string name="cd_remount_storage">
+Monter le volume de stockage
+</string>
+    <string name="storage_remounting">
+Montage du volume de stockage...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" monté avec succès.
+</string>
+    <string name="storage_mount_title">
+Monter %1$s ?
+</string>
+    <string name="storage_mount_desc">
+Pour remonter \"%1$s\", les paramètres de stockage d\\\'Android vont s\\\'ouvrir. Appuyez sur ce lecteur dans la liste, puis sélectionnez \"Monter\".
+</string>
+    <string name="storage_mount_btn">
+Ouvrir les paramètres de stockage
+</string>
+    <string name="safely_remove_unmount_action">
+Monter le lecteur
 </string>
 </resources>
 

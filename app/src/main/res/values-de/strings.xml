@@ -5661,6 +5661,9 @@ In %s speichern
     <string name="share_receive_multiple_files">
 %d-Dateien
 </string>
+    <string name="share_receive_multiple_success">
+%d Dateien erfolgreich gespeichert
+</string>
     <string name="choose_a_volume_to_browse">
 Wählen Sie einen Datenträger zum Durchsuchen
 </string>
@@ -14911,6 +14914,95 @@ Wert erhöhen
 </string>
     <string name="cd_edit_preset">
 Stil der Voreinstellung bearbeiten
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+%1$s sicher entfernen?
+</string>
+    <string name="safely_remove_confirm_msg">
+Vergewissern Sie sich, dass alle Dateien geschrieben wurden, und trennen Sie \"%1$s\" sicher.
+</string>
+    <string name="safely_remove_action">
+Sicher entfernen
+</string>
+    <string name="safely_remove_transfer_active_title">
+Aktive Übertragung läuft
+</string>
+    <string name="safely_remove_transfer_active_msg">
+Dateien werden derzeit auf dieses Laufwerk oder von ihm übertragen. Ein Entfernen jetzt kann zu Datenverlust oder fehlgeschlagenen Vorgängen führen.
+</string>
+    <string name="safely_remove_flushing">
+Schreibpuffer werden geleert...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" wurde sicher getrennt. Sie können das OTG-Kabel jetzt abziehen.
+</string>
+    <string name="safely_remove_mock_success">
+Mock-USB-Laufwerk sicher getrennt. Sie können es in den Einstellungen erneut einbinden.
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB-Laufwerk getrennt. Zu internem Speicher gewechselt.
+</string>
+    <string name="safely_remove_open_settings_title">
+Auswerfen in den Einstellungen abschließen
+</string>
+    <string name="safely_remove_open_settings_desc">
+Alle Datenpuffer wurden sicher auf das Laufwerk geschrieben. Tippen Sie unten, um die Android-Speichereinstellungen zu öffnen, und tippen Sie auf das Auswerfen-Symbol (⏏).
+</string>
+    <string name="safely_remove_open_settings_btn">
+Speichereinstellungen öffnen
+</string>
+    <string name="safely_remove_menu_item">
+Laufwerk sicher entfernen
+</string>
+    <string name="cd_safely_remove">
+Laufwerk sicher entfernen
+</string>
+    <string name="mock_usb_title">
+USB-Laufwerk (simuliertes OTG)
+</string>
+    <string name="mock_usb_subtitle">
+OTG-Flash-Laufwerk (Mock / Test)
+</string>
+    <string name="mock_usb_setting_title">
+USB-OTG-Laufwerk simulieren
+</string>
+    <string name="mock_usb_setting_desc">
+Simuliert ein angeschlossenes USB-Flash-Laufwerk oder eine externe Festplatte zum Testen von sicherem Entfernen und Dateivorgängen.
+</string>
+    <string name="mock_usb_remount_action">
+Mock-USB-Laufwerk erneut einbinden
+</string>
+    <string name="mock_usb_remounted_toast">
+Mock-USB-Laufwerk eingebunden
+</string>
+    <string name="storage_unmounted">
+Ausgehängt
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+Ausgehängt • Zum Einbinden tippen
+</string>
+    <string name="cd_remount_storage">
+Speicher-Volume einbinden
+</string>
+    <string name="storage_remounting">
+Speicher-Volume wird eingebunden...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" erfolgreich eingebunden.
+</string>
+    <string name="storage_mount_title">
+%1$s einbinden?
+</string>
+    <string name="storage_mount_desc">
+Um \"%1$s\" erneut einzubinden, werden die Android-Speichereinstellungen geöffnet. Tippen Sie in der Liste auf dieses Laufwerk und wählen Sie \"Einbinden\".
+</string>
+    <string name="storage_mount_btn">
+Speichereinstellungen öffnen
+</string>
+    <string name="safely_remove_unmount_action">
+Laufwerk einbinden
 </string>
 </resources>
 

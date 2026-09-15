@@ -120,6 +120,22 @@
                 android:visibility="gone"
                 tools:visibility="gone" />
 
+            <!-- Eject Button — visible for removable storage volumes when NOT in edit mode -->
+            <ImageView
+                android:id="@+id/btnEjectTile"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_eject"
+                android:contentDescription="@string/cd_safely_remove"
+                android:background="@drawable/bg_btn_icon_frosted"
+                app:tint="@color/mobile_icon_tint"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
         </LinearLayout>
 
         <!-- Hide Button (X) — top right, visible in Edit Mode -->

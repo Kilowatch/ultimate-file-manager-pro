@@ -5661,6 +5661,9 @@ UFM не підтримує вибір цих папок через систем
     <string name="share_receive_multiple_files">
 файли %d
 </string>
+    <string name="share_receive_multiple_success">
+%d файлів успішно збережено
+</string>
     <string name="choose_a_volume_to_browse">
 Виберіть том для перегляду
 </string>
@@ -14911,6 +14914,95 @@ SHA-256
 </string>
     <string name="cd_edit_preset">
 Редагувати стиль шаблону
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+Безпечно вилучити %1$s?
+</string>
+    <string name="safely_remove_confirm_msg">
+Переконайтеся, що всі файли записано, і безпечно від’єднайте \"%1$s\".
+</string>
+    <string name="safely_remove_action">
+Безпечно вилучити
+</string>
+    <string name="safely_remove_transfer_active_title">
+Триває активне передавання
+</string>
+    <string name="safely_remove_transfer_active_msg">
+Зараз відбувається передавання файлів на цей диск або з нього. Вилучення зараз може призвести до пошкодження даних або збою операцій.
+</string>
+    <string name="safely_remove_flushing">
+Скидання буферів запису...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" безпечно вилучено. Тепер ви можете від’єднати кабель OTG.
+</string>
+    <string name="safely_remove_mock_success">
+Імітований USB-накопичувач безпечно вилучено. Ви можете знову підключити його в налаштуваннях.
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB-накопичувач від’єднано. Переключено на внутрішню пам’ять.
+</string>
+    <string name="safely_remove_open_settings_title">
+Завершіть вилучення в налаштуваннях
+</string>
+    <string name="safely_remove_open_settings_desc">
+Усі буфери даних безпечно скинуто на диск. Натисніть нижче, щоб відкрити налаштування пам’яті Android, і торкніться значка вилучення (⏏).
+</string>
+    <string name="safely_remove_open_settings_btn">
+Відкрити налаштування пам’яті
+</string>
+    <string name="safely_remove_menu_item">
+Безпечно вилучити диск
+</string>
+    <string name="cd_safely_remove">
+Безпечно вилучити диск
+</string>
+    <string name="mock_usb_title">
+USB-накопичувач (імітований OTG)
+</string>
+    <string name="mock_usb_subtitle">
+Флеш-накопичувач OTG (імітація / тест)
+</string>
+    <string name="mock_usb_setting_title">
+Імітувати USB OTG-накопичувач
+</string>
+    <string name="mock_usb_setting_desc">
+Імітувати підключений USB-флеш-накопичувач або зовнішній HDD для тестування безпечного вилучення та операцій з файлами.
+</string>
+    <string name="mock_usb_remount_action">
+Підключити знову імітований USB-накопичувач
+</string>
+    <string name="mock_usb_remounted_toast">
+Імітований USB-накопичувач підключено
+</string>
+    <string name="storage_unmounted">
+Від’єднано
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+Від’єднано • Торкніться, щоб підключити
+</string>
+    <string name="cd_remount_storage">
+Підключити том пам’яті
+</string>
+    <string name="storage_remounting">
+Підключення тому пам’яті...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" успішно підключено.
+</string>
+    <string name="storage_mount_title">
+Підключити %1$s?
+</string>
+    <string name="storage_mount_desc">
+Щоб знову підключити \"%1$s\", відкриються налаштування пам’яті Android. Торкніться цього диска в списку та виберіть \"Підключити\".
+</string>
+    <string name="storage_mount_btn">
+Відкрити налаштування пам’яті
+</string>
+    <string name="safely_remove_unmount_action">
+Підключити диск
 </string>
 </resources>
 

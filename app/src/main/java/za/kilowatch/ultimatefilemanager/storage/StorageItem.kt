@@ -25,6 +25,7 @@ data class StorageItem(
     val mountPath: String,
     val isRemovable: Boolean = false,
     var isNewlyMounted: Boolean = false,
+    val isUnmounted: Boolean = false,
     val isAppsTile: Boolean = false,
     val isRemoteTile: Boolean = false,
     val isSearchTile: Boolean = false,

@@ -5661,6 +5661,9 @@ UFM لا يدعم اختيار هذه المجلدات عبر منتقي الن�
     <string name="share_receive_multiple_files">
 %d ملفات
 </string>
+    <string name="share_receive_multiple_success">
+تم حفظ %d من الملفات بنجاح
+</string>
     <string name="choose_a_volume_to_browse">
 اختيار وحدة تخزين للتصفح
 </string>
@@ -14911,6 +14914,95 @@ Quarterly_Financial_Report_2026_Final.pdf
 </string>
     <string name="cd_edit_preset">
 تعديل نمط الإعداد المسبق
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+إخراج %1$s بأمان؟
+</string>
+    <string name="safely_remove_confirm_msg">
+تأكد من كتابة جميع الملفات وفصل \"%1$s\" بأمان.
+</string>
+    <string name="safely_remove_action">
+إخراج آمن
+</string>
+    <string name="safely_remove_transfer_active_title">
+نقل نشط قيد التقدم
+</string>
+    <string name="safely_remove_transfer_active_msg">
+يتم حاليًا نقل الملفات من أو إلى هذا القرص. قد يؤدي إخراجه الآن إلى تلف البيانات أو فشل العمليات.
+</string>
+    <string name="safely_remove_flushing">
+جارٍ تفريغ مخازن الكتابة المؤقتة...
+</string>
+    <string name="safely_remove_success">
+تم إلغاء تحميل \"%1$s\" بأمان. يمكنك الآن فصل كابل OTG.
+</string>
+    <string name="safely_remove_mock_success">
+تم إلغاء تحميل محرك USB الوهمي بأمان. يمكنك إعادة تحميله من الإعدادات.
+</string>
+    <string name="safely_remove_unmounted_switched">
+تم فصل محرك USB. تم التبديل إلى التخزين الداخلي.
+</string>
+    <string name="safely_remove_open_settings_title">
+إتمام الإخراج من الإعدادات
+</string>
+    <string name="safely_remove_open_settings_desc">
+تم تفريغ جميع مخازن البيانات المؤقتة بأمان إلى القرص. اضغط أدناه لفتح إعدادات التخزين في Android ثم اضغط على أيقونة الإخراج (⏏).
+</string>
+    <string name="safely_remove_open_settings_btn">
+فتح إعدادات التخزين
+</string>
+    <string name="safely_remove_menu_item">
+إخراج المحرك بأمان
+</string>
+    <string name="cd_safely_remove">
+إخراج المحرك بأمان
+</string>
+    <string name="mock_usb_title">
+محرك USB (OTG محاكي)
+</string>
+    <string name="mock_usb_subtitle">
+محرك فلاش OTG (وهمي / اختبار)
+</string>
+    <string name="mock_usb_setting_title">
+محاكاة محرك USB OTG
+</string>
+    <string name="mock_usb_setting_desc">
+محاكاة محرك فلاش USB متصل أو قرص صلب خارجي لاختبار الإخراج الآمن وعمليات الملفات.
+</string>
+    <string name="mock_usb_remount_action">
+إعادة تحميل محرك USB الوهمي
+</string>
+    <string name="mock_usb_remounted_toast">
+تم تحميل محرك USB الوهمي
+</string>
+    <string name="storage_unmounted">
+تم إلغاء التحميل
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+تم إلغاء التحميل • اضغط للتحميل
+</string>
+    <string name="cd_remount_storage">
+تحميل وحدة التخزين
+</string>
+    <string name="storage_remounting">
+جارٍ تحميل وحدة التخزين...
+</string>
+    <string name="storage_remount_success">
+تم تحميل \"%1$s\" بنجاح.
+</string>
+    <string name="storage_mount_title">
+تحميل %1$s؟
+</string>
+    <string name="storage_mount_desc">
+لإعادة تحميل \"%1$s\"، سيتم فتح إعدادات التخزين في نظام Android. اضغط على هذا المحرك في القائمة واختر \"تحميل\".
+</string>
+    <string name="storage_mount_btn">
+فتح إعدادات التخزين
+</string>
+    <string name="safely_remove_unmount_action">
+تحميل المحرك
 </string>
 </resources>
 

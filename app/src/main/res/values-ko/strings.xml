@@ -5661,6 +5661,9 @@ UFM에 저장
     <string name="share_receive_multiple_files">
 %d 파일
 </string>
+    <string name="share_receive_multiple_success">
+%d개 파일이 저장되었습니다
+</string>
     <string name="choose_a_volume_to_browse">
 탐색할 볼륨 선택
 </string>
@@ -14911,6 +14914,95 @@ Quarterly_Financial_Report_2026_Final.pdf
 </string>
     <string name="cd_edit_preset">
 사전 설정 스타일 편집
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+%1$s을(를) 안전하게 제거할까요?
+</string>
+    <string name="safely_remove_confirm_msg">
+모든 파일이 기록되었는지 확인한 후 \"%1$s\"을(를) 안전하게 분리하세요.
+</string>
+    <string name="safely_remove_action">
+안전하게 제거
+</string>
+    <string name="safely_remove_transfer_active_title">
+전송 진행 중
+</string>
+    <string name="safely_remove_transfer_active_msg">
+현재 이 드라이브로 또는 이 드라이브에서 파일이 전송 중입니다. 지금 제거하면 데이터가 손상되거나 작업이 실패할 수 있습니다.
+</string>
+    <string name="safely_remove_flushing">
+쓰기 버퍼를 비우는 중...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\"이(가) 안전하게 마운트 해제되었습니다. 이제 OTG 케이블을 분리해도 됩니다.
+</string>
+    <string name="safely_remove_mock_success">
+모의 USB 드라이브가 안전하게 마운트 해제되었습니다. 설정에서 다시 마운트할 수 있습니다.
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB 드라이브 연결이 끊어졌습니다. 내부 저장소로 전환했습니다.
+</string>
+    <string name="safely_remove_open_settings_title">
+설정에서 완전히 꺼내기
+</string>
+    <string name="safely_remove_open_settings_desc">
+모든 데이터 버퍼가 드라이브에 안전하게 기록되었습니다. 아래를 눌러 Android 저장소 설정을 열고 꺼내기 아이콘(⏏)을 누르세요.
+</string>
+    <string name="safely_remove_open_settings_btn">
+저장소 설정 열기
+</string>
+    <string name="safely_remove_menu_item">
+드라이브 안전하게 제거
+</string>
+    <string name="cd_safely_remove">
+드라이브를 안전하게 제거
+</string>
+    <string name="mock_usb_title">
+USB 드라이브(모의 OTG)
+</string>
+    <string name="mock_usb_subtitle">
+OTG 플래시 드라이브(모의/테스트)
+</string>
+    <string name="mock_usb_setting_title">
+USB OTG 드라이브 시뮬레이션
+</string>
+    <string name="mock_usb_setting_desc">
+안전한 제거 및 파일 작업을 테스트하기 위해 연결된 USB 플래시 드라이브 또는 외장 HDD를 시뮬레이션합니다.
+</string>
+    <string name="mock_usb_remount_action">
+모의 USB 드라이브 다시 마운트
+</string>
+    <string name="mock_usb_remounted_toast">
+모의 USB 드라이브가 마운트되었습니다
+</string>
+    <string name="storage_unmounted">
+마운트 해제됨
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+마운트 해제됨 • 눌러서 마운트
+</string>
+    <string name="cd_remount_storage">
+저장소 볼륨 마운트
+</string>
+    <string name="storage_remounting">
+저장소 볼륨 마운트 중...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\"이(가) 성공적으로 마운트되었습니다.
+</string>
+    <string name="storage_mount_title">
+%1$s을(를) 마운트할까요?
+</string>
+    <string name="storage_mount_desc">
+\"%1$s\"을(를) 다시 마운트하려면 Android OS 저장소 설정이 열립니다. 목록에서 이 드라이브를 누르고 \"마운트\"를 선택하세요.
+</string>
+    <string name="storage_mount_btn">
+저장소 설정 열기
+</string>
+    <string name="safely_remove_unmount_action">
+드라이브 마운트
 </string>
 </resources>
 

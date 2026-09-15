@@ -270,6 +270,39 @@
         android:layout_marginVertical="2dp"
         android:background="@color/mobile_glass_stroke" />
 
+    <!-- Safely Remove / Eject Drive Option (Visible only on removable storage) -->
+    <LinearLayout
+        android:id="@+id/menuItemEjectDrive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="46dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        android:background="@drawable/bg_header_action_ripple">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_eject"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:text="@string/safely_remove_menu_item"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium" />
+    </LinearLayout>
+
     <!-- Settings Option -->
     <LinearLayout
         android:id="@+id/menuItemSettings"

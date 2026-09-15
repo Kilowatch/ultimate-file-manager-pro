@@ -60,7 +60,8 @@ private fun ImageView.safeSetIcon(resId: Int) {
     private val onStorageClick: (StorageItem) -> Unit,
     private val onLongPress: ((StorageItem, RecyclerView.ViewHolder) -> Unit)? = null,
     var onHideClick: ((StorageItem) -> Unit)? = null,
-    var onEditModeClick: ((StorageItem) -> Unit)? = null
+    var onEditModeClick: ((StorageItem) -> Unit)? = null,
+    var onEjectClick: ((StorageItem) -> Unit)? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     init {
@@ -646,6 +647,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
         private val txtNewBadge: TextView? = itemView.findViewById(R.id.txtNewBadge)
         private val circularProgress: CircularProgressView? = itemView.findViewById(R.id.circularProgress)
         private val btnHideTile: View = itemView.findViewById(R.id.btnHideTile)
+        private val btnEjectTile: View? = itemView.findViewById(R.id.btnEjectTile)
 
         // Handler + Runnable used for the 2-second mobile long-press detection
         private val longPressHandler = Handler(Looper.getMainLooper())
@@ -815,6 +817,26 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 card.scaleX = 1f
                 card.scaleY = 1f
                 card.elevation = 0f
+            }
+
+            // Eject / Remount button for removable storage volumes (USB, SD, Mock Drive)
+            if (!isEditMode && UsbEjectManager.isRemovableStorage(item)) {
+                btnEjectTile?.visibility = View.VISIBLE
+                if (btnEjectTile is ImageView) {
+                    if (item.isUnmounted) {
+                        btnEjectTile.setImageResource(R.drawable.ic_mount)
+                        btnEjectTile.contentDescription = context.getString(R.string.cd_remount_storage)
+                    } else {
+                        btnEjectTile.setImageResource(R.drawable.ic_eject)
+                        btnEjectTile.contentDescription = context.getString(R.string.cd_safely_remove)
+                    }
+                }
+                btnEjectTile?.setOnClickListener {
+                    onEjectClick?.invoke(item)
+                }
+            } else {
+                btnEjectTile?.visibility = View.GONE
+                btnEjectTile?.setOnClickListener(null)
             }
 
             // Ã¢â€ â‚¬Ã¢â€ â‚¬ Mobile: configurable touch-hold Ã¢â€ â€™ start drag Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬Ã¢â€ â‚¬
@@ -1072,7 +1094,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                     else -> ""
                 }
             } else {
-                val showProgress = viewMode == MainMenuViewModeManager.ViewMode.LIST || viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED
+                val showProgress = !item.isUnmounted && item.totalBytes > 0L && (viewMode == MainMenuViewModeManager.ViewMode.LIST || viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED)
                 if (showProgress) {
                     when (itemSize) {
                         MainMenuViewModeManager.ItemSize.LARGE -> {
@@ -1093,9 +1115,13 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 applyCustomIcon(item, imgIcon)
                 txtLabel.text = item.label
 
-                val freeFormatted  = Formatter.formatFileSize(context, item.freeBytes)
-                val totalFormatted = Formatter.formatFileSize(context, item.totalBytes)
-                txtCapacity.text   = context.getString(R.string.storage_free_format, freeFormatted, totalFormatted)
+                if (item.isUnmounted || item.totalBytes <= 0L) {
+                    txtCapacity.text = item.subtitle?.ifEmpty { null } ?: context.getString(R.string.storage_unmounted_tap_to_mount)
+                } else {
+                    val freeFormatted  = Formatter.formatFileSize(context, item.freeBytes)
+                    val totalFormatted = Formatter.formatFileSize(context, item.totalBytes)
+                    txtCapacity.text   = context.getString(R.string.storage_free_format, freeFormatted, totalFormatted)
+                }
 
                 if (showProgress) {
                     progressBar.max      = 100

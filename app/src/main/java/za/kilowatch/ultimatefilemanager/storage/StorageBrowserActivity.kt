@@ -16,6 +16,7 @@ import android.os.Handler
 import android.util.Log
 import android.os.Looper
 import android.os.StatFs
+import android.os.Environment
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -392,7 +393,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                             || path.contains("/mnt/usb",        ignoreCase = true)
                             || path.contains("/storage/usb",    ignoreCase = true)
             val hasUuid = volume.uuid != null
-            val treatAsRemovable = volume.isRemovable || (looksLikeUsb && hasUuid)
+            val treatAsRemovable = !volume.isPrimary && (volume.isRemovable || (looksLikeUsb && hasUuid))
 
             val label = volume.getDescription(context)
             val icon = StorageItem.iconForType(treatAsRemovable, label)
@@ -1608,6 +1609,17 @@ class StorageBrowserActivity : AppCompatActivity() {
                     hideTile(item)
                 }
             }
+            onEjectClick = { item ->
+                if (item.isUnmounted) {
+                    UsbEjectManager.remount(this@StorageBrowserActivity, item) {
+                        loadStorageVolumes()
+                    }
+                } else {
+                    UsbEjectManager.safelyRemove(this@StorageBrowserActivity, item) {
+                        loadStorageVolumes()
+                    }
+                }
+            }
             onEditModeClick = { item ->
                 if (isSelectingTileForColor) {
                     // Color-pick mode takes priority — even for custom tiles
@@ -1778,6 +1790,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     "$typeLabel \u2022 ${share.host}"
                 } else ""
             }
+            item.isUnmounted                    -> item.subtitle?.ifEmpty { null } ?: getString(R.string.storage_unmounted_tap_to_mount)
             item.totalBytes > 0                 -> {
                 // Real storage volume: show "X free of Y"
                 val free  = android.text.format.Formatter.formatFileSize(this, item.freeBytes)
@@ -1901,6 +1914,11 @@ class StorageBrowserActivity : AppCompatActivity() {
         lastInteractedTileId = item.id
         lastFocusedTileId = item.id
         when {
+            item.isUnmounted -> {
+                UsbEjectManager.remount(this, item) {
+                    loadStorageVolumes()
+                }
+            }
             item.isCustomTile -> {
                 val intent = Intent(this, CustomTileActivity::class.java).apply {
                     putExtra(CustomTileActivity.EXTRA_CUSTOM_TILE_ID, item.id)
@@ -2767,6 +2785,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
             putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, storageId)
             putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, storageType)
+            putExtra(FileBrowserActivity.EXTRA_IS_REMOVABLE, item.isRemovable)
             if (item.isRootTile || storageType.equals("ROOT", ignoreCase = true)) {
                 putExtra(FileBrowserActivity.EXTRA_IS_ROOT_STORAGE, true)
             }
@@ -3670,6 +3689,13 @@ class StorageBrowserActivity : AppCompatActivity() {
         if (item.isSafCustomLocation) {
             options.add(getString(R.string.remove_storage_location_confirm))
         }
+        if (UsbEjectManager.isRemovableStorage(item)) {
+            if (item.isUnmounted) {
+                options.add(getString(R.string.safely_remove_unmount_action))
+            } else {
+                options.add(getString(R.string.safely_remove_menu_item))
+            }
+        }
         com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setTitle(item.label)
             .setItems(options.toTypedArray()) { _, which ->
@@ -3678,6 +3704,16 @@ class StorageBrowserActivity : AppCompatActivity() {
                     which == 0 -> enterTvReorderMode(item)
                     selected == getString(R.string.move_to_custom_tile) -> showMoveToCustomTileDialogTv(item)
                     selected == getString(R.string.remove_storage_location_confirm) -> showRemoveStorageLocationDialog(item)
+                    selected == getString(R.string.safely_remove_unmount_action) -> {
+                        UsbEjectManager.remount(this@StorageBrowserActivity, item) {
+                            loadStorageVolumes()
+                        }
+                    }
+                    selected == getString(R.string.safely_remove_menu_item) -> {
+                        UsbEjectManager.safelyRemove(this@StorageBrowserActivity, item) {
+                            loadStorageVolumes()
+                        }
+                    }
                 }
             }
             .setNegativeButton(R.string.cancel, null)
@@ -3963,14 +3999,30 @@ class StorageBrowserActivity : AppCompatActivity() {
                 for (volume in volumes) {
                     val item = volumeToStorageItem(volume) ?: continue
                     // Guard against firmware bugs that return the same volume twice —
-                    // deduplicate by both id (UUID/"internal") and mountPath.
-                    if (!seenVolumeIds.add(item.id) || !seenMountPaths.add(item.mountPath)) {
-                        Log.w(TAG, "Skipping duplicate storage volume: id=${item.id} path=${item.mountPath}")
+                    // deduplicate by id (and mountPath if non-empty).
+                    if (!seenVolumeIds.add(item.id)) {
+                        Log.w(TAG, "Skipping duplicate storage volume: id=${item.id}")
+                        continue
+                    }
+                    if (item.mountPath.isNotEmpty() && !seenMountPaths.add(item.mountPath)) {
+                        Log.w(TAG, "Skipping duplicate storage volume path: path=${item.mountPath}")
                         continue
                     }
                     storageItems.add(item)
-                    newKnownPaths.add(item.mountPath)
-                    discoveredPaths.add(item.mountPath)
+                    if (item.mountPath.isNotEmpty()) {
+                        newKnownPaths.add(item.mountPath)
+                        discoveredPaths.add(item.mountPath)
+                    }
+                }
+            }
+
+            // Simulated USB OTG Drive (when enabled in MockUsbStorageManager)
+            if (MockUsbStorageManager.isMockUsbEnabled(this@StorageBrowserActivity)) {
+                val mockItem = MockUsbStorageManager.createMockStorageItem(this@StorageBrowserActivity)
+                storageItems.add(mockItem)
+                if (mockItem.mountPath.isNotEmpty()) {
+                    newKnownPaths.add(mockItem.mountPath)
+                    discoveredPaths.add(mockItem.mountPath)
                 }
             }
 
@@ -4787,39 +4839,75 @@ class StorageBrowserActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 null
             }
-        } ?: return null
+        }
+
+        val description = volume.getDescription(this) ?: ""
+        val looksLikeUsb = path?.let {
+            it.contains("/mnt/media_rw/", ignoreCase = true)
+            || it.contains("/mnt/usb",        ignoreCase = true)
+            || it.contains("/storage/usb",    ignoreCase = true)
+        } ?: description.lowercase().contains("usb")
+        val hasUuid = volume.uuid != null
+        val treatAsRemovable = !volume.isPrimary && (volume.isRemovable || (looksLikeUsb && hasUuid))
+
+        val isVolumeMounted = try {
+            volume.state == Environment.MEDIA_MOUNTED || volume.state == Environment.MEDIA_MOUNTED_READ_ONLY
+        } catch (_: Exception) {
+            true
+        }
+
+        // Helper to construct an unmounted StorageItem
+        fun createUnmountedItem(): StorageItem {
+            val isUsb = looksLikeUsb || description.lowercase().contains("usb")
+            val baseLabel = when {
+                isUsb -> getString(R.string.storage_usb)
+                else  -> getString(R.string.storage_sd_card)
+            }
+            val label = "$baseLabel (${getString(R.string.storage_unmounted)})"
+            val iconRes = StorageItem.iconForType(true, description)
+            val id = volume.uuid ?: "unmounted_${volume.hashCode()}"
+            return StorageItem(
+                id = id,
+                label = label,
+                iconRes = iconRes,
+                totalBytes = 0L,
+                usedBytes = 0L,
+                mountPath = path ?: "",
+                isRemovable = true,
+                isUnmounted = true,
+                subtitle = getString(R.string.storage_unmounted_tap_to_mount)
+            )
+        }
+
+        if (treatAsRemovable && !isVolumeMounted) {
+            return createUnmountedItem()
+        }
+
+        if (path == null) {
+            return if (treatAsRemovable) createUnmountedItem() else null
+        }
 
         val statFs = try {
             StatFs(path)
         } catch (e: SecurityException) {
             if (path.contains("media_rw")) {
-                Log.w(TAG, "SELinux blocked StatFs for $path â€” USB inaccessible on this platform.")
+                Log.w(TAG, "SELinux blocked StatFs for $path — USB inaccessible on this platform.")
                 if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
                     usbSelinuxBlocked = true
                 }
             }
-            return null
+            return if (treatAsRemovable) createUnmountedItem() else null
         } catch (e: Exception) {
-            return null
+            return if (treatAsRemovable) createUnmountedItem() else null
         }
 
         val totalBytes = statFs.totalBytes
+        if (treatAsRemovable && totalBytes <= 0L) {
+            return createUnmountedItem()
+        }
+
         val freeBytes = statFs.freeBytes
         val usedBytes = totalBytes - freeBytes
-
-        val description = volume.getDescription(this) ?: ""
-
-        // On some TV/set-top firmware (e.g. NVIDIA Shield), a large USB dongle can be
-        // reported as isPrimary=true and isRemovable=false. Detect this via a path heuristic:
-        //   â€¢ Mount path contains a known USB directory segment, AND
-        //   â€¢ A UUID is present â€” real internal eMMC is always UUID-less on Android.
-        // This keeps normal phones/tablets unaffected (their eMMC is at /storage/emulated/0
-        // and has no UUID).
-        val looksLikeUsb = path.contains("/mnt/media_rw/", ignoreCase = true)
-                        || path.contains("/mnt/usb",        ignoreCase = true)
-                        || path.contains("/storage/usb",    ignoreCase = true)
-        val hasUuid = volume.uuid != null
-        val treatAsRemovable = volume.isRemovable || (looksLikeUsb && hasUuid)
 
         val label = when {
             treatAsRemovable && description.lowercase().contains("usb") -> getString(R.string.storage_usb)
@@ -4855,18 +4943,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             }, 500)
         }
 
-        val filter = IntentFilter().apply {
-            StorageEventReceiver.STORAGE_ACTIONS.forEach { action ->
-                addAction(action)
-            }
-            addDataScheme("file")
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(storageReceiver, filter, RECEIVER_EXPORTED)
-        } else {
-            registerReceiver(storageReceiver, filter)
-        }
+        try {
+            StorageEventReceiver.register(this, storageReceiver)
+        } catch (_: Exception) {}
     }
 
     /**

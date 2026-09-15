@@ -5661,6 +5661,9 @@ UFM 不支持通过系统选择器选择这些文件夹。
     <string name="share_receive_multiple_files">
 %d 文件
 </string>
+    <string name="share_receive_multiple_success">
+已成功保存 %d 个文件
+</string>
     <string name="choose_a_volume_to_browse">
 选择要浏览的卷
 </string>
@@ -14910,6 +14913,95 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
 </string>
     <string name="cd_edit_preset">
 编辑预设样式
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+安全移除 %1$s？
+</string>
+    <string name="safely_remove_confirm_msg">
+请确保所有文件已写入，然后安全断开 \"%1$s\"。
+</string>
+    <string name="safely_remove_action">
+安全移除
+</string>
+    <string name="safely_remove_transfer_active_title">
+正在传输
+</string>
+    <string name="safely_remove_transfer_active_msg">
+当前有文件正在传入或传出此驱动器。现在移除可能导致数据损坏或操作失败。
+</string>
+    <string name="safely_remove_flushing">
+正在刷新写入缓冲区…
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" 已安全卸载。现在可以断开 OTG 线缆了。
+</string>
+    <string name="safely_remove_mock_success">
+模拟 USB 驱动器已安全卸载。你可以在设置中重新挂载。
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB 驱动器已断开连接。已切换到内部存储。
+</string>
+    <string name="safely_remove_open_settings_title">
+在设置中完成弹出
+</string>
+    <string name="safely_remove_open_settings_desc">
+所有数据缓冲区已安全刷新到驱动器。点击下方按钮打开 Android 存储设置，然后点击弹出图标 (⏏)。
+</string>
+    <string name="safely_remove_open_settings_btn">
+打开存储设置
+</string>
+    <string name="safely_remove_menu_item">
+安全移除驱动器
+</string>
+    <string name="cd_safely_remove">
+安全移除驱动器
+</string>
+    <string name="mock_usb_title">
+USB 驱动器（模拟 OTG）
+</string>
+    <string name="mock_usb_subtitle">
+OTG 闪存盘（模拟/测试）
+</string>
+    <string name="mock_usb_setting_title">
+模拟 USB OTG 驱动器
+</string>
+    <string name="mock_usb_setting_desc">
+模拟已连接的 USB 闪存盘或外置硬盘，用于测试安全移除和文件操作。
+</string>
+    <string name="mock_usb_remount_action">
+重新挂载模拟 USB 驱动器
+</string>
+    <string name="mock_usb_remounted_toast">
+模拟 USB 驱动器已挂载
+</string>
+    <string name="storage_unmounted">
+已卸载
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+已卸载 • 点击挂载
+</string>
+    <string name="cd_remount_storage">
+挂载存储卷
+</string>
+    <string name="storage_remounting">
+正在挂载存储卷…
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" 挂载成功。
+</string>
+    <string name="storage_mount_title">
+挂载 %1$s？
+</string>
+    <string name="storage_mount_desc">
+要重新挂载 \"%1$s\"，将打开 Android 系统存储设置。在列表中点击此驱动器，然后选择 \"挂载\"。
+</string>
+    <string name="storage_mount_btn">
+打开存储设置
+</string>
+    <string name="safely_remove_unmount_action">
+挂载驱动器
 </string>
 </resources>
 

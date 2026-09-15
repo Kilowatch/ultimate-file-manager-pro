@@ -367,6 +367,7 @@ class FileBrowserActivity : AppCompatActivity() {
         const val EXTRA_STORAGE_LABEL = "extra_storage_label"
         const val EXTRA_STORAGE_ID = "extra_storage_id"
         const val EXTRA_STORAGE_TYPE = "extra_storage_type"
+        const val EXTRA_IS_REMOVABLE = "extra_is_removable"
         const val EXTRA_PICKER_MODE = "extra_picker_mode"
         const val EXTRA_PICKER_EXTENSIONS = "extra_picker_extensions" // comma-separated, e.g. "apk" or "xapk,apks"
         const val EXTRA_SYNC_FOLDER_PICKER = "extra_sync_folder_picker"
@@ -432,6 +433,8 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isFromSearch = false
     private var isLocationPickerMode = false
     private var isRootStorage = false
+    private var isRemovableStorage = false
+    private val storageReceiver = StorageEventReceiver()
 
     private var isPickerMode = false
     private var pickerExtensions: Set<String> = emptySet()
@@ -530,6 +533,11 @@ class FileBrowserActivity : AppCompatActivity() {
             storageId = intent.getStringExtra(EXTRA_STORAGE_ID) ?: if (isRootStorage) "root" else resolvedSid
             storageType = intent.getStringExtra(EXTRA_STORAGE_TYPE) ?: if (isRootStorage) "ROOT" else resolvedStype
         }
+
+        isRemovableStorage = intent.getBooleanExtra(EXTRA_IS_REMOVABLE, false) ||
+            za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbStorageId(storageId) ||
+            za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbPath(this, rootPath)
+
         currentDir = if (isRootStorage) {
             za.kilowatch.ultimatefilemanager.storage.RootFile("", "")
         } else if (isRootProtected && ShizukuShellWrapper.canUseShizukuForPath(rootPath)) {
@@ -690,6 +698,18 @@ class FileBrowserActivity : AppCompatActivity() {
                 androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
             )
         } catch (_: Exception) {}
+
+        if (isRemovableStorage) {
+            checkRemovableDriveMounted()
+            storageReceiver.onStorageChanged = {
+                runOnUiThread {
+                    checkRemovableDriveMounted()
+                }
+            }
+            try {
+                StorageEventReceiver.register(this, storageReceiver)
+            } catch (_: Exception) {}
+        }
     }
 
     override fun onPause() {
@@ -698,6 +718,18 @@ class FileBrowserActivity : AppCompatActivity() {
         try {
             unregisterReceiver(folderChangedReceiver)
         } catch (_: Exception) {}
+        if (isRemovableStorage) {
+            try {
+                unregisterReceiver(storageReceiver)
+            } catch (_: Exception) {}
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::fileAdapter.isInitialized) {
+            fileAdapter.cancelPendingJobs()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -7206,6 +7238,17 @@ class FileBrowserActivity : AppCompatActivity() {
             copyCurrentFolderPathToClipboard()
         }
 
+        val itemEject = popupView.findViewById<View>(R.id.menuItemEjectDrive)
+        if (isRemovableStorage) {
+            itemEject?.visibility = View.VISIBLE
+            itemEject?.setOnClickListener {
+                popupWindow.dismiss()
+                safelyRemoveCurrentDrive()
+            }
+        } else {
+            itemEject?.visibility = View.GONE
+        }
+
         popupView.findViewById<View>(R.id.menuItemSettings)?.setOnClickListener {
             popupWindow.dismiss()
             startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.SettingsActivity::class.java))
@@ -7213,6 +7256,53 @@ class FileBrowserActivity : AppCompatActivity() {
 
         val xOffset = -(popupWidth - anchor.width)
         popupWindow.showAsDropDown(anchor, xOffset, (4 * resources.displayMetrics.density).toInt())
+    }
+
+    private fun checkRemovableDriveMounted() {
+        if (!isRemovableStorage) return
+        val isMock = za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbStorageId(storageId) ||
+            za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbPath(this, rootPath)
+        val isMounted = if (isMock) {
+            za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbMounted(this)
+        } else {
+            val rootFile = File(rootPath)
+            rootFile.exists() && rootFile.canRead()
+        }
+
+        if (!isMounted) {
+            android.widget.Toast.makeText(
+                this,
+                R.string.safely_remove_unmounted_switched,
+                android.widget.Toast.LENGTH_LONG
+            ).show()
+            finish()
+        }
+    }
+
+    private fun safelyRemoveCurrentDrive() {
+        if (::fileAdapter.isInitialized) {
+            fileAdapter.cancelPendingJobs()
+        }
+        val item = za.kilowatch.ultimatefilemanager.storage.StorageItem(
+            id = storageId.ifEmpty {
+                if (za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbPath(this, rootPath)) {
+                    za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.MOCK_USB_ID
+                } else {
+                    "removable"
+                }
+            },
+            label = storageLabel.ifEmpty { getString(R.string.mock_usb_title) },
+            iconRes = R.drawable.ic_storage_usb,
+            totalBytes = 0L,
+            usedBytes = 0L,
+            mountPath = rootPath,
+            isRemovable = true
+        )
+        za.kilowatch.ultimatefilemanager.storage.UsbEjectManager.safelyRemove(this, item) { success: Boolean ->
+            if (success) {
+                finish()
+            }
+        }
     }
 
     private fun copyCurrentFolderPathToClipboard() {

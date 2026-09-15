@@ -5661,6 +5661,9 @@ UFM में सहेजें
     <string name="share_receive_multiple_files">
 %d फ़ाइलें
 </string>
+    <string name="share_receive_multiple_success">
+%d फ़ाइलें सफलतापूर्वक सहेजी गईं
+</string>
     <string name="choose_a_volume_to_browse">
 ब्राउज़ करने के लिए वॉल्यूम चुनें
 </string>
@@ -14911,6 +14914,95 @@ Quarterly_Financial_Report_2026_Final.pdf
 </string>
     <string name="cd_edit_preset">
 प्रीसेट शैली संपादित करें
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+%1$s को सुरक्षित रूप से निकालें?
+</string>
+    <string name="safely_remove_confirm_msg">
+सुनिश्चित करें कि सभी फ़ाइलें लिखी गई हैं और \"%1$s\" को सुरक्षित रूप से अलग करें।
+</string>
+    <string name="safely_remove_action">
+सुरक्षित रूप से निकालें
+</string>
+    <string name="safely_remove_transfer_active_title">
+सक्रिय स्थानांतरण जारी है
+</string>
+    <string name="safely_remove_transfer_active_msg">
+फ़ाइलें वर्तमान में इस ड्राइव पर या से स्थानांतरित की जा रही हैं। अभी इसे निकालने से डेटा करप्शन या विफल संचालन हो सकता है।
+</string>
+    <string name="safely_remove_flushing">
+राइट बफ़र्स फ़्लश किए जा रहे हैं...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" सुरक्षित रूप से अनमाउंट कर दिया गया है। अब आप OTG केबल को डिस्कनेक्ट कर सकते हैं।
+</string>
+    <string name="safely_remove_mock_success">
+मॉक USB ड्राइव सुरक्षित रूप से अनमाउंट किया गया। आप इसे सेटिंग्स में पुनः माउंट कर सकते हैं।
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB ड्राइव डिस्कनेक्ट हो गया। आंतरिक संग्रहण पर स्विच किया गया।
+</string>
+    <string name="safely_remove_open_settings_title">
+सेटिंग्स में पूर्ण इजेक्ट करें
+</string>
+    <string name="safely_remove_open_settings_desc">
+सभी डेटा बफ़र्स सुरक्षित रूप से ड्राइव पर फ़्लश कर दिए गए हैं। नीचे टैप करके Android संग्रहण सेटिंग्स खोलें और इजेक्ट आइकन (⏏) पर टैप करें।
+</string>
+    <string name="safely_remove_open_settings_btn">
+संग्रहण सेटिंग्स खोलें
+</string>
+    <string name="safely_remove_menu_item">
+ड्राइव को सुरक्षित रूप से निकालें
+</string>
+    <string name="cd_safely_remove">
+ड्राइव को सुरक्षित रूप से निकालें
+</string>
+    <string name="mock_usb_title">
+USB ड्राइव (सिम्युलेटेड OTG)
+</string>
+    <string name="mock_usb_subtitle">
+OTG फ्लैश ड्राइव (मॉक / परीक्षण)
+</string>
+    <string name="mock_usb_setting_title">
+USB OTG ड्राइव सिम्युलेट करें
+</string>
+    <string name="mock_usb_setting_desc">
+सुरक्षित निकासी और फ़ाइल संचालन का परीक्षण करने के लिए कनेक्टेड USB फ्लैश ड्राइव या बाहरी HDD का सिम्युलेशन करें।
+</string>
+    <string name="mock_usb_remount_action">
+मॉक USB ड्राइव को पुनः माउंट करें
+</string>
+    <string name="mock_usb_remounted_toast">
+मॉक USB ड्राइव माउंट किया गया
+</string>
+    <string name="storage_unmounted">
+अनमाउंट किया गया
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+अनमाउंट किया गया • माउंट करने के लिए टैप करें
+</string>
+    <string name="cd_remount_storage">
+संग्रहण वॉल्यूम माउंट करें
+</string>
+    <string name="storage_remounting">
+संग्रहण वॉल्यूम माउंट किया जा रहा है...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" सफलतापूर्वक माउंट हो गया।
+</string>
+    <string name="storage_mount_title">
+%1$s को माउंट करें?
+</string>
+    <string name="storage_mount_desc">
+\"%1$s\" को पुनः माउंट करने के लिए, Android OS संग्रहण सेटिंग्स खुलेंगी। सूची में इस ड्राइव पर टैप करें और \"माउंट\" चुनें।
+</string>
+    <string name="storage_mount_btn">
+संग्रहण सेटिंग्स खोलें
+</string>
+    <string name="safely_remove_unmount_action">
+ड्राइव माउंट करें
 </string>
 </resources>
 

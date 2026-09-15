@@ -17,10 +17,11 @@ import coil3.request.allowHardware
 import coil3.request.crossfade
 import coil3.size.Scale
 import coil3.size.Precision
-import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -123,12 +124,20 @@ class FileAdapter(
 
     private var attachedContext: android.content.Context? = null
 
+    private var adapterJob = SupervisorJob()
+    private var adapterScope = CoroutineScope(adapterJob + Dispatchers.Main.immediate)
+    private var warmCacheJob: Job? = null
+
     private val clipboardListener = FileClipboard.ClipboardChangeListener {
         notifyDataSetChanged()
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
+        if (!adapterJob.isActive) {
+            adapterJob = SupervisorJob()
+            adapterScope = CoroutineScope(adapterJob + Dispatchers.Main.immediate)
+        }
         attachedContext = recyclerView.context
         FileClipboard.addListener(clipboardListener)
     }
@@ -137,6 +146,19 @@ class FileAdapter(
         super.onDetachedFromRecyclerView(recyclerView)
         FileClipboard.removeListener(clipboardListener)
         attachedContext = null
+        cancelPendingJobs()
+    }
+
+    /**
+     * Immediately cancels all background thumbnail, caching, and child-count coroutines.
+     * Prevents Android vold from sending SIGINT during storage unmount.
+     */
+    fun cancelPendingJobs() {
+        childCountJob?.cancel()
+        childCountJob = null
+        warmCacheJob?.cancel()
+        warmCacheJob = null
+        adapterJob.cancelChildren()
     }
 
     private val files = mutableListOf<File>()
@@ -294,8 +316,8 @@ class FileAdapter(
         val ctx = attachedContext
         if (ctx != null && ThumbnailPreferenceManager.isEnabled(ctx)) {
             val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager.getInstance(ctx)
-            @OptIn(DelicateCoroutinesApi::class)
-            GlobalScope.launch(Dispatchers.IO) {
+            warmCacheJob?.cancel()
+            warmCacheJob = adapterScope.launch(Dispatchers.IO) {
                 cacheManager.warmCacheForFiles(filesCopy)
                 val parentPath = filesCopy.firstOrNull()?.parent
                 if (parentPath != null) {
@@ -309,8 +331,7 @@ class FileAdapter(
         val dirs = filesCopy.filter { it.isDirectoryCached() }
         if (dirs.isNotEmpty()) {
             val ctx = attachedContext
-            @OptIn(DelicateCoroutinesApi::class)
-            childCountJob = GlobalScope.launch(Dispatchers.IO) {
+            childCountJob = adapterScope.launch(Dispatchers.IO) {
                 val counts = mutableMapOf<String, Int>()
                 val sizes = mutableMapOf<String, Long>()
                 val dao = ctx?.let { za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase.getInstance(it).fileIndexDao() }
@@ -1000,8 +1021,7 @@ class FileAdapter(
                     } else {
                         imgAppBadge?.tag = pkg
                         imgAppBadge?.visibility = View.GONE
-                        @OptIn(DelicateCoroutinesApi::class)
-                        appBadgeJob = GlobalScope.launch(Dispatchers.IO) {
+                        appBadgeJob = adapterScope.launch(Dispatchers.IO) {
                             val icon = AppIconBadgeHelper.loadIcon(context, pkg)
                             withContext(Dispatchers.Main) {
                                 if (imgAppBadge?.tag == pkg) {
@@ -1454,8 +1474,7 @@ class FileAdapter(
             }
 
             if (isImage) {
-                @OptIn(DelicateCoroutinesApi::class)
-                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                videoJob = adapterScope.launch(Dispatchers.IO) {
                     val thumbPath = cacheManager.getThumbnail(file)
                     withContext(Dispatchers.Main) {
                         if (imgIcon.tag == file.absolutePath) {
@@ -1482,8 +1501,7 @@ class FileAdapter(
                                     listener(
                                         onError = { _, _ ->
                                             if (imgIcon.tag == file.absolutePath) {
-                                                @OptIn(DelicateCoroutinesApi::class)
-                                                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                                                videoJob = adapterScope.launch(Dispatchers.IO) {
                                                     val bmp = extractRawOrImageThumbnail(file, 512)
                                                     if (bmp != null) {
                                                         withContext(Dispatchers.Main) {
@@ -1507,8 +1525,7 @@ class FileAdapter(
                 imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
                 startPulse()
 
-                @OptIn(DelicateCoroutinesApi::class)
-                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                videoJob = adapterScope.launch(Dispatchers.IO) {
                     val thumbPath = cacheManager.getThumbnail(file)
                     if (thumbPath != null && File(thumbPath).exists()) {
                         thumbnailPathCache[file.absolutePath] = thumbPath
@@ -1565,8 +1582,7 @@ class FileAdapter(
                     imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                     imgIcon.clipToOutline = false
 
-                    @OptIn(DelicateCoroutinesApi::class)
-                    videoJob = GlobalScope.launch(Dispatchers.IO) {
+                    videoJob = adapterScope.launch(Dispatchers.IO) {
                         val thumbPath = cacheManager.getThumbnail(file)
                         if (thumbPath != null && File(thumbPath).exists()) {
                             thumbnailPathCache[file.absolutePath] = thumbPath
@@ -1609,8 +1625,7 @@ class FileAdapter(
                     )
                     startPulse()
 
-                    @OptIn(DelicateCoroutinesApi::class)
-                    videoJob = GlobalScope.launch(Dispatchers.IO) {
+                    videoJob = adapterScope.launch(Dispatchers.IO) {
                         val thumbPath = cacheManager.getThumbnail(file)
                         if (thumbPath != null && File(thumbPath).exists()) {
                             thumbnailPathCache[file.absolutePath] = thumbPath
@@ -1992,8 +2007,7 @@ class FileAdapter(
 
             if (isImage) {
                 imgIcon.tag = file.absolutePath
-                @OptIn(DelicateCoroutinesApi::class)
-                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                videoJob = adapterScope.launch(Dispatchers.IO) {
                     val thumbPath = cacheManager.getThumbnail(file)
                     withContext(Dispatchers.Main) {
                         if (imgIcon.tag == file.absolutePath) {
@@ -2028,8 +2042,7 @@ class FileAdapter(
                                         },
                                         onError = { _, _ ->
                                             if (imgIcon.tag == file.absolutePath) {
-                                                @OptIn(DelicateCoroutinesApi::class)
-                                                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                                                videoJob = adapterScope.launch(Dispatchers.IO) {
                                                     val bmp = extractRawOrImageThumbnail(file, 512)
                                                     if (bmp != null) {
                                                         withContext(Dispatchers.Main) {
@@ -2055,8 +2068,7 @@ class FileAdapter(
                 imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                 startPulse()
 
-                @OptIn(DelicateCoroutinesApi::class)
-                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                videoJob = adapterScope.launch(Dispatchers.IO) {
                     val thumbPath = cacheManager.getThumbnail(file)
                     if (thumbPath != null && File(thumbPath).exists()) {
                         thumbnailPathCache[file.absolutePath] = thumbPath
@@ -2123,8 +2135,7 @@ class FileAdapter(
                     imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                     imgIcon.clipToOutline = false
 
-                    @OptIn(DelicateCoroutinesApi::class)
-                    videoJob = GlobalScope.launch(Dispatchers.IO) {
+                    videoJob = adapterScope.launch(Dispatchers.IO) {
                         val thumbPath = cacheManager.getThumbnail(file)
                         if (thumbPath != null && File(thumbPath).exists()) {
                             thumbnailPathCache[file.absolutePath] = thumbPath
@@ -2174,8 +2185,7 @@ class FileAdapter(
                     )
                     startPulse()
                     
-                    @OptIn(DelicateCoroutinesApi::class)
-                    videoJob = GlobalScope.launch(Dispatchers.IO) {
+                    videoJob = adapterScope.launch(Dispatchers.IO) {
                         val thumbPath = cacheManager.getThumbnail(file)
                         if (thumbPath != null && File(thumbPath).exists()) {
                             thumbnailPathCache[file.absolutePath] = thumbPath

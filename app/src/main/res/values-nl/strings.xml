@@ -5528,6 +5528,9 @@ Opslaan in %s
     <string name="share_receive_multiple_files">
 %d bestanden
 </string>
+    <string name="share_receive_multiple_success">
+%d bestanden succesvol opgeslagen
+</string>
     <string name="choose_a_volume_to_browse">
 Kies een volume om door te bladeren
 </string>
@@ -14667,6 +14670,95 @@ Waarde verhogen
 </string>
     <string name="cd_edit_preset">
 Stijl van voorinstelling bewerken
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+%1$s veilig verwijderen?
+</string>
+    <string name="safely_remove_confirm_msg">
+Zorg ervoor dat alle bestanden zijn weggeschreven en koppel \"%1$s\" veilig los.
+</string>
+    <string name="safely_remove_action">
+Veilig verwijderen
+</string>
+    <string name="safely_remove_transfer_active_title">
+Actieve overdracht bezig
+</string>
+    <string name="safely_remove_transfer_active_msg">
+Er worden momenteel bestanden naar of van deze schijf overgedragen. Als je deze nu verwijdert, kan dit gegevensbeschadiging of mislukte bewerkingen veroorzaken.
+</string>
+    <string name="safely_remove_flushing">
+Schrijfbuffers worden geleegd...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" is veilig ontkoppeld. Je kunt nu de OTG-kabel loskoppelen.
+</string>
+    <string name="safely_remove_mock_success">
+Gesimuleerd USB-station veilig ontkoppeld. Je kunt het opnieuw koppelen in Instellingen.
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB-station losgekoppeld. Overgeschakeld naar interne opslag.
+</string>
+    <string name="safely_remove_open_settings_title">
+Uitwerpen voltooien in Instellingen
+</string>
+    <string name="safely_remove_open_settings_desc">
+Alle databuffers zijn veilig naar de schijf weggeschreven. Tik hieronder om Android-opslaginstellingen te openen en tik op het pictogram Uitwerpen (⏏).
+</string>
+    <string name="safely_remove_open_settings_btn">
+Opslaginstellingen openen
+</string>
+    <string name="safely_remove_menu_item">
+Schijf veilig verwijderen
+</string>
+    <string name="cd_safely_remove">
+Schijf veilig verwijderen
+</string>
+    <string name="mock_usb_title">
+USB-station (gesimuleerde OTG)
+</string>
+    <string name="mock_usb_subtitle">
+OTG-flashstation (gesimuleerd / test)
+</string>
+    <string name="mock_usb_setting_title">
+USB-OTG-station simuleren
+</string>
+    <string name="mock_usb_setting_desc">
+Simuleer een aangesloten USB-stick of externe HDD om veilig verwijderen en bestandsbewerkingen te testen.
+</string>
+    <string name="mock_usb_remount_action">
+Gesimuleerd USB-station opnieuw koppelen
+</string>
+    <string name="mock_usb_remounted_toast">
+Gesimuleerd USB-station gekoppeld
+</string>
+    <string name="storage_unmounted">
+Ontkoppeld
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+Ontkoppeld • Tik om te koppelen
+</string>
+    <string name="cd_remount_storage">
+Opslagvolume koppelen
+</string>
+    <string name="storage_remounting">
+Opslagvolume wordt gekoppeld...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" is succesvol gekoppeld.
+</string>
+    <string name="storage_mount_title">
+%1$s koppelen?
+</string>
+    <string name="storage_mount_desc">
+Om \"%1$s\" opnieuw te koppelen, worden de Android-opslaginstellingen geopend. Tik op deze schijf in de lijst en selecteer \"Koppelen\".
+</string>
+    <string name="storage_mount_btn">
+Opslaginstellingen openen
+</string>
+    <string name="safely_remove_unmount_action">
+Schijf koppelen
 </string>
 </resources>
 

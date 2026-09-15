@@ -27,7 +27,8 @@ class StorageEventReceiver : BroadcastReceiver() {
             Intent.ACTION_MEDIA_EJECT,
             Intent.ACTION_MEDIA_REMOVED,
             UsbManager.ACTION_USB_DEVICE_ATTACHED,
-            UsbManager.ACTION_USB_DEVICE_DETACHED -> {
+            UsbManager.ACTION_USB_DEVICE_DETACHED,
+            MockUsbStorageManager.ACTION_MOCK_USB_STATE_CHANGED -> {
                 onStorageChanged?.invoke()
             }
         }
@@ -36,14 +37,43 @@ class StorageEventReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "StorageEventReceiver"
 
-        /** Actions to register in the IntentFilter */
-        val STORAGE_ACTIONS = listOf(
+        /** Actions to register in the IntentFilter with file data scheme */
+        val MEDIA_ACTIONS = listOf(
             Intent.ACTION_MEDIA_MOUNTED,
             Intent.ACTION_MEDIA_UNMOUNTED,
             Intent.ACTION_MEDIA_EJECT,
-            Intent.ACTION_MEDIA_REMOVED,
-            UsbManager.ACTION_USB_DEVICE_ATTACHED,
-            UsbManager.ACTION_USB_DEVICE_DETACHED
+            Intent.ACTION_MEDIA_REMOVED
         )
+
+        /** Actions to register without file scheme (hardware USB and app events) */
+        val GENERIC_ACTIONS = listOf(
+            UsbManager.ACTION_USB_DEVICE_ATTACHED,
+            UsbManager.ACTION_USB_DEVICE_DETACHED,
+            MockUsbStorageManager.ACTION_MOCK_USB_STATE_CHANGED
+        )
+
+        /** Legacy list for backward compatibility */
+        val STORAGE_ACTIONS = MEDIA_ACTIONS + GENERIC_ACTIONS
+
+        /**
+         * Registers the receiver for both media scheme events and USB/mock events.
+         */
+        fun register(context: Context, receiver: StorageEventReceiver) {
+            val mediaFilter = android.content.IntentFilter().apply {
+                MEDIA_ACTIONS.forEach { addAction(it) }
+                addDataScheme("file")
+            }
+            val genericFilter = android.content.IntentFilter().apply {
+                GENERIC_ACTIONS.forEach { addAction(it) }
+            }
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(receiver, mediaFilter, Context.RECEIVER_EXPORTED)
+                context.registerReceiver(receiver, genericFilter, Context.RECEIVER_EXPORTED)
+            } else {
+                context.registerReceiver(receiver, mediaFilter)
+                context.registerReceiver(receiver, genericFilter)
+            }
+        }
     }
 }

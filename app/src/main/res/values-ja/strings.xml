@@ -5661,6 +5661,9 @@ UFMに保存
     <string name="share_receive_multiple_files">
 %d ファイル
 </string>
+    <string name="share_receive_multiple_success">
+%d 件のファイルを保存しました
+</string>
     <string name="choose_a_volume_to_browse">
 参照するボリュームを選択
 </string>
@@ -14911,6 +14914,95 @@ Quarterly_Financial_Report_2026_Final.pdf
 </string>
     <string name="cd_edit_preset">
 プリセットのスタイルを編集
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+%1$s を安全に取り外しますか？
+</string>
+    <string name="safely_remove_confirm_msg">
+すべてのファイルが書き込まれたことを確認し、\"%1$s\" を安全に取り外してください。
+</string>
+    <string name="safely_remove_action">
+安全に取り外す
+</string>
+    <string name="safely_remove_transfer_active_title">
+転送が進行中です
+</string>
+    <string name="safely_remove_transfer_active_msg">
+現在、このドライブとの間でファイルが転送されています。今すぐ取り外すと、データが破損したり、操作が失敗する可能性があります。
+</string>
+    <string name="safely_remove_flushing">
+書き込みバッファをフラッシュしています...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" は安全にマウント解除されました。OTG ケーブルを外してもかまいません。
+</string>
+    <string name="safely_remove_mock_success">
+モック USB ドライブを安全にマウント解除しました。設定で再マウントできます。
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB ドライブが切断されました。内部ストレージに切り替えました。
+</string>
+    <string name="safely_remove_open_settings_title">
+設定で完全に取り出す
+</string>
+    <string name="safely_remove_open_settings_desc">
+すべてのデータ バッファがドライブに安全にフラッシュされました。下をタップして Android のストレージ設定を開き、イジェクト アイコン (⏏) をタップしてください。
+</string>
+    <string name="safely_remove_open_settings_btn">
+ストレージ設定を開く
+</string>
+    <string name="safely_remove_menu_item">
+ドライブを安全に取り外す
+</string>
+    <string name="cd_safely_remove">
+ドライブを安全に取り外す
+</string>
+    <string name="mock_usb_title">
+USB ドライブ (シミュレートされた OTG)
+</string>
+    <string name="mock_usb_subtitle">
+OTG フラッシュ ドライブ (モック / テスト)
+</string>
+    <string name="mock_usb_setting_title">
+USB OTG ドライブをシミュレート
+</string>
+    <string name="mock_usb_setting_desc">
+安全な取り外しとファイル操作をテストするために、接続された USB フラッシュ ドライブまたは外付け HDD をシミュレートします。
+</string>
+    <string name="mock_usb_remount_action">
+モック USB ドライブを再マウント
+</string>
+    <string name="mock_usb_remounted_toast">
+モック USB ドライブがマウントされました
+</string>
+    <string name="storage_unmounted">
+マウント解除済み
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+マウント解除済み • タップしてマウント
+</string>
+    <string name="cd_remount_storage">
+ストレージ ボリュームをマウント
+</string>
+    <string name="storage_remounting">
+ストレージ ボリュームをマウントしています...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" が正常にマウントされました。
+</string>
+    <string name="storage_mount_title">
+%1$s をマウントしますか？
+</string>
+    <string name="storage_mount_desc">
+\"%1$s\" を再マウントするには、Android OS のストレージ設定が開きます。リスト内のこのドライブをタップし、\"マウント\" を選択してください。
+</string>
+    <string name="storage_mount_btn">
+ストレージ設定を開く
+</string>
+    <string name="safely_remove_unmount_action">
+ドライブをマウント
 </string>
 </resources>
 

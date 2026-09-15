@@ -5661,6 +5661,9 @@ Salvar em %s
     <string name="share_receive_multiple_files">
 %d arquivos
 </string>
+    <string name="share_receive_multiple_success">
+%d arquivos salvos com sucesso
+</string>
     <string name="choose_a_volume_to_browse">
 Escolha um volume para navegar
 </string>
@@ -14911,6 +14914,95 @@ Aumentar valor
 </string>
     <string name="cd_edit_preset">
 Editar estilo da predefinição
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+Remover %1$s com segurança?
+</string>
+    <string name="safely_remove_confirm_msg">
+Certifique-se de que todos os arquivos foram gravados e desconecte \"%1$s\" com segurança.
+</string>
+    <string name="safely_remove_action">
+Remover com segurança
+</string>
+    <string name="safely_remove_transfer_active_title">
+Transferência ativa em andamento
+</string>
+    <string name="safely_remove_transfer_active_msg">
+No momento, há arquivos sendo transferidos de ou para esta unidade. Removê-la agora pode causar corrupção de dados ou falhas nas operações.
+</string>
+    <string name="safely_remove_flushing">
+Liberando buffers de gravação...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" foi desmontada com segurança. Você já pode desconectar o cabo OTG.
+</string>
+    <string name="safely_remove_mock_success">
+Unidade USB simulada desmontada com segurança. Você pode montá-la novamente nas Configurações.
+</string>
+    <string name="safely_remove_unmounted_switched">
+Unidade USB desconectada. Alternado para o Armazenamento interno.
+</string>
+    <string name="safely_remove_open_settings_title">
+Concluir ejeção nas Configurações
+</string>
+    <string name="safely_remove_open_settings_desc">
+Todos os buffers de dados foram liberados com segurança para a unidade. Toque abaixo para abrir as Configurações de armazenamento do Android e toque no ícone Ejetar (⏏).
+</string>
+    <string name="safely_remove_open_settings_btn">
+Abrir Configurações de armazenamento
+</string>
+    <string name="safely_remove_menu_item">
+Remover unidade com segurança
+</string>
+    <string name="cd_safely_remove">
+Remover unidade com segurança
+</string>
+    <string name="mock_usb_title">
+Unidade USB (OTG simulada)
+</string>
+    <string name="mock_usb_subtitle">
+Pen drive OTG (simulado / teste)
+</string>
+    <string name="mock_usb_setting_title">
+Simular unidade USB OTG
+</string>
+    <string name="mock_usb_setting_desc">
+Simule um pen drive USB ou HDD externo conectado para testar a remoção segura e operações com arquivos.
+</string>
+    <string name="mock_usb_remount_action">
+Montar novamente a unidade USB simulada
+</string>
+    <string name="mock_usb_remounted_toast">
+Unidade USB simulada montada
+</string>
+    <string name="storage_unmounted">
+Desmontada
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+Desmontada • Toque para montar
+</string>
+    <string name="cd_remount_storage">
+Montar volume de armazenamento
+</string>
+    <string name="storage_remounting">
+Montando volume de armazenamento...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" montada com sucesso.
+</string>
+    <string name="storage_mount_title">
+Montar %1$s?
+</string>
+    <string name="storage_mount_desc">
+Para montar \"%1$s\" novamente, as Configurações de armazenamento do Android serão abertas. Toque nesta unidade na lista e selecione \"Montar\".
+</string>
+    <string name="storage_mount_btn">
+Abrir Configurações de armazenamento
+</string>
+    <string name="safely_remove_unmount_action">
+Montar unidade
 </string>
 </resources>
 

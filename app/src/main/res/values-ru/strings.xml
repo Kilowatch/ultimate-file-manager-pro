@@ -5661,6 +5661,9 @@ UFM не поддерживает выбор этих папок через си
     <string name="share_receive_multiple_files">
 файлы %d
 </string>
+    <string name="share_receive_multiple_success">
+%d файлов успешно сохранено
+</string>
     <string name="choose_a_volume_to_browse">
 Выберите том для просмотра
 </string>
@@ -14911,6 +14914,95 @@ Quarterly_Financial_Report_2026_Final.pdf
 </string>
     <string name="cd_edit_preset">
 Изменить стиль пресета
+</string>
+
+    <!-- Safe Removal / Eject Drive (USB / OTG / HDD / SD) -->
+    <string name="safely_remove_title">
+Безопасно извлечь %1$s?
+</string>
+    <string name="safely_remove_confirm_msg">
+Убедитесь, что все файлы записаны, и безопасно отключите \"%1$s\".
+</string>
+    <string name="safely_remove_action">
+Безопасное извлечение
+</string>
+    <string name="safely_remove_transfer_active_title">
+Выполняется передача данных
+</string>
+    <string name="safely_remove_transfer_active_msg">
+В данный момент выполняется передача файлов на этот диск или с него. Извлечение сейчас может привести к повреждению данных или сбою операций.
+</string>
+    <string name="safely_remove_flushing">
+Сброс буферов записи...
+</string>
+    <string name="safely_remove_success">
+\"%1$s\" безопасно отключён. Теперь вы можете отсоединить OTG-кабель.
+</string>
+    <string name="safely_remove_mock_success">
+Тестовый USB-накопитель безопасно отключён. Вы можете подключить его снова в настройках.
+</string>
+    <string name="safely_remove_unmounted_switched">
+USB-накопитель отключён. Переключено на внутреннее хранилище.
+</string>
+    <string name="safely_remove_open_settings_title">
+Завершите извлечение в настройках
+</string>
+    <string name="safely_remove_open_settings_desc">
+Все буферы данных безопасно сброшены на диск. Нажмите ниже, чтобы открыть настройки хранилища Android, и нажмите значок извлечения (⏏).
+</string>
+    <string name="safely_remove_open_settings_btn">
+Открыть настройки хранилища
+</string>
+    <string name="safely_remove_menu_item">
+Безопасно извлечь диск
+</string>
+    <string name="cd_safely_remove">
+Безопасно извлечь диск
+</string>
+    <string name="mock_usb_title">
+USB-накопитель (имитация OTG)
+</string>
+    <string name="mock_usb_subtitle">
+OTG-флешка (тестовая)
+</string>
+    <string name="mock_usb_setting_title">
+Имитировать USB OTG-накопитель
+</string>
+    <string name="mock_usb_setting_desc">
+Имитирует подключённую USB-флешку или внешний жёсткий диск для проверки безопасного извлечения и файловых операций.
+</string>
+    <string name="mock_usb_remount_action">
+Подключить тестовый USB-накопитель заново
+</string>
+    <string name="mock_usb_remounted_toast">
+Тестовый USB-накопитель подключён
+</string>
+    <string name="storage_unmounted">
+Отключено
+</string>
+    <string name="storage_unmounted_tap_to_mount">
+Отключено • Нажмите, чтобы подключить
+</string>
+    <string name="cd_remount_storage">
+Подключить том хранилища
+</string>
+    <string name="storage_remounting">
+Подключение тома хранилища...
+</string>
+    <string name="storage_remount_success">
+\"%1$s\" успешно подключён.
+</string>
+    <string name="storage_mount_title">
+Подключить %1$s?
+</string>
+    <string name="storage_mount_desc">
+Чтобы подключить \"%1$s\" заново, откроются настройки хранилища Android. Нажмите на этот диск в списке и выберите «Подключить».
+</string>
+    <string name="storage_mount_btn">
+Открыть настройки хранилища
+</string>
+    <string name="safely_remove_unmount_action">
+Подключить диск
 </string>
 </resources>
 

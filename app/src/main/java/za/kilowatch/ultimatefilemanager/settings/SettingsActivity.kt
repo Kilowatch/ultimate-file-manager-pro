@@ -345,6 +345,43 @@ class SettingsActivity : AppCompatActivity() {
             dividerRootAccess?.visibility = View.GONE
         }
 
+        // Mock USB OTG Drive (Visible only when MOCK_USB_DRIVE_FEATURE_ENABLED is true)
+        val cardMockUsb = findViewById<View>(R.id.cardMockUsb)
+        if (!za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.MOCK_USB_DRIVE_FEATURE_ENABLED) {
+            cardMockUsb?.visibility = View.GONE
+        } else {
+            cardMockUsb?.visibility = View.VISIBLE
+            val cardMockUsbToggle = findViewById<View>(R.id.cardMockUsbToggle)
+            val switchMockUsb = findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchMockUsb)
+            val rowRemount = findViewById<View>(R.id.rowRemountMockUsb)
+            val btnRemount = findViewById<View>(R.id.btnRemountMockUsb)
+
+            fun updateMockUsbUI() {
+                val enabled = za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbEnabled(this)
+                val mounted = za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbMounted(this)
+                switchMockUsb?.isChecked = enabled
+                rowRemount?.visibility = if (enabled && !mounted) View.VISIBLE else View.GONE
+            }
+
+            updateMockUsbUI()
+
+            cardMockUsbToggle?.setOnClickListener {
+                val current = za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbEnabled(this)
+                val newEnabled = !current
+                za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.setMockUsbEnabled(this, newEnabled)
+                if (newEnabled) {
+                    za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.setMockUsbMounted(this, true)
+                }
+                updateMockUsbUI()
+            }
+
+            btnRemount?.setOnClickListener {
+                za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.remountMockUsb(this)
+                updateMockUsbUI()
+                android.widget.Toast.makeText(this, R.string.mock_usb_remounted_toast, android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
         // Hidden Files toggle
         val cardHiddenFiles = findViewById<View>(R.id.cardHiddenFiles)
         switchHiddenFiles = findViewById(R.id.switchHiddenFiles)
