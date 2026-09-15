@@ -3005,6 +3005,10 @@
     <string name="shizuku_permission_granted_api">Granted (API v23)</string>
     <string name="shizuku_recheck_status">Recheck Status</string>
     <string name="shizuku_manager_open_error">Could not open manager. Please install Shizuku or Shevery first.</string>
+    <string name="elevated_download_title">Download %1$s: v%2$s</string>
+    <string name="elevated_download_btn">Download &amp; Install (%1$s)</string>
+    <string name="elevated_fetching_toast">Checking for latest %1$s release…</string>
+    <string name="elevated_fetch_failed">Unable to fetch %1$s release info. Opening webpage…</string>
 
     <!-- Media Player errors -->
 

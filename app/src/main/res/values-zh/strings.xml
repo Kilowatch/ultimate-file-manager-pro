@@ -8711,6 +8711,18 @@ ADB/无线调试
     <string name="shizuku_manager_open_error">
 无法打开管理器。请先安装 Shizuku 或 Shevery。
 </string>
+    <string name="elevated_download_title">
+下载 %1$s：v%2$s
+</string>
+    <string name="elevated_download_btn">
+下载并安装（%1$s）
+</string>
+    <string name="elevated_fetching_toast">
+正在检查 %1$s 的最新版本…
+</string>
+    <string name="elevated_fetch_failed">
+无法获取 %1$s 的版本信息。正在打开网页…
+</string>
 
     <!-- Media Player errors -->
 

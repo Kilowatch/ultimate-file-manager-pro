@@ -8695,6 +8695,18 @@ Kontrollera status igen
     <string name="shizuku_manager_open_error">
 Det gick inte att öppna manager. Installera Shizuku eller Shevery först.
 </string>
+    <string name="elevated_download_title">
+Ladda ner %1$s: v%2$s
+</string>
+    <string name="elevated_download_btn">
+Ladda ner och installera (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+Söker efter senaste versionen av %1$s…
+</string>
+    <string name="elevated_fetch_failed">
+Det gick inte att hämta versionsinformation för %1$s. Öppnar webbsida…
+</string>
 
     <!-- Media Player errors -->
 

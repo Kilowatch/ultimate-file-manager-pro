@@ -8711,6 +8711,18 @@ ADB / تصحيح الأخطاء اللاسلكي
     <string name="shizuku_manager_open_error">
 تعذر فتح المدير. يرجى تثبيت شيزوكو أو شيفري أولاً.
 </string>
+    <string name="elevated_download_title">
+تنزيل %1$s: v%2$s
+</string>
+    <string name="elevated_download_btn">
+تنزيل وتثبيت (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+جارٍ التحقق من أحدث إصدار لـ %1$s…
+</string>
+    <string name="elevated_fetch_failed">
+تعذر جلب معلومات إصدار %1$s. جارٍ فتح صفحة الويب…
+</string>
 
     <!-- Media Player errors -->
 

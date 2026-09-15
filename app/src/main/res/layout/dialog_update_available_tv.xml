@@ -94,6 +94,17 @@
             android:focusable="true"
             android:clickable="true" />
 
+        <!-- Download progress bar (hidden until download starts) -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressDownload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:visibility="gone"
+            app:trackCornerRadius="4dp"
+            app:indicatorColor="?attr/colorPrimary"
+            app:trackColor="#26FFFFFF" />
+
         <!-- Secondary & Dismiss Buttons Row -->
         <LinearLayout
             android:layout_width="match_parent"

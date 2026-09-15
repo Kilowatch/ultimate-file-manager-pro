@@ -8529,6 +8529,18 @@ Controleer de status opnieuw
     <string name="shizuku_manager_open_error">
 Kan beheerder niet openen. Installeer eerst Shizuku of Shevery.
 </string>
+    <string name="elevated_download_title">
+Download %1$s: v%2$s
+</string>
+    <string name="elevated_download_btn">
+Downloaden en installeren (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+Controleren op de nieuwste %1$s-release…
+</string>
+    <string name="elevated_fetch_failed">
+Kan release-info van %1$s niet ophalen. Webpagina wordt geopend…
+</string>
 
     <!-- Media Player errors -->
 

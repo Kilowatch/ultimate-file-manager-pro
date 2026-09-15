@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.8] — 2026-09-14
 
 ### Added
+- **Elevated Access In-App Downloads**: Directly download and trigger package installation for Shizuku and Shevery in-app on Mobile and Android TV matching the FOSS auto-update experience, complete with release notes and streaming progress.
 - **USB OTG & External HDD Safe Removal (Eject)**: Added the ability to safely remove connected USB flash drives, external HDDs, and SD cards on Android and Android TV via dedicated eject buttons on storage cards, context menus, and the file browser overflow menu. Performs active transfer pre-flight checks, flushes dirty kernel write cache to physical storage via POSIX sync, and unmounts elevated volumes via Shizuku/Root or guides standard users directly to OS storage settings.
 - **Mock USB OTG Drive Simulator**: Added an optional simulated USB OTG drive with realistic sample files for testing mounting, browsing, transfers, and safe removal without physical hardware. Completely hidden from Settings and the UI when the feature toggle is disabled.
 - **Unmounted Storage Detection & 1-Tap Remount**: Connected SD cards, USB drives, and simulated drives that are in an unmounted/ejected state are now retained on the main storage screen with an `(Unmounted)` badge, tap-to-mount subtitle, and dedicated Mount button (📥). Supports elevated 1-tap remounting via Shizuku/Root or direct 1-tap shortcut to Android OS Storage Settings for standard users.

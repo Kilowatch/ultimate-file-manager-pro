@@ -8711,6 +8711,18 @@ Durumu Yeniden Kontrol Et
     <string name="shizuku_manager_open_error">
 Yönetici açılamadı. Lütfen önce Shizuku veya Shevery\\\'yi kurun.
 </string>
+    <string name="elevated_download_title">
+%1$s İndir: v%2$s
+</string>
+    <string name="elevated_download_btn">
+İndir ve Yükle (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+En son %1$s sürümü kontrol ediliyor…
+</string>
+    <string name="elevated_fetch_failed">
+%1$s sürüm bilgisi alınamadı. Web sayfası açılıyor…
+</string>
 
     <!-- Media Player errors -->
 

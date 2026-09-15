@@ -8711,6 +8711,18 @@ ADB / беспроводная отладка
     <string name="shizuku_manager_open_error">
 Не удалось открыть менеджер. Сначала установите Shizuku или Shevery.
 </string>
+    <string name="elevated_download_title">
+Скачать %1$s: v%2$s
+</string>
+    <string name="elevated_download_btn">
+Скачать и установить (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+Проверка последней версии %1$s…
+</string>
+    <string name="elevated_fetch_failed">
+Не удалось получить информацию о версии %1$s. Открываем веб-страницу…
+</string>
 
     <!-- Media Player errors -->
 

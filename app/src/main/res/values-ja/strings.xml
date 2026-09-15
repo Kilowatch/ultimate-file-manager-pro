@@ -8711,6 +8711,18 @@ ADB / ワイヤレスデバッグ
     <string name="shizuku_manager_open_error">
 マネージャーを開けませんでした。最初にShizukuまたはSheveryをインストールしてください。
 </string>
+    <string name="elevated_download_title">
+%1$s をダウンロード: v%2$s
+</string>
+    <string name="elevated_download_btn">
+ダウンロードしてインストール (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+%1$s の最新リリースを確認中…
+</string>
+    <string name="elevated_fetch_failed">
+%1$s のリリース情報を取得できません。Webページを開きます…
+</string>
 
     <!-- Media Player errors -->
 

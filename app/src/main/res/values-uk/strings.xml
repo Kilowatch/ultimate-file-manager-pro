@@ -8711,6 +8711,18 @@ ADB / Бездротове налагодження
     <string name="shizuku_manager_open_error">
 Не вдалося відкрити менеджер. Спочатку встановіть Shizuku або Shevery.
 </string>
+    <string name="elevated_download_title">
+Завантажити %1$s: v%2$s
+</string>
+    <string name="elevated_download_btn">
+Завантажити та встановити (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+Перевірка наявності останньої версії %1$s…
+</string>
+    <string name="elevated_fetch_failed">
+Не вдалося отримати інформацію про випуск %1$s. Відкриття вебсторінки…
+</string>
 
     <!-- Media Player errors -->
 

@@ -8711,6 +8711,18 @@ Periksa Ulang Status
     <string name="shizuku_manager_open_error">
 Tidak dapat membuka manager. Silakan instal Shizuku atau Shevery terlebih dahulu.
 </string>
+    <string name="elevated_download_title">
+Unduh %1$s: v%2$s
+</string>
+    <string name="elevated_download_btn">
+Unduh &amp; Instal (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+Memeriksa rilis terbaru %1$s…
+</string>
+    <string name="elevated_fetch_failed">
+Tidak dapat mengambil info rilis %1$s. Membuka halaman web…
+</string>
 
     <!-- Media Player errors -->
 

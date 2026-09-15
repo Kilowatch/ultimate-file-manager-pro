@@ -8711,6 +8711,18 @@ Status erneut prüfen
     <string name="shizuku_manager_open_error">
 Manager konnte nicht geöffnet werden. Bitte installieren Sie zuerst Shizuku oder Shevery.
 </string>
+    <string name="elevated_download_title">
+%1$s herunterladen: v%2$s
+</string>
+    <string name="elevated_download_btn">
+Herunterladen &amp; Installieren (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+Suche nach der neuesten %1$s-Version…
+</string>
+    <string name="elevated_fetch_failed">
+Release-Informationen zu %1$s konnten nicht abgerufen werden. Webseite wird geöffnet…
+</string>
 
     <!-- Media Player errors -->
 

@@ -8711,6 +8711,18 @@ ADB / 무선 디버깅
     <string name="shizuku_manager_open_error">
 관리자를 열 수 없습니다. Shizuku 또는 Shevery를 먼저 설치하세요.
 </string>
+    <string name="elevated_download_title">
+다운로드 %1$s: v%2$s
+</string>
+    <string name="elevated_download_btn">
+다운로드 및 설치 (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+최신 %1$s 릴리스 확인 중…
+</string>
+    <string name="elevated_fetch_failed">
+%1$s 릴리스 정보를 가져올 수 없습니다. 웹페이지를 엽니다…
+</string>
 
     <!-- Media Player errors -->
 

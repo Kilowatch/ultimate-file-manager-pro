@@ -26,6 +26,7 @@ import za.kilowatch.ultimatefilemanager.databinding.ActivityShizukuBinding
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
+import za.kilowatch.ultimatefilemanager.update.ElevatedAppDownloadManager
 
 /**
  * Elevated Access (Shizuku / Shevery) Activity for Mobile — Modern Material 3 & Glassmorphism Design.
@@ -57,13 +58,11 @@ class ShizukuActivity : AppCompatActivity() {
 
         // Download actions
         binding.btnShizukuDownload.setOnClickListener {
-            val url = "https://github.com/thedjchi/Shizuku/releases/latest"
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            ElevatedAppDownloadManager.startDownloadFlow(this, ElevatedAppDownloadManager.ElevatedApp.SHIZUKU)
         }
 
         binding.btnSheveryDownload.setOnClickListener {
-            val url = "https://github.com/HmnDev-Tech/shevery/releases/latest"
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            ElevatedAppDownloadManager.startDownloadFlow(this, ElevatedAppDownloadManager.ElevatedApp.SHEVERY)
         }
 
         // Open installed manager app actions

@@ -8711,6 +8711,18 @@ ADB / वायरलेस डिबगिंग
     <string name="shizuku_manager_open_error">
 प्रबंधक नहीं खोला जा सका। कृपया पहले Shizuku या Shevery स्थापित करें।
 </string>
+    <string name="elevated_download_title">
+%1$s डाउनलोड करें: v%2$s
+</string>
+    <string name="elevated_download_btn">
+डाउनलोड और इंस्टॉल करें (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+नवीनतम %1$s रिलीज़ की जाँच की जा रही है…
+</string>
+    <string name="elevated_fetch_failed">
+%1$s रिलीज़ जानकारी प्राप्त नहीं की जा सकी। वेबपेज खोला जा रहा है…
+</string>
 
     <!-- Media Player errors -->
 

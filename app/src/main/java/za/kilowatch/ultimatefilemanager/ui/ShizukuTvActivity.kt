@@ -11,6 +11,7 @@ import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
+import za.kilowatch.ultimatefilemanager.update.ElevatedAppDownloadManager
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,11 +50,11 @@ class ShizukuTvActivity : AppCompatActivity() {
         updateShizukuStatus()
 
         binding.btnShizukuDownload.setOnClickListener {
-            showDownloadDialog("Shizuku")
+            ElevatedAppDownloadManager.startDownloadFlow(this, ElevatedAppDownloadManager.ElevatedApp.SHIZUKU)
         }
 
         binding.btnSheveryDownload.setOnClickListener {
-            showDownloadDialog("Shevery")
+            ElevatedAppDownloadManager.startDownloadFlow(this, ElevatedAppDownloadManager.ElevatedApp.SHEVERY)
         }
 
         binding.btnShizukuEnable.setOnClickListener {

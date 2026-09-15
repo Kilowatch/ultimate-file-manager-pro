@@ -8711,6 +8711,18 @@ Volver a verificar el estado
     <string name="shizuku_manager_open_error">
 No se pudo abrir el gestor. Instala Shizuku o Shevery primero.
 </string>
+    <string name="elevated_download_title">
+Descargar %1$s: v%2$s
+</string>
+    <string name="elevated_download_btn">
+Descargar e instalar (%1$s)
+</string>
+    <string name="elevated_fetching_toast">
+Buscando la última versión de %1$s…
+</string>
+    <string name="elevated_fetch_failed">
+No se pudo obtener la información de la versión de %1$s. Abriendo la página web…
+</string>
 
     <!-- Media Player errors -->
 
