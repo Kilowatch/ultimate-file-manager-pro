@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.TextView
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -73,7 +72,15 @@ object VolumeStillInUseDialog {
 
             dialogView.findViewById<View>(R.id.btnProceed)?.setOnClickListener { settle(true) }
             dialogView.findViewById<View>(R.id.btnKeepMounted)?.setOnClickListener { settle(false) }
+            // Back and an outside tap route through cancel(); the dismiss listener is the
+            // catch-all beneath it. Every other way the dialog can leave the screen — the
+            // hosting Activity being destroyed, the window being torn down — fires *only*
+            // dismiss, and without this the continuation would stay suspended for good: the
+            // caller's coroutine would never resume, and the FR-10 re-entrancy guard it holds
+            // would lock the volume out of every later eject for the life of the process.
+            // Settling twice is already impossible (see `settled`), so this costs nothing.
             dialog.setOnCancelListener { settle(false) }
+            dialog.setOnDismissListener { settle(false) }
             // An outside tap is not consent to unmount a volume that is still in use.
             dialog.setCanceledOnTouchOutside(false)
 
@@ -81,7 +88,7 @@ object VolumeStillInUseDialog {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             // Default TV focus lands on the safe exit, not on the destructive action.
-            if (isTv) dialogView.findViewById<MaterialButton>(R.id.btnKeepMounted)?.requestFocus()
+            if (isTv) dialogView.findViewById<View>(R.id.btnKeepMounted)?.requestFocus()
 
             // If the eject is cancelled while the dialog is up, take the dialog down with it.
             continuation.invokeOnCancellation {

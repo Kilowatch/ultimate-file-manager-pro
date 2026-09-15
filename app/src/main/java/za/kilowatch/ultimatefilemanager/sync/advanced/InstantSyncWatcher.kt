@@ -52,6 +52,12 @@ object InstantSyncWatcher {
      * the path is recorded here to let [stopWatchingVolume] decide which profiles belong to
      * a volume. Kept in lockstep with [watchers]: both are written in [startWatching] and
      * cleared in [stopWatching].
+     *
+     * Main thread only, like [watchers] — a plain `mutableMapOf` with no synchronisation. The
+     * eject path is the first *external* reader of these, so this is worth stating explicitly:
+     * `VolumeClaimReleaser` calls [stopWatchingVolume] and [activeWatchesUnder] from the main
+     * dispatcher, outside its `Dispatchers.IO` block. Moving those calls inside it would turn
+     * this into a data race.
      */
     private val watchPaths = mutableMapOf<String, String>()
 

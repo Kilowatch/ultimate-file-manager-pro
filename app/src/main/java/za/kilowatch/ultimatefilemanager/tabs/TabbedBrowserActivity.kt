@@ -2255,7 +2255,21 @@ class TabbedBrowserActivity : AppCompatActivity(),
             mountPath = tab.rootPath,
             isRemovable = true
         )
-        UsbEjectManager.safelyRemove(this, item, this) { }
+        UsbEjectManager.safelyRemove(this, item, this) { success ->
+            // [navigateOutOfVolume] clears this on the path that reaches the unmount. Every other
+            // outcome — "Keep It Mounted", an FR-10 rejection, a failed elevation — ends the flow
+            // without it, so the id is cleared here too. It is never left pointing at a tab the
+            // user may have closed in the meantime.
+            ejectingTabId = null
+            if (!success) {
+                // The user already saw why (the FR-09 dialog, or the non-root Storage Settings
+                // fallback). This records that the tab-side flow ended without a removal.
+                za.kilowatch.ultimatefilemanager.util.GoRoLog.i(
+                    "TabbedBrowser",
+                    "Safely Remove of ${tab.storageLabel} ended without unmounting"
+                )
+            }
+        }
     }
 
     /**
@@ -2292,7 +2306,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
      * idempotent: a tab already pruned by the FR-08(c) unmount broadcast must not throw and must
      * not be counted as a failed navigate-out.
      */
-    fun closeTabById(tabId: String, exitToMainMenu: Boolean = false): Boolean {
+    private fun closeTabById(tabId: String, exitToMainMenu: Boolean = false): Boolean {
         val position = tabs.indexOfFirst { it.id == tabId }
         if (position < 0) return false
         if (tabs.size > 1 || !exitToMainMenu) {

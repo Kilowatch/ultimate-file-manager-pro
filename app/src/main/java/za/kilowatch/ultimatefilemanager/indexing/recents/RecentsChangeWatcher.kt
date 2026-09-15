@@ -31,9 +31,16 @@ import java.io.File
  * two live instances gets one underlying observer, and it is torn down only when the last
  * subscriber releases it — or when [releaseVolume] force-stops everything under a volume.
  *
- * All state is guarded by the monitor on this object; [FileObserver] callbacks arrive on
- * the observer's own thread, so [dispatch] takes the same monitor and never calls back
- * into the registry while holding it.
+ * All state is guarded by the monitor on this object, and [FileObserver] callbacks arrive on
+ * the observer's own thread rather than the main one.
+ *
+ * [dispatch] is itself `@Synchronized`, so it *does* hold the monitor while it invokes the
+ * listeners. That is safe for three specific reasons, not by construction: the monitor is
+ * reentrant, so a listener that re-entered the registry would not deadlock; the listener list
+ * is snapshotted with `toList()` before iteration, so a listener that acquires or releases
+ * would not corrupt the walk; and in practice the listeners only debounce and post, touching no
+ * registry state at all. A listener that did blocking work here would stall every other
+ * directory's events, so keep them short.
  */
 private object FileObserverRegistry {
 

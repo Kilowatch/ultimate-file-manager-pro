@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -35,6 +36,13 @@ import kotlin.coroutines.resume
 object UsbEjectManager {
 
     private const val TAG = "UsbEjectManager"
+
+    /**
+     * How long [awaitFdsDrained] polls before giving up and proceeding with the unmount anyway.
+     * 15 s covers the GC + finalization path reliably; the user already knows 20 s works, so
+     * this is well inside that window while still being far shorter than a manual wait.
+     */
+    private const val AWAIT_FDS_TIMEOUT_MS = 15_000L
 
     /**
      * Volume uuids with a removal currently running — the FR-10 re-entrancy guard.
@@ -120,7 +128,7 @@ object UsbEjectManager {
     fun isRemovablePath(context: Context, path: String): Boolean {
         val root = path.trimEnd('/')
         if (root.isEmpty()) return false
-        if (MockUsbStorageManager.isMockUsbPath(context, path)) return true
+        if (MockUsbStorageManager.isMockUsbPath(context, root)) return true
         if (!root.startsWith("/storage/")) return false
         val volumeId = root.removePrefix("/storage/").substringBefore('/')
         return volumeId.isNotEmpty() && volumeId != "emulated" && volumeId != "self"
@@ -299,6 +307,9 @@ object UsbEjectManager {
         Toast.makeText(activity, R.string.safely_remove_flushing, Toast.LENGTH_SHORT).show()
 
         CoroutineScope(Dispatchers.Main).launch {
+            // Null means "no outcome to report" — the only case being cancellation, where
+            // reporting one would be a lie.
+            var outcome: Boolean? = null
             try {
                 // Release every claim this process holds before asking vold to unmount. vold
                 // scans /proc/<pid>/fd and /proc/<pid>/maps of every process — including the
@@ -308,37 +319,138 @@ object UsbEjectManager {
                 // now a measurement of what actually got released, not a fixed guess.
                 val report = VolumeClaimReleaser.releaseAll(activity, volume)
 
-                // Mock drive: nothing real to unmount, so it never reaches the FR-09 gate.
-                if (MockUsbStorageManager.isMockUsbItem(item)) {
-                    MockUsbStorageManager.unmountMockUsb(activity)
-                    Toast.makeText(activity, R.string.safely_remove_mock_success, Toast.LENGTH_LONG).show()
-                    onFinished(true)
-                    return@launch
-                }
+                val isMock = MockUsbStorageManager.isMockUsbItem(item)
 
-                // FR-09: the release could not free everything, so do not unmount out from
-                // under a live reference without asking. Cancel keeps the volume mounted.
-                if (report.hasSurvivingClaims) {
+                // FR-09 first: a mock drive has nothing real to unmount, so it never reaches
+                // this gate. Otherwise, do not unmount out from under a live reference without
+                // asking — and "Keep It Mounted" ends the flow here with `false`.
+                if (!isMock && report.hasSurvivingClaims) {
                     Log.w(TAG, "Volume ${volume.uuid} still in use before unmount; asking the user")
-                    val proceed = VolumeStillInUseDialog.show(activity, volume, report)
-                    if (!proceed) {
+                    if (!VolumeStillInUseDialog.show(activity, volume, report)) {
                         Log.i(TAG, "User chose to keep ${volume.uuid} mounted")
-                        onFinished(false)
-                        return@launch
+                        outcome = false
+                    } else {
+                        // The user chose "Unmount Anyway". releaseAll deliberately cannot
+                        // force-close descriptors this process did not open (FR-14 — doing so
+                        // trips fdsan and aborts the process). Running releaseAll again is
+                        // therefore futile: it runs identical stages with identical inability.
+                        //
+                        // The real mechanism: those FDs are directory streams opened by native
+                        // libc code (opendir / readdir) behind Java's File.listFiles(). The
+                        // kernel closes them when the backing DirectoryStream object is
+                        // finalized. Finalization runs on GC, which runs on its own schedule —
+                        // that is why waiting 20+ seconds avoids the crash.
+                        //
+                        // Fix: hint the GC, then poll /proc/self/fd — the same source vold
+                        // scans — until the volume's FDs disappear or the timeout expires.
+                        // Only then issue sm unmount. If the fd is gone before the command,
+                        // vold has nothing to SIGINT.
+                        awaitFdsDrained(volume.normalizedMountPath)
                     }
                 }
 
-                onFinished(unmountOrGuide(activity, item, host))
+                if (outcome == null) {
+                    outcome = if (isMock) {
+                        MockUsbStorageManager.unmountMockUsb(activity)
+                        Toast.makeText(activity, R.string.safely_remove_mock_success, Toast.LENGTH_LONG).show()
+                        true
+                    } else {
+                        unmountOrGuide(activity, item, host)
+                    }
+                }
             } catch (e: CancellationException) {
                 // A cancelled eject must not report an outcome, but must still free the guard.
                 throw e
             } catch (e: Exception) {
                 Log.w(TAG, "Safe removal of ${volume.uuid} failed", e)
-                onFinished(false)
+                outcome = false
+            }
+
+            // Invoked *outside* the try above, and before the guard is released, for two
+            // reasons. Inside it, a callback that threw would be caught by the handler above
+            // and reported a second time as a failed release — the caller would see
+            // onFinished(true) then onFinished(false). And a callback that starts another
+            // eject must still be rejected by FR-10, which only holds while the guard does.
+            try {
+                outcome?.let { onFinished(it) }
+            } catch (e: Exception) {
+                // A throwing callback is the caller's bug, not a release failure. Logged and
+                // contained here: re-reporting it would double-invoke the callback, and letting
+                // it escape would kill the process as an unhandled exception in a launch.
+                Log.w(TAG, "onFinished callback for ${volume.uuid} threw", e)
             } finally {
                 inFlightVolumes.remove(volume.uuid)
             }
         }
+    }
+
+    /**
+     * Waits until no open descriptor of this process points into [mountPath], or until
+     * [AWAIT_FDS_TIMEOUT_MS] elapses.
+     *
+     * Hints the GC first because the surviving descriptor is almost always a native directory
+     * stream (opendir / readdir) backed by a Java object whose finalizer closes it. Without
+     * the hint the GC may not run before the unmount command is issued, and vold will then
+     * SIGINT this process. The poll loop reads /proc/self/fd directly — the same table vold
+     * inspects — so proceeding when the poll returns clean is a precise guarantee, not a guess.
+     */
+    private suspend fun awaitFdsDrained(
+        mountPath: String,
+        pollMs: Long = 250L,
+        timeoutMs: Long = AWAIT_FDS_TIMEOUT_MS
+    ) {
+        if (mountPath.isEmpty()) return
+        val root = mountPath.trimEnd('/')
+
+        // Nudge the GC to finalize native directory streams.
+        @Suppress("ExplicitGarbageCollectionCall")
+        System.gc()
+        System.runFinalization()
+
+        val deadline = System.currentTimeMillis() + timeoutMs
+        var lastSurvivors: List<String> = emptyList()
+
+        withContext(Dispatchers.IO) {
+            while (System.currentTimeMillis() < deadline) {
+                val survivors = openFdsUnder(root)
+                if (survivors.isEmpty()) {
+                    Log.i(TAG, "awaitFdsDrained: volume $root is clean")
+                    return@withContext
+                }
+                lastSurvivors = survivors
+                delay(pollMs)
+            }
+        }
+
+        // Timeout: proceed anyway — user already consented. Log what was left so it appears
+        // in a crash report if vold SIGINTs us.
+        Log.w(
+            TAG,
+            "awaitFdsDrained: timed out after ${timeoutMs}ms; " +
+                "${lastSurvivors.size} fd(s) still open on $mountPath — proceeding anyway"
+        )
+        lastSurvivors.forEach { Log.w(TAG, "  surviving fd: $it") }
+    }
+
+    /**
+     * Returns every open descriptor of this process whose target starts with [root].
+     * Identical logic to [VolumeClaimInspector] but inlined here so [awaitFdsDrained]
+     * can call it from a tight poll loop without going through the full inspection machinery.
+     */
+    private fun openFdsUnder(root: String): List<String> {
+        val result = mutableListOf<String>()
+        val names = java.io.File("/proc/self/fd").list() ?: return result
+        for (name in names) {
+            val fd = name.toIntOrNull() ?: continue
+            val target = try {
+                android.system.Os.readlink("/proc/self/fd/$fd")
+            } catch (_: Exception) {
+                continue
+            } ?: continue
+            if (target.startsWith("/proc/")) continue
+            if (target == root || target.startsWith("$root/")) result.add("$fd -> $target")
+        }
+        return result
     }
 
     /**

@@ -207,6 +207,13 @@ private fun ImageView.safeSetIcon(resId: Int) {
      *  2. **Deduplicates** rapid-fire calls — `updateTileDecorations` + `submitList` +
      *     view-mode changes can all trigger this within the same main-thread batch;
      *     the [notifyScheduled] flag ensures only ONE actual rebind is issued per frame.
+     *
+     * **The notification is deferred, not synchronous.** This used to call
+     * [notifyDataSetChanged] inline whenever the RecyclerView was not mid-layout; it now always
+     * queues. A caller that dispatches and then immediately reads adapter or list state observes
+     * the pre-notification value for one frame. Nothing on the eject path depends on that
+     * visibility — it acts on the volume's descriptors, not on the adapter — but new callers
+     * should not assume `safe` means `immediate`.
      */
     fun safeNotifyDataSetChanged() {
         val rv = attachedRecyclerView

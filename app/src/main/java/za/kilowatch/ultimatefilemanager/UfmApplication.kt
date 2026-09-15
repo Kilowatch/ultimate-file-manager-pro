@@ -66,18 +66,33 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
          * extends `AppCompatActivity` directly, so there is no type to test against.
          *
          * Keep in sync with `viewer/FileViewerRouter`, which is the single place that decides
-         * what opens as a viewer. `MediaPlayerActivity` is absent because it was unreachable and
-         * has been deleted (T022). `TwinWindowPlayerFragment` is absent
-         * because it is a fragment inside `TwinWindowActivity`, which must survive an eject —
-         * its player is released by that fragment's own teardown (T010).
+         * what opens as a viewer. `ViewerActivitiesRegistrationTest` enforces the pairing in
+         * both directions against this package's `AndroidManifest.xml` entries, because a
+         * missing name here is a false negative — and one false negative is enough for `vold`
+         * to SIGINT the process.
+         *
+         * `MediaPlayerActivity` is absent because it was unreachable and has been deleted
+         * (T022). `TwinWindowPlayerFragment` is absent because it is a fragment inside
+         * `TwinWindowActivity`, which must survive an eject — its player is released by that
+         * fragment's own teardown (T010).
+         *
+         * `ui/PackageInstallerActivity` is also reachable from the router (for `.apk`) and does
+         * open a descriptor on its source file, but it is deliberately *not* listed: it is not a
+         * viewer, it copies its source to a temp file and is gone in seconds, and force-finishing
+         * it would abort an install the user did not ask to abort. The release therefore does not
+         * touch it at all — stage 4 reports any descriptor it still holds, and the FR-09 warning
+         * lets the user decide, rather than cancelling an install on their behalf.
+         *
+         * `internal` rather than `private` so the test can read it; the set is not API.
          */
-        private val VIEWER_ACTIVITIES: Set<Class<*>> = setOf(
+        internal val VIEWER_ACTIVITIES: Set<Class<*>> = setOf(
             za.kilowatch.ultimatefilemanager.viewer.ImageViewerActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.PdfViewerActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.UFMPlayerActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.SlideShowActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.TextViewerActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.EpubViewerActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.ZipViewerActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.SevenZipViewerActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.SpreadsheetViewerActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity::class.java,
@@ -634,52 +649,72 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
      * timeout bounds the wait so a viewer that refuses to die cannot hang the eject; the
      * inspection stage afterwards reports whatever actually survived.
      *
-     * Must be called from the main thread.
+     * Safe to call from any thread — it hops to the main looper itself.
      */
     fun closeAllViewers(onDone: () -> Unit, timeoutMs: Long = VIEWER_CLOSE_TIMEOUT_MS) {
         val handler = android.os.Handler(android.os.Looper.getMainLooper())
+
+        // [onDone] is a contract rather than a best-effort: stage 1 awaits it with a timeout and
+        // records a failure if it never arrives. This guard makes "exactly once" structural
+        // instead of something every exit path below has to remember.
+        var reported = false
+        fun report() {
+            if (reported) return
+            reported = true
+            onDone()
+        }
+
         handler.post {
-            // Playback first: stopService() tears the player and its fd down, whereas
-            // ACTION_PAUSE would keep both alive and defeat the purpose.
             try {
-                za.kilowatch.ultimatefilemanager.viewer.UFMPlaybackService.stop(this)
-            } catch (e: Exception) {
-                GoRoLog.w(TAG, "closeAllViewers: playback stop failed: ${e.message}")
-            }
+                // Playback first: stopService() tears the player and its fd down, whereas
+                // ACTION_PAUSE would keep both alive and defeat the purpose.
+                try {
+                    za.kilowatch.ultimatefilemanager.viewer.UFMPlaybackService.stop(this)
+                } catch (e: Exception) {
+                    GoRoLog.w(TAG, "closeAllViewers: playback stop failed: ${e.message}")
+                }
 
-            // Decoded bitmaps can outlive their views via the process-wide Coil cache. There is
-            // no per-volume eviction API, so this is wholesale — accepted in the 2nd planning
-            // pass because it costs only a re-decode on the next browse (NFR-01).
-            try {
-                SingletonImageLoader.get(this).memoryCache?.clear()
-            } catch (e: Exception) {
-                GoRoLog.w(TAG, "closeAllViewers: Coil cache clear failed: ${e.message}")
-            }
+                // Decoded bitmaps can outlive their views via the process-wide Coil cache. There
+                // is no per-volume eviction API, so this is wholesale — accepted in the 2nd
+                // planning pass because it costs only a re-decode on the next browse (NFR-01).
+                try {
+                    SingletonImageLoader.get(this).memoryCache?.clear()
+                } catch (e: Exception) {
+                    GoRoLog.w(TAG, "closeAllViewers: Coil cache clear failed: ${e.message}")
+                }
 
-            liveViewerActivities().forEach { activity ->
-                if (!activity.isFinishing) {
-                    try { activity.finish() } catch (e: Exception) {
-                        GoRoLog.w(TAG, "closeAllViewers: finish failed for ${activity::class.java.simpleName}: ${e.message}")
+                liveViewerActivities().forEach { activity ->
+                    if (!activity.isFinishing) {
+                        try { activity.finish() } catch (e: Exception) {
+                            GoRoLog.w(TAG, "closeAllViewers: finish failed for ${activity::class.java.simpleName}: ${e.message}")
+                        }
                     }
                 }
-            }
 
-            val deadline = android.os.SystemClock.uptimeMillis() + timeoutMs
-            val poll = object : Runnable {
-                override fun run() {
-                    if (liveViewerActivities().isEmpty()) {
-                        onDone()
-                        return
+                val deadline = android.os.SystemClock.uptimeMillis() + timeoutMs
+                val poll = object : Runnable {
+                    override fun run() {
+                        if (liveViewerActivities().isEmpty()) {
+                            report()
+                            return
+                        }
+                        if (android.os.SystemClock.uptimeMillis() >= deadline) {
+                            GoRoLog.w(TAG, "closeAllViewers: timed out with ${liveViewerActivities().size} viewer(s) alive")
+                            report()
+                            return
+                        }
+                        handler.postDelayed(this, VIEWER_CLOSE_POLL_MS)
                     }
-                    if (android.os.SystemClock.uptimeMillis() >= deadline) {
-                        GoRoLog.w(TAG, "closeAllViewers: timed out with ${liveViewerActivities().size} viewer(s) alive")
-                        onDone()
-                        return
-                    }
-                    handler.postDelayed(this, VIEWER_CLOSE_POLL_MS)
                 }
+                handler.post(poll)
+            } catch (e: Exception) {
+                // Anything thrown above — including by liveViewerActivities() before the poll
+                // was ever scheduled — must still release the caller. Without this it would sit
+                // out its full timeout and then be recorded as a failed stage, which is both
+                // slower and less accurate than reporting now.
+                GoRoLog.w(TAG, "closeAllViewers: aborted: ${e.message}", e)
+                report()
             }
-            handler.post(poll)
         }
     }
 

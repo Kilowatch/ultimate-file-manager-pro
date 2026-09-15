@@ -3990,8 +3990,15 @@ class StorageBrowserActivity : AppCompatActivity() {
         val capturedIsImageCompressDestPickerMode = isImageCompressDestPickerMode
         val capturedIsGifCreatorDestPickerMode = isGifCreatorDestPickerMode
 
-        // Cancel any previous in-flight scan so we never have two concurrent coroutines
-        // both racing to call submitList / notifyDataSetChanged on the adapter.
+        // Retire the previous in-flight scan so a stale one does not finish last and overwrite
+        // this one's result.
+        //
+        // Note what this does *not* do: cancel() is cooperative, so the previous coroutine may
+        // still be between its last suspension point and its submitList when the replacement
+        // starts. It is not a mutual-exclusion guarantee, and it must not be relied on as one.
+        // What actually keeps that from reaching RecyclerView is the notify dedup in
+        // StorageAdapter.safeNotifyDataSetChanged. Joining the old job would serialise them
+        // properly, but cancelAndJoin is suspend and this is not a suspend context.
         loadStorageJob?.cancel()
         loadStorageJob = lifecycleScope.launch(Dispatchers.IO) {
             val storageManager = getSystemService(Context.STORAGE_SERVICE) as StorageManager
@@ -4427,13 +4434,17 @@ class StorageBrowserActivity : AppCompatActivity() {
 
             if (showFeatureTiles) {
                 // Add APK / XAPK Extracts tile -- only if the folder is non-empty.
-                // IMPORTANT: getExternalFilesDir() calls vold.setupAppDir() via IPC.
-                // When an SD card that was previously browsed is then unmounted, vold
-                // invalidates the external volume slot and throws
-                // ServiceSpecificException(code -22 = EINVAL). Left uncaught this
-                // exception kills the entire IO coroutine and crashes the process --
-                // which is exactly why the crash ONLY occurs after browsing storage.
-                // Wrap in try/catch so we gracefully skip the tile instead.
+                // getExternalFilesDir() reaches vold.setupAppDir() over IPC, and a call made
+                // while the external volume is being torn down can throw
+                // ServiceSpecificException(-22 / EINVAL). Uncaught, that would kill this IO
+                // coroutine and take the tile load down with it.
+                //
+                // Scope note, so this is not read as the fix for the eject crash: it is not.
+                // The eject crash was diagnosed from logcat as a vold SIGINT — `signal 2
+                // (Interrupt)` in the Zygote log, with no Java exception, no stack trace and no
+                // dropbox entry — and it killed the process even when no Java code path threw.
+                // This catch is a separate, defensive hardening for a *different* failure mode
+                // and was not part of the approved task list (see .plans/tasks.md).
                 val extractsDir = try {
                     File(
                         getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS),

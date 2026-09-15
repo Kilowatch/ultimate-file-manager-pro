@@ -24,14 +24,17 @@ import kotlin.coroutines.resume
  * holding a reference. UFM requests the unmount through Shizuku, so without this it kills
  * itself: no exception, no stack trace, just `signal 2 (Interrupt)` in the Zygote log.
  *
- * | # | Stage | Releases |
- * |---|-------|----------|
- * | 1 | `close-viewers` | Every viewer's fd, player and Coil cache |
- * | 2 | `quiesce` | Indexing jobs, adapter jobs and both filesystem watchers |
- * | 3 | `drop-caches` | Bitmaps, thumbnail and audio-art caches |
- * | 4 | `close-fds` | **Every remaining descriptor under the volume, whoever opened it** |
- * | 5 | `verify-watchers`, inspect | *(read-only)* proves 1-4 worked |
- * | 6 | `flush-buffers` | Dirty page cache |
+ * | # | Stage | Releases | Bound |
+ * |---|-------|----------|-------|
+ * | 1 | `close-viewers` | Every viewer's fd, player and Coil cache | [CLOSE_VIEWERS_TIMEOUT_MS] |
+ * | 2 | `quiesce` | Indexing jobs, adapter jobs and both filesystem watchers | 2 × [INDEX_IDLE_TIMEOUT_MS] |
+ * | 3 | `drop-caches` | Bitmaps, thumbnail and audio-art caches | — |
+ * | 4 | `verify-watchers`, inspect | *(read-only)* proves 1-3 worked, and reports what survives | — |
+ * | 5 | `flush-buffers` | Dirty page cache | — |
+ *
+ * Worst case before the unmount is issued is therefore ~9 s: 3 s in stage 1, 6 s in stage 2,
+ * plus [NAVIGATE_TIMEOUT_MS] for the host to leave the volume. Only stages 1 and 2 can block;
+ * 3-5 are unbounded in principle but do bounded work over this process's own tables.
  *
  * **Leaving the volume is not one of these stages.** It is [navigateOut], called by the eject
  * flow *after* the FR-09 gate and immediately before the unmount command. The plan originally
@@ -41,24 +44,27 @@ import kotlin.coroutines.resume
  * inside the volume *at the moment the unmount is issued*, so running it last satisfies the
  * requirement exactly while keeping those dialogs possible. The cost is that stages 1 and 3
  * find slightly more to clean up than they would have; they are designed to do that cleanup
- * anyway, and stage 4 catches anything they miss.
+ * anyway, and anything they miss is reported by stage 4 rather than closed.
  *
  * **Ordering within the release is load-bearing, not stylistic:**
  *  - Stages 1 and 3 must precede stage 4: the caches hold bitmaps that map files on the
  *    volume, and recycling a bitmap that is still displayed throws. Closing viewers first is
- *    what makes the cache sweep safe.
- *  - Stage 4 runs as late as possible because a closed descriptor number can be reused by the
- *    next `open(2)`, after which a stale reference would touch the wrong file.
- *  - Stage 6 runs *after* stage 4 deliberately. `flushBuffers()` forks a `sync` process, and a
- *    fork duplicates the parent's descriptor table — if the volume descriptors were still open
- *    at that moment the child would briefly hold copies of exactly the symlinks `vold` looks
- *    for. Closing first means there is nothing to inherit.
+ *    what makes the cache sweep safe — and it is also what makes stage 4's measurement
+ *    meaningful, since a cache dropped after the inspection would leave the report claiming a
+ *    claim survived when it had simply not been released yet.
+ *  - Stage 5 runs last so every write the earlier stages touched reaches the physical media
+ *    before the unmount is issued. `flushBuffers()` forks a `sync` process and a fork
+ *    duplicates the parent's descriptor table; running the flush last keeps what that child
+ *    inherits at its minimum, because stages 1-3 have already released their descriptors and
+ *    nothing after stage 5 opens a file.
  *
- * Stages 1 and 3 are the *targeted* release: each knows which component owns which claim, so
- * it can release that claim properly and cheaply. Stage 4 is the backstop, and a live
- * diagnostic is why it exists — a directory descriptor survived every single run, opened by
- * something the codebase cannot name. Enumerating known holders is therefore incomplete by
- * construction, and stage 4 closes whatever is left without needing to know the opener.
+ * Stages 1 and 3 are the *targeted* release: each knows which component owns which claim, so it
+ * can release that claim properly and cheaply. A live diagnostic showed why enumerating known
+ * holders is incomplete by construction — a directory descriptor survived every single run,
+ * opened by something the codebase cannot name. There is deliberately **no** stage that closes
+ * it. Closing a descriptor this process never opened trips fdsan's ownership check and aborts
+ * the process outright, so a claim surviving stages 1-3 is **reported, never closed** (FR-14),
+ * and the user decides whether to unmount regardless.
  *
  * Nothing here throws: every stage is isolated so one failure cannot abort the others, and the
  * failures are reported in [ClaimReport.failedStages] so the user is warned rather than
@@ -71,7 +77,7 @@ object VolumeClaimReleaser {
     /** How long a container gets to navigate out before the stage is treated as failed. */
     private const val NAVIGATE_TIMEOUT_MS = 3_000L
 
-    /** Outer bound on stage 2. The inner call is given this minus [CALLBACK_MARGIN_MS]. */
+    /** Outer bound on stage 1 (`close-viewers`). Inner call gets this minus [CALLBACK_MARGIN_MS]. */
     private const val CLOSE_VIEWERS_TIMEOUT_MS = 3_000L
 
     /**
@@ -111,7 +117,11 @@ object VolumeClaimReleaser {
 
         // 1 — every viewer, unconditionally, so their fds and players are gone.
         stage(failed, "close-viewers", Unit) {
-            val app = appContext as? UfmApplication ?: return@stage
+            // Throwing rather than returning quietly: a stage that silently reports "ok" when
+            // it did nothing is worse than one that reports failure, because FR-09 would then
+            // treat a volume full of live viewer descriptors as safe to unmount.
+            val app = appContext as? UfmApplication
+                ?: throw IllegalStateException("applicationContext is not a UfmApplication")
             val completed = awaitCallback(CLOSE_VIEWERS_TIMEOUT_MS) { done ->
                 app.closeAllViewers(done, CLOSE_VIEWERS_TIMEOUT_MS - CALLBACK_MARGIN_MS)
             }
@@ -121,7 +131,8 @@ object VolumeClaimReleaser {
         }
 
         // 2 — cancel background work and wait for it to actually stop (FR-04). Cancelling
-        //     without awaiting would leave the job free to open a descriptor after stage 4.
+        //     without awaiting would leave the job free to open a descriptor after stage 4 has
+        //     already reported the volume clear — a claim the user was told did not exist.
         stage(failed, "quiesce", Unit) {
             // Adapters the releaser does not own — Tab and Twin hosts keep theirs in a
             // fragment it cannot reach. Cancelled here rather than in stage 3 because these
@@ -129,6 +140,11 @@ object VolumeClaimReleaser {
             // opened its file yet, and a job that opens one after stage 4 leaves a descriptor
             // (or, worse, a mapping) the unmount will find. The standalone browser cancels
             // its own adapter before the release begins; cancelling again here is a no-op.
+            //
+            // Deliberately *not* moved inside the Dispatchers.IO block below. It walks every
+            // live adapter's backing file list, which is an unsynchronised mutableListOf owned
+            // by the main thread — reading it from an IO thread would be a data race, and the
+            // walk is bounded by what is currently on screen. Correctness over the micro-win.
             FileAdapter.cancelPendingJobsUnder(root)
             withContext(Dispatchers.IO) {
                 val indexer = FileIndexingService.getInstance(appContext)
@@ -152,12 +168,7 @@ object VolumeClaimReleaser {
             }
         }
 
-        // 4 — the backstop. Closes by target, not by owner.
-        val closed = stage(failed, "close-fds", emptyList<String>()) {
-            VolumeClaimInspector.closeClaimsUnder(volume)
-        }
-
-        // 5 — prove it worked. Watchers are queried here, after stage 2 stopped them, because
+        // 4 — prove it worked. Watchers are queried here, after stage 2 stopped them, because
         //     an inotify registration is invisible to both scans below.
         val survivingWatchers = stage(failed, "verify-watchers", emptyList<String>()) {
             RecentsChangeWatcher.activeWatchesUnder(root) +
@@ -168,29 +179,37 @@ object VolumeClaimReleaser {
             VolumeClaimInspector.inspect(
                 volume = volume,
                 watcherPaths = survivingWatchers,
-                failedStages = failed.toList(),
-                closedDescriptors = closed
+                failedStages = failed.toList()
             )
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             GoRoLog.w(TAG, "inspection failed: ${e.message}", e)
             failed.add("inspect")
-            ClaimReport(emptyList(), emptyList(), survivingWatchers, closed, failed.toList())
+            // Named, not positional: every field is a List<String>, so a transposition here
+            // would compile and be completely invisible. An empty claim
+            // list is the honest answer when the inspection itself failed — we do not know
+            // what survived, and the "inspect" failure is what warns the user.
+            ClaimReport(
+                fileDescriptors = emptyList(),
+                memoryMaps = emptyList(),
+                watcherPaths = survivingWatchers,
+                failedStages = failed.toList()
+            )
         }
 
-        // 6 — flush dirty page cache to the physical media.
+        // 5 — flush dirty page cache to the physical media.
         stage(failed, "flush-buffers", Unit) {
             if (!UsbEjectManager.flushBuffers()) {
                 throw IllegalStateException("sync did not report success")
             }
         }
 
-        // Rebuilt after the last stage so a stage-6 failure is reported too.
+        // Rebuilt after the last stage so a stage-5 failure is reported too.
         val report = inspected.copy(failedStages = failed.toList())
         GoRoLog.i(
             TAG,
-            "Release of ${volume.uuid} complete: ${report.closedCount} closed, " +
+            "Release of ${volume.uuid} complete: " +
                 "${report.fdCount} fd / ${report.mapCount} map / ${report.watcherCount} watcher " +
                 "surviving, ${report.failedCount} stage(s) failed"
         )
@@ -208,9 +227,9 @@ object VolumeClaimReleaser {
      *
      * [host] is null for the Main Menu, which has no in-volume UI to leave; that is a no-op
      * rather than a failure. Returns false if the host did not confirm within
-     * [NAVIGATE_TIMEOUT_MS], and the caller proceeds anyway: stage 4 has already closed every
-     * descriptor under the volume regardless of where the UI is pointing, so refusing the
-     * unmount here would override an explicit "Unmount Anyway" with no data-safety gain.
+     * [NAVIGATE_TIMEOUT_MS], and the caller proceeds anyway: the user has already answered the
+     * FR-09 warning, so abandoning the unmount at this point would silently override an explicit
+     * "Unmount Anyway" for no data-safety gain.
      */
     suspend fun navigateOut(host: VolumeEjectHost?): Boolean {
         if (host == null) return true

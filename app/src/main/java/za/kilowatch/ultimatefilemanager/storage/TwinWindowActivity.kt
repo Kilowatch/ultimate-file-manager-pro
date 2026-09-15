@@ -768,11 +768,35 @@ class TwinWindowActivity : AppCompatActivity() {
             return
         }
 
-        val pane1Affected = isPaneOnRemovedVolume(getPane1(), removedPath)
-        val pane2Affected = isPaneOnRemovedVolume(getPane2(), removedPath)
-        if (!pane1Affected && !pane2Affected) return
+        // The broadcast says *which* volume went; the onResume re-check does not, so it has to
+        // ask the filesystem. That stat is a blocking syscall against a card that has just
+        // failed — the exact case this path exists for, and the one where it is slowest — so it
+        // runs off the main thread, with the pruning applied back on it.
+        if (removedPath == null) {
+            // The roots are read here, on the main thread: FragmentManager access is not
+            // thread-safe. Only the stat itself is offloaded.
+            val roots = listOf(1 to localPaneRoot(getPane1()), 2 to localPaneRoot(getPane2()))
+            lifecycleScope.launch {
+                val affected = withContext(Dispatchers.IO) {
+                    roots.mapNotNull { (index, root) ->
+                        if (root != null && !File(root).exists()) index else null
+                    }
+                }
+                if (affected.isNotEmpty()) closePanesForRemoval(affected)
+            }
+            return
+        }
 
-        if (pane1Affected && pane2Affected) {
+        val affected = mutableListOf<Int>()
+        if (isPaneOnVolume(getPane1(), removedPath)) affected.add(1)
+        if (isPaneOnVolume(getPane2(), removedPath)) affected.add(2)
+        if (affected.isEmpty()) return
+        closePanesForRemoval(affected)
+    }
+
+    /** Applies the pane pruning decided by [prunePanesOnRemovedVolumes]. Runs on the main thread. */
+    private fun closePanesForRemoval(affected: List<Int>) {
+        if (affected.size == 2) {
             // Both panes were on it, so FR-06's Twin Window destination — collapse to the
             // surviving pane — has no survivor to collapse to. Fall back to the Main Menu, which
             // is what the other containers do when the last surface on a volume is closed.
@@ -790,7 +814,7 @@ class TwinWindowActivity : AppCompatActivity() {
             return
         }
 
-        val closedIndex = if (pane1Affected) 1 else 2
+        val closedIndex = affected.first()
         Log.i(TAG_TWIN, "Volume removed; closing pane $closedIndex")
         closePane(closedIndex)
         Toast.makeText(
@@ -801,22 +825,27 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     /**
-     * Whether [fragment] is a local pane rooted on a volume that is no longer available.
+     * The pane's root when it is a local pane on removable media, else null.
      *
      * Network and cloud panes hold no local volume, so they are never affected — which is also
      * why the `is FileBrowserFragment` test is the whole of that case rather than a per-type list.
      * [UsbEjectManager.isRemovablePath] excludes internal storage and SAF trees, so a drive going
      * away can never close a pane that was never on it.
+     *
+     * Main thread only: reads the fragment's state.
      */
-    private fun isPaneOnRemovedVolume(fragment: Fragment?, removedPath: String?): Boolean {
-        if (fragment !is FileBrowserFragment) return false
+    private fun localPaneRoot(fragment: Fragment?): String? {
+        if (fragment !is FileBrowserFragment) return null
         val root = fragment.getRootPath()
-        if (root.isEmpty()) return false
-        if (!UsbEjectManager.isRemovablePath(this, root)) return false
-        if (removedPath != null) {
-            return root == removedPath || root.startsWith("$removedPath/")
-        }
-        return !File(root).exists()
+        if (root.isEmpty()) return null
+        if (!UsbEjectManager.isRemovablePath(this, root)) return null
+        return root
+    }
+
+    /** Pure path comparison against a volume the broadcast named. Main thread only. */
+    private fun isPaneOnVolume(fragment: Fragment?, removedPath: String): Boolean {
+        val root = localPaneRoot(fragment) ?: return false
+        return root == removedPath || root.startsWith("$removedPath/")
     }
 
     private fun registerVolumeReceiver() {
@@ -824,6 +853,9 @@ class TwinWindowActivity : AppCompatActivity() {
             addAction(Intent.ACTION_MEDIA_UNMOUNTED)
             addAction(Intent.ACTION_MEDIA_EJECT)
             addAction(Intent.ACTION_MEDIA_REMOVED)
+            // An unsafe yank. The sibling of ACTION_MEDIA_REMOVED, and the case where a pane is
+            // most likely to be sitting on a volume that is already gone.
+            addAction(Intent.ACTION_MEDIA_BAD_REMOVAL)
             addDataScheme("file")
         }
         volumeReceiver = object : android.content.BroadcastReceiver() {
@@ -831,7 +863,19 @@ class TwinWindowActivity : AppCompatActivity() {
                 prunePanesOnRemovedVolumes(intent?.data?.path)
             }
         }
-        registerReceiver(volumeReceiver, filter)
+        // These are protected system broadcasts, so the Android 14 export flag is not strictly
+        // required here — but the rest of the app registers this same media filter through the
+        // guarded form (RecentsChangeWatcher, NetworkBrowserActivity, NetworkFileAdapter), and
+        // this was the one place that did not.
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(volumeReceiver, filter, android.content.Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                registerReceiver(volumeReceiver, filter)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG_TWIN, "Failed to register volume receiver: ${e.message}")
+        }
     }
 
     private fun animateGuideline(targetPercent: Float) {

@@ -522,17 +522,28 @@ class FileIndexingService(
      * is issued — cancelling alone leaves a job mid-walk with descriptors still open. The loop
      * re-checks after joining because a finishing job can register another.
      *
-     * Never throws: a timeout is logged and returns. The caller proceeds to the inspection
-     * stage, which reports whatever actually survived rather than assuming this succeeded.
+     * On timeout it logs and returns, so the caller proceeds to the inspection stage, which
+     * reports whatever actually survived rather than assuming this succeeded. A cancellation of
+     * the *calling* coroutine is not a timeout and is rethrown.
      */
     suspend fun awaitIdle(storageId: String, timeoutMs: Long = 5_000L) {
         val completed = withTimeoutOrNull(timeoutMs) {
             while (true) {
+                // Skip jobs whose `finally` has already run. A job cancelled by [cancelIndexing]
+                // stays in the map until its own cleanup removes it, and joining an already
+                // completed job returns instantly — so without this filter the loop could spin
+                // on a stale entry instead of exiting.
                 val pending = activeIndexingJobs
                     .filterKeys { storageIdOfJobKey(it) == storageId }
-                    .values.toList()
+                    .values.filter { !it.isCompleted }
                 if (pending.isEmpty()) break
-                pending.forEach { job -> try { job.join() } catch (_: Exception) { } }
+                // Deliberately no catch. CancellationException is an Exception, and swallowing
+                // it here defeats withTimeoutOrNull: once the deadline fires, join() rethrows
+                // immediately *without suspending*, so this block never returns, the timeout
+                // never completes, and the caller's eject coroutine — and the re-entrancy guard
+                // it holds — is stuck for the life of the process. VolumeClaimReleaser.stage
+                // rethrows for the same reason.
+                pending.forEach { job -> job.join() }
             }
             true
         }

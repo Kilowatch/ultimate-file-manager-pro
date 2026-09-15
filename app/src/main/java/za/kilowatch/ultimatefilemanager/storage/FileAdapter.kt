@@ -65,6 +65,8 @@ class FileAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
+        private const val TAG = "FileAdapter"
+
         private val videoCache = android.util.LruCache<String, android.graphics.Bitmap>(64)
         val thumbnailPathCache = java.util.concurrent.ConcurrentHashMap<String, String>()
 
@@ -139,9 +141,11 @@ class FileAdapter(
          * starts — but the Tab and Twin hosts are `FileBrowserFragment` /
          * `NetworkBrowserFragment`, whose adapters the releaser cannot reach at all. Without
          * this registry their warm-cache and child-count jobs would keep running through the
-         * release, and a job that opens a file *after* the descriptor-close stage leaves a
-         * claim the unmount will find. Stage 4's re-scan catches a reopened descriptor but
-         * **not** a mapping, and a mapping is plan R1 — the one claim Java cannot release.
+         * release, and a job that opens a file *after* stage 4 has reported the volume clear
+         * leaves a claim the unmount will find — one the user was never warned about. Stage 4
+         * cannot catch it either: its scan is a single snapshot, so a claim opened after that
+         * snapshot is invisible to it. A mapping opened late is worse still, because a mapping
+         * is plan R1 — the one claim Java cannot release at all.
          *
          * Weak so a destroyed Activity's adapter is collectable without an explicit
          * unregister; a leak here would be worse than the bug it prevents. The map is
@@ -182,7 +186,7 @@ class FileAdapter(
                 }
             }
             if (cancelled > 0) {
-                GoRoLog.i("FileAdapter", "Cancelled pending jobs on $cancelled adapter(s) under $root")
+                GoRoLog.i(TAG, "Cancelled pending jobs on $cancelled adapter(s) under $root")
             }
         }
     }
@@ -292,6 +296,13 @@ class FileAdapter(
      *
      * Matching uses a path-segment boundary, matching [clearVolumeCaches]: `/storage/7DE2-1219`
      * must not match the sibling `/storage/7DE2-12190`.
+     *
+     * **Main thread only.** [files] is the adapter's backing list and carries no synchronisation —
+     * it is written by [submitList] on the main thread, and reading it from anywhere else is a
+     * data race. The sole caller, [cancelPendingJobsUnder], is reached from
+     * `VolumeClaimReleaser.releaseAll` on `Dispatchers.Main`; that is why the release phase
+     * deliberately keeps the caller on the main dispatcher instead of moving it to
+     * `Dispatchers.IO` for the cheaper walk.
      */
     private fun isShowingPathUnder(root: String, prefix: String): Boolean {
         for (f in files) {

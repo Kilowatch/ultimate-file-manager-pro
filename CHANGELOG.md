@@ -5,16 +5,6 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
-- **Removal Warning When a Drive Is Still in Use**: Before an elevated unmount, UFM now inspects the target volume and reports what still holds it open — open files, memory-mapped files, and watched folders. `Unmount Anyway` proceeds; `Keep It Mounted` aborts without touching the volume. Previously the unmount was issued with no warning, even when the app itself still held a reference.
-- **Twin Window Handles Storage Removal**: If a volume is disconnected while Twin Window is open, the pane showing it is closed and the surviving pane is promoted. If both panes were on that volume, UFM returns to the Main Menu. A message explains what happened in both cases.
-
-### Fixed
-- **Safe Removal No Longer Terminates the App**: Ejecting an SD card, USB drive or external HDD could close UFM instantly, with no error message and no crash report. Android's `vold` daemon signals every process still holding a reference to a volume before unmounting it, and because UFM issues the unmount itself, it was signalled by its own request. The release sequence now enumerates open file descriptors and closes every one under the target volume regardless of which part of the app opened it, re-inspects the volume afterwards to prove it is clear, and only then flushes buffered writes to disk.
-- **Tabbed Browsing Explains Tabs Closed by Storage Removal**: When storage was disconnected while UFM was in the background, the affected tabs were closed before the user returned, so the message explaining why was never seen. Tabs are now pruned on return to the foreground, so the explanation is shown.
-
 ## [2.0.8] — 2026-09-14
 
 ### Added
@@ -22,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Mock USB OTG Drive Simulator**: Added an optional simulated USB OTG drive with realistic sample files for testing mounting, browsing, transfers, and safe removal without physical hardware. Completely hidden from Settings and the UI when the feature toggle is disabled.
 - **Unmounted Storage Detection & 1-Tap Remount**: Connected SD cards, USB drives, and simulated drives that are in an unmounted/ejected state are now retained on the main storage screen with an `(Unmounted)` badge, tap-to-mount subtitle, and dedicated Mount button (📥). Supports elevated 1-tap remounting via Shizuku/Root or direct 1-tap shortcut to Android OS Storage Settings for standard users.
 - Display installed application icons as badges on the top-right corner of folders in `Android/data`, `Android/obb`, and `Android/media` on mobile.
+- **Removal Warning When a Drive Is Still in Use**: Before an elevated unmount, UFM now inspects the target volume and reports what still holds it open — open files, memory-mapped files, and watched folders. `Unmount Anyway` proceeds; `Keep It Mounted` aborts without touching the volume. Previously the unmount was issued with no warning, even when the app itself still held a reference.
+- **Twin Window Handles Storage Removal**: If a volume is disconnected while Twin Window is open, the pane showing it is closed and the surviving pane is promoted. If both panes were on that volume, UFM returns to the Main Menu. A message explains what happened in both cases.
 
 ### Fixed
 - **Unmount Vold SIGINT Termination**: Fixed an issue where unmounting an SD card or USB drive caused the Android `vold` daemon to terminate the app with `SIGINT` due to lingering directory file descriptors held by background coroutines on `GlobalScope`. Coroutines in `FileAdapter` are now bound to an adapter-lifecycle-scoped job, cancelled on detach, and flushed with a brief synchronization pause before elevated unmounting.
@@ -30,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Media Playback Foreground Service Watchdog Crash**: Fixed `RemoteServiceException$ForegroundServiceDidNotStartInTimeException` in `UFMPlaybackService` on Android SDK 36 (Android 14+) by invoking `safeStartForeground` immediately in `onCreate()` and at the top of `onStartCommand()`, gracefully calling `stopSelf()` if foreground promotion fails, preferring `startService()` over `startForegroundService()` from foreground activities, guarding against empty playback commands when re-entering from the mini-player or notifications, resolving `intent.data` paths, and avoiding synchronous SAF file size queries on the main looper for large playlists.
 - **Twin Window Crash on Recreate / Split Change**: Fixed `IllegalArgumentException: No view found for id ... (paneBottom)` in `TwinWindowActivity` by standardizing pane container IDs (`pane1` and `pane2`) across all mobile and TV horizontal/vertical layouts, and discarding stale fragment state on recreation so orientation and split preference switches never attempt to restore fragments into missing containers.
 - **ADB Session Foreground Service Watchdog Crash**: Fixed `RemoteServiceException$ForegroundServiceDidNotStartInTimeException` in `AdbSessionForegroundService` by promoting to foreground on every `onStartCommand` invocation, guarding background starts on Android 14+ (SDK 34–36) via `ProcessLifecycleOwner`, and deferring service termination to the main looper to prevent immediate ActiveServices binder contract violations.
+- **Safe Removal No Longer Terminates the App**: Ejecting an SD card, USB drive or external HDD could close UFM instantly, with no error message and no crash report. Android's `vold` daemon signals every process still holding a reference to a volume before unmounting it, and because UFM issues the unmount itself, it was signalled by its own request. Before an elevated unmount, UFM now closes the viewers, caches and background jobs it holds on the target volume, re-inspects the volume afterwards to report anything still holding it open, and flushes buffered writes to disk last.
+- **Tabbed Browsing Explains Tabs Closed by Storage Removal**: When storage was disconnected while UFM was in the background, the affected tabs were closed before the user returned, so the message explaining why was never seen. Tabs are now pruned on return to the foreground, so the explanation is shown.
 
 ## [2.0.7] — 2026-09-13
 

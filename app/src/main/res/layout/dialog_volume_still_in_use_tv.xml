@@ -7,7 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="650dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_dialog_glass"
@@ -70,38 +70,37 @@
         android:layout_marginBottom="20dp"
         tools:text="Open files: 2\nWatched folders: 3" />
 
-    <!-- Primary: proceed anyway -->
-    <com.google.android.material.button.MaterialButton
+    <!-- Primary: proceed anyway. Plain Button, not MaterialButton: the D-pad focus state
+         comes from @drawable/selector_tv_button_danger (white stroke + ufmDenied fill when
+         focused), and MaterialButton ignores android:background. Same form as the sibling
+         destructive confirm, dialog_apk_extract_reset_confirm_tv.xml. White text reads on
+         both states — the default fill is glass, the focused fill is danger red. -->
+    <Button
         android:id="@+id/btnProceed"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="@string/volume_still_in_use_continue"
+        android:background="@drawable/selector_tv_button_danger"
         android:textColor="@android:color/white"
         android:textSize="15sp"
         android:fontFamily="sans-serif-bold"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        app:cornerRadius="12dp"
-        app:icon="@drawable/ic_warning"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@android:color/white"
-        app:backgroundTint="?attr/ufmDenied"
+        android:drawableStart="@drawable/ic_warning"
+        android:drawablePadding="8dp"
+        android:drawableTint="@android:color/white"
         android:focusable="true"
         android:layout_marginBottom="8dp" />
 
-    <!-- Secondary: the safe exit, and what Back does -->
-    <com.google.android.material.button.MaterialButton
+    <!-- Secondary: the safe exit, and what Back does. This is the initially-focused button
+         (VolumeStillInUseDialog requestFocus), so its focus state is the one that matters
+         most — @color/tv_button_text_selector keeps the label legible on the yellow fill. -->
+    <Button
         android:id="@+id/btnKeepMounted"
-        style="@style/Widget.Material3Expressive.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:text="@string/volume_still_in_use_keep"
+        android:background="@drawable/selector_tv_button"
+        android:textColor="@color/tv_button_text_selector"
         android:textSize="14sp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        app:cornerRadius="12dp"
-        android:focusable="true"
-        android:textColor="@color/tv_text_secondary" />
+        android:focusable="true" />
 
 </LinearLayout>

@@ -70,7 +70,10 @@
         android:layout_marginBottom="20dp"
         tools:text="Open files: 2\nWatched folders: 3" />
 
-    <!-- Primary: proceed anyway -->
+    <!-- Primary: proceed anyway. Deliberate deviation from the UFMStandard primary button,
+         which uses app:backgroundTint="?attr/colorPrimary": this is a destructive action, so
+         it carries the denied/error colour instead. The icon and white text are chosen for
+         that fill. -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnProceed"
         android:layout_width="match_parent"
