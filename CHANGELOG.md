@@ -15,7 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **WebDAV Read-Ahead**: Added 256 KB stream buffer and 2 MB sliding RAM window to `WebDavShareClient` for zero-latency sequential reads and container header inspection.
 - **Protocol Thumbnail Extraction**: Accelerated WebDAV, Dropbox, S3, and DLNA video thumbnails using random-access frame extraction and 256 KB read buffers.
 - **RClone Streaming Thumbnail Pipeline**: Switched photo thumbnail decoding to streaming range reads, eliminating full-file disk downloads.
-- **SAF DocumentsProvider Acceleration**: Implemented `openDocumentThumbnail` returning direct cached WebP descriptors to external launchers (e.g., Projectivy) and expanded FUSE proxy read-ahead cache to 4 MB.
+### Fixed
+- **FOSS Updater Loop**: Resolved an issue where the cached update dialog repeatedly reappeared on activity resume due to missing session guards and unpersisted dismissal states.
+- **Multiple Install Sessions**: Added active-session locks and single-prompt guards to prevent redundant `PackageInstaller` sessions and repeated "APK Ready to Install" notifications from spawning when confirming an in-app update.
+- **Self-Update Cancellation**: Suppressed the intrusive abort error dialog when an in-app self-update session is cancelled by the user.
 
 ## [2.0.8] — 2026-09-14
 

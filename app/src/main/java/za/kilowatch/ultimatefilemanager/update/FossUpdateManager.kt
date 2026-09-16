@@ -60,6 +60,12 @@ object FossUpdateManager {
     @Volatile
     private var isDownloadCancelled = false
 
+    @Volatile
+    private var isInstalling = false
+
+    @Volatile
+    private var hasPromptedPendingThisProcess = false
+
     data class ReleaseInfo(
         val version: String,
         val tagName: String,
@@ -249,6 +255,7 @@ object FossUpdateManager {
     fun checkOnAppOpen(activity: Activity) {
         if (!BuildConfig.IS_FOSS) return
         if (!FossUpdatePreferenceManager.isAutoCheckEnabled(activity)) return
+        if (isInstalling || hasPromptedPendingThisProcess) return
 
         // Check for a cached APK that was downloaded but not yet installed
         val pendingVersion = FossUpdatePreferenceManager.getPendingUpdateVersion(activity)
@@ -257,10 +264,19 @@ object FossUpdateManager {
             val pendingFile = File(pendingPath)
             if (pendingFile.exists() && pendingFile.length() > 0) {
                 if (isNewerVersion(pendingVersion, BuildConfig.VERSION_NAME)) {
-                    // We have a valid cached APK — try to install it directly
+                    // Check if the user already dismissed this version
+                    if (FossUpdatePreferenceManager.isVersionDismissed(activity, pendingVersion)) {
+                        return
+                    }
+                    // We have a valid cached APK — prompt to install it directly (once per process)
                     if (!activity.isFinishing && !activity.isDestroyed) {
+                        hasPromptedPendingThisProcess = true
                         tryInstallCachedApk(activity, pendingFile, pendingVersion)
                     }
+                    return
+                } else {
+                    // Cached APK is current or older — clean up immediately
+                    cleanupUpdateCache(activity)
                     return
                 }
             }
@@ -303,13 +319,18 @@ object FossUpdateManager {
     private fun tryInstallCachedApk(activity: Activity, apkFile: File, version: String) {
         MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
             .setTitle(activity.getString(R.string.update_available_title, version))
-            .setMessage(activity.getString(R.string.update_download_complete))
+            .setMessage(activity.getString(R.string.update_version_comparison, BuildConfig.VERSION_NAME, version))
             .setPositiveButton(R.string.update_download_complete) { dialog, _ ->
                 dialog.dismiss()
+                hasPromptedPendingThisProcess = true
                 installDownloadedApk(activity, apkFile, version)
             }
             .setNegativeButton(R.string.update_btn_remind_later) { dialog, _ ->
                 dialog.dismiss()
+                FossUpdatePreferenceManager.dismissVersion(activity, version)
+            }
+            .setOnCancelListener {
+                FossUpdatePreferenceManager.dismissVersion(activity, version)
             }
             .show()
     }
@@ -378,17 +399,31 @@ object FossUpdateManager {
         txtChangelog?.text = changelogBody
 
         val targetApkName = release.getTargetApkName(activity)
-        btnDownload?.text = activity.getString(R.string.update_btn_download, targetApkName)
+        val cacheDir = File(activity.cacheDir, UPDATE_CACHE_DIR)
+        val cachedApk = File(cacheDir, targetApkName)
+        val pendingVersion = FossUpdatePreferenceManager.getPendingUpdateVersion(activity)
+        val isAlreadyCached = !isTv && cachedApk.exists() && cachedApk.length() > 0 &&
+            pendingVersion.equals(release.version, ignoreCase = true)
 
-        btnDownload?.setOnClickListener {
-            if (isTv) {
-                // TV: keep browser-based download (different interaction model)
+        if (isAlreadyCached) {
+            btnDownload?.text = activity.getString(R.string.update_download_complete)
+            btnDownload?.setOnClickListener {
                 dialog.dismiss()
-                val downloadUrl = release.getTargetApkUrl(activity)
-                openUrl(activity, downloadUrl)
-            } else {
-                // Mobile: in-app download + auto-install
-                startInAppDownload(activity, release, btnDownload, progressBar, btnViewRelease, btnRemindLater, dialog)
+                hasPromptedPendingThisProcess = true
+                installDownloadedApk(activity, cachedApk, release.version)
+            }
+        } else {
+            btnDownload?.text = activity.getString(R.string.update_btn_download, targetApkName)
+            btnDownload?.setOnClickListener {
+                if (isTv) {
+                    // TV: keep browser-based download (different interaction model)
+                    dialog.dismiss()
+                    val downloadUrl = release.getTargetApkUrl(activity)
+                    openUrl(activity, downloadUrl)
+                } else {
+                    // Mobile: in-app download + auto-install
+                    startInAppDownload(activity, release, btnDownload, progressBar, btnViewRelease, btnRemindLater, dialog)
+                }
             }
         }
 
@@ -498,6 +533,7 @@ object FossUpdateManager {
                 dialog.setOnDismissListener(null) // Prevent cancelDownload() on dismiss
                 dialog.dismiss()
 
+                hasPromptedPendingThisProcess = true
                 installDownloadedApk(activity, result, release.version)
             } else {
                 // Download failed or was cancelled
@@ -597,17 +633,34 @@ object FossUpdateManager {
      * On success, Android will show the system install confirmation dialog.
      */
     private fun installDownloadedApk(context: Context, apkFile: File, version: String) {
+        if (isInstalling) {
+            Log.w(TAG, "Install already in progress for v$version, ignoring duplicate request")
+            return
+        }
+        isInstalling = true
         try {
             PackageInstallerHelper.installApk(context, apkFile)
             Log.d(TAG, "Install session committed for v$version")
         } catch (e: SecurityException) {
+            isInstalling = false
             // Install permission not granted — guide user
             Toast.makeText(context, R.string.update_install_permission_required, Toast.LENGTH_LONG).show()
             Log.w(TAG, "Install permission denied: ${e.message}")
         } catch (e: Exception) {
+            isInstalling = false
             Toast.makeText(context, R.string.update_download_failed, Toast.LENGTH_LONG).show()
             Log.e(TAG, "Install failed: ${e.message}", e)
             FossUpdatePreferenceManager.clearPendingUpdate(context)
+        }
+    }
+
+    /**
+     * Called when an install session finishes (either from InstallReceiver or when cleaned up).
+     */
+    fun onInstallSessionFinished(context: Context, isSuccess: Boolean) {
+        isInstalling = false
+        if (isSuccess) {
+            cleanupUpdateCache(context)
         }
     }
 

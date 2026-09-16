@@ -959,6 +959,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     private var hasShownReviewPopupThisSession = false
     private var hasCheckedAutoBackupRestoreThisSession = false
     private var hasCheckedCrashReportThisSession = false
+    private var hasCheckedFossUpdateThisSession = false
     /** Timestamp of the last background device-ping pass. Prevents hammering the OEM
      *  Kumiho telemetry hook (and the network) every time onResume fires. */
     private var lastDevicePingMs = 0L
@@ -1035,8 +1036,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             CrashReportDialogHelper.maybeShowCrashReportDialog(this, lifecycleScope)
         }
 
-        // Check for FOSS updates on app launch / re-open
-        if (za.kilowatch.ultimatefilemanager.BuildConfig.IS_FOSS) {
+        // Check for FOSS updates on app launch / re-open (at most once per activity session)
+        if (za.kilowatch.ultimatefilemanager.BuildConfig.IS_FOSS && !hasCheckedFossUpdateThisSession) {
+            hasCheckedFossUpdateThisSession = true
             za.kilowatch.ultimatefilemanager.update.FossUpdateManager.checkOnAppOpen(this)
         }
     }

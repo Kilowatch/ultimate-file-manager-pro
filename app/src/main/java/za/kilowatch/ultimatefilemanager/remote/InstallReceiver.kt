@@ -67,12 +67,19 @@ class InstallReceiver : BroadcastReceiver() {
             //   notification provides the fallback — the user taps it to confirm.
             //
             // Both calls are safe to fire together; at most one will be visible.
+            var startedActivitySuccessfully = false
             try {
                 context.startActivity(confirmIntent)
+                startedActivitySuccessfully = true
             } catch (e: Exception) {
                 Log.w(TAG, "startActivity for install prompt failed (expected on Android 10+ background): ${e.message}")
             }
-            showInstallPromptNotification(context, confirmIntent)
+
+            // Only post heads-up notification if startActivity failed (e.g. background restriction on Android 10+)
+            // or if this is a remote job (where screen may be off or backgrounded).
+            if (!startedActivitySuccessfully || jobId.isNotEmpty()) {
+                showInstallPromptNotification(context, confirmIntent)
+            }
             return // Cleanup happens after the user confirms (next callback)
         }
 
@@ -87,6 +94,19 @@ class InstallReceiver : BroadcastReceiver() {
         val packageName = intent.getStringExtra("packageName")?.takeIf { it.isNotBlank() } ?: extraPackage
         val appName = intent.getStringExtra("appName") ?: ""
         val fileName = intent.getStringExtra("fileName") ?: ""
+
+        val isSelfUpdate = (packageName == context.packageName)
+        if (isSelfUpdate) {
+            za.kilowatch.ultimatefilemanager.update.FossUpdateManager.onInstallSessionFinished(
+                context,
+                isSuccess = (status == PackageInstaller.STATUS_SUCCESS)
+            )
+            // If user aborted/cancelled self-update, do not show the error dialog
+            if (status == PackageInstaller.STATUS_FAILURE_ABORTED) {
+                Log.d(TAG, "Self-update install session aborted by user or system, suppressing result dialog")
+                return
+            }
+        }
 
         val resultIntent = za.kilowatch.ultimatefilemanager.ui.InstallResultActivity.createIntent(
             context, status, statusMessage, packageName, appName, fileName
