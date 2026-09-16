@@ -24,9 +24,7 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
+
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
@@ -54,12 +52,7 @@ import java.util.concurrent.TimeUnit
  */
 class BoxAuthActivity : AppCompatActivity() {
 
-    private val httpClient by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .build()
-    }
+
     private val gson = Gson()
 
     companion object {
@@ -248,37 +241,30 @@ class BoxAuthActivity : AppCompatActivity() {
     }
 
     private suspend fun exchangeCode(code: String): JsonObject = withContext(Dispatchers.IO) {
-        val formBody = FormBody.Builder()
-            .add("code", code)
-            .add("client_id", BoxOAuthConfig.CLIENT_ID)
-            .add("client_secret", BoxOAuthConfig.CLIENT_SECRET)
-            .add("redirect_uri", BoxOAuthConfig.REDIRECT_URI)
-            .add("grant_type", "authorization_code")
-            .build()
-
-        httpClient.newCall(
-            Request.Builder()
-                .url("https://api.box.com/oauth2/token")
-                .post(formBody)
-                .build()
-        ).execute().use { response ->
-            val body = response.body?.string() ?: ""
-            if (!response.isSuccessful) throw IOException("Token exchange failed (${response.code}): $body")
-            gson.fromJson(body, JsonObject::class.java)
-        }
+        val formParams = mapOf(
+            "code" to code,
+            "client_id" to BoxOAuthConfig.CLIENT_ID,
+            "client_secret" to BoxOAuthConfig.CLIENT_SECRET,
+            "redirect_uri" to BoxOAuthConfig.REDIRECT_URI,
+            "grant_type" to "authorization_code"
+        )
+        val response = UfmHttpClient.postFormSync(
+            "https://api.box.com/oauth2/token",
+            headers = emptyMap(),
+            formFields = formParams
+        )
+        val body = response.bodyString
+        if (!response.isSuccessful) throw IOException("Token exchange failed (${response.statusCode}): $body")
+        gson.fromJson(body, JsonObject::class.java)
     }
 
     private suspend fun fetchUserInfo(accessToken: String): JsonObject = withContext(Dispatchers.IO) {
-        httpClient.newCall(
-            Request.Builder()
-                .url("https://api.box.com/2.0/users/me")
-                .header("Authorization", "Bearer $accessToken")
-                .get()
-                .build()
-        ).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("Userinfo failed: ${response.code}")
-            gson.fromJson(response.body?.string(), JsonObject::class.java)
-        }
+        val response = UfmHttpClient.getSync(
+            "https://api.box.com/2.0/users/me",
+            headers = mapOf("Authorization" to "Bearer $accessToken")
+        )
+        if (!response.isSuccessful) throw IOException("Userinfo failed: ${response.statusCode}")
+        gson.fromJson(response.bodyString, JsonObject::class.java)
     }
 
     private fun showAuthErrorDialog(message: String) {

@@ -21,21 +21,20 @@ import androidx.core.app.NotificationManagerCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Call
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.network.UfmHttpClient
 import za.kilowatch.ultimatefilemanager.settings.FossUpdatePreferenceManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.PackageInstallerHelper
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 /**
  * FOSS Release Update Manager
@@ -58,25 +57,8 @@ object FossUpdateManager {
     // Throttle automatic app-open checks to at most once per 4 hours
     private const val THROTTLE_INTERVAL_MS = 4 * 60 * 60 * 1000L
 
-    /** Active OkHttp download call — used for cancellation on dialog dismiss. */
-    private var activeDownloadCall: Call? = null
-
-    private val httpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(12, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .build()
-    }
-
-    /** Dedicated client for APK downloads — longer timeouts for large files. */
-    private val downloadClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(5, TimeUnit.MINUTES)
-            .followRedirects(true)
-            .followSslRedirects(true)
-            .build()
-    }
+    @Volatile
+    private var isDownloadCancelled = false
 
     data class ReleaseInfo(
         val version: String,
@@ -149,15 +131,10 @@ object FossUpdateManager {
 
     private fun fetchFromEndpoint(url: String): ReleaseInfo? {
         return try {
-            val request = Request.Builder()
-                .url(url)
-                .header("User-Agent", "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}")
-                .get()
-                .build()
-
-            val response = httpClient.newCall(request).execute()
-            val body = response.body?.string() ?: return null
+            val headers = mapOf("User-Agent" to "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}")
+            val response = UfmHttpClient.getSync(url, headers = headers, timeoutSec = 15)
             if (!response.isSuccessful) return null
+            val body = response.bodyString
 
             val json = JSONObject(body)
             val success = json.optBoolean("success", true)
@@ -198,16 +175,13 @@ object FossUpdateManager {
 
     private fun fetchFromGitHubApi(url: String): ReleaseInfo? {
         return try {
-            val request = Request.Builder()
-                .url(url)
-                .header("User-Agent", "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}")
-                .header("Accept", "application/vnd.github.v3+json")
-                .get()
-                .build()
-
-            val response = httpClient.newCall(request).execute()
-            val body = response.body?.string() ?: return null
+            val headers = mapOf(
+                "User-Agent" to "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}",
+                "Accept" to "application/vnd.github.v3+json"
+            )
+            val response = UfmHttpClient.getSync(url, headers = headers, timeoutSec = 15)
             if (!response.isSuccessful) return null
+            val body = response.bodyString
 
             val json = JSONObject(body)
             val tagName = json.optString("tag_name", "")
@@ -496,11 +470,13 @@ object FossUpdateManager {
 
         val downloadUrl = release.getTargetApkUrl(activity)
         val targetApkName = release.getTargetApkName(activity)
+        isDownloadCancelled = false
 
-        CoroutineScope(Dispatchers.Main).launch {
+        val scope = (activity as? LifecycleOwner)?.lifecycleScope ?: CoroutineScope(Dispatchers.Main)
+        scope.launch {
             val result = downloadApk(activity, downloadUrl, targetApkName) { progress ->
                 // Progress callback — runs on IO thread, post to main
-                CoroutineScope(Dispatchers.Main).launch {
+                activity.runOnUiThread {
                     if (!activity.isFinishing && !activity.isDestroyed) {
                         btnDownload.text = activity.getString(R.string.update_downloading, progress)
                         progressBar?.setProgressCompat(progress, true)
@@ -560,34 +536,26 @@ object FossUpdateManager {
         tempFile.delete()
 
         try {
-            val request = Request.Builder()
-                .url(url)
-                .header("User-Agent", "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}")
-                .build()
-
-            val call = downloadClient.newCall(request)
-            activeDownloadCall = call
-
-            val response = call.execute()
+            val headers = mapOf("User-Agent" to "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}")
+            val response = UfmHttpClient.openStream(url, headers = headers, timeoutSec = 60)
             if (!response.isSuccessful) {
-                Log.w(TAG, "Download failed: HTTP ${response.code}")
+                Log.w(TAG, "Download failed: HTTP ${response.statusCode}")
+                response.close()
                 return@withContext null
             }
 
-            val body = response.body ?: run {
-                Log.w(TAG, "Download failed: empty response body")
-                return@withContext null
-            }
-
-            val contentLength = body.contentLength()
+            val contentLength = response.header("Content-Length")?.toLongOrNull() ?: -1L
             var bytesRead = 0L
             var lastReportedProgress = -1
 
             tempFile.outputStream().use { output ->
-                body.byteStream().use { input ->
+                response.inputStream.use { input ->
                     val buffer = ByteArray(8192)
                     var read: Int
                     while (input.read(buffer).also { read = it } != -1) {
+                        if (isDownloadCancelled) {
+                            throw java.io.IOException("Download cancelled by user")
+                        }
                         output.write(buffer, 0, read)
                         bytesRead += read
 
@@ -601,8 +569,7 @@ object FossUpdateManager {
                     }
                 }
             }
-
-            activeDownloadCall = null
+            response.close()
 
             // Rename temp → final atomically
             targetFile.delete()
@@ -615,9 +582,8 @@ object FossUpdateManager {
                 return@withContext null
             }
         } catch (e: Exception) {
-            activeDownloadCall = null
             tempFile.delete()
-            if (e is java.io.IOException && e.message?.contains("Canceled") == true) {
+            if (isDownloadCancelled || (e is java.io.IOException && e.message?.contains("cancelled", ignoreCase = true) == true)) {
                 Log.d(TAG, "Download cancelled by user")
             } else {
                 Log.w(TAG, "Download failed: ${e.message}", e)
@@ -649,13 +615,8 @@ object FossUpdateManager {
      * Cancels the active download, if any. Safe to call from any thread.
      */
     private fun cancelDownload() {
-        activeDownloadCall?.let { call ->
-            if (!call.isCanceled()) {
-                call.cancel()
-                Log.d(TAG, "Download cancelled")
-            }
-        }
-        activeDownloadCall = null
+        isDownloadCancelled = true
+        Log.d(TAG, "Download cancelled")
     }
 
     /**

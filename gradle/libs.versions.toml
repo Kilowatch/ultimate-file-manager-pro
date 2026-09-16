@@ -33,7 +33,6 @@ jxl-coder = "2.5.2"
 apng4android = "3.0.0"
 zxing = "3.5.4"
 msal = "8.2.3"
-okhttp = "5.4.0"
 browser = "1.9.0"
 media3 = "1.10.1"
 shizuku = "13.1.5"
@@ -80,14 +79,12 @@ coil-svg  = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil
 apng-core = { group = "com.github.penfeizhou.android.animation", name = "apng", version.ref = "apng4android" }
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 msal-android = { group = "com.microsoft.identity.client", name = "msal", version.ref = "msal" }
-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
 androidx-media3-exoplayer-hls = { group = "androidx.media3", name = "media3-exoplayer-hls", version.ref = "media3" }
 androidx-media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3" }
 androidx-media3-exoplayer-rtsp = { group = "androidx.media3", name = "media3-exoplayer-rtsp", version.ref = "media3" }
 androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
-androidx-media3-datasource-okhttp = { group = "androidx.media3", name = "media3-datasource-okhttp", version.ref = "media3" }
 androidx-media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
 shizuku-api = { group = "dev.rikka.shizuku", name = "api", version.ref = "shizuku" }
 shizuku-provider = { group = "dev.rikka.shizuku", name = "provider", version.ref = "shizuku" }

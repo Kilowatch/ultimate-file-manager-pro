@@ -37,8 +37,6 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
 import java.net.Inet4Address
@@ -1372,21 +1370,12 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private fun fetchDlnaDescription(ip: String, port: Int): DlnaServerInfo? {
         return try {
             val url = "http://$ip:$port/description.xml"
-            val client = BypassCleartextOkHttpClient.applyBypass(
-                OkHttpClient.Builder()
-                    .connectTimeout(2, java.util.concurrent.TimeUnit.SECONDS)
-                    .readTimeout(3, java.util.concurrent.TimeUnit.SECONDS)
-                    .followRedirects(true)
-            ).build()
-            val request = Request.Builder().url(url).get().build()
-            val response = client.newCall(request).execute()
+            val response = UfmHttpClient.getSync(url, timeoutSec = 3)
             if (!response.isSuccessful) {
-                response.close()
                 return null
             }
-            val body = response.body?.bytes()
-            response.close()
-            if (body == null || body.isEmpty()) return null
+            val body = response.bodyBytes
+            if (body.isEmpty()) return null
 
             val builder = za.kilowatch.ultimatefilemanager.server.DlnaXmlParser.newSecureDocumentBuilder()
             val doc = builder.parse(java.io.ByteArrayInputStream(body))

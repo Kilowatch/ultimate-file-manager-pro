@@ -12,17 +12,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.MediaType.Companion.toMediaType
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.network.UfmHttpClient
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
-import java.util.concurrent.TimeUnit
 
 /**
  * CrashReportDialogHelper
@@ -36,12 +31,6 @@ import java.util.concurrent.TimeUnit
 object CrashReportDialogHelper {
 
     private const val CRASH_ENDPOINT = "https://www.kilowatch.co.za/UFM/api/crash.php"
-
-    private val httpClient = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS)
-        .build()
 
     /**
      * Checks for a pending crash/ANR report and shows the appropriate dialog.
@@ -188,20 +177,9 @@ object CrashReportDialogHelper {
             var resultCode = 500
             try {
                 // 1. Attempt dedicated crash.php endpoint first
-                val bodyBuilder1 = MultipartBody.Builder().setType(MultipartBody.FORM)
-                fields.forEach { (key, value) ->
-                    if (value.isNotEmpty()) {
-                        bodyBuilder1.addFormDataPart(key, value)
-                    }
-                }
-                val request1 = Request.Builder()
-                    .url(CRASH_ENDPOINT)
-                    .post(bodyBuilder1.build())
-                    .build()
-
-                val response1 = httpClient.newCall(request1).execute()
-                val code1 = response1.code
-                response1.close()
+                val formFields1 = fields.filter { it.value.isNotEmpty() }
+                val response1 = UfmHttpClient.postFormSync(CRASH_ENDPOINT, formFields = formFields1, timeoutSec = 30)
+                val code1 = response1.statusCode
                 android.util.Log.d("CrashReport", "crash.php HTTP response code: $code1")
 
                 if (code1 == 200 || code1 == 429) {
@@ -225,29 +203,27 @@ object CrashReportDialogHelper {
                     }
 
                     val isTv = DeviceUtils.isTvDevice(activity)
-                    val bodyBuilder2 = MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("type", "bug")
-                        .addFormDataPart("subject", subject)
-                        .addFormDataPart("message", messageBody)
-                        .addFormDataPart("timestamp", (System.currentTimeMillis() / 1000).toString())
-                        .addFormDataPart("app_version", BuildConfig.VERSION_NAME)
-                        .addFormDataPart("app_code", BuildConfig.VERSION_CODE.toString())
-                        .addFormDataPart("sdk_version", android.os.Build.VERSION.SDK_INT.toString())
-                        .addFormDataPart("manufacturer", android.os.Build.MANUFACTURER)
-                        .addFormDataPart("device_model", android.os.Build.MODEL)
-                        .addFormDataPart("is_tv", if (isTv) "1" else "0")
-                        .addFormDataPart("package_name", BuildConfig.APPLICATION_ID)
-                        .addFormDataPart("honeypot", "")
+                    val formFields2 = mapOf(
+                        "type" to "bug",
+                        "subject" to subject,
+                        "message" to messageBody,
+                        "timestamp" to (System.currentTimeMillis() / 1000).toString(),
+                        "app_version" to BuildConfig.VERSION_NAME,
+                        "app_code" to BuildConfig.VERSION_CODE.toString(),
+                        "sdk_version" to android.os.Build.VERSION.SDK_INT.toString(),
+                        "manufacturer" to android.os.Build.MANUFACTURER,
+                        "device_model" to android.os.Build.MODEL,
+                        "is_tv" to if (isTv) "1" else "0",
+                        "package_name" to BuildConfig.APPLICATION_ID,
+                        "honeypot" to ""
+                    )
 
-                    val request2 = Request.Builder()
-                        .url("https://www.kilowatch.co.za/UFM/api/support.php")
-                        .post(bodyBuilder2.build())
-                        .build()
-
-                    val response2 = httpClient.newCall(request2).execute()
-                    val code2 = response2.code
-                    response2.close()
+                    val response2 = UfmHttpClient.postFormSync(
+                        "https://www.kilowatch.co.za/UFM/api/support.php",
+                        formFields = formFields2,
+                        timeoutSec = 30
+                    )
+                    val code2 = response2.statusCode
                     android.util.Log.d("CrashReport", "support.php fallback HTTP response code: $code2")
                     resultCode = code2
                 }

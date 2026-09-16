@@ -1,10 +1,6 @@
 package za.kilowatch.ultimatefilemanager.network
 
 import android.util.Log
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 import za.kilowatch.ultimatefilemanager.server.DlnaSecurityFilter
@@ -12,7 +8,6 @@ import za.kilowatch.ultimatefilemanager.server.DlnaXmlParser
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.TimeUnit
 
 /**
  * SOAP client helper for the DLNA Media Client.
@@ -21,23 +16,11 @@ import java.util.concurrent.TimeUnit
  * DLNA / UPnP media servers and parses the DIDL-Lite responses into
  * [NetworkFile] lists.
  *
- * All network calls are blocking (synchronous OkHttp).  Callers should
- * invoke methods off the main thread.
+ * Powered by native [UfmHttpClient]. Callers should invoke methods off the main thread.
  */
 object DlnaSoapClient {
 
     private const val TAG = "DlnaSoapClient"
-
-    // -----------------------------------------------------------------
-    // HTTP Client
-    // -----------------------------------------------------------------
-
-    private val client: OkHttpClient = BypassCleartextOkHttpClient.applyBypass(
-        OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-    ).build()
 
     // -----------------------------------------------------------------
     // Media-URL cache
@@ -54,8 +37,6 @@ object DlnaSoapClient {
     // -----------------------------------------------------------------
     // SOAP constants
     // -----------------------------------------------------------------
-
-    private val XML_MEDIA_TYPE = "text/xml; charset=utf-8".toMediaTypeOrNull()!!
 
     private const val SOAP_ACTION_BROWSE =
         "urn:schemas-upnp-org:service:ContentDirectory:1#Browse"
@@ -96,25 +77,20 @@ object DlnaSoapClient {
         }
 
         val soapXml = buildBrowseSoapBody(objectId, browseFlag, startIndex, requestedCount)
-        val requestBody = soapXml.toRequestBody(XML_MEDIA_TYPE)
-
-        val request = Request.Builder()
-            .url(serviceUrl)
-            .post(requestBody)
-            .addHeader("SOAPACTION", SOAP_ACTION_BROWSE)
-            .build()
+        val headers = mapOf(
+            "Content-Type" to "text/xml; charset=utf-8",
+            "SOAPACTION" to SOAP_ACTION_BROWSE
+        )
 
         return try {
-            val response = client.newCall(request).execute()
+            val response = UfmHttpClient.postStringSync(serviceUrl, headers, soapXml, timeoutSec = 15)
             if (!response.isSuccessful) {
-                Log.w(TAG, "browse: HTTP ${response.code} from $serviceUrl (objectId=$objectId)")
-                response.close()
+                Log.w(TAG, "browse: HTTP ${response.statusCode} from $serviceUrl (objectId=$objectId)")
                 return emptyList()
             }
 
-            val responseBody = response.body?.string() ?: ""
+            val responseBody = response.bodyString
             val bodyLen = responseBody.length
-            response.close()
 
             if (responseBody.isEmpty()) {
                 Log.w(TAG, "browse: empty response body from $serviceUrl (objectId=$objectId)")
@@ -125,7 +101,7 @@ object DlnaSoapClient {
             val files = parseBrowseResponse(responseBody)
             Log.d(TAG, "browse: parsed ${files.size} items from DIDL-Lite")
             files
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             Log.w(TAG, "browse: network error for $serviceUrl (objectId=$objectId)", e)
             emptyList()
         }
@@ -144,23 +120,19 @@ object DlnaSoapClient {
         }
 
         val soapXml = buildProtocolInfoSoapBody()
-        val requestBody = soapXml.toRequestBody(XML_MEDIA_TYPE)
-
-        val request = Request.Builder()
-            .url(serviceUrl)
-            .post(requestBody)
-            .addHeader("SOAPACTION", SOAP_ACTION_PROTOCOL_INFO)
-            .build()
+        val headers = mapOf(
+            "Content-Type" to "text/xml; charset=utf-8",
+            "SOAPACTION" to SOAP_ACTION_PROTOCOL_INFO
+        )
 
         return try {
-            val response = client.newCall(request).execute()
+            val response = UfmHttpClient.postStringSync(serviceUrl, headers, soapXml, timeoutSec = 15)
             val success = response.isSuccessful
             if (!success) {
-                Log.w(TAG, "getProtocolInfo: HTTP ${response.code} from $serviceUrl")
+                Log.w(TAG, "getProtocolInfo: HTTP ${response.statusCode} from $serviceUrl")
             }
-            response.close()
             success
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             Log.w(TAG, "getProtocolInfo: network error for $serviceUrl", e)
             false
         }

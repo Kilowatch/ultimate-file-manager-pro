@@ -3,15 +3,11 @@ package za.kilowatch.ultimatefilemanager.network
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.IOException
 import java.time.Duration
 import java.time.Instant
-import java.util.concurrent.TimeUnit
 
 /**
  * Refreshes a Box OAuth token via Box's token endpoint.
@@ -29,11 +25,6 @@ object BoxTokenRefresher {
     private const val TOKEN_URL = "https://api.box.com/oauth2/token"
 
     private const val GRANT_TYPE_REFRESH_TOKEN = "refresh_token"
-
-    private val httpClient = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .build()
 
     /** Guards against concurrent refresh attempts. */
     private val refreshMutex = Mutex()
@@ -82,33 +73,29 @@ object BoxTokenRefresher {
     private fun performRefresh(refreshToken: String): String {
         GoRoLog.d(TAG, "Refreshing Box OAuth token...")
 
-        val formBody = FormBody.Builder()
-            .add("grant_type", GRANT_TYPE_REFRESH_TOKEN)
-            .add("refresh_token", refreshToken)
-            .add("client_id", BoxOAuthConfig.CLIENT_ID)
-            .add("client_secret", BoxOAuthConfig.CLIENT_SECRET)
-            .build()
+        val formFields = mapOf(
+            "grant_type" to GRANT_TYPE_REFRESH_TOKEN,
+            "refresh_token" to refreshToken,
+            "client_id" to BoxOAuthConfig.CLIENT_ID,
+            "client_secret" to BoxOAuthConfig.CLIENT_SECRET
+        )
 
-        val request = Request.Builder()
-            .url(TOKEN_URL)
-            .post(formBody)
-            .build()
+        val response = UfmHttpClient.postFormSync(TOKEN_URL, formFields = formFields, timeoutSec = 30)
+        val body = response.bodyString
+        GoRoLog.d(TAG, "Box refresh HTTP ${response.statusCode}: ${body.take(200)}")
 
-        val responseBody = httpClient.newCall(request).execute().use { response ->
-            val body = response.body?.string() ?: ""
-            GoRoLog.d(TAG, "Box refresh HTTP ${response.code}: ${body.take(200)}")
-            if (!response.isSuccessful) {
-                val errorSummary = try {
-                    val err = JSONObject(body)
-                    err.optString("error_description", err.optString("error", body))
-                } catch (_: Exception) {
-                    body
-                }
-                GoRoLog.e(TAG, "Box token refresh failed (${response.code}): $errorSummary")
-                throw IOException("Box token refresh failed (${response.code}): $errorSummary")
+        if (!response.isSuccessful) {
+            val errorSummary = try {
+                val err = JSONObject(body)
+                err.optString("error_description", err.optString("error", body))
+            } catch (_: Exception) {
+                body
             }
-            body
+            GoRoLog.e(TAG, "Box token refresh failed (${response.statusCode}): $errorSummary")
+            throw IOException("Box token refresh failed (${response.statusCode}): $errorSummary")
         }
+
+        val responseBody = body
 
         // Box returns "expires_in" (seconds), not an absolute "expiry" timestamp.
         // Compute the absolute expiry and inject it so isTokenExpired() can check it.

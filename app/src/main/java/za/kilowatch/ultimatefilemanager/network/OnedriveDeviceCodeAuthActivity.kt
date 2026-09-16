@@ -18,9 +18,6 @@ import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.*
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
@@ -28,7 +25,6 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.util.QrCodeUtils
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 
 class OnedriveDeviceCodeAuthActivity : AppCompatActivity() {
 
@@ -41,12 +37,6 @@ class OnedriveDeviceCodeAuthActivity : AppCompatActivity() {
     private lateinit var txtExpiry: TextView
     private lateinit var btnBack: ImageView
 
-    private val client by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .build()
-    }
     private val gson = Gson()
     private val clientId = "1c135efb-c510-42a7-a7a6-32d29ab38d19"
     private val scopes = "Files.ReadWrite User.Read offline_access"
@@ -134,20 +124,16 @@ class OnedriveDeviceCodeAuthActivity : AppCompatActivity() {
     }
 
     private suspend fun fetchDeviceCode(): JsonObject = withContext(Dispatchers.IO) {
-        val formBody = FormBody.Builder()
-            .add("client_id", clientId)
-            .add("scope", scopes)
-            .build()
-
-        val request = Request.Builder()
-            .url("https://login.microsoftonline.com/common/oauth2/v2.0/devicecode")
-            .post(formBody)
-            .build()
-
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("Unexpected code $response")
-            gson.fromJson(response.body?.string(), JsonObject::class.java)
-        }
+        val formParams = mapOf(
+            "client_id" to clientId,
+            "scope" to scopes
+        )
+        val response = UfmHttpClient.postFormSync(
+            "https://login.microsoftonline.com/common/oauth2/v2.0/devicecode",
+            formParams
+        )
+        if (!response.isSuccessful) throw IOException("Unexpected code ${response.statusCode}: ${response.body}")
+        gson.fromJson(response.body, JsonObject::class.java)
     }
 
     private fun updateUiWithDeviceCode(response: JsonObject) {
@@ -207,28 +193,27 @@ class OnedriveDeviceCodeAuthActivity : AppCompatActivity() {
     }
 
     private suspend fun pollForToken(deviceCode: String): JsonObject? = withContext(Dispatchers.IO) {
-        val formBody = FormBody.Builder()
-            .add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
-            .add("client_id", clientId)
-            .add("device_code", deviceCode)
-            .build()
-
-        val request = Request.Builder()
-            .url("https://login.microsoftonline.com/common/oauth2/v2.0/token")
-            .post(formBody)
-            .build()
-
-        client.newCall(request).execute().use { response ->
-            val body = response.body?.string() ?: ""
-            val json = gson.fromJson(body, JsonObject::class.java)
-            
-            if (response.isSuccessful) return@withContext json
-            
-            val error = json.get("error").asString
-            if (error == "authorization_pending") return@withContext null
-            
-            throw IOException("Token poll failed: $error")
+        val formParams = mapOf(
+            "grant_type" to "urn:ietf:params:oauth:grant-type:device_code",
+            "client_id" to clientId,
+            "device_code" to deviceCode
+        )
+        val response = UfmHttpClient.postFormSync(
+            "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+            formParams
+        )
+        val json = try {
+            gson.fromJson(response.body, JsonObject::class.java)
+        } catch (e: Exception) {
+            JsonObject()
         }
+
+        if (response.isSuccessful) return@withContext json
+
+        val error = json.get("error")?.asString
+        if (error == "authorization_pending") return@withContext null
+
+        throw IOException("Token poll failed: $error")
     }
 
     private fun handleAuthSuccess(tokenResponse: JsonObject) {
@@ -261,16 +246,12 @@ class OnedriveDeviceCodeAuthActivity : AppCompatActivity() {
     }
 
     private suspend fun fetchUserProfile(accessToken: String): JsonObject = withContext(Dispatchers.IO) {
-        val request = Request.Builder()
-            .url("https://graph.microsoft.com/v1.0/me")
-            .header("Authorization", "Bearer $accessToken")
-            .get()
-            .build()
-
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("Failed to fetch profile: ${response.code}")
-            gson.fromJson(response.body?.string(), JsonObject::class.java)
-        }
+        val response = UfmHttpClient.getSync(
+            "https://graph.microsoft.com/v1.0/me",
+            headers = mapOf("Authorization" to "Bearer $accessToken")
+        )
+        if (!response.isSuccessful) throw IOException("Failed to fetch profile: ${response.statusCode}")
+        gson.fromJson(response.body, JsonObject::class.java)
     }
 
     override fun onDestroy() {

@@ -18,9 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.*
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
+
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
@@ -50,12 +48,7 @@ class GoogleDriveDeviceCodeAuthActivity : AppCompatActivity() {
     private lateinit var txtExpiry: TextView
     private lateinit var btnBack: ImageView
 
-    private val httpClient by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .build()
-    }
+
     private val gson = Gson()
     private var pollingJob: Job? = null
     private var expiryTimer: CountDownTimer? = null
@@ -143,22 +136,19 @@ class GoogleDriveDeviceCodeAuthActivity : AppCompatActivity() {
     }
 
     private suspend fun fetchDeviceCode(): JsonObject = withContext(Dispatchers.IO) {
-        val formBody = FormBody.Builder()
-            .add("client_id", za.kilowatch.ultimatefilemanager.BuildConfig.GOOGLE_DRIVE_TV_CLIENT_ID)
-            .add("scope", "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.email")
-            .build()
-
-        val request = Request.Builder()
-            .url("https://oauth2.googleapis.com/device/code")
-            .post(formBody)
-            .build()
-
-        httpClient.newCall(request).execute().use { response ->
-            val body = response.body?.string() ?: "(empty)"
-            GoRoLog.d("GDriveAuth", "device/code response ${response.code}: $body")
-            if (!response.isSuccessful) throw IOException("GDrive device code request failed: ${response.code} $body")
-            gson.fromJson(body, JsonObject::class.java)
-        }
+        val formParams = mapOf(
+            "client_id" to za.kilowatch.ultimatefilemanager.BuildConfig.GOOGLE_DRIVE_TV_CLIENT_ID,
+            "scope" to "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.email"
+        )
+        val response = UfmHttpClient.postFormSync(
+            "https://oauth2.googleapis.com/device/code",
+            headers = emptyMap(),
+            formFields = formParams
+        )
+        val body = response.bodyString
+        GoRoLog.d("GDriveAuth", "device/code response ${response.statusCode}: $body")
+        if (!response.isSuccessful) throw IOException("GDrive device code request failed: ${response.statusCode} $body")
+        gson.fromJson(body, JsonObject::class.java)
     }
 
     private fun updateUiWithDeviceCode(response: JsonObject) {
@@ -218,26 +208,23 @@ class GoogleDriveDeviceCodeAuthActivity : AppCompatActivity() {
     }
 
     private suspend fun pollForToken(deviceCode: String): JsonObject? = withContext(Dispatchers.IO) {
-        val formBody = FormBody.Builder()
-            .add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
-            .add("client_id",     za.kilowatch.ultimatefilemanager.BuildConfig.GOOGLE_DRIVE_TV_CLIENT_ID)
-            .add("client_secret", za.kilowatch.ultimatefilemanager.BuildConfig.GOOGLE_DRIVE_TV_CLIENT_SECRET)
-            .add("device_code",   deviceCode)
-            .build()
-
-        val request = Request.Builder()
-            .url("https://oauth2.googleapis.com/token")
-            .post(formBody)
-            .build()
-
-        httpClient.newCall(request).execute().use { response ->
-            val body  = response.body?.string() ?: ""
-            val json  = gson.fromJson(body, JsonObject::class.java)
-            if (response.isSuccessful) return@withContext json
-            val error = json.get("error")?.asString
-            if (error == "authorization_pending" || error == "slow_down") return@withContext null
-            throw IOException("GDrive token poll failed: $error")
-        }
+        val formParams = mapOf(
+            "grant_type" to "urn:ietf:params:oauth:grant-type:device_code",
+            "client_id" to za.kilowatch.ultimatefilemanager.BuildConfig.GOOGLE_DRIVE_TV_CLIENT_ID,
+            "client_secret" to za.kilowatch.ultimatefilemanager.BuildConfig.GOOGLE_DRIVE_TV_CLIENT_SECRET,
+            "device_code" to deviceCode
+        )
+        val response = UfmHttpClient.postFormSync(
+            "https://oauth2.googleapis.com/token",
+            headers = emptyMap(),
+            formFields = formParams
+        )
+        val body = response.bodyString
+        val json = try { gson.fromJson(body, JsonObject::class.java) } catch (e: Exception) { JsonObject() }
+        if (response.isSuccessful) return@withContext json
+        val error = json.get("error")?.asString
+        if (error == "authorization_pending" || error == "slow_down") return@withContext null
+        throw IOException("GDrive token poll failed: $error")
     }
 
     private fun handleAuthSuccess(tokenResponse: JsonObject) {
@@ -283,16 +270,12 @@ class GoogleDriveDeviceCodeAuthActivity : AppCompatActivity() {
     }
 
     private suspend fun fetchUserInfo(accessToken: String): JsonObject = withContext(Dispatchers.IO) {
-        val request = Request.Builder()
-            .url("https://www.googleapis.com/oauth2/v3/userinfo")
-            .header("Authorization", "Bearer $accessToken")
-            .get()
-            .build()
-
-        httpClient.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("GDrive userinfo failed: ${response.code}")
-            gson.fromJson(response.body?.string(), JsonObject::class.java)
-        }
+        val response = UfmHttpClient.getSync(
+            "https://www.googleapis.com/oauth2/v3/userinfo",
+            headers = mapOf("Authorization" to "Bearer $accessToken")
+        )
+        if (!response.isSuccessful) throw IOException("GDrive userinfo failed: ${response.statusCode}")
+        gson.fromJson(response.bodyString, JsonObject::class.java)
     }
 
     override fun onDestroy() {

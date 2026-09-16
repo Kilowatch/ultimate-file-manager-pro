@@ -5,6 +5,13 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.9] — 2026-09-16
+
+### Changed
+- **Unified Multi-Architecture Native Engine**: Packaged unified native library (`rclone.aar`) supporting `arm64-v8a`, `armeabi-v7a`, `x86_64`, and `x86` CPU architectures with 16 KB ELF page alignment (`0x4000`) for Android 15+ compatibility.
+- **Complete OkHttp Elimination**: Replaced OkHttp scope entirely across all cloud (Google Drive, OneDrive, Dropbox, Box, S3), WebDAV, DLNA, and HTTP networking with hardened native Go Gomobile engine (`UfmHttpClient`), with zero external OkHttp runtime dependencies.
+- **Removed Dependencies**: Removed `com.squareup.okhttp3:okhttp` and `androidx.media3:media3-datasource-okhttp` from build configuration and dependencies.
+
 ## [2.0.8] — 2026-09-14
 
 ### Added

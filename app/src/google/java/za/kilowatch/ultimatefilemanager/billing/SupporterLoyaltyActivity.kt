@@ -20,8 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
+
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
@@ -63,11 +62,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     private lateinit var txtGlobalTitle: TextView
     private var cardGlobalProgress: View? = null
 
-    /** Shared OkHttpClient for global progress API calls. */
-    private val tipJarClient = OkHttpClient.Builder()
-        .connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .build()
+
 
     private lateinit var txtThankYou: TextView
     private lateinit var txtLoading: TextView
@@ -412,15 +407,13 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val request = Request.Builder()
-                    .url("https://www.kilowatch.co.za/UFM/api/progress.php")
-                    .get()
-                    .build()
+                val response = za.kilowatch.ultimatefilemanager.network.UfmHttpClient.getSync(
+                    "https://www.kilowatch.co.za/UFM/api/progress.php",
+                    timeoutSec = 10
+                )
+                val body = response.bodyString
 
-                val response = tipJarClient.newCall(request).execute()
-                val body = response.body?.string()
-
-                if (!response.isSuccessful || body == null) {
+                if (!response.isSuccessful || body.isBlank()) {
                     return@launch
                 }
 

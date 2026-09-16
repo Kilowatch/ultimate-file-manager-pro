@@ -3,11 +3,6 @@ package za.kilowatch.ultimatefilemanager.network
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
@@ -31,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec
  * S3-compatible REST API client supporting AWS S3, IDrive e2, Backblaze B2, Wasabi, etc.
  *
  * Uses manual AWS Signature Version 4 (SigV4) signing — no AWS SDK dependency.
- * All operations are purely OkHttp + javax.crypto.
+ * Powered by native UfmHttpClient (backed by Go kernel sockets / HttpURLConnection).
  *
  * NetworkShare field mapping:
  *   host        → endpoint base URL (e.g. "https://s3.amazonaws.com")
@@ -46,47 +41,6 @@ object S3ShareClient {
     private const val OCTET_STREAM = "application/octet-stream"
     private const val MULTIPART_THRESHOLD = 100L * 1024 * 1024   // 100 MB
     private const val PART_SIZE          =   8L * 1024 * 1024    //   8 MB
-
-    private val targetIpThreadLocal = ThreadLocal<String>()
-
-    private val client by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(0,  TimeUnit.SECONDS)
-            .writeTimeout(0, TimeUnit.SECONDS)
-            .dns(object : okhttp3.Dns {
-                override fun lookup(hostname: String): List<java.net.InetAddress> {
-                    if (hostname == "localhost") {
-                        val overrideIp = targetIpThreadLocal.get()
-                        if (overrideIp != null) {
-                            try {
-                                return listOf(java.net.InetAddress.getByName(overrideIp))
-                            } catch (_: Exception) {}
-                        }
-                    }
-                    return okhttp3.Dns.SYSTEM.lookup(hostname)
-                }
-            })
-            .addInterceptor { chain ->
-                val req = chain.request()
-                if (!req.url.isHttps) {
-                    targetIpThreadLocal.set(req.url.host)
-                    try {
-                        val originalHost = req.url.host + if (req.url.port != 80 && req.url.port != 443) ":${req.url.port}" else ""
-                        val newUrl = req.url.newBuilder().host("localhost").build()
-                        val newReq = req.newBuilder()
-                            .url(newUrl)
-                            .header("Host", req.header("host") ?: req.header("Host") ?: originalHost)
-                            .build()
-                        return@addInterceptor chain.proceed(newReq)
-                    } finally {
-                        targetIpThreadLocal.remove()
-                    }
-                }
-                chain.proceed(req)
-            }
-            .build()
-    }
 
     // ─────────────────────────────────────────────────────────────────────────
     // Public API
@@ -109,10 +63,10 @@ object S3ShareClient {
             val url = "$endpoint/$bucket?$queryParams"
 
             val response = signedGet(url, share, region, emptyMap())
-            val body = response.body?.string() ?: throw IOException("Empty response from S3 listFiles")
+            val body = response.bodyString
             if (!response.isSuccessful) {
-                GoRoLog.e(TAG, "listFiles failed (${response.code}): $body")
-                throw IOException("S3 listFiles failed (${response.code}): ${extractS3Error(body)}")
+                GoRoLog.e(TAG, "listFiles failed (${response.statusCode}): $body")
+                throw IOException("S3 listFiles failed (${response.statusCode}): ${extractS3Error(body)}")
             }
 
             parseListBucketResult(body, prefix)
@@ -123,13 +77,11 @@ object S3ShareClient {
         val url = "${normalizeEndpoint(share.host)}/${share.domain}/${encodePath(key)}"
         val region = share.remotePath.ifBlank { "us-east-1" }
 
-        val body = "".toRequestBody(OCTET_STREAM.toMediaType())
-        val request = buildSignedRequest("PUT", url, share, region, emptyMap(), body, emptyPayloadHash())
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful && response.code != 409) {
-                val err = response.body?.string() ?: ""
-                throw IOException("S3 mkdir failed (${response.code}): ${extractS3Error(err)}")
-            }
+        val (targetUrl, headers) = buildSignedHeaders("PUT", url, share, region, emptyMap(), emptyPayloadHash())
+        val response = UfmHttpClient.putSync(targetUrl, headers, ByteArray(0))
+        if (!response.isSuccessful && response.statusCode != 409) {
+            val err = response.bodyString
+            throw IOException("S3 mkdir failed (${response.statusCode}): ${extractS3Error(err)}")
         }
     }
 
@@ -138,12 +90,11 @@ object S3ShareClient {
         val url = "${normalizeEndpoint(share.host)}/${share.domain}/${encodePath(key)}"
         val region = share.remotePath.ifBlank { "us-east-1" }
 
-        val request = buildSignedRequest("DELETE", url, share, region, emptyMap(), null, emptyPayloadHash())
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful && response.code != 204 && response.code != 404) {
-                val err = response.body?.string() ?: ""
-                throw IOException("S3 delete failed (${response.code}): ${extractS3Error(err)}")
-            }
+        val (targetUrl, headers) = buildSignedHeaders("DELETE", url, share, region, emptyMap(), emptyPayloadHash())
+        val response = UfmHttpClient.deleteSync(targetUrl, headers)
+        if (!response.isSuccessful && response.statusCode != 204 && response.statusCode != 404) {
+            val err = response.bodyString
+            throw IOException("S3 delete failed (${response.statusCode}): ${extractS3Error(err)}")
         }
     }
 
@@ -163,8 +114,8 @@ object S3ShareClient {
     suspend fun rename(share: NetworkShare, fromPath: String, toPath: String) = withContext(Dispatchers.IO) {
         // Since S3 doesn't distinguish file/dir at the bridge level rename call, check if it's a dir
         val isDir = try {
-            val req = buildSignedRequest("HEAD", "${normalizeEndpoint(share.host)}/${share.domain}/${encodePath(normalizePath(fromPath).trimStart('/') + "/")}", share, share.remotePath.ifBlank { "us-east-1" }, emptyMap(), null, emptyPayloadHash())
-            client.newCall(req).execute().use { it.isSuccessful }
+            val (headUrl, headHeaders) = buildSignedHeaders("HEAD", "${normalizeEndpoint(share.host)}/${share.domain}/${encodePath(normalizePath(fromPath).trimStart('/') + "/")}", share, share.remotePath.ifBlank { "us-east-1" }, emptyMap(), emptyPayloadHash())
+            UfmHttpClient.headSync(headUrl, headHeaders).isSuccessful
         } catch (e: Exception) { false }
 
         if (isDir) {
@@ -180,15 +131,13 @@ object S3ShareClient {
 
         // S3 rename = copy + delete
         val copyUrl  = "$endpoint/$bucket/${encodePath(dstKey)}"
-        val copyBody = "".toRequestBody(OCTET_STREAM.toMediaType())
         val extraHeaders = mapOf("x-amz-copy-source" to "/$bucket/${encodePath(srcKey)}")
-        val copyReq  = buildSignedRequest("PUT", copyUrl, share, region, extraHeaders, copyBody, emptyPayloadHash())
+        val (targetUrl, copyHeaders) = buildSignedHeaders("PUT", copyUrl, share, region, extraHeaders, emptyPayloadHash())
 
-        client.newCall(copyReq).execute().use { response ->
-            if (!response.isSuccessful) {
-                val err = response.body?.string() ?: ""
-                throw IOException("S3 copy failed (${response.code}): ${extractS3Error(err)}")
-            }
+        val response = UfmHttpClient.putSync(targetUrl, copyHeaders, ByteArray(0))
+        if (!response.isSuccessful) {
+            val err = response.bodyString
+            throw IOException("S3 copy failed (${response.statusCode}): ${extractS3Error(err)}")
         }
 
         // Delete source
@@ -211,16 +160,15 @@ object S3ShareClient {
 
     suspend fun openInputStream(share: NetworkShare, remotePath: String): Pair<InputStream, Long> =
         withContext(Dispatchers.IO) {
-            openInputStreamInternal(share, remotePath, null).let { response ->
-                val length = response.header("Content-Length")?.toLongOrNull() ?: -1L
-                Pair(response.body!!.byteStream(), length)
-            }
+            val response = openInputStreamInternal(share, remotePath, null)
+            val length = response.header("Content-Length")?.toLongOrNull() ?: -1L
+            Pair(response.inputStream, length)
         }
 
-    suspend fun openInputStreamForStreaming(share: NetworkShare, remotePath: String, rangeHeader: String?): okhttp3.Response =
+    suspend fun openInputStreamForStreaming(share: NetworkShare, remotePath: String, rangeHeader: String?): UfmHttpClient.StreamResponse =
         withContext(Dispatchers.IO) { openInputStreamInternalSync(share, remotePath, rangeHeader) }
 
-    fun openInputStreamForStreamingSync(share: NetworkShare, remotePath: String, rangeHeader: String?): okhttp3.Response =
+    fun openInputStreamForStreamingSync(share: NetworkShare, remotePath: String, rangeHeader: String?): UfmHttpClient.StreamResponse =
         openInputStreamInternalSync(share, remotePath, rangeHeader)
 
     fun openRandomAccessFile(share: NetworkShare, remotePath: String): IRandomAccessFile {
@@ -230,18 +178,19 @@ object S3ShareClient {
             override fun read(offset: Long, buffer: ByteArray, length: Int): Int {
                 val rangeHeader = "bytes=$offset-${offset + length - 1}"
                 val response = openInputStreamInternalSync(share, remotePath, rangeHeader)
-                if (!response.isSuccessful) {
-                    response.close()
-                    throw IOException("S3 RAF read failed: ${response.code}")
-                }
-                return response.body!!.byteStream().use { input ->
-                    var totalRead = 0
-                    while (totalRead < length) {
-                        val read = input.read(buffer, totalRead, length - totalRead)
-                        if (read == -1) break
-                        totalRead += read
+                return response.use { resp ->
+                    if (!resp.isSuccessful) {
+                        throw IOException("S3 RAF read failed: ${resp.statusCode}")
                     }
-                    if (totalRead == 0) -1 else totalRead
+                    resp.inputStream.use { input ->
+                        var totalRead = 0
+                        while (totalRead < length) {
+                            val read = input.read(buffer, totalRead, length - totalRead)
+                            if (read == -1) break
+                            totalRead += read
+                        }
+                        if (totalRead == 0) -1 else totalRead
+                    }
                 }
             }
             override fun write(offset: Long, buffer: ByteArray, length: Int): Int =
@@ -254,10 +203,9 @@ object S3ShareClient {
         val key    = normalizePath(remotePath).trimStart('/')
         val url    = "${normalizeEndpoint(share.host)}/${share.domain}/${encodePath(key)}"
         val region = share.remotePath.ifBlank { "us-east-1" }
-        val req    = buildSignedRequest("HEAD", url, share, region, emptyMap(), null, emptyPayloadHash())
-        client.newCall(req).execute().use { response ->
-            return response.header("Content-Length")?.toLongOrNull() ?: 0L
-        }
+        val (targetUrl, headers) = buildSignedHeaders("HEAD", url, share, region, emptyMap(), emptyPayloadHash())
+        val response = UfmHttpClient.headSync(targetUrl, headers)
+        return response.header("Content-Length")?.toLongOrNull() ?: 0L
     }
 
     fun getStreamingUrlAndTokenSync(share: NetworkShare, remotePath: String): Pair<String, String> {
@@ -313,27 +261,27 @@ object S3ShareClient {
     // Internal helpers — HTTP
     // ─────────────────────────────────────────────────────────────────────────
 
-    private fun openInputStreamInternal(share: NetworkShare, remotePath: String, rangeHeader: String?): okhttp3.Response {
+    private fun openInputStreamInternal(share: NetworkShare, remotePath: String, rangeHeader: String?): UfmHttpClient.StreamResponse {
         val key    = normalizePath(remotePath).trimStart('/')
         val url    = "${normalizeEndpoint(share.host)}/${share.domain}/${encodePath(key)}"
         val region = share.remotePath.ifBlank { "us-east-1" }
         val extra  = if (rangeHeader != null) mapOf("range" to rangeHeader) else emptyMap()
-        val req    = buildSignedRequest("GET", url, share, region, extra, null, emptyPayloadHash())
-        val response = client.newCall(req).execute()
-        if (!response.isSuccessful && response.code != 206) {
-            val err = response.body?.string() ?: ""
+        val (targetUrl, headers) = buildSignedHeaders("GET", url, share, region, extra, emptyPayloadHash())
+        val response = UfmHttpClient.openStream(targetUrl, headers)
+        if (!response.isSuccessful && response.statusCode != 206) {
+            val err = response.inputStream.bufferedReader().use { it.readText() }
             response.close()
-            throw IOException("S3 download failed (${response.code}): ${extractS3Error(err)}")
+            throw IOException("S3 download failed (${response.statusCode}): ${extractS3Error(err)}")
         }
         return response
     }
 
-    private fun openInputStreamInternalSync(share: NetworkShare, remotePath: String, rangeHeader: String?): okhttp3.Response =
+    private fun openInputStreamInternalSync(share: NetworkShare, remotePath: String, rangeHeader: String?): UfmHttpClient.StreamResponse =
         openInputStreamInternal(share, remotePath, rangeHeader)
 
-    private fun signedGet(url: String, share: NetworkShare, region: String, extraHeaders: Map<String, String>): okhttp3.Response {
-        val req = buildSignedRequest("GET", url, share, region, extraHeaders, null, emptyPayloadHash())
-        return client.newCall(req).execute()
+    private fun signedGet(url: String, share: NetworkShare, region: String, extraHeaders: Map<String, String>): UfmHttpClient.Response {
+        val (targetUrl, headers) = buildSignedHeaders("GET", url, share, region, extraHeaders, emptyPayloadHash())
+        return UfmHttpClient.getSync(targetUrl, headers)
     }
 
     private fun uploadSingle(
@@ -351,15 +299,13 @@ object S3ShareClient {
 
         val bytes = inputStream.readBytes()
         val payloadHash = sha256Hex(bytes)
-        val body = bytes.toRequestBody(OCTET_STREAM.toMediaType())
-        val req = buildSignedRequest("PUT", url, share, region, emptyMap(), body, payloadHash)
-        client.newCall(req).execute().use { response ->
-            if (!response.isSuccessful) {
-                val err = response.body?.string() ?: ""
-                throw IOException("S3 upload failed (${response.code}): ${extractS3Error(err)}")
-            }
-            onProgress(totalSize)
+        val (targetUrl, headers) = buildSignedHeaders("PUT", url, share, region, mapOf("Content-Type" to OCTET_STREAM), payloadHash)
+        val response = UfmHttpClient.putSync(targetUrl, headers, bytes)
+        if (!response.isSuccessful) {
+            val err = response.bodyString
+            throw IOException("S3 upload failed (${response.statusCode}): ${extractS3Error(err)}")
         }
+        onProgress(totalSize)
     }
 
     private fun uploadMultipart(
@@ -376,15 +322,13 @@ object S3ShareClient {
 
         // 1. Initiate multipart upload
         val initiateUrl = "$endpoint/$bucket/${encodePath(key)}?uploads"
-        val initiateReq = buildSignedRequest(
-            "POST", initiateUrl, share, region, emptyMap(),
-            "".toRequestBody(OCTET_STREAM.toMediaType()), emptyPayloadHash()
+        val (initUrl, initHeaders) = buildSignedHeaders(
+            "POST", initiateUrl, share, region, mapOf("Content-Type" to OCTET_STREAM), emptyPayloadHash()
         )
-        val uploadId = client.newCall(initiateReq).execute().use { response ->
-            val body = response.body?.string() ?: ""
-            if (!response.isSuccessful) throw IOException("S3 initiate multipart failed: ${extractS3Error(body)}")
-            extractXmlTag(body, "UploadId") ?: throw IOException("S3: no UploadId in response")
-        }
+        val response = UfmHttpClient.postSync(initUrl, initHeaders, ByteArray(0))
+        val body = response.bodyString
+        if (!response.isSuccessful) throw IOException("S3 initiate multipart failed: ${extractS3Error(body)}")
+        val uploadId = extractXmlTag(body, "UploadId") ?: throw IOException("S3: no UploadId in response")
 
         val eTags = mutableListOf<String>()
         var uploadedBytes = 0L
@@ -399,13 +343,11 @@ object S3ShareClient {
                     val partBytes = buffer.copyOf(bytesRead)
                     val partHash  = sha256Hex(partBytes)
                     val partUrl   = "$endpoint/$bucket/${encodePath(key)}?partNumber=$partNumber&uploadId=${urlEncode(uploadId)}"
-                    val partBody  = partBytes.toRequestBody(OCTET_STREAM.toMediaType())
-                    val partReq   = buildSignedRequest("PUT", partUrl, share, region, emptyMap(), partBody, partHash)
-                    val eTag = client.newCall(partReq).execute().use { response ->
-                        val err = response.body?.string() ?: ""
-                        if (!response.isSuccessful) throw IOException("S3 upload part $partNumber failed: ${extractS3Error(err)}")
-                        response.header("ETag") ?: extractXmlTag(err, "ETag") ?: ""
-                    }
+                    val (pUrl, pHeaders) = buildSignedHeaders("PUT", partUrl, share, region, mapOf("Content-Type" to OCTET_STREAM), partHash)
+                    val partResp = UfmHttpClient.putSync(pUrl, pHeaders, partBytes)
+                    val err = partResp.bodyString
+                    if (!partResp.isSuccessful) throw IOException("S3 upload part $partNumber failed: ${extractS3Error(err)}")
+                    val eTag = partResp.header("ETag") ?: extractXmlTag(err, "ETag") ?: ""
                     eTags.add(eTag.trim('"'))
                     uploadedBytes += bytesRead
                     onProgress(uploadedBytes)
@@ -422,19 +364,17 @@ object S3ShareClient {
                 append("</CompleteMultipartUpload>")
             }
             val completeUrl   = "$endpoint/$bucket/${encodePath(key)}?uploadId=${urlEncode(uploadId)}"
-            val completeBytes = completeXml.toByteArray()
-            val completeBody  = completeBytes.toRequestBody("application/xml".toMediaType())
-            val completeReq   = buildSignedRequest("POST", completeUrl, share, region, emptyMap(), completeBody, sha256Hex(completeBytes))
-            client.newCall(completeReq).execute().use { response ->
-                val body = response.body?.string() ?: ""
-                if (!response.isSuccessful) throw IOException("S3 complete multipart failed: ${extractS3Error(body)}")
-            }
+            val completeBytes = completeXml.toByteArray(Charsets.UTF_8)
+            val (cUrl, cHeaders) = buildSignedHeaders("POST", completeUrl, share, region, mapOf("Content-Type" to "application/xml"), sha256Hex(completeBytes))
+            val compResp = UfmHttpClient.postSync(cUrl, cHeaders, completeBytes)
+            val compBody = compResp.bodyString
+            if (!compResp.isSuccessful) throw IOException("S3 complete multipart failed: ${extractS3Error(compBody)}")
         } catch (e: Exception) {
             // Abort multipart on failure
             try {
                 val abortUrl = "$endpoint/$bucket/${encodePath(key)}?uploadId=${urlEncode(uploadId)}"
-                val abortReq = buildSignedRequest("DELETE", abortUrl, share, region, emptyMap(), null, emptyPayloadHash())
-                client.newCall(abortReq).execute().close()
+                val (aUrl, aHeaders) = buildSignedHeaders("DELETE", abortUrl, share, region, emptyMap(), emptyPayloadHash())
+                UfmHttpClient.deleteSync(aUrl, aHeaders)
             } catch (_: Exception) {}
             throw e
         }
@@ -445,7 +385,7 @@ object S3ShareClient {
     // ─────────────────────────────────────────────────────────────────────────
 
     /**
-     * Builds a fully SigV4-signed OkHttp [Request].
+     * Builds SigV4-signed URL and headers map.
      *
      * @param method        HTTP method (GET, PUT, DELETE, HEAD, POST)
      * @param urlStr        Full URL (may include query string)
@@ -453,18 +393,17 @@ object S3ShareClient {
      *                      access key (username), secret key (password)
      * @param region        AWS region or equivalent
      * @param extraHeaders  Additional headers to include and sign
-     * @param body          Request body or null for GET/HEAD/DELETE
      * @param payloadHash   SHA-256 hex of the request body (use [emptyPayloadHash] for empty body)
+     * @return Pair of encoded URL and finalized headers map (including Authorization)
      */
-    private fun buildSignedRequest(
+    private fun buildSignedHeaders(
         method: String,
         urlStr: String,
         share: NetworkShare,
         region: String,
         extraHeaders: Map<String, String>,
-        body: RequestBody?,
         payloadHash: String
-    ): Request {
+    ): Pair<String, Map<String, String>> {
         val accessKey = share.username
         val secretKey = share.password
 
@@ -508,18 +447,10 @@ object S3ShareClient {
         val authorization = "AWS4-HMAC-SHA256 Credential=$accessKey/$credentialScope, SignedHeaders=$signedHeaders, Signature=$signature"
 
         val encodedUrl = "${parsedUrl.protocol}://${parsedUrl.authority}$pathPart" + if (queryPart.isNotEmpty()) "?$queryPart" else ""
-        val requestBuilder = Request.Builder().url(encodedUrl)
-        sortedHeaderNames.forEach { h -> requestBuilder.header(h, allHeaders[h]!!) }
-        requestBuilder.header("Authorization", authorization)
+        val finalHeaders = allHeaders.toMutableMap()
+        finalHeaders["Authorization"] = authorization
 
-        return when (method) {
-            "GET"    -> requestBuilder.get().build()
-            "HEAD"   -> requestBuilder.head().build()
-            "DELETE" -> requestBuilder.delete().build()
-            "PUT"    -> requestBuilder.put(body ?: throw IOException("PUT requires body")).build()
-            "POST"   -> requestBuilder.post(body ?: throw IOException("POST requires body")).build()
-            else     -> throw IOException("Unsupported method: $method")
-        }
+        return Pair(encodedUrl, finalHeaders)
     }
 
     /** Generates a SigV4 presigned URL for GET (streaming). */

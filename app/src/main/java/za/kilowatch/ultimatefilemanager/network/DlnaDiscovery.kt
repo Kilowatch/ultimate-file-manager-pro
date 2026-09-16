@@ -4,8 +4,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import za.kilowatch.ultimatefilemanager.server.DlnaSecurityFilter
 import za.kilowatch.ultimatefilemanager.server.DlnaXmlParser
 import org.w3c.dom.Element
@@ -14,7 +12,6 @@ import java.net.InetAddress
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 /**
  * SSDP discovery system for the DLNA Media Client.
@@ -58,13 +55,6 @@ object DlnaDiscovery {
     private val fetchExecutor = Executors.newSingleThreadExecutor { r ->
         Thread(r, "DlnaFetchThread").also { it.isDaemon = true }
     }
-
-    private val okHttpClient = BypassCleartextOkHttpClient.applyBypass(
-        OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(5, TimeUnit.SECONDS)
-            .followRedirects(true)
-    ).build()
 
     // ── SSDP Listener ────────────────────────────────────────────────────────
 
@@ -281,18 +271,14 @@ object DlnaDiscovery {
                 return null
             }
 
-            val request = Request.Builder().url(locationUrl).get().build()
-            val response = okHttpClient.newCall(request).execute()
+            val response = UfmHttpClient.getSync(locationUrl, timeoutSec = 5)
             if (!response.isSuccessful) {
-                Log.w(TAG, "HTTP ${response.code} fetching $locationUrl")
-                response.close()
+                Log.w(TAG, "HTTP ${response.statusCode} fetching $locationUrl")
                 return null
             }
 
-            val bodyBytes = response.body?.bytes()
-            response.close()
-
-            if (bodyBytes == null || bodyBytes.isEmpty()) {
+            val bodyBytes = response.bodyBytes
+            if (bodyBytes.isEmpty()) {
                 Log.w(TAG, "Empty response body from $locationUrl")
                 return null
             }

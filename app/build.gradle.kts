@@ -93,8 +93,8 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 276          // Mobile versionCode; TV = this + 1
-val appVersionName = "2.0.8"      // Shown in Play Store listing
+val appVersionCode = 278          // Mobile versionCode; TV = this + 1
+val appVersionName = "2.0.9"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
 // TODO: REMOVE — Set to true to simulate an older version for auto-update testing
@@ -140,6 +140,10 @@ android {
         // (like 'tv') introduced by local folders or third-party libraries.
         resourceConfigurations += setOf("en", "ar", "de", "es", "fr", "hi", "id", "in", "it", "ja", "ko", "nl", "pt", "ru", "sv", "tr", "uk", "zh")
         
+        ndk {
+            abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86"))
+        }
+
         buildConfigField("Boolean", "IS_FOSS", "false")
     }
 
@@ -465,7 +469,6 @@ dependencies {
     // which Amazon's policy scanner flags as prohibited ad-network/GMS libraries.
     // OneDrive is hidden from the Amazon UI entirely — see src/amazon/ source-set overrides.
     "googleImplementation"(libs.msal.android)
-    implementation(libs.okhttp)
     implementation(libs.zxing.core)
     implementation("com.google.code.gson:gson:2.11.0")
     implementation(libs.androidx.browser) // Chrome Custom Tabs for Google Drive mobile OAuth
@@ -475,7 +478,6 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.rtsp)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.session)
-    implementation(libs.androidx.media3.datasource.okhttp)
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
     implementation(libs.libsu.core)
@@ -529,7 +531,11 @@ licensee {
     allowUrl("https://opensource.org/license/mit")
     allowUrl("https://api.github.com/licenses/lgpl-3.0")
     allowUrl("https://developer.android.com/guide/playcore/license")
+    allowUrl("https://github.com/junrar/junrar/blob/master/LICENSE")
+    allowUrl("https://github.com/RikkaApps/Shizuku-API/blob/master/LICENSE")
     
+    ignoreDependencies("com.github.topjohnwu.libsu", "core")
+    ignoreDependencies("com.github.topjohnwu.libsu", "nio")
     ignoreDependencies("com.microsoft.identity.client", "msal")
     ignoreDependencies("com.microsoft.identity", "common")
     ignoreDependencies("com.microsoft.identity", "common4j")

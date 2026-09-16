@@ -23,10 +23,10 @@ object GoogleDriveShareClient {
     suspend fun openInputStream(share: NetworkShare, remotePath: String): Pair<InputStream, Long> = unsupported()
     suspend fun openInputStreamForStreaming(
         share: NetworkShare, remotePath: String, rangeHeader: String?
-    ): okhttp3.Response = unsupported()
+    ): UfmHttpClient.StreamResponse = unsupported()
     fun openInputStreamForStreamingSync(
         share: NetworkShare, remotePath: String, rangeHeader: String?
-    ): okhttp3.Response = unsupported()
+    ): UfmHttpClient.StreamResponse = unsupported()
     fun openRandomAccessFile(share: NetworkShare, remotePath: String): IRandomAccessFile = unsupported()
     fun getStreamingUrlAndTokenSync(share: NetworkShare, remotePath: String): Pair<String, String> = unsupported()
     fun getFileSizeSync(share: NetworkShare, remotePath: String): Long = unsupported()

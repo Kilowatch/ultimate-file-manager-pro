@@ -5,17 +5,12 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URLEncoder
-import java.util.concurrent.TimeUnit
 
 /**
  * Google Drive REST API v3 client.
@@ -31,12 +26,6 @@ import java.util.concurrent.TimeUnit
  * The [NetworkShare.host] field stores the user's email, which is the lookup key in the repo.
  */
 object GoogleDriveShareClient {
-    private val client by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(0, TimeUnit.SECONDS)
-            .build()
-    }
     private val gson = Gson()
 
     /** In-memory cache: email → (path → fileId). Reset on repository changes. */
@@ -93,8 +82,6 @@ object GoogleDriveShareClient {
         val refreshToken = storage.refreshToken
             ?: throw Exception("No refresh token stored for Google Drive account $email")
 
-        // refreshAccessToken is mostly synchronous anyway, we can run it in runBlocking if needed,
-        // but let's just make it call the sync part directly.
         return runBlocking { refreshAccessToken(email, refreshToken, storage) }
     }
 
@@ -109,48 +96,44 @@ object GoogleDriveShareClient {
         else
             za.kilowatch.ultimatefilemanager.BuildConfig.GOOGLE_DRIVE_MOBILE_CLIENT_ID
 
-        val bodyBuilder = okhttp3.FormBody.Builder()
-            .add("client_id",     clientId)
-            .add("grant_type",    "refresh_token")
-            .add("refresh_token", refreshToken)
-        
+        val formFields = mutableMapOf(
+            "client_id" to clientId,
+            "grant_type" to "refresh_token",
+            "refresh_token" to refreshToken
+        )
         if (isTv) {
-            bodyBuilder.add("client_secret", za.kilowatch.ultimatefilemanager.BuildConfig.GOOGLE_DRIVE_TV_CLIENT_SECRET)
+            formFields["client_secret"] = za.kilowatch.ultimatefilemanager.BuildConfig.GOOGLE_DRIVE_TV_CLIENT_SECRET
         }
 
-        val formBody = bodyBuilder.build()
+        val response = UfmHttpClient.postFormSync(
+            "https://oauth2.googleapis.com/token",
+            headers = emptyMap(),
+            formFields = formFields
+        )
+        val body = response.bodyString
+        val json = try { gson.fromJson(body, JsonObject::class.java) } catch (e: Exception) { JsonObject() }
+        if (response.isSuccessful) {
+            val newAccessToken = json.get("access_token")?.asString
+                ?: throw IOException("No access_token in Google refresh response")
+            val expiresInSecs = json.get("expires_in")?.asLong ?: 3600L
+            accessTokenCache[email] = TokenCache(newAccessToken, System.currentTimeMillis() + (expiresInSecs * 1000L))
 
-        val request = Request.Builder()
-            .url("https://oauth2.googleapis.com/token")
-            .post(formBody)
-            .build()
-
-        client.newCall(request).execute().use { response ->
-            val body = response.body?.string() ?: ""
-            val json = gson.fromJson(body, JsonObject::class.java)
-            if (response.isSuccessful) {
-                val newAccessToken = json.get("access_token")?.asString
-                    ?: throw IOException("No access_token in Google refresh response")
-                val expiresInSecs = json.get("expires_in")?.asLong ?: 3600L
-                accessTokenCache[email] = TokenCache(newAccessToken, System.currentTimeMillis() + (expiresInSecs * 1000L))
-
-                val newRefreshToken = json.get("refresh_token")?.asString
-                if (newRefreshToken != null && newRefreshToken != refreshToken) {
-                    val repo = OnlineStorageRepository.getInstance(UfmApplication.instance)
-                    repo.save(storage.copy(refreshToken = newRefreshToken))
-                    GoRoLog.d("GDriveAuth", "GoogleDriveShareClient: Updated refresh token for $email")
-                }
-                return@withContext newAccessToken
-            } else {
-                val error = json.get("error")?.asString ?: response.message
-                val desc  = json.get("error_description")?.asString ?: ""
-                
-                if (error == "invalid_grant") {
-                    throw IOException("Google Drive token is invalid or expired. To fix: Please go to 'Online Storages', delete this Google Drive account, and add it again.")
-                }
-                
-                throw IOException("Google Drive token refresh failed: $error ($desc)")
+            val newRefreshToken = json.get("refresh_token")?.asString
+            if (newRefreshToken != null && newRefreshToken != refreshToken) {
+                val repo = OnlineStorageRepository.getInstance(UfmApplication.instance)
+                repo.save(storage.copy(refreshToken = newRefreshToken))
+                GoRoLog.d("GDriveAuth", "GoogleDriveShareClient: Updated refresh token for $email")
             }
+            return@withContext newAccessToken
+        } else {
+            val error = json?.get("error")?.asString ?: "HTTP ${response.statusCode}"
+            val desc = json?.get("error_description")?.asString ?: ""
+
+            if (error == "invalid_grant") {
+                throw IOException("Google Drive token is invalid or expired. To fix: Please go to 'Online Storages', delete this Google Drive account, and add it again.")
+            }
+
+            throw IOException("Google Drive token refresh failed: $error ($desc)")
         }
     }
 
@@ -183,7 +166,7 @@ object GoogleDriveShareClient {
             if (builder.isNotEmpty()) builder.append('/')
             builder.append(part)
             val subPath = builder.toString()
-            
+
             if (cache.containsKey(subPath)) {
                 currentId = cache[subPath]!!
             } else {
@@ -199,25 +182,19 @@ object GoogleDriveShareClient {
     private fun findFileIdInFolderSync(token: String, parentId: String, name: String): String? {
         val query = "'$parentId' in parents and name = '${name.replace("'", "\\'")}' and trashed = false"
         val url = "https://www.googleapis.com/drive/v3/files?q=${URLEncoder.encode(query, "UTF-8")}&fields=files(id)"
-        
-        val request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer $token")
-            .get()
-            .build()
 
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) return null
-            val body = response.body?.string() ?: ""
-            val json = gson.fromJson(body, JsonObject::class.java)
-            val files = json.getAsJsonArray("files")
-            if (files != null && files.size() > 0) {
-                return files[0].asJsonObject.get("id").asString
-            }
+        val response = UfmHttpClient.getSync(
+            url,
+            headers = mapOf("Authorization" to "Bearer $token")
+        )
+        if (!response.isSuccessful) return null
+        val json = try { gson.fromJson(response.bodyString, JsonObject::class.java) } catch (e: Exception) { null }
+        val files = json?.getAsJsonArray("files")
+        if (files != null && files.size() > 0) {
+            return files[0].asJsonObject.get("id").asString
         }
         return null
     }
-
 
     /** Resolve the parent folder of a path, returning (parentId, leafName). */
     private suspend fun resolveParent(token: String, email: String, path: String): Pair<String, String> {
@@ -249,12 +226,10 @@ object GoogleDriveShareClient {
         val url = "https://www.googleapis.com/drive/v3/files?q=$q&fields=$fields&pageSize=1000"
 
         val response = withContext(Dispatchers.IO) {
-            client.newCall(
-                Request.Builder().url(url).header("Authorization", "Bearer $token").get().build()
-            ).execute()
+            UfmHttpClient.getSync(url, headers = mapOf("Authorization" to "Bearer $token"))
         }
-        val body = response.body?.string() ?: "{}"
-        if (!response.isSuccessful) throw IOException("GDrive listFiles failed: ${response.code} $body")
+        val body = response.bodyString
+        if (!response.isSuccessful) throw IOException("GDrive listFiles failed: ${response.statusCode} $body")
 
         val json = gson.fromJson(body, JsonObject::class.java)
         val files = json.getAsJsonArray("files") ?: return emptyList()
@@ -268,7 +243,7 @@ object GoogleDriveShareClient {
         for (item in files) {
             val obj = item.asJsonObject
             val name = obj.get("name").asString
-            val id   = obj.get("id").asString
+            val id = obj.get("id").asString
             val isDir = obj.get("mimeType")?.asString == "application/vnd.google-apps.folder"
             val size = obj.get("size")?.asLong ?: 0L
             val dateStr = obj.get("modifiedTime")?.asString
@@ -299,22 +274,23 @@ object GoogleDriveShareClient {
         }
 
         val meta = gson.toJson(mapOf(
-            "name"     to folderName,
+            "name" to folderName,
             "mimeType" to "application/vnd.google-apps.folder",
-            "parents"  to listOf(parentId)
-        )).toRequestBody("application/json".toMediaType())
+            "parents" to listOf(parentId)
+        ))
 
         val response = withContext(Dispatchers.IO) {
-            client.newCall(
-                Request.Builder()
-                    .url("https://www.googleapis.com/drive/v3/files?fields=id")
-                    .header("Authorization", "Bearer $token")
-                    .post(meta)
-                    .build()
-            ).execute()
+            UfmHttpClient.postStringSync(
+                "https://www.googleapis.com/drive/v3/files?fields=id",
+                headers = mapOf(
+                    "Authorization" to "Bearer $token",
+                    "Content-Type" to "application/json"
+                ),
+                bodyString = meta
+            )
         }
-        if (!response.isSuccessful) throw IOException("GDrive mkdir failed: ${response.code} ${response.message}")
-        val id = gson.fromJson(response.body?.string(), JsonObject::class.java).get("id").asString
+        if (!response.isSuccessful) throw IOException("GDrive mkdir failed: ${response.statusCode} ${response.bodyString}")
+        val id = gson.fromJson(response.bodyString, JsonObject::class.java).get("id").asString
         pathIdCache.getOrPut(share.host) { mutableMapOf() }[remotePath.trim('/')] = id
         GoRoLog.d("GDriveClient", "mkdir($remotePath) → $id")
     }
@@ -324,16 +300,13 @@ object GoogleDriveShareClient {
         val fileId = resolvePathToId(token, share.host, remotePath)
 
         val response = withContext(Dispatchers.IO) {
-            client.newCall(
-                Request.Builder()
-                    .url("https://www.googleapis.com/drive/v3/files/$fileId")
-                    .header("Authorization", "Bearer $token")
-                    .delete()
-                    .build()
-            ).execute()
+            UfmHttpClient.deleteSync(
+                "https://www.googleapis.com/drive/v3/files/$fileId",
+                headers = mapOf("Authorization" to "Bearer $token")
+            )
         }
-        if (!response.isSuccessful && response.code != 404) {
-            throw IOException("GDrive delete failed: ${response.code} ${response.message}")
+        if (!response.isSuccessful && response.statusCode != 404) {
+            throw IOException("GDrive delete failed: ${response.statusCode} ${response.bodyString}")
         }
         invalidateCacheBelow(share.host, remotePath)
         GoRoLog.d("GDriveClient", "deleteFile($remotePath)")
@@ -342,18 +315,18 @@ object GoogleDriveShareClient {
     suspend fun rename(share: NetworkShare, fromPath: String, toPath: String) {
         val token = getAccessToken(share.host)
         val fileId = resolvePathToId(token, share.host, fromPath)
-        
+
         val fromParts = fromPath.trim('/').split("/")
         val fromParentPath = fromParts.dropLast(1).joinToString("/")
-        
+
         val toParts = toPath.trim('/').split("/")
         val toName = toParts.last()
         val toParentPath = toParts.dropLast(1).joinToString("/")
 
-        val body = gson.toJson(mapOf("name" to toName)).toRequestBody("application/json".toMediaType())
-        
+        val body = gson.toJson(mapOf("name" to toName))
+
         val urlBuilder = StringBuilder("https://www.googleapis.com/drive/v3/files/$fileId?fields=id,name")
-        
+
         if (fromParentPath != toParentPath) {
             val oldParentId = resolvePathToId(token, share.host, fromParentPath)
             val newParentId = resolvePathToId(token, share.host, toParentPath)
@@ -362,16 +335,17 @@ object GoogleDriveShareClient {
         }
 
         val response = withContext(Dispatchers.IO) {
-            client.newCall(
-                Request.Builder()
-                    .url(urlBuilder.toString())
-                    .header("Authorization", "Bearer $token")
-                    .patch(body)
-                    .build()
-            ).execute()
+            UfmHttpClient.patchStringSync(
+                urlBuilder.toString(),
+                headers = mapOf(
+                    "Authorization" to "Bearer $token",
+                    "Content-Type" to "application/json"
+                ),
+                bodyString = body
+            )
         }
-        if (!response.isSuccessful) throw IOException("GDrive rename/move failed: ${response.code} ${response.message}")
-        
+        if (!response.isSuccessful) throw IOException("GDrive rename/move failed: ${response.statusCode} ${response.bodyString}")
+
         invalidateCacheBelow(share.host, fromPath)
         invalidateCacheBelow(share.host, toPath)
         GoRoLog.d("GDriveClient", "rename/move($fromPath → $toPath)")
@@ -383,43 +357,39 @@ object GoogleDriveShareClient {
         val fileId = resolvePathToId(token, share.host, remotePath)
 
         val response = withContext(Dispatchers.IO) {
-            client.newCall(
-                Request.Builder()
-                    .url("https://www.googleapis.com/drive/v3/files/$fileId?alt=media")
-                    .header("Authorization", "Bearer $token")
-                    .get()
-                    .build()
-            ).execute()
+            UfmHttpClient.openStream(
+                "https://www.googleapis.com/drive/v3/files/$fileId?alt=media",
+                headers = mapOf("Authorization" to "Bearer $token")
+            )
         }
         if (!response.isSuccessful) {
             response.close()
-            throw IOException("GDrive download failed: ${response.code} ${response.message}")
+            throw IOException("GDrive download failed: ${response.statusCode}")
         }
-        val responseBody = response.body ?: throw IOException("Empty body from Google Drive")
-        return Pair(responseBody.byteStream(), responseBody.contentLength())
+        return Pair(response.inputStream, response.contentLength)
     }
 
-    suspend fun openInputStreamForStreaming(share: NetworkShare, remotePath: String, rangeHeader: String?): okhttp3.Response {
+    suspend fun openInputStreamForStreaming(share: NetworkShare, remotePath: String, rangeHeader: String?): UfmHttpClient.StreamResponse {
         return withContext(Dispatchers.IO) { openInputStreamForStreamingSync(share, remotePath, rangeHeader) }
     }
 
-    fun openInputStreamForStreamingSync(share: NetworkShare, remotePath: String, rangeHeader: String?): okhttp3.Response {
+    fun openInputStreamForStreamingSync(share: NetworkShare, remotePath: String, rangeHeader: String?): UfmHttpClient.StreamResponse {
         GoRoLog.d("GDriveClient", "openInputStreamForStreamingSync($remotePath, range=$rangeHeader)")
         val token = getAccessTokenSync(share.host)
         val fileId = resolvePathToIdSync(token, share.host, remotePath)
 
-        val requestBuilder = Request.Builder()
-            .url("https://www.googleapis.com/drive/v3/files/$fileId?alt=media")
-            .header("Authorization", "Bearer $token")
-        
+        val headers = mutableMapOf("Authorization" to "Bearer $token")
         if (rangeHeader != null) {
-            requestBuilder.header("Range", rangeHeader)
+            headers["Range"] = rangeHeader
         }
 
-        val response = client.newCall(requestBuilder.get().build()).execute()
+        val response = UfmHttpClient.openStream(
+            "https://www.googleapis.com/drive/v3/files/$fileId?alt=media",
+            headers = headers
+        )
         if (!response.isSuccessful) {
             response.close()
-            throw IOException("GDrive stream failed: ${response.code} ${response.message}")
+            throw IOException("GDrive stream failed: ${response.statusCode}")
         }
         return response
     }
@@ -435,20 +405,27 @@ object GoogleDriveShareClient {
                 val requestLength = minOf(length.toLong(), size - offset).toInt()
                 val rangeEnd = offset + requestLength - 1
                 val rangeHeader = "bytes=$offset-$rangeEnd"
-                
-                var bytesRead = -1
-                try {
+
+                return try {
                     val response = openInputStreamForStreamingSync(share, remotePath, rangeHeader)
-                    val stream = response.body?.byteStream()
-                    if (stream != null) {
-                        bytesRead = stream.read(buffer, 0, requestLength)
+                    response.use { resp ->
+                        if (!resp.isSuccessful) {
+                            throw IOException("GDrive RAF read failed: ${resp.statusCode}")
+                        }
+                        resp.inputStream.use { stream ->
+                            var totalRead = 0
+                            while (totalRead < requestLength) {
+                                val n = stream.read(buffer, totalRead, requestLength - totalRead)
+                                if (n == -1) break
+                                totalRead += n
+                            }
+                            if (totalRead == 0) -1 else totalRead
+                        }
                     }
-                    runCatching { stream?.close() }
-                    runCatching { response.close() }
                 } catch (e: Exception) {
                     GoRoLog.e("GDriveClient", "Random Access read failed at $offset", e)
+                    -1
                 }
-                return bytesRead
             }
 
             override fun write(offset: Long, buffer: ByteArray, length: Int): Int {
@@ -469,17 +446,13 @@ object GoogleDriveShareClient {
         val token = getAccessTokenSync(share.host)
         val fileId = resolvePathToIdSync(token, share.host, remotePath)
         val url = "https://www.googleapis.com/drive/v3/files/$fileId?fields=size"
-        val request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer $token")
-            .get()
-            .build()
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) return -1
-            val body = response.body?.string() ?: ""
-            val json = gson.fromJson(body, JsonObject::class.java)
-            return json.get("size")?.asLong ?: -1
-        }
+        val response = UfmHttpClient.getSync(
+            url,
+            headers = mapOf("Authorization" to "Bearer $token")
+        )
+        if (!response.isSuccessful) return -1
+        val json = try { gson.fromJson(response.bodyString, JsonObject::class.java) } catch (e: Exception) { null }
+        return json?.get("size")?.asLong ?: -1
     }
 
     suspend fun uploadStream(
@@ -515,18 +488,22 @@ object GoogleDriveShareClient {
 
             val bodyBytes = metaPart.toByteArray() + dataPart.toByteArray() +
                     inputStream.readBytes() + endPart.toByteArray()
-            val requestBody = bodyBytes.toRequestBody("multipart/related; boundary=$boundary".toMediaType())
             val method = if (existingId == null) "POST" else "PATCH"
-            val request = Request.Builder()
-                .url(url)
-                .header("Authorization", "Bearer $token")
-                .method(method, requestBody)
-                .build()
+            val headers = mapOf(
+                "Authorization" to "Bearer $token",
+                "Content-Type" to "multipart/related; boundary=$boundary"
+            )
 
-            val response = withContext(Dispatchers.IO) { client.newCall(request).execute() }
-            if (!response.isSuccessful) throw IOException("GDrive multipart upload failed: ${response.code} ${response.message}")
+            val response = withContext(Dispatchers.IO) {
+                if (method == "POST") {
+                    UfmHttpClient.postSync(url, headers, bodyBytes)
+                } else {
+                    UfmHttpClient.patchSync(url, headers, bodyBytes)
+                }
+            }
+            if (!response.isSuccessful) throw IOException("GDrive multipart upload failed: ${response.statusCode} ${response.bodyString}")
 
-            val id = gson.fromJson(response.body?.string(), JsonObject::class.java).get("id")?.asString
+            val id = gson.fromJson(response.bodyString, JsonObject::class.java).get("id")?.asString
             if (id != null) pathIdCache.getOrPut(share.host) { mutableMapOf() }[remotePath.trim('/')] = id
             onProgress?.invoke(totalSize, totalSize)
             return
@@ -543,17 +520,21 @@ object GoogleDriveShareClient {
         } else {
             "https://www.googleapis.com/upload/drive/v3/files/$existingId?uploadType=resumable&fields=id"
         }
-        val initMethod = if (existingId == null) "POST" else "PATCH"
-        val initRequest = Request.Builder()
-            .url(initUrl)
-            .header("Authorization", "Bearer $token")
-            .header("X-Upload-Content-Type", "application/octet-stream")
-            .header("X-Upload-Content-Length", totalSize.toString())
-            .method(initMethod, metaJson.toRequestBody("application/json".toMediaType()))
-            .build()
+        val initHeaders = mapOf(
+            "Authorization" to "Bearer $token",
+            "Content-Type" to "application/json; charset=UTF-8",
+            "X-Upload-Content-Type" to "application/octet-stream",
+            "X-Upload-Content-Length" to totalSize.toString()
+        )
 
-        val initResponse = withContext(Dispatchers.IO) { client.newCall(initRequest).execute() }
-        if (!initResponse.isSuccessful) throw IOException("GDrive resumable init failed: ${initResponse.code}")
+        val initResponse = withContext(Dispatchers.IO) {
+            if (existingId == null) {
+                UfmHttpClient.postStringSync(initUrl, initHeaders, metaJson)
+            } else {
+                UfmHttpClient.patchStringSync(initUrl, initHeaders, metaJson)
+            }
+        }
+        if (!initResponse.isSuccessful) throw IOException("GDrive resumable init failed: ${initResponse.statusCode}")
         val uploadUrl = initResponse.header("Location")
             ?: throw IOException("No upload URL in Google Drive resumable init response")
 
@@ -572,18 +553,18 @@ object GoogleDriveShareClient {
             if (bytesRead == 0) break
 
             val rangeEnd = offset + bytesRead - 1
-            val chunkBody = okhttp3.RequestBody.create("application/octet-stream".toMediaType(), buffer, 0, bytesRead)
-            val uploadRequest = Request.Builder()
-                .url(uploadUrl)
-                .header("Content-Length", bytesRead.toString())
-                .header("Content-Range", "bytes $offset-$rangeEnd/$totalSize")
-                .put(chunkBody)
-                .build()
+            val uploadHeaders = mapOf(
+                "Content-Type" to "application/octet-stream",
+                "Content-Length" to bytesRead.toString(),
+                "Content-Range" to "bytes $offset-$rangeEnd/$totalSize"
+            )
 
-            val uploadResult = withContext(Dispatchers.IO) { client.newCall(uploadRequest).execute() }
+            val uploadResult = withContext(Dispatchers.IO) {
+                UfmHttpClient.putBytesSync(uploadUrl, uploadHeaders, buffer, 0, bytesRead)
+            }
             // 308 = Resume Incomplete (continue), 200/201 = done
-            if (!uploadResult.isSuccessful && uploadResult.code != 308) {
-                throw IOException("GDrive chunk upload failed: ${uploadResult.code} ${uploadResult.message}")
+            if (!uploadResult.isSuccessful && uploadResult.statusCode != 308) {
+                throw IOException("GDrive chunk upload failed: ${uploadResult.statusCode} ${uploadResult.bodyString}")
             }
             offset += bytesRead
             onProgress?.invoke(offset, totalSize)

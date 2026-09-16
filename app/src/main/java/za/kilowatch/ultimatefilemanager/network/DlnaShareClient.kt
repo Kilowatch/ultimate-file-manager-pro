@@ -1,24 +1,17 @@
 package za.kilowatch.ultimatefilemanager.network
 
 import android.util.Log
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import za.kilowatch.ultimatefilemanager.server.DlnaSecurityFilter
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.concurrent.TimeUnit
 
 /**
  * ShareClient implementation for browsing and streaming from DLNA / UPnP
  * media servers.
  *
- * All network calls are blocking (synchronous OkHttp).  Callers should
- * invoke methods off the main thread.
- *
- * Connections use a shared [OkHttpClient] with 10-second connect and 30-second
- * read timeouts.  The underlying SOAP interactions are delegated to
- * [DlnaSoapClient]; raw media-streaming HTTP requests are made directly.
+ * All network calls are blocking. Callers should invoke methods off the main thread.
+ * Powered by native [UfmHttpClient].
  *
  * Write operations ([openOutputStream], [mkdir], [deleteFile], [deleteDir],
  * [rename]) throw [UnsupportedOperationException] because DLNA is a read-only
@@ -27,18 +20,6 @@ import java.util.concurrent.TimeUnit
 object DlnaShareClient {
 
     private const val TAG = "DlnaShareClient"
-
-    // -----------------------------------------------------------------
-    // HTTP Client
-    // -----------------------------------------------------------------
-
-    private val httpClient: OkHttpClient by lazy {
-        BypassCleartextOkHttpClient.applyBypass(
-            OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-        ).build()
-    }
 
     // -----------------------------------------------------------------
     // Read operations
@@ -96,32 +77,17 @@ object DlnaShareClient {
             throw IOException("DLNA media URL blocked by security filter: $mediaUrl")
         }
 
-        // Build the HTTP request
-        val requestBuilder = Request.Builder()
-            .url(mediaUrl)
-            .get()
-
-        // Add Range header if a start offset was provided
-        if (startOffset != null) {
-            requestBuilder.header("Range", "bytes=$startOffset-")
-        }
-
-        val request = requestBuilder.build()
+        val headers = if (startOffset != null) mapOf("Range" to "bytes=$startOffset-") else emptyMap()
 
         return try {
-            val response = httpClient.newCall(request).execute()
-            if (!response.isSuccessful) {
-                val message = "HTTP ${response.code}: ${response.message}"
+            val response = UfmHttpClient.openStream(mediaUrl, headers, timeoutSec = 30)
+            if (!response.isSuccessful && response.statusCode != 206) {
+                val message = "HTTP ${response.statusCode}"
                 response.close()
                 throw IOException("Failed to stream DLNA media at $mediaUrl: $message")
             }
-            val body = response.body
-                ?: run {
-                    response.close()
-                    throw IOException("Null response body from $mediaUrl")
-                }
-            body.byteStream()
-        } catch (e: IOException) {
+            response.inputStream
+        } catch (e: Exception) {
             throw IOException("DLNA stream error for $mediaUrl", e)
         }
     }

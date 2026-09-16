@@ -27,14 +27,9 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.network.UfmHttpClient
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
@@ -46,7 +41,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 
 class SupportActivity : AppCompatActivity() {
 
@@ -57,13 +51,6 @@ class SupportActivity : AppCompatActivity() {
     private var isApplyingRememberState = false
     // Remembered email as of the last form open — avoids re-reading prefs on every back press
     private var rememberedEmailValue = ""
-
-    // OkHttp client for API calls
-    private val httpClient = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS)
-        .build()
 
     // File picker for attachments
     private val attachmentPickerLauncher = registerForActivityResult(
@@ -506,58 +493,55 @@ class SupportActivity : AppCompatActivity() {
 
         showLoading(true)
 
-        // Build multipart request
-        val bodyBuilder = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("type", currentType)
-            .addFormDataPart("subject", subject)
-            .addFormDataPart("message", message)
-            .addFormDataPart("timestamp", timestamp.toString())
-            .addFormDataPart("app_version", BuildConfig.VERSION_NAME)
-            .addFormDataPart("app_code", BuildConfig.VERSION_CODE.toString())
-            .addFormDataPart("sdk_version", Build.VERSION.SDK_INT.toString())
-            .addFormDataPart("manufacturer", Build.MANUFACTURER)
-            .addFormDataPart("device_model", Build.MODEL)
-            .addFormDataPart("is_tv", if (isTv) "1" else "0")
-            .addFormDataPart("package_name", BuildConfig.APPLICATION_ID)
-            .addFormDataPart("honeypot", honeypot)
+        // Build multipart request fields
+        val formFields = mutableMapOf(
+            "type" to currentType,
+            "subject" to subject,
+            "message" to message,
+            "timestamp" to timestamp.toString(),
+            "app_version" to BuildConfig.VERSION_NAME,
+            "app_code" to BuildConfig.VERSION_CODE.toString(),
+            "sdk_version" to Build.VERSION.SDK_INT.toString(),
+            "manufacturer" to Build.MANUFACTURER,
+            "device_model" to Build.MODEL,
+            "is_tv" to if (isTv) "1" else "0",
+            "package_name" to BuildConfig.APPLICATION_ID,
+            "honeypot" to honeypot
+        )
 
         // Root diagnostics (Mobile only)
         if (!isTv) {
             val rootResult = za.kilowatch.ultimatefilemanager.util.RootDetector.detect(this)
-            bodyBuilder.addFormDataPart("is_rooted", if (rootResult.isRooted) "1" else "0")
-            bodyBuilder.addFormDataPart("root_type", rootResult.rootType.name)
+            formFields["is_rooted"] = if (rootResult.isRooted) "1" else "0"
+            formFields["root_type"] = rootResult.rootType.name
         }
 
         // Optional fields
-        if (steps.isNotEmpty()) bodyBuilder.addFormDataPart("steps", steps)
-        if (useCase.isNotEmpty()) bodyBuilder.addFormDataPart("use_case", useCase)
-        if (email.isNotEmpty()) bodyBuilder.addFormDataPart("email", email)
+        if (steps.isNotEmpty()) formFields["steps"] = steps
+        if (useCase.isNotEmpty()) formFields["use_case"] = useCase
+        if (email.isNotEmpty()) formFields["email"] = email
 
         // Attachments — keys must match PHP: attachment, attachment2, attachment3, attachment4, attachment5
-        selectedFilePaths.forEachIndexed { index, path ->
+        val files = selectedFilePaths.mapIndexed { index, path ->
             val file = File(path)
-            val mediaType = guessMediaType(file.extension).toMediaType()
-            val reqBody = file.asRequestBody(mediaType)
+            val mediaType = guessMediaType(file.extension)
             val key = if (index == 0) "attachment" else "attachment${index + 1}"
-            bodyBuilder.addFormDataPart(key, file.name, reqBody)
+            UfmHttpClient.FilePart(key, file.name, file.readBytes(), mediaType)
         }
-
-        val requestBody = bodyBuilder.build()
-        val request = Request.Builder()
-            .url(SUPPORT_ENDPOINT)
-            .post(requestBody)
-            .build()
 
         // Execute on IO dispatcher
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val response = httpClient.newCall(request).execute()
-                val responseBody = response.body?.string() ?: ""
+                val response = UfmHttpClient.postMultipartFiles(
+                    SUPPORT_ENDPOINT,
+                    formFields = formFields,
+                    files = files,
+                    timeoutSec = 60
+                )
 
                 withContext(Dispatchers.Main) {
                     showLoading(false)
-                    when (response.code) {
+                    when (response.statusCode) {
                         200 -> {
                             persistRememberedEmail(email)
                             showSuccessDialog()
@@ -566,7 +550,7 @@ class SupportActivity : AppCompatActivity() {
                         else -> showErrorDialog()
                     }
                 }
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     showLoading(false)
                     showErrorDialog()

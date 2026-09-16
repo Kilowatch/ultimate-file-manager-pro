@@ -49,7 +49,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.datasource.okhttp.OkHttpDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.PlayerView
@@ -670,13 +670,10 @@ class SlideShowActivity : AppCompatActivity() {
                         } else {
                             OnedriveShareClient.getStreamingUrlAndTokenSync(share, path)
                         }
-                        val okhttpClient = okhttp3.OkHttpClient.Builder()
-                            .followRedirects(true)
-                            .followSslRedirects(true)
-                            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-                            .readTimeout(0, java.util.concurrent.TimeUnit.SECONDS)
-                            .build()
-                        val dataSourceFactory = OkHttpDataSource.Factory(okhttpClient)
+                        val dataSourceFactory = DefaultHttpDataSource.Factory()
+                            .setAllowCrossProtocolRedirects(true)
+                            .setConnectTimeoutMs(30000)
+                            .setReadTimeoutMs(30000)
                             .setDefaultRequestProperties(
                                 if (token.isNotEmpty()) mapOf("Authorization" to "Bearer $token") else emptyMap()
                             )
@@ -687,11 +684,10 @@ class SlideShowActivity : AppCompatActivity() {
                         val mime = za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(ext)
                         val fileSize = sizesMap[path] ?: 0L
                         val proxyUrl = NetworkHttpProxyServer.register(share, path, mime, fileSize)
-                        val okhttpClient = okhttp3.OkHttpClient.Builder()
-                            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-                            .readTimeout(0, java.util.concurrent.TimeUnit.SECONDS)
-                            .build()
-                        val dataSourceFactory = OkHttpDataSource.Factory(okhttpClient)
+                        val dataSourceFactory = DefaultHttpDataSource.Factory()
+                            .setAllowCrossProtocolRedirects(true)
+                            .setConnectTimeoutMs(30000)
+                            .setReadTimeoutMs(30000)
                             .setUserAgent(Util.getUserAgent(context, "UFM"))
                         DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory).createMediaSource(MediaItem.fromUri(Uri.parse(proxyUrl)))
                     } else {

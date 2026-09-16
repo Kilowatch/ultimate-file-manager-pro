@@ -1,4 +1,4 @@
-﻿package za.kilowatch.ultimatefilemanager.storage
+package za.kilowatch.ultimatefilemanager.storage
 
 import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
 
@@ -22,8 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 import android.os.storage.StorageManager
@@ -5051,11 +5049,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     // ─── Tip Jar Server Fetch ────────────────────────────────
 
-    /** Shared OkHttpClient for tip jar API calls. */
-    private val tipJarClient = OkHttpClient.Builder()
-        .connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .build()
+
 
     /**
      * Abbreviates a full month name at the start of a string to its 3-letter form.
@@ -5123,15 +5117,13 @@ class StorageBrowserActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val request = Request.Builder()
-                    .url("https://www.kilowatch.co.za/UFM/api/progress.php")
-                    .get()
-                    .build()
+                val response = za.kilowatch.ultimatefilemanager.network.UfmHttpClient.getSync(
+                    "https://www.kilowatch.co.za/UFM/api/progress.php",
+                    timeoutSec = 10
+                )
+                val body = response.bodyString
 
-                val response = tipJarClient.newCall(request).execute()
-                val body = response.body?.string()
-
-                if (!response.isSuccessful || body == null) {
+                if (!response.isSuccessful || body.isBlank()) {
                     // Server error — use cached values
                     withContext(Dispatchers.Main) {
                         applyCachedTipJarProgress()

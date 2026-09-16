@@ -16,21 +16,20 @@ import android.widget.Toast
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Call
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.network.UfmHttpClient
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.PackageInstallerHelper
 import java.io.File
 import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 /**
  * Manages in-app downloading and auto-installation of elevated companion applications
@@ -75,23 +74,8 @@ object ElevatedAppDownloadManager {
         val apkName: String
     )
 
-    private var activeDownloadCall: Call? = null
-
-    private val httpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(12, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .build()
-    }
-
-    private val downloadClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(5, TimeUnit.MINUTES)
-            .followRedirects(true)
-            .followSslRedirects(true)
-            .build()
-    }
+    @Volatile
+    private var isDownloadCancelled = false
 
     /**
      * Entry point to start the download flow for Shizuku or Shevery.
@@ -144,16 +128,13 @@ object ElevatedAppDownloadManager {
     private fun fetchFromGitHubRepo(app: ElevatedApp, repo: String): AppReleaseInfo? {
         val url = "https://api.github.com/repos/$repo/releases/latest"
         return try {
-            val request = Request.Builder()
-                .url(url)
-                .header("User-Agent", "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}")
-                .header("Accept", "application/vnd.github.v3+json")
-                .get()
-                .build()
-
-            val response = httpClient.newCall(request).execute()
-            val body = response.body?.string() ?: return null
+            val headers = mapOf(
+                "User-Agent" to "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}",
+                "Accept" to "application/vnd.github.v3+json"
+            )
+            val response = UfmHttpClient.getSync(url, headers = headers, timeoutSec = 15)
             if (!response.isSuccessful) return null
+            val body = response.bodyString
 
             val json = JSONObject(body)
             val tagName = json.optString("tag_name", "")
@@ -198,17 +179,20 @@ object ElevatedAppDownloadManager {
                 apkName = apkName
             )
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to fetch release for $repo: ${e.message}")
             null
         }
+    }
+
+    private fun formatFileSize(size: Long): String {
+        return if (size > 0) {
+            String.format(Locale.US, "%.1f MB", size / (1024.0 * 1024.0))
+        } else ""
     }
 
     /**
      * Displays a glassmorphic update/download dialog adhering to UFM standards.
      */
     fun showDownloadDialog(activity: Activity, release: AppReleaseInfo) {
-        if (activity.isFinishing || activity.isDestroyed) return
-
         val isTv = DeviceUtils.isTvDevice(activity)
         val layoutRes = if (isTv) R.layout.dialog_update_available_tv else R.layout.dialog_update_available
         val dialogView = LayoutInflater.from(activity).inflate(layoutRes, null)
@@ -221,43 +205,44 @@ object ElevatedAppDownloadManager {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         val imgIcon = dialogView.findViewById<ImageView>(R.id.imgUpdateIcon)
-        val txtTitle = dialogView.findViewById<TextView>(R.id.txtUpdateTitle)
-        val txtVersionDiff = dialogView.findViewById<TextView>(R.id.txtVersionDiff)
-        val txtChangelog = dialogView.findViewById<TextView>(R.id.txtChangelog)
-        val btnDownload = dialogView.findViewById<MaterialButton>(R.id.btnDownloadUpdate)
-        val btnViewRelease = dialogView.findViewById<MaterialButton>(R.id.btnViewRelease)
-        val btnRemindLater = dialogView.findViewById<MaterialButton>(R.id.btnRemindLater)
-        val progressBar = dialogView.findViewById<LinearProgressIndicator>(R.id.progressDownload)
-
         imgIcon?.setImageResource(release.app.iconRes)
-        txtTitle?.text = activity.getString(R.string.elevated_download_title, release.app.displayName, release.version)
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtUpdateTitle)
+        txtTitle?.text = "${release.app.displayName} ${release.version}"
+
+        val txtVersionDiff = dialogView.findViewById<TextView>(R.id.txtVersionDiff)
         txtVersionDiff?.text = release.tagName
 
-        val changelogBody = if (release.body.isNotBlank()) {
-            FossUpdateManager.renderMarkdown(activity, release.body)
+        val txtChangelog = dialogView.findViewById<TextView>(R.id.txtChangelog)
+        if (release.body.isNotBlank()) {
+            txtChangelog?.visibility = View.VISIBLE
+            txtChangelog?.text = FossUpdateManager.renderMarkdown(activity, release.body)
         } else {
-            activity.getString(R.string.update_available_msg)
-        }
-        txtChangelog?.text = changelogBody
-
-        val sizeMb = if (release.apkSize > 0) {
-            String.format(Locale.US, "%.1f MB", release.apkSize / (1024.0 * 1024.0))
-        } else ""
-        val downloadLabel = if (sizeMb.isNotEmpty()) "${release.app.displayName} ($sizeMb)" else release.app.displayName
-        btnDownload?.text = activity.getString(R.string.elevated_download_btn, downloadLabel)
-
-        btnDownload?.setOnClickListener {
-            startInAppDownload(activity, release, btnDownload, progressBar, btnViewRelease, btnRemindLater, dialog)
+            val sizeStr = formatFileSize(release.apkSize)
+            txtChangelog?.text = "${release.app.displayName} ($sizeStr)"
         }
 
+        val progressBar = dialogView.findViewById<LinearProgressIndicator>(R.id.progressDownload)
+        progressBar?.visibility = View.GONE
+
+        val btnDownload = dialogView.findViewById<MaterialButton>(R.id.btnDownloadUpdate)
+        btnDownload?.text = activity.getString(R.string.btn_download)
+
+        val btnViewRelease = dialogView.findViewById<MaterialButton>(R.id.btnViewRelease)
+        btnViewRelease?.text = activity.getString(R.string.update_btn_view_release)
         btnViewRelease?.setOnClickListener {
-            dialog.dismiss()
             openUrl(activity, release.htmlUrl)
         }
 
+        val btnRemindLater = dialogView.findViewById<MaterialButton>(R.id.btnRemindLater)
         btnRemindLater?.text = activity.getString(R.string.btn_cancel)
         btnRemindLater?.setOnClickListener {
+            cancelDownload()
             dialog.dismiss()
+        }
+
+        btnDownload?.setOnClickListener {
+            startInAppDownload(activity, release, it as MaterialButton, progressBar, btnViewRelease, btnRemindLater, dialog)
         }
 
         dialog.setOnDismissListener {
@@ -265,31 +250,6 @@ object ElevatedAppDownloadManager {
         }
 
         dialog.show()
-
-        val displayMetrics = activity.resources.displayMetrics
-        val isLandscape = activity.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
-
-        val targetWidth = if (isTv) {
-            (displayMetrics.widthPixels * 0.55).toInt()
-        } else if (isLandscape) {
-            (displayMetrics.widthPixels * 0.92).toInt()
-        } else {
-            (displayMetrics.widthPixels * 0.95).toInt()
-        }
-
-        val targetHeight = if (isTv) {
-            android.view.WindowManager.LayoutParams.WRAP_CONTENT
-        } else if (isLandscape) {
-            (displayMetrics.heightPixels * 0.92).toInt()
-        } else {
-            (displayMetrics.heightPixels * 0.86).toInt()
-        }
-
-        dialog.window?.setLayout(targetWidth, targetHeight)
-
-        if (isTv) {
-            btnDownload?.requestFocus()
-        }
     }
 
     /**
@@ -323,9 +283,12 @@ object ElevatedAppDownloadManager {
         btnViewRelease?.isEnabled = false
         btnRemindLater?.isEnabled = false
 
-        CoroutineScope(Dispatchers.Main).launch {
+        isDownloadCancelled = false
+
+        val scope = (activity as? LifecycleOwner)?.lifecycleScope ?: CoroutineScope(Dispatchers.Main)
+        scope.launch {
             val result = downloadApk(activity, release.apkUrl, release.apkName) { progress ->
-                CoroutineScope(Dispatchers.Main).launch {
+                activity.runOnUiThread {
                     if (!activity.isFinishing && !activity.isDestroyed) {
                         btnDownload.text = activity.getString(R.string.update_downloading, progress)
                         progressBar?.setProgressCompat(progress, true)
@@ -371,34 +334,26 @@ object ElevatedAppDownloadManager {
         tempFile.delete()
 
         try {
-            val request = Request.Builder()
-                .url(url)
-                .header("User-Agent", "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}")
-                .build()
-
-            val call = downloadClient.newCall(request)
-            activeDownloadCall = call
-
-            val response = call.execute()
+            val headers = mapOf("User-Agent" to "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}")
+            val response = UfmHttpClient.openStream(url, headers = headers, timeoutSec = 60)
             if (!response.isSuccessful) {
-                Log.w(TAG, "Download failed: HTTP ${response.code}")
+                Log.w(TAG, "Download failed: HTTP ${response.statusCode}")
+                response.close()
                 return@withContext null
             }
 
-            val body = response.body ?: run {
-                Log.w(TAG, "Download failed: empty response body")
-                return@withContext null
-            }
-
-            val contentLength = body.contentLength()
+            val contentLength = response.header("Content-Length")?.toLongOrNull() ?: -1L
             var bytesRead = 0L
             var lastReportedProgress = -1
 
             tempFile.outputStream().use { output ->
-                body.byteStream().use { input ->
+                response.inputStream.use { input ->
                     val buffer = ByteArray(8192)
                     var read: Int
                     while (input.read(buffer).also { read = it } != -1) {
+                        if (isDownloadCancelled) {
+                            throw java.io.IOException("Download cancelled by user")
+                        }
                         output.write(buffer, 0, read)
                         bytesRead += read
 
@@ -412,8 +367,7 @@ object ElevatedAppDownloadManager {
                     }
                 }
             }
-
-            activeDownloadCall = null
+            response.close()
 
             targetFile.delete()
             if (tempFile.renameTo(targetFile)) {
@@ -425,9 +379,8 @@ object ElevatedAppDownloadManager {
                 return@withContext null
             }
         } catch (e: Exception) {
-            activeDownloadCall = null
             tempFile.delete()
-            if (e is java.io.IOException && e.message?.contains("Canceled") == true) {
+            if (isDownloadCancelled || (e is java.io.IOException && e.message?.contains("cancelled", ignoreCase = true) == true)) {
                 Log.d(TAG, "Download cancelled by user")
             } else {
                 Log.w(TAG, "Download failed: ${e.message}", e)
@@ -450,13 +403,8 @@ object ElevatedAppDownloadManager {
     }
 
     private fun cancelDownload() {
-        activeDownloadCall?.let { call ->
-            if (!call.isCanceled()) {
-                call.cancel()
-                Log.d(TAG, "Download cancelled")
-            }
-        }
-        activeDownloadCall = null
+        isDownloadCancelled = true
+        Log.d(TAG, "Download cancelled")
     }
 
     private fun openUrl(context: Context, url: String) {

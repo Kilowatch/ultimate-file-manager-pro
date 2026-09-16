@@ -37,13 +37,13 @@ object OnedriveShareClient {
         share: NetworkShare,
         remotePath: String,
         rangeHeader: String?
-    ): okhttp3.Response = unsupported()
+    ): UfmHttpClient.StreamResponse = unsupported()
 
     fun openInputStreamForStreamingSync(
         share: NetworkShare,
         remotePath: String,
         rangeHeader: String?
-    ): okhttp3.Response = unsupported()
+    ): UfmHttpClient.StreamResponse = unsupported()
 
     fun openRandomAccessFile(share: NetworkShare, remotePath: String): IRandomAccessFile = unsupported()
 
