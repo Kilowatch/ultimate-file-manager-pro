@@ -465,9 +465,9 @@ class UfmDocumentsProvider : DocumentsProvider() {
         }
 
         val callback = object : ProxyFileDescriptorCallback() {
-            // 512 KB cache buffer for read-ahead to minimize network IO calls from Android FUSE.
+            // 4 MB cache buffer for read-ahead to minimize network IO calls from Android FUSE.
             // Lazily allocated on first onRead() to prevent OOM when multiple proxies are opened.
-            private val DEFAULT_CACHE_SIZE = 512 * 1024
+            private val DEFAULT_CACHE_SIZE = 4 * 1024 * 1024
             private var cacheBuffer: ByteArray? = null
             private var cacheStartPos = -1L
             private var cacheEndPos = -1L
@@ -626,7 +626,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         ShareType.NFS -> NfsShareClient.openInputStream(share, path)
                         ShareType.DLNA -> DlnaShareClient.openInputStream(share, path)
                     }
-                    inputStream.use { it.copyTo(out) }
+                    inputStream.use { it.copyTo(out, bufferSize = 128 * 1024) }
                 }
                 out.flush()
                 out.close()
@@ -744,6 +744,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
         if (isNetworkDoc(documentId)) {
             return openNetworkDocumentThumbnail(documentId, sizeHint, signal)
         }
+        openLocalDocumentThumbnail(documentId, sizeHint, signal)?.let { return it }
         val absPath = try { fromSafDocId(documentId) } catch (e: Exception) { return null }
         val file = File(absPath)
         if (!file.exists() || !file.isFile) return null
@@ -1177,7 +1178,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
             val cacheManager = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(ctx)
             val netFile = NetworkFile(name = fileName, path = path, isDirectory = false)
             val thumbPath = runBlocking(Dispatchers.IO) {
-                cacheManager.getThumbnail(share, netFile, force = true)
+                cacheManager.getThumbnail(share, netFile, force = false)
             }
             if (thumbPath != null && signal?.isCanceled != true) {
                 val thumbFile = File(thumbPath)
@@ -1188,6 +1189,40 @@ class UfmDocumentsProvider : DocumentsProvider() {
             } else null
         } catch (e: Exception) {
             GoRoLog.w("openNetworkDocumentThumbnail: failed for $documentId", e)
+            null
+        }
+    }
+
+    private fun openLocalDocumentThumbnail(
+        documentId: String,
+        sizeHint: Point?,
+        signal: CancellationSignal?
+    ): AssetFileDescriptor? {
+        if (signal?.isCanceled == true) return null
+        val absPath = fromSafDocId(documentId)
+        val localFile = File(absPath)
+        if (!localFile.exists() || localFile.isDirectory) return null
+        val ext = localFile.extension.lowercase()
+        val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+        val isVideo = ext in VIDEO_EXTENSIONS
+        val isApk = ext in listOf("apk", "xapk", "apks")
+        if (!isImage && !isVideo && !isApk) return null
+
+        val ctx = context ?: return null
+        return try {
+            val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager(ctx)
+            val thumbPath = runBlocking(Dispatchers.IO) {
+                cacheManager.getThumbnail(localFile, force = false)
+            }
+            if (thumbPath != null && signal?.isCanceled != true) {
+                val thumbFile = File(thumbPath)
+                if (thumbFile.exists() && thumbFile.length() > 0) {
+                    val pfd = ParcelFileDescriptor.open(thumbFile, ParcelFileDescriptor.MODE_READ_ONLY)
+                    AssetFileDescriptor(pfd, 0, AssetFileDescriptor.UNKNOWN_LENGTH)
+                } else null
+            } else null
+        } catch (e: Exception) {
+            GoRoLog.w("openLocalDocumentThumbnail: failed for $documentId", e)
             null
         }
     }

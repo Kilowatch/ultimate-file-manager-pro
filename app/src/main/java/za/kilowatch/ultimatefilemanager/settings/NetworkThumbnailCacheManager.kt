@@ -281,7 +281,8 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                     za.kilowatch.ultimatefilemanager.network.RCloneShareClient.supportsRangeReads(effectiveShare, effectivePath, networkFile.size)
                 val isRandomAccessCapable = effectiveShare.type in listOf(
                     ShareType.SMB, ShareType.SFTP, ShareType.SCP, ShareType.FTP, ShareType.NFS,
-                    ShareType.GOOGLE_DRIVE, ShareType.ONEDRIVE
+                    ShareType.GOOGLE_DRIVE, ShareType.ONEDRIVE, ShareType.DROPBOX,
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2, ShareType.DLNA, ShareType.WEBDAV
                 ) || rCloneRangeOk
                 val skipRetriever = ext in SKIP_RETRIEVER_EXTENSIONS
 
@@ -456,7 +457,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                                 // returns a non-null but incomplete bitmap from truncated data,
                                 // so the fallback path would never trigger.
                                 val maxImageSize = 5 * 1024 * 1024
-                                val data = ByteArray(16384)
+                                val data = ByteArray(256 * 1024)
                                 val buffer = ByteArrayOutputStream()
                                 var totalRead = 0
                                 var bytesRead: Int
@@ -818,29 +819,56 @@ class RemoteMediaDataSource(
     private val randomAccess: IRandomAccessFile
 ) : android.media.MediaDataSource() {
 
-    // Fix 4: Pre-allocate a reusable read buffer to avoid per-call heap churn.
-    // MediaMetadataRetriever calls readAt() hundreds of times during container
-    // probing; each ByteArray(size) allocation was fragmenting the heap.
-    // The buffer grows lazily if a single read requests more than the current capacity.
-    private var readBuffer = ByteArray(65536) // sized to match typical SMB max read
+    // 256 KB sliding read-ahead buffer to coalesce hundreds of tiny MediaMetadataRetriever
+    // container-probing reads (8B, 16B, 64B) into single network calls.
+    private val WINDOW_SIZE = 256 * 1024
+    private var windowBuffer = ByteArray(WINDOW_SIZE)
+    private var winStart = -1L
+    private var winEnd = -1L
 
     override fun readAt(position: Long, buffer: ByteArray, offset: Int, size: Int): Int {
         synchronized(this) {
             return try {
-                // Cap per-read to 1 MB to prevent OOM from excessive reads
-                val safeSize = minOf(size, 1_048_576)
-                if (readBuffer.size < safeSize) {
-                    readBuffer = ByteArray(safeSize)
+                val totalFileSize = randomAccess.size
+                if (totalFileSize > 0L && position >= totalFileSize) return -1
+                val bytesToRead = minOf(size.toLong(), if (totalFileSize > 0L) totalFileSize - position else size.toLong()).toInt()
+                if (bytesToRead <= 0) return 0
+
+                // 1. Fast path: fulfill from sliding window
+                if (position in winStart until winEnd) {
+                    val available = (winEnd - position).toInt()
+                    val toCopy = minOf(bytesToRead, available, buffer.size - offset)
+                    if (toCopy > 0) {
+                        System.arraycopy(windowBuffer, (position - winStart).toInt(), buffer, offset, toCopy)
+                        return toCopy
+                    }
                 }
-                val bytesRead = randomAccess.read(position, readBuffer, safeSize)
-                if (bytesRead > 0) {
-                    val copyLen = minOf(bytesRead, buffer.size - offset)
-                    System.arraycopy(readBuffer, 0, buffer, offset, copyLen)
+
+                // 2. Window miss: fetch at least WINDOW_SIZE from randomAccess
+                val fetchLen = if (totalFileSize > 0L) {
+                    minOf(maxOf(WINDOW_SIZE.toLong(), bytesToRead.toLong()), totalFileSize - position).toInt()
+                } else {
+                    maxOf(WINDOW_SIZE, bytesToRead)
                 }
-                bytesRead
+                if (fetchLen <= 0) return -1
+
+                if (windowBuffer.size < fetchLen) {
+                    windowBuffer = ByteArray(fetchLen)
+                }
+
+                val readCount = randomAccess.read(position, windowBuffer, fetchLen)
+                if (readCount <= 0) return -1
+
+                winStart = position
+                winEnd = position + readCount
+
+                val toCopy = minOf(bytesToRead, readCount, buffer.size - offset)
+                if (toCopy > 0) {
+                    System.arraycopy(windowBuffer, 0, buffer, offset, toCopy)
+                    return toCopy
+                }
+                -1
             } catch (e: Exception) {
-                // Returning -1 tells MediaMetadataRetriever "I/O error, abort"
-                // instead of throwing into native code which can crash the process.
                 GoRoLog.w("UFM_CACHE", "readAt error at pos=$position size=$size: ${e.message}")
                 -1
             }

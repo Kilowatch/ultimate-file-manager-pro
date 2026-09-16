@@ -177,6 +177,25 @@ class LocalThumbnailCacheManager(private val context: Context) {
      * Main entry point to get or generate a cached thumbnail.
      */
     suspend fun getThumbnail(file: File, force: Boolean = false): String? = withContext(Dispatchers.IO) {
+        val isSaf = file is SafFile ||
+            SafTreeManager.isSafPath(file.absolutePath) ||
+            SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+        if (isSaf) {
+            val safShare = za.kilowatch.ultimatefilemanager.network.OnlineSafDoc.resolveSafShare(context, file.absolutePath)
+            if (safShare != null) {
+                val (netShare, remotePath) = safShare
+                val netFile = za.kilowatch.ultimatefilemanager.network.NetworkFile(
+                    name = file.name,
+                    path = if (remotePath.startsWith("/")) remotePath else "/$remotePath",
+                    isDirectory = false,
+                    size = file.length(),
+                    lastModified = file.lastModified()
+                )
+                val netCacheMgr = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(context)
+                return@withContext netCacheMgr.getThumbnail(netShare, netFile, force = force)
+            }
+        }
+
         val cached = getCachedThumbnailPath(file, force = force)
         if (cached != null) return@withContext cached
 
@@ -187,6 +206,25 @@ class LocalThumbnailCacheManager(private val context: Context) {
      * Extracts, scales, compresses to WebP, and records the thumbnail in the database.
      */
     suspend fun generateAndCache(file: File, force: Boolean = false): String? = withContext(Dispatchers.IO) {
+        val isSaf = file is SafFile ||
+            SafTreeManager.isSafPath(file.absolutePath) ||
+            SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
+        if (isSaf) {
+            val safShare = za.kilowatch.ultimatefilemanager.network.OnlineSafDoc.resolveSafShare(context, file.absolutePath)
+            if (safShare != null) {
+                val (netShare, remotePath) = safShare
+                val netFile = za.kilowatch.ultimatefilemanager.network.NetworkFile(
+                    name = file.name,
+                    path = if (remotePath.startsWith("/")) remotePath else "/$remotePath",
+                    isDirectory = false,
+                    size = file.length(),
+                    lastModified = file.lastModified()
+                )
+                val netCacheMgr = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(context)
+                return@withContext netCacheMgr.getThumbnail(netShare, netFile, force = force)
+            }
+        }
+
         if (!force && !ThumbnailPreferenceManager.isEnabled(context)) return@withContext null
 
         val cacheFolderPath = ThumbnailPreferenceManager.getCachePath(context)

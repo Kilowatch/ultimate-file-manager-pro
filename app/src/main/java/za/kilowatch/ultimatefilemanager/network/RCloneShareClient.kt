@@ -744,19 +744,63 @@ object RCloneShareClient {
 
     suspend fun openInputStream(share: NetworkShare, remotePath: String): Pair<InputStream, Long> =
         withContext(Dispatchers.IO) {
-            // operations/cat is not registered in the Gomobile build — use
-            // operations/copyfile to a self-deleting temp file for all file sizes.
+            val normalizedPath = normalizePath(remotePath)
+            val fileSize = getFileSizeSync(share, remotePath)
+            val supportsRange = supportsRangeReads(share, normalizedPath, fileSize)
+
+            // When range reads are supported, stream directly via openRandomAccessFile
+            // without downloading the entire file to disk (critical for fast thumbnail generation).
+            if (supportsRange) {
+                val ra = openRandomAccessFile(share, remotePath)
+                val stream = object : InputStream() {
+                    private var pos = 0L
+                    private val lock = Any()
+                    private var isClosed = false
+
+                    override fun read(): Int = synchronized(lock) {
+                        if (isClosed || (fileSize > 0 && pos >= fileSize)) return -1
+                        val b = ByteArray(1)
+                        val n = ra.read(pos, b, 1)
+                        if (n <= 0) return -1
+                        pos++
+                        return b[0].toInt() and 0xFF
+                    }
+
+                    override fun read(b: ByteArray, off: Int, len: Int): Int = synchronized(lock) {
+                        if (isClosed || (fileSize > 0 && pos >= fileSize) || len <= 0) return -1
+                        val toRead = if (fileSize > 0) minOf(len.toLong(), fileSize - pos).toInt() else len
+                        // IRandomAccessFile.read writes into b starting at 0; handle offset if needed
+                        val targetBuf = if (off == 0) b else ByteArray(toRead)
+                        val readLen = ra.read(pos, targetBuf, toRead)
+                        if (readLen <= 0) return -1
+                        if (off != 0) {
+                            System.arraycopy(targetBuf, 0, b, off, readLen)
+                        }
+                        pos += readLen
+                        return readLen
+                    }
+
+                    override fun close() = synchronized(lock) {
+                        if (!isClosed) {
+                            isClosed = true
+                            ra.close()
+                        }
+                    }
+                }
+                return@withContext Pair(stream, fileSize)
+            }
+
+            // Fallback for remotes without range reads: copy to a self-deleting temp file
             val tempFile = File.createTempFile("rclone_dl_", ".tmp")
             try {
                 rcloneCall(share, "operations/copyfile", JSONObject().apply {
                     put("srcFs", "${getRemoteName(share)}:")
-                    put("srcRemote", normalizePath(remotePath))
+                    put("srcRemote", normalizedPath)
                     put("dstFs", "/")
                     put("dstRemote", tempFile.absolutePath)
                 })
                 val size = tempFile.length()
                 val fis = FileInputStream(tempFile)
-                // Wrap to auto-delete the temp file on close
                 Pair(object : InputStream() {
                     override fun read(): Int = fis.read()
                     override fun read(b: ByteArray, off: Int, len: Int): Int = fis.read(b, off, len)

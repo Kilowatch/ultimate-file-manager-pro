@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unified Multi-Architecture Native Engine**: Packaged unified native library (`rclone.aar`) supporting `arm64-v8a`, `armeabi-v7a`, `x86_64`, and `x86` CPU architectures with 16 KB ELF page alignment (`0x4000`) for Android 15+ compatibility.
 - **Complete OkHttp Elimination**: Replaced OkHttp scope entirely across all cloud (Google Drive, OneDrive, Dropbox, Box, S3), WebDAV, DLNA, and HTTP networking with hardened native Go Gomobile engine (`UfmHttpClient`), with zero external OkHttp runtime dependencies.
 - **Removed Dependencies**: Removed `com.squareup.okhttp3:okhttp` and `androidx.media3:media3-datasource-okhttp` from build configuration and dependencies.
+- **WebDAV & RClone Video Playback Performance**: Expanded video streaming cache in `UfmMedia3DataSource` to 8 MB and resolved 32 KB fetch throttling bug for seamless high-bitrate playback.
+- **WebDAV Read-Ahead**: Added 256 KB stream buffer and 2 MB sliding RAM window to `WebDavShareClient` for zero-latency sequential reads and container header inspection.
+- **Protocol Thumbnail Extraction**: Accelerated WebDAV, Dropbox, S3, and DLNA video thumbnails using random-access frame extraction and 256 KB read buffers.
+- **RClone Streaming Thumbnail Pipeline**: Switched photo thumbnail decoding to streaming range reads, eliminating full-file disk downloads.
+- **SAF DocumentsProvider Acceleration**: Implemented `openDocumentThumbnail` returning direct cached WebP descriptors to external launchers (e.g., Projectivy) and expanded FUSE proxy read-ahead cache to 4 MB.
 
 ## [2.0.8] — 2026-09-14
 

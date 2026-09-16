@@ -28,6 +28,7 @@ import androidx.media3.common.Player
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.session.MediaSession
 import za.kilowatch.ultimatefilemanager.R
@@ -495,15 +496,14 @@ class UFMPlaybackService : Service() {
     // ── Internal Playback ───────────────────────────────────────────
 
     /**
-     * When a media item was opened through UFM's own SAF provider on an RClone
-     * online-storage root (document id `os:<storageId>/<remote>`), returns the
+     * When a media item was opened through UFM's own SAF provider on a network share or online
+     * storage root (document id `net:<shareId>/<remote>` or `os:<storageId>/<remote>`), returns the
      * [NetworkShare] and remote path so playback can use the fast random-access
      * streaming path (as the Online browser does) instead of the SAF FUSE pipe,
      * which stutters on ranged reads (T-027).
      */
     private fun resolveOnlineStorageForSafPlayback(context: android.content.Context, path: String): Pair<NetworkShare, String>? {
-        val resolved = za.kilowatch.ultimatefilemanager.network.OnlineSafDoc.resolveRClone(context, path) ?: return null
-        return Pair(resolved.first.toNetworkShare(), resolved.second)
+        return za.kilowatch.ultimatefilemanager.network.OnlineSafDoc.resolveSafShare(context, path)
     }
 
     private fun playCurrent() {
@@ -515,7 +515,19 @@ class UFMPlaybackService : Service() {
 
         // Build ExoPlayer if needed
         if (player == null) {
-            val newPlayer = ExoPlayer.Builder(this).build()
+            val loadControl = DefaultLoadControl.Builder()
+                .setBufferDurationsMs(
+                    15_000, // minBufferMs (15s)
+                    30_000, // maxBufferMs (30s)
+                    1_500,  // bufferForPlaybackMs (1.5s startup)
+                    2_000   // bufferForPlaybackAfterRebufferMs (2.0s rebuffer)
+                )
+                .setPrioritizeTimeOverSizeThresholds(true)
+                .build()
+
+            val newPlayer = ExoPlayer.Builder(this)
+                .setLoadControl(loadControl)
+                .build()
             player = newPlayer
             mediaSession = MediaSession.Builder(this, newPlayer)
                 .setCallback(MediaSessionCallback(this@UFMPlaybackService))

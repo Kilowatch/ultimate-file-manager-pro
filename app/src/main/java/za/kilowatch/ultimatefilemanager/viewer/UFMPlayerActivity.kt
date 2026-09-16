@@ -2517,7 +2517,7 @@ class UfmMedia3DataSource(
     private var opened = false
     private var currentUri: Uri? = null
 
-    private val CACHE_SIZE = 2 * 1024 * 1024
+    private val CACHE_SIZE = 8 * 1024 * 1024
     private val cacheBuffer = ByteArray(CACHE_SIZE)
     private var cacheStartPos: Long = -1L
     private var cacheEndPos: Long = -1L
@@ -2592,7 +2592,8 @@ class UfmMedia3DataSource(
                 }
             }
 
-            val fetchSize = minOf(CACHE_SIZE, buffer.size)
+            // Fill cache with a full CACHE_SIZE block (do not throttle to buffer.size)
+            val fetchSize = CACHE_SIZE
             val remainingInFile = if (fileLength > 0) (fileLength - streamPosition).coerceAtLeast(0L) else Long.MAX_VALUE
             val actualFetchSize = minOf(fetchSize.toLong(), remainingInFile).coerceAtMost(CACHE_SIZE.toLong()).toInt()
             if (actualFetchSize <= 0) return C.RESULT_END_OF_INPUT
@@ -2628,7 +2629,7 @@ class UfmMedia3DataSource(
                 // Repopulate the cache exactly like the success path so subsequent reads work.
                 val newRa = randomAccess!!
                 val retryRemaining = if (fileLength > 0) (fileLength - streamPosition).coerceAtLeast(0L) else Long.MAX_VALUE
-                val retryFetchSize = minOf(minOf(CACHE_SIZE, buffer.size).toLong(), retryRemaining).coerceAtMost(CACHE_SIZE.toLong()).toInt()
+                val retryFetchSize = minOf(CACHE_SIZE.toLong(), retryRemaining).coerceAtMost(CACHE_SIZE.toLong()).toInt()
                 val n = newRa.read(streamPosition, cacheBuffer, retryFetchSize)
                 if (n <= 0) {
                     C.RESULT_END_OF_INPUT

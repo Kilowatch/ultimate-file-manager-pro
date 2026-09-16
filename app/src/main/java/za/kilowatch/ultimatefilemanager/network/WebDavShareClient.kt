@@ -138,10 +138,10 @@ object WebDavShareClient {
             val stat = JSONObject(statJson)
             val size = if (stat.optBoolean("exists", false)) stat.optLong("size", -1L) else -1L
 
-            // Return a streaming input stream backed by range reads
+            // Return a streaming input stream backed by range reads with 256 KB read-ahead buffer
             val stream = object : InputStream() {
                 private var pos = 0L
-                private val bufSize = 64 * 1024
+                private val bufSize = 256 * 1024
                 private var currentBuf: ByteArray? = null
                 private var bufPos = 0
 
@@ -165,17 +165,42 @@ object WebDavShareClient {
 
                 override fun read(b: ByteArray, off: Int, len: Int): Int {
                     if (size in 0..pos) return -1
-                    val toRead = if (size > 0) minOf(len.toLong(), size - pos).toInt() else len
+                    if (len <= 0) return 0
+
+                    // Fast path: serve from buffered read-ahead chunk
+                    if (currentBuf != null && bufPos < currentBuf!!.size) {
+                        val avail = currentBuf!!.size - bufPos
+                        val toCopy = minOf(len, avail)
+                        System.arraycopy(currentBuf!!, bufPos, b, off, toCopy)
+                        bufPos += toCopy
+                        pos += toCopy
+                        return toCopy
+                    }
+
+                    // Buffer refill: fetch at least bufSize from network
+                    val fetchTarget = maxOf(bufSize, len)
+                    val toRead = if (size > 0) minOf(fetchTarget.toLong(), size - pos).toInt() else fetchTarget
                     if (toRead <= 0) return -1
+
                     val chunk = try {
                         webdavclient.Webdavclient.webdavReadRange(share.host, share.username, share.password, cleanPath, pos, toRead.toLong())
                     } catch (_: Exception) {
                         return -1
                     }
                     if (chunk == null || chunk.isEmpty()) return -1
-                    System.arraycopy(chunk, 0, b, off, chunk.size)
-                    pos += chunk.size
-                    return chunk.size
+
+                    val toCopy = minOf(len, chunk.size)
+                    System.arraycopy(chunk, 0, b, off, toCopy)
+                    pos += toCopy
+
+                    if (chunk.size > toCopy) {
+                        currentBuf = chunk
+                        bufPos = toCopy
+                    } else {
+                        currentBuf = null
+                        bufPos = 0
+                    }
+                    return toCopy
                 }
             }
 
@@ -197,6 +222,12 @@ object WebDavShareClient {
             private var isClosed = false
             private var actualSize: Long = fileSize
 
+            // 2 MB sliding read-ahead window for high-speed streaming and instant metadata probing
+            private val windowSize = 2 * 1024 * 1024
+            private var winStart = -1L
+            private var winEnd = -1L
+            private var win: ByteArray? = null
+
             override val size: Long
                 get() = synchronized(lock) {
                     if (actualSize <= 0L) {
@@ -215,9 +246,26 @@ object WebDavShareClient {
 
             override fun read(offset: Long, buffer: ByteArray, length: Int): Int = synchronized(lock) {
                 val currentSize = size
-                if (isClosed || offset >= currentSize || length <= 0) return -1
-                val toRead = minOf(length.toLong(), currentSize - offset).toInt()
-                if (toRead <= 0) return -1
+                if (isClosed || (currentSize > 0 && offset >= currentSize) || length <= 0) return -1
+
+                // 1. Check if the read can be fulfilled from the sliding read-ahead window
+                val w = win
+                if (w != null && offset >= winStart && offset < winEnd) {
+                    val avail = (winEnd - offset).toInt()
+                    val toCopy = minOf(length, avail)
+                    if (toCopy > 0) {
+                        System.arraycopy(w, (offset - winStart).toInt(), buffer, 0, toCopy)
+                        return toCopy
+                    }
+                }
+
+                // 2. Window miss: fetch at least windowSize (or length if greater) from WebDAV
+                val fetchLen = if (currentSize > 0) {
+                    minOf(maxOf(windowSize.toLong(), length.toLong()), currentSize - offset).toInt()
+                } else {
+                    maxOf(windowSize, length)
+                }
+                if (fetchLen <= 0) return -1
 
                 try {
                     val data = webdavclient.Webdavclient.webdavReadRange(
@@ -226,14 +274,26 @@ object WebDavShareClient {
                         share.password,
                         cleanPath,
                         offset,
-                        toRead.toLong()
+                        fetchLen.toLong()
                     )
                     if (data == null || data.isEmpty()) return -1
-                    System.arraycopy(data, 0, buffer, 0, data.size)
-                    data.size
+
+                    // Update the sliding window
+                    if (win == null || win!!.size < data.size) {
+                        win = ByteArray(data.size)
+                    }
+                    System.arraycopy(data, 0, win!!, 0, data.size)
+                    winStart = offset
+                    winEnd = offset + data.size
+
+                    val toCopy = minOf(length, data.size)
+                    if (toCopy > 0) {
+                        System.arraycopy(data, 0, buffer, 0, toCopy)
+                    }
+                    return if (toCopy > 0) toCopy else -1
                 } catch (e: Exception) {
                     GoRoLog.e(TAG, "WebDAV readRange error at offset $offset", e)
-                    -1
+                    return -1
                 }
             }
 
@@ -242,6 +302,9 @@ object WebDavShareClient {
 
             override fun close() = synchronized(lock) {
                 isClosed = true
+                win = null
+                winStart = -1L
+                winEnd = -1L
             }
         }
     }
