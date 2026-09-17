@@ -228,7 +228,7 @@ Administrador de aplicaciones: consulta y administra todas las aplicaciones inst
 Instalador de APK: instala aplicaciones Android y APK divididos (XAPK) directamente desde archivos guardados localmente.
 </item>
         <item>
-Acceso elevado (Shizuku, Shevery y ADB): obtén acceso similar al root para administrar archivos del sistema y directorios restringidos sin necesidad de rootear tu dispositivo.
+Acceso elevado (Porter, Shizuku, Shevery y ADB): obtén acceso similar a root para gestionar archivos del sistema y directorios restringidos sin rootear realmente el dispositivo.
 </item>
         <item>
 Indexador de almacenamiento: crea un índice local de metadatos de archivos para búsquedas instantáneas y una navegación rapidísima.
@@ -283,7 +283,7 @@ Eliminación de aplicaciones del sistema
 Emparejamiento ADB
 </item>
         <item>
-Shizuku, Shevery y acceso elevado
+Porter, Shizuku, Shevery y acceso elevado
 </item>
         <item>
 Capturas de pantalla de TV
@@ -327,7 +327,7 @@ Eliminar aplicaciones del sistema según recomendaciones de desbloqueo puede afe
 El emparejamiento ADB requiere intercambiar certificados entre tu dispositivo y el dispositivo de destino a través de tu Wi-Fi local. Solo conéctate a dispositivos que te pertenezcan o para los que tengas permiso de acceso. Cualquier persona en tu red que capture tu PIN de emparejamiento puede acceder a tu dispositivo: mantén este PIN privado.
 </item>
         <item>
-Usar Shizuku, Shevery o ADB para acceso elevado permite que la aplicación modifique archivos protegidos del sistema. El uso indebido de estas funciones podría afectar la estabilidad o seguridad del dispositivo. Úsalas con precaución y solo concede acceso a esta aplicación.
+Usar Porter, Shizuku, Shevery o ADB para obtener acceso elevado permite que la app modifique archivos protegidos por el sistema. El uso indebido de estas funciones podría afectar la estabilidad o la seguridad del dispositivo. Úsalas con precaución y concede acceso solo a esta app.
 </item>
         <item>
 Las capturas de pantalla de TVs emparejados se toman a través de ADB en tu red local y se guardan directamente en el almacenamiento de tu teléfono. Nosotros no transmitimos, vemos ni subimos tus capturas de pantalla. Asegúrate de capturar pantallas solo en dispositivos que te pertenezcan o para los que tengas permiso de acceso.
@@ -370,10 +370,10 @@ Ten precaución al eliminar aplicaciones del sistema según recomendaciones de d
 Conéctate a través del Terminal ADB solo a dispositivos que te pertenezcan o para los que tengas permiso explícito de acceso. No uses el Terminal ADB para obtener acceso no autorizado a ningún dispositivo.
 </item>
         <item>
-Mantén privados los PINs de emparejamiento de ADB, Shizuku o Shevery; compártelos solo con personas en las que confíes para acceder a tu dispositivo.
+Mantén privados los PIN de emparejamiento de ADB, Porter, Shizuku o Shevery; compártelos solo con personas de confianza que tengan acceso a tu dispositivo.
 </item>
         <item>
-Asegura tu administrador de Shizuku o Shevery: conceder acceso elevado a UFM a través de Shizuku o Shevery le otorga control sobre archivos restringidos. Solo concede este acceso si confías en la aplicación.
+Protege tu Porter, Shizuku o Shevery Manager: conceder acceso elevado a UFM mediante cualquiera de estos gestores le da poder sobre archivos restringidos. Concede este acceso solo si confías en la app.
 </item>
         <item>
 Usa la aplicación solo con fines legales. No almacenes, compartas ni distribuyas contenido ilegal.
@@ -428,7 +428,7 @@ Facturación
 ADB Debug Bridge
 </item>
         <item>
-Acceso elevado (Shizuku y Shevery)
+Acceso elevado (Porter, Shizuku y Shevery)
 </item>
         <item>
 Inicio al arrancar
@@ -487,16 +487,16 @@ Procesa compras opcionales del bote de propinas a través de Google Play.
 Permite la conexión segura a dispositivos Android para acceso avanzado a la shell. Genera un certificado RSA único en tu dispositivo para el emparejamiento; no se transmiten certificados a servidores externos.
 </item>
         <item>
-Permite que la aplicación use la API de Shizuku / Shevery (incluyendo Secure Settings) para administrar archivos en directorios restringidos del sistema sin rootear.
+Permite que la app use la API de Porter / Shizuku / Shevery (incluidos los ajustes seguros) para gestionar archivos en directorios restringidos del sistema sin rootear.
 </item>
         <item>
 Permite que los servicios de Shizuku y Shevery se inicien automáticamente al arrancar tu dispositivo para garantizar su disponibilidad inmediata.
 </item>
         <item>
-Te permite optar por mantener los servicios de Shizuku y Shevery activos en segundo plano para un rendimiento fiable.
+Permite que los servicios de Porter, Shizuku y Shevery se inicien automáticamente cuando el dispositivo arranque para garantizar su disponibilidad inmediata.
 </item>
         <item>
-Necesario para ejecutar la sincronización de carpetas y las transferencias de archivos como un servicio en primer plano, de modo que se completen de manera fiable incluso con la pantalla apagada.
+Permite optar por mantener los servicios de Porter, Shizuku y Shevery activos en segundo plano para un rendimiento fiable.
 </item>
         <item>
 Mantiene la CPU y el Wi-Fi activos durante transferencias de archivos grandes para que se completen de manera fiable incluso cuando la pantalla se apaga.
@@ -602,7 +602,7 @@ jxl-coder (io.github.awxkee): biblioteca de decodificación y codificación de i
 APNG4Android (com.github.penfeizhou.android.animation): biblioteca principal para decodificar y renderizar archivos PNG animados en Android. (Apache-2.0)
 </item>
         <item>
-API de Shizuku y Shevery (dev.rikka.shizuku:api y provider / com.hamondev.shevery): bibliotecas que permiten el acceso elevado al sistema de archivos a través de las aplicaciones Shizuku o Shevery Manager. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api): SDK de Android que permite el acceso elevado al sistema de archivos mediante las apps Porter, Shizuku o Shevery Manager. Incluye la API de Shizuku (rikka.shizuku), con licencia MIT. (Apache-2.0)
 </item>
         <item>
 ViewPager2: biblioteca de Android para deslizarse entre fragmentos y diseños. (Apache-2.0)
@@ -1037,7 +1037,7 @@ Información del dispositivo emparejado
 Claves de autenticación ADB
 </item>
         <item>
-Estado de autorización de Shizuku / Shevery
+Estado de autorización de Porter / Shizuku / Shevery
 </item>
         <item>
 Capturas de pantalla de TV
@@ -1096,7 +1096,7 @@ Nombre, ID y dirección IP del dispositivo para emparejamiento · Almacenamiento
 Claves RSA y certificados generados para conexiones ADB seguras · Almacenamiento privado de la app
 </item>
         <item>
-Estado del permiso de acceso elevado desde la app Shizuku o Shevery Manager · Almacenamiento privado de la app
+Estado de la concesión de acceso elevado desde la app Porter, Shizuku o Shevery Manager · Almacenamiento privado de la app
 </item>
         <item>
 Capturas de pantalla tomadas desde un TV emparejado vía ADB · Carpeta local Pictures/Screenshots de tu teléfono
@@ -1188,7 +1188,7 @@ Cifrar y descifrar tus archivos privados
 Recordar tus preferencias y ajustes
 </item>
         <item>
-Usar acceso elevado (Shizuku/Shevery/ADB) para gestionar archivos protegidos del sistema en directorios restringidos
+Usar acceso elevado (Porter/Shizuku/Shevery/ADB) para gestionar archivos protegidos por el sistema en directorios restringidos
 </item>
         <item>
 Crear y mantener un índice de archivos para navegación y búsqueda rápidas (gestionable desde Ajustes -> Indexador de almacenamiento)
@@ -1278,7 +1278,7 @@ Permite el descubrimiento de dispositivos en la red local (NSD/mDNS) para empare
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1304,13 +1304,13 @@ WAKE_LOCK
 Te alerta cuando las operaciones de archivos terminan o el almacenamiento está bajo
 </item>
         <item>
-Permite la comunicación con Shizuku o Shevery Manager para acceso elevado a archivos
+Permite la comunicación con Porter, Shizuku o Shevery Manager para el acceso elevado a archivos
 </item>
         <item>
-Permite que los servicios de Shizuku o Shevery se inicien automáticamente al arrancar para disponibilidad inmediata
+Permite que los servicios de Porter, Shizuku o Shevery se inicien automáticamente al arrancar para una disponibilidad inmediata
 </item>
         <item>
-Te permite optar por mantener Shizuku o Shevery activo en segundo plano para un rendimiento confiable
+Permite optar por mantener Porter, Shizuku o Shevery activos en segundo plano para un rendimiento fiable
 </item>
         <item>
 Permite la instalación de archivos APK que elijas
@@ -1651,7 +1651,7 @@ Notificaciones
 Instalar paquetes
 </item>
         <item>
-Acceso elevado (Shizuku)
+Acceso elevado (Porter, Shizuku y Shevery)
 </item>
         <item>
 Indexador de almacenamiento
@@ -1689,7 +1689,7 @@ Alertas de finalización de operaciones y avisos de almacenamiento
 Instalación de APK desde el almacenamiento local
 </item>
         <item>
-Gestión avanzada de archivos en directorios restringidos del sistema a través de la API de Shizuku
+Gestión avanzada de archivos en directorios restringidos del sistema mediante la API de Porter / Shizuku
 </item>
         <item>
 Indexa metadatos de archivos localmente para una búsqueda rápida

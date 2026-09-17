@@ -10,6 +10,15 @@ object ShizukuShellWrapper {
     const val SHIZUKU_PACKAGE = "moe.shizuku.privileged.api"
     const val SHEVERY_PACKAGE = "com.hamondev.shevery"
 
+    /**
+     * The Porter **manager** app.
+     *
+     * Not Porter's Compatibility companion, which deliberately reuses [SHIZUKU_PACKAGE] and is out of
+     * scope. Kept here with the other two so the three manager package ids have exactly one definition
+     * each — a package string that drifts by one character fails silently.
+     */
+    const val PORTER_PACKAGE = "eu.darken.porter"
+
     @Volatile
     private var cachedPrimaryPrefix: String? = null
     private val cachedSdPrefixes = java.util.concurrent.ConcurrentHashMap<String, String>()
@@ -36,7 +45,21 @@ object ShizukuShellWrapper {
         return isShizukuInstalled(context) || isSheveryInstalled(context)
     }
 
+    /**
+     * Manually binds to Shevery's provider and hands the resulting binder to the Shizuku client.
+     *
+     * FALLBACK ONLY — the SDK is the primary path, and this must never pre-empt or race it. The
+     * pingBinder() guard below enforces that: when the SDK already holds a live binder we return
+     * immediately and never call into Shevery. Callers must likewise reach this only after
+     * confirming no binder is held. This path stays live rather than being dead code, which is why
+     * the authority below has to be correct.
+     *
+     * Shevery publishes `com.hamondev.shevery.shizuku`. The previous authority here,
+     * `com.hamondev.shevery.shizukuprovider`, does not exist — ContentResolver.call() returned
+     * null and the bind fell through silently, so this path never actually worked on device.
+     */
     fun tryBindShevery(context: android.content.Context? = null): Boolean {
+        // Fallback guard: a binder is already held, so there is nothing to bind and nothing to race.
         if (Shizuku.pingBinder()) return true
         val ctx = context ?: try {
             za.kilowatch.ultimatefilemanager.UfmApplication.instance
@@ -45,7 +68,7 @@ object ShizukuShellWrapper {
         } ?: return false
 
         return try {
-            val uri = android.net.Uri.parse("content://$SHEVERY_PACKAGE.shizukuprovider")
+            val uri = android.net.Uri.parse("content://$SHEVERY_PACKAGE.shizuku")
             val reply = ctx.contentResolver.call(uri, "sendBinder", null, null)
             val binder = reply?.getBinder("moe.shizuku.privileged.api.intent.extra.BINDER")
                 ?: reply?.getBinder("binder")

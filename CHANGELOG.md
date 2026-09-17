@@ -5,6 +5,15 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] — 2026-09-17
+
+### Added
+- **Porter Support**: Added Porter as a third elevated-access manager alongside Shizuku and Shevery, listed first and marked recommended. UFM detects which managers are installed, distinguishes Porter from Shizuku when both are present, and shows each app's real launcher icon.
+
+### Fixed
+- **Translated Brand Names**: Corrected the app name, `UFM`, `RClone`, `Shizuku` and `Shevery` being translated or transliterated in the Hindi, Arabic, Italian and Dutch translations, where they are now kept in their original spelling.
+- **Open-Source Licence List**: Corrected the licence list, which attributed a single licence to the whole Porter SDK and omitted the bundled Shizuku API.
+
 ## [2.0.9] — 2026-09-16
 
 ### Changed

@@ -8496,17 +8496,14 @@ Otorisasi ditolak atau dibatalkan.
 Akses Istimewa
 </string>
     <string name="shizuku_subtitle">
-Shizuku / Shevery
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB Drive (Dibatasi)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV membatasi akses USB langsung — gunakan Shizuku / Shevery
-</string>
-    <string name="shizuku_usb_access_desc">
-Kebijakan keamanan perangkat ini (SELinux) memblokir akses langsung ke drive USB yang dipasang di /mnt/media_rw/. Untuk mengakses penyimpanan USB, instal dan otorisasi Shizuku atau Shevery, yang menyediakan hak istimewa yang diperlukan untuk melewati batasan ini.
+Fire TV membatasi akses USB langsung — gunakan Porter / Shizuku / Shevery
 </string>
     <string name="opening_shizuku">
 Membuka Manajer Istimewa…
@@ -8514,14 +8511,11 @@ Membuka Manajer Istimewa…
     <string name="shizuku_status_label">
 Status Layanan
 </string>
-    <string name="shizuku_installed">
-Manajer Istimewa (Shizuku / Shevery) sudah terinstal
-</string>
     <string name="shizuku_not_installed">
 Manajer Istimewa belum terinstal
 </string>
     <string name="shizuku_description">
-Shizuku dan Shevery memungkinkan aplikasi menggunakan API tingkat sistem secara langsung, memungkinkan fitur lanjutan seperti manajemen file latar belakang dan eksekusi perintah sistem tanpa memerlukan root pada sebagian besar versi Android.
+Porter, Shizuku dan Shevery memungkinkan aplikasi menggunakan API tingkat sistem secara langsung, mengaktifkan fitur lanjutan seperti manajemen file latar belakang dan eksekusi perintah sistem tanpa memerlukan root di sebagian besar versi Android.
 </string>
     <string name="shizuku_service_status">
 Status Layanan
@@ -8544,9 +8538,6 @@ Tidak Diizinkan
     <string name="shizuku_installed_msg">
 Manajer Istimewa sudah terinstal dan akan siap digunakan.
 </string>
-    <string name="shizuku_download_hint">
-Anda dapat mengunduh versi terbaru Shizuku atau Shevery dari repositori GitHub resmi mereka.
-</string>
     <string name="shizuku_download_link">
 Unduh Manajer
 </string>
@@ -8556,25 +8547,8 @@ Unduh Shizuku
     <string name="shizuku_download_shevery">
 Unduh Shevery
 </string>
-    <string name="shizuku_tv_download_title">
-Unduh Shizuku / Shevery
-</string>
-    <string name="shizuku_tv_download_msg">
-Manajer Istimewa (Shizuku atau Shevery) tidak terinstal di perangkat ini.\n
-\n
-Silakan kunjungi salah satu URL berikut di ponsel atau komputer Anda untuk mengunduh APK terbaru, lalu sideload ke TV ini:\n
-\n
-Shizuku:\n
-%1$s\n
-\n
-Shevery:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 Salin Tautan
-</string>
-    <string name="shizuku_link_copied">
-Tautan disalin ke papan klip
 </string>
     <string name="shizuku_auth_title">
 Otorisasi Akses Istimewa
@@ -8604,10 +8578,10 @@ Akses Istimewa diaktifkan dan aktif
 ADB tidak terhubung. Hubungkan melalui Terminal ADB untuk mengaktifkan Akses Istimewa secara otomatis.
 </string>
     <string name="shizuku_header_subtitle">
-Layanan Shizuku &amp; Shevery
+Layanan Porter, Shizuku &amp; Shevery
 </string>
     <string name="shizuku_status_not_installed_desc">
-Instal Shizuku atau Shevery untuk membuka folder Android/data yang dilindungi dan operasi dengan hak akses tinggi tanpa root.
+Pasang Porter, Shizuku atau Shevery untuk membuka folder Android/data yang dilindungi dan operasi tingkat lanjut tanpa root.
 </string>
     <string name="shizuku_status_stopped_desc">
 Layanan dengan hak akses tinggi telah terinstal tetapi saat ini tidak berjalan. Mulai layanan melalui Debugging Nirkabel atau aplikasi pengelola Anda.
@@ -8666,6 +8640,42 @@ Shevery
     <string name="shizuku_manager_shevery_desc">
 Alternatif cepat dan ringan
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+Kelanjutan Shizuku yang dipelihara secara aktif
+</string>
+    <string name="shizuku_manager_recommended">
+Direkomendasikan
+</string>
+    <string name="shizuku_porter_waiting_desc">
+Porter telah terpasang tetapi layanannya tidak berjalan. Koneksi menunggu Porter, sehingga manajer lain tidak dapat mengambil alih hingga Porter dijalankan — atau dihapus.
+</string>
+    <string name="elevated_state_not_installed">
+Tidak terpasang
+</string>
+    <string name="elevated_state_not_running">
+Layanan tidak berjalan
+</string>
+    <string name="elevated_state_unauthorized">
+Otorisasi diperlukan
+</string>
+    <string name="elevated_state_connected">
+Terhubung
+</string>
+    <string name="elevated_state_unknown">
+Status tidak tersedia
+</string>
+    <string name="elevated_detecting">
+Memeriksa akses yang ditingkatkan…
+</string>
+    <string name="shizuku_download_porter_apk">
+Unduh Porter (APK)
+</string>
+    <string name="elevated_prerelease_badge">
+Pra-rilis
+</string>
     <string name="shizuku_download_shizuku_apk">
 Unduh Shizuku (APK)
 </string>
@@ -8709,7 +8719,7 @@ Diberikan (API v23)
 Periksa Ulang Status
 </string>
     <string name="shizuku_manager_open_error">
-Tidak dapat membuka manajer. Harap instal Shizuku atau Shevery terlebih dahulu.
+Tidak dapat membuka manajer. Harap pasang Porter, Shizuku atau Shevery terlebih dahulu.
 </string>
     <string name="elevated_download_title">
 Unduh %1$s: v%2$s

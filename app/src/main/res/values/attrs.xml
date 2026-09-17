@@ -338,7 +338,8 @@
          reported still being visible with the mode on.
          ──────────────────────────────────────────────────────────────────── -->
 
-    <!-- #FF1B5E20, a deep green, set as a TextView colour in ShizukuTvActivity.
+    <!-- #FF1B5E20, a deep green, set as a TextView colour in ElevatedAccessActivity
+         (previously ShizukuTvActivity, which that Activity replaced).
          Rides the success tier: "service is enabled and active" is a success
          state, and it is the counterpart of ufmShizukuError, which rides the
          error tier. -->

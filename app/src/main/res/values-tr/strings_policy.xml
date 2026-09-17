@@ -228,7 +228,7 @@ Uygulama Yöneticisi — cihazınıza kurulu tüm uygulamaları görüntüleyin 
 APK Kurucu — yerel olarak kaydedilen dosyalardan Android uygulamalarını ve bölünmüş APK\\\'ları (XAPK) doğrudan kurun.
 </item>
         <item>
-Yükseltilmiş Erişim (Shizuku, Shevery ve ADB) — cihazınızı gerçekten root\\\'lamadan sistem dosyalarını ve kısıtlı dizinleri yönetmek için root benzeri erişim elde edin.
+Yükseltilmiş Erişim (Porter, Shizuku, Shevery ve ADB) — cihazınızı gerçekten rootlamadan sistem dosyalarını ve kısıtlı dizinleri yönetmek için root benzeri erişim elde edin.
 </item>
         <item>
 Depolama Dizinleyici — anında arama ve oldukça hızlı gezinme için dosya meta verilerinin yerel bir dizinini oluşturun.
@@ -283,7 +283,7 @@ Sistem Uygulaması Kaldırma
 ADB Eşleme
 </item>
         <item>
-Shizuku, Shevery ve Yükseltilmiş Erişim
+Porter, Shizuku, Shevery ve Yükseltilmiş Erişim
 </item>
         <item>
 TV Ekran Görüntüleri
@@ -327,7 +327,7 @@ Bloatware kaldırma önerilerine dayanarak sistem uygulamalarını kaldırmak ci
 ADB eşleme, cihazınız ile hedef cihaz arasında yerel Wi-Fi üzerinden sertifika değişimi gerektirir. Yalnızca sahibi olduğunuz veya erişim izniniz olan cihazlara bağlanın. Ağınızdaki eşleme PIN\'inizi ele geçiren herkes cihazınıza erişebilir — bu PIN\'i gizli tutun.
 </item>
         <item>
-Shizuku, Shevery veya ADB\'yi yükseltilmiş erişim için kullanmak, uygulamanın sistem korumalı dosyaları değiştirmesine izin verir. Bu özelliklerin yanlış kullanımı cihaz kararlılığını veya güvenliğini etkileyebilir. Dikkatli kullanın ve erişimi yalnızca bu uygulamaya verin.
+Porter, Shizuku, Shevery veya ADB\\\'yi yükseltilmiş erişim için kullanmak, uygulamanın sistem tarafından korunan dosyaları değiştirmesine olanak tanır. Bu özelliklerin kötüye kullanımı cihaz kararlılığını veya güvenliğini etkileyebilir. Dikkatli kullanın ve bu erişimi yalnızca bu uygulamaya verin.
 </item>
         <item>
 Eşleştirilmiş TV\'lerin ekran görüntüleri, ADB aracılığıyla yerel ağınız üzerinden yakalanır ve doğrudan telefonunuzun depolamasına kaydedilir. Ekran görüntülerinizi iletmeyiz, görüntülemeyiz veya yüklemeyiz. Yalnızca sahibi olduğunuz veya erişim izniniz olan cihazlarda ekran yakaladığınızdan emin olun.
@@ -370,10 +370,10 @@ Bloatware kaldırma önerilerine dayanarak sistem uygulamalarını kaldırırken
 ADB Terminali aracılığıyla yalnızca sahibi olduğunuz veya açık erişim izniniz olan cihazlara bağlanın. Herhangi bir cihaza yetkisiz erişim sağlamak için ADB Terminali kullanmayın.
 </item>
         <item>
-Tüm ADB, Shizuku veya Shevery eşleme PIN\'lerini gizli tutun — bunları yalnızca cihazınıza erişmesine güvendiğiniz kişilerle paylaşın.
+Herhangi bir ADB, Porter, Shizuku veya Shevery eşleştirme PIN\\\'ini gizli tutun — bunları yalnızca cihazınıza erişim sağlamasına güvendiğiniz kişilerle paylaşın.
 </item>
         <item>
-Shizuku veya Shevery Yöneticinizi güvende tutun — UFM\'ye Shizuku veya Shevery aracılığıyla yükseltilmiş erişim vermek, kısıtlı dosyalar üzerinde güç sağlar. Bu erişimi yalnızca uygulamaya güveniyorsanız verin.
+Porter, Shizuku veya Shevery Manager\\\'ınızı güvence altına alın — bu yöneticilerden herhangi biri aracılığıyla UFM\\\'ye yükseltilmiş erişim vermek, ona kısıtlı dosyalar üzerinde yetki verir. Bu erişimi yalnızca uygulamaya güveniyorsanız verin.
 </item>
         <item>
 Uygulamayı yalnızca yasal amaçlar için kullanın. Yasadışı içerik depolamayın, paylaşmayın veya dağıtmayın.
@@ -428,7 +428,7 @@ Faturalandırma
 ADB Hata Ayıklama Köprüsü
 </item>
         <item>
-Yükseltilmiş Erişim (Shizuku ve Shevery)
+Yükseltilmiş Erişim (Porter, Shizuku ve Shevery)
 </item>
         <item>
 Başlangıçta Başlat
@@ -487,16 +487,16 @@ Yerel depolamadan çalıştırmayı seçtiğiniz APK dosyalarını yüklemek iç
 Gelişmiş kabuk erişimi için Android cihazlara güvenli bağlantı sağlar. Eşleme için cihazınızda benzersiz bir RSA sertifikası oluşturur; harici sunuculara hiçbir sertifika iletilmez.
 </item>
         <item>
-Uygulamanın, cihazı rootlamadan kısıtlı sistem dizinlerindeki dosyaları yönetmek için Shizuku / Shevery API\'sini (Güvenli Ayarlar dahil) kullanmasına izin verir.
+Uygulamanın, rootlamadan kısıtlı sistem dizinlerindeki dosyaları yönetmek için Porter / Shizuku / Shevery API\\\'sini (Güvenli Ayarlar dahil) kullanmasına izin verir.
 </item>
         <item>
 Shizuku ve Shevery hizmetlerinin cihazınız önyüklendiğinde otomatik olarak başlamasını sağlayarak anında kullanılabilirlik sağlar.
 </item>
         <item>
-Kararlı performans için Shizuku ve Shevery hizmetlerini arka planda etkin tutmayı tercih etmenizi sağlar.
+Cihazınız açıldığında Porter, Shizuku ve Shevery hizmetlerinin otomatik olarak başlamasına ve hemen kullanılabilir olmasına izin verir.
 </item>
         <item>
-Klasör Senkronizasyonu ve dosya aktarımlarının, ekran kapalıyken bile güvenilir bir şekilde tamamlanması için ön planda hizmet olarak çalıştırılması gerekir.
+Güvenilir performans için Porter, Shizuku ve Shevery hizmetlerini arka planda etkin tutmayı seçmenize olanak tanır.
 </item>
         <item>
 Büyük dosya aktarımları sırasında CPU ve Wi-Fi\'yi etkin tutarak ekran kapandığında bile aktarımların güvenilir bir şekilde tamamlanmasını sağlar.
@@ -602,7 +602,7 @@ jxl-coder (io.github.awxkee) — Android API 21+\\\'da yerel JXL desteği sağla
 APNG4Android (com.github.penfeizhou.android.animation) — Android\\\'de animasyonlu PNG dosyalarını kod çözme ve oluşturma için temel kitaplık. (Apache-2.0)
 </item>
         <item>
-Shizuku ve Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — Shizuku veya Shevery Manager uygulamaları aracılığıyla yükseltilmiş dosya sistemi erişimi sağlayan kitaplıklar. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Porter, Shizuku veya Shevery Manager uygulamaları aracılığıyla yükseltilmiş dosya sistemi erişimini etkinleştiren Android SDK\\\'sı. MIT lisanslı Shizuku API\\\'sini (rikka.shizuku) içerir. (Apache-2.0)
 </item>
         <item>
 ViewPager2 — parçalar ve düzenler arasında kaydırmak için Android kitaplığı. (Apache-2.0)
@@ -1037,7 +1037,7 @@ Eşleştirilmiş Cihaz Bilgisi
 ADB Kimlik Doğrulama Anahtarları
 </item>
         <item>
-Shizuku / Shevery Yetkilendirme Durumu
+Porter / Shizuku / Shevery Yetkilendirme Durumu
 </item>
         <item>
 TV Ekran Görüntüleri
@@ -1096,7 +1096,7 @@ Cihaz eşleştirme için cihaz adı, kimlik ve IP · Uygulama özel depolama ala
 Güvenli ADB bağlantıları için oluşturulan RSA anahtarları ve sertifikalar · Uygulama özel depolama alanı
 </item>
         <item>
-Shizuku veya Shevery Manager uygulamasından yükseltilmiş erişim izninin durumu · Uygulama özel depolama alanı
+Porter, Shizuku veya Shevery Manager uygulamasından verilen yükseltilmiş erişim durumu · Uygulama özel depolama alanı
 </item>
         <item>
 Eşleştirilmiş bir TV\'den ADB ile alınan ekran görüntüleri · Telefonunuzun yerel Resimler/Ekran Görüntüleri klasörü
@@ -1188,7 +1188,7 @@ Dosya tarayıcısında açıkça talep ettiğinizin ötesinde herhangi bir Googl
 Tercihlerinizi ve ayarlarınızı hatırla
 </item>
         <item>
-Kısıtlı dizinlerdeki sistem korumalı dosyaları yönetmek için yükseltilmiş erişim (Shizuku/Shevery/ADB) kullan
+Kısıtlı dizinlerdeki sistem tarafından korunan dosyaları yönetmek için yükseltilmiş erişim (Porter/Shizuku/Shevery/ADB) kullanın
 </item>
         <item>
 Hızlı gezinti ve arama için dosya dizin oluşturma ve bakımını yap (Ayarlar -> Depolama Dizinleyicisi üzerinden yönetilebilir)
@@ -1278,7 +1278,7 @@ Cihaz eşleştirme için yerel ağ cihaz keşfini (NSD/mDNS) etkinleştirir
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1304,13 +1304,13 @@ WAKE_LOCK
 Dosya işlemleri tamamlandığında veya depolama alanı düşük olduğunda sizi uyarır
 </item>
         <item>
-Yükseltilmiş dosya erişimi için Shizuku veya Shevery Manager ile iletişime izin verir
+Yükseltilmiş dosya erişimi için Porter, Shizuku veya Shevery Manager ile iletişime izin verir
 </item>
         <item>
-Shizuku veya Shevery hizmetlerinin anında kullanılabilirlik için önyüklemede otomatik olarak başlamasına izin verir
+Porter, Shizuku veya Shevery hizmetlerinin açılışta otomatik olarak başlamasına ve hemen kullanılabilir olmasına izin verir
 </item>
         <item>
-Güvenilir performans için Shizuku veya Shevery\'yi arka planda aktif tutmayı tercih etmenize izin verir
+Güvenilir performans için Porter, Shizuku veya Shevery\\\'yi arka planda etkin tutmayı seçmenize olanak tanır
 </item>
         <item>
 Seçtiğiniz APK dosyalarının yüklenmesine izin verir
@@ -1651,7 +1651,7 @@ Bildirimler
 Paketleri Kur
 </item>
         <item>
-Yükseltilmiş Erişim (Shizuku)
+Yükseltilmiş Erişim (Porter, Shizuku ve Shevery)
 </item>
         <item>
 Depolama Dizinleyici
@@ -1689,7 +1689,7 @@ Cihaz eşleştirme için yerel ağ cihaz keşfi (NSD/mDNS)
 Yerel depolamadan APK kurulumu
 </item>
         <item>
-Shizuku API\\\'si aracılığıyla kısıtlı sistem dizinlerinde gelişmiş dosya yönetimi
+Porter / Shizuku API\\\'si aracılığıyla kısıtlı sistem dizinlerinde gelişmiş dosya yönetimi
 </item>
         <item>
 Hızlı arama için dosya meta verilerini yerel olarak dizine ekler

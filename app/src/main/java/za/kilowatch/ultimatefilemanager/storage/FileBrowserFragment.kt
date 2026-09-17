@@ -4414,13 +4414,17 @@ class FileBrowserFragment : Fragment() {
             val layoutProtected = view?.findViewById<View>(R.id.layoutProtectedPrompt)
             val txtEmptyFolder = view?.findViewById<View>(R.id.txtEmptyFolder)
             if (isProtected && !canUseShizuku && !hasSaf && ctx != null) {
-                val isTv = DeviceUtils.isTvDevice(ctx)
                 layoutProtected?.visibility = View.VISIBLE
                 txtEmptyFolder?.visibility = View.GONE
                 view?.findViewById<View>(R.id.btnEnableElevated)?.setOnClickListener {
-                    val intent = if (isTv) Intent(ctx, za.kilowatch.ultimatefilemanager.ui.ShizukuTvActivity::class.java)
-                                 else Intent(ctx, za.kilowatch.ultimatefilemanager.ui.ShizukuActivity::class.java)
-                    startActivity(intent)
+                    // No isTv branch — ElevatedAccessActivity selects its own layout. Note this is a
+                    // Fragment: it launches the Activity, it does not cast to any browser Activity.
+                    startActivity(
+                        Intent(
+                            ctx,
+                            za.kilowatch.ultimatefilemanager.ui.elevated.ElevatedAccessActivity::class.java
+                        )
+                    )
                 }
                 view?.findViewById<View>(R.id.btnGrantSaf)?.setOnClickListener {
                     launchSafTreePicker(currentDir.absolutePath)

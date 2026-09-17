@@ -8496,17 +8496,14 @@ Box 인증
 고급 접근 권한
 </string>
     <string name="shizuku_subtitle">
-Shizuku / Shevery
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB 드라이브(제한됨)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV는 직접 USB 접근을 제한합니다 — Shizuku / Shevery를 사용하세요
-</string>
-    <string name="shizuku_usb_access_desc">
-이 기기의 보안 정책(SELinux)은 /mnt/media_rw/에 마운트된 USB 드라이브에 대한 직접 접근을 차단합니다. USB 저장소에 접근하려면 Shizuku 또는 Shevery를 설치하고 권한을 부여하세요. 이 도구들은 이 제한을 우회하는 데 필요한 상승된 권한을 제공합니다.
+Fire TV는 직접 USB 액세스를 제한합니다 — Porter / Shizuku / Shevery를 사용하세요
 </string>
     <string name="opening_shizuku">
 고급 관리자 열기…
@@ -8514,14 +8511,11 @@ Fire TV는 직접 USB 접근을 제한합니다 — Shizuku / Shevery를 사용�
     <string name="shizuku_status_label">
 서비스 상태
 </string>
-    <string name="shizuku_installed">
-고급 관리자(Shizuku / Shevery)가 설치되었습니다
-</string>
     <string name="shizuku_not_installed">
 고급 관리자가 설치되지 않았습니다
 </string>
     <string name="shizuku_description">
-Shizuku와 Shevery는 앱이 시스템 수준 API를 직접 사용할 수 있게 하여, 대부분의 Android 버전에서 루트 권한 없이 백그라운드 파일 관리 및 시스템 명령 실행과 같은 고급 기능을 가능하게 합니다.
+Porter, Shizuku 및 Shevery는 앱이 시스템 수준 API를 직접 사용할 수 있게 하여, 대부분의 Android 버전에서 루트 없이 백그라운드 파일 관리 및 시스템 명령 실행과 같은 고급 기능을 사용할 수 있도록 합니다.
 </string>
     <string name="shizuku_service_status">
 서비스 상태
@@ -8544,9 +8538,6 @@ Shizuku와 Shevery는 앱이 시스템 수준 API를 직접 사용할 수 있게
     <string name="shizuku_installed_msg">
 고급 관리자가 설치되었으며 사용할 수 있습니다.
 </string>
-    <string name="shizuku_download_hint">
-Shizuku 또는 Shevery의 최신 버전을 공식 GitHub 저장소에서 다운로드할 수 있습니다.
-</string>
     <string name="shizuku_download_link">
 다운로드 관리자
 </string>
@@ -8556,25 +8547,8 @@ Shizuku 또는 Shevery의 최신 버전을 공식 GitHub 저장소에서 다운�
     <string name="shizuku_download_shevery">
 다운로드 Shevery
 </string>
-    <string name="shizuku_tv_download_title">
-Shizuku / Shevery 다운로드
-</string>
-    <string name="shizuku_tv_download_msg">
-이 기기에 고급 관리자(Shizuku 또는 Shevery)가 설치되지 않았습니다.\n
-\n
-휴대폰이나 컴퓨터에서 다음 URL 중 하나를 방문하여 최신 APK를 다운로드한 후, 이 TV에 사이드로드하세요:\n
-\n
-Shizuku:\n
-%1$s\n
-\n
-Shevery:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 링크 복사
-</string>
-    <string name="shizuku_link_copied">
-링크가 클립보드에 복사되었습니다
 </string>
     <string name="shizuku_auth_title">
 고급 접근 권한 승인
@@ -8604,10 +8578,10 @@ UFM이 고급 파일 작업을 수행하려면 권한 부여가 필요합니다.
 ADB가 연결되지 않았습니다. ADB 터미널을 통해 연결하여 고급 접근 권한을 자동으로 활성화하세요.
 </string>
     <string name="shizuku_header_subtitle">
-Shizuku 및 Shevery 서비스
+Porter, Shizuku 및 Shevery 서비스
 </string>
     <string name="shizuku_status_not_installed_desc">
-Shizuku 또는 Shevery를 설치하여 루트 없이 보호된 Android/data 폴더와 높은 권한 작업을 잠금 해제하세요.
+루트 없이 보호된 Android/data 폴더와 상승된 작업을 잠금 해제하려면 Porter, Shizuku 또는 Shevery를 설치하세요.
 </string>
     <string name="shizuku_status_stopped_desc">
 높은 권한 서비스가 설치되어 있지만 현재 실행 중이 아닙니다. 무선 디버깅 또는 관리자 앱을 통해 서비스를 시작하세요.
@@ -8666,6 +8640,42 @@ Shevery
     <string name="shizuku_manager_shevery_desc">
 가볍고 빠른 대안
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+활발히 유지 관리되는 Shizuku 후속 프로젝트
+</string>
+    <string name="shizuku_manager_recommended">
+추천
+</string>
+    <string name="shizuku_porter_waiting_desc">
+Porter가 설치되어 있지만 서비스가 실행 중이 아닙니다. 연결이 Porter를 기다리고 있으므로 Porter가 시작되거나 제거될 때까지 다른 관리자가 대신할 수 없습니다.
+</string>
+    <string name="elevated_state_not_installed">
+설치되지 않음
+</string>
+    <string name="elevated_state_not_running">
+서비스 실행 중 아님
+</string>
+    <string name="elevated_state_unauthorized">
+승인 필요
+</string>
+    <string name="elevated_state_connected">
+연결됨
+</string>
+    <string name="elevated_state_unknown">
+상태 알 수 없음
+</string>
+    <string name="elevated_detecting">
+고급 권한 확인 중…
+</string>
+    <string name="shizuku_download_porter_apk">
+Porter 다운로드 (APK)
+</string>
+    <string name="elevated_prerelease_badge">
+사전 출시
+</string>
     <string name="shizuku_download_shizuku_apk">
 Shizuku 다운로드 (APK)
 </string>
@@ -8709,7 +8719,7 @@ ADB / 무선 디버깅
 상태 다시 확인
 </string>
     <string name="shizuku_manager_open_error">
-관리자를 열 수 없습니다. Shizuku 또는 Shevery를 먼저 설치하세요.
+관리자를 열 수 없습니다. 먼저 Porter, Shizuku 또는 Shevery를 설치하세요.
 </string>
     <string name="elevated_download_title">
 다운로드 %1$s: v%2$s

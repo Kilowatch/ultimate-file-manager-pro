@@ -8496,17 +8496,14 @@ La autorización fue denegada o cancelada.
 Acceso Elevado
 </string>
     <string name="shizuku_subtitle">
-Shizuku / Shevery
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 Unidad USB (restringido)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV restringe el acceso USB directo: usa Shizuku / Shevery
-</string>
-    <string name="shizuku_usb_access_desc">
-La política de seguridad de este dispositivo (SELinux) bloquea el acceso directo a las unidades USB montadas en /mnt/media_rw/. Para acceder al almacenamiento USB, instala y autoriza Shizuku o Shevery, que proporcionan los privilegios elevados necesarios para evitar esta restricción.
+Fire TV restringe el acceso directo por USB: usa Porter / Shizuku / Shevery
 </string>
     <string name="opening_shizuku">
 Abriendo Gestor de Elevación…
@@ -8514,14 +8511,11 @@ Abriendo Gestor de Elevación…
     <string name="shizuku_status_label">
 Estado del servicio
 </string>
-    <string name="shizuku_installed">
-El Gestor de Elevación (Shizuku / Shevery) está instalado
-</string>
     <string name="shizuku_not_installed">
 El Gestor de Elevación no está instalado
 </string>
     <string name="shizuku_description">
-Shizuku y Shevery permiten que las aplicaciones usen APIs del sistema directamente, habilitando funciones avanzadas como la gestión de archivos en segundo plano y la ejecución de comandos del sistema sin necesidad de root en la mayoría de las versiones de Android.
+Porter, Shizuku y Shevery permiten que las apps usen las API a nivel de sistema directamente, lo que habilita funciones avanzadas como la gestión de archivos en segundo plano y la ejecución de comandos del sistema sin necesidad de root en la mayoría de las versiones de Android.
 </string>
     <string name="shizuku_service_status">
 Estado del servicio
@@ -8544,9 +8538,6 @@ No autorizado
     <string name="shizuku_installed_msg">
 El Gestor de Elevación está instalado y estará disponible para su uso.
 </string>
-    <string name="shizuku_download_hint">
-Puedes descargar la última versión de Shizuku o Shevery desde sus repositorios oficiales de GitHub.
-</string>
     <string name="shizuku_download_link">
 Descargar Gestor
 </string>
@@ -8556,25 +8547,8 @@ Descargar Shizuku
     <string name="shizuku_download_shevery">
 Descargar Shevery
 </string>
-    <string name="shizuku_tv_download_title">
-Descargar Shizuku / Shevery
-</string>
-    <string name="shizuku_tv_download_msg">
-El Gestor de Elevación (Shizuku o Shevery) no está instalado en este dispositivo.\n
-\n
-Visita una de las siguientes URL en tu teléfono o computadora para descargar el APK más reciente y luego cárgalo en este televisor:\n
-\n
-Shizuku:\n
-%1$s\n
-\n
-Shevery:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 Copiar enlaces
-</string>
-    <string name="shizuku_link_copied">
-Enlaces copiados al portapapeles
 </string>
     <string name="shizuku_auth_title">
 Autorizar Acceso Elevado
@@ -8604,10 +8578,10 @@ El Acceso Elevado está habilitado y activo
 ADB no está conectado. Conéctate a través del Terminal ADB para habilitar el Acceso Elevado automáticamente.
 </string>
     <string name="shizuku_header_subtitle">
-Servicio Shizuku y Shevery
+Servicios de Porter, Shizuku y Shevery
 </string>
     <string name="shizuku_status_not_installed_desc">
-Instala Shizuku o Shevery para desbloquear carpetas protegidas de Android/data y operaciones elevadas sin root.
+Instala Porter, Shizuku o Shevery para desbloquear las carpetas protegidas Android/data y las operaciones elevadas sin root.
 </string>
     <string name="shizuku_status_stopped_desc">
 El servicio elevado está instalado pero actualmente no está en ejecución. Inicia el servicio mediante la Depuración inalámbrica o tu aplicación de gestión.
@@ -8666,6 +8640,42 @@ Shevery
     <string name="shizuku_manager_shevery_desc">
 Alternativa rápida y ligera
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+Continuación de Shizuku con mantenimiento activo
+</string>
+    <string name="shizuku_manager_recommended">
+Recomendado
+</string>
+    <string name="shizuku_porter_waiting_desc">
+Porter está instalado, pero su servicio no está en ejecución. La conexión espera a Porter, por lo que ningún otro gestor puede tomar el control hasta que se inicie Porter, o se desinstale.
+</string>
+    <string name="elevated_state_not_installed">
+No instalado
+</string>
+    <string name="elevated_state_not_running">
+Servicio no en ejecución
+</string>
+    <string name="elevated_state_unauthorized">
+Se requiere autorización
+</string>
+    <string name="elevated_state_connected">
+Conectado
+</string>
+    <string name="elevated_state_unknown">
+Estado no disponible
+</string>
+    <string name="elevated_detecting">
+Comprobando acceso elevado…
+</string>
+    <string name="shizuku_download_porter_apk">
+Descargar Porter (APK)
+</string>
+    <string name="elevated_prerelease_badge">
+Versión preliminar
+</string>
     <string name="shizuku_download_shizuku_apk">
 Descargar Shizuku (APK)
 </string>
@@ -8709,7 +8719,7 @@ Concedido (API v23)
 Volver a verificar el estado
 </string>
     <string name="shizuku_manager_open_error">
-No se pudo abrir el gestor. Instala Shizuku o Shevery primero.
+No se pudo abrir el gestor. Instala primero Porter, Shizuku o Shevery.
 </string>
     <string name="elevated_download_title">
 Descargar %1$s: v%2$s

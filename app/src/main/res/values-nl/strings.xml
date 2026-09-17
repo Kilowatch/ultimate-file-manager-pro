@@ -453,7 +453,7 @@ Stom
 
     <!-- Content Descriptions -->
     <string name="cd_app_icon">
-Ultieme File Manager Pro-pictogram
+Pictogram van Ultimate File Manager Pro
 </string>
     <string name="cd_permission_icon">
 Toestemmingspictogram
@@ -8314,17 +8314,14 @@ De autorisatie is geweigerd of geannuleerd.
 Verhoogde toegang
 </string>
     <string name="shizuku_subtitle">
-Shizuku/Shevery
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB-station (beperkt)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV beperkt directe USB-toegang - gebruik Shizuku / Shevery
-</string>
-    <string name="shizuku_usb_access_desc">
-Het beveiligingsbeleid van dit apparaat (SELinux) blokkeert directe toegang tot USB-drives die zijn aangekoppeld op /mnt/media_rw/. Om toegang te krijgen tot USB-opslag, installeert en autoriseert u Shizuku of Shevery, die de verhoogde rechten biedt die nodig zijn om deze beperking te omzeilen.
+Fire TV beperkt directe USB-toegang — gebruik Porter / Shizuku / Shevery
 </string>
     <string name="opening_shizuku">
 Verhoogde manager openen…
@@ -8332,14 +8329,11 @@ Verhoogde manager openen…
     <string name="shizuku_status_label">
 Servicestatus
 </string>
-    <string name="shizuku_installed">
-Verhoogde Manager (Shizuku / Shevery) is geïnstalleerd
-</string>
     <string name="shizuku_not_installed">
 Verhoogde Manager is niet geïnstalleerd
 </string>
     <string name="shizuku_description">
-Shizuku en Shevery zorgen ervoor dat apps rechtstreeks API\'s op systeemniveau kunnen gebruiken, waardoor geavanceerde functies mogelijk zijn, zoals bestandsbeheer op de achtergrond en het uitvoeren van systeemopdrachten zonder dat root nodig is op de meeste Android-versies.
+Met Porter, Shizuku en Shevery kunnen apps rechtstreeks API’s op systeemniveau gebruiken, waardoor geavanceerde functies zoals bestandsbeheer op de achtergrond en het uitvoeren van systeemopdrachten mogelijk worden zonder root op de meeste Android-versies.
 </string>
     <string name="shizuku_service_status">
 Servicestatus
@@ -8362,9 +8356,6 @@ Niet geautoriseerd
     <string name="shizuku_installed_msg">
 Elevated Manager is geïnstalleerd en zal beschikbaar zijn voor gebruik.
 </string>
-    <string name="shizuku_download_hint">
-Je kunt de nieuwste versie van Shizuku of Shevery downloaden van hun officiële GitHub-repository\'s.
-</string>
     <string name="shizuku_download_link">
 Beheerder downloaden
 </string>
@@ -8374,25 +8365,8 @@ Shizuku downloaden
     <string name="shizuku_download_shevery">
 Download Shevery
 </string>
-    <string name="shizuku_tv_download_title">
-Shizuku/Shevery downloaden
-</string>
-    <string name="shizuku_tv_download_msg">
-Verhoogde Manager (Shizuku of Shevery) is niet geïnstalleerd op dit apparaat.\n
-\n
-Ga naar een van de volgende URL\'s op uw telefoon of computer om de nieuwste APK te downloaden en sideload deze vervolgens naar deze tv:\n
-\n
-Shizuku:\n
-%1$s\n
-\n
-Shevery:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 Kopieer koppelingen
-</string>
-    <string name="shizuku_link_copied">
-Links gekopieerd naar klembord
 </string>
     <string name="shizuku_auth_title">
 Autoriseer verhoogde toegang
@@ -8422,10 +8396,10 @@ Verhoogde toegang is ingeschakeld en actief
 ADB is niet verbonden. Maak verbinding via ADB Terminal om verhoogde toegang automatisch in te schakelen.
 </string>
     <string name="shizuku_header_subtitle">
-Shizuku &amp; Shevery-service
+Porter-, Shizuku- en Shevery-diensten
 </string>
     <string name="shizuku_status_not_installed_desc">
-Installeer Shizuku of Shevery om beschermde Android-/datamappen en verhoogde bewerkingen zonder root te ontgrendelen.
+Installeer Porter, Shizuku of Shevery om beveiligde Android/data-mappen te ontgrendelen en bewerkingen met verhoogde rechten uit te voeren zonder root.
 </string>
     <string name="shizuku_status_stopped_desc">
 Verhoogde service is geïnstalleerd, maar is momenteel niet actief. Start de dienst via Wireless Debugging of uw managerapp.
@@ -8484,6 +8458,42 @@ Shevery
     <string name="shizuku_manager_shevery_desc">
 Lichtgewicht snel alternatief
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+Actief onderhouden voortzetting van Shizuku
+</string>
+    <string name="shizuku_manager_recommended">
+Aanbevolen
+</string>
+    <string name="shizuku_porter_waiting_desc">
+Porter is geïnstalleerd, maar de bijbehorende service draait niet. De verbinding wacht op Porter, dus een andere manager kan het niet overnemen totdat Porter is gestart — of verwijderd.
+</string>
+    <string name="elevated_state_not_installed">
+Niet geïnstalleerd
+</string>
+    <string name="elevated_state_not_running">
+Service draait niet
+</string>
+    <string name="elevated_state_unauthorized">
+Autorisatie vereist
+</string>
+    <string name="elevated_state_connected">
+Verbonden
+</string>
+    <string name="elevated_state_unknown">
+Status niet beschikbaar
+</string>
+    <string name="elevated_detecting">
+Controleren op verhoogde toegang…
+</string>
+    <string name="shizuku_download_porter_apk">
+Porter downloaden (APK)
+</string>
+    <string name="elevated_prerelease_badge">
+Pre-release
+</string>
     <string name="shizuku_download_shizuku_apk">
 Shizuku downloaden (APK)
 </string>
@@ -8527,7 +8537,7 @@ Toegekend (API v23)
 Controleer de status opnieuw
 </string>
     <string name="shizuku_manager_open_error">
-Kan beheerder niet openen. Installeer eerst Shizuku of Shevery.
+Kon de manager niet openen. Installeer eerst Porter, Shizuku of Shevery.
 </string>
     <string name="elevated_download_title">
 Download %1$s: v%2$s
@@ -11216,7 +11226,7 @@ PRO
 
     <!-- RClone Cloud Storage Support -->
     <string name="add_online_storage_rclone">
-RClonen
+RClone
 </string>
     <string name="add_online_storage_auth_rclone">
 Opslag instellen

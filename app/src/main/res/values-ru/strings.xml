@@ -8496,17 +8496,14 @@ Box — сессия истекла
 Расширенный доступ
 </string>
     <string name="shizuku_subtitle">
-Shizuku / Shevery
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB-накопитель (ограниченный доступ)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV ограничивает прямой доступ к USB — используйте Shizuku / Shevery
-</string>
-    <string name="shizuku_usb_access_desc">
-Политика безопасности этого устройства (SELinux) блокирует прямой доступ к USB-накопителям, смонтированным в /mnt/media_rw/. Чтобы получить доступ к USB-накопителям, установите и авторизуйте Shizuku или Shevery, что предоставит необходимые расширенные привилегии для обхода этого ограничения.
+Fire TV ограничивает прямой доступ к USB — используйте Porter / Shizuku / Shevery
 </string>
     <string name="opening_shizuku">
 Открытие расширенного менеджера…
@@ -8514,14 +8511,11 @@ Fire TV ограничивает прямой доступ к USB — испол
     <string name="shizuku_status_label">
 Статус сервиса
 </string>
-    <string name="shizuku_installed">
-Расширенный менеджер (Shizuku / Shevery) установлен
-</string>
     <string name="shizuku_not_installed">
 Расширенный менеджер не установлен
 </string>
     <string name="shizuku_description">
-Shizuku и Shevery позволяют приложениям напрямую использовать системные API, обеспечивая расширенные функции, такие как фоновое управление файлами и выполнение системных команд без необходимости root на большинстве версий Android.
+Porter, Shizuku и Shevery позволяют приложениям напрямую использовать API системного уровня, открывая такие расширенные возможности, как управление файлами в фоне и выполнение системных команд без root-прав на большинстве версий Android.
 </string>
     <string name="shizuku_service_status">
 Статус сервиса
@@ -8544,9 +8538,6 @@ Shizuku и Shevery позволяют приложениям напрямую и
     <string name="shizuku_installed_msg">
 Расширенный менеджер установлен и будет доступен для использования.
 </string>
-    <string name="shizuku_download_hint">
-Вы можете загрузить последнюю версию Shizuku или Shevery из их официальных репозиториев GitHub.
-</string>
     <string name="shizuku_download_link">
 Загрузить менеджер
 </string>
@@ -8556,25 +8547,8 @@ Shizuku и Shevery позволяют приложениям напрямую и
     <string name="shizuku_download_shevery">
 Скачать Shevery
 </string>
-    <string name="shizuku_tv_download_title">
-Загрузить Shizuku / Shevery
-</string>
-    <string name="shizuku_tv_download_msg">
-Расширенный менеджер (Shizuku или Shevery) не установлен на этом устройстве.\n
-\n
-Пожалуйста, перейдите по одному из следующих URL на вашем телефоне или компьютере, чтобы загрузить последний APK, затем установите его на этот телевизор:\n
-\n
-Shizuku:\n
-%1$s\n
-\n
-Shevery:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 Копировать ссылки
-</string>
-    <string name="shizuku_link_copied">
-Ссылки скопированы в буфер обмена
 </string>
     <string name="shizuku_auth_title">
 Авторизовать расширенный доступ
@@ -8604,10 +8578,10 @@ UFM требуется авторизация для выполнения рас
 ADB не подключён. Подключитесь через ADB-терминал, чтобы автоматически включить расширенный доступ.
 </string>
     <string name="shizuku_header_subtitle">
-Служба Shizuku и Shevery
+Службы Porter, Shizuku и Shevery
 </string>
     <string name="shizuku_status_not_installed_desc">
-Установите Shizuku или Shevery, чтобы получить доступ к защищенным папкам Android/data и расширенным операциям без root.
+Установите Porter, Shizuku или Shevery, чтобы разблокировать защищённые папки Android/data и операции с повышенными правами без root.
 </string>
     <string name="shizuku_status_stopped_desc">
 Расширенная служба установлена, но в данный момент не запущена. Запустите службу через беспроводную отладку или приложение-менеджер.
@@ -8666,6 +8640,42 @@ Shevery
     <string name="shizuku_manager_shevery_desc">
 Легкая и быстрая альтернатива
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+Активно поддерживаемое продолжение Shizuku
+</string>
+    <string name="shizuku_manager_recommended">
+Рекомендуется
+</string>
+    <string name="shizuku_porter_waiting_desc">
+Porter установлен, но его служба не запущена. Подключение ожидает Porter, поэтому другой менеджер не сможет перехватить управление, пока Porter не будет запущен — или удалён.
+</string>
+    <string name="elevated_state_not_installed">
+Не установлено
+</string>
+    <string name="elevated_state_not_running">
+Служба не запущена
+</string>
+    <string name="elevated_state_unauthorized">
+Требуется авторизация
+</string>
+    <string name="elevated_state_connected">
+Подключено
+</string>
+    <string name="elevated_state_unknown">
+Статус недоступен
+</string>
+    <string name="elevated_detecting">
+Проверка расширенного доступа…
+</string>
+    <string name="shizuku_download_porter_apk">
+Скачать Porter (APK)
+</string>
+    <string name="elevated_prerelease_badge">
+Предварительная версия
+</string>
     <string name="shizuku_download_shizuku_apk">
 Скачать Shizuku (APK)
 </string>
@@ -8709,7 +8719,7 @@ ADB / беспроводная отладка
 Проверить статус
 </string>
     <string name="shizuku_manager_open_error">
-Не удалось открыть менеджер. Сначала установите Shizuku или Shevery.
+Не удалось открыть менеджер. Сначала установите Porter, Shizuku или Shevery.
 </string>
     <string name="elevated_download_title">
 Скачать %1$s: v%2$s

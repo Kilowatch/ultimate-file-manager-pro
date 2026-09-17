@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">
-مدير الملفات المثالي برو
+Ultimate File Manager Pro
 </string>
     <string name="settings_language">
 اللغة
@@ -199,7 +199,7 @@
 </string>
 
     <string name="welcome_title">
-مرحباً بك في مدير الملفات المثالي برو
+مرحبًا بك في Ultimate File Manager Pro
 </string>
     <string name="welcome_subtitle">
 إدارة جميع ملفاتك بسهولة.\n
@@ -296,7 +296,7 @@
 التخزين
 </string>
     <string name="storage_title">
-مدير الملفات المثالي برو
+Ultimate File Manager Pro
 </string>
     <string name="storage_internal">
 التخزين الداخلي
@@ -483,7 +483,7 @@
 
     <!-- Content Descriptions -->
     <string name="cd_app_icon">
-أيقونة مدير الملفات المثالي برو
+أيقونة Ultimate File Manager Pro
 </string>
     <string name="cd_permission_icon">
 أيقونة الإذن
@@ -8496,17 +8496,14 @@ Box — انتهت الجلسة
 وصول موسع
 </string>
     <string name="shizuku_subtitle">
-شيزوكو / شيفري
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 محرك USB (مقيد)
 </string>
     <string name="shizuku_usb_access_subtitle">
-يقيد Fire TV الوصول المباشر إلى USB — استخدم شيزوكو / شيفري
-</string>
-    <string name="shizuku_usb_access_desc">
-سياسة الأمان لهذا الجهاز (SELinux) تمنع الوصول المباشر إلى أقراص USB المثبتة في /mnt/media_rw/. للوصول إلى تخزين USB، قم بتثبيت وتفويض شيزوكو أو شيفري، اللذين يوفران الصلاحيات الموسعة اللازمة لتجاوز هذا القيد.
+يقيّد Fire TV الوصول المباشر إلى USB — استخدم Porter / Shizuku / Shevery
 </string>
     <string name="opening_shizuku">
 جارٍ فتح المدير الموسع…
@@ -8514,14 +8511,11 @@ Box — انتهت الجلسة
     <string name="shizuku_status_label">
 حالة الخدمة
 </string>
-    <string name="shizuku_installed">
-المدير الموسع (شيزوكو / شيفري) مثبت
-</string>
     <string name="shizuku_not_installed">
 المدير الموسع غير مثبت
 </string>
     <string name="shizuku_description">
-يسمح شيزوكو وشيفري للتطبيقات باستخدام واجهات برمجة التطبيقات على مستوى النظام مباشرة، مما يتيح ميزات متقدمة مثل إدارة الملفات في الخلفية وتنفيذ أوامر النظام دون الحاجة إلى صلاحيات الجذر على معظم إصدارات أندرويد.
+تسمح Porter و Shizuku و Shevery للتطبيقات باستخدام APIs على مستوى النظام مباشرةً، مما يتيح ميزات متقدمة مثل إدارة الملفات في الخلفية وتنفيذ أوامر النظام دون الحاجة إلى root في معظم إصدارات Android.
 </string>
     <string name="shizuku_service_status">
 حالة الخدمة
@@ -8544,9 +8538,6 @@ Box — انتهت الجلسة
     <string name="shizuku_installed_msg">
 المدير الموسع مثبت وسيكون متاحًا للاستخدام.
 </string>
-    <string name="shizuku_download_hint">
-يمكنك تنزيل أحدث إصدار من شيزوكو أو شيفري من مستودعاتهما الرسمية على GitHub.
-</string>
     <string name="shizuku_download_link">
 تنزيل المدير
 </string>
@@ -8556,25 +8547,8 @@ Box — انتهت الجلسة
     <string name="shizuku_download_shevery">
 تنزيل Shevery
 </string>
-    <string name="shizuku_tv_download_title">
-تنزيل شيزوكو / شيفري
-</string>
-    <string name="shizuku_tv_download_msg">
-المدير الموسع (شيزوكو أو شيفري) غير مثبت على هذا الجهاز.\n
-\n
-يرجى زيارة أحد الروابط التالية على هاتفك أو جهاز الكمبيوتر لتنزيل أحدث APK، ثم تحميله جانبيًا إلى هذا التلفزيون:\n
-\n
-شيزوكو:\n
-%1$s\n
-\n
-شيفري:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 نسخ الروابط
-</string>
-    <string name="shizuku_link_copied">
-تم نسخ الروابط إلى الحافظة
 </string>
     <string name="shizuku_auth_title">
 تفويض الوصول الموسع
@@ -8604,10 +8578,10 @@ Box — انتهت الجلسة
 ADB غير متصل. اتصل عبر محطة ADB لتمكين الوصول الموسع تلقائيًا.
 </string>
     <string name="shizuku_header_subtitle">
-خدمة Shizuku وShevery
+خدمات Porter و Shizuku و Shevery
 </string>
     <string name="shizuku_status_not_installed_desc">
-ثبّت Shizuku أو Shevery لفتح مجلدات Android/data المحمية والعمليات ذات الصلاحيات الموسعة دون الحاجة إلى صلاحيات الروت.
+قم بتثبيت Porter أو Shizuku أو Shevery لفتح مجلدات Android/data المحمية والعمليات المتقدمة دون root.
 </string>
     <string name="shizuku_status_stopped_desc">
 الخدمة الموسعة مثبتة ولكنها لا تعمل حاليًا. ابدأ الخدمة عبر تصحيح الأخطاء اللاسلكي أو تطبيق الإدارة الخاص بك.
@@ -8666,6 +8640,42 @@ Shevery
     <string name="shizuku_manager_shevery_desc">
 بديل خفيف وسريع
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+استمرار Shizuku الذي يتم صيانته بنشاط
+</string>
+    <string name="shizuku_manager_recommended">
+موصى به
+</string>
+    <string name="shizuku_porter_waiting_desc">
+Porter مثبت لكن خدمته لا تعمل. الاتصال ينتظر Porter، لذا لا يمكن لمدير آخر أن يتولى الأمر حتى يتم تشغيل Porter — أو إلغاء تثبيته.
+</string>
+    <string name="elevated_state_not_installed">
+غير مثبت
+</string>
+    <string name="elevated_state_not_running">
+الخدمة لا تعمل
+</string>
+    <string name="elevated_state_unauthorized">
+التفويض مطلوب
+</string>
+    <string name="elevated_state_connected">
+متصل
+</string>
+    <string name="elevated_state_unknown">
+الحالة غير متاحة
+</string>
+    <string name="elevated_detecting">
+جارٍ التحقق من الوصول المرتفع…
+</string>
+    <string name="shizuku_download_porter_apk">
+تنزيل Porter (APK)
+</string>
+    <string name="elevated_prerelease_badge">
+إصدار تجريبي
+</string>
     <string name="shizuku_download_shizuku_apk">
 تنزيل Shizuku (APK)
 </string>
@@ -8709,7 +8719,7 @@ ADB / تصحيح الأخطاء اللاسلكي
 إعادة التحقق من الحالة
 </string>
     <string name="shizuku_manager_open_error">
-تعذر فتح المدير. يرجى تثبيت شيزوكو أو شيفري أولاً.
+تعذر فتح المدير. يرجى تثبيت Porter أو Shizuku أو Shevery أولاً.
 </string>
     <string name="elevated_download_title">
 تنزيل %1$s: v%2$s

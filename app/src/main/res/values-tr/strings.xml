@@ -8496,17 +8496,14 @@ Yetkilendirme reddedildi veya iptal edildi.
 Yükseltilmiş Erişim
 </string>
     <string name="shizuku_subtitle">
-Shizuku / Shevery
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB Sürücü (Kısıtlı)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV doğrudan USB erişimini kısıtlar — Shizuku / Shevery kullanın
-</string>
-    <string name="shizuku_usb_access_desc">
-Bu cihazın güvenlik politikası (SELinux), /mnt/media_rw/ yoluna bağlanan USB sürücülerine doğrudan erişimi engeller. USB depolamaya erişmek için, bu kısıtlamayı aşmak için gereken yükseltilmiş ayrıcalıkları sağlayan Shizuku veya Shevery\\\'yi kurun ve yetkilendirin.
+Fire TV doğrudan USB erişimini kısıtlar — Porter / Shizuku / Shevery kullanın
 </string>
     <string name="opening_shizuku">
 Yükseltilmiş Yönetici açılıyor…
@@ -8514,14 +8511,11 @@ Yükseltilmiş Yönetici açılıyor…
     <string name="shizuku_status_label">
 Hizmet Durumu
 </string>
-    <string name="shizuku_installed">
-Yükseltilmiş Yönetici (Shizuku / Shevery) kurulu
-</string>
     <string name="shizuku_not_installed">
 Yükseltilmiş Yönetici kurulu değil
 </string>
     <string name="shizuku_description">
-Shizuku ve Shevery, uygulamaların doğrudan sistem düzeyindeki API\\\'leri kullanmasına izin verir; böylece çoğu Android sürümünde root gerektirmeden arka planda dosya yönetimi ve sistem komutları yürütme gibi gelişmiş özellikler sağlar.
+Porter, Shizuku ve Shevery, uygulamaların sistem düzeyindeki API\\\'leri doğrudan kullanmasına olanak tanır; çoğu Android sürümünde root gerektirmeden arka planda dosya yönetimi ve sistem komutu yürütme gibi gelişmiş özellikleri etkinleştirir.
 </string>
     <string name="shizuku_service_status">
 Hizmet Durumu
@@ -8544,9 +8538,6 @@ Yetkisiz
     <string name="shizuku_installed_msg">
 Yükseltilmiş Yönetici kurulu ve kullanıma hazır olacak.
 </string>
-    <string name="shizuku_download_hint">
-Shizuku veya Shevery\\\'nin en son sürümünü resmi GitHub depolarından indirebilirsiniz.
-</string>
     <string name="shizuku_download_link">
 Yönetici İndir
 </string>
@@ -8556,25 +8547,8 @@ Shizuku\'yu İndir
     <string name="shizuku_download_shevery">
 Shevery\'yi İndir
 </string>
-    <string name="shizuku_tv_download_title">
-Shizuku / Shevery İndir
-</string>
-    <string name="shizuku_tv_download_msg">
-Bu cihazda Yükseltilmiş Yönetici (Shizuku veya Shevery) kurulu değil.\n
-\n
-En son APK\\\'yı indirmek için telefonunuzda veya bilgisayarınızda aşağıdaki URL\\\'lerden birini ziyaret edin, ardından bu TV\\\'ye yandan yükleyin:\n
-\n
-Shizuku:\n
-%1$s\n
-\n
-Shevery:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 Bağlantıları Kopyala
-</string>
-    <string name="shizuku_link_copied">
-Bağlantılar panoya kopyalandı
 </string>
     <string name="shizuku_auth_title">
 Yükseltilmiş Erişimi Yetkilendir
@@ -8604,10 +8578,10 @@ Yükseltilmiş Erişim etkin ve aktif
 ADB bağlı değil. Yükseltilmiş Erişimi otomatik olarak etkinleştirmek için ADB Terminali üzerinden bağlanın.
 </string>
     <string name="shizuku_header_subtitle">
-Shizuku ve Shevery Hizmeti
+Porter, Shizuku ve Shevery Hizmetleri
 </string>
     <string name="shizuku_status_not_installed_desc">
-Korumalı Android/data klasörlerinin ve yükseltilmiş işlemlerin kilidini root gerektirmeden açmak için Shizuku veya Shevery kurun.
+Korumalı Android/data klasörlerinin kilidini açmak ve root olmadan yükseltilmiş işlemleri gerçekleştirmek için Porter, Shizuku veya Shevery\\\'yi yükleyin.
 </string>
     <string name="shizuku_status_stopped_desc">
 Yükseltilmiş hizmet kurulu ancak şu anda çalışmıyor. Hizmeti Kablosuz Hata Ayıklama veya yönetici uygulamanız aracılığıyla başlatın.
@@ -8666,6 +8640,42 @@ Shevery
     <string name="shizuku_manager_shevery_desc">
 Hafif ve hızlı alternatif
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+Etkin olarak bakımı yapılan Shizuku devamı
+</string>
+    <string name="shizuku_manager_recommended">
+Önerilen
+</string>
+    <string name="shizuku_porter_waiting_desc">
+Porter yüklü ancak hizmeti çalışmıyor. Bağlantı Porter\\\'ı bekliyor, bu nedenle Porter başlatılana veya kaldırılana kadar başka bir yönetici devralamaz.
+</string>
+    <string name="elevated_state_not_installed">
+Yüklü değil
+</string>
+    <string name="elevated_state_not_running">
+Hizmet çalışmıyor
+</string>
+    <string name="elevated_state_unauthorized">
+Yetkilendirme gerekli
+</string>
+    <string name="elevated_state_connected">
+Bağlı
+</string>
+    <string name="elevated_state_unknown">
+Durum kullanılamıyor
+</string>
+    <string name="elevated_detecting">
+Yükseltilmiş erişim denetleniyor…
+</string>
+    <string name="shizuku_download_porter_apk">
+Porter\\\'ı indir (APK)
+</string>
+    <string name="elevated_prerelease_badge">
+Ön sürüm
+</string>
     <string name="shizuku_download_shizuku_apk">
 Shizuku\\\'yu İndir (APK)
 </string>
@@ -8709,7 +8719,7 @@ Verildi (API v23)
 Durumu Yeniden Kontrol Et
 </string>
     <string name="shizuku_manager_open_error">
-Yönetici açılamadı. Lütfen önce Shizuku veya Shevery\\\'yi kurun.
+Yönetici açılamadı. Lütfen önce Porter, Shizuku veya Shevery\\\'yi yükleyin.
 </string>
     <string name="elevated_download_title">
 %1$s İndir: v%2$s

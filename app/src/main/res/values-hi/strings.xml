@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">
-अल्टीमेट फ़ाइल मैनेजर प्रो
+Ultimate File Manager Pro
 </string>
     <string name="settings_language">
 भाषा
@@ -199,7 +199,7 @@ Swedish (Svenska)
 </string>
 
     <string name="welcome_title">
-अल्टीमेट फ़ाइल मैनेजर प्रो में आपका स्वागत है
+Ultimate File Manager Pro में आपका स्वागत है
 </string>
     <string name="welcome_subtitle">
 अपनी सभी फ़ाइलों को आसानी से प्रबंधित करें।\n
@@ -296,7 +296,7 @@ Swedish (Svenska)
 स्टोरेज
 </string>
     <string name="storage_title">
-अल्टीमेट फ़ाइल मैनेजर प्रो
+Ultimate File Manager Pro
 </string>
     <string name="storage_internal">
 आंतरिक स्टोरेज
@@ -483,7 +483,7 @@ UFM प्लेयर में अगला स्वतः चलाएँ
 
     <!-- Content Descriptions -->
     <string name="cd_app_icon">
-अल्टीमेट फ़ाइल मैनेजर प्रो आइकन
+Ultimate File Manager Pro आइकन
 </string>
     <string name="cd_permission_icon">
 अनुमति आइकन
@@ -832,7 +832,7 @@ ADB कनेक्शन अस्वीकृत या विफल
 विंडोज ऐप साथी
 </string>
     <string name="remote_option_windows_desc">
-विंडोज के लिए अल्टीमेट फ़ाइल मैनेजर प्रो डेस्कटॉप साथी का उपयोग करके कनेक्ट करें। यह आपको अपनी फ़ाइलों को प्रबंधित करने के लिए एक तेज़, सुरक्षित, दोहरे फलक वाला डेस्कटॉप इंटरफ़ेस प्रदान करता है।
+Windows के लिए Ultimate File Manager Pro डेस्कटॉप साथी का उपयोग करके कनेक्ट करें। यह आपको अपनी फ़ाइलों को प्रबंधित करने के लिए एक तेज़, सुरक्षित, दोहरे फलक वाला डेस्कटॉप इंटरफ़ेस देता है।
 </string>
     <string name="remote_option_web_title">
 HTTPS वेब सर्वर
@@ -980,14 +980,14 @@ VPN सक्रिय
 कॉर्पोरेट नीति का पता चला
 </string>
     <string name="policy_blocked_message">
-ऐसा प्रतीत होता है कि आपके उपकरण या संगठन ने इस स्टोरेज प्रदाता तक पहुँच प्रतिबंधित कर दी है।
-
-सामान्य कारणों में शामिल हैं:
-• Intune/MDM नीतियाँ
-• Conditional Access नियम
-• नेटवर्क-स्तरीय अवरोध
-
-कृपया क्लाउड स्टोरेज तक पहुँच की अनुमति देने के लिए अपने IT प्रशासक से संपर्क करें।
+\"ऐसा प्रतीत होता है कि आपके डिवाइस या संगठन ने इस स्टोरेज प्रदाता तक पहुंच को प्रतिबंधित कर दिया है।\n
+\n
+सामान्य कारणों में शामिल हैं:\n
+• Intune/MDM नीतियां\n
+• Conditional Access नियम\n
+• नेटवर्क-स्तरीय अवरोध\n
+\n
+कृपया क्लाउड स्टोरेज एक्सेस के लिए \\\"Ultimate File Manager Pro\\\" को अनुमति देने के लिए अपने IT व्यवस्थापक से संपर्क करें।\"
 </string>
     <string name="policy_blocked_details">
 तकनीकी विवरण
@@ -1487,7 +1487,7 @@ Material You
 लाइव फ़ॉन्ट पूर्वावलोकन
 </string>
     <string name="font_size_preview_sample_heading">
-अल्टीमेट फ़ाइल मैनेजर प्रो
+Ultimate File Manager Pro
 </string>
     <string name="font_size_preview_sample_body">
 त्वरित भूरा लोमड़ी आलसी कुत्ते के ऊपर कूदता है। Android और TV पर पावर उपयोगकर्ताओं के लिए डुअल-पेन फ़ाइल मैनेजर।
@@ -2612,7 +2612,7 @@ New File.txt
 ऐप पसंद आ रहा है?
 </string>
     <string name="rate_us_screen_title">
-अल्टीमेट फ़ाइल मैनेजर प्रो पसंद आ रहा है?
+Ultimate File Manager Pro का आनंद ले रहे हैं?
 </string>
     <string name="rate_us_screen_body">
 आपकी प्रतिक्रिया हमें सुधार करने में मदद करती है और सीधे ऐप के विकास का समर्थन करती है।\n
@@ -2652,11 +2652,11 @@ UFM के साथ खोलें
 UFM को फ़ाइल स्रोत के रूप में उपयोग करें
 </string>
     <string name="saf_info_body">
-UFM इस डिवाइस पर एक फ़ाइल प्रदाता के रूप में पंजीकृत है।\n
+UFM इस डिवाइस पर फ़ाइल प्रदाता के रूप में पंजीकृत है।\n
 \n
-Android के फ़ाइल चयनकर्ता का उपयोग करने वाला कोई भी ऐप — जैसे मीडिया प्लेयर, Daijisho जैसे लॉन्चर, या क्लाउड बैकअप टूल — अब UFM के माध्यम से आपके स्टोरेज को ब्राउज़ कर सकता है।\n
+कोई भी ऐप जो Android के फ़ाइल पिकर का उपयोग करता है — जैसे मीडिया प्लेयर, Daijisho जैसे लॉन्चर, या क्लाउड बैकअप टूल — अब UFM के माध्यम से आपके स्टोरेज को ब्राउज़ कर सकता है।\n
 \n
-Android TV पर, बस अपने ऐप में फ़ाइल चयनकर्ता लॉन्च करें और उपलब्ध स्रोतों की सूची से \'अल्टीमेट फ़ाइल मैनेजर प्रो\' चुनें।
+Android TV पर, बस अपने ऐप में फ़ाइल पिकर खोलें और उपलब्ध स्रोतों की सूची से \'Ultimate File Manager Pro\' चुनें।
 </string>
     <string name="saf_info_how_title">
 इसका उपयोग कैसे करें
@@ -2665,7 +2665,7 @@ Android TV पर, बस अपने ऐप में फ़ाइल चय�
 1. एक ऐप खोलें जिसमें \'ब्राउज़\' या \'लाइब्रेरी जोड़ें\' विकल्प हो
 </string>
     <string name="saf_info_step2">
-2. जब फ़ाइल चयनकर्ता दिखाई दे, तो साइडबार में \'अल्टीमेट फ़ाइल मैनेजर प्रो\' देखें
+2. जब फ़ाइल पिकर दिखाई दे, तो साइडबार में \'Ultimate File Manager Pro\' देखें
 </string>
     <string name="saf_info_step3">
 3. अपने स्टोरेज में नेविगेट करें और एक फ़ाइल या फ़ोल्डर चुनें
@@ -8496,17 +8496,14 @@ Box को अधिकृत करें
 उन्नत पहुंच
 </string>
     <string name="shizuku_subtitle">
-Shizuku / Shevery
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB ड्राइव (प्रतिबंधित)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV सीधे USB पहुंच को प्रतिबंधित करता है — Shizuku / Shevery का उपयोग करें
-</string>
-    <string name="shizuku_usb_access_desc">
-इस डिवाइस की सुरक्षा नीति (SELinux) /mnt/media_rw/ पर माउंट की गई USB ड्राइव तक सीधी पहुंच को अवरुद्ध करती है। USB स्टोरेज तक पहुंचने के लिए, Shizuku या Shevery को स्थापित करें और अधिकृत करें, जो इस प्रतिबंध को दरकिनार करने के लिए आवश्यक उन्नत विशेषाधिकार प्रदान करता है।
+Fire TV सीधे USB पहुँच को प्रतिबंधित करता है — Porter / Shizuku / Shevery का उपयोग करें
 </string>
     <string name="opening_shizuku">
 उन्नत प्रबंधक खोला जा रहा है…
@@ -8514,14 +8511,11 @@ Fire TV सीधे USB पहुंच को प्रतिबंधित �
     <string name="shizuku_status_label">
 सेवा स्थिति
 </string>
-    <string name="shizuku_installed">
-उन्नत प्रबंधक (Shizuku / Shevery) स्थापित है
-</string>
     <string name="shizuku_not_installed">
 उन्नत प्रबंधक स्थापित नहीं है
 </string>
     <string name="shizuku_description">
-Shizuku और Shevery एप्लिकेशन को सीधे सिस्टम-स्तरीय API का उपयोग करने की अनुमति देते हैं, जिससे अधिकांश Android संस्करणों पर रूट की आवश्यकता के बिना बैकग्राउंड फ़ाइल प्रबंधन और सिस्टम कमांड निष्पादन जैसी उन्नत सुविधाएँ सक्षम होती हैं।
+Porter, Shizuku और Shevery ऐप्स को सिस्टम-स्तरीय API का सीधे उपयोग करने की अनुमति देते हैं, जिससे अधिकांश Android संस्करणों पर रूट की आवश्यकता के बिना पृष्ठभूमि फ़ाइल प्रबंधन और सिस्टम कमांड निष्पादन जैसी उन्नत सुविधाएँ सक्षम होती हैं।
 </string>
     <string name="shizuku_service_status">
 सेवा स्थिति
@@ -8544,9 +8538,6 @@ Shizuku और Shevery एप्लिकेशन को सीधे सिस
     <string name="shizuku_installed_msg">
 उन्नत प्रबंधक स्थापित है और उपयोग के लिए उपलब्ध होगा।
 </string>
-    <string name="shizuku_download_hint">
-आप Shizuku या Shevery का नवीनतम संस्करण उनके आधिकारिक GitHub रिपॉजिटरी से डाउनलोड कर सकते हैं।
-</string>
     <string name="shizuku_download_link">
 डाउनलोड प्रबंधक
 </string>
@@ -8556,25 +8547,8 @@ Shizuku डाउनलोड करें
     <string name="shizuku_download_shevery">
 Shevery डाउनलोड करें
 </string>
-    <string name="shizuku_tv_download_title">
-Shizuku / Shevery डाउनलोड करें
-</string>
-    <string name="shizuku_tv_download_msg">
-इस डिवाइस पर उन्नत प्रबंधक (Shizuku या Shevery) स्थापित नहीं है।\n
-\n
-कृपया नवीनतम APK डाउनलोड करने के लिए अपने फ़ोन या कंप्यूटर पर निम्नलिखित URL में से किसी एक पर जाएँ, फिर इसे इस TV पर साइडलोड करें:\n
-\n
-Shizuku:\n
-%1$s\n
-\n
-Shevery:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 लिंक कॉपी करें
-</string>
-    <string name="shizuku_link_copied">
-लिंक क्लिपबोर्ड पर कॉपी हो गए
 </string>
     <string name="shizuku_auth_title">
 उन्नत पहुंच को अधिकृत करें
@@ -8604,10 +8578,10 @@ UFM को उन्नत फ़ाइल संचालन करने क�
 ADB कनेक्ट नहीं है। उन्नत पहुंच को स्वचालित रूप से सक्षम करने के लिए ADB टर्मिनल के माध्यम से कनेक्ट करें।
 </string>
     <string name="shizuku_header_subtitle">
-Shizuku और Shevery सेवा
+Porter, Shizuku और Shevery सेवाएँ
 </string>
     <string name="shizuku_status_not_installed_desc">
-रूट के बिना संरक्षित Android/data फ़ोल्डरों और उन्नत संचालन को अनलॉक करने के लिए Shizuku या Shevery इंस्टॉल करें।
+संरक्षित Android/data फ़ोल्डरों और बिना रूट के उन्नत संचालनों को अनलॉक करने के लिए Porter, Shizuku या Shevery इंस्टॉल करें।
 </string>
     <string name="shizuku_status_stopped_desc">
 एलिवेटेड सेवा इंस्टॉल है लेकिन वर्तमान में चालू नहीं है। वायरलेस डिबगिंग या अपने मैनेजर ऐप के माध्यम से सेवा प्रारंभ करें।
@@ -8666,6 +8640,42 @@ Shevery
     <string name="shizuku_manager_shevery_desc">
 हल्का और तेज़ विकल्प
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+सक्रिय रूप से अनुरक्षित Shizuku का निरंतर संस्करण
+</string>
+    <string name="shizuku_manager_recommended">
+अनुशंसित
+</string>
+    <string name="shizuku_porter_waiting_desc">
+Porter इंस्टॉल है लेकिन इसकी सेवा चल नहीं रही है। कनेक्शन Porter की प्रतीक्षा करता है, इसलिए Porter के शुरू होने — या अनइंस्टॉल होने तक कोई अन्य प्रबंधक नियंत्रण नहीं ले सकता।
+</string>
+    <string name="elevated_state_not_installed">
+इंस्टॉल नहीं है
+</string>
+    <string name="elevated_state_not_running">
+सेवा चल नहीं रही है
+</string>
+    <string name="elevated_state_unauthorized">
+प्राधिकरण आवश्यक
+</string>
+    <string name="elevated_state_connected">
+जुड़ा हुआ
+</string>
+    <string name="elevated_state_unknown">
+स्थिति अनुपलब्ध
+</string>
+    <string name="elevated_detecting">
+एलिवेटेड एक्सेस की जाँच की जा रही है…
+</string>
+    <string name="shizuku_download_porter_apk">
+Porter डाउनलोड करें (APK)
+</string>
+    <string name="elevated_prerelease_badge">
+प्री-रिलीज़
+</string>
     <string name="shizuku_download_shizuku_apk">
 Shizuku (APK) डाउनलोड करें
 </string>
@@ -8709,7 +8719,7 @@ ADB / वायरलेस डिबगिंग
 स्थिति पुनः जांचें
 </string>
     <string name="shizuku_manager_open_error">
-प्रबंधक नहीं खोला जा सका। कृपया पहले Shizuku या Shevery स्थापित करें।
+प्रबंधक नहीं खोला जा सका। कृपया पहले Porter, Shizuku या Shevery इंस्टॉल करें।
 </string>
     <string name="elevated_download_title">
 %1$s डाउनलोड करें: v%2$s
@@ -9321,7 +9331,7 @@ URL http:// या https:// से शुरू होना चाहिए
 के बारे में
 </string>
     <string name="about_app_name">
-अल्टीमेट फ़ाइल मैनेजर प्रो
+Ultimate File Manager Pro
 </string>
     <string name="about_email">
 support@kilowatch.co.za
@@ -13681,7 +13691,7 @@ SAF स्टोरेज
 स्टोरेज फोल्डर का चयन करें
 </string>
     <string name="dialog_setup_folders_desc">
-अपने डिवाइस पर फ़ोल्डर चुनें यूएफएम को एक्सेस और प्रबंधन करने की अनुमति है।
+अपने डिवाइस पर उन फ़ोल्डरों को चुनें जिन्हें UFM एक्सेस और प्रबंधित कर सकता है।
 </string>
     <string name="btn_add_another_folder">
 Add Folder
@@ -13840,9 +13850,9 @@ No mounted folders remaining for this storage.
 रूट एक्सेस प्रदान करें?
 </string>
     <string name="root_grant_dialog_desc">
-अल्टीमेट फाइल मैनेजर प्रो आपके रूट मैनेजर (%1$s) से सुपरयूजर अनुमतियों का अनुरोध करेगा। यह सिस्टम-स्तरीय फ़ाइलों को ब्राउज़ करने और प्रबंधित करने की पहुंच प्रदान करता है।\n
+Ultimate File Manager Pro आपके रूट मैनेजर (%1$s) से सुपरयूज़र अनुमतियाँ मांगेगा। यह सिस्टम-स्तरीय फ़ाइलों को ब्राउज़ और प्रबंधित करने के लिए एक्सेस प्रदान करता है।\n
 \n
-यदि आप सिस्टम फ़ाइलों को संशोधित करने के जोखिमों को समझते हैं तो केवल रूट एक्सेस प्रदान करें।
+केवल तभी रूट एक्सेस दें जब आप सिस्टम फ़ाइलों को संशोधित करने के जोखिमों को समझते हों।
 </string>
     <string name="root_grant_dialog_grant">
 ग्रांट रूट
@@ -13912,13 +13922,13 @@ SELinux प्रसंग
 आप अप टू डेट हैं
 </string>
     <string name="update_already_latest_msg">
-अल्टीमेट फ़ाइल मैनेजर प्रो v%1$s नवीनतम रिलीज़ है।
+Ultimate File Manager Pro v%1$s नवीनतम रिलीज़ है।
 </string>
     <string name="update_available_title">
 अद्यतन उपलब्ध: v%1$s
 </string>
     <string name="update_available_msg">
-अल्टीमेट फ़ाइल मैनेजर प्रो का एक नया संस्करण GitHub पर उपलब्ध है।
+Ultimate File Manager Pro का एक नया संस्करण GitHub पर उपलब्ध है।
 </string>
     <string name="update_version_comparison">
 स्थापित: v%1$s • नवीनतम: v%2$s
@@ -13933,7 +13943,7 @@ GitHub पर देखें
 मुझे बाद में याद दिलाना
 </string>
     <string name="update_notification_title">
-यूएफएम अपडेट उपलब्ध: v%1$s
+UFM अपडेट उपलब्ध: v%1$s
 </string>
     <string name="update_notification_desc">
 एक नई रिलीज़ (v%1$s) GitHub पर उपलब्ध है। डाउनलोड करने के लिए टैप करें.
@@ -13957,7 +13967,7 @@ GitHub पर देखें
 अद्यतन जांच सक्षम करें?
 </string>
     <string name="settings_foss_update_enable_dialog_desc">
-सक्षम होने पर, अल्टीमेट फ़ाइल मैनेजर प्रो ऐप खुलने पर नए GitHub रिलीज़ की जाँच करेगा और डाउनलोड के लिए नया संस्करण उपलब्ध होने पर आपको सूचित करेगा।\n
+सक्षम होने पर, Ultimate File Manager Pro ऐप खुलने पर नए GitHub रिलीज़ की जाँच करेगा और जब डाउनलोड के लिए नया संस्करण उपलब्ध होगा तो आपको सूचित करेगा।\n
 \n
 इस जाँच के दौरान कोई व्यक्तिगत डेटा एकत्र या प्रसारित नहीं किया जाता है।
 </string>
@@ -14233,7 +14243,7 @@ AndroidManifest.xml को डीकोड करने में असमर�
 ऐप लॉक
 </string>
     <string name="settings_security_app_lock_subtitle">
-अल्टीमेट फ़ाइल मैनेजर प्रो खोलने के लिए प्रमाणीकरण की आवश्यकता है
+Ultimate File Manager Pro को खोलने के लिए प्रमाणीकरण आवश्यक है
 </string>
     <string name="settings_security_method_title">
 प्रमाणीकरण विधि
@@ -14317,7 +14327,7 @@ UFM को सुरक्षित करने के लिए 4 अंको
 सांकेतिक शब्द लगना
 </string>
     <string name="settings_security_password_subtitle">
-यूएफएम के लिए एक सुरक्षित पासवर्ड दर्ज करें
+UFM के लिए एक सुरक्षित पासवर्ड दर्ज करें
 </string>
     <string name="settings_security_password_create_title">
 पासवर्ड बनाएं
@@ -14353,9 +14363,9 @@ UFM को सुरक्षित करने के लिए 4 अंको
 महत्वपूर्ण सुरक्षा सूचना
 </string>
     <string name="security_warning_message">
-यदि आप अपना पिन या पासवर्ड भूल जाते हैं और अपनी रिकवरी कुंजी खो देते हैं, तो आपको अल्टीमेट फ़ाइल मैनेजर प्रो से स्थायी रूप से लॉक कर दिया जाएगा।\n
+यदि आप अपना पिन या पासवर्ड भूल जाते हैं और अपनी रिकवरी की खो देते हैं, तो आप Ultimate File Manager Pro से स्थायी रूप से लॉक हो जाएंगे।\n
 \n
-न तो किलोवॉच और न ही कोई अन्य आपके क्रेडेंशियल्स को पुनर्प्राप्त कर सकता है या आपकी फ़ाइलों को अनलॉक कर सकता है। अपनी पुनर्प्राप्ति कुंजी को सुरक्षित स्थान पर रखना सुनिश्चित करें।
+न तो KiloWatch और न ही कोई अन्य आपके क्रेडेंशियल्स को पुनर्प्राप्त कर सकता है या आपकी फ़ाइलों को अनलॉक कर सकता है। अपनी रिकवरी की को सुरक्षित, सुरक्षित स्थान पर रखना सुनिश्चित करें।
 </string>
     <string name="security_warning_confirm">
 मैं समझता हूँ - पुनर्प्राप्ति कुंजी दिखाएँ
@@ -14364,7 +14374,7 @@ UFM को सुरक्षित करने के लिए 4 अंको
 सुरक्षा पुनर्प्राप्ति कुंजी
 </string>
     <string name="security_recovery_code_body">
-इस कुंजी को लिख लें. यदि आप अपना पिन या पासवर्ड भूल जाते हैं तो यूएफएम को अनलॉक करने का यह एकमात्र तरीका है।
+इस कुंजी को लिख लें। यह UFM को अनलॉक करने का एकमात्र तरीका है यदि आप अपना पिन या पासवर्ड भूल जाते हैं।
 </string>
     <string name="security_recovery_code_copy">
 पुनर्प्राप्ति कुंजी कॉपी करें

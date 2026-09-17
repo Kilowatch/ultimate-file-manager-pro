@@ -2935,16 +2935,14 @@
 
     <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">Elevated Access</string>
-    <string name="shizuku_subtitle">Shizuku / Shevery</string>
+    <string name="shizuku_subtitle">Porter / Shizuku / Shevery</string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">USB Drive (Restricted)</string>
-    <string name="shizuku_usb_access_subtitle">Fire TV restricts direct USB access — use Shizuku / Shevery</string>
-    <string name="shizuku_usb_access_desc">This device\'s security policy (SELinux) blocks direct access to USB drives mounted at /mnt/media_rw/. To access USB storage, install and authorize Shizuku or Shevery, which provides the elevated privileges needed to bypass this restriction.</string>
+    <string name="shizuku_usb_access_subtitle">Fire TV restricts direct USB access — use Porter / Shizuku / Shevery</string>
     <string name="opening_shizuku">Opening Elevated Manager…</string>
     <string name="shizuku_status_label">Service Status</string>
-    <string name="shizuku_installed">Elevated Manager (Shizuku / Shevery) is installed</string>
     <string name="shizuku_not_installed">Elevated Manager is not installed</string>
-    <string name="shizuku_description">Shizuku and Shevery allow apps to use system-level APIs directly, enabling advanced features like background file management and system command execution without requiring root on most Android versions.</string>
+    <string name="shizuku_description">Porter, Shizuku and Shevery allow apps to use system-level APIs directly, enabling advanced features like background file management and system command execution without requiring root on most Android versions.</string>
     <string name="shizuku_service_status">Service Status</string>
     <string name="shizuku_service_running">Elevated service is running</string>
     <string name="shizuku_service_not_running">Elevated service is not running</string>
@@ -2952,14 +2950,10 @@
     <string name="shizuku_authorized">Authorized</string>
     <string name="shizuku_not_authorized">Not Authorized</string>
     <string name="shizuku_installed_msg">Elevated Manager is installed and will be available to be used.</string>
-    <string name="shizuku_download_hint">You can download the latest version of Shizuku or Shevery from their official GitHub repositories.</string>
     <string name="shizuku_download_link">Download Manager</string>
     <string name="shizuku_download_shizuku">Download Shizuku</string>
     <string name="shizuku_download_shevery">Download Shevery</string>
-    <string name="shizuku_tv_download_title">Download Shizuku / Shevery</string>
-    <string name="shizuku_tv_download_msg">Elevated Manager (Shizuku or Shevery) is not installed on this device.\n\nPlease visit one of the following URLs on your phone or computer to download the latest APK, then sideload it to this TV:\n\nShizuku:\n%1$s\n\nShevery:\n%2$s</string>
     <string name="shizuku_copy_link">Copy Links</string>
-    <string name="shizuku_link_copied">Links copied to clipboard</string>
     <string name="shizuku_auth_title">Authorize Elevated Access</string>
     <string name="shizuku_auth_msg">UFM requires authorization to perform advanced file operations. Please grant permission in the following system dialog.</string>
     <string name="shizuku_btn_authorize">Authorize</string>
@@ -2969,8 +2963,8 @@
     <string name="shizuku_start_failed">Failed to start service. Please ensure Wireless Debugging is enabled or start it manually.</string>
     <string name="shizuku_enabled_and_active">Elevated Access is enabled and active</string>
     <string name="shizuku_adb_not_connected">ADB is not connected. Connect via ADB Terminal to enable Elevated Access automatically.</string>
-    <string name="shizuku_header_subtitle">Shizuku &amp; Shevery Service</string>
-    <string name="shizuku_status_not_installed_desc">Install Shizuku or Shevery to unlock protected Android/data folders and elevated operations without root.</string>
+    <string name="shizuku_header_subtitle">Porter, Shizuku &amp; Shevery Services</string>
+    <string name="shizuku_status_not_installed_desc">Install Porter, Shizuku or Shevery to unlock protected Android/data folders and elevated operations without root.</string>
     <string name="shizuku_status_stopped_desc">Elevated service is installed but currently not running. Start the service via Wireless Debugging or your manager app.</string>
     <string name="shizuku_status_unauthorized_desc">Service is running, but UFM requires authorization to access system-level APIs.</string>
     <string name="shizuku_status_active_desc">Elevated service is active with full permissions granted. Protected folders and elevated operations are ready.</string>
@@ -2990,6 +2984,18 @@
     <string name="shizuku_manager_shizuku_desc">Standard elevated service from GitHub</string>
     <string name="shizuku_manager_shevery_title">Shevery</string>
     <string name="shizuku_manager_shevery_desc">Lightweight fast alternative</string>
+    <string name="shizuku_manager_porter_title">Porter</string>
+    <string name="shizuku_manager_porter_desc">Actively maintained Shizuku continuation</string>
+    <string name="shizuku_manager_recommended">Recommended</string>
+    <string name="shizuku_porter_waiting_desc">Porter is installed but its service is not running. The connection waits for Porter, so another manager cannot take over until Porter is started — or uninstalled.</string>
+    <string name="elevated_state_not_installed">Not installed</string>
+    <string name="elevated_state_not_running">Service not running</string>
+    <string name="elevated_state_unauthorized">Authorization required</string>
+    <string name="elevated_state_connected">Connected</string>
+    <string name="elevated_state_unknown">Status unavailable</string>
+    <string name="elevated_detecting">Checking for elevated access…</string>
+    <string name="shizuku_download_porter_apk">Download Porter (APK)</string>
+    <string name="elevated_prerelease_badge">Pre-release</string>
     <string name="shizuku_download_shizuku_apk">Download Shizuku (APK)</string>
     <string name="shizuku_download_shevery_apk">Download Shevery (APK)</string>
     <string name="shizuku_open_manager">Open %1$s Manager</string>
@@ -3004,7 +3010,7 @@
     <string name="shizuku_service_mode_adb">ADB / Wireless Debugging</string>
     <string name="shizuku_permission_granted_api">Granted (API v23)</string>
     <string name="shizuku_recheck_status">Recheck Status</string>
-    <string name="shizuku_manager_open_error">Could not open manager. Please install Shizuku or Shevery first.</string>
+    <string name="shizuku_manager_open_error">Could not open manager. Please install Porter, Shizuku or Shevery first.</string>
     <string name="elevated_download_title">Download %1$s: v%2$s</string>
     <string name="elevated_download_btn">Download &amp; Install (%1$s)</string>
     <string name="elevated_fetching_toast">Checking for latest %1$s release…</string>

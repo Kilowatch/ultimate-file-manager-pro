@@ -8496,17 +8496,14 @@ Boxを認証
 昇格したアクセス
 </string>
     <string name="shizuku_subtitle">
-Shizuku / Shevery
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USBドライブ（制限あり）
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TVはUSBへの直接アクセスを制限しています — Shizuku / Sheveryを使用してください
-</string>
-    <string name="shizuku_usb_access_desc">
-このデバイスのセキュリティポリシー（SELinux）により、/mnt/media_rw/にマウントされたUSBドライブへの直接アクセスがブロックされています。USBストレージにアクセスするには、この制限を回避するために必要な昇格した権限を提供するShizukuまたはSheveryをインストールして認証してください。
+Fire TVは直接USBアクセスを制限しています — Porter / Shizuku / Sheveryを使用してください
 </string>
     <string name="opening_shizuku">
 昇格マネージャーを開いています…
@@ -8514,14 +8511,11 @@ Fire TVはUSBへの直接アクセスを制限しています — Shizuku / Shev
     <string name="shizuku_status_label">
 サービスステータス
 </string>
-    <string name="shizuku_installed">
-昇格マネージャー（Shizuku / Shevery）がインストールされています
-</string>
     <string name="shizuku_not_installed">
 昇格マネージャーがインストールされていません
 </string>
     <string name="shizuku_description">
-ShizukuとSheveryを使用すると、アプリはシステムレベルのAPIを直接使用でき、ほとんどのAndroidバージョンでルートを必要とせずに、バックグラウンドファイル管理やシステムコマンド実行などの高度な機能を有効にできます。
+Porter、Shizuku、SheveryはアプリがシステムレベルのAPIを直接使用できるようにし、ほとんどのAndroidバージョンでrootを必要とせずにバックグラウンドファイル管理やシステムコマンド実行などの高度な機能を有効にします。
 </string>
     <string name="shizuku_service_status">
 サービスステータス
@@ -8544,9 +8538,6 @@ ShizukuとSheveryを使用すると、アプリはシステムレベルのAPIを
     <string name="shizuku_installed_msg">
 昇格マネージャーがインストールされており、使用できるようになります。
 </string>
-    <string name="shizuku_download_hint">
-ShizukuまたはSheveryの最新バージョンは、それぞれの公式GitHubリポジトリからダウンロードできます。
-</string>
     <string name="shizuku_download_link">
 マネージャーをダウンロード
 </string>
@@ -8556,25 +8547,8 @@ ShizukuまたはSheveryの最新バージョンは、それぞれの公式GitHub
     <string name="shizuku_download_shevery">
 ダウンロード Shevery
 </string>
-    <string name="shizuku_tv_download_title">
-Shizuku / Sheveryをダウンロード
-</string>
-    <string name="shizuku_tv_download_msg">
-このデバイスに昇格マネージャー（ShizukuまたはShevery）がインストールされていません。\n
-\n
-以下のURLのいずれかにスマートフォンまたはコンピューターからアクセスして最新のAPKをダウンロードし、このテレビにサイドロードしてください:\n
-\n
-Shizuku:\n
-%1$s\n
-\n
-Shevery:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 リンクをコピー
-</string>
-    <string name="shizuku_link_copied">
-リンクをクリップボードにコピーしました
 </string>
     <string name="shizuku_auth_title">
 昇格アクセスを認証
@@ -8604,10 +8578,10 @@ UFMは高度なファイル操作を実行するために認証が必要です�
 ADBが接続されていません。ADBターミナル経由で接続すると、昇格アクセスが自動的に有効になります。
 </string>
     <string name="shizuku_header_subtitle">
-Shizuku &amp; Shevery サービス
+Porter、Shizuku &amp; Sheveryサービス
 </string>
     <string name="shizuku_status_not_installed_desc">
-ShizukuまたはSheveryをインストールすると、rootなしで保護されたAndroid/dataフォルダや昇格した操作を利用できます。
+rootなしで保護されたAndroid/dataフォルダと昇格操作をアンロックするには、Porter、Shizuku、またはSheveryをインストールしてください。
 </string>
     <string name="shizuku_status_stopped_desc">
 昇格サービスはインストールされていますが、現在実行されていません。ワイヤレスデバッグまたはマネージャーアプリからサービスを開始してください。
@@ -8666,6 +8640,42 @@ Shevery
     <string name="shizuku_manager_shevery_desc">
 軽量で高速な代替手段
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+活発にメンテナンスされているShizukuの後継
+</string>
+    <string name="shizuku_manager_recommended">
+推奨
+</string>
+    <string name="shizuku_porter_waiting_desc">
+Porterはインストールされていますが、サービスが実行されていません。接続はPorterを待機しているため、Porterが起動されるか、アンインストールされるまで、別のマネージャーが引き継ぐことはできません。
+</string>
+    <string name="elevated_state_not_installed">
+未インストール
+</string>
+    <string name="elevated_state_not_running">
+サービス停止中
+</string>
+    <string name="elevated_state_unauthorized">
+認証が必要
+</string>
+    <string name="elevated_state_connected">
+接続済み
+</string>
+    <string name="elevated_state_unknown">
+ステータス不明
+</string>
+    <string name="elevated_detecting">
+管理者権限を確認しています…
+</string>
+    <string name="shizuku_download_porter_apk">
+Porterをダウンロード (APK)
+</string>
+    <string name="elevated_prerelease_badge">
+プレリリース
+</string>
     <string name="shizuku_download_shizuku_apk">
 Shizuku（APK）をダウンロード
 </string>
@@ -8709,7 +8719,7 @@ ADB / ワイヤレスデバッグ
 ステータスを再確認
 </string>
     <string name="shizuku_manager_open_error">
-マネージャーを開けませんでした。最初にShizukuまたはSheveryをインストールしてください。
+マネージャーを開けませんでした。先にPorter、Shizuku、またはSheveryをインストールしてください。
 </string>
     <string name="elevated_download_title">
 %1$s をダウンロード: v%2$s

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One elevated-access manager card (mobile). Inflated once per manager, in the order
+  ElevatedManager.entries declares — the container never chooses the order.
+
+  The icon has NO container. `imgManagerIcon` is a bare ImageView, so the installed app's
+  launcher icon is never drawn inside a circle or squircle. A container that does not exist
+  cannot be given a background by a later edit.
+
+  View IDs are identical to item_elevated_manager_tv.xml; only dimensions, styles and focus
+  behaviour differ, so ElevatedAccessRenderer serves both.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardManager"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="14dp"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!--
+              Bare icon. No background, no frame, no circle — the container was the thing the user
+              rejected, so it is absent rather than transparent.
+
+              The tint is for the NOT-INSTALLED placeholder only: every brand vector here is filled
+              #FF000000 and would be invisible on the dark card without it. When a real launcher icon
+              is installed the renderer clears this tint, because tinting a launcher icon would
+              destroy the colours that are the entire point of showing it. See ElevatedAccessRenderer.
+            -->
+            <ImageView
+                android:id="@+id/imgManagerIcon"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="@null"
+                app:tint="?attr/colorPrimary"
+                tools:src="@drawable/ic_porter_logo" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/txtManagerTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/mobile_card_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-bold"
+                        tools:text="Porter" />
+
+                    <!-- "Recommended" pill. GONE on every manager except Porter. -->
+                    <TextView
+                        android:id="@+id/txtRecommendedBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_status_badge_accent"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:text="@string/shizuku_manager_recommended"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="10sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtManagerDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/mobile_card_text_secondary"
+                    android:textSize="12sp"
+                    tools:text="Actively maintained Shizuku continuation" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- This manager's state, or "Status unavailable" when UFM cannot observe it. -->
+        <TextView
+            android:id="@+id/txtManagerState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-medium"
+            tools:text="Service not running" />
+
+        <!-- FR-26 hold-out notice. Only ever shown on the Porter card. -->
+        <TextView
+            android:id="@+id/txtPorterWaiting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/shizuku_porter_waiting_desc"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <!--
+          Start service / Authorize. Visible only when the service is reachable but not usable.
+          This is the button the user asked for: "if the service is running, then there should be
+          a button to allow elevated access".
+        -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnManagerAction"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/white"
+            android:textSize="13.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:textAllCaps="false"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="@color/white"
+            android:visibility="gone"
+            tools:text="Start Service"
+            tools:visibility="visible" />
+
+        <!-- Download. Visible only when this manager is not installed. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnManagerDownload"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/white"
+            android:textSize="13.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:textAllCaps="false"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_direction_download"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="@color/white"
+            android:visibility="gone"
+            tools:text="Download Porter (APK)" />
+
+        <!-- Open the manager app. Visible whenever it is installed. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnManagerOpen"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:textAllCaps="false"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_arrow_forward"
+            app:iconGravity="textEnd"
+            app:iconPadding="8dp"
+            android:visibility="gone"
+            tools:text="Open Porter"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

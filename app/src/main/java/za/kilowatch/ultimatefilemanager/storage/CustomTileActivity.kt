@@ -459,12 +459,14 @@ class CustomTileActivity : AppCompatActivity() {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.ui.TerminalActivity::class.java))
             }
             item.isShizukuTile -> {
-                val intent = if (isTv) {
-                    Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuTvActivity::class.java)
-                } else {
-                    Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuActivity::class.java)
-                }
-                startActivity(intent)
+                // No isTv branch — ElevatedAccessActivity picks its own layout (CLAUDE.md: one
+                // Activity, two layouts). The tile must resolve to the same class as the Main Menu.
+                startActivity(
+                    Intent(
+                        this,
+                        za.kilowatch.ultimatefilemanager.ui.elevated.ElevatedAccessActivity::class.java
+                    )
+                )
             }
             item.isAppsTile -> {
                 startActivity(Intent(this, AppManagerActivity::class.java))

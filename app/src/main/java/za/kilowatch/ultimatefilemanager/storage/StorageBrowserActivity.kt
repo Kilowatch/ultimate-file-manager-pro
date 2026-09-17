@@ -2059,12 +2059,14 @@ class StorageBrowserActivity : AppCompatActivity() {
                 if (now - lastShizukuLaunchTime < 1000) return
                 lastShizukuLaunchTime = now
 
-                val intent = if (isTv) {
-                    Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuTvActivity::class.java)
-                } else {
-                    Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuActivity::class.java)
-                }
-                startActivity(intent)
+                // No isTv branch: ElevatedAccessActivity selects its own layout, so which Activity
+                // to launch is no longer a question the caller can get wrong.
+                startActivity(
+                    Intent(
+                        this,
+                        za.kilowatch.ultimatefilemanager.ui.elevated.ElevatedAccessActivity::class.java
+                    )
+                )
                 showPremiumSnackbar(getString(R.string.opening_shizuku))
             }
             item.isAppsTile -> {

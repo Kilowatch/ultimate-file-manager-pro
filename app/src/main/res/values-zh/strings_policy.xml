@@ -228,7 +228,7 @@ ADB 终端 — 使用 ADB（Android 调试桥）通过本地 Wi-Fi 以开发者�
 APK 安装程序 — 安装 Android 应用程序并直接从本地保存的文件中拆分 APK (XAPK)。
 </item>
         <item>
-提升访问权限（Shizuku、Shevery 和 ADB）— 获得类似 root 的访问权限来管理系统文件和受限目录，而无需实际 root 设备。
+特权访问（Porter、Shizuku、Shevery 和 ADB）——无需真正 Root 设备，即可获得类似 Root 的权限来管理系统文件和受限目录。
 </item>
         <item>
 存储索引器 — 创建文件元数据的本地索引，以进行即时搜索和超快浏览。
@@ -283,7 +283,7 @@ APK文件
 亚行配对
 </item>
         <item>
-雫、Shevery 和高架通道
+Porter、Shizuku、Shevery 与特权访问
 </item>
         <item>
 电视截图
@@ -327,7 +327,7 @@ APK文件
 ADB 配对需要通过本地 Wi-Fi 在您的设备和目标设备之间交换证书。仅连接到您拥有或有权访问的设备。您网络上捕获您的配对 PIN 码的任何人都可以访问您的设备 - 请将此 PIN 码保密。
 </item>
         <item>
-使用 Shizuku、Shevery 或 ADB 进行提升访问允许应用程序修改受系统保护的文件。滥用这些功能可能会影响设备的稳定性或安全性。请谨慎使用，仅授予对此应用程序的访问权限。
+使用 Porter、Shizuku、Shevery 或 ADB 进行特权访问后，应用将能够修改受系统保护的文件。滥用这些功能可能会影响设备稳定性或安全性。请谨慎使用，并仅向本应用授予此访问权限。
 </item>
         <item>
 配对电视的屏幕截图是通过本地网络上的 ADB 捕获的，并直接保存到手机的存储中。我们不会传输、查看或上传您的屏幕截图。确保仅在您拥有或有权访问的设备上捕获屏幕。
@@ -370,10 +370,10 @@ ADB 配对需要通过本地 Wi-Fi 在您的设备和目标设备之间交换证
 仅通过 ADB 终端连接到您拥有或具有明确访问权限的设备。请勿使用 ADB 终端未经授权访问任何设备。
 </item>
         <item>
-将任何 ADB、Shizuku 或 Shevery 配对 PIN 码保密 — 仅与您信任且有权访问您设备的人共享这些密码。
+请对任何 ADB、Porter、Shizuku 或 Shevery 配对 PIN 保密——仅与您信任且可访问您设备的人分享。
 </item>
         <item>
-保护您的 Shizuku 或 Shevery Manager — 通过 Shizuku 或 Shevery 授予 UFM 更高的访问权限，使其有权访问受限制的文件。仅当您信任该应用程序时才授予此访问权限。
+请保护好您的 Porter、Shizuku 或 Shevery 管理器——通过其中任一管理器向 UFM 授予特权访问后，它便能操作受限文件。仅在您信任此应用时才授予该访问权限。
 </item>
         <item>
 仅将应用程序用于合法目的。请勿存储、共享或分发非法内容。
@@ -428,7 +428,7 @@ Billing
 ADB Debug Bridge
 </item>
         <item>
-Elevated Access (Shizuku &amp; Shevery)
+特权访问（Porter、Shizuku 和 Shevery）
 </item>
         <item>
 Boot Start
@@ -487,16 +487,16 @@ Powers remote file management, network share access (SMB/FTP/SFTP/SCP/NFS), fold
 允许安全连接到 Android 设备以进行高级 shell 访问。在您的设备上生成唯一的 RSA 证书以进行配对；没有证书传输到外部服务器。
 </item>
         <item>
-Allows the app to use the Shizuku / Shevery API (including Secure Settings) for managing files in restricted system directories without rooting.
+允许应用使用 Porter / Shizuku / Shevery API（包括安全设置）来管理受限系统目录中的文件，而无需 Root 设备。
 </item>
         <item>
 允许 Shizuku 和 Shevery 服务在您的设备启动时自动启动，以确保立即可用。
 </item>
         <item>
-Allows you to opt-in to keeping Shizuku and Shevery services active in the background for reliable performance.
+允许 Porter、Shizuku 和 Shevery 服务在设备启动时自动启动，以确保立即可用。
 </item>
         <item>
-Required to run Folder Sync and file transfers as a foreground service so they complete reliably even when the screen is off.
+允许您选择让 Porter、Shizuku 和 Shevery 服务在后台保持运行，以获得可靠性能。
 </item>
         <item>
 Keeps the CPU and Wi-Fi active during large file transfers so they complete reliably even when the screen turns off.
@@ -602,7 +602,7 @@ jxl-coder (io.github.awxkee) — JPEG XL 图像解码和编码库，在 Android 
 APNG4Android (com.github.penfeizhou.android.animation) — 用于在 Android 上解码和渲染动画 PNG 文件的核心库。 （阿帕奇-2.0）
 </item>
         <item>
-Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — 通过 Shizuku 或 Shevery Manager 应用程序实现提升文件系统访问权限的库。 （阿帕奇-2.0）
+Porter SDK（com.github.d4rken-org.porter-api）——通过 Porter、Shizuku 或 Shevery 管理器应用实现特权文件系统访问的 Android SDK。它内嵌 Shizuku API（rikka.shizuku），采用 MIT 许可证。(Apache-2.0)
 </item>
         <item>
 ViewPager2 — 用于在片段和布局之间滑动的 Android 库。 （阿帕奇-2.0）
@@ -1037,7 +1037,7 @@ Debloater：根据公开可用的 debloat 参考列表（在设备本地下载�
 ADB 身份验证密钥
 </item>
         <item>
-Shizuku / Shevery 授权状态
+Porter / Shizuku / Shevery 授权状态
 </item>
         <item>
 电视截图
@@ -1096,7 +1096,7 @@ S3 / S3兼容的存储凭证（AWS S3、MinIO、IDrive E2等）
 为安全 ADB 连接生成的 RSA 密钥和证书 · 应用私有存储
 </item>
         <item>
-Shizuku 或 Shevery Manager 应用程序的提升访问授权的状态 · 应用程序私有存储
+来自 Porter、Shizuku 或 Shevery 管理器应用的特权访问授权状态 · 应用私有存储
 </item>
         <item>
 通过 ADB 从已配对电视捕获的屏幕截图 · 您手机本地的 图片/截图 文件夹
@@ -1188,7 +1188,7 @@ cookie (ufm_lang) 会在整个会话期间和跨浏览器重新启动时记住�
 记住您的偏好和设置
 </item>
         <item>
-使用提升的访问权限 (Shizuku/Shevery/ADB) 管理受限目录中受系统保护的文件
+使用特权访问（Porter/Shizuku/Shevery/ADB）管理受限目录中受系统保护的文件
 </item>
         <item>
 创建和维护文件索引以实现快速浏览和搜索（可通过“设置”->“存储索引器”进行管理）
@@ -1278,7 +1278,7 @@ CHANGE_WIFI_MULTICAST_STATE
 POST_通知
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
 </item>
         <item>
 接收_启动_完成
@@ -1304,13 +1304,13 @@ FOREGROUND_SERVICE / FOREGROUND_SERVICE_DATA_SYNC
 当文件操作完成或存储空间不足时提醒您
 </item>
         <item>
-允许与 Shizuku 或 Shevery Manager 通信以提升文件访问权限
+允许与 Porter、Shizuku 或 Shevery 管理器通信，以实现特权文件访问
 </item>
         <item>
-允许 Shizuku 或 Shevery 服务在启动时自动启动以立即可用
+允许 Porter、Shizuku 或 Shevery 服务在开机时自动启动，以确保立即可用
 </item>
         <item>
-允许您选择让 Shizuku 或 Shevery 在后台保持活动状态以获得可靠的性能
+允许您选择让 Porter、Shizuku 或 Shevery 在后台保持运行，以获得可靠性能
 </item>
         <item>
 允许安装您选择的 APK 文件
@@ -1651,7 +1651,7 @@ Firebase 分析数据
 安装包
 </item>
         <item>
-高架通道（雫）
+特权访问（Porter、Shizuku 和 Shevery）
 </item>
         <item>
 存储索引器
@@ -1689,7 +1689,7 @@ AVIF 图像支持
 从本地存储安装 APK
 </item>
         <item>
-通过 Shizuku API 在受限系统目录中进行高级文件管理
+通过 Porter / Shizuku API 在受限系统目录中进行高级文件管理
 </item>
         <item>
 在本地索引文件元数据以进行快速搜索

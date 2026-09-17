@@ -188,8 +188,27 @@ class LicensesActivity : AppCompatActivity() {
             if (list.none { it.name.contains("ffmpeg", ignoreCase = true) }) {
                 list.add(LibInfo(getString(R.string.ffmpeg_lgpl_build), "8.1.2", "LGPL-2.1", "https://ffmpeg.org"))
             }
-            if (list.none { it.name.contains("shizuku", ignoreCase = true) || it.name.contains("shevery", ignoreCase = true) }) {
-                list.add(LibInfo("Shizuku & Shevery API (dev.rikka.shizuku:api)", "13.1.5", "Apache-2.0", "https://github.com/HmnDev-Tech/shevery"))
+            // The elevated-access stack is two artefacts with different licences, and the old
+            // single entry conflated them: it named the Shizuku API coordinate but linked to the
+            // Shevery repository, and pinned a version that no longer ships.
+            //
+            // The guards are deliberately asymmetric because the two entries have different
+            // provenance. Porter is a real resolved dependency: `licenses.json` now lists all five
+            // of its artefacts, so on the healthy path the guard below is always false and this
+            // entry only earns its keep if a future `licenses.json` loses them — it discloses
+            // rather than letting the licence vanish silently. The embedded Shizuku API is *not* a
+            // dependency — it is bundled inside the Porter AARs and appears in no POM — so it can
+            // never show up in `licenses.json`, and this entry is its only possible disclosure.
+            // That one is live, not defensive.
+            //
+            // The licence is two words on purpose. The SDK is not uniformly Apache-2.0: `client`
+            // is Apache-2.0 while its `aidl`, `api`, `provider` and `shared` siblings are MIT.
+            // Naming only one of them would under-disclose the other.
+            if (list.none { it.name.contains("porter", ignoreCase = true) }) {
+                list.add(LibInfo("Porter SDK (com.github.d4rken-org.porter-api)", "0.1.0", "Apache-2.0 / MIT", "https://github.com/d4rken-org/porter-api"))
+            }
+            if (list.none { it.name.contains("shizuku", ignoreCase = true) || it.name.contains("rikka", ignoreCase = true) }) {
+                list.add(LibInfo("Shizuku API (rikka.shizuku, bundled in the Porter SDK)", "", "MIT", "https://github.com/RikkaApps/Shizuku-API"))
             }
 
             if (list.none { it.name.contains("zstd", ignoreCase = true) }) {
@@ -230,7 +249,12 @@ class LicensesActivity : AppCompatActivity() {
         LibInfo("jxl-coder (io.github.awxkee:jxl-coder)", "2.5.2", "Apache-2.0 / BSD-3-Clause", "https://github.com/awxkee/jxl-coder-android"),
         LibInfo(getString(R.string.add_online_storage_rclone), "1.75.0", "MIT", "https://github.com/rclone/rclone"),
         LibInfo(getString(R.string.ffmpeg_lgpl_build), "8.1.2", "LGPL-2.1", "https://ffmpeg.org"),
-        LibInfo("Shizuku & Shevery API (dev.rikka.shizuku:api)", "13.1.5", "Apache-2.0", "https://github.com/HmnDev-Tech/shevery"),
+        // Two artefacts, three licences — see the note in loadLibraries() above. The Porter SDK is
+        // not a single licence: `client` is Apache-2.0 while `aidl`, `api`, `provider` and `shared`
+        // are MIT. Kept as raw literals rather than string resources because these are proper
+        // nouns: a translated library name would be wrong, and the sibling entries here do the same.
+        LibInfo("Porter SDK (com.github.d4rken-org.porter-api)", "0.1.0", "Apache-2.0 / MIT", "https://github.com/d4rken-org/porter-api"),
+        LibInfo("Shizuku API (rikka.shizuku, bundled in the Porter SDK)", "", "MIT", "https://github.com/RikkaApps/Shizuku-API"),
     )
 
     // ── View builders ─────────────────────────────────────────────────────────

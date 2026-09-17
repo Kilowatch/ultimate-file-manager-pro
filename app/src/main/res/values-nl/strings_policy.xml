@@ -228,7 +228,7 @@ App Manager — bekijk en beheer alle apps die op uw apparaat zijn geïnstalleer
 APK-installatieprogramma: installeer Android-apps en splits APK\'s (XAPK) rechtstreeks vanuit lokaal opgeslagen bestanden.
 </item>
         <item>
-Verhoogde toegang (Shizuku, Shevery &amp; ADB) — verkrijg root-achtige toegang om systeembestanden en beperkte mappen te beheren zonder uw apparaat daadwerkelijk te rooten.
+Verhoogde toegang (Porter, Shizuku, Shevery &amp; ADB) — krijg root-achtige toegang om systeembestanden en beperkte mappen te beheren zonder je apparaat daadwerkelijk te rooten.
 </item>
         <item>
 Storage Indexer — maak een lokale index van bestandsmetagegevens voor direct zoeken en razendsnel browsen.
@@ -283,7 +283,7 @@ Systeemapp verwijderen
 ADB-koppeling
 </item>
         <item>
-Shizuku, Shevery en verhoogde toegang
+Porter, Shizuku, Shevery &amp; Verhoogde toegang
 </item>
         <item>
 TV-screenshots
@@ -327,7 +327,7 @@ Het verwijderen van systeem-apps op basis van debloat-aanbevelingen kan de stabi
 Voor ADB-koppeling is het uitwisselen van certificaten tussen uw apparaat en het doelapparaat via uw lokale Wi-Fi vereist. Maak alleen verbinding met apparaten waarvan u de eigenaar bent of waarvoor u toegangsrechten heeft. Iedereen in uw netwerk die uw koppelingspincode vastlegt, heeft toegang tot uw apparaat. Houd deze pincode privé.
 </item>
         <item>
-Door Shizuku, Shevery of ADB te gebruiken voor verhoogde toegang kan de app door het systeem beveiligde bestanden wijzigen. Misbruik van deze functies kan de stabiliteit of veiligheid van het apparaat beïnvloeden. Wees voorzichtig en verleen alleen toegang tot deze app.
+Het gebruik van Porter, Shizuku, Shevery of ADB voor verhoogde toegang stelt de app in staat om door het systeem beschermde bestanden te wijzigen. Misbruik van deze functies kan de stabiliteit of veiligheid van het apparaat beïnvloeden. Gebruik voorzichtig en verleen alleen toegang aan deze app.
 </item>
         <item>
 Schermafbeeldingen van gekoppelde tv\'s worden via ADB via uw lokale netwerk vastgelegd en rechtstreeks in de opslag van uw telefoon opgeslagen. We verzenden, bekijken of uploaden uw schermafbeeldingen niet. Zorg ervoor dat u alleen schermen vastlegt op apparaten waarvan u de eigenaar bent of waartoe u toestemming heeft.
@@ -370,10 +370,10 @@ Wees voorzichtig bij het verwijderen van systeem-apps op basis van debloat-aanbe
 Maak alleen via ADB Terminal verbinding met apparaten waarvan u de eigenaar bent of waarvoor u expliciete toestemming heeft. Gebruik ADB Terminal niet om ongeautoriseerde toegang te krijgen tot welk apparaat dan ook.
 </item>
         <item>
-Houd eventuele ADB-, Shizuku- of Shevery-koppelingspincodes privé. Deel deze alleen met mensen waarvan u vertrouwt dat ze toegang hebben tot uw apparaat.
+Houd eventuele ADB-, Porter-, Shizuku- of Shevery-koppelingspincodes privé — deel deze alleen met mensen die je vertrouwt en toegang hebben tot je apparaat.
 </item>
         <item>
-Beveilig uw Shizuku- of Shevery-manager: door UFM verhoogde toegang te verlenen via Shizuku of Shevery krijgt deze macht over beperkte bestanden. Verleen deze toegang alleen als u de app vertrouwt.
+Beveilig je Porter, Shizuku of Shevery Manager — het verlenen van verhoogde toegang aan UFM via een van deze managers geeft het macht over beperkte bestanden. Verleen deze toegang alleen als je de app vertrouwt.
 </item>
         <item>
 Gebruik de app alleen voor legale doeleinden. Bewaar, deel of verspreid geen illegale inhoud.
@@ -428,7 +428,7 @@ Facturering
 ADB-foutopsporingsbrug
 </item>
         <item>
-Verhoogde toegang (Shizuku en Shevery)
+Verhoogde toegang (Porter, Shizuku &amp; Shevery)
 </item>
         <item>
 Opstarten
@@ -487,16 +487,16 @@ Verwerkt optionele Tip Jar-aankopen via Google Play.
 Maakt een veilige verbinding met Android-apparaten mogelijk voor geavanceerde shell-toegang. Genereert een uniek RSA-certificaat op uw apparaat om te koppelen; er worden geen certificaten verzonden naar externe servers.
 </item>
         <item>
-Hiermee kan de app de Shizuku/Shevery API (inclusief Veilige instellingen) gebruiken voor het beheren van bestanden in beperkte systeemmappen zonder te rooten.
+Staat de app toe om de Porter / Shizuku / Shevery API (inclusief Secure Settings) te gebruiken voor het beheren van bestanden in beperkte systeemmappen zonder te rooten.
 </item>
         <item>
 Zorgt ervoor dat Shizuku- en Shevery-services automatisch starten wanneer uw apparaat opstart, zodat onmiddellijke beschikbaarheid wordt gegarandeerd.
 </item>
         <item>
-Hiermee kunt u ervoor kiezen om de Shizuku- en Shevery-services op de achtergrond actief te houden voor betrouwbare prestaties.
+Staat Porter-, Shizuku- en Shevery-services toe om automatisch te starten wanneer je apparaat opstart, om onmiddellijke beschikbaarheid te garanderen.
 </item>
         <item>
-Vereist om mapsynchronisatie en bestandsoverdracht als voorgrondservice uit te voeren, zodat deze betrouwbaar worden uitgevoerd, zelfs als het scherm is uitgeschakeld.
+Staat je toe om ervoor te kiezen om Porter-, Shizuku- en Shevery-services actief te houden op de achtergrond voor betrouwbare prestaties.
 </item>
         <item>
 Houdt de CPU en Wi-Fi actief tijdens de overdracht van grote bestanden, zodat deze betrouwbaar worden voltooid, zelfs als het scherm wordt uitgeschakeld.
@@ -602,7 +602,7 @@ jxl-coder (io.github.awxkee) - JPEG XL-bibliotheek voor het decoderen en coderen
 APNG4Android (com.github.penfeizhou.android.animation) - kernbibliotheek voor het decoderen en weergeven van geanimeerde PNG-bestanden op Android. (Apache-2.0)
 </item>
         <item>
-Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — bibliotheken die verhoogde toegang tot het bestandssysteem mogelijk maken via Shizuku- of Shevery Manager-apps. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Android SDK die verhoogde toegang tot het bestandssysteem mogelijk maakt via de Porter-, Shizuku- of Shevery Manager-apps. Het bevat de Shizuku API (rikka.shizuku), gelicentieerd onder MIT. (Apache-2.0)
 </item>
         <item>
 ViewPager2 — Android-bibliotheek voor het schakelen tussen fragmenten en lay-outs. (Apache-2.0)
@@ -1037,7 +1037,7 @@ Gekoppelde apparaatinfo
 ADB-authenticatiesleutels
 </item>
         <item>
-Shizuku / Shevery-autorisatiestaat
+Porter / Shizuku / Shevery autorisatiestatus
 </item>
         <item>
 TV-screenshots
@@ -1096,7 +1096,7 @@ Apparaatnaam, ID en IP voor apparaatkoppeling · Privéopslag van app
 RSA-sleutels en certificaten gegenereerd voor veilige ADB-verbindingen · Privéopslag van app
 </item>
         <item>
-Status van de verhoogde toegangsverlening van de Shizuku- of Shevery Manager-app · Privéopslag van de app
+Status van de verleende verhoogde toegang door de Porter-, Shizuku- of Shevery Manager-app · Privéopslag van de app
 </item>
         <item>
 Schermafbeeldingen gemaakt vanaf een gekoppelde tv via ADB · De lokale map Afbeeldingen/Screenshots van uw telefoon
@@ -1188,7 +1188,7 @@ Versleutel en decodeer uw privébestanden
 Onthoud uw voorkeuren en instellingen
 </item>
         <item>
-Gebruik verhoogde toegang (Shizuku/Shevery/ADB) voor het beheren van door het systeem beveiligde bestanden in beperkte mappen
+Gebruik verhoogde toegang (Porter/Shizuku/Shevery/ADB) voor het beheren van door het systeem beschermde bestanden in beperkte mappen
 </item>
         <item>
 Bestandsindexering maken en onderhouden voor snel browsen en zoeken (beheerbaar via Instellingen -> Storage Indexer)
@@ -1278,7 +1278,7 @@ Schakelt detectie van lokale netwerkapparaten (NSD/mDNS) in voor het koppelen va
 POST_NOTIFICATIES
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1304,13 +1304,13 @@ WAKE_LOCK
 Waarschuwt u wanneer de bestandsbewerkingen zijn voltooid of er weinig opslagruimte is
 </item>
         <item>
-Maakt communicatie mogelijk met de Shizuku- of Shevery Manager voor verhoogde bestandstoegang
+Staat communicatie met de Porter-, Shizuku- of Shevery Manager toe voor verhoogde bestandstoegang
 </item>
         <item>
-Hiermee kunnen Shizuku- of Shevery-services automatisch starten bij het opstarten voor onmiddellijke beschikbaarheid
+Staat Porter-, Shizuku- of Shevery-services toe om automatisch te starten bij het opstarten voor onmiddellijke beschikbaarheid
 </item>
         <item>
-Hiermee kunt u ervoor kiezen om Shizuku of Shevery op de achtergrond actief te houden voor betrouwbare prestaties
+Staat je toe om ervoor te kiezen om Porter, Shizuku of Shevery actief te houden op de achtergrond voor betrouwbare prestaties
 </item>
         <item>
 Staat de installatie toe van APK-bestanden die u kiest
@@ -1651,7 +1651,7 @@ Meldingen
 Pakketten installeren
 </item>
         <item>
-Verhoogde toegang (Shizuku)
+Verhoogde toegang (Porter, Shizuku &amp; Shevery)
 </item>
         <item>
 Opslagindexer
@@ -1689,7 +1689,7 @@ Waarschuwingen voor voltooiing van de bewerking en opslagwaarschuwingen
 APK-installatie vanuit lokale opslag
 </item>
         <item>
-Geavanceerd bestandsbeheer in beperkte systeemmappen via de Shizuku API
+Geavanceerd bestandsbeheer in beperkte systeemmappen via de Porter / Shizuku API
 </item>
         <item>
 Indexeert bestandsmetagegevens lokaal voor snel zoeken

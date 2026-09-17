@@ -22,7 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
+import org.json.JSONArray
 import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.UfmHttpClient
@@ -45,8 +45,24 @@ object ElevatedAppDownloadManager {
         val primaryRepo: String,
         val fallbackRepo: String?,
         val fallbackWebUrl: String,
-        val iconRes: Int
+        val iconRes: Int,
+        /**
+         * Selects THIS manager's own APK from a release's assets. `null` keeps the legacy
+         * "first .apk asset" behaviour, which is correct for repos publishing a single APK.
+         */
+        val apkAssetPattern: Regex? = null
     ) {
+        PORTER(
+            displayName = "Porter",
+            primaryRepo = "d4rken-org/porter",
+            fallbackRepo = null,
+            fallbackWebUrl = "https://github.com/d4rken-org/porter/releases",
+            iconRes = R.drawable.ic_porter_logo,
+            // The same release ships porter-compat-*.apk — the Compatibility companion, which is
+            // NOT a supported artifact for UFM and is not the manager app. Assets come back
+            // compat-first, so a plain "first .apk" match downloads the wrong application.
+            apkAssetPattern = Regex("""^porter-v.*\.apk$""", RegexOption.IGNORE_CASE)
+        ),
         SHIZUKU(
             displayName = "Shizuku",
             primaryRepo = "thedjchi/Shizuku",
@@ -71,7 +87,9 @@ object ElevatedAppDownloadManager {
         val body: String,
         val apkUrl: String,
         val apkSize: Long,
-        val apkName: String
+        val apkName: String,
+        /** The resolved release is a pre-release — the UI must say so (FR-30). */
+        val isPrerelease: Boolean = false
     )
 
     @Volatile
@@ -125,8 +143,19 @@ object ElevatedAppDownloadManager {
         return@withContext null
     }
 
+    /**
+     * Resolves the newest usable release for [repo].
+     *
+     * Queries the releases LIST, not `/releases/latest`. GitHub's `latest` endpoint skips
+     * pre-releases entirely, so it 404s for any repository whose releases are all pre-releases —
+     * which is Porter's permanent situation (CR-03) and would make its download fail outright.
+     *
+     * The URL is the only thing this function decides — *which* of the returned releases is
+     * offered, and which of its assets is this app's APK, is [parseRelease]'s job, so that the part
+     * the user actually sees can be tested without a network.
+     */
     private fun fetchFromGitHubRepo(app: ElevatedApp, repo: String): AppReleaseInfo? {
-        val url = "https://api.github.com/repos/$repo/releases/latest"
+        val url = "https://api.github.com/repos/$repo/releases?per_page=10"
         return try {
             val headers = mapOf(
                 "User-Agent" to "UltimateFileManager-Android/${BuildConfig.VERSION_NAME}",
@@ -134,53 +163,92 @@ object ElevatedAppDownloadManager {
             )
             val response = UfmHttpClient.getSync(url, headers = headers, timeoutSec = 15)
             if (!response.isSuccessful) return null
-            val body = response.bodyString
-
-            val json = JSONObject(body)
-            val tagName = json.optString("tag_name", "")
-            if (tagName.isBlank()) return null
-
-            val version = tagName.removePrefix("v").removePrefix("V")
-            val htmlUrl = json.optString("html_url", app.fallbackWebUrl)
-            val releaseNotes = json.optString("body", "")
-
-            var apkUrl = ""
-            var apkSize = 0L
-            var apkName = ""
-
-            val assetsArray = json.optJSONArray("assets")
-            if (assetsArray != null) {
-                for (i in 0 until assetsArray.length()) {
-                    val asset = assetsArray.optJSONObject(i) ?: continue
-                    val name = asset.optString("name", "")
-                    val downloadUrl = asset.optString("browser_download_url", "")
-                    val size = asset.optLong("size", 0L)
-
-                    if (name.endsWith(".apk", ignoreCase = true)) {
-                        apkUrl = downloadUrl
-                        apkSize = size
-                        apkName = name
-                        break
-                    }
-                }
-            }
-
-            if (apkUrl.isBlank()) return null
-            if (apkName.isBlank()) apkName = "${app.displayName.lowercase()}-$tagName.apk"
-
-            AppReleaseInfo(
-                app = app,
-                version = version,
-                tagName = tagName,
-                htmlUrl = htmlUrl,
-                body = releaseNotes,
-                apkUrl = apkUrl,
-                apkSize = apkSize,
-                apkName = apkName
-            )
+            parseRelease(app, response.bodyString)
         } catch (e: Exception) {
             null
         }
+    }
+
+    /**
+     * Picks the release to offer out of a GitHub `/releases` LIST payload, and this app's own APK
+     * out of that release's assets.
+     *
+     * Split out of [fetchFromGitHubRepo] so every branch is reachable from a unit test without a
+     * network: the HTTP concerns (status code, timeout, headers) stay in the caller, and the part
+     * that actually decides *what the user is offered* is a pure function of the response body.
+     *
+     * Selection order: newest stable (non-prerelease, non-draft), else newest pre-release, else
+     * nothing. Drafts are never offered — they are unpublished and their asset URLs 404 for anyone
+     * who is not the maintainer.
+     *
+     * The result carries [AppReleaseInfo.isPrerelease] so the caller can label a pre-release rather
+     * than passing it off as stable (FR-29/FR-30) — reaching a pre-release at all is the point,
+     * since Porter has yet to cut a stable one (CR-03), and a fallback that silently dropped them
+     * would leave Porter permanently undownloadable.
+     */
+    internal fun parseRelease(app: ElevatedApp, body: String): AppReleaseInfo? {
+        // GitHub answers a 404/403 with a JSON *object* ({"message":"Not Found"}), not an array, and
+        // an empty or truncated body throws as well. Both mean "no release to offer", not "crash".
+        val releases = try {
+            JSONArray(body)
+        } catch (e: Exception) {
+            return null
+        }
+
+        val candidates = (0 until releases.length())
+            .mapNotNull { releases.optJSONObject(it) }
+            .filter { !it.optBoolean("draft", false) }
+        val json = candidates.firstOrNull { !it.optBoolean("prerelease", false) }
+            ?: candidates.firstOrNull()
+            ?: return null
+
+        val isPrerelease = json.optBoolean("prerelease", false)
+        val tagName = json.optString("tag_name", "")
+        if (tagName.isBlank()) return null
+
+        val version = tagName.removePrefix("v").removePrefix("V")
+        val htmlUrl = json.optString("html_url", app.fallbackWebUrl)
+        val releaseNotes = json.optString("body", "")
+
+        var apkUrl = ""
+        var apkSize = 0L
+        var apkName = ""
+
+        val assetsArray = json.optJSONArray("assets")
+        if (assetsArray != null) {
+            for (i in 0 until assetsArray.length()) {
+                val asset = assetsArray.optJSONObject(i) ?: continue
+                val name = asset.optString("name", "")
+                val downloadUrl = asset.optString("browser_download_url", "")
+                val size = asset.optLong("size", 0L)
+
+                // Porter's releases carry BOTH porter-compat-*.apk and porter-*.apk, and come
+                // back compat-first — a plain "first .apk" match takes the wrong app.
+                val matches = app.apkAssetPattern?.matches(name)
+                    ?: name.endsWith(".apk", ignoreCase = true)
+                if (matches) {
+                    apkUrl = downloadUrl
+                    apkSize = size
+                    apkName = name
+                    break
+                }
+            }
+        }
+
+        if (apkUrl.isBlank()) return null
+        if (apkName.isBlank()) apkName = "${app.displayName.lowercase()}-$tagName.apk"
+
+        return AppReleaseInfo(
+            app = app,
+            version = version,
+            tagName = tagName,
+            htmlUrl = htmlUrl,
+            body = releaseNotes,
+            apkUrl = apkUrl,
+            apkSize = apkSize,
+            apkName = apkName,
+            isPrerelease = isPrerelease
+        )
     }
 
     private fun formatFileSize(size: Long): String {
@@ -208,7 +276,17 @@ object ElevatedAppDownloadManager {
         imgIcon?.setImageResource(release.app.iconRes)
 
         val txtTitle = dialogView.findViewById<TextView>(R.id.txtUpdateTitle)
-        txtTitle?.text = "${release.app.displayName} ${release.version}"
+        // FR-30: a pre-release has to say so. `isPrerelease` is resolved in parseRelease() and this
+        // is the only place that consumes it — without this the flag is inert and the dialog offers
+        // a beta as though it were a stable build. That is not an edge case here: Porter has no
+        // stable release at all (CR-03), so every Porter download through this screen is one.
+        // The badge is an existing translated string; only the separator is literal.
+        txtTitle?.text = if (release.isPrerelease) {
+            "${release.app.displayName} ${release.version} · " +
+                activity.getString(R.string.elevated_prerelease_badge)
+        } else {
+            "${release.app.displayName} ${release.version}"
+        }
 
         val txtVersionDiff = dialogView.findViewById<TextView>(R.id.txtVersionDiff)
         txtVersionDiff?.text = release.tagName

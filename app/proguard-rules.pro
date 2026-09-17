@@ -255,6 +255,22 @@
 -dontwarn io.netty.pkitesting.CertificateBuilder$Algorithm
 -dontwarn io.netty.pkitesting.CertificateBuilder
 -dontwarn io.netty.pkitesting.X509Bundle
+# Netty's Conscrypt ALPN integration (io.netty.handler.ssl.ConscryptAlpnSslEngine) references
+# org.conscrypt.*, which exists only when Conscrypt is on the classpath. This app does not depend on
+# Conscrypt, so the classes are legitimately absent and the engine is never loaded at runtime.
+#
+# These are -dontwarn, not -keep: they pin no classes, methods or fields, so unlike a blanket keep
+# they have no effect on the Play Console optimisation score. They are exactly the rules AGP wrote
+# into build/outputs/mapping/mobileGoogleRelease/missing_rules.txt.
+#
+# Pre-existing gap, not introduced by the Porter change: the file already carried the equivalent
+# suppressions for Netty's other optional dependencies (brotli4j, tcnative, pkitesting) but never
+# this set, so `assembleMobileGoogleRelease` could not complete. Found by the first release build
+# run in this working copy.
+-dontwarn org.conscrypt.AllocatedBuffer
+-dontwarn org.conscrypt.BufferAllocator
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.HandshakeListener
 -dontwarn jdk.jfr.DataAmount
 -dontwarn jdk.jfr.MemoryAddress
 -dontwarn lzma.sdk.ICodeProgress
@@ -422,5 +438,28 @@
 -keepclassmembers class org.jaudiotagger.audio.** {
     public <init>(...);
 }
+
+# ── Porter SDK (com.github.d4rken-org.porter-api:client) / rikka.shizuku ───
+# ShizukuShellWrapper.runCommand() reaches Shizuku.newProcess by reflection:
+#   getDeclaredMethod("newProcess", Array<String>::class.java, Array<String>::class.java, String::class.java)
+# with isAccessible = true. The method is PRIVATE, so R8 would otherwise rename or strip it and
+# the lookup fails at runtime. The failure is silent — runCommand() catches Throwable and returns
+# (-1, emptyList()) — so a release build broken this way looks like a permissions problem on
+# device rather than a code defect. Verified against porter-api:client:0.1.0.
+-keepclassmembers class rikka.shizuku.Shizuku {
+    private static rikka.shizuku.ShizukuRemoteProcess newProcess(java.lang.String[], java.lang.String[], java.lang.String);
+}
+
+# ShizukuRemoteProcess is constructed only by the reflective call above, so R8 observes no
+# constructor invocation and may strip the class outright. Callers use it through the
+# java.lang.Process interface, so the public members must survive.
+-keep class rikka.shizuku.ShizukuRemoteProcess { public *; }
+
+# Deliberately NOT kept, and not an oversight:
+#  - Shizuku.onBinderReceived(IBinder, String) is public in this SDK and is called directly from
+#    three sites in ShizukuShellWrapper. R8 already treats direct calls as reachable, so a keep
+#    rule would be redundant.
+#  - moe.shizuku.api.BinderContainer is already preserved by the SDK's own bundled consumer rules
+#    (provider-0.1.0.aar). Duplicating them here would be noise.
 
 

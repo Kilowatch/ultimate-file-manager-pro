@@ -228,7 +228,7 @@ Manajer Aplikasi — lihat dan kelola semua aplikasi yang terpasang di perangkat
 Pemasang APK — pasang aplikasi Android dan APK split (XAPK) langsung dari file yang disimpan secara lokal.
 </item>
         <item>
-Akses Tingkat Lanjut (Shizuku, Shevery &amp; ADB) — dapatkan akses seperti root untuk mengelola file sistem dan direktori terbatas tanpa benar-benar me-root perangkat Anda.
+Akses yang Ditingkatkan (Porter, Shizuku, Shevery &amp; ADB) — dapatkan akses seperti root untuk mengelola file sistem dan direktori terbatas tanpa benar-benar melakukan root pada perangkat Anda.
 </item>
         <item>
 Pengindeks Penyimpanan — buat indeks lokal metadata file untuk pencarian instan dan penjelajahan yang sangat cepat.
@@ -283,7 +283,7 @@ Penghapusan Aplikasi Sistem
 Pemasangan ADB
 </item>
         <item>
-Shizuku, Shevery &amp; Akses Tingkat Tinggi
+Porter, Shizuku, Shevery &amp; Akses yang Ditingkatkan
 </item>
         <item>
 Tangkapan Layar TV
@@ -327,7 +327,7 @@ Menghapus aplikasi sistem berdasarkan rekomendasi debloat dapat memengaruhi stab
 Pemasangan ADB memerlukan pertukaran sertifikat antara perangkat Anda dan perangkat target melalui Wi-Fi lokal. Hanya terhubung ke perangkat yang Anda miliki atau memiliki izin untuk mengakses. Siapa pun di jaringan Anda yang menangkap PIN pemasangan Anda dapat mengakses perangkat Anda — jaga kerahasiaan PIN ini.
 </item>
         <item>
-Menggunakan Shizuku, Shevery, atau ADB untuk akses tingkat tinggi memungkinkan aplikasi memodifikasi berkas yang dilindungi sistem. Penyalahgunaan fitur ini dapat memengaruhi stabilitas atau keamanan perangkat. Gunakan dengan hati-hati dan hanya berikan akses ke aplikasi ini.
+Menggunakan Porter, Shizuku, Shevery, atau ADB untuk akses yang ditingkatkan memungkinkan aplikasi memodifikasi file yang dilindungi sistem. Penyalahgunaan fitur ini dapat memengaruhi stabilitas atau keamanan perangkat. Gunakan dengan hati-hati dan hanya berikan akses ke aplikasi ini.
 </item>
         <item>
 Tangkapan layar dari TV yang dipasangkan diambil melalui ADB melalui jaringan lokal Anda dan disimpan langsung ke penyimpanan ponsel Anda. Kami tidak mentransmisikan, melihat, atau mengunggah tangkapan layar Anda. Pastikan Anda hanya menangkap layar pada perangkat yang Anda miliki atau memiliki izin untuk mengakses.
@@ -370,10 +370,10 @@ Berhati-hatilah saat menghapus aplikasi sistem berdasarkan rekomendasi debloat.
 Hanya terhubung melalui Terminal ADB ke perangkat yang Anda miliki atau memiliki izin eksplisit untuk mengakses. Jangan gunakan Terminal ADB untuk mendapatkan akses tidak sah ke perangkat apa pun.
 </item>
         <item>
-Jaga kerahasiaan PIN pemasangan ADB, Shizuku, atau Shevery — bagikan hanya dengan orang yang Anda percayai untuk memiliki akses ke perangkat Anda.
+Jaga kerahasiaan PIN pemasangan ADB, Porter, Shizuku, atau Shevery — bagikan hanya kepada orang yang Anda percaya memiliki akses ke perangkat Anda.
 </item>
         <item>
-Amankan Manajer Shizuku atau Shevery Anda — memberikan akses tingkat tinggi ke UFM melalui Shizuku atau Shevery memberinya kekuasaan atas berkas yang dibatasi. Hanya berikan akses ini jika Anda mempercayai aplikasi.
+Amankan Porter, Shizuku, atau Shevery Manager Anda — memberikan akses yang ditingkatkan kepada UFM melalui salah satu manajer ini akan memberinya kendali atas file yang dibatasi. Hanya berikan akses ini jika Anda mempercayai aplikasi ini.
 </item>
         <item>
 Hanya gunakan aplikasi untuk tujuan yang sah. Jangan menyimpan, membagikan, atau mendistribusikan konten ilegal.
@@ -428,7 +428,7 @@ Penagihan
 ADB Debug Bridge
 </item>
         <item>
-Akses Tingkat Tinggi (Shizuku &amp; Shevery)
+Akses yang Ditingkatkan (Porter, Shizuku &amp; Shevery)
 </item>
         <item>
 Mulai Saat Boot
@@ -487,16 +487,16 @@ Memproses pembelian Tip Jar opsional melalui Google Play.
 Memungkinkan koneksi aman ke perangkat Android untuk akses shell tingkat lanjut. Menghasilkan sertifikat RSA unik pada perangkat Anda untuk pemasangan; tidak ada sertifikat yang dikirimkan ke server eksternal.
 </item>
         <item>
-Memungkinkan aplikasi menggunakan API Shizuku / Shevery (termasuk Pengaturan Aman) untuk mengelola berkas di direktori sistem yang dibatasi tanpa melakukan root.
+Memungkinkan aplikasi menggunakan API Porter / Shizuku / Shevery (termasuk Pengaturan Aman) untuk mengelola file di direktori sistem yang dibatasi tanpa melakukan root.
 </item>
         <item>
 Memungkinkan layanan Shizuku dan Shevery dimulai secara otomatis saat perangkat Anda boot untuk memastikan ketersediaan segera.
 </item>
         <item>
-Memungkinkan Anda memilih untuk menjaga layanan Shizuku dan Shevery tetap aktif di latar belakang untuk kinerja yang andal.
+Memungkinkan layanan Porter, Shizuku, dan Shevery untuk mulai secara otomatis saat perangkat Anda menyala untuk memastikan ketersediaan segera.
 </item>
         <item>
-Diperlukan untuk menjalankan Sinkronisasi Folder dan transfer berkas sebagai layanan latar depan sehingga selesai dengan andal bahkan saat layar mati.
+Memungkinkan Anda untuk memilih agar layanan Porter, Shizuku, dan Shevery tetap aktif di latar belakang untuk performa yang andal.
 </item>
         <item>
 Menjaga CPU dan Wi-Fi tetap aktif selama transfer berkas besar sehingga selesai dengan andal bahkan saat layar mati.
@@ -602,7 +602,7 @@ jxl-coder (io.github.awxkee) — pustaka dekode dan enkode gambar JPEG XL yang m
 APNG4Android (com.github.penfeizhou.android.animation) — pustaka inti untuk mendekode dan merender file PNG animasi di Android. (Apache-2.0)
 </item>
         <item>
-API Shizuku &amp; Shevery (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — pustaka yang memungkinkan akses sistem file tingkat lanjut melalui aplikasi Shizuku atau Shevery Manager. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Android SDK yang memungkinkan akses sistem file yang ditingkatkan melalui aplikasi Porter, Shizuku, atau Shevery Manager. Ini menyematkan API Shizuku (rikka.shizuku), dilisensikan di bawah MIT. (Apache-2.0)
 </item>
         <item>
 ViewPager2 — pustaka Android untuk menggeser antar fragmen dan tata letak. (Apache-2.0)
@@ -1035,7 +1035,7 @@ Info Perangkat yang Dipasangkan
 Kunci Otentikasi ADB
 </item>
         <item>
-Status Otorisasi Shizuku / Shevery
+Status Otorisasi Porter / Shizuku / Shevery
 </item>
         <item>
 Tangkapan Layar TV
@@ -1094,7 +1094,7 @@ Nama perangkat, ID, dan IP untuk pemasangan perangkat · Penyimpanan pribadi apl
 Kunci RSA dan sertifikat yang dihasilkan untuk koneksi ADB aman · Penyimpanan pribadi aplikasi
 </item>
         <item>
-Status pemberian akses yang ditingkatkan dari aplikasi Shizuku atau Shevery Manager · Penyimpanan pribadi aplikasi
+Status pemberian akses yang ditingkatkan dari aplikasi Porter, Shizuku, atau Shevery Manager · Penyimpanan privat aplikasi
 </item>
         <item>
 Tangkapan layar yang diambil dari TV yang dipasangkan melalui ADB · Folder Pictures/Screenshots lokal ponsel Anda
@@ -1186,7 +1186,7 @@ Enkripsi dan dekripsi file pribadi Anda
 Ingat preferensi dan pengaturan Anda
 </item>
         <item>
-Gunakan akses yang ditingkatkan (Shizuku/Shevery/ADB) untuk mengelola file yang dilindungi sistem di direktori terbatas
+Gunakan akses yang ditingkatkan (Porter/Shizuku/Shevery/ADB) untuk mengelola file yang dilindungi sistem di direktori terbatas
 </item>
         <item>
 Membuat dan memelihara pengindeksan file untuk penjelajahan dan pencarian cepat (dapat dikelola melalui Pengaturan -> Pengindeks Penyimpanan)
@@ -1276,7 +1276,7 @@ Memungkinkan penemuan perangkat jaringan lokal (NSD/mDNS) untuk pemasangan peran
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1302,13 +1302,13 @@ WAKE_LOCK
 Memberi tahu Anda saat operasi file selesai atau penyimpanan hampir penuh
 </item>
         <item>
-Memungkinkan komunikasi dengan Shizuku atau Shevery Manager untuk akses file yang ditingkatkan
+Memungkinkan komunikasi dengan Porter, Shizuku, atau Shevery Manager untuk akses file yang ditingkatkan
 </item>
         <item>
-Memungkinkan layanan Shizuku atau Shevery untuk mulai secara otomatis saat boot untuk ketersediaan segera
+Memungkinkan layanan Porter, Shizuku, atau Shevery untuk mulai secara otomatis saat boot untuk ketersediaan segera
 </item>
         <item>
-Memungkinkan Anda memilih untuk menjaga Shizuku atau Shevery tetap aktif di latar belakang untuk kinerja yang andal
+Memungkinkan Anda untuk memilih agar Porter, Shizuku, atau Shevery tetap aktif di latar belakang untuk performa yang andal
 </item>
         <item>
 Memungkinkan instalasi file APK yang Anda pilih
@@ -1649,7 +1649,7 @@ Notifikasi
 Instal Paket
 </item>
         <item>
-Akses Tingkat Lanjut (Shizuku)
+Akses yang Ditingkatkan (Porter, Shizuku &amp; Shevery)
 </item>
         <item>
 Pengindeks Penyimpanan
@@ -1687,7 +1687,7 @@ Peringatan penyelesaian operasi dan peringatan penyimpanan
 Instalasi APK dari penyimpanan lokal
 </item>
         <item>
-Pengelolaan file lanjutan di direktori sistem terbatas melalui API Shizuku
+Manajemen file tingkat lanjut di direktori sistem yang dibatasi melalui API Porter / Shizuku
 </item>
         <item>
 Mengindeks metadata file secara lokal untuk pencarian cepat

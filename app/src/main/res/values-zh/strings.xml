@@ -8496,17 +8496,14 @@ UFM 无法通过您的 Google 云端硬盘帐户进行身份验证。连接令�
 高架访问
 </string>
     <string name="shizuku_subtitle">
-雫 / 谢弗里
+Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB 驱动器（受限）
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV 限制直接 USB 访问 — 使用 Shizuku / Shevery
-</string>
-    <string name="shizuku_usb_access_desc">
-此设备的安全策略 (SELinux) 阻止直接访问安装在 /mnt/media_rw/ 的 USB 驱动器。要访问 USB 存储，请安装并授权 Shizuku 或 Shevery，它提供绕过此限制所需的提升权限。
+Fire TV 限制直接 USB 访问——请使用 Porter / Shizuku / Shevery
 </string>
     <string name="opening_shizuku">
 打开提升管理器...
@@ -8514,14 +8511,11 @@ Fire TV 限制直接 USB 访问 — 使用 Shizuku / Shevery
     <string name="shizuku_status_label">
 服务状态
 </string>
-    <string name="shizuku_installed">
-安装了 Elevated Manager（Shizuku / Shevery）
-</string>
     <string name="shizuku_not_installed">
 未安装提升管理器
 </string>
     <string name="shizuku_description">
-Shizuku 和 Shevery 允许应用程序直接使用系统级 API，从而在大多数 Android 版本上无需 root 即可启用后台文件管理和系统命令执行等高级功能。
+Porter、Shizuku 和 Shevery 允许应用直接使用系统级 API，从而在大多数 Android 版本上无需 root 即可实现后台文件管理和系统命令执行等高级功能。
 </string>
     <string name="shizuku_service_status">
 服务状态
@@ -8544,9 +8538,6 @@ Shizuku 和 Shevery 允许应用程序直接使用系统级 API，从而在大�
     <string name="shizuku_installed_msg">
 Elevated Manager 已安装并且可供使用。
 </string>
-    <string name="shizuku_download_hint">
-您可以从官方 GitHub 存储库下载最新版本的 Shizuku 或 Shevery。
-</string>
     <string name="shizuku_download_link">
 下载管理器
 </string>
@@ -8556,25 +8547,8 @@ Elevated Manager 已安装并且可供使用。
     <string name="shizuku_download_shevery">
 下载谢弗里
 </string>
-    <string name="shizuku_tv_download_title">
-下载雫 / Shevery
-</string>
-    <string name="shizuku_tv_download_msg">
-此设备上未安装 Elevated Manager（Shizuku 或 Shevery）。\n
-\n
-请在您的手机或计算机上访问以下 URL 之一下载最新的 APK，然后将其旁加载到此电视上:\n
-\n
-Shizuku:\n
-%1$s\n
-\n
-Shevery:\n
-%2$s
-</string>
     <string name="shizuku_copy_link">
 复制链接
-</string>
-    <string name="shizuku_link_copied">
-链接已复制到剪贴板
 </string>
     <string name="shizuku_auth_title">
 授权提升访问权限
@@ -8604,10 +8578,10 @@ UFM 需要授权才能执行高级文件操作。请在以下系统对话框中�
 亚行未连接。通过 ADB 终端连接以自动启用提升访问。
 </string>
     <string name="shizuku_header_subtitle">
-雫＆谢弗里服务
+Porter、Shizuku 和 Shevery 服务
 </string>
     <string name="shizuku_status_not_installed_desc">
-安装 Shizuku 或 Shevery 以解锁受保护的 Android/data 文件夹和高级操作，无需 root。
+安装 Porter、Shizuku 或 Shevery，即可无需 root 解锁受保护的 Android/data 文件夹并执行提权操作。
 </string>
     <string name="shizuku_status_stopped_desc">
 已安装提升的服务，但当前未运行。通过无线调试或管理器应用程序启动服务。
@@ -8666,6 +8640,42 @@ UFM 需要授权才能执行高级文件操作。请在以下系统对话框中�
     <string name="shizuku_manager_shevery_desc">
 轻量级快速替代方案
 </string>
+    <string name="shizuku_manager_porter_title">
+Porter
+</string>
+    <string name="shizuku_manager_porter_desc">
+仍在积极维护的 Shizuku 延续版本
+</string>
+    <string name="shizuku_manager_recommended">
+推荐
+</string>
+    <string name="shizuku_porter_waiting_desc">
+已安装 Porter，但其服务未运行。连接会等待 Porter，因此在启动 Porter（或将其卸载）之前，其他管理器无法接管。
+</string>
+    <string name="elevated_state_not_installed">
+未安装
+</string>
+    <string name="elevated_state_not_running">
+服务未运行
+</string>
+    <string name="elevated_state_unauthorized">
+需要授权
+</string>
+    <string name="elevated_state_connected">
+已连接
+</string>
+    <string name="elevated_state_unknown">
+状态不可用
+</string>
+    <string name="elevated_detecting">
+正在检查提权访问…
+</string>
+    <string name="shizuku_download_porter_apk">
+下载 Porter（APK）
+</string>
+    <string name="elevated_prerelease_badge">
+预发布版
+</string>
     <string name="shizuku_download_shizuku_apk">
 下载雫 (APK)
 </string>
@@ -8709,7 +8719,7 @@ ADB/无线调试
 重新检查状态
 </string>
     <string name="shizuku_manager_open_error">
-无法打开管理器。请先安装 Shizuku 或 Shevery。
+无法打开管理器。请先安装 Porter、Shizuku 或 Shevery。
 </string>
     <string name="elevated_download_title">
 下载 %1$s：v%2$s

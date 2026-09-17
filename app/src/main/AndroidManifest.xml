@@ -44,10 +44,16 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
 
-    <!-- Shizuku & Shevery API Permissions -->
+    <!-- Elevated-access permissions.
+         moe.shizuku.manager.permission.API_V23 is the permission Shevery actually kept — it did NOT
+         define com.hamondev.shevery.permission.API_V23, which UFM previously declared against a
+         permission no application defines. Both managers share this one permission.
+         INTERACT_ACROSS_USERS_FULL is deliberately NOT requested here: it guards provider delivery
+         and is explicitly not a permission a client app should request. It is still applied as the
+         android:permission attribute on both binder providers below — a different mechanism, which
+         must stay. Removing the wrong one either requests a forbidden permission or leaves the
+         providers unguarded. -->
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
-    <uses-permission android:name="com.hamondev.shevery.permission.API_V23" />
-    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" tools:ignore="ProtectedPermissions" />
 
     <!-- TV Support -->
     <uses-feature
@@ -66,11 +72,13 @@
         android:required="false" />
 
 
-    <!-- Queries for MSAL Broker Apps, Shizuku, and Shevery -->
+    <!-- Queries for MSAL Broker Apps and the three elevated-access managers.
+         Porter's docs say not to add QUERY_ALL_PACKAGES for its sake — declare the package instead. -->
     <queries>
         <package android:name="com.azure.authenticator" />
         <package android:name="com.microsoft.windowsintune.companyportal" />
         <package android:name="com.microsoft.identity.testuserapp" />
+        <package android:name="eu.darken.porter" />
         <package android:name="moe.shizuku.privileged.api" />
         <package android:name="com.hamondev.shevery" />
     </queries>
@@ -233,14 +241,16 @@
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|uiMode" />
 
-        <!-- Shizuku Manager (Mobile/TV) -->
-        <activity
-            android:name=".ui.ShizukuActivity"
-            android:exported="false"
-            android:label="@string/shizuku_title" />
+        <!--
+          Elevated Access (Porter / Shizuku / Shevery).
 
+          One Activity for both form factors, not two. It selects its layout from
+          DeviceUtils.isTvDevice() at runtime, so there is nothing for a TV-specific
+          declaration to express — the previous pair existed only because the TV screen was a
+          separate class, which it no longer is.
+        -->
         <activity
-            android:name=".ui.ShizukuTvActivity"
+            android:name=".ui.elevated.ElevatedAccessActivity"
             android:exported="false"
             android:label="@string/shizuku_title" />
 
@@ -538,14 +548,36 @@
 
 
 
-        <!-- Shizuku Provider (Mandatory for receiving the binder) -->
+        <!-- Elevated-access binder providers.
+             The Porter SDK ships NO <provider> of its own — only a permission request — so the
+             client app declares both itself. Replaces the former rikka.shizuku.ShizukuProvider,
+             which served .shizuku and could not route to Porter when Porter was selected. -->
         <provider
-            android:name="rikka.shizuku.ShizukuProvider"
+            android:name="eu.darken.porter.client.PorterProvider"
+            android:authorities="${applicationId}.porter"
+            android:multiprocess="false"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+        <!-- Keeps the .shizuku authority alive even when Porter is the selected service, so the
+             SDK's internal getBinder lookup still resolves. Do not remove this — the authority
+             must remain regardless of which backend is active. -->
+        <provider
+            android:name="eu.darken.porter.client.SelectedShizukuProvider"
             android:authorities="${applicationId}.shizuku"
             android:multiprocess="false"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+        <!-- Defensive: if any library contributes a provider for the retired Shizuku class, strip
+             it so no authority is declared twice. A no-op today — the SDK's own provider module
+             ships no <provider> node — but it guards against a future transitive dependency. -->
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            tools:node="remove" />
 
         <!-- SAF DocumentsProvider — makes UFM appear in Android's file picker (ACTION_OPEN_DOCUMENT / ACTION_OPEN_DOCUMENT_TREE) -->
         <provider

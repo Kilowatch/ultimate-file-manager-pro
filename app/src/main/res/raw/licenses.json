@@ -1763,6 +1763,82 @@
         }
     },
     {
+        "groupId": "com.github.d4rken-org.porter-api",
+        "artifactId": "aidl",
+        "version": "0.1.0",
+        "name": "Porter SDK - aidl",
+        "unknownLicenses": [
+            {
+                "name": "MIT License",
+                "url": "https://opensource.org/license/mit"
+            }
+        ],
+        "scm": {
+            "url": "https://github.com/d4rken-org/porter-api"
+        }
+    },
+    {
+        "groupId": "com.github.d4rken-org.porter-api",
+        "artifactId": "api",
+        "version": "0.1.0",
+        "name": "Porter SDK - api",
+        "unknownLicenses": [
+            {
+                "name": "MIT License",
+                "url": "https://opensource.org/license/mit"
+            }
+        ],
+        "scm": {
+            "url": "https://github.com/d4rken-org/porter-api"
+        }
+    },
+    {
+        "groupId": "com.github.d4rken-org.porter-api",
+        "artifactId": "client",
+        "version": "0.1.0",
+        "name": "Porter SDK - client",
+        "spdxLicenses": [
+            {
+                "identifier": "Apache-2.0",
+                "name": "Apache License 2.0",
+                "url": "https://www.apache.org/licenses/LICENSE-2.0"
+            }
+        ],
+        "scm": {
+            "url": "https://github.com/d4rken-org/porter-api"
+        }
+    },
+    {
+        "groupId": "com.github.d4rken-org.porter-api",
+        "artifactId": "provider",
+        "version": "0.1.0",
+        "name": "Porter SDK - provider",
+        "unknownLicenses": [
+            {
+                "name": "MIT License",
+                "url": "https://opensource.org/license/mit"
+            }
+        ],
+        "scm": {
+            "url": "https://github.com/d4rken-org/porter-api"
+        }
+    },
+    {
+        "groupId": "com.github.d4rken-org.porter-api",
+        "artifactId": "shared",
+        "version": "0.1.0",
+        "name": "Porter SDK - shared",
+        "unknownLicenses": [
+            {
+                "name": "MIT License",
+                "url": "https://opensource.org/license/mit"
+            }
+        ],
+        "scm": {
+            "url": "https://github.com/d4rken-org/porter-api"
+        }
+    },
+    {
         "groupId": "com.github.junrar",
         "artifactId": "junrar",
         "version": "8.1.0",
@@ -2630,66 +2706,6 @@
         ],
         "scm": {
             "url": "https://gitbox.apache.org/repos/asf"
-        }
-    },
-    {
-        "groupId": "dev.rikka.shizuku",
-        "artifactId": "aidl",
-        "version": "13.1.5",
-        "name": "Shizuku API - aidl",
-        "unknownLicenses": [
-            {
-                "name": "MIT License",
-                "url": "https://github.com/RikkaApps/Shizuku-API/blob/master/LICENSE"
-            }
-        ],
-        "scm": {
-            "url": "https://github.com/RikkaApps/Shizuku-API"
-        }
-    },
-    {
-        "groupId": "dev.rikka.shizuku",
-        "artifactId": "api",
-        "version": "13.1.5",
-        "name": "Shizuku API - API",
-        "unknownLicenses": [
-            {
-                "name": "MIT License",
-                "url": "https://github.com/RikkaApps/Shizuku-API/blob/master/LICENSE"
-            }
-        ],
-        "scm": {
-            "url": "https://github.com/RikkaApps/Shizuku-API"
-        }
-    },
-    {
-        "groupId": "dev.rikka.shizuku",
-        "artifactId": "provider",
-        "version": "13.1.5",
-        "name": "Shizuku API - provider",
-        "unknownLicenses": [
-            {
-                "name": "MIT License",
-                "url": "https://github.com/RikkaApps/Shizuku-API/blob/master/LICENSE"
-            }
-        ],
-        "scm": {
-            "url": "https://github.com/RikkaApps/Shizuku-API"
-        }
-    },
-    {
-        "groupId": "dev.rikka.shizuku",
-        "artifactId": "shared",
-        "version": "13.1.5",
-        "name": "Shizuku API - shared",
-        "unknownLicenses": [
-            {
-                "name": "MIT License",
-                "url": "https://github.com/RikkaApps/Shizuku-API/blob/master/LICENSE"
-            }
-        ],
-        "scm": {
-            "url": "https://github.com/RikkaApps/Shizuku-API"
         }
     },
     {

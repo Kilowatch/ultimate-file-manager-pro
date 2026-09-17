@@ -79,6 +79,7 @@ val ALL_BUILTIN_ICONS = intArrayOf(
     R.drawable.ic_more_vert, R.drawable.ic_remove_circle, R.drawable.ic_history,
     R.drawable.ic_import_code, R.drawable.ic_refresh_custom, R.drawable.ic_lightning,
     R.drawable.ic_saf, R.drawable.ic_visibility_off, R.drawable.ic_shizuku_logo,
+    R.drawable.ic_porter_logo,
     R.drawable.ic_notifications, R.drawable.ic_install
 )
 

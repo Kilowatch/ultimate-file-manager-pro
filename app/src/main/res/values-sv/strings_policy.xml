@@ -228,7 +228,7 @@ Apphanterare – visa och hantera alla appar som är installerade på din enhet,
 APK Installer - installera Android-appar och dela APK-filer (XAPK) direkt från filer som sparats lokalt.
 </item>
         <item>
-Förhöjd åtkomst (Shizuku, Shevery &amp; ADB) – få root-liknande åtkomst för att hantera systemfiler och begränsade kataloger utan att faktiskt rota din enhet.
+Förhöjd åtkomst (Porter, Shizuku, Shevery &amp; ADB) — få root-liknande åtkomst för att hantera systemfiler och begränsade kataloger utan att faktiskt roota din enhet.
 </item>
         <item>
 Storage Indexer — skapa ett lokalt index av filmetadata för omedelbar sökning och blixtsnabb surfning.
@@ -283,7 +283,7 @@ Borttagning av systemapp
 ADB-parning
 </item>
         <item>
-Shizuku, Shevery och förhöjd åtkomst
+Porter, Shizuku, Shevery &amp; Förhöjd åtkomst
 </item>
         <item>
 TV-skärmdumpar
@@ -327,7 +327,7 @@ Att ta bort systemappar baserade på rekommendationer för debloat kan påverka 
 ADB-parning kräver utbyte av certifikat mellan din enhet och målenheten över ditt lokala Wi-Fi. Anslut bara till enheter du äger eller har behörighet att komma åt. Alla i ditt nätverk som registrerar din kopplings-PIN kan komma åt din enhet – håll denna PIN-kod privat.
 </item>
         <item>
-Genom att använda Shizuku, Shevery eller ADB för förhöjd åtkomst kan appen modifiera systemskyddade filer. Missbruk av dessa funktioner kan påverka enhetens stabilitet eller säkerhet. Använd med försiktighet och ge endast åtkomst till denna app.
+Att använda Porter, Shizuku, Shevery eller ADB för förhöjd åtkomst tillåter appen att ändra systemskyddade filer. Missbruk av dessa funktioner kan påverka enhetens stabilitet eller säkerhet. Använd med försiktighet och ge endast åtkomst till denna app.
 </item>
         <item>
 Skärmdumpar av parade TV-apparater fångas via ADB över ditt lokala nätverk och sparas direkt i telefonens lagring. Vi överför, visar eller laddar inte upp dina skärmdumpar. Se till att du bara fångar skärmar på enheter du äger eller har behörighet att komma åt.
@@ -370,10 +370,10 @@ Var försiktig när du tar bort systemappar baserat på rekommendationer för de
 Anslut endast via ADB Terminal till enheter du äger eller har uttrycklig behörighet att komma åt. Använd inte ADB Terminal för att få obehörig åtkomst till någon enhet.
 </item>
         <item>
-Håll eventuella ADB-, Shizuku- eller Shevery-PIN-koder privata – dela dessa endast med personer som du litar på har tillgång till din enhet.
+Håll alla ADB-, Porter-, Shizuku- eller Shevery-parnings-PIN-koder privata — dela dem endast med personer som du litar på att ha åtkomst till din enhet.
 </item>
         <item>
-Säkra din Shizuku eller Shevery Manager – genom att ge UFM förhöjd åtkomst via Shizuku eller Shevery ger den makt över begränsade filer. Ge endast denna åtkomst om du litar på appen.
+Säkra din Porter-, Shizuku- eller Shevery Manager — att bevilja UFM förhöjd åtkomst via någon av dessa Manager-appar ger den makt över begränsade filer. Bevilja endast denna åtkomst om du litar på appen.
 </item>
         <item>
 Använd endast appen för lagliga ändamål. Lagra, dela eller distribuera inte olagligt innehåll.
@@ -428,7 +428,7 @@ Fakturering
 ADB Debug Bridge
 </item>
         <item>
-Förhöjd åtkomst (Shizuku &amp; Shevery)
+Förhöjd åtkomst (Porter, Shizuku &amp; Shevery)
 </item>
         <item>
 Starta start
@@ -487,16 +487,16 @@ Behandlar valfria Tips Jar-köp via Google Play.
 Tillåter säker anslutning till Android-enheter för avancerad skalåtkomst. Genererar ett unikt RSA-certifikat på din enhet för ihopparning; inga certifikat överförs till externa servrar.
 </item>
         <item>
-Tillåter att appen använder Shizuku / Shevery API (inklusive Secure Settings) för att hantera filer i begränsade systemkataloger utan att rota.
+Tillåter appen att använda Porter / Shizuku / Shevery API (inklusive Secure Settings) för att hantera filer i begränsade systemkataloger utan att roota.
 </item>
         <item>
 Tillåter Shizuku- och Shevery-tjänster att starta automatiskt när din enhet startar för att säkerställa omedelbar tillgänglighet.
 </item>
         <item>
-Låter dig välja att hålla Shizuku och Shevery-tjänster aktiva i bakgrunden för pålitlig prestanda.
+Tillåter Porter-, Shizuku- och Shevery-tjänster att starta automatiskt när din enhet startar för att säkerställa omedelbar tillgänglighet.
 </item>
         <item>
-Krävs för att köra mappsynkronisering och filöverföringar som en förgrundstjänst så att de slutförs tillförlitligt även när skärmen är avstängd.
+Tillåter dig att välja att hålla Porter-, Shizuku- och Shevery-tjänster aktiva i bakgrunden för tillförlitlig prestanda.
 </item>
         <item>
 Håller CPU och Wi-Fi aktiva under stora filöverföringar så att de slutförs tillförlitligt även när skärmen stängs av.
@@ -602,7 +602,7 @@ jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library pro
 APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
 </item>
         <item>
-Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — libraries enabling elevated file system access via Shizuku or Shevery Manager apps. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Android SDK som möjliggör förhöjd filsystemåtkomst via Porter-, Shizuku- eller Shevery Manager-appar. Den bäddar in Shizuku API (rikka.shizuku), licensierad under MIT. (Apache-2.0)
 </item>
         <item>
 ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
@@ -1037,7 +1037,7 @@ Information om kopplad enhet
 ADB-autentiseringsnycklar
 </item>
         <item>
-Shizuku / Shevery Authorization State
+Auktoriseringsstatus för Porter / Shizuku / Shevery
 </item>
         <item>
 TV-skärmdumpar
@@ -1096,7 +1096,7 @@ Enhetsnamn, ID och IP för enhetsparning · Appens privata lagring
 RSA-nycklar och certifikat genererade för säkra ADB-anslutningar · App privat lagring
 </item>
         <item>
-Status för den förhöjda åtkomstbeviljanden från Shizuku eller Shevery Manager-appen · Appens privata lagring
+Status för beviljad förhöjd åtkomst från Porter-, Shizuku- eller Shevery Manager-appen · Appens privata lagringsutrymme
 </item>
         <item>
 Skärmdumpar tagna från en parad TV via ADB · Din telefons lokala bilder/skärmdumpar-mapp
@@ -1188,7 +1188,7 @@ Kryptera och dekryptera dina privata filer
 Kom ihåg dina preferenser och inställningar
 </item>
         <item>
-Använd förhöjd åtkomst (Shizuku/Shevery/ADB) för att hantera systemskyddade filer i begränsade kataloger
+Använd förhöjd åtkomst (Porter/Shizuku/Shevery/ADB) för att hantera systemskyddade filer i begränsade kataloger
 </item>
         <item>
 Skapa och underhåll filindexering för snabb bläddring och sökning (kan hanteras via Inställningar -> Lagringsindexerare)
@@ -1278,7 +1278,7 @@ Aktiverar lokal nätverksenhetsupptäckt (NSD/mDNS) för enhetsparning
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1304,13 +1304,13 @@ WAKE_LOCK
 Varnar dig när filhanteringen är klar eller lagringen är låg
 </item>
         <item>
-Tillåter kommunikation med Shizuku eller Shevery Manager för ökad filåtkomst
+Tillåter kommunikation med Porter-, Shizuku- eller Shevery Manager för förhöjd filåtkomst
 </item>
         <item>
-Tillåter Shizuku- eller Shevery-tjänster att starta automatiskt vid start för omedelbar tillgänglighet
+Tillåter Porter-, Shizuku- eller Shevery-tjänster att starta automatiskt vid start för omedelbar tillgänglighet
 </item>
         <item>
-Låter dig välja att hålla Shizuku eller Shevery aktiva i bakgrunden för pålitlig prestanda
+Tillåter dig att välja att hålla Porter, Shizuku eller Shevery aktiva i bakgrunden för tillförlitlig prestanda
 </item>
         <item>
 Tillåter installation av APK-filer du väljer
@@ -1651,7 +1651,7 @@ Aviseringar
 Installera paket
 </item>
         <item>
-Elevated Access (Shizuku)
+Förhöjd åtkomst (Porter, Shizuku &amp; Shevery)
 </item>
         <item>
 Förvaringsindexerare
@@ -1689,7 +1689,7 @@ Varningar om slutförande av drift och lagringsvarningar
 APK installation from local storage
 </item>
         <item>
-Avancerad filhantering i begränsade systemkataloger via Shizuku API
+Avancerad filhantering i begränsade systemkataloger via Porter / Shizuku API
 </item>
         <item>
 Indexes file metadata locally for fast search

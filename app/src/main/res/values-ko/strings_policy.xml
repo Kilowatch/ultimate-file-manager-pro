@@ -228,7 +228,7 @@ ADB 터미널 — ADB(Android Debug Bridge)를 사용하여 로컬 Wi-Fi에서 �
 APK 설치 프로그램 — 로컬에 저장된 파일에서 Android 앱 및 분할 APK(XAPK)를 직접 설치합니다.
 </item>
         <item>
-상승된 권한 액세스(Shizuku, Shevery 및 ADB) — 실제로 기기를 루팅하지 않고 시스템 파일과 제한된 디렉터리를 관리할 수 있는 루트 수준의 액세스 권한을 얻습니다.
+고급 액세스 (Porter, Shizuku, Shevery &amp; ADB) — 실제로 기기를 루팅하지 않고도 시스템 파일 및 제한된 디렉토리를 관리할 수 있는 루트와 유사한 액세스를 얻습니다.
 </item>
         <item>
 저장공간 인덱서 — 파일 메타데이터의 로컬 인덱스를 생성하여 즉시 검색과 매우 빠른 탐색을 지원합니다.
@@ -283,7 +283,7 @@ APK 파일
 ADB 페어링
 </item>
         <item>
-Shizuku, Shevery 및 상승된 액세스
+Porter, Shizuku, Shevery 및 고급 액세스
 </item>
         <item>
 TV 스크린샷
@@ -327,7 +327,7 @@ PIN 및 복구 코드를 잊어버린 경우, 암호화된 파일은 누구도 �
 ADB 페어링을 위해서는 로컬 Wi-Fi를 통해 기기와 대상 기기 간에 인증서를 교환해야 합니다. 소유하고 있거나 액세스 권한이 있는 기기에만 연결하십시오. 네트워크에서 페어링 PIN을 캡처하는 사람은 누구나 기기에 액세스할 수 있으므로 PIN을 비공개로 유지하십시오.
 </item>
         <item>
-Shizuku, Shevery 또는 ADB를 상승된 액세스에 사용하면 앱이 시스템 보호 파일을 수정할 수 있습니다. 이러한 기능을 오용하면 기기 안정성이나 보안에 영향을 줄 수 있습니다. 주의하여 사용하고 이 앱에만 액세스 권한을 부여하십시오.
+Porter, Shizuku, Shevery 또는 ADB를 고급 액세스에 사용하면 앱이 시스템 보호 파일을 수정할 수 있습니다. 이러한 기능을 오용하면 기기 안정성이나 보안에 영향을 줄 수 있습니다. 주의해서 사용하고 이 앱에만 액세스를 허용하세요.
 </item>
         <item>
 페어링된 TV의 스크린샷은 로컬 네트워크를 통해 ADB로 캡처되어 휴대폰 저장소에 직접 저장됩니다. 당사는 스크린샷을 전송, 보거나 업로드하지 않습니다. 소유하거나 액세스 권한이 있는 기기에서만 화면을 캡처하십시오.
@@ -370,10 +370,10 @@ PIN을 비공개로 유지하십시오. PIN을 아는 사람은 누구나 보관
 ADB 터미널을 통해 소유하거나 명시적 액세스 권한이 있는 기기에만 연결하십시오. ADB 터미널을 사용하여 무단 액세스를 얻지 마십시오.
 </item>
         <item>
-ADB, Shizuku 또는 Shevery 페어링 PIN을 비공개로 유지하십시오. 기기에 액세스할 수 있다고 신뢰하는 사람과만 공유하십시오.
+ADB, Porter, Shizuku 또는 Shevery 페어링 PIN은 비공개로 유지하세요 — 기기에 액세스할 수 있다고 신뢰하는 사람에게만 공유하세요.
 </item>
         <item>
-Shizuku 또는 Shevery Manager를 안전하게 보호하십시오. Shizuku 또는 Shevery를 통해 UFM에 상승된 액세스 권한을 부여하면 제한된 파일에 대한 권한이 부여됩니다. 앱을 신뢰하는 경우에만 이 액세스 권한을 부여하십시오.
+Porter, Shizuku 또는 Shevery Manager를 보호하세요 — 이러한 관리자 중 하나를 통해 UFM에 고급 액세스를 부여하면 제한된 파일에 대한 권한이 생깁니다. 앱을 신뢰하는 경우에만 이 액세스를 허용하세요.
 </item>
         <item>
 합법적인 목적으로만 앱을 사용하십시오. 불법 콘텐츠를 저장, 공유 또는 배포하지 마십시오.
@@ -428,7 +428,7 @@ APK 파일을 설치하기 전에 해당 파일의 신뢰성과 안전성을 확
 ADB 디버그 브리지
 </item>
         <item>
-상승된 액세스(Shizuku 및 Shevery)
+고급 액세스 (Porter, Shizuku 및 Shevery)
 </item>
         <item>
 부팅 시작
@@ -487,16 +487,16 @@ Google Play를 통해 선택적 팁 항아리 구매를 처리합니다.
 고급 셸 액세스를 위해 Android 기기에 대한 보안 연결을 허용합니다. 페어링을 위해 기기에 고유한 RSA 인증서를 생성합니다. 외부 서버로 인증서가 전송되지 않습니다.
 </item>
         <item>
-앱이 루팅 없이 제한된 시스템 디렉토리의 파일을 관리하기 위해 Shizuku/Shevery API(보안 설정 포함)를 사용할 수 있도록 합니다.
+앱이 루팅 없이 제한된 시스템 디렉토리의 파일을 관리하기 위해 Porter / Shizuku / Shevery API(보안 설정 포함)를 사용할 수 있도록 허용합니다.
 </item>
         <item>
 기기가 부팅될 때 Shizuku 및 Shevery 서비스가 자동으로 시작되어 즉시 사용 가능하도록 합니다.
 </item>
         <item>
-안정적인 성능을 위해 Shizuku 및 Shevery 서비스를 백그라운드에서 활성 상태로 유지하도록 선택할 수 있습니다.
+기기가 부팅될 때 Porter, Shizuku 및 Shevery 서비스가 자동으로 시작되어 즉시 사용할 수 있도록 허용합니다.
 </item>
         <item>
-폴더 동기화 및 파일 전송을 포그라운드 서비스로 실행하여 화면이 꺼져도 안정적으로 완료되도록 하는 데 필요합니다.
+안정적인 성능을 위해 Porter, Shizuku 및 Shevery 서비스를 백그라운드에서 활성 상태로 유지하도록 선택할 수 있습니다.
 </item>
         <item>
 대용량 파일 전송 중 CPU와 Wi-Fi를 활성 상태로 유지하여 화면이 꺼져도 안정적으로 완료되도록 합니다.
@@ -602,7 +602,7 @@ jxl-coder (io.github.awxkee) — Android API 21 이상에서 기본 JXL 지원�
 APNG4Android (com.github.penfeizhou.android.animation) — Android에서 애니메이션 PNG 파일을 디코딩하고 렌더링하기 위한 핵심 라이브러리. (Apache-2.0)
 </item>
         <item>
-Shizuku 및 Shevery API (dev.rikka.shizuku:api 및 provider / com.hamondev.shevery) — Shizuku 또는 Shevery Manager 앱을 통해 상승된 파일 시스템 액세스를 가능하게 하는 라이브러리. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Porter, Shizuku 또는 Shevery Manager 앱을 통해 고급 파일 시스템 액세스를 가능하게 하는 Android SDK입니다. MIT 라이선스 하에 Shizuku API(rikka.shizuku)를 내장하고 있습니다. (Apache-2.0)
 </item>
         <item>
 ViewPager2 — 프래그먼트와 레이아웃 간 전환을 위한 Android 라이브러리. (Apache-2.0)
@@ -1035,7 +1035,7 @@ Ultimate File Manager Pro를 사용함으로써 귀하는 본 개인정보처리
 ADB 인증 키
 </item>
         <item>
-Shizuku / Shevery 권한 부여 상태
+Porter / Shizuku / Shevery 인증 상태
 </item>
         <item>
 TV 스크린샷
@@ -1094,7 +1094,7 @@ SMB/FTP 공유에 연결(호스트, 사용자 이름, 비밀번호) · 앱 비�
 안전한 ADB 연결을 위해 생성된 RSA 키와 인증서 · 앱 비공개 저장소
 </item>
         <item>
-Shizuku 또는 Shevery Manager 앱의 상승된 접근 권한 부여 상태 · 앱 비공개 저장소
+Porter, Shizuku 또는 Shevery Manager 앱에서 부여한 고급 액세스 상태 · 앱 개인 저장소
 </item>
         <item>
 ADB를 통해 페어링된 TV에서 캡처한 스크린샷 · 휴대폰의 로컬 Pictures/Screenshots 폴더
@@ -1186,7 +1186,7 @@ PIN 또는 복구 코드
 환경설정 및 설정 기억
 </item>
         <item>
-제한된 디렉터리에서 시스템 보호 파일 관리를 위한 상승된 접근(Shizuku/Shevery/ADB) 사용
+제한된 디렉토리의 시스템 보호 파일을 관리하기 위해 고급 액세스(Porter/Shizuku/Shevery/ADB)를 사용하세요.
 </item>
         <item>
 빠른 탐색 및 검색을 위한 파일 인덱싱 생성 및 유지(설정 -> 저장소 인덱서를 통해 관리 가능)
@@ -1276,7 +1276,7 @@ CHANGE_WIFI_MULTICAST_STATE
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1302,13 +1302,13 @@ WAKE_LOCK
 파일 작업 완료 또는 저장 공간 부족 시 알림
 </item>
         <item>
-상승된 파일 접근을 위해 Shizuku 또는 Shevery Manager와의 통신 허용
+고급 파일 액세스를 위해 Porter, Shizuku 또는 Shevery Manager와 통신할 수 있도록 허용합니다.
 </item>
         <item>
-즉시 사용 가능하도록 부팅 시 Shizuku 또는 Shevery 서비스가 자동으로 시작되도록 허용
+부팅 시 Porter, Shizuku 또는 Shevery 서비스가 자동으로 시작되어 즉시 사용할 수 있도록 허용합니다.
 </item>
         <item>
-안정적인 성능을 위해 백그라운드에서 Shizuku 또는 Shevery를 활성 상태로 유지하는 옵션 선택 허용
+안정적인 성능을 위해 Porter, Shizuku 또는 Shevery를 백그라운드에서 활성 상태로 유지하도록 선택할 수 있습니다.
 </item>
         <item>
 선택한 APK 파일 설치 허용
@@ -1649,7 +1649,7 @@ Ultimate File Manager Pro를 찾아 탭합니다.
 패키지 설치
 </item>
         <item>
-상승된 접근 권한 (Shizuku)
+고급 액세스 (Porter, Shizuku 및 Shevery)
 </item>
         <item>
 저장소 인덱서
@@ -1687,7 +1687,7 @@ Lottie 애니메이션
 로컬 저장소에서 APK 설치
 </item>
         <item>
-Shizuku API를 통한 제한된 시스템 디렉터리에서의 고급 파일 관리
+Porter / Shizuku API를 통한 제한된 시스템 디렉토리의 고급 파일 관리
 </item>
         <item>
 빠른 검색을 위해 파일 메타데이터를 로컬에 색인합니다.

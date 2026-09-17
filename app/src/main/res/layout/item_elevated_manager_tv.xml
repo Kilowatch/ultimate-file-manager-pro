@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  One elevated-access manager card (TV). Inflated once per manager, in the order
+  ElevatedManager.entries declares — the container never chooses the order.
+
+  View IDs are identical to item_elevated_manager.xml; only dimensions, styles and focus
+  behaviour differ, so ElevatedAccessRenderer serves both. The icon is a bare ImageView here
+  too — installed launcher icons are never drawn inside a circle on either form factor.
+
+  D-pad: each card's buttons are focusable and chained vertically; the host layout owns the
+  cross-card wiring because only it knows how many cards exist.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardManager"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:background="@drawable/bg_glass_card"
+    android:orientation="vertical"
+    android:padding="28dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!--
+          Bare icon. No background, no frame, no circle — same rule as mobile.
+          Tint is the not-installed placeholder only; the renderer clears it for a real launcher icon.
+        -->
+        <ImageView
+            android:id="@+id/imgManagerIcon"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:scaleType="fitCenter"
+            android:contentDescription="@null"
+            app:tint="@color/tv_accent"
+            tools:src="@drawable/ic_porter_logo" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/txtManagerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="22sp"
+                    android:fontFamily="sans-serif-black"
+                    tools:text="Porter" />
+
+                <!-- "Recommended" pill. GONE on every manager except Porter. -->
+                <TextView
+                    android:id="@+id/txtRecommendedBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_status_badge_accent"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp"
+                    android:text="@string/shizuku_manager_recommended"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-black"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtManagerDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="16sp"
+                tools:text="Actively maintained Shizuku continuation" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- This manager's state, or "Status unavailable" when UFM cannot observe it. -->
+    <TextView
+        android:id="@+id/txtManagerState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-black"
+        tools:text="Service not running" />
+
+    <!-- FR-26 hold-out notice. Only ever shown on the Porter card. -->
+    <TextView
+        android:id="@+id/txtPorterWaiting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/shizuku_porter_waiting_desc"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="15sp"
+        android:lineSpacingExtra="2dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <!-- Start service / Authorize. Visible only when reachable but not usable. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnManagerAction"
+            style="@style/TvYellowFocusStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:visibility="gone"
+            android:focusable="true"
+            android:paddingVertical="12dp"
+            android:paddingHorizontal="28dp"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif-black"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            tools:text="Enable Elevated Access"
+            tools:visibility="visible" />
+
+        <!-- Download. Visible only when this manager is not installed. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnManagerDownload"
+            style="@style/TvYellowFocusStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:visibility="gone"
+            android:focusable="true"
+            android:paddingVertical="12dp"
+            android:paddingHorizontal="28dp"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif-black"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            app:icon="@drawable/ic_direction_download"
+            app:iconTint="@color/black"
+            app:iconPadding="10dp"
+            tools:text="Download Porter (APK)"
+            tools:visibility="visible" />
+
+        <!-- Open the manager app. Visible whenever it is installed. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnManagerOpen"
+            style="@style/TvYellowFocusStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_marginStart="16dp"
+            android:visibility="gone"
+            android:focusable="true"
+            android:paddingVertical="12dp"
+            android:paddingHorizontal="28dp"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif-black"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            app:icon="@drawable/ic_arrow_forward"
+            app:iconTint="@color/black"
+            app:iconGravity="textEnd"
+            app:iconPadding="10dp"
+            tools:text="Open Porter Manager"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+</LinearLayout>

@@ -93,8 +93,8 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 278          // Mobile versionCode; TV = this + 1
-val appVersionName = "2.0.9"      // Shown in Play Store listing
+val appVersionCode = 280          // Mobile versionCode; TV = this + 1
+val appVersionName = "2.1.0"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
 // TODO: REMOVE — Set to true to simulate an older version for auto-update testing
@@ -478,8 +478,7 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.rtsp)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.session)
-    implementation(libs.shizuku.api)
-    implementation(libs.shizuku.provider)
+    implementation(libs.porter.client)
     implementation(libs.libsu.core)
     implementation(libs.libsu.nio)
     implementation(libs.lottie)
@@ -532,8 +531,12 @@ licensee {
     allowUrl("https://api.github.com/licenses/lgpl-3.0")
     allowUrl("https://developer.android.com/guide/playcore/license")
     allowUrl("https://github.com/junrar/junrar/blob/master/LICENSE")
-    allowUrl("https://github.com/RikkaApps/Shizuku-API/blob/master/LICENSE")
-    
+    // The Shizuku-API allowance that used to sit here is gone with the `dev.rikka.shizuku`
+    // dependency it existed for. The Porter SDK needs no entry of its own: its `client` artefact
+    // is SPDX Apache-2.0 (allowed above) and its `aidl`/`api`/`provider`/`shared` siblings resolve
+    // to the opensource.org MIT URL already allowed below. Licensee reports the URL as unused, so
+    // leaving it would be a lie about what ships.
+
     ignoreDependencies("com.github.topjohnwu.libsu", "core")
     ignoreDependencies("com.github.topjohnwu.libsu", "nio")
     ignoreDependencies("com.microsoft.identity.client", "msal")

@@ -6897,10 +6897,13 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 btnEnableElevated?.text = getString(R.string.protected_folder_btn_shizuku)
                 btnEnableElevated?.setIconResource(R.drawable.ic_shield_protected)
                 btnEnableElevated?.setOnClickListener {
-                    val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
-                    val intent = if (isTv) Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuTvActivity::class.java)
-                                 else Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuActivity::class.java)
-                    startActivity(intent)
+                    // No isTv branch — ElevatedAccessActivity selects its own layout.
+                    startActivity(
+                        Intent(
+                            this,
+                            za.kilowatch.ultimatefilemanager.ui.elevated.ElevatedAccessActivity::class.java
+                        )
+                    )
                 }
                 btnGrantSaf?.visibility = View.VISIBLE
                 btnGrantSaf?.text = getString(R.string.protected_folder_btn_saf)

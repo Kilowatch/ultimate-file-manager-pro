@@ -228,7 +228,7 @@ Gestionnaire d\\\'applications — visualisez et gérez toutes les applications 
 Installateur d\\\'APK — installez des applications Android et des APK fractionnés (XAPK) directement à partir de fichiers enregistrés localement.
 </item>
         <item>
-Accès élevé (Shizuku, Shevery et ADB) — obtenez un accès de type root pour gérer les fichiers système et les répertoires restreints sans vraiment rooter votre appareil.
+Accès élevé (Porter, Shizuku, Shevery et ADB) — obtenez un accès de type root pour gérer les fichiers système et les répertoires restreints sans réellement rooter votre appareil.
 </item>
         <item>
 Indexeur de stockage — créez un index local des métadonnées de fichiers pour une recherche instantanée et une navigation ultra-rapide.
@@ -283,7 +283,7 @@ Suppression d\\\'applications système
 Appairage ADB
 </item>
         <item>
-Shizuku, Shevery et accès élevé
+Porter, Shizuku, Shevery et accès élevé
 </item>
         <item>
 Captures d\\\'écran TV
@@ -327,7 +327,7 @@ La suppression d\\\'applications système basée sur des recommandations de dés
 L\\\'appairage ADB nécessite l\\\'échange de certificats entre votre appareil et l\\\'appareil cible via votre réseau Wi-Fi local. Connectez-vous uniquement à des appareils que vous possédez ou dont vous avez l\\\'autorisation d\\\'accès. Toute personne sur votre réseau qui capture votre code PIN d\\\'appairage peut accéder à votre appareil — gardez ce code privé.
 </item>
         <item>
-L\\\'utilisation de Shizuku, Shevery ou ADB pour un accès élevé permet à l\\\'application de modifier des fichiers protégés par le système. Une mauvaise utilisation de ces fonctionnalités pourrait affecter la stabilité ou la sécurité de l\\\'appareil. Utilisez avec prudence et accordez l\\\'accès uniquement à cette application.
+L\\\'utilisation de Porter, Shizuku, Shevery ou ADB pour obtenir un accès élevé permet à l\\\'application de modifier des fichiers protégés par le système. Une mauvaise utilisation de ces fonctionnalités peut nuire à la stabilité ou à la sécurité de votre appareil. Utilisez-les avec prudence et n\\\'accordez cet accès qu\\\'à cette application.
 </item>
         <item>
 Les captures d\\\'écran des TV appairées sont capturées via ADB sur votre réseau local et enregistrées directement dans le stockage de votre téléphone. Nous ne transmettons, ne consultons ni ne téléchargeons vos captures d\\\'écran. Assurez-vous de ne capturer que des écrans sur des appareils que vous possédez ou dont vous avez l\\\'autorisation d\\\'accès.
@@ -370,10 +370,10 @@ Soyez prudent lorsque vous supprimez des applications système basées sur des r
 Connectez-vous via le terminal ADB uniquement aux appareils que vous possédez ou pour lesquels vous avez une autorisation explicite d\\\'accès. N\\\'utilisez pas le terminal ADB pour obtenir un accès non autorisé à un appareil.
 </item>
         <item>
-Gardez tous les codes PIN d\\\'appairage ADB, Shizuku ou Shevery privés — partagez-les uniquement avec des personnes en qui vous avez confiance pour accéder à votre appareil.
+Gardez confidentiels les codes PIN d\\\'appairage ADB, Porter, Shizuku ou Shevery — ne les partagez qu\\\'avec des personnes en qui vous avez confiance pour accéder à votre appareil.
 </item>
         <item>
-Sécurisez votre gestionnaire Shizuku ou Shevery — accorder un accès élevé à UFM via Shizuku ou Shevery lui donne un pouvoir sur les fichiers restreints. N\\\'accordez cet accès que si vous avez confiance en l\\\'application.
+Sécurisez votre gestionnaire Porter, Shizuku ou Shevery — accorder un accès élevé à UFM via l\\\'un de ces gestionnaires lui donne le pouvoir sur des fichiers restreints. N\\\'accordez cet accès que si vous faites confiance à l\\\'application.
 </item>
         <item>
 Utilisez l\\\'application uniquement à des fins légales. Ne stockez, ne partagez et ne distribuez pas de contenu illégal.
@@ -428,7 +428,7 @@ Facturation
 Pont de débogage ADB
 </item>
         <item>
-Accès élevé (Shizuku et Shevery)
+Accès élevé (Porter, Shizuku et Shevery)
 </item>
         <item>
 Démarrage au boot
@@ -487,16 +487,16 @@ Traite les achats facultatifs de la boîte à pourboires via Google Play.
 Permet une connexion sécurisée à des appareils Android pour un accès avancé au shell. Génère un certificat RSA unique sur votre appareil pour l\\\'appairage ; aucun certificat n\\\'est transmis à des serveurs externes.
 </item>
         <item>
-Permet à l\\\'application d\\\'utiliser l\\\'API Shizuku / Shevery (y compris les paramètres sécurisés) pour gérer les fichiers dans les répertoires système restreints sans root.
+Permet à l\\\'application d\\\'utiliser l\\\'API Porter / Shizuku / Shevery (y compris les paramètres sécurisés) pour gérer les fichiers dans les répertoires système restreints sans rooter l\\\'appareil.
 </item>
         <item>
 Permet aux services Shizuku et Shevery de démarrer automatiquement au démarrage de votre appareil pour assurer une disponibilité immédiate.
 </item>
         <item>
-Vous permet d\\\'opter pour le maintien des services Shizuku et Shevery actifs en arrière-plan pour des performances fiables.
+Permet aux services Porter, Shizuku et Shevery de démarrer automatiquement au démarrage de votre appareil afin de garantir leur disponibilité immédiate.
 </item>
         <item>
-Requis pour exécuter la synchronisation de dossiers et les transferts de fichiers en tant que service au premier plan afin qu\\\'ils se terminent de manière fiable même lorsque l\\\'écran est éteint.
+Vous permet d\\\'activer le maintien des services Porter, Shizuku et Shevery en arrière-plan pour des performances fiables.
 </item>
         <item>
 Maintient le processeur et le Wi-Fi actifs lors des transferts de fichiers volumineux afin qu\\\'ils se terminent de manière fiable même lorsque l\\\'écran s\\\'éteint.
@@ -602,7 +602,7 @@ jxl-coder (io.github.awxkee) — bibliothèque de décodage et d\\\'encodage d\\
 APNG4Android (com.github.penfeizhou.android.animation) — bibliothèque principale pour décoder et afficher les fichiers PNG animés sur Android. (Apache-2.0)
 </item>
         <item>
-Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — bibliothèques permettant un accès élevé au système de fichiers via les applications Shizuku ou Shevery Manager. (Apache-2.0)
+SDK Porter (com.github.d4rken-org.porter-api) — SDK Android permettant un accès élevé au système de fichiers via les applications gestionnaires Porter, Shizuku ou Shevery. Il intègre l\\\'API Shizuku (rikka.shizuku), sous licence MIT. (Apache-2.0)
 </item>
         <item>
 ViewPager2 — bibliothèque Android pour faire défiler entre fragments et mises en page. (Apache-2.0)
@@ -1037,7 +1037,7 @@ Informations sur l\\\'appareil appairé
 Clés d\\\'authentification ADB
 </item>
         <item>
-État d\\\'autorisation Shizuku / Shevery
+État d\\\'autorisation de Porter / Shizuku / Shevery
 </item>
         <item>
 Captures d\\\'écran TV
@@ -1096,7 +1096,7 @@ Nom, identifiant et adresse IP de l\\\'appareil pour l\\\'appairage · Stockage 
 Clés RSA et certificats générés pour les connexions ADB sécurisées · Stockage privé de l\\\'application
 </item>
         <item>
-État de l\\\'autorisation d\\\'accès élevé de l\\\'application Shizuku ou Shevery Manager · Stockage privé de l\\\'application
+État de l\\\'autorisation d\\\'accès élevé accordée par l\\\'application gestionnaire Porter, Shizuku ou Shevery · stockage privé de l\\\'application
 </item>
         <item>
 Captures d\\\'écran prises depuis une TV appairée via ADB · Dossier local Pictures/Screenshots de votre téléphone
@@ -1188,7 +1188,7 @@ Chiffrer et déchiffrer vos fichiers privés
 Se souvenir de vos préférences et paramètres
 </item>
         <item>
-Utiliser un accès élevé (Shizuku/Shevery/ADB) pour gérer les fichiers protégés du système dans des répertoires restreints
+Utiliser l\\\'accès élevé (Porter/Shizuku/Shevery/ADB) pour gérer les fichiers protégés par le système dans les répertoires restreints
 </item>
         <item>
 Créer et maintenir un index de fichiers pour une navigation et une recherche rapides (gérable via Paramètres -> Indexeur de stockage)
@@ -1278,7 +1278,7 @@ Active la découverte d\'appareils sur le réseau local (NSD/mDNS) pour l\'appai
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1304,13 +1304,13 @@ WAKE_LOCK
 Vous alerte lorsque les opérations sur les fichiers se terminent ou que le stockage est faible
 </item>
         <item>
-Permet la communication avec Shizuku ou Shevery Manager pour un accès élevé aux fichiers
+Permet la communication avec le gestionnaire Porter, Shizuku ou Shevery pour un accès élevé aux fichiers
 </item>
         <item>
-Permet aux services Shizuku ou Shevery de démarrer automatiquement au démarrage pour une disponibilité immédiate
+Permet aux services Porter, Shizuku ou Shevery de démarrer automatiquement au démarrage pour une disponibilité immédiate
 </item>
         <item>
-Vous permet d\\\'opter pour maintenir Shizuku ou Shevery actif en arrière-plan pour des performances fiables
+Vous permet d\\\'activer le maintien de Porter, Shizuku ou Shevery en arrière-plan pour des performances fiables
 </item>
         <item>
 Permet l\\\'installation des fichiers APK que vous choisissez
@@ -1651,7 +1651,7 @@ Notifications
 Installer des packages
 </item>
         <item>
-Accès élevé (Shizuku)
+Accès élevé (Porter, Shizuku et Shevery)
 </item>
         <item>
 Indexeur de stockage
@@ -1689,7 +1689,7 @@ Alertes de fin d\\\'opération et avertissements de stockage
 Installation d\\\'APK à partir du stockage local
 </item>
         <item>
-Gestion avancée des fichiers dans les répertoires système restreints via l\\\'API Shizuku
+Gestion avancée des fichiers dans les répertoires système restreints via l\\\'API Porter / Shizuku
 </item>
         <item>
 Indexe les métadonnées des fichiers localement pour une recherche rapide
