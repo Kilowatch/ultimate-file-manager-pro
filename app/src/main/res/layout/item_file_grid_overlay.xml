@@ -21,13 +21,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Image Preview / Icon Area (takes 100% width, 1:1 square ratio) -->
+        <!-- Image Preview / Icon Area (takes 100% of the square card) -->
         <FrameLayout
             android:id="@+id/frameIcon"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -126,13 +127,13 @@
 
         </FrameLayout>
 
-        <!-- Clean Text Below the Icon Block -->
+        <!-- Overlay Text at the Bottom of the Card -->
         <TextView
             android:id="@+id/txtFileName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="6dp"
-            android:paddingTop="6dp"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="14dp"
             android:paddingBottom="8dp"
             android:gravity="center"
             android:textColor="@color/mobile_card_text_primary"
@@ -140,7 +141,7 @@
             android:fontFamily="sans-serif-medium"
             android:maxLines="2"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/frameIcon"
+            android:background="@drawable/gradient_bottom_shadow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -8,7 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.0] — 2026-09-17
 
 ### Added
+- **Configurable Grid View Text Placement**: Added option to display file and folder names below the thumbnail/icon block instead of overlaid on top with a gradient shadow. Text below block is now the default, with legacy overlay mode selectable in Settings under Appearance across both Mobile and Android TV.
 - **Porter Support**: Added Porter as a third elevated-access manager alongside Shizuku and Shevery, listed first and marked recommended. UFM detects which managers are installed, distinguishes Porter from Shizuku when both are present, and shows each app's real launcher icon.
+- **Elevated Access Hero Card Enhancements**: Added the active elevated manager's launcher icon and prominent application title to the top status hero card across Mobile and Android TV.
+- **Stop Daemon Action**: Added a dedicated "Stop Daemon" button in the top status block to cleanly terminate running elevated background daemons via elevated process termination and client binder reset.
+- **Per-Application "Allow App Access" Toggle**: Added an "Allow app access" switch inside each installed manager block (Porter, Shizuku, Shevery) allowing users to switch elevated permissions on and off directly within each application card.
 
 ### Fixed
 - **Translated Brand Names**: Corrected the app name, `UFM`, `RClone`, `Shizuku` and `Shevery` being translated or transliterated in the Hindi, Arabic, Italian and Dutch translations, where they are now kept in their original spelling.

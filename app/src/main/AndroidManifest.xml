@@ -54,6 +54,7 @@
          must stay. Removing the wrong one either requests a forbidden permission or leaves the
          providers unguarded. -->
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+    <uses-permission android:name="eu.darken.porter.permission.API_V23" />
 
     <!-- TV Support -->
     <uses-feature

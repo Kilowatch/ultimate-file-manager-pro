@@ -298,6 +298,8 @@ object SettingsBackupManager {
         add("ufm_keyboard_shortcuts_prefs", context.getString(R.string.backup_pref_keyboard_shortcuts))
         add("ufm_saf_locations_prefs",   context.getString(R.string.backup_pref_saf_locations))
         add("adb_preferences",           context.getString(R.string.backup_pref_adb_settings))
+        add("grid_text_position_prefs",  context.getString(R.string.backup_pref_grid_text_position))
+        add("ufm_view_style_prefs_v2",   context.getString(R.string.backup_pref_view_styles))
         add("checksum_prefs",          context.getString(R.string.backup_pref_checksum))
         add("ufm_recents_prefs",         context.getString(R.string.recent_files_title))
         if (!za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
@@ -637,7 +639,9 @@ object SettingsBackupManager {
                 "tabs_preferences"          to R.string.backup_pref_tabs,
                 "root_preferences"          to R.string.backup_pref_root,
                 "ufm_tv_server_prefs"       to R.string.backup_pref_tv_server,
-                "ufm_foss_update_prefs"     to R.string.backup_pref_foss_update
+                "ufm_foss_update_prefs"     to R.string.backup_pref_foss_update,
+                "grid_text_position_prefs"  to R.string.backup_pref_grid_text_position,
+                "ufm_view_style_prefs_v2"   to R.string.backup_pref_view_styles
             )
             while (keys.hasNext()) {
                 val key = keys.next()

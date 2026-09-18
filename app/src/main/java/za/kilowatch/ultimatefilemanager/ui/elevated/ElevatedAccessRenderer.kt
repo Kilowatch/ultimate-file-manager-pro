@@ -34,7 +34,9 @@ class ElevatedAccessViewRefs(
     val porterWaiting: TextView,
     val actionButton: MaterialButton,
     val downloadButton: MaterialButton,
-    val openButton: MaterialButton
+    val openButton: MaterialButton,
+    val appAccessLayout: View,
+    val appAccessSwitch: com.google.android.material.materialswitch.MaterialSwitch
 ) {
     companion object {
         fun from(binding: ItemElevatedManagerBinding) = ElevatedAccessViewRefs(
@@ -47,7 +49,9 @@ class ElevatedAccessViewRefs(
             porterWaiting = binding.txtPorterWaiting,
             actionButton = binding.btnManagerAction,
             downloadButton = binding.btnManagerDownload,
-            openButton = binding.btnManagerOpen
+            openButton = binding.btnManagerOpen,
+            appAccessLayout = binding.layoutAppAccess,
+            appAccessSwitch = binding.switchAppAccess
         )
 
         fun from(binding: ItemElevatedManagerTvBinding) = ElevatedAccessViewRefs(
@@ -60,7 +64,9 @@ class ElevatedAccessViewRefs(
             porterWaiting = binding.txtPorterWaiting,
             actionButton = binding.btnManagerAction,
             downloadButton = binding.btnManagerDownload,
-            openButton = binding.btnManagerOpen
+            openButton = binding.btnManagerOpen,
+            appAccessLayout = binding.layoutAppAccess,
+            appAccessSwitch = binding.switchAppAccess
         )
     }
 }
@@ -78,7 +84,8 @@ class ElevatedAccessRenderer(
     private val refs: ElevatedAccessViewRefs,
     private val onAction: (ElevatedManager, ServiceState) -> Unit,
     private val onDownload: (ElevatedManager) -> Unit,
-    private val onOpen: (ElevatedManager) -> Unit
+    private val onOpen: (ElevatedManager) -> Unit,
+    private val onToggleAccess: (ElevatedManager, Boolean) -> Unit
 ) {
 
     /**
@@ -100,7 +107,36 @@ class ElevatedAccessRenderer(
         bindIdentity(manager)
         bindStateLine(state)
         bindWaitingNotice(manager, waitingForPorter)
+        bindAppAccess(state)
         bindButtons(state)
+    }
+
+    private fun bindAppAccess(state: ManagerState) {
+        val manager = state.manager
+        if (!state.installed) {
+            refs.appAccessLayout.visibility = View.GONE
+            refs.appAccessSwitch.setOnCheckedChangeListener(null)
+            return
+        }
+
+        refs.appAccessLayout.visibility = View.VISIBLE
+
+        val isAllowed = when (state.serviceState) {
+            ServiceState.CONNECTED -> true
+            ServiceState.RUNNING_UNAUTHORIZED -> false
+            else -> activity.checkSelfPermission(manager.permission) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        }
+
+        refs.appAccessSwitch.setOnCheckedChangeListener(null)
+        refs.appAccessSwitch.isChecked = isAllowed
+
+        refs.appAccessSwitch.setOnCheckedChangeListener { _, isChecked ->
+            onToggleAccess(manager, isChecked)
+        }
+
+        refs.appAccessLayout.setOnClickListener {
+            refs.appAccessSwitch.toggle()
+        }
     }
 
     /**

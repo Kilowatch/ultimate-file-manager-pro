@@ -18,6 +18,7 @@ import za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper
  */
 enum class ElevatedManager(
     val packageName: String,
+    val permission: String,
     @StringRes val titleRes: Int,
     @StringRes val descriptionRes: Int,
     @DrawableRes val brandIconRes: Int,
@@ -28,6 +29,7 @@ enum class ElevatedManager(
 ) {
     PORTER(
         packageName = ShizukuShellWrapper.PORTER_PACKAGE,
+        permission = "eu.darken.porter.permission.API_V23",
         titleRes = R.string.shizuku_manager_porter_title,
         descriptionRes = R.string.shizuku_manager_porter_desc,
         brandIconRes = R.drawable.ic_porter_logo,
@@ -36,6 +38,7 @@ enum class ElevatedManager(
     ),
     SHIZUKU(
         packageName = ShizukuShellWrapper.SHIZUKU_PACKAGE,
+        permission = "moe.shizuku.manager.permission.API_V23",
         titleRes = R.string.shizuku_manager_shizuku_title,
         descriptionRes = R.string.shizuku_manager_shizuku_desc,
         brandIconRes = R.drawable.ic_shizuku_logo,
@@ -43,6 +46,7 @@ enum class ElevatedManager(
     ),
     SHEVERY(
         packageName = ShizukuShellWrapper.SHEVERY_PACKAGE,
+        permission = "moe.shizuku.manager.permission.API_V23",
         titleRes = R.string.shizuku_manager_shevery_title,
         descriptionRes = R.string.shizuku_manager_shevery_desc,
         // Shevery has no brand vector of its own; ic_lightning is what the download manager

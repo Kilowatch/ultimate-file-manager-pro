@@ -697,6 +697,10 @@ class SettingsActivity : AppCompatActivity() {
         cardGridIndicators.setOnClickListener { toggleGridIndicators() }
         switchGridIndicators.setOnCheckedChangeListener(null)
 
+        // Grid Text Position row (TV)
+        findViewById<View>(R.id.cardGridTextPosition)?.setOnClickListener { showGridTextPositionDialog() }
+        updateGridTextPositionSubtitleTv()
+
         // Tip Jar Progress Popup toggle — ON = show, OFF = hide (default ON)
         val cardTipJarPopup = findViewById<View>(R.id.cardTipJarPopup)
         if (cardTipJarPopup != null) {
@@ -845,6 +849,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<View>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardScrollingText)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardGridIndicators)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardGridTextPosition)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardTipJarPopup)?.let { setupTvCardFocus(it) }
             // FR-20. Omitting this would leave the Colorblind card rendered but
             // D-pad-invisible — the exact failure this feature exists to fix.
@@ -2305,6 +2310,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
             CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size),
             CardIcon(R.id.cardGridIndicators, "settings_grid_indicators", R.drawable.ic_view_list),
+            CardIcon(R.id.cardGridTextPosition, "settings_grid_text_position", R.drawable.ic_view_grid_medium),
             CardIcon(R.id.cardTipJarPopup, "settings_tip_jar_popup", R.drawable.ic_tip_jar_glow),
             CardIcon(R.id.cardFossUpdateCheck, "settings_foss_update", R.drawable.ic_install)
         )
@@ -2945,7 +2951,39 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        findViewById<View>(R.id.rowGridTextPosition)?.setOnClickListener {
+            showGridTextPositionDialog()
+        }
+
         updateViewAppearanceUI()
+    }
+
+    private fun showGridTextPositionDialog() {
+        val options = arrayOf(
+            getString(R.string.settings_grid_text_position_below),
+            getString(R.string.settings_grid_text_position_overlay)
+        )
+        val currentPosition = GridTextPositionPreferenceManager.getPosition(this)
+        val selectedIndex = if (currentPosition == GridTextPositionPreferenceManager.Position.BELOW) 0 else 1
+
+        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.settings_grid_text_position_title)
+            .setSingleChoiceItems(options, selectedIndex) { dialog, which ->
+                val newPosition = if (which == 0) GridTextPositionPreferenceManager.Position.BELOW else GridTextPositionPreferenceManager.Position.OVERLAY
+                GridTextPositionPreferenceManager.setPosition(this, newPosition)
+                updateViewAppearanceUI()
+                updateGridTextPositionSubtitleTv()
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.btn_cancel, null)
+            .show()
+    }
+
+    private fun updateGridTextPositionSubtitleTv() {
+        val isBelow = GridTextPositionPreferenceManager.isBelow(this)
+        findViewById<TextView>(R.id.txtGridTextPositionSubtitleTv)?.setText(
+            if (isBelow) R.string.settings_grid_text_position_below else R.string.settings_grid_text_position_overlay
+        )
     }
 
     private fun updateViewAppearanceUI() {
@@ -2998,6 +3036,12 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<TextView>(txtId)?.text =
                 "${style.targetWidthDp} dp cell · ${style.cardMarginDp} dp gap"
         }
+
+        val isBelow = GridTextPositionPreferenceManager.isBelow(this)
+        findViewById<TextView>(R.id.txtGridTextPositionSubtitle)?.setText(
+            if (isBelow) R.string.settings_grid_text_position_below else R.string.settings_grid_text_position_overlay
+        )
     }
 }
+
 

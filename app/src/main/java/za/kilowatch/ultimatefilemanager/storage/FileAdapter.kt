@@ -36,6 +36,7 @@ import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.FileNameDisplayHelper
+import za.kilowatch.ultimatefilemanager.settings.GridTextPositionPreferenceManager
 import za.kilowatch.ultimatefilemanager.util.AppIconBadgeHelper
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
@@ -691,14 +692,19 @@ class FileAdapter(
         if (item is ListItem.EmptyBuffer) return 4
         if (item is ListItem.Header) return 3
         val isGrid = ViewModeManager.isGrid(viewMode)
+        val isBelow = attachedContext?.let { GridTextPositionPreferenceManager.isBelow(it) } != false
         return when {
-            isGrid    -> 1             // grid layout
-            isCompact -> 2             // compact list (vertical-split twin window)
-            else      -> 0             // list layout (can be TV list or mobile list)
+            isGrid && isBelow -> 1             // grid layout (text below block)
+            isGrid            -> 5             // grid layout (text overlaid on block)
+            isCompact         -> 2             // compact list (vertical-split twin window)
+            else              -> 0             // list layout (can be TV list or mobile list)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (attachedContext == null) {
+            attachedContext = parent.context
+        }
         if (viewType == 4) {
             val view = View(parent.context).apply {
                 layoutParams = RecyclerView.LayoutParams(
@@ -714,6 +720,7 @@ class FileAdapter(
         }
         val layoutRes = when {
             viewType == 1 -> R.layout.item_file_grid
+            viewType == 5 -> R.layout.item_file_grid_overlay
             isTv         -> R.layout.item_file_tv
             viewType == 2 -> R.layout.item_file_compact
             else         -> R.layout.item_file
@@ -1556,7 +1563,11 @@ class FileAdapter(
             FileNameDisplayHelper.applyFileNameDisplay(txtName, file.name, isTv, isGrid)
 
             if (isGrid) {
-                applyGridTextColor(file)
+                if (!GridTextPositionPreferenceManager.isBelow(context)) {
+                    applyGridTextColor(file)
+                } else {
+                    txtName.setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.mobile_card_text_primary))
+                }
             }
         }
 

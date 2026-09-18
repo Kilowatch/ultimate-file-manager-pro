@@ -1174,6 +1174,58 @@
                                 </FrameLayout>
                             </LinearLayout>
 
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="64dp"
+                                android:layout_marginVertical="6dp"
+                                android:background="@color/mobile_glass_stroke" />
+
+                            <!-- Grid Text Placement Setting -->
+                            <LinearLayout
+                                android:id="@+id/rowGridTextPosition"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:paddingVertical="10dp"
+                                android:paddingStart="64dp"
+                                android:paddingEnd="16dp"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/settings_grid_text_position_title"
+                                        android:textColor="@color/mobile_card_text_primary"
+                                        android:textSize="14sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtGridTextPositionSubtitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/mobile_text_secondary"
+                                        android:textSize="11sp"
+                                        android:text="@string/settings_grid_text_position_below" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_arrow_down"
+                                    app:tint="@color/mobile_text_secondary"
+                                    android:contentDescription="@null" />
+                            </LinearLayout>
+
                         </LinearLayout>
                         <View
                             android:layout_width="match_parent"

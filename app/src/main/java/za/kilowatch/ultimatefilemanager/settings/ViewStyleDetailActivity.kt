@@ -430,9 +430,19 @@ class ViewStyleDetailActivity : AppCompatActivity() {
             GridPreviewSample("Data.csv", FileTypeIconProvider.iconForExtension(this, "csv"), isImage = false)
         )
 
+        val gridLayoutRes = if (GridTextPositionPreferenceManager.isBelow(this)) {
+            R.layout.item_file_grid
+        } else {
+            R.layout.item_file_grid_overlay
+        }
+        if (containerGridPreview.tag != gridLayoutRes) {
+            containerGridPreview.removeAllViews()
+            containerGridPreview.tag = gridLayoutRes
+        }
+
         // Ensure container has exactly spanCount children
         while (containerGridPreview.childCount < spanCount) {
-            val view = layoutInflater.inflate(R.layout.item_file_grid, containerGridPreview, false)
+            val view = layoutInflater.inflate(gridLayoutRes, containerGridPreview, false)
             containerGridPreview.addView(view)
         }
         while (containerGridPreview.childCount > spanCount) {

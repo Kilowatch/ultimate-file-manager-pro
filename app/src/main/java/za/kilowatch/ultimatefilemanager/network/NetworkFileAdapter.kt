@@ -31,6 +31,7 @@ import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailPreferenceManag
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.FileNameDisplayHelper
+import za.kilowatch.ultimatefilemanager.settings.GridTextPositionPreferenceManager
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import coil3.load
 import coil3.asImage
@@ -405,10 +406,12 @@ class NetworkFileAdapter(
         if (item is za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer) return 4
         if (item is za.kilowatch.ultimatefilemanager.storage.ListItem.Header) return 3
         val isGrid = ViewModeManager.isGrid(viewMode)
+        val isBelow = GridTextPositionPreferenceManager.isBelow(context)
         return when {
-            isGrid    -> 1
-            isCompact -> 2
-            else      -> 0
+            isGrid && isBelow -> 1
+            isGrid            -> 5
+            isCompact         -> 2
+            else              -> 0
         }
     }
 
@@ -428,6 +431,7 @@ class NetworkFileAdapter(
         }
         val layoutRes = when {
             viewType == 1 -> R.layout.item_file_grid
+            viewType == 5 -> R.layout.item_file_grid_overlay
             isTv         -> R.layout.item_file_tv
             viewType == 2 -> R.layout.item_file_compact
             else         -> R.layout.item_file
@@ -1086,7 +1090,11 @@ class NetworkFileAdapter(
             FileNameDisplayHelper.applyFileNameDisplay(txtName, file.name, isTv, isGrid)
 
             if (isGrid) {
-                applyGridTextColor(file)
+                if (!GridTextPositionPreferenceManager.isBelow(context)) {
+                    applyGridTextColor(file)
+                } else {
+                    txtName.setTextColor(ContextCompat.getColor(context, if (isTv) R.color.tv_text_primary else R.color.mobile_card_text_primary))
+                }
             }
 
             // Toggle item handling (e.g. "Enable WiFi Remote" switch)

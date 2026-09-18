@@ -8727,6 +8727,14 @@ Descargar %1$s: v%2$s
     <string name="elevated_download_btn">
 Descargar e instalar (%1$s)
 </string>
+    <string name="shizuku_btn_stop_daemon">Stop Daemon</string>
+    <string name="shizuku_dialog_stop_daemon_title">Stop Elevated Access Daemon?</string>
+    <string name="shizuku_dialog_stop_daemon_desc">This will terminate the running %1$s background daemon. Elevated file operations in UFM will be paused until restarted.</string>
+    <string name="shizuku_daemon_stopped">%1$s daemon stopped</string>
+    <string name="shizuku_daemon_stop_failed">Could not stop %1$s daemon automatically. Please stop it from the %1$s app.</string>
+    <string name="shizuku_allow_app_access">Allow app access</string>
+    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
+    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
     <string name="elevated_fetching_toast">
 Buscando la última versión de %1$s…
 </string>
@@ -15064,6 +15072,14 @@ Abrir Ajustes de almacenamiento
     <string name="safely_remove_unmount_action">
 Montar unidad
 </string>
+
+    <!-- Grid Text Placement Settings -->
+    <string name="settings_grid_text_position_title">Grid Text Placement</string>
+    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
+    <string name="settings_grid_text_position_below">Below Block (Default)</string>
+    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
+    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
+    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
 </resources>
 
 
