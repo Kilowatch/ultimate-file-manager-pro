@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Per-Application "Allow App Access" Toggle**: Added an "Allow app access" switch inside each installed manager block (Porter, Shizuku, Shevery) allowing users to switch elevated permissions on and off directly within each application card.
 
 ### Fixed
+- **Streaming Proxy Seek Freezes (Issue #33)**: Fixed video freezing while audio continues playing during external player (VLC) playback over SMB. The local HTTP proxy now proactively aborts superseded in-flight streams and closes their sockets on new seek requests, freeing blocked loopback connections.
+- **Loopback Socket Tuning**: Enabled `TCP_NODELAY` and capped socket send buffers to 512 KB on the local HTTP streaming proxy to eliminate Nagle ACK latency and prevent loopback buffer bloat.
+- **SMB Session & Handle Leak Elimination (Issue #33)**: Fixed SMB sessions and file handles lingering after media playback by automatically closing idle file handles after 60 seconds of inactivity (with transparent reopening on demand), reducing session TTL to 10 minutes, and querying file sizes via pooled SMB metadata rather than opening dedicated random-access connections prior to launch.
 - **Translated Brand Names**: Corrected the app name, `UFM`, `RClone`, `Shizuku` and `Shevery` being translated or transliterated in the Hindi, Arabic, Italian and Dutch translations, where they are now kept in their original spelling.
 - **Open-Source Licence List**: Corrected the licence list, which attributed a single licence to the whole Porter SDK and omitted the bundled Shizuku API.
 

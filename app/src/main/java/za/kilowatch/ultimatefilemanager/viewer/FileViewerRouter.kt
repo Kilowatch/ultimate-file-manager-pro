@@ -763,10 +763,11 @@ object FileViewerRouter {
                     fileSizeHint
                 } else if (share.host == za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER) {
                     za.kilowatch.ultimatefilemanager.network.RCloneShareClient.getFileSizeSync(share, remotePath)
+                } else if (share.type == za.kilowatch.ultimatefilemanager.network.ShareType.SMB) {
+                    za.kilowatch.ultimatefilemanager.network.SmbShareClient.getFileSize(share, remotePath) ?: -1L
                 } else {
                     val openedHandle = when (share.type) {
                         za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openRandomAccessFile(share, remotePath)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.openRandomAccessFile(share, remotePath)
                         za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.openRandomAccessFile(share, remotePath)
                         za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openRandomAccessFile(share, remotePath)
                         za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openRandomAccessFile(share, remotePath)

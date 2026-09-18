@@ -11,9 +11,11 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Local HTTP/1.1 proxy server for network-file streaming to external players (VLC, MX Player, etc.)
@@ -25,14 +27,18 @@ import java.util.concurrent.TimeUnit
  * threads inside the same smbj handle at once, which is what corrupts the SMB connection and makes
  * the NAS drop it.
  *
- * On seek, the player closes the old HTTP socket; the old streaming loop's next socket write
- * fails and it exits without touching the handle. The new request reuses the same pinned handle
- * at the new offset — no new SMB connection is opened for a seek.
+ * On seek, when a new Range request arrives on the same session, any in-flight superseded stream
+ * is actively aborted and its socket closed. This unblocks the writer thread immediately, clears
+ * kernel loopback buffers, and avoids hitting the client's per-host connection limit.
+ *
+ * Pinned handles are automatically closed after [IDLE_HANDLE_CLOSE_MS] of zero active connections
+ * and reopened transparently on demand, preventing server-side handle and session leaks.
  */
 object NetworkHttpProxyServer {
 
     private const val TAG = "NetworkHttpProxy"
-    private const val SESSION_TTL_MS = 60 * 60 * 1000L
+    private const val SESSION_TTL_MS = 10 * 60 * 1000L // 10 minutes idle session TTL
+    internal const val IDLE_HANDLE_CLOSE_MS = 60 * 1000L // 60s idle handle reclamation
     private const val CHUNK_SIZE = 256 * 1024
 
     /** Max read attempts with a fresh handle before returning EOF. */
@@ -40,6 +46,21 @@ object NetworkHttpProxyServer {
 
     /** Base backoff between reopen attempts (multiplied by attempt number). */
     private const val READ_RETRY_BACKOFF_MS = 400L
+
+    internal class ActiveStream(
+        val socket: Socket,
+        val rangeStart: Long,
+        val rangeEnd: Long
+    ) {
+        @Volatile var isAborted: Boolean = false
+
+        fun abort() {
+            if (!isAborted) {
+                isAborted = true
+                runCatching { socket.close() }
+            }
+        }
+    }
 
     class Session(
         val share: NetworkShare,
@@ -61,11 +82,37 @@ object NetworkHttpProxyServer {
          */
         val readLock = Any()
 
+        /** Currently active streaming context on this session. Replaced & aborted on seek. */
+        @Volatile internal var activeStream: ActiveStream? = null
+
+        /** Count of concurrently active HTTP streaming connections on this session. */
+        internal val activeStreamCount = AtomicInteger(0)
+
+        /** Scheduled future for closing handle when idle. */
+        @Volatile internal var idleCloseFuture: ScheduledFuture<*>? = null
+
         fun closeHandle() {
             synchronized(readLock) {
                 runCatching { handle?.close() }
                 handle = null
             }
+        }
+
+        @Synchronized
+        internal fun cancelIdleHandleCloseLocked() {
+            idleCloseFuture?.cancel(false)
+            idleCloseFuture = null
+        }
+
+        @Synchronized
+        internal fun scheduleIdleHandleCloseLocked(delayMs: Long) {
+            idleCloseFuture?.cancel(false)
+            idleCloseFuture = scheduler.schedule({
+                if (activeStreamCount.get() == 0) {
+                    closeHandle()
+                    GoRoLog.d(TAG, "Closed idle handle for session $path")
+                }
+            }, delayMs, TimeUnit.MILLISECONDS)
         }
     }
 
@@ -81,6 +128,16 @@ object NetworkHttpProxyServer {
     @Volatile private var port: Int = 0
 
     private val executor = ThreadPoolExecutor(0, 32, 60L, TimeUnit.SECONDS, SynchronousQueue())
+
+    private val scheduler = Executors.newSingleThreadScheduledExecutor { r ->
+        Thread(r, "ufm-proxy-scheduler").apply { isDaemon = true }
+    }
+
+    /**
+     * Handle-factory seam for creating streaming handles. Defaults to the real
+     * [openHandleForSession]; tests override it to inject a fake [IRandomAccessFile].
+     */
+    internal var handleFactory: (Session) -> IRandomAccessFile? = ::openHandleForSession
 
     @Synchronized
     fun start() {
@@ -122,6 +179,8 @@ object NetworkHttpProxyServer {
 
     fun unregister(uuid: String) {
         val session = sessions.remove(uuid)
+        session?.cancelIdleHandleCloseLocked()
+        session?.activeStream?.abort()
         session?.closeHandle()
         GoRoLog.d(TAG, "Unregistered session $uuid")
     }
@@ -144,7 +203,11 @@ object NetworkHttpProxyServer {
 
     private fun handleClient(socket: Socket) {
         try {
+            socket.tcpNoDelay = true
             socket.soTimeout = 30_000
+            runCatching { socket.sendBufferSize = 512 * 1024 }
+            runCatching { socket.receiveBufferSize = 64 * 1024 }
+
             val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
             val out = socket.getOutputStream()
 
@@ -187,7 +250,32 @@ object NetworkHttpProxyServer {
                 return
             }
 
-            streamResponse(out, session, fileSize, isRangeRequest, rangeStart, rangeEnd)
+            val currentStream = ActiveStream(socket, rangeStart, rangeEnd)
+            val prevStream: ActiveStream?
+            synchronized(session) {
+                prevStream = session.activeStream
+                session.activeStream = currentStream
+                session.cancelIdleHandleCloseLocked()
+            }
+            if (prevStream != null && prevStream.socket !== socket) {
+                GoRoLog.d(TAG, "Aborting superseded stream (${prevStream.rangeStart}-${prevStream.rangeEnd}) on session $uuid for new seek ($rangeStart-$rangeEnd)")
+                prevStream.abort()
+            }
+            session.activeStreamCount.incrementAndGet()
+
+            try {
+                streamResponse(out, session, currentStream, fileSize, isRangeRequest, rangeStart, rangeEnd)
+            } finally {
+                synchronized(session) {
+                    if (session.activeStream === currentStream) {
+                        session.activeStream = null
+                    }
+                    val remainingActive = session.activeStreamCount.decrementAndGet()
+                    if (remainingActive <= 0) {
+                        session.scheduleIdleHandleCloseLocked(IDLE_HANDLE_CLOSE_MS)
+                    }
+                }
+            }
         } catch (e: Exception) {
             GoRoLog.e(TAG, "Client handler error", e)
         } finally {
@@ -207,7 +295,7 @@ object NetworkHttpProxyServer {
      * the NAS; reconnects are paced by the player's own request cadence.
      */
     private fun streamResponse(
-        out: OutputStream, session: Session,
+        out: OutputStream, session: Session, stream: ActiveStream,
         fileSize: Long, isRangeRequest: Boolean, rangeStart: Long, rangeEnd: Long
     ) {
         val contentLength = rangeEnd - rangeStart + 1
@@ -228,17 +316,18 @@ object NetworkHttpProxyServer {
         var remaining = contentLength
 
         while (remaining > 0) {
+            if (stream.isAborted || stream.socket.isClosed) break
             val toRead = minOf(CHUNK_SIZE.toLong(), remaining).toInt()
-            val bytesRead = readChunk(session, position, buffer, toRead)
-            if (bytesRead <= 0) break
+            val bytesRead = readChunk(session, stream, position, buffer, toRead)
+            if (bytesRead <= 0 || stream.isAborted || stream.socket.isClosed) break
 
             try { out.write(buffer, 0, bytesRead) }
-            catch (e: Exception) { break } // client disconnected (seek/close)
+            catch (e: Exception) { break } // client disconnected or aborted (seek/close)
 
             position += bytesRead
             remaining -= bytesRead
         }
-        out.flush()
+        runCatching { out.flush() }
     }
 
     /**
@@ -253,36 +342,46 @@ object NetworkHttpProxyServer {
      *
      * @return bytes read, or 0 (EOF) only if every reopen attempt failed.
      */
-    private fun readChunk(session: Session, offset: Long, buffer: ByteArray, length: Int): Int {
-        synchronized(session.readLock) {
-            var handle: IRandomAccessFile = getOrCreatePinnedHandleLocked(session) ?: return 0
-
-            var attempts = 0
-            while (attempts < MAX_READ_ATTEMPTS) {
-                attempts++
+    private fun readChunk(session: Session, stream: ActiveStream?, offset: Long, buffer: ByteArray, length: Int): Int {
+        var attempts = 0
+        while (attempts < MAX_READ_ATTEMPTS) {
+            if (stream?.isAborted == true || stream?.socket?.isClosed == true) return 0
+            attempts++
+            val (readBytes, error) = synchronized(session.readLock) {
+                val handle = getOrCreatePinnedHandleLocked(session) ?: return 0
                 try {
                     val n = handle.read(offset, buffer, length)
-                    return if (n < 0) 0 else n
+                    Pair(if (n < 0) 0 else n, null)
                 } catch (e: Exception) {
-                    GoRoLog.w(TAG, "Pinned handle read failed at offset $offset (attempt $attempts/$MAX_READ_ATTEMPTS)", null)
-                    if (attempts >= MAX_READ_ATTEMPTS) {
-                        GoRoLog.e(TAG, "Pinned handle read failed after $MAX_READ_ATTEMPTS attempts at offset $offset", e)
-                        return 0
-                    }
-                    // Close the dead handle; open a fresh one after a short backoff so the
-                    // NAS's reset cooldown has time to pass before we reconnect.
-                    runCatching { handle.close() }
-                    session.handle = null
-                    try { Thread.sleep(READ_RETRY_BACKOFF_MS * attempts) }
-                    catch (_: InterruptedException) { return 0 }
-                    handle = try { openHandleForSession(session) }
-                    catch (ex: Exception) { GoRoLog.e(TAG, "Failed to reopen pinned handle for ${session.path}", ex); null }
-                        ?: return 0
-                    session.handle = handle
+                    Pair(0, e)
                 }
             }
-            return 0
+
+            if (error == null) {
+                return readBytes
+            }
+
+            GoRoLog.w(TAG, "Pinned handle read failed at offset $offset (attempt $attempts/$MAX_READ_ATTEMPTS)", null)
+            if (attempts >= MAX_READ_ATTEMPTS) {
+                GoRoLog.e(TAG, "Pinned handle read failed after $MAX_READ_ATTEMPTS attempts at offset $offset", error)
+                return 0
+            }
+
+            // Close the dead handle under lock so the next attempt opens a fresh one.
+            synchronized(session.readLock) {
+                runCatching { session.handle?.close() }
+                session.handle = null
+            }
+
+            if (stream?.isAborted == true || stream?.socket?.isClosed == true) return 0
+
+            // Sleep OUTSIDE readLock so other session operations are not blocked during backoff.
+            try { Thread.sleep(READ_RETRY_BACKOFF_MS * attempts) }
+            catch (_: InterruptedException) { return 0 }
+
+            if (stream?.isAborted == true || stream?.socket?.isClosed == true) return 0
         }
+        return 0
     }
 
     /**
@@ -291,7 +390,7 @@ object NetworkHttpProxyServer {
      */
     private fun getOrCreatePinnedHandleLocked(session: Session): IRandomAccessFile? {
         session.handle?.let { return it }
-        val h = try { openHandleForSession(session) }
+        val h = try { handleFactory(session) }
         catch (e: Exception) { GoRoLog.e(TAG, "Failed to open pinned handle for ${session.path}", e); null }
         session.handle = h
         return h
@@ -379,15 +478,16 @@ object NetworkHttpProxyServer {
     // ── Session eviction ──────────────────────────────────────────────────────
 
     private fun scheduleSessionEviction() {
-        val scheduler = Executors.newSingleThreadScheduledExecutor()
         scheduler.scheduleAtFixedRate({
             val now = System.currentTimeMillis()
             val expired = sessions.entries.filter { now - it.value.lastAccessMs > SESSION_TTL_MS }
             expired.forEach { (uuid, session) ->
+                session.cancelIdleHandleCloseLocked()
                 session.closeHandle()
                 sessions.remove(uuid)
                 GoRoLog.d(TAG, "Evicted idle session $uuid")
             }
-        }, 10, 10, TimeUnit.MINUTES)
+        }, 1, 1, TimeUnit.MINUTES)
     }
 }
+
