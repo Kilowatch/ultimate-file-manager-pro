@@ -249,7 +249,11 @@ class TvRemoteActivity : AppCompatActivity() {
                         // The user manually disconnected the previous TV, which stopped the service.
                         // We must restart it now so the HID proxy and SDP records are recreated.
                         // The service will auto-connect to the new default TV once registered.
-                        BluetoothHidService.start(this)
+                        try {
+                            BluetoothHidService.start(this)
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to start BluetoothHidService", e)
+                        }
                     }
                     // Wrap transport and start observing so UI reflects the connection
                     currentTransport = BluetoothRemoteTransport(btManager!!)
@@ -411,7 +415,11 @@ class TvRemoteActivity : AppCompatActivity() {
                     startBluetoothFlow()
                 }
             } else {
-                startBluetoothFlow()
+                if (ContextCompat.checkSelfPermission(this@TvRemoteActivity, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                    showCardNoPermission()
+                } else {
+                    startBluetoothFlow()
+                }
             }
         }
 
@@ -768,6 +776,17 @@ class TvRemoteActivity : AppCompatActivity() {
             refreshDisconnectedCard()
             return
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                showCardNoPermission()
+                return
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                showCardNoPermission()
+                return
+            }
+        }
         if (btManager?.isBluetoothEnabled() == false) {
             showCardBluetoothOff()
             return
@@ -792,15 +811,34 @@ class TvRemoteActivity : AppCompatActivity() {
                 checkBluetoothEnabledAndStartService()
             }
         } else {
-            checkBluetoothEnabledAndStartService()
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                showCardNoPermission()
+            } else {
+                checkBluetoothEnabledAndStartService()
+            }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
     private fun checkBluetoothEnabledAndStartService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                showCardNoPermission()
+                return
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                showCardNoPermission()
+                return
+            }
+        }
         if (btManager?.isBluetoothEnabled() == true) {
-            // Start the foreground service — safe to call even if already running.
-            BluetoothHidService.start(this)
+            try {
+                // Start the foreground service — safe to call even if already running.
+                BluetoothHidService.start(this)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to start BluetoothHidService", e)
+            }
 
             // Wrap BT manager as the current transport
             currentTransport = BluetoothRemoteTransport(btManager!!)
@@ -945,6 +983,21 @@ class TvRemoteActivity : AppCompatActivity() {
     /** Connect via Bluetooth with the existing BT flow. */
     private fun connectViaBluetoothTransport(tvName: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    showCardNoPermission()
+                    return
+                }
+            } else {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                    showCardNoPermission()
+                    return
+                }
+            }
+            if (btManager?.isBluetoothEnabled() == false) {
+                showCardBluetoothOff()
+                return
+            }
             btManager?.manualDisconnect = false
             btManager?.wasVirtualCableUnplugged = false
             val currentName = btManager?.getSavedTvDevices()
@@ -961,7 +1014,11 @@ class TvRemoteActivity : AppCompatActivity() {
             // Wrap and observe the transport
             currentTransport = BluetoothRemoteTransport(btManager!!)
             startTransportObserver()
-            BluetoothHidService.start(this)
+            try {
+                BluetoothHidService.start(this)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to start BluetoothHidService", e)
+            }
             btManager?.autoConnectToSavedTv(true)
         }
     }
@@ -999,7 +1056,11 @@ class TvRemoteActivity : AppCompatActivity() {
         btnStatusAction.setOnClickListener {
             @Suppress("DEPRECATION")
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivity(enableBtIntent)
+            try {
+                startActivity(enableBtIntent)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to launch ACTION_REQUEST_ENABLE", e)
+            }
         }
         setToolbarActions(pairVisible = false, disconnectVisible = false)
     }

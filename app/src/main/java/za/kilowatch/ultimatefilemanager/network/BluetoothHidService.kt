@@ -51,12 +51,20 @@ class BluetoothHidService : Service() {
         private const val RECONNECT_DELAY_MS = 2_000L
 
         fun start(context: Context) {
-            val intent = Intent(context, BluetoothHidService::class.java)
-            ContextCompat.startForegroundService(context, intent)
+            try {
+                val intent = Intent(context, BluetoothHidService::class.java)
+                ContextCompat.startForegroundService(context, intent)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start BluetoothHidService", e)
+            }
         }
 
         fun stop(context: Context) {
-            context.stopService(Intent(context, BluetoothHidService::class.java))
+            try {
+                context.stopService(Intent(context, BluetoothHidService::class.java))
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to stop BluetoothHidService", e)
+            }
         }
     }
 
@@ -76,12 +84,18 @@ class BluetoothHidService : Service() {
         // to startForeground() when the service declares foregroundServiceType in the manifest.
         // On Android 16 (API 36), omitting the type throws MissingForegroundServiceTypeException.
         // ServiceCompat handles the version check gracefully.
-        ServiceCompat.startForeground(
-            this,
-            NOTIFICATION_ID,
-            notification,
-            ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
-        )
+        try {
+            ServiceCompat.startForeground(
+                this,
+                NOTIFICATION_ID,
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start foreground service", e)
+            stopSelf()
+            return
+        }
 
         btManager = BluetoothRemoteManager.getInstance(this)
         btManager?.initialize()

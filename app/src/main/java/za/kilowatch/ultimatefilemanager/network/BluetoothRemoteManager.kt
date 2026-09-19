@@ -138,8 +138,8 @@ class BluetoothRemoteManager private constructor(private val context: Context) {
         }
     }
 
-    private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
+    private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+    private val bluetoothAdapter: BluetoothAdapter? = bluetoothManager?.adapter
     private val prefs: SharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     private var hidDevice: BluetoothHidDevice? = null
     internal var connectedDevice: BluetoothDevice? = null
@@ -474,14 +474,24 @@ class BluetoothRemoteManager private constructor(private val context: Context) {
     }
 
     fun initialize() {
-        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) return
-        bluetoothAdapter.getProfileProxy(context, serviceListener, BluetoothProfile.HID_DEVICE)
+        try {
+            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) return
+            bluetoothAdapter.getProfileProxy(context, serviceListener, BluetoothProfile.HID_DEVICE)
+        } catch (e: SecurityException) {
+            Log.w(TAG, "Lacking permission to initialize Bluetooth profile proxy", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize Bluetooth profile proxy", e)
+        }
     }
 
     fun cleanup() {
         unregisterApp()
         hidDevice?.let {
-            bluetoothAdapter?.closeProfileProxy(BluetoothProfile.HID_DEVICE, it)
+            try {
+                bluetoothAdapter?.closeProfileProxy(BluetoothProfile.HID_DEVICE, it)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to close Bluetooth profile proxy", e)
+            }
         }
         hidDevice = null
         connectedDevice = null
@@ -489,7 +499,17 @@ class BluetoothRemoteManager private constructor(private val context: Context) {
         _appRegistrationState.value = false
     }
 
-    fun isBluetoothEnabled() = bluetoothAdapter?.isEnabled == true
+    fun isBluetoothEnabled(): Boolean {
+        return try {
+            bluetoothAdapter?.isEnabled == true
+        } catch (e: SecurityException) {
+            Log.w(TAG, "Lacking permission to check if Bluetooth is enabled", e)
+            false
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to check if Bluetooth is enabled", e)
+            false
+        }
+    }
 
     /**
      * Enable Bluetooth discoverable mode for 300 seconds (maximum).
