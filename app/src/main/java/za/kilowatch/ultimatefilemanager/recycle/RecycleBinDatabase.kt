@@ -15,6 +15,16 @@ abstract class RecycleBinDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): RecycleBinDatabase {
             return INSTANCE ?: synchronized(this) {
+                try {
+                    val field = android.database.CursorWindow::class.java.getDeclaredField("sCursorWindowSize")
+                    field.isAccessible = true
+                    val current = (field.get(null) as? Number)?.toLong() ?: 0L
+                    if (current < 50L * 1024 * 1024) {
+                        field.set(null, 50 * 1024 * 1024) // 50MB window
+                    }
+                } catch (_: Throwable) {
+                    // Ignored on Android versions with strict non-SDK reflection policies
+                }
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     RecycleBinDatabase::class.java,

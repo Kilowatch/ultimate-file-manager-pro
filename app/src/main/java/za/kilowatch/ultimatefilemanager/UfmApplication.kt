@@ -209,6 +209,14 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             Log.e(TAG, "Failed to initialize hidden files manager", e)
         }
         try {
+            val field = android.database.CursorWindow::class.java.getDeclaredField("sCursorWindowSize")
+            field.isAccessible = true
+            val current = (field.get(null) as? Number)?.toLong() ?: 0L
+            if (current < 50L * 1024 * 1024) {
+                field.set(null, 50 * 1024 * 1024)
+            }
+        } catch (_: Throwable) {}
+        try {
             za.kilowatch.ultimatefilemanager.recycle.RecycleBinManager.init(this)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize recycle bin manager", e)

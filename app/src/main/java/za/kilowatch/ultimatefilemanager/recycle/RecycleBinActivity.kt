@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -108,8 +109,14 @@ class RecycleBinActivity : AppCompatActivity() {
 
     private fun observeData() {
         lifecycleScope.launch {
-            RecycleBinManager.validateEntries()
-            RecycleBinManager.getAllFlow().collectLatest { entries ->
+            try {
+                RecycleBinManager.validateEntries()
+            } catch (e: Exception) {
+                android.util.Log.w("RecycleBinActivity", "Failed to validate entries", e)
+            }
+            RecycleBinManager.getAllFlow().catch { e ->
+                android.util.Log.e("RecycleBinActivity", "Failed to observe recycle bin entries", e)
+            }.collectLatest { entries ->
                 allEntries = entries
                 adapter.pruneSelection(entries)
                 adapter.submitList(entries)
@@ -137,12 +144,13 @@ class RecycleBinActivity : AppCompatActivity() {
 
     private fun updateTrashSize() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val entries = RecycleBinManager.getAllEntries()
-            var totalSize = entries.sumOf { it.fileSize }
-            var fileCount = entries.count { !it.isDirectory }
-            var folderCount = entries.count { it.isDirectory }
+            var totalSize = RecycleBinManager.getTotalFileSize()
+            var fileCount = RecycleBinManager.getFileCount()
+            var folderCount = RecycleBinManager.getFolderCount()
+            val totalEntryCount = fileCount + folderCount
+            val dirEntries = RecycleBinManager.getDirectoryEntries()
 
-            for (entry in entries.filter { it.isDirectory }) {
+            for (entry in dirEntries) {
                 if (entry.trashPath.startsWith("/")) {
                     val dir = File(entry.trashPath)
                     if (dir.isDirectory) {
@@ -177,13 +185,16 @@ class RecycleBinActivity : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 val autoDays = za.kilowatch.ultimatefilemanager.recycle.RecycleBinSettingsManager.getAutoDeleteDays(this@RecycleBinActivity)
-                txtTrashSize.text = if (entries.isNotEmpty()) {
+                txtTrashSize.text = if (totalEntryCount > 0) {
                     val sb = StringBuilder()
                     if (totalSize > 0) sb.append(android.text.format.Formatter.formatFileSize(this@RecycleBinActivity, totalSize)).append(" · ")
                     sb.append("$fileCount files")
                     if (folderCount > 0) sb.append(" · $folderCount folders")
                     if (autoDays > 0) {
-                        val expiredCount = entries.count { it.dateDeleted + (autoDays * 86400000L) < System.currentTimeMillis() }
+                        val cutoff = System.currentTimeMillis() - (autoDays * 86400000L)
+                        val expiredCount = try {
+                            RecycleBinDatabase.getInstance(this@RecycleBinActivity).recycleBinDao().getExpiredEntries(cutoff).size
+                        } catch (_: Exception) { 0 }
                         if (expiredCount > 0) sb.append(" · $expiredCount expiring")
                         sb.append(" · ").append(getString(R.string.recycle_bin_auto_delete_days, autoDays))
                     } else {
@@ -191,7 +202,7 @@ class RecycleBinActivity : AppCompatActivity() {
                     }
                     sb.toString()
                 } else ""
-                txtTrashSize.visibility = if (entries.isNotEmpty()) View.VISIBLE else View.GONE
+                txtTrashSize.visibility = if (totalEntryCount > 0) View.VISIBLE else View.GONE
             }
         }
     }

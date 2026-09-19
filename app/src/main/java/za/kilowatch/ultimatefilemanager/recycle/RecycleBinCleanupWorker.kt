@@ -22,11 +22,13 @@ class RecycleBinCleanupWorker(appContext: Context, params: WorkerParameters) :
         Log.d(TAG, "Running cleanup: deleting entries older than $days days")
 
         val cutoff = System.currentTimeMillis() - (days * 86400000L)
-        val entries = withContext(Dispatchers.IO) {
-            RecycleBinManager.getAllEntries()
+        val expired = withContext(Dispatchers.IO) {
+            try {
+                RecycleBinDatabase.getInstance(applicationContext).recycleBinDao().getExpiredEntries(cutoff)
+            } catch (_: Exception) {
+                RecycleBinManager.getAllEntries().filter { it.dateDeleted < cutoff }
+            }
         }
-
-        val expired = entries.filter { it.dateDeleted < cutoff }
         if (expired.isEmpty()) {
             Log.d(TAG, "No expired entries found")
             return Result.success()

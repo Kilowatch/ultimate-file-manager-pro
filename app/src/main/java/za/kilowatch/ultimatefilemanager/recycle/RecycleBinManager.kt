@@ -425,10 +425,47 @@ object RecycleBinManager {
         }
     }
 
-    fun getAllFlow() = dao.getAllFlow()
+    fun getAllFlow(limit: Int = 500) = dao.getAllFlow(limit)
 
-    suspend fun getAllEntries(): List<RecycleBinEntity> = withContext(Dispatchers.IO) {
-        dao.getAll()
+    suspend fun getAllEntries(pageSize: Int = 250): List<RecycleBinEntity> = withContext(Dispatchers.IO) {
+        try {
+            val all = mutableListOf<RecycleBinEntity>()
+            var offset = 0
+            while (true) {
+                val chunk = dao.getPaged(limit = pageSize, offset = offset)
+                all.addAll(chunk)
+                if (chunk.size < pageSize) break
+                offset += chunk.size
+            }
+            all
+        } catch (e: Exception) {
+            android.util.Log.e("RecycleBinManager", "Failed to load chunked recycle bin entries, falling back to limited query", e)
+            try {
+                dao.getAll(500)
+            } catch (_: Exception) {
+                emptyList()
+            }
+        }
+    }
+
+    suspend fun getCount(): Int = withContext(Dispatchers.IO) {
+        try { dao.getCount() } catch (_: Exception) { 0 }
+    }
+
+    suspend fun getTotalFileSize(): Long = withContext(Dispatchers.IO) {
+        try { dao.getTotalFileSize() } catch (_: Exception) { 0L }
+    }
+
+    suspend fun getFileCount(): Int = withContext(Dispatchers.IO) {
+        try { dao.getFileCount() } catch (_: Exception) { 0 }
+    }
+
+    suspend fun getFolderCount(): Int = withContext(Dispatchers.IO) {
+        try { dao.getFolderCount() } catch (_: Exception) { 0 }
+    }
+
+    suspend fun getDirectoryEntries(): List<RecycleBinEntity> = withContext(Dispatchers.IO) {
+        try { dao.getDirectoryEntries() } catch (_: Exception) { emptyList() }
     }
 
     suspend fun getById(id: Long): RecycleBinEntity? = withContext(Dispatchers.IO) {
