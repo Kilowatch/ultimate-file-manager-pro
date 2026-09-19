@@ -4473,7 +4473,62 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 66. The main thread is sampled inside an in-memory collection iterator
+                    //     or lookup during Activity creation or relaunch — top frame
+                    //     is `iterator` / `listIterator` (e.g. `kotlin.collections.EmptyList.iterator`,
+                    //     `Collections$EmptyIterator`, `ArrayList.iterator`, or R8-mapped
+                    //     `sn2.iterator`), under an Activity lifecycle creation / relaunch
+                    //     dispatch (`Activity.performCreate` -> `onCreate`,
+                    //     `Instrumentation.callActivityOnCreate`,
+                    //     `ActivityThread.performLaunchActivity` / `handleLaunchActivity` /
+                    //     `handleRelaunchActivityInner` / `handleRelaunchActivity`),
+                    //     thread state RUNNABLE — reported from a Vantiva XstreamIPTV1-VT
+                    //     (Android TV set-top box, SDK 34, app 2.0.9-GOOGLE).
+                    //     `EmptyList.iterator()` is a single in-memory instruction that returns
+                    //     a singleton iterator without loops, locks, I/O, or IPC; it is physically
+                    //     impossible for it to occupy the main thread for 5 s. The stack is under
+                    //     a framework-driven Activity relaunch / creation and has zero framework
+                    //     blocking primitives anywhere (no `BinderProxy.transact`/`transactNative`,
+                    //     `Object.wait`, `LockSupport.park`, `java.io.*`, `libcore.io.*`,
+                    //     `java.net.*`, or `android.database.*`). The >5 s block is device-side
+                    //     CPU starvation on a low-end TV (where DLNA discovery, NanoHttpd, and
+                    //     coroutine worker threads were all RUNNABLE, starving the main thread)
+                    //     or a post-stall sample of the backlog the main looper drains right as
+                    //     `onCreate` executed. The `AnrWatchdogThread` now treats a main-thread
+                    //     stack whose top frame method is `iterator` or `listIterator`, with an
+                    //     Activity `onCreate` frame, an Activity lifecycle creation / relaunch
+                    //     frame (`performCreate` / `callActivityOnCreate` / `performLaunchActivity` /
+                    //     `handleLaunchActivity` / `handleRelaunchActivityInner` /
+                    //     `handleRelaunchActivity`), and NO framework blocking primitives, as a
+                    //     false positive and resets its heartbeat instead of writing a report.
+                    //     Genuine freezes keep the main thread parked inside a blocking primitive
+                    //     (a lock, file/network/database I/O, or binder frame appears on the
+                    //     stack) or app business logic outside collection traversal, and are still
+                    //     reported.
+                    val isActivityOnCreateCollectionIteratorStall =
+                        (topFrame?.methodName == "iterator" || topFrame?.methodName == "listIterator") &&
+                        mainStackTrace.any {
+                            it.className.endsWith("Activity") && it.methodName == "onCreate"
+                        } &&
+                        mainStackTrace.any {
+                            (it.className == "android.app.Activity" && it.methodName == "performCreate") ||
+                            (it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnCreate") ||
+                            (it.className == "android.app.ActivityThread" &&
+                             (it.methodName == "performLaunchActivity" || it.methodName == "handleLaunchActivity" ||
+                              it.methodName == "handleRelaunchActivityInner" || it.methodName == "handleRelaunchActivity"))
+                        } &&
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {

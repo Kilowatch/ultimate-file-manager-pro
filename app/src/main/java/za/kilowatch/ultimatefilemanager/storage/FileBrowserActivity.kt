@@ -518,7 +518,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
         rootPath = if (isRootStorage) "/" else SafFile.cleanSafPath(rawMountPath ?: internalPath)
         val isRootProtected = ShizukuShellWrapper.isProtectedPath(rootPath)
-        val isRootSaf = SafTreeManager.isSafPath(rootPath) || SafTreeManager.hasTreePermissionForPath(this, rootPath)
+        val isRootSaf = SafTreeManager.isSafPath(rootPath) || (rootPath != internalPath && SafTreeManager.hasTreePermissionForPath(this, rootPath))
 
         za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SafStorage", "FileBrowserActivity onCreate: rootPath=$rootPath, isRootProtected=$isRootProtected, isRootSaf=$isRootSaf, isRootStorage=$isRootStorage")
 

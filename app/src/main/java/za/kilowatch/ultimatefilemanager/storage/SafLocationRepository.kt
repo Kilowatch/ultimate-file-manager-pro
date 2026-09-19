@@ -3,6 +3,9 @@ package za.kilowatch.ultimatefilemanager.storage
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 
@@ -17,6 +20,9 @@ object SafLocationRepository {
 
     @Volatile
     private var cachedLocations: List<SafLocation>? = null
+
+    @Volatile
+    private var isReconciling = false
 
     fun clearCache() {
         cachedLocations = null
@@ -41,43 +47,56 @@ object SafLocationRepository {
             }
         }
 
-        // Reconcile with system persistedUriPermissions to discover all granted folders
-        try {
-            var changed = false
-            val persisted = context.contentResolver.persistedUriPermissions
-            val knownUris = list.map { it.treeUriString }.toSet()
-            for (perm in persisted) {
-                if (!perm.isReadPermission) continue
-                val uriStr = perm.uri.toString()
-                if (!knownUris.contains(uriStr)) {
-                    val doc = androidx.documentfile.provider.DocumentFile.fromTreeUri(context, perm.uri)
-                    val name = doc?.name ?: "Storage Folder"
-                    val docId = try {
-                        android.provider.DocumentsContract.getTreeDocumentId(perm.uri)
-                    } catch (_: Exception) { "" }
-                    val authority = perm.uri.authority ?: ""
-                    val isTermux = authority.contains("termux")
-                    list.add(SafLocation(
-                        displayName = name,
-                        treeUriString = uriStr,
-                        authority = authority,
-                        rootDocId = docId,
-                        iconType = if (isTermux) "terminal" else "folder",
-                        isStandalone = isTermux
-                    ))
-                    changed = true
-                }
-            }
-            if (changed) {
-                saveLocations(context, list)
-            }
-        } catch (e: Exception) {
-            GoRoLog.w("SafLocationRepository", "Error reconciling persisted URI permissions: ${e.message}")
-        }
-
         val result = list.toList()
         cachedLocations = result
+
+        // Reconcile with system persistedUriPermissions asynchronously on background IO
+        // so the calling thread (especially the main looper) is never blocked by ContentResolver IPC.
+        reconcilePersistedPermissionsAsync(context.applicationContext ?: context)
+
         return result
+    }
+
+    private fun reconcilePersistedPermissionsAsync(context: Context) {
+        if (isReconciling) return
+        isReconciling = true
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val persisted = context.contentResolver.persistedUriPermissions
+                val currentList = (cachedLocations ?: emptyList()).toMutableList()
+                val knownUris = currentList.map { it.treeUriString }.toSet()
+                var changed = false
+                for (perm in persisted) {
+                    if (!perm.isReadPermission) continue
+                    val uriStr = perm.uri.toString()
+                    if (!knownUris.contains(uriStr)) {
+                        val doc = androidx.documentfile.provider.DocumentFile.fromTreeUri(context, perm.uri)
+                        val name = doc?.name ?: "Storage Folder"
+                        val docId = try {
+                            android.provider.DocumentsContract.getTreeDocumentId(perm.uri)
+                        } catch (_: Exception) { "" }
+                        val authority = perm.uri.authority ?: ""
+                        val isTermux = authority.contains("termux")
+                        currentList.add(SafLocation(
+                            displayName = name,
+                            treeUriString = uriStr,
+                            authority = authority,
+                            rootDocId = docId,
+                            iconType = if (isTermux) "terminal" else "folder",
+                            isStandalone = isTermux
+                        ))
+                        changed = true
+                    }
+                }
+                if (changed) {
+                    saveLocations(context, currentList)
+                }
+            } catch (e: Exception) {
+                GoRoLog.w("SafLocationRepository", "Error reconciling persisted URI permissions: ${e.message}")
+            } finally {
+                isReconciling = false
+            }
+        }
     }
 
     fun addLocation(context: Context, location: SafLocation): Boolean {

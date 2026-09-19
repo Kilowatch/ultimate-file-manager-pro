@@ -149,6 +149,13 @@ object SafTreeManager {
             return location != null
         }
 
+        // Fast-path: Primary internal shared storage (/storage/emulated/0) is never a SAF tree
+        val internalStorage = android.os.Environment.getExternalStorageDirectory()?.absolutePath ?: ""
+        val normInternal = if (internalStorage.isNotEmpty()) normalizePath(internalStorage) else ""
+        if ((normInternal.isNotEmpty() && norm == normInternal) || norm == "/sdcard" || norm == "/storage/emulated/0") {
+            return false
+        }
+
         val entry = findMatchingTreeEntry(context, path) ?: return false
         val uri = Uri.parse(entry.second)
         val persisted = context.contentResolver.persistedUriPermissions
@@ -425,29 +432,33 @@ object SafTreeManager {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val all = prefs.all
         var bestMatch: Pair<String, String>? = null
-        for ((registeredPath, uriString) in all) {
-            if (uriString is String) {
-                val regNorm = normalizePath(registeredPath)
-                if (norm == regNorm || norm.startsWith("$regNorm/")) {
-                    if (bestMatch == null || regNorm.length > bestMatch.first.length) {
-                        bestMatch = Pair(regNorm, uriString)
+        if (all.isNotEmpty()) {
+            for ((registeredPath, uriString) in all) {
+                if (uriString is String) {
+                    val regNorm = normalizePath(registeredPath)
+                    if (norm == regNorm || norm.startsWith("$regNorm/")) {
+                        if (bestMatch == null || regNorm.length > bestMatch.first.length) {
+                            bestMatch = Pair(regNorm, uriString)
+                        }
                     }
                 }
             }
         }
         // Also check SafLocationRepository for any locations registered or reconciled from persistedUriPermissions
         val locations = SafLocationRepository.getLocations(context)
-        for (loc in locations) {
-            val safPrefix = "saf://${loc.id}"
-            if (norm == safPrefix || norm.startsWith("$safPrefix/")) {
-                if (bestMatch == null || safPrefix.length > bestMatch.first.length) {
-                    bestMatch = Pair(safPrefix, loc.treeUriString)
+        if (locations.isNotEmpty()) {
+            for (loc in locations) {
+                val safPrefix = "saf://${loc.id}"
+                if (norm == safPrefix || norm.startsWith("$safPrefix/")) {
+                    if (bestMatch == null || safPrefix.length > bestMatch.first.length) {
+                        bestMatch = Pair(safPrefix, loc.treeUriString)
+                    }
                 }
-            }
-            val disp = normalizePath(loc.getDisplayPath())
-            if (disp.isNotEmpty() && (norm == disp || norm.startsWith("$disp/"))) {
-                if (bestMatch == null || disp.length > bestMatch.first.length) {
-                    bestMatch = Pair(disp, loc.treeUriString)
+                val disp = normalizePath(loc.getDisplayPath())
+                if (disp.isNotEmpty() && (norm == disp || norm.startsWith("$disp/"))) {
+                    if (bestMatch == null || disp.length > bestMatch.first.length) {
+                        bestMatch = Pair(disp, loc.treeUriString)
+                    }
                 }
             }
         }
