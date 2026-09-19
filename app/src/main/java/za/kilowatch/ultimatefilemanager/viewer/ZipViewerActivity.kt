@@ -246,11 +246,24 @@ class ZipViewerActivity : AppCompatActivity() {
                 KeyEvent.KEYCODE_DPAD_CENTER,
                 KeyEvent.KEYCODE_ENTER -> {
                     if (event.isLongPress || event.repeatCount == 1) {
-                        val currentFocusView = currentFocus
-                        val focusedPos = currentFocusView?.let { recyclerEntries.getChildAdapterPosition(it) } ?: RecyclerView.NO_POSITION
+                        val focusedPos = try {
+                            val focused = currentFocus ?: recyclerEntries.findFocus()
+                            val vh = focused?.let { recyclerEntries.findContainingViewHolder(it) }
+                            if (vh != null && vh.bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                                vh.bindingAdapterPosition
+                            } else {
+                                RecyclerView.NO_POSITION
+                            }
+                        } catch (_: Exception) {
+                            RecyclerView.NO_POSITION
+                        }
                         val item = if (focusedPos != RecyclerView.NO_POSITION) {
                             (recyclerEntries.adapter as? ZipAdapter)?.items?.getOrNull(focusedPos)
-                        } else focusedItem
+                        } else if (recyclerEntries.hasFocus()) {
+                            focusedItem
+                        } else {
+                            null
+                        }
                         if (item != null) {
                             showItemOptionsForTarget(listOf(item))
                             return true
