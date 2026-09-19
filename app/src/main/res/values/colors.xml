@@ -4,6 +4,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="ic_launcher_background">#FF12306C</color>
+    <color name="splash_background">#FF002039</color>
 
 
     <!-- Premium Light Theme Palette -->

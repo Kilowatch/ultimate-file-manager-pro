@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.0] — 2026-09-17
 
 ### Added
+- **Custom Splash Screen Background**: Updated the default Android 12+ launch splash screen background color to a refined dark teal (`#002039`) matching the UFM theme.
 - **Configurable Grid View Text Placement**: Added option to display file and folder names below the thumbnail/icon block instead of overlaid on top with a gradient shadow. Text below block is now the default, with legacy overlay mode selectable in Settings under Appearance across both Mobile and Android TV.
 - **Porter Support**: Added Porter as a third elevated-access manager alongside Shizuku and Shevery, listed first and marked recommended. UFM detects which managers are installed, distinguishes Porter from Shizuku when both are present, and shows each app's real launcher icon.
 - **Elevated Access Hero Card Enhancements**: Added the active elevated manager's launcher icon and prominent application title to the top status hero card across Mobile and Android TV.
