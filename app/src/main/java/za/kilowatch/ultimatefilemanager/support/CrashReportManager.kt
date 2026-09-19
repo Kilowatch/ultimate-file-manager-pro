@@ -4395,7 +4395,85 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 65. The main thread is sampled inside the framework's text-layout
+                    //     line-break result inspection while a main-looper Runnable updates
+                    //     a TextView's text via `TextView.setText` — top frame
+                    //     `android.graphics.text.LineBreaker$Result.getLineCount` (or
+                    //     `LineBreaker.nComputeLineBreaks`/`computeLineBreaks`), under
+                    //     `StaticLayout.generate` (via `StaticLayout.<init>` from
+                    //     `StaticLayout$Builder.build`) -> `TextView.makeSingleLayout` ->
+                    //     `TextView.makeNewLayout` -> `TextView.checkForRelayout` ->
+                    //     `TextView.setText`, dispatched by a main-looper Runnable (`run()`
+                    //     sitting directly on `Handler.handleCallback` -> `dispatchMessage` ->
+                    //     `Looper.loopOnce`/`loop` -> `ActivityThread.main`), thread state
+                    //     RUNNABLE — reported from an Expressluck GRS SMART 4K TV, SDK 30,
+                    //     app 2.0.6-GOOGLE. `LineBreaker$Result.getLineCount` is a µs-scale
+                    //     bounded native/framework call that returns the line count of the
+                    //     computed breaks, and `TextView.setText` is standard framework text
+                    //     relayout: it cannot by itself occupy the main thread for 5 s. The
+                    //     main looper is demonstrably processing a freshly dispatched message
+                    //     at sample time (`Handler.handleCallback` directly below the
+                    //     Runnable's `run()`), which a thread parked inside a >5 s block
+                    //     cannot do — so the >5 s block is device-side slowness / CPU
+                    //     starvation on the low-end 4K TV (the report's own `DlnaSsdpListener`,
+                    //     `NanoHttpd Main Listener`, `DefaultDispatcher-worker-*` threads are
+                    //     all RUNNABLE, busy with DLNA/SSDP discovery and the HTTP file server,
+                    //     starving the main thread) or a post-stall sample of the backlog the
+                    //     main looper drains after a genuine stall. None of the existing
+                    //     text-layout filters match: filter 33 (`isRecyclerViewTextLayoutStall`)
+                    //     requires a RecyclerView frame and frame-draw traversal, filter 48
+                    //     requires `setTextColor` on focus change, filter 55 requires
+                    //     `Paint.getRunCharacterAdvance` under ScrollView, filter 58 requires
+                    //     `BoringLayout.isBoring`, etc. The `AnrWatchdogThread` now treats a
+                    //     main-thread stack whose top frame is `LineBreaker$Result.getLineCount`
+                    //     (or `LineBreaker.nComputeLineBreaks`/`computeLineBreaks`), with a
+                    //     `StaticLayout.generate`/`StaticLayout$Builder.build` frame, a
+                    //     `TextView.makeSingleLayout`/`makeNewLayout`/`checkForRelayout` frame,
+                    //     a `TextView.setText` frame, a main-looper Runnable (`run()`
+                    //     sitting directly on `Handler.handleCallback`), with no
+                    //     `za.kilowatch.ultimatefilemanager` frames and no framework blocking
+                    //     primitive anywhere on the stack, as a false positive and resets its
+                    //     heartbeat instead of writing a report. Genuine freezes keep the main
+                    //     thread inside app business logic — an app frame on the stack, or a
+                    //     top frame inside a blocking primitive (a lock, file/network/database
+                    //     I/O or binder frame) — and are still reported.
+                    val isTextViewSetTextLineBreakerStall =
+                        ((topFrame?.className == "android.graphics.text.LineBreaker\$Result" &&
+                          (topFrame?.methodName == "getLineCount" || topFrame?.methodName == "nGetLineCount")) ||
+                         (topFrame?.className == "android.graphics.text.LineBreaker" &&
+                          (topFrame?.methodName == "nComputeLineBreaks" || topFrame?.methodName == "computeLineBreaks"))) &&
+                        mainStackTrace.any {
+                            (it.className == "android.text.StaticLayout" && it.methodName == "generate") ||
+                            (it.className == "android.text.StaticLayout\$Builder" && it.methodName == "build")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.TextView" &&
+                            (it.methodName == "makeNewLayout" || it.methodName == "makeSingleLayout" ||
+                             it.methodName == "checkForRelayout")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.TextView" && it.methodName == "setText"
+                        } &&
+                        mainStackTrace.withIndex().any { (i, frame) ->
+                            frame.methodName == "run" &&
+                            PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
+                            mainStackTrace.getOrNull(i + 1)?.let { next ->
+                                next.className == "android.os.Handler" && next.methodName == "handleCallback"
+                            } == true
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
