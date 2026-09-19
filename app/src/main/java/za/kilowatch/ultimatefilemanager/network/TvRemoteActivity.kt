@@ -105,51 +105,51 @@ class TvRemoteActivity : AppCompatActivity() {
 
     // ── UI references ─────────────────────────────────────────────────────
 
-    private lateinit var btnBack: ImageView
-    private lateinit var btnPairContainer: FrameLayout
-    private lateinit var btnPairAction: TextView
-    private lateinit var btnDisconnectContainer: FrameLayout
-    private lateinit var btnDisconnectAction: TextView
-    private lateinit var coordinatorRoot: View
+    private var btnBack: ImageView? = null
+    private var btnPairContainer: FrameLayout? = null
+    private var btnPairAction: TextView? = null
+    private var btnDisconnectContainer: FrameLayout? = null
+    private var btnDisconnectAction: TextView? = null
+    private var coordinatorRoot: View? = null
 
-    private lateinit var viewStatusDot: View
-    private lateinit var txtStatusLabel: TextView
+    private var viewStatusDot: View? = null
+    private var txtStatusLabel: TextView? = null
 
-    private lateinit var progressConnecting: ProgressBar
-    private lateinit var btnStatusAction: MaterialButton
+    private var progressConnecting: ProgressBar? = null
+    private var btnStatusAction: MaterialButton? = null
 
     // D-Pad
-    private lateinit var btnDpadUp: ImageButton
-    private lateinit var btnDpadDown: ImageButton
-    private lateinit var btnDpadLeft: ImageButton
-    private lateinit var btnDpadRight: ImageButton
-    private lateinit var btnDpadOk: MaterialButton
+    private var btnDpadUp: ImageButton? = null
+    private var btnDpadDown: ImageButton? = null
+    private var btnDpadLeft: ImageButton? = null
+    private var btnDpadRight: ImageButton? = null
+    private var btnDpadOk: MaterialButton? = null
 
     // Nav
-    private lateinit var btnNavBack: LinearLayout
-    private lateinit var btnNavHome: LinearLayout
+    private var btnNavBack: LinearLayout? = null
+    private var btnNavHome: LinearLayout? = null
 
     // Volume (always visible in main layout)
-    private lateinit var layoutVolumeRow:      LinearLayout
-    private lateinit var btnTogglePhoneVolume: LinearLayout
-    private lateinit var txtToggleVolume:      TextView
-    private lateinit var imgToggleVolume:      ImageView
-    private lateinit var btnVolDown:           ImageButton
-    private lateinit var btnMute: ImageButton
-    private lateinit var btnVolUp: ImageButton
+    private var layoutVolumeRow:      LinearLayout? = null
+    private var btnTogglePhoneVolume: LinearLayout? = null
+    private var txtToggleVolume:      TextView? = null
+    private var imgToggleVolume:      ImageView? = null
+    private var btnVolDown:           ImageButton? = null
+    private var btnMute:              ImageButton? = null
+    private var btnVolUp:             ImageButton? = null
 
     // Media (always visible in main layout)
-    private lateinit var btnRewind: ImageButton
-    private lateinit var btnPlayPause: ImageButton
-    private lateinit var btnFastForward: ImageButton
+    private var btnRewind: ImageButton? = null
+    private var btnPlayPause: ImageButton? = null
+    private var btnFastForward: ImageButton? = null
 
     // Keyboard panel (toggled via FAB)
-    private lateinit var fabKeyboard: com.google.android.material.floatingactionbutton.FloatingActionButton
-    private lateinit var layoutKeyboardPanel: LinearLayout
-    private lateinit var etKeyboard: TextInputEditText
-    private lateinit var btnKbBackspace: MaterialButton
-    private lateinit var btnKbEnter: MaterialButton
-    private lateinit var btnKbClear: MaterialButton
+    private var fabKeyboard: com.google.android.material.floatingactionbutton.FloatingActionButton? = null
+    private var layoutKeyboardPanel: LinearLayout? = null
+    private var etKeyboard: TextInputEditText? = null
+    private var btnKbBackspace: MaterialButton? = null
+    private var btnKbEnter: MaterialButton? = null
+    private var btnKbClear: MaterialButton? = null
 
     private var isKeyboardVisible = false
     private var isMuted = false
@@ -204,10 +204,12 @@ class TvRemoteActivity : AppCompatActivity() {
 
         bindViews()
 
-        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(coordinatorRoot) { v, insets ->
-            val bars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
-            insets
+        coordinatorRoot?.let { root ->
+            androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+                val bars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+                v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+                insets
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -219,8 +221,18 @@ class TvRemoteActivity : AppCompatActivity() {
         observeConnectionState()
         checkExistingConnection()
 
-        registerReceiver(bluetoothStateReceiver, android.content.IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
-        isBluetoothReceiverRegistered = true
+        try {
+            ContextCompat.registerReceiver(
+                this,
+                bluetoothStateReceiver,
+                android.content.IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED),
+                ContextCompat.RECEIVER_EXPORTED
+            )
+            isBluetoothReceiverRegistered = true
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to register bluetoothStateReceiver", e)
+            isBluetoothReceiverRegistered = false
+        }
     }
 
     /**
@@ -274,7 +286,11 @@ class TvRemoteActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (isBluetoothReceiverRegistered) {
-            unregisterReceiver(bluetoothStateReceiver)
+            try {
+                unregisterReceiver(bluetoothStateReceiver)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to unregister bluetoothStateReceiver", e)
+            }
             isBluetoothReceiverRegistered = false
         }
         repeatJob?.cancel()
@@ -398,7 +414,7 @@ class TvRemoteActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        cardBt.setOnClickListener {
+        cardBt?.setOnClickListener {
             dialog.dismiss()
             // Bluetooth — ensure permissions, then start the BT flow
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -423,12 +439,12 @@ class TvRemoteActivity : AppCompatActivity() {
             }
         }
 
-        cardWifi.setOnClickListener {
+        cardWifi?.setOnClickListener {
             dialog.dismiss()
             connectViaAdbTransport(directConnect = false)
         }
 
-        btnCancel.setOnClickListener { dialog.dismiss() }
+        btnCancel?.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
@@ -570,9 +586,9 @@ class TvRemoteActivity : AppCompatActivity() {
         // Show Cancel button while waiting for the TV to accept the RSA prompt.
         // No timeout — the ADB connect blocks until the user accepts/rejects
         // the SHA fingerprint on the TV (same pattern as Take Screenshot).
-        btnStatusAction.text = getString(R.string.bt_remote_cancel)
-        btnStatusAction.visibility = View.VISIBLE
-        btnStatusAction.setOnClickListener {
+        btnStatusAction?.text = getString(R.string.bt_remote_cancel)
+        btnStatusAction?.visibility = View.VISIBLE
+        btnStatusAction?.setOnClickListener {
             manualConnectJob?.cancel()
             AdbManager.getInstance().disconnectExplicit()
             refreshDisconnectedCard()
@@ -606,6 +622,10 @@ class TvRemoteActivity : AppCompatActivity() {
                 }
             } catch (e: kotlinx.coroutines.CancellationException) {
                 // User pressed Cancel — already handled above
+            } catch (e: Exception) {
+                withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    refreshDisconnectedCard()
+                }
             } finally {
                 manualConnectJob = null
             }
@@ -644,7 +664,7 @@ class TvRemoteActivity : AppCompatActivity() {
         val btnAdd = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnManualAdd)
         val btnCancel = dialogView.findViewById<View>(R.id.btnManualCancel)
 
-        btnAdd.isEnabled = false
+        btnAdd?.isEnabled = false
 
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
@@ -659,27 +679,27 @@ class TvRemoteActivity : AppCompatActivity() {
         )
 
         fun validate() {
-            val name = etName.text?.toString()?.trim() ?: ""
-            val ip = etIp.text?.toString()?.trim() ?: ""
-            btnAdd.isEnabled = name.isNotEmpty() && ipPattern.matches(ip)
+            val name = etName?.text?.toString()?.trim() ?: ""
+            val ip = etIp?.text?.toString()?.trim() ?: ""
+            btnAdd?.isEnabled = name.isNotEmpty() && ipPattern.matches(ip)
         }
 
-        etName.addTextChangedListener(object : android.text.TextWatcher {
+        etName?.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: android.text.Editable?) { validate() }
         })
-        etIp.addTextChangedListener(object : android.text.TextWatcher {
+        etIp?.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: android.text.Editable?) { validate() }
         })
 
-        btnCancel.setOnClickListener { dialog.dismiss() }
+        btnCancel?.setOnClickListener { dialog.dismiss() }
 
-        btnAdd.setOnClickListener {
-            val name = etName.text?.toString()?.trim() ?: ""
-            val ip = etIp.text?.toString()?.trim() ?: ""
+        btnAdd?.setOnClickListener {
+            val name = etName?.text?.toString()?.trim() ?: ""
+            val ip = etIp?.text?.toString()?.trim() ?: ""
 
             val transportPrefs = RemoteTransportPrefs(this@TvRemoteActivity)
             // Check manual list
@@ -757,9 +777,9 @@ class TvRemoteActivity : AppCompatActivity() {
 
     /** Update the card action button to show transport picker. */
     private fun setActionButtonToPicker() {
-        btnStatusAction.text = getString(R.string.bt_remote_card_action_connect)
-        btnStatusAction.visibility = View.VISIBLE
-        btnStatusAction.setOnClickListener { showTransportPicker() }
+        btnStatusAction?.text = getString(R.string.bt_remote_card_action_connect)
+        btnStatusAction?.visibility = View.VISIBLE
+        btnStatusAction?.setOnClickListener { showTransportPicker() }
     }
 
     // ── Permissions & BT check ────────────────────────────────────────────
@@ -929,24 +949,24 @@ class TvRemoteActivity : AppCompatActivity() {
     }
 
     private fun showCardNoPairedTvs() {
-        txtStatusLabel.text    = getString(R.string.bt_remote_card_no_tvs_title)
+        txtStatusLabel?.text = getString(R.string.bt_remote_card_no_tvs_title)
 
-        progressConnecting.visibility = View.GONE
-        viewStatusDot.backgroundTintList =
+        progressConnecting?.visibility = View.GONE
+        viewStatusDot?.backgroundTintList =
             android.content.res.ColorStateList.valueOf(ColorblindPalette.vpnWarningAmber(this))
-        btnStatusAction.text = getString(R.string.bt_remote_card_action_pair_tv)
-        btnStatusAction.visibility = View.VISIBLE
-        btnStatusAction.setOnClickListener {
+        btnStatusAction?.text = getString(R.string.bt_remote_card_action_pair_tv)
+        btnStatusAction?.visibility = View.VISIBLE
+        btnStatusAction?.setOnClickListener {
             showTransportPicker()
         }
         setToolbarActions(pairVisible = false, disconnectVisible = false)
     }
 
     private fun showCardDisconnected(tvName: String) {
-        txtStatusLabel.text    = getString(R.string.bt_remote_card_disconnected_title)
+        txtStatusLabel?.text = getString(R.string.bt_remote_card_disconnected_title)
 
-        progressConnecting.visibility = View.GONE
-        viewStatusDot.backgroundTintList =
+        progressConnecting?.visibility = View.GONE
+        viewStatusDot?.backgroundTintList =
             android.content.res.ColorStateList.valueOf(ColorblindPalette.vpnWarningAmber(this))
 
         // Use the last connected transport — this is the single source of truth
@@ -956,23 +976,23 @@ class TvRemoteActivity : AppCompatActivity() {
 
         when (lastTransport) {
             "bluetooth" -> {
-                btnStatusAction.text = getString(R.string.remote_connect_via_bt, tvName)
-                btnStatusAction.visibility = View.VISIBLE
-                btnStatusAction.setOnClickListener {
+                btnStatusAction?.text = getString(R.string.remote_connect_via_bt, tvName)
+                btnStatusAction?.visibility = View.VISIBLE
+                btnStatusAction?.setOnClickListener {
                     connectViaBluetoothTransport(tvName)
                 }
             }
             "adb_wifi" -> {
-                btnStatusAction.text = getString(R.string.remote_connect_via_wifi, tvName)
-                btnStatusAction.visibility = View.VISIBLE
-                btnStatusAction.setOnClickListener {
+                btnStatusAction?.text = getString(R.string.remote_connect_via_wifi, tvName)
+                btnStatusAction?.visibility = View.VISIBLE
+                btnStatusAction?.setOnClickListener {
                     connectViaAdbTransport(directConnect = true)
                 }
             }
             else -> {
-                btnStatusAction.text = getString(R.string.bt_remote_card_action_connect_to, tvName)
-                btnStatusAction.visibility = View.VISIBLE
-                btnStatusAction.setOnClickListener {
+                btnStatusAction?.text = getString(R.string.bt_remote_card_action_connect_to, tvName)
+                btnStatusAction?.visibility = View.VISIBLE
+                btnStatusAction?.setOnClickListener {
                     showTransportPicker()
                 }
             }
@@ -1025,35 +1045,35 @@ class TvRemoteActivity : AppCompatActivity() {
 
     private fun showCardConnecting(tvName: String, formatResId: Int = R.string.bt_remote_card_connecting_title) {
         val displayName = if (tvName.isNotEmpty() && tvName != getString(R.string.tv_remote)) tvName else "TV"
-        txtStatusLabel.text = getString(formatResId, displayName)
+        txtStatusLabel?.text = getString(formatResId, displayName)
 
-        progressConnecting.visibility = View.VISIBLE
-        viewStatusDot.backgroundTintList =
+        progressConnecting?.visibility = View.VISIBLE
+        viewStatusDot?.backgroundTintList =
             android.content.res.ColorStateList.valueOf(ColorblindPalette.vpnWarningAmber(this))
-        btnStatusAction.visibility = View.GONE
+        btnStatusAction?.visibility = View.GONE
         setToolbarActions(pairVisible = false, disconnectVisible = false)
     }
 
     private fun showCardConnected(tvName: String) {
         // Show only the TV name — no "Connected to" prefix
-        txtStatusLabel.text    = if (tvName.isNotEmpty()) tvName else getString(R.string.connected)
+        txtStatusLabel?.text = if (tvName.isNotEmpty()) tvName else getString(R.string.connected)
 
-        progressConnecting.visibility = View.GONE
-        viewStatusDot.backgroundTintList =
+        progressConnecting?.visibility = View.GONE
+        viewStatusDot?.backgroundTintList =
             android.content.res.ColorStateList.valueOf(ColorblindPalette.success(this))
-        btnStatusAction.visibility = View.GONE
+        btnStatusAction?.visibility = View.GONE
         setToolbarActions(pairVisible = false, disconnectVisible = true)
     }
 
     private fun showCardBluetoothOff() {
-        txtStatusLabel.text    = getString(R.string.bt_remote_card_bt_off_title)
+        txtStatusLabel?.text = getString(R.string.bt_remote_card_bt_off_title)
 
-        progressConnecting.visibility = View.GONE
-        viewStatusDot.backgroundTintList =
+        progressConnecting?.visibility = View.GONE
+        viewStatusDot?.backgroundTintList =
             android.content.res.ColorStateList.valueOf(ColorblindPalette.statusError(this))
-        btnStatusAction.text = getString(R.string.bt_remote_card_action_turn_on)
-        btnStatusAction.visibility = View.VISIBLE
-        btnStatusAction.setOnClickListener {
+        btnStatusAction?.text = getString(R.string.bt_remote_card_action_turn_on)
+        btnStatusAction?.visibility = View.VISIBLE
+        btnStatusAction?.setOnClickListener {
             @Suppress("DEPRECATION")
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             try {
@@ -1066,14 +1086,14 @@ class TvRemoteActivity : AppCompatActivity() {
     }
 
     private fun showCardNoPermission() {
-        txtStatusLabel.text    = getString(R.string.bt_remote_card_no_permission_title)
+        txtStatusLabel?.text = getString(R.string.bt_remote_card_no_permission_title)
 
-        progressConnecting.visibility = View.GONE
-        viewStatusDot.backgroundTintList =
+        progressConnecting?.visibility = View.GONE
+        viewStatusDot?.backgroundTintList =
             android.content.res.ColorStateList.valueOf(ColorblindPalette.statusError(this))
-        btnStatusAction.text = getString(R.string.bt_remote_card_action_grant_permission)
-        btnStatusAction.visibility = View.VISIBLE
-        btnStatusAction.setOnClickListener {
+        btnStatusAction?.text = getString(R.string.bt_remote_card_action_grant_permission)
+        btnStatusAction?.visibility = View.VISIBLE
+        btnStatusAction?.setOnClickListener {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                 data = android.net.Uri.fromParts("package", packageName, null)
             }
@@ -1085,14 +1105,16 @@ class TvRemoteActivity : AppCompatActivity() {
     // ── Header Bar & Device Selection ────────────────────────────────────────
 
     private fun setToolbarActions(pairVisible: Boolean, disconnectVisible: Boolean) {
-        btnPairContainer.visibility = if (pairVisible) View.VISIBLE else View.GONE
-        btnDisconnectContainer.visibility = if (disconnectVisible) View.VISIBLE else View.GONE
+        btnPairContainer?.visibility = if (pairVisible) View.VISIBLE else View.GONE
+        btnDisconnectContainer?.visibility = if (disconnectVisible) View.VISIBLE else View.GONE
     }
 
     private fun setupToolbar() {
-        btnBack.setOnClickListener { onBackPressed() }
-        btnPairAction.setOnClickListener { promptSelectTv() }
-        btnDisconnectAction.setOnClickListener {
+        (btnBack ?: findViewById<View>(R.id.btnBack) ?: findViewById<View>(android.R.id.home))?.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+        btnPairAction?.setOnClickListener { promptSelectTv() }
+        btnDisconnectAction?.setOnClickListener {
             currentTransport?.disconnect()
             currentTransport = null
             transportObserverJob?.cancel()
@@ -1111,7 +1133,7 @@ class TvRemoteActivity : AppCompatActivity() {
         val adbCount = prefs.getRemoteEnabledDeviceIds().size
         val manualCount = prefs.getManualDevices().size
         val totalCount = btCount + adbCount + manualCount
-        btnPairAction.text = if (totalCount <= 1) {
+        btnPairAction?.text = if (totalCount <= 1) {
             getString(R.string.bt_remote_add_device)
         } else {
             getString(R.string.bt_remote_select_device)
@@ -1120,14 +1142,14 @@ class TvRemoteActivity : AppCompatActivity() {
 
     private fun toggleKeyboardPanel() {
         isKeyboardVisible = !isKeyboardVisible
-        layoutKeyboardPanel.visibility = if (isKeyboardVisible) View.VISIBLE else View.GONE
+        layoutKeyboardPanel?.visibility = if (isKeyboardVisible) View.VISIBLE else View.GONE
         if (isKeyboardVisible) {
-            etKeyboard.requestFocus()
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(etKeyboard, InputMethodManager.SHOW_IMPLICIT)
+            etKeyboard?.requestFocus()
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            etKeyboard?.let { imm?.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT) }
         } else {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(etKeyboard.windowToken, 0)
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            etKeyboard?.windowToken?.let { imm?.hideSoftInputFromWindow(it, 0) }
         }
     }
 
@@ -1201,7 +1223,7 @@ class TvRemoteActivity : AppCompatActivity() {
         val btnAdd = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSheetAdd)
         val btnCancel = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSheetCancel)
 
-        listView.adapter = object : android.widget.ArrayAdapter<String>(
+        listView?.adapter = object : android.widget.ArrayAdapter<String>(
             this, R.layout.dialog_remote_device_row, R.id.txtDeviceName, deviceNames
         ) {
             override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
@@ -1209,20 +1231,20 @@ class TvRemoteActivity : AppCompatActivity() {
                 val txtName = view.findViewById<TextView>(R.id.txtDeviceName)
                 val btnTrash = view.findViewById<ImageView>(R.id.btnTrash)
                 val entry = allEntries.getOrNull(position)
-                txtName.text = getItem(position)
+                txtName?.text = getItem(position)
                 if (entry?.manualDevice != null) {
-                    btnTrash.visibility = android.view.View.VISIBLE
-                    btnTrash.setOnClickListener {
+                    btnTrash?.visibility = android.view.View.VISIBLE
+                    btnTrash?.setOnClickListener {
                         showRemoveManualConfirm(entry.manualDevice!!, transportPrefs)
                     }
                 } else {
-                    btnTrash.visibility = android.view.View.GONE
-                    btnTrash.setOnClickListener(null)
+                    btnTrash?.visibility = android.view.View.GONE
+                    btnTrash?.setOnClickListener(null)
                 }
                 return view
             }
         }
-        listView.setOnItemClickListener { _, _, which, _ ->
+        listView?.setOnItemClickListener { _, _, which, _ ->
             bottomSheet.dismiss()
             val entry = allEntries.getOrNull(which) ?: return@setOnItemClickListener
             when {
@@ -1252,11 +1274,11 @@ class TvRemoteActivity : AppCompatActivity() {
                 }
             }
         }
-        btnAdd.setOnClickListener {
+        btnAdd?.setOnClickListener {
             bottomSheet.dismiss()
             showAddTvOptions()
         }
-        btnCancel.setOnClickListener { bottomSheet.dismiss() }
+        btnCancel?.setOnClickListener { bottomSheet.dismiss() }
 
         bottomSheet.setOnDismissListener { currentBottomSheet = null }
         bottomSheet.setContentView(sheetView)
@@ -1316,15 +1338,15 @@ class TvRemoteActivity : AppCompatActivity() {
         val txtDefaultLabel = dialogView.findViewById<TextView>(R.id.txtDefaultActionLabel)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancelOptions)
 
-        txtTitle.text = device.name ?: device.address
-        txtDefaultLabel.text = defaultLabel
+        txtTitle?.text = device.name ?: device.address
+        txtDefaultLabel?.text = defaultLabel
 
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .setCancelable(true)
             .create()
 
-        cardConnect.setOnClickListener {
+        cardConnect?.setOnClickListener {
             dialog.dismiss()
             btManager?.saveTvDevice(device)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -1332,7 +1354,7 @@ class TvRemoteActivity : AppCompatActivity() {
             }
         }
 
-        cardToggle.setOnClickListener {
+        cardToggle?.setOnClickListener {
             dialog.dismiss()
             if (isDefault) {
                 btManager?.clearDefaultTv()
@@ -1345,7 +1367,7 @@ class TvRemoteActivity : AppCompatActivity() {
             }
         }
 
-        btnCancel.setOnClickListener { dialog.dismiss() }
+        btnCancel?.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
@@ -1387,51 +1409,51 @@ class TvRemoteActivity : AppCompatActivity() {
 
     private fun bindViews() {
         coordinatorRoot        = findViewById(R.id.coordinatorRoot)
-        btnBack                = findViewById(R.id.btnBack)
+        btnBack                = findViewById(R.id.btnBack) ?: findViewById(android.R.id.home)
         btnPairContainer       = findViewById(R.id.btnPairContainer)
         btnPairAction          = findViewById(R.id.btnPairAction)
         btnDisconnectContainer = findViewById(R.id.btnDisconnectContainer)
         btnDisconnectAction    = findViewById(R.id.btnDisconnectAction)
         viewStatusDot          = findViewById(R.id.viewStatusDot)
-        txtStatusLabel     = findViewById(R.id.txtStatusLabel)
+        txtStatusLabel         = findViewById(R.id.txtStatusLabel)
 
-        progressConnecting = findViewById(R.id.progressConnecting)
-        btnStatusAction    = findViewById(R.id.btnStatusAction)
+        progressConnecting     = findViewById(R.id.progressConnecting)
+        btnStatusAction        = findViewById(R.id.btnStatusAction)
 
-        btnDpadUp          = findViewById(R.id.btnDpadUp)
-        btnDpadDown        = findViewById(R.id.btnDpadDown)
-        btnDpadLeft        = findViewById(R.id.btnDpadLeft)
-        btnDpadRight       = findViewById(R.id.btnDpadRight)
-        btnDpadOk          = findViewById(R.id.btnDpadOk)
+        btnDpadUp              = findViewById(R.id.btnDpadUp)
+        btnDpadDown            = findViewById(R.id.btnDpadDown)
+        btnDpadLeft            = findViewById(R.id.btnDpadLeft)
+        btnDpadRight           = findViewById(R.id.btnDpadRight)
+        btnDpadOk              = findViewById(R.id.btnDpadOk)
 
-        btnNavBack         = findViewById(R.id.btnNavBack)
-        btnNavHome         = findViewById(R.id.btnNavHome)
+        btnNavBack             = findViewById(R.id.btnNavBack)
+        btnNavHome             = findViewById(R.id.btnNavHome)
 
-        layoutVolumeRow      = findViewById(R.id.layoutVolumeRow)
-        btnTogglePhoneVolume = findViewById(R.id.btnTogglePhoneVolume)
-        txtToggleVolume      = findViewById(R.id.txtToggleVolume)
-        imgToggleVolume      = findViewById(R.id.imgToggleVolume)
+        layoutVolumeRow        = findViewById(R.id.layoutVolumeRow)
+        btnTogglePhoneVolume   = findViewById(R.id.btnTogglePhoneVolume)
+        txtToggleVolume        = findViewById(R.id.txtToggleVolume)
+        imgToggleVolume        = findViewById(R.id.imgToggleVolume)
 
         // Volume + media are now direct children of the main layout
-        btnVolDown         = findViewById(R.id.btnVolDown)
-        btnMute            = findViewById(R.id.btnMute)
-        btnVolUp           = findViewById(R.id.btnVolUp)
+        btnVolDown             = findViewById(R.id.btnVolDown)
+        btnMute                = findViewById(R.id.btnMute)
+        btnVolUp               = findViewById(R.id.btnVolUp)
 
-        btnRewind          = findViewById(R.id.btnRewind)
-        btnPlayPause       = findViewById(R.id.btnPlayPause)
-        btnFastForward     = findViewById(R.id.btnFastForward)
+        btnRewind              = findViewById(R.id.btnRewind)
+        btnPlayPause           = findViewById(R.id.btnPlayPause)
+        btnFastForward         = findViewById(R.id.btnFastForward)
 
         // Keyboard FAB
-        fabKeyboard         = findViewById(R.id.fabKeyboard)
+        fabKeyboard            = findViewById(R.id.fabKeyboard)
 
         // Keyboard panel is embedded in the main layout, hidden by default
-        layoutKeyboardPanel = findViewById(R.id.layoutKeyboardPanel)
-        layoutKeyboardPanel.visibility = View.GONE
+        layoutKeyboardPanel    = findViewById(R.id.layoutKeyboardPanel)
+        layoutKeyboardPanel?.visibility = View.GONE
 
-        etKeyboard     = findViewById(R.id.etKeyboard)
-        btnKbBackspace = findViewById(R.id.btnKbBackspace)
-        btnKbEnter     = findViewById(R.id.btnKbEnter)
-        btnKbClear     = findViewById(R.id.btnKbClear)
+        etKeyboard             = findViewById(R.id.etKeyboard)
+        btnKbBackspace         = findViewById(R.id.btnKbBackspace)
+        btnKbEnter             = findViewById(R.id.btnKbEnter)
+        btnKbClear             = findViewById(R.id.btnKbClear)
     }
 
     private fun setupButtons() {
@@ -1442,7 +1464,7 @@ class TvRemoteActivity : AppCompatActivity() {
         setupDpadButton(btnDpadRight, HID_DPAD_RIGHT)
 
         // OK — support long press (no repeat, just hold DOWN state)
-        btnDpadOk.setOnTouchListener { _, event ->
+        btnDpadOk?.setOnTouchListener { _, event ->
             when (event.action) {
                 android.view.MotionEvent.ACTION_DOWN -> {
                     vibrate()
@@ -1452,14 +1474,14 @@ class TvRemoteActivity : AppCompatActivity() {
                         kotlinx.coroutines.delay(REPEAT_INITIAL_DELAY_MS)
                         if (isActive) vibrate()
                     }
-                    btnDpadOk.isPressed = true
+                    btnDpadOk?.isPressed = true
                     true
                 }
                 android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL -> {
                     repeatJob?.cancel()
                     repeatJob = null
                     currentTransport?.sendKeyboardKeyUp()
-                    btnDpadOk.isPressed = false
+                    btnDpadOk?.isPressed = false
                     true
                 }
                 else -> false
@@ -1469,34 +1491,34 @@ class TvRemoteActivity : AppCompatActivity() {
         setupKeyboardPanel()
 
         // FAB toggles the keyboard panel
-        fabKeyboard.setOnClickListener { toggleKeyboardPanel() }
+        fabKeyboard?.setOnClickListener { toggleKeyboardPanel() }
 
         // Navigation
-        btnNavBack.setOnClickListener { vibrate(); currentTransport?.sendConsumerKey(HID_BACK) }
-        btnNavHome.setOnClickListener { vibrate(); currentTransport?.sendConsumerKey(HID_HOME) }
+        btnNavBack?.setOnClickListener { vibrate(); currentTransport?.sendConsumerKey(HID_BACK) }
+        btnNavHome?.setOnClickListener { vibrate(); currentTransport?.sendConsumerKey(HID_HOME) }
 
         // Phone Volume Toggle Preference
         val prefs = getSharedPreferences("TvRemotePrefs", Context.MODE_PRIVATE)
         var usePhoneVolume = prefs.getBoolean("usePhoneVolume", false)
         
         fun updateVolumeUI(usePhone: Boolean) {
-            btnTogglePhoneVolume.isActivated = usePhone
-            imgToggleVolume.isActivated = usePhone
-            txtToggleVolume.isActivated = usePhone
+            btnTogglePhoneVolume?.isActivated = usePhone
+            imgToggleVolume?.isActivated = usePhone
+            txtToggleVolume?.isActivated = usePhone
             
             if (usePhone) {
-                btnVolDown.visibility = View.GONE
-                btnVolUp.visibility = View.GONE
-                txtToggleVolume.text = getString(R.string.bt_remote_volume_on)
+                btnVolDown?.visibility = View.GONE
+                btnVolUp?.visibility = View.GONE
+                txtToggleVolume?.text = getString(R.string.bt_remote_volume_on)
             } else {
-                btnVolDown.visibility = View.VISIBLE
-                btnVolUp.visibility = View.VISIBLE
-                txtToggleVolume.text = getString(R.string.bt_remote_volume_off)
+                btnVolDown?.visibility = View.VISIBLE
+                btnVolUp?.visibility = View.VISIBLE
+                txtToggleVolume?.text = getString(R.string.bt_remote_volume_off)
             }
         }
         updateVolumeUI(usePhoneVolume)
 
-        btnTogglePhoneVolume.setOnClickListener {
+        btnTogglePhoneVolume?.setOnClickListener {
             vibrate()
             usePhoneVolume = !usePhoneVolume
             prefs.edit().putBoolean("usePhoneVolume", usePhoneVolume).apply()
@@ -1529,10 +1551,10 @@ class TvRemoteActivity : AppCompatActivity() {
 
         // Volume
         setupRepeatAction(btnVolDown) { vibrate(); currentTransport?.sendConsumerKey(HID_VOLUME_DOWN) }
-        btnMute.setOnClickListener    {
+        btnMute?.setOnClickListener    {
             vibrate()
             isMuted = !isMuted
-            btnMute.isActivated = isMuted
+            btnMute?.isActivated = isMuted
             currentTransport?.sendConsumerKey(HID_VOLUME_MUTE)
         }
         setupRepeatAction(btnVolUp)   { vibrate(); currentTransport?.sendConsumerKey(HID_VOLUME_UP) }
@@ -1540,9 +1562,9 @@ class TvRemoteActivity : AppCompatActivity() {
         // Media — using keyboard keycodes that all Android TV apps respond to:
         // Rewind/FF → Left/Right arrow (same as what stock remotes send for seek)
         // Play/Pause → Enter (universal across Netflix, Prime, Debrid Stream etc.)
-        btnRewind.setOnClickListener      { vibrate(); currentTransport?.sendKeyboardKey(HID_DPAD_LEFT) }
-        btnPlayPause.setOnClickListener   { vibrate(); currentTransport?.sendKeyboardKey(HID_DPAD_CENTER) }
-        btnFastForward.setOnClickListener { vibrate(); currentTransport?.sendKeyboardKey(HID_DPAD_RIGHT) }
+        btnRewind?.setOnClickListener      { vibrate(); currentTransport?.sendKeyboardKey(HID_DPAD_LEFT) }
+        btnPlayPause?.setOnClickListener   { vibrate(); currentTransport?.sendKeyboardKey(HID_DPAD_CENTER) }
+        btnFastForward?.setOnClickListener { vibrate(); currentTransport?.sendKeyboardKey(HID_DPAD_RIGHT) }
     }
 
     // ── Keyboard Mode ─────────────────────────────────────────────────────
@@ -1552,37 +1574,37 @@ class TvRemoteActivity : AppCompatActivity() {
         setupRepeatAction(btnKbBackspace) {
             vibrate()
             currentTransport?.sendHidBackspace()
-            val cur = etKeyboard.text?.toString() ?: ""
+            val cur = etKeyboard?.text?.toString() ?: ""
             if (cur.isNotEmpty()) {
                 previousKeyboardText = cur.dropLast(1)
-                etKeyboard.setText(previousKeyboardText)
-                etKeyboard.setSelection(previousKeyboardText.length)
+                etKeyboard?.setText(previousKeyboardText)
+                etKeyboard?.setSelection(previousKeyboardText.length)
             }
         }
-        btnKbEnter.setOnClickListener {
+        btnKbEnter?.setOnClickListener {
             vibrate()
             currentTransport?.sendHidEnter()
             previousKeyboardText = ""
-            etKeyboard.text?.clear()
+            etKeyboard?.text?.clear()
         }
-        btnKbClear.setOnClickListener {
+        btnKbClear?.setOnClickListener {
             vibrate()
-            if (!etKeyboard.text.isNullOrEmpty()) {
+            if (!etKeyboard?.text.isNullOrEmpty()) {
                 currentTransport?.sendSelectAll()
                 currentTransport?.sendHidBackspace()
             }
             previousKeyboardText = ""
-            etKeyboard.text?.clear()
+            etKeyboard?.text?.clear()
         }
 
         // Handle enter on the soft keyboard
-        etKeyboard.setOnEditorActionListener { _, _, _ ->
-            btnKbEnter.performClick()
+        etKeyboard?.setOnEditorActionListener { _, _, _ ->
+            btnKbEnter?.performClick()
             true
         }
 
         // TextWatcher: send only the delta between previous and new text
-        etKeyboard.addTextChangedListener(object : TextWatcher {
+        etKeyboard?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(editable: Editable?) {
@@ -1610,8 +1632,8 @@ class TvRemoteActivity : AppCompatActivity() {
 
 
     @Suppress("ClickableViewAccessibility")
-    private fun setupRepeatAction(button: View, action: () -> Unit) {
-        button.setOnTouchListener { _, event ->
+    private fun setupRepeatAction(button: View?, action: () -> Unit) {
+        button?.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     action()
@@ -1638,8 +1660,8 @@ class TvRemoteActivity : AppCompatActivity() {
     }
 
     @Suppress("ClickableViewAccessibility")
-    private fun setupDpadButton(button: ImageButton, keycode: Byte) {
-        button.setOnTouchListener { _, event ->
+    private fun setupDpadButton(button: ImageButton?, keycode: Byte) {
+        button?.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     vibrate()
