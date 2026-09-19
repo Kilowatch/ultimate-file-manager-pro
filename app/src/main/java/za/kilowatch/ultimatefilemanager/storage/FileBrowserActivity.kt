@@ -193,6 +193,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
     private var isSearchIndexed = false
     private var isTransferring = false
     private var folderFlowJob: kotlinx.coroutines.Job? = null
+    private var storageSpaceJob: kotlinx.coroutines.Job? = null
 
     private var onFolderPicked: ((File) -> Unit)? = null
 
@@ -727,6 +728,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
     override fun onDestroy() {
         super.onDestroy()
+        storageSpaceJob?.cancel()
         if (::fileAdapter.isInitialized) {
             fileAdapter.cancelPendingJobs()
         }
@@ -5104,6 +5106,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
     private fun loadDirectory(directory: File, preserveSelection: Boolean = false) {
         if (isTransferring) return   // Don't refresh while a copy/move is in progress
+        storageSpaceJob?.cancel()
 
         val pathStr = SafFile.cleanSafPath(directory.absolutePath)
         val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(pathStr)
@@ -5185,19 +5188,27 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             if (SafTreeManager.isSafPath(targetDir.absolutePath)) {
                 getString(R.string.saf_storage)
             } else {
-                try {
-                    val freeBytes = targetDir.freeSpace
-                    val totalBytes = targetDir.totalSpace
-                    if (totalBytes > 0) {
-                        val freeStr = android.text.format.Formatter.formatFileSize(this, freeBytes)
-                        val totalStr = android.text.format.Formatter.formatFileSize(this, totalBytes)
-                        "$freeStr free of $totalStr"
-                    } else {
-                        targetDir.absolutePath
+                storageSpaceJob = lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    try {
+                        val freeBytes = targetDir.freeSpace
+                        val totalBytes = targetDir.totalSpace
+                        if (totalBytes > 0) {
+                            val freeStr = android.text.format.Formatter.formatFileSize(this@FileBrowserActivity, freeBytes)
+                            val totalStr = android.text.format.Formatter.formatFileSize(this@FileBrowserActivity, totalBytes)
+                            val spaceText = "$freeStr free of $totalStr"
+                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                if (currentDir.absolutePath == targetDir.absolutePath && !isDestroyed && !isFinishing) {
+                                    toolbar.subtitle = spaceText
+                                    findViewById<android.widget.TextView>(R.id.txtTvSubtitle)?.text = spaceText
+                                    findViewById<android.widget.TextView>(R.id.txtSubtitle)?.text = spaceText
+                                }
+                            }
+                        }
+                    } catch (_: Exception) {
+                        // Keep initial path subtitle
                     }
-                } catch (_: Exception) {
-                    targetDir.absolutePath
                 }
+                targetDir.absolutePath
             }
         } else {
             val rel = targetDir.absolutePath.removePrefix(rootPath).trimStart('/')
