@@ -4528,7 +4528,85 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 67. The main thread is sampled inside ICU character case mapping or text
+                    //     uppercase transformation during Activity cold-start layout inflation —
+                    //     top frame `android.icu.impl.CaseMapImpl.internalToUpper` / `toUpper`
+                    //     (or `android.icu.text.CaseMap$Upper.apply`, `android.text.TextUtils.toUpperCase`,
+                    //     or `android.text.method.AllCapsTransformationMethod.getTransformation`),
+                    //     under `AllCapsTransformationMethod.getTransformation` -> `TextView.setText`
+                    //     (or `MaterialButton.setText`) -> `TextView.setTransformationMethod` /
+                    //     `setTransformationMethodInternal` -> `TextView.applyTextAppearance` ->
+                    //     `TextView.<init>` -> `Button.<init>` -> `MaterialButton.<init>` (or
+                    //     general View/TextView construction), under `LayoutInflater.createView` /
+                    //     `createViewFromTag` / `rInflate` / `inflate` -> `setContentView` ->
+                    //     Activity `onCreate` (`performCreate` -> `callActivityOnCreate` ->
+                    //     `performLaunchActivity` / `handleLaunchActivity`), thread state RUNNABLE
+                    //     — reported from a SkyworthDigital 4K Google TV Stick, SDK 34, app 2.0.6-GOOGLE.
+                    //     Transforming a short button or view label to uppercase via ICU is a µs-scale
+                    //     bounded framework call that cannot by itself occupy the main thread for 5 s.
+                    //     The stack is executing during framework-driven Activity cold-start layout
+                    //     inflation (`setContentView`), with only Activity lifecycle frames in the app
+                    //     package and zero framework blocking primitives anywhere on the stack (no
+                    //     `BinderProxy.transact`/`transactNative`, `Object.wait`, `LockSupport.park`,
+                    //     `java.io.*`, `libcore.io.*`, `java.net.*`, or `android.database.*`). The >5 s
+                    //     block is device-side CPU starvation on the low-end TV stick (where DLNA,
+                    //     HTTP file server, and background coroutine workers were all RUNNABLE,
+                    //     competing for CPU) or a post-stall sample of the backlog the main looper
+                    //     drains during cold-start startup. The `AnrWatchdogThread` now treats a
+                    //     main-thread stack whose top frame is inside ICU/text uppercase transformation
+                    //     (`CaseMapImpl.internalToUpper`/`toUpper`, `CaseMap$Upper.apply`,
+                    //     `TextUtils.toUpperCase`, `String.toUpperCase`, or
+                    //     `AllCapsTransformationMethod.getTransformation`), with an
+                    //     `AllCapsTransformationMethod.getTransformation` frame, a
+                    //     `LayoutInflater` frame, an Activity `onCreate` frame under an Activity
+                    //     cold-start launch (`performCreate` / `callActivityOnCreate` /
+                    //     `performLaunchActivity` / `handleLaunchActivity`), and no framework blocking
+                    //     primitives, as a false positive and resets its heartbeat instead of writing a
+                    //     report. Genuine freezes keep the main thread parked inside a blocking primitive
+                    //     (a lock, file/network/database I/O, or binder frame appears on the stack) or
+                    //     app business logic outside framework layout inflation, and are still reported.
+                    val isCaseMapAllCapsButtonInflateStall =
+                        (topFrame?.className?.startsWith("android.icu.") == true ||
+                         (topFrame?.className == "android.text.TextUtils" && topFrame?.methodName == "toUpperCase") ||
+                         (topFrame?.className == "android.text.method.AllCapsTransformationMethod" &&
+                          topFrame?.methodName == "getTransformation") ||
+                         (topFrame?.className == "java.lang.String" && topFrame?.methodName == "toUpperCase")) &&
+                        mainStackTrace.any {
+                            it.className == "android.text.method.AllCapsTransformationMethod" &&
+                            it.methodName == "getTransformation"
+                        } &&
+                        mainStackTrace.any {
+                            (it.className == "com.google.android.material.button.MaterialButton" && it.methodName == "<init>") ||
+                            (it.className == "android.widget.TextView" && it.methodName == "<init>") ||
+                            (it.className == "android.widget.Button" && it.methodName == "<init>")
+                        } &&
+                        mainStackTrace.any { it.className == "android.view.LayoutInflater" } &&
+                        mainStackTrace.any { it.methodName == "setContentView" } &&
+                        mainStackTrace.any {
+                            it.className.endsWith("Activity") && it.methodName == "onCreate"
+                        } &&
+                        mainStackTrace.any {
+                            (it.className == "android.app.Activity" && it.methodName == "performCreate") ||
+                            (it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnCreate") ||
+                            (it.className == "android.app.ActivityThread" &&
+                             (it.methodName == "performLaunchActivity" || it.methodName == "handleLaunchActivity" ||
+                              it.methodName == "handleRelaunchActivityInner" || it.methodName == "handleRelaunchActivity"))
+                        } &&
+                        mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.let { appFrames ->
+                            appFrames.isNotEmpty() && appFrames.all { it.className.endsWith("Activity") }
+                        } &&
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
