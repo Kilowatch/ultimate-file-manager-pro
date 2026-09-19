@@ -6,14 +6,13 @@ import android.content.pm.PackageInstaller
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
@@ -43,16 +42,30 @@ class InstallResultActivity : AppCompatActivity() {
 
         val isTv = DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_install_result_tv else R.layout.dialog_install_result
-        val view = LayoutInflater.from(this).inflate(layoutRes, null)
+        setContentView(layoutRes)
+
+        window.setBackgroundDrawableResource(android.R.color.transparent)
+        window.setGravity(Gravity.CENTER)
+
+        if (!isTv) {
+            val displayMetrics = resources.displayMetrics
+            val maxWidth = (360 * displayMetrics.density).toInt()
+            val targetWidth = (displayMetrics.widthPixels * 0.88).toInt().coerceAtMost(maxWidth)
+            window.setLayout(targetWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+        } else {
+            window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
+
+        setFinishOnTouchOutside(true)
 
         val isSuccess = (status == PackageInstaller.STATUS_SUCCESS)
 
-        val imgIcon = view.findViewById<ImageView>(R.id.imgResultIcon)
-        val txtTitle = view.findViewById<TextView>(R.id.txtResultTitle)
-        val txtAppName = view.findViewById<TextView>(R.id.txtResultAppName)
-        val txtMessage = view.findViewById<TextView>(R.id.txtResultMessage)
-        val btnDismiss = view.findViewById<MaterialButton>(R.id.btnDismiss)
-        val btnOpen = view.findViewById<MaterialButton>(R.id.btnOpen)
+        val imgIcon = findViewById<ImageView>(R.id.imgResultIcon)
+        val txtTitle = findViewById<TextView>(R.id.txtResultTitle)
+        val txtAppName = findViewById<TextView>(R.id.txtResultAppName)
+        val txtMessage = findViewById<TextView>(R.id.txtResultMessage)
+        val btnDismiss = findViewById<MaterialButton>(R.id.btnDismiss)
+        val btnOpen = findViewById<MaterialButton>(R.id.btnOpen)
 
         val displayName = when {
             appName.isNotBlank() -> appName
@@ -126,15 +139,6 @@ class InstallResultActivity : AppCompatActivity() {
             btnDismiss.text = getString(R.string.btn_ok)
             btnDismiss.setOnClickListener { finish() }
         }
-
-        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setView(view)
-            .setCancelable(true)
-            .setOnDismissListener { finish() }
-            .create()
-
-        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_glass)
-        dialog.show()
 
         if (isTv) {
             val focusTarget = if (isSuccess && btnOpen.visibility == View.VISIBLE) btnOpen else btnDismiss
