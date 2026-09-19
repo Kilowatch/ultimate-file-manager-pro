@@ -169,6 +169,19 @@ class TransferService : Service() {
         return START_NOT_STICKY
     }
 
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        super.onTimeout(startId, fgsType)
+        Log.w(TAG, "TransferService reached system timeout for fgsType $fgsType (startId $startId)")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            @Suppress("DEPRECATION")
+            stopForeground(true)
+        }
+        TransferManager.cancelAll()
+        stopSelf()
+    }
+
     override fun onDestroy() {
         activeInstance = null
         releaseLocks()

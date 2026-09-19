@@ -83,6 +83,12 @@ class SmartSortWidgetExecuteService : Service() {
         return START_REDELIVER_INTENT
     }
 
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        super.onTimeout(startId, fgsType)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+    }
+
     private fun parseConfig(jsonStr: String): SmartSortConfig? {
         return try {
             val j = JSONObject(jsonStr)

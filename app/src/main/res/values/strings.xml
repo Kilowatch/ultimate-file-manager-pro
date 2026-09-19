@@ -3127,6 +3127,7 @@
     <string name="file_server_notification_desc">Shows when FTP or SFTP servers are active</string>
     <string name="file_server_notification_stop">Stop</string>
     <string name="file_server_notification_open">Tap to manage</string>
+    <string name="file_server_timeout_stopped">File server stopped: Android 6-hour execution limit reached</string>
     <string name="opening_file_server">Opening File Server…</string>
     <string name="select">Select</string>
     <string name="browse_for_folder">📂 Browse for Folder…</string>
@@ -3557,6 +3558,7 @@
     <string name="scanner_no_pages">No pages scanned yet</string>
     <string name="scanner_default_filename">Scan</string>
     <string name="scanner_capture_camera">Camera</string>
+    <string name="scanner_camera_not_found">No camera app found on this device</string>
     <string name="scanner_capture_gallery">Choose from Gallery</string>
     <string name="scanner_saving_title">Saving document</string>
     <string name="scanner_saving_message">Please wait while your document is saved...</string>

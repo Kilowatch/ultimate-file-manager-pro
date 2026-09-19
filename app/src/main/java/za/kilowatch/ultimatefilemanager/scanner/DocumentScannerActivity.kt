@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.scanner
 
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -154,10 +155,7 @@ class DocumentScannerActivity : AppCompatActivity() {
         pagesRecycler.layoutManager = LinearLayoutManager(this)
         pagesAdapter = PagesAdapter(scannedBitmaps) { index ->
             if (index in scannedBitmaps.indices) {
-                val removed = scannedBitmaps.removeAt(index)
-                if (!removed.isRecycled) {
-                    removed.recycle()
-                }
+                scannedBitmaps.removeAt(index)
                 updatePagesUi()
             }
         }
@@ -200,11 +198,23 @@ class DocumentScannerActivity : AppCompatActivity() {
             photoFile
         )
         cameraPhotoUri = uri
-        cameraLauncher.launch(uri)
+        try {
+            cameraLauncher.launch(uri)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(this, R.string.scanner_camera_not_found, Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, R.string.scanner_camera_not_found, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun launchGallery() {
-        galleryLauncher.launch("image/*")
+        try {
+            galleryLauncher.launch("image/*")
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(this, R.string.scanner_save_error, Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            // Non-fatal
+        }
     }
 
     private fun createTempPhotoFile(): File {
@@ -673,12 +683,8 @@ class DocumentScannerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        pagesRecycler.adapter = null
         super.onDestroy()
-        for (bmp in scannedBitmaps) {
-            if (!bmp.isRecycled) {
-                bmp.recycle()
-            }
-        }
         scannedBitmaps.clear()
     }
 

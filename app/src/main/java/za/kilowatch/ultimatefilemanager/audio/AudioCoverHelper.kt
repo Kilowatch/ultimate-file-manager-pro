@@ -86,7 +86,7 @@ object AudioCoverHelper {
         val keys = artCache.snapshot().keys
         for (key in keys) {
             if (key == root || key.startsWith(prefix)) {
-                artCache.remove(key)?.recycle()
+                artCache.remove(key)
             }
         }
         val noKeys = noArtCache.snapshot().keys

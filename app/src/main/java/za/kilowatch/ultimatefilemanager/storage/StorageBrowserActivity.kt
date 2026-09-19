@@ -3252,7 +3252,6 @@ class StorageBrowserActivity : AppCompatActivity() {
         reorderModeOriginalList = storageAdapter.getItems().toList()
         reorderModeItemId       = item.id
         storageAdapter.reorderModeId = item.id
-        storageAdapter.notifyDataSetChanged()
         showPremiumSnackbar(getString(R.string.dpad_moves_tile_ok_saves_back_cancels))
     }
 
@@ -3272,7 +3271,6 @@ class StorageBrowserActivity : AppCompatActivity() {
         reorderModeItemId       = null
         reorderModeOriginalList = null
         storageAdapter.reorderModeId = null
-        storageAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -3434,7 +3432,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 applyViewMode()
             } else {
                 storageAdapter.refreshDisplayedList(this)
-                storageAdapter.notifyDataSetChanged()
+                storageAdapter.safeNotifyDataSetChanged()
             }
 
             showPremiumSnackbar(getString(R.string.custom_header_created))
@@ -3862,7 +3860,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     private fun deleteCustomHeaderInternal(catId: String, headerTitle: String) {
         MainMenuViewModeManager.deleteCustomCategory(this, catId)
         storageAdapter.refreshDisplayedList(this)
-        storageAdapter.notifyDataSetChanged()
+        storageAdapter.safeNotifyDataSetChanged()
         showPremiumSnackbar(getString(R.string.custom_header_deleted, headerTitle))
     }
 

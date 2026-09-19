@@ -244,6 +244,10 @@ class UFMPlayerActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as? UFMPlaybackService.LocalBinder ?: return
             playbackService = binder.getService().also { svc ->
+                if (svc.queueManager.isEmpty && initialPath.isNotEmpty()) {
+                    intent.putExtra("initialPath", initialPath)
+                    UFMPlaybackService.start(this@UFMPlayerActivity, intent)
+                }
                 if (currentTrackInfo == null) {
                     currentTrackInfo = svc.queueManager.currentItem
                 }

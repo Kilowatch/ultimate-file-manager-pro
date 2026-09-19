@@ -125,7 +125,7 @@ class FileAdapter(
             val keys = videoCache.snapshot().keys
             for (key in keys) {
                 if (key == root || key.startsWith(prefix)) {
-                    videoCache.remove(key)?.recycle()
+                    videoCache.remove(key)
                 }
             }
             thumbnailPathCache.keys.filter { it == root || it.startsWith(prefix) }
@@ -221,12 +221,55 @@ class FileAdapter(
     private var adapterScope = CoroutineScope(adapterJob + Dispatchers.Main.immediate)
     private var warmCacheJob: Job? = null
 
+    private var attachedRecyclerView: RecyclerView? = null
+
+    fun safeNotifyDataSetChanged() {
+        val rv = attachedRecyclerView
+        if (rv == null) {
+            try {
+                notifyDataSetChanged()
+            } catch (_: IllegalStateException) {}
+            return
+        }
+        if (rv.isComputingLayout) {
+            rv.post {
+                val currentRv = attachedRecyclerView ?: return@post
+                if (currentRv.isComputingLayout) {
+                    currentRv.post {
+                        if (attachedRecyclerView != null) {
+                            try {
+                                notifyDataSetChanged()
+                            } catch (_: IllegalStateException) {}
+                        }
+                    }
+                } else {
+                    try {
+                        notifyDataSetChanged()
+                    } catch (_: IllegalStateException) {}
+                }
+            }
+        } else {
+            try {
+                notifyDataSetChanged()
+            } catch (_: IllegalStateException) {
+                rv.post {
+                    if (attachedRecyclerView != null) {
+                        try {
+                            notifyDataSetChanged()
+                        } catch (_: IllegalStateException) {}
+                    }
+                }
+            }
+        }
+    }
+
     private val clipboardListener = FileClipboard.ClipboardChangeListener {
-        notifyDataSetChanged()
+        safeNotifyDataSetChanged()
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
+        attachedRecyclerView = recyclerView
         if (!adapterJob.isActive) {
             adapterJob = SupervisorJob()
             adapterScope = CoroutineScope(adapterJob + Dispatchers.Main.immediate)
@@ -237,6 +280,9 @@ class FileAdapter(
     
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
+        if (attachedRecyclerView == recyclerView) {
+            attachedRecyclerView = null
+        }
         FileClipboard.removeListener(clipboardListener)
         attachedContext = null
         cancelPendingJobs()
@@ -1751,7 +1797,7 @@ class FileAdapter(
                 // Video: extract a frame at the configured percentage into the video.
                 imgIcon.tag = file.absolutePath
                 val cached = videoCache.get(file.absolutePath)
-                if (cached != null) {
+                if (cached != null && !cached.isRecycled) {
                     imgIcon.setImageBitmap(cached)
                 } else {
                     imgIcon.setImageDrawable(
@@ -2310,7 +2356,7 @@ class FileAdapter(
                 // Video: extract frame on background thread (same as list path).
                 imgIcon.tag = file.absolutePath
                 val cached = videoCache.get(file.absolutePath)
-                if (cached != null) {
+                if (cached != null && !cached.isRecycled) {
                     imgIcon.setImageBitmap(cached)
                     if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
                 } else {

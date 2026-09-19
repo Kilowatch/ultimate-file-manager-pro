@@ -23,7 +23,7 @@ object MockUsbStorageManager {
      * Set to true to enable the mock USB drive for testing.
      * Set to false to completely hide it from Settings and UI.
      */
-    const val MOCK_USB_DRIVE_FEATURE_ENABLED = false
+    var MOCK_USB_DRIVE_FEATURE_ENABLED = false
 
     const val MOCK_USB_ID = "mock_usb_drive"
     private const val PREFS_NAME = "mock_usb_storage_prefs"

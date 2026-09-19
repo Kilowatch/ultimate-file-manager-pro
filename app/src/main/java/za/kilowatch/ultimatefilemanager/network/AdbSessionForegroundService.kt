@@ -59,9 +59,22 @@ class AdbSessionForegroundService : Service() {
                     putExtra(EXTRA_PORT, port)
                 }
 
+                var started = false
                 if (isForeground) {
-                    ContextCompat.startForegroundService(context, intent)
-                } else {
+                    try {
+                        context.startService(intent)
+                        started = true
+                    } catch (e: Exception) {
+                        try {
+                            ContextCompat.startForegroundService(context, intent)
+                            started = true
+                        } catch (t: Throwable) {
+                            Log.w(TAG, "startForegroundService failed: ${t.message}")
+                        }
+                    }
+                }
+
+                if (!started) {
                     // On Android 14+ (API 34+), starting a connectedDevice FGS while backgrounded is restricted
                     // by OS policy (ForegroundServiceStartNotAllowedException). Post fallback notification directly
                     // so status is visible, and the FGS will be promoted when the app resumes into foreground.
@@ -196,11 +209,6 @@ class AdbSessionForegroundService : Service() {
                 val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 nm.notify(NOTIFICATION_ID, notification)
             } catch (_: Exception) {}
-            // Post stopSelf to main looper rather than calling it synchronously inside the binder transaction,
-            // preventing RemoteServiceException$ForegroundServiceDidNotStartInTimeException
-            android.os.Handler(android.os.Looper.getMainLooper()).post {
-                stopSelf()
-            }
         }
     }
 

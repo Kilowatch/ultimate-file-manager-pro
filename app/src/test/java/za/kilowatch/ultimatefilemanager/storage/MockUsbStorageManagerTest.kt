@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -21,8 +22,14 @@ class MockUsbStorageManagerTest {
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
         // Ensure clean state before each test
+        MockUsbStorageManager.MOCK_USB_DRIVE_FEATURE_ENABLED = true
         MockUsbStorageManager.setMockUsbEnabled(context, true)
         MockUsbStorageManager.setMockUsbMounted(context, true)
+    }
+
+    @After
+    fun tearDown() {
+        MockUsbStorageManager.MOCK_USB_DRIVE_FEATURE_ENABLED = false
     }
 
     @Test

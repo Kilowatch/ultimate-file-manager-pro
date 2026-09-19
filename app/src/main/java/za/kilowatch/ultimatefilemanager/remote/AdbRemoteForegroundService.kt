@@ -41,7 +41,11 @@ class AdbRemoteForegroundService : Service() {
                 val intent = Intent(context, AdbRemoteForegroundService::class.java).apply {
                     putExtra(EXTRA_TV_NAME, tvName)
                 }
-                ContextCompat.startForegroundService(context, intent)
+                try {
+                    context.startService(intent)
+                } catch (e: Exception) {
+                    ContextCompat.startForegroundService(context, intent)
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start foreground service", e)
             }

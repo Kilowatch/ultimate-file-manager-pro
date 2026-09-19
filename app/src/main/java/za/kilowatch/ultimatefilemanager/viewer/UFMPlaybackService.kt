@@ -109,10 +109,15 @@ class UFMPlaybackService : Service() {
         } catch (e: Exception) {
             // Catches ForegroundServiceStartNotAllowedException on Android 12+ (SDK 31+) if resumed/started from background
             GoRoLog.e("UFMPlaybackService", "startForeground failed (likely background start restriction): ${e.message}", e)
-            // If startForeground fails, the service MUST stop immediately to fulfill the platform contract
-            // and prevent ForegroundServiceDidNotStartInTimeException.
-            safeStopForeground(true)
-            stopSelf()
+            isForegroundService = false
+            try {
+                notificationManager.notify(NOTIFICATION_ID, notification)
+            } catch (_: Exception) {}
+            // Only stop if the service is not actively serving a bound client or playing audio
+            if (playbackCallback == null && player?.isPlaying != true) {
+                safeStopForeground(true)
+                stopSelf()
+            }
         }
     }
 
@@ -159,19 +164,12 @@ class UFMPlaybackService : Service() {
                 action = ACTION_PLAY
             }
             try {
-                // When started from a foreground activity, standard startService avoids the strict
-                // 5-second startForeground() watchdog timeout crash.
+                // Standard startService avoids the strict 5-second startForeground() watchdog timeout.
                 context.startService(serviceIntent)
             } catch (e: Exception) {
-                try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        context.startForegroundService(serviceIntent)
-                    } else {
-                        context.startService(serviceIntent)
-                    }
-                } catch (t: Throwable) {
-                    GoRoLog.e("UFMPlaybackService", "Failed to start playback service", t)
-                }
+                // Do NOT escalate to startForegroundService() if startService fails (e.g. background restriction during startup).
+                // UFMPlayerActivity binds via bindService(..., BIND_AUTO_CREATE) which safely starts and binds without a watchdog.
+                GoRoLog.w("UFMPlaybackService", "startService failed (${e.message}), relying on bindService / foreground promotion")
             }
         }
 

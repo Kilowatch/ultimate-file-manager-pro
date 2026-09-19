@@ -277,6 +277,46 @@ class FileServerService : Service() {
         stopSelf()
     }
 
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        super.onTimeout(startId, fgsType)
+        Log.w(TAG, "FileServerService reached system timeout for fgsType $fgsType (startId $startId) — stopping service")
+        // Demote from foreground immediately to prevent ForegroundServiceDidNotStopInTimeException on Android 15
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopFtpServer()
+        stopSftpServer()
+        stopDlnaServer()
+        stopRendererServer()
+        setFtpEnabled(this, false)
+        setSftpEnabled(this, false)
+        setDlnaServerEnabled(this, false)
+        setDlnaRendererEnabled(this, false)
+        FtpSftpWidgetProvider.updateAllWidgets(this)
+        updateState(false, false, false, false)
+        showTimeoutNotification()
+        stopSelf()
+    }
+
+    private fun showTimeoutNotification() {
+        try {
+            val contentIntent = Intent(this, ServerHostActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+            val pendingIntent = PendingIntent.getActivity(
+                this, 0, contentIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(getString(R.string.file_server_title))
+                .setContentText(getString(R.string.file_server_timeout_stopped))
+                .setSmallIcon(R.drawable.ic_file_server)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .build()
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.notify(NOTIFICATION_ID + 10, notification)
+        } catch (_: Exception) {}
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         // Demote from foreground before any cleanup — prevents

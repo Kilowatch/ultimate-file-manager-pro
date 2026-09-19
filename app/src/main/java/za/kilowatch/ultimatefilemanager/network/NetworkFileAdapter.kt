@@ -121,6 +121,88 @@ class NetworkFileAdapter(
 
     private val dateFormat = SimpleDateFormat("MMM dd, yyyy • HH:mm", Locale.getDefault())
     
+    private var attachedRecyclerView: RecyclerView? = null
+
+    fun safeNotifyDataSetChanged() {
+        val rv = attachedRecyclerView
+        if (rv == null) {
+            try {
+                notifyDataSetChanged()
+            } catch (_: IllegalStateException) {}
+            return
+        }
+        if (rv.isComputingLayout) {
+            rv.post {
+                val currentRv = attachedRecyclerView ?: return@post
+                if (currentRv.isComputingLayout) {
+                    currentRv.post {
+                        if (attachedRecyclerView != null) {
+                            try {
+                                notifyDataSetChanged()
+                            } catch (_: IllegalStateException) {}
+                        }
+                    }
+                } else {
+                    try {
+                        notifyDataSetChanged()
+                    } catch (_: IllegalStateException) {}
+                }
+            }
+        } else {
+            try {
+                notifyDataSetChanged()
+            } catch (_: IllegalStateException) {
+                rv.post {
+                    if (attachedRecyclerView != null) {
+                        try {
+                            notifyDataSetChanged()
+                        } catch (_: IllegalStateException) {}
+                    }
+                }
+            }
+        }
+    }
+
+    fun safeNotifyItemChanged(position: Int) {
+        val rv = attachedRecyclerView
+        if (rv == null) {
+            try {
+                notifyItemChanged(position)
+            } catch (_: IllegalStateException) {}
+            return
+        }
+        if (rv.isComputingLayout) {
+            rv.post {
+                val currentRv = attachedRecyclerView ?: return@post
+                if (currentRv.isComputingLayout) {
+                    currentRv.post {
+                        if (attachedRecyclerView != null) {
+                            try {
+                                notifyItemChanged(position)
+                            } catch (_: IllegalStateException) {}
+                        }
+                    }
+                } else {
+                    try {
+                        notifyItemChanged(position)
+                    } catch (_: IllegalStateException) {}
+                }
+            }
+        } else {
+            try {
+                notifyItemChanged(position)
+            } catch (_: IllegalStateException) {
+                rv.post {
+                    if (attachedRecyclerView != null) {
+                        try {
+                            notifyItemChanged(position)
+                        } catch (_: IllegalStateException) {}
+                    }
+                }
+            }
+        }
+    }
+
     private val thumbnailReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == "za.kilowatch.ultimatefilemanager.ACTION_NETWORK_THUMBNAIL_CREATED") {
@@ -133,7 +215,7 @@ class NetworkFileAdapter(
                     val index = files.indexOfFirst { it.path == networkPath }
                     if (index != -1) {
                         za.kilowatch.ultimatefilemanager.util.GoRoLog.d("UFM_CACHE", "Refreshing item at index $index")
-                        notifyItemChanged(index)
+                        safeNotifyItemChanged(index)
                     } else {
                         za.kilowatch.ultimatefilemanager.util.GoRoLog.w("UFM_CACHE", "Path $networkPath not found in current list")
                     }
@@ -143,11 +225,12 @@ class NetworkFileAdapter(
     }
 
     private val clipboardListener = za.kilowatch.ultimatefilemanager.storage.FileClipboard.ClipboardChangeListener {
-        notifyDataSetChanged()
+        safeNotifyDataSetChanged()
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
+        attachedRecyclerView = recyclerView
         za.kilowatch.ultimatefilemanager.storage.FileClipboard.addListener(clipboardListener)
         val filter = IntentFilter("za.kilowatch.ultimatefilemanager.ACTION_NETWORK_THUMBNAIL_CREATED")
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
@@ -159,6 +242,9 @@ class NetworkFileAdapter(
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
+        if (attachedRecyclerView == recyclerView) {
+            attachedRecyclerView = null
+        }
         za.kilowatch.ultimatefilemanager.storage.FileClipboard.removeListener(clipboardListener)
         try {
             context.unregisterReceiver(thumbnailReceiver)
@@ -1113,9 +1199,9 @@ class NetworkFileAdapter(
                     context.getString(R.string.use_remote_disabled_subtitle)
                 }
                 txtDetails.visibility = View.VISIBLE
-                switchToggle.setOnCheckedChangeListener(null)
-                switchToggle.isChecked = file.isToggled
-                switchToggle.setOnCheckedChangeListener { _, isChecked ->
+                switchToggle?.setOnCheckedChangeListener(null)
+                switchToggle?.isChecked = file.isToggled
+                switchToggle?.setOnCheckedChangeListener { _, isChecked ->
                     onToggleChanged?.invoke(file, isChecked)
                 }
             } else {

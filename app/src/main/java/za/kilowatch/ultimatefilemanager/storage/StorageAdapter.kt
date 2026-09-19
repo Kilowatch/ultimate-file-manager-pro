@@ -115,9 +115,13 @@ private fun ImageView.safeSetIcon(resId: Int) {
     /**
      * Set to the ID of the tile currently in TV reorder mode.
      * While set, that tile renders with an enlarged scale and a highlighted stroke.
-     * Call [notifyDataSetChanged] after mutating this.
      */
     var reorderModeId: String? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            safeNotifyDataSetChanged()
+        }
 
     private fun isFeatureTile(item: StorageItem): Boolean =
         item.isAppsTile || item.isRemoteTile || item.isTvRemoteTile || item.isSearchTile ||
@@ -219,15 +223,40 @@ private fun ImageView.safeSetIcon(resId: Int) {
         val rv = attachedRecyclerView
         if (rv == null) {
             // No RecyclerView attached yet — safe to call directly.
-            notifyDataSetChanged()
+            try {
+                notifyDataSetChanged()
+            } catch (_: IllegalStateException) {}
             return
         }
         if (!notifyScheduled) {
             notifyScheduled = true
-            rv.post {
-                notifyScheduled = false
-                if (attachedRecyclerView != null) notifyDataSetChanged()
-            }
+            rv.post(object : Runnable {
+                override fun run() {
+                    val currentRv = attachedRecyclerView
+                    if (currentRv == null) {
+                        notifyScheduled = false
+                        return
+                    }
+                    if (currentRv.isComputingLayout) {
+                        // RecyclerView is actively computing layout or scrolling; defer execution
+                        currentRv.post(this)
+                    } else {
+                        notifyScheduled = false
+                        try {
+                            notifyDataSetChanged()
+                        } catch (_: IllegalStateException) {
+                            // Defensive recovery in case layout pass started concurrently
+                            currentRv.post {
+                                if (attachedRecyclerView != null) {
+                                    try {
+                                        notifyDataSetChanged()
+                                    } catch (_: IllegalStateException) {}
+                                }
+                            }
+                        }
+                    }
+                }
+            })
         }
         // else: a notification is already queued for the next frame — no-op.
     }
@@ -349,7 +378,24 @@ private fun ImageView.safeSetIcon(resId: Int) {
         if (from < 0 || to < 0 || from >= items.size || to >= items.size) return
 
         items.add(to, items.removeAt(from))
-        notifyItemMoved(from, to)
+        val rv = attachedRecyclerView
+        if (rv != null && rv.isComputingLayout) {
+            rv.post {
+                try {
+                    notifyItemMoved(from, to)
+                } catch (_: IllegalStateException) {}
+            }
+        } else {
+            try {
+                notifyItemMoved(from, to)
+            } catch (_: IllegalStateException) {
+                rv?.post {
+                    try {
+                        notifyItemMoved(from, to)
+                    } catch (_: IllegalStateException) {}
+                }
+            }
+        }
 
         val nonHeaders = items.filter { !it.isCategoryHeader }
         val newRaw = mutableListOf<StorageItem>()

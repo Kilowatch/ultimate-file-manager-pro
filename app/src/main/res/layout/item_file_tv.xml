@@ -120,6 +120,14 @@
             android:layout_marginEnd="@dimen/margin_sm"
             tools:text="4.2 MB" />
 
+        <!-- Toggle switch (shown only for toggle items, right side) -->
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <!-- Pinned Badge -->
         <ImageView
             android:id="@+id/imgPinnedBadge"
@@ -160,6 +168,7 @@
 
         <!-- Focus chevron (always visible, highlights on focus) -->
         <ImageView
+            android:id="@+id/imgChevron"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_arrow_back"

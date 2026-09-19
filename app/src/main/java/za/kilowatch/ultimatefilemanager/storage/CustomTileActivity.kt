@@ -818,7 +818,6 @@ class CustomTileActivity : AppCompatActivity() {
         reorderModeOriginalList = storageAdapter.getItems().toList()
         reorderModeItemId = item.id
         storageAdapter.reorderModeId = item.id
-        storageAdapter.notifyDataSetChanged()
         showPremiumSnackbar(getString(R.string.dpad_moves_tile_ok_saves_back_cancels))
     }
 
@@ -834,7 +833,6 @@ class CustomTileActivity : AppCompatActivity() {
         reorderModeItemId = null
         reorderModeOriginalList = null
         storageAdapter.reorderModeId = null
-        storageAdapter.notifyDataSetChanged()
     }
 
     private fun moveTileInReorderMode(direction: Int) {
