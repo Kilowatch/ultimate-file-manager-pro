@@ -160,25 +160,6 @@
                     android:textSize="18sp"
                     android:textAllCaps="false" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnStopDaemon"
-                    style="@style/TvYellowFocusStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/shizuku_btn_stop_daemon"
-                    android:visibility="gone"
-                    android:focusable="true"
-                    android:paddingVertical="12dp"
-                    android:paddingHorizontal="28dp"
-                    android:textColor="@color/white"
-                    android:fontFamily="sans-serif-black"
-                    android:textSize="18sp"
-                    android:textAllCaps="false"
-                    app:backgroundTint="#FFEF5350"
-                    tools:visibility="visible" />
-
                 <!-- Capability checkmarks -->
                 <LinearLayout
                     android:layout_width="match_parent"

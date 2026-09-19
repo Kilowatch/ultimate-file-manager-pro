@@ -435,9 +435,7 @@ Regelnummers en kolomkoppen zijn zichtbaar
     <string name="settings_left_handed_fab_title">
 Linkshandige FAB-modus
 </string>
-    <string name="settings_left_handed_fab_subtitle_on">
-Tools &amp; Paste FAB\'s bevinden zich linksonder
-</string>
+    <string name="settings_left_handed_fab_subtitle_on">De hulpprogramma\'s en plakknoppen bevinden zich linksonder</string>
     <string name="settings_left_handed_fab_subtitle_off">
 Tools &amp; Paste FAB\'s bevinden zich rechtsonder (standaard)
 </string>
@@ -676,9 +674,7 @@ Selecteer bestanden om acties uit te voeren
     <string name="delete_confirm_single">
 %1$s verwijderen?
 </string>
-    <string name="delete_confirm_multiple">
-%1$d artikelen verwijderen?
-</string>
+    <string name="delete_confirm_multiple">%1$d items verwijderen?</string>
     <string name="delete_title">
 Permanent verwijderen?
 </string>
@@ -5688,9 +5684,7 @@ Nieuwe map
     <string name="remote_upload">
 Uploaden
 </string>
-    <string name="remote_items_selected">
-geselecteerde artikelen
-</string>
+    <string name="remote_items_selected">geselecteerde items</string>
     <string name="remote_btn_select_all">
 Alles selecteren
 </string>
@@ -5787,9 +5781,7 @@ Open
     <string name="remote_item">
 item
 </string>
-    <string name="remote_items">
-artikelen
-</string>
+    <string name="remote_items">items</string>
     <string name="remote_reencrypt">
 Sluiten/opnieuw coderen
 </string>
@@ -6676,9 +6668,7 @@ Nieuw slot
     <string name="clipboard_slot_header">
 %1$s — %2$d bestand(en)
 </string>
-    <string name="clipboard_combined_slot">
-Gecombineerd (%1$d artikelen)
-</string>
+    <string name="clipboard_combined_slot">Gecombineerd (%1$d items)</string>
     <string name="paste_this_slot">
 Plak dit slot
 </string>
@@ -7476,9 +7466,7 @@ Hernoemd naar %1$s
     <string name="failed_to_delete_name">
 Kan %1$s niet verwijderen
 </string>
-    <string name="actionlabel_filessize_items_to_destname">
-%1$s %2$d artikelen naar %3$s?
-</string>
+    <string name="actionlabel_filessize_items_to_destname">%1$s %2$d items naar %3$s?</string>
     <string name="moving_files">
 Bestanden verplaatsen…
 </string>
@@ -8545,11 +8533,15 @@ Download %1$s: v%2$s
     <string name="elevated_download_btn">
 Downloaden en installeren (%1$s)
 </string>
-    <string name="shizuku_btn_stop_daemon">Stop Daemon</string>
-    <string name="shizuku_dialog_stop_daemon_title">Stop Elevated Access Daemon?</string>
-    <string name="shizuku_dialog_stop_daemon_desc">This will terminate the running %1$s background daemon. Elevated file operations in UFM will be paused until restarted.</string>
-    <string name="shizuku_daemon_stopped">%1$s daemon stopped</string>
-    <string name="shizuku_daemon_stop_failed">Could not stop %1$s daemon automatically. Please stop it from the %1$s app.</string>
+    <string name="elevated_disconnect_confirm_title">
+Disconnect Elevated Access?
+</string>
+    <string name="elevated_disconnect_confirm_desc">
+This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+</string>
+    <string name="elevated_btn_disconnect">
+Disconnect
+</string>
     <string name="shizuku_allow_app_access">Allow app access</string>
     <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
     <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
@@ -8847,6 +8839,9 @@ Stop
 </string>
     <string name="file_server_notification_open">
 Tik om te beheren
+</string>
+    <string name="file_server_timeout_stopped">
+File server stopped: Android 6-hour execution limit reached
 </string>
     <string name="opening_file_server">
 Bestandsserver openen…
@@ -9983,6 +9978,9 @@ Scannen
 </string>
     <string name="scanner_capture_camera">
 Camera
+</string>
+    <string name="scanner_camera_not_found">
+No camera app found on this device
 </string>
     <string name="scanner_capture_gallery">
 Kies uit Galerij
@@ -11574,9 +11572,7 @@ Eigenschappen
     <string name="properties_calculating_size">
 Grootte berekenen\\u2026
 </string>
-    <string name="properties_multiple_items_title">
-%1$d artikelen geselecteerd
-</string>
+    <string name="properties_multiple_items_title">%1$d items geselecteerd</string>
     <string name="properties_selection_title">
 Selectie-eigenschappen
 </string>
@@ -11798,9 +11794,7 @@ Deze map
 </string>
 
     <!-- Folder Sort Manager Activity -->
-    <string name="folder_sort_manager_title">
-Mapsortering overschrijft
-</string>
+    <string name="folder_sort_manager_title">Mappensortering overschrijven</string>
     <string name="folder_sort_manager_empty">
 Er zijn geen mapspecifieke sorteerinstellingen opgeslagen.\n
 \n
@@ -11856,9 +11850,7 @@ Verwijder sorteeroverschrijving voor deze map
 </string>
 
     <!-- Settings card for Folder Sort Manager -->
-    <string name="settings_folder_sort_title">
-Mapsortering overschrijft
-</string>
+    <string name="settings_folder_sort_title">Mappensortering overschrijven</string>
     <string name="settings_folder_sort_subtitle">
 Beheer de sorteer- en filterinstellingen per map
 </string>
@@ -13082,9 +13074,7 @@ Klassieke lijst
     <string name="main_menu_layout_classic_list_desc">
 Platte lijst met één kolom (groot, gemiddeld, klein)
 </string>
-    <string name="main_menu_section_items_count">
-%1$d artikelen
-</string>
+    <string name="main_menu_section_items_count">%1$d items</string>
     <string name="main_menu_section_item_count_single">
 1 artikel
 </string>

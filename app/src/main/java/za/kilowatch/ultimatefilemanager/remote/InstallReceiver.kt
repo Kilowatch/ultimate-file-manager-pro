@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import za.kilowatch.ultimatefilemanager.R
 import java.io.File
+import java.util.concurrent.Executors
 
 /**
  * Receives the result broadcast from PackageInstaller after an APK / XAPK
@@ -26,10 +27,34 @@ import java.io.File
  *
  * On completion (success or failure), cleans up temp files for both the
  * single-APK path (apk_install/) and the XAPK path (xapk_temp/<jobId>/).
+ *
+ * Asynchronous Processing:
+ * Uses [goAsync] to handle broadcasts off the main thread. Synchronous binder calls
+ * to NotificationManager (e.g. notify/createNotificationChannel) can block when
+ * PackageManager holds internal locks during package installation/dexopt, leading to
+ * ANRs if performed on the main Looper.
  */
 class InstallReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
+        val pendingResult = goAsync()
+        val appContext = context.applicationContext
+        executor.execute {
+            try {
+                handleBroadcast(appContext, intent)
+            } catch (t: Throwable) {
+                Log.e(TAG, "Error processing install broadcast: ${t.message}", t)
+            } finally {
+                try {
+                    pendingResult.finish()
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to finish broadcast pendingResult: ${e.message}")
+                }
+            }
+        }
+    }
+
+    private fun handleBroadcast(context: Context, intent: Intent) {
         val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -1)
         // jobId is "" for single-APK installs; non-empty for XAPK jobs.
         val jobId  = intent.getStringExtra("jobId") ?: ""
@@ -49,7 +74,12 @@ class InstallReceiver : BroadcastReceiver() {
         Log.d(TAG, "Install result for job='$jobId': $statusLabel")
 
         if (status == PackageInstaller.STATUS_PENDING_USER_ACTION) {
-            val confirmIntent = intent.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)
+            val confirmIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(Intent.EXTRA_INTENT, Intent::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)
+            }
             if (confirmIntent == null) {
                 Log.w(TAG, "STATUS_PENDING_USER_ACTION but EXTRA_INTENT was null")
                 return
@@ -139,26 +169,30 @@ class InstallReceiver : BroadcastReceiver() {
     // ── Notification helpers ──────────────────────────────────────────────────
 
     private fun showInstallPromptNotification(context: Context, confirmIntent: Intent) {
-        ensureNotificationChannel(context)
+        try {
+            ensureNotificationChannel(context)
 
-        val pi = PendingIntent.getActivity(
-            context,
-            NOTIF_REQUEST_CODE,
-            confirmIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-        )
+            val pi = PendingIntent.getActivity(
+                context,
+                NOTIF_REQUEST_CODE,
+                confirmIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            )
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.stat_sys_download_done)
-            .setContentTitle(context.getString(R.string.notif_apk_ready_title))
-            .setContentText(context.getString(R.string.notif_apk_ready_desc))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
-            .setContentIntent(pi)
-            .build()
+            val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(android.R.drawable.stat_sys_download_done)
+                .setContentTitle(context.getString(R.string.notif_apk_ready_title))
+                .setContentText(context.getString(R.string.notif_apk_ready_desc))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setContentIntent(pi)
+                .build()
 
-        notifManager(context).notify(NOTIF_ID, notification)
-        Log.d(TAG, "Install-prompt notification posted")
+            notifManager(context).notify(NOTIF_ID, notification)
+            Log.d(TAG, "Install-prompt notification posted")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to post install-prompt notification: ${e.message}", e)
+        }
     }
 
     private fun showInstallResultNotification(
@@ -169,81 +203,93 @@ class InstallReceiver : BroadcastReceiver() {
         fileName: String,
         resultIntent: Intent
     ) {
-        ensureNotificationChannel(context)
+        try {
+            ensureNotificationChannel(context)
 
-        val pi = PendingIntent.getActivity(
-            context,
-            RESULT_NOTIF_REQUEST_CODE,
-            resultIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-        )
+            val pi = PendingIntent.getActivity(
+                context,
+                RESULT_NOTIF_REQUEST_CODE,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            )
 
-        val displayName = when {
-            appName.isNotBlank() -> appName
-            fileName.isNotBlank() -> fileName
-            packageName.isNotBlank() -> packageName
-            else -> context.getString(R.string.app_name)
-        }
-
-        val isSuccess = (status == PackageInstaller.STATUS_SUCCESS)
-
-        val title = if (isSuccess) {
-            context.getString(R.string.installation_successful)
-        } else {
-            context.getString(R.string.installation_failed)
-        }
-
-        val text = if (isSuccess) {
-            context.getString(R.string.installation_successful_desc, displayName)
-        } else {
-            when (status) {
-                PackageInstaller.STATUS_FAILURE_CONFLICT ->
-                    context.getString(R.string.install_error_signature_mismatch)
-                PackageInstaller.STATUS_FAILURE_INCOMPATIBLE ->
-                    context.getString(R.string.install_error_incompatible)
-                PackageInstaller.STATUS_FAILURE_STORAGE ->
-                    context.getString(R.string.install_error_storage)
-                PackageInstaller.STATUS_FAILURE_INVALID ->
-                    context.getString(R.string.install_error_invalid)
-                PackageInstaller.STATUS_FAILURE_BLOCKED ->
-                    context.getString(R.string.install_error_blocked)
-                PackageInstaller.STATUS_FAILURE_ABORTED ->
-                    context.getString(R.string.install_error_aborted)
-                else -> context.getString(R.string.install_error_generic, displayName)
+            val displayName = when {
+                appName.isNotBlank() -> appName
+                fileName.isNotBlank() -> fileName
+                packageName.isNotBlank() -> packageName
+                else -> context.getString(R.string.app_name)
             }
+
+            val isSuccess = (status == PackageInstaller.STATUS_SUCCESS)
+
+            val title = if (isSuccess) {
+                context.getString(R.string.installation_successful)
+            } else {
+                context.getString(R.string.installation_failed)
+            }
+
+            val text = if (isSuccess) {
+                context.getString(R.string.installation_successful_desc, displayName)
+            } else {
+                when (status) {
+                    PackageInstaller.STATUS_FAILURE_CONFLICT ->
+                        context.getString(R.string.install_error_signature_mismatch)
+                    PackageInstaller.STATUS_FAILURE_INCOMPATIBLE ->
+                        context.getString(R.string.install_error_incompatible)
+                    PackageInstaller.STATUS_FAILURE_STORAGE ->
+                        context.getString(R.string.install_error_storage)
+                    PackageInstaller.STATUS_FAILURE_INVALID ->
+                        context.getString(R.string.install_error_invalid)
+                    PackageInstaller.STATUS_FAILURE_BLOCKED ->
+                        context.getString(R.string.install_error_blocked)
+                    PackageInstaller.STATUS_FAILURE_ABORTED ->
+                        context.getString(R.string.install_error_aborted)
+                    else -> context.getString(R.string.install_error_generic, displayName)
+                }
+            }
+
+            val iconRes = if (isSuccess) android.R.drawable.stat_sys_download_done else android.R.drawable.ic_dialog_alert
+
+            val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(iconRes)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                .setPriority(if (isSuccess) NotificationCompat.PRIORITY_DEFAULT else NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setContentIntent(pi)
+                .build()
+
+            notifManager(context).notify(RESULT_NOTIF_ID, notification)
+            Log.d(TAG, "Install result notification posted (isSuccess=$isSuccess)")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to post install result notification: ${e.message}", e)
         }
-
-        val iconRes = if (isSuccess) android.R.drawable.stat_sys_download_done else android.R.drawable.ic_dialog_alert
-
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(iconRes)
-            .setContentTitle(title)
-            .setContentText(text)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
-            .setPriority(if (isSuccess) NotificationCompat.PRIORITY_DEFAULT else NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
-            .setContentIntent(pi)
-            .build()
-
-        notifManager(context).notify(RESULT_NOTIF_ID, notification)
-        Log.d(TAG, "Install result notification posted (isSuccess=$isSuccess)")
     }
 
     private fun cancelInstallNotification(context: Context) {
-        notifManager(context).cancel(NOTIF_ID)
+        try {
+            notifManager(context).cancel(NOTIF_ID)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to cancel install notification: ${e.message}", e)
+        }
     }
 
     private fun ensureNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                context.getString(R.string.notif_channel_apk_install_name),
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = context.getString(R.string.notif_channel_apk_install_desc)
-                enableVibration(true)
+            try {
+                val channel = NotificationChannel(
+                    CHANNEL_ID,
+                    context.getString(R.string.notif_channel_apk_install_name),
+                    NotificationManager.IMPORTANCE_HIGH
+                ).apply {
+                    description = context.getString(R.string.notif_channel_apk_install_desc)
+                    enableVibration(true)
+                }
+                notifManager(context).createNotificationChannel(channel)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to create notification channel: ${e.message}", e)
             }
-            notifManager(context).createNotificationChannel(channel)
         }
     }
 
@@ -260,5 +306,11 @@ class InstallReceiver : BroadcastReceiver() {
 
         /** Action fired by PackageInstaller on session completion. */
         const val ACTION_INSTALL_COMPLETE = "za.kilowatch.ultimatefilemanager.INSTALL_COMPLETE"
+
+        private val executor = Executors.newSingleThreadExecutor { r ->
+            Thread(r, "ufm-install-receiver").apply {
+                isDaemon = true
+            }
+        }
     }
 }

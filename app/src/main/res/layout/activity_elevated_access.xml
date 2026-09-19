@@ -209,27 +209,6 @@
                         app:iconTint="@color/white"
                         android:visibility="gone" />
 
-                    <!-- Stop Daemon Action Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnStopDaemon"
-                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/shizuku_btn_stop_daemon"
-                        android:textColor="#FFEF5350"
-                        android:textSize="14sp"
-                        android:fontFamily="sans-serif-bold"
-                        android:textAllCaps="false"
-                        app:strokeColor="#66EF5350"
-                        app:cornerRadius="12dp"
-                        app:icon="@drawable/ic_stop"
-                        app:iconGravity="textStart"
-                        app:iconPadding="8dp"
-                        app:iconTint="#FFEF5350"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

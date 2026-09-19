@@ -11,6 +11,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.databinding.ItemElevatedManagerBinding
 import za.kilowatch.ultimatefilemanager.databinding.ItemElevatedManagerTvBinding
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
+import za.kilowatch.ultimatefilemanager.settings.ElevatedAccessPreferenceManager
 
 /**
  * The view references one manager card exposes, resolved from either layout.
@@ -121,12 +122,13 @@ class ElevatedAccessRenderer(
 
         refs.appAccessLayout.visibility = View.VISIBLE
 
-        val isAllowed = when (state.serviceState) {
+        val isPrefEnabled = ElevatedAccessPreferenceManager.isManagerEnabled(activity, manager)
+        val hasPermission = when (state.serviceState) {
             ServiceState.CONNECTED -> true
             ServiceState.RUNNING_UNAUTHORIZED -> false
             else -> activity.checkSelfPermission(manager.permission) == android.content.pm.PackageManager.PERMISSION_GRANTED
         }
-
+        val isAllowed = isPrefEnabled && hasPermission
         refs.appAccessSwitch.setOnCheckedChangeListener(null)
         refs.appAccessSwitch.isChecked = isAllowed
 

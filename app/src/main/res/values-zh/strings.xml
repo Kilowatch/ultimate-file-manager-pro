@@ -8727,20 +8727,14 @@ ADB/无线调试
     <string name="elevated_download_btn">
 下载并安装（%1$s）
 </string>
-    <string name="shizuku_btn_stop_daemon">
-Stop Daemon
+    <string name="elevated_disconnect_confirm_title">
+Disconnect Elevated Access?
 </string>
-    <string name="shizuku_dialog_stop_daemon_title">
-Stop Elevated Access Daemon?
+    <string name="elevated_disconnect_confirm_desc">
+This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
 </string>
-    <string name="shizuku_dialog_stop_daemon_desc">
-This will terminate the running %1$s background daemon. Elevated file operations in UFM will be paused until restarted.
-</string>
-    <string name="shizuku_daemon_stopped">
-%1$s daemon stopped
-</string>
-    <string name="shizuku_daemon_stop_failed">
-Could not stop %1$s daemon automatically. Please stop it from the %1$s app.
+    <string name="elevated_btn_disconnect">
+Disconnect
 </string>
     <string name="shizuku_allow_app_access">
 Allow app access
@@ -9045,6 +9039,9 @@ FTP 和 SFTP 服务器正在运行
 </string>
     <string name="file_server_notification_open">
 点击进行管理
+</string>
+    <string name="file_server_timeout_stopped">
+File server stopped: Android 6-hour execution limit reached
 </string>
     <string name="opening_file_server">
 正在打开文件服务器...
@@ -10187,6 +10184,9 @@ PDF（仅限多页）
 </string>
     <string name="scanner_capture_camera">
 相机
+</string>
+    <string name="scanner_camera_not_found">
+No camera app found on this device
 </string>
     <string name="scanner_capture_gallery">
 从图库中选择

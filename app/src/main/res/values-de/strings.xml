@@ -8727,11 +8727,15 @@ Der Manager konnte nicht geöffnet werden. Bitte installiere zuerst Porter, Shiz
     <string name="elevated_download_btn">
 Herunterladen &amp; Installieren (%1$s)
 </string>
-    <string name="shizuku_btn_stop_daemon">Stop Daemon</string>
-    <string name="shizuku_dialog_stop_daemon_title">Stop Elevated Access Daemon?</string>
-    <string name="shizuku_dialog_stop_daemon_desc">This will terminate the running %1$s background daemon. Elevated file operations in UFM will be paused until restarted.</string>
-    <string name="shizuku_daemon_stopped">%1$s daemon stopped</string>
-    <string name="shizuku_daemon_stop_failed">Could not stop %1$s daemon automatically. Please stop it from the %1$s app.</string>
+    <string name="elevated_disconnect_confirm_title">
+Disconnect Elevated Access?
+</string>
+    <string name="elevated_disconnect_confirm_desc">
+This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+</string>
+    <string name="elevated_btn_disconnect">
+Disconnect
+</string>
     <string name="shizuku_allow_app_access">Allow app access</string>
     <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
     <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
@@ -9029,6 +9033,9 @@ Stopp
 </string>
     <string name="file_server_notification_open">
 Tippen zum Verwalten
+</string>
+    <string name="file_server_timeout_stopped">
+File server stopped: Android 6-hour execution limit reached
 </string>
     <string name="opening_file_server">
 Dateiserver wird geöffnet…
@@ -10171,6 +10178,9 @@ Scannen
 </string>
     <string name="scanner_capture_camera">
 Kamera
+</string>
+    <string name="scanner_camera_not_found">
+No camera app found on this device
 </string>
     <string name="scanner_capture_gallery">
 Aus Galerie auswählen

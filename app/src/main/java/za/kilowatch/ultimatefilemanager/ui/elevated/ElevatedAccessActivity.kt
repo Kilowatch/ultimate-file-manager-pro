@@ -39,6 +39,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.databinding.ItemElevatedManagerBinding
 import za.kilowatch.ultimatefilemanager.databinding.ItemElevatedManagerTvBinding
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
+import za.kilowatch.ultimatefilemanager.settings.ElevatedAccessPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import android.util.Log
@@ -75,7 +76,6 @@ private class ElevatedAccessScreenRefs(
     val statusTitle: TextView,
     val statusBadge: TextView,
     val statusDescription: TextView,
-    val stopDaemonButton: MaterialButton?,
     val protectedCheck: ImageView,
     val speedCheck: ImageView,
     val securityCheck: ImageView,
@@ -100,7 +100,6 @@ private class ElevatedAccessScreenRefs(
             statusTitle = root.findViewById(R.id.txtShizukuStatus),
             statusBadge = root.findViewById(R.id.txtStatusBadge),
             statusDescription = root.findViewById(R.id.txtShizukuDescription),
-            stopDaemonButton = root.findViewById(R.id.btnStopDaemon),
             protectedCheck = root.findViewById(R.id.icProtectedCheck),
             speedCheck = root.findViewById(R.id.icSpeedCheck),
             securityCheck = root.findViewById(R.id.icSecurityCheck),
@@ -222,9 +221,6 @@ class ElevatedAccessActivity : AppCompatActivity() {
             heroState?.let { hero ->
                 if (hero.installed) onManagerAction(hero.manager, hero.serviceState)
             }
-        }
-        refs.stopDaemonButton?.setOnClickListener {
-            heroState?.let { hero -> confirmStopDaemon(hero) }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(refs.root) { v, insets ->
@@ -369,7 +365,6 @@ class ElevatedAccessActivity : AppCompatActivity() {
         refs.statusDescription.visibility = View.GONE
         refs.statusBadge.visibility = View.GONE
         refs.enableButton.visibility = View.GONE
-        refs.stopDaemonButton?.visibility = View.GONE
 
         // Neutral, like every other statement this screen makes about a state it has not observed.
         (refs.heroCard as? MaterialCardView)?.strokeColor =
@@ -506,10 +501,6 @@ class ElevatedAccessActivity : AppCompatActivity() {
             refs.enableButton.setText(enableLabelRes)
             refs.enableButton.setIconResource(enableIconRes)
         }
-
-        // Stop Daemon Button: visible when the daemon is running or connected
-        val canStop = hero.serviceState == ServiceState.CONNECTED || hero.serviceState == ServiceState.RUNNING_UNAUTHORIZED
-        refs.stopDaemonButton?.visibility = if (canStop) View.VISIBLE else View.GONE
 
         val active = hero.serviceState == ServiceState.CONNECTED
         val checkVisibility = if (active) View.VISIBLE else View.GONE
@@ -761,200 +752,80 @@ class ElevatedAccessActivity : AppCompatActivity() {
             ElevatedManager.SHEVERY -> ElevatedAppDownloadManager.ElevatedApp.SHEVERY
         }
 
-    // ── Daemon Stopping ─────────────────────────────────────────────────────
+    // ── Per-Application Allow App Access Toggle ───────────────────────────────
 
-    private fun confirmStopDaemon(hero: ManagerState) {
-        val managerTitle = getString(hero.manager.titleRes)
-        val msg = getString(R.string.shizuku_dialog_stop_daemon_desc, managerTitle)
-
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.shizuku_dialog_stop_daemon_title)
-            .setMessage(msg)
-            .setPositiveButton(R.string.shizuku_btn_stop_daemon) { _, _ ->
-                stopDaemon(hero)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+    private fun onToggleAppAccess(manager: ElevatedManager, enable: Boolean) {
+        val managerTitle = getString(manager.titleRes)
+        if (!enable) {
+            // Confirm with user before disconnecting elevated access
+            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setTitle(R.string.elevated_disconnect_confirm_title)
+                .setMessage(getString(R.string.elevated_disconnect_confirm_desc, managerTitle))
+                .setPositiveButton(R.string.elevated_btn_disconnect) { _, _ ->
+                    disconnectAppAccess(manager)
+                }
+                .setNegativeButton(R.string.cancel) { _, _ ->
+                    refresh()
+                }
+                .setOnCancelListener {
+                    refresh()
+                }
+                .show()
+        } else {
+            enableAppAccess(manager)
+        }
     }
 
-    private fun stopDaemon(hero: ManagerState) {
+    private fun disconnectAppAccess(manager: ElevatedManager) {
+        val managerTitle = getString(manager.titleRes)
         lifecycleScope.launch {
-            val managerTitle = getString(hero.manager.titleRes)
-
+            ElevatedAccessPreferenceManager.setManagerEnabled(this@ElevatedAccessActivity, manager, false)
             withContext(Dispatchers.IO) {
-                val killScript = "daemons=\"\"; " +
-                    "for p in /proc/[0-9]*; do " +
-                    "[ -d \"\$p\" ] || continue; " +
-                    "cmd=\$(cat \"\$p/cmdline\" 2>/dev/null | tr '\\0' ' '); " +
-                    "comm=\$(cat \"\$p/comm\" 2>/dev/null); " +
-                    "case \"\$cmd \$comm\" in " +
-                    "*porter_server*|*eu.darken.porter.server*|*shizuku_server*|*moe.shizuku.server*|*com.hamondev.shevery*) " +
-                    "daemons=\"\$daemons \${p##*/}\";; " +
-                    "esac; done; " +
-                    "if [ -n \"\$daemons\" ]; then nohup sh -c \"sleep 1; kill -9 \$daemons\" >/dev/null 2>&1 & fi; " +
-                    "killall -9 porter_server shizuku_server 2>/dev/null; " +
-                    "kill -9 \$(pidof porter_server 2>/dev/null) 2>/dev/null; " +
-                    "kill -9 \$(pidof shizuku_server 2>/dev/null) 2>/dev/null; " +
-                    "am force-stop eu.darken.porter moe.shizuku.privileged.api com.hamondev.shevery 2>/dev/null"
-
-                // 1. Terminate daemon processes via elevated Shizuku shell
-                try {
-                    ShizukuShellWrapper.runCommand(killScript)
-                } catch (e: Throwable) {
-                    Log.w("ElevatedAccess", "Shizuku shell kill error: ${e.message}")
-                }
-
-                // 2. Terminate daemon processes via Root if root shell is available
-                try {
-                    if (RootShellWrapper.isAuthorized(this@ElevatedAccessActivity)) {
-                        RootShellWrapper.runCommand(killScript)
-                    }
-                } catch (e: Throwable) {
-                    Log.w("ElevatedAccess", "Root shell kill error: ${e.message}")
-                }
-
-                // 3. Request exit on Shizuku API
-                try {
-                    Shizuku.exit()
-                } catch (e: Throwable) {
-                    Log.w("ElevatedAccess", "Shizuku.exit() error: ${e.message}")
-                }
-
-                delay(1500)
-            }
-
-            // 4. Verify whether daemon was stopped
-            val stillRunning = withContext(Dispatchers.IO) { probe.isServiceBound() }
-            if (!stillRunning) {
                 try {
                     Shizuku.onBinderReceived(null, packageName)
                 } catch (e: Throwable) {
                     Log.w("ElevatedAccess", "Binder detach error: ${e.message}")
                 }
-                Toast.makeText(
-                    this@ElevatedAccessActivity,
-                    getString(R.string.shizuku_daemon_stopped, managerTitle),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                Toast.makeText(
-                    this@ElevatedAccessActivity,
-                    getString(R.string.shizuku_daemon_stop_failed, managerTitle),
-                    Toast.LENGTH_LONG
-                ).show()
-                openManagerApp(hero.manager)
             }
             refresh()
+            Toast.makeText(
+                this@ElevatedAccessActivity,
+                getString(R.string.shizuku_app_access_revoked, managerTitle),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
-    // ── Per-Application Allow App Access Toggle ───────────────────────────────
-
-    private fun onToggleAppAccess(manager: ElevatedManager, enable: Boolean) {
+    private fun enableAppAccess(manager: ElevatedManager) {
+        val managerTitle = getString(manager.titleRes)
         lifecycleScope.launch {
-            val managerTitle = getString(manager.titleRes)
-            if (enable) {
+            ElevatedAccessPreferenceManager.setManagerEnabled(this@ElevatedAccessActivity, manager, true)
+
+            // If root is authorized, grant permission via su shell
+            if (RootShellWrapper.isAuthorized(this@ElevatedAccessActivity)) {
                 withContext(Dispatchers.IO) {
                     try {
-                        ShizukuShellWrapper.runCommand("pm grant $packageName ${manager.permission}")
-                        if (RootShellWrapper.isAuthorized(this@ElevatedAccessActivity)) {
-                            RootShellWrapper.runCommand("pm grant $packageName ${manager.permission}")
-                        }
+                        RootShellWrapper.runCommand("pm grant $packageName ${manager.permission}")
                     } catch (e: Throwable) {
-                        Log.w("ElevatedAccess", "pm grant error: ${e.message}")
-                    }
-
-                    try {
-                        val grantJsonScript = "sed -i '/za\\.kilowatch\\.ultimatefilemanager/s/\"flags\":[0-9]*/\"flags\":2/' /data/user_de/0/com.android.shell/porter.json 2>/dev/null; " +
-                            "sed -i '/za\\.kilowatch\\.ultimatefilemanager/s/\"flags\":[0-9]*/\"flags\":2/' /data/user_de/0/com.android.shell/shizuku.json 2>/dev/null"
-                        ShizukuShellWrapper.runCommand(grantJsonScript)
-                        if (RootShellWrapper.isAuthorized(this@ElevatedAccessActivity)) {
-                            RootShellWrapper.runCommand(grantJsonScript)
-                        }
-                    } catch (e: Throwable) {
-                        Log.w("ElevatedAccess", "config json update error: ${e.message}")
+                        Log.w("ElevatedAccess", "Root pm grant error: ${e.message}")
                     }
                 }
+            }
 
-                val isAuth = withContext(Dispatchers.IO) { probe.isAuthorized() }
-                if (!isAuth) {
-                    val requested = ShizukuShellWrapper.requestPermissionSafely(permissionRequestCode, this@ElevatedAccessActivity)
-                    if (!requested) {
-                        launchManagerAuthorization(manager)
-                    }
-                } else {
-                    Toast.makeText(
-                        this@ElevatedAccessActivity,
-                        getString(R.string.shizuku_app_access_granted_toast, managerTitle),
-                        Toast.LENGTH_SHORT
-                    ).show()
+            val isAuth = withContext(Dispatchers.IO) { probe.isAuthorized() }
+            if (!isAuth) {
+                val requested = ShizukuShellWrapper.requestPermissionSafely(permissionRequestCode, this@ElevatedAccessActivity)
+                if (!requested) {
+                    openManagerApp(manager)
                 }
             } else {
-                withContext(Dispatchers.IO) {
-                    try {
-                        ShizukuShellWrapper.runCommand("pm revoke $packageName ${manager.permission}")
-                        if (RootShellWrapper.isAuthorized(this@ElevatedAccessActivity)) {
-                            RootShellWrapper.runCommand("pm revoke $packageName ${manager.permission}")
-                        }
-                    } catch (e: Throwable) {
-                        Log.w("ElevatedAccess", "pm revoke error: ${e.message}")
-                    }
-
-                    try {
-                        val revokeJsonScript = "sed -i '/za\\.kilowatch\\.ultimatefilemanager/s/\"flags\":[0-9]*/\"flags\":4/' /data/user_de/0/com.android.shell/porter.json 2>/dev/null; " +
-                            "sed -i '/za\\.kilowatch\\.ultimatefilemanager/s/\"flags\":[0-9]*/\"flags\":4/' /data/user_de/0/com.android.shell/shizuku.json 2>/dev/null"
-                        ShizukuShellWrapper.runCommand(revokeJsonScript)
-                        if (RootShellWrapper.isAuthorized(this@ElevatedAccessActivity)) {
-                            RootShellWrapper.runCommand(revokeJsonScript)
-                        }
-                    } catch (e: Throwable) {
-                        Log.w("ElevatedAccess", "config json update error: ${e.message}")
-                    }
-
-                    try {
-                        Shizuku.onBinderReceived(null, packageName)
-                    } catch (e: Throwable) {
-                        Log.w("ElevatedAccess", "Binder detach error: ${e.message}")
-                    }
-                }
-
-                launchManagerAuthorization(manager)
-
                 Toast.makeText(
                     this@ElevatedAccessActivity,
-                    getString(R.string.shizuku_app_access_revoked, managerTitle),
+                    getString(R.string.shizuku_app_access_granted_toast, managerTitle),
                     Toast.LENGTH_SHORT
                 ).show()
             }
             refresh()
-        }
-    }
-
-    private fun launchManagerAuthorization(manager: ElevatedManager) {
-        when (manager) {
-            ElevatedManager.SHIZUKU -> {
-                try {
-                    val intent = Intent().setComponent(
-                        ComponentName("moe.shizuku.privileged.api", "moe.shizuku.manager.authorization.AuthorizationActivity")
-                    ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                } catch (_: Throwable) {
-                    openManagerApp(manager)
-                }
-            }
-            ElevatedManager.PORTER -> {
-                try {
-                    val (code, _) = ShizukuShellWrapper.runCommand("am start -n eu.darken.porter/.management.ApplicationManagementActivity")
-                    if (code != 0) {
-                        openManagerApp(manager)
-                    }
-                } catch (_: Throwable) {
-                    openManagerApp(manager)
-                }
-            }
-            ElevatedManager.SHEVERY -> {
-                openManagerApp(manager)
-            }
         }
     }
 
