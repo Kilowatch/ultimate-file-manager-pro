@@ -66,8 +66,7 @@ class TvServerForegroundService : Service() {
                     stop(appContext)
                     return
                 }
-                val pairedDevices = PairingManager.getInstance(appContext).getAllPairedDevices()
-                if (pairedDevices.isEmpty()) {
+                if (!PairingManager.getInstance(appContext).hasPairedDevices()) {
                     Log.d(TAG, "No paired devices found — skipping TV server foreground service start")
                     stop(appContext)
                     return
@@ -173,27 +172,31 @@ class TvServerForegroundService : Service() {
         }
 
         acquireLocks()
-        try {
-            UfmApplication.instance.ensurePairingServerRunning()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to ensure PairingServer running on create", e)
-        }
+        Thread {
+            try {
+                UfmApplication.instance.ensurePairingServerRunning()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to ensure PairingServer running on create", e)
+            }
+        }.apply { name = "ufm-tv-server-init"; isDaemon = true; start() }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val isEnabled = TvBackgroundServerPreferenceManager.isEnabled(this)
-        val pairedDevices = PairingManager.getInstance(this).getAllPairedDevices()
-        if (!isEnabled || pairedDevices.isEmpty() || !DeviceUtils.isTvDevice(this)) {
+        val hasDevices = PairingManager.getInstance(this).hasPairedDevices()
+        if (!isEnabled || !hasDevices || !DeviceUtils.isTvDevice(this)) {
             Log.d(TAG, "Service disabled, no paired devices, or not TV — stopping service")
             stopSelf()
             return START_NOT_STICKY
         }
 
-        try {
-            UfmApplication.instance.ensurePairingServerRunning()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to ensure PairingServer running on start command", e)
-        }
+        Thread {
+            try {
+                UfmApplication.instance.ensurePairingServerRunning()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to ensure PairingServer running on start command", e)
+            }
+        }.apply { name = "ufm-tv-server-init"; isDaemon = true; start() }
 
         // START_STICKY: If killed under memory pressure, restart so paired mobile devices
         // continue to have access to TV storage.

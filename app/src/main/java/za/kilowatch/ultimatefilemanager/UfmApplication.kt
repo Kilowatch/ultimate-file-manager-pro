@@ -103,7 +103,9 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
     }
 
     private val TAG = "UfmApplication"
+    @Volatile
     private var pairingServer: PairingServer? = null
+    private val pairingServerLock = Any()
 
     // ── Coil global ImageLoader ───────────────────────────────────────────────────
     // Providing the singleton here ensures every imgIcon.load() call (e.g. in
@@ -430,7 +432,6 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
         // BouncyCastle is already registered synchronously above (before super.onCreate).
         // This thread only starts PairingServer, which depends on BC being present.
         Thread {
-            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND)
             // Initialize PairingServer (depends on BouncyCastle, already registered on main thread)
             ensurePairingServerRunning()
 
@@ -581,19 +582,26 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
     /**
      * Ensures that [PairingServer] is initialized and running.
      * Can be safely called from background services, initializers, or activities.
+     * If called from the main thread, the initialization is dispatched to a background
+     * daemon thread to avoid blocking the UI looper on KeyStore/crypto and socket operations.
      */
     fun ensurePairingServerRunning() {
-        if (pairingServer == null) {
-            synchronized(this) {
-                if (pairingServer == null) {
-                    try {
-                        val server = PairingServer(this)
-                        server.startSecure()
-                        pairingServer = server
-                        Log.d(TAG, "Global PairingServer started successfully (HTTPS)")
-                    } catch (t: Throwable) {
-                        Log.e(TAG, "Failed to start global PairingServer in ensurePairingServerRunning", t)
-                    }
+        if (pairingServer != null) return
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+            Thread {
+                ensurePairingServerRunning()
+            }.apply { name = "ufm-pairing-init"; isDaemon = true; start() }
+            return
+        }
+        synchronized(pairingServerLock) {
+            if (pairingServer == null) {
+                try {
+                    val server = PairingServer(this)
+                    server.startSecure()
+                    pairingServer = server
+                    Log.d(TAG, "Global PairingServer started successfully (HTTPS)")
+                } catch (t: Throwable) {
+                    Log.e(TAG, "Failed to start global PairingServer in ensurePairingServerRunning", t)
                 }
             }
         }

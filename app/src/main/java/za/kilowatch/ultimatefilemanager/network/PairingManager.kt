@@ -39,6 +39,10 @@ class PairingManager(private val context: Context) {
         return id
     }
 
+    fun hasPairedDevices(): Boolean {
+        return prefs.getStringSet(KEY_PAIRED_DEVICES, null)?.isNotEmpty() == true
+    }
+
     fun getAllPairedDevices(): List<PairedDevice> {
         val deviceStrings = prefs.getStringSet(KEY_PAIRED_DEVICES, emptySet()) ?: emptySet()
         // Migrate any plaintext secrets still embedded in old 9-field CSV entries
