@@ -186,8 +186,9 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             za.kilowatch.ultimatefilemanager.settings.LocaleHelper.getSavedLocale(this)
             za.kilowatch.ultimatefilemanager.settings.ColorblindPrefs.getType(this)
             za.kilowatch.ultimatefilemanager.settings.ColorblindPrefs.getStrength(this)
+            za.kilowatch.ultimatefilemanager.settings.LongPressDurationManager.init(this)
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to pre-warm locale/font prefs", e)
+            Log.e(TAG, "Failed to pre-warm locale/font/long-press prefs", e)
         }
 
         // Initialise Firebase Analytics asynchronously on a background thread (see the

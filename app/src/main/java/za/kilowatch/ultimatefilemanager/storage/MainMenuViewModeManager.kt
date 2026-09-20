@@ -27,51 +27,67 @@ object MainMenuViewModeManager {
         MODERN_CATEGORIZED  // Modern grouped/collapsible sections
     }
 
+    @Volatile private var cachedViewMode: ViewMode? = null
+    @Volatile private var cachedColumnCount: Int? = null
+    @Volatile private var cachedItemSize: ItemSize? = null
+
     fun saveViewMode(context: Context, mode: ViewMode) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        cachedViewMode = mode
+        context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putInt(KEY_VIEW_MODE, mode.ordinal)
             .apply()
     }
 
     fun loadViewMode(context: Context): ViewMode {
-        val ordinal = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        cachedViewMode?.let { return it }
+        val ordinal = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getInt(KEY_VIEW_MODE, ViewMode.LIST.ordinal)
-        return ViewMode.entries.getOrElse(ordinal) { ViewMode.LIST }
+        val mode = ViewMode.entries.getOrElse(ordinal) { ViewMode.LIST }
+        cachedViewMode = mode
+        return mode
     }
 
     fun saveColumnCount(context: Context, count: Int) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val validCount = if (count != 3 && count != 4) 3 else count
+        cachedColumnCount = validCount
+        context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
-            .putInt(KEY_COLUMN_COUNT, count)
+            .putInt(KEY_COLUMN_COUNT, validCount)
             .apply()
     }
 
     fun loadColumnCount(context: Context): Int {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        cachedColumnCount?.let { return it }
+        val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val count = prefs.getInt(KEY_COLUMN_COUNT, 3)
         
         // Migrate legacy 2-column or other unsupported values to 3
-        if (count != 3 && count != 4) {
+        val validCount = if (count != 3 && count != 4) {
             prefs.edit().putInt(KEY_COLUMN_COUNT, 3).apply()
-            return 3
-        }
-        return count
+            3
+        } else count
+        cachedColumnCount = validCount
+        return validCount
     }
 
     enum class ItemSize { LARGE, MEDIUM, SMALL }
 
     fun saveItemSize(context: Context, size: ItemSize) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        cachedItemSize = size
+        context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putInt(KEY_ITEM_SIZE, size.ordinal)
             .apply()
     }
 
     fun loadItemSize(context: Context): ItemSize {
-        val ordinal = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        cachedItemSize?.let { return it }
+        val ordinal = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getInt(KEY_ITEM_SIZE, ItemSize.MEDIUM.ordinal)
-        return ItemSize.entries.getOrElse(ordinal) { ItemSize.MEDIUM }
+        val size = ItemSize.entries.getOrElse(ordinal) { ItemSize.MEDIUM }
+        cachedItemSize = size
+        return size
     }
 
     private const val KEY_CUSTOM_CATEGORIES = "main_menu_tile_categories"
