@@ -189,17 +189,7 @@ class WelcomeActivity : AppCompatActivity() {
             }
             // REQUEST_INSTALL_PACKAGES — open Settings
             item.id == "install_apps" -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    try {
-                        val intent = Intent(
-                            Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
-                            Uri.parse("package:$packageName")
-                        )
-                        settingsLauncher.launch(intent)
-                    } catch (_: Exception) {
-                        openAppDetailsSettings()
-                    }
-                }
+                PackageInstallerHelper.openInstallPermissionSettings(this, settingsLauncher)
             }
             // Standard runtime permissions
             else -> {

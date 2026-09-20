@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.remote.InstallReceiver
 import java.io.File
@@ -177,6 +178,21 @@ object PackageInstallerHelper {
     }
 
     /**
+     * Checks whether any unknown app sources / app details settings activity can resolve on the current device.
+     */
+    fun canResolveInstallPermissionSettings(context: Context): Boolean {
+        val packageUri = Uri.parse("package:${context.packageName}")
+        val pm = context.packageManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageUri).resolveActivity(pm) != null) return true
+            if (Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).resolveActivity(pm) != null) return true
+        }
+        if (Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri).resolveActivity(pm) != null) return true
+        if (Intent(Settings.ACTION_SECURITY_SETTINGS).resolveActivity(pm) != null) return true
+        return Intent(Settings.ACTION_SETTINGS).resolveActivity(pm) != null
+    }
+
+    /**
      * Attempts to open the system settings screen for granting unknown app install permissions.
      * Safely falls back across multiple settings intents (per-app unknown sources,
      * global unknown sources list, application details, security settings, general settings)
@@ -185,7 +201,7 @@ object PackageInstallerHelper {
      *
      * @return true if a settings activity was successfully launched, false otherwise.
      */
-    fun openInstallPermissionSettings(context: Context): Boolean {
+    fun openInstallPermissionSettings(context: Context, launcher: ActivityResultLauncher<Intent>? = null): Boolean {
         val packageUri = Uri.parse("package:${context.packageName}")
         val intents = mutableListOf<Intent>()
 
@@ -207,8 +223,12 @@ object PackageInstallerHelper {
 
         for (intent in intents) {
             try {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(intent)
+                if (launcher != null) {
+                    launcher.launch(intent)
+                } else {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                }
                 return true
             } catch (e: ActivityNotFoundException) {
                 Log.w(TAG, "Settings activity not found for ${intent.action}: ${e.message}")

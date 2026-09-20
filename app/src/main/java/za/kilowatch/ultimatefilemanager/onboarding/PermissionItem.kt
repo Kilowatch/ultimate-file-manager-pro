@@ -8,6 +8,7 @@ import android.os.Build
 import android.provider.Settings
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.PackageInstallerHelper
 
 /**
  * Represents a permission card shown on the Welcome Screen.
@@ -108,13 +109,9 @@ object PermissionItemFactory {
             )
         }
 
-        // 4. Install Apps (optional) — only show if the Settings page exists
+        // 4. Install Apps (optional) — only show if any settings page exists
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val installIntent = Intent(
-                Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
-                Uri.parse("package:${context.packageName}")
-            )
-            val canResolve = installIntent.resolveActivity(context.packageManager) != null
+            val canResolve = PackageInstallerHelper.canResolveInstallPermissionSettings(context)
 
             if (canResolve || !isTv) {
                 items.add(
