@@ -189,7 +189,10 @@ class WelcomeActivity : AppCompatActivity() {
             }
             // REQUEST_INSTALL_PACKAGES — open Settings
             item.id == "install_apps" -> {
-                PackageInstallerHelper.openInstallPermissionSettings(this, settingsLauncher)
+                val launched = PackageInstallerHelper.openInstallPermissionSettings(this, settingsLauncher)
+                if (!launched) {
+                    Toast.makeText(this, R.string.error_install_unknown_apps_instruction, Toast.LENGTH_SHORT).show()
+                }
             }
             // Standard runtime permissions
             else -> {

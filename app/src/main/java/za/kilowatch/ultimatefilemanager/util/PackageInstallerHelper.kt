@@ -181,15 +181,20 @@ object PackageInstallerHelper {
      * Checks whether any unknown app sources / app details settings activity can resolve on the current device.
      */
     fun canResolveInstallPermissionSettings(context: Context): Boolean {
-        val packageUri = Uri.parse("package:${context.packageName}")
-        val pm = context.packageManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageUri).resolveActivity(pm) != null) return true
-            if (Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).resolveActivity(pm) != null) return true
+        return try {
+            val packageUri = Uri.parse("package:${context.packageName}")
+            val pm = context.packageManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageUri).resolveActivity(pm) != null) return true
+                if (Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).resolveActivity(pm) != null) return true
+            }
+            if (Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri).resolveActivity(pm) != null) return true
+            if (Intent(Settings.ACTION_SECURITY_SETTINGS).resolveActivity(pm) != null) return true
+            Intent(Settings.ACTION_SETTINGS).resolveActivity(pm) != null
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to resolve install permission settings: ${e.message}")
+            false
         }
-        if (Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri).resolveActivity(pm) != null) return true
-        if (Intent(Settings.ACTION_SECURITY_SETTINGS).resolveActivity(pm) != null) return true
-        return Intent(Settings.ACTION_SETTINGS).resolveActivity(pm) != null
     }
 
     /**
