@@ -25,6 +25,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.PackageInstallerHelper
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 
