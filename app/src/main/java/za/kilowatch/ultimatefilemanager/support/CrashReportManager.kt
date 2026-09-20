@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.support
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Build
 import android.os.Handler
@@ -262,6 +263,35 @@ object CrashReportManager {
     }
 
     /**
+     * Identifies system-side ANR stalls where the main thread is blocked inside a synchronous
+     * binder IPC call to the system server's ActivityTaskManager (Android 10+, API 29+) or
+     * ActivityManager (Android 9 and below, API <= 28) while launching an Activity
+     * (e.g. `startActivity` / `startActivityForResult` via `Instrumentation.execStartActivity` ->
+     * `IActivityTaskManager$Stub$Proxy.startActivity` or `IActivityManager$Stub$Proxy.startActivity` ->
+     * `BinderProxy.transact` / `transactNative`).
+     *
+     * In this state, the app is waiting for the system server / OS process to finish processing
+     * the activity launch; no app business logic is actively running in the top frame.
+     */
+    fun isActivityLaunchBinderStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame?.className != "android.os.BinderProxy" ||
+            (topFrame.methodName != "transact" && topFrame.methodName != "transactNative")) {
+            return false
+        }
+        return mainStackTrace.any { frame ->
+            (frame.className == "android.app.IActivityTaskManager\$Stub\$Proxy" ||
+             frame.className == "android.app.IActivityManager\$Stub\$Proxy" ||
+             frame.className == "android.app.ActivityManagerProxy" ||
+             frame.className == "android.app.IActivityTaskManager" ||
+             frame.className == "android.app.IActivityManager") &&
+            frame.methodName.startsWith("startActivity")
+        }
+    }
+
+    /**
      * Hooks ActivityThread.mH via Handler.mCallback to intercept EXECUTE_TRANSACTION (159)
      * messages before they can trigger framework NullPointerExceptions in ActivityThread.handleLaunchActivity.
      *
@@ -278,6 +308,7 @@ object CrashReportManager {
      *    `handleLaunchActivity` profilerInfo NPE so the main looper continues processing subsequent events
      *    cleanly without crashing the process.
      */
+    @SuppressLint("BlockedPrivateApi")
     private fun installActivityThreadCrashHook() {
         try {
             val activityThreadClass = Class.forName("android.app.ActivityThread")
@@ -297,7 +328,7 @@ object CrashReportManager {
             val originalCallback = mCallbackField.get(mH) as? Handler.Callback
 
             val mLaunchingActivitiesField = try {
-                activityThreadClass.getDeclaredField("mLaunchingActivities").apply { isAccessible = true }
+                activityThreadClass.declaredFields.firstOrNull { it.name == "mLaunchingActivities" }?.apply { isAccessible = true }
             } catch (_: Throwable) {
                 null
             }
@@ -1417,32 +1448,28 @@ object CrashReportManager {
                         }
 
                     // 23. The main thread is blocked on a synchronous binder call to
-                    //     the system server's ActivityTaskManager while the app
-                    //     launches an Activity — e.g. LanguageWelcomeActivity.onCreate
-                    //     -> Activity.startActivity -> startActivityForResult ->
-                    //     Instrumentation.execStartActivity ->
-                    //     IActivityTaskManager$Stub$Proxy.startActivity ->
+                    //     the system server's ActivityTaskManager (Android 10+, API 29+)
+                    //     or ActivityManager (Android 9 and below, API <= 28) while the
+                    //     app launches an Activity — e.g. LanguageWelcomeActivity.onCreate
+                    //     or a button onClick handler -> Activity.startActivity ->
+                    //     startActivityForResult -> Instrumentation.execStartActivity ->
+                    //     IActivityTaskManager$Stub$Proxy.startActivity /
+                    //     IActivityManager$Stub$Proxy.startActivity ->
                     //     BinderProxy.transact -> transactNative (top frame) (reported
-                    //     from a Xiaomi MiTV-AFMU0, SDK 34, app 1.8.0-GOOGLE). The app
-                    //     merely invoked the one-line framework API `startActivity()`;
-                    //     the >5 s block is the system server's response latency to the
+                    //     from a Xiaomi MiTV-AFMU0, SDK 34, app 1.8.0-GOOGLE, and a
+                    //     Droidlogic r34ay, SDK 28, app 2.0.9-GOOGLE). The app merely
+                    //     invoked the one-line framework API `startActivity()`; the >5 s
+                    //     block is the system server's response latency to the
                     //     activity-launch transaction, which the app cannot act on. The
                     //     top frame is the binder transact into the system server — the
                     //     app is inside the round-trip, not executing business logic —
                     //     so even though the stack carries the launching Activity's own
-                    //     `onCreate` call-path frame (the onCreate decided to launch
-                    //     the next screen), the wait is still system-side, the same
-                    //     class as the unbindService binder filter above. A genuine
-                    //     freeze that runs app business logic has an app frame as the
-                    //     current frame (the top frame is not
-                    //     `BinderProxy.transact`/`transactNative`) and is still
-                    //     reported.
-                    val isActivityLaunchBinderStall =
-                        topFrame?.className == "android.os.BinderProxy" &&
-                        (topFrame?.methodName == "transact" || topFrame?.methodName == "transactNative") &&
-                        mainStackTrace.any {
-                            it.className == "android.app.IActivityTaskManager\$Stub\$Proxy" && it.methodName == "startActivity"
-                        }
+                    //     `onCreate` or click handler call-path frame, the wait is still
+                    //     system-side, the same class as the unbindService binder filter
+                    //     above. A genuine freeze that runs app business logic has an app
+                    //     frame as the current frame (the top frame is not
+                    //     `BinderProxy.transact`/`transactNative`) and is still reported.
+                    val isActivityLaunchBinderStall = isActivityLaunchBinderStall(topFrame, mainStackTrace)
 
                     // 24. The main thread is sampled inside a trivial view lookup
                     //     while an Activity's own `onCreate` runs during a
