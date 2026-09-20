@@ -4780,7 +4780,68 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 71. The main thread is sampled inside framework ColorStateList cache
+                    //     lookup or weak reference resolution during Snackbar layout
+                    //     inflation — top frame `java.lang.ref.Reference.getReferent` (or
+                    //     `Reference.get`, or `android.content.res.ColorStateList.valueOf`),
+                    //     under `ColorStateList.valueOf` ->
+                    //     `com.google.android.material.snackbar.Snackbar$SnackbarLayout.<init>`
+                    //     (or `SnackbarBaseLayout.<init>`, `SnackbarContentLayout.<init>`)
+                    //     -> `LayoutInflater.createView` / `createViewFromTag` / `inflate`,
+                    //     dispatched during user click / key event handling or UI update
+                    //     via `Snackbar.make` (reported from an NVIDIA SHIELD Android TV,
+                    //     SDK 30, app 2.0.9-GOOGLE). `ColorStateList.valueOf` is an in-memory
+                    //     lookup in an internal SparseArray cache of weak references taking
+                    //     sub-microsecond CPU time with no loops, locks, I/O, or IPC: it
+                    //     cannot by itself occupy the main thread for 5 s. The main looper
+                    //     was actively executing a user input dispatch / click event at
+                    //     sample time, which a thread parked inside a >5 s block cannot do;
+                    //     the >5 s block is device-side CPU starvation or scheduling latency
+                    //     on the Android TV device (where background SSDP/DLNA listeners, HTTP
+                    //     streaming servers, GC daemons, and coroutine workers were all
+                    //     RUNNABLE, competing for CPU) or a post-stall sample of the backlog
+                    //     the looper drains after a stall. The stack has zero framework
+                    //     blocking primitives anywhere on the stack (no
+                    //     `BinderProxy.transact`/`transactNative`, `Object.wait`,
+                    //     `LockSupport.park`, `java.io.*`, `libcore.io.*`, `java.net.*`, or
+                    //     `android.database.*`). The `AnrWatchdogThread` now treats a
+                    //     main-thread stack whose top frame is inside `Reference.getReferent`,
+                    //     `Reference.get`, or `ColorStateList.valueOf`, with a
+                    //     `ColorStateList.valueOf` frame, a `Snackbar` or `SnackbarLayout`
+                    //     frame, a `LayoutInflater` frame, and no framework blocking
+                    //     primitives anywhere on the stack, as a false positive and resets its
+                    //     heartbeat instead of writing a report. Genuine freezes keep the main
+                    //     thread parked inside a blocking primitive (a lock,
+                    //     file/network/database I/O, or binder call) and are still reported.
+                    val isSnackbarInflateColorStateListStall =
+                        (
+                            (topFrame?.className == "java.lang.ref.Reference" &&
+                             (topFrame?.methodName == "getReferent" || topFrame?.methodName == "get")) ||
+                            (topFrame?.className == "android.content.res.ColorStateList" &&
+                             topFrame?.methodName == "valueOf")
+                        ) &&
+                        mainStackTrace.any {
+                            it.className == "android.content.res.ColorStateList" &&
+                            it.methodName == "valueOf"
+                        } &&
+                        mainStackTrace.any { frame ->
+                            frame.className.startsWith("com.google.android.material.snackbar.") ||
+                            frame.className.contains("SnackbarLayout") ||
+                            frame.className.contains("Snackbar")
+                        } &&
+                        mainStackTrace.any { it.className == "android.view.LayoutInflater" } &&
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {

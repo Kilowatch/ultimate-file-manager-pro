@@ -3887,12 +3887,17 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     private fun showPremiumSnackbar(message: String) {
-        val rootView = findViewById<View>(R.id.main)
-        Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
-            .setBackgroundTint(getColor(R.color.ufm_surface_variant))
-            .setTextColor(getColor(R.color.ufm_text_primary))
-            .setActionTextColor(getColor(R.color.ufm_primary))
-            .show()
+        if (isFinishing || isDestroyed) return
+        val rootView = findViewById<View>(R.id.main) ?: findViewById<View>(android.R.id.content) ?: return
+        try {
+            Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
+                .setBackgroundTint(getColor(R.color.ufm_surface_variant))
+                .setTextColor(getColor(R.color.ufm_text_primary))
+                .setActionTextColor(getColor(R.color.ufm_primary))
+                .show()
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to show snackbar: ${e.message}")
+        }
     }
 
     /**
