@@ -73,6 +73,7 @@ class ZipViewerActivity : AppCompatActivity() {
     private var sourceFile: File? = null
     private var currentPath = "" // Current directory within the ZIP
     private var allEntries = listOf<FileHeader>()
+    private var allEntryInfos = listOf<ArchiveManager.ArchiveEntryInfo>()
     private var archivePassword: String? = null
     private val extractedFiles = mutableMapOf<String, File>()
     private var focusedItem: ZipItem? = null
@@ -320,19 +321,54 @@ class ZipViewerActivity : AppCompatActivity() {
                     file
                 }
                 sourceFile = targetFile
-                val zf = ZipFile(targetFile)
-                val isEncrypted = zf.isEncrypted || zf.fileHeaders.any { it.isEncrypted }
-                
-                if (isEncrypted && archivePassword == null) {
-                    withContext(Dispatchers.Main) {
-                        progressBar.visibility = View.GONE
-                        showPasswordPrompt(zf)
+                var zf: ZipFile? = null
+                var ccEntries: List<ArchiveManager.ArchiveEntryInfo>? = null
+
+                try {
+                    val candidateZf = ZipFile(targetFile)
+                    if (archivePassword != null) {
+                        candidateZf.setPassword(archivePassword?.toCharArray())
                     }
-                    return@launch
+                    val isEncrypted = candidateZf.isEncrypted || candidateZf.fileHeaders.any { it.isEncrypted }
+                    
+                    if (isEncrypted && archivePassword == null) {
+                        withContext(Dispatchers.Main) {
+                            progressBar.visibility = View.GONE
+                            showPasswordPrompt(candidateZf)
+                        }
+                        return@launch
+                    }
+                    zf = candidateZf
+                } catch (e: Exception) {
+                    Log.d("ZipViewerActivity", "Zip4j failed to inspect archive ($e), attempting Commons Compress fallback")
+                    try {
+                        val entries = ArchiveManager.getArchiveEntries(targetFile, archivePassword)
+                        if (entries.isNotEmpty()) {
+                            ccEntries = entries
+                        } else {
+                            throw e
+                        }
+                    } catch (_: Exception) {
+                        throw e
+                    }
                 }
 
-                zipFile = zf
-                allEntries = zf.fileHeaders
+                if (zf != null) {
+                    zipFile = zf
+                    allEntries = zf.fileHeaders
+                    allEntryInfos = zf.fileHeaders.map {
+                        ArchiveManager.ArchiveEntryInfo(
+                            name = it.fileName,
+                            isDirectory = it.isDirectory,
+                            uncompressedSize = it.uncompressedSize,
+                            lastModified = it.lastModifiedTime
+                        )
+                    }
+                } else if (ccEntries != null) {
+                    zipFile = null
+                    allEntries = emptyList()
+                    allEntryInfos = ccEntries
+                }
 
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
@@ -370,6 +406,14 @@ class ZipViewerActivity : AppCompatActivity() {
 
                     zipFile = zf
                     allEntries = headers
+                    allEntryInfos = headers.map {
+                        ArchiveManager.ArchiveEntryInfo(
+                            name = it.fileName,
+                            isDirectory = it.isDirectory,
+                            uncompressedSize = it.uncompressedSize,
+                            lastModified = it.lastModifiedTime
+                        )
+                    }
                     withContext(Dispatchers.Main) {
                         displayEntries()
                     }
@@ -404,8 +448,8 @@ class ZipViewerActivity : AppCompatActivity() {
         val items = mutableListOf<ZipItem>()
         val seenDirs = mutableSetOf<String>()
 
-        for (entry in allEntries) {
-            val name = entry.fileName
+        for (entry in allEntryInfos) {
+            val name = entry.name
             if (!name.startsWith(prefix)) continue
             val relativeName = name.removePrefix(prefix)
             if (relativeName.isEmpty()) continue
@@ -415,12 +459,17 @@ class ZipViewerActivity : AppCompatActivity() {
                 val dirName = relativeName.substringBefore("/")
                 if (dirName.isNotEmpty() && dirName !in seenDirs) {
                     seenDirs.add(dirName)
-                    items.add(ZipItem(dirName, isDirectory = true, entry = null))
+                    items.add(ZipItem(dirName, isDirectory = true, fullPath = "$prefix$dirName"))
                 }
             } else {
-                // This is a file at the current level
-                if (!entry.isDirectory) {
-                    items.add(ZipItem(relativeName, isDirectory = false, entry = entry))
+                if (entry.isDirectory) {
+                    if (relativeName !in seenDirs) {
+                        seenDirs.add(relativeName)
+                        items.add(ZipItem(relativeName, isDirectory = true, fullPath = entry.name, entryInfo = entry))
+                    }
+                } else {
+                    val matchingHeader = allEntries.firstOrNull { it.fileName == entry.name }
+                    items.add(ZipItem(relativeName, isDirectory = false, fullPath = entry.name, entry = matchingHeader, entryInfo = entry))
                 }
             }
         }
@@ -721,7 +770,7 @@ class ZipViewerActivity : AppCompatActivity() {
         )
 
         // 4. Checksum Tools
-        val filesOnly = items.filter { !it.isDirectory && it.entry != null }
+        val filesOnly = items.filter { !it.isDirectory }
         val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
         if (filesOnly.isNotEmpty() && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) {
             actions.add(
@@ -733,8 +782,8 @@ class ZipViewerActivity : AppCompatActivity() {
                 ) {
                     val file = sourceFile ?: return@ActionItem
                     val sources = filesOnly.map { item ->
-                        val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                        val size = item.entry?.uncompressedSize ?: 0L
+                        val entryPath = item.fullPath.ifEmpty { item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}") }
+                        val size = item.uncompressedSize
                         za.kilowatch.ultimatefilemanager.checksum.ArchiveFileSource(
                             archiveFile = file,
                             entryPath = entryPath,
@@ -777,7 +826,7 @@ class ZipViewerActivity : AppCompatActivity() {
             try {
                 items.forEachIndexed { index, item ->
                     coroutineContext.ensureActive()
-                    val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val entryPath = item.fullPath.ifEmpty { item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}") }
                     val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
                               else ((index * 100) / items.size.coerceAtLeast(1)).coerceIn(0, 100)
                     val elapsed = System.currentTimeMillis() - startTime
@@ -855,7 +904,7 @@ class ZipViewerActivity : AppCompatActivity() {
             try {
                 items.forEachIndexed { index, item ->
                     coroutineContext.ensureActive()
-                    val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val entryPath = item.fullPath.ifEmpty { item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}") }
                     val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
                               else ((index * 100) / items.size.coerceAtLeast(1)).coerceIn(0, 100)
                     val elapsed = System.currentTimeMillis() - startTime
@@ -967,7 +1016,7 @@ class ZipViewerActivity : AppCompatActivity() {
                 var deletedAny = false
                 items.forEachIndexed { index, item ->
                     coroutineContext.ensureActive()
-                    val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val entryPath = item.fullPath.ifEmpty { item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}") }
                     val pct = ((index + 1) * 100) / items.size.coerceAtLeast(1)
                     runOnUiThread {
                         progressDialog.update(
@@ -1010,7 +1059,7 @@ class ZipViewerActivity : AppCompatActivity() {
 
     /** Shows the extract-location dialog, then navigates to the storage/folder picker. */
     private fun extractAll() {
-        if (zipFile == null) return
+        if (zipFile == null && allEntryInfos.isEmpty()) return
         val dialog = ExtractLocationDialog()
         dialog.setOnSetLocation {
             pendingExtractAll = true
@@ -1063,15 +1112,15 @@ class ZipViewerActivity : AppCompatActivity() {
         dialog.setOnDelete {
             confirmDeleteZipItems(items)
         }
-        val filesOnly = items.filter { !it.isDirectory && it.entry != null }
+        val filesOnly = items.filter { !it.isDirectory }
         val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
         if (filesOnly.isNotEmpty() && pm.isIconEnabled(this, pm.KEY_CHECKSUM)) {
             dialog.setAllowChecksum(true)
             dialog.setOnChecksum {
                 val file = sourceFile ?: return@setOnChecksum
                 val sources = filesOnly.map { item ->
-                    val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                    val size = item.entry?.uncompressedSize ?: 0L
+                    val entryPath = item.fullPath.ifEmpty { item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}") }
+                    val size = item.uncompressedSize
                     za.kilowatch.ultimatefilemanager.checksum.ArchiveFileSource(
                         archiveFile = file,
                         entryPath = entryPath,
@@ -1090,7 +1139,8 @@ class ZipViewerActivity : AppCompatActivity() {
     /** Extracts a single entry to the session cache and opens it in the built-in viewer. */
     private fun previewItem(item: ZipItem) {
         val source = sourceFile ?: return
-        val entryPath = item.entry?.fileName ?: return
+        val entryPath = item.fullPath.ifEmpty { item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}") }
+        if (entryPath.isEmpty()) return
         val entryName = entryPath.substringAfterLast("/")
 
         // Reuse an already-extracted copy from this session when available.
@@ -1154,7 +1204,7 @@ class ZipViewerActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val entryPath = item.fullPath.ifEmpty { item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}") }
                 val res = ArchiveManager.extractZipEntry(file, entryPath, destDir, archivePassword, this@ZipViewerActivity)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
@@ -1179,7 +1229,7 @@ class ZipViewerActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val entryPath = item.fullPath.ifEmpty { item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}") }
                 val res = ArchiveManager.moveZipEntry(file, entryPath, destDir, archivePassword, this@ZipViewerActivity)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
@@ -1236,7 +1286,7 @@ class ZipViewerActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val entryPath = item.fullPath.ifEmpty { item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}") }
                 val res = ArchiveManager.deleteZipEntry(file, entryPath, archivePassword)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
@@ -1258,8 +1308,57 @@ class ZipViewerActivity : AppCompatActivity() {
 
     /** Performs the actual "Extract All" once the user has chosen a destination. */
     private fun doExtractAll(destDir: File) {
-        val zf = zipFile ?: return
         val file = sourceFile ?: return
+        if (zipFile == null) {
+            val progressDialog = ArchiveProgressDialog(this).apply {
+                show(
+                    operation = ArchiveOperationType.EXTRACT,
+                    archiveName = file.name,
+                    totalFiles = allEntryInfos.size
+                )
+            }
+            var extractJob: kotlinx.coroutines.Job? = null
+            progressDialog.setOnCancelListener {
+                extractJob?.cancel()
+            }
+
+            extractJob = lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    val res = ArchiveManager.extract(
+                        context = this@ZipViewerActivity,
+                        archiveFile = file,
+                        destDir = destDir,
+                        password = archivePassword,
+                        onArchiveProgress = { progress ->
+                            runOnUiThread {
+                                progressDialog.update(progress)
+                            }
+                        }
+                    )
+                    withContext(Dispatchers.Main) {
+                        progressDialog.dismiss()
+                        if (res.isSuccess) {
+                            showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
+                        } else {
+                            showSnackbar("${getString(R.string.archive_extract_error)}: ${res.exceptionOrNull()?.message}")
+                        }
+                    }
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    withContext(Dispatchers.Main) {
+                        progressDialog.dismiss()
+                        showSnackbar(getString(R.string.archive_cancelled))
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        progressDialog.dismiss()
+                        showSnackbar("${getString(R.string.archive_extract_error)}: ${e.message}")
+                    }
+                }
+            }
+            return
+        }
+
+        val zf = zipFile!!
         val progressDialog = ArchiveProgressDialog(this).apply {
             show(
                 operation = ArchiveOperationType.EXTRACT,
@@ -1341,7 +1440,11 @@ class ZipViewerActivity : AppCompatActivity() {
 
     /** Performs single-file extraction once the user has chosen a destination. */
     private fun doExtractSingleFile(header: FileHeader, destDir: File) {
-        val zf = zipFile ?: return
+        val zf = zipFile
+        if (zf == null) {
+            doExtractSingleItem(ZipItem(name = header.fileName.substringAfterLast("/"), isDirectory = false, fullPath = header.fileName), destDir)
+            return
+        }
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -1393,9 +1496,11 @@ class ZipViewerActivity : AppCompatActivity() {
     data class ZipItem(
         val name: String,
         val isDirectory: Boolean,
-        val entry: FileHeader?
+        val fullPath: String = "",
+        val entry: FileHeader? = null,
+        val entryInfo: ArchiveManager.ArchiveEntryInfo? = null
     ) {
-        val uncompressedSize: Long get() = entry?.uncompressedSize ?: 0L
+        val uncompressedSize: Long get() = entry?.uncompressedSize ?: entryInfo?.uncompressedSize ?: 0L
     }
 
     // ── Adapter ──────────────────────────────────────────────────────────────
@@ -1479,13 +1584,18 @@ class ZipViewerActivity : AppCompatActivity() {
                 holder.icon.setImageResource(
                     FileTypeIconProvider.iconForExtension(holder.itemView.context, item.name.substringAfterLast('.', ""))
                 )
-                val entry = item.entry!!
-                val size = Formatter.formatFileSize(context, entry.uncompressedSize)
-                val compressed = Formatter.formatFileSize(context, entry.compressedSize)
-                val ratio = if (entry.uncompressedSize > 0) {
-                    ((1.0 - entry.compressedSize.toDouble() / entry.uncompressedSize) * 100).toInt()
-                } else 0
-                holder.txtInfo.text = getString(R.string.size_compressed_ratio_saved, size, compressed, ratio)
+                val entry = item.entry
+                if (entry != null) {
+                    val size = Formatter.formatFileSize(context, entry.uncompressedSize)
+                    val compressed = Formatter.formatFileSize(context, entry.compressedSize)
+                    val ratio = if (entry.uncompressedSize > 0) {
+                        ((1.0 - entry.compressedSize.toDouble() / entry.uncompressedSize) * 100).toInt()
+                    } else 0
+                    holder.txtInfo.text = getString(R.string.size_compressed_ratio_saved, size, compressed, ratio)
+                } else {
+                    val size = Formatter.formatFileSize(context, item.uncompressedSize)
+                    holder.txtInfo.text = size
+                }
                 holder.itemView.setOnClickListener {
                     if (selectedZipItems.isNotEmpty()) {
                         toggleSelection(item)

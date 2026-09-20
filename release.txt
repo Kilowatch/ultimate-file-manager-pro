@@ -1,0 +1,16 @@
+Added
+* Zstandard ZIP archive support
+* Porter elevated access support
+* Grid view text placement
+* Per-app permission toggles
+* Elevated access hero card
+* Stop daemon action
+
+Fixed
+* SMB streaming seek freezes
+* SMB session handle leaks
+* TV remote Bluetooth crash
+* Storage space calculation freeze
+* TV pairing server freeze
+* File server timeout crash
+* Rapid scroll bitmap crash

@@ -140,13 +140,29 @@ class ArchiveFileSource(
             szf.close()
             throw FileNotFoundException("Entry $entryPath not found in 7z archive")
         } else {
-            val zip = net.lingala.zip4j.ZipFile(archiveFile)
-            if (zip.isEncrypted && password != null) {
-                zip.setPassword(password.toCharArray())
+            try {
+                val zip = net.lingala.zip4j.ZipFile(archiveFile)
+                if (zip.isEncrypted && password != null) {
+                    zip.setPassword(password.toCharArray())
+                }
+                val header = zip.getFileHeader(entryPath)
+                    ?: throw FileNotFoundException("Entry $entryPath not found in archive")
+                zip.getInputStream(header)
+            } catch (e: Exception) {
+                val ccZip = org.apache.commons.compress.archivers.zip.ZipFile.builder().setFile(archiveFile).get()
+                val entry = ccZip.getEntry(entryPath)
+                    ?: throw FileNotFoundException("Entry $entryPath not found in archive")
+                val rawStream = ccZip.getInputStream(entry)
+                object : java.io.FilterInputStream(rawStream) {
+                    override fun close() {
+                        try {
+                            super.close()
+                        } finally {
+                            try { ccZip.close() } catch (_: Exception) {}
+                        }
+                    }
+                }
             }
-            val header = zip.getFileHeader(entryPath)
-                ?: throw FileNotFoundException("Entry $entryPath not found in archive")
-            zip.getInputStream(header)
         }
     }
 }

@@ -154,17 +154,37 @@ object ArchiveManager {
     }
 
     private fun getZipEntries(archiveFile: File, password: String?): List<ArchiveEntryInfo> {
-        val zipFile = ZipFile(archiveFile)
-        if (zipFile.isEncrypted && password != null) {
-            zipFile.setPassword(password.toCharArray())
-        }
-        return zipFile.fileHeaders.map { header ->
-            ArchiveEntryInfo(
-                name = header.fileName,
-                isDirectory = header.isDirectory,
-                uncompressedSize = header.uncompressedSize,
-                lastModified = header.lastModifiedTime
-            )
+        try {
+            val zipFile = ZipFile(archiveFile)
+            if (zipFile.isEncrypted && password != null) {
+                zipFile.setPassword(password.toCharArray())
+            }
+            return zipFile.fileHeaders.map { header ->
+                ArchiveEntryInfo(
+                    name = header.fileName,
+                    isDirectory = header.isDirectory,
+                    uncompressedSize = header.uncompressedSize,
+                    lastModified = header.lastModifiedTime
+                )
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "Zip4j failed to read entries (${e.message}), falling back to Commons Compress")
+            val list = mutableListOf<ArchiveEntryInfo>()
+            org.apache.commons.compress.archivers.zip.ZipFile.builder().setFile(archiveFile).get().use { ccZip ->
+                val entries = ccZip.entries
+                while (entries.hasMoreElements()) {
+                    val entry = entries.nextElement()
+                    list.add(
+                        ArchiveEntryInfo(
+                            name = entry.name,
+                            isDirectory = entry.isDirectory,
+                            uncompressedSize = if (entry.size >= 0) entry.size else 0L,
+                            lastModified = if (entry.time >= 0) entry.time else 0L
+                        )
+                    )
+                }
+            }
+            return list
         }
     }
 
@@ -994,97 +1014,207 @@ object ArchiveManager {
         onProgress: (Int) -> Unit = {},
         onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ) {
-        val zipFile = ZipFile(archiveFile)
-        if (zipFile.isEncrypted && password != null) {
-            zipFile.setPassword(password.toCharArray())
-        }
-
-        val canonicalDest = destDir.canonicalPath
-        val headers = zipFile.fileHeaders
-        val totalFiles = headers.size
-        val totalBytes = headers.sumOf { it.uncompressedSize }
-        var bytesProcessed = 0L
-        val startTime = System.currentTimeMillis()
-        var applyToAllAction: TransferConflictHelper.ConflictAction? = null
-
-        headers.forEachIndexed { index, header ->
-            if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
-            val outFile = File(destDir, header.fileName)
-            val canonicalOut = try {
-                outFile.canonicalPath
-            } catch (e: java.io.IOException) {
-                return@forEachIndexed
-            }
-            if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
-                Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${header.fileName}")
-                return@forEachIndexed
+        try {
+            val zipFile = ZipFile(archiveFile)
+            if (zipFile.isEncrypted && password != null) {
+                zipFile.setPassword(password.toCharArray())
             }
 
-            var targetFile = outFile
-            if (header.isDirectory) {
-                targetFile.mkdirs()
-            } else {
-                if (targetFile.exists()) {
-                    val action = if (applyToAllAction != null) {
-                        applyToAllAction!!
-                    } else {
-                        val applyToAllRef = booleanArrayOf(false)
-                        val act = if (onConflict != null) {
-                            onConflict(targetFile, false, targetFile.length(), applyToAllRef)
+            val canonicalDest = destDir.canonicalPath
+            val headers = zipFile.fileHeaders
+            val totalFiles = headers.size
+            val totalBytes = headers.sumOf { it.uncompressedSize }
+            var bytesProcessed = 0L
+            val startTime = System.currentTimeMillis()
+            var applyToAllAction: TransferConflictHelper.ConflictAction? = null
+
+            headers.forEachIndexed { index, header ->
+                if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
+                val outFile = File(destDir, header.fileName)
+                val canonicalOut = try {
+                    outFile.canonicalPath
+                } catch (e: java.io.IOException) {
+                    return@forEachIndexed
+                }
+                if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
+                    Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${header.fileName}")
+                    return@forEachIndexed
+                }
+
+                var targetFile = outFile
+                if (header.isDirectory) {
+                    targetFile.mkdirs()
+                } else {
+                    if (targetFile.exists()) {
+                        val action = if (applyToAllAction != null) {
+                            applyToAllAction!!
                         } else {
-                            TransferConflictHelper.ConflictAction.OVERWRITE
+                            val applyToAllRef = booleanArrayOf(false)
+                            val act = if (onConflict != null) {
+                                onConflict(targetFile, false, targetFile.length(), applyToAllRef)
+                            } else {
+                                TransferConflictHelper.ConflictAction.OVERWRITE
+                            }
+                            if (applyToAllRef[0]) {
+                                applyToAllAction = act
+                            }
+                            act
                         }
-                        if (applyToAllRef[0]) {
-                            applyToAllAction = act
+
+                        when (action) {
+                            TransferConflictHelper.ConflictAction.SKIP -> return@forEachIndexed
+                            TransferConflictHelper.ConflictAction.CANCEL -> throw kotlinx.coroutines.CancellationException("Extraction cancelled by user")
+                            TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                targetFile = TransferConflictHelper.uniqueLocalFile(targetFile.parentFile!!, targetFile.name)
+                            }
+                            TransferConflictHelper.ConflictAction.OVERWRITE -> { /* proceed */ }
                         }
-                        act
                     }
 
-                    when (action) {
-                        TransferConflictHelper.ConflictAction.SKIP -> return@forEachIndexed
-                        TransferConflictHelper.ConflictAction.CANCEL -> throw kotlinx.coroutines.CancellationException("Extraction cancelled by user")
-                        TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
-                            targetFile = TransferConflictHelper.uniqueLocalFile(targetFile.parentFile!!, targetFile.name)
+                    targetFile.parentFile?.mkdirs()
+                    zipFile.getInputStream(header).use { input ->
+                        targetFile.outputStream().use { output ->
+                            val buffer = ByteArray(16384)
+                            var len: Int
+                            while (input.read(buffer).also { len = it } > 0) {
+                                if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
+                                output.write(buffer, 0, len)
+                                bytesProcessed += len
+                            }
                         }
-                        TransferConflictHelper.ConflictAction.OVERWRITE -> { /* proceed */ }
                     }
                 }
 
-                targetFile.parentFile?.mkdirs()
-                zipFile.getInputStream(header).use { input ->
-                    targetFile.outputStream().use { output ->
-                        val buffer = ByteArray(16384)
-                        var len: Int
-                        while (input.read(buffer).also { len = it } > 0) {
-                            if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
-                            output.write(buffer, 0, len)
-                            bytesProcessed += len
-                        }
-                    }
-                }
-            }
+                val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                          else (((index + 1) * 100) / totalFiles.coerceAtLeast(1)).coerceIn(0, 100)
+                val elapsed = System.currentTimeMillis() - startTime
+                val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
 
-            val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
-                      else (((index + 1) * 100) / totalFiles.coerceAtLeast(1)).coerceIn(0, 100)
-            val elapsed = System.currentTimeMillis() - startTime
-            val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
-            val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
-
-            onArchiveProgress?.onProgress(
-                ArchiveProgress(
-                    operation = ArchiveOperationType.EXTRACT,
-                    archiveName = archiveFile.name,
-                    currentFileName = header.fileName,
-                    fileIndex = index + 1,
-                    totalFiles = totalFiles,
-                    bytesProcessed = bytesProcessed,
-                    totalBytes = totalBytes,
-                    percentage = pct,
-                    speedBytesPerSec = speed,
-                    estimatedRemainingMs = eta
+                onArchiveProgress?.onProgress(
+                    ArchiveProgress(
+                        operation = ArchiveOperationType.EXTRACT,
+                        archiveName = archiveFile.name,
+                        currentFileName = header.fileName,
+                        fileIndex = index + 1,
+                        totalFiles = totalFiles,
+                        bytesProcessed = bytesProcessed,
+                        totalBytes = totalBytes,
+                        percentage = pct,
+                        speedBytesPerSec = speed,
+                        estimatedRemainingMs = eta
+                    )
                 )
-            )
-            onProgress(pct)
+                onProgress(pct)
+            }
+        } catch (e: Exception) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
+            Log.d(TAG, "Zip4j extraction failed (${e.message}), attempting Commons Compress fallback")
+            try {
+                extractZipCommonsCompress(archiveFile, destDir, onArchiveProgress, onProgress, onConflict)
+            } catch (ccEx: Exception) {
+                if (ccEx is kotlinx.coroutines.CancellationException) throw ccEx
+                throw e
+            }
+        }
+    }
+
+    private suspend fun extractZipCommonsCompress(
+        archiveFile: File,
+        destDir: File,
+        onArchiveProgress: ArchiveProgressListener? = null,
+        onProgress: (Int) -> Unit = {},
+        onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
+    ) {
+        val canonicalDest = destDir.canonicalPath
+        var applyToAllAction: TransferConflictHelper.ConflictAction? = null
+        val startTime = System.currentTimeMillis()
+
+        org.apache.commons.compress.archivers.zip.ZipFile.builder().setFile(archiveFile).get().use { ccZip ->
+            val entries = ccZip.entries.toList()
+            val totalFiles = entries.size
+            val totalBytes = entries.sumOf { if (it.size >= 0) it.size else 0L }
+            var bytesProcessed = 0L
+
+            entries.forEachIndexed { index, entry ->
+                if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
+                val outFile = File(destDir, entry.name)
+                val canonicalOut = try {
+                    outFile.canonicalPath
+                } catch (e: java.io.IOException) {
+                    return@forEachIndexed
+                }
+                if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
+                    Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${entry.name}")
+                    return@forEachIndexed
+                }
+
+                var targetFile = outFile
+                if (entry.isDirectory) {
+                    targetFile.mkdirs()
+                } else {
+                    if (targetFile.exists()) {
+                        val action = if (applyToAllAction != null) {
+                            applyToAllAction!!
+                        } else {
+                            val applyToAllRef = booleanArrayOf(false)
+                            val act = if (onConflict != null) {
+                                onConflict(targetFile, false, targetFile.length(), applyToAllRef)
+                            } else {
+                                TransferConflictHelper.ConflictAction.OVERWRITE
+                            }
+                            if (applyToAllRef[0]) {
+                                applyToAllAction = act
+                            }
+                            act
+                        }
+
+                        when (action) {
+                            TransferConflictHelper.ConflictAction.SKIP -> return@forEachIndexed
+                            TransferConflictHelper.ConflictAction.CANCEL -> throw kotlinx.coroutines.CancellationException("Extraction cancelled by user")
+                            TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                targetFile = TransferConflictHelper.uniqueLocalFile(targetFile.parentFile!!, targetFile.name)
+                            }
+                            TransferConflictHelper.ConflictAction.OVERWRITE -> { /* proceed */ }
+                        }
+                    }
+
+                    targetFile.parentFile?.mkdirs()
+                    ccZip.getInputStream(entry).use { input ->
+                        targetFile.outputStream().use { output ->
+                            val buffer = ByteArray(16384)
+                            var len: Int
+                            while (input.read(buffer).also { len = it } > 0) {
+                                if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Extraction cancelled")
+                                output.write(buffer, 0, len)
+                                bytesProcessed += len
+                            }
+                        }
+                    }
+                }
+
+                val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                          else (((index + 1) * 100) / totalFiles.coerceAtLeast(1)).coerceIn(0, 100)
+                val elapsed = System.currentTimeMillis() - startTime
+                val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+
+                onArchiveProgress?.onProgress(
+                    ArchiveProgress(
+                        operation = ArchiveOperationType.EXTRACT,
+                        archiveName = archiveFile.name,
+                        currentFileName = entry.name,
+                        fileIndex = index + 1,
+                        totalFiles = totalFiles,
+                        bytesProcessed = bytesProcessed,
+                        totalBytes = totalBytes,
+                        percentage = pct,
+                        speedBytesPerSec = speed,
+                        estimatedRemainingMs = eta
+                    )
+                )
+                onProgress(pct)
+            }
         }
     }
 
@@ -1319,39 +1449,78 @@ object ArchiveManager {
                 destDir
             }
 
-            val zipFile = ZipFile(effectiveArchive)
-            if (zipFile.isEncrypted && password != null) {
-                zipFile.setPassword(password.toCharArray())
-            }
-            effectiveDest.mkdirs()
-            val canonicalDest = effectiveDest.canonicalPath
-            val headers = zipFile.fileHeaders.filter { 
-                it.fileName == entryPath || it.fileName == "$entryPath/" || it.fileName.startsWith("$entryPath/")
-            }
-            if (headers.isEmpty()) {
-                throw IllegalArgumentException("Entry not found in archive: $entryPath")
-            }
+            try {
+                val zipFile = ZipFile(effectiveArchive)
+                if (zipFile.isEncrypted && password != null) {
+                    zipFile.setPassword(password.toCharArray())
+                }
+                effectiveDest.mkdirs()
+                val canonicalDest = effectiveDest.canonicalPath
+                val headers = zipFile.fileHeaders.filter { 
+                    it.fileName == entryPath || it.fileName == "$entryPath/" || it.fileName.startsWith("$entryPath/")
+                }
+                if (headers.isEmpty()) {
+                    throw IllegalArgumentException("Entry not found in archive: $entryPath")
+                }
 
-            val prefix = if (entryPath.endsWith("/")) entryPath else if (entryPath.contains("/")) entryPath.substringBeforeLast("/") + "/" else ""
-            for (header in headers) {
-                val relativePath = if (prefix.isNotEmpty() && header.fileName.startsWith(prefix)) {
-                    header.fileName.removePrefix(prefix)
-                } else {
-                    header.fileName.substringAfterLast("/")
+                val prefix = if (entryPath.endsWith("/")) entryPath else if (entryPath.contains("/")) entryPath.substringBeforeLast("/") + "/" else ""
+                for (header in headers) {
+                    val relativePath = if (prefix.isNotEmpty() && header.fileName.startsWith(prefix)) {
+                        header.fileName.removePrefix(prefix)
+                    } else {
+                        header.fileName.substringAfterLast("/")
+                    }
+                    val outFile = File(effectiveDest, relativePath)
+                    val canonicalOut = outFile.canonicalPath
+                    if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
+                        Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${header.fileName}")
+                        continue
+                    }
+                    if (header.isDirectory) {
+                        outFile.mkdirs()
+                    } else {
+                        outFile.parentFile?.mkdirs()
+                        zipFile.getInputStream(header).use { input ->
+                            outFile.outputStream().use { output ->
+                                input.copyTo(output)
+                            }
+                        }
+                    }
                 }
-                val outFile = File(effectiveDest, relativePath)
-                val canonicalOut = outFile.canonicalPath
-                if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
-                    Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${header.fileName}")
-                    continue
-                }
-                if (header.isDirectory) {
-                    outFile.mkdirs()
-                } else {
-                    outFile.parentFile?.mkdirs()
-                    zipFile.getInputStream(header).use { input ->
-                        outFile.outputStream().use { output ->
-                            input.copyTo(output)
+            } catch (e: Exception) {
+                Log.d(TAG, "Zip4j entry extraction failed (${e.message}), attempting Commons Compress fallback")
+                org.apache.commons.compress.archivers.zip.ZipFile.builder().setFile(effectiveArchive).get().use { ccZip ->
+                    effectiveDest.mkdirs()
+                    val canonicalDest = effectiveDest.canonicalPath
+                    val entries = ccZip.entries.toList().filter {
+                        it.name == entryPath || it.name == "$entryPath/" || it.name.startsWith("$entryPath/")
+                    }
+                    if (entries.isEmpty()) {
+                        throw IllegalArgumentException("Entry not found in archive: $entryPath")
+                    }
+
+                    val prefix = if (entryPath.endsWith("/")) entryPath else if (entryPath.contains("/")) entryPath.substringBeforeLast("/") + "/" else ""
+                    for (entry in entries) {
+                        val relativePath = if (prefix.isNotEmpty() && entry.name.startsWith(prefix)) {
+                            entry.name.removePrefix(prefix)
+                        } else {
+                            entry.name.substringAfterLast("/")
+                        }
+                        val outFile = File(effectiveDest, relativePath)
+                        val canonicalOut = outFile.canonicalPath
+                        if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
+                            Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${entry.name}")
+                            continue
+                        }
+                        if (entry.isDirectory) {
+                            outFile.mkdirs()
+                        } else {
+                            outFile.parentFile?.mkdirs()
+                            ccZip.getInputStream(entry).use { input ->
+                                outFile.outputStream().use { output ->
+                                    input.copyTo(output)
+                                }
+                            }
                         }
                     }
                 }
@@ -1404,7 +1573,43 @@ object ArchiveManager {
             }
             Result.success(Unit)
         } catch (e: Exception) {
-            Result.failure(e)
+            try {
+                val tempArchive = File(archiveFile.parentFile ?: File("."), "temp_del_${System.currentTimeMillis()}_${archiveFile.name}")
+                org.apache.commons.compress.archivers.zip.ZipFile.builder().setFile(archiveFile).get().use { ccZip ->
+                    org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream(tempArchive.outputStream().buffered()).use { zout ->
+                        val entries = ccZip.entries
+                        while (entries.hasMoreElements()) {
+                            val entry = entries.nextElement()
+                            val isMatch = entry.name == entryPath || entry.name == "$entryPath/" || entry.name.startsWith("$entryPath/")
+                            if (!isMatch) {
+                                if (entry.isDirectory) {
+                                    zout.putArchiveEntry(entry)
+                                    zout.closeArchiveEntry()
+                                } else {
+                                    val rawStream = ccZip.getRawInputStream(entry)
+                                    if (rawStream != null) {
+                                        zout.addRawArchiveEntry(entry, rawStream)
+                                    } else {
+                                        val uncompressedEntry = org.apache.commons.compress.archivers.zip.ZipArchiveEntry(entry.name).apply {
+                                            time = entry.time
+                                        }
+                                        zout.putArchiveEntry(uncompressedEntry)
+                                        ccZip.getInputStream(entry).use { input -> input.copyTo(zout) }
+                                        zout.closeArchiveEntry()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (tempArchive.exists()) {
+                    archiveFile.delete()
+                    tempArchive.renameTo(archiveFile)
+                }
+                Result.success(Unit)
+            } catch (ccEx: Exception) {
+                Result.failure(ccEx)
+            }
         }
     }
 
@@ -2034,8 +2239,106 @@ object ArchiveManager {
             }
             Result.success(count)
         } catch (e: Exception) {
-            Result.failure(e)
+            if (e is kotlinx.coroutines.CancellationException) throw e
+            Log.d(TAG, "Zip4j addFilesToZip failed (${e.message}), attempting Commons Compress fallback")
+            try {
+                addFilesToZipCommonsCompress(archiveFile, sourceFiles, targetDirInArchive, isMove, onArchiveProgress, onProgress)
+            } catch (ccEx: Exception) {
+                if (ccEx is kotlinx.coroutines.CancellationException) throw ccEx
+                Result.failure(ccEx)
+            }
         }
+    }
+
+    private fun addFilesToZipCommonsCompress(
+        archiveFile: File,
+        sourceFiles: List<File>,
+        targetDirInArchive: String,
+        isMove: Boolean,
+        onArchiveProgress: ArchiveProgressListener?,
+        onProgress: (current: Int, total: Int, fileName: String) -> Unit
+    ): Result<Int> {
+        val tempArchive = File(archiveFile.parentFile ?: File("."), "temp_add_${System.currentTimeMillis()}_${archiveFile.name}")
+        val (totalFiles, totalBytes) = calculateTotalFilesAndBytes(sourceFiles)
+        var bytesProcessed = 0L
+        val startTime = System.currentTimeMillis()
+        var count = 0
+
+        org.apache.commons.compress.archivers.zip.ZipFile.builder().setFile(archiveFile).get().use { ccZip ->
+            org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream(tempArchive.outputStream().buffered()).use { zout ->
+                val existingEntries = ccZip.entries
+                while (existingEntries.hasMoreElements()) {
+                    val entry = existingEntries.nextElement()
+                    if (entry.isDirectory) {
+                        zout.putArchiveEntry(entry)
+                        zout.closeArchiveEntry()
+                    } else {
+                        val rawStream = ccZip.getRawInputStream(entry)
+                        if (rawStream != null) {
+                            zout.addRawArchiveEntry(entry, rawStream)
+                        } else {
+                            val uncompressedEntry = org.apache.commons.compress.archivers.zip.ZipArchiveEntry(entry.name).apply {
+                                time = entry.time
+                            }
+                            zout.putArchiveEntry(uncompressedEntry)
+                            ccZip.getInputStream(entry).use { it.copyTo(zout) }
+                            zout.closeArchiveEntry()
+                        }
+                    }
+                }
+
+                fun writeSource(file: File, basePrefix: String) {
+                    if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Operation cancelled")
+                    val entryPath = if (basePrefix.isEmpty()) file.name else "$basePrefix/${file.name}"
+                    val entry = org.apache.commons.compress.archivers.zip.ZipArchiveEntry(if (file.isDirectory) "$entryPath/" else entryPath)
+                    entry.time = file.lastModified()
+                    zout.putArchiveEntry(entry)
+                    if (file.isFile) {
+                        file.inputStream().use { it.copyTo(zout) }
+                        count++
+                        bytesProcessed += file.length()
+                        val pct = if (totalBytes > 0) ((bytesProcessed * 100) / totalBytes).toInt().coerceIn(0, 100)
+                                  else ((count * 100) / totalFiles.coerceAtLeast(1)).coerceIn(0, 100)
+                        val elapsed = System.currentTimeMillis() - startTime
+                        val speed = if (elapsed > 500) (bytesProcessed * 1000L) / elapsed else 0L
+                        val eta = if (speed > 0 && totalBytes > bytesProcessed) ((totalBytes - bytesProcessed) * 1000L) / speed else 0L
+                        onArchiveProgress?.onProgress(
+                            ArchiveProgress(
+                                operation = if (isMove) ArchiveOperationType.MOVE else ArchiveOperationType.ADD,
+                                archiveName = archiveFile.name,
+                                currentFileName = file.name,
+                                fileIndex = count,
+                                totalFiles = totalFiles,
+                                bytesProcessed = bytesProcessed,
+                                totalBytes = totalBytes,
+                                percentage = pct,
+                                speedBytesPerSec = speed,
+                                estimatedRemainingMs = eta
+                            )
+                        )
+                        onProgress(count, totalFiles, file.name)
+                    }
+                    zout.closeArchiveEntry()
+                    if (file.isDirectory) {
+                        file.listFiles()?.forEach { child ->
+                            writeSource(child, entryPath)
+                        }
+                    }
+                }
+
+                for (sf in sourceFiles) {
+                    writeSource(sf, targetDirInArchive)
+                }
+            }
+        }
+        if (tempArchive.exists()) {
+            archiveFile.delete()
+            tempArchive.renameTo(archiveFile)
+        }
+        if (isMove) {
+            sourceFiles.forEach { it.deleteRecursively() }
+        }
+        return Result.success(count)
     }
 
     private fun addFilesTo7z(
