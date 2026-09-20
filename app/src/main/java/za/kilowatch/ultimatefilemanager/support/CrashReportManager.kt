@@ -2,6 +2,8 @@ package za.kilowatch.ultimatefilemanager.support
 
 import android.app.Application
 import android.os.Build
+import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
@@ -181,6 +183,26 @@ object CrashReportManager {
                 return@setDefaultUncaughtExceptionHandler
             }
 
+            // Suppress Android framework ActivityThread.handleLaunchActivity NullPointerException
+            // when ActivityClientRecord.profilerInfo is read on a null record during activity launch
+            // on low-end TV devices / OEM ROMs (e.g. TCL Smart TV Pro, SDK 31).
+            if (isLaunchActivityProfilerInfoCrash(throwable)) {
+                Log.w(TAG, "Suppressed framework handleLaunchActivity profilerInfo NullPointerException crash: ${throwable.message}")
+                if (thread == Looper.getMainLooper().thread) {
+                    while (true) {
+                        try {
+                            Looper.loop()
+                        } catch (inner: Throwable) {
+                            if (!isLaunchActivityProfilerInfoCrash(inner)) {
+                                defaultHandler?.uncaughtException(thread, inner)
+                                break
+                            }
+                        }
+                    }
+                }
+                return@setDefaultUncaughtExceptionHandler
+            }
+
             if (isEnabled(app)) {
                 try {
                     writeCrashReport(app, thread, throwable)
@@ -190,6 +212,7 @@ object CrashReportManager {
             }
             defaultHandler?.uncaughtException(thread, throwable)
         }
+        installActivityThreadCrashHook()
         Log.d(TAG, "Crash handler installed")
     }
 
@@ -212,6 +235,137 @@ object CrashReportManager {
             }
         }
         return false
+    }
+
+    /**
+     * Identifies framework NullPointerExceptions in Android's ActivityThread.handleLaunchActivity
+     * when accessing `ActivityClientRecord.profilerInfo` on a null record during activity launch
+     * transactions (`LaunchActivityItem.execute`) on OEM ROMs (e.g. TCL Smart TV Pro, SDK 31).
+     */
+    fun isLaunchActivityProfilerInfoCrash(throwable: Throwable): Boolean {
+        if (throwable !is NullPointerException) return false
+        val msg = throwable.message.orEmpty()
+        if (msg.contains("profilerInfo") && msg.contains("ActivityClientRecord")) {
+            return true
+        }
+        val trace = throwable.stackTrace
+        val hasHandleLaunch = trace.any {
+            it.className == "android.app.ActivityThread" && it.methodName == "handleLaunchActivity"
+        }
+        val hasLaunchItem = trace.any {
+            it.className == "android.app.servertransaction.LaunchActivityItem" && it.methodName == "execute"
+        }
+        if (hasHandleLaunch && hasLaunchItem) {
+            return true
+        }
+        return msg.contains("profilerInfo") && hasHandleLaunch
+    }
+
+    /**
+     * Hooks ActivityThread.mH via Handler.mCallback to intercept EXECUTE_TRANSACTION (159)
+     * messages before they can trigger framework NullPointerExceptions in ActivityThread.handleLaunchActivity.
+     *
+     * On OEM ROMs like TCL Smart TV Pro (Android 12 / SDK 31), race conditions or asynchronous lifecycle
+     * cancellations can cause `LaunchActivityItem.execute` to invoke `handleLaunchActivity` when the
+     * `ActivityClientRecord` is missing from `ActivityThread.mLaunchingActivities`, causing `r.profilerInfo`
+     * to throw an unhandled NullPointerException on the main looper.
+     *
+     * This hook:
+     * 1. Inspects incoming `ClientTransaction` objects on EXECUTE_TRANSACTION (159). If a `LaunchActivityItem`
+     *    is scheduled but its token is missing from `mLaunchingActivities`, it proactively invokes
+     *    `LaunchActivityItem.preExecute` to populate the `ActivityClientRecord`, allowing normal launch.
+     * 2. Wraps transaction dispatch in defensive exception handling, catching and suppressing any
+     *    `handleLaunchActivity` profilerInfo NPE so the main looper continues processing subsequent events
+     *    cleanly without crashing the process.
+     */
+    private fun installActivityThreadCrashHook() {
+        try {
+            val activityThreadClass = Class.forName("android.app.ActivityThread")
+            val currentActivityThreadMethod = activityThreadClass.getDeclaredMethod("currentActivityThread").apply {
+                isAccessible = true
+            }
+            val activityThread = currentActivityThreadMethod.invoke(null) ?: return
+
+            val mHField = activityThreadClass.getDeclaredField("mH").apply {
+                isAccessible = true
+            }
+            val mH = mHField.get(activityThread) as? Handler ?: return
+
+            val mCallbackField = Handler::class.java.getDeclaredField("mCallback").apply {
+                isAccessible = true
+            }
+            val originalCallback = mCallbackField.get(mH) as? Handler.Callback
+
+            val mLaunchingActivitiesField = try {
+                activityThreadClass.getDeclaredField("mLaunchingActivities").apply { isAccessible = true }
+            } catch (_: Throwable) {
+                null
+            }
+
+            mCallbackField.set(mH, Handler.Callback { msg ->
+                if (originalCallback?.handleMessage(msg) == true) {
+                    return@Callback true
+                }
+
+                // 159 = ActivityThread.H.EXECUTE_TRANSACTION (Android 9+)
+                if (msg.what == 159 && msg.obj != null) {
+                    try {
+                        ensureLaunchingActivityRecord(activityThread, msg.obj, mLaunchingActivitiesField)
+                        mH.handleMessage(msg)
+                    } catch (t: Throwable) {
+                        if (isLaunchActivityProfilerInfoCrash(t)) {
+                            Log.w(TAG, "Suppressed framework handleLaunchActivity profilerInfo NullPointerException crash", t)
+                            return@Callback true
+                        }
+                        throw t
+                    }
+                    return@Callback true
+                }
+
+                false
+            })
+            Log.d(TAG, "ActivityThread mH crash hook installed successfully")
+        } catch (e: Throwable) {
+            Log.w(TAG, "Failed to install ActivityThread mH crash hook", e)
+        }
+    }
+
+    private fun ensureLaunchingActivityRecord(
+        activityThread: Any,
+        transaction: Any,
+        mLaunchingActivitiesField: java.lang.reflect.Field?
+    ) {
+        try {
+            val transactionClass = transaction.javaClass
+            val token = transactionClass.methods.firstOrNull { it.name == "getActivityToken" }?.invoke(transaction) as? IBinder ?: return
+
+            if (mLaunchingActivitiesField != null) {
+                val map = mLaunchingActivitiesField.get(activityThread) as? Map<*, *>
+                if (map != null && map.containsKey(token)) {
+                    return
+                }
+            }
+
+            val callbacks = transactionClass.methods.firstOrNull { it.name == "getCallbacks" }?.invoke(transaction) as? List<*> ?: return
+            for (item in callbacks) {
+                if (item != null && item.javaClass.simpleName == "LaunchActivityItem") {
+                    try {
+                        val preExecuteMethod = item.javaClass.methods.firstOrNull {
+                            it.name == "preExecute" && it.parameterTypes.size == 2
+                        }
+                        if (preExecuteMethod != null) {
+                            preExecuteMethod.isAccessible = true
+                            preExecuteMethod.invoke(item, activityThread, token)
+                            Log.i(TAG, "Pre-populated missing ActivityClientRecord for token $token")
+                        }
+                    } catch (e: Throwable) {
+                        Log.w(TAG, "Failed to pre-execute LaunchActivityItem", e)
+                    }
+                }
+            }
+        } catch (_: Throwable) {
+            // Safe to ignore; fallback catch in handleMessage catches any NPE
+        }
     }
 
     /**
