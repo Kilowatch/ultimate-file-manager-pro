@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import androidx.documentfile.provider.DocumentFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase
@@ -67,7 +68,7 @@ class RecentsRepository private constructor(private val context: Context) {
                     true
                 }
             }.map { it.toItem() }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     /**

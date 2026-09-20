@@ -434,10 +434,6 @@ class RecentFilesActivity : AppCompatActivity() {
                 } else {
                     File(item.uriOrPath)
                 }
-                // CRITICAL: Ensure local files actually exist on disk before displaying in the UI
-                if (item.source == RecentFileSource.FULL_FS && (!fileObj.exists() || !fileObj.isFile)) {
-                    continue
-                }
                 fileList.add(fileObj)
                 labels[fileObj.absolutePath] = item.volumeLabel
             }
@@ -558,13 +554,7 @@ class RecentFilesActivity : AppCompatActivity() {
         if (selected.size == 1) {
             txtDeleteMessage.text = getString(R.string.delete_filename, selected.first().name)
         } else {
-            val folders = selected.count { it.isDirectory }
-            val files = selected.count { it.isFile }
-            txtDeleteMessage.text = when {
-                folders > 0 && files > 0 -> getString(R.string.delete_message_mixed, folders, files)
-                folders > 0 -> getString(R.string.delete_message_folders, folders)
-                else -> getString(R.string.delete_message_files, files)
-            }
+            txtDeleteMessage.text = getString(R.string.delete_message_files, selected.size)
         }
 
         btnDeleteConfirm.setOnClickListener {
@@ -689,22 +679,25 @@ class RecentFilesActivity : AppCompatActivity() {
                         } catch (_: Exception) {}
                         MediaScannerNotifier.scanFile(this@RecentFilesActivity, target.absolutePath)
                         repository?.onFileRenamed(oldPath, target)
+                        val targetExists = target.exists() && target.isFile
+                        val targetLastModified = if (targetExists) target.lastModified() else 0L
+                        val targetLength = if (targetExists) target.length() else 0L
                         withContext(Dispatchers.Main) {
                             val oldItem = allRawItems.find { it.uriOrPath == oldPath }
                             val volLabel = oldItem?.volumeLabel ?: getString(R.string.internal_storage)
                             val volId = oldItem?.volumeId ?: "internal"
                             allRawItems.removeAll { it.uriOrPath == oldPath }
-                            if (target.exists()) {
+                            if (targetExists) {
                                 allRawItems.add(
                                     0,
                                     RecentFileItem(
                                         displayName = target.name,
                                         uriOrPath = target.absolutePath,
-                                        lastModified = target.lastModified(),
+                                        lastModified = targetLastModified,
                                         volumeLabel = volLabel,
                                         volumeId = volId,
                                         source = RecentFileSource.FULL_FS,
-                                        sizeBytes = target.length()
+                                        sizeBytes = targetLength
                                     )
                                 )
                             }
