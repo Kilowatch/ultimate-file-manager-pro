@@ -487,11 +487,7 @@ object FossUpdateManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
             !activity.packageManager.canRequestPackageInstalls()) {
             Toast.makeText(activity, R.string.update_install_permission_required, Toast.LENGTH_LONG).show()
-            val permIntent = Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
-                data = Uri.parse("package:${activity.packageName}")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            activity.startActivity(permIntent)
+            PackageInstallerHelper.openInstallPermissionSettings(activity)
             return
         }
 

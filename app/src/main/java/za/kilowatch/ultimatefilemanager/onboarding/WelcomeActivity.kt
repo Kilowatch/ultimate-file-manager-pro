@@ -384,11 +384,17 @@ class WelcomeActivity : AppCompatActivity() {
      * Fallback: opens the generic app info/details page in system settings.
      */
     private fun openAppDetailsSettings() {
-        val intent = Intent(
-            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.parse("package:$packageName")
-        )
-        settingsLauncher.launch(intent)
+        try {
+            val intent = Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:$packageName")
+            )
+            settingsLauncher.launch(intent)
+        } catch (_: Exception) {
+            try {
+                settingsLauncher.launch(Intent(Settings.ACTION_SETTINGS))
+            } catch (_: Exception) {}
+        }
     }
 
     /**

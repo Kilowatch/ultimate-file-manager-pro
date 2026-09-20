@@ -1,11 +1,13 @@
 package za.kilowatch.ultimatefilemanager.util
 
 import android.app.PendingIntent
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.remote.InstallReceiver
@@ -175,6 +177,53 @@ object PackageInstallerHelper {
     }
 
     /**
+     * Attempts to open the system settings screen for granting unknown app install permissions.
+     * Safely falls back across multiple settings intents (per-app unknown sources,
+     * global unknown sources list, application details, security settings, general settings)
+     * to prevent [ActivityNotFoundException] on Android TV and customized OEM ROMs lacking
+     * the dedicated unknown sources settings activity.
+     *
+     * @return true if a settings activity was successfully launched, false otherwise.
+     */
+    fun openInstallPermissionSettings(context: Context): Boolean {
+        val packageUri = Uri.parse("package:${context.packageName}")
+        val intents = mutableListOf<Intent>()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // 1. Per-app unknown sources settings
+            intents.add(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageUri))
+            // 2. Global unknown sources list without package URI
+            intents.add(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES))
+        }
+
+        // 3. App Details settings (contains "Install unknown apps" or special permissions on most TVs/OEMs)
+        intents.add(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri))
+
+        // 4. Security settings (where unknown sources toggle resides on TV boxes and older Android)
+        intents.add(Intent(Settings.ACTION_SECURITY_SETTINGS))
+
+        // 5. Generic system settings
+        intents.add(Intent(Settings.ACTION_SETTINGS))
+
+        for (intent in intents) {
+            try {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+                return true
+            } catch (e: ActivityNotFoundException) {
+                Log.w(TAG, "Settings activity not found for ${intent.action}: ${e.message}")
+            } catch (e: SecurityException) {
+                Log.w(TAG, "Security exception launching ${intent.action}: ${e.message}")
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to launch settings ${intent.action}: ${e.message}")
+            }
+        }
+
+        Log.e(TAG, "Unable to launch any settings activity for install permissions")
+        return false
+    }
+
+    /**
      * Checks if the app has permission to install unknown apps.
      * Throws [SecurityException] and opens settings if not allowed.
      */
@@ -182,11 +231,7 @@ object PackageInstallerHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
             !context.packageManager.canRequestPackageInstalls()) {
             
-            val intent = Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
-                data = Uri.parse("package:${context.packageName}")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            context.startActivity(intent)
+            openInstallPermissionSettings(context)
             
             throw SecurityException(context.getString(R.string.error_install_unknown_apps_instruction))
         }
