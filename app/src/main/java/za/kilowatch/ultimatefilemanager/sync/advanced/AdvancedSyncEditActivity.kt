@@ -632,11 +632,16 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
 
         // Warn if source and local destination are the same or nested
         if (hasLocalDest) {
-            val srcCanonical = java.io.File(localUri).canonicalPath
-            val destCanonical = java.io.File(destLocalUri).canonicalPath
-            if (srcCanonical == destCanonical ||
-                destCanonical.startsWith(srcCanonical + java.io.File.separator) ||
-                srcCanonical.startsWith(destCanonical + java.io.File.separator)) {
+            val isSameOrNested = try {
+                val srcCanonical = java.io.File(localUri).canonicalPath
+                val destCanonical = java.io.File(destLocalUri).canonicalPath
+                srcCanonical == destCanonical ||
+                    destCanonical.startsWith(srcCanonical + java.io.File.separator) ||
+                    srcCanonical.startsWith(destCanonical + java.io.File.separator)
+            } catch (_: Exception) {
+                localUri == destLocalUri
+            }
+            if (isSameOrNested) {
                 showWarningDialog(
                     title = getString(R.string.important_warning),
                     message = getString(R.string.advanced_sync_same_path_warning),

@@ -2228,6 +2228,19 @@ class StorageBrowserActivity : AppCompatActivity() {
                             putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
                         }
                     )
+                } else if (isQuickTransferPickerMode) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                            putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                        } else {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                        }
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
+                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
+                            this@StorageBrowserActivity.intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
+                    }
+                    pickerLauncher.launch(intent)
                 } else if (isPickerMode) {
                     if (isDrivePicker) {
                         val data = Intent().apply {
@@ -2250,19 +2263,6 @@ class StorageBrowserActivity : AppCompatActivity() {
                         }
                         pickerLauncher.launch(intent)
                     }
-                } else if (isQuickTransferPickerMode) {
-                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                        if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
-                            putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
-                        } else {
-                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
-                        }
-                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
-                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
-                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
-                            this@StorageBrowserActivity.intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
-                    }
-                    pickerLauncher.launch(intent)
                 } else if (isLocationPickerMode) {
                     val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
                         // TV/paired-device items must use EXTRA_PAIRED_DEVICE_ID so
@@ -2427,6 +2427,18 @@ class StorageBrowserActivity : AppCompatActivity() {
                             }
                         )
                     }
+                } else if (isQuickTransferPickerMode) {
+                    launchWithRCloneInit {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            putExtra("isOnlineStorage", true)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
+                            putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
+                            putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
+                                this@StorageBrowserActivity.intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
+                        }
+                        pickerLauncher.launch(intent)
+                    }
                 } else if (isPickerMode) {
                     if (isDrivePicker) {
                         // Drive picker only returns a result — no network I/O here.
@@ -2449,18 +2461,6 @@ class StorageBrowserActivity : AppCompatActivity() {
                             }
                             pickerLauncher.launch(intent)
                         }
-                    }
-                } else if (isQuickTransferPickerMode) {
-                    launchWithRCloneInit {
-                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                            putExtra("isOnlineStorage", true)
-                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
-                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
-                            putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
-                            putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
-                                this@StorageBrowserActivity.intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
-                        }
-                        pickerLauncher.launch(intent)
                     }
                 } else if (isLocationPickerMode) {
                     launchWithRCloneInit {

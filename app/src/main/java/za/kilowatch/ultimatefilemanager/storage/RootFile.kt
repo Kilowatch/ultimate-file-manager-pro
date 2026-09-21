@@ -22,6 +22,12 @@ class RootFile(
     val symlinkTarget: String = ""
 ) : File(if (parentPath == "/" || parentPath.isEmpty()) (if (docName.isEmpty()) "/" else "/$docName") else "$parentPath/$docName") {
 
+    constructor(fullPath: String, isDir: Boolean = true) : this(
+        if (fullPath == "/" || fullPath.isEmpty()) "/" else fullPath.substringBeforeLast('/', "").ifEmpty { "/" },
+        if (fullPath == "/" || fullPath.isEmpty()) "" else fullPath.substringAfterLast('/'),
+        isDir
+    )
+
     val posixPath: String = if (parentPath == "/" || parentPath.isEmpty()) {
         if (docName.isEmpty()) "/" else "/$docName"
     } else {

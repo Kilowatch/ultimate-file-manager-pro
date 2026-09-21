@@ -391,12 +391,17 @@ class NetworkBrowserActivity : AppCompatActivity() {
         pendingQuickTransferIsMove = isMove
         
         // Populate clipboard *now* so that the destination activity can read it directly
-        NetworkClipboard.add(files, if (isMove) NetworkClipboard.Operation.MOVE else NetworkClipboard.Operation.COPY, share.id, share.remotePath)
+        val effectiveRemotePath = when {
+            share.type == ShareType.SMB && share.isServerMode && currentPath.isNotEmpty() -> "/${currentPath.trimStart('/').substringBefore('/')}"
+            share.remotePath.isNotBlank() -> share.remotePath
+            currentPath.isNotBlank() -> currentPath
+            else -> ""
+        }
+        NetworkClipboard.set(files, if (isMove) NetworkClipboard.Operation.MOVE else NetworkClipboard.Operation.COPY, share.id, effectiveRemotePath)
         
         val intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
-            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
             putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
-            putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP, if (isMove) "move" else "copy")
+            putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP, if (isMove) "MOVE" else "COPY")
         }
         quickTransferLauncher.launch(intent)
     }
@@ -565,7 +570,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         isCompressDestPickerMode = intent.getBooleanExtra(EXTRA_COMPRESS_DEST_PICKER, false)
         isLocationPickerMode = intent.getBooleanExtra(EXTRA_LOCATION_PICKER, false)
         isQuickTransferPickerMode = intent.getBooleanExtra(EXTRA_QUICK_TRANSFER_PICKER, false)
-        quickTransferIsMove = intent.getStringExtra(EXTRA_QUICK_TRANSFER_OP) == "MOVE"
+        quickTransferIsMove = intent.getStringExtra(EXTRA_QUICK_TRANSFER_OP)?.equals("MOVE", ignoreCase = true) == true
         isShareDestPickerMode = intent.getBooleanExtra(EXTRA_SHARE_DEST_PICKER, false)
         isScannerFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, false)
         isAutoBackupFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
@@ -1272,6 +1277,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val initialMode = ViewModeManager.load(this)
         applyViewMode(initialMode)
 
+        // Quick Transfer picker mode: show "Copy Here" / "Move Here" FAB
+        if (isQuickTransferPickerMode) {
+            layoutSelectionBar.visibility = View.GONE
+            showUseFolderFab()
+            return
+        }
+
         // Hide editing controls in picker mode
         if (isPickerMode) {
             layoutSelectionBar.visibility = View.GONE
@@ -1279,38 +1291,6 @@ class NetworkBrowserActivity : AppCompatActivity() {
             findViewById<android.widget.ImageView>(R.id.btnCreateNew)?.visibility = View.GONE
             findViewById<android.widget.ImageView>(R.id.btnViewToggle)?.visibility = View.GONE
             findViewById<android.widget.ImageView>(R.id.btnSort)?.visibility = View.GONE
-            return
-        }
-
-        // Sync folder picker mode: show New Folder + Use This Folder FAB
-        if (isSyncFolderPickerMode) {
-            layoutSelectionBar.visibility = View.GONE
-            fabPaste.visibility = View.GONE
-            // Show new folder button so the user can create one if needed
-            if (!share.readOnly) {
-                btnCreateNew.visibility = View.VISIBLE
-            }
-            // Dynamically add a 'Use This Folder' FAB above the existing FAB area
-            showUseFolderFab()
-            return
-        }
-
-        // Advanced Sync folder picker mode: show New Folder + Use This Folder FAB
-        if (isAdvancedSyncFolderPickerMode) {
-            android.util.Log.d("AdvSyncDest", "Advanced sync picker mode MATCHED at setupViews")
-            layoutSelectionBar.visibility = View.GONE
-            fabPaste.visibility = View.GONE
-            if (!share.readOnly) {
-                btnCreateNew.visibility = View.VISIBLE
-            }
-            showUseFolderFab()
-            return
-        }
-
-        // Quick Transfer picker mode: show "Copy Here" / "Move Here" FAB
-        if (isQuickTransferPickerMode) {
-            layoutSelectionBar.visibility = View.GONE
-            showUseFolderFab()
             return
         }
 
@@ -2117,6 +2097,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
      * In sync/compress folder picker mode: re-uses the fabPaste button as a "Use This Folder" action.
      */
     private fun showUseFolderFab() {
+        if (share.type == ShareType.SMB && share.isServerMode && currentPath.isEmpty()) {
+            fabPaste.visibility = View.GONE
+            updateFabPositions()
+            return
+        }
+
         if (isCompressDestPickerMode) {
             fabPaste.setText(R.string.use_this_folder)
             fabPaste.setIconResource(R.drawable.ic_compress)
@@ -2138,7 +2124,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             fabPaste.setIconResource(R.drawable.ic_folder)
             fabPaste.visibility = View.VISIBLE
             fabPaste.setOnClickListener { showConfirmLocationPickerNetworkFolderDialog() }
-        } else         if (isQuickTransferPickerMode) {
+        } else if (isQuickTransferPickerMode) {
             fabPaste.setText(if (quickTransferIsMove) R.string.quick_transfer_move_here else R.string.quick_transfer_copy_here)
             fabPaste.setIconResource(if (quickTransferIsMove) R.drawable.ic_move else R.drawable.ic_copy)
             fabPaste.visibility = View.VISIBLE
@@ -2240,7 +2226,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private fun showConfirmQuickTransferNetworkDialog() {
         val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
         val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
-        val fileCount = za.kilowatch.ultimatefilemanager.storage.FileClipboard.files.size
+        val fileCount = za.kilowatch.ultimatefilemanager.storage.FileClipboard.totalItemCount()
         val msgRes = if (quickTransferIsMove) R.string.quick_transfer_move_confirm else R.string.quick_transfer_copy_confirm
         val posRes = if (quickTransferIsMove) R.string.quick_transfer_move_here else R.string.quick_transfer_copy_here
         val iconRes = if (quickTransferIsMove) R.drawable.ic_move else R.drawable.ic_copy
@@ -2248,7 +2234,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         showFolderConfirmDialog(
             heroIconRes = iconRes,
             title = getString(if (quickTransferIsMove) R.string.action_move_to else R.string.action_copy_to),
-            subtitle = if (quickTransferIsMove) "Move files to network share" else "Copy files to network share",
+            subtitle = getString(if (quickTransferIsMove) R.string.quick_transfer_move_here else R.string.quick_transfer_copy_here),
             folderName = folderName,
             path = displayPath,
             description = getString(msgRes, fileCount),
@@ -3096,15 +3082,28 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
 
     private fun updatePasteFab() {
-        // In sync/compress folder picker mode + location picker mode the FAB is "Use This Folder" — never hide it here
-        if (isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isAutoBackupFolderPicker || isImageCompressDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
+        // In sync/compress/quick-transfer folder picker mode + location picker mode the FAB is "Use This Folder" / "Copy Here" / "Move Here" — never hide it here
+        if (isQuickTransferPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isAutoBackupFolderPicker || isImageCompressDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
             showUseFolderFab()
+            return
+        }
+
+        if (isPickerMode) {
+            fabPaste.visibility = View.GONE
             return
         }
 
         if (share.readOnly) {
             fabPaste.visibility = View.GONE
             if (isTv) updateTvClipboardPanel()
+            return
+        }
+
+        // At root of an SMB server in server mode, there is no share open to paste into!
+        if (share.type == ShareType.SMB && share.isServerMode && currentPath.isEmpty()) {
+            fabPaste.visibility = View.GONE
+            if (isTv) updateTvClipboardPanel()
+            updateFabPositions()
             return
         }
         
@@ -3180,6 +3179,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         updateSubtitle()
         updateBreadcrumbs()
+        updatePasteFab()
 
         loadJob?.cancel()
         loadJob = lifecycleScope.launch(Dispatchers.IO) {
@@ -3204,6 +3204,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                     tvEmptyState.text = getString(R.string.smb_server_no_shares)
                                     tvEmptyState.visibility = View.VISIBLE
                                     recyclerFiles.visibility = View.GONE
+                                    updatePasteFab()
                                 } else {
                                     currentFiles = discovered
                                     applyData()
@@ -3599,6 +3600,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         .warmCacheForFolder(share.id, currentFolder)
                 } catch (_: Throwable) {}
             }
+            updatePasteFab()
         }
 
         if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(this)) {
@@ -4865,6 +4867,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
         if (targetSlots.isEmpty()) return
         val isExtractOperation = targetSlots.any { it.isExtract }
 
+        // Ensure effective share remotePath is resolved when in server mode inside a share
+        if (share.type == ShareType.SMB && share.isServerMode && currentPath.isNotEmpty()) {
+            val shareName = currentPath.trimStart('/').substringBefore('/')
+            share = share.copy(remotePath = "/$shareName")
+            fileAdapter.share = share
+        }
+
         // ── Build progress dialog (mobile / TV) ────────────────────────
         val isTv = DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_transfer_progress_tv else R.layout.dialog_transfer_progress
@@ -4926,6 +4935,19 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 if (isFinishing || isDestroyed) return
                 try { dialog.dismiss() } catch (_: Exception) {}
+
+                if (isQuickTransferPickerMode) {
+                    val result = Intent().apply {
+                        putExtra("QT_SUCCESS_COUNT", summary.successCount)
+                        putExtra("QT_FAIL_COUNT", summary.failCount)
+                        putExtra("QT_SKIPPED_COUNT", summary.skippedCount)
+                        putExtra("QT_MESSAGE", summary.message)
+                    }
+                    setResult(RESULT_OK, result)
+                    finish()
+                    return
+                }
+
                 updatePasteFab()
                 loadDirectory()
                 if (!summary.cancelled) {

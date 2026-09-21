@@ -7,6 +7,26 @@ class ShizukuFile(
     private val docLength: Long = 0L,
     private val docLastModified: Long = 0L
 ) : java.io.File(parentPath, docName) {
+
+    constructor(fullPath: String, isDir: Boolean = true) : this(
+        if (fullPath == "/" || fullPath.isEmpty()) "/" else fullPath.substringBeforeLast('/', "").ifEmpty { "/" },
+        if (fullPath == "/" || fullPath.isEmpty()) "" else fullPath.substringAfterLast('/'),
+        isDir
+    )
+
+    val posixPath: String = if (parentPath == "/" || parentPath.isEmpty()) {
+        if (docName.isEmpty()) "/" else "/$docName"
+    } else {
+        "$parentPath/$docName"
+    }
+
+    override fun getPath(): String = posixPath
+    override fun getAbsolutePath(): String = posixPath
+    override fun getCanonicalPath(): String = posixPath
+    override fun getName(): String = docName
+    override fun getParent(): String? = if (posixPath == "/" || posixPath.isEmpty()) null else posixPath.substringBeforeLast('/', "").ifEmpty { "/" }
+    override fun getParentFile(): java.io.File? = parent?.let { ShizukuFile(it, true) }
+
     override fun isDirectory(): Boolean = isDir
     override fun isFile(): Boolean = !isDir
     override fun length(): Long = if (docLength > 0L) docLength else ShizukuShellWrapper.getFileSize(absolutePath)

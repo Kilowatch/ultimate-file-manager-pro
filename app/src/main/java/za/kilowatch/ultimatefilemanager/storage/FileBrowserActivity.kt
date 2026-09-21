@@ -1399,7 +1399,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         val path = currentDir.absolutePath
         val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
         // In the picker instance pendingQuickTransferFiles is null — fall back to FileClipboard
-        val fileCount = pendingQuickTransferFiles?.size ?: FileClipboard.files.size
+        val fileCount = pendingQuickTransferFiles?.size ?: FileClipboard.totalItemCount()
         val titleRes = if (isMove) R.string.action_move_to else R.string.action_copy_to
         val msgRes   = if (isMove) R.string.quick_transfer_move_confirm else R.string.quick_transfer_copy_confirm
         val posRes   = if (isMove) R.string.quick_transfer_move_here else R.string.quick_transfer_copy_here
@@ -5104,16 +5104,21 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
         val pathStr = SafFile.cleanSafPath(directory.absolutePath)
         val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(pathStr)
+        val canUseRoot = directory is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                (za.kilowatch.ultimatefilemanager.settings.RootPreferenceManager.isRootEnabled(this) &&
+                 za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isAuthorized(this))
         val canUseShizuku = isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(pathStr)
         val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(pathStr) ||
                 za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, pathStr) ||
                 directory is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                 pathStr.startsWith("saf://")
 
-        za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SafStorage", "loadDirectory: path=$pathStr, isProtected=$isProtected, canUseShizuku=$canUseShizuku, isSaf=$isSaf, directoryClass=${directory::class.java.simpleName}")
+        za.kilowatch.ultimatefilemanager.util.GoRoLog.d("SafStorage", "loadDirectory: path=$pathStr, isProtected=$isProtected, canUseRoot=$canUseRoot, canUseShizuku=$canUseShizuku, isSaf=$isSaf, directoryClass=${directory::class.java.simpleName}")
 
-        val targetDir = if (pathStr == rootPath && !pathStr.startsWith("saf://")) {
+        val targetDir = if (pathStr == rootPath && !pathStr.startsWith("saf://") && !isRootStorage) {
             File(pathStr)
+        } else if (isProtected && canUseRoot && directory !is za.kilowatch.ultimatefilemanager.storage.RootFile) {
+            za.kilowatch.ultimatefilemanager.storage.RootFile(pathStr, true)
         } else if (canUseShizuku && directory !is za.kilowatch.ultimatefilemanager.storage.ShizukuFile) {
             val pName = pathStr.substringAfterLast("/")
             val pParent = pathStr.substringBeforeLast("/", "")
@@ -6873,6 +6878,9 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(currentDir.absolutePath)
             val canUseShizuku = isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)
             val hasSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) || za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, currentDir.absolutePath)
+            val hasRoot = currentDir is za.kilowatch.ultimatefilemanager.storage.RootFile ||
+                          (za.kilowatch.ultimatefilemanager.settings.RootPreferenceManager.isRootEnabled(this) &&
+                           za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isAuthorized(this))
 
             val layoutProtected = findViewById<View>(R.id.layoutProtectedPrompt)
             val txtEmptyFolder = findViewById<TextView>(R.id.txtEmptyFolder)
@@ -6893,7 +6901,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 btnGrantSaf?.setOnClickListener {
                     launchAllFilesSettings()
                 }
-            } else if (isProtected && !canUseShizuku && !hasSaf) {
+            } else if (isProtected && !canUseShizuku && !hasSaf && !hasRoot) {
                 layoutProtected?.visibility = View.VISIBLE
                 txtEmptyFolder?.visibility = View.GONE
                 txtProtectedTitle?.text = getString(R.string.protected_folder_title)

@@ -62,7 +62,7 @@ object NetworkPasteEngine {
 
         // ── resolve a source share id → NetworkShare (repo / paired device / online) ──
         val shareCache = mutableMapOf<String, NetworkShare?>()
-        fun resolveShare(shareId: String, remotePath: String = ""): NetworkShare? = shareCache.getOrPut(shareId) {
+        fun resolveShare(shareId: String, remotePath: String = ""): NetworkShare? = shareCache.getOrPut("$shareId:$remotePath") {
             if (shareId == share.id) {
                 if (share.isServerMode && remotePath.isNotEmpty()) share.copy(remotePath = remotePath)
                 else share
@@ -185,7 +185,8 @@ object NetworkPasteEngine {
                         }
                     }
 
-                    if (srcShare.id == share.id && op == FileClipboard.Operation.MOVE && (!hasConflict || effectiveDest != targetPath)) {
+                    val isSameShare = srcShare.id == share.id && (!share.isServerMode || srcShare.remotePath.equals(share.remotePath, ignoreCase = true))
+                    if (isSameShare && op == FileClipboard.Operation.MOVE && (!hasConflict || effectiveDest != targetPath)) {
                         session.reportProgress(itemName, 0, 0, fileIndexCounter.get(), totalFiles)
                             when (share.type) {
                                 ShareType.SMB          -> SmbShareClient.rename(share, source.path, effectiveDest)
@@ -325,7 +326,8 @@ object NetworkPasteEngine {
 
                     session.reportProgress(itemName, 0, source.size, currentIndex, totalFiles)
 
-                    if (srcShare.id == share.id && op == FileClipboard.Operation.MOVE && (!hasConflict || finalPath != targetPath)) {
+                    val isSameShare = srcShare.id == share.id && (!share.isServerMode || srcShare.remotePath.equals(share.remotePath, ignoreCase = true))
+                    if (isSameShare && op == FileClipboard.Operation.MOVE && (!hasConflict || finalPath != targetPath)) {
                             when (share.type) {
                                 ShareType.SMB          -> SmbShareClient.rename(share, source.path, finalPath)
                                 ShareType.SFTP, ShareType.SCP -> SshShareClient.rename(share, source.path, finalPath)
