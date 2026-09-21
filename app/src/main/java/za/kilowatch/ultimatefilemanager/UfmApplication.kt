@@ -282,107 +282,133 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             // Activity.onCreate() stack (including setContentView) has unwound, so
             // the view hierarchy is guaranteed to exist when it runs.
             override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {
-                aliveActivities.add(activity)
-                val themeHelper = za.kilowatch.ultimatefilemanager.settings.ThemeHelper
-                if (themeHelper.isAmoled(activity)) {
-                    android.os.Handler(android.os.Looper.getMainLooper()).post {
-                        // 1st: R.id.main — used by ~95% of activities.
-                        // 2nd: first child of android.R.id.content — the inflated layout
-                        //      root ConstraintLayout, which covers TwinWindowActivity (no
-                        //      root id), TvPairingActivity (root id != main), and any
-                        //      other screen whose root carries a non-standard id.
-                        val root: android.view.View? =
-                            activity.findViewById(R.id.main)
-                                ?: (activity.findViewById<android.view.ViewGroup>(android.R.id.content))
-                                    ?.getChildAt(0)
-                        root?.setBackgroundColor(android.graphics.Color.BLACK)
+                try {
+                    aliveActivities.add(activity)
+                    val themeHelper = za.kilowatch.ultimatefilemanager.settings.ThemeHelper
+                    if (themeHelper.isAmoled(activity)) {
+                        android.os.Handler(android.os.Looper.getMainLooper()).post {
+                            try {
+                                // 1st: R.id.main — used by ~95% of activities.
+                                // 2nd: first child of android.R.id.content — the inflated layout
+                                //      root ConstraintLayout, which covers TwinWindowActivity (no
+                                //      root id), TvPairingActivity (root id != main), and any
+                                //      other screen whose root carries a non-standard id.
+                                val root: android.view.View? =
+                                    activity.findViewById(R.id.main)
+                                        ?: (activity.findViewById<android.view.ViewGroup>(android.R.id.content))
+                                            ?.getChildAt(0)
+                                root?.setBackgroundColor(android.graphics.Color.BLACK)
+                            } catch (e: Throwable) {
+                                Log.w(TAG, "Failed to apply AMOLED background in onActivityCreated", e)
+                            }
+                        }
                     }
+                } catch (e: Throwable) {
+                    Log.w(TAG, "Error in onActivityCreated lifecycle callback", e)
                 }
             }
             override fun onActivityStarted(activity: android.app.Activity) {
-                startedActivityCount++
+                try {
+                    startedActivityCount++
+                } catch (e: Throwable) {
+                    Log.w(TAG, "Error in onActivityStarted lifecycle callback", e)
+                }
             }
             override fun onActivityResumed(activity: android.app.Activity) {
-                // Check if Mobile Security App Lock should be prompted
-                if (!activity.isFinishing &&
-                    activity !is za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity &&
-                    activity !is za.kilowatch.ultimatefilemanager.onboarding.LanguageWelcomeActivity &&
-                    activity !is za.kilowatch.ultimatefilemanager.onboarding.PolicyWelcomeActivity) {
-                    val secManager = za.kilowatch.ultimatefilemanager.security.AppSecurityManager.getInstance(this@UfmApplication)
-                    if (secManager.shouldPromptLock(activity)) {
-                        val intent = android.content.Intent(activity, za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity::class.java).apply {
-                            addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                try {
+                    // Check if Mobile Security App Lock should be prompted
+                    if (!activity.isFinishing &&
+                        activity !is za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity &&
+                        activity !is za.kilowatch.ultimatefilemanager.onboarding.LanguageWelcomeActivity &&
+                        activity !is za.kilowatch.ultimatefilemanager.onboarding.PolicyWelcomeActivity) {
+                        val secManager = za.kilowatch.ultimatefilemanager.security.AppSecurityManager.getInstance(this@UfmApplication)
+                        if (secManager.shouldPromptLock(activity)) {
+                            val intent = android.content.Intent(activity, za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity::class.java).apply {
+                                addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                            }
+                            activity.startActivity(intent)
+                            return
                         }
-                        activity.startActivity(intent)
-                        return
                     }
-                }
 
-                val localeHelper = za.kilowatch.ultimatefilemanager.settings.LocaleHelper
-                val fontHelper  = za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
+                    val localeHelper = za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+                    val fontHelper  = za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 
-                // --- Locale check ---
-                val savedLocale = localeHelper.getSavedLocale(activity)
-                val expectedLang = if (savedLocale == localeHelper.LOCALE_DEFAULT) {
-                    java.util.Locale.getDefault().language
-                } else {
-                    savedLocale
-                }
-                val actualLang = activity.resources.configuration.locale.language
-                val localeMismatch = (savedLocale != localeHelper.LOCALE_DEFAULT) && (actualLang != expectedLang)
-
-                // --- Font scale check ---
-                val expectedScale = when (fontHelper.getSavedSize(activity)) {
-                    fontHelper.FONT_SMALL -> 0.85f
-                    fontHelper.FONT_LARGE -> 1.15f
-                    else                  -> 1.00f
-                }
-                val actualScale   = activity.resources.configuration.fontScale
-                val fontMismatch  = Math.abs(actualScale - expectedScale) > 0.01f
-
-                if (localeMismatch || fontMismatch) {
-                    GoRoLog.w("GoRo", "Global Refresh: Recreating ${activity.javaClass.simpleName} " +
-                          "(lang=$actualLang→$expectedLang, scale=$actualScale→$expectedScale, localeMismatch=$localeMismatch, fontMismatch=$fontMismatch)")
-                    activity.recreate()
-                } else {
-                    // --- AMOLED background enforcement ---
-                    // Dark ↔ AMOLED both use MODE_NIGHT_YES so setDefaultNightMode() sees no
-                    // change and never triggers recreation. We therefore enforce black on every
-                    // resume when AMOLED is active, and recreate when it was just deactivated
-                    // (background is solid black but AMOLED is off).
-                    val themeHelper = za.kilowatch.ultimatefilemanager.settings.ThemeHelper
-                    val amoledRoot: android.view.View? =
-                        activity.findViewById(R.id.main)
-                            ?: (activity.findViewById<android.view.ViewGroup>(android.R.id.content))
-                                ?.getChildAt(0)
-
-                    if (themeHelper.isAmoled(activity)) {
-                        // Enforce pure black — idempotent, safe to call on every resume.
-                        amoledRoot?.setBackgroundColor(android.graphics.Color.BLACK)
+                    // --- Locale check ---
+                    val savedLocale = localeHelper.getSavedLocale(activity)
+                    val expectedLang = if (savedLocale == localeHelper.LOCALE_DEFAULT) {
+                        java.util.Locale.getDefault().language
                     } else {
-                        // If AMOLED was just turned off, the root background is still a
-                        // solid black ColorDrawable. Recreate to let the layout XML restore
-                        // the correct gradient drawable.
-                        val bg = amoledRoot?.background
-                        if (bg is android.graphics.drawable.ColorDrawable &&
-                            bg.color == android.graphics.Color.BLACK) {
-                            activity.recreate()
+                        savedLocale
+                    }
+                    val actualLang = activity.resources.configuration.locale.language
+                    val localeMismatch = (savedLocale != localeHelper.LOCALE_DEFAULT) && (actualLang != expectedLang)
+
+                    // --- Font scale check ---
+                    val expectedScale = when (fontHelper.getSavedSize(activity)) {
+                        fontHelper.FONT_SMALL -> 0.85f
+                        fontHelper.FONT_LARGE -> 1.15f
+                        else                  -> 1.00f
+                    }
+                    val actualScale   = activity.resources.configuration.fontScale
+                    val fontMismatch  = Math.abs(actualScale - expectedScale) > 0.01f
+
+                    if (localeMismatch || fontMismatch) {
+                        GoRoLog.w("GoRo", "Global Refresh: Recreating ${activity.javaClass.simpleName} " +
+                              "(lang=$actualLang→$expectedLang, scale=$actualScale→$expectedScale, localeMismatch=$localeMismatch, fontMismatch=$fontMismatch)")
+                        activity.recreate()
+                    } else {
+                        // --- AMOLED background enforcement ---
+                        // Dark ↔ AMOLED both use MODE_NIGHT_YES so setDefaultNightMode() sees no
+                        // change and never triggers recreation. We therefore enforce black on every
+                        // resume when AMOLED is active, and recreate when it was just deactivated
+                        // (background is solid black but AMOLED is off).
+                        val themeHelper = za.kilowatch.ultimatefilemanager.settings.ThemeHelper
+                        val amoledRoot: android.view.View? =
+                            activity.findViewById(R.id.main)
+                                ?: (activity.findViewById<android.view.ViewGroup>(android.R.id.content))
+                                    ?.getChildAt(0)
+
+                        if (themeHelper.isAmoled(activity)) {
+                            // Enforce pure black — idempotent, safe to call on every resume.
+                            amoledRoot?.setBackgroundColor(android.graphics.Color.BLACK)
+                        } else {
+                            // If AMOLED was just turned off, the root background is still a
+                            // solid black ColorDrawable. Recreate to let the layout XML restore
+                            // the correct gradient drawable.
+                            val bg = amoledRoot?.background
+                            if (bg is android.graphics.drawable.ColorDrawable &&
+                                bg.color == android.graphics.Color.BLACK) {
+                                activity.recreate()
+                            }
                         }
                     }
+                } catch (e: Throwable) {
+                    Log.w(TAG, "Error in onActivityResumed lifecycle callback", e)
                 }
             }
             override fun onActivityPaused(activity: android.app.Activity) {}
             override fun onActivityStopped(activity: android.app.Activity) {
-                startedActivityCount--
-                if (startedActivityCount <= 0) {
-                    startedActivityCount = 0
-                    if (!activity.isChangingConfigurations && activity !is za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity) {
-                        za.kilowatch.ultimatefilemanager.security.AppSecurityManager.getInstance(this@UfmApplication).onAppEnteredBackground()
+                try {
+                    startedActivityCount--
+                    if (startedActivityCount <= 0) {
+                        startedActivityCount = 0
+                        if (!activity.isChangingConfigurations && activity !is za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity) {
+                            za.kilowatch.ultimatefilemanager.security.AppSecurityManager.getInstance(this@UfmApplication).onAppEnteredBackground()
+                        }
                     }
+                } catch (e: Throwable) {
+                    Log.w(TAG, "Error in onActivityStopped lifecycle callback", e)
                 }
             }
             override fun onActivitySaveInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {}
-            override fun onActivityDestroyed(activity: android.app.Activity) { aliveActivities.remove(activity) }
+            override fun onActivityDestroyed(activity: android.app.Activity) {
+                try {
+                    aliveActivities.remove(activity)
+                } catch (e: Throwable) {
+                    Log.w(TAG, "Error in onActivityDestroyed lifecycle callback", e)
+                }
+            }
         })
         
         // Offload heavy startup tasks (Indexing, Cache Purge, Hidden Files) to a background thread.

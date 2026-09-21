@@ -462,4 +462,13 @@
 #  - moe.shizuku.api.BinderContainer is already preserved by the SDK's own bundled consumer rules
 #    (provider-0.1.0.aar). Duplicating them here would be noise.
 
+# ── Application ActivityLifecycleCallbacks ───────────────────────────────────
+# Keep all ActivityLifecycleCallbacks implementations and methods so R8 does not
+# prune, inline, or stub out methods (e.g. onActivityStarted with throw null) when
+# whole-program optimization does not observe direct calls in app bytecode.
+-keep class * implements android.app.Application$ActivityLifecycleCallbacks {
+    public *;
+}
+
+
 

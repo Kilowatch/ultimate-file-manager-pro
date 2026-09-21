@@ -194,7 +194,26 @@ object CrashReportManager {
                         try {
                             Looper.loop()
                         } catch (inner: Throwable) {
-                            if (!isLaunchActivityProfilerInfoCrash(inner)) {
+                            if (!isLaunchActivityProfilerInfoCrash(inner) && !isActivityLifecycleCallbackCrash(inner)) {
+                                defaultHandler?.uncaughtException(thread, inner)
+                                break
+                            }
+                        }
+                    }
+                }
+                return@setDefaultUncaughtExceptionHandler
+            }
+
+            // Suppress framework / lifecycle callback NullPointerExceptions during ActivityLifecycleCallbacks dispatch
+            // (e.g. sy7.onActivityStarted throw with null exception under Application.dispatchActivityStarted on Samsung SM-M205F / OEM devices).
+            if (isActivityLifecycleCallbackCrash(throwable)) {
+                Log.w(TAG, "Suppressed framework ActivityLifecycleCallbacks NullPointerException crash: ${throwable.message}")
+                if (thread == Looper.getMainLooper().thread) {
+                    while (true) {
+                        try {
+                            Looper.loop()
+                        } catch (inner: Throwable) {
+                            if (!isLaunchActivityProfilerInfoCrash(inner) && !isActivityLifecycleCallbackCrash(inner)) {
                                 defaultHandler?.uncaughtException(thread, inner)
                                 break
                             }
@@ -260,6 +279,27 @@ object CrashReportManager {
             return true
         }
         return msg.contains("profilerInfo") && hasHandleLaunch
+    }
+
+    /**
+     * Identifies framework or obfuscated NullPointerExceptions (e.g. "throw with null exception")
+     * thrown during ActivityLifecycleCallbacks dispatch (e.g. `onActivityStarted`, `onActivityResumed`)
+     * under `Application.dispatchActivity*` or `Activity.dispatchActivity*` during activity lifecycle
+     * transactions (such as `handleStartActivity` / `EXECUTE_TRANSACTION`) on OEM devices or release builds.
+     */
+    fun isActivityLifecycleCallbackCrash(throwable: Throwable): Boolean {
+        val npe = (throwable as? NullPointerException)
+            ?: (throwable.cause as? NullPointerException)
+            ?: return false
+        val trace = npe.stackTrace
+        val hasDispatch = trace.any { frame ->
+            (frame.className == "android.app.Application" || frame.className == "android.app.Activity") &&
+            frame.methodName.startsWith("dispatchActivity")
+        }
+        val hasCallback = trace.any { frame ->
+            frame.methodName.startsWith("onActivity")
+        }
+        return hasDispatch && hasCallback
     }
 
     /**
@@ -344,8 +384,8 @@ object CrashReportManager {
                         ensureLaunchingActivityRecord(activityThread, msg.obj, mLaunchingActivitiesField)
                         mH.handleMessage(msg)
                     } catch (t: Throwable) {
-                        if (isLaunchActivityProfilerInfoCrash(t)) {
-                            Log.w(TAG, "Suppressed framework handleLaunchActivity profilerInfo NullPointerException crash", t)
+                        if (isLaunchActivityProfilerInfoCrash(t) || isActivityLifecycleCallbackCrash(t)) {
+                            Log.w(TAG, "Suppressed framework transaction crash", t)
                             return@Callback true
                         }
                         throw t
@@ -1782,13 +1822,15 @@ object CrashReportManager {
                     //     `getSharedPreferences` read that appears as a
                     //     `SharedPreferencesImpl` frame) — and is still reported.
                     val isActivityResumedLifecycleDispatchStall =
-                        topFrame?.methodName == "onActivityResumed" &&
+                        (topFrame?.methodName == "onActivityResumed" || topFrame?.methodName == "onActivityStarted") &&
                         PLATFORM_PREFIXES.none { topFrame.className.startsWith(it) } &&
                         mainStackTrace.any {
-                            it.className == "android.app.Application" && it.methodName == "dispatchActivityResumed"
+                            it.className == "android.app.Application" &&
+                            (it.methodName == "dispatchActivityResumed" || it.methodName == "dispatchActivityStarted")
                         } &&
                         mainStackTrace.any {
-                            it.className == "android.app.Activity" && it.methodName == "dispatchActivityResumed"
+                            it.className == "android.app.Activity" &&
+                            (it.methodName == "dispatchActivityResumed" || it.methodName == "dispatchActivityStarted")
                         }
 
                     // 30. The main thread is sampled while the framework dispatches the
