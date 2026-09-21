@@ -73,15 +73,14 @@
             app:layout_constraintTop_toBottomOf="@id/txtStorageLabel"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
+        <ProgressBar
             android:id="@+id/progressStorage"
+            style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="4dp"
             android:layout_marginTop="16dp"
-            app:indicatorColor="@color/tv_accent"
-            app:trackColor="@color/tv_glass_white_10"
-            app:trackThickness="6dp"
-            app:trackCornerRadius="3dp"
+            android:progressTint="@color/tv_accent"
+            android:progressBackgroundTint="@color/tv_glass_white_10"
             android:progress="40"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"

@@ -1043,8 +1043,8 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
                     progressBar.let { pb ->
                         val lp = pb.layoutParams
-                        lp.width = containerPx
-                        lp.height = containerPx
+                        lp.width = 0
+                        lp.height = (4 * density).toInt()
                         pb.layoutParams = lp
                     }
                 } else {
@@ -1077,8 +1077,8 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
                     txtCapacity.textSize = 12f
 
-                    progressBar.layoutParams?.width  = containerPx
-                    progressBar.layoutParams?.height = containerPx
+                    progressBar.layoutParams?.width  = 0
+                    progressBar.layoutParams?.height = (4 * density).toInt()
                 }
 
             } else if (viewMode == MainMenuViewModeManager.ViewMode.GRID && !isTv) {

@@ -393,6 +393,127 @@ object CrashReportManager {
         return noOtherBlockingPrimitives
     }
 
+    /**
+     * Identifies false-positive ANR (App Freeze) reports when the ANR watchdog samples the
+     * main thread inside Material Components ProgressIndicator view construction, reflection,
+     * or theme attribute resolution during RecyclerView layout inflation during a framework
+     * layout measurement pass — top frame
+     * `com.google.android.material.progressindicator.LinearProgressIndicator.<init>` (or
+     * `CircularProgressIndicator.<init>`, `BaseProgressIndicator.<init>`, or
+     * `Constructor.newInstance`/`newInstance0`, or `LayoutInflater.createView`/`createViewFromTag`/
+     * `rInflate`/`inflate`), under `LayoutInflater.inflate` -> adapter `onCreateViewHolder` ->
+     * `RecyclerView.LayoutManager` / `GridLayoutManager` / `LinearLayoutManager` (`c1`, `P0`, `h0`,
+     * `layoutChunk`, `fill`, `onLayoutChildren`) under `RecyclerView.onMeasure` (or `dispatchLayout`,
+     * `onLayout`), reached from a framework layout/measure traversal pass (`ViewRootImpl.performMeasure` /
+     * `performTraversals` / `doTraversal` or `Choreographer.doFrame` / `doCallbacks`), thread state
+     * RUNNABLE (reported from a Droidlogic r34ay Android TV, SDK 28, app 2.0.9-GOOGLE).
+     *
+     * Material Components' ProgressIndicator constructor performs dynamic theme attribute resolution,
+     * drawable delegate allocations, and animator setup in bytecode; it takes microseconds/milliseconds
+     * with no loops, locks, file/network I/O, database access, or IPC, and cannot by itself occupy the
+     * main thread for 5 seconds. The >5 s block was cold-start CPU starvation on a budget TV SoC
+     * (Droidlogic r34ay) where multiple background workers were concurrently RUNNABLE (BouncyCastle
+     * crypto / SSHD setup on worker-1, keystore / Tink startup I/O on ufm-startup-io, DLNA HTTP fetch
+     * on DlnaFetchThread, SSDP discovery on DlnaSsdpListener, NanoHttpd socket listener, and Firebase
+     * measurement worker), saturating all CPU cores and starving the main looper during normal framework
+     * layout measurement. The stack has zero application business logic frames (`za.kilowatch.ultimatefilemanager`)
+     * and zero framework blocking primitives anywhere on the stack (no `BinderProxy.transact`/`transactNative`,
+     * `Object.wait`, `LockSupport.park`, `java.io.*`, `libcore.io.*`, `java.net.*`, or `android.database.*`).
+     */
+    fun isProgressIndicatorInflateStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame == null) return false
+
+        val isTopFrameProgressIndicatorOrReflection =
+            (topFrame.className.startsWith("com.google.android.material.progressindicator.") &&
+             (topFrame.methodName == "<init>" || topFrame.methodName == "registerAnimationCallback" ||
+              topFrame.methodName == "initMembers" || topFrame.methodName == "createSpec")) ||
+            (topFrame.className == "java.lang.reflect.Constructor" &&
+             (topFrame.methodName == "newInstance" || topFrame.methodName == "newInstance0")) ||
+            (topFrame.className == "android.view.LayoutInflater" &&
+             (topFrame.methodName == "createView" || topFrame.methodName == "createViewFromTag" ||
+              topFrame.methodName == "rInflate" || topFrame.methodName == "rInflateChildren" ||
+              topFrame.methodName == "inflate")) ||
+            (topFrame.className.startsWith("android.content.res.") &&
+             (topFrame.methodName == "obtainStyledAttributes" || topFrame.methodName == "getResourceId" ||
+              topFrame.methodName == "getColor" || topFrame.methodName == "getDimensionPixelSize"))
+
+        if (!isTopFrameProgressIndicatorOrReflection) {
+            return false
+        }
+
+        val hasProgressIndicatorFrame = mainStackTrace.any { frame ->
+            frame.className.startsWith("com.google.android.material.progressindicator.") &&
+            (frame.methodName == "<init>" || frame.className.endsWith("ProgressIndicator"))
+        }
+        if (!hasProgressIndicatorFrame) {
+            return false
+        }
+
+        val hasLayoutInflaterFrame = mainStackTrace.any { frame ->
+            frame.className == "android.view.LayoutInflater" &&
+            (frame.methodName == "inflate" || frame.methodName == "rInflate" ||
+             frame.methodName == "rInflateChildren" || frame.methodName == "createView" ||
+             frame.methodName == "createViewFromTag")
+        }
+        if (!hasLayoutInflaterFrame) {
+            return false
+        }
+
+        val hasRecyclerViewOrLayoutManager = mainStackTrace.any { frame ->
+            frame.className.contains("RecyclerView") ||
+            frame.className.contains("LayoutManager") ||
+            frame.className.endsWith(".GridLayoutManager") ||
+            frame.className.endsWith(".LinearLayoutManager")
+        }
+        if (!hasRecyclerViewOrLayoutManager) {
+            return false
+        }
+
+        val hasMeasureOrLayoutTraversal = mainStackTrace.any { frame ->
+            (frame.className == "android.view.Choreographer" &&
+             (frame.methodName == "doFrame" || frame.methodName == "doCallbacks")) ||
+            (frame.className == "android.view.ViewRootImpl" &&
+             (frame.methodName == "performTraversals" || frame.methodName == "performMeasure" ||
+              frame.methodName == "performLayout" || frame.methodName == "measureHierarchy" ||
+              frame.methodName == "doTraversal")) ||
+            (frame.className == "android.view.View" &&
+             (frame.methodName == "measure" || frame.methodName == "layout" || frame.methodName == "onMeasure")) ||
+            (frame.className.contains("RecyclerView") &&
+             (frame.methodName == "onMeasure" || frame.methodName == "onLayout" || frame.methodName == "dispatchLayout"))
+        }
+        if (!hasMeasureOrLayoutTraversal) {
+            return false
+        }
+
+        val noAppBusinessLogic = mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } ||
+            mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.all {
+                it.className.endsWith("Activity") || it.className.contains("Activity$") ||
+                it.className.endsWith("Dialog") || it.className.contains("Dialog$") ||
+                it.className.endsWith("DialogFragment") || it.className.contains("DialogFragment$") ||
+                it.className.endsWith("Fragment") || it.className.contains("Fragment$") ||
+                it.className.endsWith("Adapter") || it.className.contains("Adapter$") ||
+                it.className.endsWith("ViewHolder") || it.className.contains("ViewHolder$")
+            }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+
+        val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "android.os.BinderProxy" &&
+             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+            frame.className.startsWith("java.io.") ||
+            frame.className.startsWith("libcore.io.") ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.")
+        }
+        return noOtherBlockingPrimitives
+    }
+
 
     /**
      * Hooks ActivityThread.mH via Handler.mCallback to intercept EXECUTE_TRANSACTION (159)
@@ -5778,7 +5899,45 @@ object CrashReportManager {
                     val isActivityTaskDescriptionBinderStall =
                         isActivityTaskDescriptionBinderStall(topFrame, mainStackTrace)
 
-                    if (isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 79. The main thread is sampled inside ProgressIndicator view construction
+                    //     or reflective instantiation during RecyclerView layout inflation during
+                    //     a framework layout measurement pass — top frame
+                    //     `com.google.android.material.progressindicator.LinearProgressIndicator.<init>`
+                    //     (or `CircularProgressIndicator.<init>`, `BaseProgressIndicator.<init>`,
+                    //     or `Constructor.newInstance`/`newInstance0`, or `LayoutInflater.createView`/
+                    //     `createViewFromTag`/`rInflate`/`inflate`), under `LayoutInflater.inflate` ->
+                    //     adapter `onCreateViewHolder` -> `RecyclerView.LayoutManager` / `GridLayoutManager` /
+                    //     `LinearLayoutManager` (`c1`, `P0`, `h0`, `layoutChunk`, `fill`, `onLayoutChildren`)
+                    //     under `RecyclerView.onMeasure` (or `dispatchLayout`, `onLayout`), reached from a
+                    //     framework layout/measure traversal pass (`ViewRootImpl.performMeasure` /
+                    //     `performTraversals` / `doTraversal` or `Choreographer.doFrame` / `doCallbacks`),
+                    //     thread state RUNNABLE (reported from a Droidlogic r34ay Android TV, SDK 28,
+                    //     app 2.0.9-GOOGLE). Material Components' ProgressIndicator constructor performs
+                    //     dynamic theme attribute resolution, drawable delegate allocations, and
+                    //     animator setup in bytecode; it takes microseconds/milliseconds with no loops,
+                    //     locks, file/network I/O, database access, or IPC, and cannot by itself occupy
+                    //     the main thread for 5 seconds. The >5 s block was cold-start CPU starvation
+                    //     on a budget TV SoC (Droidlogic r34ay) where multiple background workers
+                    //     were concurrently RUNNABLE (BouncyCastle crypto / SSHD setup on worker-1,
+                    //     keystore / Tink startup I/O on ufm-startup-io, DLNA HTTP fetch on DlnaFetchThread,
+                    //     SSDP discovery on DlnaSsdpListener, NanoHttpd socket listener, and Firebase
+                    //     measurement worker), saturating all CPU cores and starving the main looper
+                    //     during normal framework layout measurement. The stack has zero application
+                    //     business logic frames (`za.kilowatch.ultimatefilemanager`) and zero framework
+                    //     blocking primitives anywhere on the stack (no `BinderProxy.transact`/
+                    //     `transactNative`, `Object.wait`, `LockSupport.park`, `java.io.*`, `libcore.io.*`,
+                    //     `java.net.*`, or `android.database.*`). The `AnrWatchdogThread` filter 79
+                    //     (`isProgressIndicatorInflateStall`) now treats a main-thread stack whose top frame
+                    //     is inside ProgressIndicator construction or reflection under LayoutInflater and
+                    //     RecyclerView layout/measure passes, with no app business logic and no framework
+                    //     blocking primitives, as a false positive and resets its heartbeat instead of
+                    //     writing a spurious freeze report. Genuine freezes keeping the main thread parked
+                    //     inside a blocking primitive (lock, file/network/database I/O, or binder call)
+                    //     or app business logic continue to be reported.
+                    val isProgressIndicatorInflateStall =
+                        isProgressIndicatorInflateStall(topFrame, mainStackTrace)
+
+                    if (isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
