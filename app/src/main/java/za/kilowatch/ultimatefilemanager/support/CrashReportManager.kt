@@ -332,6 +332,69 @@ object CrashReportManager {
     }
 
     /**
+     * Identifies a main-thread stack where the top frame is blocked on a synchronous binder call to
+     * the system server (ActivityClientController / ActivityTaskManager / ActivityManager) while setting
+     * the task description during Activity launch or theme application (e.g.
+     * `IActivityClientController$Stub$Proxy.setTaskDescription` -> `BinderProxy.transact` / `transactNative`).
+     *
+     * In this state, the app is waiting for the system server / OS process to finish updating the
+     * task description; no app business logic is actively running and no framework blocking primitives
+     * (locks, disk/network I/O, database) are held.
+     */
+    fun isActivityTaskDescriptionBinderStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame?.className != "android.os.BinderProxy" ||
+            (topFrame.methodName != "transact" && topFrame.methodName != "transactNative")) {
+            return false
+        }
+        val hasTaskDescriptionFrame = mainStackTrace.any { frame ->
+            (frame.className.startsWith("android.app.") ||
+             frame.className.contains("ActivityClient") ||
+             frame.className.contains("ActivityTaskManager") ||
+             frame.className.contains("ActivityManager")) &&
+            frame.methodName == "setTaskDescription"
+        }
+        if (!hasTaskDescriptionFrame) {
+            return false
+        }
+        val hasThemeOrLaunchContext = mainStackTrace.any { frame ->
+            (frame.className == "android.app.Activity" &&
+             (frame.methodName == "onApplyThemeResource" || frame.methodName == "setTheme" ||
+              frame.methodName == "setTaskDescription" || frame.methodName == "onPostCreate" ||
+              frame.methodName == "performCreate" || frame.methodName == "performLaunchActivity")) ||
+            (frame.className == "android.view.ContextThemeWrapper" &&
+             (frame.methodName == "initializeTheme" || frame.methodName == "setTheme" ||
+              frame.methodName == "applyOverrideConfiguration")) ||
+            (frame.className == "android.app.ActivityThread" &&
+             (frame.methodName == "performLaunchActivity" || frame.methodName == "handleLaunchActivity" ||
+              frame.methodName == "handleRelaunchActivity" || frame.methodName == "handleRelaunchActivityInner")) ||
+            frame.methodName == "setTheme"
+        }
+        if (!hasThemeOrLaunchContext) {
+            return false
+        }
+        val noAppBusinessLogic = mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } ||
+            mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.all {
+                it.className.endsWith("Activity") || it.className.contains("Activity$")
+            }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+        val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+            frame.className.startsWith("java.io.") ||
+            frame.className.startsWith("libcore.io.") ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.")
+        }
+        return noOtherBlockingPrimitives
+    }
+
+
+    /**
      * Hooks ActivityThread.mH via Handler.mCallback to intercept EXECUTE_TRANSACTION (159)
      * messages before they can trigger framework NullPointerExceptions in ActivityThread.handleLaunchActivity.
      *
@@ -5682,7 +5745,40 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 78. The main thread is sampled inside a synchronous binder call to the
+                    //     system server's ActivityClientController or ActivityTaskManager while
+                    //     updating task description during Activity launch or theme application —
+                    //     top frame `android.os.BinderProxy.transactNative` / `transact`, under
+                    //     `android.app.IActivityClientController$Stub$Proxy.setTaskDescription`
+                    //     (or `ActivityClient.setTaskDescription`, `Activity.setTaskDescription`,
+                    //     `IActivityTaskManager.setTaskDescription`, `IActivityManager.setTaskDescription`),
+                    //     reached from `Activity.onApplyThemeResource` -> `ContextThemeWrapper.initializeTheme`
+                    //     -> `ContextThemeWrapper.setTheme` -> `Activity.setTheme` (or obfuscated
+                    //     `AppCompatActivity.setTheme` e.g. `dv.setTheme`) under `ActivityThread.performLaunchActivity`
+                    //     -> `ActivityThread.handleLaunchActivity` -> `LaunchActivityItem.execute`
+                    //     -> `TransactionExecutor.executeCallbacks`, thread state RUNNABLE (reported
+                    //     from a Sony BRAVIA 4K VH21, SDK 31, app 2.0.9-GOOGLE). When launching an
+                    //     Activity, framework `ActivityThread.performLaunchActivity` applies the
+                    //     activity's theme via `setTheme()`, which calls `onApplyThemeResource()`
+                    //     to review and apply the task description (`Activity.setTaskDescription`).
+                    //     On Android 12 (SDK 31), `ActivityClient.setTaskDescription` issues a
+                    //     synchronous Binder IPC to the system server's `ActivityClientController`.
+                    //     Under system server load or cold-start background I/O on CPU-constrained
+                    //     Android TV hardware (e.g. Sony BRAVIA 4K), the synchronous Binder IPC
+                    //     round-trip can exceed 5 seconds while zero application code is executing.
+                    //     Because R8 minifies `AppCompatActivity` to a short class name (e.g. `dv`)
+                    //     that lacks platform package prefixes, `isPureFrameworkStack` evaluates to
+                    //     false. The `AnrWatchdogThread` filter 78 (`isActivityTaskDescriptionBinderStall`)
+                    //     now treats a main-thread stack whose top frame is inside `BinderProxy.transact`
+                    //     / `transactNative` under `setTaskDescription` during Activity launch or theme
+                    //     initialization, with no app business logic execution and no framework blocking
+                    //     primitives, as a false positive, resetting its heartbeat instead of writing
+                    //     a spurious freeze report. Genuine freezes keeping the main thread parked
+                    //     inside application business logic or blocking primitives continue to be reported.
+                    val isActivityTaskDescriptionBinderStall =
+                        isActivityTaskDescriptionBinderStall(topFrame, mainStackTrace)
+
+                    if (isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
