@@ -187,7 +187,7 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             za.kilowatch.ultimatefilemanager.settings.ColorblindPrefs.getType(this)
             za.kilowatch.ultimatefilemanager.settings.ColorblindPrefs.getStrength(this)
             za.kilowatch.ultimatefilemanager.settings.LongPressDurationManager.init(this)
-            getSharedPreferences("acceptance_prefs", android.content.Context.MODE_PRIVATE)
+            za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.init(this)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to pre-warm locale/font/long-press/acceptance prefs", e)
         }

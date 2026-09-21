@@ -30,8 +30,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val prefs = getSharedPreferences("acceptance_prefs", Context.MODE_PRIVATE)
-        val onboardingComplete = prefs.getBoolean("onboarding_complete", false)
+        val onboardingComplete = za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.isOnboardingComplete(this)
 
         val destination = if (onboardingComplete) {
             // Check if Twin Window is set as default startup

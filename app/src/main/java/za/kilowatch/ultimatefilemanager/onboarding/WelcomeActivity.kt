@@ -481,8 +481,7 @@ class WelcomeActivity : AppCompatActivity() {
     }
 
     private fun isOnboardingComplete(): Boolean {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getBoolean(KEY_ONBOARDING_COMPLETE, false)
+        return PolicyAcceptanceManager.isOnboardingComplete(this)
     }
 
     /**
@@ -497,8 +496,7 @@ class WelcomeActivity : AppCompatActivity() {
     }
 
     private fun markOnboardingComplete() {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putBoolean(KEY_ONBOARDING_COMPLETE, true).apply()
+        PolicyAcceptanceManager.setOnboardingComplete(this, true)
     }
 
     private fun navigateToDefaultStartScreen() {

@@ -110,9 +110,11 @@ class PolicyActivity : AppCompatActivity() {
         val acceptanceUi = PolicyViewBuilder.buildAcceptanceUi(this, isTv, type)
         val bottomContainer = findViewById<LinearLayout>(R.id.bottomContainer)
         
-        val prefsKey = if (type == TYPE_TERMS) "terms_accepted_time" else "privacy_accepted_time"
-        val prefs = getSharedPreferences("acceptance_prefs", Context.MODE_PRIVATE)
-        val acceptedTime = prefs.getLong(prefsKey, 0L)
+        val acceptedTime = if (type == TYPE_TERMS) {
+            za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.getTermsAcceptedTime(this)
+        } else {
+            za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.getPrivacyAcceptedTime(this)
+        }
 
         if (isTv && bottomContainer != null && acceptedTime == 0L) {
             bottomContainer.addView(acceptanceUi)

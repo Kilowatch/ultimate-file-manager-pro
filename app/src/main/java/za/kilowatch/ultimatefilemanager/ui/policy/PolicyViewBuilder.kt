@@ -460,9 +460,11 @@ object PolicyViewBuilder {
 
     fun buildAcceptanceUi(context: Context, isTvDevice: Boolean, policyType: String): View {
         val isTerms = policyType == PolicyActivity.TYPE_TERMS
-        val prefsKey = if (isTerms) "terms_accepted_time" else "privacy_accepted_time"
-        val prefs = context.getSharedPreferences("acceptance_prefs", Context.MODE_PRIVATE)
-        val acceptedTime = prefs.getLong(prefsKey, 0L)
+        val acceptedTime = if (isTerms) {
+            za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.getTermsAcceptedTime(context)
+        } else {
+            za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.getPrivacyAcceptedTime(context)
+        }
 
         if (acceptedTime == 0L) {
             val paddingMultiplier = if (isTvDevice) 1.3f else 1f
@@ -492,7 +494,11 @@ object PolicyViewBuilder {
 
                 setOnClickListener {
                     val currentTime = System.currentTimeMillis()
-                    prefs.edit().putLong(prefsKey, currentTime).apply()
+                    if (isTerms) {
+                        za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.recordTermsAccepted(context, currentTime)
+                    } else {
+                        za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.recordPrivacyAccepted(context, currentTime)
+                    }
                     val toastMsg = if (isTerms) context.getString(R.string.terms_conditions_accepted) else context.getString(R.string.privacy_policy_accepted)
                     android.widget.Toast.makeText(context, toastMsg, android.widget.Toast.LENGTH_SHORT).show()
                     if (context is androidx.appcompat.app.AppCompatActivity) {

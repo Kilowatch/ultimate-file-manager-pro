@@ -121,12 +121,7 @@ class LanguageWelcomeActivity : AppCompatActivity() {
             LocaleHelper.save(this, selectedLocale)
             setWelcomeFinished()
             if (BuildConfig.IS_FOSS) {
-                val acceptancePrefs = getSharedPreferences("acceptance_prefs", Context.MODE_PRIVATE)
-                val currentTime = System.currentTimeMillis()
-                acceptancePrefs.edit()
-                    .putLong("terms_accepted_time", currentTime)
-                    .putLong("privacy_accepted_time", currentTime)
-                    .apply()
+                PolicyAcceptanceManager.recordBothAccepted(this)
             }
             goToNextScreen()
         }

@@ -27,8 +27,15 @@ class PolicyWelcomeActivity : AppCompatActivity() {
     private var isTv = false
     private lateinit var btnContinue: MaterialButton
 
-    private val acceptancePrefs by lazy {
-        getSharedPreferences("acceptance_prefs", Context.MODE_PRIVATE)
+    private val policyObserver = {
+        if (!isFinishing && !isDestroyed) {
+            if (PolicyAcceptanceManager.arePoliciesAccepted(this)) {
+                startActivity(Intent(this, WelcomeActivity::class.java))
+                finish()
+            } else {
+                refreshCardStates()
+            }
+        }
     }
 
     override fun attachBaseContext(newBase: android.content.Context) {
@@ -40,8 +47,10 @@ class PolicyWelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        PolicyAcceptanceManager.addObserver(policyObserver)
+
         // Bypass directly to the regular onboarding/permissions if policies already accepted
-        if (arePoliciesAccepted()) {
+        if (PolicyAcceptanceManager.arePoliciesAccepted(this)) {
             startActivity(Intent(this, WelcomeActivity::class.java))
             finish()
             return
@@ -103,9 +112,14 @@ class PolicyWelcomeActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        PolicyAcceptanceManager.removeObserver(policyObserver)
+    }
+
     private fun refreshCardStates() {
-        val termsTime = acceptancePrefs.getLong("terms_accepted_time", 0L)
-        val privacyTime = acceptancePrefs.getLong("privacy_accepted_time", 0L)
+        val termsTime = PolicyAcceptanceManager.getTermsAcceptedTime(this)
+        val privacyTime = PolicyAcceptanceManager.getPrivacyAcceptedTime(this)
 
         val tvTermsStatus = findViewById<TextView>(R.id.tvTermsStatus)
         val tvPrivacyStatus = findViewById<TextView>(R.id.tvPrivacyStatus)
@@ -141,11 +155,5 @@ class PolicyWelcomeActivity : AppCompatActivity() {
         val bothAccepted = (termsTime > 0 && privacyTime > 0)
         btnContinue.isEnabled = bothAccepted
         btnContinue.alpha = if (bothAccepted) 1f else 0.4f
-    }
-
-    private fun arePoliciesAccepted(): Boolean {
-        val termsTime = acceptancePrefs.getLong("terms_accepted_time", 0L)
-        val privacyTime = acceptancePrefs.getLong("privacy_accepted_time", 0L)
-        return (termsTime > 0 && privacyTime > 0)
     }
 }
