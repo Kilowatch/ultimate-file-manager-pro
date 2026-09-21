@@ -394,6 +394,72 @@ object CrashReportManager {
     }
 
     /**
+     * Identifies a main-thread stack where the top frame is blocked on a synchronous binder call to
+     * the Android system server (ActivityTaskManager / ActivityClientController / ActivityManager)
+     * while finishing an Activity (e.g. `finish()`, `finishAffinity()`, `finishAfterTransition()`,
+     * `finishAndRemoveTask()` via `IActivityTaskManager$Stub$Proxy.finishActivity`,
+     * `IActivityClientController$Stub$Proxy.finishActivity`, `ActivityClient.finishActivity`,
+     * `IActivityManager$Stub$Proxy.finishActivity`, or `ActivityManagerProxy.finishActivity` ->
+     * `BinderProxy.transact` / `transactNative`).
+     *
+     * In this state, the app is waiting for the system server / OS process to finish tearing down or
+     * transitioning the activity; no app business logic is actively running and no framework blocking primitives
+     * (locks, disk/network I/O, database) are held.
+     */
+    fun isActivityFinishBinderStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame?.className != "android.os.BinderProxy" ||
+            (topFrame.methodName != "transact" && topFrame.methodName != "transactNative")) {
+            return false
+        }
+        val hasFinishActivityFrame = mainStackTrace.any { frame ->
+            (frame.className.startsWith("android.app.") ||
+             frame.className.contains("ActivityTaskManager") ||
+             frame.className.contains("ActivityClient") ||
+             frame.className.contains("ActivityManager")) &&
+            (frame.methodName.startsWith("finishActivity") ||
+             frame.methodName == "finishAndRemoveTask" ||
+             frame.methodName == "finishAffinity")
+        }
+        if (!hasFinishActivityFrame) {
+            return false
+        }
+        val hasActivityFinishContext = mainStackTrace.any { frame ->
+            (frame.className == "android.app.Activity" &&
+             (frame.methodName == "finish" || frame.methodName == "finishAffinity" ||
+              frame.methodName == "finishAfterTransition" || frame.methodName == "finishAndRemoveTask" ||
+              frame.methodName.startsWith("finishActivity"))) ||
+            (frame.className.startsWith("android.app.") && frame.methodName.startsWith("finishActivity"))
+        }
+        if (!hasActivityFinishContext) {
+            return false
+        }
+        val noAppBusinessLogic = mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } ||
+            mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.all {
+                it.className.endsWith("Activity") || it.className.contains("Activity$") ||
+                it.className.endsWith("Fragment") || it.className.contains("Fragment$") ||
+                it.className.endsWith("Dialog") || it.className.contains("Dialog$") ||
+                it.className.contains("DialogFragment") ||
+                it.className.contains("Callback") || it.className.contains("Listener") ||
+                it.className.contains("Helper")
+            }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+        val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+            frame.className.startsWith("java.io.") ||
+            frame.className.startsWith("libcore.io.") ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.")
+        }
+        return noOtherBlockingPrimitives
+    }
+
+    /**
      * Identifies false-positive ANR (App Freeze) reports when the ANR watchdog samples the
      * main thread inside Material Components ProgressIndicator view construction, reflection,
      * or theme attribute resolution during RecyclerView layout inflation during a framework
@@ -5937,7 +6003,32 @@ object CrashReportManager {
                     val isProgressIndicatorInflateStall =
                         isProgressIndicatorInflateStall(topFrame, mainStackTrace)
 
-                    if (isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 80. The main thread is sampled inside a synchronous binder call to the
+                    //     Android system server's ActivityTaskManager, ActivityClientController, or
+                    //     ActivityManager while finishing an Activity — top frame
+                    //     `android.os.BinderProxy.transactNative` / `transact`, under
+                    //     `android.app.IActivityTaskManager$Stub$Proxy.finishActivity` (or
+                    //     `IActivityClientController$Stub$Proxy.finishActivity`, `ActivityClient.finishActivity`,
+                    //     `IActivityManager$Stub$Proxy.finishActivity`, `ActivityManagerProxy.finishActivity`),
+                    //     reached from `android.app.Activity.finish` (or `finishAffinity`, `finishAfterTransition`,
+                    //     `finishAndRemoveTask`) under back navigation, key dispatch, or user interaction,
+                    //     thread state RUNNABLE (reported from an SDMC Q7 Android TV, SDK 30, app 2.0.6-GOOGLE).
+                    //     When closing an Activity, framework `Activity.finish()` issues a synchronous two-way
+                    //     Binder IPC (`finishActivity`) to `system_server`. Under system-server load or concurrent
+                    //     background I/O on CPU-constrained Android TV hardware, the synchronous Binder IPC
+                    //     round-trip can exceed 5 seconds while zero application code is executing. Because R8
+                    //     minifies AndroidX back callbacks and ComponentActivity to short names lacking platform
+                    //     package prefixes, `isPureFrameworkStack` evaluates to false. The `AnrWatchdogThread`
+                    //     filter 80 (`isActivityFinishBinderStall`) now treats a main-thread stack whose top frame
+                    //     is inside `BinderProxy.transact` / `transactNative` under `finishActivity`, with no app
+                    //     business logic execution and no framework blocking primitives, as a false positive,
+                    //     resetting its heartbeat instead of writing a spurious freeze report. Genuine freezes
+                    //     keeping the main thread parked inside application business logic or blocking primitives
+                    //     continue to be reported.
+                    val isActivityFinishBinderStall =
+                        isActivityFinishBinderStall(topFrame, mainStackTrace)
+
+                    if (isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
