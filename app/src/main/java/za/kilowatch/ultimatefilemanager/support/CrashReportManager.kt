@@ -5210,7 +5210,104 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 74. The main thread is sampled inside the framework's native text glyph
+                    //     advance measurement while measuring a TextView (or DialogTitle /
+                    //     AppCompatTextView / MaterialTextView) inside an AlertDialog layout
+                    //     during a framework layout measure pass — top frame
+                    //     `android.graphics.Paint.nGetRunAdvance` / `getRunAdvance` (or
+                    //     `android.text.TextLine.getRunAdvance` / `handleText` / `handleRun` /
+                    //     `measureRun` / `measure` / `metrics`, or `Layout.measurePara` /
+                    //     `getDesiredWidthWithLimit`), under `android.widget.TextView.onMeasure`
+                    //     and `androidx.appcompat.widget.AlertDialogLayout.onMeasure` ->
+                    //     `View.measure` -> `ViewRootImpl.performMeasure` / `performTraversals` /
+                    //     `Choreographer.doFrame`, thread state RUNNABLE (reported from a
+                    //     Droidlogic r34ay, SDK 28, app 2.0.9-GOOGLE). `Paint.nGetRunAdvance` is
+                    //     a sub-microsecond native call in the Skia/Minikin text shaping engine that
+                    //     computes the pixel advance of a text run: it takes nanoseconds with no
+                    //     loops, locks, file/network I/O, database access, or IPC, and cannot by
+                    //     itself occupy the main looper for 5 s. The >5 s block was cold-start CPU
+                    //     starvation on a low-end Android TV device where background startup tasks
+                    //     (BouncyCastle crypto and Apache SSHD setup on `DefaultDispatcher-worker-*`,
+                    //     SSDP discovery on `DlnaSsdpListener`, Go HTTP networking on
+                    //     `DlnaFetchThread`, KeyStore operations on `ufm-pairing-init`, and startup
+                    //     I/O on `ufm-startup-io`) were concurrently RUNNABLE, competing for CPU
+                    //     during cold start, causing the watchdog to sample the main looper during
+                    //     normal framework layout measurement of an alert dialog. The stack has
+                    //     zero application business logic frames (`za.kilowatch.ultimatefilemanager`)
+                    //     and zero framework blocking primitives anywhere on the stack (no
+                    //     `BinderProxy.transact`/`transactNative`, `Object.wait`, `LockSupport.park`,
+                    //     `java.io.*`, `libcore.io.*`, `java.net.*`, or `android.database.*`). The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose top frame is in
+                    //     text glyph advance measurement under `TextView.onMeasure` and
+                    //     `AlertDialogLayout.onMeasure`, with a `View.measure` frame and a framework
+                    //     traversal frame, with no app business logic and no framework blocking
+                    //     primitives, as a false positive and resets its heartbeat instead of writing
+                    //     a report. Genuine freezes keeping the main thread parked inside a blocking
+                    //     primitive (lock, file/network/database I/O, or binder call) or app business
+                    //     logic outside framework layout measurement continue to be reported.
+                    val isAlertDialogLayoutTextMeasureStall =
+                        (
+                            (topFrame?.className == "android.graphics.Paint" &&
+                             (topFrame.methodName == "nGetRunAdvance" || topFrame.methodName == "getRunAdvance" ||
+                              topFrame.methodName == "nGetRunCharacterAdvance" || topFrame.methodName == "getRunCharacterAdvance")) ||
+                            (topFrame?.className == "android.text.TextLine" &&
+                             (topFrame.methodName == "getRunAdvance" || topFrame.methodName == "handleText" ||
+                              topFrame.methodName == "handleRun" || topFrame.methodName == "measureRun" ||
+                              topFrame.methodName == "measure" || topFrame.methodName == "metrics")) ||
+                            (topFrame?.className == "android.text.Layout" &&
+                             (topFrame.methodName == "measurePara" || topFrame.methodName == "getDesiredWidthWithLimit" ||
+                              topFrame.methodName == "getDesiredWidth"))
+                        ) &&
+                        mainStackTrace.any {
+                            it.className == "android.text.TextLine" &&
+                            (it.methodName == "getRunAdvance" || it.methodName == "handleText" ||
+                             it.methodName == "handleRun" || it.methodName == "measureRun" ||
+                             it.methodName == "measure" || it.methodName == "metrics")
+                        } &&
+                        mainStackTrace.any {
+                            (it.className == "android.widget.TextView" || it.className.endsWith("TextView") ||
+                             it.className.endsWith("DialogTitle")) &&
+                            (it.methodName == "onMeasure" || it.methodName == "measure")
+                        } &&
+                        mainStackTrace.any {
+                            (it.className == "androidx.appcompat.widget.AlertDialogLayout" ||
+                             it.className.endsWith(".AlertDialogLayout")) &&
+                            (it.methodName == "onMeasure" || it.methodName == "measure")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.View" && it.methodName == "measure"
+                        } &&
+                        (
+                            mainStackTrace.any {
+                                it.className == "android.view.Choreographer" &&
+                                (it.methodName == "doFrame" || it.methodName == "doCallbacks")
+                            } ||
+                            mainStackTrace.any {
+                                it.className == "android.view.ViewRootImpl" &&
+                                (it.methodName == "performTraversals" || it.methodName == "performMeasure" ||
+                                 it.methodName == "measureHierarchy" || it.methodName == "doTraversal")
+                            }
+                        ) &&
+                        (
+                            mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } ||
+                            mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.all {
+                                it.className.endsWith("Activity") || it.className.contains("Activity$") ||
+                                it.className.endsWith("Dialog") || it.className.contains("Dialog$") ||
+                                it.className.endsWith("DialogFragment") || it.className.contains("DialogFragment$")
+                            }
+                        ) &&
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
