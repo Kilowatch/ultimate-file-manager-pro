@@ -5022,7 +5022,106 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 72. The main thread is sampled inside framework resource inspection
+                    //     (AssetManager.nativeGetResourceTypeName / getResourceTypeName,
+                    //     ResourcesImpl.getResourceTypeName, or Resources.getResourceTypeName)
+                    //     during Activity cold-start layout inflation — top frame
+                    //     `android.content.res.AssetManager.nativeGetResourceTypeName` (or
+                    //     `AssetManager.getResourceTypeName`, `ResourcesImpl.getResourceTypeName`,
+                    //     `Resources.getResourceTypeName`), under `Resources.getResourceTypeName` ->
+                    //     `com.google.android.material.button.MaterialButton.<init>` (or
+                    //     `android.widget.TextView.<init>`, `android.widget.Button.<init>`, or
+                    //     other bundled-library / Material view constructor) ->
+                    //     `LayoutInflater.createView` / `createViewFromTag` / `rInflate` / `inflate`
+                    //     -> `setContentView` during Activity cold start (e.g.
+                    //     `PolicyWelcomeActivity.onCreate`), thread state RUNNABLE (reported from
+                    //     a Droidlogic r34ay, SDK 28, app 2.0.9-GOOGLE). `nativeGetResourceTypeName`
+                    //     performs an in-memory lookup in the pre-loaded resource table
+                    //     (resources.arsc) inside native AssetManager taking sub-microsecond CPU
+                    //     time with no loops, locks, I/O, or IPC: it cannot by itself occupy the
+                    //     main thread for 5 s. The >5 s block is device-side CPU starvation on
+                    //     a low-end Android TV device where background startup tasks (BouncyCastle
+                    //     crypto on `ufm-startup-io`, TLS handshake on `firebase-installations-executor-*`,
+                    //     SSDP discovery on `DlnaSsdpListener`, HTTP server on `NanoHttpd`, and
+                    //     network coroutine workers) were all concurrently RUNNABLE, competing
+                    //     for CPU during cold start, causing the watchdog to sample the main looper
+                    //     during normal framework layout inflation. The stack has only Activity
+                    //     lifecycle frames in the application package and zero framework blocking
+                    //     primitives anywhere on the stack (no `BinderProxy.transact`/`transactNative`,
+                    //     `Object.wait`, `LockSupport.park`, `java.io.*`, `libcore.io.*`, `java.net.*`,
+                    //     or `android.database.*`). The `AnrWatchdogThread` now treats a main-thread
+                    //     stack whose top frame is inside AssetManager/Resources getResourceTypeName
+                    //     (or getResourceName/EntryName/PackageName), under a Material/framework view
+                    //     `<init>`, `LayoutInflater`, `setContentView`, and an Activity cold-start
+                    //     launch, with no framework blocking primitives and only Activity lifecycle
+                    //     frames in the app package, as a false positive and resets its heartbeat
+                    //     instead of writing a report. Genuine freezes keep the main thread parked
+                    //     inside a blocking primitive (lock, file/network/database I/O, or binder call)
+                    //     or app business logic outside framework layout inflation and are still reported.
+                    val isResourceTypeNameLayoutInflateStall =
+                        (
+                            (topFrame?.className == "android.content.res.AssetManager" &&
+                             (topFrame?.methodName == "nativeGetResourceTypeName" ||
+                              topFrame?.methodName == "nativeGetResourceName" ||
+                              topFrame?.methodName == "nativeGetResourceEntryName" ||
+                              topFrame?.methodName == "nativeGetResourcePackageName" ||
+                              topFrame?.methodName == "getResourceTypeName" ||
+                              topFrame?.methodName == "getResourceName" ||
+                              topFrame?.methodName == "getResourceEntryName" ||
+                              topFrame?.methodName == "getResourcePackageName")) ||
+                            (topFrame?.className == "android.content.res.ResourcesImpl" &&
+                             (topFrame?.methodName == "getResourceTypeName" ||
+                              topFrame?.methodName == "getResourceName" ||
+                              topFrame?.methodName == "getResourceEntryName" ||
+                              topFrame?.methodName == "getResourcePackageName")) ||
+                            (topFrame?.className == "android.content.res.Resources" &&
+                             (topFrame?.methodName == "getResourceTypeName" ||
+                              topFrame?.methodName == "getResourceName" ||
+                              topFrame?.methodName == "getResourceEntryName" ||
+                              topFrame?.methodName == "getResourcePackageName"))
+                        ) &&
+                        mainStackTrace.any {
+                            (it.className == "android.content.res.AssetManager" ||
+                             it.className == "android.content.res.ResourcesImpl" ||
+                             it.className == "android.content.res.Resources") &&
+                            (it.methodName == "getResourceTypeName" ||
+                             it.methodName == "getResourceName" ||
+                             it.methodName == "getResourceEntryName" ||
+                             it.methodName == "getResourcePackageName")
+                        } &&
+                        mainStackTrace.any {
+                            (it.className == "com.google.android.material.button.MaterialButton" && it.methodName == "<init>") ||
+                            (it.className == "android.widget.TextView" && it.methodName == "<init>") ||
+                            (it.className == "android.widget.Button" && it.methodName == "<init>") ||
+                            (it.className.startsWith("com.google.android.material.") && it.methodName == "<init>")
+                        } &&
+                        mainStackTrace.any { it.className == "android.view.LayoutInflater" } &&
+                        mainStackTrace.any { it.methodName == "setContentView" } &&
+                        mainStackTrace.any {
+                            it.className.endsWith("Activity") && it.methodName == "onCreate"
+                        } &&
+                        mainStackTrace.any {
+                            (it.className == "android.app.Activity" && it.methodName == "performCreate") ||
+                            (it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnCreate") ||
+                            (it.className == "android.app.ActivityThread" &&
+                             (it.methodName == "performLaunchActivity" || it.methodName == "handleLaunchActivity" ||
+                              it.methodName == "handleRelaunchActivityInner" || it.methodName == "handleRelaunchActivity"))
+                        } &&
+                        mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.let { appFrames ->
+                            appFrames.isNotEmpty() && appFrames.all { it.className.endsWith("Activity") || it.className.contains("Activity$") }
+                        } &&
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {

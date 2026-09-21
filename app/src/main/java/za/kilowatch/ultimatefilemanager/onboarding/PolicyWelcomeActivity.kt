@@ -27,6 +27,10 @@ class PolicyWelcomeActivity : AppCompatActivity() {
     private var isTv = false
     private lateinit var btnContinue: MaterialButton
 
+    private val acceptancePrefs by lazy {
+        getSharedPreferences("acceptance_prefs", Context.MODE_PRIVATE)
+    }
+
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
@@ -100,9 +104,8 @@ class PolicyWelcomeActivity : AppCompatActivity() {
     }
 
     private fun refreshCardStates() {
-        val prefs = getSharedPreferences("acceptance_prefs", Context.MODE_PRIVATE)
-        val termsTime = prefs.getLong("terms_accepted_time", 0L)
-        val privacyTime = prefs.getLong("privacy_accepted_time", 0L)
+        val termsTime = acceptancePrefs.getLong("terms_accepted_time", 0L)
+        val privacyTime = acceptancePrefs.getLong("privacy_accepted_time", 0L)
 
         val tvTermsStatus = findViewById<TextView>(R.id.tvTermsStatus)
         val tvPrivacyStatus = findViewById<TextView>(R.id.tvPrivacyStatus)
@@ -141,9 +144,8 @@ class PolicyWelcomeActivity : AppCompatActivity() {
     }
 
     private fun arePoliciesAccepted(): Boolean {
-        val prefs = getSharedPreferences("acceptance_prefs", Context.MODE_PRIVATE)
-        val termsTime = prefs.getLong("terms_accepted_time", 0L)
-        val privacyTime = prefs.getLong("privacy_accepted_time", 0L)
+        val termsTime = acceptancePrefs.getLong("terms_accepted_time", 0L)
+        val privacyTime = acceptancePrefs.getLong("privacy_accepted_time", 0L)
         return (termsTime > 0 && privacyTime > 0)
     }
 }
