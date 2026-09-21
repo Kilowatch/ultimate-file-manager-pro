@@ -32,6 +32,9 @@ object MockUsbStorageManager {
 
     const val ACTION_MOCK_USB_STATE_CHANGED = "za.kilowatch.ultimatefilemanager.action.MOCK_USB_STATE_CHANGED"
 
+    @Volatile
+    private var cachedMockUsbDir: File? = null
+
     private fun getPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -49,6 +52,7 @@ object MockUsbStorageManager {
      * Toggles whether the mock USB drive is enabled in settings.
      */
     fun setMockUsbEnabled(context: Context, enabled: Boolean) {
+        if (!MOCK_USB_DRIVE_FEATURE_ENABLED) return
         getPrefs(context).edit().putBoolean(KEY_MOCK_USB_ENABLED, enabled).apply()
         notifyStateChanged(context)
     }
@@ -57,7 +61,7 @@ object MockUsbStorageManager {
      * Returns whether the mock USB drive is currently mounted (not ejected).
      */
     fun isMockUsbMounted(context: Context): Boolean {
-        if (!isMockUsbEnabled(context)) return false
+        if (!MOCK_USB_DRIVE_FEATURE_ENABLED || !isMockUsbEnabled(context)) return false
         return getPrefs(context).getBoolean(KEY_MOCK_USB_MOUNTED, true)
     }
 
@@ -65,6 +69,7 @@ object MockUsbStorageManager {
      * Marks the mock drive as mounted or unmounted.
      */
     fun setMockUsbMounted(context: Context, mounted: Boolean) {
+        if (!MOCK_USB_DRIVE_FEATURE_ENABLED) return
         getPrefs(context).edit().putBoolean(KEY_MOCK_USB_MOUNTED, mounted).apply()
         notifyStateChanged(context)
     }
@@ -93,17 +98,37 @@ object MockUsbStorageManager {
     }
 
     /**
-     * Resolves the physical sandbox directory for the mock USB drive,
-     * creating realistic sample test files if empty.
+     * Resolves the physical sandbox directory for the mock USB drive.
+     * Uses memory caching to avoid repeated synchronous getExternalFilesDir() I/O calls.
      */
     fun getMockUsbDirectory(context: Context): File {
-        val baseDir = context.getExternalFilesDir(null) ?: context.filesDir
-        val mockUsbDir = File(baseDir, "mock_usb_drive")
-        if (!mockUsbDir.exists()) {
-            mockUsbDir.mkdirs()
+        cachedMockUsbDir?.let { return it }
+        val baseDir = if (MOCK_USB_DRIVE_FEATURE_ENABLED) {
+            try {
+                context.getExternalFilesDir(null) ?: context.filesDir
+            } catch (_: Exception) {
+                context.filesDir
+            }
+        } else {
+            context.filesDir
         }
-        populateSampleFilesIfEmpty(mockUsbDir)
+        val mockUsbDir = File(baseDir, "mock_usb_drive")
+        cachedMockUsbDir = mockUsbDir
         return mockUsbDir
+    }
+
+    /**
+     * Ensures sample mock USB files exist on disk when the feature is enabled.
+     */
+    fun ensureSampleFilesExist(context: Context) {
+        if (!MOCK_USB_DRIVE_FEATURE_ENABLED) return
+        try {
+            val dir = getMockUsbDirectory(context)
+            if (!dir.exists()) {
+                dir.mkdirs()
+            }
+            populateSampleFilesIfEmpty(dir)
+        } catch (_: Exception) {}
     }
 
     private fun populateSampleFilesIfEmpty(dir: File) {
@@ -140,6 +165,7 @@ object MockUsbStorageManager {
      * Creates a [StorageItem] representing the mock USB drive.
      */
     fun createMockStorageItem(context: Context): StorageItem {
+        ensureSampleFilesExist(context)
         val dir = getMockUsbDirectory(context)
         val totalBytes = 32L * 1024 * 1024 * 1024 // 32 GB
         val usedBytes = 7L * 1024 * 1024 * 1024   // 7 GB
@@ -186,6 +212,7 @@ object MockUsbStorageManager {
      * Checks if a given [StorageItem] is the mock USB drive.
      */
     fun isMockUsbItem(item: StorageItem): Boolean {
+        if (!MOCK_USB_DRIVE_FEATURE_ENABLED) return false
         return item.id == MOCK_USB_ID
     }
 
@@ -193,15 +220,20 @@ object MockUsbStorageManager {
      * Checks if a given storage ID is the mock USB drive.
      */
     fun isMockUsbStorageId(id: String): Boolean {
+        if (!MOCK_USB_DRIVE_FEATURE_ENABLED) return false
         return id == MOCK_USB_ID
     }
 
     /**
      * Checks if a given file path is located inside the mock USB drive.
+     * Fast-paths immediately to false when disabled or if the path does not contain "mock_usb_drive"
+     * to avoid any filesystem or external storage queries on the main thread.
      */
     fun isMockUsbPath(context: Context, path: String): Boolean {
-        val normMock = getMockUsbDirectory(context).absolutePath.replace('\\', '/').trimEnd('/')
+        if (!MOCK_USB_DRIVE_FEATURE_ENABLED || !isMockUsbEnabled(context)) return false
         val normPath = path.replace('\\', '/').trimEnd('/')
+        if (!normPath.contains("mock_usb_drive")) return false
+        val normMock = getMockUsbDirectory(context).absolutePath.replace('\\', '/').trimEnd('/')
         return normPath == normMock || normPath.startsWith("$normMock/")
     }
 }

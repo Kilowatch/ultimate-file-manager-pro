@@ -128,7 +128,7 @@ object UsbEjectManager {
     fun isRemovablePath(context: Context, path: String): Boolean {
         val root = path.trimEnd('/')
         if (root.isEmpty()) return false
-        if (MockUsbStorageManager.isMockUsbPath(context, root)) return true
+        if (MockUsbStorageManager.MOCK_USB_DRIVE_FEATURE_ENABLED && MockUsbStorageManager.isMockUsbPath(context, root)) return true
         if (!root.startsWith("/storage/")) return false
         val volumeId = root.removePrefix("/storage/").substringBefore('/')
         return volumeId.isNotEmpty() && volumeId != "emulated" && volumeId != "self"

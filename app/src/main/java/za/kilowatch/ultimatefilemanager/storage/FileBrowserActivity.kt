@@ -703,9 +703,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         if (isRemovableStorage) {
             checkRemovableDriveMounted()
             storageReceiver.onStorageChanged = {
-                runOnUiThread {
-                    checkRemovableDriveMounted()
-                }
+                checkRemovableDriveMounted()
             }
             try {
                 StorageEventReceiver.register(this, storageReceiver)
@@ -5071,13 +5069,9 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         val appData = "Android/data/$packageName"
         val appMedia = "Android/media/$packageName"
         val appObb = "Android/obb/$packageName"
-        val extFiles = getExternalFilesDir(null)?.absolutePath ?: ""
-        val extCache = externalCacheDir?.absolutePath ?: ""
         val intFiles = filesDir.absolutePath
         val intCache = cacheDir.absolutePath
         return path.contains(appData) || path.contains(appMedia) || path.contains(appObb) ||
-               (extFiles.isNotEmpty() && path.startsWith(extFiles)) ||
-               (extCache.isNotEmpty() && path.startsWith(extCache)) ||
                path.startsWith(intFiles) || path.startsWith(intCache)
     }
 
@@ -7274,22 +7268,32 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
     private fun checkRemovableDriveMounted() {
         if (!isRemovableStorage) return
-        val isMock = za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbStorageId(storageId) ||
-            za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbPath(this, rootPath)
-        val isMounted = if (isMock) {
-            za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbMounted(this)
-        } else {
-            val rootFile = File(rootPath)
-            rootFile.exists() && rootFile.canRead()
-        }
+        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val isMock = za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbStorageId(storageId) ||
+                za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbPath(this@FileBrowserActivity, rootPath)
+            val isMounted = if (isMock) {
+                za.kilowatch.ultimatefilemanager.storage.MockUsbStorageManager.isMockUsbMounted(this@FileBrowserActivity)
+            } else {
+                try {
+                    val rootFile = File(rootPath)
+                    rootFile.exists() && rootFile.canRead()
+                } catch (_: Exception) {
+                    false
+                }
+            }
 
-        if (!isMounted) {
-            android.widget.Toast.makeText(
-                this,
-                R.string.safely_remove_unmounted_switched,
-                android.widget.Toast.LENGTH_LONG
-            ).show()
-            finish()
+            if (!isMounted) {
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    if (!isFinishing && !isDestroyed) {
+                        android.widget.Toast.makeText(
+                            this@FileBrowserActivity,
+                            R.string.safely_remove_unmounted_switched,
+                            android.widget.Toast.LENGTH_LONG
+                        ).show()
+                        finish()
+                    }
+                }
+            }
         }
     }
 

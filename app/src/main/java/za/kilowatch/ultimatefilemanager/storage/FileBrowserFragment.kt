@@ -2620,13 +2620,9 @@ class FileBrowserFragment : Fragment() {
         val appData = "Android/data/$pkg"
         val appMedia = "Android/media/$pkg"
         val appObb = "Android/obb/$pkg"
-        val extFiles = ctx.getExternalFilesDir(null)?.absolutePath ?: ""
-        val extCache = ctx.externalCacheDir?.absolutePath ?: ""
         val intFiles = ctx.filesDir.absolutePath
         val intCache = ctx.cacheDir.absolutePath
         return path.contains(appData) || path.contains(appMedia) || path.contains(appObb) ||
-               (extFiles.isNotEmpty() && path.startsWith(extFiles)) ||
-               (extCache.isNotEmpty() && path.startsWith(extCache)) ||
                path.startsWith(intFiles) || path.startsWith(intCache)
     }
 
