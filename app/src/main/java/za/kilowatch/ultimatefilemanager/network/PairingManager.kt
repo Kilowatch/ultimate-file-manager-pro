@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.network
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Looper
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,7 +13,14 @@ import java.util.UUID
 class PairingManager(private val context: Context) {
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    private val secureStore: SecureTokenStore = SecureTokenStore.getInstance(context)
+    private val secureStore: SecureTokenStore by lazy { SecureTokenStore.getInstance(context) }
+
+    @Volatile
+    private var cachedDeviceId: String? = null
+
+    @Volatile
+    private var cachedDevices: List<PairedDevice>? = null
+    private val cacheLock = Any()
 
     companion object {
         private const val PREFS_NAME = "UFM_Pairing_Prefs"
@@ -31,61 +39,90 @@ class PairingManager(private val context: Context) {
 
     // Get or generate my unique device ID
     fun getMyDeviceId(): String {
+        cachedDeviceId?.let { return it }
         var id = prefs.getString(KEY_MY_DEVICE_ID, null)
         if (id == null) {
             id = UUID.randomUUID().toString()
             prefs.edit().putString(KEY_MY_DEVICE_ID, id).apply()
         }
+        cachedDeviceId = id
         return id
     }
 
     fun hasPairedDevices(): Boolean {
+        cachedDevices?.let { return it.isNotEmpty() }
         return prefs.getStringSet(KEY_PAIRED_DEVICES, null)?.isNotEmpty() == true
     }
 
     fun getAllPairedDevices(): List<PairedDevice> {
-        val deviceStrings = prefs.getStringSet(KEY_PAIRED_DEVICES, emptySet()) ?: emptySet()
-        // Migrate any plaintext secrets still embedded in old 9-field CSV entries
-        migrateSecretsIfNeeded(deviceStrings)
-        return deviceStrings.mapNotNull { PairedDevice.fromSharedPrefsString(it) }
-            .map { device ->
-                // Hydrate secrets from encrypted store
-                device.authToken = secureStore.getToken(device.deviceId)
-                device.certFingerprint = secureStore.getFingerprint(device.deviceId)
-                device
-            }
+        cachedDevices?.let { return it.map { d -> d.copy() } }
+        synchronized(cacheLock) {
+            cachedDevices?.let { return it.map { d -> d.copy() } }
+            val deviceStrings = prefs.getStringSet(KEY_PAIRED_DEVICES, emptySet()) ?: emptySet()
+            // Migrate any plaintext secrets still embedded in old 9-field CSV entries
+            migrateSecretsIfNeeded(deviceStrings)
+            val loaded = deviceStrings.mapNotNull { PairedDevice.fromSharedPrefsString(it) }
+                .map { device ->
+                    // Hydrate secrets from encrypted store
+                    device.authToken = secureStore.getToken(device.deviceId)
+                    device.certFingerprint = secureStore.getFingerprint(device.deviceId)
+                    device
+                }
+            cachedDevices = loaded
+            return loaded.map { it.copy() }
+        }
     }
 
     fun getPairedDevice(deviceId: String): PairedDevice? {
+        cachedDevices?.let { cached ->
+            return cached.find { it.deviceId == deviceId }?.copy()
+        }
         return getAllPairedDevices().find { it.deviceId == deviceId }
     }
 
     fun addOrUpdateDevice(device: PairedDevice) {
-        val currentDevices = getAllPairedDevices().toMutableList()
-        val index = currentDevices.indexOfFirst { it.deviceId == device.deviceId }
-        
-        if (index != -1) {
-            currentDevices[index] = device
-        } else {
-            currentDevices.add(device)
+        synchronized(cacheLock) {
+            val currentDevices = (cachedDevices ?: getAllPairedDevices()).toMutableList()
+            val index = currentDevices.indexOfFirst { it.deviceId == device.deviceId }
+            
+            if (index != -1) {
+                currentDevices[index] = device.copy()
+            } else {
+                currentDevices.add(device.copy())
+            }
+            
+            cachedDevices = currentDevices.toList()
+            saveDevices(currentDevices)
         }
-        
-        saveDevices(currentDevices)
     }
 
     fun removeDevice(deviceId: String) {
-        val currentDevices = getAllPairedDevices().toMutableList()
-        currentDevices.removeAll { it.deviceId == deviceId }
-        saveDevices(currentDevices)
-        // Remove encrypted secrets for this device
-        secureStore.remove(deviceId)
+        synchronized(cacheLock) {
+            val currentDevices = (cachedDevices ?: getAllPairedDevices()).toMutableList()
+            currentDevices.removeAll { it.deviceId == deviceId }
+            cachedDevices = currentDevices.toList()
+            saveDevices(currentDevices)
+            // Remove encrypted secrets for this device
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                Thread {
+                    secureStore.remove(deviceId)
+                }.apply { name = "ufm-remove-pairing-secret"; isDaemon = true; start() }
+            } else {
+                secureStore.remove(deviceId)
+            }
+        }
     }
     
     fun updateConnectionStatus(deviceId: String, isConnected: Boolean) {
-        val device = getPairedDevice(deviceId)
-        if (device != null) {
-            device.isConnected = isConnected
-            addOrUpdateDevice(device)
+        synchronized(cacheLock) {
+            val currentDevices = (cachedDevices ?: getAllPairedDevices()).toMutableList()
+            val index = currentDevices.indexOfFirst { it.deviceId == deviceId }
+            if (index != -1 && currentDevices[index].isConnected != isConnected) {
+                currentDevices[index] = currentDevices[index].copy(isConnected = isConnected)
+                cachedDevices = currentDevices.toList()
+                val stringSet = currentDevices.map { it.toSharedPrefsString() }.toSet()
+                prefs.edit().putStringSet(KEY_PAIRED_DEVICES, stringSet).apply()
+            }
         }
     }
 
@@ -93,12 +130,21 @@ class PairingManager(private val context: Context) {
     // Uses commit() internally (via SecureTokenStore) rather than apply() to
     // avoid QueuedWork blocking the main thread during Activity.onPause().
     private fun saveDevices(devices: List<PairedDevice>) {
-        // Persist secrets to encrypted store before saving the plaintext CSV
-        for (device in devices) {
-            secureStore.put(device.deviceId, device.authToken, device.certFingerprint)
-        }
         val stringSet = devices.map { it.toSharedPrefsString() }.toSet()
         prefs.edit().putStringSet(KEY_PAIRED_DEVICES, stringSet).apply()
+
+        // Persist secrets to encrypted store
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            Thread {
+                for (device in devices) {
+                    secureStore.put(device.deviceId, device.authToken, device.certFingerprint)
+                }
+            }.apply { name = "ufm-save-pairing-secrets"; isDaemon = true; start() }
+        } else {
+            for (device in devices) {
+                secureStore.put(device.deviceId, device.authToken, device.certFingerprint)
+            }
+        }
     }
 
     /**

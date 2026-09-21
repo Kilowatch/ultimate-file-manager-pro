@@ -26,6 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
@@ -44,6 +45,7 @@ class DevicePairingActivity : AppCompatActivity() {
     private lateinit var adapter: PairedDeviceAdapter
     private var isTvMode = false
     private var tvPairingDialog: android.app.AlertDialog? = null
+    private var refreshJob: Job? = null
 
     private val updateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -133,9 +135,7 @@ class DevicePairingActivity : AppCompatActivity() {
         refreshList()
     }
 
-    private fun refreshList() {
-        val devices = pairingManager.getAllPairedDevices()
-        adapter.setDevices(devices)
+    private fun updateVisibility(devices: List<PairedDevice>) {
         if (isTvMode) {
             findViewById<View>(R.id.txtEmptyState)?.visibility = if (devices.isEmpty()) View.VISIBLE else View.GONE
             findViewById<View>(R.id.recyclerPairedDevices)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
@@ -145,17 +145,28 @@ class DevicePairingActivity : AppCompatActivity() {
             findViewById<View>(R.id.recyclerPairedDevices)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
             findViewById<View>(R.id.btnAddDevice)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
         }
+    }
 
-        // Asynchronously verify connected devices are still reachable
-        lifecycleScope.launch {
+    private fun refreshList() {
+        refreshJob?.cancel()
+        refreshJob = lifecycleScope.launch {
+            val devices = withContext(Dispatchers.IO) {
+                pairingManager.getAllPairedDevices()
+            }
+            adapter.setDevices(devices)
+            updateVisibility(devices)
+
+            // Asynchronously verify connected devices are still reachable
             for (device in devices) {
                 if (device.isConnected) {
-                    val isOnline = pairingManager.pingDevice(device)
+                    val isOnline = withContext(Dispatchers.IO) { pairingManager.pingDevice(device) }
                     if (!isOnline) {
-                        pairingManager.updateConnectionStatus(device.deviceId, false)
-                        withContext(Dispatchers.Main) {
-                            adapter.setDevices(pairingManager.getAllPairedDevices())
+                        withContext(Dispatchers.IO) {
+                            pairingManager.updateConnectionStatus(device.deviceId, false)
                         }
+                        val updated = withContext(Dispatchers.IO) { pairingManager.getAllPairedDevices() }
+                        adapter.setDevices(updated)
+                        updateVisibility(updated)
                     }
                 }
             }
@@ -197,9 +208,13 @@ class DevicePairingActivity : AppCompatActivity() {
             val newName = edtName?.text?.toString()?.trim() ?: ""
             if (newName.isNotBlank()) {
                 device.name = newName
-                pairingManager.addOrUpdateDevice(device)
-                refreshList()
                 dialog.dismiss()
+                lifecycleScope.launch(Dispatchers.IO) {
+                    pairingManager.addOrUpdateDevice(device)
+                    withContext(Dispatchers.Main) {
+                        refreshList()
+                    }
+                }
             }
         }
 
@@ -245,13 +260,13 @@ class DevicePairingActivity : AppCompatActivity() {
     }
 
     private fun performDelete(device: PairedDevice) {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             // Tell the remote end we are unpairing
             pairingManager.unpairRemoteDevice(device)
-            
+            pairingManager.removeDevice(device.deviceId)
+            val hasRemaining = pairingManager.hasPairedDevices()
             withContext(Dispatchers.Main) {
-                pairingManager.removeDevice(device.deviceId)
-                if (isTvMode && pairingManager.getAllPairedDevices().isEmpty()) {
+                if (isTvMode && !hasRemaining) {
                     za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.stop(this@DevicePairingActivity)
                 }
                 refreshList()
@@ -433,6 +448,7 @@ class DevicePairingActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        refreshJob?.cancel()
         unregisterReceiver(updateReceiver)
     }
 }

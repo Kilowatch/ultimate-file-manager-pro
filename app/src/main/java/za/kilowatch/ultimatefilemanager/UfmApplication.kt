@@ -435,6 +435,17 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             } catch (e: Exception) {
                 Log.e(TAG, "NetworkShareRepository pre-warm failed", e)
             }
+
+            // 6. Pre-warm PairingManager & SecureTokenStore — initializes AndroidKeyStore
+            //    and EncryptedSharedPreferences on this background thread so that
+            //    DevicePairingActivity, TvRemoteActivity, and StorageBrowserActivity
+            //    never block the main thread.
+            try {
+                za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@UfmApplication).getAllPairedDevices()
+                Log.d(TAG, "PairingManager pre-warmed successfully")
+            } catch (e: Exception) {
+                Log.e(TAG, "PairingManager pre-warm failed", e)
+            }
             
         }.apply { name = "ufm-startup-io"; start() }
 
