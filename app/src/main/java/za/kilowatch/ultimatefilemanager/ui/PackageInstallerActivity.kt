@@ -51,6 +51,9 @@ class PackageInstallerActivity : AppCompatActivity() {
             } catch (e: SecurityException) {
                 // Already handled by opening settings in PackageInstallerHelper
                 Log.w(TAG, "SecurityException: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    android.widget.Toast.makeText(this@PackageInstallerActivity, e.message ?: getString(R.string.error_install_unknown_apps_instruction), android.widget.Toast.LENGTH_LONG).show()
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Installation failed", e)
                 withContext(Dispatchers.Main) {
