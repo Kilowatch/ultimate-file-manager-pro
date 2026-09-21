@@ -188,8 +188,9 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             za.kilowatch.ultimatefilemanager.settings.ColorblindPrefs.getStrength(this)
             za.kilowatch.ultimatefilemanager.settings.LongPressDurationManager.init(this)
             za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.init(this)
+            za.kilowatch.ultimatefilemanager.billing.AutoBackupPrefs.init(this)
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to pre-warm locale/font/long-press/acceptance prefs", e)
+            Log.e(TAG, "Failed to pre-warm locale/font/long-press/acceptance/autobackup prefs", e)
         }
 
         // Initialise Firebase Analytics asynchronously on a background thread (see the
@@ -472,6 +473,15 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                 Log.d(TAG, "PairingManager pre-warmed successfully")
             } catch (e: Exception) {
                 Log.e(TAG, "PairingManager pre-warm failed", e)
+            }
+
+            // 7. Pre-warm AutoBackupPrefs — loads auto_backup_prefs from disk on this
+            //    background thread so StorageBrowserActivity.onResume never blocks the main thread.
+            try {
+                za.kilowatch.ultimatefilemanager.billing.AutoBackupPrefs.init(this@UfmApplication)
+                Log.d(TAG, "AutoBackupPrefs pre-warmed successfully")
+            } catch (e: Exception) {
+                Log.e(TAG, "AutoBackupPrefs pre-warm failed", e)
             }
             
         }.apply { name = "ufm-startup-io"; start() }

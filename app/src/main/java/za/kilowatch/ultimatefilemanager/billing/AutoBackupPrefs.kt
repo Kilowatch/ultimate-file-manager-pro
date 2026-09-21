@@ -39,6 +39,36 @@ object AutoBackupPrefs {
     private const val KEY_FILES_ON_FIRST_BOOT = "backup_files_present_on_first_boot"
     private const val KEY_RESTORE_PROMPT_SHOWN = "auto_restore_prompt_shown"
 
+    // ── In-memory caches for fast main-thread lookups ────────────────────────
+
+    @Volatile
+    private var cachedFilesOnFirstBoot: Boolean? = null
+
+    @Volatile
+    private var cachedRestorePromptShown: Boolean? = null
+
+    fun init(context: Context) {
+        val sp = getPrefs(context)
+        cachedFilesOnFirstBoot = if (sp.contains(KEY_FILES_ON_FIRST_BOOT)) {
+            sp.getBoolean(KEY_FILES_ON_FIRST_BOOT, false)
+        } else {
+            null
+        }
+        cachedRestorePromptShown = if (sp.contains(KEY_RESTORE_PROMPT_SHOWN)) {
+            sp.getBoolean(KEY_RESTORE_PROMPT_SHOWN, false)
+        } else {
+            null
+        }
+    }
+
+    @androidx.annotation.VisibleForTesting
+    fun resetForTesting() {
+        cachedFilesOnFirstBoot = null
+        cachedRestorePromptShown = null
+        prefs = null
+        securePrefs = null
+    }
+
     // ── Custom location keys ─────────────────────────────────────────────────
 
     private const val KEY_CUSTOM_LOCATION_TYPE = "custom_location_type"
@@ -161,18 +191,34 @@ object AutoBackupPrefs {
 
     // ── First-boot / restore flags ────────────────────────────────────────────
 
-    fun isBackupFilesPresentOnFirstBoot(context: Context): Boolean =
-        getPrefs(context).getBoolean(KEY_FILES_ON_FIRST_BOOT, false)
-
-    fun setBackupFilesPresentOnFirstBoot(context: Context, present: Boolean) {
-        getPrefs(context).edit().putBoolean(KEY_FILES_ON_FIRST_BOOT, present).commit()
+    fun isBackupFilesPresentOnFirstBoot(context: Context): Boolean {
+        cachedFilesOnFirstBoot?.let { return it }
+        val sp = getPrefs(context)
+        val value = sp.getBoolean(KEY_FILES_ON_FIRST_BOOT, false)
+        if (sp.contains(KEY_FILES_ON_FIRST_BOOT)) {
+            cachedFilesOnFirstBoot = value
+        }
+        return value
     }
 
-    fun isRestorePromptShown(context: Context): Boolean =
-        getPrefs(context).getBoolean(KEY_RESTORE_PROMPT_SHOWN, false)
+    fun setBackupFilesPresentOnFirstBoot(context: Context, present: Boolean) {
+        cachedFilesOnFirstBoot = present
+        getPrefs(context).edit().putBoolean(KEY_FILES_ON_FIRST_BOOT, present).apply()
+    }
+
+    fun isRestorePromptShown(context: Context): Boolean {
+        cachedRestorePromptShown?.let { return it }
+        val sp = getPrefs(context)
+        val value = sp.getBoolean(KEY_RESTORE_PROMPT_SHOWN, false)
+        if (sp.contains(KEY_RESTORE_PROMPT_SHOWN)) {
+            cachedRestorePromptShown = value
+        }
+        return value
+    }
 
     fun setRestorePromptShown(context: Context) {
-        getPrefs(context).edit().putBoolean(KEY_RESTORE_PROMPT_SHOWN, true).commit()
+        cachedRestorePromptShown = true
+        getPrefs(context).edit().putBoolean(KEY_RESTORE_PROMPT_SHOWN, true).apply()
     }
 
     // ── Custom location getters/setters ───────────────────────────────────────

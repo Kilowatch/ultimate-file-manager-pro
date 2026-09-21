@@ -1043,34 +1043,54 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
     }
 
-    // â”€â”€ Auto-Backup Restore Detection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Auto-Backup Restore Detection ─────────────────────────────────────────
 
     private fun checkAutoBackupRestore() {
         val ctx = this
 
-        // If the flag doesn't exist yet, this is the first boot after install/upgrade.
-        // Set the flag now, then fall through to check if we need to show the dialog.
+        // Fast path: if prompt was already shown, or if first-boot check already confirmed no files,
+        // bail out immediately with zero background dispatch or disk I/O.
+        if (AutoBackupPrefs.isRestorePromptShown(ctx)) return
         val prefs = ctx.getSharedPreferences("auto_backup_prefs", Context.MODE_PRIVATE)
-        if (!prefs.contains("backup_files_present_on_first_boot")) {
-            val configExists = AutoBackupPrefs.getConfigFile(ctx).exists()
-            val themeExists = AutoBackupPrefs.getThemeFile(ctx).exists()
-            AutoBackupPrefs.setBackupFilesPresentOnFirstBoot(ctx, configExists || themeExists)
+        if (prefs.contains("backup_files_present_on_first_boot") && !AutoBackupPrefs.isBackupFilesPresentOnFirstBoot(ctx)) {
+            return
         }
 
-        // If files were not present on first boot, nothing to restore
-        if (!AutoBackupPrefs.isBackupFilesPresentOnFirstBoot(ctx)) return
+        lifecycleScope.launch(Dispatchers.IO) {
+            var configExists = false
+            var themeExists = false
 
-        // If prompt was already shown, don't show again
-        if (AutoBackupPrefs.isRestorePromptShown(ctx)) return
+            // If the flag doesn't exist yet, this is the first boot after install/upgrade.
+            // Check files on disk and set the flag.
+            if (!prefs.contains("backup_files_present_on_first_boot")) {
+                configExists = AutoBackupPrefs.getConfigFile(ctx).exists()
+                themeExists = AutoBackupPrefs.getThemeFile(ctx).exists()
+                AutoBackupPrefs.setBackupFilesPresentOnFirstBoot(ctx, configExists || themeExists)
+            } else {
+                if (!AutoBackupPrefs.isBackupFilesPresentOnFirstBoot(ctx)) return@launch
+                if (AutoBackupPrefs.isRestorePromptShown(ctx)) return@launch
+                configExists = AutoBackupPrefs.getConfigFile(ctx).exists()
+                themeExists = AutoBackupPrefs.getThemeFile(ctx).exists()
+            }
 
-        // Show the restore dialog
-        showBackupRestoreDialog()
+            // If files were not present on first boot or no longer exist, nothing to restore
+            if (!configExists && !themeExists) return@launch
+
+            // If prompt was already shown, don't show again
+            if (AutoBackupPrefs.isRestorePromptShown(ctx)) return@launch
+
+            // Show the restore dialog on the main thread
+            withContext(Dispatchers.Main) {
+                if (!isFinishing && !isDestroyed) {
+                    showBackupRestoreDialog(configExists, themeExists)
+                }
+            }
+        }
     }
 
-    private fun showBackupRestoreDialog() {
+    private fun showBackupRestoreDialog(configExists: Boolean, themeExists: Boolean) {
+        if (isFinishing || isDestroyed) return
         val ctx = this
-        val configExists = AutoBackupPrefs.getConfigFile(this).exists()
-        val themeExists = AutoBackupPrefs.getThemeFile(this).exists()
 
         val detectedItems = mutableListOf<String>()
         if (configExists) detectedItems.add("• " + getString(R.string.auto_restore_detected_config))

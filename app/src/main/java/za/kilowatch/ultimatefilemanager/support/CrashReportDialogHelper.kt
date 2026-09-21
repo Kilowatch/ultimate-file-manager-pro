@@ -79,6 +79,7 @@ object CrashReportDialogHelper {
         fields: Map<String, String>,
         lifecycleScope: LifecycleCoroutineScope
     ) {
+        if (activity.isFinishing || activity.isDestroyed) return
         val isTv = DeviceUtils.isTvDevice(activity)
 
         val layoutRes = if (isTv) R.layout.dialog_crash_report_tv else R.layout.dialog_crash_report
