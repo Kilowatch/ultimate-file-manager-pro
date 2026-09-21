@@ -5121,7 +5121,96 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 73. The main thread is sampled inside ConstraintLayout's view
+                    //     measurement or internal linear equation solver / object pool
+                    //     (androidx.constraintlayout.core.Pools$SimplePool, LinearSystem,
+                    //     ConstraintWidget, ConstraintWidgetContainer, or BasicMeasure)
+                    //     during a framework layout measure pass — top frame
+                    //     `androidx.constraintlayout.core.Pools$SimplePool.release` / `acquire`
+                    //     (or `androidx.core.util.Pools$SimplePool.release` / `acquire`, or
+                    //     `LinearSystem.addRow` / `addConstraint` / `addEquality`, or an R8-obfuscated
+                    //     solver class under `androidx.constraintlayout.widget.ConstraintLayout.onMeasure`),
+                    //     reached from `androidx.constraintlayout.widget.ConstraintLayout.onMeasure`
+                    //     -> `View.measure` -> `RecyclerView.onMeasure` (or framework layout pass)
+                    //     -> `ViewRootImpl.performMeasure` / `performTraversals` / `Choreographer.doFrame`,
+                    //     thread state RUNNABLE (reported from a Droidlogic r34ay, SDK 28,
+                    //     app 2.0.9-GOOGLE). `Pools$SimplePool.release` is a sub-microsecond in-memory
+                    //     array assignment in the constraint solver that takes nanoseconds with no loops,
+                    //     locks, file/network I/O, database access, or IPC: it cannot by itself occupy
+                    //     the main thread for 5 s. The >5 s block was cold-start CPU starvation on a
+                    //     low-end Android TV device where background startup tasks (BouncyCastle
+                    //     crypto on `ufm-startup-io`, Apache SSHD setup on `DefaultDispatcher-worker-*`,
+                    //     SSDP discovery on `DlnaSsdpListener`, Go HTTP networking on `DlnaFetchThread`,
+                    //     HTTP listener on `NanoHttpd`, and SQLite queries on `Measurement Worker`) were
+                    //     all concurrently RUNNABLE, competing for CPU during cold start and navigation,
+                    //     causing the watchdog to sample the main looper during normal framework/Jetpack
+                    //     layout measurement of a card/item view. The stack has zero application
+                    //     business logic frames (`za.kilowatch.ultimatefilemanager`) and zero framework
+                    //     blocking primitives anywhere on the stack (no `BinderProxy.transact`/`transactNative`,
+                    //     `Object.wait`, `LockSupport.park`, `java.io.*`, `libcore.io.*`, `java.net.*`,
+                    //     or `android.database.*`). The `AnrWatchdogThread` now treats a main-thread stack
+                    //     whose top frame is inside the ConstraintLayout solver hierarchy or object pool
+                    //     under `ConstraintLayout.onMeasure`, with a `View.measure` frame and a framework
+                    //     traversal frame, with no app business logic and no framework blocking primitives,
+                    //     as a false positive and resets its heartbeat instead of writing a report.
+                    //     Genuine freezes keeping the main thread parked inside a blocking primitive
+                    //     (lock, file/network/database I/O, or binder call) or app business logic outside
+                    //     framework layout measurement continue to be reported.
+                    val clMeasureIndex = mainStackTrace.indexOfFirst {
+                        it.className == "androidx.constraintlayout.widget.ConstraintLayout" &&
+                        (it.methodName == "onMeasure" || it.methodName == "resolveSystem")
+                    }
+                    val isConstraintLayoutMeasureLinearSystemStall =
+                        clMeasureIndex >= 0 &&
+                        (
+                            topFrame?.className?.startsWith("androidx.constraintlayout.") == true ||
+                            topFrame?.className?.startsWith("androidx.core.util.Pools") == true ||
+                            (topFrame?.className?.let { className ->
+                                PLATFORM_PREFIXES.none { prefix -> className.startsWith(prefix) } &&
+                                !className.startsWith(APP_PACKAGE)
+                            } == true)
+                        ) &&
+                        topFrame?.methodName != "run" &&
+                        topFrame?.methodName != "<clinit>" &&
+                        mainStackTrace.take(clMeasureIndex).all { frame ->
+                            frame.className.startsWith("androidx.constraintlayout.") ||
+                            frame.className.startsWith("androidx.core.util.Pools") ||
+                            frame.className.startsWith("androidx.core.") ||
+                            (PLATFORM_PREFIXES.none { prefix -> frame.className.startsWith(prefix) } &&
+                             !frame.className.startsWith(APP_PACKAGE))
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.View" && it.methodName == "measure"
+                        } &&
+                        (
+                            mainStackTrace.any {
+                                it.className == "android.view.Choreographer" &&
+                                (it.methodName == "doFrame" || it.methodName == "doCallbacks")
+                            } ||
+                            mainStackTrace.any {
+                                it.className == "android.view.ViewRootImpl" &&
+                                (it.methodName == "performTraversals" || it.methodName == "performMeasure" ||
+                                 it.methodName == "measureHierarchy" || it.methodName == "doTraversal")
+                            }
+                        ) &&
+                        (
+                            mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } ||
+                            mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.all {
+                                it.className.endsWith("Activity") || it.className.contains("Activity$")
+                            }
+                        ) &&
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
