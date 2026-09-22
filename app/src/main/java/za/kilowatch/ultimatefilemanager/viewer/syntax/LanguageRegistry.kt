@@ -79,6 +79,25 @@ object LanguageRegistry {
         stringDelimiters = listOf("\"")
     )
 
+    val Subtitle = LanguageDef(
+        name = "Subtitle",
+        keywords = setOf(
+            "dialogue", "comment", "style", "format", "events",
+            "v4+ styles", "script info", "webvtt", "note", "region"
+        ),
+        types = setOf(
+            "karaoke", "scroll", "banner", "title", "original",
+            "translation", "timing", "sync", "actor", "effect"
+        ),
+        builtins = setOf(
+            "font", "color", "size", "b", "i", "u", "s",
+            "align", "pos", "an", "k", "kf", "ko"
+        ),
+        lineComments = listOf(";", "//", "NOTE"),
+        blockComments = listOf("{" to "}"),
+        stringDelimiters = listOf("\"")
+    )
+
     // ── Markup languages ───────────────────────────────────────────────
 
     val XML = LanguageDef(
@@ -1749,6 +1768,7 @@ object LanguageRegistry {
         putExt(Dart,           "dart")
         putExt(Dockerfile,     "dockerfile", "containerfile")
         putExt(M3U,            "m3u", "m3u8")
+        putExt(Subtitle,       "srt", "vtt", "ass", "ssa", "sub", "lrc", "smi", "sami", "ttml", "sbv", "dfxp")
     }.also { map ->
         // Add lowercase-only aliases for all registered extensions
         // (map is immutable after .also {} — this is informational)

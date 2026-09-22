@@ -40,7 +40,9 @@ class FloatingQuickActionBar @JvmOverloads constructor(
         val hasUnpinned: Boolean = false,
         val hasArchiveSelected: Boolean = false,
         val allImagesSelected: Boolean = false,
-        val allAudioSelected: Boolean = false
+        val allAudioSelected: Boolean = false,
+        val allVideosSelected: Boolean = false,
+        val hasDirectories: Boolean = false
     )
 
     private val cardPill: MaterialCardView
@@ -88,6 +90,11 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                 pm.ACTION_SET_NOTIFICATION -> pm.isIconEnabled(context, pm.KEY_SET_NOTIFICATION) && state.allAudioSelected && state.selectedCount == 1
                 pm.ACTION_SET_ALARM -> pm.isIconEnabled(context, pm.KEY_SET_ALARM) && state.allAudioSelected && state.selectedCount == 1
                 pm.ACTION_MUSIC_TAGGER -> pm.isIconEnabled(context, pm.KEY_MUSIC_TAGGER) && state.allAudioSelected
+                pm.ACTION_OPEN_WITH -> pm.isIconEnabled(context, pm.KEY_OPEN_WITH) && state.selectedCount == 1 && !state.hasDirectories
+                pm.ACTION_OPEN_AS -> pm.isIconEnabled(context, pm.KEY_OPEN_AS) && state.selectedCount == 1 && !state.hasDirectories
+                pm.ACTION_EXTRACT_SUBTITLES -> pm.isIconEnabled(context, pm.KEY_EXTRACT_SUBTITLES) && state.selectedCount == 1 && state.allVideosSelected && !state.hasDirectories
+                pm.ACTION_EXTRACT_AUDIO -> pm.isIconEnabled(context, pm.KEY_EXTRACT_AUDIO) && state.selectedCount == 1 && state.allVideosSelected && !state.hasDirectories
+                pm.ACTION_CONVERT_TO_MP4 -> pm.isIconEnabled(context, pm.KEY_CONVERT_TO_MP4) && state.selectedCount == 1 && state.allVideosSelected && !state.hasDirectories
                 pm.ACTION_SELECT_ALL -> pm.isIconEnabled(context, pm.KEY_SELECT_ALL)
                 pm.ACTION_INVERT_SELECTION -> pm.isIconEnabled(context, pm.KEY_INVERT_SELECTION)
                 pm.ACTION_CHECKSUM -> pm.isIconEnabled(context, pm.KEY_CHECKSUM)
@@ -277,6 +284,31 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                     resolvedIconRes = R.drawable.ic_checksum
                     resolvedNameRes = R.string.action_checksum
                     customIconKey = "toolbar_checksum"
+                }
+                pm.ACTION_OPEN_WITH -> {
+                    resolvedIconRes = R.drawable.ic_apps
+                    resolvedNameRes = R.string.toolbar_open_with
+                    customIconKey = "toolbar_open_with"
+                }
+                pm.ACTION_OPEN_AS -> {
+                    resolvedIconRes = R.drawable.ic_apps
+                    resolvedNameRes = R.string.toolbar_open_as
+                    customIconKey = "toolbar_open_as"
+                }
+                pm.ACTION_EXTRACT_SUBTITLES -> {
+                    resolvedIconRes = R.drawable.ic_subtitles
+                    resolvedNameRes = R.string.toolbar_extract_subtitles
+                    customIconKey = "toolbar_extract_subtitles"
+                }
+                pm.ACTION_EXTRACT_AUDIO -> {
+                    resolvedIconRes = R.drawable.ic_audio_track
+                    resolvedNameRes = R.string.toolbar_extract_audio
+                    customIconKey = "toolbar_extract_audio"
+                }
+                pm.ACTION_CONVERT_TO_MP4 -> {
+                    resolvedIconRes = R.drawable.ic_convert_video
+                    resolvedNameRes = R.string.toolbar_convert_to_mp4
+                    customIconKey = "toolbar_convert_to_mp4"
                 }
                 pm.ACTION_MORE -> {
                     resolvedIconRes = R.drawable.ic_arrow_forward

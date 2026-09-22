@@ -54,6 +54,7 @@ import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import za.kilowatch.ultimatefilemanager.storage.FilePropertiesBottomSheet
 import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
+import za.kilowatch.ultimatefilemanager.viewer.OpenAsBottomSheet
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameItem
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity
@@ -1606,6 +1607,25 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 }
             }
 
+            // 4a. Open With
+            if (count == 1 && !selected.first().isDirectory && pm.isIconEnabled(this, pm.KEY_OPEN_WITH)) {
+                list.add(FileToolsBottomSheet.ActionItem("open_with", getString(R.string.toolbar_open_with), R.drawable.ic_apps, "toolbar_open_with") {
+                    cacheNetworkFile(selected.first()) { localFile ->
+                        FileViewerRouter.showOpenWithDialog(this, localFile, isNetwork = true)
+                    }
+                })
+            }
+
+            // 4b. Open As
+            if (count == 1 && !selected.first().isDirectory && pm.isIconEnabled(this, pm.KEY_OPEN_AS)) {
+                list.add(FileToolsBottomSheet.ActionItem("open_as", getString(R.string.toolbar_open_as), R.drawable.ic_apps, "toolbar_open_as") {
+                    cacheNetworkFile(selected.first()) { localFile ->
+                        OpenAsBottomSheet.newInstance(localFile.absolutePath, selected.first().name, true)
+                            .show(supportFragmentManager, OpenAsBottomSheet.TAG)
+                    }
+                })
+            }
+
             // 5. Favorite
             if (count == 1 && pm.isIconEnabled(this, pm.KEY_FAVORITE)) {
                 list.add(FileToolsBottomSheet.ActionItem("favorite", getString(R.string.action_favorite), R.drawable.ic_star, "toolbar_favorite") {
@@ -1651,6 +1671,36 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     downloadNetworkImagesAndCreateGif(selected.filter {
                         it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                     })
+                })
+            }
+
+            // Extract Subtitles from Video
+            if (count == 1 && !selected.first().isDirectory &&
+                za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(selected.first().name.substringAfterLast('.')) &&
+                za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isAvailable() &&
+                pm.isIconEnabled(this, pm.KEY_EXTRACT_SUBTITLES)) {
+                list.add(FileToolsBottomSheet.ActionItem("extract_subtitles", getString(R.string.toolbar_extract_subtitles), R.drawable.ic_subtitles, "toolbar_extract_subtitles") {
+                    extractSubtitlesFromNetworkVideo(selected.first())
+                })
+            }
+
+            // Extract Audio from Video
+            if (count == 1 && !selected.first().isDirectory &&
+                za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(selected.first().name.substringAfterLast('.')) &&
+                za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isAvailable() &&
+                pm.isIconEnabled(this, pm.KEY_EXTRACT_AUDIO)) {
+                list.add(FileToolsBottomSheet.ActionItem("extract_audio", getString(R.string.toolbar_extract_audio), R.drawable.ic_audio_track, "toolbar_extract_audio") {
+                    extractAudioFromNetworkVideo(selected.first())
+                })
+            }
+
+            // Convert Video to MP4
+            if (count == 1 && !selected.first().isDirectory &&
+                za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(selected.first().name.substringAfterLast('.')) &&
+                za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isAvailable() &&
+                pm.isIconEnabled(this, pm.KEY_CONVERT_TO_MP4)) {
+                list.add(FileToolsBottomSheet.ActionItem("convert_to_mp4", getString(R.string.toolbar_convert_to_mp4), R.drawable.ic_convert_video, "toolbar_convert_to_mp4") {
+                    convertNetworkVideoToMp4(selected.first())
                 })
             }
 
@@ -2791,6 +2841,36 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 val shareable = selected.filter { !it.isDirectory }
                 if (shareable.isNotEmpty()) shareNetworkFiles(shareable)
             }
+            pm.ACTION_OPEN_WITH -> {
+                if (selected.size == 1 && !selected.first().isDirectory) {
+                    cacheNetworkFile(selected.first()) { localFile ->
+                        FileViewerRouter.showOpenWithDialog(this, localFile, isNetwork = true)
+                    }
+                }
+            }
+            pm.ACTION_OPEN_AS -> {
+                if (selected.size == 1 && !selected.first().isDirectory) {
+                    cacheNetworkFile(selected.first()) { localFile ->
+                        OpenAsBottomSheet.newInstance(localFile.absolutePath, selected.first().name, true)
+                            .show(supportFragmentManager, OpenAsBottomSheet.TAG)
+                    }
+                }
+            }
+            pm.ACTION_EXTRACT_SUBTITLES -> {
+                if (selected.size == 1 && !selected.first().isDirectory) {
+                    extractSubtitlesFromNetworkVideo(selected.first())
+                }
+            }
+            pm.ACTION_EXTRACT_AUDIO -> {
+                if (selected.size == 1 && !selected.first().isDirectory) {
+                    extractAudioFromNetworkVideo(selected.first())
+                }
+            }
+            pm.ACTION_CONVERT_TO_MP4 -> {
+                if (selected.size == 1 && !selected.first().isDirectory) {
+                    convertNetworkVideoToMp4(selected.first())
+                }
+            }
             pm.ACTION_COMPRESS -> showArchiveOptions(selected)
             pm.ACTION_EXTRACT -> {
                 val archives = selected.filter { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchiveExtension(it.name.substringAfterLast('.')) }
@@ -2984,7 +3064,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         },
                         allAudioSelected = netFiles.isNotEmpty() && netFiles.all {
                             !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.name.substringAfterLast('.'))
-                        }
+                        },
+                        allVideosSelected = netFiles.isNotEmpty() && netFiles.all {
+                            !it.isDirectory && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(it.name.substringAfterLast('.'))
+                        },
+                        hasDirectories = netFiles.any { it.isDirectory }
                     )
                     floatingQuickBar?.bindSelection(state)
                     floatingQuickBar?.showAnimated { updateFabPositions() }
@@ -6486,6 +6570,321 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun cacheNetworkFile(file: NetworkFile, onReady: (File) -> Unit) {
+        val snack = com.google.android.material.snackbar.Snackbar.make(
+            findViewById(R.id.main), getString(R.string.opening_filename, file.name), com.google.android.material.snackbar.Snackbar.LENGTH_INDEFINITE)
+        snack.show()
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val safeName = file.name.replace(Regex("[/\\\\:*?\"<>|]"), "_")
+                val cacheFile = File(cacheDir, "ufm_open_$safeName")
+                val inStream = when (share.type) {
+                    ShareType.SMB -> SmbShareClient.openInputStream(share, file.path)
+                    ShareType.FTP -> FtpShareClient.openInputStream(share, file.path)
+                    ShareType.TV  -> TvShareClient.openInputStream(share, file.path)
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, file.path)
+                    ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, file.path).first
+                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, file.path).first
+                    ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, file.path).first
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, file.path).first
+                    ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, file.path).first
+                    ShareType.NFS                         -> NfsShareClient.openInputStream(share, file.path)
+                    ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, file.path)
+                }
+                inStream.use { inp -> cacheFile.outputStream().use { out -> inp.copyTo(out) } }
+                withContext(Dispatchers.Main) {
+                    snack.dismiss()
+                    onReady(cacheFile)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    snack.dismiss()
+                    Toast.makeText(this@NetworkBrowserActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun extractSubtitlesFromNetworkVideo(file: NetworkFile) {
+        val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+            this@NetworkBrowserActivity,
+            getString(R.string.extracting_subtitles),
+            file.name,
+            R.drawable.ic_subtitles
+        )
+        progress.show()
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val safeName = file.name.replace(Regex("[/\\\\:*?\"<>|]"), "_")
+                val cacheFile = File(cacheDir, "ufm_extract_$safeName")
+                val inStream = when (share.type) {
+                    ShareType.SMB -> SmbShareClient.openInputStream(share, file.path)
+                    ShareType.FTP -> FtpShareClient.openInputStream(share, file.path)
+                    ShareType.TV  -> TvShareClient.openInputStream(share, file.path)
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, file.path)
+                    ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, file.path).first
+                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, file.path).first
+                    ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, file.path).first
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, file.path).first
+                    ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, file.path).first
+                    ShareType.NFS                         -> NfsShareClient.openInputStream(share, file.path)
+                    ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, file.path)
+                }
+                inStream.use { inp -> cacheFile.outputStream().use { out -> inp.copyTo(out) } }
+                val info = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfo(cacheFile)
+                val subStreams = info?.subtitleStreams ?: emptyList()
+
+                withContext(Dispatchers.Main) {
+                    if (subStreams.isEmpty()) {
+                        progress.dismiss()
+                        Toast.makeText(this@NetworkBrowserActivity, R.string.no_subtitles_found_in_video, Toast.LENGTH_SHORT).show()
+                        return@withContext
+                    }
+
+                    if (subStreams.size == 1) {
+                        val stream = subStreams.first()
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            val result = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractSubtitles(cacheFile, stream.index, stream.lang)
+                            if (result != null) {
+                                if (!share.readOnly) {
+                                    val destRemotePath = if (currentPath.isEmpty()) result.name else "$currentPath/${result.name}"
+                                    uploadLocalEntryToNetwork(result, destRemotePath)
+                                }
+                                withContext(Dispatchers.Main) {
+                                    progress.dismiss()
+                                    fileAdapter.exitSelectionMode()
+                                    Toast.makeText(this@NetworkBrowserActivity, getString(R.string.subtitles_extracted_success) + "\n" + result.name, Toast.LENGTH_LONG).show()
+                                    loadDirectory()
+                                }
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    progress.dismiss()
+                                    Toast.makeText(this@NetworkBrowserActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    } else {
+                        progress.dismiss()
+                        val sheet = za.kilowatch.ultimatefilemanager.viewer.SubtitleTrackBottomSheet.newInstance(file.name, subStreams)
+                        sheet.onTrackSelected = { streamIndex, langTag, extractAll ->
+                            val trackProgress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+                                this@NetworkBrowserActivity,
+                                getString(R.string.extracting_subtitles),
+                                file.name,
+                                R.drawable.ic_subtitles
+                            )
+                            trackProgress.show()
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                if (extractAll) {
+                                    val results = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractAllSubtitles(cacheFile, subStreams)
+                                    for (res in results) {
+                                        if (!share.readOnly) {
+                                            val destRemotePath = if (currentPath.isEmpty()) res.name else "$currentPath/${res.name}"
+                                            uploadLocalEntryToNetwork(res, destRemotePath)
+                                        }
+                                    }
+                                    withContext(Dispatchers.Main) {
+                                        trackProgress.dismiss()
+                                        fileAdapter.exitSelectionMode()
+                                        if (results.isNotEmpty()) {
+                                            Toast.makeText(this@NetworkBrowserActivity, getString(R.string.subtitles_extracted_multiple_success, results.size), Toast.LENGTH_LONG).show()
+                                        } else {
+                                            Toast.makeText(this@NetworkBrowserActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                                        }
+                                        loadDirectory()
+                                    }
+                                } else {
+                                    val result = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractSubtitles(cacheFile, streamIndex, langTag)
+                                    if (result != null) {
+                                        if (!share.readOnly) {
+                                            val destRemotePath = if (currentPath.isEmpty()) result.name else "$currentPath/${result.name}"
+                                            uploadLocalEntryToNetwork(result, destRemotePath)
+                                        }
+                                        withContext(Dispatchers.Main) {
+                                            trackProgress.dismiss()
+                                            fileAdapter.exitSelectionMode()
+                                            Toast.makeText(this@NetworkBrowserActivity, getString(R.string.subtitles_extracted_success) + "\n" + result.name, Toast.LENGTH_LONG).show()
+                                            loadDirectory()
+                                        }
+                                    } else {
+                                        withContext(Dispatchers.Main) {
+                                            trackProgress.dismiss()
+                                            Toast.makeText(this@NetworkBrowserActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        sheet.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.viewer.SubtitleTrackBottomSheet.TAG)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progress.dismiss()
+                    Toast.makeText(this@NetworkBrowserActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun extractAudioFromNetworkVideo(file: NetworkFile) {
+        val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+            this@NetworkBrowserActivity,
+            getString(R.string.extracting_audio),
+            file.name,
+            R.drawable.ic_audio
+        )
+        progress.show()
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val safeName = file.name.replace(Regex("[/\\\\:*?\"<>|]"), "_")
+                val cacheFile = File(cacheDir, "ufm_extract_$safeName")
+                val inStream = when (share.type) {
+                    ShareType.SMB -> SmbShareClient.openInputStream(share, file.path)
+                    ShareType.FTP -> FtpShareClient.openInputStream(share, file.path)
+                    ShareType.TV  -> TvShareClient.openInputStream(share, file.path)
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, file.path)
+                    ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, file.path).first
+                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, file.path).first
+                    ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, file.path).first
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, file.path).first
+                    ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, file.path).first
+                    ShareType.NFS                         -> NfsShareClient.openInputStream(share, file.path)
+                    ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, file.path)
+                }
+                inStream.use { inp -> cacheFile.outputStream().use { out -> inp.copyTo(out) } }
+                val info = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfo(cacheFile)
+                val audioStreams = info?.audioStreams ?: emptyList()
+
+                withContext(Dispatchers.Main) {
+                    if (audioStreams.isEmpty()) {
+                        progress.dismiss()
+                        Toast.makeText(this@NetworkBrowserActivity, R.string.no_audio_found_in_video, Toast.LENGTH_SHORT).show()
+                        return@withContext
+                    }
+
+                    progress.dismiss()
+                    val sheet = za.kilowatch.ultimatefilemanager.viewer.AudioTrackBottomSheet.newInstance(file.name, audioStreams)
+                    sheet.onTrackSelected = { streamIndex, langTag, extractAll, universalM4a ->
+                        val trackProgress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+                            this@NetworkBrowserActivity,
+                            getString(R.string.extracting_audio),
+                            file.name,
+                            R.drawable.ic_audio
+                        )
+                        trackProgress.show()
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            if (extractAll) {
+                                val results = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractAllAudio(cacheFile, audioStreams, universalAac = universalM4a)
+                                for (res in results) {
+                                    if (!share.readOnly) {
+                                        val destRemotePath = if (currentPath.isEmpty()) res.name else "$currentPath/${res.name}"
+                                        uploadLocalEntryToNetwork(res, destRemotePath)
+                                    }
+                                }
+                                withContext(Dispatchers.Main) {
+                                    trackProgress.dismiss()
+                                    fileAdapter.exitSelectionMode()
+                                    if (results.isNotEmpty()) {
+                                        Toast.makeText(this@NetworkBrowserActivity, getString(R.string.audio_extracted_multiple_success, results.size), Toast.LENGTH_LONG).show()
+                                    } else {
+                                        Toast.makeText(this@NetworkBrowserActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                                    }
+                                    loadDirectory()
+                                }
+                            } else {
+                                val result = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractAudio(cacheFile, streamIndex, langTag, universalAac = universalM4a)
+                                if (result != null) {
+                                    if (!share.readOnly) {
+                                        val destRemotePath = if (currentPath.isEmpty()) result.name else "$currentPath/${result.name}"
+                                        uploadLocalEntryToNetwork(result, destRemotePath)
+                                    }
+                                    withContext(Dispatchers.Main) {
+                                        trackProgress.dismiss()
+                                        fileAdapter.exitSelectionMode()
+                                        Toast.makeText(this@NetworkBrowserActivity, getString(R.string.audio_extracted_success) + "\n" + result.name, Toast.LENGTH_LONG).show()
+                                        loadDirectory()
+                                    }
+                                } else {
+                                    withContext(Dispatchers.Main) {
+                                        trackProgress.dismiss()
+                                        Toast.makeText(this@NetworkBrowserActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    sheet.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.viewer.AudioTrackBottomSheet.TAG)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progress.dismiss()
+                    Toast.makeText(this@NetworkBrowserActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun convertNetworkVideoToMp4(file: NetworkFile) {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.convert_to_mp4_title)
+            .setMessage(getString(R.string.convert_to_mp4_confirm, file.name))
+            .setPositiveButton(R.string.action_convert_to_mp4) { _, _ ->
+                val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+                    this@NetworkBrowserActivity,
+                    getString(R.string.convert_to_mp4_progress),
+                    file.name,
+                    R.drawable.ic_convert_video
+                )
+                progress.show()
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val safeName = file.name.replace(Regex("[/\\\\:*?\"<>|]"), "_")
+                        val cacheFile = File(cacheDir, "ufm_convert_$safeName")
+                        val inStream = when (share.type) {
+                            ShareType.SMB -> SmbShareClient.openInputStream(share, file.path)
+                            ShareType.FTP -> FtpShareClient.openInputStream(share, file.path)
+                            ShareType.TV  -> TvShareClient.openInputStream(share, file.path)
+                            ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, file.path)
+                            ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, file.path).first
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, file.path).first
+                            ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, file.path).first
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, file.path).first
+                            ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, file.path).first
+                            ShareType.NFS                         -> NfsShareClient.openInputStream(share, file.path)
+                            ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, file.path)
+                        }
+                        inStream.use { inp -> cacheFile.outputStream().use { out -> inp.copyTo(out) } }
+                        val result = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.convertToMp4(cacheFile)
+                        if (result != null) {
+                            if (!share.readOnly) {
+                                val destRemotePath = if (currentPath.isEmpty()) result.name else "$currentPath/${result.name}"
+                                uploadLocalEntryToNetwork(result, destRemotePath)
+                            }
+                            withContext(Dispatchers.Main) {
+                                progress.dismiss()
+                                fileAdapter.exitSelectionMode()
+                                Toast.makeText(this@NetworkBrowserActivity, getString(R.string.convert_to_mp4_success, result.name), Toast.LENGTH_LONG).show()
+                                loadDirectory()
+                            }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                progress.dismiss()
+                                Toast.makeText(this@NetworkBrowserActivity, R.string.convert_to_mp4_failed, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            progress.dismiss()
+                            Toast.makeText(this@NetworkBrowserActivity, R.string.convert_to_mp4_failed, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     /**

@@ -9,7 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -113,6 +116,10 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
     private lateinit var txtAudioAlbum: TextView
     private lateinit var rowAudioTechSpecs: View
     private lateinit var txtAudioTechSpecs: TextView
+
+    // FFmpeg Media Stream Details views
+    private lateinit var layoutMediaStreamDetails: View
+    private lateinit var tableMediaStreams: TableLayout
 
     private var filePaths: ArrayList<String> = arrayListOf()
     private var isDirList: BooleanArray = booleanArrayOf()
@@ -308,6 +315,9 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
         txtAudioAlbum = view.findViewById(R.id.txtAudioAlbum)
         rowAudioTechSpecs = view.findViewById(R.id.rowAudioTechSpecs)
         txtAudioTechSpecs = view.findViewById(R.id.txtAudioTechSpecs)
+
+        layoutMediaStreamDetails = view.findViewById(R.id.layoutMediaStreamDetails)
+        tableMediaStreams = view.findViewById(R.id.tableMediaStreams)
 
         setupWindowsProperties()
     }
@@ -591,10 +601,20 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                 layoutAudioTagDetails.visibility = View.GONE
             }
 
+            // 9. FFmpeg Media Stream Details (Single video or audio file)
+            val isVideoOrAudio = !isDirectory && !isNetwork &&
+                (FileViewerRouter.isVideo(ext) || FileViewerRouter.isAudio(ext))
+            if (isVideoOrAudio && za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isAvailable()) {
+                loadMediaStreamDetails(path)
+            } else {
+                layoutMediaStreamDetails.visibility = View.GONE
+            }
+
         } else {
             // Multiple Items Selected
             layoutApkDetails.visibility = View.GONE
             layoutAudioTagDetails.visibility = View.GONE
+            layoutMediaStreamDetails.visibility = View.GONE
             dividerRoot.visibility = View.GONE
             tableRootProperties.visibility = View.GONE
 
@@ -816,6 +836,7 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             "gif" -> Pair("GIF image (.gif)", "GIF Image (.gif)")
             "webp" -> Pair("WEBP image (.webp)", "WEBP Image (.webp)")
             "svg" -> Pair("SVG image (.svg)", "Scalable Vector Graphics (.svg)")
+            "svgz" -> Pair("Compressed SVG image (.svgz)", "Gzipped Scalable Vector Graphics (.svgz)")
             "bmp" -> Pair("BMP image (.bmp)", "Bitmap Image (.bmp)")
             "heic", "heif", "hif", "avif", "avifs" -> Pair("${ext.uppercase()} image (.${ext})", "${ext.uppercase()} Image (.${ext})")
             "jxl" -> Pair("JPEG XL image (.jxl)", "JPEG XL Image (.jxl)")
@@ -849,11 +870,12 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             "mos" -> Pair("Leaf RAW image (.mos)", "Leaf Camera RAW Image (.mos)")
             "raw" -> Pair("RAW image (.raw)", "Raw Camera Image (.raw)")
 
-            // Documents & Spreadsheets
+            // Documents, Spreadsheets & Presentations
             "pdf" -> Pair("PDF Document (.pdf)", "Adobe Acrobat Document (.pdf)")
             "doc", "docx" -> Pair("Word Document (.${ext})", "Microsoft Word Document (.${ext})")
             "xls", "xlsx", "csv" -> Pair("Excel Worksheet (.${ext})", "Microsoft Excel Worksheet (.${ext})")
-            "ppt", "pptx" -> Pair("PowerPoint Presentation (.${ext})", "Microsoft PowerPoint Presentation (.${ext})")
+            in FileViewerRouter.PRESENTATION_EXTENSIONS -> Pair("Presentation (.${ext})", "Presentation Slide Deck (.${ext})")
+            in FileViewerRouter.SUBTITLE_EXTENSIONS -> Pair("${ext.uppercase()} Subtitle (.${ext})", "${ext.uppercase()} Subtitle File (.${ext})")
             "txt" -> Pair("Text Document (.txt)", "Plain Text Document (.txt)")
             "json" -> Pair("JSON File (.json)", "JSON Source File (.json)")
             "xml" -> Pair("XML Document (.xml)", "XML Document (.xml)")
@@ -904,6 +926,8 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
         return when {
             ext in FileViewerRouter.IMAGE_EXTENSIONS -> getString(R.string.properties_viewer_photo)
             FileViewerRouter.isVideo(ext) || FileViewerRouter.isAudio(ext) -> getString(R.string.properties_viewer_player)
+            ext in FileViewerRouter.PRESENTATION_EXTENSIONS -> getString(R.string.open_as_presentation)
+            ext in FileViewerRouter.SUBTITLE_EXTENSIONS -> getString(R.string.properties_viewer_text)
             ext in FileViewerRouter.TEXT_EXTENSIONS || FileViewerRouter.isDotConfigFile(name) -> getString(R.string.properties_viewer_text)
             ext in setOf("zip", "7z", "rar", "tar", "gz", "bz2", "xz", "iso", "jar") -> getString(R.string.properties_viewer_archive)
             ext in setOf("xls", "xlsx", "csv", "xlsm", "xltx", "xltm", "xlt", "xlsb") -> getString(R.string.properties_viewer_spreadsheet)
@@ -926,7 +950,8 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             ext == "pdf" -> R.drawable.ic_file_pdf
             ext in setOf("doc", "docx") -> R.drawable.ic_file_word
             ext in setOf("xls", "xlsx", "csv", "xlsm", "xltx", "xltm", "xlt", "xlsb") -> R.drawable.ic_file_spreadsheet
-            ext in setOf("ppt", "pptx") -> R.drawable.ic_file_presentation
+            ext in FileViewerRouter.PRESENTATION_EXTENSIONS -> R.drawable.ic_file_presentation
+            ext in FileViewerRouter.SUBTITLE_EXTENSIONS -> R.drawable.ic_file_subtitle
             ext in FileViewerRouter.TEXT_EXTENSIONS || FileViewerRouter.isDotConfigFile(name) -> R.drawable.ic_file_code
             ext in setOf("apk", "aab", "xapk", "apks", "apkm") -> R.drawable.ic_file_apk
             else -> R.drawable.ic_file_generic
@@ -1295,5 +1320,86 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
                 )
             })
         }
+    }
+
+    private fun loadMediaStreamDetails(path: String) {
+        val file = File(path)
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val mediaInfo = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfo(file)
+            withContext(Dispatchers.Main) {
+                if (!isAdded || mediaInfo == null || mediaInfo.streams.isEmpty()) {
+                    layoutMediaStreamDetails.visibility = View.GONE
+                    return@withContext
+                }
+                layoutMediaStreamDetails.visibility = View.VISIBLE
+                tableMediaStreams.removeAllViews()
+
+                // Container / Format
+                addMediaPropRow(getString(R.string.media_format), mediaInfo.format.uppercase())
+
+                // Overall Bitrate
+                if (mediaInfo.bitrate > 0) {
+                    addMediaPropRow(getString(R.string.media_bitrate), "${mediaInfo.bitrate / 1000} kbps")
+                }
+
+                // Video Streams
+                mediaInfo.videoStreams.forEachIndexed { idx, v ->
+                    val label = if (mediaInfo.videoStreams.size > 1) "Video #${idx + 1}" else "Video"
+                    val desc = buildString {
+                        append(v.codec.uppercase())
+                        if (v.width > 0 && v.height > 0) append(" • ${v.width}×${v.height}")
+                        if (v.fps > 0) append(" @ ${String.format(Locale.US, "%.2f", v.fps)} fps")
+                        if (v.bitrate > 0) append(" • ${v.bitrate / 1000} kbps")
+                    }
+                    addMediaPropRow(label, desc)
+                }
+
+                // Audio Streams
+                mediaInfo.audioStreams.forEachIndexed { idx, a ->
+                    val label = if (mediaInfo.audioStreams.size > 1) "Audio #${idx + 1}" else "Audio"
+                    val desc = buildString {
+                        append(a.codec.uppercase())
+                        if (a.channels > 0) append(" • ${a.channels} ch")
+                        if (a.sampleRate > 0) append(" • ${a.sampleRate} Hz")
+                        if (a.lang.isNotEmpty()) append(" • ${a.lang.uppercase()}")
+                        if (a.title.isNotEmpty()) append(" (${a.title})")
+                    }
+                    addMediaPropRow(label, desc)
+                }
+
+                // Subtitle Streams
+                mediaInfo.subtitleStreams.forEachIndexed { idx, s ->
+                    val label = if (mediaInfo.subtitleStreams.size > 1) "Subtitle #${idx + 1}" else "Subtitle"
+                    val desc = buildString {
+                        append(s.codec.uppercase())
+                        if (s.lang.isNotEmpty()) append(" • ${s.lang.uppercase()}")
+                        if (s.title.isNotEmpty()) append(" (${s.title})")
+                    }
+                    addMediaPropRow(label, desc)
+                }
+            }
+        }
+    }
+
+    private fun addMediaPropRow(label: String, value: String) {
+        val ctx = context ?: return
+        val row = TableRow(ctx).apply {
+            setPadding(0, 0, 0, (6 * resources.displayMetrics.density).toInt())
+        }
+        val lbl = TextView(ctx).apply {
+            text = label
+            setTextColor(ContextCompat.getColor(ctx, R.color.mobile_text_secondary))
+            textSize = 13f
+            setPadding(0, 0, (16 * resources.displayMetrics.density).toInt(), 0)
+        }
+        val valTxt = TextView(ctx).apply {
+            text = value
+            setTextColor(ContextCompat.getColor(ctx, R.color.mobile_text_primary))
+            textSize = 13f
+            typeface = android.graphics.Typeface.MONOSPACE
+        }
+        row.addView(lbl)
+        row.addView(valTxt)
+        tableMediaStreams.addView(row)
     }
 }

@@ -110,6 +110,8 @@ class ToolbarIconsActivity : AppCompatActivity() {
                     ToolbarItem(R.drawable.ic_move, R.string.action_move, R.string.toolbar_desc_move, ToolbarIconsPreferenceManager.KEY_MOVE, "toolbar_move"),
                     ToolbarItem(R.drawable.ic_rename, R.string.action_rename, R.string.toolbar_desc_rename, ToolbarIconsPreferenceManager.KEY_RENAME, "toolbar_rename"),
                     ToolbarItem(R.drawable.ic_share, R.string.action_share, R.string.toolbar_desc_share, ToolbarIconsPreferenceManager.KEY_SHARE, "toolbar_share"),
+                    ToolbarItem(R.drawable.ic_apps, R.string.toolbar_open_with, R.string.action_open_with, ToolbarIconsPreferenceManager.KEY_OPEN_WITH, "toolbar_open_with"),
+                    ToolbarItem(R.drawable.ic_apps, R.string.toolbar_open_as, R.string.action_open_as, ToolbarIconsPreferenceManager.KEY_OPEN_AS, "toolbar_open_as"),
                     ToolbarItem(R.drawable.ic_delete, R.string.action_delete, R.string.toolbar_desc_delete, ToolbarIconsPreferenceManager.KEY_DELETE, "toolbar_delete")
                 )
             ),
@@ -151,6 +153,9 @@ class ToolbarIconsActivity : AppCompatActivity() {
                     ToolbarItem(R.drawable.ic_music_tag, R.string.action_music_tagger, R.string.toolbar_desc_music_tagger, ToolbarIconsPreferenceManager.KEY_MUSIC_TAGGER, "toolbar_music_tagger", mobileOnly = true),
                     ToolbarItem(R.drawable.ic_duplicate_finder, R.string.action_duplicate_finder, R.string.toolbar_desc_duplicate_finder, ToolbarIconsPreferenceManager.KEY_DUPLICATE_FINDER, "toolbar_duplicate_finder"),
                     ToolbarItem(R.drawable.ic_folder_large_files, R.string.action_large_files_finder, R.string.toolbar_desc_large_files_finder, ToolbarIconsPreferenceManager.KEY_LARGE_FILES_FINDER, "toolbar_large_files_finder"),
+                    ToolbarItem(R.drawable.ic_subtitles, R.string.toolbar_extract_subtitles, R.string.action_extract_subtitles, ToolbarIconsPreferenceManager.KEY_EXTRACT_SUBTITLES, "toolbar_extract_subtitles"),
+                    ToolbarItem(R.drawable.ic_audio_track, R.string.toolbar_extract_audio, R.string.action_extract_audio, ToolbarIconsPreferenceManager.KEY_EXTRACT_AUDIO, "toolbar_extract_audio"),
+                    ToolbarItem(R.drawable.ic_convert_video, R.string.toolbar_convert_to_mp4, R.string.action_convert_to_mp4, ToolbarIconsPreferenceManager.KEY_CONVERT_TO_MP4, "toolbar_convert_to_mp4"),
                     ToolbarItem(R.drawable.ic_checksum, R.string.action_checksum, R.string.toolbar_desc_checksum, ToolbarIconsPreferenceManager.KEY_CHECKSUM, "toolbar_checksum")
                 )
             )
@@ -173,6 +178,8 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.ACTION_COPY -> QuickActionDef(pm.ACTION_COPY, R.string.action_copy, R.drawable.ic_copy, "toolbar_copy")
             pm.ACTION_RENAME -> QuickActionDef(pm.ACTION_RENAME, R.string.action_rename, R.drawable.ic_edit, "toolbar_rename")
             pm.ACTION_SHARE -> QuickActionDef(pm.ACTION_SHARE, R.string.action_share, R.drawable.ic_share, "toolbar_share")
+            pm.ACTION_OPEN_WITH -> QuickActionDef(pm.ACTION_OPEN_WITH, R.string.toolbar_open_with, R.drawable.ic_apps, "toolbar_open_with")
+            pm.ACTION_OPEN_AS -> QuickActionDef(pm.ACTION_OPEN_AS, R.string.toolbar_open_as, R.drawable.ic_apps, "toolbar_open_as")
             pm.ACTION_PROTECT_UNPROTECT -> QuickActionDef(pm.ACTION_PROTECT_UNPROTECT, R.string.quick_bar_action_protect_unprotect, R.drawable.ic_shield_protected, "toolbar_protect")
             pm.ACTION_HIDE_UNHIDE -> QuickActionDef(pm.ACTION_HIDE_UNHIDE, R.string.quick_bar_action_hide_unhide, R.drawable.ic_eye_off, "toolbar_hide")
             pm.ACTION_PIN_UNPIN -> QuickActionDef(pm.ACTION_PIN_UNPIN, R.string.quick_bar_action_pin_unpin, R.drawable.ic_paperclip, "toolbar_pin")
@@ -191,6 +198,9 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.ACTION_MUSIC_TAGGER -> QuickActionDef(pm.ACTION_MUSIC_TAGGER, R.string.action_music_tagger, R.drawable.ic_music_tag, "toolbar_music_tagger")
             pm.ACTION_DUPLICATE_FINDER -> QuickActionDef(pm.ACTION_DUPLICATE_FINDER, R.string.action_duplicate_finder, R.drawable.ic_duplicate_finder, "toolbar_duplicate_finder")
             pm.ACTION_LARGE_FILES_FINDER -> QuickActionDef(pm.ACTION_LARGE_FILES_FINDER, R.string.action_large_files_finder, R.drawable.ic_folder_large_files, "toolbar_large_files_finder")
+            pm.ACTION_EXTRACT_SUBTITLES -> QuickActionDef(pm.ACTION_EXTRACT_SUBTITLES, R.string.toolbar_extract_subtitles, R.drawable.ic_subtitles, "toolbar_extract_subtitles")
+            pm.ACTION_EXTRACT_AUDIO -> QuickActionDef(pm.ACTION_EXTRACT_AUDIO, R.string.toolbar_extract_audio, R.drawable.ic_audio_track, "toolbar_extract_audio")
+            pm.ACTION_CONVERT_TO_MP4 -> QuickActionDef(pm.ACTION_CONVERT_TO_MP4, R.string.toolbar_convert_to_mp4, R.drawable.ic_convert_video, "toolbar_convert_to_mp4")
             pm.ACTION_CREATE_NEW -> QuickActionDef(pm.ACTION_CREATE_NEW, R.string.cd_create_new, R.drawable.ic_create_new, "toolbar_create_new")
             pm.ACTION_RETRIGGER_THUMBNAILS -> QuickActionDef(pm.ACTION_RETRIGGER_THUMBNAILS, R.string.action_retrigger_thumbnails, R.drawable.ic_photo_video, "toolbar_retrigger_thumbnails")
             pm.ACTION_COPY_ENCRYPT -> QuickActionDef(pm.ACTION_COPY_ENCRYPT, R.string.action_copy_encrypt, R.drawable.ic_copy_encrypt, "toolbar_copy_encrypt")
@@ -232,6 +242,11 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.KEY_MUSIC_TAGGER -> pm.ACTION_MUSIC_TAGGER
             pm.KEY_DUPLICATE_FINDER -> pm.ACTION_DUPLICATE_FINDER
             pm.KEY_LARGE_FILES_FINDER -> pm.ACTION_LARGE_FILES_FINDER
+            pm.KEY_OPEN_WITH -> pm.ACTION_OPEN_WITH
+            pm.KEY_OPEN_AS -> pm.ACTION_OPEN_AS
+            pm.KEY_EXTRACT_SUBTITLES -> pm.ACTION_EXTRACT_SUBTITLES
+            pm.KEY_EXTRACT_AUDIO -> pm.ACTION_EXTRACT_AUDIO
+            pm.KEY_CONVERT_TO_MP4 -> pm.ACTION_CONVERT_TO_MP4
             pm.KEY_CHECKSUM -> pm.ACTION_CHECKSUM
             else -> prefKey
         }

@@ -57,6 +57,7 @@ if (ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "armeabi-v7a")
     import_ffmpeg_lib(avcodec)
     import_ffmpeg_lib(avformat)
     import_ffmpeg_lib(swscale)
+    import_ffmpeg_lib(swresample)
 
     add_library(ffmpeg_jni SHARED ffmpeg_jni.c)
 
@@ -69,6 +70,7 @@ if (ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "armeabi-v7a")
         avcodec
         avutil
         swscale
+        swresample
         jnigraphics
         log
     )

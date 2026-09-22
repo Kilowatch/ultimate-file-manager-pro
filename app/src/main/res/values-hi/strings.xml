@@ -15078,6 +15078,111 @@ USB OTG ड्राइव सिम्युलेट करें
     <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
     <string name="backup_pref_grid_text_position">Grid text placement settings</string>
     <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    
+    <!-- Universal File Opening, Presentation Viewer & Open As -->
+    <string name="open_as">Open As…</string>
+    <string name="open_as_desc">Choose a viewer or player to open this file</string>
+    <string name="presentation_viewer">Presentation Viewer</string>
+    <string name="slide_counter">Slide %1$d of %2$d</string>
+    <string name="open_in_powerpoint">Open in Presentation App</string>
+    <string name="open_as_text">Text / Code Viewer</string>
+    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
+    <string name="open_as_hex">Hex / Binary Viewer</string>
+    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
+    <string name="open_as_presentation">Presentation / Slide Deck</string>
+    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
+    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
+    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
+    <string name="open_as_image">Image Viewer</string>
+    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
+    <string name="open_as_audio">Audio Player</string>
+    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
+    <string name="open_as_video">Video Player</string>
+    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
+    <string name="open_as_archive">Archive Browser</string>
+    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
+    <string name="open_as_other">Choose External App…</string>
+    <string name="open_as_other_desc">Open with an installed third-party app</string>
+    <string name="speaker_notes">Speaker Notes</string>
+    <string name="no_slides_found">No slides found in this presentation</string>
+    <string name="next_slide">Next Slide</string>
+    <string name="prev_slide">Previous Slide</string>
+    <string name="view_raw_text">View as Raw Text</string>
+    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
+    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
+    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
+    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+
+    <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
+    <string name="action_open_with">Open With…</string>
+    <string name="action_open_as">Open As…</string>
+    <string name="toolbar_open_with">Open With</string>
+    <string name="toolbar_open_as">Open As</string>
+    <string name="action_extract_subtitles">Extract Subtitles</string>
+    <string name="action_extract_audio">Extract Audio</string>
+    <string name="action_convert_to_mp4">
+Convert to MP4
+</string>
+    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
+    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_convert_to_mp4">
+Convert to MP4
+</string>
+    <string name="extracting_subtitles">Extracting subtitle track…</string>
+    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="convert_to_mp4_progress">
+Converting video to MP4…
+</string>
+    <string name="convert_to_mp4_success">
+Video converted to %1$s
+</string>
+    <string name="convert_to_mp4_failed">
+Failed to convert video
+</string>
+    <string name="convert_to_mp4_title">
+Convert to MP4
+</string>
+    <string name="convert_to_mp4_confirm">
+Convert \"%1$s\" to universal MP4 format?
+</string>
+    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
+    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
+    <string name="media_technical_details">Media Stream Details</string>
+    <string name="media_format">Container</string>
+    <string name="media_bitrate">Overall Bitrate</string>
+    <string name="error_generic">An error occurred</string>
+    <string name="failed_to_open_file">Failed to open file</string>
+    <string name="slide_badge_format">Slide %1$d</string>
+    <string name="slide_counter_format">Slide %1$d of %2$d</string>
+    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="select_subtitle_track">
+Select Subtitle Track
+</string>
+    <string name="extract_all_subtitles">
+Extract All Tracks
+</string>
+    <string name="extract_all_subtitles_desc">
+Extract all %1$d subtitle tracks into separate files
+</string>
+    <string name="subtitles_extracted_multiple_success">
+Successfully extracted %1$d subtitle files.
+</string>
+    <string name="select_audio_track">
+Select Audio Track
+</string>
+    <string name="extract_all_audio">
+Extract All Tracks
+</string>
+    <string name="extract_all_audio_desc">
+Extract all %1$d audio tracks into separate files
+</string>
+    <string name="audio_extracted_multiple_success">
+Successfully extracted %1$d audio files.
+</string>
+    <string name="no_audio_found_in_video">
+No audio tracks found in this video
+</string>
 </resources>
 
 

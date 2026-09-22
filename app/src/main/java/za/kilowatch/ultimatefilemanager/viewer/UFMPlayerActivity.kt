@@ -282,6 +282,14 @@ class UFMPlayerActivity : AppCompatActivity() {
                 p?.currentTracks?.let { tracks ->
                     if (!tracks.isEmpty) detectAndUpdateTracks(tracks)
                 }
+                // Proactively check cinema audio decoder availability
+                val startPath = currentTrackInfo?.path ?: initialPath
+                val startExt = startPath.substringAfterLast('.', "").lowercase()
+                if (za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isCinemaAudioExtension(startExt)) {
+                    if (!za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.hasDecoderForAudioExtension(startExt)) {
+                        checkAndPromptCinemaAudioFallback("Device lacks decoder for $startExt")
+                    }
+                }
                 // Register to receive callbacks
                 svc.registerCallback(playbackCallback)
                 // Push current state
@@ -317,25 +325,33 @@ class UFMPlayerActivity : AppCompatActivity() {
     private val playbackCallback = object : UFMPlaybackService.PlaybackCallback {
         override fun onProgressUpdate(position: Long, duration: Long) {
             if (!isTracking && !(isTv && isTvSeeking) && !isPiP) {
-                if (duration > 0) {
-                    seekBar.max = duration.toInt()
+                val effDur = if (duration > 0) duration else (playbackService?.duration ?: 0L)
+                if (effDur > 0) {
+                    seekBar.max = effDur.toInt()
                     if (isTv) {
                         val skipMs = PlayerPreferencesManager.getSkipLengthMs(this@UFMPlayerActivity).toInt()
-                        val step = if (skipMs > 0) skipMs else (duration / 100).toInt().coerceIn(5_000, 60_000)
+                        val step = if (skipMs > 0) skipMs else (effDur / 100).toInt().coerceIn(5_000, 60_000)
                         seekBar.keyProgressIncrement = step
                     }
                     seekBar.progress = position.toInt()
-                    updateTimeLabels(position.toInt(), duration.toInt())
+                    updateTimeLabels(position.toInt(), effDur.toInt())
                 }
             }
         }
 
         override fun onTrackChanged(trackInfo: QueueItem?) {
             runOnUiThread {
+                cinemaFallbackPromptedPath = null
                 currentTrackInfo = trackInfo
                 hasPendingNextTrack = false
                 nextTrackOverlay.hideImmediately()
                 if (trackInfo != null) {
+                    val ext = trackInfo.path.substringAfterLast('.', "").lowercase()
+                    if (za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isCinemaAudioExtension(ext)) {
+                        if (!za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.hasDecoderForAudioExtension(ext)) {
+                            checkAndPromptCinemaAudioFallback("Device lacks decoder for $ext")
+                        }
+                    }
                     val fileName = trackInfo.path.substringAfterLast("/")
                     txtTitle.text = trackInfo.title ?: fileName
 
@@ -472,6 +488,8 @@ class UFMPlayerActivity : AppCompatActivity() {
         override fun onQueueChanged(queue: List<QueueItem>) {
             runOnUiThread {
                 val currentIdx = playbackService?.queueManager?.currentIndex ?: currentIndex
+                playlist.clear()
+                playlist.addAll(queue.map { it.path })
                 queueAdapter?.updateData(queue.toMutableList(), currentIdx)
                 if (isTv) {
                     tvPlaylistAdapter?.updateItems(queue, currentIdx)
@@ -489,9 +507,80 @@ class UFMPlayerActivity : AppCompatActivity() {
         override fun onError(error: String) {
             runOnUiThread {
                 bufferingLayout.visibility = View.GONE
-                Toast.makeText(this@UFMPlayerActivity, error, Toast.LENGTH_LONG).show()
+                if (!checkAndPromptCinemaAudioFallback(error)) {
+                    Toast.makeText(this@UFMPlayerActivity, error, Toast.LENGTH_LONG).show()
+                }
             }
         }
+    }
+
+    private var cinemaFallbackPromptedPath: String? = null
+
+    private fun checkAndPromptCinemaAudioFallback(error: String): Boolean {
+        if (isFinishing || isDestroyed) return false
+        val currentItem = playbackService?.queueManager?.currentItem ?: currentTrackInfo
+        val path = currentItem?.path ?: initialPath
+        if (path.isEmpty()) return false
+
+        if (cinemaFallbackPromptedPath == path) return true
+
+        val ext = path.substringAfterLast('.', "").lowercase()
+        val isCinemaExt = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isCinemaAudioExtension(ext)
+        val isDecoderIssue = error.contains("Decoder init failed", ignoreCase = true)
+            || error.contains("eac3", ignoreCase = true)
+            || error.contains("ac3", ignoreCase = true)
+            || error.contains("dts", ignoreCase = true)
+            || error.contains("audio/eac3", ignoreCase = true)
+            || error.contains("None of the available extractors", ignoreCase = true)
+            || error.contains("Device lacks decoder", ignoreCase = true)
+            || error.contains("Unsupported audio codec", ignoreCase = true)
+
+        if (!isCinemaExt && !isDecoderIssue) return false
+
+        val file = File(path)
+        if (!file.exists() || !file.canRead()) return false
+
+        cinemaFallbackPromptedPath = path
+
+        val displayCodec = when (ext) {
+            "eac3", "ec3" -> "Dolby Digital Plus (E-AC-3)"
+            "ac3" -> "Dolby Digital (AC-3)"
+            "dts", "dtshd" -> "DTS Audio"
+            "truehd", "thd" -> "Dolby TrueHD"
+            else -> ext.uppercase()
+        }
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.codec_unsupported_title)
+            .setMessage(getString(R.string.codec_unsupported_message, displayCodec))
+            .setPositiveButton(R.string.convert_and_play) { _, _ ->
+                val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+                    this@UFMPlayerActivity,
+                    getString(R.string.converting_audio),
+                    file.name,
+                    R.drawable.ic_audio
+                )
+                progress.show()
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val converted = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.transcodeToM4a(file)
+                    withContext(Dispatchers.Main) {
+                        progress.dismiss()
+                        if (converted != null && converted.exists()) {
+                            val newPath = converted.absolutePath
+                            txtTitle.text = converted.name
+                            playbackService?.replaceCurrentTrackAndPlay(newPath)
+                        } else {
+                            Toast.makeText(this@UFMPlayerActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                Toast.makeText(this@UFMPlayerActivity, error, Toast.LENGTH_LONG).show()
+            }
+            .show()
+
+        return true
     }
 
     // ── Auto-hide Controls ──────────────────────────────────────────
@@ -518,7 +607,21 @@ class UFMPlayerActivity : AppCompatActivity() {
             val svc = playbackService
             if (svc != null && !isTracking && !(isTv && isTvSeeking) && !isPiP) {
                 val pos = svc.currentPosition
-                val dur = svc.duration
+                var dur = svc.duration
+                if (dur <= 0) {
+                    val qDur = currentTrackInfo?.duration ?: 0L
+                    dur = if (qDur > 0) qDur else {
+                        try {
+                            val p = svc.queueManager.currentItem?.path ?: initialPath
+                            if (p.isNotEmpty()) {
+                                val f = File(p)
+                                if (f.exists() && f.canRead()) {
+                                    (za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfo(f)?.durationSec ?: 0L) * 1000L
+                                } else 0L
+                            } else 0L
+                        } catch (_: Exception) { 0L }
+                    }
+                }
                 if (dur > 0) {
                     seekBar.max = dur.toInt()
                     if (isTv) {
@@ -1663,6 +1766,12 @@ class UFMPlayerActivity : AppCompatActivity() {
         currentAudioTracks = audioTracks
         val allSubtitles = embeddedSubtitles + externalSubtitleInfos
         currentSubtitleTracks = allSubtitles
+
+        val audioGroups = tracks.groups.filter { it.type == C.TRACK_TYPE_AUDIO }
+        if (audioGroups.isNotEmpty() && audioGroups.none { it.isTrackSupported(0) }) {
+            val mime = audioGroups.firstOrNull()?.getTrackFormat(0)?.sampleMimeType ?: ""
+            checkAndPromptCinemaAudioFallback("Device lacks decoder for $mime")
+        }
 
         val anySubSelected = currentSubtitleTracks.any { it.isSelected }
         val hasMultipleAudio = audioTracks.size > 1

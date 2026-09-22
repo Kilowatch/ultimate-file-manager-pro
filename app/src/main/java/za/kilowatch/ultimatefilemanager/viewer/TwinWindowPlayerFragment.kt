@@ -421,6 +421,7 @@ class TwinWindowPlayerFragment : Fragment() {
             playerView.visibility = View.VISIBLE
         }
 
+        player?.release()
         val newPlayer = ExoPlayer.Builder(requireContext()).build()
         isLocalPlayer = shareId == null
 
@@ -457,10 +458,27 @@ class TwinWindowPlayerFragment : Fragment() {
             newPlayer.setMediaSource(mediaSource)
             newPlayer.prepare()
         }
+
+        val ext = filePath.substringAfterLast('.', "").lowercase()
+        if (isLocalPlayer && za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isCinemaAudioExtension(ext)) {
+            if (!za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.hasDecoderForAudioExtension(ext)) {
+                promptCinemaAudioFallback("Device lacks decoder for $ext")
+                return
+            }
+        }
+
         player = newPlayer
         playerView.player = newPlayer
 
         newPlayer.addListener(object : Player.Listener {
+            override fun onTracksChanged(tracks: androidx.media3.common.Tracks) {
+                val audioGroups = tracks.groups.filter { it.type == androidx.media3.common.C.TRACK_TYPE_AUDIO }
+                if (audioGroups.isNotEmpty() && audioGroups.none { it.isTrackSupported(0) }) {
+                    val mime = audioGroups.firstOrNull()?.getTrackFormat(0)?.sampleMimeType ?: ""
+                    promptCinemaAudioFallback("Device lacks decoder for $mime")
+                }
+            }
+
             override fun onPlaybackStateChanged(state: Int) {
                 when (state) {
                     Player.STATE_BUFFERING -> if (!isLocalPlayer) bufferingLayout.visibility = View.VISIBLE
@@ -507,6 +525,7 @@ class TwinWindowPlayerFragment : Fragment() {
 
             override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
                 bufferingLayout.visibility = View.GONE
+                promptCinemaAudioFallback(error.message ?: "")
             }
         })
 
@@ -591,12 +610,86 @@ class TwinWindowPlayerFragment : Fragment() {
         btnRepeat.imageTintList = android.content.res.ColorStateList.valueOf(color)
     }
 
+    private var cinemaFallbackPromptedPath: String? = null
+
+    private fun promptCinemaAudioFallback(error: String) {
+        val ctx = context ?: return
+        if (!isAdded || !isLocalPlayer) return
+        if (cinemaFallbackPromptedPath == filePath) return
+
+        val ext = filePath.substringAfterLast('.', "").lowercase()
+        val isCinemaExt = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isCinemaAudioExtension(ext)
+        val isDecoderIssue = error.contains("Decoder init failed", ignoreCase = true)
+            || error.contains("eac3", ignoreCase = true)
+            || error.contains("ac3", ignoreCase = true)
+            || error.contains("dts", ignoreCase = true)
+            || error.contains("audio/eac3", ignoreCase = true)
+            || error.contains("None of the available extractors", ignoreCase = true)
+            || error.contains("Device lacks decoder", ignoreCase = true)
+            || error.contains("Unsupported audio codec", ignoreCase = true)
+
+        if (!isCinemaExt && !isDecoderIssue) return
+
+        val file = java.io.File(filePath)
+        if (!file.exists() || !file.canRead()) return
+
+        cinemaFallbackPromptedPath = filePath
+
+        val displayCodec = when (ext) {
+            "eac3", "ec3" -> "Dolby Digital Plus (E-AC-3)"
+            "ac3" -> "Dolby Digital (AC-3)"
+            "dts", "dtshd" -> "DTS Audio"
+            "truehd", "thd" -> "Dolby TrueHD"
+            else -> ext.uppercase()
+        }
+        androidx.appcompat.app.AlertDialog.Builder(ctx)
+            .setTitle(R.string.codec_unsupported_title)
+            .setMessage(getString(R.string.codec_unsupported_message, displayCodec))
+            .setPositiveButton(R.string.convert_and_play) { _, _ ->
+                val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+                    ctx,
+                    getString(R.string.converting_audio),
+                    file.name,
+                    R.drawable.ic_audio
+                )
+                progress.show()
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                    val converted = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.transcodeToM4a(file)
+                    withContext(Dispatchers.Main) {
+                        progress.dismiss()
+                        if (!isAdded) return@withContext
+                        if (converted != null && converted.exists()) {
+                            filePath = converted.absolutePath
+                            txtTitle.text = converted.name
+                            cinemaFallbackPromptedPath = null
+                            initPlayer()
+                        } else {
+                            android.widget.Toast.makeText(ctx, R.string.error_generic, android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
     private val progressUpdater = object : Runnable {
         override fun run() {
             player?.let { p ->
                 if (!isTracking && !(isTv && isTvSeeking) && p.isPlaying) {
                     val pos = p.currentPosition.toInt()
-                    val dur = p.duration
+                    var dur = p.duration
+                    if (dur <= 0L && isLocalPlayer) {
+                        try {
+                            val f = java.io.File(filePath)
+                            if (f.exists() && f.canRead()) {
+                                val mi = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfo(f)
+                                if (mi != null && mi.durationSec > 0L) {
+                                    dur = mi.durationSec * 1000L
+                                }
+                            }
+                        } catch (_: Exception) {}
+                    }
                     if (dur > 0L) {
                         seekBar.max = dur.toInt()
                         if (isTv) {
@@ -623,7 +716,18 @@ class TwinWindowPlayerFragment : Fragment() {
     private fun updateSeek() {
         player?.let { p ->
             val pos = p.currentPosition.toInt()
-            val dur = p.duration
+            var dur = p.duration
+            if (dur <= 0L && isLocalPlayer) {
+                try {
+                    val f = java.io.File(filePath)
+                    if (f.exists() && f.canRead()) {
+                        val mi = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfo(f)
+                        if (mi != null && mi.durationSec > 0L) {
+                            dur = mi.durationSec * 1000L
+                        }
+                    }
+                } catch (_: Exception) {}
+            }
             if (dur > 0L) {
                 seekBar.max = dur.toInt()
                 if (isTv) {

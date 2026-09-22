@@ -69,6 +69,13 @@ class QueueManager {
         return true
     }
 
+    /** Replace an item at [index] with [newItem]. */
+    fun replaceItem(index: Int, newItem: QueueItem) {
+        if (index in items.indices) {
+            items[index] = newItem
+        }
+    }
+
     /** Move an item from [fromIndex] to [toIndex]. */
     fun moveItem(fromIndex: Int, toIndex: Int) {
         if (fromIndex < 0 || fromIndex >= items.size) return

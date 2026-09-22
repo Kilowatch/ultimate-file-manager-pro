@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Presentation Viewer - UFM Standard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://tools.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".viewer.PresentationViewerActivity">
+
+    <!-- 72dp TV Glass Header Bar -->
+    <LinearLayout
+        android:id="@+id/layoutTvHeader"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="48dp"
+        android:background="@color/tv_glass_white_10"
+        android:elevation="4dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <ImageView
+            android:id="@+id/btnOpenExternal"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_file_presentation"
+            android:contentDescription="@string/open_in_powerpoint"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:tint="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <ImageView
+            android:id="@+id/btnViewText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_file_text"
+            android:contentDescription="@string/view_raw_text"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:tint="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="Presentation.pptx" />
+
+            <TextView
+                android:id="@+id/txtSlideCounter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                tools:text="Slide 1 of 12" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- TV Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:indeterminateTint="@color/ufm_accent" />
+
+    <!-- TV Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_file_presentation"
+            app:tint="@color/tv_text_secondary"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/no_slides_found"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- TV Presentation Body -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingHorizontal="48dp"
+        android:paddingVertical="20dp">
+
+        <!-- Slide Viewport (Card) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSlide"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:clickable="true"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/tv_glass_white_10"
+            app:cardBackgroundColor="@color/tv_dialog_background">
+
+            <ScrollView
+                android:id="@+id/scrollViewSlide"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="28dp"
+                android:clipToPadding="false">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Slide Badge -->
+                    <TextView
+                        android:id="@+id/txtSlideBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="6dp"
+                        android:background="@drawable/bg_badge"
+                        android:textColor="@color/ufm_accent"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="SLIDE 1" />
+
+                    <!-- Slide Title -->
+                    <TextView
+                        android:id="@+id/txtSlideTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="26sp"
+                        android:fontFamily="sans-serif-black"
+                        tools:text="Introduction to Architecture" />
+
+                    <!-- Slide Thumbnail / Media -->
+                    <ImageView
+                        android:id="@+id/imgSlideMedia"
+                        android:layout_width="match_parent"
+                        android:layout_height="320dp"
+                        android:layout_marginTop="20dp"
+                        android:scaleType="fitCenter"
+                        android:background="@drawable/bg_tv_card_glass"
+                        android:visibility="gone"
+                        android:contentDescription="@null"
+                        tools:visibility="visible" />
+
+                    <!-- Slide Body -->
+                    <TextView
+                        android:id="@+id/txtSlideContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="19sp"
+                        android:lineSpacingMultiplier="1.4"
+                        tools:text="• Overview of components\n• Multi-threaded extraction\n• Zero dead-end fallback guarantee" />
+
+                    <!-- Notes -->
+                    <LinearLayout
+                        android:id="@+id/layoutSpeakerNotes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="28dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_badge"
+                        android:padding="16dp"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/speaker_notes"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtSpeakerNotes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="15sp"
+                            tools:text="Emphasize performance benchmarks here." />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- TV Navigation Column -->
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="24dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPrevSlide"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="@string/prev_slide"
+                android:textColor="@color/selector_tv_button_text_yellow"
+                android:background="@drawable/selector_tv_button_yellow"
+                android:focusable="true"
+                android:clickable="true"
+                app:icon="@drawable/ic_arrow_back"
+                app:iconGravity="textStart"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/txtBottomIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="24dp"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="1 / 12" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNextSlide"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="@string/next_slide"
+                android:textColor="@color/selector_tv_button_text_yellow"
+                android:background="@drawable/selector_tv_button_yellow"
+                android:focusable="true"
+                android:clickable="true"
+                app:icon="@drawable/ic_arrow_forward"
+                app:iconGravity="textEnd"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

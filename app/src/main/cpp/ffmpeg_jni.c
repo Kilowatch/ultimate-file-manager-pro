@@ -4,6 +4,10 @@
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
+#include <libswresample/swresample.h>
+#include <libavutil/audio_fifo.h>
+#include <libavutil/channel_layout.h>
+#include <libavutil/opt.h>
 #include <libavutil/imgutils.h>
 #include <libavutil/log.h>
 
@@ -356,3 +360,834 @@ Java_za_kilowatch_ultimatefilemanager_media_FFmpegThumbnailHelper_extractFrame(
 
     return success;
 }
+
+JNIEXPORT jstring JNICALL
+Java_za_kilowatch_ultimatefilemanager_media_FFmpegMediaHelper_nativeGetMediaInfo(
+        JNIEnv *env, jobject thiz, jstring media_path) {
+    const char *path = (*env)->GetStringUTFChars(env, media_path, NULL);
+    if (!path) return NULL;
+
+    AVFormatContext *format_ctx = NULL;
+    if (avformat_open_input(&format_ctx, path, NULL, NULL) != 0) {
+        (*env)->ReleaseStringUTFChars(env, media_path, path);
+        return NULL;
+    }
+    (*env)->ReleaseStringUTFChars(env, media_path, path);
+
+    if (avformat_find_stream_info(format_ctx, NULL) < 0) {
+        avformat_close_input(&format_ctx);
+        return NULL;
+    }
+
+    char info[4096];
+    int offset = 0;
+    offset += snprintf(info + offset, sizeof(info) - offset,
+        "{\"format\":\"%s\",\"duration_sec\":%lld,\"bitrate\":%lld,\"streams\":[",
+        format_ctx->iformat ? format_ctx->iformat->name : "unknown",
+        (long long)(format_ctx->duration / AV_TIME_BASE),
+        (long long)format_ctx->bit_rate);
+
+    for (unsigned int i = 0; i < format_ctx->nb_streams; i++) {
+        AVStream *st = format_ctx->streams[i];
+        AVCodecParameters *codecpar = st->codecpar;
+        const char *type_str = "other";
+        if (codecpar->codec_type == AVMEDIA_TYPE_VIDEO) type_str = "video";
+        else if (codecpar->codec_type == AVMEDIA_TYPE_AUDIO) type_str = "audio";
+        else if (codecpar->codec_type == AVMEDIA_TYPE_SUBTITLE) type_str = "subtitle";
+
+        AVDictionaryEntry *lang_entry = av_dict_get(st->metadata, "language", NULL, 0);
+        const char *lang = lang_entry ? lang_entry->value : "";
+        AVDictionaryEntry *title_entry = av_dict_get(st->metadata, "title", NULL, 0);
+        const char *title = title_entry ? title_entry->value : "";
+
+        const char *codec_name = avcodec_get_name(codecpar->codec_id);
+
+        if (i > 0 && offset < (int)sizeof(info) - 1) {
+            offset += snprintf(info + offset, sizeof(info) - offset, ",");
+        }
+
+        if (codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
+            double fps = 0.0;
+            if (st->r_frame_rate.den > 0) {
+                fps = av_q2d(st->r_frame_rate);
+            }
+            offset += snprintf(info + offset, sizeof(info) - offset,
+                "{\"index\":%u,\"type\":\"%s\",\"codec\":\"%s\",\"width\":%d,\"height\":%d,\"fps\":%.2f,\"bitrate\":%lld,\"lang\":\"%s\",\"title\":\"%s\"}",
+                i, type_str, codec_name, codecpar->width, codecpar->height, fps, (long long)codecpar->bit_rate, lang, title);
+        } else if (codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+            offset += snprintf(info + offset, sizeof(info) - offset,
+                "{\"index\":%u,\"type\":\"%s\",\"codec\":\"%s\",\"channels\":%d,\"sample_rate\":%d,\"bitrate\":%lld,\"lang\":\"%s\",\"title\":\"%s\"}",
+                i, type_str, codec_name, codecpar->ch_layout.nb_channels, codecpar->sample_rate, (long long)codecpar->bit_rate, lang, title);
+        } else {
+            offset += snprintf(info + offset, sizeof(info) - offset,
+                "{\"index\":%u,\"type\":\"%s\",\"codec\":\"%s\",\"lang\":\"%s\",\"title\":\"%s\"}",
+                i, type_str, codec_name, lang, title);
+        }
+    }
+
+    if (offset < (int)sizeof(info) - 3) {
+        offset += snprintf(info + offset, sizeof(info) - offset, "]}");
+    }
+
+    avformat_close_input(&format_ctx);
+    return (*env)->NewStringUTF(env, info);
+}
+
+JNIEXPORT jboolean JNICALL
+Java_za_kilowatch_ultimatefilemanager_media_FFmpegMediaHelper_nativeExtractSubtitle(
+        JNIEnv *env, jobject thiz, jstring media_path, jint target_stream_idx, jstring output_path) {
+    const char *in_path = (*env)->GetStringUTFChars(env, media_path, NULL);
+    const char *out_path = (*env)->GetStringUTFChars(env, output_path, NULL);
+    if (!in_path || !out_path) {
+        if (in_path) (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        if (out_path) (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVFormatContext *in_ctx = NULL;
+    if (avformat_open_input(&in_ctx, in_path, NULL, NULL) != 0) {
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    if (avformat_find_stream_info(in_ctx, NULL) < 0) {
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    int sub_stream_idx = target_stream_idx;
+    if (sub_stream_idx < 0) {
+        for (unsigned int i = 0; i < in_ctx->nb_streams; i++) {
+            if (in_ctx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_SUBTITLE) {
+                sub_stream_idx = i;
+                break;
+            }
+        }
+    }
+
+    if (sub_stream_idx < 0 || sub_stream_idx >= (int)in_ctx->nb_streams) {
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVFormatContext *out_ctx = NULL;
+    if (avformat_alloc_output_context2(&out_ctx, NULL, "srt", out_path) < 0 || !out_ctx) {
+        if (avformat_alloc_output_context2(&out_ctx, NULL, NULL, out_path) < 0 || !out_ctx) {
+            avformat_close_input(&in_ctx);
+            (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+            (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+            return JNI_FALSE;
+        }
+    }
+
+    AVStream *in_stream = in_ctx->streams[sub_stream_idx];
+    AVStream *out_stream = avformat_new_stream(out_ctx, NULL);
+    if (!out_stream) {
+        avformat_free_context(out_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    if (avcodec_parameters_copy(out_stream->codecpar, in_stream->codecpar) < 0) {
+        avformat_free_context(out_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+    out_stream->codecpar->codec_tag = 0;
+
+    if (!(out_ctx->oformat->flags & AVFMT_NOFILE)) {
+        if (avio_open(&out_ctx->pb, out_path, AVIO_FLAG_WRITE) < 0) {
+            avformat_free_context(out_ctx);
+            avformat_close_input(&in_ctx);
+            (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+            (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+            return JNI_FALSE;
+        }
+    }
+
+    if (avformat_write_header(out_ctx, NULL) < 0) {
+        if (out_ctx->pb) avio_closep(&out_ctx->pb);
+        avformat_free_context(out_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVPacket *pkt = av_packet_alloc();
+    while (av_read_frame(in_ctx, pkt) >= 0) {
+        if (pkt->stream_index == sub_stream_idx) {
+            pkt->stream_index = out_stream->index;
+            av_packet_rescale_ts(pkt, in_stream->time_base, out_stream->time_base);
+            av_interleaved_write_frame(out_ctx, pkt);
+        }
+        av_packet_unref(pkt);
+    }
+    av_packet_free(&pkt);
+
+    av_write_trailer(out_ctx);
+
+    if (out_ctx->pb) avio_closep(&out_ctx->pb);
+    avformat_free_context(out_ctx);
+    avformat_close_input(&in_ctx);
+
+    (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+    (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+    return JNI_TRUE;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_za_kilowatch_ultimatefilemanager_media_FFmpegMediaHelper_nativeExtractAudio(
+        JNIEnv *env, jobject thiz, jstring media_path, jint target_stream_idx, jstring output_path) {
+    const char *in_path = (*env)->GetStringUTFChars(env, media_path, NULL);
+    const char *out_path = (*env)->GetStringUTFChars(env, output_path, NULL);
+    if (!in_path || !out_path) {
+        if (in_path) (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        if (out_path) (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVFormatContext *in_ctx = NULL;
+    if (avformat_open_input(&in_ctx, in_path, NULL, NULL) != 0) {
+        LOGE("nativeExtractAudio: avformat_open_input failed for %s", in_path);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    if (avformat_find_stream_info(in_ctx, NULL) < 0) {
+        LOGE("nativeExtractAudio: avformat_find_stream_info failed for %s", in_path);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    int audio_stream_idx = target_stream_idx;
+    if (audio_stream_idx < 0 || audio_stream_idx >= (int)in_ctx->nb_streams ||
+        in_ctx->streams[audio_stream_idx]->codecpar->codec_type != AVMEDIA_TYPE_AUDIO) {
+        audio_stream_idx = av_find_best_stream(in_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+    }
+
+    if (audio_stream_idx < 0) {
+        LOGE("nativeExtractAudio: no audio stream found in %s", in_path);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVStream *in_stream = in_ctx->streams[audio_stream_idx];
+
+    AVFormatContext *out_ctx = NULL;
+    if (avformat_alloc_output_context2(&out_ctx, NULL, NULL, out_path) < 0 || !out_ctx) {
+        // Fallback: try deducing format name from extension
+        const char *fmt_name = NULL;
+        if (strstr(out_path, ".ac3")) fmt_name = "ac3";
+        else if (strstr(out_path, ".eac3")) fmt_name = "eac3";
+        else if (strstr(out_path, ".dts")) fmt_name = "dts";
+        else if (strstr(out_path, ".thd") || strstr(out_path, ".truehd")) fmt_name = "truehd";
+        else if (strstr(out_path, ".wav")) fmt_name = "wav";
+        else if (strstr(out_path, ".flac")) fmt_name = "flac";
+        else if (strstr(out_path, ".opus")) fmt_name = "opus";
+        else if (strstr(out_path, ".ogg")) fmt_name = "ogg";
+        else if (strstr(out_path, ".mp3")) fmt_name = "mp3";
+        else if (strstr(out_path, ".m4a")) fmt_name = "ipod";
+        else if (strstr(out_path, ".mka")) fmt_name = "matroska";
+
+        if (fmt_name) {
+            avformat_alloc_output_context2(&out_ctx, NULL, fmt_name, out_path);
+        }
+    }
+
+    if (!out_ctx) {
+        LOGE("nativeExtractAudio: avformat_alloc_output_context2 failed for %s", out_path);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVStream *out_stream = avformat_new_stream(out_ctx, NULL);
+    if (!out_stream) {
+        LOGE("nativeExtractAudio: avformat_new_stream failed");
+        avformat_free_context(out_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    if (avcodec_parameters_copy(out_stream->codecpar, in_stream->codecpar) < 0) {
+        LOGE("nativeExtractAudio: avcodec_parameters_copy failed");
+        avformat_free_context(out_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+    out_stream->codecpar->codec_tag = 0;
+
+    if (out_ctx->oformat->name &&
+        (strcmp(out_ctx->oformat->name, "mp4") == 0 || strcmp(out_ctx->oformat->name, "ipod") == 0)) {
+        av_dict_set(&out_ctx->metadata, "movflags", "faststart", 0);
+    }
+
+    if (!(out_ctx->oformat->flags & AVFMT_NOFILE)) {
+        if (avio_open(&out_ctx->pb, out_path, AVIO_FLAG_WRITE) < 0) {
+            LOGE("nativeExtractAudio: avio_open failed for %s", out_path);
+            avformat_free_context(out_ctx);
+            avformat_close_input(&in_ctx);
+            (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+            (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+            return JNI_FALSE;
+        }
+    }
+
+    int header_err = avformat_write_header(out_ctx, NULL);
+    if (header_err < 0) {
+        char errbuf[256];
+        av_strerror(header_err, errbuf, sizeof(errbuf));
+        LOGE("nativeExtractAudio: avformat_write_header failed for %s: %d (%s), codec: %s",
+             out_path, header_err, errbuf, avcodec_get_name(in_stream->codecpar->codec_id));
+        if (out_ctx->pb) avio_closep(&out_ctx->pb);
+        avformat_free_context(out_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    int64_t cur_pts = 0;
+    int packets_written = 0;
+    AVPacket *pkt = av_packet_alloc();
+    while (av_read_frame(in_ctx, pkt) >= 0) {
+        if (pkt->stream_index == audio_stream_idx) {
+            pkt->stream_index = out_stream->index;
+            pkt->pos = -1;
+
+            // Rescale timestamps to output time base
+            av_packet_rescale_ts(pkt, in_stream->time_base, out_stream->time_base);
+
+            // Audio packets have no B-frames; enforce non-negative, monotonically non-decreasing DTS
+            if (pkt->pts == AV_NOPTS_VALUE || pkt->pts < cur_pts) {
+                pkt->pts = cur_pts;
+            }
+            pkt->dts = pkt->pts;
+
+            int64_t duration = pkt->duration;
+            if (duration <= 0) {
+                if (out_stream->codecpar->frame_size > 0) {
+                    duration = out_stream->codecpar->frame_size;
+                } else if (out_stream->codecpar->sample_rate > 0) {
+                    duration = av_rescale_q(1024, (AVRational){1, out_stream->codecpar->sample_rate}, out_stream->time_base);
+                } else {
+                    duration = 1;
+                }
+            }
+            if (duration <= 0) duration = 1;
+            pkt->duration = duration;
+            cur_pts = pkt->pts + duration;
+
+            if (av_interleaved_write_frame(out_ctx, pkt) >= 0) {
+                packets_written++;
+            }
+        }
+        av_packet_unref(pkt);
+    }
+    av_packet_free(&pkt);
+
+    // Flush any buffered frames in the interleaver
+    av_interleaved_write_frame(out_ctx, NULL);
+
+    av_write_trailer(out_ctx);
+
+    if (out_ctx->pb) avio_closep(&out_ctx->pb);
+    avformat_free_context(out_ctx);
+    avformat_close_input(&in_ctx);
+
+    (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+    (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+
+    if (packets_written == 0) {
+        LOGE("nativeExtractAudio: zero audio packets written to %s", out_path);
+        return JNI_FALSE;
+    }
+
+    return JNI_TRUE;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_za_kilowatch_ultimatefilemanager_media_FFmpegMediaHelper_nativeTranscodeAudio(
+        JNIEnv *env, jobject thiz, jstring media_path, jint target_stream_idx, jstring output_path) {
+    const char *in_path = (*env)->GetStringUTFChars(env, media_path, NULL);
+    const char *out_path = (*env)->GetStringUTFChars(env, output_path, NULL);
+    if (!in_path || !out_path) {
+        if (in_path) (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        if (out_path) (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVFormatContext *in_ctx = NULL;
+    if (avformat_open_input(&in_ctx, in_path, NULL, NULL) != 0) {
+        LOGE("nativeTranscodeAudio: avformat_open_input failed for %s", in_path);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    if (avformat_find_stream_info(in_ctx, NULL) < 0) {
+        LOGE("nativeTranscodeAudio: avformat_find_stream_info failed for %s", in_path);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    int audio_stream_idx = target_stream_idx;
+    if (audio_stream_idx < 0 || audio_stream_idx >= (int)in_ctx->nb_streams ||
+        in_ctx->streams[audio_stream_idx]->codecpar->codec_type != AVMEDIA_TYPE_AUDIO) {
+        audio_stream_idx = av_find_best_stream(in_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
+    }
+
+    if (audio_stream_idx < 0) {
+        LOGE("nativeTranscodeAudio: no audio stream found in %s", in_path);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVStream *in_stream = in_ctx->streams[audio_stream_idx];
+
+    // Find and open decoder
+    const AVCodec *dec = avcodec_find_decoder(in_stream->codecpar->codec_id);
+    if (!dec) {
+        LOGE("nativeTranscodeAudio: decoder not found for %s", avcodec_get_name(in_stream->codecpar->codec_id));
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVCodecContext *dec_ctx = avcodec_alloc_context3(dec);
+    if (!dec_ctx || avcodec_parameters_to_context(dec_ctx, in_stream->codecpar) < 0 || avcodec_open2(dec_ctx, dec, NULL) < 0) {
+        LOGE("nativeTranscodeAudio: failed to open decoder");
+        if (dec_ctx) avcodec_free_context(&dec_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    // Allocate output context for .m4a (ipod format)
+    AVFormatContext *out_ctx = NULL;
+    if (avformat_alloc_output_context2(&out_ctx, NULL, "ipod", out_path) < 0 || !out_ctx) {
+        LOGE("nativeTranscodeAudio: avformat_alloc_output_context2 failed for %s", out_path);
+        avcodec_free_context(&dec_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    // Find and open AAC encoder
+    const AVCodec *enc = avcodec_find_encoder(AV_CODEC_ID_AAC);
+    if (!enc) {
+        LOGE("nativeTranscodeAudio: AAC encoder not found");
+        avformat_free_context(out_ctx);
+        avcodec_free_context(&dec_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVCodecContext *enc_ctx = avcodec_alloc_context3(enc);
+    if (!enc_ctx) {
+        avformat_free_context(out_ctx);
+        avcodec_free_context(&dec_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    enc_ctx->sample_rate = dec_ctx->sample_rate > 0 ? dec_ctx->sample_rate : 48000;
+    enc_ctx->sample_fmt = AV_SAMPLE_FMT_FLTP;
+    enc_ctx->bit_rate = 192000;
+    enc_ctx->ch_layout = (AVChannelLayout)AV_CHANNEL_LAYOUT_STEREO;
+
+    if (out_ctx->oformat->flags & AVFMT_GLOBALHEADER) {
+        enc_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+    }
+
+    if (avcodec_open2(enc_ctx, enc, NULL) < 0) {
+        LOGE("nativeTranscodeAudio: failed to open AAC encoder");
+        avcodec_free_context(&enc_ctx);
+        avformat_free_context(out_ctx);
+        avcodec_free_context(&dec_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVStream *out_stream = avformat_new_stream(out_ctx, NULL);
+    if (!out_stream || avcodec_parameters_from_context(out_stream->codecpar, enc_ctx) < 0) {
+        LOGE("nativeTranscodeAudio: avformat_new_stream failed");
+        avcodec_free_context(&enc_ctx);
+        avformat_free_context(out_ctx);
+        avcodec_free_context(&dec_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+    out_stream->time_base = (AVRational){1, enc_ctx->sample_rate};
+
+    // Open output IO
+    if (!(out_ctx->oformat->flags & AVFMT_NOFILE)) {
+        if (avio_open(&out_ctx->pb, out_path, AVIO_FLAG_WRITE) < 0) {
+            LOGE("nativeTranscodeAudio: avio_open failed for %s", out_path);
+            avcodec_free_context(&enc_ctx);
+            avformat_free_context(out_ctx);
+            avcodec_free_context(&dec_ctx);
+            avformat_close_input(&in_ctx);
+            (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+            (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+            return JNI_FALSE;
+        }
+    }
+
+    av_dict_set(&out_ctx->metadata, "movflags", "faststart", 0);
+
+    if (avformat_write_header(out_ctx, NULL) < 0) {
+        LOGE("nativeTranscodeAudio: avformat_write_header failed");
+        if (out_ctx->pb) avio_closep(&out_ctx->pb);
+        avcodec_free_context(&enc_ctx);
+        avformat_free_context(out_ctx);
+        avcodec_free_context(&dec_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    // Initialize resampler
+    SwrContext *swr_ctx = NULL;
+    int swr_err = swr_alloc_set_opts2(
+        &swr_ctx,
+        &enc_ctx->ch_layout, enc_ctx->sample_fmt, enc_ctx->sample_rate,
+        &dec_ctx->ch_layout, dec_ctx->sample_fmt, dec_ctx->sample_rate,
+        0, NULL);
+    if (swr_err < 0 || !swr_ctx || swr_init(swr_ctx) < 0) {
+        LOGE("nativeTranscodeAudio: swr_init failed");
+        if (swr_ctx) swr_free(&swr_ctx);
+        if (out_ctx->pb) avio_closep(&out_ctx->pb);
+        avcodec_free_context(&enc_ctx);
+        avformat_free_context(out_ctx);
+        avcodec_free_context(&dec_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    // Audio FIFO buffer for 1024-sample AAC frames
+    AVAudioFifo *fifo = av_audio_fifo_alloc(enc_ctx->sample_fmt, enc_ctx->ch_layout.nb_channels, 1024 * 4);
+    if (!fifo) {
+        LOGE("nativeTranscodeAudio: av_audio_fifo_alloc failed");
+        swr_free(&swr_ctx);
+        if (out_ctx->pb) avio_closep(&out_ctx->pb);
+        avcodec_free_context(&enc_ctx);
+        avformat_free_context(out_ctx);
+        avcodec_free_context(&dec_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVFrame *in_frame = av_frame_alloc();
+    AVFrame *enc_frame = av_frame_alloc();
+    enc_frame->nb_samples = enc_ctx->frame_size > 0 ? enc_ctx->frame_size : 1024;
+    enc_frame->format = enc_ctx->sample_fmt;
+    av_channel_layout_copy(&enc_frame->ch_layout, &enc_ctx->ch_layout);
+    enc_frame->sample_rate = enc_ctx->sample_rate;
+    av_frame_get_buffer(enc_frame, 0);
+
+    AVPacket *in_pkt = av_packet_alloc();
+    AVPacket *out_pkt = av_packet_alloc();
+    int64_t pts = 0;
+    int frames_encoded = 0;
+
+    while (av_read_frame(in_ctx, in_pkt) >= 0) {
+        if (in_pkt->stream_index == audio_stream_idx) {
+            if (avcodec_send_packet(dec_ctx, in_pkt) >= 0) {
+                while (avcodec_receive_frame(dec_ctx, in_frame) == 0) {
+                    // Resample to encoder format
+                    int max_dst_nb_samples = av_rescale_rnd(
+                        swr_get_delay(swr_ctx, dec_ctx->sample_rate) + in_frame->nb_samples,
+                        enc_ctx->sample_rate, dec_ctx->sample_rate, AV_ROUND_UP);
+
+                    uint8_t **resampled_data = NULL;
+                    int resampled_linesize = 0;
+                    av_samples_alloc_array_and_samples(&resampled_data, &resampled_linesize,
+                                                       enc_ctx->ch_layout.nb_channels, max_dst_nb_samples,
+                                                       enc_ctx->sample_fmt, 0);
+
+                    int nb_samples_out = swr_convert(swr_ctx, resampled_data, max_dst_nb_samples,
+                                                     (const uint8_t **)in_frame->data, in_frame->nb_samples);
+                    if (nb_samples_out > 0) {
+                        if (av_audio_fifo_realloc(fifo, av_audio_fifo_size(fifo) + nb_samples_out) >= 0) {
+                            av_audio_fifo_write(fifo, (void **)resampled_data, nb_samples_out);
+                        }
+                    }
+                    if (resampled_data) {
+                        av_freep(&resampled_data[0]);
+                        av_freep(&resampled_data);
+                    }
+
+                    // Encode full 1024-sample frames from FIFO
+                    while (av_audio_fifo_size(fifo) >= enc_frame->nb_samples) {
+                        av_frame_make_writable(enc_frame);
+                        av_audio_fifo_read(fifo, (void **)enc_frame->data, enc_frame->nb_samples);
+                        enc_frame->pts = pts;
+                        pts += enc_frame->nb_samples;
+
+                        if (avcodec_send_frame(enc_ctx, enc_frame) >= 0) {
+                            while (avcodec_receive_packet(enc_ctx, out_pkt) == 0) {
+                                av_packet_rescale_ts(out_pkt, enc_ctx->time_base, out_stream->time_base);
+                                out_pkt->stream_index = out_stream->index;
+                                av_interleaved_write_frame(out_ctx, out_pkt);
+                                av_packet_unref(out_pkt);
+                                frames_encoded++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        av_packet_unref(in_pkt);
+    }
+
+    // Flush decoder
+    avcodec_send_packet(dec_ctx, NULL);
+    while (avcodec_receive_frame(dec_ctx, in_frame) == 0) {
+        int max_dst_nb_samples = av_rescale_rnd(
+            swr_get_delay(swr_ctx, dec_ctx->sample_rate) + in_frame->nb_samples,
+            enc_ctx->sample_rate, dec_ctx->sample_rate, AV_ROUND_UP);
+        uint8_t **resampled_data = NULL;
+        int resampled_linesize = 0;
+        av_samples_alloc_array_and_samples(&resampled_data, &resampled_linesize,
+                                           enc_ctx->ch_layout.nb_channels, max_dst_nb_samples,
+                                           enc_ctx->sample_fmt, 0);
+        int nb_samples_out = swr_convert(swr_ctx, resampled_data, max_dst_nb_samples,
+                                         (const uint8_t **)in_frame->data, in_frame->nb_samples);
+        if (nb_samples_out > 0) {
+            if (av_audio_fifo_realloc(fifo, av_audio_fifo_size(fifo) + nb_samples_out) >= 0) {
+                av_audio_fifo_write(fifo, (void **)resampled_data, nb_samples_out);
+            }
+        }
+        if (resampled_data) {
+            av_freep(&resampled_data[0]);
+            av_freep(&resampled_data);
+        }
+    }
+
+    // Flush any remaining samples in FIFO (pad with silence if needed for last frame)
+    int remaining = av_audio_fifo_size(fifo);
+    if (remaining > 0) {
+        av_frame_make_writable(enc_frame);
+        // Zero all samples first
+        for (int ch = 0; ch < enc_ctx->ch_layout.nb_channels; ch++) {
+            memset(enc_frame->data[ch], 0, enc_frame->nb_samples * sizeof(float));
+        }
+        av_audio_fifo_read(fifo, (void **)enc_frame->data, remaining);
+        enc_frame->pts = pts;
+        pts += enc_frame->nb_samples;
+        if (avcodec_send_frame(enc_ctx, enc_frame) >= 0) {
+            while (avcodec_receive_packet(enc_ctx, out_pkt) == 0) {
+                av_packet_rescale_ts(out_pkt, enc_ctx->time_base, out_stream->time_base);
+                out_pkt->stream_index = out_stream->index;
+                av_interleaved_write_frame(out_ctx, out_pkt);
+                av_packet_unref(out_pkt);
+                frames_encoded++;
+            }
+        }
+    }
+
+    // Flush encoder
+    avcodec_send_frame(enc_ctx, NULL);
+    while (avcodec_receive_packet(enc_ctx, out_pkt) == 0) {
+        av_packet_rescale_ts(out_pkt, enc_ctx->time_base, out_stream->time_base);
+        out_pkt->stream_index = out_stream->index;
+        av_interleaved_write_frame(out_ctx, out_pkt);
+        av_packet_unref(out_pkt);
+        frames_encoded++;
+    }
+
+    av_interleaved_write_frame(out_ctx, NULL);
+    av_write_trailer(out_ctx);
+
+    // Cleanup
+    av_packet_free(&in_pkt);
+    av_packet_free(&out_pkt);
+    av_frame_free(&in_frame);
+    av_frame_free(&enc_frame);
+    av_audio_fifo_free(fifo);
+    swr_free(&swr_ctx);
+    if (out_ctx->pb) avio_closep(&out_ctx->pb);
+    avcodec_free_context(&enc_ctx);
+    avformat_free_context(out_ctx);
+    avcodec_free_context(&dec_ctx);
+    avformat_close_input(&in_ctx);
+
+    (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+    (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+
+    if (frames_encoded == 0) {
+        LOGE("nativeTranscodeAudio: zero frames encoded for %s", out_path);
+        return JNI_FALSE;
+    }
+    return JNI_TRUE;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_za_kilowatch_ultimatefilemanager_media_FFmpegMediaHelper_nativeConvertToMp4(
+        JNIEnv *env, jobject thiz, jstring media_path, jstring output_path) {
+    const char *in_path = (*env)->GetStringUTFChars(env, media_path, NULL);
+    const char *out_path = (*env)->GetStringUTFChars(env, output_path, NULL);
+    if (!in_path || !out_path) {
+        if (in_path) (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        if (out_path) (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVFormatContext *in_ctx = NULL;
+    if (avformat_open_input(&in_ctx, in_path, NULL, NULL) != 0) {
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    if (avformat_find_stream_info(in_ctx, NULL) < 0) {
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVFormatContext *out_ctx = NULL;
+    if (avformat_alloc_output_context2(&out_ctx, NULL, "mp4", out_path) < 0 || !out_ctx) {
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    int *stream_mapping = (int *)calloc(in_ctx->nb_streams, sizeof(int));
+    if (!stream_mapping) {
+        avformat_free_context(out_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    int stream_idx = 0;
+    for (unsigned int i = 0; i < in_ctx->nb_streams; i++) {
+        AVStream *in_stream = in_ctx->streams[i];
+        AVCodecParameters *in_codecpar = in_stream->codecpar;
+
+        // Map video and audio streams to output
+        if (in_codecpar->codec_type != AVMEDIA_TYPE_VIDEO &&
+            in_codecpar->codec_type != AVMEDIA_TYPE_AUDIO) {
+            stream_mapping[i] = -1;
+            continue;
+        }
+
+        stream_mapping[i] = stream_idx++;
+        AVStream *out_stream = avformat_new_stream(out_ctx, NULL);
+        if (!out_stream) {
+            free(stream_mapping);
+            avformat_free_context(out_ctx);
+            avformat_close_input(&in_ctx);
+            (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+            (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+            return JNI_FALSE;
+        }
+
+        if (avcodec_parameters_copy(out_stream->codecpar, in_codecpar) < 0) {
+            free(stream_mapping);
+            avformat_free_context(out_ctx);
+            avformat_close_input(&in_ctx);
+            (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+            (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+            return JNI_FALSE;
+        }
+        out_stream->codecpar->codec_tag = 0;
+    }
+
+    if (!(out_ctx->oformat->flags & AVFMT_NOFILE)) {
+        if (avio_open(&out_ctx->pb, out_path, AVIO_FLAG_WRITE) < 0) {
+            free(stream_mapping);
+            avformat_free_context(out_ctx);
+            avformat_close_input(&in_ctx);
+            (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+            (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+            return JNI_FALSE;
+        }
+    }
+
+    // Faststart flag for modern MP4 web/streaming playback
+    av_dict_set(&out_ctx->metadata, "movflags", "faststart", 0);
+
+    if (avformat_write_header(out_ctx, NULL) < 0) {
+        if (out_ctx->pb) avio_closep(&out_ctx->pb);
+        free(stream_mapping);
+        avformat_free_context(out_ctx);
+        avformat_close_input(&in_ctx);
+        (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+        (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+        return JNI_FALSE;
+    }
+
+    AVPacket *pkt = av_packet_alloc();
+    while (av_read_frame(in_ctx, pkt) >= 0) {
+        int out_idx = stream_mapping[pkt->stream_index];
+        if (out_idx >= 0 && out_idx < (int)out_ctx->nb_streams) {
+            AVStream *in_stream = in_ctx->streams[pkt->stream_index];
+            AVStream *out_stream = out_ctx->streams[out_idx];
+
+            pkt->stream_index = out_idx;
+            av_packet_rescale_ts(pkt, in_stream->time_base, out_stream->time_base);
+            av_interleaved_write_frame(out_ctx, pkt);
+        }
+        av_packet_unref(pkt);
+    }
+    av_packet_free(&pkt);
+
+    av_write_trailer(out_ctx);
+
+    if (out_ctx->pb) avio_closep(&out_ctx->pb);
+    free(stream_mapping);
+    avformat_free_context(out_ctx);
+    avformat_close_input(&in_ctx);
+
+    (*env)->ReleaseStringUTFChars(env, media_path, in_path);
+    (*env)->ReleaseStringUTFChars(env, output_path, out_path);
+    return JNI_TRUE;
+}
+
+

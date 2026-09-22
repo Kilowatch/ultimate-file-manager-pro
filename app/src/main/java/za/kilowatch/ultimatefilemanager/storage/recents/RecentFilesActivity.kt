@@ -76,6 +76,7 @@ import za.kilowatch.ultimatefilemanager.util.RingtoneHelper
 import za.kilowatch.ultimatefilemanager.util.WallpaperHelper
 import za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
+import za.kilowatch.ultimatefilemanager.viewer.OpenAsBottomSheet
 import za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity
 import za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity
 import java.io.File
@@ -486,7 +487,11 @@ class RecentFilesActivity : AppCompatActivity() {
                         },
                         allAudioSelected = imgFiles.isNotEmpty() && imgFiles.all {
                             it.isFile && FileViewerRouter.isAudio(it.extension)
-                        }
+                        },
+                        allVideosSelected = imgFiles.isNotEmpty() && imgFiles.all {
+                            it.isFile && FileViewerRouter.isVideo(it.extension)
+                        },
+                        hasDirectories = imgFiles.any { it.isDirectory }
                     )
                     floatingQuickBar?.bindSelection(state)
                     floatingQuickBar?.showAnimated()
@@ -618,9 +623,167 @@ class RecentFilesActivity : AppCompatActivity() {
             }
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
-        } catch (e: Exception) {
-            Toast.makeText(this, "Failed to share files: ${e.message}", Toast.LENGTH_SHORT).show()
+        } catch (_: Exception) {
+            Toast.makeText(this, R.string.error_generic, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun extractSubtitlesFromVideo(file: File) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val info = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfo(file)
+            val subStreams = info?.subtitleStreams ?: emptyList()
+            withContext(Dispatchers.Main) {
+                if (subStreams.isEmpty()) {
+                    Toast.makeText(this@RecentFilesActivity, R.string.no_subtitles_found_in_video, Toast.LENGTH_SHORT).show()
+                    return@withContext
+                }
+
+                if (subStreams.size == 1) {
+                    val stream = subStreams.first()
+                    val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+                        this@RecentFilesActivity,
+                        getString(R.string.extracting_subtitles),
+                        file.name,
+                        R.drawable.ic_subtitles
+                    )
+                    progress.show()
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val result = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractSubtitles(file, stream.index, stream.lang)
+                        withContext(Dispatchers.Main) {
+                            progress.dismiss()
+                            if (result != null) {
+                                fileAdapter.exitSelectionMode()
+                                Toast.makeText(this@RecentFilesActivity, getString(R.string.subtitles_extracted_success) + "\n" + result.name, Toast.LENGTH_LONG).show()
+                                refreshData(forceFull = true)
+                            } else {
+                                Toast.makeText(this@RecentFilesActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                } else {
+                    val sheet = za.kilowatch.ultimatefilemanager.viewer.SubtitleTrackBottomSheet.newInstance(file.name, subStreams)
+                    sheet.onTrackSelected = { streamIndex, langTag, extractAll ->
+                        val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+                            this@RecentFilesActivity,
+                            getString(R.string.extracting_subtitles),
+                            file.name,
+                            R.drawable.ic_subtitles
+                        )
+                        progress.show()
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            if (extractAll) {
+                                val results = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractAllSubtitles(file, subStreams)
+                                withContext(Dispatchers.Main) {
+                                    progress.dismiss()
+                                    fileAdapter.exitSelectionMode()
+                                    if (results.isNotEmpty()) {
+                                        Toast.makeText(this@RecentFilesActivity, getString(R.string.subtitles_extracted_multiple_success, results.size), Toast.LENGTH_LONG).show()
+                                    } else {
+                                        Toast.makeText(this@RecentFilesActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                                    }
+                                    refreshData(forceFull = true)
+                                }
+                            } else {
+                                val result = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractSubtitles(file, streamIndex, langTag)
+                                withContext(Dispatchers.Main) {
+                                    progress.dismiss()
+                                    fileAdapter.exitSelectionMode()
+                                    if (result != null) {
+                                        Toast.makeText(this@RecentFilesActivity, getString(R.string.subtitles_extracted_success) + "\n" + result.name, Toast.LENGTH_LONG).show()
+                                    } else {
+                                        Toast.makeText(this@RecentFilesActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                                    }
+                                    refreshData(forceFull = true)
+                                }
+                            }
+                        }
+                    }
+                    sheet.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.viewer.SubtitleTrackBottomSheet.TAG)
+                }
+            }
+        }
+    }
+
+    private fun extractAudioFromVideo(file: File) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val info = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfo(file)
+            val audioStreams = info?.audioStreams ?: emptyList()
+            withContext(Dispatchers.Main) {
+                if (audioStreams.isEmpty()) {
+                    Toast.makeText(this@RecentFilesActivity, R.string.no_audio_found_in_video, Toast.LENGTH_SHORT).show()
+                    return@withContext
+                }
+
+                val sheet = za.kilowatch.ultimatefilemanager.viewer.AudioTrackBottomSheet.newInstance(file.name, audioStreams)
+                sheet.onTrackSelected = { streamIndex, langTag, extractAll, universalM4a ->
+                    val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+                        this@RecentFilesActivity,
+                        getString(R.string.extracting_audio),
+                        file.name,
+                        R.drawable.ic_audio
+                    )
+                    progress.show()
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        if (extractAll) {
+                            val results = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractAllAudio(file, audioStreams, universalAac = universalM4a)
+                            withContext(Dispatchers.Main) {
+                                progress.dismiss()
+                                fileAdapter.exitSelectionMode()
+                                if (results.isNotEmpty()) {
+                                    Toast.makeText(this@RecentFilesActivity, getString(R.string.audio_extracted_multiple_success, results.size), Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(this@RecentFilesActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                                }
+                                refreshData(forceFull = true)
+                            }
+                        } else {
+                            val result = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.extractAudio(file, streamIndex, langTag, universalAac = universalM4a)
+                            withContext(Dispatchers.Main) {
+                                progress.dismiss()
+                                fileAdapter.exitSelectionMode()
+                                if (result != null) {
+                                    Toast.makeText(this@RecentFilesActivity, getString(R.string.audio_extracted_success) + "\n" + result.name, Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(this@RecentFilesActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                                }
+                                refreshData(forceFull = true)
+                            }
+                        }
+                    }
+                }
+                sheet.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.viewer.AudioTrackBottomSheet.TAG)
+            }
+        }
+    }
+
+    private fun convertVideoToMp4(file: File) {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.convert_to_mp4_title)
+            .setMessage(getString(R.string.convert_to_mp4_confirm, file.name))
+            .setPositiveButton(R.string.action_convert_to_mp4) { _, _ ->
+                val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+                    this@RecentFilesActivity,
+                    getString(R.string.convert_to_mp4_progress),
+                    file.name,
+                    R.drawable.ic_convert_video
+                )
+                progress.show()
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val result = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.convertToMp4(file)
+                    withContext(Dispatchers.Main) {
+                        progress.dismiss()
+                        if (result != null) {
+                            fileAdapter.exitSelectionMode()
+                            Toast.makeText(this@RecentFilesActivity, getString(R.string.convert_to_mp4_success, result.name), Toast.LENGTH_LONG).show()
+                            refreshData(forceFull = true)
+                        } else {
+                            Toast.makeText(this@RecentFilesActivity, R.string.convert_to_mp4_failed, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     private fun showRenameDialog(file: File) {
@@ -787,6 +950,21 @@ class RecentFilesActivity : AppCompatActivity() {
             }
         }
 
+        // 5a. Open With
+        if (selected.size == 1 && selected.first().isFile && pm.isIconEnabled(this, pm.KEY_OPEN_WITH)) {
+            list.add(FileToolsBottomSheet.ActionItem("open_with", getString(R.string.toolbar_open_with), R.drawable.ic_apps, "toolbar_open_with") {
+                FileViewerRouter.showOpenWithDialog(this, selected.first(), isNetwork = false)
+            })
+        }
+
+        // 5b. Open As
+        if (selected.size == 1 && selected.first().isFile && pm.isIconEnabled(this, pm.KEY_OPEN_AS)) {
+            list.add(FileToolsBottomSheet.ActionItem("open_as", getString(R.string.toolbar_open_as), R.drawable.ic_apps, "toolbar_open_as") {
+                OpenAsBottomSheet.newInstance(selected.first().absolutePath, selected.first().name, false)
+                    .show(supportFragmentManager, OpenAsBottomSheet.TAG)
+            })
+        }
+
         // 6. Compress
         if (pm.isIconEnabled(this, pm.KEY_COMPRESS)) {
             list.add(FileToolsBottomSheet.ActionItem("compress", getString(R.string.action_compress), R.drawable.ic_compress, "toolbar_compress") {
@@ -826,6 +1004,33 @@ class RecentFilesActivity : AppCompatActivity() {
                         ArrayList(selected.map { it.absolutePath })
                     )
                 })
+            })
+        }
+
+        // Extract Subtitles from Video
+        if (selected.size == 1 && selected.first().isFile && FileViewerRouter.isVideo(selected.first().extension) &&
+            za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isAvailable() &&
+            pm.isIconEnabled(this, pm.KEY_EXTRACT_SUBTITLES)) {
+            list.add(FileToolsBottomSheet.ActionItem("extract_subtitles", getString(R.string.toolbar_extract_subtitles), R.drawable.ic_subtitles, "toolbar_extract_subtitles") {
+                extractSubtitlesFromVideo(selected.first())
+            })
+        }
+
+        // Extract Audio from Video
+        if (selected.size == 1 && selected.first().isFile && FileViewerRouter.isVideo(selected.first().extension) &&
+            za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isAvailable() &&
+            pm.isIconEnabled(this, pm.KEY_EXTRACT_AUDIO)) {
+            list.add(FileToolsBottomSheet.ActionItem("extract_audio", getString(R.string.toolbar_extract_audio), R.drawable.ic_audio_track, "toolbar_extract_audio") {
+                extractAudioFromVideo(selected.first())
+            })
+        }
+
+        // Convert Video to MP4
+        if (selected.size == 1 && selected.first().isFile && FileViewerRouter.isVideo(selected.first().extension) &&
+            za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isAvailable() &&
+            pm.isIconEnabled(this, pm.KEY_CONVERT_TO_MP4)) {
+            list.add(FileToolsBottomSheet.ActionItem("convert_to_mp4", getString(R.string.toolbar_convert_to_mp4), R.drawable.ic_convert_video, "toolbar_convert_to_mp4") {
+                convertVideoToMp4(selected.first())
             })
         }
 
@@ -1056,6 +1261,32 @@ class RecentFilesActivity : AppCompatActivity() {
                 }
             }
             pm.ACTION_SHARE -> handleShareFiles(selected)
+            pm.ACTION_OPEN_WITH -> {
+                if (selected.size == 1 && selected.first().isFile) {
+                    FileViewerRouter.showOpenWithDialog(this, selected.first(), isNetwork = false)
+                }
+            }
+            pm.ACTION_OPEN_AS -> {
+                if (selected.size == 1 && selected.first().isFile) {
+                    OpenAsBottomSheet.newInstance(selected.first().absolutePath, selected.first().name, false)
+                        .show(supportFragmentManager, OpenAsBottomSheet.TAG)
+                }
+            }
+            pm.ACTION_EXTRACT_SUBTITLES -> {
+                if (selected.size == 1 && selected.first().isFile) {
+                    extractSubtitlesFromVideo(selected.first())
+                }
+            }
+            pm.ACTION_EXTRACT_AUDIO -> {
+                if (selected.size == 1 && selected.first().isFile) {
+                    extractAudioFromVideo(selected.first())
+                }
+            }
+            pm.ACTION_CONVERT_TO_MP4 -> {
+                if (selected.size == 1 && selected.first().isFile) {
+                    convertVideoToMp4(selected.first())
+                }
+            }
             pm.ACTION_COMPRESS -> showArchiveOptions(selected)
             pm.ACTION_EXTRACT -> performExtractHere(selected)
             pm.ACTION_SELECT_ALL -> {

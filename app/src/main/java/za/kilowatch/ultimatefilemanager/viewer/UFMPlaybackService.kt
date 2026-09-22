@@ -215,7 +215,7 @@ class UFMPlaybackService : Service() {
         }
         player?.let { p ->
             callback.onPlaybackStateChanged(p.isPlaying, p.playbackState, isCurrentLocal)
-            callback.onProgressUpdate(p.currentPosition, p.duration)
+            callback.onProgressUpdate(p.currentPosition, duration)
             p.currentTracks?.let { tracks ->
                 if (!tracks.isEmpty) {
                     callback.onTracksChanged(tracks)
@@ -378,6 +378,25 @@ class UFMPlaybackService : Service() {
         playbackCallback?.onQueueChanged(queueManager.queue)
     }
 
+    /**
+     * Replaces the currently active track with a new path (e.g. after transcoding unsupported audio)
+     * and restarts playback seamlessly.
+     */
+    fun replaceCurrentTrackAndPlay(newPath: String) {
+        val currentIdx = queueManager.currentIndex
+        val oldItem = queueManager.currentItem ?: return
+        val ext = newPath.substringAfterLast('.', "").lowercase()
+        val newItem = oldItem.copy(
+            path = newPath,
+            isVideo = !FileViewerRouter.isAudio(ext),
+            fileSize = try { java.io.File(newPath).length() } catch (_: Exception) { 0L }
+        )
+        queueManager.replaceItem(currentIdx, newItem)
+        playCurrent()
+        playbackCallback?.onQueueChanged(queueManager.queue)
+        playbackCallback?.onTrackChanged(newItem)
+    }
+
     fun play() {
         player?.play()
         requestAudioFocus()
@@ -405,9 +424,11 @@ class UFMPlaybackService : Service() {
     /** Seek by a relative delta (ms), clamped to [0, duration]. */
     fun seekBy(deltaMs: Long) {
         val p = player ?: return
-        val target = (p.currentPosition + deltaMs).coerceIn(0L, p.duration.coerceAtLeast(0L))
+        val target = (p.currentPosition + deltaMs).coerceIn(0L, duration.coerceAtLeast(0L))
         p.seekTo(target)
     }
+
+    fun seekRelative(deltaMs: Long) = seekBy(deltaMs)
 
     /** Skip forward by the configured skip length (no-op when disabled). */
     fun skipForward() {
@@ -481,9 +502,26 @@ class UFMPlaybackService : Service() {
 
     fun getPlayer(): ExoPlayer? = player
 
+    private var cachedMediaDurationMs: Long = 0L
+
     /** For mini-player/Activity to read current position. */
     val currentPosition: Long get() = player?.currentPosition ?: 0L
-    val duration: Long get() = player?.duration ?: 0L
+    val duration: Long
+        get() {
+            val p = player
+            val pDur = p?.duration ?: 0L
+            if (pDur > 0L && pDur != androidx.media3.common.C.TIME_UNSET) {
+                return pDur
+            }
+            if (cachedMediaDurationMs > 0L) {
+                return cachedMediaDurationMs
+            }
+            val qDur = queueManager.currentItem?.duration ?: 0L
+            if (qDur > 0L) {
+                return qDur
+            }
+            return 0L
+        }
     val isPlaying: Boolean get() = player?.isPlaying == true
     val currentQueueItem: QueueItem? get() = queueManager.currentItem
 
@@ -603,6 +641,8 @@ class UFMPlaybackService : Service() {
         // Request audio focus
         requestAudioFocus()
 
+        cachedMediaDurationMs = if (item.duration > 0L) item.duration else 0L
+
         // Extract metadata in background
         extractMetadata(item)
 
@@ -675,9 +715,26 @@ class UFMPlaybackService : Service() {
 
         override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
             GoRoLog.e("UFMPlaybackService", "Player error: ${error.message}", error)
+            val currentItem = queueManager.currentItem
+            val isCinemaAudio = currentItem != null && (
+                za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isCinemaAudioExtension(
+                    currentItem.path.substringAfterLast('.', "")
+                ) || error.message?.contains("eac3", ignoreCase = true) == true
+                  || error.message?.contains("ac3", ignoreCase = true) == true
+                  || error.message?.contains("dts", ignoreCase = true) == true
+            )
+            val isDecoderError = error.errorCode == androidx.media3.common.PlaybackException.ERROR_CODE_DECODER_INIT_FAILED
+                || error.errorCode == androidx.media3.common.PlaybackException.ERROR_CODE_DECODING_FAILED
+                || error.message?.contains("Decoder init failed", ignoreCase = true) == true
+
             playbackCallback?.onError(error.localizedMessage ?: "Playback error")
 
-            // On network error, try to skip to next
+            if (isCinemaAudio || isDecoderError) {
+                // Give activity opportunity to offer audio transcoding
+                return
+            }
+
+            // On network error or fatal error, try to skip to next
             if (queueManager.size > 1) {
                 skipToNext()
             } else {
@@ -693,6 +750,12 @@ class UFMPlaybackService : Service() {
 
         override fun onTracksChanged(tracks: androidx.media3.common.Tracks) {
             playbackCallback?.onTracksChanged(tracks)
+            val audioGroups = tracks.groups.filter { it.type == androidx.media3.common.C.TRACK_TYPE_AUDIO }
+            if (audioGroups.isNotEmpty() && audioGroups.none { it.isTrackSupported(0) }) {
+                val format = audioGroups.first().getTrackFormat(0)
+                val mime = format.sampleMimeType ?: ""
+                playbackCallback?.onError("Unsupported audio codec: $mime")
+            }
         }
     }
 
@@ -800,7 +863,7 @@ class UFMPlaybackService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val dur = player?.duration ?: 0L
+        val dur = duration
         val pos = player?.currentPosition ?: 0L
         val timeDisplay = if (dur > 0 && dur < Long.MAX_VALUE) {
             formatTime(pos.toInt()) + " / " + formatTime(dur.toInt())
@@ -1000,6 +1063,24 @@ class UFMPlaybackService : Service() {
                 val title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
                 val artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)
                 val album = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM)
+                val durStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                var extractedDuration = durStr?.toLongOrNull() ?: 0L
+
+                if (extractedDuration <= 0L && isCurrentLocal) {
+                    try {
+                        val f = File(item.path)
+                        if (f.exists() && f.canRead()) {
+                            val mi = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfo(f)
+                            if (mi != null && mi.durationSec > 0L) {
+                                extractedDuration = mi.durationSec * 1000L
+                            }
+                        }
+                    } catch (_: Exception) {}
+                }
+
+                if (extractedDuration > 0L) {
+                    cachedMediaDurationMs = extractedDuration
+                }
 
                 var artBytes = retriever.embeddedPicture
                 if (artBytes == null && isAudio) {
@@ -1074,12 +1155,16 @@ class UFMPlaybackService : Service() {
                     updatedItems[idx] = updatedItems[idx].copy(
                         title = title ?: updatedItems[idx].title,
                         artist = artist ?: updatedItems[idx].artist,
-                        album = album ?: updatedItems[idx].album
+                        album = album ?: updatedItems[idx].album,
+                        duration = if (extractedDuration > 0L) extractedDuration else updatedItems[idx].duration
                     )
                     queueManager.setQueue(updatedItems, idx)
                 }
 
                 playbackCallback?.onMetadataChanged(metadata)
+                if (extractedDuration > 0L) {
+                    playbackCallback?.onProgressUpdate(player?.currentPosition ?: 0L, extractedDuration)
+                }
                 // Must update notification on main thread — ExoPlayer enforces thread checks
                 handler.post { updateNotification() }
 

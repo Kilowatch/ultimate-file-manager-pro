@@ -2170,7 +2170,11 @@ class SearchActivity : AppCompatActivity() {
                         isAllSelected = isAll,
                         allAudioSelected = imgFiles.isNotEmpty() && imgFiles.all {
                             it.isFile && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(it.extension)
-                        }
+                        },
+                        allVideosSelected = imgFiles.isNotEmpty() && imgFiles.all {
+                            it.isFile && za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(it.extension)
+                        },
+                        hasDirectories = imgFiles.any { it.isDirectory }
                     )
                     floatingQuickBar?.bindSelection(state)
                     floatingQuickBar?.showAnimated()

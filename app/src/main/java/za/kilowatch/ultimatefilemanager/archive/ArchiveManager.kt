@@ -73,7 +73,7 @@ object ArchiveManager {
                 name.endsWith(".tar.zst") || name.endsWith(".tzst") -> getTarEntries(archiveFile, CompressorStream.ZSTD)
                 name.endsWith(".tar") -> getTarEntries(archiveFile, CompressorStream.NONE)
                 name.endsWith(".rar") -> getRarEntries(archiveFile, password)
-                name.endsWith(".gz") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.GZIP)
+                name.endsWith(".gz") || name.endsWith(".svgz") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.GZIP)
                 name.endsWith(".bz2") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.BZIP2)
                 name.endsWith(".xz") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.XZ)
                 name.endsWith(".zst") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.ZSTD)
@@ -203,7 +203,7 @@ object ArchiveManager {
     }
 
     val SUPPORTED_ARCHIVE_EXTENSIONS = setOf(
-        "zip", "7z", "rar", "tar", "gz", "bz2", "xz", "zst", "tgz", "txz", "tzst", "tbz", "tbz2"
+        "zip", "7z", "rar", "tar", "gz", "bz2", "xz", "zst", "tgz", "txz", "tzst", "tbz", "tbz2", "svgz"
     )
 
     fun isSupportedArchiveExtension(ext: String): Boolean {
@@ -230,6 +230,9 @@ object ArchiveManager {
             if (lower.endsWith(ext)) {
                 return fileName.substring(0, fileName.length - ext.length)
             }
+        }
+        if (lower.endsWith(".svgz")) {
+            return fileName.substring(0, fileName.length - 5) + ".svg"
         }
         return if (fileName.contains('.')) fileName.substringBeforeLast('.') else fileName
     }
@@ -653,7 +656,7 @@ object ArchiveManager {
                 name.endsWith(".tar.zst") || name.endsWith(".tzst") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.ZSTD, onArchiveProgress, onProgress, onConflict)
                 name.endsWith(".tar") -> extractTarStream(effectiveArchive, effectiveDest, CompressorStream.NONE, onArchiveProgress, onProgress, onConflict)
                 name.endsWith(".rar") -> extractRar(effectiveArchive, effectiveDest, password, onArchiveProgress, onProgress, onConflict)
-                name.endsWith(".gz") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.GZIP, onArchiveProgress, onProgress, onConflict)
+                name.endsWith(".gz") || name.endsWith(".svgz") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.GZIP, onArchiveProgress, onProgress, onConflict)
                 name.endsWith(".bz2") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.BZIP2, onArchiveProgress, onProgress, onConflict)
                 name.endsWith(".xz") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.XZ, onArchiveProgress, onProgress, onConflict)
                 name.endsWith(".zst") -> extractSingleStreamOrTar(effectiveArchive, effectiveDest, CompressorStream.ZSTD, onArchiveProgress, onProgress, onConflict)
@@ -851,7 +854,11 @@ object ArchiveManager {
         onProgress: (Int) -> Unit = {},
         onConflict: (suspend (file: File, isFolder: Boolean, destSizeBytes: Long, applyToAllRef: BooleanArray) -> TransferConflictHelper.ConflictAction)? = null
     ) {
-        val targetName = archiveFile.name.substringBeforeLast('.')
+        val targetName = if (archiveFile.name.endsWith(".svgz", ignoreCase = true)) {
+            archiveFile.name.substringBeforeLast('.') + ".svg"
+        } else {
+            archiveFile.name.substringBeforeLast('.')
+        }
         var targetFile = File(destDir, targetName)
 
         if (targetFile.exists()) {

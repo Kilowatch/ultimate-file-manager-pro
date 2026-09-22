@@ -982,8 +982,10 @@ class TextViewerActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                val forceHex = intent.getBooleanExtra(EXTRA_FORCE_HEX, false)
                 val ext = file.extension.lowercase()
                 val text = when {
+                    forceHex -> extractDat(file)
                     ext == "rtf" -> extractRtf(file)
                     ext == "dat" -> extractDat(file)
                     ext in OFFICE_WORD_EXTENSIONS -> extractWord(file, ext)
@@ -1667,6 +1669,8 @@ class TextViewerActivity : AppCompatActivity() {
         // 64 KB pages exceeded the ANR watchdog's 5s budget on low-end TV boxes
         // (ZTE OTT Xview+ AV1, SDK 30); 16 KB keeps a page measurement well under it.
         private const val PAGE_BYTE_SIZE = 16 * 1024
+
+        const val EXTRA_FORCE_HEX = "extra_force_hex"
 
         // Documents larger than this (UTF-8 bytes) cannot be opened in edit mode:
         // setText() of the whole document on the main thread re-lays-out every glyph,

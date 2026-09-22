@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mobile Presentation Viewer - UFM Standard -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://tools.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    tools:context=".viewer.PresentationViewerActivity">
+
+    <!-- 56dp Fixed Glass Header Bar -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Back Button in 40dp Frosted Squircle -->
+        <FrameLayout
+            android:id="@+id/btnBackFrame"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <!-- Title and Slide Counter -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="Presentation.pptx" />
+
+            <TextView
+                android:id="@+id/txtSlideCounter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                tools:text="Slide 1 of 12" />
+        </LinearLayout>
+
+        <!-- Open in PowerPoint / External Suite Button -->
+        <FrameLayout
+            android:id="@+id/btnOpenExternalFrame"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnOpenExternal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_file_presentation"
+                android:contentDescription="@string/open_in_powerpoint"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <!-- View as Raw Text Button -->
+        <FrameLayout
+            android:id="@+id/btnViewTextFrame"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnViewText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_file_text"
+                android:contentDescription="@string/view_raw_text"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:indeterminateTint="?attr/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_file_presentation"
+            app:tint="@color/mobile_text_secondary"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/no_slides_found"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <!-- Slide Content Viewport -->
+    <ScrollView
+        android:id="@+id/scrollViewSlide"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:padding="16dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSlide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:cardBackgroundColor="@color/mobile_glass_card">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <!-- Slide Number Chip -->
+                <TextView
+                    android:id="@+id/txtSlideBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:background="@drawable/bg_badge"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="SLIDE 1" />
+
+                <!-- Slide Title -->
+                <TextView
+                    android:id="@+id/txtSlideTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="22sp"
+                    android:fontFamily="sans-serif-black"
+                    android:textIsSelectable="true"
+                    tools:text="Introduction to Architecture" />
+
+                <!-- Slide Thumbnail / Image -->
+                <ImageView
+                    android:id="@+id/imgSlideMedia"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_marginTop="16dp"
+                    android:scaleType="fitCenter"
+                    android:background="@drawable/bg_glass_card"
+                    android:visibility="gone"
+                    android:contentDescription="@null"
+                    tools:visibility="visible" />
+
+                <!-- Slide Body / Bullet Points -->
+                <TextView
+                    android:id="@+id/txtSlideContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="16sp"
+                    android:lineSpacingMultiplier="1.3"
+                    android:textIsSelectable="true"
+                    tools:text="• Overview of components\n• Multi-threaded extraction\n• Zero dead-end fallback guarantee" />
+
+                <!-- Speaker Notes Accordion -->
+                <LinearLayout
+                    android:id="@+id/layoutSpeakerNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_badge"
+                    android:padding="12dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/speaker_notes"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtSpeakerNotes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="13sp"
+                        android:textIsSelectable="true"
+                        tools:text="Emphasize performance benchmarks here." />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </ScrollView>
+
+    <!-- Bottom Navigation Bar -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Previous Slide Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPrevSlide"
+            style="@style/Widget.Material3Expressive.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/prev_slide"
+            app:icon="@drawable/ic_arrow_back"
+            android:textSize="13sp" />
+
+        <!-- Slide Indicator in center -->
+        <TextView
+            android:id="@+id/txtBottomIndicator"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="1 / 12" />
+
+        <!-- Next Slide Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNextSlide"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/next_slide"
+            app:icon="@drawable/ic_arrow_forward"
+            app:iconGravity="textEnd"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

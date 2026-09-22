@@ -28,7 +28,7 @@ object FileTypeIconProvider {
 
         // ── Images ────────────────────────────────────────────────────────────
         "jpg", "jpeg", "png", "apng", "gif", "bmp", "webp",
-        "heic", "heif", "hif", "svg", "tiff", "tif", "ico", "cur", "ani", "avif", "avifs", "jxl", "hdr", "exr",
+        "heic", "heif", "hif", "svg", "svgz", "tiff", "tif", "ico", "cur", "ani", "avif", "avifs", "jxl", "hdr", "exr",
         "wbmp", "pcx", "pbm", "pgm", "ppm", "pnm", "wmf", "emf", "tga", "targa", "dds",
         "psd", "psb", "ai", "xcf", "kra", "clip", "mpo", "jps", "pns",
         "raw", "dng", "cr2", "cr3", "crw", "nef", "nrw", "arw", "srf", "sr2",
@@ -43,9 +43,11 @@ object FileTypeIconProvider {
             R.drawable.ic_file_video
 
         // ── Audio ─────────────────────────────────────────────────────────────
-        "mp3", "wav", "flac", "aac", "ogg", "m4a",
-        "opus", "wma", "mid", "midi", "aiff", "aif",
-        "ape", "alac", "mka", "ra", "amr", "ac3" ->
+        "mp3", "wav", "flac", "aac", "ogg", "oga", "m4a", "m4b", "m4p",
+        "opus", "wma", "mid", "midi", "kar", "rmi", "aiff", "aif", "aifc",
+        "ape", "alac", "mka", "ra", "ram", "amr", "awb", "ac3", "eac3", "ec3",
+        "dts", "dtshd", "truehd", "thd", "wv", "voc", "au", "snd", "qcp",
+        "mod", "xm", "it", "s3m" ->
             R.drawable.ic_file_audio
 
         // ── PDF ───────────────────────────────────────────────────────────────
@@ -205,7 +207,7 @@ object FileTypeIconProvider {
 
     fun fileTypeIdForExtension(ext: String): String = when (ext.lowercase().trimStart('.')) {
         "jpg", "jpeg", "png", "apng", "gif", "bmp", "webp",
-        "heic", "heif", "hif", "svg", "tiff", "tif", "ico", "cur", "ani", "avif", "avifs", "jxl", "hdr", "exr",
+        "heic", "heif", "hif", "svg", "svgz", "tiff", "tif", "ico", "cur", "ani", "avif", "avifs", "jxl", "hdr", "exr",
         "wbmp", "pcx", "pbm", "pgm", "ppm", "pnm", "wmf", "emf", "tga", "targa", "dds",
         "psd", "psb", "ai", "xcf", "kra", "clip", "mpo", "jps", "pns",
         "raw", "dng", "cr2", "cr3", "crw", "nef", "nrw", "arw", "srf", "sr2",

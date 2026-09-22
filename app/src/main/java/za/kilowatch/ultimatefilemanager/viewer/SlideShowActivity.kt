@@ -159,6 +159,7 @@ class SlideShowActivity : AppCompatActivity() {
                 add(AvifDecoder.Factory())
                 add(JxlDecoder.Factory())
                 add(SvgDecoder.Factory())
+                add(SvgzDecoder.Factory())
             }
             .build()
     }

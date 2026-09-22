@@ -123,6 +123,7 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                 add(AvifDecoder.Factory())
                 add(JxlDecoder.Factory())
                 add(SvgDecoder.Factory())
+                add(za.kilowatch.ultimatefilemanager.viewer.SvgzDecoder.Factory())
             }
             .build()
     }

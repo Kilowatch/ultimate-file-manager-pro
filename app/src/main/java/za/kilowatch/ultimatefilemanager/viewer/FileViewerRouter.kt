@@ -73,17 +73,27 @@ object FileViewerRouter {
     // ── DAT (auto-detect text vs binary) ─────────────────────────────────────
     val DAT_EXTENSIONS = setOf("dat")
 
+    // ── Subtitles ─────────────────────────────────────────────────────────────
+    val SUBTITLE_EXTENSIONS = setOf(
+        "srt", "vtt", "ass", "ssa", "sub", "lrc", "smi", "sami", "ttml", "sbv", "dfxp"
+    )
+
+    // ── Presentations (OOXML, Legacy PPT, OpenDocument ODP) ──────────────────
+    val PRESENTATION_EXTENSIONS = setOf(
+        "pptx", "pptm", "ppsx", "potx", "potm",
+        "ppt", "pps", "pot",
+        "odp", "fodp", "otp"
+    )
+
     // ── Office OOXML (ZIP-based, POI XWPF/XSSF/XSLF) ────────────────────────
     private val OFFICE_OOXML_EXTENSIONS = setOf(
         "docx", "docm", "dotx", "dotm",
-        "pptx", "pptm", "ppsx", "potx", "potm",
         "vsdx"
     )
 
     // ── Office legacy binary (POI HWPF/HSSF/HSLF) ───────────────────────────
     private val OFFICE_LEGACY_EXTENSIONS = setOf(
-        "doc", "dot",
-        "ppt", "pps", "pot"
+        "doc", "dot"
     )
 
     // ── Spreadsheet ──────────────────────────────────────────────────────────
@@ -104,7 +114,7 @@ object FileViewerRouter {
         // Legacy & Bitmaps
         "bmp", "ico", "cur", "ani", "wbmp", "pcx", "pbm", "pgm", "ppm", "pnm",
         // Vector
-        "svg", "wmf", "emf",
+        "svg", "svgz", "wmf", "emf",
         // Professional & Textures
         "tiff", "tif", "tga", "targa", "dds",
         // Design & Graphics projects
@@ -129,7 +139,14 @@ object FileViewerRouter {
 
     // ── Audio ─────────────────────────────────────────────────────────────────
     val AUDIO_EXTENSIONS = setOf(
-        "mp3", "wav", "ogg", "m4a", "aac", "flac", "opus", "wma", "amr"
+        // Standard Web & Mobile Audio
+        "mp3", "wav", "ogg", "oga", "m4a", "m4b", "m4p", "aac", "flac", "alac", "opus", "wma",
+        // Surround & Cinema Audio
+        "eac3", "ec3", "ac3", "dts", "dtshd", "truehd", "thd", "mka",
+        // Audiophile, Lossless & Voice
+        "aiff", "aif", "aifc", "ape", "wv", "amr", "awb", "voc", "au", "snd", "qcp", "ra", "ram",
+        // MIDI & Trackers
+        "mid", "midi", "kar", "rmi", "mod", "xm", "it", "s3m"
     )
 
     // ── Video ─────────────────────────────────────────────────────────────────
@@ -151,7 +168,8 @@ object FileViewerRouter {
     )
 
     /** All extensions this router can handle internally. */
-    val ALL_SUPPORTED: Set<String> = TEXT_EXTENSIONS + DAT_EXTENSIONS +
+    val ALL_SUPPORTED: Set<String> = TEXT_EXTENSIONS + SUBTITLE_EXTENSIONS +
+        PRESENTATION_EXTENSIONS + DAT_EXTENSIONS +
         OFFICE_OOXML_EXTENSIONS + OFFICE_LEGACY_EXTENSIONS + SPREADSHEET_EXTENSIONS +
         IMAGE_EXTENSIONS + PDF_EXTENSIONS + EPUB_EXTENSIONS + ZIP_EXTENSIONS +
         AUDIO_EXTENSIONS + VIDEO_EXTENSIONS + PACKAGE_EXTENSIONS
@@ -187,7 +205,17 @@ object FileViewerRouter {
      */
     fun openFile(context: Context, file: File, transitionView: android.view.View? = null, isNetwork: Boolean = false): Boolean {
         val ext = file.extension.lowercase()
-        if (ext !in ALL_SUPPORTED && !isDotConfigFile(file.name)) return false
+        if (ext !in ALL_SUPPORTED && !isDotConfigFile(file.name)) {
+            if (hasExternalHandler(context, file)) {
+                showOpenWithDialog(context, file, isNetwork = isNetwork)
+                return true
+            } else if (context is androidx.fragment.app.FragmentActivity) {
+                OpenAsBottomSheet.newInstance(file.absolutePath, file.name, isNetwork)
+                    .show(context.supportFragmentManager, OpenAsBottomSheet.TAG)
+                return true
+            }
+            return false
+        }
 
         // Check for saved default preference (local vs network context)
         val defaultAction = DefaultOpenManager.getDefaultAction(context, ext, isNetwork = isNetwork)
@@ -269,10 +297,11 @@ object FileViewerRouter {
             in IMAGE_EXTENSIONS -> Intent(context, ImageViewerActivity::class.java)
             in PDF_EXTENSIONS   -> Intent(context, PdfViewerActivity::class.java)
             in EPUB_EXTENSIONS  -> Intent(context, EpubViewerActivity::class.java)
+            in PRESENTATION_EXTENSIONS -> Intent(context, PresentationViewerActivity::class.java)
             "zip" -> Intent(context, ZipViewerActivity::class.java)
             "7z", in ZIP_EXTENSIONS -> Intent(context, SevenZipViewerActivity::class.java)
             in SPREADSHEET_EXTENSIONS -> Intent(context, SpreadsheetViewerActivity::class.java)
-            in TEXT_EXTENSIONS, in DAT_EXTENSIONS, in OFFICE_OOXML_EXTENSIONS, in OFFICE_LEGACY_EXTENSIONS ->
+            in SUBTITLE_EXTENSIONS, in TEXT_EXTENSIONS, in DAT_EXTENSIONS, in OFFICE_OOXML_EXTENSIONS, in OFFICE_LEGACY_EXTENSIONS ->
                 textViewerIntent(context)
             in PACKAGE_EXTENSIONS ->
                 Intent(context, za.kilowatch.ultimatefilemanager.ui.PackageInstallerActivity::class.java).apply {
@@ -324,10 +353,11 @@ object FileViewerRouter {
         context: Context,
         file: File,
         contentUri: Uri? = null,
-        isExternal: Boolean = false
+        isExternal: Boolean = false,
+        forceOpen: Boolean = false
     ) {
         val ext = file.extension.lowercase()
-        if (ext !in AUDIO_EXTENSIONS && ext !in VIDEO_EXTENSIONS) return
+        if (!forceOpen && ext !in AUDIO_EXTENSIONS && ext !in VIDEO_EXTENSIONS) return
 
         val parentDir = file.parentFile
         val sortState = if (parentDir != null) {
@@ -427,7 +457,7 @@ object FileViewerRouter {
      * Shows a premium-styled "Open with" dialog letting the user choose
      * between UFM's built-in viewer or an external app.
      */
-    private fun showOpenWithDialog(context: Context, file: File, isNetwork: Boolean = false) {
+    fun showOpenWithDialog(context: Context, file: File, isNetwork: Boolean = false) {
         if (context !is Activity) {
             openInBuiltInViewer(context, file)
             return
@@ -617,6 +647,27 @@ object FileViewerRouter {
             )
         }
         root.addView(externalBtn)
+
+        // ── Open As... (Universal modality chooser) ──
+        val openAsBtn = createChoiceButton(
+            context, dp,
+            icon = "⚡",
+            label = context.getString(R.string.open_as),
+            description = context.getString(R.string.open_as_desc),
+            gradientColors = intArrayOf(bgColor, bgColor),
+            labelColor = textPrimary,
+            descColor = textSecondary
+        ) {
+            dialog.dismiss()
+            if (context is androidx.fragment.app.FragmentActivity) {
+                OpenAsBottomSheet.newInstance(file.absolutePath, file.name, isNetwork)
+                    .show(context.supportFragmentManager, OpenAsBottomSheet.TAG)
+            }
+        }
+        root.addView(openAsBtn, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply { topMargin = dp(8) })
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()

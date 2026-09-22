@@ -5,6 +5,31 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2] — 2026-09-22
+
+### Added
+- **Universal Audio Extraction & Transcoding**: Added FFmpeg native audio transcoding engine (`libswresample`) converting multi-channel cinema audio tracks (E-AC-3, AC-3, DTS, TrueHD) into universal stereo M4A (AAC) playable on 100% of Android devices, car stereos, and third-party music players.
+- **Audio Extraction Format Selector**: Added format toggle in Audio Track Bottom Sheet allowing users to choose between Universal M4A (default) and untouched Original Stream copies.
+- **Decoder Error Recovery**: Added automatic decoder failure recovery in the media player and twin window player prompting users to convert unsupported cinema audio formats (E-AC-3, DTS) to Universal M4A with one tap and immediately resume playback.
+- **SVGZ Vector Image Support**: Added native decompression and rendering support for gzipped SVG (.svgz) vector graphics across the image viewer, file icons, and archive tools.
+- **Universal "Open As..." Chooser**: Added a modal picker featuring 9 file modalities (Text Document, Hex Dump, Presentation, Spreadsheet, Image, Audio, Video, Archive, External App Chooser) with a direct "Zero Dead-Ends" fallback whenever an unsupported or ambiguous file format is tapped.
+- **Native Presentation Viewer**: Added an integrated presentation viewer (`PresentationViewerActivity`) supporting both `.pptx` and legacy `.ppt` slides with slide reordering, slide thumbnails, speaker notes drawer, TV D-Pad navigation, and full-screen slideshow presentation mode on Mobile and Android TV.
+- **Subtitle Syntax Highlighting & Viewing**: Built native subtitle highlighting and editing into `TextViewerActivity` via `LanguageRegistry.Subtitle`, supporting `.srt`, `.vtt`, `.ass`, `.ssa`, `.sub`, `.lrc`, `.smi`, `.sami`, `.ttml`, `.sbv`, and `.dfxp`.
+- **FFmpeg Stream Details & Multi-Track Extraction**: Added native FFmpeg media stream inspection in file properties (`FilePropertiesBottomSheet`) displaying container format, bitrates, video resolution/FPS/codecs, audio channels/sample rates, and subtitle languages. Added one-tap lossless audio extraction and subtitle track demuxing directly from the selection Tools FAB and Floating Quick Action Bar.
+- **Multi-Track Audio Stream Extraction & Selection**: Inspect multi-audio video files with a dedicated track selection dialog showing localized languages, channel layouts (Stereo, 5.1/7.1 Surround), codec badges, and batch "Extract All Audio Tracks" option across Mobile and Android TV.
+- **Multi-Track Subtitle Stream Extraction & Selection**: Track selection modal for extracting individual subtitle tracks or batch extracting all tracks with language suffixes.
+- **Media Operation Progress Dialog**: Translucent UFMStandard progress dialog providing visual feedback during video conversion, subtitle extraction, and audio extraction.
+- **Toolbar & Quick Action Bar Synchronization**: Synchronized `open_with`, `open_as`, `extract_subtitles`, and `extract_audio` across all browser environments (`FileBrowserActivity`, `FileBrowserFragment`, `NetworkBrowserActivity`, `NetworkBrowserFragment`, and `RecentFilesActivity`) with full user customizability in `ToolbarIconsActivity`.
+
+### Changed
+- **Comprehensive MIME & Extension Registry**: Expanded `MimeTypeHelper` canonical mapping dictionary to cover over 500+ file extensions across modern, legacy, retro, geospatial, and industrial formats.
+- **Hex Inspector Modality**: Added `EXTRA_FORCE_HEX` support in `TextViewerActivity` to allow raw hexadecimal inspection and editing of any file type or binary asset directly from "Open As...".
+
+### Fixed
+- **Cinema Audio Routing & Recognition**: Fixed `.eac3`, `.ec3`, `.ac3`, `.dts`, `.dtshd`, `.truehd`, and `.mka` not being recognized as native audio files in the file viewer router, icon provider, and sort filters.
+- **MKV Audio Extraction Failure**: Fixed remuxing failure on MKV files with AC3, E-AC3, and DTS audio streams by adding native codec container mapping, Matroska Audio (.mka) container fallback, and C-level packet timestamp normalization.
+- **Subtitles & PPTX Format Routing**: Fixed subtitle files failing with "No app found to open this file type" and PowerPoint files opening erroneously as raw XML text in the text viewer.
+
 ## [2.1.1] — 2026-09-21
 
 ### Fixed

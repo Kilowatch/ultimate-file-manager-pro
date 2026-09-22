@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Audio Track Selection Dialog - Centered 650dp Glass Panel -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="650dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_tv_card_glass"
+    android:padding="28dp">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_audio_track"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="26sp"
+            android:fontFamily="sans-serif-black" />
+
+        <TextView
+            android:id="@+id/txtFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="15sp"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            tools:text="movie_sample.mkv" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tv_glass_white_10"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Format Selector -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="12dp">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleFormat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            app:selectionRequired="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFormatUniversal"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="@string/audio_format_universal"
+                android:textSize="14sp"
+                android:focusable="true"
+                android:checkable="true"
+                app:icon="@drawable/ic_audio"
+                app:iconSize="20dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFormatOriginal"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="@string/audio_format_original"
+                android:textSize="14sp"
+                android:focusable="true"
+                android:checkable="true"
+                app:icon="@drawable/ic_audio_track"
+                app:iconSize="20dp" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/txtFormatDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/audio_format_universal_desc"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- Tracks List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTracks"
+        android:layout_width="match_parent"
+        android:layout_height="340dp"
+        android:clipToPadding="false" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="16dp"
+        android:text="@string/cancel"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="15sp"
+        app:cornerRadius="12dp"
+        app:strokeColor="@color/tv_glass_white_20"
+        app:strokeWidth="1dp"
+        app:backgroundTint="@color/tv_glass_white_10" />
+
+</LinearLayout>

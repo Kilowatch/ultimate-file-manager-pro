@@ -942,6 +942,11 @@
 
         <!-- Built-in File Viewers -->
         <activity
+            android:name=".viewer.PresentationViewerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|uiMode" />
+
+        <activity
             android:name=".viewer.SpreadsheetViewerActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|uiMode" />
