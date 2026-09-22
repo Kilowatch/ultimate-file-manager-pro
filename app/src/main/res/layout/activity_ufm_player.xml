@@ -17,6 +17,15 @@
         app:surface_type="surface_view"
         app:resize_mode="fit" />
 
+    <!-- SVG Animation Player Surface -->
+    <za.kilowatch.ultimatefilemanager.viewer.SvgAnimationPlayerView
+        android:id="@+id/svgPlayerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@android:color/black"
+        android:visibility="gone" />
+
     <!-- Audio Poster Overlay -->
     <ImageView
         android:id="@+id/audioPoster"

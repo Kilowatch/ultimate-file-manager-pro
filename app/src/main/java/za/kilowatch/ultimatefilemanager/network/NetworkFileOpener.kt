@@ -96,7 +96,8 @@ object NetworkFileOpener {
                         val filesToConsider = currentFiles.filter { !it.isDirectory && !it.name.startsWith(".") }
                             .filter { f ->
                                 val e = f.name.substringAfterLast('.', "").lowercase()
-                                e in FileViewerRouter.IMAGE_EXTENSIONS || e in FileViewerRouter.VIDEO_EXTENSIONS
+                                (e in FileViewerRouter.IMAGE_EXTENSIONS || e in FileViewerRouter.VIDEO_EXTENSIONS) &&
+                                e != "svg" && e != "svgz"
                             }
                         startSlideShow(activity, share, file, sortedFiles, filesToConsider)
                         return

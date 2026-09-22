@@ -577,13 +577,22 @@ class UFMPlaybackService : Service() {
 
         val p = player ?: return
 
-        // Determine if audio or video
-        val isAudio = FileViewerRouter.isAudio(item.path.substringAfterLast('.'))
-        isAudioOnlyBackground = isAudio  // Audio is always audio-only in background
-
         // Build media source
         val isNetwork = networkShare != null
         isCurrentLocal = !isNetwork
+
+        val ext = item.path.substringAfterLast('.', "").lowercase()
+        if (ext == "svg" || ext == "svgz") {
+            p.stop()
+            p.clearMediaItems()
+            playbackCallback?.onTrackChanged(item)
+            playbackCallback?.onPlaybackStateChanged(true, Player.STATE_READY, isCurrentLocal)
+            return
+        }
+
+        // Determine if audio or video
+        val isAudio = FileViewerRouter.isAudio(ext)
+        isAudioOnlyBackground = isAudio  // Audio is always audio-only in background
         // RClone content added via "Add storage location" is an os: document behind our
         // own SAF provider; stream it through the fast random-access path (the same one
         // the Online browser uses) instead of the SAF FUSE pipe, which stutters (T-027).

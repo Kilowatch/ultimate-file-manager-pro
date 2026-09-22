@@ -15124,6 +15124,35 @@ Convert \"%1$s\" to universal MP4 format?
 </string>
     <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
     <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="audio_format_universal">
+Universal M4A
+</string>
+    <string name="audio_format_original">
+Original Stream
+</string>
+    <string name="audio_format_universal_desc">
+High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+</string>
+    <string name="audio_format_original_desc">
+Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+</string>
+    <string name="codec_unsupported_title">
+Audio Codec Not Supported
+</string>
+    <string name="codec_unsupported_message">
+This device lacks a native hardware decoder for %1$s audio.\n
+\n
+Would you like to convert it to Universal M4A (AAC) for seamless playback?
+</string>
+    <string name="convert_and_play">
+Convert &amp; Play
+</string>
+    <string name="converting_audio">
+Converting audio to M4A…
+</string>
+    <string name="convert_to_m4a">
+Convert to M4A
+</string>
     <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
     <string name="media_technical_details">Media Stream Details</string>
     <string name="media_format">Container</string>

@@ -247,7 +247,10 @@ object FileViewerRouter {
                     val parentDir = file.parentFile
                     val files = parentDir?.listFiles() ?: emptyArray()
                     val filesToConsider = files.filter { it.isFile && !it.name.startsWith(".") }
-                        .filter { f -> f.extension.lowercase() in IMAGE_EXTENSIONS || f.extension.lowercase() in VIDEO_EXTENSIONS }
+                        .filter { f ->
+                            val e = f.extension.lowercase()
+                            (e in IMAGE_EXTENSIONS || e in VIDEO_EXTENSIONS) && e != "svg" && e != "svgz"
+                        }
                     openInSlideShow(context, file, filesToConsider)
                     return true
                 }
@@ -288,7 +291,7 @@ object FileViewerRouter {
             (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, file.absolutePath)
         } else null
 
-        if (ext in AUDIO_EXTENSIONS || ext in VIDEO_EXTENSIONS) {
+        if (ext in AUDIO_EXTENSIONS || ext in VIDEO_EXTENSIONS || ext == "svg" || ext == "svgz") {
             openInPlayer(context, file, effectiveContentUri, isExternal)
             return
         }
@@ -357,7 +360,8 @@ object FileViewerRouter {
         forceOpen: Boolean = false
     ) {
         val ext = file.extension.lowercase()
-        if (!forceOpen && ext !in AUDIO_EXTENSIONS && ext !in VIDEO_EXTENSIONS) return
+        val isSvg = ext == "svg" || ext == "svgz"
+        if (!forceOpen && ext !in AUDIO_EXTENSIONS && ext !in VIDEO_EXTENSIONS && !isSvg) return
 
         val parentDir = file.parentFile
         val sortState = if (parentDir != null) {
@@ -373,12 +377,12 @@ object FileViewerRouter {
         val mediaFiles = if (isSaf && parentPath.isNotEmpty()) {
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, parentPath).filter { f ->
                 val e = f.extension.lowercase()
-                e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS
+                e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS || e == "svg" || e == "svgz"
             }.sortedWith(comparator)
         } else {
             parentDir?.listFiles { f ->
                 val e = f.extension.lowercase()
-                e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS
+                e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS || e == "svg" || e == "svgz"
             }?.sortedWith(comparator)
         }
 
@@ -529,15 +533,16 @@ object FileViewerRouter {
         val ext = file.extension.lowercase()
         val isVideo = ext in VIDEO_EXTENSIONS
         val isAudio = ext in AUDIO_EXTENSIONS
-        val isImage = ext in IMAGE_EXTENSIONS
+        val isSvg = ext == "svg" || ext == "svgz"
+        val isImage = ext in IMAGE_EXTENSIONS && !isSvg
 
         val dialog = AlertDialog.Builder(context)
             .setView(root)
             .setCancelable(true)
             .create()
 
-        // ── UFM Viewer (shown for images, documents, text, etc. — NOT audio/video) ──
-        if (!isVideo && !isAudio) {
+        // ── UFM Viewer (shown for images, documents, text, etc. — NOT audio/video/svg) ──
+        if (!isVideo && !isAudio && !isSvg) {
             val ufmBtn = createChoiceButton(
                 context, dp,
                 icon = "📂",
@@ -560,7 +565,7 @@ object FileViewerRouter {
             ).apply { bottomMargin = dp(12) })
         }
 
-        // ── UFM Slide Show (shown for Images on local and SAF storage) ──
+        // ── UFM Slide Show (shown for non-SVG Images on local and SAF storage) ──
         if (isImage && !isNetwork) {
             val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
             val parentPath = file.parent ?: ""
@@ -573,7 +578,7 @@ object FileViewerRouter {
             }
             val imageOrVideoFiles = filesToConsider.filter { f ->
                 val e = f.extension.lowercase()
-                e in IMAGE_EXTENSIONS || e in VIDEO_EXTENSIONS
+                (e in IMAGE_EXTENSIONS || e in VIDEO_EXTENSIONS) && e != "svg" && e != "svgz"
             }
 
             if (imageOrVideoFiles.isNotEmpty()) {
@@ -600,8 +605,8 @@ object FileViewerRouter {
             }
         }
 
-        // ── UFM Media Player (only shown for audio/video) ──
-        if (isVideo || isAudio) {
+        // ── UFM Media Player (shown for audio, video, and animated SVG/SVGZ) ──
+        if (isVideo || isAudio || isSvg) {
             val playerBtn = createChoiceButton(
                 context, dp,
                 icon = "▶️",

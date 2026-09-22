@@ -121,6 +121,7 @@ class UFMPlayerActivity : AppCompatActivity() {
     private lateinit var trackSheetLayout: View
     private lateinit var trackSheetList: LinearLayout
     private lateinit var trackSheetTitle: TextView
+    private lateinit var svgPlayerView: SvgAnimationPlayerView
 
     // ── TV Playlist Drawer Views ───────────────────────────────────
     private var sideControlsLayout: View? = null
@@ -360,6 +361,14 @@ class UFMPlayerActivity : AppCompatActivity() {
                     currentIndex = newIdx
                     if (isTv) {
                         tvPlaylistAdapter?.setCurrentIndex(newIdx)
+                    }
+
+                    if (ext == "svg" || ext == "svgz") {
+                        loadSvgFile(trackInfo.path)
+                        return@runOnUiThread
+                    } else if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                        svgPlayerView.pause()
+                        svgPlayerView.visibility = View.GONE
                     }
 
                     // Switch audio/video mode
@@ -773,6 +782,7 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         val ext = initialPath.substringAfterLast('.', "").lowercase()
         val isMjpeg = ext in setOf("mjpeg", "mjpg", "mjp")
+        val isSvg = ext == "svg" || ext == "svgz" || intent.type == "image/svg+xml"
         if (isMjpeg) {
             audioPoster.visibility = View.VISIBLE
             audioPoster.scaleType = ImageView.ScaleType.FIT_CENTER
@@ -851,6 +861,17 @@ class UFMPlayerActivity : AppCompatActivity() {
                     updatePlayPauseIcon()
                 }
             }
+        } else if (isSvg) {
+            audioPoster.visibility = View.GONE
+            audioPlaceholder.visibility = View.GONE
+            audioPosterScrim.visibility = View.GONE
+            playerView.visibility = View.GONE
+            subtitleView.visibility = View.GONE
+            btnSubtitles.visibility = View.GONE
+            updateAlpha(btnAudioTrack, false)
+            btnAudioTrack.isEnabled = false
+
+            loadSvgFile(initialPath)
         } else {
             // Start & bind to the playback service
             if (initialPath.isNotEmpty()) {
@@ -877,6 +898,11 @@ class UFMPlayerActivity : AppCompatActivity() {
         updateSkipButtonVisibility()
         isPiP = false
         val ext = (intent.getStringExtra("initialPath") ?: intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH) ?: "").substringAfterLast('.', "").lowercase()
+        if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+            svgPlayerView.onResume()
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            return
+        }
         if (ext in setOf("mjpeg", "mjpg", "mjp") || mjpegPlayer != null) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             return
@@ -898,6 +924,9 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+            svgPlayerView.onPause()
+        }
         mjpegPlayer?.pause()
         updatePlayPauseIcon()
         // Never detach player here — PiP lifecycle handles surface transitions
@@ -909,6 +938,9 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        if (::svgPlayerView.isInitialized) {
+            svgPlayerView.destroy()
+        }
         if (bound) {
             playbackService?.unregisterCallback()
             unbindService(serviceConnection)
@@ -1120,6 +1152,41 @@ class UFMPlayerActivity : AppCompatActivity() {
         trackSheetLayout = findViewById(R.id.trackSheetLayout)
         trackSheetList = findViewById(R.id.trackSheetList)
         trackSheetTitle = findViewById(R.id.trackSheetTitle)
+        svgPlayerView = findViewById(R.id.svgPlayerView)
+
+        svgPlayerView.onPlaybackStateChanged = { isPlaying ->
+            runOnUiThread {
+                updatePlayPauseIcon()
+                if (isPlaying) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                    resetHideTimer()
+                } else {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                }
+            }
+        }
+        svgPlayerView.onProgressUpdate = { posMs, durMs, _ ->
+            runOnUiThread {
+                if (!isTracking && !(isTv && isTvSeeking) && !isPiP) {
+                    if (durMs > 0) {
+                        seekBar.max = durMs.toInt()
+                        if (isTv) {
+                            val skipMs = PlayerPreferencesManager.getSkipLengthMs(this@UFMPlayerActivity).toInt()
+                            val step = if (skipMs > 0) skipMs else (durMs / 100).toInt().coerceIn(5_000, 60_000)
+                            seekBar.keyProgressIncrement = step
+                        }
+                        seekBar.progress = posMs.toInt()
+                        updateTimeLabels(posMs.toInt(), durMs.toInt())
+                    }
+                }
+            }
+        }
+        svgPlayerView.onError = { error ->
+            runOnUiThread {
+                loadingSpinner.visibility = View.GONE
+                Toast.makeText(this@UFMPlayerActivity, error.localizedMessage ?: "Error", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         if (!isTv) {
             val overlay = findViewById<PlayerGestureOverlayView?>(R.id.gestureOverlay)
@@ -1134,17 +1201,28 @@ class UFMPlayerActivity : AppCompatActivity() {
                         PlayerPreferencesManager.isGesturesEnabled(this) && !isPiP
                     },
                     isVideoPlaying = {
-                        val isVid = currentTrackInfo?.isVideo ?: (playerView.visibility == View.VISIBLE)
+                        val isVid = (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) ||
+                            (currentTrackInfo?.isVideo ?: (playerView.visibility == View.VISIBLE))
                         isVid
                     },
                     getCurrentPosition = {
-                        mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
+                        if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                            svgPlayerView.currentPositionMs
+                        } else {
+                            mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
+                        }
                     },
                     getDuration = {
-                        mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+                        if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                            svgPlayerView.durationMs
+                        } else {
+                            mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+                        }
                     },
                     onSeekTo = { pos ->
-                        if (mjpegPlayer != null) {
+                        if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                            svgPlayerView.seekTo(pos)
+                        } else if (mjpegPlayer != null) {
                             mjpegPlayer?.seekTo(pos, audioPoster)
                         } else {
                             playbackService?.seekTo(pos)
@@ -1243,7 +1321,11 @@ class UFMPlayerActivity : AppCompatActivity() {
                     if (isTv) {
                         isTvSeeking = true
                     }
-                    val dur = mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+                    val dur = if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                        svgPlayerView.durationMs
+                    } else {
+                        mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+                    }
                     updateTimeLabels(progress, if (dur > 0) dur.toInt() else 0)
                     resetHideTimer()
                 }
@@ -1251,10 +1333,13 @@ class UFMPlayerActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(sb: SeekBar?) { isTracking = true }
             override fun onStopTrackingTouch(sb: SeekBar?) {
                 isTracking = false
-                if (mjpegPlayer != null) {
-                    mjpegPlayer?.seekTo(sb?.progress?.toLong() ?: 0L, audioPoster)
+                val target = sb?.progress?.toLong() ?: 0L
+                if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                    svgPlayerView.seekTo(target)
+                } else if (mjpegPlayer != null) {
+                    mjpegPlayer?.seekTo(target, audioPoster)
                 } else {
-                    playbackService?.seekTo(sb?.progress?.toLong() ?: 0L)
+                    playbackService?.seekTo(target)
                 }
                 resetHideTimer()
             }
@@ -1267,7 +1352,9 @@ class UFMPlayerActivity : AppCompatActivity() {
                     android.view.KeyEvent.KEYCODE_ENTER,
                     android.view.KeyEvent.KEYCODE_NUMPAD_ENTER -> {
                         val target = seekBar.progress.toLong()
-                        if (mjpegPlayer != null) {
+                        if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                            svgPlayerView.seekTo(target)
+                        } else if (mjpegPlayer != null) {
                             mjpegPlayer?.seekTo(target, audioPoster)
                         } else {
                             playbackService?.seekTo(target)
@@ -1311,6 +1398,13 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         btnPlayPause.setOnClickListener {
             resetHideTimer()
+            if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                svgPlayerView.toggle()
+                updatePlayPauseIcon()
+                val playing = svgPlayerView.isPlaying
+                PlayerToastHelper.show(this, getString(if (playing) R.string.player_toast_play else R.string.player_toast_pause))
+                return@setOnClickListener
+            }
             if (mjpegPlayer != null) {
                 mjpegPlayer?.toggle(audioPoster, lifecycleScope)
                 updatePlayPauseIcon()
@@ -1326,20 +1420,40 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         btnNext.setOnClickListener {
             resetHideTimer()
+            if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE && playbackService == null) {
+                if (currentIndex < playlist.size - 1) {
+                    playSvgTrackAtIndex(currentIndex + 1)
+                    PlayerToastHelper.show(this, getString(R.string.player_toast_next))
+                }
+                return@setOnClickListener
+            }
             playbackService?.skipToNext()
             PlayerToastHelper.show(this, getString(R.string.player_toast_next))
         }
 
         btnPrev.setOnClickListener {
             resetHideTimer()
+            if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE && playbackService == null) {
+                if (currentIndex > 0) {
+                    playSvgTrackAtIndex(currentIndex - 1)
+                    PlayerToastHelper.show(this, getString(R.string.player_toast_previous))
+                }
+                return@setOnClickListener
+            }
             playbackService?.skipToPrev()
             PlayerToastHelper.show(this, getString(R.string.player_toast_previous))
         }
 
         btnSkipBack.setOnClickListener {
             resetHideTimer()
+            val skipMs = PlayerPreferencesManager.getSkipLengthMs(this)
+            if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                val target = (svgPlayerView.currentPositionMs - skipMs).coerceAtLeast(0L)
+                svgPlayerView.seekTo(target)
+                PlayerToastHelper.show(this, getString(R.string.player_skip_backward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
+                return@setOnClickListener
+            }
             if (mjpegPlayer != null) {
-                val skipMs = PlayerPreferencesManager.getSkipLengthMs(this)
                 val target = (mjpegPlayer?.currentPositionMs ?: 0L) - skipMs
                 mjpegPlayer?.seekTo(target.coerceAtLeast(0L), audioPoster)
                 PlayerToastHelper.show(this, getString(R.string.player_skip_backward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
@@ -1351,8 +1465,14 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         btnSkipForward.setOnClickListener {
             resetHideTimer()
+            val skipMs = PlayerPreferencesManager.getSkipLengthMs(this)
+            if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+                val target = (svgPlayerView.currentPositionMs + skipMs).coerceAtMost(svgPlayerView.durationMs)
+                svgPlayerView.seekTo(target)
+                PlayerToastHelper.show(this, getString(R.string.player_skip_forward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
+                return@setOnClickListener
+            }
             if (mjpegPlayer != null) {
-                val skipMs = PlayerPreferencesManager.getSkipLengthMs(this)
                 val target = (mjpegPlayer?.currentPositionMs ?: 0L) + skipMs
                 mjpegPlayer?.seekTo(target.coerceAtMost(mjpegPlayer?.totalDurationMs ?: 0L), audioPoster)
                 PlayerToastHelper.show(this, getString(R.string.player_skip_forward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
@@ -1459,7 +1579,12 @@ class UFMPlayerActivity : AppCompatActivity() {
         sideControlsLayout?.alpha = 1f
         subtitleView.setPadding(0, 0, 0, dp(100))
 
-        if (playbackService?.isPlaying == true && !isShowingSheet && !isTvPlaylistDrawerOpen && !(isTv && isTvSeeking)) {
+        val isPlayingNow = if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+            svgPlayerView.isPlaying
+        } else {
+            playbackService?.isPlaying == true
+        }
+        if (isPlayingNow && !isShowingSheet && !isTvPlaylistDrawerOpen && !(isTv && isTvSeeking)) {
             handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(this))
         }
     }
@@ -1467,8 +1592,16 @@ class UFMPlayerActivity : AppCompatActivity() {
     private fun cancelTvSeek() {
         if (!isTvSeeking) return
         isTvSeeking = false
-        val pos = mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
-        val dur = mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+        val pos = if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+            svgPlayerView.currentPositionMs
+        } else {
+            mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
+        }
+        val dur = if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+            svgPlayerView.durationMs
+        } else {
+            mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+        }
         if (dur > 0) {
             seekBar.progress = pos.toInt()
             updateTimeLabels(pos.toInt(), dur.toInt())
@@ -1541,7 +1674,11 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     private fun updatePlayPauseIcon() {
-        val isPlaying = mjpegPlayer?.isPlaying ?: (playbackService?.isPlaying ?: false)
+        val isPlaying = if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
+            svgPlayerView.isPlaying
+        } else {
+            mjpegPlayer?.isPlaying ?: (playbackService?.isPlaying ?: false)
+        }
         val icon = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
         if (btnPlayPause is FloatingActionButton) {
             (btnPlayPause as FloatingActionButton).setImageResource(icon)
@@ -1569,6 +1706,9 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private fun stopPlaybackAndFinish() {
         gestureOverlay?.hideAll(true)
+        if (::svgPlayerView.isInitialized) {
+            svgPlayerView.destroy()
+        }
         mjpegPlayer?.release()
         mjpegPlayer = null
         if (bound) {
@@ -2204,14 +2344,11 @@ class UFMPlayerActivity : AppCompatActivity() {
             items = mutableListOf(),
             currentIndex = 0,
             onItemClick = { position ->
-                playbackService?.queueManager?.setCurrentIndex(position)
-                playbackService?.skipToNext() // Actually just loads the track
-                playbackService?.let { svc ->
-                    // Reset and play from new index
-                    val qm = svc.queueManager
-                    qm.setCurrentIndex(position)
-                    // We use a flag approach: call playCurrent through the service
-                    svc.skipToNext() // Re-uses next-index logic
+                if (playbackService != null) {
+                    playbackService?.queueManager?.setCurrentIndex(position)
+                    playbackService?.skipToNext() // Actually just loads the track
+                } else {
+                    playSvgTrackAtIndex(position)
                 }
                 toggleQueueDrawer()
             },
@@ -2253,8 +2390,6 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     private fun toggleQueueDrawer() {
-        val svc = playbackService
-        if (svc == null) return
         val recycler = queueRecyclerView ?: return
         val overlay = queueDrawerLayout ?: return
         val header = recycler.rootView.findViewWithTag<TextView>("queueHeader") ?: return
@@ -2264,8 +2399,20 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         if (isQueueDrawerOpen) {
             // Update data
-            val queue = svc.queueManager.queue.toMutableList()
-            val currentIdx = svc.queueManager.currentIndex
+            val svc = playbackService
+            val queue = if (svc != null) {
+                svc.queueManager.queue.toMutableList()
+            } else {
+                playlist.map { p ->
+                    val e = p.substringAfterLast('.', "").lowercase()
+                    QueueItem(
+                        path = p,
+                        isVideo = !FileViewerRouter.isAudio(e),
+                        fileSize = if (shareId.isEmpty()) File(p).length() else 0L
+                    )
+                }.toMutableList()
+            }
+            val currentIdx = svc?.queueManager?.currentIndex ?: currentIndex
             queueAdapter?.updateData(queue, currentIdx)
 
             val hasItems = queue.isNotEmpty()
@@ -2336,7 +2483,11 @@ class UFMPlayerActivity : AppCompatActivity() {
             tvPlaylistAdapter?.setCurrentIndex(position)
             val path = playlist.getOrNull(position) ?: ""
             txtTitle.text = path.substringAfterLast('/')
-            playbackService?.skipToIndex(position)
+            if (playbackService != null) {
+                playbackService?.skipToIndex(position)
+            } else {
+                playSvgTrackAtIndex(position)
+            }
         }
         recycler.adapter = tvPlaylistAdapter
         updatePlaylistCountText()
@@ -2404,7 +2555,8 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private fun discoverSiblingVideos(initialPath: String) {
         val ext = initialPath.substringAfterLast('.', "").lowercase()
-        val isVideo = ext in FileViewerRouter.VIDEO_EXTENSIONS
+        val isSvg = ext == "svg" || ext == "svgz"
+        val isVideo = ext in FileViewerRouter.VIDEO_EXTENSIONS || isSvg
         val isAudio = FileViewerRouter.isAudio(ext)
         if (!isVideo && !isAudio) return
 
@@ -2420,8 +2572,9 @@ class UFMPlayerActivity : AppCompatActivity() {
                         val comparator = SortFilterPreferenceManager.getFileComparator(sortState, this@UFMPlayerActivity)
                         val files = parentDir.listFiles { f ->
                             val e = f.extension.lowercase()
-                            if (isVideo) FileViewerRouter.isVideo(e)
-                            else FileViewerRouter.isAudio(e) || FileViewerRouter.isVideo(e)
+                            if (isSvg) e == "svg" || e == "svgz" || FileViewerRouter.isVideo(e)
+                            else if (isVideo) FileViewerRouter.isVideo(e) || e == "svg" || e == "svgz"
+                            else FileViewerRouter.isAudio(e) || FileViewerRouter.isVideo(e) || e == "svg" || e == "svgz"
                         }?.sortedWith(comparator)
                         files?.map { it.absolutePath }
                     } else null
@@ -2478,6 +2631,80 @@ class UFMPlayerActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 za.kilowatch.ultimatefilemanager.util.GoRoLog.w("UFMPlayerActivity", "Sibling video discovery error: ${e.message}")
             }
+        }
+    }
+
+    // ── SVG Animation Playback Helpers ──────────────────────────────
+
+    private fun loadSvgFile(path: String) {
+        val fileName = path.substringAfterLast('/')
+        txtTitle.text = if (fileName.isNotEmpty()) fileName else "Media Title"
+        loadingSpinner.visibility = View.VISIBLE
+        svgPlayerView.visibility = View.VISIBLE
+        playerView.visibility = View.GONE
+        audioPoster.visibility = View.GONE
+        audioPlaceholder.visibility = View.GONE
+        audioPosterScrim.visibility = View.GONE
+        subtitleView.visibility = View.GONE
+        btnSubtitles.visibility = View.GONE
+        updateAlpha(btnAudioTrack, false)
+        btnAudioTrack.isEnabled = false
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val bytes = try {
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path) ||
+                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@UFMPlayerActivity, path) ||
+                            path.startsWith("content://")
+                if (isSaf) {
+                    val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
+                    val uri = if (contentUriStr != null) Uri.parse(contentUriStr)
+                              else if (path.startsWith("content://")) Uri.parse(path)
+                              else (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(this@UFMPlayerActivity, path) ?: Uri.parse(path))
+                    contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                } else {
+                    val f = File(path)
+                    if (f.exists() && f.canRead()) {
+                        f.readBytes()
+                    } else null
+                }
+            } catch (e: Exception) {
+                GoRoLog.e("UFMPlayerActivity", "Failed to read SVG file bytes: $path", e)
+                null
+            }
+
+            withContext(Dispatchers.Main) {
+                loadingSpinner.visibility = View.GONE
+                if (isFinishing || isDestroyed) return@withContext
+                if (bytes != null && bytes.isNotEmpty()) {
+                    svgPlayerView.loadSvg(bytes, autoPlay = true)
+                    updatePlayPauseIcon()
+                } else {
+                    Toast.makeText(this@UFMPlayerActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun playSvgTrackAtIndex(index: Int) {
+        if (index !in playlist.indices) return
+        currentIndex = index
+        val path = playlist[index]
+        val ext = path.substringAfterLast('.', "").lowercase()
+        if (ext == "svg" || ext == "svgz") {
+            loadSvgFile(path)
+            if (isTv) {
+                tvPlaylistAdapter?.setCurrentIndex(index)
+            }
+        } else {
+            // Switching from standalone SVG to a video/audio track
+            if (::svgPlayerView.isInitialized) {
+                svgPlayerView.pause()
+                svgPlayerView.visibility = View.GONE
+            }
+            intent.putExtra("initialPath", path)
+            intent.putStringArrayListExtra("playlist", playlist)
+            UFMPlaybackService.start(this, intent)
+            bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
 

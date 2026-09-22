@@ -486,6 +486,7 @@ dependencies {
         exclude(group = "org.bouncycastle")
     }
     implementation(libs.jaudiotagger)
+    implementation(libs.androidx.webkit)
     // libnfs: native NFS v2/v3/v4 client via JNI (built from source in src/main/cpp/)
 
 

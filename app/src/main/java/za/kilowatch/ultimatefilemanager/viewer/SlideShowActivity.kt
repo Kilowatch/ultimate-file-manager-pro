@@ -317,9 +317,10 @@ class SlideShowActivity : AppCompatActivity() {
         if (playlist.isEmpty() && initialPath.isNotEmpty()) {
             val parentDir = java.io.File(initialPath).parentFile
             val scanned = parentDir?.listFiles { f ->
+                val e = f.extension.lowercase()
                 f.isFile && !f.name.startsWith(".") &&
-                (f.extension.lowercase() in FileViewerRouter.IMAGE_EXTENSIONS ||
-                 f.extension.lowercase() in FileViewerRouter.VIDEO_EXTENSIONS)
+                (e in FileViewerRouter.IMAGE_EXTENSIONS || e in FileViewerRouter.VIDEO_EXTENSIONS) &&
+                e != "svg" && e != "svgz"
             }?.sortedWith(NaturalSort.byName { it.name }) ?: emptyList()
             playlist = ArrayList(scanned.map { it.absolutePath })
             if (playlist.isEmpty()) playlist.add(initialPath)

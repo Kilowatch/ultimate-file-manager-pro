@@ -41,21 +41,9 @@ class SvgzDecoder(
                 val peek = source.source().peek()
                 val header = ByteArray(2)
                 val readCount = peek.read(header)
-                if (readCount < 2) return false
-                // Check for GZIP magic: 0x1F, 0x8B
-                if (header[0] == 0x1F.toByte() && header[1] == 0x8B.toByte()) {
-                    val testPeek = source.source().peek()
-                    GZIPInputStream(testPeek.inputStream()).use { gz ->
-                        val buf = ByteArray(128)
-                        val len = gz.read(buf)
-                        if (len > 0) {
-                            val text = String(buf, 0, len, Charsets.UTF_8)
-                            text.contains("<svg", ignoreCase = true) || text.contains("<?xml", ignoreCase = true)
-                        } else false
-                    }
-                } else {
-                    false
-                }
+                if (readCount < 2 || !SvgAnimationHelper.isGzipHeader(header)) return false
+                val testPeek = source.source().peek()
+                SvgAnimationHelper.isSvgOrSvgz(testPeek.inputStream())
             } catch (_: Throwable) {
                 false
             }
