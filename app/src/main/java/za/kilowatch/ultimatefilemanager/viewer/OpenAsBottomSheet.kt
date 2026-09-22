@@ -6,6 +6,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,13 +88,14 @@ class OpenAsBottomSheet : BottomSheetDialogFragment() {
         val context = requireContext()
         isTv = DeviceUtils.isTvDevice(context)
         if (isTv) {
-            val tvDialog = Dialog(context).apply {
+            val tvDialog = Dialog(context, R.style.UFM_Dialog).apply {
                 window?.apply {
                     setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     setLayout(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                     )
+                    setGravity(Gravity.CENTER)
                 }
             }
             return tvDialog
@@ -108,6 +111,20 @@ class OpenAsBottomSheet : BottomSheetDialogFragment() {
             }
         }
         return dialog
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (isTv) {
+            dialog?.window?.apply {
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                setGravity(Gravity.CENTER)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -128,6 +145,8 @@ class OpenAsBottomSheet : BottomSheetDialogFragment() {
         val rvCategories = view.findViewById<RecyclerView>(R.id.rvCategories)
         rvCategories.layoutManager = LinearLayoutManager(context)
 
+        val btnCancel = view.findViewById<MaterialButton?>(R.id.btnCancel)
+
         val options = listOf(
             OpenAsOption(ID_TEXT, R.string.open_as_text, R.string.open_as_text_desc, R.drawable.ic_file_text),
             OpenAsOption(ID_HEX, R.string.open_as_hex, R.string.open_as_hex_desc, R.drawable.ic_file_code),
@@ -140,13 +159,41 @@ class OpenAsBottomSheet : BottomSheetDialogFragment() {
             OpenAsOption(ID_EXTERNAL, R.string.open_as_other, R.string.open_as_other_desc, R.drawable.ic_apps)
         )
 
-        rvCategories.adapter = OpenAsAdapter(options) { option ->
+        rvCategories.adapter = OpenAsAdapter(options, isTv, btnCancel) { option ->
             handleCategorySelected(option.id)
             dismiss()
         }
 
-        view.findViewById<MaterialButton?>(R.id.btnCancel)?.setOnClickListener {
+        btnCancel?.setOnClickListener {
             dismiss()
+        }
+
+        if (isTv) {
+            btnCancel?.setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    when (keyCode) {
+                        KeyEvent.KEYCODE_DPAD_UP -> {
+                            val lastPos = options.size - 1
+                            rvCategories.smoothScrollToPosition(lastPos)
+                            rvCategories.post {
+                                rvCategories.findViewHolderForAdapterPosition(lastPos)?.itemView?.requestFocus()
+                                    ?: rvCategories.layoutManager?.findViewByPosition(lastPos)?.requestFocus()
+                            }
+                            true
+                        }
+                        KeyEvent.KEYCODE_DPAD_DOWN -> true
+                        else -> false
+                    }
+                } else {
+                    false
+                }
+            }
+
+            rvCategories.post {
+                val firstView = rvCategories.findViewHolderForAdapterPosition(0)?.itemView
+                    ?: rvCategories.layoutManager?.findViewByPosition(0)
+                firstView?.requestFocus()
+            }
         }
     }
 
@@ -224,6 +271,8 @@ class OpenAsBottomSheet : BottomSheetDialogFragment() {
 
     private class OpenAsAdapter(
         private val items: List<OpenAsOption>,
+        private val isTv: Boolean,
+        private val btnCancel: View?,
         private val onItemClick: (OpenAsOption) -> Unit
     ) : RecyclerView.Adapter<OpenAsAdapter.ViewHolder>() {
 
@@ -235,8 +284,9 @@ class OpenAsBottomSheet : BottomSheetDialogFragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val layoutRes = if (isTv) R.layout.item_open_as_category_tv else R.layout.item_open_as_category
             val view = LayoutInflater.from(parent.context).inflate(
-                R.layout.item_open_as_category,
+                layoutRes,
                 parent,
                 false
             )
@@ -251,6 +301,39 @@ class OpenAsBottomSheet : BottomSheetDialogFragment() {
 
             holder.itemContainer.setOnClickListener {
                 onItemClick(item)
+            }
+
+            if (isTv) {
+                if (position == items.size - 1) {
+                    holder.itemContainer.nextFocusDownId = R.id.btnCancel
+                } else {
+                    holder.itemContainer.nextFocusDownId = View.NO_ID
+                }
+
+                holder.itemContainer.setOnKeyListener { _, keyCode, event ->
+                    if (event.action == KeyEvent.ACTION_DOWN) {
+                        when (keyCode) {
+                            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                                if (position == items.size - 1) {
+                                    btnCancel?.requestFocus()
+                                    true
+                                } else {
+                                    false
+                                }
+                            }
+                            KeyEvent.KEYCODE_DPAD_UP -> {
+                                if (position == 0) {
+                                    true // Prevent focus escaping upward from the top item
+                                } else {
+                                    false
+                                }
+                            }
+                            else -> false
+                        }
+                    } else {
+                        false
+                    }
+                }
             }
         }
 

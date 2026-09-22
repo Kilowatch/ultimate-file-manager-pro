@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Multi-Track Subtitle Stream Extraction & Selection**: Track selection modal for extracting individual subtitle tracks or batch extracting all tracks with language suffixes.
 - **Media Operation Progress Dialog**: Translucent UFMStandard progress dialog providing visual feedback during video conversion, subtitle extraction, and audio extraction.
 - **Toolbar & Quick Action Bar Synchronization**: Synchronized `open_with`, `open_as`, `extract_subtitles`, and `extract_audio` across all browser environments (`FileBrowserActivity`, `FileBrowserFragment`, `NetworkBrowserActivity`, `NetworkBrowserFragment`, and `RecentFilesActivity`) with full user customizability in `ToolbarIconsActivity`.
+- **Raw AC-3/E-AC-3 Seekable Playback**: Added `SeekableAc3Extractor` enabling seekbar scrubbing and duration display for raw `.ac3`, `.eac3`, and `.ec3` audio files by parsing syncframe headers, publishing a `ConstantBitrateSeekMap`, and adjusting sample timestamps via `ForwardingTrackOutput` after seek operations.
 
 ### Changed
 - **Comprehensive MIME & Extension Registry**: Expanded `MimeTypeHelper` canonical mapping dictionary to cover over 500+ file extensions across modern, legacy, retro, geospatial, and industrial formats.
@@ -29,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Cinema Audio Routing & Recognition**: Fixed `.eac3`, `.ec3`, `.ac3`, `.dts`, `.dtshd`, `.truehd`, and `.mka` not being recognized as native audio files in the file viewer router, icon provider, and sort filters.
 - **MKV Audio Extraction Failure**: Fixed remuxing failure on MKV files with AC3, E-AC3, and DTS audio streams by adding native codec container mapping, Matroska Audio (.mka) container fallback, and C-level packet timestamp normalization.
 - **Subtitles & PPTX Format Routing**: Fixed subtitle files failing with "No app found to open this file type" and PowerPoint files opening erroneously as raw XML text in the text viewer.
+- **E-AC-3 Playback & Duration Detection**: Fixed raw E-AC-3 (`.eac3`, `.ec3`) files showing `0:00` duration and failing to play by enabling constant-bitrate seeking in `UfmExtractorsFactory`, adding FFmpeg-based duration fallback in `UFMPlaybackService`, and implementing proactive/reactive codec failure recovery with automatic decoder fallback prompts.
+- **AC-3/E-AC-3 Seeking Failure**: Fixed seeking not working in raw AC-3 and E-AC-3 files caused by the syncframe header buffer missing the `0x0B77` syncword required by `Ac3Util.parseAc3SyncframeInfo()`, an undersized 16-byte header buffer insufficient for E-AC-3 parsing, and an incorrect `C.TIME_UNSET` length comparison preventing the `ConstantBitrateSeekMap` from being published.
 
 ## [2.1.1] — 2026-09-21
 

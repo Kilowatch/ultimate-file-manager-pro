@@ -1206,11 +1206,13 @@ class SlideShowActivity : AppCompatActivity() {
     private fun performRenameLocal(file: File, newName: String, position: Int) {
         val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@SlideShowActivity, file.absolutePath)
         lifecycleScope.launch(Dispatchers.IO) {
-            val (success, targetPath) = if (isSaf) {
-                val renamed = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(this@SlideShowActivity, file.absolutePath, newName)
+            val success: Boolean
+            val targetPath: String
+
+            if (isSaf) {
+                success = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.rename(this@SlideShowActivity, file.absolutePath, newName)
                 val parent = file.parentFile?.absolutePath ?: ""
-                val newChildPath = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(parent, newName)
-                Pair(renamed, newChildPath)
+                targetPath = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getSafChildPath(parent, newName)
             } else {
                 val newFile = File(file.parent, newName)
                 if (newFile.exists()) {
@@ -1219,8 +1221,8 @@ class SlideShowActivity : AppCompatActivity() {
                     }
                     return@launch
                 }
-                val renamed = file.renameTo(newFile)
-                Pair(renamed, newFile.absolutePath)
+                success = file.renameTo(newFile)
+                targetPath = newFile.absolutePath
             }
 
             if (success) {

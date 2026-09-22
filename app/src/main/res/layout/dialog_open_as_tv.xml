@@ -1,67 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TV Open As Dialog - Centered 650dp Glass Panel -->
+<!-- TV Open As Dialog - Centered 800dp Theme-Aware Glass Panel -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="650dp"
+    android:layout_width="800dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_tv_card_glass"
+    android:background="@drawable/bg_dialog_glass"
     android:padding="28dp">
 
-    <!-- Header -->
+    <!-- Header with Hero Icon Badge and File Details -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/txtHeaderTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/open_as"
-            android:textColor="@color/tv_text_primary"
-            android:textSize="26sp"
-            android:fontFamily="sans-serif-black" />
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="16dp">
 
-        <TextView
-            android:id="@+id/txtFileName"
-            android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_apps"
+                app:tint="@color/tv_accent"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textColor="@color/tv_text_secondary"
-            android:textSize="15sp"
-            android:singleLine="true"
-            android:ellipsize="middle"
-            tools:text="presentation_sample.pptx" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtHeaderTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/open_as"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="24sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:id="@+id/txtFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="sample_presentation.pptx" />
+        </LinearLayout>
     </LinearLayout>
 
+    <!-- Glass Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/tv_glass_white_10"
-        android:layout_marginTop="16dp"
+        android:background="@color/tv_glass_border"
+        android:layout_marginTop="18dp"
         android:layout_marginBottom="16dp" />
 
-    <!-- Categories List -->
+    <!-- Categories List (Wide 800dp layout ensures full horizontal text display) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategories"
         android:layout_width="match_parent"
         android:layout_height="340dp"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:paddingVertical="2dp"
+        android:overScrollMode="never"
+        android:scrollbars="vertical"
+        android:scrollbarThumbVertical="@drawable/bg_drag_handle"
+        android:descendantFocusability="afterDescendants"
+        android:nextFocusDown="@id/btnCancel"
+        android:nextFocusUp="@id/rvCategories" />
 
-    <!-- Cancel Button -->
+    <!-- Cancel Button (Full-width across 800dp dialog for flawless D-pad landing) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:text="@string/cancel"
         android:textColor="@color/selector_tv_button_text_yellow"
-        android:background="@drawable/selector_tv_button_yellow"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
         android:focusable="true"
+        android:focusableInTouchMode="false"
         android:clickable="true"
-        android:textSize="14sp" />
+        app:cornerRadius="25dp"
+        app:backgroundTint="@color/tv_button_bg_tint"
+        app:strokeColor="@color/tv_button_stroke"
+        app:strokeWidth="1.5dp"
+        app:rippleColor="#33000000"
+        android:nextFocusUp="@id/rvCategories"
+        android:nextFocusDown="@id/btnCancel" />
 
 </LinearLayout>
