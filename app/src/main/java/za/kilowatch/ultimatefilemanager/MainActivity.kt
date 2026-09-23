@@ -53,7 +53,17 @@ class MainActivity : AppCompatActivity() {
             Intent(this, WelcomeActivity::class.java)
         }
 
-        startActivity(destination)
+        if (destination.component?.className == StorageBrowserActivity::class.java.name ||
+            destination.component?.className == WelcomeActivity::class.java.name
+        ) {
+            destination.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(destination)
+        } else {
+            val mainIntent = Intent(this, StorageBrowserActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            startActivities(arrayOf(mainIntent, destination))
+        }
         finish()
     }
 }

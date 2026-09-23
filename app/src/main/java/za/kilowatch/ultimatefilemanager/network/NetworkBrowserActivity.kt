@@ -740,6 +740,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        recordCurrentLocation()
+    }
+
+    fun recordCurrentLocation() {
         val isAnyPicker = isPickerMode || isAdvancedSyncFolderPickerMode || isSyncFolderPickerMode ||
                 isQuickTransferPickerMode || isCompressDestPickerMode || isShareDestPickerMode ||
                 isLocationPickerMode

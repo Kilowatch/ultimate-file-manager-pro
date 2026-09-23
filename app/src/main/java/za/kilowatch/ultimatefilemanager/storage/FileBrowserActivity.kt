@@ -725,6 +725,10 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             } catch (_: Exception) {}
         }
 
+        recordCurrentLocation()
+    }
+
+    fun recordCurrentLocation() {
         val isAnyPicker = isPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode ||
                 isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isExtractDestPickerMode ||
                 isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isLocationPickerMode ||
@@ -5415,6 +5419,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         }
 
         currentDir = targetDir
+        recordCurrentLocation()
         updateBreadcrumbs()
 
         // Exit selection mode when navigating or after an operation. Preserve it only

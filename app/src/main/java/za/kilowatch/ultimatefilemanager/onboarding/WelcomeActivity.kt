@@ -540,10 +540,15 @@ class WelcomeActivity : AppCompatActivity() {
             intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java)
         }
 
-        // Ensure that if we bypass StorageBrowser, the target activity is the task root
-        // so it can synthesize the back stack correctly.
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        if (intent.component?.className == za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java.name) {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        } else {
+            val mainIntent = Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            startActivities(arrayOf(mainIntent, intent))
+        }
         finish()
     }
 

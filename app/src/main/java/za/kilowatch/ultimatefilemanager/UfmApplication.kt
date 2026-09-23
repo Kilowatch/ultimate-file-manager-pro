@@ -334,6 +334,9 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                         }
                     }
 
+                    // Keep last location manager synchronized across all available places in the app
+                    za.kilowatch.ultimatefilemanager.storage.LastLocationManager.onActivityResumed(activity)
+
                     val localeHelper = za.kilowatch.ultimatefilemanager.settings.LocaleHelper
                     val fontHelper  = za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 

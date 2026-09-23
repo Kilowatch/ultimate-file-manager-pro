@@ -50,7 +50,12 @@ object TabSessionManager {
     fun hasSavedTabs(context: Context): Boolean {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val jsonStr = prefs.getString(KEY_TABS_JSON, null) ?: return false
-        return jsonStr.length > 2 // more than "[]"
+        return try {
+            val array = JSONArray(jsonStr)
+            array.length() > 1
+        } catch (_: Exception) {
+            false
+        }
     }
 
     fun clearSession(context: Context) {

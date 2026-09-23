@@ -1746,6 +1746,15 @@ Ultimate File Manager Pro
     <string name="settings_default_start_screen_subtitle">
 Виберіть, який екран відкривається під час запуску
 </string>
+    <string name="start_screen_last_opened">
+Last Opened Location
+</string>
+    <string name="start_screen_last_opened_desc">
+Reopen where you left off upon app launch
+</string>
+    <string name="storage_unavailable_redirect">
+Previous storage location is unavailable. Returned to Storage screen.
+</string>
     <string name="start_screen_storage_browser">
 Головне меню (за замовчуванням)
 </string>

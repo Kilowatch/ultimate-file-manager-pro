@@ -1,9 +1,12 @@
 package za.kilowatch.ultimatefilemanager.storage
 
+import android.app.Activity
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Environment
 import android.os.storage.StorageManager
+import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
@@ -32,8 +35,11 @@ object LastLocationManager {
     const val TYPE_TABBED_BROWSER = "TABBED_BROWSER"
     const val TYPE_TWIN_WINDOW = "TWIN_WINDOW"
     const val TYPE_STORAGE_BROWSER = "STORAGE_BROWSER"
+    const val TYPE_GENERIC_ACTIVITY = "GENERIC_ACTIVITY"
 
     private const val KEY_CONTAINER_TYPE = "container_type"
+    private const val KEY_GENERIC_CLASS_NAME = "generic_class_name"
+    private const val KEY_GENERIC_INTENT_URI = "generic_intent_uri"
 
     // FileBrowser keys
     private const val KEY_MOUNT_PATH = "file_mount_path"
@@ -131,6 +137,125 @@ object LastLocationManager {
     }
 
     /**
+     * Records any standard feature activity (Settings, App Manager, Notepad, Sync, etc.).
+     */
+    fun recordGenericActivity(activity: Activity) {
+        val prefs = activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val intentUri = try {
+            activity.intent?.toUri(Intent.URI_INTENT_SCHEME)
+        } catch (_: Throwable) {
+            null
+        }
+        prefs.edit()
+            .putString(KEY_CONTAINER_TYPE, TYPE_GENERIC_ACTIVITY)
+            .putString(KEY_GENERIC_CLASS_NAME, activity.javaClass.name)
+            .putString(KEY_GENERIC_INTENT_URI, intentUri)
+            .apply()
+    }
+
+    /**
+     * Called from [za.kilowatch.ultimatefilemanager.UfmApplication] whenever any activity resumes.
+     * Keeps the last opened location automatically updated across all available places in the app.
+     */
+    fun onActivityResumed(activity: Activity) {
+        if (activity.isFinishing) return
+        val context = activity.applicationContext
+
+        when (activity) {
+            is StorageBrowserActivity -> {
+                val isPicker = activity.intent?.getBooleanExtra("isPickerMode", false) == true ||
+                        activity.intent?.getBooleanExtra("EXTRA_PICKER_MODE", false) == true
+                if (!isPicker) {
+                    recordStorageBrowser(context)
+                }
+            }
+            is TabbedBrowserActivity -> {
+                activity.recordCurrentLocation()
+            }
+            is TwinWindowActivity -> {
+                recordTwinWindow(context)
+            }
+            is FileBrowserActivity -> {
+                activity.recordCurrentLocation()
+            }
+            is NetworkBrowserActivity -> {
+                activity.recordCurrentLocation()
+            }
+            else -> {
+                if (isRecordableGenericActivity(activity)) {
+                    recordGenericActivity(activity)
+                }
+            }
+        }
+    }
+
+    /**
+     * Determines whether an activity represents a persistent app place (e.g. Settings, App Manager,
+     * Notepad, Sync Manager) rather than a transient picker, gate, or modal dialog.
+     */
+    fun isRecordableGenericActivity(activity: Activity): Boolean {
+        if (activity.isFinishing) return false
+        val className = activity.javaClass.name
+
+        // Exclude classes not in our app package
+        if (!className.startsWith("za.kilowatch.ultimatefilemanager.")) return false
+
+        // Exclude onboarding, gate, and trampoline activities
+        if (className.startsWith("za.kilowatch.ultimatefilemanager.onboarding.") ||
+            className == "za.kilowatch.ultimatefilemanager.MainActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity"
+        ) {
+            return false
+        }
+
+        // Exclude security unlock gate (AppSecurityManager prompts lock independently)
+        if (className == "za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity") {
+            return false
+        }
+
+        // Exclude media/document viewers (they are transient view operations; last location should stay the folder)
+        if (className.startsWith("za.kilowatch.ultimatefilemanager.viewer.") ||
+            UfmApplication.VIEWER_ACTIVITIES.contains(activity.javaClass)
+        ) {
+            return false
+        }
+
+        // Exclude pickers and transient action dialogs
+        val intent = activity.intent
+        if (intent != null) {
+            if (intent.getBooleanExtra("isPickerMode", false) ||
+                intent.getBooleanExtra("EXTRA_PICKER_MODE", false) ||
+                intent.getBooleanExtra("picker_mode", false)
+            ) {
+                return false
+            }
+        }
+
+        if (className == "za.kilowatch.ultimatefilemanager.ui.SafPickerActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.OpenWithActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.ShareReceiverActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.PackageInstallerActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.InstallResultActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.AdbPairingActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.AdbPairingTvActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.TvPairingActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.storage.TileColorImportTvActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.storage.TileColorTvActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.storage.TileCopyTvActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.storage.TvColorPickerActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.storage.VaultFolderPickerActivity" ||
+            className.contains("AuthActivity")
+        ) {
+            return false
+        }
+
+        return true
+    }
+
+    /**
      * Clears recorded last location.
      */
     fun clear(context: Context) {
@@ -221,11 +346,9 @@ object LastLocationManager {
             }
 
             TYPE_TABBED_BROWSER -> {
-                if (!TabSessionManager.hasSavedTabs(context)) {
-                    return Intent(context, StorageBrowserActivity::class.java)
-                }
                 val (savedTabs, _) = TabSessionManager.loadSession(context)
                 if (savedTabs.isEmpty()) {
+                    recordStorageBrowser(context)
                     return Intent(context, StorageBrowserActivity::class.java)
                 }
                 val (validTabs, closedTabs) = TabSessionManager.validateAndPrune(context, savedTabs)
@@ -237,11 +360,62 @@ object LastLocationManager {
                         putExtra(EXTRA_STORAGE_UNAVAILABLE_REDIRECT, true)
                     }
                 }
+                if (validTabs.size <= 1) {
+                    // User has not set multiple tabs — resume in normal single browser mode
+                    val tab = validTabs[0]
+                    if (tab.storageType == za.kilowatch.ultimatefilemanager.tabs.StorageType.NETWORK || tab.storageType == za.kilowatch.ultimatefilemanager.tabs.StorageType.CLOUD) {
+                        return Intent(context, NetworkBrowserActivity::class.java).apply {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, tab.shareId)
+                            putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, tab.currentPath)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, tab.storageLabel)
+                        }
+                    } else {
+                        val isSaf = SafTreeManager.isSafPath(tab.rootPath) || tab.storageType == za.kilowatch.ultimatefilemanager.tabs.StorageType.SAF
+                        return Intent(context, FileBrowserActivity::class.java).apply {
+                            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, tab.rootPath)
+                            putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, tab.currentPath)
+                            putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, tab.storageLabel)
+                            putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, if (isSaf) "SAF" else "LOCAL")
+                        }
+                    }
+                }
                 return Intent(context, TabbedBrowserActivity::class.java)
             }
 
             TYPE_TWIN_WINDOW -> {
                 return Intent(context, TwinWindowActivity::class.java)
+            }
+
+            TYPE_GENERIC_ACTIVITY -> {
+                val className = prefs.getString(KEY_GENERIC_CLASS_NAME, null)
+                val intentUri = prefs.getString(KEY_GENERIC_INTENT_URI, null)
+
+                if (className.isNullOrEmpty()) {
+                    recordStorageBrowser(context)
+                    return Intent(context, StorageBrowserActivity::class.java)
+                }
+
+                val clazz = try {
+                    Class.forName(className)
+                } catch (_: Throwable) {
+                    recordStorageBrowser(context)
+                    return Intent(context, StorageBrowserActivity::class.java)
+                }
+
+                val targetIntent = if (!intentUri.isNullOrEmpty()) {
+                    try {
+                        Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME).apply {
+                            component = ComponentName(context, clazz)
+                            flags = 0
+                        }
+                    } catch (_: Throwable) {
+                        Intent(context, clazz)
+                    }
+                } else {
+                    Intent(context, clazz)
+                }
+
+                return targetIntent
             }
 
             else -> {

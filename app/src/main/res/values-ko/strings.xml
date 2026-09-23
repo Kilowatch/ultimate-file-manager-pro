@@ -1746,6 +1746,15 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
     <string name="settings_default_start_screen_subtitle">
 앱 실행 시 열릴 화면 선택
 </string>
+    <string name="start_screen_last_opened">
+Last Opened Location
+</string>
+    <string name="start_screen_last_opened_desc">
+Reopen where you left off upon app launch
+</string>
+    <string name="storage_unavailable_redirect">
+Previous storage location is unavailable. Returned to Storage screen.
+</string>
     <string name="start_screen_storage_browser">
 주 메뉴 (기본값)
 </string>

@@ -238,8 +238,39 @@ class TabbedBrowserActivity : AppCompatActivity(),
 
     override fun onPause() {
         super.onPause()
-        TabSessionManager.saveSession(this, tabs, activeTabId ?: "")
-        za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordTabbedBrowser(this)
+        recordCurrentLocation()
+    }
+
+    fun getTabsCount(): Int = tabs.size
+
+    fun recordCurrentLocation() {
+        if (tabs.size > 1) {
+            TabSessionManager.saveSession(this, tabs, activeTabId ?: "")
+            za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordTabbedBrowser(this)
+        } else if (tabs.size == 1) {
+            val tab = tabs[0]
+            if (tab.storageType == StorageType.NETWORK || tab.storageType == StorageType.CLOUD) {
+                za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordNetworkBrowser(
+                    context = this,
+                    shareId = tab.shareId ?: "",
+                    currentPath = tab.currentPath,
+                    storageLabel = tab.storageLabel,
+                    isOnlineStorage = tab.storageType == StorageType.CLOUD
+                )
+            } else {
+                val isSaf = SafTreeManager.isSafPath(tab.rootPath) || tab.storageType == StorageType.SAF
+                za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordFileBrowser(
+                    context = this,
+                    mountPath = tab.rootPath,
+                    currentPath = tab.currentPath,
+                    storageLabel = tab.storageLabel,
+                    storageId = "",
+                    storageType = if (isSaf) "SAF" else "LOCAL",
+                    isRemovable = false,
+                    isRoot = false
+                )
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -394,7 +425,12 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     return
                 }
 
-                TabSessionManager.saveSession(this@TabbedBrowserActivity, tabs, activeTabId ?: "")
+                if (tabs.size <= 1) {
+                    TabSessionManager.clearSession(this@TabbedBrowserActivity)
+                    za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordStorageBrowser(this@TabbedBrowserActivity)
+                } else {
+                    TabSessionManager.saveSession(this@TabbedBrowserActivity, tabs, activeTabId ?: "")
+                }
                 val intent = Intent(this@TabbedBrowserActivity, StorageBrowserActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 }
