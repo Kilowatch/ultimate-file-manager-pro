@@ -961,8 +961,32 @@ class StorageBrowserActivity : AppCompatActivity() {
     private var lastDevicePingMs = 0L
     private val DEVICE_PING_INTERVAL_MS = 30_000L
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent?.getBooleanExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT, false) == true) {
+            intent.removeExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT)
+            showPremiumSnackbar(getString(R.string.storage_unavailable_redirect))
+        }
+    }
+
     override fun onResume() {
         super.onResume()
+        val isAnyPickerActive = isPickerMode || isLocationPickerMode || isSyncFolderPickerMode ||
+                isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode ||
+                isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode ||
+                isNetworkCachePickerMode || isLocalCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode ||
+                isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker ||
+                isSupportAttachmentPicker || isKeyfilePickerMode || isCertPickerMode || isDrivePicker
+        if (!isAnyPickerActive) {
+            za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordStorageBrowser(this)
+        }
+
+        if (intent.getBooleanExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT, false)) {
+            intent.removeExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT)
+            showPremiumSnackbar(getString(R.string.storage_unavailable_redirect))
+        }
+
         // Reload in onResume to pick up new network shares or USB mounts instantly
         loadStorageVolumes()
         Log.d(TAG, "onResume: Refreshing storage volumes")

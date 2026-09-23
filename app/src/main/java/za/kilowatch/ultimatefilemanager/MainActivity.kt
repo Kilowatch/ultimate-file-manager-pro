@@ -33,18 +33,21 @@ class MainActivity : AppCompatActivity() {
         val onboardingComplete = za.kilowatch.ultimatefilemanager.onboarding.PolicyAcceptanceManager.isOnboardingComplete(this)
 
         val destination = if (onboardingComplete) {
-            // Check if Twin Window is set as default startup
-            val isDefaultTwinWindow = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
-            if (isDefaultTwinWindow) {
-                Intent(this, TwinWindowActivity::class.java).also {
-                    // Set default local storage for the first pane
-                    it.putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_PATH, 
-                        android.os.Environment.getExternalStorageDirectory().absolutePath)
-                    it.putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_LABEL, 
-                        getString(R.string.storage_internal))
-                }
+            val startScreenId = za.kilowatch.ultimatefilemanager.settings.DefaultStartScreenPreferenceManager.getStartScreenId(this)
+            if (startScreenId == za.kilowatch.ultimatefilemanager.settings.DefaultStartScreenPreferenceManager.ID_LAST_OPENED) {
+                za.kilowatch.ultimatefilemanager.storage.LastLocationManager.resolveStartIntent(this)
             } else {
-                Intent(this, StorageBrowserActivity::class.java)
+                val isDefaultTwinWindow = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
+                if (isDefaultTwinWindow || startScreenId == za.kilowatch.ultimatefilemanager.settings.DefaultStartScreenPreferenceManager.ID_TWIN_WINDOW) {
+                    Intent(this, TwinWindowActivity::class.java).also {
+                        it.putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_PATH, 
+                            android.os.Environment.getExternalStorageDirectory().absolutePath)
+                        it.putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_LABEL, 
+                            getString(R.string.storage_internal))
+                    }
+                } else {
+                    Intent(this, StorageBrowserActivity::class.java)
+                }
             }
         } else {
             Intent(this, WelcomeActivity::class.java)

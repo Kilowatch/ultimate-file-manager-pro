@@ -73,20 +73,24 @@ object TabSessionManager {
         val validTabs = mutableListOf<TabModel>()
         val closedTabNames = mutableListOf<String>()
 
-        val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as? StorageManager
-        val mountedVolumes = storageManager?.storageVolumes ?: emptyList()
         val mountedPaths = mutableSetOf<String>()
-        for (vol in mountedVolumes) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             try {
-                val state = vol.state
-                if (state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY) {
-                    val getPathMethod = vol.javaClass.getMethod("getPath")
-                    val path = getPathMethod.invoke(vol) as? String
-                    if (!path.isNullOrEmpty()) {
-                        mountedPaths.add(path)
-                    }
+                val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as? StorageManager
+                val mountedVolumes = storageManager?.storageVolumes ?: emptyList()
+                for (vol in mountedVolumes) {
+                    try {
+                        val state = vol.state
+                        if (state == Environment.MEDIA_MOUNTED || state == Environment.MEDIA_MOUNTED_READ_ONLY) {
+                            val getPathMethod = vol.javaClass.getMethod("getPath")
+                            val path = getPathMethod.invoke(vol) as? String
+                            if (!path.isNullOrEmpty()) {
+                                mountedPaths.add(path)
+                            }
+                        }
+                    } catch (_: Throwable) {}
                 }
-            } catch (_: Exception) {}
+            } catch (_: Throwable) {}
         }
 
         val networkRepo = NetworkShareRepository.getInstance(context)
@@ -146,7 +150,11 @@ object TabSessionManager {
 
     fun createDefaultTab(context: Context): TabModel {
         val internalPath = Environment.getExternalStorageDirectory().absolutePath
-        val label = context.getString(R.string.storage_internal)
+        val label = try {
+            context.getString(R.string.storage_internal)
+        } catch (_: Exception) {
+            "Internal Storage"
+        }
         return TabModel(
             title = label,
             isCustomName = false,

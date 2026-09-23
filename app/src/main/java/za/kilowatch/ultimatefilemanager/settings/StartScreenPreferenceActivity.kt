@@ -75,19 +75,34 @@ class StartScreenPreferenceActivity : AppCompatActivity() {
         contentLayout = findViewById(R.id.contentLayout)
 
         // 1. Build Main Screen Options
-        val mainScreenOptions = listOf(
+        val mainScreenOptions = mutableListOf<StartScreenOption>()
+        if (!isTv) {
+            mainScreenOptions.add(
+                StartScreenOption(
+                    id = DefaultStartScreenPreferenceManager.ID_LAST_OPENED,
+                    title = "${getString(R.string.start_screen_last_opened)} (Default)",
+                    subtitle = getString(R.string.start_screen_last_opened_desc),
+                    iconRes = R.drawable.ic_history
+                )
+            )
+        }
+        mainScreenOptions.add(
             StartScreenOption(
                 id = DefaultStartScreenPreferenceManager.ID_STORAGE_BROWSER,
-                title = getString(R.string.start_screen_storage_browser),
+                title = if (isTv) getString(R.string.start_screen_storage_browser) else getString(R.string.start_screen_storage_browser).replace(" (Default)", ""),
                 subtitle = getString(R.string.start_screen_storage_browser_desc),
                 iconRes = R.drawable.ic_home
-            ),
+            )
+        )
+        mainScreenOptions.add(
             StartScreenOption(
                 id = DefaultStartScreenPreferenceManager.ID_TWIN_WINDOW,
                 title = getString(R.string.start_screen_twin_window),
                 subtitle = getString(R.string.start_screen_twin_window_desc),
                 iconRes = R.drawable.ic_twin_window
-            ),
+            )
+        )
+        mainScreenOptions.add(
             StartScreenOption(
                 id = DefaultStartScreenPreferenceManager.ID_FILE_SERVER,
                 title = getString(R.string.start_screen_file_server),

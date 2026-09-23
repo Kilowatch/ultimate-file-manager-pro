@@ -1250,6 +1250,7 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.start_screen_twin_window)
         } else {
             when {
+                currentStartScreenId == DefaultStartScreenPreferenceManager.ID_LAST_OPENED -> getString(R.string.start_screen_last_opened)
                 currentStartScreenId == DefaultStartScreenPreferenceManager.ID_TWIN_WINDOW -> getString(R.string.start_screen_twin_window)
                 currentStartScreenId == DefaultStartScreenPreferenceManager.ID_FILE_SERVER -> getString(R.string.start_screen_file_server)
                 currentStartScreenId.startsWith(DefaultStartScreenPreferenceManager.PREFIX_STORAGE) -> {

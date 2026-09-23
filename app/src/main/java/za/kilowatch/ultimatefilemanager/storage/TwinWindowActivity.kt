@@ -93,6 +93,11 @@ class TwinWindowActivity : AppCompatActivity() {
         prunePanesOnRemovedVolumes(null)
     }
 
+    override fun onPause() {
+        super.onPause()
+        za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordTwinWindow(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         volumeReceiver?.let {

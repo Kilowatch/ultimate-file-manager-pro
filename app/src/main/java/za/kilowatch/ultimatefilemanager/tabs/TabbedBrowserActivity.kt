@@ -236,6 +236,12 @@ class TabbedBrowserActivity : AppCompatActivity(),
         validateAndPruneStorageTabs()
     }
 
+    override fun onPause() {
+        super.onPause()
+        TabSessionManager.saveSession(this, tabs, activeTabId ?: "")
+        za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordTabbedBrowser(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         storageReceiver?.let {
@@ -2368,7 +2374,17 @@ class TabbedBrowserActivity : AppCompatActivity(),
             )
             return
         }
+        val previousCount = tabs.size
         val (valid, closed) = TabSessionManager.validateAndPrune(this, tabs)
+        if (closed.size == previousCount && previousCount > 0) {
+            android.widget.Toast.makeText(
+                this,
+                getString(R.string.tab_storage_unavailable_closed, closed.joinToString(", ")),
+                android.widget.Toast.LENGTH_LONG
+            ).show()
+            exitToMainMenuAndFinish()
+            return
+        }
         if (closed.isNotEmpty()) {
             tabs.clear()
             tabs.addAll(valid)

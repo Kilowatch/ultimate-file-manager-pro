@@ -724,6 +724,26 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 unregisterReceiver(storageReceiver)
             } catch (_: Exception) {}
         }
+
+        val isAnyPicker = isPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode ||
+                isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isExtractDestPickerMode ||
+                isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isLocationPickerMode ||
+                isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
+                isScannerFolderPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker ||
+                isFromSearch
+
+        if (!isAnyPicker && ::rootPath.isInitialized && ::currentDir.isInitialized) {
+            LastLocationManager.recordFileBrowser(
+                context = this,
+                mountPath = rootPath,
+                currentPath = currentDir.absolutePath,
+                storageLabel = storageLabel,
+                storageId = storageId,
+                storageType = storageType,
+                isRemovable = isRemovableStorage,
+                isRoot = isRootStorage
+            )
+        }
     }
 
     override fun onDestroy() {
@@ -7530,6 +7550,10 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                             R.string.safely_remove_unmounted_switched,
                             android.widget.Toast.LENGTH_LONG
                         ).show()
+                        if (isTaskRoot) {
+                            val intent = Intent(this@FileBrowserActivity, StorageBrowserActivity::class.java)
+                            startActivity(intent)
+                        }
                         finish()
                     }
                 }

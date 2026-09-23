@@ -98,7 +98,8 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity::class.java,
-            za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java
+            za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java,
+            za.kilowatch.ultimatefilemanager.viewer.PresentationViewerActivity::class.java
         )
     }
 

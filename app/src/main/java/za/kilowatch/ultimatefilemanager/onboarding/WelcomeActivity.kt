@@ -504,6 +504,9 @@ class WelcomeActivity : AppCompatActivity() {
         var intent: Intent? = null
 
         when {
+            startScreenId == za.kilowatch.ultimatefilemanager.settings.DefaultStartScreenPreferenceManager.ID_LAST_OPENED -> {
+                intent = za.kilowatch.ultimatefilemanager.storage.LastLocationManager.resolveStartIntent(this)
+            }
             startScreenId == za.kilowatch.ultimatefilemanager.settings.DefaultStartScreenPreferenceManager.ID_TWIN_WINDOW -> {
                 intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity::class.java)
             }

@@ -607,6 +607,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
             )
         } else {
             val shareId = intent.getStringExtra(EXTRA_SHARE_ID) ?: run {
+                if (isTaskRoot) {
+                    startActivity(Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                        putExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT, true)
+                    })
+                }
                 finish()
                 return
             }
@@ -615,6 +620,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
             if (isOnlineStorage) {
                 val foundShare = OnlineStorageRepository.getInstance(this).getById(shareId)
                 if (foundShare == null) {
+                    if (isTaskRoot) {
+                        startActivity(Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                            putExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT, true)
+                        })
+                    }
                     finish()
                     return
                 }
@@ -655,6 +665,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
             } else {
                 val foundShare = NetworkShareRepository.getInstance(this).getById(shareId)
                 if (foundShare == null) {
+                    if (isTaskRoot) {
+                        startActivity(Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                            putExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT, true)
+                        })
+                    }
                     finish()
                     return
                 }
@@ -721,6 +736,27 @@ class NetworkBrowserActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         unregisterReceiver(updateReceiver)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val isAnyPicker = isPickerMode || isAdvancedSyncFolderPickerMode || isSyncFolderPickerMode ||
+                isQuickTransferPickerMode || isCompressDestPickerMode || isShareDestPickerMode ||
+                isLocationPickerMode
+
+        if (!isAnyPicker && ::share.isInitialized) {
+            val isOnline = intent.getBooleanExtra("isOnlineStorage", false)
+            val pairedId = intent.getStringExtra(EXTRA_PAIRED_DEVICE_ID)
+            val label = intent.getStringExtra(EXTRA_STORAGE_LABEL) ?: share.name
+            za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordNetworkBrowser(
+                context = this,
+                shareId = share.id,
+                currentPath = currentPath,
+                storageLabel = label,
+                isOnlineStorage = isOnline,
+                pairedDeviceId = pairedId
+            )
+        }
     }
 
     override fun onResume() {
