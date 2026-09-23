@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.3] — 2026-09-22
 
 ### Added
+- **Android TV Folder Sync & Advanced Sync**: Enabled Folder Sync and Advanced Sync tiles and features on Android TV devices with full 10-foot UI support and D-pad remote navigation.
+- **Dedicated 10-Foot TV Sync Layouts**: Added dedicated Android TV layouts for Sync Manager (`activity_sync_manager_tv.xml`), Sync Edit (`activity_sync_edit_tv.xml`), and Advanced Sync Edit (`activity_advanced_sync_edit_tv.xml`).
+- **TV Sync Profile Cards & Action Modals**: Added D-pad focusable TV sync profile card views and action dialogs with direct toggle, edit, sync-now, and deletion controls.
+- **TV Destination Picker & Dropdowns**: Added TV destination picker item layouts (`item_sync_destination_tv.xml`) and TV spinner dropdowns.
 - **SMIL Vector Animation Playback for SVG & SVGZ**: Built full SMIL timeline playback (`<animate>`, `<animateTransform>`, `<animateMotion>`, `<set>`, `<discard>`) into UFM Media Player for both raw `.svg` and gzip-compressed `.svgz` vector files across Mobile and Android TV.
 - **Dedicated Interactive & SMIL SVG Controls**: Built a dual-mode interactive and transport control set for SMIL and interactive SVG playback in UFM Media Player (supporting comicstrip slideshows, panel navigation, gamepad/keyboard/D-pad forwarding, and playback speed).
 - **Unified Player Transport Controls for Vector Media**: Integrated playback controls (Play, Pause, Restart, Seekbar scrubbing, Skip +/-10s, Gestures, and Playlist Queue navigation) seamlessly for animated SVG files using the existing media player interface with zero UI clutter.

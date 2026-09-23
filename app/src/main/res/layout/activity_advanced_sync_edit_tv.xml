@@ -384,6 +384,155 @@
                         android:textColor="@color/tv_text_primary"
                         android:focusable="true" />
 
+                    <!-- Interval Section -->
+                    <LinearLayout
+                        android:id="@+id/layoutIntervalSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="4dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/sync_frequency"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="@color/tv_accent"
+                            app:hintTextColor="@color/tv_accent"
+                            app:endIconTint="@color/tv_accent"
+                            android:textColorHint="@color/tv_text_hint">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/dropdownInterval"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:popupBackground="@drawable/bg_dialog_glass"
+                                android:dropDownVerticalOffset="4dp"
+                                android:inputType="none"
+                                android:focusable="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <!-- Scheduled Section -->
+                    <LinearLayout
+                        android:id="@+id/layoutScheduledSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="4dp"
+                        android:visibility="gone">
+
+                        <!-- Period Dropdown -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/repeat"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="@color/tv_accent"
+                            app:hintTextColor="@color/tv_accent"
+                            app:endIconTint="@color/tv_accent"
+                            android:textColorHint="@color/tv_text_hint">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/dropdownPeriod"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:popupBackground="@drawable/bg_dialog_glass"
+                                android:dropDownVerticalOffset="4dp"
+                                android:inputType="none"
+                                android:focusable="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Day of Week (Weekly) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:id="@+id/layoutDayOfWeek"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:hint="@string/day_of_week"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="@color/tv_accent"
+                            app:hintTextColor="@color/tv_accent"
+                            app:endIconTint="@color/tv_accent"
+                            android:textColorHint="@color/tv_text_hint"
+                            android:visibility="gone">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/dropdownDayOfWeek"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:popupBackground="@drawable/bg_dialog_glass"
+                                android:dropDownVerticalOffset="4dp"
+                                android:inputType="none"
+                                android:focusable="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Day of Month (Monthly) -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:id="@+id/layoutDayOfMonth"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:hint="@string/day_of_month"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxStrokeColor="@color/tv_accent"
+                            app:hintTextColor="@color/tv_accent"
+                            app:endIconTint="@color/tv_accent"
+                            android:textColorHint="@color/tv_text_hint"
+                            android:visibility="gone">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/dropdownDayOfMonth"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:popupBackground="@drawable/bg_dialog_glass"
+                                android:dropDownVerticalOffset="4dp"
+                                android:inputType="none"
+                                android:focusable="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/sync_time"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TimePicker
+                            android:id="@+id/timePicker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="8dp"
+                            android:timePickerMode="spinner" />
+                    </LinearLayout>
+
                     <!-- Instant sync toggle -->
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/switchInstantSync"
@@ -538,15 +687,33 @@
                             android:textSize="15sp"
                             android:text="@string/move_files_upload" />
 
+                        <TextView
+                            android:id="@+id/txtMoveFilesSummary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="14dp"
+                            android:textColor="@color/tv_text_hint"
+                            android:textSize="12sp"
+                            android:text="@string/move_files_upload_summary" />
+
                         <com.google.android.material.materialswitch.MaterialSwitch
                             android:id="@+id/switchSyncDeletions"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
                             android:checked="false"
                             android:textColor="@color/tv_text_primary"
                             android:textSize="15sp"
                             android:text="@string/sync_deletions" />
+
+                        <TextView
+                            android:id="@+id/txtSyncDeletionsSummary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/tv_text_hint"
+                            android:textSize="12sp"
+                            android:text="@string/sync_deletions_summary_upload" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -556,6 +723,7 @@
                  CARD 5: FILE FILTERING & TAGS
                  ══════════════════════════════════════════════════ -->
             <TextView
+                android:id="@+id/txtHeaderFiltering"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sync_section_filtering"
@@ -567,6 +735,7 @@
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFiltering"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -577,6 +746,7 @@
                 app:cardElevation="0dp">
 
                 <LinearLayout
+                    android:id="@+id/layoutFilters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

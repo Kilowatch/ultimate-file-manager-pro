@@ -5312,6 +5312,14 @@ TV का नाम बदलकर %1$s कर दिया गया
     <string name="play_pause">
 चलाएं / रोकें
 </string>
+    <!-- SVG Interactive Player Controls -->
+    <string name="svg_interactive_mode">Interactive Mode</string>
+    <string name="svg_transport_mode">Player Controls</string>
+    <string name="svg_restart">Restart Animation</string>
+    <string name="svg_playback_speed">Playback Speed</string>
+    <string name="svg_next_panel">Next Panel</string>
+    <string name="svg_prev_panel">Previous Panel</string>
+    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 ऑडियो ट्रैक
@@ -7711,6 +7719,10 @@ SMB/FTP सेट करें
     <string name="sync_disabled">
 सिंक अक्षम
 </string>
+    <string name="sync_action_enable">Enable Profile</string>
+    <string name="sync_action_disable">Disable Profile</string>
+    <string name="sync_status_enabled">Active</string>
+    <string name="sync_status_disabled">Paused</string>
     <string name="sync_delete_profile_confirm_msg">
 क्या आप वाकई \"%1$s\" को हटाना चाहते हैं? इसे पूर्ववत नहीं किया जा सकता।
 </string>

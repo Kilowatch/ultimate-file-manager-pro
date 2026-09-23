@@ -20,7 +20,9 @@ class SyncProfileAdapter(
 ) : ListAdapter<SyncProfile, SyncProfileAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_sync_profile, parent, false)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(parent.context)
+        val layoutRes = if (isTv) R.layout.item_sync_profile_tv else R.layout.item_sync_profile
+        val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
         return ViewHolder(view)
     }
 
@@ -33,9 +35,10 @@ class SyncProfileAdapter(
         private val txtInterval: TextView = view.findViewById(R.id.txtInterval)
         private val txtSource: TextView = view.findViewById(R.id.txtSource)
         private val txtDest: TextView = view.findViewById(R.id.txtDest)
-        private val txtLastSync: TextView = view.findViewById(R.id.txtLastSync)
-        private val switchEnabled: MaterialSwitch = view.findViewById(R.id.switchEnabled)
-        private val btnMenu: View = view.findViewById(R.id.btnMenu)
+        private val txtLastSync: TextView? = view.findViewById(R.id.txtLastSync)
+        private val txtStatus: TextView? = view.findViewById(R.id.txtStatus)
+        private val switchEnabled: MaterialSwitch? = view.findViewById(R.id.switchEnabled)
+        private val btnMenu: View? = view.findViewById(R.id.btnMenu)
 
         fun bind(profile: SyncProfile) {
             txtName.text = profile.name
@@ -67,22 +70,34 @@ class SyncProfileAdapter(
             txtSource.text = profile.localDisplayPath
             txtDest.text = profile.remotePath.ifEmpty { "/" }
 
-            if (profile.lastSyncTime > 0) {
-                val timeStr = android.text.format.DateUtils.getRelativeTimeSpanString(
-                    profile.lastSyncTime, System.currentTimeMillis(), android.text.format.DateUtils.MINUTE_IN_MILLIS
-                )
-                txtLastSync.text = itemView.context.getString(R.string.last_sync_timestr_profilelastsyncfilecount_files, timeStr, profile.lastSyncFileCount)
-            } else {
-                txtLastSync.setText(R.string.never_synced)
+            if (txtLastSync != null) {
+                if (profile.lastSyncTime > 0) {
+                    val timeStr = android.text.format.DateUtils.getRelativeTimeSpanString(
+                        profile.lastSyncTime, System.currentTimeMillis(), android.text.format.DateUtils.MINUTE_IN_MILLIS
+                    )
+                    txtLastSync.text = itemView.context.getString(R.string.last_sync_timestr_profilelastsyncfilecount_files, timeStr, profile.lastSyncFileCount)
+                } else {
+                    txtLastSync.setText(R.string.never_synced)
+                }
             }
 
-            switchEnabled.setOnCheckedChangeListener(null)
-            switchEnabled.isChecked = profile.enabled
-            switchEnabled.setOnCheckedChangeListener { _, isChecked ->
+            txtStatus?.let { statusView ->
+                statusView.text = itemView.context.getString(if (profile.enabled) R.string.sync_status_enabled else R.string.sync_status_disabled)
+                statusView.setTextColor(
+                    androidx.core.content.ContextCompat.getColor(
+                        itemView.context,
+                        if (profile.enabled) R.color.tv_accent else R.color.tv_text_secondary
+                    )
+                )
+            }
+
+            switchEnabled?.setOnCheckedChangeListener(null)
+            switchEnabled?.isChecked = profile.enabled
+            switchEnabled?.setOnCheckedChangeListener { _, isChecked ->
                 onToggle(profile, isChecked)
             }
 
-            btnMenu.setOnClickListener { v ->
+            btnMenu?.setOnClickListener { v ->
                 val inflater = LayoutInflater.from(v.context)
                 val popupView = inflater.inflate(R.layout.popup_sync_profile_menu, null)
                 val density = v.resources.displayMetrics.density

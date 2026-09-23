@@ -528,6 +528,9 @@ class CustomTileActivity : AppCompatActivity() {
             item.isSyncTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.sync.SyncManagerActivity::class.java))
             }
+            item.isAdvancedSyncTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.sync.advanced.AdvancedSyncActivity::class.java))
+            }
             item.isFileServerTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.server.ServerHostActivity::class.java))
             }

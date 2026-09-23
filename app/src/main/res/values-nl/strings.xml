@@ -5177,6 +5177,14 @@ Aanpassen aan scherm
     <string name="play_pause">
 Afspelen / pauzeren
 </string>
+    <!-- SVG Interactive Player Controls -->
+    <string name="svg_interactive_mode">Interactive Mode</string>
+    <string name="svg_transport_mode">Player Controls</string>
+    <string name="svg_restart">Restart Animation</string>
+    <string name="svg_playback_speed">Playback Speed</string>
+    <string name="svg_next_panel">Next Panel</string>
+    <string name="svg_prev_panel">Previous Panel</string>
+    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Audiotrack
@@ -7560,6 +7568,10 @@ Synchronisatie ingeschakeld
     <string name="sync_disabled">
 Synchronisatie uitgeschakeld
 </string>
+    <string name="sync_action_enable">Enable Profile</string>
+    <string name="sync_action_disable">Disable Profile</string>
+    <string name="sync_status_enabled">Active</string>
+    <string name="sync_status_disabled">Paused</string>
     <string name="sync_delete_profile_confirm_msg">
 Weet u zeker dat u \'%1$s\' wilt verwijderen? Dit kan niet ongedaan worden gemaakt.
 </string>

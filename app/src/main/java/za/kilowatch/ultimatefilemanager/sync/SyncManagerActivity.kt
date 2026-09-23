@@ -44,7 +44,11 @@ class SyncManagerActivity : AppCompatActivity() {
         za.kilowatch.ultimatefilemanager.settings.ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_sync_manager)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        setContentView(
+            if (isTv) R.layout.activity_sync_manager_tv
+            else R.layout.activity_sync_manager
+        )
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -68,7 +72,7 @@ class SyncManagerActivity : AppCompatActivity() {
             }
         })
 
-        findViewById<ExtendedFloatingActionButton>(R.id.fabAdd).setOnClickListener {
+        findViewById<ExtendedFloatingActionButton>(R.id.fabAdd)?.setOnClickListener {
             startActivity(Intent(this, SyncEditActivity::class.java))
         }
 
@@ -82,6 +86,7 @@ class SyncManagerActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
         adapter = SyncProfileAdapter(
             onToggle = { profile, isEnabled ->
                 val updated = profile.copy(enabled = isEnabled)
@@ -91,30 +96,86 @@ class SyncManagerActivity : AppCompatActivity() {
                 showSnackbar(if (isEnabled) getString(R.string.sync_enabled) else getString(R.string.sync_disabled))
             },
             onEdit = { profile ->
-                val intent = Intent(this, SyncEditActivity::class.java).apply {
-                    putExtra(SyncEditActivity.EXTRA_PROFILE_ID, profile.id)
+                if (isTv) {
+                    showTvActionDialog(profile)
+                } else {
+                    val intent = Intent(this, SyncEditActivity::class.java).apply {
+                        putExtra(SyncEditActivity.EXTRA_PROFILE_ID, profile.id)
+                    }
+                    startActivity(intent)
                 }
-                startActivity(intent)
             },
             onDelete = { profile ->
                 showDeleteConfirmDialog(profile)
             },
             onSyncNow = { profile ->
-                Toast.makeText(this, R.string.sync_triggered_locally_background_job, Toast.LENGTH_SHORT).show()
-                // Force run once by scheduling it immediately
-                val workRequest = androidx.work.OneTimeWorkRequestBuilder<SyncWorker>()
-                    .setInputData(androidx.work.workDataOf("PROFILE_ID" to profile.id))
-                    .setExpedited(androidx.work.OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                    .build()
-                androidx.work.WorkManager.getInstance(this).enqueue(workRequest)
+                triggerSyncNow(profile)
             }
         )
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
     }
 
+    private fun triggerSyncNow(profile: SyncProfile) {
+        Toast.makeText(this, R.string.sync_triggered_locally_background_job, Toast.LENGTH_SHORT).show()
+        val workRequest = androidx.work.OneTimeWorkRequestBuilder<SyncWorker>()
+            .setInputData(androidx.work.workDataOf("PROFILE_ID" to profile.id))
+            .setExpedited(androidx.work.OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
+        androidx.work.WorkManager.getInstance(this).enqueue(workRequest)
+    }
+
+    private fun showTvActionDialog(profile: SyncProfile) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_sync_profile_actions_tv, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        dialogView.findViewById<TextView>(R.id.txtTitle).text = profile.name
+        dialogView.findViewById<TextView>(R.id.txtSubtitle).text = profile.localDisplayPath
+
+        val btnToggle = dialogView.findViewById<android.widget.Button>(R.id.btnToggle)
+        btnToggle.text = if (profile.enabled) getString(R.string.sync_action_disable) else getString(R.string.sync_action_enable)
+        btnToggle.setOnClickListener {
+            dialog.dismiss()
+            val updated = profile.copy(enabled = !profile.enabled)
+            repo.save(updated)
+            SyncScheduler.scheduleSync(this, updated)
+            loadProfiles()
+            showSnackbar(if (updated.enabled) getString(R.string.sync_enabled) else getString(R.string.sync_disabled))
+        }
+
+        dialogView.findViewById<android.widget.Button>(R.id.btnEdit).setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(this, SyncEditActivity::class.java).apply {
+                putExtra(SyncEditActivity.EXTRA_PROFILE_ID, profile.id)
+            }
+            startActivity(intent)
+        }
+
+        dialogView.findViewById<android.widget.Button>(R.id.btnSyncNow).setOnClickListener {
+            dialog.dismiss()
+            triggerSyncNow(profile)
+        }
+
+        dialogView.findViewById<android.widget.Button>(R.id.btnDelete).setOnClickListener {
+            dialog.dismiss()
+            showDeleteConfirmDialog(profile)
+        }
+
+        dialogView.findViewById<android.widget.Button>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
     private fun showDeleteConfirmDialog(profile: SyncProfile) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_sync_profile_delete_confirm, null)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_sync_profile_delete_confirm_tv else R.layout.dialog_sync_profile_delete_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
         val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setView(dialogView)
             .create()

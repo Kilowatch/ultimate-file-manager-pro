@@ -83,17 +83,6 @@
         android:layout_marginBottom="8dp" />
 
     <Button
-        android:id="@+id/btnConflictLog"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="@string/conflict_log_title"
-        android:textSize="15sp"
-        android:textColor="@color/tv_text_primary"
-        android:background="@drawable/selector_tv_button"
-        android:focusable="true"
-        android:layout_marginBottom="8dp" />
-
-    <Button
         android:id="@+id/btnDelete"
         android:layout_width="match_parent"
         android:layout_height="48dp"

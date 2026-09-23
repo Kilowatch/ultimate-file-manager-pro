@@ -2690,6 +2690,10 @@
     <string name="set_up_smb_ftp">Set Up SMB / FTP</string>
     <string name="sync_enabled">Sync enabled</string>
     <string name="sync_disabled">Sync disabled</string>
+    <string name="sync_action_enable">Enable Profile</string>
+    <string name="sync_action_disable">Disable Profile</string>
+    <string name="sync_status_enabled">Active</string>
+    <string name="sync_status_disabled">Paused</string>
     <string name="sync_delete_profile_confirm_msg">Are you sure you want to delete \"%1$s\"? This cannot be undone.</string>
     <string name="profile_deleted">Profile deleted</string>
     <string name="every_formatintervalprofileintervalminutes">Every %1$s</string>

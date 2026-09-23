@@ -48,15 +48,15 @@ class SyncEditActivity : AppCompatActivity() {
     private lateinit var dropdownPeriod: AutoCompleteTextView
     private lateinit var dropdownDayOfWeek: AutoCompleteTextView
     private lateinit var dropdownDayOfMonth: AutoCompleteTextView
-    private lateinit var chipInterval: MaterialButton
-    private lateinit var chipScheduled: MaterialButton
+    private lateinit var chipInterval: View
+    private lateinit var chipScheduled: View
     private lateinit var layoutIntervalSection: View
     private lateinit var layoutScheduledSection: View
     private lateinit var layoutDayOfWeek: View
     private lateinit var layoutDayOfMonth: View
     private lateinit var timePicker: TimePicker
     private lateinit var switchNotifications: MaterialSwitch
-    private lateinit var btnDelete: MaterialButton
+    private lateinit var btnDelete: View
 
     private lateinit var repo: SyncProfileRepository
     private lateinit var netRepo: NetworkShareRepository
@@ -107,7 +107,11 @@ class SyncEditActivity : AppCompatActivity() {
         za.kilowatch.ultimatefilemanager.settings.ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_sync_edit)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        setContentView(
+            if (isTv) R.layout.activity_sync_edit_tv
+            else R.layout.activity_sync_edit
+        )
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -139,7 +143,7 @@ class SyncEditActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
         // ── Local folder picker (uses UFM storage browser) ──────────────────
-        findViewById<MaterialButton>(R.id.btnSelectLocal).setOnClickListener {
+        findViewById<View>(R.id.btnSelectLocal).setOnClickListener {
             val intent = Intent(this, StorageBrowserActivity::class.java).apply {
                 putExtra(StorageBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, true)
             }
@@ -147,7 +151,7 @@ class SyncEditActivity : AppCompatActivity() {
         }
 
         // ── Remote folder browser ────────────────────────────────────────────
-        findViewById<MaterialButton>(R.id.btnBrowseRemote).setOnClickListener {
+        findViewById<View>(R.id.btnBrowseRemote).setOnClickListener {
             val shareId = selectedNetworkShareId
             if (shareId == null) {
                 Toast.makeText(this, R.string.please_select_a_network_share, Toast.LENGTH_SHORT).show()
@@ -166,8 +170,10 @@ class SyncEditActivity : AppCompatActivity() {
         chipScheduled.setOnClickListener { selectSchedule("scheduled") }
         selectSchedule("interval")
 
+        val dropdownLayoutRes = if (isTv) R.layout.item_tv_spinner_dropdown else R.layout.item_dropdown_popup
+
         // ── Period dropdown ──────────────────────────────────────────────────
-        val periodAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, periods)
+        val periodAdapter = ArrayAdapter(this, dropdownLayoutRes, android.R.id.text1, periods)
         dropdownPeriod.setAdapter(periodAdapter)
         dropdownPeriod.setText(periods[0], false)
         dropdownPeriod.setOnItemClickListener { _, _, position, _ ->
@@ -177,7 +183,7 @@ class SyncEditActivity : AppCompatActivity() {
         }
 
         // ── Day of week dropdown ─────────────────────────────────────────────
-        val dowAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, daysOfWeek)
+        val dowAdapter = ArrayAdapter(this, dropdownLayoutRes, android.R.id.text1, daysOfWeek)
         dropdownDayOfWeek.setAdapter(dowAdapter)
         dropdownDayOfWeek.setText(daysOfWeek[0], false)
         dropdownDayOfWeek.setOnItemClickListener { _, _, position, _ ->
@@ -185,7 +191,7 @@ class SyncEditActivity : AppCompatActivity() {
         }
 
         // ── Day of month dropdown ────────────────────────────────────────────
-        val domAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, daysOfMonth)
+        val domAdapter = ArrayAdapter(this, dropdownLayoutRes, android.R.id.text1, daysOfMonth)
         dropdownDayOfMonth.setAdapter(domAdapter)
         dropdownDayOfMonth.setText(daysOfMonth[0], false)
         dropdownDayOfMonth.setOnItemClickListener { _, _, position, _ ->
@@ -193,7 +199,7 @@ class SyncEditActivity : AppCompatActivity() {
         }
 
         // ── Save / Delete buttons ────────────────────────────────────────────
-        findViewById<MaterialButton>(R.id.btnSave).setOnClickListener { saveProfile() }
+        findViewById<View>(R.id.btnSave).setOnClickListener { saveProfile() }
         btnDelete.setOnClickListener { showDeleteConfirmDialog() }
 
         setupShareDropdown()
@@ -214,10 +220,15 @@ class SyncEditActivity : AppCompatActivity() {
     private fun selectSchedule(type: String) {
         selectedScheduleType = type
         val isInterval = type == "interval"
-        chipInterval.isCheckable = true
-        chipInterval.isChecked = isInterval
-        chipScheduled.isCheckable = true
-        chipScheduled.isChecked = !isInterval
+        listOf(chipInterval, chipScheduled).forEach { c ->
+            if (c is MaterialButton) {
+                c.isCheckable = true
+                c.isChecked = (c == chipInterval && isInterval) || (c == chipScheduled && !isInterval)
+            } else if (c is android.widget.Button) {
+                val isSelected = (c == chipInterval && isInterval) || (c == chipScheduled && !isInterval)
+                c.setBackgroundResource(if (isSelected) R.drawable.selector_tv_button_yellow else R.drawable.selector_tv_button)
+            }
+        }
 
         layoutIntervalSection.visibility = if (isInterval) View.VISIBLE else View.GONE
         layoutScheduledSection.visibility = if (isInterval) View.GONE else View.VISIBLE
@@ -228,9 +239,11 @@ class SyncEditActivity : AppCompatActivity() {
     // ─────────────────────────────────────────────────────────────────────
 
     private fun setupShareDropdown() {
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val dropdownLayoutRes = if (isTv) R.layout.item_tv_spinner_dropdown else R.layout.item_dropdown_popup
         networkShares = netRepo.getAll()
         val shareNames = networkShares.map { it.name.ifEmpty { it.host } }
-        val shareAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, shareNames)
+        val shareAdapter = ArrayAdapter(this, dropdownLayoutRes, android.R.id.text1, shareNames)
         dropdownShare.setAdapter(shareAdapter)
         dropdownShare.setOnItemClickListener { _, _, position, _ ->
             selectedNetworkShareId = networkShares[position].id
@@ -241,13 +254,15 @@ class SyncEditActivity : AppCompatActivity() {
     }
 
     private fun setupIntervalDropdown() {
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val dropdownLayoutRes = if (isTv) R.layout.item_tv_spinner_dropdown else R.layout.item_dropdown_popup
         val intervals = listOf(
             getString(R.string.q15_minutes), getString(R.string.q30_minutes),
             getString(R.string.q1_hour), getString(R.string.q6_hours),
             getString(R.string.q12_hours), getString(R.string.q24_hours)
         )
         val intervalValues = listOf(15, 30, 60, 360, 720, 1440)
-        val intervalAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, intervals)
+        val intervalAdapter = ArrayAdapter(this, dropdownLayoutRes, android.R.id.text1, intervals)
         dropdownInterval.setAdapter(intervalAdapter)
         dropdownInterval.setText(intervals[2], false) // Default: 1 hr
         dropdownInterval.setOnItemClickListener { _, _, position, _ ->
@@ -261,7 +276,9 @@ class SyncEditActivity : AppCompatActivity() {
     // ─────────────────────────────────────────────────────────────────────
 
     private fun showNoShareDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_sync_no_share, null)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_sync_no_share_tv else R.layout.dialog_sync_no_share
+        val dialogView = layoutInflater.inflate(layoutRes, null)
         val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setView(dialogView)
             .setCancelable(false)
@@ -285,7 +302,9 @@ class SyncEditActivity : AppCompatActivity() {
 
     private fun showDeleteConfirmDialog() {
         val currentName = editName.text.toString().trim().ifEmpty { getString(R.string.sync_now) }
-        val dialogView = layoutInflater.inflate(R.layout.dialog_sync_profile_delete_confirm, null)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_sync_profile_delete_confirm_tv else R.layout.dialog_sync_profile_delete_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
         val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setView(dialogView)
             .create()

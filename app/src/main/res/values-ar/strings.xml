@@ -5312,6 +5312,14 @@ APK جاهز للتثبيت
     <string name="play_pause">
 تشغيل / إيقاف مؤقت
 </string>
+    <!-- SVG Interactive Player Controls -->
+    <string name="svg_interactive_mode">Interactive Mode</string>
+    <string name="svg_transport_mode">Player Controls</string>
+    <string name="svg_restart">Restart Animation</string>
+    <string name="svg_playback_speed">Playback Speed</string>
+    <string name="svg_next_panel">Next Panel</string>
+    <string name="svg_prev_panel">Previous Panel</string>
+    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 المسار الصوتي
@@ -7711,6 +7719,10 @@ Debloater
     <string name="sync_disabled">
 المزامنة معطلة
 </string>
+    <string name="sync_action_enable">Enable Profile</string>
+    <string name="sync_action_disable">Disable Profile</string>
+    <string name="sync_status_enabled">Active</string>
+    <string name="sync_status_disabled">Paused</string>
     <string name="sync_delete_profile_confirm_msg">
 هل تريد بالتأكيد حذف \"%1$s\"؟ لا يمكن التراجع عن هذا الإجراء.
 </string>

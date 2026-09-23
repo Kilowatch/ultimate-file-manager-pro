@@ -41,6 +41,7 @@ class AdvancedSyncProfileAdapter(
         private val txtSource: TextView = view.findViewById(R.id.txtSource)
         private val txtDest: TextView = view.findViewById(R.id.txtDest)
         private val txtLastSync: TextView? = view.findViewById(R.id.txtLastSync)
+        private val txtStatus: TextView? = view.findViewById(R.id.txtStatus)
         private val switchEnabled: MaterialSwitch? = view.findViewById(R.id.switchEnabled)
         private val btnMenu: View? = view.findViewById(R.id.btnMenu)
 
@@ -122,7 +123,18 @@ class AdvancedSyncProfileAdapter(
                 }
             }
 
-            // Enabled switch
+            // Enabled switch & TV status
+            txtStatus?.text = if (profile.enabled) {
+                itemView.context.getString(R.string.sync_status_enabled)
+            } else {
+                itemView.context.getString(R.string.sync_status_disabled)
+            }
+            txtStatus?.setTextColor(
+                itemView.context.getColor(
+                    if (profile.enabled) R.color.tv_accent else R.color.tv_text_secondary
+                )
+            )
+
             switchEnabled?.setOnCheckedChangeListener(null)
             switchEnabled?.isChecked = profile.enabled
             switchEnabled?.setOnCheckedChangeListener { _, isChecked ->

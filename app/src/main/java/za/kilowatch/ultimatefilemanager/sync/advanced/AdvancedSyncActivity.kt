@@ -258,6 +258,22 @@ class AdvancedSyncActivity : AppCompatActivity() {
             triggerSyncNow(profile)
         }
 
+        val btnToggle = dialogView.findViewById<Button>(R.id.btnToggle)
+        btnToggle.text = if (profile.enabled) getString(R.string.sync_action_disable) else getString(R.string.sync_action_enable)
+        btnToggle.setOnClickListener {
+            dialog.dismiss()
+            val updated = profile.copy(enabled = !profile.enabled)
+            repo.save(updated)
+            AdvancedSyncScheduler.scheduleSync(this, updated)
+            if (updated.instantSyncEnabled && updated.enabled) {
+                InstantSyncWatcher.startWatching(this, updated)
+            } else {
+                InstantSyncWatcher.stopWatching(updated.id)
+            }
+            loadProfiles()
+            Toast.makeText(this, if (updated.enabled) R.string.sync_enabled else R.string.sync_disabled, Toast.LENGTH_SHORT).show()
+        }
+
         dialogView.findViewById<Button>(R.id.btnConflictLog).setOnClickListener {
             dialog.dismiss()
             showConflictLog(profile)

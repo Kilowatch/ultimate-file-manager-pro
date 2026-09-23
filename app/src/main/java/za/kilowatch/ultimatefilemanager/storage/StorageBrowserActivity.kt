@@ -603,12 +603,8 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
             items.add(StorageItem(id = "network_tile", label = context.getString(R.string.network_tile_title), iconRes = R.drawable.ic_network, totalBytes = 0, usedBytes = 0, mountPath = "", isNetworkTile = true))
             items.add(StorageItem(id = "online_storages_tile", label = context.getString(R.string.online_storages_title), iconRes = R.drawable.ic_cloud, totalBytes = 0, usedBytes = 0, mountPath = "", isOnlineStoragesTile = true))
-            if (!isTv) {
-                items.add(StorageItem(id = "sync_tile", label = context.getString(R.string.sync_title), iconRes = R.drawable.ic_sync, totalBytes = 0, usedBytes = 0, mountPath = "", isSyncTile = true))
-            }
-            if (!isTv) {
-                items.add(StorageItem(id = "advanced_sync_tile", label = context.getString(R.string.advanced_sync_title), iconRes = R.drawable.ic_sync_advanced, totalBytes = 0, usedBytes = 0, mountPath = "", isAdvancedSyncTile = true))
-            }
+            items.add(StorageItem(id = "sync_tile", label = context.getString(R.string.sync_title), iconRes = R.drawable.ic_sync, totalBytes = 0, usedBytes = 0, mountPath = "", isSyncTile = true))
+            items.add(StorageItem(id = "advanced_sync_tile", label = context.getString(R.string.advanced_sync_title), iconRes = R.drawable.ic_sync_advanced, totalBytes = 0, usedBytes = 0, mountPath = "", isAdvancedSyncTile = true))
             items.add(StorageItem(id = "file_server_tile", label = context.getString(R.string.file_server_title), iconRes = R.drawable.ic_file_server, totalBytes = 0, usedBytes = 0, mountPath = "", isFileServerTile = true))
             items.add(StorageItem(id = "add_storage_location_tile", label = context.getString(R.string.add_storage_location_title), iconRes = R.drawable.ic_folder, totalBytes = 0, usedBytes = 0, mountPath = "", isAddStorageLocationTile = true, subtitle = context.getString(R.string.add_storage_location_subtitle)))
             items.add(StorageItem(id = "settings_tile", label = context.getString(R.string.font_size_title), iconRes = R.drawable.ic_font_size, totalBytes = 0, usedBytes = 0, mountPath = "", isSettingsTile = true))
@@ -4653,31 +4649,27 @@ class StorageBrowserActivity : AppCompatActivity() {
                     isOnlineStoragesTile = true
                 ))
 
-                // Add the Folder Sync tile â€” mobile only, directly below the Network Shares manager tile
-                if (!capturedIsTv) {
-                    storageItems.add(StorageItem(
-                        id = "sync_tile",
-                        label = getString(R.string.sync_title),
-                        iconRes = R.drawable.ic_sync,
-                        totalBytes = 0,
-                        usedBytes = 0,
-                        mountPath = "",
-                        isSyncTile = true
-                    ))
-                }
+                // Add the Folder Sync tile, directly below the Network Shares manager tile
+                storageItems.add(StorageItem(
+                    id = "sync_tile",
+                    label = getString(R.string.sync_title),
+                    iconRes = R.drawable.ic_sync,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isSyncTile = true
+                ))
 
-                // Add the Advanced Sync tile â€” mobile only, alongside Folder Sync tile
-                if (!capturedIsTv) {
-                    storageItems.add(StorageItem(
-                        id = "advanced_sync_tile",
-                        label = getString(R.string.advanced_sync_title),
-                        iconRes = R.drawable.ic_sync_advanced,
-                        totalBytes = 0,
-                        usedBytes = 0,
-                        mountPath = "",
-                        isAdvancedSyncTile = true
-                    ))
-                }
+                // Add the Advanced Sync tile, alongside Folder Sync tile
+                storageItems.add(StorageItem(
+                    id = "advanced_sync_tile",
+                    label = getString(R.string.advanced_sync_title),
+                    iconRes = R.drawable.ic_sync_advanced,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isAdvancedSyncTile = true
+                ))
 
                 // Add the Add Storage Location action tile
                 storageItems.add(StorageItem(

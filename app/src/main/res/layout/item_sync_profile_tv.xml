@@ -20,11 +20,11 @@
         android:padding="20dp">
 
         <ImageView
-            android:id="@+id/iconDirection"
+            android:id="@+id/iconSync"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="10dp"
-            android:src="@drawable/ic_direction_twoway"
+            android:src="@drawable/ic_sync"
             android:background="@drawable/bg_btn_icon_frosted"
             app:tint="@color/tv_text_primary"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,9 +42,9 @@
             android:textColor="@color/tv_text_primary"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/txtStatus"
-            app:layout_constraintStart_toEndOf="@+id/iconDirection"
-            app:layout_constraintTop_toTopOf="@+id/iconDirection"
-            tools:text="DCIM Advanced Sync" />
+            app:layout_constraintStart_toEndOf="@+id/iconSync"
+            app:layout_constraintTop_toTopOf="@+id/iconSync"
+            tools:text="Camera Upload Sync" />
 
         <TextView
             android:id="@+id/txtStatus"
@@ -58,12 +58,10 @@
             tools:text="Active" />
 
         <TextView
-            android:id="@+id/txtScheduleType"
+            android:id="@+id/txtInterval"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="3dp"
             android:textColor="@color/tv_accent"
             android:textSize="14sp"
             android:fontFamily="sans-serif-medium"
@@ -85,8 +83,8 @@
             app:drawableTint="@color/tv_text_secondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtScheduleType"
-            tools:text="Internal Storage/DCIM" />
+            app:layout_constraintTop_toBottomOf="@+id/txtInterval"
+            tools:text="DCIM/Camera" />
 
         <TextView
             android:id="@+id/txtDest"

@@ -298,9 +298,11 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         chipManual.setOnClickListener { selectSchedule("manual") }
         selectSchedule("interval")
 
+        val dropdownLayoutRes = if (isTv) R.layout.item_tv_spinner_dropdown else R.layout.item_dropdown_popup
+
         // ── Period dropdown ────────────────────────────────────────────────────
         dropdownPeriod?.let { dp ->
-            val periodAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, periods)
+            val periodAdapter = ArrayAdapter(this, dropdownLayoutRes, android.R.id.text1, periods)
             dp.setAdapter(periodAdapter)
             dp.setText(periods[0], false)
             dp.setOnItemClickListener { _, _, position, _ ->
@@ -311,7 +313,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         }
 
         dropdownDayOfWeek?.let { ddow ->
-            val dowAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, daysOfWeek)
+            val dowAdapter = ArrayAdapter(this, dropdownLayoutRes, android.R.id.text1, daysOfWeek)
             ddow.setAdapter(dowAdapter)
             ddow.setText(daysOfWeek[0], false)
             ddow.setOnItemClickListener { _, _, position, _ ->
@@ -320,7 +322,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         }
 
         dropdownDayOfMonth?.let { ddom ->
-            val domAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, daysOfMonth)
+            val domAdapter = ArrayAdapter(this, dropdownLayoutRes, android.R.id.text1, daysOfMonth)
             ddom.setAdapter(domAdapter)
             ddom.setText(daysOfMonth[0], false)
             ddom.setOnItemClickListener { _, _, position, _ ->
@@ -504,6 +506,8 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     }
 
     private fun setupIntervalDropdown() {
+        val isTv = DeviceUtils.isTvDevice(this)
+        val dropdownLayoutRes = if (isTv) R.layout.item_tv_spinner_dropdown else R.layout.item_dropdown_popup
         dropdownInterval?.let { di ->
             val intervals = listOf(
                 getString(R.string.q5_minutes), getString(R.string.q10_minutes),
@@ -512,7 +516,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
                 getString(R.string.q12_hours), getString(R.string.q24_hours)
             )
             val intervalValues = listOf(5, 10, 15, 30, 60, 360, 720, 1440)
-            val intervalAdapter = ArrayAdapter(this, R.layout.item_dropdown_popup, android.R.id.text1, intervals)
+            val intervalAdapter = ArrayAdapter(this, dropdownLayoutRes, android.R.id.text1, intervals)
             di.setAdapter(intervalAdapter)
             di.setText(intervals[2], false)
             di.setOnItemClickListener { _, _, position, _ ->
@@ -966,7 +970,8 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-                val itemView = layoutInflater.inflate(R.layout.item_sync_destination, parent, false)
+                val itemRes = if (isTv) R.layout.item_sync_destination_tv else R.layout.item_sync_destination
+                val itemView = layoutInflater.inflate(itemRes, parent, false)
                 return object : RecyclerView.ViewHolder(itemView) {}
             }
 
