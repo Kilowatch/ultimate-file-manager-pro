@@ -123,6 +123,19 @@ class UFMPlayerActivity : AppCompatActivity() {
     private lateinit var trackSheetTitle: TextView
     private lateinit var svgPlayerView: SvgAnimationPlayerView
 
+    // ── Dedicated SVG Animation Controls ───────────────────────────
+    private var isSvgInteractiveMode: Boolean = false
+    private var btnSvgModeToggle: ImageButton? = null
+    private var btnSvgSpeed: ImageButton? = null
+    private var btnSvgRestart: ImageButton? = null
+    private var btnSvgPrevPanel: ImageButton? = null
+    private var btnSvgNextPanel: ImageButton? = null
+    private var svgInteractivePill: View? = null
+    private var btnPillControls: ImageButton? = null
+    private var btnPillClose: ImageButton? = null
+    private var txtTvInteractiveHint: TextView? = null
+    private var currentSvgBytes: ByteArray? = null
+
     // ── TV Playlist Drawer Views ───────────────────────────────────
     private var sideControlsLayout: View? = null
     private var playlistDrawerLayout: View? = null
@@ -369,6 +382,7 @@ class UFMPlayerActivity : AppCompatActivity() {
                     } else if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
                         svgPlayerView.pause()
                         svgPlayerView.visibility = View.GONE
+                        updateSvgControlsVisibility(false)
                     }
 
                     // Switch audio/video mode
@@ -1078,28 +1092,46 @@ class UFMPlayerActivity : AppCompatActivity() {
             dismissTrackSheet()
         }
 
+        val wasSvgActive = ::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE
+        val prevSvgMode = isSvgInteractiveMode
+        val prevSvgPlaying = if (wasSvgActive) svgPlayerView.isPlaying else false
+        val currentSvgPos = if (wasSvgActive) svgPlayerView.currentPositionMs else 0L
+
         // Re-inflate layout matching current orientation (portrait layout vs layout-land)
         setContentView(R.layout.activity_ufm_player)
         initViews()
 
-        // Re-attach player to newly inflated PlayerView
-        playbackService?.getPlayer()?.let { p ->
-            player = p
-            playerView.player = p
-            p.removeListener(activityPlayerListener)
-            p.addListener(activityPlayerListener)
-            p.currentTracks?.let { detectAndUpdateTracks(it) }
-        }
+        if (wasSvgActive && currentSvgBytes != null) {
+            val bytes = currentSvgBytes!!
+            svgPlayerView.visibility = View.VISIBLE
+            playerView.visibility = View.GONE
+            svgPlayerView.loadSvg(bytes, autoPlay = prevSvgPlaying)
+            if (currentSvgPos > 0L) {
+                svgPlayerView.seekTo(currentSvgPos)
+            }
+            updatePlayPauseIcon()
+            updateSvgControlsVisibility(true)
+            setSvgInteractiveMode(prevSvgMode)
+        } else {
+            // Re-attach player to newly inflated PlayerView
+            playbackService?.getPlayer()?.let { p ->
+                player = p
+                playerView.player = p
+                p.removeListener(activityPlayerListener)
+                p.addListener(activityPlayerListener)
+                p.currentTracks?.let { detectAndUpdateTracks(it) }
+            }
 
-        // Restore playback state / UI text
-        val currentPos = mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
-        val dur = mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
-        if (dur > 0) {
-            seekBar.max = dur.toInt()
-            seekBar.progress = currentPos.toInt()
-            updateTimeLabels(currentPos.toInt(), dur.toInt())
+            // Restore playback state / UI text
+            val currentPos = mjpegPlayer?.currentPositionMs ?: (playbackService?.currentPosition ?: 0L)
+            val dur = mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
+            if (dur > 0) {
+                seekBar.max = dur.toInt()
+                seekBar.progress = currentPos.toInt()
+                updateTimeLabels(currentPos.toInt(), dur.toInt())
+            }
+            updatePlayPauseIcon()
         }
-        updatePlayPauseIcon()
         val initialPath = intent.getStringExtra("initialPath")
             ?: intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH)
             ?: intent.data?.path
@@ -1518,6 +1550,80 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         updateSkipButtonVisibility()
 
+        // ── Dedicated SVG Animation Controls Init ──────────────────
+        btnSvgModeToggle = findViewById(R.id.btnSvgModeToggle)
+        btnSvgSpeed = findViewById(R.id.btnSvgSpeed)
+        btnSvgRestart = findViewById(R.id.btnSvgRestart)
+        btnSvgPrevPanel = findViewById(R.id.btnSvgPrevPanel)
+        btnSvgNextPanel = findViewById(R.id.btnSvgNextPanel)
+        svgInteractivePill = findViewById(R.id.svgInteractivePill)
+        btnPillControls = findViewById(R.id.btnPillControls)
+        btnPillClose = findViewById(R.id.btnPillClose)
+        txtTvInteractiveHint = findViewById(R.id.txtTvInteractiveHint)
+
+        btnSvgModeToggle?.setOnClickListener {
+            resetHideTimer()
+            setSvgInteractiveMode(!isSvgInteractiveMode)
+        }
+
+        btnSvgSpeed?.setOnClickListener {
+            resetHideTimer()
+            showSvgSpeedDialog()
+        }
+
+        btnSvgRestart?.setOnClickListener {
+            resetHideTimer()
+            if (::svgPlayerView.isInitialized) {
+                svgPlayerView.restart()
+                PlayerToastHelper.show(this, getString(R.string.svg_restart))
+            }
+        }
+
+        btnSvgPrevPanel?.setOnClickListener {
+            resetHideTimer()
+            if (::svgPlayerView.isInitialized) {
+                svgPlayerView.prevPanel()
+                val panelName = svgPlayerView.detectedViews.getOrNull(svgPlayerView.currentViewIndex) ?: ""
+                PlayerToastHelper.show(this, "${getString(R.string.svg_prev_panel)} ($panelName)")
+            }
+        }
+
+        btnSvgNextPanel?.setOnClickListener {
+            resetHideTimer()
+            if (::svgPlayerView.isInitialized) {
+                svgPlayerView.nextPanel()
+                val panelName = svgPlayerView.detectedViews.getOrNull(svgPlayerView.currentViewIndex) ?: ""
+                PlayerToastHelper.show(this, "${getString(R.string.svg_next_panel)} ($panelName)")
+            }
+        }
+
+        btnPillControls?.setOnClickListener {
+            setSvgInteractiveMode(false)
+        }
+
+        btnPillClose?.setOnClickListener {
+            stopPlaybackAndFinish()
+        }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val isSvgActive = ::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE
+                if (isSvgActive && isSvgInteractiveMode) {
+                    setSvgInteractiveMode(false)
+                    return
+                }
+                if (isShowingSheet) {
+                    dismissTrackSheet()
+                    return
+                }
+                if (isTv && isTvPlaylistDrawerOpen) {
+                    closeTvPlaylistDrawer()
+                    return
+                }
+                stopPlaybackAndFinish()
+            }
+        })
+
         if (isTv) {
             // ── TV Playlist Drawer Init ─────────────────────────────────
             initTvPlaylistDrawer()
@@ -1814,6 +1920,20 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        val isSvgActive = ::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE
+        if (isTv && isSvgActive && isSvgInteractiveMode) {
+            if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+                if (event.keyCode == android.view.KeyEvent.KEYCODE_BACK) {
+                    setSvgInteractiveMode(false)
+                    return true
+                }
+                if (event.keyCode == android.view.KeyEvent.KEYCODE_MENU) {
+                    setSvgInteractiveMode(false)
+                    return true
+                }
+            }
+            return svgPlayerView.forwardKeyEvent(event)
+        }
         if (isTv && event.action == android.view.KeyEvent.ACTION_DOWN) {
             // If controls are hidden and drawer/sheet are closed, first D-pad interaction wakes up controls
             if (controlsLayout.visibility != View.VISIBLE && !isShowingSheet && !isTvPlaylistDrawerOpen) {
@@ -2676,8 +2796,15 @@ class UFMPlayerActivity : AppCompatActivity() {
                 loadingSpinner.visibility = View.GONE
                 if (isFinishing || isDestroyed) return@withContext
                 if (bytes != null && bytes.isNotEmpty()) {
+                    currentSvgBytes = bytes
                     svgPlayerView.loadSvg(bytes, autoPlay = true)
                     updatePlayPauseIcon()
+                    updateSvgControlsVisibility(true)
+                    if (svgPlayerView.isInteractiveSvg) {
+                        setSvgInteractiveMode(true)
+                    } else {
+                        setSvgInteractiveMode(false)
+                    }
                 } else {
                     Toast.makeText(this@UFMPlayerActivity, R.string.error_generic, Toast.LENGTH_SHORT).show()
                 }
@@ -2697,15 +2824,127 @@ class UFMPlayerActivity : AppCompatActivity() {
             }
         } else {
             // Switching from standalone SVG to a video/audio track
+            currentSvgBytes = null
             if (::svgPlayerView.isInitialized) {
                 svgPlayerView.pause()
                 svgPlayerView.visibility = View.GONE
+                updateSvgControlsVisibility(false)
             }
             intent.putExtra("initialPath", path)
             intent.putStringArrayListExtra("playlist", playlist)
             UFMPlaybackService.start(this, intent)
             bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         }
+    }
+
+    private fun setSvgInteractiveMode(enabled: Boolean) {
+        isSvgInteractiveMode = enabled
+        if (!isTv) {
+            if (enabled) {
+                gestureOverlay?.visibility = View.GONE
+                controlsLayout.visibility = View.GONE
+                topBar.visibility = View.GONE
+                svgInteractivePill?.visibility = View.VISIBLE
+                svgInteractivePill?.alpha = 1.0f
+                handler.removeCallbacksAndMessages("svg_pill")
+                handler.postDelayed({
+                    if (isSvgInteractiveMode && !isFinishing && !isDestroyed) {
+                        svgInteractivePill?.animate()?.alpha(0.35f)?.setDuration(400)?.start()
+                    }
+                }, 3000L)
+            } else {
+                svgInteractivePill?.visibility = View.GONE
+                gestureOverlay?.visibility = View.VISIBLE
+                resetHideTimer()
+            }
+        } else {
+            // Android TV
+            if (enabled) {
+                controlsLayout.visibility = View.GONE
+                topBar.visibility = View.GONE
+                sideControlsLayout?.visibility = View.GONE
+                txtTvInteractiveHint?.visibility = View.VISIBLE
+                txtTvInteractiveHint?.alpha = 1.0f
+                handler.removeCallbacksAndMessages("tv_hint")
+                handler.postDelayed({
+                    if (isSvgInteractiveMode && !isFinishing && !isDestroyed) {
+                        txtTvInteractiveHint?.animate()?.alpha(0f)?.setDuration(500)?.withEndAction {
+                            txtTvInteractiveHint?.visibility = View.GONE
+                        }?.start()
+                    }
+                }, 3500L)
+                svgPlayerView.requestFocus()
+            } else {
+                txtTvInteractiveHint?.visibility = View.GONE
+                resetHideTimer()
+                btnPlayPause.requestFocus()
+            }
+        }
+        btnSvgModeToggle?.let { btn ->
+            if (enabled) {
+                btn.setImageResource(R.drawable.ic_tune)
+                btn.contentDescription = getString(R.string.svg_transport_mode)
+            } else {
+                btn.setImageResource(R.drawable.ic_touch_app)
+                btn.contentDescription = getString(R.string.svg_interactive_mode)
+            }
+        }
+    }
+
+    private fun updateSvgControlsVisibility(isSvg: Boolean) {
+        if (isSvg) {
+            btnAudioTrack.visibility = View.GONE
+            btnSubtitles.visibility = View.GONE
+            btnInfo.visibility = View.GONE
+            btnShuffle.visibility = View.GONE
+            btnRepeat.visibility = View.GONE
+
+            btnSvgModeToggle?.visibility = View.VISIBLE
+            btnSvgSpeed?.visibility = View.VISIBLE
+            btnSvgRestart?.visibility = View.VISIBLE
+            val hasMultiplePanels = ::svgPlayerView.isInitialized && svgPlayerView.detectedViews.size > 1
+            btnSvgPrevPanel?.visibility = if (hasMultiplePanels) View.VISIBLE else View.GONE
+            btnSvgNextPanel?.visibility = if (hasMultiplePanels) View.VISIBLE else View.GONE
+        } else {
+            btnAudioTrack.visibility = View.VISIBLE
+            btnSubtitles.visibility = View.VISIBLE
+            btnInfo.visibility = View.VISIBLE
+            btnShuffle.visibility = View.VISIBLE
+            btnRepeat.visibility = View.VISIBLE
+
+            btnSvgModeToggle?.visibility = View.GONE
+            btnSvgSpeed?.visibility = View.GONE
+            btnSvgRestart?.visibility = View.GONE
+            btnSvgPrevPanel?.visibility = View.GONE
+            btnSvgNextPanel?.visibility = View.GONE
+            svgInteractivePill?.visibility = View.GONE
+            txtTvInteractiveHint?.visibility = View.GONE
+            isSvgInteractiveMode = false
+            if (!isTv) {
+                gestureOverlay?.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun showSvgSpeedDialog() {
+        val speeds = floatArrayOf(0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f, 4.0f)
+        val labels = arrayOf("0.25x", "0.5x", "0.75x", "1.0x (Normal)", "1.25x", "1.5x", "2.0x", "4.0x")
+        val currentSpeed = if (::svgPlayerView.isInitialized) svgPlayerView.playbackRate else 1.0f
+        var checkedIdx = speeds.indexOfFirst { kotlin.math.abs(it - currentSpeed) < 0.05f }
+        if (checkedIdx < 0) checkedIdx = 3 // default 1.0x
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.svg_playback_speed)
+            .setSingleChoiceItems(labels, checkedIdx) { dialog, which ->
+                val selected = speeds[which]
+                if (::svgPlayerView.isInitialized) {
+                    svgPlayerView.setPlaybackRate(selected)
+                }
+                PlayerToastHelper.show(this@UFMPlayerActivity, "${getString(R.string.svg_playback_speed)}: ${labels[which]}")
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     companion object {

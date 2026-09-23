@@ -20,6 +20,10 @@ import java.io.ByteArrayInputStream
 /**
  * Sandboxed, local-only player view for playing SMIL animated vector graphics (SVG and SVGZ)
  * in UFM Media Player without external network access or file-scheme vulnerabilities.
+ *
+ * Supports two animation engines:
+ * - **SMIL**: Uses `pauseAnimations()`, `unpauseAnimations()`, `setCurrentTime()`, `getCurrentTime()`
+ * - **CSS @keyframes**: Uses the Web Animations API (`getAnimations()`, `.pause()`, `.play()`, `.currentTime`)
  */
 class SvgAnimationPlayerView @JvmOverloads constructor(
     context: Context,
@@ -46,6 +50,17 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
     var isIndeterminateDuration: Boolean = true
         private set
     var isRepeat: Boolean = false
+    var isInteractiveSvg: Boolean = false
+        private set
+    /** True when the SVG uses CSS `@keyframes` animations instead of (or alongside) SMIL. */
+    var hasCssAnimation: Boolean = false
+        private set
+    var detectedViews: List<String> = emptyList()
+        private set
+    var currentViewIndex: Int = -1
+        private set
+    var playbackRate: Float = 1.0f
+        private set
 
     var onProgressUpdate: ((positionMs: Long, totalDurationMs: Long, isIndeterminate: Boolean) -> Unit)? = null
     var onPlaybackStateChanged: ((isPlaying: Boolean) -> Unit)? = null
@@ -68,19 +83,66 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
     private val progressPollRunnable = object : Runnable {
         override fun run() {
             if (isPlaying && isPageLoaded) {
-                webView.evaluateJavascript("document.querySelector('svg')?.getCurrentTime() || 0") { result ->
-                    val sec = result?.toDoubleOrNull() ?: 0.0
-                    val posMs = (sec * 1000.0).toLong()
-                    currentPositionMs = posMs
+                if (hasCssAnimation) {
+                    // Query CSS animation state via Web Animations API
+                    webView.evaluateJavascript("""
+                        (function() {
+                            var anims = document.getAnimations ? document.getAnimations() : [];
+                            if (anims.length === 0) return '0,0,0';
+                            var a = anims[0];
+                            var ct = a.currentTime || 0;
+                            var dur = 0;
+                            var isInf = false;
+                            try {
+                                var timing = a.effect && a.effect.getComputedTiming ? a.effect.getComputedTiming() : null;
+                                if (timing) {
+                                    dur = timing.duration || 0;
+                                    isInf = (timing.iterations === Infinity);
+                                }
+                            } catch(e) {}
+                            if (dur > 0 && isInf) {
+                                ct = ct % dur;
+                            }
+                            return ct + ',' + dur + ',' + (isInf ? '1' : '0');
+                        })()
+                    """.trimIndent()) { result ->
+                        val clean = result?.trim()?.removeSurrounding("\"") ?: "0,0,0"
+                        val parts = clean.split(",")
+                        val posMs = parts.getOrNull(0)?.toDoubleOrNull()?.toLong() ?: 0L
+                        val durMs = parts.getOrNull(1)?.toDoubleOrNull()?.toLong() ?: 0L
+                        val isInf = parts.getOrNull(2) == "1"
 
-                    if (!isIndeterminateDuration && totalDurationMs > 0L && posMs >= totalDurationMs) {
-                        if (isRepeat) {
-                            seekTo(0L)
-                        } else {
-                            pause()
+                        currentPositionMs = posMs
+                        if (durMs > 0L) {
+                            totalDurationMs = durMs
+                            isIndeterminateDuration = false
                         }
+
+                        if (!isInf && !isIndeterminateDuration && totalDurationMs > 0L && posMs >= totalDurationMs) {
+                            if (isRepeat) {
+                                seekTo(0L)
+                            } else {
+                                pause()
+                            }
+                        }
+                        onProgressUpdate?.invoke(currentPositionMs, totalDurationMs, isIndeterminateDuration)
                     }
-                    onProgressUpdate?.invoke(currentPositionMs, totalDurationMs, isIndeterminateDuration)
+                } else {
+                    // Query SMIL animation state
+                    webView.evaluateJavascript("document.querySelector('svg')?.getCurrentTime() || 0") { result ->
+                        val sec = result?.toDoubleOrNull() ?: 0.0
+                        val posMs = (sec * 1000.0).toLong()
+                        currentPositionMs = posMs
+
+                        if (!isIndeterminateDuration && totalDurationMs > 0L && posMs >= totalDurationMs) {
+                            if (isRepeat) {
+                                seekTo(0L)
+                            } else {
+                                pause()
+                            }
+                        }
+                        onProgressUpdate?.invoke(currentPositionMs, totalDurationMs, isIndeterminateDuration)
+                    }
                 }
                 handler.postDelayed(this, 250L)
             }
@@ -97,6 +159,9 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
 
     private fun configureWebView() {
         webView.setBackgroundColor(Color.BLACK)
+        webView.isFocusable = true
+        webView.isFocusableInTouchMode = true
+        webView.isClickable = true
 
         CookieManager.getInstance().setAcceptCookie(false)
 
@@ -104,10 +169,13 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
             javaScriptEnabled = true
             allowFileAccess = false
             allowContentAccess = false
+            @Suppress("DEPRECATION")
             allowFileAccessFromFileURLs = false
+            @Suppress("DEPRECATION")
             allowUniversalAccessFromFileURLs = false
             setGeolocationEnabled(false)
-            domStorageEnabled = false
+            domStorageEnabled = true
+            @Suppress("DEPRECATION")
             databaseEnabled = false
             cacheMode = WebSettings.LOAD_NO_CACHE
             mediaPlaybackRequiresUserGesture = false
@@ -149,7 +217,12 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
                 view: WebView,
                 request: WebResourceRequest
             ): Boolean {
-                // Block all navigation attempts
+                val url = request.url
+                // Allow internal anchor/fragment navigation on the appassets domain (e.g. #1N, #Nav, #begin)
+                if (url.host.equals("appassets.androidplatform.net", ignoreCase = true)) {
+                    return false
+                }
+                // Block all external navigation attempts
                 return true
             }
 
@@ -187,6 +260,11 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
             val decompressed = SvgAnimationHelper.decompressIfNeeded(svgBytes)
             val svgString = String(decompressed, Charsets.UTF_8)
 
+            hasCssAnimation = SvgAnimationHelper.containsCssAnimation(svgString)
+            isInteractiveSvg = SvgAnimationHelper.containsInteractiveElements(svgString) || hasCssAnimation
+            detectedViews = SvgAnimationHelper.extractViewPanels(svgString)
+            currentViewIndex = if (detectedViews.isNotEmpty()) 0 else -1
+
             val parsedDuration = SvgAnimationHelper.parseAnimationDurationMs(svgString)
             if (parsedDuration != null && parsedDuration > 0L) {
                 totalDurationMs = parsedDuration
@@ -200,7 +278,7 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
             isPageLoaded = false
             pendingAutoPlay = autoPlay
 
-            val htmlString = SvgAnimationHelper.wrapSvgInHtml(svgString)
+            val htmlString = SvgAnimationHelper.wrapSvgInHtml(svgString, allowInlineScripts = true)
             currentHtmlBytes = htmlString.toByteArray(Charsets.UTF_8)
 
             webView.loadUrl("https://appassets.androidplatform.net/player/index.html")
@@ -210,24 +288,117 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
     }
 
     /**
-     * Starts or resumes SMIL animation playback.
+     * Forwards Android KeyEvents (D-Pad, remote keys, Gamepad, keyboard) directly to the WebView DOM.
+     */
+    fun forwardKeyEvent(event: android.view.KeyEvent): Boolean {
+        webView.requestFocus()
+        return webView.dispatchKeyEvent(event)
+    }
+
+    /**
+     * Sets playback speed multiplier across SMIL and CSS animations using the Web Animations API.
+     */
+    fun setPlaybackRate(rate: Float) {
+        playbackRate = rate
+        if (isPageLoaded) {
+            webView.evaluateJavascript("""
+                (function(r) {
+                    try {
+                        if (document.getAnimations) {
+                            document.getAnimations().forEach(function(anim) {
+                                try { anim.playbackRate = r; } catch(e) {}
+                            });
+                        }
+                    } catch(e) {}
+                })($rate);
+            """.trimIndent(), null)
+        }
+    }
+
+    /**
+     * Navigates to a specific SVG `<view>` panel via hash navigation.
+     */
+    fun navigateToPanel(viewId: String) {
+        if (isPageLoaded) {
+            val hash = if (viewId.startsWith("#")) viewId else "#$viewId"
+            webView.evaluateJavascript("location.hash = '$hash';", null)
+        }
+    }
+
+    /**
+     * Cycles to the next available view panel if the SVG has multiple views.
+     */
+    fun nextPanel(): Boolean {
+        if (detectedViews.isEmpty()) return false
+        currentViewIndex = (currentViewIndex + 1) % detectedViews.size
+        navigateToPanel(detectedViews[currentViewIndex])
+        return true
+    }
+
+    /**
+     * Cycles to the previous available view panel if the SVG has multiple views.
+     */
+    fun prevPanel(): Boolean {
+        if (detectedViews.isEmpty()) return false
+        currentViewIndex = if (currentViewIndex - 1 < 0) detectedViews.size - 1 else currentViewIndex - 1
+        navigateToPanel(detectedViews[currentViewIndex])
+        return true
+    }
+
+    /**
+     * Starts or resumes animation playback (SMIL or CSS).
      */
     fun play() {
         isPlaying = true
         if (isPageLoaded) {
-            webView.evaluateJavascript("document.querySelector('svg')?.unpauseAnimations();", null)
+            if (hasCssAnimation) {
+                // Resume CSS animations via Web Animations API
+                webView.evaluateJavascript("""
+                    (function() {
+                        try {
+                            var anims = document.getAnimations ? document.getAnimations() : [];
+                            anims.forEach(function(a) { try { a.play(); } catch(e) {} });
+                        } catch(e) {}
+                        try {
+                            var svg = document.querySelector('svg');
+                            if (svg && typeof svg.unpauseAnimations === 'function') svg.unpauseAnimations();
+                        } catch(e) {}
+                    })();
+                """.trimIndent(), null)
+            } else {
+                webView.evaluateJavascript("document.querySelector('svg')?.unpauseAnimations();", null)
+            }
             startProgressPolling()
+            if (playbackRate != 1.0f) {
+                setPlaybackRate(playbackRate)
+            }
         }
         onPlaybackStateChanged?.invoke(true)
     }
 
     /**
-     * Pauses SMIL animation playback.
+     * Pauses animation playback (SMIL or CSS).
      */
     fun pause() {
         isPlaying = false
         if (isPageLoaded) {
-            webView.evaluateJavascript("document.querySelector('svg')?.pauseAnimations();", null)
+            if (hasCssAnimation) {
+                // Pause CSS animations via Web Animations API
+                webView.evaluateJavascript("""
+                    (function() {
+                        try {
+                            var anims = document.getAnimations ? document.getAnimations() : [];
+                            anims.forEach(function(a) { try { a.pause(); } catch(e) {} });
+                        } catch(e) {}
+                        try {
+                            var svg = document.querySelector('svg');
+                            if (svg && typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
+                        } catch(e) {}
+                    })();
+                """.trimIndent(), null)
+            } else {
+                webView.evaluateJavascript("document.querySelector('svg')?.pauseAnimations();", null)
+            }
         }
         stopProgressPolling()
         onPlaybackStateChanged?.invoke(false)
@@ -241,10 +412,41 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
     }
 
     /**
-     * Restarts playback from timestamp 0.
+     * Restarts playback from timestamp 0 and resets to initial view.
      */
     fun restart() {
-        seekTo(0L)
+        if (isPageLoaded) {
+            if (hasCssAnimation) {
+                // Reset CSS animations to beginning and navigate to #begin for interactive SVGs
+                webView.evaluateJavascript("""
+                    (function() {
+                        try {
+                            var anims = document.getAnimations ? document.getAnimations() : [];
+                            anims.forEach(function(a) { try { a.currentTime = 0; a.play(); } catch(e) {} });
+                        } catch(e) {}
+                        try {
+                            var svg = document.querySelector('svg');
+                            if (svg && typeof svg.setCurrentTime === 'function') svg.setCurrentTime(0);
+                        } catch(e) {}
+                        location.hash = '#begin';
+                    })();
+                """.trimIndent(), null)
+            } else {
+                webView.evaluateJavascript("""
+                    (function() {
+                        const svg = document.querySelector('svg');
+                        if (svg && typeof svg.setCurrentTime === 'function') {
+                            try { svg.setCurrentTime(0); } catch(e) {}
+                        }
+                        if (location.hash) {
+                            location.hash = '#begin';
+                        }
+                    })();
+                """.trimIndent(), null)
+            }
+        }
+        currentPositionMs = 0L
+        currentViewIndex = if (detectedViews.isNotEmpty()) 0 else -1
         play()
     }
 
@@ -258,9 +460,30 @@ class SvgAnimationPlayerView @JvmOverloads constructor(
             positionMs.coerceAtLeast(0L)
         }
         currentPositionMs = clampedPos
-        val sec = clampedPos / 1000f
         if (isPageLoaded) {
-            webView.evaluateJavascript("document.querySelector('svg')?.setCurrentTime($sec);", null)
+            if (hasCssAnimation) {
+                // Seek CSS animations via Web Animations API (currentTime is in ms)
+                webView.evaluateJavascript("""
+                    (function(ms) {
+                        try {
+                            var anims = document.getAnimations ? document.getAnimations() : [];
+                            anims.forEach(function(a) {
+                                try {
+                                    var dur = (a.effect && a.effect.getComputedTiming) ? (a.effect.getComputedTiming().duration || 0) : 0;
+                                    var targetMs = (dur > 0) ? (ms % dur) : ms;
+                                    a.currentTime = targetMs;
+                                } catch(e) {
+                                    a.currentTime = ms;
+                                }
+                            });
+                        } catch(e) {}
+                    })($clampedPos);
+                """.trimIndent(), null)
+            } else {
+                // SMIL seekTo uses seconds
+                val sec = clampedPos / 1000f
+                webView.evaluateJavascript("document.querySelector('svg')?.setCurrentTime($sec);", null)
+            }
         }
         onProgressUpdate?.invoke(currentPositionMs, totalDurationMs, isIndeterminateDuration)
     }

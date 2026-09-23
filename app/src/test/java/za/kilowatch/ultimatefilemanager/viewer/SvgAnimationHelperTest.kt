@@ -149,5 +149,106 @@ class SvgAnimationHelperTest {
         assertTrue("HTML shell must contain black background for media player UI", html.contains("#000000"))
         assertTrue("HTML shell must embed the SVG", html.contains("<svg viewBox=\"0 0 100 100\">"))
         assertTrue("HTML shell must contain responsive viewport meta", html.contains("viewport"))
+        assertTrue("HTML shell must contain script-src for sandboxed offline scripts", html.contains("script-src 'unsafe-inline'"))
+    }
+
+    @Test
+    fun testContainsInteractiveElements() {
+        val scriptSvg = "<svg><script>console.log('hi');</script></svg>"
+        assertTrue("SVG with script should be detected as interactive", SvgAnimationHelper.containsInteractiveElements(scriptSvg))
+
+        val viewSvg = "<svg><view id=\"1N\" viewBox=\"0 0 100 100\"/></svg>"
+        assertTrue("SVG with view should be detected as interactive", SvgAnimationHelper.containsInteractiveElements(viewSvg))
+
+        val anchorSvg = "<svg><a href=\"#begin\"><text>Start</text></a></svg>"
+        assertTrue("SVG with anchor hash should be detected as interactive", SvgAnimationHelper.containsInteractiveElements(anchorSvg))
+
+        val clickTriggerSvg = "<svg><set attributeName=\"visibility\" to=\"visible\" begin=\"btn.click\"/></svg>"
+        assertTrue("SVG with SMIL click trigger should be detected as interactive", SvgAnimationHelper.containsInteractiveElements(clickTriggerSvg))
+
+        val staticSvg = "<svg><circle cx=\"50\" cy=\"50\" r=\"40\"/></svg>"
+        assertFalse("Plain static SVG should not be detected as interactive", SvgAnimationHelper.containsInteractiveElements(staticSvg))
+    }
+
+    @Test
+    fun testExtractViewPanels() {
+        val svgWithViews = """
+            <svg viewBox="0 0 1000 1000">
+                <view id="1N" viewBox="0 0 500 500"/>
+                <view id="2N" viewBox="500 0 500 500"/>
+                <view id="Nav" viewBox="0 0 1000 1000"/>
+            </svg>
+        """.trimIndent()
+        val panels = SvgAnimationHelper.extractViewPanels(svgWithViews)
+        assertEquals(3, panels.size)
+        assertEquals("1N", panels[0])
+        assertEquals("2N", panels[1])
+        assertEquals("Nav", panels[2])
+    }
+
+    @Test
+    fun testSanitizeSvg_inlineScriptSupport() {
+        val svgWithInline = """
+            <svg xmlns="http://www.w3.org/2000/svg">
+                <script type="text/javascript">
+                    function nav(p) { location.hash = '#' + p; }
+                </script>
+                <script src="https://evil.com/tracker.js"></script>
+                <circle cx="50" cy="50" r="40"/>
+            </svg>
+        """.trimIndent()
+
+        // When inline scripts are allowed (for sandbox rendering), external script src is removed but inline remains
+        val allowed = SvgAnimationHelper.sanitizeSvg(svgWithInline, allowInlineScripts = true)
+        assertTrue("Inline script content should be preserved", allowed.contains("function nav"))
+        assertFalse("External script src should be stripped", allowed.contains("evil.com"))
+
+        // When inline scripts are disabled (default), all script tags are removed
+        val stripped = SvgAnimationHelper.sanitizeSvg(svgWithInline, allowInlineScripts = false)
+        assertFalse("All script tags should be stripped when allowInlineScripts is false", stripped.contains("<script"))
+        assertFalse("Script content should be stripped", stripped.contains("function nav"))
+    }
+
+    @Test
+    fun testContainsCssAnimation() {
+        val cssSvg = """
+            <svg xmlns="http://www.w3.org/2000/svg">
+                <style>
+                    @keyframes pulse { 0% { opacity: 0; } 100% { opacity: 1; } }
+                    #circle { animation: pulse 2s infinite; }
+                </style>
+                <circle id="circle" cx="50" cy="50" r="40"/>
+            </svg>
+        """.trimIndent()
+        assertTrue("SVG with @keyframes should report CSS animation", SvgAnimationHelper.containsCssAnimation(cssSvg))
+
+        val smilSvg = """
+            <svg xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="40">
+                    <animate attributeName="r" dur="3s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+        """.trimIndent()
+        assertFalse("SMIL-only SVG should not report CSS animation", SvgAnimationHelper.containsCssAnimation(smilSvg))
+
+        val staticSvg = "<svg><circle cx=\"50\" cy=\"50\" r=\"40\"/></svg>"
+        assertFalse("Static SVG should not report CSS animation", SvgAnimationHelper.containsCssAnimation(staticSvg))
+    }
+
+    @Test
+    fun testWrapSvgInHtml_interactiveShim() {
+        val interactiveSvg = """
+            <svg viewBox="164 156 1728 1728" xmlns="http://www.w3.org/2000/svg">
+                <view id="1N" viewBox="164 156 1728 1728"/>
+                <view id="2N" viewBox="1956 156 1728 1728"/>
+                <g id="ss"><rect width="3840" height="3840"/></g>
+            </svg>
+        """.trimIndent()
+
+        val html = SvgAnimationHelper.wrapSvgInHtml(interactiveSvg, allowInlineScripts = true)
+        assertTrue("Wrapper should include ufm-viewbox-clip", html.contains("ufm-viewbox-clip"))
+        assertTrue("Wrapper should enforce overflow: hidden on svg", html.contains("overflow: hidden !important"))
+        assertTrue("Wrapper should register hashchange listener", html.contains("hashchange"))
+        assertTrue("Wrapper should preserve <view> elements", html.contains("<view id=\"1N\""))
     }
 }

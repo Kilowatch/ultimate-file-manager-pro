@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **SMIL Vector Animation Playback for SVG & SVGZ**: Built full SMIL timeline playback (`<animate>`, `<animateTransform>`, `<animateMotion>`, `<set>`, `<discard>`) into UFM Media Player for both raw `.svg` and gzip-compressed `.svgz` vector files across Mobile and Android TV.
+- **Dedicated Interactive & SMIL SVG Controls**: Built a dual-mode interactive and transport control set for SMIL and interactive SVG playback in UFM Media Player (supporting comicstrip slideshows, panel navigation, gamepad/keyboard/D-pad forwarding, and playback speed).
 - **Unified Player Transport Controls for Vector Media**: Integrated playback controls (Play, Pause, Restart, Seekbar scrubbing, Skip +/-10s, Gestures, and Playlist Queue navigation) seamlessly for animated SVG files using the existing media player interface with zero UI clutter.
 - **Sandboxed Offline Vector Rendering**: Hardened rendering via an isolated, offline AndroidX WebKit container utilizing `WebViewAssetLoader`, virtual origin mapping (`https://appassets.androidplatform.net/`), strict Content Security Policy (`default-src 'none'`), script sanitization, and 15 MB zip-bomb decompression protection.
 

@@ -1875,6 +1875,14 @@
     <string name="zoom_out">Zoom out</string>
     <string name="fit_to_screen">Fit to screen</string>
     <string name="play_pause">Play / Pause</string>
+    <!-- SVG Interactive Player Controls -->
+    <string name="svg_interactive_mode">Interactive Mode</string>
+    <string name="svg_transport_mode">Player Controls</string>
+    <string name="svg_restart">Restart Animation</string>
+    <string name="svg_playback_speed">Playback Speed</string>
+    <string name="svg_next_panel">Next Panel</string>
+    <string name="svg_prev_panel">Previous Panel</string>
+    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">Audio Track</string>
     <string name="subtitles">Subtitles</string>

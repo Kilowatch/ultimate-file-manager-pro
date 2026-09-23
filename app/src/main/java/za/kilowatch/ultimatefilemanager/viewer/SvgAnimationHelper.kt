@@ -274,12 +274,62 @@ object SvgAnimationHelper {
     }
 
     /**
-     * Strips any `<script>` tags and inline event listeners (`onload`, `onclick`) from the SVG
-     * XML to protect against XSS when rendered in WebView.
+     * Checks whether the SVG contains interactive elements such as embedded scripts,
+     * view targets, internal anchor links, or SMIL user-interaction triggers.
      */
-    fun sanitizeSvg(svgXml: String): String {
-        var sanitized = SCRIPT_TAG_PATTERN.matcher(svgXml).replaceAll("")
-        sanitized = EVENT_HANDLER_PATTERN.matcher(sanitized).replaceAll("")
+    fun containsInteractiveElements(svgXml: String): Boolean {
+        val lower = svgXml.lowercase()
+        return lower.contains("<script") ||
+                lower.contains("<view") ||
+                Regex("<a\\s+[^>]*href\\s*=\\s*[\"']#", RegexOption.IGNORE_CASE).containsMatchIn(svgXml) ||
+                Regex("begin\\s*=\\s*[\"'][^\"']*\\b(click|mousedown|mouseup|keydown|mouseover)\\b", RegexOption.IGNORE_CASE).containsMatchIn(svgXml) ||
+                lower.contains(":target")
+    }
+
+    /**
+     * Fast check for CSS `@keyframes` rules in the SVG's embedded `<style>` blocks.
+     * CSS animations use the Web Animations API (not SMIL) for play/pause/seek.
+     */
+    fun containsCssAnimation(svgXml: String): Boolean {
+        return svgXml.lowercase().contains("@keyframes")
+    }
+
+    /**
+     * Extracts IDs of `<view id="...">` tags in the SVG document (useful for slide/panel navigation).
+     */
+    fun extractViewPanels(svgXml: String): List<String> {
+        val pattern = Pattern.compile("<view\\s+[^>]*\\bid=[\"']([^\"']+)[\"']", Pattern.CASE_INSENSITIVE)
+        val matcher = pattern.matcher(svgXml)
+        val panels = mutableListOf<String>()
+        while (matcher.find()) {
+            val id = matcher.group(1)
+            if (!id.isNullOrEmpty() && !panels.contains(id)) {
+                panels.add(id)
+            }
+        }
+        return panels
+    }
+
+    /**
+     * Sanitizes SVG XML. When [allowInlineScripts] is false (default), all `<script>` tags
+     * and event listeners are stripped. When true (for rendering in our offline sandboxed WebView),
+     * safe inline `<script>` tags are preserved while external script loads (`src=...`) and
+     * remote URLs are stripped.
+     */
+    fun sanitizeSvg(svgXml: String, allowInlineScripts: Boolean = false): String {
+        var sanitized = if (allowInlineScripts) {
+            // Strip external script loads (src, href, xlink:href)
+            val externalScript = Pattern.compile("<script\\b[^>]*\\b(src|href|xlink:href)\\s*=[^>]*>[\\s\\S]*?</script>", Pattern.CASE_INSENSITIVE)
+            var s = externalScript.matcher(svgXml).replaceAll("")
+            // Strip remote external URL anchors
+            val remoteAnchors = Pattern.compile("<a\\b[^>]*\\b(href|xlink:href)\\s*=\\s*[\"']https?://[^\"']*[\"']", Pattern.CASE_INSENSITIVE)
+            s = remoteAnchors.matcher(s).replaceAll("<a ")
+            s
+        } else {
+            var s = SCRIPT_TAG_PATTERN.matcher(svgXml).replaceAll("")
+            s = EVENT_HANDLER_PATTERN.matcher(s).replaceAll("")
+            s
+        }
         // Strip XML declaration if present so inline HTML parser doesn't trip
         sanitized = sanitized.replace(Regex("<\\?xml[^>]*\\?>", RegexOption.IGNORE_CASE), "")
         sanitized = sanitized.replace(Regex("<!DOCTYPE[^>]*>", RegexOption.IGNORE_CASE), "")
@@ -289,47 +339,153 @@ object SvgAnimationHelper {
     /**
      * Wraps the sanitized SVG in an HTML5 shell configured with strict Content Security Policy,
      * full-bleed responsive layout, and dark background matching UFM Media Player aesthetics.
+     *
+     * For interactive SVGs (those with `<view>` elements, `<script>`, CSS `:target`, or
+     * `@keyframes` animations), the wrapper uses minimal CSS that does NOT override the SVG's
+     * own styles, and injects a JavaScript shim that emulates `<view>` viewBox switching —
+     * a browser feature that only works for standalone SVG documents, not inline SVGs in HTML.
      */
-    fun wrapSvgInHtml(svgXml: String): String {
-        val sanitizedSvg = sanitizeSvg(svgXml)
+    fun wrapSvgInHtml(svgXml: String, allowInlineScripts: Boolean = true): String {
+        val sanitizedSvg = sanitizeSvg(svgXml, allowInlineScripts = allowInlineScripts)
+        val scriptCsp = if (allowInlineScripts) "script-src 'unsafe-inline';" else ""
+        val isInteractive = containsInteractiveElements(svgXml) || containsCssAnimation(svgXml)
+
+        return if (isInteractive) {
+            wrapInteractiveSvgInHtml(sanitizedSvg, scriptCsp)
+        } else {
+            wrapStaticSvgInHtml(sanitizedSvg, scriptCsp)
+        }
+    }
+
+    /**
+     * Wraps a static/SMIL-only SVG with full viewport-fitting CSS.
+     */
+    private fun wrapStaticSvgInHtml(sanitizedSvg: String, scriptCsp: String): String {
         return """
             <!DOCTYPE html>
             <html lang="en">
             <head>
               <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
               <link rel="icon" href="data:,">
-              <!-- Strict Content Security Policy: block all external scripts, fonts, networks -->
-              <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; frame-src 'none'; object-src 'none';">
+              <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; $scriptCsp img-src 'self' data:; frame-src 'none'; object-src 'none';">
               <style>
-                * {
-                  margin: 0;
-                  padding: 0;
-                  box-sizing: border-box;
-                }
+                * { margin: 0; padding: 0; box-sizing: border-box; }
                 html, body {
-                  width: 100vw;
-                  height: 100vh;
+                  width: 100vw; height: 100vh;
                   background-color: #000000;
                   overflow: hidden;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  user-select: none;
-                  -webkit-user-select: none;
-                  -webkit-touch-callout: none;
+                  display: flex; align-items: center; justify-content: center;
+                  touch-action: manipulation;
                 }
                 svg {
-                  width: 100vw;
-                  height: 100vh;
-                  max-width: 100%;
-                  max-height: 100%;
+                  width: 100vw; height: 100vh;
+                  max-width: 100%; max-height: 100%;
                   object-fit: contain;
                 }
               </style>
             </head>
             <body>
               $sanitizedSvg
+            </body>
+            </html>
+        """.trimIndent()
+    }
+
+    /**
+     * Wraps an interactive SVG (with `<view>`, `<script>`, CSS animations, or `:target` selectors)
+     * using minimal CSS that lets the SVG's own embedded styles control layout. Injects a
+     * JavaScript shim that emulates native SVG `<view>` viewBox switching, which only works in
+     * standalone SVG documents but not when the SVG is inlined in HTML.
+     */
+    private fun wrapInteractiveSvgInHtml(sanitizedSvg: String, scriptCsp: String): String {
+        return """
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+              <link rel="icon" href="data:,">
+              <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; $scriptCsp img-src 'self' data:; frame-src 'none'; object-src 'none';">
+              <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                html { background-color: #000000; width: 100vw; height: 100vh; overflow: hidden; }
+                body {
+                  width: 100vw; height: 100vh;
+                  overflow: hidden;
+                  display: flex; align-items: center; justify-content: center;
+                  background-color: #000000;
+                  touch-action: manipulation;
+                }
+                svg {
+                  width: 100%;
+                  height: 100%;
+                  max-width: 100vw;
+                  max-height: 100vh;
+                  object-fit: contain;
+                  overflow: hidden !important;
+                }
+              </style>
+            </head>
+            <body>
+              $sanitizedSvg
+              <script>
+              /* UFM viewBox & panel clip shim: emulate native <view> viewBox switching and isolate panels */
+              (function() {
+                var svg = document.querySelector('svg');
+                if (!svg) return;
+                var origVB = svg.getAttribute('viewBox') || '0 0 1728 1728';
+
+                var defs = svg.querySelector('defs');
+                if (!defs) {
+                  defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                  svg.insertBefore(defs, svg.firstChild);
+                }
+
+                var clipPath = document.getElementById('ufm-viewbox-clip');
+                var clipRect;
+                if (!clipPath) {
+                  clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
+                  clipPath.setAttribute('id', 'ufm-viewbox-clip');
+                  clipRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                  clipRect.setAttribute('id', 'ufm-clip-rect');
+                  clipPath.appendChild(clipRect);
+                  defs.appendChild(clipPath);
+                } else {
+                  clipRect = document.getElementById('ufm-clip-rect');
+                }
+
+                // Clip #ss so other comicstrip panels do not bleed outside the active viewBox
+                var ss = document.getElementById('ss');
+                if (ss) {
+                  ss.style.clipPath = 'url(#ufm-viewbox-clip)';
+                }
+
+                function applyViewBox() {
+                  var h = location.hash.substring(1);
+                  var vb = origVB;
+                  if (h) {
+                    var v = document.getElementById(h);
+                    if (v && v.tagName && v.tagName.toLowerCase() === 'view' && v.getAttribute('viewBox')) {
+                      vb = v.getAttribute('viewBox');
+                    }
+                  }
+                  svg.setAttribute('viewBox', vb);
+                  if (clipRect) {
+                    var parts = vb.trim().split(/\s+/);
+                    if (parts.length === 4) {
+                      clipRect.setAttribute('x', parts[0]);
+                      clipRect.setAttribute('y', parts[1]);
+                      clipRect.setAttribute('width', parts[2]);
+                      clipRect.setAttribute('height', parts[3]);
+                    }
+                  }
+                }
+
+                window.addEventListener('hashchange', applyViewBox);
+                applyViewBox();
+              })();
+              </script>
             </body>
             </html>
         """.trimIndent()

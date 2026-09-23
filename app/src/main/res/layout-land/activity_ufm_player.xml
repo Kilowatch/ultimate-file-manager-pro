@@ -18,6 +18,15 @@
         app:surface_type="surface_view"
         app:resize_mode="fit" />
 
+    <!-- SVG Animation Player Surface -->
+    <za.kilowatch.ultimatefilemanager.viewer.SvgAnimationPlayerView
+        android:id="@+id/svgPlayerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@android:color/black"
+        android:visibility="gone" />
+
     <!-- Audio Poster Overlay -->
     <ImageView
         android:id="@+id/audioPoster"
@@ -204,6 +213,72 @@
             android:src="@drawable/ic_about"
             android:contentDescription="@string/video_info_title"
             app:tint="@android:color/white" />
+
+        <!-- Dedicated SVG Animation Controls -->
+        <ImageButton
+            android:id="@+id/btnSvgModeToggle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_touch_app"
+            android:contentDescription="@string/svg_interactive_mode"
+            app:tint="@android:color/white"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/btnSvgSpeed"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_speed"
+            android:contentDescription="@string/svg_playback_speed"
+            app:tint="@android:color/white"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/btnSvgRestart"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_refresh"
+            android:contentDescription="@string/svg_restart"
+            app:tint="@android:color/white"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/btnSvgPrevPanel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/svg_prev_panel"
+            app:tint="@android:color/white"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/btnSvgNextPanel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_forward"
+            android:contentDescription="@string/svg_next_panel"
+            app:tint="@android:color/white"
+            android:visibility="gone" />
     </LinearLayout>
 
     <!-- Track Selection Sheet (Left Side Modal Panel in Landscape) -->
@@ -356,4 +431,36 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Floating Mini-HUD for SVG Interactive Mode -->
+    <LinearLayout
+        android:id="@+id/svgInteractivePill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:padding="4dp"
+        android:elevation="8dp"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/btnPillControls"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_tune"
+            app:tint="@android:color/white"
+            android:contentDescription="@string/svg_transport_mode" />
+
+        <ImageButton
+            android:id="@+id/btnPillClose"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close"
+            app:tint="@android:color/white"
+            android:contentDescription="@string/back" />
+    </LinearLayout>
 </FrameLayout>
