@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.3] — 2026-09-22
 
 ### Added
+- **Mobile Floating Bottom Bar Dock**: Added a modern floating bottom dock on the Storage Browser screen for quick access to frequently used main menu items (disabled by default).
+- **Dedicated Floating Bar Manager**: Added `FloatingBarManageActivity` featuring drag-and-drop reordering, quick add and remove actions, and direct state persistence.
+- **Main Menu Tile Hiding**: Docked items are automatically hidden from the main menu grid and displayed exclusively in the bottom dock.
+- **Dynamic Scroll Clearance**: Automatically computes dynamic bottom padding on the main menu recycler view so that bottom-most items remain 100% visible and un-obscured above the floating dock when scrolled.
+- **Settings Integration & Backup Support**: Added master enable/disable toggle and management navigation row in Settings, with full backup and restore support in `SettingsBackupManager`.
 - **Automatic Last Opened Location Resume**: Added intelligent session resumption on mobile cold-start; force-closing and reopening the app restores the exact active folder and container (Standalone File Browser, Network Browser, Tabbed Browser, or Twin Window).
 - **Graceful Storage Disconnection Fallback**: Automatically checks storage availability on launch (removable USB drives, unmounted SD cards, revoked SAF permissions, and deleted network shares); if disconnected, redirects to the Storage screen with an explanatory alert.
 - **Default Start Screen Preference**: Configured "Last Opened Location" as the out-of-the-box default start screen on mobile while preserving the Leanback dashboard default for Android TV.

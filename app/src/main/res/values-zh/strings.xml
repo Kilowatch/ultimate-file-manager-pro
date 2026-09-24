@@ -15356,6 +15356,53 @@ Successfully extracted %1$d audio files.
     <string name="no_audio_found_in_video">
 No audio tracks found in this video
 </string>
+
+    <!-- Floating Bottom Bar Dock -->
+    <string name="floating_bar_settings_title">
+Floating Bottom Bar
+</string>
+    <string name="floating_bar_settings_subtitle">
+Show a modern floating dock at the bottom of the main menu for quick access
+</string>
+    <string name="floating_bar_manage_title">
+Manage Floating Bar
+</string>
+    <string name="floating_bar_manage_subtitle">
+Add, remove, and reorder quick-access shortcuts
+</string>
+    <string name="floating_bar_enable_switch">
+Enable Floating Bar
+</string>
+    <string name="floating_bar_enable_desc">
+Docked tiles appear in the bottom floating bar and are hidden from the main menu
+</string>
+    <string name="floating_bar_docked_section">
+Docked Items
+</string>
+    <string name="floating_bar_docked_hint">
+Drag handle to reorder. Tap Remove to return item to main menu.
+</string>
+    <string name="floating_bar_available_section">
+Available Tiles
+</string>
+    <string name="floating_bar_available_hint">
+Tap + to add a tile to the floating bottom bar
+</string>
+    <string name="floating_bar_empty_docked">
+No items docked yet. Add tiles from the list below.
+</string>
+    <string name="floating_bar_empty_available">
+All available tiles have been added to the floating bar.
+</string>
+    <string name="floating_bar_add">
+Add
+</string>
+    <string name="floating_bar_remove">
+Remove
+</string>
+    <string name="backup_pref_floating_bar">
+Floating Bottom Bar
+</string>
 </resources>
 
 

@@ -32,6 +32,7 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager.ViewMode
+import za.kilowatch.ultimatefilemanager.storage.FloatingBarManager
 
 /**
  * Settings hub screen.
@@ -148,6 +149,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private var switchLeftHandedFab: SwitchMaterial? = null
     private var txtLeftHandedFabSubtitle: TextView? = null
+
+    private var switchFloatingBar: SwitchMaterial? = null
 
     private var switchTvBackgroundServer: SwitchMaterial? = null
     private var txtTvBackgroundServerSubtitle: TextView? = null
@@ -685,6 +688,24 @@ class SettingsActivity : AppCompatActivity() {
             switchLeftHandedFab?.setOnCheckedChangeListener(null)
         }
 
+        // Floating Bottom Bar toggle & manage (Mobile Only)
+        val cardFloatingBarToggle = findViewById<View>(R.id.cardFloatingBarToggle)
+        if (cardFloatingBarToggle != null && !isTv) {
+            switchFloatingBar = findViewById(R.id.switchFloatingBarEnabled)
+            switchFloatingBar?.isChecked = FloatingBarManager.isEnabled(this)
+            switchFloatingBar?.setOnCheckedChangeListener { _, isChecked ->
+                FloatingBarManager.setEnabled(this, isChecked)
+            }
+            cardFloatingBarToggle.setOnClickListener {
+                switchFloatingBar?.let { it.isChecked = !it.isChecked }
+            }
+
+            val cardFloatingBarManage = findViewById<View>(R.id.cardFloatingBarManage)
+            cardFloatingBarManage?.setOnClickListener {
+                startActivity(Intent(this, FloatingBarManageActivity::class.java))
+            }
+        }
+
         // Grid Indicators toggle — ON = hide, OFF = show (default)
         val cardGridIndicators = findViewById<View>(R.id.cardGridIndicators)
         switchGridIndicators = findViewById(R.id.switchGridIndicators)
@@ -1210,6 +1231,9 @@ class SettingsActivity : AppCompatActivity() {
             sw.isChecked = leftHanded
             updateLeftHandedFabSubtitle(leftHanded)
         }
+
+        // Refresh Floating Bottom Bar toggle
+        switchFloatingBar?.isChecked = FloatingBarManager.isEnabled(this)
 
         // Refresh Grid Indicators subtitle
         if (::switchGridIndicators.isInitialized) {

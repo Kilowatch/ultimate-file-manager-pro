@@ -101,6 +101,18 @@ class StorageBrowserActivity : AppCompatActivity() {
     private var savedScrollPosition: Int = RecyclerView.NO_POSITION
     private var savedScrollOffset: Int = 0
 
+    private var cardFloatingBar: com.google.android.material.card.MaterialCardView? = null
+    private var recyclerFloatingBar: RecyclerView? = null
+    private var floatingBarAdapter: FloatingBarAdapter? = null
+
+    private val isAnyPickerMode: Boolean
+        get() = isPickerMode || isLocationPickerMode || isSyncFolderPickerMode ||
+                isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode ||
+                isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode ||
+                isNetworkCachePickerMode || isLocalCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode ||
+                isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker ||
+                isSupportAttachmentPicker || isKeyfilePickerMode || isCertPickerMode || isDrivePicker
+
     private var isPickerMode = false
     private var isKeyfilePickerMode = false
     private var isCertPickerMode = false
@@ -992,6 +1004,9 @@ class StorageBrowserActivity : AppCompatActivity() {
         Log.d(TAG, "onResume: Refreshing storage volumes")
         applyViewMode()
         applyDynamicThemeColors()
+        if (!isTv) {
+            updateFloatingBarUi()
+        }
 
         
         // Background check: ping TV devices and refresh UI if online status changes.
@@ -1754,9 +1769,154 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
 
         // Attach ItemTouchHelper for mobile drag-and-drop (no-op on TV)
-        if (!isTv) setupItemTouchHelper()
+        if (!isTv) {
+            setupItemTouchHelper()
+            setupFloatingBar()
+        }
 
         applyDynamicThemeColors()
+    }
+
+    private fun setupFloatingBar() {
+        cardFloatingBar = findViewById(R.id.cardFloatingBar)
+        recyclerFloatingBar = findViewById(R.id.recyclerFloatingBar)
+
+        recyclerFloatingBar?.let { rv ->
+            rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            floatingBarAdapter = FloatingBarAdapter(
+                onTileClick = { item ->
+                    onStorageTileClicked(item)
+                },
+                onAddClick = {
+                    startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.FloatingBarManageActivity::class.java))
+                }
+            )
+            rv.adapter = floatingBarAdapter
+        }
+    }
+
+    private fun updateFloatingBarUi() {
+        if (isTv || isAnyPickerMode || !FloatingBarManager.isEnabled(this)) {
+            cardFloatingBar?.visibility = View.GONE
+            updateFloatingBarScrollClearance(false)
+            return
+        }
+
+        val dockedIds = FloatingBarManager.getItemIds(this)
+        val itemMap = lastFullTileList.associateBy { it.id }
+        val dockedItems = dockedIds.mapNotNull { itemMap[it] }
+
+        floatingBarAdapter?.apply {
+            updateTileDecorations(
+                colors = TileColorManager.loadTileColors(this@StorageBrowserActivity),
+                icons  = TileIconManager.getAllTileIcons(this@StorageBrowserActivity),
+                res    = TileIconManager.getAllTileIconRes(this@StorageBrowserActivity)
+            )
+            submitList(dockedItems)
+        }
+
+        cardFloatingBar?.setCardBackgroundColor(resolveTileBackgroundColor())
+        cardFloatingBar?.strokeColor = resolveTileStrokeColor()
+        cardFloatingBar?.visibility = View.VISIBLE
+        updateFloatingBarScrollClearance(true)
+    }
+
+    private fun getScreenBackgroundColor(): Int {
+        val theme = za.kilowatch.ultimatefilemanager.settings.ThemeHelper.getSavedTheme(this)
+        return when {
+            theme == za.kilowatch.ultimatefilemanager.settings.ThemeHelper.THEME_AMOLED -> {
+                android.graphics.Color.BLACK
+            }
+            theme == za.kilowatch.ultimatefilemanager.settings.ThemeHelper.THEME_LIGHT -> {
+                getColor(R.color.tv_bg_gradient_end)
+            }
+            else -> {
+                getColor(R.color.tv_bg_gradient_end)
+            }
+        }
+    }
+
+    private fun resolveTileBackgroundColor(): Int {
+        val colors = TileColorManager.loadTileColors(this)
+        val dockedIds = FloatingBarManager.getItemIds(this)
+        val screenBg = getScreenBackgroundColor()
+
+        for (id in dockedIds) {
+            val bg = colors[id]?.tileBgColor
+            if (bg != null && bg != android.graphics.Color.TRANSPARENT) {
+                return if (android.graphics.Color.alpha(bg) == 255) bg else androidx.core.graphics.ColorUtils.compositeColors(bg, screenBg)
+            }
+        }
+        for (config in colors.values) {
+            if (config.tileBgColor != android.graphics.Color.TRANSPARENT) {
+                val bg = config.tileBgColor
+                return if (android.graphics.Color.alpha(bg) == 255) bg else androidx.core.graphics.ColorUtils.compositeColors(bg, screenBg)
+            }
+        }
+        val glassCardColor = getColor(R.color.mobile_glass_card)
+        return androidx.core.graphics.ColorUtils.compositeColors(glassCardColor, screenBg)
+    }
+
+    private fun resolveTileStrokeColor(): Int {
+        val colors = TileColorManager.loadTileColors(this)
+        val dockedIds = FloatingBarManager.getItemIds(this)
+        val screenBg = getScreenBackgroundColor()
+
+        for (id in dockedIds) {
+            val ring = colors[id]?.ringColor
+            if (ring != null && ring != android.graphics.Color.TRANSPARENT) {
+                return if (android.graphics.Color.alpha(ring) == 255) ring else androidx.core.graphics.ColorUtils.compositeColors(ring, screenBg)
+            }
+        }
+        for (config in colors.values) {
+            if (config.ringColor != android.graphics.Color.TRANSPARENT) {
+                val ring = config.ringColor
+                return if (android.graphics.Color.alpha(ring) == 255) ring else androidx.core.graphics.ColorUtils.compositeColors(ring, screenBg)
+            }
+        }
+        val glassStrokeColor = getColor(R.color.mobile_glass_stroke)
+        return androidx.core.graphics.ColorUtils.compositeColors(glassStrokeColor, screenBg)
+    }
+
+    private fun updateFloatingBarScrollClearance(enabled: Boolean) {
+        if (!::recyclerStorage.isInitialized) return
+        val defaultBottomPadding = resources.getDimensionPixelSize(R.dimen.margin_xl)
+        if (!enabled) {
+            if (recyclerStorage.paddingBottom != defaultBottomPadding) {
+                recyclerStorage.setPadding(
+                    recyclerStorage.paddingLeft,
+                    recyclerStorage.paddingTop,
+                    recyclerStorage.paddingRight,
+                    defaultBottomPadding
+                )
+            }
+            return
+        }
+
+        val card = cardFloatingBar ?: return
+        val applyPadding = {
+            val barHeight = card.height
+            val lp = card.layoutParams as? ViewGroup.MarginLayoutParams
+            val bottomMargin = lp?.bottomMargin ?: (16 * resources.displayMetrics.density).roundToInt()
+            val extraGap = (16 * resources.displayMetrics.density).roundToInt()
+            val targetPadding = if (barHeight > 0) barHeight + bottomMargin + extraGap else (100 * resources.displayMetrics.density).roundToInt()
+            if (recyclerStorage.paddingBottom != targetPadding) {
+                recyclerStorage.setPadding(
+                    recyclerStorage.paddingLeft,
+                    recyclerStorage.paddingTop,
+                    recyclerStorage.paddingRight,
+                    targetPadding
+                )
+            }
+        }
+
+        if (card.isLaidOut && card.height > 0) {
+            applyPadding()
+        } else {
+            card.doOnLayout {
+                applyPadding()
+            }
+        }
     }
 
     private fun applyDynamicThemeColors() {
@@ -1767,6 +1927,10 @@ class StorageBrowserActivity : AppCompatActivity() {
         btnImportColorCode?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
         btnAddCustomTile?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
         btnSettingsGear?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        if (!isTv) {
+            cardFloatingBar?.setCardBackgroundColor(resolveTileBackgroundColor())
+            cardFloatingBar?.strokeColor = resolveTileStrokeColor()
+        }
         updateToggleVisuals()
     }
 
@@ -1884,6 +2048,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     TileColorManager.saveTileColor(this, item.id, newConfig)
                     val updatedColors = TileColorManager.loadTileColors(this)
                     storageAdapter.setTileColors(updatedColors)
+                    updateFloatingBarUi()
                 }
                 .setOnIconChangedListener { iconConfig ->
                     TileIconManager.saveTileIconRes(this, item.id, iconConfig.selectedIconRes)
@@ -1894,6 +2059,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     }
                     storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this))
                     storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
+                    updateFloatingBarUi()
                 }
                 .setOnBrowseIconClickedListener {
                     launchTileIconPicker(item.id)
@@ -1916,6 +2082,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                             storageAdapter.setTileColors(
                                 TileColorManager.loadTileColors(this@StorageBrowserActivity)
                             )
+                            updateFloatingBarUi()
                         }
                     }.show(supportFragmentManager, TileCopyBottomSheet.TAG)
                 }
@@ -4229,6 +4396,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                     knownMountPaths.addAll(newKnownPaths)
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
+                    if (!capturedIsTv) {
+                        updateFloatingBarUi()
+                    }
                 }
                 return@launch
             }
@@ -4347,6 +4517,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
                     restoreSelectionAndScroll()
+                    if (!capturedIsTv) {
+                        updateFloatingBarUi()
+                    }
                 }
                 return@launch
             }
@@ -4370,6 +4543,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
                     restoreSelectionAndScroll()
+                    if (!capturedIsTv) {
+                        updateFloatingBarUi()
+                    }
                 }
                 return@launch
             }
@@ -4394,6 +4570,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
                     restoreSelectionAndScroll()
+                    if (!capturedIsTv) {
+                        updateFloatingBarUi()
+                    }
                 }
                 return@launch
             }
@@ -4784,6 +4963,12 @@ class StorageBrowserActivity : AppCompatActivity() {
             val fullList = storageItems.toList()
             val hidden = TileOrderManager.loadHidden(this@StorageBrowserActivity)
             storageItems.removeAll { it.id in hidden }
+
+            if (!capturedIsTv && showFeatureTiles && FloatingBarManager.isEnabled(this@StorageBrowserActivity)) {
+                val dockedIds = FloatingBarManager.getItemIds(this@StorageBrowserActivity).toSet()
+                storageItems.removeAll { it.id in dockedIds }
+            }
+
             val orderedItems = applyTileOrder(storageItems)
 
             // In tile icon picker mode, show only storage-selector tiles
@@ -4818,6 +5003,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                 storageAdapter.submitList(displayItems, this@StorageBrowserActivity)
                 updateEmptyState(storageItems.isEmpty())
                 restoreSelectionAndScroll()
+                if (!capturedIsTv) {
+                    updateFloatingBarUi()
+                }
             }
         }
     }

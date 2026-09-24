@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutFloatingBarAdd"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="68dp"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingHorizontal="6dp"
+    android:paddingVertical="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackgroundBorderless">
+
+    <!-- Frosted Squircle Icon Container with + icon -->
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_btn_icon_frosted">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_add"
+            android:scaleType="centerInside"
+            android:importantForAccessibility="no"
+            app:tint="@color/mobile_icon_tint" />
+    </FrameLayout>
+
+    <!-- "Add" Label -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="78dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/floating_bar_add"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textSize="11sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:breakStrategy="simple"
+        android:hyphenationFrequency="none" />
+
+</LinearLayout>

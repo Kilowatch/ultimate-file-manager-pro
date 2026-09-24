@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="68dp"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingHorizontal="6dp"
+    android:paddingVertical="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackgroundBorderless">
+
+    <!-- Frosted Squircle Icon Container -->
+    <FrameLayout
+        android:id="@+id/containerIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_btn_icon_frosted">
+
+        <ImageView
+            android:id="@+id/imgTileIcon"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:importantForAccessibility="no"
+            app:tint="@color/mobile_icon_tint"
+            tools:src="@drawable/ic_cloud" />
+    </FrameLayout>
+
+    <!-- Title Label -->
+    <TextView
+        android:id="@+id/txtTileLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="78dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textSize="11sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:breakStrategy="simple"
+        android:hyphenationFrequency="none"
+        tools:text="Internal\nStorage" />
+
+</LinearLayout>

@@ -305,6 +305,7 @@ object SettingsBackupManager {
         if (!za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
             add("tabs_preferences",          context.getString(R.string.backup_pref_tabs))
             add("root_preferences",          context.getString(R.string.backup_pref_root))
+            add("floating_bar_prefs",        context.getString(R.string.backup_pref_floating_bar))
         }
         if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
             add("ufm_tv_server_prefs",   context.getString(R.string.backup_pref_tv_server))
@@ -638,6 +639,7 @@ object SettingsBackupManager {
                 "ufm_recents_prefs"         to R.string.recent_files_title,
                 "tabs_preferences"          to R.string.backup_pref_tabs,
                 "root_preferences"          to R.string.backup_pref_root,
+                "floating_bar_prefs"        to R.string.backup_pref_floating_bar,
                 "ufm_tv_server_prefs"       to R.string.backup_pref_tv_server,
                 "ufm_foss_update_prefs"     to R.string.backup_pref_foss_update,
                 "grid_text_position_prefs"  to R.string.backup_pref_grid_text_position,

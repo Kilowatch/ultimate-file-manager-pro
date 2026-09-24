@@ -394,6 +394,12 @@
             android:name=".settings.ToolbarIconsActivity"
             android:exported="false" />
 
+        <!-- Floating Bottom Bar (Dock) Management -->
+        <activity
+            android:name=".settings.FloatingBarManageActivity"
+            android:exported="false"
+            android:label="@string/floating_bar_manage_title" />
+
         <!-- Manage Favorites -->
         <activity
             android:name=".settings.ManageFavoritesActivity"

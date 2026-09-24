@@ -116,6 +116,9 @@
     <color name="quick_bar_bg">#FF374151</color>
     <color name="quick_bar_stroke">#33FFFFFF</color>
     <color name="quick_bar_icon_tint">#FFFFFFFF</color>
+    <!-- Floating Bottom Dock — 100% opaque composite matching mobile tile surface -->
+    <color name="floating_bar_bg">#FF3C4555</color>
+    <color name="floating_bar_stroke">#55FFFFFF</color>
     <color name="mobile_text_primary">#FFFFFFFF</color>
     <color name="mobile_text_secondary">#99FFFFFF</color>
     <color name="mobile_text_hint">#99FFFFFF</color>
