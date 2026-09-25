@@ -33,6 +33,7 @@ import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager.ViewMode
 import za.kilowatch.ultimatefilemanager.storage.FloatingBarManager
+import za.kilowatch.ultimatefilemanager.storage.QuickAccessManager
 
 /**
  * Settings hub screen.
@@ -151,6 +152,15 @@ class SettingsActivity : AppCompatActivity() {
     private var txtLeftHandedFabSubtitle: TextView? = null
 
     private var switchFloatingBar: SwitchMaterial? = null
+    private var txtQuickAccessStyleSubtitle: TextView? = null
+    private var cardQuickAccessEdge: View? = null
+    private var txtQuickAccessEdgeSubtitle: TextView? = null
+    private var cardQuickAccessEdgeHandle: View? = null
+    private var switchQuickAccessEdgeHandle: SwitchMaterial? = null
+    private var cardQuickAccessHideTiles: View? = null
+    private var switchQuickAccessHideTiles: SwitchMaterial? = null
+    private var cardFloatingBarManage: View? = null
+    private var dividerQuickAccessManage: View? = null
 
     private var switchTvBackgroundServer: SwitchMaterial? = null
     private var txtTvBackgroundServerSubtitle: TextView? = null
@@ -688,23 +698,8 @@ class SettingsActivity : AppCompatActivity() {
             switchLeftHandedFab?.setOnCheckedChangeListener(null)
         }
 
-        // Floating Bottom Bar toggle & manage (Mobile Only)
-        val cardFloatingBarToggle = findViewById<View>(R.id.cardFloatingBarToggle)
-        if (cardFloatingBarToggle != null && !isTv) {
-            switchFloatingBar = findViewById(R.id.switchFloatingBarEnabled)
-            switchFloatingBar?.isChecked = FloatingBarManager.isEnabled(this)
-            switchFloatingBar?.setOnCheckedChangeListener { _, isChecked ->
-                FloatingBarManager.setEnabled(this, isChecked)
-            }
-            cardFloatingBarToggle.setOnClickListener {
-                switchFloatingBar?.let { it.isChecked = !it.isChecked }
-            }
-
-            val cardFloatingBarManage = findViewById<View>(R.id.cardFloatingBarManage)
-            cardFloatingBarManage?.setOnClickListener {
-                startActivity(Intent(this, FloatingBarManageActivity::class.java))
-            }
-        }
+        // Quick Access section (Floating Bottom Bar & Edge Swipe Menu - Mobile Only)
+        setupQuickAccessSection()
 
         // Grid Indicators toggle — ON = hide, OFF = show (default)
         val cardGridIndicators = findViewById<View>(R.id.cardGridIndicators)
@@ -1232,8 +1227,8 @@ class SettingsActivity : AppCompatActivity() {
             updateLeftHandedFabSubtitle(leftHanded)
         }
 
-        // Refresh Floating Bottom Bar toggle
-        switchFloatingBar?.isChecked = FloatingBarManager.isEnabled(this)
+        // Refresh Quick Access settings
+        updateQuickAccessSettingsUi()
 
         // Refresh Grid Indicators subtitle
         if (::switchGridIndicators.isInitialized) {
@@ -1799,6 +1794,160 @@ class SettingsActivity : AppCompatActivity() {
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    private fun setupQuickAccessSection() {
+        val layoutSectionQuickAccess = findViewById<View>(R.id.layoutSectionQuickAccess)
+        if (isTv) {
+            layoutSectionQuickAccess?.visibility = View.GONE
+            return
+        }
+        val cardQuickAccessStyle = findViewById<View>(R.id.cardQuickAccessStyle) ?: return
+        layoutSectionQuickAccess?.visibility = View.VISIBLE
+
+        txtQuickAccessStyleSubtitle = findViewById(R.id.txtQuickAccessStyleSubtitle)
+        cardQuickAccessEdge = findViewById(R.id.cardQuickAccessEdge)
+        txtQuickAccessEdgeSubtitle = findViewById(R.id.txtQuickAccessEdgeSubtitle)
+        cardQuickAccessEdgeHandle = findViewById(R.id.cardQuickAccessEdgeHandle)
+        switchQuickAccessEdgeHandle = findViewById(R.id.switchQuickAccessEdgeHandle)
+        cardQuickAccessHideTiles = findViewById(R.id.cardQuickAccessHideTiles)
+        switchQuickAccessHideTiles = findViewById(R.id.switchQuickAccessHideTiles)
+        cardFloatingBarManage = findViewById(R.id.cardFloatingBarManage)
+        dividerQuickAccessManage = findViewById(R.id.dividerQuickAccessManage)
+
+        cardQuickAccessStyle.setOnClickListener {
+            showQuickAccessStyleDialog()
+        }
+
+        cardQuickAccessEdge?.setOnClickListener {
+            showQuickAccessEdgeDialog()
+        }
+
+        cardQuickAccessEdgeHandle?.setOnClickListener {
+            switchQuickAccessEdgeHandle?.let { it.isChecked = !it.isChecked }
+        }
+        switchQuickAccessEdgeHandle?.setOnCheckedChangeListener { _, isChecked ->
+            QuickAccessManager.setEdgeHandleEnabled(this, isChecked)
+        }
+
+        cardQuickAccessHideTiles?.setOnClickListener {
+            switchQuickAccessHideTiles?.let { it.isChecked = !it.isChecked }
+        }
+        switchQuickAccessHideTiles?.setOnCheckedChangeListener { _, isChecked ->
+            QuickAccessManager.setHideMainTilesEnabled(this, isChecked)
+        }
+
+        cardFloatingBarManage?.setOnClickListener {
+            startActivity(Intent(this, FloatingBarManageActivity::class.java))
+        }
+
+        updateQuickAccessSettingsUi()
+    }
+
+    private fun showQuickAccessStyleDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_quick_access_mode, null)
+        val currentMode = QuickAccessManager.getMode(this)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val options = listOf(
+            Triple(R.id.btnModeDisabled, R.id.checkModeDisabled, QuickAccessManager.MODE_DISABLED),
+            Triple(R.id.btnModeBottomBar, R.id.checkModeBottomBar, QuickAccessManager.MODE_BOTTOM_BAR),
+            Triple(R.id.btnModeEdgeMenu, R.id.checkModeEdgeMenu, QuickAccessManager.MODE_EDGE_MENU)
+        )
+
+        options.forEach { (btnId, checkId, mode) ->
+            val btn = dialogView.findViewById<View>(btnId)
+            val check = dialogView.findViewById<ImageView>(checkId)
+            val isSelected = currentMode == mode
+            check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+
+            btn?.setOnClickListener {
+                dialog.dismiss()
+                QuickAccessManager.setMode(this, mode)
+                updateQuickAccessSettingsUi()
+            }
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showQuickAccessEdgeDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_quick_access_edge, null)
+        val currentEdge = QuickAccessManager.getEdgePosition(this)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val options = listOf(
+            Triple(R.id.btnEdgeLeft, R.id.checkEdgeLeft, QuickAccessManager.EDGE_LEFT),
+            Triple(R.id.btnEdgeRight, R.id.checkEdgeRight, QuickAccessManager.EDGE_RIGHT)
+        )
+
+        options.forEach { (btnId, checkId, edge) ->
+            val btn = dialogView.findViewById<View>(btnId)
+            val check = dialogView.findViewById<ImageView>(checkId)
+            val isSelected = currentEdge == edge
+            check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+
+            btn?.setOnClickListener {
+                dialog.dismiss()
+                QuickAccessManager.setEdgePosition(this, edge)
+                updateQuickAccessSettingsUi()
+            }
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun updateQuickAccessSettingsUi() {
+        if (isTv) return
+        val mode = QuickAccessManager.getMode(this)
+        val isEdgeMenu = mode == QuickAccessManager.MODE_EDGE_MENU
+        val isEnabled = mode != QuickAccessManager.MODE_DISABLED
+
+        txtQuickAccessStyleSubtitle?.text = when (mode) {
+            QuickAccessManager.MODE_BOTTOM_BAR -> getString(R.string.quick_access_mode_bottom_bar)
+            QuickAccessManager.MODE_EDGE_MENU -> getString(R.string.quick_access_mode_edge_menu)
+            else -> getString(R.string.quick_access_mode_disabled)
+        }
+
+        val edge = QuickAccessManager.getEdgePosition(this)
+        txtQuickAccessEdgeSubtitle?.text = if (edge == QuickAccessManager.EDGE_LEFT) {
+            getString(R.string.quick_access_edge_left)
+        } else {
+            getString(R.string.quick_access_edge_right)
+        }
+
+        cardQuickAccessEdge?.visibility = if (isEdgeMenu) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.dividerQuickAccessEdge)?.visibility = if (isEdgeMenu) View.VISIBLE else View.GONE
+
+        cardQuickAccessEdgeHandle?.visibility = if (isEdgeMenu) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.dividerQuickAccessEdgeHandle)?.visibility = if (isEdgeMenu) View.VISIBLE else View.GONE
+
+        cardQuickAccessHideTiles?.visibility = if (isEdgeMenu) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.dividerQuickAccessHideTiles)?.visibility = if (isEdgeMenu) View.VISIBLE else View.GONE
+
+        switchQuickAccessEdgeHandle?.isChecked = QuickAccessManager.isEdgeHandleEnabled(this)
+        switchQuickAccessHideTiles?.isChecked = QuickAccessManager.isHideMainTilesEnabled(this)
+
+        cardFloatingBarManage?.visibility = if (isEnabled) View.VISIBLE else View.GONE
+        dividerQuickAccessManage?.visibility = if (isEnabled) View.VISIBLE else View.GONE
     }
 
     private fun toggleTvBackgroundServer() {

@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.3] — 2026-09-22
 
 ### Added
+- **Global Edge Swipe Menu**: Added an app-wide slide-out navigation drawer accessible via inward swipe gestures from anywhere in the application (left or right screen edge), featuring the official app icon, "Ultimate File Manager Pro" branding, quick navigation shortcuts, and direct settings access.
+- **Quick Access Style Customization**: Expanded Quick Access preferences in Settings allowing users to choose between Disabled, Bottom Floating Bar, and Edge Swipe Menu.
+- **Configurable Swipe Edge & Indicator**: Added configurable swipe edge selection (Left vs Right edge) and an optional subtle edge handle pill for easy opening and touch discovery.
+- **Android 10+ Gesture Navigation Compatibility**: Integrated Android 10+ (API 29+) System Gesture Exclusion Rects (`setSystemGestureExclusionRects`) on the edge handle to avoid conflicting with system navigation back gestures.
+- **Clean Interception & Touch Dispatch**: Built `EdgeMenuRootLayout` to intercept inward drag gestures cleanly without consuming taps or interfering with underlying action bars and scroll views.
+- **Main Dashboard Tile Filtering Toggle**: Added setting to hide docked tiles from the main dashboard grid, keeping the storage overview clean and uncluttered.
+- **Universal Storage Tile Launcher**: Added `StorageTileActionHandler` enabling seamless navigation to any tool or storage volume (Twin Window, Notepad, Scanner, Apps, Terminal, Shizuku, Search, Analyzer, Smart Sort, Vault, Recycle Bin, Sync, File Server, Settings, Network shares, Cloud accounts, and local storage) from within the drawer across any active screen.
 - **Mobile Floating Bottom Bar Dock**: Added a modern floating bottom dock on the Storage Browser screen for quick access to frequently used main menu items (disabled by default).
 - **Dedicated Floating Bar Manager**: Added `FloatingBarManageActivity` featuring drag-and-drop reordering, quick add and remove actions, and direct state persistence.
 - **Main Menu Tile Hiding**: Docked items are automatically hidden from the main menu grid and displayed exclusively in the bottom dock.
@@ -27,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Sandboxed Offline Vector Rendering**: Hardened rendering via an isolated, offline AndroidX WebKit container utilizing `WebViewAssetLoader`, virtual origin mapping (`https://appassets.androidplatform.net/`), strict Content Security Policy (`default-src 'none'`), script sanitization, and 15 MB zip-bomb decompression protection.
 
 ### Changed
+- **Adaptive Quick Access Management**: Adapted `FloatingBarManageActivity` to dynamically update titles and descriptions depending on whether Bottom Floating Bar or Edge Swipe Menu is active.
+- **Solid Opaque Surface Theming**: Enforced solid opaque card coloring composite-calculated over theme surfaces (`#222222` in AMOLED, `#3C4555` in dark mode) ensuring crisp visibility with zero transparency artifacts.
 - **Dedicated Vector Routing**: Directed `.svg` and `.svgz` files exclusively to UFM Media Player, removing them from static Image Viewer and SlideShow candidate queues to ensure smooth animation playback.
 
 ### Fixed

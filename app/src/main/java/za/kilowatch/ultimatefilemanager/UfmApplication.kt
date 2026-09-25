@@ -389,11 +389,19 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                             }
                         }
                     }
+                    // Edge Swipe Menu overlay synchronization
+                    za.kilowatch.ultimatefilemanager.storage.EdgeMenuOverlayController.onActivityResumed(activity)
                 } catch (e: Throwable) {
                     Log.w(TAG, "Error in onActivityResumed lifecycle callback", e)
                 }
             }
-            override fun onActivityPaused(activity: android.app.Activity) {}
+            override fun onActivityPaused(activity: android.app.Activity) {
+                try {
+                    za.kilowatch.ultimatefilemanager.storage.EdgeMenuOverlayController.onActivityPaused(activity)
+                } catch (e: Throwable) {
+                    Log.w(TAG, "Error in onActivityPaused lifecycle callback", e)
+                }
+            }
             override fun onActivityStopped(activity: android.app.Activity) {
                 try {
                     startedActivityCount--
@@ -411,6 +419,7 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             override fun onActivityDestroyed(activity: android.app.Activity) {
                 try {
                     aliveActivities.remove(activity)
+                    za.kilowatch.ultimatefilemanager.storage.EdgeMenuOverlayController.onActivityDestroyed(activity)
                 } catch (e: Throwable) {
                     Log.w(TAG, "Error in onActivityDestroyed lifecycle callback", e)
                 }

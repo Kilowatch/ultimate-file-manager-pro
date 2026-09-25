@@ -48,6 +48,7 @@
             android:layout_marginStart="14dp">
 
             <TextView
+                android:id="@+id/txtToolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/floating_bar_manage_title"
@@ -56,6 +57,7 @@
                 android:fontFamily="sans-serif-black" />
 
             <TextView
+                android:id="@+id/txtToolbarSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/floating_bar_manage_subtitle"
@@ -128,6 +130,7 @@
                         android:layout_marginEnd="12dp">
 
                         <TextView
+                            android:id="@+id/txtMasterToggleTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/floating_bar_enable_switch"
@@ -136,6 +139,7 @@
                             android:fontFamily="sans-serif-bold" />
 
                         <TextView
+                            android:id="@+id/txtMasterToggleDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"

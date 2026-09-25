@@ -1796,13 +1796,13 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     private fun updateFloatingBarUi() {
-        if (isTv || isAnyPickerMode || !FloatingBarManager.isEnabled(this)) {
+        if (isTv || isAnyPickerMode || QuickAccessManager.getMode(this) != QuickAccessManager.MODE_BOTTOM_BAR) {
             cardFloatingBar?.visibility = View.GONE
             updateFloatingBarScrollClearance(false)
             return
         }
 
-        val dockedIds = FloatingBarManager.getItemIds(this)
+        val dockedIds = QuickAccessManager.getItemIds(this)
         val itemMap = lastFullTileList.associateBy { it.id }
         val dockedItems = dockedIds.mapNotNull { itemMap[it] }
 
@@ -4964,8 +4964,14 @@ class StorageBrowserActivity : AppCompatActivity() {
             val hidden = TileOrderManager.loadHidden(this@StorageBrowserActivity)
             storageItems.removeAll { it.id in hidden }
 
-            if (!capturedIsTv && showFeatureTiles && FloatingBarManager.isEnabled(this@StorageBrowserActivity)) {
-                val dockedIds = FloatingBarManager.getItemIds(this@StorageBrowserActivity).toSet()
+            val qMode = QuickAccessManager.getMode(this@StorageBrowserActivity)
+            val shouldHideDocked = when (qMode) {
+                QuickAccessManager.MODE_BOTTOM_BAR -> true
+                QuickAccessManager.MODE_EDGE_MENU -> QuickAccessManager.isHideMainTilesEnabled(this@StorageBrowserActivity)
+                else -> false
+            }
+            if (!capturedIsTv && showFeatureTiles && shouldHideDocked) {
+                val dockedIds = QuickAccessManager.getItemIds(this@StorageBrowserActivity).toSet()
                 storageItems.removeAll { it.id in dockedIds }
             }
 

@@ -5431,6 +5431,29 @@
     <string name="floating_bar_add">Add</string>
     <string name="floating_bar_remove">Remove</string>
     <string name="backup_pref_floating_bar">Floating Bottom Bar</string>
+
+    <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
+    <string name="quick_access_title">Quick Access</string>
+    <string name="quick_access_mode_title">Quick Access Style</string>
+    <string name="quick_access_mode_subtitle">Choose how quick-access shortcuts are presented</string>
+    <string name="quick_access_mode_disabled">Disabled</string>
+    <string name="quick_access_mode_bottom_bar">Bottom Floating Bar</string>
+    <string name="quick_access_mode_edge_menu">Edge Swipe Menu</string>
+    <string name="quick_access_edge_title">Swipe Edge</string>
+    <string name="quick_access_edge_left">Left Edge</string>
+    <string name="quick_access_edge_right">Right Edge</string>
+    <string name="quick_access_edge_handle_title">Edge Handle Indicator</string>
+    <string name="quick_access_edge_handle_desc">Show a subtle indicator on the screen edge for easy opening</string>
+    <string name="quick_access_hide_tiles_title">Hide Docked Tiles on Main Menu</string>
+    <string name="quick_access_hide_tiles_desc">Keep the main dashboard clean by hiding tiles docked in Quick Access</string>
+    <string name="quick_access_manage_tiles">Manage Tiles</string>
+    <string name="quick_access_empty_hint">No tiles docked yet.\nTap Manage Tiles to add shortcuts.</string>
+    <string name="quick_access_mode_disabled_desc">Disable quick access shortcuts</string>
+    <string name="quick_access_mode_bottom_bar_desc">Modern dock at the bottom of the main menu</string>
+    <string name="quick_access_mode_edge_menu_desc">Slide-out drawer accessible from screen edge</string>
+    <string name="quick_access_edge_subtitle">Select screen edge for swipe gesture</string>
+    <string name="quick_access_edge_left_desc">Swipe inward from the left screen edge</string>
+    <string name="quick_access_edge_right_desc">Swipe inward from the right screen edge</string>
 </resources>
 
 

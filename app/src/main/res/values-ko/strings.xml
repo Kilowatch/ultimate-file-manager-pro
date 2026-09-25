@@ -15280,6 +15280,60 @@ Remove
     <string name="backup_pref_floating_bar">
 Floating Bottom Bar
 </string>
+
+    <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
+    <string name="quick_access_title">
+Quick Access
+</string>
+    <string name="quick_access_mode_title">
+Quick Access Style
+</string>
+    <string name="quick_access_mode_subtitle">
+Choose how quick-access shortcuts are presented
+</string>
+    <string name="quick_access_mode_disabled">
+Disabled
+</string>
+    <string name="quick_access_mode_bottom_bar">
+Bottom Floating Bar
+</string>
+    <string name="quick_access_mode_edge_menu">
+Edge Swipe Menu
+</string>
+    <string name="quick_access_edge_title">
+Swipe Edge
+</string>
+    <string name="quick_access_edge_left">
+Left Edge
+</string>
+    <string name="quick_access_edge_right">
+Right Edge
+</string>
+    <string name="quick_access_edge_handle_title">
+Edge Handle Indicator
+</string>
+    <string name="quick_access_edge_handle_desc">
+Show a subtle indicator on the screen edge for easy opening
+</string>
+    <string name="quick_access_hide_tiles_title">
+Hide Docked Tiles on Main Menu
+</string>
+    <string name="quick_access_hide_tiles_desc">
+Keep the main dashboard clean by hiding tiles docked in Quick Access
+</string>
+    <string name="quick_access_manage_tiles">
+Manage Tiles
+</string>
+    <string name="quick_access_empty_hint">
+No tiles docked yet.\n
+Tap Manage Tiles to add shortcuts.
+</string>
+    <string name="quick_access_mode_disabled_desc">빠른 실행 단축키 비활성화</string>
+    <string name="quick_access_mode_bottom_bar_desc">메인 메뉴 하단의 모던 플로팅 바</string>
+    <string name="quick_access_mode_edge_menu_desc">화면 가장자리에서 스와이프하여 여는 서랍 메뉴</string>
+    <string name="quick_access_edge_subtitle">스와이프 제스처를 사용할 화면 가장자리 선택</string>
+    <string name="quick_access_edge_left_desc">화면 왼쪽 가장자리에서 안쪽으로 스와이프</string>
+    <string name="quick_access_edge_right_desc">화면 오른쪽 가장자리에서 안쪽으로 스와이프</string>
 </resources>
 
 

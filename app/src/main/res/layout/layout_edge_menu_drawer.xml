@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<za.kilowatch.ultimatefilemanager.storage.EdgeMenuRootLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootEdgeMenu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="false"
+    android:focusable="false">
+
+    <!-- Edge Touch Handle (Generous touch target with sleek frosted pill indicator) -->
+    <FrameLayout
+        android:id="@+id/viewEdgeHandle"
+        android:layout_width="28dp"
+        android:layout_height="72dp"
+        android:layout_gravity="start|center_vertical"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="6dp">
+
+        <View
+            android:id="@+id/viewEdgeHandlePill"
+            android:layout_width="5dp"
+            android:layout_height="56dp"
+            android:layout_gravity="start|center_vertical"
+            android:background="@drawable/bg_edge_menu_handle" />
+    </FrameLayout>
+
+    <!-- Backdrop Dimming Scrim -->
+    <View
+        android:id="@+id/viewEdgeScrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"
+        android:alpha="0"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- Slide-out Drawer Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardEdgeDrawer"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/floating_bar_bg"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="16dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/floating_bar_stroke">
+
+        <LinearLayout
+            android:id="@+id/layoutDrawerInner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- ── Header: App Logo, Name & Close Button ── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="12dp">
+
+                <!-- App Icon in frosted squircle -->
+                <FrameLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_btn_icon_frosted">
+
+                    <ImageView
+                        android:id="@+id/imgAppLogo"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/ic_launcher"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <!-- Title & Subtitle -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtAppTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:textColor="@color/mobile_card_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-black"
+                        android:letterSpacing="0.01"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+
+                    <TextView
+                        android:id="@+id/txtMenuSubtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/quick_access_title"
+                        android:textColor="@color/mobile_card_text_secondary"
+                        android:textSize="11sp"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+
+                <!-- Close Button -->
+                <FrameLayout
+                    android:id="@+id/btnCloseEdgeMenu"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_close"
+                        app:tint="@color/mobile_icon_tint"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <!-- Subtle Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/mobile_glass_stroke" />
+
+            <!-- ── Tile List ── -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvEdgeMenuItems"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingVertical="4dp"
+                android:overScrollMode="always"
+                tools:listitem="@layout/item_edge_menu_tile" />
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/layoutEmptyEdgeMenu"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:src="@drawable/ic_grid_view_custom"
+                    app:tint="@color/mobile_text_secondary"
+                    android:alpha="0.45"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/quick_access_empty_hint"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="13sp"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <!-- Subtle Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/mobile_glass_stroke" />
+
+            <!-- ── Footer: Manage Tiles & Settings ── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp">
+
+                <!-- Manage Tiles Action Button -->
+                <LinearLayout
+                    android:id="@+id/btnManageTiles"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/quick_access_manage_tiles"
+                    android:paddingHorizontal="14dp">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_add"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/quick_access_manage_tiles"
+                        android:textColor="@color/mobile_card_text_primary"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:letterSpacing="0.01"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                </LinearLayout>
+
+                <!-- Settings Shortcut -->
+                <FrameLayout
+                    android:id="@+id/btnEdgeSettings"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/settings">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_settings"
+                        app:tint="@color/mobile_icon_tint"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</za.kilowatch.ultimatefilemanager.storage.EdgeMenuRootLayout>

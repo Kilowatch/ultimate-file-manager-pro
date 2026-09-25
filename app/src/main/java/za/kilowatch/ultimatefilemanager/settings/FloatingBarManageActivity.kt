@@ -94,6 +94,13 @@ class FloatingBarManageActivity : AppCompatActivity() {
         txtDockedCount = findViewById(R.id.txtDockedCount)
         txtAvailableCount = findViewById(R.id.txtAvailableCount)
 
+        val isEdgeMenu = za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.getMode(this) == za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.MODE_EDGE_MENU
+        if (isEdgeMenu) {
+            findViewById<android.widget.TextView>(R.id.txtToolbarTitle)?.setText(R.string.quick_access_manage_tiles)
+            findViewById<android.widget.TextView>(R.id.txtMasterToggleTitle)?.setText(R.string.quick_access_title)
+            findViewById<android.widget.TextView>(R.id.txtMasterToggleDesc)?.setText(R.string.quick_access_mode_subtitle)
+        }
+
         switchFloatingBar.isChecked = FloatingBarManager.isEnabled(this)
         switchFloatingBar.setOnCheckedChangeListener { _, isChecked ->
             FloatingBarManager.setEnabled(this, isChecked)
