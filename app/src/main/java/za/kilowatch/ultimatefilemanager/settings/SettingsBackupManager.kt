@@ -273,6 +273,7 @@ object SettingsBackupManager {
         add("thumbnail_prefs",           context.getString(R.string.backup_pref_thumbnails))
         add("network_thumbnail_prefs",   context.getString(R.string.backup_pref_network_thumbnails))
         add("network_open_cache_prefs",  context.getString(R.string.backup_pref_network_cache))
+        add("network_media_process_prefs", context.getString(R.string.backup_pref_network_media_process))
         add("side_by_side_video_prefs",  context.getString(R.string.backup_pref_side_by_side))
         add("ufm_quick_transfer_prefs",  context.getString(R.string.backup_pref_quick_transfer))
         add("recycle_bin_prefs",         context.getString(R.string.backup_pref_recycle_bin))

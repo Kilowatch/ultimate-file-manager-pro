@@ -183,8 +183,16 @@ object FFmpegMediaHelper {
      */
     fun getMediaInfo(file: File): MediaInfo? {
         if (!isLoaded || !file.exists() || !file.canRead()) return null
+        return getMediaInfoFromPathOrUrl(file.absolutePath)
+    }
+
+    /**
+     * Inspects media file or streaming URL streams, codecs, bitrates, resolutions, and languages.
+     */
+    fun getMediaInfoFromPathOrUrl(pathOrUrl: String): MediaInfo? {
+        if (!isLoaded || pathOrUrl.isBlank()) return null
         return try {
-            val jsonStr = nativeGetMediaInfo(file.absolutePath) ?: return null
+            val jsonStr = nativeGetMediaInfo(pathOrUrl) ?: return null
             val obj = org.json.JSONObject(jsonStr)
             val format = obj.optString("format", "unknown")
             val duration = obj.optLong("duration_sec", 0L)
@@ -212,7 +220,7 @@ object FFmpegMediaHelper {
             }
             MediaInfo(format, duration, bitrate, streamList)
         } catch (e: Exception) {
-            GoRoLog.e(TAG, "Failed to parse media info for ${file.name}", e)
+            GoRoLog.e(TAG, "Failed to parse media info for $pathOrUrl", e)
             null
         }
     }
@@ -262,6 +270,55 @@ object FFmpegMediaHelper {
         val results = mutableListOf<File>()
         for (stream in subtitleStreams) {
             val extracted = extractSubtitles(file, streamIndex = stream.index, langCode = stream.lang)
+            if (extracted != null) {
+                results.add(extracted)
+            }
+        }
+        return results
+    }
+
+    /**
+     * Extracts an embedded subtitle track directly from a streaming URL to a standalone `.srt` file.
+     */
+    fun extractSubtitlesFromUrl(
+        url: String,
+        streamIndex: Int = -1,
+        targetFile: File
+    ): File? {
+        if (!isLoaded || url.isBlank()) return null
+        return try {
+            val success = nativeExtractSubtitle(url, streamIndex, targetFile.absolutePath)
+            if (success && targetFile.exists() && targetFile.length() > 0) {
+                targetFile
+            } else {
+                targetFile.delete()
+                null
+            }
+        } catch (e: Exception) {
+            GoRoLog.e(TAG, "Failed to extract subtitles from URL $url", e)
+            null
+        }
+    }
+
+    /**
+     * Extracts all subtitle streams directly from a streaming URL into individual `.srt` files.
+     */
+    fun extractAllSubtitlesFromUrl(
+        url: String,
+        subtitleStreams: List<MediaStreamInfo>,
+        baseName: String,
+        outputDir: File
+    ): List<File> {
+        val results = mutableListOf<File>()
+        for (stream in subtitleStreams) {
+            val langSuffix = if (stream.lang.isNotBlank()) "_${stream.lang.lowercase().trim()}" else "_track${stream.index}"
+            var candidate = File(outputDir, "${baseName}${langSuffix}.srt")
+            var counter = 1
+            while (candidate.exists()) {
+                candidate = File(outputDir, "${baseName}${langSuffix}_$counter.srt")
+                counter++
+            }
+            val extracted = extractSubtitlesFromUrl(url, stream.index, candidate)
             if (extracted != null) {
                 results.add(extracted)
             }
@@ -369,6 +426,87 @@ object FFmpegMediaHelper {
     }
 
     /**
+     * Extracts an audio stream directly from a streaming URL into a standalone audio file.
+     * If [universalAac] is true, transcodes to standard AAC (.m4a).
+     * Otherwise, performs lossless direct stream copy.
+     */
+    fun extractAudioFromUrl(
+        url: String,
+        streamIndex: Int = -1,
+        targetFile: File,
+        universalAac: Boolean = false
+    ): File? {
+        if (!isLoaded || url.isBlank()) return null
+        return try {
+            if (universalAac) {
+                val success = nativeTranscodeAudio(url, streamIndex, targetFile.absolutePath)
+                if (success && targetFile.exists() && targetFile.length() > 0) {
+                    return targetFile
+                }
+                targetFile.delete()
+                return null
+            }
+
+            var success = nativeExtractAudio(url, streamIndex, targetFile.absolutePath)
+            if (success && targetFile.exists() && targetFile.length() > 0) {
+                return targetFile
+            }
+
+            // Fallback: If native container remuxing failed and ext was not .mka, try .mka (Matroska Audio)
+            if (!targetFile.name.endsWith(".mka", ignoreCase = true)) {
+                targetFile.delete()
+                val parent = targetFile.parentFile ?: return null
+                val base = targetFile.nameWithoutExtension
+                var mkaCandidate = File(parent, "$base.mka")
+                var mkaCounter = 1
+                while (mkaCandidate.exists()) {
+                    mkaCandidate = File(parent, "${base}_$mkaCounter.mka")
+                    mkaCounter++
+                }
+                success = nativeExtractAudio(url, streamIndex, mkaCandidate.absolutePath)
+                if (success && mkaCandidate.exists() && mkaCandidate.length() > 0) {
+                    return mkaCandidate
+                }
+                mkaCandidate.delete()
+            }
+
+            targetFile.delete()
+            null
+        } catch (e: Exception) {
+            GoRoLog.e(TAG, "Failed to extract audio from URL $url", e)
+            null
+        }
+    }
+
+    /**
+     * Extracts all audio streams directly from a streaming URL into individual files.
+     */
+    fun extractAllAudioFromUrl(
+        url: String,
+        audioStreams: List<MediaStreamInfo>,
+        baseName: String,
+        outputDir: File,
+        universalAac: Boolean = false
+    ): List<File> {
+        val results = mutableListOf<File>()
+        for (stream in audioStreams) {
+            val ext = if (universalAac) "m4a" else getAudioExtensionForCodec(stream.codec)
+            val langSuffix = if (stream.lang.isNotBlank()) "_${stream.lang.lowercase().trim()}" else "_track${stream.index}"
+            var candidate = File(outputDir, "${baseName}${langSuffix}.$ext")
+            var counter = 1
+            while (candidate.exists()) {
+                candidate = File(outputDir, "${baseName}${langSuffix}_$counter.$ext")
+                counter++
+            }
+            val extracted = extractAudioFromUrl(url, stream.index, candidate, universalAac = universalAac)
+            if (extracted != null) {
+                results.add(extracted)
+            }
+        }
+        return results
+    }
+
+    /**
      * Transcodes an existing audio or video file's audio track to universal AAC (.m4a) format.
      * Guaranteed to be playable on all Android phones, TVs, external music players, and car stereos.
      */
@@ -428,6 +566,25 @@ object FFmpegMediaHelper {
             }
         } catch (e: Exception) {
             GoRoLog.e(TAG, "Failed to convert ${file.name} to MP4", e)
+            null
+        }
+    }
+
+    /**
+     * Converts or remuxes a video directly from a streaming URL to standard universal MP4 format (.mp4).
+     */
+    fun convertToMp4FromUrl(url: String, targetFile: File): File? {
+        if (!isLoaded || url.isBlank()) return null
+        return try {
+            val success = nativeConvertToMp4(url, targetFile.absolutePath)
+            if (success && targetFile.exists() && targetFile.length() > 0) {
+                targetFile
+            } else {
+                targetFile.delete()
+                null
+            }
+        } catch (e: Exception) {
+            GoRoLog.e(TAG, "Failed to convert URL $url to MP4", e)
             null
         }
     }

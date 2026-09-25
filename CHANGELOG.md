@@ -15,6 +15,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Clean Interception & Touch Dispatch**: Built `EdgeMenuRootLayout` to intercept inward drag gestures cleanly without consuming taps or interfering with underlying action bars and scroll views.
 - **Main Dashboard Tile Filtering Toggle**: Added setting to hide docked tiles from the main dashboard grid, keeping the storage overview clean and uncluttered.
 - **Universal Storage Tile Launcher**: Added `StorageTileActionHandler` enabling seamless navigation to any tool or storage volume (Twin Window, Notepad, Scanner, Apps, Terminal, Shizuku, Search, Analyzer, Smart Sort, Vault, Recycle Bin, Sync, File Server, Settings, Network shares, Cloud accounts, and local storage) from within the drawer across any active screen.
+- **Unified UFMStandard Dialog Experience**: Overhauled all dialogs and alert popups across the application (Mobile and Android TV) to strictly conform to UFMStandard glass design guidelines (`@drawable/bg_dialog_glass` / `@drawable/bg_bottom_sheet_glass`), featuring 48–56dp rounded frosted squircle hero badges (`@drawable/bg_btn_icon_frosted`), theme-adaptive typography, edge-to-edge transparent windows, and embedded vertically stacked action buttons.
+- **Dedicated Dual-Layout XML Dialogs**: Replaced programmatic platform alerts with purpose-built Mobile and TV layouts for MP4 video conversion confirmation (`dialog_convert_mp4_confirm.xml`), directory path navigation (`dialog_go_to_path.xml`), multi-page and text unsaved changes (`dialog_unsaved_changes.xml`), batch renaming workflow (help, execute confirmation, and discard alerts), App Manager application info cards (`dialog_app_details.xml`), video player playback speed selector (`dialog_playback_speed.xml`), and EPUB chapter table of contents (`dialog_epub_toc.xml`).
+- **Standardized Dialog Helper**: Introduced `UfmDialogHelper` for centralized, consistent invocation of standard confirmation, warning, and text-input modals across all storage engines (Local, SAF, Network, Cloud, Recents, and Twin Window).
+- **Direct Remote Zero-Copy Media Extraction & Conversion**: Extracting audio tracks, subtitle streams, and converting videos to MP4 on network and cloud storage now stream directly via `NetworkHttpProxyServer` into the remote directory without copying multi-gigabyte source videos to local storage.
+- **Copy-to-Local Media Processing Option**: Added toggle under Settings > Transfers & Network to optionally copy remote videos to device storage before processing, complete with a UFMStandard confirmation popup displaying source file size.
+- **Background MediaOperationWorker**: Media extractions and conversions across both Local and Network storage now run through WorkManager foreground service workers with persistent notifications, surviving app switching, activity destruction, and screen lock.
+
+### Changed
+- **Dialog Button Embedding**: Eliminated raw system horizontal button bars (`.setPositiveButton()` / `.setNegativeButton()`) on custom glass views; all primary and secondary actions are now embedded directly inside the glass card layouts for consistent hierarchy and elevation.
+- **Android TV Dialog Focus**: Ensured standard 650dp/800dp card widths and yellow focus highlight styling (`@drawable/selector_tv_button_yellow`) across all newly introduced TV dialog variants with optimized D-pad remote navigation.
+- **Online Storage Actions Modal**: Upgraded mobile cloud account actions to a glass card dialog matching the Android TV interface, providing one-tap browsing, SAF exposure toggling, and account deletion.
+
+### Fixed
+- **System Theme Title Inconsistencies**: Removed reflection hacks for alert title recoloring in App Manager, replacing them with theme-aware layout typography.
+- **Dialog Window Insets**: Enforced transparent background drawables on all dialog windows, eliminating white rectangular frames around curved glass corners.
+- **Read-Only Share Media Extraction Notice**: Added a UFMStandard glass modal in NetworkBrowser informing users when extracting audio/subtitles or converting videos on read-only shares that the output file will be saved directly to the device's Downloads folder.
+- **Server-Mode SMB Share Resolution**: Resolved path construction for server-mode SMB connections in `MediaOperationWorker` by threading the effective share name from `currentPath`, ensuring upload and streaming paths resolve correctly even when `remotePath` is unset in the share configuration.
 
 ## [2.1.3] — 2026-09-22
 

@@ -98,6 +98,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var switchNetworkOpenCache: SwitchMaterial
     private lateinit var txtNetworkOpenCacheSubtitle: TextView
+    private lateinit var switchNetworkMediaProcessCache: SwitchMaterial
+    private lateinit var txtNetworkMediaProcessCacheSubtitle: TextView
     private lateinit var txtNetworkTransferThreadsSubtitle: TextView
 
     private lateinit var switchRecycleBin: SwitchMaterial
@@ -465,6 +467,18 @@ class SettingsActivity : AppCompatActivity() {
 
         cardNetworkOpenCache.setOnClickListener { toggleNetworkOpenCache() }
         switchNetworkOpenCache.setOnCheckedChangeListener(null)
+
+        // Network Media Process (Direct Remote vs Copy to Local)
+        val cardNetworkMediaProcessCache = findViewById<View>(R.id.cardNetworkMediaProcessCache)
+        switchNetworkMediaProcessCache = findViewById(R.id.switchNetworkMediaProcessCache)
+        txtNetworkMediaProcessCacheSubtitle = findViewById(R.id.txtNetworkMediaProcessCacheSubtitle)
+
+        val networkMediaProcessCopy = za.kilowatch.ultimatefilemanager.settings.NetworkMediaProcessPreferenceManager.isCopyBeforeProcessing(this)
+        switchNetworkMediaProcessCache.isChecked = networkMediaProcessCopy
+        updateNetworkMediaProcessCacheSubtitle(networkMediaProcessCopy)
+
+        cardNetworkMediaProcessCache.setOnClickListener { toggleNetworkMediaProcessCache() }
+        switchNetworkMediaProcessCache.setOnCheckedChangeListener(null)
 
         // Network Transfer Threads (FTP / SFTP)
         val cardNetworkTransferThreads = findViewById<View>(R.id.cardNetworkTransferThreads)
@@ -1120,6 +1134,13 @@ class SettingsActivity : AppCompatActivity() {
             updateNetworkOpenCacheSubtitle(enabled)
         }
 
+        // Refresh network media process subtitle
+        if (::switchNetworkMediaProcessCache.isInitialized) {
+            val enabled = za.kilowatch.ultimatefilemanager.settings.NetworkMediaProcessPreferenceManager.isCopyBeforeProcessing(this)
+            switchNetworkMediaProcessCache.isChecked = enabled
+            updateNetworkMediaProcessCacheSubtitle(enabled)
+        }
+
         // Refresh TV background server subtitle
         switchTvBackgroundServer?.let { sw ->
             val enabled = za.kilowatch.ultimatefilemanager.settings.TvBackgroundServerPreferenceManager.isEnabled(this)
@@ -1760,6 +1781,21 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.settings_network_open_cache_subtitle_on)
         } else {
             getString(R.string.settings_network_open_cache_subtitle_off)
+        }
+    }
+
+    private fun toggleNetworkMediaProcessCache() {
+        val newValue = !switchNetworkMediaProcessCache.isChecked
+        switchNetworkMediaProcessCache.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.settings.NetworkMediaProcessPreferenceManager.setCopyBeforeProcessing(this, newValue)
+        updateNetworkMediaProcessCacheSubtitle(newValue)
+    }
+
+    private fun updateNetworkMediaProcessCacheSubtitle(copyToLocal: Boolean) {
+        txtNetworkMediaProcessCacheSubtitle.text = if (copyToLocal) {
+            getString(R.string.settings_network_media_process_subtitle_on)
+        } else {
+            getString(R.string.settings_network_media_process_subtitle_off)
         }
     }
 

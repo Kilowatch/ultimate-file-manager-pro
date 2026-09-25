@@ -15334,6 +15334,84 @@ Tap Manage Tiles to add shortcuts.
     <string name="quick_access_edge_subtitle">Selecione a borda da tela para o gesto de deslizar</string>
     <string name="quick_access_edge_left_desc">Deslize para dentro a partir da borda esquerda da tela</string>
     <string name="quick_access_edge_right_desc">Deslize para dentro a partir da borda direita da tela</string>
+
+    <!-- Direct Remote Media & Media Operation Worker -->
+    <string name="settings_network_media_process_title">
+Network Media Processing
+</string>
+    <string name="settings_network_media_process_subtitle_off">
+Direct stream processing (zero local copy of video)
+</string>
+    <string name="settings_network_media_process_subtitle_on">
+Copy full video to local storage before processing
+</string>
+    <string name="backup_pref_network_media_process">
+Network Media Processing
+</string>
+    <string name="dialog_copy_before_process_title">
+Copy to Local Storage?
+</string>
+    <string name="dialog_copy_before_process_msg">
+This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+\n
+Depending on file size and connection speed, this may take some time.\n
+\n
+Do you want to proceed?
+</string>
+    <string name="action_copy_and_proceed">
+Copy &amp; Proceed
+</string>
+    <string name="media_operation_channel_name">
+Media Operations
+</string>
+    <string name="media_operation_channel_desc">
+Background video conversion and track extraction
+</string>
+    <string name="media_op_converting_video">
+Converting Video to MP4…
+</string>
+    <string name="media_op_extracting_audio">
+Extracting Audio Track…
+</string>
+    <string name="media_op_extracting_subtitles">
+Extracting Subtitles…
+</string>
+    <string name="media_op_completed_title">
+Media Operation Completed
+</string>
+    <string name="media_op_failed_title">
+Media Operation Failed
+</string>
+    <string name="media_op_downloading_source">
+Downloading remote video to local cache…
+</string>
+    <string name="media_op_uploading_result">
+Uploading result to remote folder…
+</string>
+    <string name="media_op_running_background">
+Continuing in background. Check notifications for progress.
+</string>
+    <string name="media_op_readonly_share_title">
+Remote Share is Read-Only
+</string>
+    <string name="media_op_readonly_share_msg">
+The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+\n
+Would you like to save it to your local device instead?
+</string>
+    <string name="action_save_locally">
+Save to Device
+</string>
+    <string name="dialog_media_op_readonly_title">
+Read-Only Share
+</string>
+    <string name="dialog_media_op_readonly_msg">
+The share \"%1$s\" is read-only.\n
+\n
+The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+\n
+Do you want to proceed?
+</string>
 </resources>
 
 

@@ -25,6 +25,13 @@ static void ffmpeg_log_callback(void *ptr, int level, const char *fmt, va_list v
     __android_log_vprint(android_level, "FFmpegNative", fmt, vl);
 }
 
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
+    av_log_set_callback(ffmpeg_log_callback);
+    av_log_set_level(AV_LOG_WARNING);
+    avformat_network_init();
+    return JNI_VERSION_1_6;
+}
+
 static void process_bitmap_pixels(AndroidBitmapInfo *bmp_info, void *bmp_pixels, jboolean *is_black) {
     uint32_t *pixels = (uint32_t *)bmp_pixels;
     int w = bmp_info->width;
