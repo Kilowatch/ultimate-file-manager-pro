@@ -361,7 +361,7 @@ fixCategoryFocus(); fixCategoryFocus()
                 val dialog = MaterialAlertDialogBuilder(this@SmartSortTvActivity, R.style.UFM_Dialog)
                     .setView(dialogView)
                     .create()
-                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                 dialogView.findViewById<View>(R.id.btnDone).setOnClickListener { dialog.dismiss() }
                 dialog.show()
             }
@@ -389,7 +389,7 @@ fixCategoryFocus(); fixCategoryFocus()
                 .setView(progressView)
                 .setCancelable(false)
                 .create()
-            pd.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            pd.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             pd.show()
 
             val cfg = buildConfig()
@@ -424,7 +424,7 @@ fixCategoryFocus(); fixCategoryFocus()
                     .setView(resultsView)
                     .setCancelable(false)
                     .create()
-                resDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                resDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                 resultsView.findViewById<View>(R.id.btnDone).setOnClickListener {
                     resDialog.dismiss()
                     setResult(RESULT_OK, Intent().apply { putExtra(RESULT_SORTED, true) })
@@ -546,7 +546,7 @@ private fun showAddRuleDialog(ruleContainer: LinearLayout?, emptyText: TextView?
     val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
         .setView(dialogView)
         .create()
-    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
     dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
         val desc = txtInput.text?.toString()?.trim() ?: ""
@@ -581,7 +581,7 @@ private fun showEditRuleDialog(index: Int, container: LinearLayout?, emptyText: 
     val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
         .setView(dialogView)
         .create()
-    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
     dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
         val desc = txtInput.text?.toString()?.trim() ?: ""
@@ -613,7 +613,7 @@ private fun showAddExtensionDialog(ruleIndex: Int) {
     val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
         .setView(dialogView)
         .create()
-    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
     dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
         val ext = txtInput.text?.toString()?.trim()?.lowercase()?.removePrefix(".") ?: ""
@@ -653,7 +653,7 @@ private fun showRemoveExtensionsDialog(ruleIndex: Int) {
     val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
         .setView(dialogView)
         .create()
-    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
     val inflater = LayoutInflater.from(this)
     fun renderExtensionList() {
@@ -746,7 +746,7 @@ private fun onSaveButtonClicked() {
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         val currentSaved = savedConfigId?.let { SmartSortSavedConfigRepository.getById(it) }
         val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtSubtitle)
@@ -774,7 +774,7 @@ private fun onSaveButtonClicked() {
             val delDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
                 .setView(delDialogView)
                 .create()
-            delDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            delDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             delDialogView.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
                 savedConfigId?.let { SmartSortSavedConfigRepository.delete(it) }
                 savedConfigId = null
@@ -814,7 +814,7 @@ private fun showSaveDescriptionDialog(isEdit: Boolean) {
     val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
         .setView(dialogView)
         .create()
-    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
     dialogView.findViewById<View>(R.id.btnSaveConfirm).setOnClickListener {
         val d = txtInput.text?.toString()?.trim() ?: ""
@@ -929,7 +929,7 @@ private fun updateSaveIcon() {
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         dialogView.findViewById<View>(R.id.btnDone).setOnClickListener { dialog.dismiss() }
         dialog.show()
     }

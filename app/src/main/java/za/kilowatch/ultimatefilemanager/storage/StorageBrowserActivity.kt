@@ -776,7 +776,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
 
         dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         edtName?.requestFocus()
     }
 
@@ -816,7 +816,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
 
         dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         edtName?.requestFocus()
     }
 
@@ -834,7 +834,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         btnDeleteConfirm?.setOnClickListener {
             dialog.dismiss()
@@ -1154,7 +1154,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
 
         dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performAutoBackupRestore(configExists: Boolean, themeExists: Boolean) {
@@ -2337,7 +2337,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         .create()
                     dialogView.findViewById<View>(R.id.btnGotIt)?.setOnClickListener { dialog.dismiss() }
                     dialog.show()
-                    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                    dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                 } else {
                     startActivity(Intent(this, za.kilowatch.ultimatefilemanager.network.TvRemoteActivity::class.java))
                     showPremiumSnackbar(getString(R.string.opening_itemlabel, getString(R.string.tv_remote)))
@@ -2917,10 +2917,14 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     private fun showRestrictedFeatureGuidanceDialog() {
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.restricted_feature_dialog_title)
-            .setMessage(R.string.restricted_feature_dialog_desc)
-            .setPositiveButton(R.string.btn_open_settings) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.restricted_feature_dialog_title),
+            message = getString(R.string.restricted_feature_dialog_desc),
+            iconRes = R.drawable.ic_warning,
+            positiveText = getString(R.string.btn_open_settings),
+            negativeText = getString(R.string.cancel),
+            onPositive = {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
                     try {
                         val intent = Intent(
@@ -2936,9 +2940,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     }
                 }
             }
-            .setNegativeButton(R.string.cancel, null)
-            .create()
-        dialog.show()
+        )
     }
 
     /**
@@ -3389,7 +3391,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         
         val btnGotIt = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnGotIt)
         btnGotIt.setOnClickListener {
@@ -3583,7 +3585,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnOptionCreateHeader)?.setOnClickListener {
             dialog.dismiss()
@@ -3610,7 +3612,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnCancelHeader)?.setOnClickListener {
             dialog.dismiss()
@@ -3679,7 +3681,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         btnCancel.setOnClickListener { dialog.dismiss() }
 
@@ -3785,7 +3787,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
 
         iconPickerDialog.show()
-        iconPickerDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        iconPickerDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun showCreateCustomTileDialogTv(isEdit: Boolean, existingData: CustomTileManager.CustomTileData?) {
@@ -3816,7 +3818,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         btnSave.setOnClickListener {
             val title = edtTitle.text?.toString()?.trim() ?: ""
@@ -3893,7 +3895,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             dialog.show()
-            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
     }
 
@@ -3965,14 +3967,15 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     private fun confirmDeleteCustomTile(item: StorageItem) {
         if (isTv) {
-            com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(getString(R.string.custom_tile_delete_confirm))
-                .setMessage(getString(R.string.custom_tile_delete_warning))
-                .setPositiveButton(getString(R.string.custom_tile_delete_title)) { _, _ ->
-                    deleteCustomTileInternal(item)
-                }
-                .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
-                .show()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = this,
+                title = getString(R.string.custom_tile_delete_confirm),
+                message = getString(R.string.custom_tile_delete_warning),
+                iconRes = R.drawable.ic_delete,
+                positiveText = getString(R.string.custom_tile_delete_title),
+                negativeText = getString(R.string.cancel),
+                onPositive = { deleteCustomTileInternal(item) }
+            )
         } else {
             val dialogView = layoutInflater.inflate(R.layout.dialog_delete_custom_tile_confirm, null)
             val txtTileName = dialogView.findViewById<TextView>(R.id.txtTileName)
@@ -3996,7 +3999,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             dialog.show()
-            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
     }
 
@@ -4026,14 +4029,15 @@ class StorageBrowserActivity : AppCompatActivity() {
         val headerTitle = item.label
 
         if (isTv) {
-            com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(getString(R.string.custom_header_delete_title))
-                .setMessage(getString(R.string.custom_header_delete_warning))
-                .setPositiveButton(getString(R.string.delete)) { _, _ ->
-                    deleteCustomHeaderInternal(catId, headerTitle)
-                }
-                .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
-                .show()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = this,
+                title = getString(R.string.custom_header_delete_title),
+                message = getString(R.string.custom_header_delete_warning),
+                iconRes = R.drawable.ic_delete,
+                positiveText = getString(R.string.delete),
+                negativeText = getString(R.string.cancel),
+                onPositive = { deleteCustomHeaderInternal(catId, headerTitle) }
+            )
         } else {
             val dialogView = layoutInflater.inflate(R.layout.dialog_delete_category_header_confirm, null)
             val txtHeaderName = dialogView.findViewById<TextView>(R.id.txtHeaderName)
@@ -4060,7 +4064,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             dialog.show()
-            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
     }
 

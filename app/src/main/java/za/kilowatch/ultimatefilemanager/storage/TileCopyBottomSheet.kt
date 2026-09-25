@@ -131,10 +131,10 @@ class TileCopyBottomSheet : BottomSheetDialogFragment() {
         // Apply source colours to both preview cards
         applyConfigToConfirmPreview(dialogView)
 
-        val dialog = AlertDialog.Builder(ctx)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnConfirmCancel)
             .setOnClickListener { dialog.dismiss() }

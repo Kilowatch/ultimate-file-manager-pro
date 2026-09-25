@@ -184,7 +184,7 @@ class SmartSortSheet : BottomSheetDialogFragment() {
                 val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
                     .setView(dialogView)
                     .create()
-                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                 dialogView.findViewById<View>(R.id.btnDone).setOnClickListener { dialog.dismiss() }
                 dialog.show()
             }
@@ -598,7 +598,7 @@ class SmartSortSheet : BottomSheetDialogFragment() {
             btnActionRow.addView(btnEdit)
             val btnDelete = com.google.android.material.button.MaterialButton(requireContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply { layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(8, 0, 8, 0) }; text = getString(R.string.smart_sort_delete_rule); textSize = 12f; minimumHeight = 0; setPadding(8, 2, 8, 2); setOnClickListener { val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_smart_sort_delete_rule_confirm, null)
                 val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog).setView(dialogView).create()
-                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                 dialogView.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
                     sheetCustomRules.removeAt(index)
                     customCategoryPaths.remove(rule.id)
@@ -620,7 +620,7 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         dialogView.findViewById<View>(R.id.btnDone).setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
@@ -631,7 +631,7 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
             val desc = txtInput.text?.toString()?.trim() ?: ""
@@ -661,7 +661,7 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
             val desc = txtInput.text?.toString()?.trim() ?: ""
@@ -688,7 +688,7 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnConfirm).setOnClickListener {
             val ext = txtInput.text?.toString()?.trim()?.lowercase()?.removePrefix(".") ?: ""
@@ -724,7 +724,7 @@ class SmartSortSheet : BottomSheetDialogFragment() {
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         val inflater = LayoutInflater.from(requireContext())
         fun renderExtensionList() {

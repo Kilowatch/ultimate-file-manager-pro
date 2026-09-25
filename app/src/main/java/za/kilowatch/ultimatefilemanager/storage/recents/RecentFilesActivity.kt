@@ -757,10 +757,14 @@ class RecentFilesActivity : AppCompatActivity() {
     }
 
     private fun convertVideoToMp4(file: File) {
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(R.string.convert_to_mp4_title)
-            .setMessage(getString(R.string.convert_to_mp4_confirm, file.name))
-            .setPositiveButton(R.string.action_convert_to_mp4) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.convert_to_mp4_title),
+            message = getString(R.string.convert_to_mp4_confirm, file.name),
+            iconRes = R.drawable.ic_convert_video,
+            positiveText = getString(R.string.action_convert_to_mp4),
+            negativeText = getString(android.R.string.cancel),
+            onPositive = {
                 val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
                     this@RecentFilesActivity,
                     getString(R.string.convert_to_mp4_progress),
@@ -782,8 +786,7 @@ class RecentFilesActivity : AppCompatActivity() {
                     }
                 }
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        )
     }
 
     private fun showRenameDialog(file: File) {

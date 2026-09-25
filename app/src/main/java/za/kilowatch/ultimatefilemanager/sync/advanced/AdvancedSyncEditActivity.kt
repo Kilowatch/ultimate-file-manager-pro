@@ -694,11 +694,11 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         val isTv = DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_sync_warning_tv else R.layout.dialog_sync_warning
         val dialogView = layoutInflater.inflate(layoutRes, null)
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<TextView>(R.id.txtTitle).text = title
         dialogView.findViewById<TextView>(R.id.txtMessage).text = message
@@ -731,11 +731,11 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         val isTv = DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_sync_profile_delete_confirm_tv else R.layout.dialog_sync_profile_delete_confirm
         val dialogView = layoutInflater.inflate(layoutRes, null)
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<TextView>(R.id.txtTitle).text =
             getString(R.string.delete_confirm_single, currentName)
@@ -960,11 +960,11 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         val isTv = DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_sync_select_destination_tv else R.layout.dialog_sync_select_destination
         val dialogView = layoutInflater.inflate(layoutRes, null)
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         val recycler = dialogView.findViewById<RecyclerView>(R.id.recyclerDestinations)
         recycler.layoutManager = LinearLayoutManager(this)

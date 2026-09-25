@@ -1871,7 +1871,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             .setCancelable(false)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         dialog.show()
 
         lifecycleScope.launch {
@@ -3863,10 +3863,14 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
     }
 
     private fun convertVideoToMp4(file: File) {
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(R.string.convert_to_mp4_title)
-            .setMessage(getString(R.string.convert_to_mp4_confirm, file.name))
-            .setPositiveButton(R.string.action_convert_to_mp4) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.convert_to_mp4_title),
+            message = getString(R.string.convert_to_mp4_confirm, file.name),
+            iconRes = R.drawable.ic_convert_video,
+            positiveText = getString(R.string.action_convert_to_mp4),
+            negativeText = getString(android.R.string.cancel),
+            onPositive = {
                 val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
                     this@FileBrowserActivity,
                     getString(R.string.convert_to_mp4_progress),
@@ -3888,8 +3892,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                     }
                 }
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        )
     }
 
     private fun updateSelectionBar(count: Int) {
@@ -7685,37 +7688,17 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
     }
 
     private fun showGoToPathDialog() {
-        val input = com.google.android.material.textfield.TextInputEditText(this).apply {
-            if (::currentDir.isInitialized) {
-                setText(currentDir.absolutePath)
+        val initial = if (::currentDir.isInitialized) currentDir.absolutePath else null
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showGoToPath(this, initial) { inputPath ->
+            val target = File(inputPath)
+            if (target.exists() && target.isDirectory) {
+                loadDirectory(target)
+            } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, inputPath)) {
+                loadDirectory(File(inputPath))
+            } else {
+                showPremiumSnackbar(getString(R.string.go_to_path_invalid))
             }
-            setHint(R.string.go_to_path_hint)
-            selectAll()
         }
-        val til = com.google.android.material.textfield.TextInputLayout(this).apply {
-            addView(input)
-            val pad = (20 * resources.displayMetrics.density).toInt()
-            setPadding(pad, (12 * resources.displayMetrics.density).toInt(), pad, 0)
-        }
-
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.go_to_path_title)
-            .setView(til)
-            .setPositiveButton(R.string.go_to_path_action) { _, _ ->
-                val inputPath = input.text?.toString()?.trim().orEmpty()
-                if (inputPath.isNotEmpty()) {
-                    val target = File(inputPath)
-                    if (target.exists() && target.isDirectory) {
-                        loadDirectory(target)
-                    } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, inputPath)) {
-                        loadDirectory(File(inputPath))
-                    } else {
-                        showPremiumSnackbar(getString(R.string.go_to_path_invalid))
-                    }
-                }
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
     }
 
 

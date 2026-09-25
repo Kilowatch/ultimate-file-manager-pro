@@ -360,30 +360,33 @@ class ExifToolsActivity : AppCompatActivity() {
             if (selectedIndex !in files.indices) return@setOnClickListener
             val target = files[selectedIndex]
 
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.exif_confirm_overwrite_title)
-                .setMessage(getString(R.string.exif_confirm_overwrite_msg, 1))
-                .setPositiveButton(R.string.compress_btn_start) { _, _ ->
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        val options = ExifPrivacyOptions(
-                            stripGps = true,
-                            stripDevice = true,
-                            stripAuthor = true,
-                            stripDates = false,
-                            stripCameraSettings = false
-                        )
-                        val success = ExifPrivacyManager.stripMetadata(this@ExifToolsActivity, target, target, options)
-                        withContext(Dispatchers.Main) {
-                            if (success) {
-                                Toast.makeText(this@ExifToolsActivity, getString(R.string.exif_single_photo_cleaned, target.name), Toast.LENGTH_SHORT).show()
-                                thumbAdapter.notifyItemChanged(selectedIndex)
-                                displayCurrentPhotoMetadata()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                    context = this,
+                    title = getString(R.string.exif_confirm_overwrite_title),
+                    message = getString(R.string.exif_confirm_overwrite_msg, 1),
+                    iconRes = R.drawable.ic_warning,
+                    positiveText = getString(R.string.compress_btn_start),
+                    negativeText = getString(R.string.cancel),
+                    onPositive = {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            val options = ExifPrivacyOptions(
+                                stripGps = true,
+                                stripDevice = true,
+                                stripAuthor = true,
+                                stripDates = false,
+                                stripCameraSettings = false
+                            )
+                            val success = ExifPrivacyManager.stripMetadata(this@ExifToolsActivity, target, target, options)
+                            withContext(Dispatchers.Main) {
+                                if (success) {
+                                    Toast.makeText(this@ExifToolsActivity, getString(R.string.exif_single_photo_cleaned, target.name), Toast.LENGTH_SHORT).show()
+                                    thumbAdapter.notifyItemChanged(selectedIndex)
+                                    displayCurrentPhotoMetadata()
+                                }
                             }
                         }
                     }
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+                )
         }
     }
 
@@ -430,14 +433,15 @@ class ExifToolsActivity : AppCompatActivity() {
 
             val isOverwrite = rgDestination.checkedRadioButtonId == R.id.rbDestOverwrite
             if (isOverwrite) {
-                MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                    .setTitle(R.string.exif_confirm_overwrite_title)
-                    .setMessage(getString(R.string.exif_confirm_overwrite_msg, files.size))
-                    .setPositiveButton(R.string.compress_btn_start) { _, _ ->
-                        performBatchClean(options, null)
-                    }
-                    .setNegativeButton(R.string.cancel, null)
-                    .show()
+                za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                    context = this,
+                    title = getString(R.string.exif_confirm_overwrite_title),
+                    message = getString(R.string.exif_confirm_overwrite_msg, files.size),
+                    iconRes = R.drawable.ic_warning,
+                    positiveText = getString(R.string.compress_btn_start),
+                    negativeText = getString(R.string.cancel),
+                    onPositive = { performBatchClean(options, null) }
+                )
             } else {
                 val targetDir = if (rgDestination.checkedRadioButtonId == R.id.rbDestFolder) {
                     customOutputDir

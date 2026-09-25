@@ -520,10 +520,13 @@ class MusicTaggerActivity : AppCompatActivity() {
             currentFile.extension
         )
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.music_tag_rename_confirm_title)
-            .setMessage(getString(R.string.music_tag_rename_confirm_msg, suggestedName))
-            .setPositiveButton(R.string.action_rename) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.music_tag_rename_confirm_title),
+            message = getString(R.string.music_tag_rename_confirm_msg, suggestedName),
+            iconRes = R.drawable.ic_music_tag,
+            positiveText = getString(R.string.action_rename),
+            onPositive = {
                 lifecycleScope.launch(Dispatchers.IO) {
                     val renamed = AudioTagManager.renameFileFromTags(
                         this@MusicTaggerActivity,
@@ -548,18 +551,18 @@ class MusicTaggerActivity : AppCompatActivity() {
                     }
                 }
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        )
     }
 
     private fun saveTags() {
         saveFormIntoCache(files[selectedIndex])
 
-        val progressDialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.saving)
-            .setMessage(if (files.size > 1) "Updating tracks..." else "Saving tags...")
-            .setCancelable(false)
-            .create()
+        val progressDialog = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+            this,
+            getString(R.string.saving),
+            if (files.size > 1) "Updating tracks..." else "Saving tags...",
+            R.drawable.ic_music_tag
+        )
         progressDialog.show()
 
         lifecycleScope.launch(Dispatchers.IO) {

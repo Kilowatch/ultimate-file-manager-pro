@@ -64,7 +64,7 @@ class SmartSortHistorySheet : BottomSheetDialogFragment() {
             val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
                 .setView(dialogView)
                 .create()
-            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
             dialogView.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
                 SmartSortHistoryManager.clearAll()
@@ -118,7 +118,7 @@ class SmartSortHistorySheet : BottomSheetDialogFragment() {
                     .setView(undoProgressView)
                     .setCancelable(false)
                     .create()
-                undoDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                undoDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                 undoDialog.show()
 
                 lifecycleScope.launch {

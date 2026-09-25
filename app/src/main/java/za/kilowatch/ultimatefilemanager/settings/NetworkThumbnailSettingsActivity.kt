@@ -251,7 +251,7 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
             .setView(view)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         btnBrowse.setOnClickListener {
             dialog.dismiss()
@@ -322,7 +322,7 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
             .setView(view)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         fun selectPreset(valueMb: Int) {
             NetworkThumbnailPreferenceManager.setCacheLimitMb(this, valueMb)
@@ -395,7 +395,7 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
             .setView(view)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         btnClearConfirm.setOnClickListener {
             dialog.dismiss()

@@ -161,11 +161,11 @@ class AdvancedSyncActivity : AppCompatActivity() {
         val isTv = DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_sync_profile_delete_confirm_tv else R.layout.dialog_sync_profile_delete_confirm
         val dialogView = layoutInflater.inflate(layoutRes, null)
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<TextView>(R.id.txtTitle).text =
             getString(R.string.delete_confirm_single, profile.name)
@@ -192,11 +192,11 @@ class AdvancedSyncActivity : AppCompatActivity() {
         val isTv = DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_sync_conflict_log_tv else R.layout.dialog_sync_conflict_log
         val dialogView = layoutInflater.inflate(layoutRes, null)
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<TextView>(R.id.txtTitle).text =
             getString(R.string.conflict_log_title) + " — " + profile.name
@@ -236,11 +236,11 @@ class AdvancedSyncActivity : AppCompatActivity() {
 
     private fun showTvActionDialog(profile: AdvancedSyncProfile) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_advanced_sync_actions_tv, null)
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<TextView>(R.id.txtTitle).text = profile.name
         dialogView.findViewById<TextView>(R.id.txtSubtitle).text = profile.localDisplayPath

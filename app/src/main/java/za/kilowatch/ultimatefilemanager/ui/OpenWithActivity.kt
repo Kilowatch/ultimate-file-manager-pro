@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.OpenableColumns
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -127,12 +128,15 @@ class OpenWithActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    AlertDialog.Builder(this@OpenWithActivity)
-                        .setTitle(R.string.error_cannot_open_file)
-                        .setMessage(e.message ?: getString(R.string.unknown_error))
-                        .setPositiveButton(R.string.btn_ok) { _, _ -> finish() }
-                        .setOnCancelListener { finish() }
-                        .show()
+                    za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                        context = this@OpenWithActivity,
+                        title = getString(R.string.error_cannot_open_file),
+                        message = e.message ?: getString(R.string.unknown_error),
+                        iconRes = R.drawable.ic_warning,
+                        positiveText = getString(R.string.btn_ok),
+                        negativeText = null,
+                        onPositive = { finish() }
+                    ).setOnCancelListener { finish() }
                 }
             }
         }
@@ -346,12 +350,28 @@ class OpenWithActivity : AppCompatActivity() {
         }
 
         // For cached non-standard files, offer option to view as text or open UFM
-        AlertDialog.Builder(this)
-            .setTitle(file.name)
-            .setMessage(R.string.open_in_ufm)
-            .setPositiveButton(R.string.view_as_text) { _, _ ->
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_confirm_action_tv else R.layout.dialog_confirm_action
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.setOnCancelListener { finish() }
+
+        dialogView.findViewById<android.widget.ImageView>(R.id.imgHeroIcon)?.setImageResource(R.drawable.ic_file_text)
+        dialogView.findViewById<android.widget.TextView>(R.id.txtTitle)?.text = file.name
+        dialogView.findViewById<android.widget.TextView>(R.id.txtMessage)?.text = getString(R.string.open_in_ufm)
+
+        val btnConfirm = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnConfirm)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
+
+        btnConfirm?.let { btn ->
+            btn.text = getString(R.string.view_as_text)
+            btn.setOnClickListener {
+                dialog.dismiss()
                 FileViewerRouter.openInBuiltInViewer(
-                    context = this,
+                    context = this@OpenWithActivity,
                     file = file,
                     contentUri = originalUri,
                     startInEditMode = isEdit,
@@ -359,13 +379,18 @@ class OpenWithActivity : AppCompatActivity() {
                 )
                 finish()
             }
-            .setNeutralButton(R.string.browse_storage) { _, _ ->
-                val intent = Intent(this, StorageBrowserActivity::class.java)
+        }
+        btnCancel?.let { btn ->
+            btn.text = getString(R.string.browse_storage)
+            btn.setOnClickListener {
+                dialog.dismiss()
+                val intent = Intent(this@OpenWithActivity, StorageBrowserActivity::class.java)
                 startActivity(intent)
                 finish()
             }
-            .setNegativeButton(android.R.string.cancel) { _, _ -> finish() }
-            .setOnCancelListener { finish() }
-            .show()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 }

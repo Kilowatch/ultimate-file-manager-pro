@@ -397,7 +397,7 @@ class CustomTileActivity : AppCompatActivity() {
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         val btnGotIt = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnGotIt)
         btnGotIt.setOnClickListener { dialog.dismiss() }

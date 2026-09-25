@@ -94,14 +94,14 @@ class ChecksumDialogFragment : DialogFragment() {
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             window.setGravity(android.view.Gravity.CENTER)
-            window.setBackgroundDrawableResource(android.R.color.transparent)
+            window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         } else {
             window.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             window.setGravity(android.view.Gravity.BOTTOM)
-            window.setBackgroundDrawableResource(android.R.color.transparent)
+            window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
     }
 

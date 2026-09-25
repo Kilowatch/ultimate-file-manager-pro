@@ -232,7 +232,7 @@ class TileColorTvActivity : AppCompatActivity() {
 
             tvCode.text = code
 
-            val dialog = android.app.AlertDialog.Builder(this, android.R.style.Theme_Translucent_NoTitleBar)
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
                 .setView(dialogView)
                 .create()
 
@@ -248,6 +248,7 @@ class TileColorTvActivity : AppCompatActivity() {
             btnClose.setOnClickListener { dialog.dismiss() }
 
             dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
 
         findViewById<View>(R.id.btnTvColorDone).setOnClickListener {
@@ -284,7 +285,7 @@ class TileColorTvActivity : AppCompatActivity() {
             pendingIconRes = res
         }
 
-        val dialog = android.app.AlertDialog.Builder(this, android.R.style.Theme_Translucent_NoTitleBar)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
@@ -301,6 +302,7 @@ class TileColorTvActivity : AppCompatActivity() {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     // ── Colour helpers ────────────────────────────────────────────────────

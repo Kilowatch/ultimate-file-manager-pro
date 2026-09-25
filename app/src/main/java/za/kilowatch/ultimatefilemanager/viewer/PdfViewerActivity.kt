@@ -343,28 +343,31 @@ class PdfViewerActivity : AppCompatActivity() {
         val tilPassword = dialogView.findViewById<TextInputLayout>(R.id.tilPassword)
         val edtPassword = dialogView.findViewById<TextInputEditText>(R.id.edtPassword)
 
-        // Hide the layout's own buttons — AlertDialog supplies OK / Cancel
-        dialogView.findViewById<View>(R.id.btnUnlock)?.visibility = View.GONE
-        dialogView.findViewById<View>(R.id.btnCancel)?.visibility = View.GONE
-
         if (incorrect) {
             tilPassword?.error = getString(R.string.pdf_password_incorrect)
         }
 
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.pdf_password_prompt_title))
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .setCancelable(false)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val entered = edtPassword?.text?.toString() ?: ""
-                if (entered.isNotEmpty()) {
-                    closePdfRenderer()   // serialised close before re-opening
-                    rendererClosed = false  // reset so the next render can proceed
-                    loadPdf(file, entered)
-                }
+            .create()
+
+        dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnUnlock)?.setOnClickListener {
+            val entered = edtPassword?.text?.toString() ?: ""
+            if (entered.isNotEmpty()) {
+                dialog.dismiss()
+                closePdfRenderer()
+                rendererClosed = false
+                loadPdf(file, entered)
             }
-            .setNegativeButton(R.string.cancel) { _, _ -> finish() }
-            .show()
+        }
+        dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+            finish()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun updateZoomIndicator() {

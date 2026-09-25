@@ -573,10 +573,14 @@ class UFMPlayerActivity : AppCompatActivity() {
             else -> ext.uppercase()
         }
 
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(R.string.codec_unsupported_title)
-            .setMessage(getString(R.string.codec_unsupported_message, displayCodec))
-            .setPositiveButton(R.string.convert_and_play) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.codec_unsupported_title),
+            message = getString(R.string.codec_unsupported_message, displayCodec),
+            iconRes = R.drawable.ic_warning,
+            positiveText = getString(R.string.convert_and_play),
+            negativeText = getString(android.R.string.cancel),
+            onPositive = {
                 val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
                     this@UFMPlayerActivity,
                     getString(R.string.converting_audio),
@@ -597,11 +601,11 @@ class UFMPlayerActivity : AppCompatActivity() {
                         }
                     }
                 }
-            }
-            .setNegativeButton(android.R.string.cancel) { _, _ ->
+            },
+            onNegative = {
                 Toast.makeText(this@UFMPlayerActivity, error, Toast.LENGTH_LONG).show()
             }
-            .show()
+        )
 
         return true
     }
@@ -2927,24 +2931,13 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     private fun showSvgSpeedDialog() {
-        val speeds = floatArrayOf(0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f, 4.0f)
-        val labels = arrayOf("0.25x", "0.5x", "0.75x", "1.0x (Normal)", "1.25x", "1.5x", "2.0x", "4.0x")
         val currentSpeed = if (::svgPlayerView.isInitialized) svgPlayerView.playbackRate else 1.0f
-        var checkedIdx = speeds.indexOfFirst { kotlin.math.abs(it - currentSpeed) < 0.05f }
-        if (checkedIdx < 0) checkedIdx = 3 // default 1.0x
-
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.svg_playback_speed)
-            .setSingleChoiceItems(labels, checkedIdx) { dialog, which ->
-                val selected = speeds[which]
-                if (::svgPlayerView.isInitialized) {
-                    svgPlayerView.setPlaybackRate(selected)
-                }
-                PlayerToastHelper.show(this@UFMPlayerActivity, "${getString(R.string.svg_playback_speed)}: ${labels[which]}")
-                dialog.dismiss()
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showPlaybackSpeed(this, currentSpeed) { selected ->
+            if (::svgPlayerView.isInitialized) {
+                svgPlayerView.setPlaybackRate(selected)
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+            PlayerToastHelper.show(this@UFMPlayerActivity, "${getString(R.string.svg_playback_speed)}: ${selected}x")
+        }
     }
 
     companion object {

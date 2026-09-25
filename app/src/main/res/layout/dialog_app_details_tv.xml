@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV App Details Dialog — UFMStandard Glass
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="650dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp"
+    android:gravity="center_horizontal">
+
+    <!-- App Icon in Frosted Squircle -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:id="@+id/imgAppIcon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:importantForAccessibility="no"
+            tools:src="@mipmap/ic_launcher" />
+    </FrameLayout>
+
+    <!-- App Name -->
+    <TextView
+        android:id="@+id/txtAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="8dp"
+        tools:text="Application Name" />
+
+    <!-- App Details / Package / Debloat info -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="220dp"
+        android:layout_marginBottom="24dp">
+
+        <TextView
+            android:id="@+id/txtAppDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.2"
+            tools:text="Package: com.example.app\nVersion: 1.0.0" />
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClose"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/remote_close"
+            android:background="@drawable/selector_tv_button"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="15sp"
+            android:focusable="true"
+            android:textAllCaps="false"
+            android:layout_marginEnd="8dp"
+            style="@style/Widget.Material3.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAppInfo"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/app_info"
+            android:background="@drawable/selector_tv_button"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="15sp"
+            android:focusable="true"
+            android:textAllCaps="false"
+            android:layout_marginEnd="8dp"
+            style="@style/Widget.Material3.Button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnExtract"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/extract"
+            android:background="@drawable/selector_tv_button_yellow"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="?attr/ufmFocusFillText"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-bold"
+            android:focusable="true"
+            android:textAllCaps="false"
+            style="@style/Widget.Material3.Button" />
+    </LinearLayout>
+
+</LinearLayout>

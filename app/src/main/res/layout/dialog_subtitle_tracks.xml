@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_bottom_sheet"
+    android:background="@drawable/bg_bottom_sheet_glass"
     android:paddingBottom="16dp">
 
     <!-- Top Drag Handle -->
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_subtitle_track"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/mobile_text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-medium" />

@@ -5,7 +5,7 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.1.3] — 2026-09-22
+## [2.1.4] — 2026-09-25
 
 ### Added
 - **Global Edge Swipe Menu**: Added an app-wide slide-out navigation drawer accessible via inward swipe gestures from anywhere in the application (left or right screen edge), featuring the official app icon, "Ultimate File Manager Pro" branding, quick navigation shortcuts, and direct settings access.
@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Clean Interception & Touch Dispatch**: Built `EdgeMenuRootLayout` to intercept inward drag gestures cleanly without consuming taps or interfering with underlying action bars and scroll views.
 - **Main Dashboard Tile Filtering Toggle**: Added setting to hide docked tiles from the main dashboard grid, keeping the storage overview clean and uncluttered.
 - **Universal Storage Tile Launcher**: Added `StorageTileActionHandler` enabling seamless navigation to any tool or storage volume (Twin Window, Notepad, Scanner, Apps, Terminal, Shizuku, Search, Analyzer, Smart Sort, Vault, Recycle Bin, Sync, File Server, Settings, Network shares, Cloud accounts, and local storage) from within the drawer across any active screen.
+
+## [2.1.3] — 2026-09-22
+
+### Added
 - **Mobile Floating Bottom Bar Dock**: Added a modern floating bottom dock on the Storage Browser screen for quick access to frequently used main menu items (disabled by default).
 - **Dedicated Floating Bar Manager**: Added `FloatingBarManageActivity` featuring drag-and-drop reordering, quick add and remove actions, and direct state persistence.
 - **Main Menu Tile Hiding**: Docked items are automatically hidden from the main menu grid and displayed exclusively in the bottom dock.

@@ -9,7 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_bottom_sheet"
+    android:background="@drawable/bg_bottom_sheet_glass"
     android:paddingBottom="20dp">
 
     <!-- Drag handle -->
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/clipboard_add_or_new_title"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="@color/mobile_text_primary"
         android:textSize="19sp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"

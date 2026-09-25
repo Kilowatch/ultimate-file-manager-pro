@@ -182,11 +182,11 @@ class LanguageWelcomeActivity : AppCompatActivity() {
     private fun showLanguageSelectorDialog() {
         val dialog = if (isTv) {
             android.app.Dialog(this, R.style.UFM_Dialog).apply {
-                window?.setBackgroundDrawableResource(android.R.color.transparent)
+                window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             }
         } else {
             com.google.android.material.bottomsheet.BottomSheetDialog(this, R.style.UFM_Dialog).apply {
-                window?.setBackgroundDrawableResource(android.R.color.transparent)
+                window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             }
         }
         

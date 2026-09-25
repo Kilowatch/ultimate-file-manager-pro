@@ -353,16 +353,28 @@ class AppBrowserFragment : Fragment() {
     }
 
     private fun showAppDetail(app: AppItem) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(app.name)
-            .setIcon(app.icon)
-            .setMessage("Package: ${app.packageName}")
-            .setPositiveButton("Select") { _, _ ->
+        val details = "Package: ${app.packageName}\nVersion: ${app.versionName ?: ""}"
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showAppDetails(
+            context = requireContext(),
+            appName = app.name,
+            packageName = app.packageName,
+            appIcon = app.icon,
+            details = details,
+            onExtract = {
                 appAdapter.toggleSelection(app)
                 updateSelectionUi()
+            },
+            onAppInfo = {
+                try {
+                    val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = android.net.Uri.fromParts("package", app.packageName, null)
+                    }
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    // ignore
+                }
             }
-            .setNegativeButton(R.string.remote_close, null)
-            .show()
+        )
     }
 
     fun handleBackPress(): Boolean {

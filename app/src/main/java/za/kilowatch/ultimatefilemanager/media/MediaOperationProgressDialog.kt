@@ -45,7 +45,7 @@ class MediaOperationProgressDialog(
 
         try {
             dialog?.show()
-            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog?.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         } catch (_: Exception) {}
     }
 
@@ -56,6 +56,8 @@ class MediaOperationProgressDialog(
             txtSubtitle?.text = newSubtitle
         }
     }
+
+    fun setMessage(message: String) = updateSubtitle(message)
 
     fun dismiss() {
         try {

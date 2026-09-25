@@ -758,19 +758,16 @@ class ElevatedAccessActivity : AppCompatActivity() {
         val managerTitle = getString(manager.titleRes)
         if (!enable) {
             // Confirm with user before disconnecting elevated access
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.elevated_disconnect_confirm_title)
-                .setMessage(getString(R.string.elevated_disconnect_confirm_desc, managerTitle))
-                .setPositiveButton(R.string.elevated_btn_disconnect) { _, _ ->
-                    disconnectAppAccess(manager)
-                }
-                .setNegativeButton(R.string.cancel) { _, _ ->
-                    refresh()
-                }
-                .setOnCancelListener {
-                    refresh()
-                }
-                .show()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = this,
+                title = getString(R.string.elevated_disconnect_confirm_title),
+                message = getString(R.string.elevated_disconnect_confirm_desc, managerTitle),
+                iconRes = R.drawable.ic_warning,
+                positiveText = getString(R.string.elevated_btn_disconnect),
+                negativeText = getString(R.string.cancel),
+                onPositive = { disconnectAppAccess(manager) },
+                onNegative = { refresh() }
+            )
         } else {
             enableAppAccess(manager)
         }

@@ -2060,10 +2060,14 @@ class TabbedBrowserActivity : AppCompatActivity(),
         } else {
             getString(R.string.delete_confirm_multiple, files.size)
         }
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.delete_title)
-            .setMessage(msg)
-            .setPositiveButton(R.string.action_delete) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.delete_title),
+            message = msg,
+            iconRes = R.drawable.ic_delete,
+            positiveText = getString(R.string.action_delete),
+            negativeText = getString(R.string.cancel),
+            onPositive = {
                 lifecycleScope.launch(Dispatchers.IO) {
                     for (f in files) {
                         if (f.isDirectory) f.deleteRecursively() else f.delete()
@@ -2074,8 +2078,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     }
                 }
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        )
     }
 
     override fun onRenameRequested(fragment: FileBrowserFragment, file: File?) {
@@ -2114,10 +2117,14 @@ class TabbedBrowserActivity : AppCompatActivity(),
         } else {
             getString(R.string.delete_confirm_multiple, files.size)
         }
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.delete_title)
-            .setMessage(msg)
-            .setPositiveButton(R.string.action_delete) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.delete_title),
+            message = msg,
+            iconRes = R.drawable.ic_delete,
+            positiveText = getString(R.string.action_delete),
+            negativeText = getString(R.string.cancel),
+            onPositive = {
                 lifecycleScope.launch(Dispatchers.IO) {
                     for (f in files) {
                         deleteRemoteFile(share, f.path, f.isDirectory)
@@ -2128,8 +2135,7 @@ class TabbedBrowserActivity : AppCompatActivity(),
                     }
                 }
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        )
     }
 
     override fun onNetworkPasteRequested(fragment: NetworkBrowserFragment, destinationPath: String) {

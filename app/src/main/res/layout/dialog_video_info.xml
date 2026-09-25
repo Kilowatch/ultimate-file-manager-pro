@@ -33,7 +33,7 @@
             <FrameLayout
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_icon_circle"
+                android:background="@drawable/bg_btn_icon_frosted"
                 android:layout_marginEnd="14dp">
 
                 <ImageView

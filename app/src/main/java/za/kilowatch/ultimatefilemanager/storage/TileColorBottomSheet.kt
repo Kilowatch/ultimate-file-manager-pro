@@ -244,11 +244,11 @@ class TileColorBottomSheet : BottomSheetDialogFragment() {
             setExportPreviewRow(dialogView, R.id.dotExportIconBg, R.id.hexExportIconBg, config.iconBgColor)
             setExportPreviewRow(dialogView, R.id.dotExportLabel, R.id.hexExportLabel, config.labelColor)
 
-            val dialog = android.app.AlertDialog.Builder(requireContext())
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
                 .setView(dialogView)
-                .setPositiveButton(R.string.close, null)
+                .setCancelable(true)
                 .create()
-                
+
             btnCopy.setOnClickListener {
                 val clipboard = requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
                 val clip = android.content.ClipData.newPlainText(getString(R.string.tile_color_code_clipboard_label), code)
@@ -257,8 +257,8 @@ class TileColorBottomSheet : BottomSheetDialogFragment() {
                 btnCopy.setIconResource(R.drawable.ic_check)
                 android.widget.Toast.makeText(requireContext(), R.string.tile_color_code_copied_toast, android.widget.Toast.LENGTH_SHORT).show()
             }
-            
-            dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             dialog.show()
         }
 
@@ -666,7 +666,7 @@ private fun showColorPickerDialog(initialColor: Int, onColorSelected: (Int) -> U
             }
         }
 
-        val dialog = android.app.AlertDialog.Builder(requireContext())
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
@@ -681,7 +681,7 @@ private fun showColorPickerDialog(initialColor: Int, onColorSelected: (Int) -> U
             dialog.dismiss()
         }
 
-        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         dialog.show()
     }
 

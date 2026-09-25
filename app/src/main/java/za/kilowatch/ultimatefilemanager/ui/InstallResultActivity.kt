@@ -44,7 +44,7 @@ class InstallResultActivity : AppCompatActivity() {
         val layoutRes = if (isTv) R.layout.dialog_install_result_tv else R.layout.dialog_install_result
         setContentView(layoutRes)
 
-        window.setBackgroundDrawableResource(android.R.color.transparent)
+        window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         window.setGravity(Gravity.CENTER)
 
         if (!isTv) {

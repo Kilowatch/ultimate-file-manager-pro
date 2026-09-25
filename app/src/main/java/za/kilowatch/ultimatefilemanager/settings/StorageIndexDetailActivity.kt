@@ -125,7 +125,7 @@ class StorageIndexDetailActivity : AppCompatActivity() {
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         val txtMessage = dialogView.findViewById<TextView>(R.id.txtMessage)
         txtMessage?.text = getString(R.string.storage_indexer_delete_confirm_message)

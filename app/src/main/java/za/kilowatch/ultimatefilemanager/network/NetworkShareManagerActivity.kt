@@ -96,7 +96,7 @@ class NetworkShareManagerActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
             dialog.dismiss()
@@ -190,7 +190,7 @@ class NetworkShareManagerActivity : AppCompatActivity() {
                     .setCancelable(true)
                     .create()
 
-                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
                 dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
                     dialog.dismiss()

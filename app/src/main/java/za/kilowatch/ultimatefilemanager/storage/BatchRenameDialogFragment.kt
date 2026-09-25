@@ -221,17 +221,15 @@ class BatchRenameDialogFragment : DialogFragment() {
     }
 
     private fun showHelpDialog() {
-        MaterialAlertDialogBuilder(
-            requireContext(),
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = requireContext(),
+            title = getString(R.string.batch_rename_help_title),
+            message = getString(R.string.batch_rename_help_message),
+            iconRes = R.drawable.ic_help,
+            positiveText = getString(android.R.string.ok),
+            negativeText = null,
+            onPositive = {}
         )
-            .setTitle(getString(R.string.batch_rename_help_title))
-            .setMessage(getString(R.string.batch_rename_help_message))
-            .setPositiveButton(android.R.string.ok, null)
-            .show()
-            .also { dialog ->
-                dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
-            }
     }
 
     private fun setupReplaceInputs() {
@@ -608,20 +606,17 @@ class BatchRenameDialogFragment : DialogFragment() {
                 getString(R.string.batch_rename_confirm_body, folderCount, fileCount)
             }
 
-            MaterialAlertDialogBuilder(
-                requireContext(),
-                com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-            )
-                .setTitle(getString(R.string.batch_rename_confirm_title))
-                .setMessage(confirmMessage)
-                .setNegativeButton(getString(R.string.batch_rename_confirm_cancel), null)
-                .setPositiveButton(getString(R.string.batch_rename_confirm_accept)) { _, _ ->
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = requireContext(),
+                title = getString(R.string.batch_rename_confirm_title),
+                message = confirmMessage,
+                iconRes = R.drawable.ic_rename,
+                positiveText = getString(R.string.batch_rename_confirm_accept),
+                negativeText = getString(R.string.batch_rename_confirm_cancel),
+                onPositive = {
                     executeRename(state)
                 }
-                .show()
-                .also { dialog ->
-                    dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
-                }
+            )
         }
     }
 
@@ -770,20 +765,17 @@ class BatchRenameDialogFragment : DialogFragment() {
     private fun handleBackPress() {
         val patternText = edtPattern.text?.toString()?.trim() ?: ""
         if (patternText.isNotEmpty()) {
-            MaterialAlertDialogBuilder(
-                requireContext(),
-                com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-            )
-                .setTitle(getString(R.string.batch_rename_back_discard_title))
-                .setMessage(getString(R.string.batch_rename_back_discard_body))
-                .setNegativeButton(getString(R.string.batch_rename_back_discard_cancel), null)
-                .setPositiveButton(getString(R.string.batch_rename_back_discard_confirm)) { _, _ ->
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = requireContext(),
+                title = getString(R.string.batch_rename_back_discard_title),
+                message = getString(R.string.batch_rename_back_discard_body),
+                iconRes = R.drawable.ic_warning,
+                positiveText = getString(R.string.batch_rename_back_discard_confirm),
+                negativeText = getString(R.string.batch_rename_back_discard_cancel),
+                onPositive = {
                     dismiss()
                 }
-                .show()
-                .also { dialog ->
-                    dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
-                }
+            )
         } else {
             dismiss()
         }

@@ -317,22 +317,19 @@ object FossUpdateManager {
      * Prompts the user to install a previously downloaded APK.
      */
     private fun tryInstallCachedApk(activity: Activity, apkFile: File, version: String) {
-        MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
-            .setTitle(activity.getString(R.string.update_available_title, version))
-            .setMessage(activity.getString(R.string.update_version_comparison, BuildConfig.VERSION_NAME, version))
-            .setPositiveButton(R.string.update_download_complete) { dialog, _ ->
-                dialog.dismiss()
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = activity,
+            title = activity.getString(R.string.update_available_title, version),
+            message = activity.getString(R.string.update_version_comparison, BuildConfig.VERSION_NAME, version),
+            iconRes = R.drawable.ic_arrow_up,
+            positiveText = activity.getString(R.string.update_download_complete),
+            negativeText = activity.getString(R.string.update_btn_remind_later),
+            onPositive = {
                 hasPromptedPendingThisProcess = true
                 installDownloadedApk(activity, apkFile, version)
-            }
-            .setNegativeButton(R.string.update_btn_remind_later) { dialog, _ ->
-                dialog.dismiss()
-                FossUpdatePreferenceManager.dismissVersion(activity, version)
-            }
-            .setOnCancelListener {
-                FossUpdatePreferenceManager.dismissVersion(activity, version)
-            }
-            .show()
+            },
+            onNegative = { FossUpdatePreferenceManager.dismissVersion(activity, version) }
+        )
     }
 
     /**

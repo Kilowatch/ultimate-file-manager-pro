@@ -800,7 +800,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnScanCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -904,7 +904,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnCredCancel).setOnClickListener { dialog.dismiss() }
         dialogView.findViewById<View>(R.id.btnCredConnect).setOnClickListener {
@@ -956,7 +956,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnSharesCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -1047,7 +1047,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         var cancelled = false
         dialogView.findViewById<View>(R.id.btnScanCancel).setOnClickListener {
@@ -1205,7 +1205,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         var cancelled = false
         dialogView.findViewById<View>(R.id.btnScanCancel).setOnClickListener {
@@ -1332,7 +1332,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnSharesCancel).setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -1704,7 +1704,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<MaterialButton>(R.id.btnSuccessSave).setOnClickListener {
             repo.save(share)

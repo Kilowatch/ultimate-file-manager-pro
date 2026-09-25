@@ -176,36 +176,11 @@ class NotepadActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (isModified) {
-            if (isTv) {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.unsaved_changes_title)
-                    .setMessage(R.string.unsaved_changes_message)
-                    .setPositiveButton(R.string.save) { _, _ -> onSavePressed() }
-                    .setNegativeButton(R.string.btn_discard) { _, _ -> finish() }
-                    .setNeutralButton(android.R.string.cancel, null)
-                    .show()
-            } else {
-                val dialogView = layoutInflater.inflate(R.layout.dialog_notepad_unsaved, null)
-                val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                    .setView(dialogView)
-                    .setCancelable(true)
-                    .create()
-
-                dialogView.findViewById<View>(R.id.btnSaveUnsaved).setOnClickListener {
-                    dialog.dismiss()
-                    onSavePressed()
-                }
-                dialogView.findViewById<View>(R.id.btnDiscardUnsaved).setOnClickListener {
-                    dialog.dismiss()
-                    finish()
-                }
-                dialogView.findViewById<View>(R.id.btnCancelUnsaved).setOnClickListener {
-                    dialog.dismiss()
-                }
-
-                dialog.show()
-                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            }
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showUnsavedChanges(
+                context = this,
+                onSave = { onSavePressed() },
+                onDiscard = { finish() }
+            )
         } else {
             super.onBackPressed()
         }

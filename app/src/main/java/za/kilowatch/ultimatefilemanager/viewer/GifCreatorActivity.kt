@@ -258,7 +258,7 @@ class GifCreatorActivity : AppCompatActivity() {
             .create()
 
         progressDialog.show()
-        progressDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        progressDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         progressBar.max = frames.size
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -523,6 +523,6 @@ class GifCreatorActivity : AppCompatActivity() {
         }
 
         dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 }

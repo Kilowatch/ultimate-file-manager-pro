@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_bottom_sheet">
+    android:background="@drawable/bg_bottom_sheet_glass">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             <FrameLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_icon_circle"
+                android:background="@drawable/bg_btn_icon_frosted"
                 android:layout_marginEnd="12dp">
 
                 <ImageView
@@ -39,7 +39,7 @@
                     android:layout_height="22dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_shield_check"
-                    app:tint="?android:attr/textColorPrimary" />
+                    app:tint="?attr/colorPrimary" />
             </FrameLayout>
 
             <LinearLayout
@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/apk_details_cert_title"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/mobile_text_primary"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/dividerHorizontal"
+            android:background="?attr/colorOutlineVariant"
             android:layout_marginBottom="14dp" />
 
         <!-- Certificate Details Table -->
@@ -92,7 +92,7 @@
                     android:id="@+id/txtCertSubject"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/mobile_text_primary"
                     android:textSize="13sp"
                     tools:text="CN=Android, OU=Android, O=Google Inc" />
             </TableRow>
@@ -110,7 +110,7 @@
                     android:id="@+id/txtCertIssuer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/mobile_text_primary"
                     android:textSize="13sp"
                     tools:text="CN=Android, OU=Android, O=Google Inc" />
             </TableRow>
@@ -128,7 +128,7 @@
                     android:id="@+id/txtCertValidity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/mobile_text_primary"
                     android:textSize="13sp"
                     tools:text="2020-01-01 to 2050-01-01" />
             </TableRow>
@@ -146,7 +146,7 @@
                     android:id="@+id/txtCertAlgorithm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/mobile_text_primary"
                     android:textSize="13sp"
                     tools:text="SHA256withRSA" />
             </TableRow>
@@ -164,7 +164,7 @@
                     android:id="@+id/txtCertSerial"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/mobile_text_primary"
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     tools:text="45:9B:7C:2E" />
@@ -174,7 +174,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/dividerHorizontal"
+            android:background="?attr/colorOutlineVariant"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="14dp" />
 
@@ -183,7 +183,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fingerprints"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="@color/mobile_text_primary"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginBottom="10dp" />
@@ -213,7 +213,7 @@
                     android:id="@+id/txtCertMd5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/mobile_text_primary"
                     android:textSize="11sp"
                     android:fontFamily="monospace"
                     tools:text="AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99" />
@@ -225,9 +225,9 @@
                 android:layout_height="32dp"
                 android:padding="6dp"
                 android:src="@drawable/ic_copy"
-                android:background="@drawable/bg_icon_circle"
+                android:background="@drawable/bg_btn_icon_frosted"
                 android:contentDescription="Copy MD5"
-                app:tint="?android:attr/textColorPrimary" />
+                app:tint="?attr/colorPrimary" />
         </LinearLayout>
 
         <!-- SHA-1 Row -->
@@ -255,7 +255,7 @@
                     android:id="@+id/txtCertSha1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/mobile_text_primary"
                     android:textSize="11sp"
                     android:fontFamily="monospace"
                     tools:text="11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33:44" />
@@ -267,9 +267,9 @@
                 android:layout_height="32dp"
                 android:padding="6dp"
                 android:src="@drawable/ic_copy"
-                android:background="@drawable/bg_icon_circle"
+                android:background="@drawable/bg_btn_icon_frosted"
                 android:contentDescription="Copy SHA-1"
-                app:tint="?android:attr/textColorPrimary" />
+                app:tint="?attr/colorPrimary" />
         </LinearLayout>
 
         <!-- SHA-256 Row -->
@@ -297,7 +297,7 @@
                     android:id="@+id/txtCertSha256"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/mobile_text_primary"
                     android:textSize="11sp"
                     android:fontFamily="monospace"
                     tools:text="AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99" />
@@ -309,9 +309,9 @@
                 android:layout_height="32dp"
                 android:padding="6dp"
                 android:src="@drawable/ic_copy"
-                android:background="@drawable/bg_icon_circle"
+                android:background="@drawable/bg_btn_icon_frosted"
                 android:contentDescription="Copy SHA-256"
-                app:tint="?android:attr/textColorPrimary" />
+                app:tint="?attr/colorPrimary" />
         </LinearLayout>
 
         <!-- Close Button -->

@@ -368,13 +368,11 @@ class TextViewerActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (isModified) {
-            AlertDialog.Builder(this)
-                .setTitle(getString(R.string.unsaved_changes_title))
-                .setMessage(getString(R.string.unsaved_changes_message))
-                .setPositiveButton(R.string.save) { _, _ -> showSaveDialog() }
-                .setNegativeButton(R.string.btn_discard) { _, _ -> finish() }
-                .setNeutralButton(android.R.string.cancel, null)
-                .show()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showUnsavedChanges(
+                context = this,
+                onSave = { showSaveDialog() },
+                onDiscard = { finish() }
+            )
         } else {
             super.onBackPressed()
         }

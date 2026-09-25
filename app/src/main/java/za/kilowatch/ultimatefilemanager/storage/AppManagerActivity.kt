@@ -440,37 +440,15 @@ class AppManagerActivity : AppCompatActivity() {
             }
         }
 
-        val dialogBuilder = MaterialAlertDialogBuilder(this,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(app.name)
-            .setIcon(app.icon)
-            .setMessage(message)
-            .setPositiveButton(getString(R.string.extract)) { _, _ ->
-                extractApp(app)
-            }
-            .setNeutralButton(getString(R.string.app_info)) { _, _ ->
-                openAppInfo(app.packageName)
-            }
-            .setNegativeButton(R.string.remote_close, null)
-
-        val dialog = dialogBuilder.create()
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(bgColor))
-        val titleView = dialog.findViewById<android.widget.TextView>(
-            com.google.android.material.R.id.alertTitle
-        ) ?: dialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
-        titleView?.setTextColor(white)
-        dialog.findViewById<android.widget.TextView>(android.R.id.message)?.setTextColor(white)
-
-        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-            backgroundTintList = glassCsl; setTextColor(white)
-        }
-        dialog.getButton(android.app.AlertDialog.BUTTON_NEUTRAL)?.apply {
-            backgroundTintList = glassCsl; setTextColor(white)
-        }
-        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
-            backgroundTintList = glassCsl; setTextColor(white)
-        }
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showAppDetails(
+            context = this,
+            appName = app.name,
+            packageName = app.packageName,
+            appIcon = app.icon,
+            details = message,
+            onExtract = { extractApp(app) },
+            onAppInfo = { openAppInfo(app.packageName) }
+        )
     }
 
     /**
@@ -596,41 +574,21 @@ class AppManagerActivity : AppCompatActivity() {
             return
         }
 
-        val bgColor = getColor(R.color.tv_bg_gradient_end)
-        val white = getColor(R.color.tv_text_primary)
-        val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
-        val greenCsl = android.content.res.ColorStateList.valueOf(0xFF4CAF50.toInt())
+        val message = getString(R.string.filename_1, fileName) + "\n" +
+            getString(R.string.accessible_via_ufm_app_files_downloads_ufmextracted) + "\n\n" +
+            getString(R.string.a_new_tile_called_apk_xapk_extracts_will_appear_on_the) + " " +
+            getString(R.string.home_screen_tap_it_to_browse_share_or_install_your_extracted_files) + " " +
+            getString(R.string.the_tile_disappears_automatically_when_the_folder_is_empty)
 
-        MaterialAlertDialogBuilder(this,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.extracted_as_formatlabel, formatLabel))
-            .setMessage(
-                getString(R.string.filename_1, fileName) + "\n" +
-                getString(R.string.accessible_via_ufm_app_files_downloads_ufmextracted) + "\n\n" +
-                getString(R.string.a_new_tile_called_apk_xapk_extracts_will_appear_on_the) + " " +
-                getString(R.string.home_screen_tap_it_to_browse_share_or_install_your_extracted_files) + " " +
-                getString(R.string.the_tile_disappears_automatically_when_the_folder_is_empty)
-            )
-            .setPositiveButton(getString(R.string.got_it_1), null)
-            .create()
-            .also { dialog ->
-                dialog.show()
-                dialog.window?.setBackgroundDrawable(
-                    android.graphics.drawable.ColorDrawable(bgColor)
-                )
-                val titleView = dialog.findViewById<android.widget.TextView>(
-                    com.google.android.material.R.id.alertTitle
-                ) ?: dialog.findViewById(
-                    resources.getIdentifier("alertTitle", "id", "android")
-                )
-                titleView?.setTextColor(white)
-                dialog.findViewById<android.widget.TextView>(android.R.id.message)
-                    ?.setTextColor(white)
-                dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-                    backgroundTintList = greenCsl
-                    setTextColor(android.graphics.Color.WHITE)
-                }
-            }
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.extracted_as_formatlabel, formatLabel),
+            message = message,
+            iconRes = R.drawable.ic_check_circle,
+            positiveText = getString(R.string.got_it_1),
+            negativeText = null,
+            onPositive = {}
+        )
     }
 
     /** Adds a file to a ZipOutputStream under the given entry name. */

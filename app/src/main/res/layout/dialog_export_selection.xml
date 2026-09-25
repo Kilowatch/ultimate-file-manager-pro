@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
     android:padding="20dp">
 
     <TextView
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/backup_select_items"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/mobile_text_primary"
         android:textSize="18sp"
         android:fontFamily="sans-serif-medium"
         android:layout_marginBottom="12dp" />

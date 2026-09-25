@@ -670,13 +670,11 @@ class DocumentScannerActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (scannedBitmaps.isNotEmpty()) {
-            AlertDialog.Builder(this)
-                .setTitle(R.string.unsaved_changes_title)
-                .setMessage(R.string.unsaved_changes_message)
-                .setPositiveButton(R.string.scanner_save) { _, _ -> onSavePressed() }
-                .setNegativeButton(R.string.btn_discard) { _, _ -> finish() }
-                .setNeutralButton(android.R.string.cancel, null)
-                .show()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showUnsavedChanges(
+                context = this,
+                onSave = { onSavePressed() },
+                onDiscard = { finish() }
+            )
         } else {
             super.onBackPressed()
         }

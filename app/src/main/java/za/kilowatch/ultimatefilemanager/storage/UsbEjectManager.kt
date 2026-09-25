@@ -257,14 +257,15 @@ object UsbEjectManager {
         host: VolumeEjectHost?,
         onFinished: (Boolean) -> Unit
     ) {
-        MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
-            .setTitle(activity.getString(R.string.safely_remove_title, item.label))
-            .setMessage(activity.getString(R.string.safely_remove_confirm_msg, item.label))
-            .setPositiveButton(R.string.safely_remove_action) { _, _ ->
-                checkTransfersAndProceed(activity, item, host, onFinished)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = activity,
+            title = activity.getString(R.string.safely_remove_title, item.label),
+            message = activity.getString(R.string.safely_remove_confirm_msg, item.label),
+            iconRes = R.drawable.ic_storage_usb,
+            positiveText = activity.getString(R.string.safely_remove_action),
+            negativeText = activity.getString(R.string.cancel),
+            onPositive = { checkTransfersAndProceed(activity, item, host, onFinished) }
+        )
     }
 
     private fun checkTransfersAndProceed(
@@ -274,14 +275,15 @@ object UsbEjectManager {
         onFinished: (Boolean) -> Unit
     ) {
         if (TransferManager.isActiveTransfers()) {
-            MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
-                .setTitle(R.string.safely_remove_transfer_active_title)
-                .setMessage(R.string.safely_remove_transfer_active_msg)
-                .setPositiveButton(R.string.safely_remove_action) { _, _ ->
-                    performSafeRemoval(activity, item, host, onFinished)
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = activity,
+                title = activity.getString(R.string.safely_remove_transfer_active_title),
+                message = activity.getString(R.string.safely_remove_transfer_active_msg),
+                iconRes = R.drawable.ic_warning,
+                positiveText = activity.getString(R.string.safely_remove_action),
+                negativeText = activity.getString(R.string.cancel),
+                onPositive = { performSafeRemoval(activity, item, host, onFinished) }
+            )
         } else {
             performSafeRemoval(activity, item, host, onFinished)
         }
@@ -559,6 +561,7 @@ object UsbEjectManager {
                 .create()
 
             dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             continuation.invokeOnCancellation {
                 activity.runOnUiThread { dialog.dismiss() }
             }
@@ -611,16 +614,18 @@ object UsbEjectManager {
         onFinished: (Boolean) -> Unit
     ) {
         val cleanLabel = item.label.substringBefore(" (")
-        MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
-            .setTitle(activity.getString(R.string.storage_mount_title, cleanLabel))
-            .setMessage(activity.getString(R.string.storage_mount_desc, cleanLabel))
-            .setPositiveButton(R.string.storage_mount_btn) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = activity,
+            title = activity.getString(R.string.storage_mount_title, cleanLabel),
+            message = activity.getString(R.string.storage_mount_desc, cleanLabel),
+            iconRes = R.drawable.ic_storage_usb,
+            positiveText = activity.getString(R.string.storage_mount_btn),
+            negativeText = activity.getString(R.string.cancel),
+            onPositive = {
                 openSystemStorageSettings(activity)
                 onFinished(true)
-            }
-            .setNegativeButton(R.string.cancel) { _, _ ->
-                onFinished(false)
-            }
-            .show()
+            },
+            onNegative = { onFinished(false) }
+        )
     }
 }

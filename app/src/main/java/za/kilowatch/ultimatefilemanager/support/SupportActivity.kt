@@ -472,12 +472,15 @@ class SupportActivity : AppCompatActivity() {
 
     private fun submitForm() {
         if (!isInternetAvailable()) {
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.support_error_title)
-                .setMessage(R.string.support_no_internet)
-                .setPositiveButton(R.string.support_retry) { _, _ -> submitForm() }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = this,
+                title = getString(R.string.support_error_title),
+                message = getString(R.string.support_no_internet),
+                iconRes = R.drawable.ic_warning,
+                positiveText = getString(R.string.support_retry),
+                negativeText = getString(android.R.string.cancel),
+                onPositive = { submitForm() }
+            )
             return
         }
 

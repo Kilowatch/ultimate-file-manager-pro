@@ -268,7 +268,7 @@ class StorageIndexerActivity : AppCompatActivity() {
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<TextView>(R.id.txtTitle).text = getString(R.string.storage_indexer_premium_title)
         dialogView.findViewById<TextView>(R.id.txtMessage).text = getString(R.string.storage_indexer_premium_message)
@@ -314,7 +314,7 @@ class StorageIndexerActivity : AppCompatActivity() {
             .setCancelable(false)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         val txtProgressStats = dialogView.findViewById<TextView>(R.id.txtProgressStats)
         val btnRunBackground = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnRunBackground)

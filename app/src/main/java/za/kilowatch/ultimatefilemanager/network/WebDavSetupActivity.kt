@@ -125,14 +125,17 @@ class WebDavSetupActivity : AppCompatActivity() {
 
             // Warn user if using plain HTTP
             if (url.startsWith("http://")) {
-                AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.webdav_setup_http_warning_title))
-                    .setMessage(getString(R.string.webdav_setup_http_warning_msg))
-                    .setPositiveButton(getString(R.string.webdav_setup_http_warning_continue)) { _, _ ->
+                za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                    context = this,
+                    title = getString(R.string.webdav_setup_http_warning_title),
+                    message = getString(R.string.webdav_setup_http_warning_msg),
+                    iconRes = R.drawable.ic_warning,
+                    positiveText = getString(R.string.webdav_setup_http_warning_continue),
+                    negativeText = getString(R.string.webdav_setup_http_warning_cancel),
+                    onPositive = {
                         attemptConnect(label, url, username, password, btnConnect, progressBar, tvStatus)
                     }
-                    .setNegativeButton(getString(R.string.webdav_setup_http_warning_cancel), null)
-                    .show()
+                )
             } else {
                 attemptConnect(label, url, username, password, btnConnect, progressBar, tvStatus)
             }

@@ -57,12 +57,15 @@ class PackageInstallerActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e(TAG, "Installation failed", e)
                 withContext(Dispatchers.Main) {
-                    com.google.android.material.dialog.MaterialAlertDialogBuilder(this@PackageInstallerActivity)
-                        .setTitle(R.string.installation_failed)
-                        .setMessage(e.message ?: getString(R.string.unknown_error))
-                        .setPositiveButton(R.string.btn_ok) { _, _ -> finish() }
-                        .setOnCancelListener { finish() }
-                        .show()
+                    za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                        context = this@PackageInstallerActivity,
+                        title = getString(R.string.installation_failed),
+                        message = e.message ?: getString(R.string.unknown_error),
+                        iconRes = R.drawable.ic_warning,
+                        positiveText = getString(R.string.btn_ok),
+                        negativeText = null,
+                        onPositive = { finish() }
+                    )
                 }
                 return@launch
             }

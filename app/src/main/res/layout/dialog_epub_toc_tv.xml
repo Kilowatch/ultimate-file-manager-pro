@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    EPUB Table of Contents — TV UFMStandard Dialog (650dp wide)
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="650dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp">
+
+    <!-- Header: frosted icon + title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="20dp">
+
+        <FrameLayout
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="18dp">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_file_text"
+                android:importantForAccessibility="no"
+                app:tint="@color/tv_accent" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/epub_table_of_contents"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black" />
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tv_glass_border"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Chapter List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChapters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="500dp"
+        android:overScrollMode="never" />
+
+    <!-- Close Button -->
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/close"
+        android:textColor="@color/tv_text_primary"
+        android:background="@drawable/selector_tv_button"
+        android:focusable="true" />
+
+</LinearLayout>

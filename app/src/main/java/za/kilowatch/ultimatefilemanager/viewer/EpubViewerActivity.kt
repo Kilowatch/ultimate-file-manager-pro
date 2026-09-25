@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +22,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import android.graphics.drawable.ColorDrawable
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -251,32 +251,27 @@ class EpubViewerActivity : AppCompatActivity() {
         val chapters = book?.chapters ?: return
         val isTv = DeviceUtils.isTvDevice(this)
 
-        if (isTv) {
-            // TV: simple AlertDialog list
-            val titles = chapters.map { it.title }.toTypedArray()
-            androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle(R.string.epub_table_of_contents)
-                .setItems(titles) { _, which -> showChapter(which) }
-                .show()
-            return
+        val layoutRes = if (isTv) R.layout.dialog_epub_toc_tv else R.layout.dialog_epub_toc
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        val rvChapters = dialogView.findViewById<RecyclerView>(R.id.rvChapters)
+        rvChapters?.layoutManager = LinearLayoutManager(this)
+        rvChapters?.adapter = TocAdapter(chapters, currentChapterIndex) { index ->
+            dialog.dismiss()
+            showChapter(index)
         }
 
-        // Mobile: material bottom sheet
-        val sheet = BottomSheetDialog(this)
-        val sheetView = LayoutInflater.from(this).inflate(
-            android.R.layout.simple_list_item_1,
-            null,
-            false
-        )
-        val recycler = RecyclerView(this).apply {
-            layoutManager = LinearLayoutManager(this@EpubViewerActivity)
-            adapter = TocAdapter(chapters, currentChapterIndex) { index ->
-                sheet.dismiss()
-                showChapter(index)
-            }
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
         }
-        sheet.setContentView(recycler)
-        sheet.show()
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     // ── TOC RecyclerView Adapter ──────────────────────────────────────────────
@@ -288,27 +283,22 @@ class EpubViewerActivity : AppCompatActivity() {
     ) : RecyclerView.Adapter<TocAdapter.TocVh>() {
 
         inner class TocVh(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val txtChapterTitle: TextView = itemView as TextView
+            val txtChapterTitle: TextView = itemView.findViewById(R.id.txtChapterTitle)
+            val imgActiveChapter: ImageView = itemView.findViewById(R.id.imgActiveChapter)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TocVh {
-            val tv = TextView(parent.context).apply {
-                setPadding(48, 32, 48, 32)
-                textSize = 16f
-                gravity = Gravity.START or Gravity.CENTER_VERTICAL
-                isClickable = true
-                isFocusable = true
-            }
-            return TocVh(tv)
+            val v = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_epub_toc_chapter, parent, false)
+            return TocVh(v)
         }
 
         override fun onBindViewHolder(holder: TocVh, position: Int) {
             val chapter = chapters[position]
             holder.txtChapterTitle.text = chapter.title
-            holder.txtChapterTitle.setTextColor(
-                if (position == activeIndex) getColor(R.color.ufm_primary)
-                else getColor(android.R.color.primary_text_dark)
-            )
+            val isActive = position == activeIndex
+            holder.imgActiveChapter.visibility = if (isActive) View.VISIBLE else View.GONE
+            holder.txtChapterTitle.alpha = if (isActive) 1.0f else 0.87f
             holder.itemView.setOnClickListener { onSelect(position) }
         }
 

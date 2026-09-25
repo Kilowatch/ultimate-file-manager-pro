@@ -536,7 +536,7 @@ object FileViewerRouter {
         val isSvg = ext == "svg" || ext == "svgz"
         val isImage = ext in IMAGE_EXTENSIONS && !isSvg
 
-        val dialog = AlertDialog.Builder(context)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
             .setView(root)
             .setCancelable(true)
             .create()

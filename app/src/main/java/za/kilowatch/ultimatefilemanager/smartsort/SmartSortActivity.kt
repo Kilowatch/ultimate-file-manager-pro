@@ -372,7 +372,7 @@ class SmartSortActivity : AppCompatActivity() {
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         fun renderConfigs() {
             layoutList.removeAllViews()
@@ -443,7 +443,7 @@ class SmartSortActivity : AppCompatActivity() {
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
             SmartSortSavedConfigRepository.delete(saved.id)

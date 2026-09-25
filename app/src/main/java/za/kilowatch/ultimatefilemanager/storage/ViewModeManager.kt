@@ -141,14 +141,16 @@ object ViewModeManager {
 
             val selectedIndex = modes.indexOf(currentMode)
 
-            MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
+            val d = MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
                 .setTitle(R.string.dialog_view_mode_title)
                 .setSingleChoiceItems(options, selectedIndex) { dialog, which ->
                     onSelected(modes[which])
                     dialog.dismiss()
                 }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
+                .setCancelable(true)
+                .create()
+            d.show()
+            d.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             return
         }
 

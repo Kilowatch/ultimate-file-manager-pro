@@ -279,12 +279,12 @@ class SyncEditActivity : AppCompatActivity() {
         val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_sync_no_share_tv else R.layout.dialog_sync_no_share
         val dialogView = layoutInflater.inflate(layoutRes, null)
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .setCancelable(false)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnSetup).setOnClickListener {
             dialog.dismiss()
@@ -305,11 +305,11 @@ class SyncEditActivity : AppCompatActivity() {
         val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
         val layoutRes = if (isTv) R.layout.dialog_sync_profile_delete_confirm_tv else R.layout.dialog_sync_profile_delete_confirm
         val dialogView = layoutInflater.inflate(layoutRes, null)
-        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<TextView>(R.id.txtTitle).text =
             getString(R.string.delete_confirm_single, currentName)

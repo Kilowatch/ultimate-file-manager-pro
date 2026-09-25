@@ -16,6 +16,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -133,7 +135,7 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
             .setCancelable(true)
             .create()
 
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
             dialog.dismiss()
@@ -357,7 +359,7 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
                     .setCancelable(true)
                     .create()
 
-                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
                 dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
                     dialog.dismiss()
@@ -402,44 +404,58 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
             }
 
             private fun showMobileActionDialog(storage: OnlineStorage) {
-                val safStatus = if (storage.exposeToSaf) "ON" else "OFF"
-                val items = arrayOf(
-                    getString(R.string.network_action_browse),
-                    "${getString(R.string.expose_to_saf_title)}: $safStatus",
-                    getString(R.string.network_action_delete)
-                )
-                MaterialAlertDialogBuilder(itemView.context)
-                    .setTitle(storage.displayName.ifBlank { storage.email })
-                    .setItems(items) { _, which ->
-                        when (which) {
-                            0 -> {
-                                if (storage.provider == OnlineStorageProvider.RCLONE) {
-                                    launchRCloneBrowse(itemView.context, storage)
-                                } else if (storage.isCredentialsStripped) {
-                                    Toast.makeText(
-                                        itemView.context,
-                                        R.string.backup_toast_please_fill_credentials,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    launchSetup(storage)
-                                } else {
-                                    val intent = Intent(itemView.context, NetworkBrowserActivity::class.java).apply {
-                                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage.id)
-                                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${storage.displayName} - ${storage.email}")
-                                        putExtra("isOnlineStorage", true)
-                                    }
-                                    itemView.context.startActivity(intent)
-                                }
-                            }
-                            1 -> {
-                                val updated = storage.copy(exposeToSaf = !storage.exposeToSaf)
-                                repo.save(updated)
-                                refresh()
-                            }
-                            2 -> onDelete(storage)
+                val dialogView = LayoutInflater.from(itemView.context).inflate(R.layout.dialog_online_storage_actions, null)
+                val dialog = MaterialAlertDialogBuilder(itemView.context, R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .setCancelable(true)
+                    .create()
+
+                dialogView.findViewById<TextView>(R.id.txtAccountTitle)?.text =
+                    storage.displayName.ifBlank { storage.email }
+                dialogView.findViewById<TextView>(R.id.txtAccountSubtitle)?.text =
+                    storage.provider.getFriendlyName(itemView.context)
+
+                dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                dialogView.findViewById<View>(R.id.btnActionBrowse)?.setOnClickListener {
+                    dialog.dismiss()
+                    if (storage.isCredentialsStripped) {
+                        Toast.makeText(
+                            itemView.context,
+                            R.string.backup_toast_please_fill_credentials,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        launchSetup(storage)
+                    } else if (storage.provider == OnlineStorageProvider.RCLONE) {
+                        launchRCloneBrowse(itemView.context, storage)
+                    } else {
+                        val intent = Intent(itemView.context, NetworkBrowserActivity::class.java).apply {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${storage.displayName} - ${storage.email}")
+                            putExtra("isOnlineStorage", true)
                         }
+                        itemView.context.startActivity(intent)
                     }
-                    .show()
+                }
+
+                val swActionSaf = dialogView.findViewById<com.google.android.material.materialswitch.MaterialSwitch?>(R.id.swActionSaf)
+                swActionSaf?.isChecked = storage.exposeToSaf
+                dialogView.findViewById<View>(R.id.btnActionToggleSaf)?.setOnClickListener {
+                    val updated = storage.copy(exposeToSaf = !storage.exposeToSaf)
+                    repo.save(updated)
+                    swActionSaf?.isChecked = updated.exposeToSaf
+                    refresh()
+                }
+
+                dialogView.findViewById<View>(R.id.btnActionDelete)?.setOnClickListener {
+                    dialog.dismiss()
+                    onDelete(storage)
+                }
+
+                dialog.show()
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             }
         }
     }

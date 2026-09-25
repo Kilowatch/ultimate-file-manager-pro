@@ -642,10 +642,14 @@ class TwinWindowPlayerFragment : Fragment() {
             "truehd", "thd" -> "Dolby TrueHD"
             else -> ext.uppercase()
         }
-        androidx.appcompat.app.AlertDialog.Builder(ctx)
-            .setTitle(R.string.codec_unsupported_title)
-            .setMessage(getString(R.string.codec_unsupported_message, displayCodec))
-            .setPositiveButton(R.string.convert_and_play) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = ctx,
+            title = getString(R.string.codec_unsupported_title),
+            message = getString(R.string.codec_unsupported_message, displayCodec),
+            iconRes = R.drawable.ic_warning,
+            positiveText = getString(R.string.convert_and_play),
+            negativeText = getString(android.R.string.cancel),
+            onPositive = {
                 val progress = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
                     ctx,
                     getString(R.string.converting_audio),
@@ -669,8 +673,7 @@ class TwinWindowPlayerFragment : Fragment() {
                     }
                 }
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        )
     }
 
     private val progressUpdater = object : Runnable {

@@ -325,7 +325,7 @@ class ImageCompressActivity : AppCompatActivity() {
             .create()
 
         progressDialog.show()
-        progressDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        progressDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         lifecycleScope.launch(Dispatchers.IO) {
             val results = mutableListOf<CompressionResult>()
@@ -469,7 +469,7 @@ class ImageCompressActivity : AppCompatActivity() {
             .create()
 
         dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         btnClose.setOnClickListener { dialog.dismiss() }
 
