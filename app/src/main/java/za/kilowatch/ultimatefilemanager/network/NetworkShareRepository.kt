@@ -117,7 +117,8 @@ class NetworkShareRepository private constructor(private val context: Context) {
                         nfsVersion = o.optInt("nfsVersion", 0),
                         nfsAuthFlavor = o.optInt("nfsAuthFlavor", 1),
                         exposeToSaf = o.optBoolean("exposeToSaf", true),
-                        parallelThreads = o.optInt("parallelThreads", 0)
+                        parallelThreads = o.optInt("parallelThreads", 0),
+                        allowInsecureTls = o.optBoolean("allowInsecureTls", false)
                     )
                 )
             }
@@ -165,6 +166,7 @@ class NetworkShareRepository private constructor(private val context: Context) {
                 put("nfsAuthFlavor", s.nfsAuthFlavor)
                 put("exposeToSaf", s.exposeToSaf)
                 put("parallelThreads", s.parallelThreads)
+                put("allowInsecureTls", s.allowInsecureTls)
             })
         }
         file.writeText(arr.toString(2))

@@ -9362,6 +9362,38 @@ URL должен начинаться с http:// или https://
 Отмена
 </string>
 
+    <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
+    <string name="webdav_setup_allow_insecure_tls">
+Allow untrusted / self-signed certificate
+</string>
+    <string name="webdav_setup_allow_insecure_tls_sub">
+Accept self-signed or private CA SSL certificates (common on local NAS devices)
+</string>
+    <string name="webdav_setup_password_keep_hint">
+Password (leave blank to keep current)
+</string>
+    <string name="webdav_cert_dialog_title">
+Untrusted SSL Certificate
+</string>
+    <string name="webdav_cert_dialog_msg">
+The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+</string>
+    <string name="webdav_cert_dialog_subject">
+Subject
+</string>
+    <string name="webdav_cert_dialog_issuer">
+Issuer
+</string>
+    <string name="webdav_cert_dialog_valid">
+Validity
+</string>
+    <string name="webdav_cert_dialog_fingerprint">
+SHA-256 Fingerprint
+</string>
+    <string name="webdav_cert_dialog_trust">
+Trust &amp; Connect
+</string>
+
     <!-- About Section -->
     <string name="about_title">
 О приложении

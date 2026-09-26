@@ -112,7 +112,8 @@ class OnlineStorageRepository private constructor(private val context: Context) 
                         webDavUsername = o.optString("webDavUsername",  null).takeUnless { it.isNullOrEmpty() },
                         webDavPassword = decryptedWebDavPass,
                         isCredentialsStripped = o.optBoolean("isCredentialsStripped", false),
-                        exposeToSaf = o.optBoolean("exposeToSaf", true)
+                        exposeToSaf = o.optBoolean("exposeToSaf", true),
+                        allowInsecureTls = o.optBoolean("allowInsecureTls", false)
                     )
                 )
             }
@@ -154,6 +155,7 @@ class OnlineStorageRepository private constructor(private val context: Context) 
                 }
                 put("isCredentialsStripped", s.isCredentialsStripped)
                 put("exposeToSaf", s.exposeToSaf)
+                put("allowInsecureTls", s.allowInsecureTls)
             })
         }
         file.writeText(arr.toString(2))

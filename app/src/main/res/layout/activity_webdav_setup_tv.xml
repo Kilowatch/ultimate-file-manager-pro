@@ -257,8 +257,57 @@
                     android:id="@+id/edtWebDavPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:nextFocusDown="@+id/rowAllowInsecureTls" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Allow Untrusted / Self-Signed SSL Certificate Row -->
+            <LinearLayout
+                android:id="@+id/rowAllowInsecureTls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/selector_tv_list_item"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp"
+                android:layout_marginBottom="16dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:nextFocusUp="@+id/edtWebDavPassword"
+                android:nextFocusDown="@+id/btnConnect">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/webdav_setup_allow_insecure_tls"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/webdav_setup_allow_insecure_tls_sub"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/cbAllowInsecureTls"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:focusable="false"
+                    android:clickable="false" />
+            </LinearLayout>
 
             <!-- Status text -->
             <TextView
@@ -288,6 +337,7 @@
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:focusable="true"
+                android:nextFocusUp="@+id/rowAllowInsecureTls"
                 app:cornerRadius="12dp"
                 app:backgroundTint="@color/btn_save_bg_tint"
                 android:textColor="@android:color/white" />

@@ -4,12 +4,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -28,13 +24,64 @@ object WebDavShareClient {
     private const val TAG = "WebDavShareClient"
 
     // ─────────────────────────────────────────────────────────────────────────
+    // Certificate & Diagnostic Models
+    // ─────────────────────────────────────────────────────────────────────────
+
+    data class WebDavCertInfo(
+        val subject: String,
+        val issuer: String,
+        val validFrom: String,
+        val validTo: String,
+        val serialNumber: String,
+        val sha256Fingerprint: String
+    )
+
+    // ─────────────────────────────────────────────────────────────────────────
     // Public API
     // ─────────────────────────────────────────────────────────────────────────
+
+    suspend fun probeCertificate(rawUrl: String): WebDavCertInfo? = withContext(Dispatchers.IO) {
+        try {
+            val jsonStr = webdavclient.Webdavclient.webdavProbeCertificate(rawUrl)
+            val json = JSONObject(jsonStr)
+            WebDavCertInfo(
+                subject = json.optString("subject", ""),
+                issuer = json.optString("issuer", ""),
+                validFrom = json.optString("validFrom", ""),
+                validTo = json.optString("validTo", ""),
+                serialNumber = json.optString("serialNumber", ""),
+                sha256Fingerprint = json.optString("sha256Fingerprint", "")
+            )
+        } catch (e: Exception) {
+            GoRoLog.e(TAG, "probeCertificate failed for $rawUrl", e)
+            null
+        }
+    }
+
+    suspend fun verifyConnection(share: NetworkShare) = withContext(Dispatchers.IO) {
+        if (RCloneShareClient.isRCloneShare(share)) {
+            if (!RCloneShareClient.testConnection(share)) {
+                throw IOException("RClone connection failed")
+            }
+            return@withContext
+        }
+        webdavclient.Webdavclient.webdavTestConnection(
+            share.host,
+            share.username,
+            share.password,
+            share.allowInsecureTls
+        )
+    }
 
     suspend fun testConnection(share: NetworkShare): Boolean = withContext(Dispatchers.IO) {
         if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.testConnection(share)
         try {
-            webdavclient.Webdavclient.webdavTestConnection(share.host, share.username, share.password)
+            webdavclient.Webdavclient.webdavTestConnection(
+                share.host,
+                share.username,
+                share.password,
+                share.allowInsecureTls
+            )
             true
         } catch (e: Exception) {
             GoRoLog.e(TAG, "testConnection failed for ${share.host}", e)
@@ -47,7 +94,13 @@ object WebDavShareClient {
             if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.listFiles(share, remotePath)
             val cleanPath = remotePath.trim('/')
             val jsonStr = try {
-                webdavclient.Webdavclient.webdavListFiles(share.host, share.username, share.password, cleanPath)
+                webdavclient.Webdavclient.webdavListFiles(
+                    share.host,
+                    share.username,
+                    share.password,
+                    cleanPath,
+                    share.allowInsecureTls
+                )
             } catch (e: Exception) {
                 GoRoLog.e(TAG, "listFiles failed for $cleanPath on ${share.host}", e)
                 throw IOException("WebDAV list failed: ${e.message}")
@@ -88,7 +141,13 @@ object WebDavShareClient {
         if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.mkdir(share, remotePath)
         val cleanPath = remotePath.trim('/')
         try {
-            webdavclient.Webdavclient.webdavMkdirAll(share.host, share.username, share.password, cleanPath)
+            webdavclient.Webdavclient.webdavMkdirAll(
+                share.host,
+                share.username,
+                share.password,
+                cleanPath,
+                share.allowInsecureTls
+            )
         } catch (e: Exception) {
             GoRoLog.e(TAG, "mkdir failed for $cleanPath", e)
             throw IOException("WebDAV mkdir failed: ${e.message}")
@@ -99,7 +158,13 @@ object WebDavShareClient {
         if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.deleteFile(share, remotePath)
         val cleanPath = remotePath.trim('/')
         try {
-            webdavclient.Webdavclient.webdavRemove(share.host, share.username, share.password, cleanPath)
+            webdavclient.Webdavclient.webdavRemove(
+                share.host,
+                share.username,
+                share.password,
+                cleanPath,
+                share.allowInsecureTls
+            )
         } catch (e: Exception) {
             GoRoLog.e(TAG, "deleteFile failed for $cleanPath", e)
             throw IOException("WebDAV delete failed: ${e.message}")
@@ -110,7 +175,13 @@ object WebDavShareClient {
         if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.deleteDir(share, remotePath)
         val cleanPath = remotePath.trim('/')
         try {
-            webdavclient.Webdavclient.webdavRemoveAll(share.host, share.username, share.password, cleanPath)
+            webdavclient.Webdavclient.webdavRemoveAll(
+                share.host,
+                share.username,
+                share.password,
+                cleanPath,
+                share.allowInsecureTls
+            )
         } catch (e: Exception) {
             GoRoLog.e(TAG, "deleteDir failed for $cleanPath", e)
             throw IOException("WebDAV deleteDir failed: ${e.message}")
@@ -123,7 +194,15 @@ object WebDavShareClient {
             val cleanFrom = fromPath.trim('/')
             val cleanTo = toPath.trim('/')
             try {
-                webdavclient.Webdavclient.webdavRename(share.host, share.username, share.password, cleanFrom, cleanTo, true)
+                webdavclient.Webdavclient.webdavRename(
+                    share.host,
+                    share.username,
+                    share.password,
+                    cleanFrom,
+                    cleanTo,
+                    true,
+                    share.allowInsecureTls
+                )
             } catch (e: Exception) {
                 GoRoLog.e(TAG, "rename failed from $cleanFrom to $cleanTo", e)
                 throw IOException("WebDAV rename failed: ${e.message}")
@@ -134,14 +213,20 @@ object WebDavShareClient {
         withContext(Dispatchers.IO) {
             if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.openInputStream(share, remotePath)
             val cleanPath = remotePath.trim('/')
-            val statJson = webdavclient.Webdavclient.webdavStat(share.host, share.username, share.password, cleanPath)
+            val statJson = webdavclient.Webdavclient.webdavStat(
+                share.host,
+                share.username,
+                share.password,
+                cleanPath,
+                share.allowInsecureTls
+            )
             val stat = JSONObject(statJson)
             val size = if (stat.optBoolean("exists", false)) stat.optLong("size", -1L) else -1L
 
-            // Return a streaming input stream backed by range reads with 256 KB read-ahead buffer
+            // Return a streaming input stream backed by range reads with 1 MB read-ahead buffer
             val stream = object : InputStream() {
                 private var pos = 0L
-                private val bufSize = 256 * 1024
+                private val bufSize = 1024 * 1024
                 private var currentBuf: ByteArray? = null
                 private var bufPos = 0
 
@@ -150,7 +235,15 @@ object WebDavShareClient {
                         if (size in 0..pos) return -1
                         val toRead = if (size > 0) minOf(bufSize.toLong(), size - pos).toInt() else bufSize
                         val chunk = try {
-                            webdavclient.Webdavclient.webdavReadRange(share.host, share.username, share.password, cleanPath, pos, toRead.toLong())
+                            webdavclient.Webdavclient.webdavReadRange(
+                                share.host,
+                                share.username,
+                                share.password,
+                                cleanPath,
+                                pos,
+                                toRead.toLong(),
+                                share.allowInsecureTls
+                            )
                         } catch (_: Exception) {
                             return -1
                         }
@@ -183,7 +276,15 @@ object WebDavShareClient {
                     if (toRead <= 0) return -1
 
                     val chunk = try {
-                        webdavclient.Webdavclient.webdavReadRange(share.host, share.username, share.password, cleanPath, pos, toRead.toLong())
+                        webdavclient.Webdavclient.webdavReadRange(
+                            share.host,
+                            share.username,
+                            share.password,
+                            cleanPath,
+                            pos,
+                            toRead.toLong(),
+                            share.allowInsecureTls
+                        )
                     } catch (_: Exception) {
                         return -1
                     }
@@ -232,7 +333,13 @@ object WebDavShareClient {
                 get() = synchronized(lock) {
                     if (actualSize <= 0L) {
                         try {
-                            val statJson = webdavclient.Webdavclient.webdavStat(share.host, share.username, share.password, cleanPath)
+                            val statJson = webdavclient.Webdavclient.webdavStat(
+                                share.host,
+                                share.username,
+                                share.password,
+                                cleanPath,
+                                share.allowInsecureTls
+                            )
                             val stat = JSONObject(statJson)
                             if (stat.optBoolean("exists", false)) {
                                 actualSize = stat.optLong("size", 0L)
@@ -274,7 +381,8 @@ object WebDavShareClient {
                         share.password,
                         cleanPath,
                         offset,
-                        fetchLen.toLong()
+                        fetchLen.toLong(),
+                        share.allowInsecureTls
                     )
                     if (data == null || data.isEmpty()) return -1
 
@@ -322,28 +430,41 @@ object WebDavShareClient {
         }
 
         val cleanPath = remotePath.trim('/')
-        val tempFile = File(UfmApplication.instance.cacheDir, "webdav_up_${System.currentTimeMillis()}.tmp")
-        try {
-            FileOutputStream(tempFile).use { fos ->
-                val buf = ByteArray(64 * 1024)
-                var read: Int
-                var sent = 0L
-                while (inputStream.read(buf).also { read = it } != -1) {
-                    fos.write(buf, 0, read)
-                    sent += read
-                    onProgress?.invoke(sent)
-                }
-            }
-
-            webdavclient.Webdavclient.webdavUploadFile(
+        val handle = try {
+            webdavclient.Webdavclient.webdavOpenFile(
                 share.host,
                 share.username,
                 share.password,
                 cleanPath,
-                tempFile.absolutePath
+                "w",
+                totalSize,
+                share.allowInsecureTls
             )
+        } catch (e: Exception) {
+            GoRoLog.e(TAG, "webdavOpenFile failed for upload on $cleanPath", e)
+            throw IOException("WebDAV upload open failed: ${e.message}", e)
+        }
+
+        try {
+            val buf = ByteArray(64 * 1024)
+            var read: Int
+            var sent = 0L
+            while (inputStream.read(buf).also { read = it } != -1) {
+                val chunk = if (read == buf.size) buf else buf.copyOf(read)
+                webdavclient.Webdavclient.webdavWriteHandle(handle, chunk)
+                sent += read
+                onProgress?.invoke(sent)
+            }
+        } catch (e: Exception) {
+            GoRoLog.e(TAG, "uploadStream failed during streaming for $cleanPath", e)
+            throw IOException("WebDAV upload streaming failed: ${e.message}", e)
         } finally {
-            tempFile.delete()
+            try {
+                webdavclient.Webdavclient.webdavCloseHandle(handle)
+            } catch (e: Exception) {
+                GoRoLog.e(TAG, "webdavCloseHandle failed for $cleanPath", e)
+                throw IOException("WebDAV upload finalize failed: ${e.message}", e)
+            }
         }
     }
 
@@ -351,28 +472,50 @@ object WebDavShareClient {
         withContext(Dispatchers.IO) {
             if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.openOutputStream(share, remotePath)
             val cleanPath = remotePath.trim('/')
-            val tempFile = File(UfmApplication.instance.cacheDir, "webdav_out_${System.currentTimeMillis()}.tmp")
+            val handle = try {
+                webdavclient.Webdavclient.webdavOpenFile(
+                    share.host,
+                    share.username,
+                    share.password,
+                    cleanPath,
+                    "w",
+                    -1L,
+                    share.allowInsecureTls
+                )
+            } catch (e: Exception) {
+                GoRoLog.e(TAG, "webdavOpenFile failed for $cleanPath", e)
+                throw IOException("WebDAV openOutputStream failed: ${e.message}", e)
+            }
 
             object : OutputStream() {
-                private val fileOut = FileOutputStream(tempFile)
-                override fun write(b: Int) = fileOut.write(b)
-                override fun write(b: ByteArray, off: Int, len: Int) = fileOut.write(b, off, len)
-                override fun flush() = fileOut.flush()
-                override fun close() {
-                    fileOut.close()
+                private var isClosed = false
+
+                override fun write(b: Int) {
+                    write(byteArrayOf(b.toByte()), 0, 1)
+                }
+
+                override fun write(b: ByteArray, off: Int, len: Int) {
+                    if (isClosed) throw IOException("Stream is closed")
+                    if (len <= 0) return
+                    val chunk = if (off == 0 && len == b.size) b else b.copyOfRange(off, off + len)
                     try {
-                        webdavclient.Webdavclient.webdavUploadFile(
-                            share.host,
-                            share.username,
-                            share.password,
-                            cleanPath,
-                            tempFile.absolutePath
-                        )
+                        webdavclient.Webdavclient.webdavWriteHandle(handle, chunk)
                     } catch (e: Exception) {
-                        GoRoLog.e(TAG, "webdavUploadFile failed for $cleanPath on close", e)
-                        throw IOException("WebDAV upload failed on stream close: ${e.message}", e)
-                    } finally {
-                        tempFile.delete()
+                        throw IOException("WebDAV write failed: ${e.message}", e)
+                    }
+                }
+
+                override fun flush() {}
+
+                override fun close() {
+                    if (!isClosed) {
+                        isClosed = true
+                        try {
+                            webdavclient.Webdavclient.webdavCloseHandle(handle)
+                        } catch (e: Exception) {
+                            GoRoLog.e(TAG, "webdavCloseHandle failed on close for $cleanPath", e)
+                            throw IOException("WebDAV upload close failed: ${e.message}", e)
+                        }
                     }
                 }
             }

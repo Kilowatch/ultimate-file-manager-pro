@@ -275,13 +275,20 @@ class MediaOperationWorker(
         var share = NetworkShareRepository.getInstance(applicationContext).getById(shareId)
             ?: return Result.failure(workDataOf(KEY_ERROR_MESSAGE to "Network share not found"))
 
-        // For isServerMode SMB shares with empty remotePath: if the caller passed an effective
-        // share name (first path segment of currentPath), apply it so SmbShareClient can correctly
-        // resolve upload paths when the repository-stored remotePath is empty.
-        if (share.type == ShareType.SMB && share.isServerMode && share.remotePath.isEmpty()
-            && effectiveShareName.isNotEmpty()) {
-            share = share.copy(remotePath = "/$effectiveShareName")
+        // For isServerMode SMB shares: resolve the effective share name and update share.remotePath
+        // so that SmbShareClient and NetworkHttpProxyServer can open the file and construct upload paths.
+        val resolvedShareName = when {
+            effectiveShareName.isNotBlank() -> effectiveShareName.trimStart('/').substringBefore('/')
+            share.isServerMode && remoteDir.isNotBlank() -> remoteDir.trimStart('/').substringBefore('/')
+            share.isServerMode && remoteFilePath.isNotBlank() && remoteFilePath.trimStart('/').contains('/') ->
+                remoteFilePath.trimStart('/').substringBefore('/')
+            else -> ""
         }
+
+        if (share.type == ShareType.SMB && share.isServerMode && resolvedShareName.isNotEmpty()) {
+            share = share.copy(remotePath = "/$resolvedShareName")
+        }
+        GoRoLog.d(TAG, "doNetworkWork: opType=$opType, fileName=$fileName, shareId=$shareId, isServerMode=${share.isServerMode}, resolvedShareName='$resolvedShareName', remotePath='${share.remotePath}', remoteFilePath='$remoteFilePath', remoteDir='$remoteDir'")
 
         val ext = fileName.substringAfterLast('.', "")
         val mimeType = za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(ext)

@@ -660,7 +660,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     },
                     domain   = foundShare.s3Bucket ?: "",
                     remotePath = foundShare.s3Region ?: "/",
-                    readOnly = false
+                    readOnly = false,
+                    allowInsecureTls = foundShare.allowInsecureTls
                 )
             } else {
                 val foundShare = NetworkShareRepository.getInstance(this).getById(shareId)
@@ -6679,18 +6680,23 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
 
     private suspend fun openNetworkInputStreamForFile(file: NetworkFile): java.io.InputStream {
-        return when (share.type) {
-            ShareType.SMB -> SmbShareClient.openInputStream(share, file.path)
-            ShareType.FTP -> FtpShareClient.openInputStream(share, file.path)
-            ShareType.TV  -> TvShareClient.openInputStream(share, file.path)
-            ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, file.path)
-            ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, file.path).first
-            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, file.path).first
-            ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, file.path).first
-            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, file.path).first
-            ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, file.path).first
-            ShareType.NFS                         -> NfsShareClient.openInputStream(share, file.path)
-            ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, file.path)
+        val targetShare = if (share.type == ShareType.SMB && share.isServerMode) {
+            val fromShare = share.remotePath.trimStart('/').substringBefore('/')
+            val resolvedShare = if (fromShare.isNotEmpty()) fromShare else currentPath.trimStart('/').substringBefore('/')
+            if (resolvedShare.isNotEmpty()) share.copy(remotePath = "/$resolvedShare") else share
+        } else share
+        return when (targetShare.type) {
+            ShareType.SMB -> SmbShareClient.openInputStream(targetShare, file.path)
+            ShareType.FTP -> FtpShareClient.openInputStream(targetShare, file.path)
+            ShareType.TV  -> TvShareClient.openInputStream(targetShare, file.path)
+            ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(targetShare, file.path)
+            ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(targetShare, file.path).first
+            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(targetShare, file.path).first
+            ShareType.DROPBOX -> DropboxShareClient.openInputStream(targetShare, file.path).first
+            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(targetShare, file.path).first
+            ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(targetShare, file.path).first
+            ShareType.NFS                         -> NfsShareClient.openInputStream(targetShare, file.path)
+            ShareType.DLNA                        -> DlnaShareClient.openInputStream(targetShare, file.path)
         }
     }
 
@@ -6712,11 +6718,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
         )
         progress.show()
 
-        // For isServerMode SMB with empty remotePath, derive the effective share name from currentPath
-        // so the worker can safely handle upload paths even at the server root boundary.
-        val effectiveShareName = if (share.type == za.kilowatch.ultimatefilemanager.network.ShareType.SMB
-            && share.isServerMode && share.remotePath.isEmpty() && currentPath.isNotEmpty()) {
-            currentPath.trimStart('/').substringBefore('/')
+        // For isServerMode SMB, derive the effective share name from share.remotePath or currentPath
+        val effectiveShareName = if (share.type == za.kilowatch.ultimatefilemanager.network.ShareType.SMB && share.isServerMode) {
+            val fromShare = share.remotePath.trimStart('/').substringBefore('/')
+            if (fromShare.isNotEmpty()) fromShare else currentPath.trimStart('/').substringBefore('/')
         } else ""
 
         val workId = za.kilowatch.ultimatefilemanager.media.MediaOperationWorker.enqueueNetwork(
@@ -6788,7 +6793,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         info?.subtitleStreams ?: emptyList()
                     } else {
                         val mimeType = za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(file.name.substringAfterLast('.'))
-                        val streamUrl = za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer.register(share, file.path, mimeType, file.size)
+                        val effectiveShare = if (share.type == ShareType.SMB && share.isServerMode) {
+                            val fromShare = share.remotePath.trimStart('/').substringBefore('/')
+                            val resolvedShare = if (fromShare.isNotEmpty()) fromShare else currentPath.trimStart('/').substringBefore('/')
+                            if (resolvedShare.isNotEmpty()) share.copy(remotePath = "/$resolvedShare") else share
+                        } else share
+                        val streamUrl = za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer.register(effectiveShare, file.path, mimeType, file.size)
                         val sessionUuid = streamUrl.substringAfter("127.0.0.1:").substringAfter('/').substringBefore('/')
                         val info = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfoFromPathOrUrl(streamUrl)
                         za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer.unregister(sessionUuid)
@@ -6865,7 +6875,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         info?.audioStreams ?: emptyList()
                     } else {
                         val mimeType = za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(file.name.substringAfterLast('.'))
-                        val streamUrl = za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer.register(share, file.path, mimeType, file.size)
+                        val effectiveShare = if (share.type == ShareType.SMB && share.isServerMode) {
+                            val fromShare = share.remotePath.trimStart('/').substringBefore('/')
+                            val resolvedShare = if (fromShare.isNotEmpty()) fromShare else currentPath.trimStart('/').substringBefore('/')
+                            if (resolvedShare.isNotEmpty()) share.copy(remotePath = "/$resolvedShare") else share
+                        } else share
+                        val streamUrl = za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer.register(effectiveShare, file.path, mimeType, file.size)
                         val sessionUuid = streamUrl.substringAfter("127.0.0.1:").substringAfter('/').substringBefore('/')
                         val info = za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.getMediaInfoFromPathOrUrl(streamUrl)
                         za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer.unregister(sessionUuid)

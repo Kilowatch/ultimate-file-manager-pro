@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.4] — 2026-09-25
 
 ### Added
+- **WebDAV Self-Signed & Private CA HTTPS Support**: Added full support for local WebDAV connections over HTTPS with self-signed or untrusted SSL certificates (Synology DSM, Nextcloud, QNAP, TrueNAS), featuring an interactive `UFMStandard` glass certificate trust dialog displaying Subject, Issuer, Validity dates, and SHA-256 fingerprint.
+- **Android TV WebDAV Untrusted Certificate Toggle**: Added a D-pad navigable checkbox row with yellow focus highlight styling (`@drawable/selector_tv_button_yellow`) to the TV WebDAV setup layout (`activity_webdav_setup_tv.xml`).
 - **Global Edge Swipe Menu**: Added an app-wide slide-out navigation drawer accessible via inward swipe gestures from anywhere in the application (left or right screen edge), featuring the official app icon, "Ultimate File Manager Pro" branding, quick navigation shortcuts, and direct settings access.
 - **Quick Access Style Customization**: Expanded Quick Access preferences in Settings allowing users to choose between Disabled, Bottom Floating Bar, and Edge Swipe Menu.
 - **Configurable Swipe Edge & Indicator**: Added configurable swipe edge selection (Left vs Right edge) and an optional subtle edge handle pill for easy opening and touch discovery.
@@ -23,11 +25,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Background MediaOperationWorker**: Media extractions and conversions across both Local and Network storage now run through WorkManager foreground service workers with persistent notifications, surviving app switching, activity destruction, and screen lock.
 
 ### Changed
+- **Zero-Disk-Spooling WebDAV Streaming**: Replaced temporary file disk spooling with direct in-memory kernel pipe streaming (`WriteStreamWithLength`) for WebDAV file uploads, preventing flash memory exhaustion and `ENOSPC` errors on large multi-gigabyte transfers.
+- **WebDAV Read-Ahead Throughput**: Increased sequential download chunk buffer to 1 MB for improved LAN and high-bandwidth WebDAV streaming performance.
 - **Dialog Button Embedding**: Eliminated raw system horizontal button bars (`.setPositiveButton()` / `.setNegativeButton()`) on custom glass views; all primary and secondary actions are now embedded directly inside the glass card layouts for consistent hierarchy and elevation.
 - **Android TV Dialog Focus**: Ensured standard 650dp/800dp card widths and yellow focus highlight styling (`@drawable/selector_tv_button_yellow`) across all newly introduced TV dialog variants with optimized D-pad remote navigation.
 - **Online Storage Actions Modal**: Upgraded mobile cloud account actions to a glass card dialog matching the Android TV interface, providing one-tap browsing, SAF exposure toggling, and account deletion.
 
 ### Fixed
+- **WebDAV Password Retention**: Fixed an issue where editing an existing WebDAV connection cleared the stored password if the password field was left blank.
+- **WebDAV URL Auto-Prefixing**: Automatically prepends `https://` when users input bare hostnames or IP addresses (e.g., `192.168.1.100:5006/webdav`).
 - **System Theme Title Inconsistencies**: Removed reflection hacks for alert title recoloring in App Manager, replacing them with theme-aware layout typography.
 - **Dialog Window Insets**: Enforced transparent background drawables on all dialog windows, eliminating white rectangular frames around curved glass corners.
 - **Read-Only Share Media Extraction Notice**: Added a UFMStandard glass modal in NetworkBrowser informing users when extracting audio/subtitles or converting videos on read-only shares that the output file will be saved directly to the device's Downloads folder.

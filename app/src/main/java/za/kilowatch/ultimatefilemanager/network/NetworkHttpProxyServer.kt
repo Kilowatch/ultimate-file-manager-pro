@@ -451,12 +451,18 @@ object NetworkHttpProxyServer {
     // ── Handle factory ────────────────────────────────────────────────────────
 
     internal fun openHandleForSession(session: Session): IRandomAccessFile? {
-        return when (session.share.type) {
+        val share = if (session.share.type == ShareType.SMB && session.share.isServerMode && session.share.remotePath.isEmpty() && session.path.trimStart('/').contains('/')) {
+            val shareName = session.path.trimStart('/').substringBefore('/')
+            session.share.copy(remotePath = "/$shareName")
+        } else {
+            session.share
+        }
+        return when (share.type) {
             // suppressInvalidateOnReadError = true: the proxy's pinned handle must NOT be
             // auto-invalidated (connection closed) when a read throws — an external player
             // that aborts a request on seek would otherwise destroy the shared SMB/SSH session.
             ShareType.SMB -> SmbShareClient.openRandomAccessFile(
-                session.share, session.path, isWrite = false, dedicated = true,
+                share, session.path, isWrite = false, dedicated = true,
                 suppressInvalidateOnReadError = true
             )
             ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(

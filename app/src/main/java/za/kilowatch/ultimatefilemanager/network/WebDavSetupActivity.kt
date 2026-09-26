@@ -79,6 +79,8 @@ class WebDavSetupActivity : AppCompatActivity() {
         setupViews()
     }
 
+    private var cbAllowInsecureTls: android.widget.CompoundButton? = null
+
     private fun setupViews() {
         val btnBack     = findViewById<ImageView>(R.id.btnBack)
         val edtLabel    = findViewById<TextInputEditText>(R.id.edtWebDavLabel)
@@ -88,6 +90,14 @@ class WebDavSetupActivity : AppCompatActivity() {
         val btnConnect  = findViewById<MaterialButton>(R.id.btnConnect)
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val tvStatus    = findViewById<TextView>(R.id.tvStatus)
+        cbAllowInsecureTls = findViewById(R.id.cbAllowInsecureTls)
+
+        if (isTv) {
+            val rowAllowInsecure = findViewById<View>(R.id.rowAllowInsecureTls)
+            rowAllowInsecure?.setOnClickListener {
+                cbAllowInsecureTls?.let { cb -> cb.isChecked = !cb.isChecked }
+            }
+        }
 
         btnBack.setOnClickListener { finish() }
 
@@ -96,7 +106,11 @@ class WebDavSetupActivity : AppCompatActivity() {
             edtLabel.setText(existing.email)
             edtUrl.setText(existing.webDavUrl ?: "")
             edtUsername.setText(existing.webDavUsername ?: "")
+            if (!existing.webDavPassword.isNullOrEmpty()) {
+                edtPassword.hint = getString(R.string.webdav_setup_password_keep_hint)
+            }
             edtPassword.setText("")
+            cbAllowInsecureTls?.isChecked = existing.allowInsecureTls
         }
 
         if (isTv) {
@@ -106,10 +120,19 @@ class WebDavSetupActivity : AppCompatActivity() {
         }
 
         btnConnect.setOnClickListener {
-            val label    = edtLabel.text?.toString()?.trim() ?: ""
-            val url      = edtUrl.text?.toString()?.trim() ?: ""
-            val username = edtUsername.text?.toString()?.trim() ?: ""
-            val password = edtPassword.text?.toString() ?: ""
+            val label       = edtLabel.text?.toString()?.trim() ?: ""
+            var url         = edtUrl.text?.toString()?.trim() ?: ""
+            val username    = edtUsername.text?.toString()?.trim() ?: ""
+            val inputPass   = edtPassword.text?.toString() ?: ""
+            val allowInsecure = cbAllowInsecureTls?.isChecked ?: false
+
+            val password = if (inputPass.isNotEmpty()) {
+                inputPass
+            } else if (existing != null && !existing.webDavPassword.isNullOrEmpty()) {
+                existing.webDavPassword
+            } else {
+                ""
+            }
 
             if (label.isEmpty() || url.isEmpty()) {
                 tvStatus.text = getString(R.string.webdav_setup_error_empty_fields)
@@ -117,14 +140,14 @@ class WebDavSetupActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                tvStatus.text = getString(R.string.webdav_setup_error_bad_url)
-                tvStatus.visibility = View.VISIBLE
-                return@setOnClickListener
+            // Auto-prefix https:// if user entered bare host/IP
+            if (!url.startsWith("http://", ignoreCase = true) && !url.startsWith("https://", ignoreCase = true)) {
+                url = "https://$url"
+                edtUrl.setText(url)
             }
 
             // Warn user if using plain HTTP
-            if (url.startsWith("http://")) {
+            if (url.startsWith("http://", ignoreCase = true)) {
                 za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
                     context = this,
                     title = getString(R.string.webdav_setup_http_warning_title),
@@ -133,11 +156,11 @@ class WebDavSetupActivity : AppCompatActivity() {
                     positiveText = getString(R.string.webdav_setup_http_warning_continue),
                     negativeText = getString(R.string.webdav_setup_http_warning_cancel),
                     onPositive = {
-                        attemptConnect(label, url, username, password, btnConnect, progressBar, tvStatus)
+                        attemptConnect(label, url, username, password, allowInsecure, btnConnect, progressBar, tvStatus)
                     }
                 )
             } else {
-                attemptConnect(label, url, username, password, btnConnect, progressBar, tvStatus)
+                attemptConnect(label, url, username, password, allowInsecure, btnConnect, progressBar, tvStatus)
             }
         }
     }
@@ -147,18 +170,20 @@ class WebDavSetupActivity : AppCompatActivity() {
         url: String,
         username: String,
         password: String,
+        allowInsecure: Boolean,
         btnConnect: MaterialButton,
         progressBar: ProgressBar,
         tvStatus: TextView
     ) {
         val testShare = NetworkShare(
-            id       = "test_${System.currentTimeMillis()}",
-            name     = label,
-            type     = ShareType.WEBDAV,
-            host     = url.trimEnd('/') + "/",
-            username = username,
-            password = password,
-            readOnly = false
+            id               = "test_${System.currentTimeMillis()}",
+            name             = label,
+            type             = ShareType.WEBDAV,
+            host             = url.trimEnd('/') + "/",
+            username         = username,
+            password         = password,
+            readOnly         = false,
+            allowInsecureTls = allowInsecure
         )
 
         progressBar.visibility = View.VISIBLE
@@ -167,26 +192,25 @@ class WebDavSetupActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                val ok = withContext(Dispatchers.IO) {
-                    WebDavShareClient.testConnection(testShare)
+                withContext(Dispatchers.IO) {
+                    WebDavShareClient.verifyConnection(testShare)
                 }
-
-                if (!ok) throw Exception(getString(R.string.webdav_setup_error_server_rejected))
 
                 // Success — persist
                 val storage = OnlineStorage(
-                    id             = editingStorageId ?: java.util.UUID.randomUUID().toString(),
-                    provider       = OnlineStorageProvider.WEBDAV,
-                    email          = label,
-                    displayName    = label,
-                    webDavUrl      = testShare.host,
-                    webDavUsername = username.ifEmpty { null },
-                    webDavPassword = password.ifEmpty { null },
+                    id                    = editingStorageId ?: java.util.UUID.randomUUID().toString(),
+                    provider              = OnlineStorageProvider.WEBDAV,
+                    email                 = label,
+                    displayName           = label,
+                    webDavUrl             = testShare.host,
+                    webDavUsername        = username.ifEmpty { null },
+                    webDavPassword        = password.ifEmpty { null },
                     isCredentialsStripped = false,
-                    exposeToSaf = editingStorageId?.let { repo.getById(it)?.exposeToSaf } ?: true
+                    exposeToSaf           = editingStorageId?.let { repo.getById(it)?.exposeToSaf } ?: true,
+                    allowInsecureTls      = allowInsecure
                 )
                 repo.save(storage)
-                GoRoLog.d(TAG, "WebDAV storage connected: $label")
+                GoRoLog.d(TAG, "WebDAV storage connected: $label (allowInsecureTls=$allowInsecure)")
 
                 progressBar.visibility = View.GONE
                 tvStatus.text          = getString(R.string.webdav_setup_success)
@@ -196,11 +220,85 @@ class WebDavSetupActivity : AppCompatActivity() {
 
             } catch (e: Exception) {
                 GoRoLog.e(TAG, "WebDAV connection test failed", e)
+                val errMsg = e.message ?: ""
+                val isCertError = errMsg.contains("x509", ignoreCase = true) ||
+                        errMsg.contains("certificate", ignoreCase = true) ||
+                        errMsg.contains("authority", ignoreCase = true) ||
+                        errMsg.contains("untrusted", ignoreCase = true) ||
+                        errMsg.contains("self-signed", ignoreCase = true)
+
+                if (isCertError && !allowInsecure) {
+                    val certInfo = withContext(Dispatchers.IO) {
+                        WebDavShareClient.probeCertificate(testShare.host)
+                    }
+                    progressBar.visibility = View.GONE
+                    btnConnect.isEnabled   = true
+
+                    if (certInfo != null) {
+                        showCertificateTrustDialog(certInfo) {
+                            cbAllowInsecureTls?.isChecked = true
+                            attemptConnect(label, url, username, password, true, btnConnect, progressBar, tvStatus)
+                        }
+                        return@launch
+                    }
+                }
+
                 progressBar.visibility = View.GONE
                 btnConnect.isEnabled   = true
-                tvStatus.text          = getString(R.string.webdav_setup_error_connection, e.message ?: "")
+                tvStatus.text          = getString(R.string.webdav_setup_error_connection, errMsg)
                 tvStatus.visibility    = View.VISIBLE
             }
+        }
+    }
+
+    private fun showCertificateTrustDialog(
+        certInfo: WebDavShareClient.WebDavCertInfo,
+        onTrust: () -> Unit
+    ) {
+        val dialogView = layoutInflater.inflate(
+            if (isTv) R.layout.dialog_webdav_cert_tv else R.layout.dialog_webdav_cert,
+            null
+        )
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val txtSubject     = dialogView.findViewById<TextView>(R.id.txtCertSubject)
+        val txtIssuer      = dialogView.findViewById<TextView>(R.id.txtCertIssuer)
+        val txtValidity    = dialogView.findViewById<TextView>(R.id.txtCertValidity)
+        val txtFingerprint = dialogView.findViewById<TextView>(R.id.txtCertFingerprint)
+        val btnTrust       = dialogView.findViewById<View>(R.id.btnTrust)
+        val btnCancel      = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtSubject.text     = certInfo.subject.ifEmpty { "—" }
+        txtIssuer.text      = certInfo.issuer.ifEmpty { "—" }
+        txtValidity.text    = if (certInfo.validFrom.isNotEmpty() && certInfo.validTo.isNotEmpty()) {
+            "${certInfo.validFrom} – ${certInfo.validTo}"
+        } else {
+            certInfo.validTo.ifEmpty { "—" }
+        }
+        txtFingerprint.text = certInfo.sha256Fingerprint.ifEmpty { "—" }
+
+        btnTrust.setOnClickListener {
+            dialog.dismiss()
+            onTrust()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            dialog.window?.setLayout(
+                (600 * resources.displayMetrics.density).toInt(),
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            btnTrust.requestFocus()
         }
     }
 

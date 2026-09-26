@@ -35,7 +35,8 @@ data class OnlineStorage(
     /** WebDAV password — encrypted at rest via VaultCrypto */
     val webDavPassword: String? = null,
     val isCredentialsStripped: Boolean = false,
-    val exposeToSaf: Boolean = true
+    val exposeToSaf: Boolean = true,
+    val allowInsecureTls: Boolean = false
 ) {
     val docIdPrefix: String get() = "os:$id/"
 
@@ -104,7 +105,8 @@ fun OnlineStorage.toNetworkShare(): NetworkShare {
         password = sharePassword,
         readOnly = false,
         isCredentialsStripped = isCredentialsStripped,
-        exposeToSaf = exposeToSaf
+        exposeToSaf = exposeToSaf,
+        allowInsecureTls = allowInsecureTls
     )
 }
 

@@ -31,7 +31,8 @@ data class NetworkShare(
     val nfsVersion: Int = 0,                 // 0 = auto-negotiated (recommended), 3 = NFSv3, 4 = NFSv4
     val nfsAuthFlavor: Int = 1,              // 0 = AUTH_NONE, 1 = AUTH_SYS
     val exposeToSaf: Boolean = true,
-    val parallelThreads: Int = 0             // 0 = use global preference, 1 = single-threaded, 2/4/6/8
+    val parallelThreads: Int = 0,            // 0 = use global preference, 1 = single-threaded, 2/4/6/8
+    val allowInsecureTls: Boolean = false
 ) {
     val effectivePort: Int get() = when {
         port > 0  -> port
@@ -39,6 +40,7 @@ data class NetworkShare(
         type == ShareType.FTP -> 21
         type == ShareType.NFS -> 2049
         type == ShareType.DLNA -> 8200
+        type == ShareType.WEBDAV -> if (host.startsWith("http://", ignoreCase = true)) 80 else 443
         else -> 22 // SFTP and SCP default to 22
     }
 

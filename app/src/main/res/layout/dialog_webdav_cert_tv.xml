@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="600dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp"
+    android:gravity="center_horizontal">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_danger"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_shield_alert"
+            app:tint="?attr/ufmDenied"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Dialog Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/webdav_cert_dialog_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Description Message -->
+    <TextView
+        android:id="@+id/txtMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/webdav_cert_dialog_msg"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:lineSpacingMultiplier="1.2"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Certificate Details Glass Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_tv_glass_card"
+        android:padding="16dp"
+        android:layout_marginBottom="24dp">
+
+        <!-- Subject -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/webdav_cert_dialog_subject"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="true" />
+
+        <TextView
+            android:id="@+id/txtCertSubject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Issuer -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/webdav_cert_dialog_issuer"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="true" />
+
+        <TextView
+            android:id="@+id/txtCertIssuer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Validity -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/webdav_cert_dialog_valid"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="true" />
+
+        <TextView
+            android:id="@+id/txtCertValidity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- SHA-256 Fingerprint -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/webdav_cert_dialog_fingerprint"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="true" />
+
+        <TextView
+            android:id="@+id/txtCertFingerprint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_accent"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
+    <!-- Buttons Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:background="@drawable/selector_tv_button"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="15sp"
+            android:focusable="true"
+            android:textAllCaps="false"
+            android:layout_marginEnd="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTrust"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/webdav_cert_dialog_trust"
+            android:background="@drawable/selector_tv_button_yellow"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="?attr/ufmFocusFillText"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-black"
+            android:focusable="true"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+</LinearLayout>
