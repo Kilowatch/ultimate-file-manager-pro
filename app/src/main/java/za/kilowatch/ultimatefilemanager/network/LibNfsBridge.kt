@@ -90,6 +90,9 @@ object LibNfsBridge {
     /** Get file size. Returns -1 on error. */
     @JvmStatic external fun nfsFileSize(handle: Long, path: String): Long
 
+    /** Get file size using an open file handle (nfs_fstat64). Returns -1 on error. */
+    @JvmStatic external fun nfsFstatSize(handle: Long, fhHandle: Long): Long
+
     /**
      * Open a file. Returns file handle, or 0 on failure.
      * @param flags 0 = read-only, 1 = write (create), 2 = read-write

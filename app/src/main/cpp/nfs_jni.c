@@ -371,6 +371,30 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsFileSize(
     return (jlong)st.nfs_size;
 }
 
+/*
+ * long nfsFstatSize(long handle, long fhHandle)
+ * Returns -1 on error.
+ */
+JNIEXPORT jlong JNICALL
+Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsFstatSize(
+        JNIEnv *env, jclass clazz, jlong handle, jlong fhHandle) {
+    struct nfs_context *nfs = ctx_from_handle(handle);
+    struct nfsfh *fh = (struct nfsfh *)(intptr_t)fhHandle;
+
+    if (!fh) {
+        LOGE("nfsFstatSize: null file handle");
+        return -1;
+    }
+
+    struct nfs_stat_64 st;
+    int ret = nfs_fstat64(nfs, fh, &st);
+    if (ret != 0) {
+        LOGE("nfs_fstat64 failed: %s", nfs_get_error(nfs));
+        return -1;
+    }
+    return (jlong)st.nfs_size;
+}
+
 /* ── File I/O ─────────────────────────────────────────────────────────────── */
 
 /*
@@ -412,6 +436,9 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsRead(
     struct nfs_context *nfs = ctx_from_handle(handle);
     struct nfsfh *fh = (struct nfsfh *)(intptr_t)fhHandle;
 
+    if (!fh || length <= 0) return 0;
+    if (length > 128 * 1024) length = 128 * 1024;
+
     char *tmp = malloc(length);
     if (!tmp) {
         throw_io(env, "malloc failed");
@@ -437,6 +464,9 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsPread(
         jlong fileOffset, jbyteArray jBuf, jint bufOffset, jint length) {
     struct nfs_context *nfs = ctx_from_handle(handle);
     struct nfsfh *fh = (struct nfsfh *)(intptr_t)fhHandle;
+
+    if (!fh || length <= 0) return 0;
+    if (length > 128 * 1024) length = 128 * 1024;
 
     char *tmp = malloc(length);
     if (!tmp) {

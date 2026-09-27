@@ -30,6 +30,12 @@ object LibNfsClient {
 
     private const val TAG = "LibNfsClient"
 
+    /** Safe chunk size for NFS streaming reads to prevent RPC timeout and large native allocations. */
+    const val NFS_READ_CHUNK_SIZE = 64 * 1024
+
+    /** Safe chunk size for NFS streaming writes. */
+    const val NFS_WRITE_CHUNK_SIZE = 64 * 1024
+
 
     /** Whether the native library loaded successfully. */
     val isAvailable: Boolean by lazy {
@@ -118,6 +124,23 @@ object LibNfsClient {
     fun buildChildPath(parentPath: String, childName: String): String {
         val p = normalizePath(parentPath)
         return if (p == "/") "/$childName" else "$p/$childName"
+    }
+
+    /**
+     * Strip the share's export path prefix from a remote path if present, ensuring
+     * paths are relative to the mounted NFS export root (preventing path doubling).
+     */
+    fun stripExportPrefix(share: NetworkShare, path: String): String {
+        val normPath = normalizePath(path)
+        val export = normalizePath(share.remotePath)
+        if (export.isNotEmpty() && export != "/") {
+            if (normPath == export) return "/"
+            if (normPath.startsWith("$export/")) {
+                val stripped = normPath.removePrefix(export)
+                return if (stripped.startsWith("/")) stripped else "/$stripped"
+            }
+        }
+        return normPath
     }
 
     /**
@@ -501,7 +524,7 @@ object LibNfsClient {
         val (handle, mountErr) = mountContext(share)
         if (mountErr != null) throw IOException("NFS mount failed: $mountErr")
 
-        val path = normalizePath(remotePath)
+        val path = stripExportPrefix(share, remotePath)
         val fh = LibNfsBridge.nfsOpen(handle, path, 0)
         if (fh == 0L) {
             LibNfsBridge.nfsDestroy(handle)
@@ -517,7 +540,7 @@ object LibNfsClient {
         val (handle, mountErr) = mountContext(share)
         if (mountErr != null) throw IOException("NFS mount failed: $mountErr")
 
-        val path = normalizePath(remotePath)
+        val path = stripExportPrefix(share, remotePath)
         val fh = LibNfsBridge.nfsOpen(handle, path, 1)
         if (fh == 0L) {
             val rpcErr = LibNfsBridge.nfsGetLastRpcError(handle)
@@ -533,7 +556,7 @@ object LibNfsClient {
         remotePath: String,
         isWrite: Boolean = false
     ): IRandomAccessFile {
-        return LibNfsRandomAccess(share, normalizePath(remotePath), isWrite)
+        return LibNfsRandomAccess(share, stripExportPrefix(share, remotePath), isWrite)
     }
 
     fun mkdir(share: NetworkShare, remotePath: String) {
@@ -633,8 +656,12 @@ object LibNfsClient {
         override fun read(b: ByteArray, off: Int, len: Int): Int {
             if (closed) throw IOException("Stream closed")
             if (len == 0) return 0
-            val res = LibNfsBridge.nfsPread(ctxHandle, fileHandle, position, b, off, len)
-            if (res < 0) throw IOException("NFS read failed")
+            val chunkLen = minOf(len, NFS_READ_CHUNK_SIZE)
+            val res = LibNfsBridge.nfsPread(ctxHandle, fileHandle, position, b, off, chunkLen)
+            if (res < 0) {
+                val rpcErr = LibNfsBridge.nfsGetLastRpcError(ctxHandle)
+                throw IOException("NFS read failed: ${rpcErr.ifEmpty { "unknown error" }}")
+            }
             if (res == 0) return -1 // EOF
             position += res
             return res
@@ -702,18 +729,22 @@ object LibNfsClient {
             val (h, err) = mountContext(share)
             if (err != null) throw IOException("NFS mount failed: $err")
             ctxHandle = h
+            // Streaming timeout (30 seconds) prevents premature timeout during seeks / large buffers over Wi-Fi
+            LibNfsBridge.nfsSetTimeout(ctxHandle, 30_000)
             fileHandle = LibNfsBridge.nfsOpen(h, remotePath, if (isWrite) 2 else 0)
             if (fileHandle == 0L) {
+                val rpcErr = LibNfsBridge.nfsGetLastRpcError(ctxHandle)
                 LibNfsBridge.nfsDestroy(ctxHandle)
-                throw IOException("Failed to open file: $remotePath")
+                throw IOException("Failed to open file: $remotePath (${rpcErr.ifEmpty { "ENOENT or permission denied" }})")
             }
         }
 
         override val size: Long
             get() = synchronized(this) {
                 if (cachedSize < 0) {
-                    cachedSize = LibNfsBridge.nfsFileSize(ctxHandle, remotePath)
-                    if (cachedSize < 0) throw IOException("Failed to get file size")
+                    val s = LibNfsBridge.nfsFstatSize(ctxHandle, fileHandle)
+                    cachedSize = if (s >= 0) s else LibNfsBridge.nfsFileSize(ctxHandle, remotePath)
+                    if (cachedSize < 0) throw IOException("Failed to get file size for: $remotePath")
                 }
                 return cachedSize
             }
@@ -724,11 +755,14 @@ object LibNfsClient {
             val toReadTotal = minOf(length.toLong(), size - offset).toInt()
             if (toReadTotal <= 0) return -1
             while (bytesRead < toReadTotal) {
-                val toRead = toReadTotal - bytesRead
+                val toRead = minOf(toReadTotal - bytesRead, NFS_READ_CHUNK_SIZE)
                 val res = LibNfsBridge.nfsPread(
                     ctxHandle, fileHandle, offset + bytesRead, buffer, bytesRead, toRead
                 )
-                if (res < 0) throw IOException("NFS random-access read failed")
+                if (res < 0) {
+                    val rpcErr = LibNfsBridge.nfsGetLastRpcError(ctxHandle)
+                    throw IOException("NFS random-access read failed at offset ${offset + bytesRead}: ${rpcErr.ifEmpty { "unknown error" }}")
+                }
                 if (res == 0) break // EOF reached earlier than expected
                 bytesRead += res
             }
@@ -738,11 +772,14 @@ object LibNfsClient {
         override fun write(offset: Long, buffer: ByteArray, length: Int): Int = synchronized(this) {
             var bytesWritten = 0
             while (bytesWritten < length) {
-                val toWrite = length - bytesWritten
+                val toWrite = minOf(length - bytesWritten, NFS_WRITE_CHUNK_SIZE)
                 val res = LibNfsBridge.nfsPwrite(
                     ctxHandle, fileHandle, offset + bytesWritten, buffer, bytesWritten, toWrite
                 )
-                if (res < 0) throw IOException("NFS random-access write failed")
+                if (res < 0) {
+                    val rpcErr = LibNfsBridge.nfsGetLastRpcError(ctxHandle)
+                    throw IOException("NFS random-access write failed at offset ${offset + bytesWritten}: ${rpcErr.ifEmpty { "unknown error" }}")
+                }
                 if (res == 0) throw IOException("NFS random-access write returned 0 bytes")
                 bytesWritten += res
             }

@@ -75,4 +75,7 @@ object NfsShareClient {
 
     /** Utility: normalise an NFS path. Delegated to [LibNfsClient]. */
     fun normalizePath(path: String): String = LibNfsClient.normalizePath(path)
+
+    /** Utility: strip export prefix if present in the given path. Delegated to [LibNfsClient]. */
+    fun stripExportPrefix(share: NetworkShare, path: String): String = LibNfsClient.stripExportPrefix(share, path)
 }
