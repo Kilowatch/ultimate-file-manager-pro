@@ -64,7 +64,7 @@
          must stay. Removing the wrong one either requests a forbidden permission or leaves the
          providers unguarded. -->
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
-    <uses-permission android:name="eu.darken.porter.permission.API_V23" />
+    <uses-permission android:name="eu.darken.porter.permission.API" />
 
     <!-- TV Support -->
     <uses-feature
@@ -574,23 +574,16 @@
 
 
 
-        <!-- Elevated-access binder providers.
-             The Porter SDK ships NO <provider> of its own — only a permission request — so the
-             client app declares both itself. Replaces the former rikka.shizuku.ShizukuProvider,
-             which served .shizuku and could not route to Porter when Porter was selected. -->
-        <provider
-            android:name="eu.darken.porter.client.PorterProvider"
-            android:authorities="${applicationId}.porter"
-            android:multiprocess="false"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+        <!-- Shizuku & Shevery Compatibility Provider (bridges to Porter SDK 0.7.0).
+             The Porter SDK automatically declares PorterApiProvider (${applicationId}.porter.api)
+             via sdk AAR manifest merger. Shizuku/Shevery compatibility is handled by declaring
+             PorterShizukuApiProvider for the ${applicationId}.shizuku authority. -->
+        <meta-data
+            android:name="moe.shizuku.client.V3_SUPPORT"
+            android:value="true" />
 
-        <!-- Keeps the .shizuku authority alive even when Porter is the selected service, so the
-             SDK's internal getBinder lookup still resolves. Do not remove this — the authority
-             must remain regardless of which backend is active. -->
         <provider
-            android:name="eu.darken.porter.client.SelectedShizukuProvider"
+            android:name="eu.darken.porter.sdk.PorterShizukuApiProvider"
             android:authorities="${applicationId}.shizuku"
             android:multiprocess="false"
             android:enabled="true"
@@ -598,8 +591,7 @@
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
         <!-- Defensive: if any library contributes a provider for the retired Shizuku class, strip
-             it so no authority is declared twice. A no-op today — the SDK's own provider module
-             ships no <provider> node — but it guards against a future transitive dependency. -->
+             it so no authority is declared twice. -->
         <provider
             android:name="rikka.shizuku.ShizukuProvider"
             android:authorities="${applicationId}.shizuku"

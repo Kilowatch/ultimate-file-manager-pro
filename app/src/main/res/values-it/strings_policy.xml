@@ -1281,7 +1281,7 @@ Abilita il rilevamento dei dispositivi di rete locale (NSD/mDNS) per l\'accoppia
 POST_NOTIFICHE
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API
 </item>
         <item>
 RICEZIONE_BOOT_COMPLETED

@@ -1281,7 +1281,7 @@ Schakelt detectie van lokale netwerkapparaten (NSD/mDNS) in voor het koppelen va
 POST_NOTIFICATIES
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED

@@ -439,28 +439,11 @@
     public <init>(...);
 }
 
-# ── Porter SDK (com.github.d4rken-org.porter-api:client) / rikka.shizuku ───
-# ShizukuShellWrapper.runCommand() reaches Shizuku.newProcess by reflection:
-#   getDeclaredMethod("newProcess", Array<String>::class.java, Array<String>::class.java, String::class.java)
-# with isAccessible = true. The method is PRIVATE, so R8 would otherwise rename or strip it and
-# the lookup fails at runtime. The failure is silent — runCommand() catches Throwable and returns
-# (-1, emptyList()) — so a release build broken this way looks like a permissions problem on
-# device rather than a code defect. Verified against porter-api:client:0.1.0.
--keepclassmembers class rikka.shizuku.Shizuku {
-    private static rikka.shizuku.ShizukuRemoteProcess newProcess(java.lang.String[], java.lang.String[], java.lang.String);
-}
-
-# ShizukuRemoteProcess is constructed only by the reflective call above, so R8 observes no
-# constructor invocation and may strip the class outright. Callers use it through the
-# java.lang.Process interface, so the public members must survive.
--keep class rikka.shizuku.ShizukuRemoteProcess { public *; }
-
-# Deliberately NOT kept, and not an oversight:
-#  - Shizuku.onBinderReceived(IBinder, String) is public in this SDK and is called directly from
-#    three sites in ShizukuShellWrapper. R8 already treats direct calls as reachable, so a keep
-#    rule would be redundant.
-#  - moe.shizuku.api.BinderContainer is already preserved by the SDK's own bundled consumer rules
-#    (provider-0.1.0.aar). Duplicating them here would be noise.
+# ── Porter SDK 0.7.0 (com.github.d4rken-org.porter-api:sdk, sdk-extras, shizuku-compat) ──
+# The legacy rikka.shizuku.Shizuku.newProcess reflection hack has been eliminated in favour of
+# official PorterConnection.exec() from porter-api:sdk-extras.
+# Necessary keep rules for IBinder constructors, PorterShellService, and BinderContainer
+# are already supplied by the AAR consumer-rules.pro in sdk, sdk-extras, and shizuku-compat.
 
 # ── Application ActivityLifecycleCallbacks ───────────────────────────────────
 # Keep all ActivityLifecycleCallbacks implementations and methods so R8 does not

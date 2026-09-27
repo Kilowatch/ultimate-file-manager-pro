@@ -29,7 +29,7 @@ enum class ElevatedManager(
 ) {
     PORTER(
         packageName = ShizukuShellWrapper.PORTER_PACKAGE,
-        permission = "eu.darken.porter.permission.API_V23",
+        permission = "eu.darken.porter.permission.API",
         titleRes = R.string.shizuku_manager_porter_title,
         descriptionRes = R.string.shizuku_manager_porter_desc,
         brandIconRes = R.drawable.ic_porter_logo,

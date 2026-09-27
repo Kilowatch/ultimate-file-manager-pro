@@ -1,9 +1,15 @@
 package za.kilowatch.ultimatefilemanager.storage
 
+import android.content.Context
 import android.content.pm.PackageManager
-import rikka.shizuku.Shizuku
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import android.util.Log
+import eu.darken.porter.sdk.PermissionState
+import eu.darken.porter.sdk.Porter
+import eu.darken.porter.sdk.PorterBackend
+import eu.darken.porter.sdk.extras.exec
+import kotlinx.coroutines.runBlocking
+import za.kilowatch.ultimatefilemanager.settings.ElevatedAccessPreferenceManager
+import za.kilowatch.ultimatefilemanager.ui.elevated.ElevatedManager
 
 object ShizukuShellWrapper {
 
@@ -41,8 +47,17 @@ object ShizukuShellWrapper {
         }
     }
 
-    fun isElevatedManagerInstalled(context: android.content.Context): Boolean {
-        return isShizukuInstalled(context) || isSheveryInstalled(context)
+    fun isPorterInstalled(context: Context): Boolean {
+        return try {
+            context.packageManager.getPackageInfo(PORTER_PACKAGE, 0)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    fun isElevatedManagerInstalled(context: Context): Boolean {
+        return isPorterInstalled(context) || isShizukuInstalled(context) || isSheveryInstalled(context)
     }
 
     /**
@@ -58,121 +73,74 @@ object ShizukuShellWrapper {
      * `com.hamondev.shevery.shizukuprovider`, does not exist — ContentResolver.call() returned
      * null and the bind fell through silently, so this path never actually worked on device.
      */
-    fun tryBindShevery(context: android.content.Context? = null): Boolean {
-        // Fallback guard: a binder is already held, so there is nothing to bind and nothing to race.
-        if (Shizuku.pingBinder()) return true
+    /**
+     * Manually requests Shevery to send its binder to our .shizuku provider.
+     */
+    fun tryBindShevery(context: Context? = null): Boolean {
+        if (Porter.connection.value != null) return true
         val ctx = context ?: try {
             za.kilowatch.ultimatefilemanager.UfmApplication.instance
-        } catch (e: Exception) {
-            null
-        } ?: return false
+        } catch (_: Exception) { null } ?: return false
 
         return try {
             val uri = android.net.Uri.parse("content://$SHEVERY_PACKAGE.shizuku")
-            val reply = ctx.contentResolver.call(uri, "sendBinder", null, null)
-            val binder = reply?.getBinder("moe.shizuku.privileged.api.intent.extra.BINDER")
-                ?: reply?.getBinder("binder")
-            if (binder != null) {
-                try {
-                    Shizuku.onBinderReceived(null, ctx.packageName)
-                    Shizuku.onBinderReceived(binder, ctx.packageName)
-                } catch (e: Throwable) {
-                    e.printStackTrace()
-                }
-                Shizuku.pingBinder()
-            } else {
-                false
-            }
-        } catch (e: Exception) {
+            ctx.contentResolver.call(uri, "sendBinder", null, null)
+            Porter.connection.value != null
+        } catch (_: Exception) {
             false
         }
     }
 
     /**
-     * Safely checks self permission without crashing if the client is not attached,
-     * the remote binder is dead, or the service threw an IllegalStateException.
-     * If unattached, attempts an automatic one-time re-attach before reporting denied.
+     * Safely checks permission on the active Porter / Shizuku / Shevery connection.
      */
-    fun checkPermissionSafely(context: android.content.Context? = null): Int {
-        return try {
-            if (!Shizuku.pingBinder()) {
-                tryBindShevery(context)
-            }
-            if (!Shizuku.pingBinder()) {
-                return PackageManager.PERMISSION_DENIED
-            }
-            try {
-                Shizuku.checkSelfPermission()
-            } catch (e: IllegalStateException) {
-                // If "Not an attached client", try to re-attach once
-                val binder = Shizuku.getBinder()
-                val pkgName = context?.packageName ?: try {
-                    za.kilowatch.ultimatefilemanager.UfmApplication.instance.packageName
-                } catch (_: Exception) { null }
+    fun checkPermissionSafely(context: Context? = null): Int {
+        return if (isAuthorized(context)) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+    }
 
-                if (binder != null && binder.pingBinder() && pkgName != null) {
-                    try {
-                        Shizuku.onBinderReceived(null, pkgName)
-                        Shizuku.onBinderReceived(binder, pkgName)
-                        return Shizuku.checkSelfPermission()
-                    } catch (re: Throwable) {
-                        android.util.Log.w("ShizukuShellWrapper", "Re-attach failed: ${re.message}")
-                    }
-                }
-                PackageManager.PERMISSION_DENIED
-            }
+    /**
+     * Safely requests permission via the active Porter connection.
+     */
+    fun requestPermissionSafely(requestCode: Int = 0, context: Context? = null): Boolean {
+        val connection = Porter.connection.value ?: return false
+        return try {
+            val state = runBlocking { connection.requestPermission() }
+            state is PermissionState.Granted
         } catch (e: Throwable) {
-            android.util.Log.w("ShizukuShellWrapper", "checkPermissionSafely failed: ${e.message}")
-            PackageManager.PERMISSION_DENIED
+            Log.w("ShizukuShellWrapper", "requestPermissionSafely failed: ${e.message}")
+            false
         }
     }
 
     /**
-     * Safely requests permission without crashing if client is not attached.
-     * Attempts a one-time re-attach if unattached before failing.
+     * Suspending version of requestPermission directly returning PermissionState.
      */
-    fun requestPermissionSafely(requestCode: Int, context: android.content.Context? = null): Boolean {
-        return try {
-            if (!Shizuku.pingBinder()) {
-                tryBindShevery(context)
+    suspend fun requestPermission(): PermissionState {
+        val connection = Porter.connection.value ?: return PermissionState.Denied(false)
+        return connection.requestPermission()
+    }
+
+    fun isAuthorized(context: Context? = null): Boolean {
+        val connection = Porter.connection.value ?: return false
+        val isGranted = connection.permission.value is PermissionState.Granted
+        if (!isGranted) return false
+
+        val ctx = context ?: try {
+            za.kilowatch.ultimatefilemanager.UfmApplication.instance
+        } catch (_: Exception) { null }
+
+        if (ctx != null) {
+            val activeManager = when (connection.backend) {
+                PorterBackend.PORTER -> ElevatedManager.PORTER
+                PorterBackend.SHIZUKU -> {
+                    if (isShizukuInstalled(ctx)) ElevatedManager.SHIZUKU else ElevatedManager.SHEVERY
+                }
             }
-            if (!Shizuku.pingBinder()) {
+            if (!ElevatedAccessPreferenceManager.isManagerEnabled(ctx, activeManager)) {
                 return false
             }
-            try {
-                Shizuku.requestPermission(requestCode)
-                true
-            } catch (e: IllegalStateException) {
-                // Try re-attaching once
-                val binder = Shizuku.getBinder()
-                val pkgName = context?.packageName ?: try {
-                    za.kilowatch.ultimatefilemanager.UfmApplication.instance.packageName
-                } catch (_: Exception) { null }
-
-                if (binder != null && binder.pingBinder() && pkgName != null) {
-                    try {
-                        Shizuku.onBinderReceived(null, pkgName)
-                        Shizuku.onBinderReceived(binder, pkgName)
-                        Shizuku.requestPermission(requestCode)
-                        return true
-                    } catch (re: Throwable) {
-                        android.util.Log.w("ShizukuShellWrapper", "requestPermission re-attach failed: ${re.message}")
-                    }
-                }
-                false
-            }
-        } catch (e: Throwable) {
-            android.util.Log.w("ShizukuShellWrapper", "requestPermissionSafely failed: ${e.message}")
-            false
         }
-    }
-
-    fun isAuthorized(context: android.content.Context? = null): Boolean {
-        return try {
-            checkPermissionSafely(context) == PackageManager.PERMISSION_GRANTED
-        } catch (e: Throwable) {
-            false
-        }
+        return true
     }
 
     fun isProtectedPath(path: String): Boolean {
@@ -278,32 +246,21 @@ object ShizukuShellWrapper {
     }
 
     /**
-     * Executes a shell command via Shizuku or Shevery.
-     * Returns a pair of (exitCode, stdout_lines)
+     * Executes a shell command via Porter, Shizuku or Shevery.
+     * Returns a pair of (exitCode, stdout_lines).
      */
     fun runCommand(cmd: String): Pair<Int, List<String>> {
         if (!isAuthorized()) return Pair(-1, emptyList())
-        try {
-            val method = Shizuku::class.java.getDeclaredMethod(
-                "newProcess",
-                Array<String>::class.java,
-                Array<String>::class.java,
-                String::class.java
-            )
-            method.isAccessible = true
-            val process = method.invoke(null, arrayOf("sh", "-c", cmd), null, null) as Process
-            
-            val reader = BufferedReader(InputStreamReader(process.inputStream))
-            val lines = mutableListOf<String>()
-            var line: String?
-            while (reader.readLine().also { line = it } != null) {
-                line?.let { lines.add(it) }
+        val connection = Porter.connection.value ?: return Pair(-1, emptyList())
+        return try {
+            val result = runBlocking {
+                connection.exec("sh", "-c", cmd)
             }
-            val exitCode = process.waitFor()
-            return Pair(exitCode, lines)
+            val lines = if (result.output.isEmpty()) emptyList() else result.output.trimEnd('\r', '\n').lines()
+            Pair(result.exitCode, lines)
         } catch (e: Exception) {
-            e.printStackTrace()
-            return Pair(-1, emptyList())
+            Log.w("ShizukuShellWrapper", "runCommand failed: ${e.message}")
+            Pair(-1, emptyList())
         }
     }
 

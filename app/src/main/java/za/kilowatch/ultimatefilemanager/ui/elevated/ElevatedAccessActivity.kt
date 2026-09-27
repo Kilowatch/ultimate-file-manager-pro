@@ -34,7 +34,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import rikka.shizuku.Shizuku
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import eu.darken.porter.sdk.PermissionState
+import eu.darken.porter.sdk.Porter
+import eu.darken.porter.sdk.PorterApiProvider
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.databinding.ItemElevatedManagerBinding
 import za.kilowatch.ultimatefilemanager.databinding.ItemElevatedManagerTvBinding
@@ -177,10 +181,6 @@ class ElevatedAccessActivity : AppCompatActivity() {
 
     private val permissionRequestCode = 1001
 
-    private val permissionListener = Shizuku.OnRequestPermissionResultListener { code, _ ->
-        if (code == permissionRequestCode) refresh()
-    }
-
     /**
      * Wraps the base context for locale.
      *
@@ -231,10 +231,12 @@ class ElevatedAccessActivity : AppCompatActivity() {
 
         buildManagerCards()
 
-        try {
-            Shizuku.addRequestPermissionResultListener(permissionListener)
-        } catch (e: Throwable) {
-            e.printStackTrace()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                Porter.connection.collect {
+                    refresh()
+                }
+            }
         }
 
         refresh()
@@ -253,11 +255,6 @@ class ElevatedAccessActivity : AppCompatActivity() {
         statusAnimator = null
         startingDialog?.dismiss()
         startingDialog = null
-        try {
-            Shizuku.removeRequestPermissionResultListener(permissionListener)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
     }
 
     // ── Card construction ───────────────────────────────────────────────────
@@ -606,11 +603,17 @@ class ElevatedAccessActivity : AppCompatActivity() {
             .create()
 
         dialogView.findViewById<View>(R.id.btnAuthorize).setOnClickListener {
-            val requested = ShizukuShellWrapper.requestPermissionSafely(permissionRequestCode, this)
-            if (!requested) {
-                Toast.makeText(this, R.string.shizuku_start_failed, Toast.LENGTH_SHORT).show()
-            }
             dialog.dismiss()
+            lifecycleScope.launch {
+                val state = ShizukuShellWrapper.requestPermission()
+                if (state is PermissionState.Granted) {
+                    refresh()
+                } else if (state is PermissionState.Denied && state.permanentlyDenied) {
+                    Toast.makeText(this@ElevatedAccessActivity, R.string.shizuku_start_failed, Toast.LENGTH_SHORT).show()
+                } else {
+                    refresh()
+                }
+            }
         }
         dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener { dialog.dismiss() }
 
@@ -724,6 +727,13 @@ class ElevatedAccessActivity : AppCompatActivity() {
      * use rather than hiding it in an import that would not exist.
      */
     private fun sendBinderRequestBroadcast(manager: ElevatedManager) {
+        if (manager == ElevatedManager.PORTER) {
+            try {
+                PorterApiProvider.requestBinderForNonProviderProcess(this)
+            } catch (e: Throwable) {
+                Log.w("ElevatedAccess", "requestBinderForNonProviderProcess failed: ${e.message}")
+            }
+        }
         val action = when (manager) {
             ElevatedManager.PORTER -> "eu.darken.porter.sdk.action.BINDER_RECEIVED"
             ElevatedManager.SHIZUKU,
@@ -777,13 +787,6 @@ class ElevatedAccessActivity : AppCompatActivity() {
         val managerTitle = getString(manager.titleRes)
         lifecycleScope.launch {
             ElevatedAccessPreferenceManager.setManagerEnabled(this@ElevatedAccessActivity, manager, false)
-            withContext(Dispatchers.IO) {
-                try {
-                    Shizuku.onBinderReceived(null, packageName)
-                } catch (e: Throwable) {
-                    Log.w("ElevatedAccess", "Binder detach error: ${e.message}")
-                }
-            }
             refresh()
             Toast.makeText(
                 this@ElevatedAccessActivity,
@@ -811,8 +814,8 @@ class ElevatedAccessActivity : AppCompatActivity() {
 
             val isAuth = withContext(Dispatchers.IO) { probe.isAuthorized() }
             if (!isAuth) {
-                val requested = ShizukuShellWrapper.requestPermissionSafely(permissionRequestCode, this@ElevatedAccessActivity)
-                if (!requested) {
+                val state = ShizukuShellWrapper.requestPermission()
+                if (state !is PermissionState.Granted) {
                     openManagerApp(manager)
                 }
             } else {

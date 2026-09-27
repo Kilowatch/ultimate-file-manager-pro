@@ -22,8 +22,8 @@ import kotlinx.coroutines.withContext
  * app that card names, so the user is never sent to a different manager than the one they tapped.
  *
  * [FR-21]/[FR-24] ("which manager is active") is therefore answered at install granularity, not
- * daemon granularity, because that is the granularity the SDK actually reports: `PorterClient`
- * picks its backend by resolving who *defines* `eu.darken.porter.permission.API_V23`, which is
+ * daemon granularity, because that is the granularity the SDK actually reports: `Porter`
+ * picks its backend by resolving who *defines* `eu.darken.porter.permission.API`, which is
  * fixed at install time. It cannot be upgraded to a per-daemon answer from the client side.
  */
 class ElevatedAccessResolver(private val probe: ElevatedAccessProbe) {

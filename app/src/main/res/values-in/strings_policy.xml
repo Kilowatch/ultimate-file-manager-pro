@@ -1281,7 +1281,7 @@ Memungkinkan penemuan perangkat jaringan lokal (NSD/mDNS) untuk pemasangan peran
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED

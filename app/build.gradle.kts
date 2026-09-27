@@ -478,7 +478,8 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.rtsp)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.session)
-    implementation(libs.porter.client)
+    implementation(libs.porter.extras)
+    implementation(libs.porter.shizuku.compat)
     implementation(libs.libsu.core)
     implementation(libs.libsu.nio)
     implementation(libs.lottie)
@@ -532,11 +533,8 @@ licensee {
     allowUrl("https://api.github.com/licenses/lgpl-3.0")
     allowUrl("https://developer.android.com/guide/playcore/license")
     allowUrl("https://github.com/junrar/junrar/blob/master/LICENSE")
-    // The Shizuku-API allowance that used to sit here is gone with the `dev.rikka.shizuku`
-    // dependency it existed for. The Porter SDK needs no entry of its own: its `client` artefact
-    // is SPDX Apache-2.0 (allowed above) and its `aidl`/`api`/`provider`/`shared` siblings resolve
-    // to the opensource.org MIT URL already allowed below. Licensee reports the URL as unused, so
-    // leaving it would be a lie about what ships.
+    // The Porter SDK 0.7.0 needs no extra licensee entry: `sdk` and `sdk-extras` are SPDX Apache-2.0
+    // (allowed above) and `shizuku-compat` / protocol siblings are Apache-2.0 / MIT (allowed above).
 
     ignoreDependencies("com.github.topjohnwu.libsu", "core")
     ignoreDependencies("com.github.topjohnwu.libsu", "nio")

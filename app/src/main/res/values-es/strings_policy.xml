@@ -1281,7 +1281,7 @@ Permite el descubrimiento de dispositivos en la red local (NSD/mDNS) para empare
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED

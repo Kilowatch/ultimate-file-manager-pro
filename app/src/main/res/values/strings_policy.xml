@@ -516,7 +516,7 @@
     <!-- Other permissions (Section 4) -->
     <string-array name="pp_other_perm_labels">
         <item>POST_NOTIFICATIONS</item>
-        <item>moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API_V23</item>
+        <item>moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API</item>
         <item>RECEIVE_BOOT_COMPLETED</item>
         <item>REQUEST_IGNORE_BATTERY_OPTIMIZATIONS</item>
         <item>REQUEST_INSTALL_PACKAGES</item>
