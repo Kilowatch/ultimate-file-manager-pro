@@ -135,7 +135,7 @@ object FileViewerRouter {
 
     // ── Archives ─────────────────────────────────────────────────────────────
     private val ZIP_EXTENSIONS = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.SUPPORTED_ARCHIVE_EXTENSIONS
-    private val PACKAGE_EXTENSIONS = setOf("apk", "xapk", "apks")
+    private val PACKAGE_EXTENSIONS = za.kilowatch.ultimatefilemanager.util.ApkIconHelper.PACKAGE_EXTENSIONS
 
     // ── Audio ─────────────────────────────────────────────────────────────────
     val AUDIO_EXTENSIONS = setOf(

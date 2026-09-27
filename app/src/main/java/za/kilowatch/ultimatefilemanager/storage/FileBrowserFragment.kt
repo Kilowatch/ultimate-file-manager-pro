@@ -3018,7 +3018,7 @@ class FileBrowserFragment : Fragment() {
                 val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                 val sorted = sortAndFilterFiles(visibleFiles)
                 withContext(Dispatchers.Main) {
-                    submitAdapterList(sorted, false, hiddenPaths)
+                    submitAdapterList(sorted, false, hiddenPaths, showHidden)
                 }
             }
             return
@@ -3055,7 +3055,7 @@ class FileBrowserFragment : Fragment() {
                 val visibleFiles = fileList.filter { isFileVisible(it, showHidden, hiddenPaths) }
                 val sorted = sortAndFilterFiles(visibleFiles)
                 withContext(Dispatchers.Main) {
-                    submitAdapterList(sorted, false, hiddenPaths)
+                    submitAdapterList(sorted, false, hiddenPaths, showHidden)
                 }
             }
             return
@@ -3078,7 +3078,7 @@ class FileBrowserFragment : Fragment() {
                 val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                 val sorted = sortAndFilterFiles(visibleFiles)
                 withContext(Dispatchers.Main) {
-                    submitAdapterList(sorted, null, hiddenPaths)
+                    submitAdapterList(sorted, null, hiddenPaths, showHidden)
                 }
             }
         } else {
@@ -3101,7 +3101,7 @@ class FileBrowserFragment : Fragment() {
                                 val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(visibleFiles)
                                 withContext(Dispatchers.Main) {
-                                    submitAdapterList(sorted, false, hiddenPaths)
+                                    submitAdapterList(sorted, false, hiddenPaths, showHidden)
                                 }
                             } else {
                                 val files = fileIndices.map { index ->
@@ -3132,7 +3132,7 @@ class FileBrowserFragment : Fragment() {
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
                                     val isStorageIndexed = za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.isStorageFullyIndexed(storageId)
-                                    submitAdapterList(sorted, isStorageIndexed, hiddenPaths)
+                                    submitAdapterList(sorted, isStorageIndexed, hiddenPaths, showHidden)
                                 }
                             }
                         }
@@ -3161,7 +3161,12 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
-    private fun submitAdapterList(sorted: List<File>, showAllAsIndexed: Boolean?, hiddenPaths: Set<String>) {
+    private fun submitAdapterList(
+        sorted: List<File>,
+        showAllAsIndexed: Boolean?,
+        hiddenPaths: Set<String>,
+        showHidden: Boolean = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+    ) {
         val safeContext = context ?: return
         val currentPath = currentDir.absolutePath
         val oldPath = lastLoadedPath
@@ -3202,9 +3207,9 @@ class FileBrowserFragment : Fragment() {
         val updateAdapter = {
             if (isAdded) {
                 if (showAllAsIndexed != null) {
-                    fileAdapter.submitList(sorted, showAllAsIndexed = showAllAsIndexed, hiddenPaths = hiddenPaths)
+                    fileAdapter.submitList(sorted, showAllAsIndexed = showAllAsIndexed, hiddenPaths = hiddenPaths, showHidden = showHidden)
                 } else {
-                    fileAdapter.submitList(sorted, hiddenPaths = hiddenPaths)
+                    fileAdapter.submitList(sorted, hiddenPaths = hiddenPaths, showHidden = showHidden)
                 }
                 updateEmptyState(sorted.isEmpty())
                 updatePasteFab()
@@ -3393,7 +3398,8 @@ class FileBrowserFragment : Fragment() {
                     newFiles = processed,
                     showAllAsIndexed = isSearchIndexed,
                     hiddenPaths = hiddenPaths,
-                    searchBasePath = currentDir.absolutePath
+                    searchBasePath = currentDir.absolutePath,
+                    showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
                 )
                 updateEmptyState(processed.isEmpty())
             }

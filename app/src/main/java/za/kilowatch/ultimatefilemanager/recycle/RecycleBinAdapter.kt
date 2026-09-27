@@ -21,6 +21,7 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
 import za.kilowatch.ultimatefilemanager.settings.IconTapEditModePreferenceManager
+import za.kilowatch.ultimatefilemanager.util.ApkIconHelper
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import java.io.File
 import java.text.SimpleDateFormat
@@ -215,7 +216,7 @@ class RecycleBinAdapter(
                     )?.asImage()
 
                     val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
-                    val isApk = ext in setOf("apk", "xapk", "apks")
+                    val isApk = ApkIconHelper.isApkOrBundle(ext)
                     val isVideo = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
 
                     when {
@@ -266,7 +267,7 @@ class RecycleBinAdapter(
             } else {
                 val isMedia = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS ||
                     ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS ||
-                    ext in setOf("apk", "xapk", "apks")
+                    ext in ApkIconHelper.PACKAGE_EXTENSIONS
                 if (isMedia) {
                     imgFileIcon.imageTintList = null
                     imgFileIcon.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -419,58 +420,7 @@ class RecycleBinAdapter(
 
         private suspend fun resolveApkIcon(file: File): android.graphics.drawable.Drawable? =
             withContext(Dispatchers.IO) {
-                val ext = file.extension.lowercase()
-                val pm = itemView.context.packageManager
-
-                if (ext == "apk") {
-                    try {
-                        val pi = pm.getPackageArchiveInfo(file.absolutePath, 0)
-                        if (pi != null) {
-                            pi.applicationInfo?.sourceDir = file.absolutePath
-                            pi.applicationInfo?.publicSourceDir = file.absolutePath
-                            pi.applicationInfo?.loadIcon(pm)
-                        } else null
-                    } catch (_: Exception) { null }
-                } else {
-                    val iconBitmap: android.graphics.Bitmap? = try {
-                        java.util.zip.ZipFile(file).use { zip ->
-                            val entry = zip.getEntry("icon.png")
-                            if (entry != null) {
-                                android.graphics.BitmapFactory.decodeStream(zip.getInputStream(entry))
-                            } else null
-                        }
-                    } catch (_: Exception) { null }
-
-                    if (iconBitmap != null) {
-                        android.graphics.drawable.BitmapDrawable(itemView.context.resources, iconBitmap)
-                    } else {
-                        var tempApk: File? = null
-                        try {
-                            tempApk = File(
-                                itemView.context.cacheDir,
-                                "xapk_base_${System.currentTimeMillis()}.apk"
-                            )
-                            java.util.zip.ZipFile(file).use { zip ->
-                                val entry = zip.getEntry("base.apk")
-                                if (entry != null) {
-                                    zip.getInputStream(entry).use { input ->
-                                        tempApk.outputStream().use { output -> input.copyTo(output) }
-                                    }
-                                }
-                            }
-                            if (tempApk.exists() && tempApk.length() > 0L) {
-                                val pi = pm.getPackageArchiveInfo(tempApk.absolutePath, 0)
-                                if (pi != null) {
-                                    pi.applicationInfo?.sourceDir = tempApk.absolutePath
-                                    pi.applicationInfo?.publicSourceDir = tempApk.absolutePath
-                                    pi.applicationInfo?.loadIcon(pm)
-                                } else null
-                            } else null
-                        } catch (_: Exception) { null } finally {
-                            tempApk?.delete()
-                        }
-                    }
-                }
+                ApkIconHelper.resolveIcon(itemView.context, file)
             }
     }
 

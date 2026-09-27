@@ -320,7 +320,7 @@ object MimeTypeHelper {
         "arj"           -> "application/x-arj"
         "ace"           -> "application/x-ace-compressed"
         "apk"           -> "application/vnd.android.package-archive"
-        "xapk", "apks"  -> "application/vnd.android.package-archive"
+        "xapk", "apks", "apkm" -> "application/vnd.android.package-archive"
         "jar", "aar"    -> "application/java-archive"
 
         // ── 10. Code, Web & Scripting ────────────────────────────────────────

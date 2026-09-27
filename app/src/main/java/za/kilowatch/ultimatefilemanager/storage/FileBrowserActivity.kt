@@ -1683,7 +1683,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 if (append) {
                     fileAdapter.appendList(processed)
                 } else {
-                    fileAdapter.submitList(processed, showAllAsIndexed = true, hiddenPaths = hiddenPaths)
+                    fileAdapter.submitList(processed, showAllAsIndexed = true, hiddenPaths = hiddenPaths, showHidden = showHidden)
                     updateEmptyState(processed.isEmpty())
                     applyFileFocus()
                 }
@@ -5525,7 +5525,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
                 withContext(Dispatchers.Main) {
                     submitAdapterList {
-                        fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
+                        fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths, showHidden = showHidden)
                         updateEmptyState(sorted.isEmpty())
                         applyFileFocus()
                     }
@@ -5550,7 +5550,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 val sorted = sortAndFilterFiles(visibleFiles)
                 withContext(Dispatchers.Main) {
                     submitAdapterList {
-                        fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
+                        fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths, showHidden = showHidden)
                         updateEmptyState(sorted.isEmpty())
                         applyFileFocus()
                     }
@@ -5570,7 +5570,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                         .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name }
                 )
                 withContext(Dispatchers.Main) {
-                    fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = emptySet())
+                    fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = emptySet(), showHidden = true)
                     updateEmptyState(sorted.isEmpty())
                 }
             }
@@ -5645,7 +5645,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                         val sorted = sortAndFilterFiles(rawFiles)
                         withContext(Dispatchers.Main) {
                             submitAdapterList {
-                                fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
+                                fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths, showHidden = showHidden)
                                 updateEmptyState(sorted.isEmpty())
                                 applyFileFocus()
                             }
@@ -5684,7 +5684,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 val sorted = sortAndFilterFiles(visibleFiles)
                 withContext(Dispatchers.Main) {
                     submitAdapterList {
-                        fileAdapter.submitList(sorted, indexedPaths = indexedPaths, hiddenPaths = hiddenPaths)
+                        fileAdapter.submitList(sorted, indexedPaths = indexedPaths, hiddenPaths = hiddenPaths, showHidden = showHidden)
                         updateEmptyState(sorted.isEmpty())
                         applyFileFocus()
                     }
@@ -5716,7 +5716,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                                 val sorted = sortAndFilterFiles(visibleFiles)
                                 withContext(Dispatchers.Main) {
                                     submitAdapterList {
-                                        fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
+                                        fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths, showHidden = showHidden)
                                         updateEmptyState(sorted.isEmpty())
                                         applyFileFocus()
                                     }
@@ -5749,7 +5749,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                                 withContext(Dispatchers.Main) {
                                     val isStorageIndexed = za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.isStorageFullyIndexed(storageId)
                                     submitAdapterList {
-                                        fileAdapter.submitList(sorted, showAllAsIndexed = isStorageIndexed, hiddenPaths = hiddenPaths)
+                                        fileAdapter.submitList(sorted, showAllAsIndexed = isStorageIndexed, hiddenPaths = hiddenPaths, showHidden = showHidden)
                                         updateEmptyState(sorted.isEmpty())
                                         applyFileFocus()
                                     }
@@ -5864,7 +5864,8 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                     newFiles = processed,
                     showAllAsIndexed = isSearchIndexed,
                     hiddenPaths = hiddenPaths,
-                    searchBasePath = currentDir.absolutePath
+                    searchBasePath = currentDir.absolutePath,
+                    showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
                 )
                 updateEmptyState(processed.isEmpty())
             }

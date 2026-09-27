@@ -40,7 +40,7 @@ enum class SmartSortCategory(
     APPS(
         folderName = "UFM Apps",
         displayNameResId = R.string.smart_sort_category_apps,
-        extensions = setOf("apk", "xapk", "apks")
+        extensions = za.kilowatch.ultimatefilemanager.util.ApkIconHelper.PACKAGE_EXTENSIONS
     ),
     EBOOKS(
         folderName = "UFM eBooks",

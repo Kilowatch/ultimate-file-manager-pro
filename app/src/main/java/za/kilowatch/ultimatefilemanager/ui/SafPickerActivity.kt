@@ -37,6 +37,7 @@ import za.kilowatch.ultimatefilemanager.network.ShareType
 import za.kilowatch.ultimatefilemanager.storage.StorageItem
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
+import za.kilowatch.ultimatefilemanager.util.ApkIconHelper
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import java.io.File
 
@@ -722,7 +723,7 @@ class SafPickerActivity : AppCompatActivity() {
                 val ext = if (currentShare != null) item.label.substringAfterLast('.', "").lowercase() else file?.extension?.lowercase() ?: ""
                 val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 val isVideo = ext in VIDEO_EXTENSIONS
-                val isApk = ext in listOf("apk", "xapk", "apks")
+                val isApk = ApkIconHelper.isApkOrBundle(ext)
                 val canShowThumb = showThumbnails && !item.isRoot && !item.isDir && (isImage || isVideo || isApk)
 
                 icon.alpha = alpha
@@ -817,7 +818,7 @@ class SafPickerActivity : AppCompatActivity() {
                 val ext = if (currentShare != null) item.label.substringAfterLast('.', "").lowercase() else file?.extension?.lowercase() ?: ""
                 val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 val isVideo = ext in VIDEO_EXTENSIONS
-                val isApk = ext in listOf("apk", "xapk", "apks")
+                val isApk = ApkIconHelper.isApkOrBundle(ext)
                 val canShowThumb = showThumbnails && !item.isRoot && !item.isDir && (isImage || isVideo || isApk)
                 if (!canShowThumb) return
                 hasLoadedThumbnail = true

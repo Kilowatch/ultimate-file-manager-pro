@@ -1821,7 +1821,7 @@ class RecentFilesActivity : AppCompatActivity() {
 
     private fun isArchive(item: RecentFileItem): Boolean {
         val ext = item.displayName.substringAfterLast('.', "").lowercase()
-        return ext in setOf("zip", "7z", "rar", "tar", "gz", "bz2", "xz", "apk", "xapk", "apks")
+        return ext in setOf("zip", "7z", "rar", "tar", "gz", "bz2", "xz", "apk", "xapk", "apks", "apkm")
     }
 
     private fun isDocument(item: RecentFileItem): Boolean {

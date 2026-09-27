@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import za.kilowatch.ultimatefilemanager.network.*
 import za.kilowatch.ultimatefilemanager.network.DlnaShareClient
+import za.kilowatch.ultimatefilemanager.util.ApkIconHelper
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import android.content.Intent
 import java.io.ByteArrayOutputStream
@@ -236,7 +237,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
         val ext = networkFile.name.substringAfterLast('.', "").lowercase()
         val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
         val isVideo = ext in VIDEO_EXTENSIONS
-        val isApk = ext in listOf("apk", "xapk", "apks")
+        val isApk = ApkIconHelper.isApkOrBundle(ext)
         val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
 
         if (!isImage && !isVideo && !isApk && !isAudio) return@withContext null
@@ -534,22 +535,16 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                                         }
                                     }
                                 } else if (isApk) {
-                                    val pm = context.packageManager
-                                    val pi = pm.getPackageArchiveInfo(tempFile.absolutePath, 0)
-                                    if (pi != null) {
-                                        pi.applicationInfo?.sourceDir = tempFile.absolutePath
-                                        pi.applicationInfo?.publicSourceDir = tempFile.absolutePath
-                                        val drawable = pi.applicationInfo?.loadIcon(pm)
-                                        if (drawable != null) {
-                                            finalBitmap = Bitmap.createBitmap(
-                                                drawable.intrinsicWidth.coerceAtLeast(1),
-                                                drawable.intrinsicHeight.coerceAtLeast(1),
-                                                Bitmap.Config.ARGB_8888
-                                            )
-                                            val canvas = android.graphics.Canvas(finalBitmap!!)
-                                            drawable.setBounds(0, 0, canvas.width, canvas.height)
-                                            drawable.draw(canvas)
-                                        }
+                                    val drawable = ApkIconHelper.resolveIcon(context, tempFile)
+                                    if (drawable != null) {
+                                        finalBitmap = Bitmap.createBitmap(
+                                            drawable.intrinsicWidth.coerceAtLeast(1),
+                                            drawable.intrinsicHeight.coerceAtLeast(1),
+                                            Bitmap.Config.ARGB_8888
+                                        )
+                                        val canvas = android.graphics.Canvas(finalBitmap!!)
+                                        drawable.setBounds(0, 0, canvas.width, canvas.height)
+                                        drawable.draw(canvas)
                                     }
                                 } else if (isVideo) {
                                     val pct = VideoThumbnailTimePreferenceManager.getPercent(context)

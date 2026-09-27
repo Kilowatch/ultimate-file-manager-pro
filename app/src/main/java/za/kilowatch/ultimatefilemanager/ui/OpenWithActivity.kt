@@ -201,7 +201,7 @@ class OpenWithActivity : AppCompatActivity() {
     }
 
     private fun isPackageFile(extension: String, mimeType: String): Boolean {
-        return extension in setOf("apk", "xapk", "apks") ||
+        return za.kilowatch.ultimatefilemanager.util.ApkIconHelper.isApkOrBundle(extension) ||
                 mimeType == "application/vnd.android.package-archive"
     }
 

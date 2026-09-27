@@ -2175,7 +2175,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             shareNow = share,
             isTvRoot = isTv && currentPath.isEmpty()
         )
-        fileAdapter.submitList(processed)
+        fileAdapter.submitList(processed, showHidden = showHidden)
         updateEmptyState(processed.isEmpty())
     }
 
@@ -3714,7 +3714,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }
 
         val updateAdapter = {
-            fileAdapter.submitList(displayFiles)
+            fileAdapter.submitList(displayFiles, showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled)
             progressBar.visibility = View.GONE
             if (displayFiles.isEmpty()) layoutEmpty.visibility = View.VISIBLE else recyclerFiles.visibility = View.VISIBLE
             restoreScroll()

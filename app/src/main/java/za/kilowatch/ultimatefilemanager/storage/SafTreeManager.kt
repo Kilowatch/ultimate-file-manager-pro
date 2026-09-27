@@ -559,19 +559,46 @@ object SafTreeManager {
 
     /**
      * Fast child count query without full object instantiation or multi-query overhead.
+     * When [showHidden] is true and [hiddenPaths] is empty, returns the full child count.
+     * Otherwise, inspects display names to filter out junk and hidden files.
      */
-    fun getChildCount(context: Context, path: String): Int {
+    fun getChildCount(
+        context: Context,
+        path: String,
+        showHidden: Boolean = false,
+        hiddenPaths: Set<String> = emptySet()
+    ): Int {
         val norm = normalizePath(path)
         val (treeUri, docId) = resolveTreeAndDocId(context, norm) ?: return 0
         return try {
             val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, docId)
-            context.contentResolver.query(
-                childrenUri,
-                arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID),
-                null, null, null
-            )?.use { cursor ->
-                cursor.count
-            } ?: 0
+            if (showHidden && hiddenPaths.isEmpty()) {
+                context.contentResolver.query(
+                    childrenUri,
+                    arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID),
+                    null, null, null
+                )?.use { cursor ->
+                    cursor.count
+                } ?: 0
+            } else {
+                context.contentResolver.query(
+                    childrenUri,
+                    arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME),
+                    null, null, null
+                )?.use { cursor ->
+                    val nameCol = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+                    var count = 0
+                    while (cursor.moveToNext()) {
+                        val name = if (nameCol >= 0) cursor.getString(nameCol) else ""
+                        val isVisible = showHidden || (
+                            !za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isJunkOrHidden(name) &&
+                            SafFile.combineSafPath(norm, name) !in hiddenPaths
+                        )
+                        if (isVisible) count++
+                    }
+                    count
+                } ?: 0
+            }
         } catch (_: Exception) {
             0
         }

@@ -96,6 +96,20 @@ object PackageInstallerHelper {
                     throw IllegalArgumentException(context.getString(R.string.error_no_apk_in_xapk))
                 }
 
+                // If no specific ABI is forced, select device's preferred ABI to prevent conflicting ABI splits
+                val presentAbis = apkEntries.mapNotNull { entry ->
+                    abiRegex.find(entry.name.substringAfterLast('/'))?.groupValues?.getOrNull(1)
+                }.toSet()
+
+                val targetAbi = forceAbi ?: Build.SUPPORTED_ABIS.firstOrNull { supported ->
+                    val cleanSupported = supported.replace("-", ".").replace("_", ".")
+                    presentAbis.any { present ->
+                        val cleanPresent = present.replace("-", ".").replace("_", ".")
+                        cleanSupported.equals(cleanPresent, ignoreCase = true)
+                    }
+                }
+                val targetAbiPattern = targetAbi?.replace("-", ".")?.replace("_", ".")
+
                 apkEntries.forEach { entry ->
                     val name = entry.name.substringAfterLast('/')
                     
@@ -105,8 +119,11 @@ object PackageInstallerHelper {
                     val include = when {
                         isDensitySplit && forceDpi != null ->
                             name.contains(forceDpi, ignoreCase = true)
-                        isAbiSplit && forceAbi != null ->
-                            name.contains(forceAbi, ignoreCase = true)
+                        isAbiSplit && targetAbiPattern != null ->
+                            abiRegex.find(name)?.groupValues?.getOrNull(1)?.let {
+                                it.replace("-", ".").replace("_", ".").equals(targetAbiPattern, ignoreCase = true)
+                            } == true
+                        isAbiSplit -> true
                         else -> true  // base.apk, language splits, anydpi, unrecognised — always include
                     }
                     if (!include) return@forEach
@@ -285,6 +302,6 @@ object PackageInstallerHelper {
     fun isApk(file: File): Boolean = file.extension.lowercase() == "apk"
     fun isXapk(file: File): Boolean {
         val ext = file.extension.lowercase()
-        return ext == "xapk" || ext == "apks"
+        return ext == "xapk" || ext == "apks" || ext == "apkm"
     }
 }

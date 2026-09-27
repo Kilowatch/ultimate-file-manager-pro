@@ -37,6 +37,7 @@ import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.FileNameDisplayHelper
 import za.kilowatch.ultimatefilemanager.settings.GridTextPositionPreferenceManager
+import za.kilowatch.ultimatefilemanager.util.ApkIconHelper
 import za.kilowatch.ultimatefilemanager.util.AppIconBadgeHelper
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
@@ -311,6 +312,7 @@ class FileAdapter(
     private val hiddenPaths = mutableSetOf<String>()
     private var showAllAsIndexed = false
     private var searchBasePath: String? = null
+    private var showHidden: Boolean = false
     private val childCountCache = mutableMapOf<String, Int>()
     private val folderSizeCache = mutableMapOf<String, Long>()
     private var childCountJob: Job? = null
@@ -399,7 +401,8 @@ class FileAdapter(
         hiddenPaths: Set<String> = emptySet(),
         showAllAsIndexed: Boolean = false,
         storageLabels: Map<String, String> = emptyMap(),
-        searchBasePath: String? = null
+        searchBasePath: String? = null,
+        showHidden: Boolean = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
     ) {
         val filesCopy = newFiles.toList()
         files.clear()
@@ -416,6 +419,11 @@ class FileAdapter(
         this.storageLabels.clear()
         this.storageLabels.putAll(storageLabels)
         this.searchBasePath = searchBasePath
+
+        if (this.showHidden != showHidden) {
+            this.showHidden = showHidden
+            childCountCache.clear()
+        }
 
         // Snapshot each file's metadata (isDirectory / size / lastModified) once, so the
         // RecyclerView bind path below never re-runs File.stat() on the main thread. The
@@ -511,14 +519,18 @@ class FileAdapter(
                     if (!isActive) return@launch
                     val isSafDir = dir is SafFile || (ctx != null && SafTreeManager.isSaf(ctx, dir))
                     val visibleCount = if (isSafDir && ctx != null) {
-                        SafTreeManager.getChildCount(ctx, dir.absolutePath)
+                        SafTreeManager.getChildCount(ctx, dir.absolutePath, showHidden = this@FileAdapter.showHidden, hiddenPaths = this@FileAdapter.hiddenPaths)
                     } else {
                         val children = dir.list()?.toList()
-                        children?.count { subName ->
-                            !za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isJunkOrHidden(subName) &&
-                            SafFile.combineSafPath(dir.absolutePath, subName) !in hiddenPaths &&
-                            File(dir, subName).absolutePath !in hiddenPaths
-                        } ?: 0
+                        if (this@FileAdapter.showHidden) {
+                            children?.size ?: 0
+                        } else {
+                            children?.count { subName ->
+                                !za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isJunkOrHidden(subName) &&
+                                SafFile.combineSafPath(dir.absolutePath, subName) !in this@FileAdapter.hiddenPaths &&
+                                File(dir, subName).absolutePath !in this@FileAdapter.hiddenPaths
+                            } ?: 0
+                        }
                     }
                     counts[dir.absolutePath] = visibleCount
 
@@ -931,7 +943,7 @@ class FileAdapter(
             val ext = file.extension.lowercase()
             val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val isVideo = ext in VIDEO_EXTENSIONS
-            val isApk = ext in listOf("apk", "xapk", "apks")
+            val isApk = ApkIconHelper.isApkOrBundle(ext)
             val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
             val isThumbnail = !file.isDirectoryCached() && showThumbnails && (isImage || isVideo || isApk || (isAudio && !za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(file.absolutePath)))
@@ -969,7 +981,7 @@ class FileAdapter(
             val ext = file.extension.lowercase()
             val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val isVideo = ext in VIDEO_EXTENSIONS
-            val isApk = ext in listOf("apk", "xapk", "apks")
+            val isApk = ApkIconHelper.isApkOrBundle(ext)
             val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
             val isThumbnail = !file.isDirectoryCached() && showThumbnails && (isImage || isVideo || isApk || (isAudio && !za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(file.absolutePath)))
@@ -1239,7 +1251,7 @@ class FileAdapter(
                 val ext = file.extension.lowercase()
                 val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 val isVideo = ext in VIDEO_EXTENSIONS
-                val isApk = ext in listOf("apk", "xapk", "apks")
+                val isApk = ApkIconHelper.isApkOrBundle(ext)
                 val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
                 val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
 
@@ -1941,182 +1953,7 @@ class FileAdapter(
          */
         private suspend fun resolveApkIcon(file: File): android.graphics.drawable.Drawable? =
             withContext(Dispatchers.IO) {
-                val isSaf = file is za.kilowatch.ultimatefilemanager.storage.SafFile ||
-                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(file.absolutePath) ||
-                            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(itemView.context, file.absolutePath)
-                val ext = file.extension.lowercase()
-                val pm = itemView.context.packageManager
-
-                if (isSaf) {
-                    var iconDrawable: android.graphics.drawable.Drawable? = null
-                    // 1. Fast path: try streaming zip for icon without copying full file.
-                    // We collect candidates from all density buckets and pick the best
-                    // (xxhdpi > xhdpi > hdpi > mdpi > ldpi > unknown) to avoid downloading
-                    // the entire APK over the network.
-                    try {
-                        val inStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(itemView.context, file.absolutePath)
-                        if (inStream != null) {
-                            // Density rank: higher = better quality
-                            fun densityRank(name: String): Int = when {
-                                "xxxhdpi" in name -> 6
-                                "xxhdpi"  in name -> 5
-                                "xhdpi"   in name -> 4
-                                "hdpi"    in name -> 3
-                                "mdpi"    in name -> 2
-                                "ldpi"    in name -> 1
-                                else              -> 0
-                            }
-                            fun isIconEntry(n: String) =
-                                n == "icon.png" ||
-                                n == "ic_launcher.png" ||
-                                (n.startsWith("res/mipmap")  && n.endsWith(".png") && "ic_launcher" in n) ||
-                                (n.startsWith("res/drawable") && n.endsWith(".png") && "ic_launcher" in n) ||
-                                n.endsWith("/icon.png")
-
-                            var bestRank = -1
-                            var bestBytes: ByteArray? = null
-
-                            java.util.zip.ZipInputStream(inStream).use { zip ->
-                                var entry = zip.nextEntry
-                                while (entry != null) {
-                                    val n = entry.name.lowercase()
-                                    if (isIconEntry(n)) {
-                                        val rank = densityRank(n)
-                                        if (rank > bestRank) {
-                                            val bytes = zip.readBytes()
-                                            if (bytes.isNotEmpty()) {
-                                                bestRank = rank
-                                                bestBytes = bytes
-                                            }
-                                        }
-                                    }
-                                    entry = zip.nextEntry
-                                }
-                            }
-                            bestBytes?.let { bytes ->
-                                val bmp = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                                if (bmp != null) {
-                                    iconDrawable = android.graphics.drawable.BitmapDrawable(itemView.context.resources, bmp)
-                                }
-                            }
-                        }
-                    } catch (_: Exception) {}
-
-                    if (iconDrawable != null) {
-                        return@withContext iconDrawable
-                    }
-
-                    // 2. Fallback: copy to temp file and let PackageManager parse it
-                    var tempApk: File? = null
-                    try {
-                        tempApk = File(itemView.context.cacheDir, "saf_apk_${System.currentTimeMillis()}.$ext")
-                        val inStream = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.openInputStream(itemView.context, file.absolutePath)
-                        if (inStream != null) {
-                            inStream.use { input ->
-                                tempApk.outputStream().use { output -> input.copyTo(output) }
-                            }
-                            if (ext == "apk") {
-                                val pi = pm.getPackageArchiveInfo(tempApk.absolutePath, 0)
-                                if (pi != null) {
-                                    pi.applicationInfo?.sourceDir = tempApk.absolutePath
-                                    pi.applicationInfo?.publicSourceDir = tempApk.absolutePath
-                                    iconDrawable = pi.applicationInfo?.loadIcon(pm)
-                                }
-                            } else {
-                                val iconBitmap: android.graphics.Bitmap? = try {
-                                    java.util.zip.ZipFile(tempApk).use { zip ->
-                                        val entry = zip.getEntry("icon.png")
-                                        if (entry != null) {
-                                            android.graphics.BitmapFactory.decodeStream(zip.getInputStream(entry))
-                                        } else null
-                                    }
-                                } catch (_: Exception) { null }
-
-                                if (iconBitmap != null) {
-                                    iconDrawable = android.graphics.drawable.BitmapDrawable(itemView.context.resources, iconBitmap)
-                                } else {
-                                    var innerApk: File? = null
-                                    try {
-                                        innerApk = File(itemView.context.cacheDir, "saf_xapk_base_${System.currentTimeMillis()}.apk")
-                                        java.util.zip.ZipFile(tempApk).use { zip ->
-                                            val entry = zip.getEntry("base.apk")
-                                            if (entry != null) {
-                                                zip.getInputStream(entry).use { input ->
-                                                    innerApk.outputStream().use { output -> input.copyTo(output) }
-                                                }
-                                            }
-                                        }
-                                        if (innerApk.exists() && innerApk.length() > 0L) {
-                                            val pi = pm.getPackageArchiveInfo(innerApk.absolutePath, 0)
-                                            if (pi != null) {
-                                                pi.applicationInfo?.sourceDir = innerApk.absolutePath
-                                                pi.applicationInfo?.publicSourceDir = innerApk.absolutePath
-                                                iconDrawable = pi.applicationInfo?.loadIcon(pm)
-                                            }
-                                        }
-                                    } finally {
-                                        innerApk?.delete()
-                                    }
-                                }
-                            }
-                        }
-                    } catch (_: Exception) { null } finally {
-                        tempApk?.delete()
-                    }
-                    return@withContext iconDrawable
-                } else {
-                    if (ext == "apk") {
-                        // Standard APK — PackageManager can parse it directly.
-                        try {
-                            val pi = pm.getPackageArchiveInfo(file.absolutePath, 0)
-                            if (pi != null) {
-                                pi.applicationInfo?.sourceDir = file.absolutePath
-                                pi.applicationInfo?.publicSourceDir = file.absolutePath
-                                pi.applicationInfo?.loadIcon(pm)
-                            } else null
-                        } catch (_: Exception) { null }
-                    } else {
-                        // XAPK / APKS — multi-APK ZIP format; PackageManager can't parse directly.
-                        val iconBitmap: android.graphics.Bitmap? = try {
-                            java.util.zip.ZipFile(file).use { zip ->
-                                val entry = zip.getEntry("icon.png")
-                                if (entry != null) {
-                                    android.graphics.BitmapFactory.decodeStream(zip.getInputStream(entry))
-                                } else null
-                            }
-                        } catch (_: Exception) { null }
-
-                        if (iconBitmap != null) {
-                            android.graphics.drawable.BitmapDrawable(itemView.context.resources, iconBitmap)
-                        } else {
-                            var tempApk: File? = null
-                            try {
-                                tempApk = File(
-                                    itemView.context.cacheDir,
-                                    "xapk_base_${System.currentTimeMillis()}.apk"
-                                )
-                                java.util.zip.ZipFile(file).use { zip ->
-                                    val entry = zip.getEntry("base.apk")
-                                    if (entry != null) {
-                                        zip.getInputStream(entry).use { input ->
-                                            tempApk.outputStream().use { output -> input.copyTo(output) }
-                                        }
-                                    }
-                                }
-                                if (tempApk.exists() && tempApk.length() > 0L) {
-                                    val pi = pm.getPackageArchiveInfo(tempApk.absolutePath, 0)
-                                    if (pi != null) {
-                                        pi.applicationInfo?.sourceDir = tempApk.absolutePath
-                                        pi.applicationInfo?.publicSourceDir = tempApk.absolutePath
-                                        pi.applicationInfo?.loadIcon(pm)
-                                    } else null
-                                } else null
-                            } catch (_: Exception) { null } finally {
-                                tempApk?.delete()
-                            }
-                        }
-                    }
-                }
+                ApkIconHelper.resolveIcon(itemView.context, file)
             }
 
         /**
@@ -2128,7 +1965,7 @@ class FileAdapter(
             val ext = file.extension.lowercase()
             val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val isVideo = ext in VIDEO_EXTENSIONS
-            val isApk = ext in listOf("apk", "xapk", "apks")
+            val isApk = ApkIconHelper.isApkOrBundle(ext)
             val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
 
             if (!isImage && !isVideo && !isApk && !isAudio) {
@@ -2587,7 +2424,7 @@ class FileAdapter(
             val ext = file.extension.lowercase()
             val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val isVideo = ext in VIDEO_EXTENSIONS
-            val isApk = ext in listOf("apk", "xapk", "apks")
+            val isApk = ApkIconHelper.isApkOrBundle(ext)
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)
             val hasThumbnail = !file.isDirectoryCached() && showThumbnails && (isImage || isVideo || isApk)
 

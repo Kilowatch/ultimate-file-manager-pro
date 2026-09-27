@@ -180,7 +180,8 @@ class PremiumShareActivity : AppCompatActivity() {
         // If single APK/XAPK, prompt user
         val isPackage = files.size == 1 && (files[0].name.endsWith(".apk", ignoreCase = true) ||
                 files[0].name.endsWith(".xapk", ignoreCase = true) ||
-                files[0].name.endsWith(".apks", ignoreCase = true))
+                files[0].name.endsWith(".apks", ignoreCase = true) ||
+                files[0].name.endsWith(".apkm", ignoreCase = true))
         if (isPackage) {
             showPremiumApkActionDialog(device, files[0])
         } else {
@@ -303,7 +304,7 @@ class PremiumShareActivity : AppCompatActivity() {
             // Transfer all files
             for (file in transferFiles) {
                 val isApk = file.name.endsWith(".apk", ignoreCase = true)
-                val isXapk = file.name.endsWith(".xapk", ignoreCase = true) || file.name.endsWith(".apks", ignoreCase = true)
+                val isXapk = file.name.endsWith(".xapk", ignoreCase = true) || file.name.endsWith(".apks", ignoreCase = true) || file.name.endsWith(".apkm", ignoreCase = true)
                 val isInstall = installApk && (isApk || isXapk)
                 val remoteDir = if (isInstall) "/data/local/tmp" else "/storage/emulated/0/Download"
 

@@ -2655,7 +2655,7 @@ class NetworkBrowserFragment : Fragment() {
         }
 
         submitAdapterList {
-            fileAdapter.submitList(sortedAndFiltered)
+            fileAdapter.submitList(sortedAndFiltered, showHidden = showHidden)
             layoutEmpty?.visibility = if (sortedAndFiltered.isEmpty()) View.VISIBLE else View.GONE
             val currentFolder = currentPath
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {

@@ -1056,9 +1056,9 @@ class PairingServer(
                 "{\"error\":\"File not found\"}")
         }
         val ext = file.extension.lowercase()
-        if (ext != "xapk" && ext != "apks") {
+        if (ext != "xapk" && ext != "apks" && ext != "apkm") {
             return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json",
-                "{\"error\":\"Not an XAPK/APKS file\"}")
+                "{\"error\":\"Not an XAPK/APKS/APKM file\"}")
         }
 
         val jobId = UUID.randomUUID().toString()

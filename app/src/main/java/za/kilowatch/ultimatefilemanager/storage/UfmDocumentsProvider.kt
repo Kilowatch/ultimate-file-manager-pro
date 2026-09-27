@@ -216,7 +216,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         val ext = displayName.substringAfterLast('.', "").lowercase()
                         val hasThumbnail = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS ||
                                 ext in VIDEO_EXTENSIONS ||
-                                ext in listOf("apk", "xapk", "apks")
+                                za.kilowatch.ultimatefilemanager.util.ApkIconHelper.isApkOrBundle(ext)
                         var flags = if (share.readOnly) 0 else Document.FLAG_SUPPORTS_WRITE or Document.FLAG_SUPPORTS_DELETE or Document.FLAG_SUPPORTS_RENAME
                         if (hasThumbnail) flags = flags or Document.FLAG_SUPPORTS_THUMBNAIL
                         val docId = buildNetDocId(share, path, isOnline)
@@ -1170,7 +1170,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
         val ext = fileName.substringAfterLast('.', "").lowercase()
         val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
         val isVideo = ext in VIDEO_EXTENSIONS
-        val isApk = ext in listOf("apk", "xapk", "apks")
+        val isApk = za.kilowatch.ultimatefilemanager.util.ApkIconHelper.isApkOrBundle(ext)
         if (!isImage && !isVideo && !isApk) return null
 
         val ctx = context ?: return null
@@ -1205,7 +1205,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
         val ext = localFile.extension.lowercase()
         val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
         val isVideo = ext in VIDEO_EXTENSIONS
-        val isApk = ext in listOf("apk", "xapk", "apks")
+        val isApk = za.kilowatch.ultimatefilemanager.util.ApkIconHelper.isApkOrBundle(ext)
         if (!isImage && !isVideo && !isApk) return null
 
         val ctx = context ?: return null
@@ -1234,7 +1234,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
         val hasThumbnail = !file.isDirectory && (
             ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS ||
             ext in VIDEO_EXTENSIONS ||
-            ext in listOf("apk", "xapk", "apks")
+            za.kilowatch.ultimatefilemanager.util.ApkIconHelper.isApkOrBundle(ext)
         )
         var flags   = when {
             share.readOnly  -> 0  // read-only: no write flags at all

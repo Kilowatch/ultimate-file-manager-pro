@@ -500,7 +500,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
             "txt", "csv", "rtf", "odt", "dat",
             "vsd", "vsdx", "pub", "accdb", "mdb"
         )
-        val APK_EXTENSIONS = setOf("apk", "xapk", "apks")
+        val APK_EXTENSIONS = za.kilowatch.ultimatefilemanager.util.ApkIconHelper.PACKAGE_EXTENSIONS
         val TEXT_EXTENSIONS = setOf(
             "txt", "log", "ini", "cfg", "conf", "json", "xml", "yaml", "yml", "md",
             "sh", "bat", "py", "js", "html", "css", "java", "kt", "c", "cpp", "h",

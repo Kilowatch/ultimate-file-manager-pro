@@ -3753,7 +3753,7 @@ class FileServer(
         if (!file.exists() || !file.isFile)
             return jsonResponse(Status.NOT_FOUND, "error" to localizedCtx.getString(R.string.error_file_not_found))
         val ext = file.extension.lowercase()
-        if (ext != "xapk" && ext != "apks")
+        if (ext != "xapk" && ext != "apks" && ext != "apkm")
             return jsonResponse(Status.BAD_REQUEST, "error" to localizedCtx.getString(R.string.error_not_apk_xapk))
 
         val forceDpi = session.parms["forceDpi"]?.takeIf { it.isNotBlank() }
@@ -3791,7 +3791,7 @@ class FileServer(
         val tmpPath  = files["file"] ?: return jsonResponse(Status.BAD_REQUEST, "error" to localizedCtx.getString(R.string.error_no_file_uploaded))
         val fileName = session.parms["file"] ?: return jsonResponse(Status.BAD_REQUEST, "error" to localizedCtx.getString(R.string.error_missing_filename))
         val ext = fileName.substringAfterLast('.', "").lowercase()
-        if (ext != "xapk" && ext != "apks")
+        if (ext != "xapk" && ext != "apks" && ext != "apkm")
             return jsonResponse(Status.BAD_REQUEST, "error" to localizedCtx.getString(R.string.error_not_apk_xapk))
 
         val forceDpi = session.parms["forceDpi"]?.takeIf { it.isNotBlank() }

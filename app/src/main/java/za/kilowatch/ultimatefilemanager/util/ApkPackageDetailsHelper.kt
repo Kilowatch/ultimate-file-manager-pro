@@ -64,9 +64,8 @@ object ApkPackageDetailsHelper {
         val certificateInfo: CertificateInfo?
     )
 
-    fun isApkOrBundle(nameOrPath: String): Boolean {
-        val ext = nameOrPath.substringAfterLast('.', "").lowercase()
-        return ext in setOf("apk", "xapk", "apks", "apkm")
+    fun isApkOrBundle(nameOrPath: String?): Boolean {
+        return ApkIconHelper.isApkOrBundle(nameOrPath)
     }
 
     /**

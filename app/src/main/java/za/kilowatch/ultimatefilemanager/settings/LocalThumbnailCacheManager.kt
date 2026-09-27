@@ -20,6 +20,7 @@ import za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper
 import za.kilowatch.ultimatefilemanager.storage.FileAdapter
 import za.kilowatch.ultimatefilemanager.storage.SafFile
 import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
+import za.kilowatch.ultimatefilemanager.util.ApkIconHelper
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import java.io.File
@@ -56,7 +57,7 @@ class LocalThumbnailCacheManager(private val context: Context) {
 
         val VIDEO_EXTENSIONS = FileViewerRouter.VIDEO_EXTENSIONS
         val IMAGE_EXTENSIONS = FileViewerRouter.IMAGE_EXTENSIONS
-        val APK_EXTENSIONS = setOf("apk", "xapk", "apks")
+        val APK_EXTENSIONS = ApkIconHelper.PACKAGE_EXTENSIONS
         val RAW_EXTENSIONS = setOf("raw", "dng", "cr2", "cr3", "nef", "nrw", "arw", "srf", "sr2", "orf", "rw2", "pef", "raf", "kdc", "dcr", "mos", "mef", "mrw")
 
         /** Max width/height for cached thumbnails. */
@@ -505,60 +506,7 @@ class LocalThumbnailCacheManager(private val context: Context) {
     }
 
     private fun resolveApkIcon(file: File): Drawable? {
-        return try {
-            val isSaf = file is SafFile ||
-                SafTreeManager.isSafPath(file.absolutePath) ||
-                SafTreeManager.hasTreePermissionForPath(context, file.absolutePath)
-
-            if (isSaf) {
-                val inStream = SafTreeManager.openInputStream(context, file.absolutePath) ?: return null
-                var bestRank = -1
-                var bestBytes: ByteArray? = null
-
-                fun densityRank(name: String): Int = when {
-                    "xxxhdpi" in name -> 6
-                    "xxhdpi"  in name -> 5
-                    "xhdpi"   in name -> 4
-                    "hdpi"    in name -> 3
-                    "mdpi"    in name -> 2
-                    "ldpi"    in name -> 1
-                    else              -> 0
-                }
-
-                ZipInputStream(inStream).use { zip ->
-                    var entry = zip.nextEntry
-                    while (entry != null) {
-                        val n = entry.name.lowercase()
-                        val isIcon = n == "icon.png" || n == "ic_launcher.png" ||
-                            (n.startsWith("res/mipmap") && n.endsWith(".png") && "ic_launcher" in n) ||
-                            (n.startsWith("res/drawable") && n.endsWith(".png") && "ic_launcher" in n) ||
-                            n.endsWith("/icon.png")
-                        if (isIcon) {
-                            val rank = densityRank(n)
-                            if (rank > bestRank) {
-                                bestRank = rank
-                                bestBytes = zip.readBytes()
-                                if (rank == 6) break
-                            }
-                        }
-                        zip.closeEntry()
-                        entry = zip.nextEntry
-                    }
-                }
-                if (bestBytes != null && bestBytes!!.isNotEmpty()) {
-                    val bmp = BitmapFactory.decodeByteArray(bestBytes, 0, bestBytes!!.size)
-                    if (bmp != null) return android.graphics.drawable.BitmapDrawable(context.resources, bmp)
-                }
-            }
-
-            val pm = context.packageManager
-            val pi = pm.getPackageArchiveInfo(file.absolutePath, 0) ?: return null
-            pi.applicationInfo?.sourceDir = file.absolutePath
-            pi.applicationInfo?.publicSourceDir = file.absolutePath
-            pi.applicationInfo?.loadIcon(pm)
-        } catch (_: Throwable) {
-            null
-        }
+        return ApkIconHelper.resolveIcon(context, file)
     }
 
     /**

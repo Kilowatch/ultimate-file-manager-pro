@@ -5,6 +5,14 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.5] — 2026-09-27
+
+### Added
+- **APKMirror Bundle (.apkm) Support**: Added full support for APKMirror App Bundles (`.apkm`), including app icon thumbnail extraction, 512px WebP disk and Room DB caching, Android package fallback icons, Smart Sort app categorization, and direct session-based split package installation.
+
+### Fixed
+- **Folder Item Counting with Hidden Files**: Fixed folder child item counter excluding subfolders and files starting with a dot (such as `.thumbnail` or `.nomedia`) when "Show hidden files" is enabled. Synchronized item counting across local, SAF, root, Shizuku, and network/cloud storage in both Standalone and Tabbed/Twin Window modes.
+
 ## [2.1.4] — 2026-09-25
 
 ### Added

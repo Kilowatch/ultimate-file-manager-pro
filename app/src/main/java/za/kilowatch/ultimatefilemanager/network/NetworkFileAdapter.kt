@@ -25,6 +25,7 @@ import android.graphics.Bitmap
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
 import za.kilowatch.ultimatefilemanager.settings.IconTapEditModePreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
+import za.kilowatch.ultimatefilemanager.util.ApkIconHelper
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
 import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailPreferenceManager
@@ -115,6 +116,7 @@ class NetworkFileAdapter(
     }
 
     private var searchBasePath: String? = null
+    private var showHidden: Boolean = false
 
     private val childCountCache = mutableMapOf<String, Int>()
     private var childCountJob: Job? = null
@@ -252,12 +254,19 @@ class NetworkFileAdapter(
         adapterScope.coroutineContext.cancelChildren()
     }
 
-    fun submitList(newFiles: List<NetworkFile>, searchBasePath: String? = null) {
+    fun submitList(
+        newFiles: List<NetworkFile>, 
+        searchBasePath: String? = null,
+        showHidden: Boolean = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+    ) {
         val filesCopy = newFiles.toList()
         files.clear()
         files.addAll(filesCopy)
         this.searchBasePath = searchBasePath
-        childCountCache.clear()
+        if (this.showHidden != showHidden) {
+            this.showHidden = showHidden
+            childCountCache.clear()
+        }
         // Clean up selection if files were removed by a directory reload. Key on the
         // remote `path` only — a file whose metadata changed (size/mtime) is the same
         // item and must stay selected. If anything is dropped, fire onSelectionChanged
@@ -343,8 +352,12 @@ class NetworkFileAdapter(
                             za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, dir.path)
                             za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.listFiles(share, dir.path)
                         }
-                        val visibleCount = rawFiles.count {
-                            !za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isJunkOrHidden(it.name)
+                        val visibleCount = if (this@NetworkFileAdapter.showHidden) {
+                            rawFiles.size
+                        } else {
+                            rawFiles.count {
+                                !za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isJunkOrHidden(it.name)
+                            }
                         }
                         counts[dir.path] = visibleCount
                     } catch (e: Exception) {
@@ -751,7 +764,7 @@ class NetworkFileAdapter(
 
             val ext = file.name.substringAfterLast('.', "").lowercase()
             val imageExts = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
-            val apkExts   = setOf("apk", "xapk", "apks")
+            val apkExts   = ApkIconHelper.PACKAGE_EXTENSIONS
             val isAudio   = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
             val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts || isAudio
             val isThumbnail = !file.isDirectory && isEnabled && (isMedia && (!isAudio || !za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(file.path)))
@@ -1021,7 +1034,7 @@ class NetworkFileAdapter(
             } else {
                 val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 val isVideo = ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS
-                val isApk = ext in listOf("apk", "xapk", "apks")
+                val isApk = ApkIconHelper.isApkOrBundle(ext)
                 val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
                 val isCached = isEnabled && isMedia && (
                     thumbnailPathCache[file.path]?.let { File(it).exists() } == true ||
@@ -1252,7 +1265,7 @@ class NetworkFileAdapter(
             
             val ext = file.name.substringAfterLast('.', "").lowercase()
             val imageExts = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
-            val apkExts   = setOf("apk", "xapk", "apks")
+            val apkExts   = ApkIconHelper.PACKAGE_EXTENSIONS
             val isAudio   = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
             // VIDEO_EXTENSIONS is the single authoritative list shared with NetworkThumbnailCacheManager
             val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts || isAudio
@@ -1506,7 +1519,7 @@ class NetworkFileAdapter(
         private fun applyGridTextColor(file: NetworkFile) {
             val ext = file.name.substringAfterLast('.', "").lowercase()
             val imageExts = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
-            val apkExts   = setOf("apk", "xapk", "apks")
+            val apkExts   = ApkIconHelper.PACKAGE_EXTENSIONS
             val isAudio   = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
             val isEnabled = NetworkThumbnailPreferenceManager.isEnabled(context)
             val isShowingArt = isAudio && (thumbnailPathCache[file.path] != null || za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.getCachedArt(file.path) != null)

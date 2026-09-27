@@ -66,7 +66,7 @@ object FileTypeIconProvider {
             R.drawable.ic_file_presentation
 
         // ── APK (Android packages — distinct robot icon) ──────────────────────
-        "apk", "xapk", "apks" ->
+        "apk", "xapk", "apks", "apkm" ->
             R.drawable.ic_file_apk
 
         // ── Archives / Compressed ─────────────────────────────────────────────
@@ -226,7 +226,7 @@ object FileTypeIconProvider {
         "doc", "docx", "odt", "rtf", "pages", "wpd" -> "file_word"
         "xls", "xlsx", "ods", "csv", "numbers", "tsv" -> "file_spreadsheet"
         "ppt", "pptx", "odp", "key" -> "file_presentation"
-        "apk", "xapk", "apks" -> "file_apk"
+        "apk", "xapk", "apks", "apkm" -> "file_apk"
 
         "zip", "rar", "7z", "tar", "gz", "bz2",
         "xz", "zst", "lz4", "tgz", "tbz2", "jar",

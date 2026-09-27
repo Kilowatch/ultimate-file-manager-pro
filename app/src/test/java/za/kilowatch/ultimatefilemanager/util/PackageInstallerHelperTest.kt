@@ -27,6 +27,8 @@ class PackageInstallerHelperTest {
         assertTrue(PackageInstallerHelper.isXapk(File("test.XAPK")))
         assertTrue(PackageInstallerHelper.isXapk(File("test.apks")))
         assertTrue(PackageInstallerHelper.isXapk(File("test.APKS")))
+        assertTrue(PackageInstallerHelper.isXapk(File("test.apkm")))
+        assertTrue(PackageInstallerHelper.isXapk(File("test.APKM")))
         assertFalse(PackageInstallerHelper.isXapk(File("test.apk")))
         assertFalse(PackageInstallerHelper.isXapk(File("test.zip")))
     }

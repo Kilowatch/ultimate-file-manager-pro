@@ -92,7 +92,7 @@ class PackageInstallerActivity : AppCompatActivity() {
         val ext = file.extension.lowercase()
         if (ext == "apk") {
             PackageInstallerHelper.installApk(this@PackageInstallerActivity, file)
-        } else if (ext == "xapk" || ext == "apks") {
+        } else if (ext == "xapk" || ext == "apks" || ext == "apkm") {
             PackageInstallerHelper.installXapk(this@PackageInstallerActivity, file)
         } else {
             throw IllegalArgumentException("${getString(R.string.error_not_apk_xapk)}: .$ext")
