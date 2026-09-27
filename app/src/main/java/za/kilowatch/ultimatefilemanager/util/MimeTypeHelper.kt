@@ -120,11 +120,14 @@ object MimeTypeHelper {
         "flac"          -> "audio/flac"
         "m4a"           -> "audio/mp4"
 
+        // Video & Streams
+        "ts", "m2ts", "mts", "m2t", "tp", "trp" -> "video/mp2t"
+
         // Modern Code / Config
         "yaml", "yml"   -> "text/yaml"
         "toml"          -> "text/x-toml"
         "json5", "jsonc"-> "application/json"
-        "ts", "tsx"     -> "application/typescript"
+        "tsx"           -> "application/typescript"
         "kt", "kts"     -> "text/x-kotlin"
         "rs"            -> "text/x-rust"
 
@@ -336,7 +339,7 @@ object MimeTypeHelper {
         "html", "htm", "xhtml", "shtml" -> "text/html"
         "css", "scss", "sass", "less" -> "text/css"
         "js", "mjs", "cjs", "jsx" -> "application/javascript"
-        "ts", "tsx"     -> "application/typescript"
+        "tsx"           -> "application/typescript"
         "vue", "svelte" -> "text/html"
         "kt", "kts", "ktm" -> "text/x-kotlin"
         "java", "jav"   -> "text/x-java-source"

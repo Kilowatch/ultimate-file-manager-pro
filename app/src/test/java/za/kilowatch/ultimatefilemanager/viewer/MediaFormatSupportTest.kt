@@ -20,7 +20,7 @@ class MediaFormatSupportTest {
     private val newVideoExtensions = listOf(
         "mjpeg", "mjpg", "mjp",
         "m4v", "qt", "3g2", "3gp2",
-        "m2ts", "mts", "m2t", "tp", "trp",
+        "m2ts", "mts", "m2t", "tp", "trp", "ts",
         "vob", "evo", "mpg", "mpeg", "mpe", "m1v", "m2v", "mpv",
         "f4v", "ogv", "ogm", "rm", "rmvb", "asf", "wm",
         "mxf", "dv", "divx", "xvid", "mk3d"
@@ -85,5 +85,35 @@ class MediaFormatSupportTest {
         val extractorInput = androidx.media3.extractor.DefaultExtractorInput(dataSource, 0, streamBytes.size.toLong())
 
         assertTrue("MjpegExtractor should sniff synthetic JPEG stream", extractor.sniff(extractorInput))
+    }
+
+    @Test
+    fun testTsExtension_resolvesToVideoMimeAndRouting() {
+        assertEquals("video/mp2t", MimeTypeHelper.getOrFallback("ts"))
+        assertEquals("video/mp2t", MimeTypeHelper.getMimeType(java.io.File("sample.ts")))
+        assertTrue("ts should be in VIDEO_EXTENSIONS", "ts" in FileViewerRouter.VIDEO_EXTENSIONS)
+        assertTrue("ts should NOT be in TEXT_EXTENSIONS", "ts" !in FileViewerRouter.TEXT_EXTENSIONS)
+    }
+
+    @Test
+    fun testOnlineStorage_toNetworkShare_preservesAllowInsecureTls() {
+        val onlineInsecure = za.kilowatch.ultimatefilemanager.network.OnlineStorage(
+            id = "webdav_test",
+            provider = za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV,
+            webDavUrl = "https://192.168.1.100:8443",
+            allowInsecureTls = true
+        )
+        val shareInsecure = za.kilowatch.ultimatefilemanager.network.toNetworkShare(onlineInsecure)
+        assertTrue("allowInsecureTls must be preserved as true", shareInsecure.allowInsecureTls)
+        assertEquals("https://192.168.1.100:8443", shareInsecure.host)
+
+        val onlineSecure = za.kilowatch.ultimatefilemanager.network.OnlineStorage(
+            id = "webdav_test2",
+            provider = za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV,
+            webDavUrl = "https://example.com",
+            allowInsecureTls = false
+        )
+        val shareSecure = za.kilowatch.ultimatefilemanager.network.toNetworkShare(onlineSecure)
+        org.junit.Assert.assertFalse("allowInsecureTls must be preserved as false", shareSecure.allowInsecureTls)
     }
 }

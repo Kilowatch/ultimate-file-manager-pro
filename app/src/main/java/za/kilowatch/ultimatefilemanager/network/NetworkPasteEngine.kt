@@ -78,31 +78,7 @@ object NetworkPasteEngine {
                         type = ShareType.TV, host = dev.lastIp, port = dev.lastPort, readOnly = false)
                     else {
                         val online = OnlineStorageRepository.getInstance(appContext).getById(shareId)
-                        if (online != null) NetworkShare(
-                            id = online.id, name = online.displayName,
-                            type = when (online.provider) {
-                                OnlineStorageProvider.ONEDRIVE     -> ShareType.ONEDRIVE
-                                OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                                OnlineStorageProvider.DROPBOX      -> ShareType.DROPBOX
-                                OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
-                                OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
-                                OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
-                                OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
-                            },
-                            host = when (online.provider) {
-                                OnlineStorageProvider.RCLONE -> RCloneShareClient.RCLONE_HOST_MARKER
-                                else -> if (online.isWebDavProvider) online.webDavUrl ?: "" else online.s3Endpoint ?: online.email
-                            },
-                            domain = online.s3Bucket ?: "",
-                            remotePath = online.s3Region ?: "",
-                            username = when (online.provider) {
-                                OnlineStorageProvider.RCLONE -> online.id
-                                else -> if (online.isWebDavProvider) online.webDavUsername ?: "" else online.s3AccessKey ?: online.email
-                            },
-                            password = if (online.isWebDavProvider) online.webDavPassword ?: "" else online.s3SecretKey ?: "",
-                            readOnly = false
-                        )
-                        else null
+                        online?.toNetworkShare()
                     }
                 }
             }

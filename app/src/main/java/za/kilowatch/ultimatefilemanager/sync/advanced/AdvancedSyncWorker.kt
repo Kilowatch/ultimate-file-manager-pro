@@ -21,6 +21,7 @@ import za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
 import za.kilowatch.ultimatefilemanager.network.RCloneShareClient
 import za.kilowatch.ultimatefilemanager.network.S3ShareClient
 import za.kilowatch.ultimatefilemanager.network.ShareType
+import za.kilowatch.ultimatefilemanager.network.toNetworkShare
 import za.kilowatch.ultimatefilemanager.network.SmbShareClient
 import za.kilowatch.ultimatefilemanager.network.SshShareClient
 import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
@@ -135,35 +136,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 val foundOnline = OnlineStorageRepository.getInstance(applicationContext).getById(profile.networkShareId)
                 Log.d(TAG, "Online storage lookup: ${foundOnline?.let { "${it.displayName} (${it.provider})" } ?: "null"}")
                 if (foundOnline != null) {
-                    share = NetworkShare(
-                        id = foundOnline.id,
-                        name = foundOnline.displayName,
-                        type = when (foundOnline.provider) {
-                            OnlineStorageProvider.ONEDRIVE    -> ShareType.ONEDRIVE
-                            OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                            OnlineStorageProvider.DROPBOX      -> ShareType.DROPBOX
-                            OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
-                            OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
-                            OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
-                            OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
-                        },
-                        host = when (foundOnline.provider) {
-                            OnlineStorageProvider.RCLONE -> RCloneShareClient.RCLONE_HOST_MARKER
-                            else -> if (foundOnline.isWebDavProvider) foundOnline.webDavUrl ?: "" else foundOnline.s3Endpoint ?: foundOnline.email
-                        },
-                        port = 0,
-                        username = when (foundOnline.provider) {
-                            OnlineStorageProvider.RCLONE -> foundOnline.id
-                            else -> if (foundOnline.isWebDavProvider) foundOnline.webDavUsername ?: "" else foundOnline.s3AccessKey ?: ""
-                        },
-                        password = when (foundOnline.provider) {
-                            OnlineStorageProvider.RCLONE -> ""
-                            else -> if (foundOnline.isWebDavProvider) foundOnline.webDavPassword ?: "" else foundOnline.s3SecretKey ?: ""
-                        },
-                        domain = foundOnline.s3Bucket ?: "",
-                        remotePath = foundOnline.s3Region ?: "/",
-                        readOnly = false
-                    )
+                    share = foundOnline.toNetworkShare()
                 }
             }
 

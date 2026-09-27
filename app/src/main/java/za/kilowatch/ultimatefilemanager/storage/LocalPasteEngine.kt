@@ -767,29 +767,7 @@ object LocalPasteEngine {
                             if (share == null) {
                                 val onlineStorage = OnlineStorageRepository.getInstance(appContext).getById(item.sourceShareId)
                                 if (onlineStorage != null) {
-                                    share = NetworkShare(
-                                        id = onlineStorage.id,
-                                        name = onlineStorage.displayName,
-                                        type = when (onlineStorage.provider) {
-                                            OnlineStorageProvider.ONEDRIVE     -> ShareType.ONEDRIVE
-                                            OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                                            OnlineStorageProvider.DROPBOX      -> ShareType.DROPBOX
-                                            OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
-                                            OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
-                                            OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
-                                            OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
-                                        },
-                                        host = when (onlineStorage.provider) {
-                                            OnlineStorageProvider.RCLONE -> RCloneShareClient.RCLONE_HOST_MARKER
-                                            else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUrl ?: onlineStorage.email else onlineStorage.s3Endpoint ?: onlineStorage.email
-                                        },
-                                        username = when (onlineStorage.provider) {
-                                            OnlineStorageProvider.RCLONE -> onlineStorage.id
-                                            else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUsername ?: "" else onlineStorage.s3AccessKey ?: ""
-                                        },
-                                        password = if (onlineStorage.isWebDavProvider) onlineStorage.webDavPassword ?: "" else onlineStorage.s3SecretKey ?: "",
-                                        readOnly = false
-                                    )
+                                    share = onlineStorage.toNetworkShare()
                                 }
                             }
 

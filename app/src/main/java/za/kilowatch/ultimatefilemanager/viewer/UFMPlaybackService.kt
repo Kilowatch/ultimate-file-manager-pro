@@ -323,7 +323,8 @@ class UFMPlaybackService : Service() {
         provider: String?,
         remotePath: String?,
         fileSize: Long,
-        isServerMode: Boolean = false
+        isServerMode: Boolean = false,
+        allowInsecureTls: Boolean = false
     ) {
         // Build QueueItems from the path list
         val items = paths.mapIndexed { index, path ->
@@ -355,7 +356,7 @@ class UFMPlaybackService : Service() {
 
         queueManager.setQueue(items, startIndex)
         initialFileSize = fileSize
-        networkShare = provider?.let { buildNetworkShare(shareId, shareHost, shareUsername, shareName, it, remotePath, isServerMode) }
+        networkShare = provider?.let { buildNetworkShare(shareId, shareHost, shareUsername, shareName, it, remotePath, isServerMode, allowInsecureTls) }
 
         playCurrent()
         playbackCallback?.onQueueChanged(queueManager.queue)
@@ -1012,7 +1013,8 @@ class UFMPlaybackService : Service() {
             provider = intent.getStringExtra("provider"),
             remotePath = intent.getStringExtra(NetworkBrowserActivity.EXTRA_REMOTE_PATH),
             fileSize = intent.getLongExtra("initialSize", 0L),
-            isServerMode = intent.getBooleanExtra("isServerMode", false)
+            isServerMode = intent.getBooleanExtra("isServerMode", false),
+            allowInsecureTls = intent.getBooleanExtra("allowInsecureTls", false)
         )
     }
 
@@ -1194,7 +1196,8 @@ class UFMPlaybackService : Service() {
         shareName: String?,
         provider: String,
         remotePathFromIntent: String? = null,
-        isServerMode: Boolean = false
+        isServerMode: Boolean = false,
+        allowInsecureTls: Boolean = false
     ): NetworkShare? {
         // First try to look up the full share from the repository (includes password, port, domain, etc.)
         if (!shareId.isNullOrEmpty()) {
@@ -1214,34 +1217,7 @@ class UFMPlaybackService : Service() {
             val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this)
             val online = onlineRepo.getById(shareId)
             if (online != null) {
-                val mappedShare = NetworkShare(
-                    id = online.id,
-                    name = online.displayName,
-                    type = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> ShareType.ONEDRIVE
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> ShareType.DROPBOX
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> ShareType.AWS_S3
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> ShareType.IDRIVE_E2
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> ShareType.WEBDAV
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> ShareType.WEBDAV
-                    },
-                    host = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE ->
-                            za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
-                        else -> if (online.isWebDavProvider) online.webDavUrl ?: online.email
-                                else online.s3Endpoint ?: online.email
-                    },
-                    username = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> online.id
-                        else -> if (online.isWebDavProvider) online.webDavUsername ?: ""
-                                else online.s3AccessKey ?: ""
-                    },
-                    password = if (online.isWebDavProvider) online.webDavPassword ?: ""
-                              else online.s3SecretKey ?: "",
-                    readOnly = false
-                )
-                return mappedShare
+                return online.toNetworkShare()
             }
         }
 
@@ -1258,7 +1234,8 @@ class UFMPlaybackService : Service() {
             type = type,
             remotePath = remotePathFromIntent ?: "",
             port = 0,
-            isServerMode = isServerMode
+            isServerMode = isServerMode,
+            allowInsecureTls = allowInsecureTls
         )
     }
 

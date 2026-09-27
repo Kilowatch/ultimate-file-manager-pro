@@ -429,6 +429,7 @@ class TwinWindowPlayerFragment : Fragment() {
             // Network file — use UfmMedia3DataSource
             val repo = NetworkShareRepository.getInstance(requireContext())
             var share = repo.getById(shareId!!)
+                ?: za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(requireContext()).getById(shareId!!)?.toNetworkShare()
             if (share?.isServerMode == true && !remotePath.isNullOrEmpty()) {
                 share = share.copy(remotePath = remotePath!!)
             }

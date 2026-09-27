@@ -53,6 +53,7 @@ import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.DlnaDiscovery
 import za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity
+import za.kilowatch.ultimatefilemanager.network.toNetworkShare
 import za.kilowatch.ultimatefilemanager.remote.PinDialogHelper
 import za.kilowatch.ultimatefilemanager.remote.RemoteManageActivity
 import za.kilowatch.ultimatefilemanager.remote.VpnWarningHelper
@@ -530,34 +531,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         if (net != null) {
                             net
                         } else {
-                            val online = onlineRepo.getById(fav.shareId)
-                            if (online != null) {
-                                za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                                    id = online.id,
-                                    name = online.displayName,
-                                    type = when (online.provider) {
-                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
-                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
-                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX
-                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
-                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
-                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                                    },
-                                    host = when (online.provider) {
-                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
-                                        else -> if (online.isWebDavProvider) online.webDavUrl ?: online.email else online.s3Endpoint ?: online.email
-                                    },
-                                    port = 0,
-                                    username = when (online.provider) {
-                                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> online.id
-                                        else -> if (online.isWebDavProvider) online.webDavUsername ?: "" else online.s3AccessKey ?: ""
-                                    },
-                                    password = if (online.isWebDavProvider) online.webDavPassword ?: "" else online.s3SecretKey ?: "",
-                                    remotePath = "/",
-                                    readOnly = false
-                                )
-                            } else null
+                            onlineRepo.getById(fav.shareId)?.toNetworkShare()
                         }
                     }
                 } else null
@@ -4626,34 +4600,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                             if (netShare != null) {
                                 netShare
                             } else {
-                                val onlineShare = onlineRepo.getById(fav.shareId)
-                                if (onlineShare != null) {
-                                    za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                                        id = onlineShare.id,
-                                        name = onlineShare.displayName,
-                                        type = when (onlineShare.provider) {
-                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
-                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
-                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX
-                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
-                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
-                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                                        },
-                                        host = when (onlineShare.provider) {
-                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
-                                            else -> if (onlineShare.isWebDavProvider) onlineShare.webDavUrl ?: onlineShare.email else onlineShare.s3Endpoint ?: onlineShare.email
-                                        },
-                                        port = 0,
-                                        username = when (onlineShare.provider) {
-                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> onlineShare.id
-                                            else -> if (onlineShare.isWebDavProvider) onlineShare.webDavUsername ?: "" else onlineShare.s3AccessKey ?: ""
-                                        },
-                                        password = if (onlineShare.isWebDavProvider) onlineShare.webDavPassword ?: "" else onlineShare.s3SecretKey ?: "",
-                                        remotePath = "/",
-                                        readOnly = false
-                                    )
-                                } else null
+                                onlineRepo.getById(fav.shareId)?.toNetworkShare()
                             }
                         }
                     } else null

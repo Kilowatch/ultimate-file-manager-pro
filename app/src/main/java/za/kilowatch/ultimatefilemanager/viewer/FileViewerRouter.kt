@@ -47,7 +47,7 @@ object FileViewerRouter {
         "xsd", "xsl", "xslt", "plist", "svg",
         // Web
         "html", "htm", "xhtml", "css", "scss", "less", "sass",
-        "js", "mjs", "cjs", "jsx", "ts", "tsx",
+        "js", "mjs", "cjs", "jsx", "tsx",
         // Scripting
         "py", "pyw", "pyx", "pxd", "pyi", "rb", "erb", "rhtml", "rxml", "rjs",
         "rake", "gemspec", "php", "phtml", "php3", "php4", "php5", "php7", "phps", "phpt",

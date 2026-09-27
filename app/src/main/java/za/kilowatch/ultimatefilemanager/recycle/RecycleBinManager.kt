@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.network.NetworkShare
 import za.kilowatch.ultimatefilemanager.network.ShareType
+import za.kilowatch.ultimatefilemanager.network.toNetworkShare
 import java.io.File
 
 object RecycleBinManager {
@@ -595,27 +596,7 @@ object RecycleBinManager {
             val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(appContext)
             val fromOnline = onlineRepo.getById(storageId)
             if (fromOnline != null) {
-                val providerType = when (fromOnline.provider) {
-                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> ShareType.ONEDRIVE
-                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> ShareType.DROPBOX
-                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> ShareType.AWS_S3
-                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> ShareType.IDRIVE_E2
-                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> ShareType.WEBDAV
-                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> ShareType.WEBDAV
-                }
-                return NetworkShare(
-                    id = fromOnline.id,
-                    name = fromOnline.displayName,
-                    type = providerType,
-                    host = if (fromOnline.isWebDavProvider) (fromOnline.webDavUrl ?: fromOnline.email) else (fromOnline.s3Endpoint ?: fromOnline.email),
-                    port = 0,
-                    username = if (fromOnline.isWebDavProvider) (fromOnline.webDavUsername ?: fromOnline.email) else (fromOnline.s3AccessKey ?: fromOnline.email),
-                    password = if (fromOnline.isWebDavProvider) (fromOnline.webDavPassword ?: "") else (fromOnline.s3SecretKey ?: ""),
-                    domain = fromOnline.s3Bucket ?: "",
-                    remotePath = fromOnline.s3Region ?: "/",
-                    readOnly = false
-                )
+                return fromOnline.toNetworkShare()
             }
 
             // Check PairingManager (TV)

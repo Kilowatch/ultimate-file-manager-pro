@@ -628,41 +628,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     finish()
                     return
                 }
-                share = NetworkShare(
-                    id = foundShare.id,
-                    name = foundShare.displayName,
-                    type = when (foundShare.provider) {
-                        OnlineStorageProvider.ONEDRIVE     -> ShareType.ONEDRIVE
-                        OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                        OnlineStorageProvider.DROPBOX      -> ShareType.DROPBOX
-                        OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
-                        OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
-                        OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
-                        OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
-                    },
-                    host = when (foundShare.provider) {
-                        OnlineStorageProvider.RCLONE  -> RCloneShareClient.RCLONE_HOST_MARKER
-                        else -> if (foundShare.isWebDavProvider) foundShare.webDavUrl ?: ""
-                                else foundShare.s3Endpoint ?: foundShare.email
-                    },
-                    port = 0,
-                    username = when (foundShare.provider) {
-                        // Use storage.id as the remote name — it is the section header
-                        // in the encrypted rclone.conf and the name registered via
-                        // config/create in launchRCloneBrowse, so all three are in sync.
-                        OnlineStorageProvider.RCLONE  -> foundShare.id
-                        else -> if (foundShare.isWebDavProvider) foundShare.webDavUsername ?: ""
-                                else foundShare.s3AccessKey ?: foundShare.email
-                    },
-                    password = when {
-                        foundShare.isWebDavProvider -> foundShare.webDavPassword ?: ""
-                        else                        -> foundShare.s3SecretKey ?: ""
-                    },
-                    domain   = foundShare.s3Bucket ?: "",
-                    remotePath = foundShare.s3Region ?: "/",
-                    readOnly = false,
-                    allowInsecureTls = foundShare.allowInsecureTls
-                )
+                share = foundShare.toNetworkShare()
             } else {
                 val foundShare = NetworkShareRepository.getInstance(this).getById(shareId)
                 if (foundShare == null) {
@@ -6093,6 +6059,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             putExtra("shareName", share.name)
             putExtra("provider", share.type.name)
             putExtra("isServerMode", share.isServerMode)
+            putExtra("allowInsecureTls", share.allowInsecureTls)
             putExtra("initialPath", file.path)
             putExtra("initialSize", file.size)
             putExtra("sizesMap", java.util.HashMap(sizesMap))
@@ -6112,6 +6079,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             putExtra("shareHost", share.host)
             putExtra("shareName", share.name)
             putExtra("provider", share.type.name)
+            putExtra("allowInsecureTls", share.allowInsecureTls)
             putExtra("initialPath", file.path)
             putExtra("initialSize", file.size)
             putExtra("sizesMap", java.util.HashMap(sizesMap))

@@ -1853,36 +1853,11 @@ class UFMPlayerActivity : AppCompatActivity() {
             val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this)
             val online = onlineRepo.getById(shareId)
             if (online != null) {
-                return NetworkShare(
-                    id = online.id,
-                    name = online.displayName,
-                    type = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> ShareType.ONEDRIVE
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> ShareType.DROPBOX
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> ShareType.AWS_S3
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> ShareType.IDRIVE_E2
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> ShareType.WEBDAV
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> ShareType.WEBDAV
-                    },
-                    host = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE ->
-                            za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
-                        else -> if (online.isWebDavProvider) online.webDavUrl ?: online.email
-                                else online.s3Endpoint ?: online.email
-                    },
-                    username = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> online.id
-                        else -> if (online.isWebDavProvider) online.webDavUsername ?: ""
-                                else online.s3AccessKey ?: ""
-                    },
-                    password = if (online.isWebDavProvider) online.webDavPassword ?: ""
-                              else online.s3SecretKey ?: "",
-                    readOnly = false
-                )
+                return online.toNetworkShare()
             }
         }
 
+        val allowInsecure = intent.getBooleanExtra("allowInsecureTls", false)
         val type = try { ShareType.valueOf(provider) } catch (_: Exception) { return null }
         return NetworkShare(
             id = shareId ?: "",
@@ -1892,7 +1867,8 @@ class UFMPlayerActivity : AppCompatActivity() {
             type = type,
             remotePath = remotePathFromIntent ?: "",
             port = 0,
-            isServerMode = isServerMode
+            isServerMode = isServerMode,
+            allowInsecureTls = allowInsecure
         )
     }
 
@@ -2164,6 +2140,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         return try {
             NetworkShareRepository.getInstance(this).getAll()
                 .firstOrNull { it.id == shareId }
+                ?: za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this).getById(shareId)?.toNetworkShare()
         } catch (e: Exception) {
             GoRoLog.e("UFMPlayerActivity", "resolveCurrentShare failed", e)
             null

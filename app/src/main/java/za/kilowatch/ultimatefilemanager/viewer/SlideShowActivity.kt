@@ -655,11 +655,13 @@ class SlideShowActivity : AppCompatActivity() {
                         .createMediaSource(MediaItem.fromUri(docUri))
                 } else {
                     var share = NetworkShareRepository.getInstance(context).getById(shareId)
+                        ?: za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(context).getById(shareId)?.toNetworkShare()
                         ?: NetworkShare(
                             id = shareId,
                             host = shareHost,
                             name = shareName,
-                            type = ShareType.valueOf(provider)
+                            type = ShareType.valueOf(provider),
+                            allowInsecureTls = intent.getBooleanExtra("allowInsecureTls", false)
                         )
                     // Server-mode SMB: override remotePath from intent extra
                     if (share.isServerMode && remotePathExtra.isNotEmpty()) {

@@ -612,27 +612,8 @@ class DocumentScannerActivity : AppCompatActivity() {
 
     private suspend fun uploadToNetwork(tempFile: File, shareId: String, netPath: String) {
         var share = NetworkShareRepository.getInstance(this).getById(shareId)
-            ?: OnlineStorageRepository.getInstance(this).getById(shareId)?.let { online ->
-                za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                    id = online.id,
-                    name = online.displayName,
-                    type = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> ShareType.ONEDRIVE
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> ShareType.DROPBOX
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> ShareType.AWS_S3
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> ShareType.IDRIVE_E2
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> ShareType.WEBDAV
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> ShareType.WEBDAV
-                    },
-                    host = online.email,
-                    port = 0,
-                    username = online.email,
-                    password = "",
-                    remotePath = "/",
-                    readOnly = false
-                )
-            } ?: throw java.io.IOException("Network share not found: $shareId")
+            ?: OnlineStorageRepository.getInstance(this).getById(shareId)?.toNetworkShare()
+            ?: throw java.io.IOException("Network share not found: $shareId")
 
         // Server-mode SMB: extract share name from the first segment of netPath
         val fileRemotePath = if (share.isServerMode && netPath.isNotEmpty()) {
