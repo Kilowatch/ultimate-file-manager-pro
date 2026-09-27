@@ -238,25 +238,55 @@ class ChecksumDialogFragment : DialogFragment() {
             val largest = sources.maxByOrNull { it.size }
             val formattedSize = Formatter.formatFileSize(requireContext(), largest?.size ?: 0L)
 
-            val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_folder_confirm, null)
-            val txtMsg = dialogView.findViewById<TextView?>(R.id.txtMessage)
+            val isTv = DeviceUtils.isTvDevice(requireContext())
+            val layoutRes = if (isTv) R.layout.dialog_confirm_action_tv else R.layout.dialog_confirm_action
+            val dialogView = LayoutInflater.from(requireContext()).inflate(layoutRes, null)
+
+            val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialogView.findViewById<ImageView>(R.id.imgHeroIcon)?.setImageResource(R.drawable.ic_warning)
+            dialogView.findViewById<TextView>(R.id.txtTitle)?.text = getString(R.string.checksum_large_file_warning_title)
+            dialogView.findViewById<TextView>(R.id.txtMessage)?.text = getString(R.string.checksum_large_file_warning_msg, formattedSize)
+
             val cbDontAsk = CheckBox(requireContext()).apply {
                 text = getString(R.string.checksum_dont_ask_again)
-                setPadding(0, 16, 0, 0)
+                setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
+                setPadding(0, 8, 0, 16)
+            }
+            val rootLayout = dialogView as? LinearLayout
+            val btnConfirmIndex = rootLayout?.indexOfChild(dialogView.findViewById(R.id.btnConfirm)) ?: -1
+            if (btnConfirmIndex >= 0) {
+                rootLayout?.addView(cbDontAsk, btnConfirmIndex)
+            } else {
+                rootLayout?.addView(cbDontAsk)
             }
 
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.checksum_large_file_warning_title)
-                .setMessage(getString(R.string.checksum_large_file_warning_msg, formattedSize))
-                .setView(cbDontAsk)
-                .setPositiveButton(R.string.ok) { _, _ ->
+            val btnConfirm = dialogView.findViewById<MaterialButton>(R.id.btnConfirm)
+            val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancel)
+
+            btnConfirm?.apply {
+                text = getString(R.string.ok)
+                setOnClickListener {
+                    dialog.dismiss()
                     if (cbDontAsk.isChecked) {
                         ChecksumPreferenceManager.setWarnLargeFiles(requireContext(), false)
                     }
                     startComputation()
                 }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
+            }
+
+            btnCancel?.apply {
+                text = getString(android.R.string.cancel)
+                setOnClickListener {
+                    dialog.dismiss()
+                }
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         } else {
             startComputation()
         }

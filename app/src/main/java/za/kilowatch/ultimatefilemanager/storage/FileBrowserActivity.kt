@@ -6453,17 +6453,20 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             slot.items.any { it.operation == FileClipboard.Operation.MOVE }
         }
         val count = sources.size
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.confirm_add_to_archive_title)
-            .setMessage(getString(R.string.confirm_add_to_archive_msg, count, archiveFile.name))
-            .setPositiveButton(if (isMove) R.string.move_to_archive else R.string.copy_to_archive) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.confirm_add_to_archive_title),
+            message = getString(R.string.confirm_add_to_archive_msg, count, archiveFile.name),
+            iconRes = R.drawable.ic_file_archive,
+            positiveText = getString(if (isMove) R.string.move_to_archive else R.string.copy_to_archive),
+            negativeText = getString(android.R.string.cancel),
+            onPositive = {
                 executeAddFilesToArchive(archiveFile, sources, isMove) {
                     FileClipboard.clear()
                     updatePasteFab()
                 }
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        )
     }
 
     private fun executeAddFilesToArchive(

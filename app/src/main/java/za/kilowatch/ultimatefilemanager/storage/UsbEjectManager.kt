@@ -535,33 +535,36 @@ object UsbEjectManager {
     }
 
     /**
-     * Non-root fallback. Kept on `.setPositiveButton()` / `.setNegativeButton()` rather than
-     * the UFMStandard embedded-button glass dialog: FR-11 leaves the neighbouring
-     * `safely_remove_*` dialogs untouched, and restyling this one alone would make it
-     * inconsistent with the confirm dialog that opens the very same flow.
+     * Non-root fallback guiding the user to Android Storage Settings, styled
+     * according to UFMStandard glass dialog guidelines.
      */
     private suspend fun showStandardSettingsDialog(
         activity: Activity,
         item: StorageItem
     ): Boolean = withContext(Dispatchers.Main) {
+        if (activity.isFinishing || activity.isDestroyed) return@withContext false
+
         suspendCancellableCoroutine { continuation ->
-            val dialog = MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
-                .setTitle(R.string.safely_remove_open_settings_title)
-                .setMessage(R.string.safely_remove_open_settings_desc)
-                .setPositiveButton(R.string.safely_remove_open_settings_btn) { _, _ ->
+            val dialog = za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = activity,
+                title = activity.getString(R.string.safely_remove_open_settings_title),
+                message = activity.getString(R.string.safely_remove_open_settings_desc),
+                iconRes = R.drawable.ic_eject,
+                positiveText = activity.getString(R.string.safely_remove_open_settings_btn),
+                negativeText = activity.getString(R.string.cancel),
+                onPositive = {
                     openSystemStorageSettings(activity)
                     if (continuation.isActive) continuation.resume(true)
-                }
-                .setNegativeButton(R.string.cancel) { _, _ ->
+                },
+                onNegative = {
                     if (continuation.isActive) continuation.resume(false)
                 }
-                .setOnCancelListener {
-                    if (continuation.isActive) continuation.resume(false)
-                }
-                .create()
+            )
 
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            dialog.setOnCancelListener {
+                if (continuation.isActive) continuation.resume(false)
+            }
+
             continuation.invokeOnCancellation {
                 activity.runOnUiThread { dialog.dismiss() }
             }

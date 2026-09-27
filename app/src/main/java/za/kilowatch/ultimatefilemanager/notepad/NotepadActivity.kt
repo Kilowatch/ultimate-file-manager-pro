@@ -404,36 +404,15 @@ class NotepadActivity : AppCompatActivity() {
 
     private fun onNewDocumentPressed() {
         if (isModified) {
-            if (isTv) {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.new_document_warning_title)
-                    .setMessage(R.string.new_document_warning_message)
-                    .setPositiveButton(R.string.btn_discard) { _, _ -> resetToNewDocument() }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show()
-            } else {
-                val dialogView = layoutInflater.inflate(R.layout.dialog_notepad_unsaved, null)
-                val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                    .setView(dialogView)
-                    .setCancelable(true)
-                    .create()
-
-                dialogView.findViewById<TextView>(R.id.txtTitle).text = getString(R.string.new_document_warning_title)
-                dialogView.findViewById<TextView>(R.id.txtMessage).text = getString(R.string.new_document_warning_message)
-                dialogView.findViewById<View>(R.id.btnSaveUnsaved).visibility = View.GONE
-                dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDiscardUnsaved).text = getString(R.string.btn_discard)
-
-                dialogView.findViewById<View>(R.id.btnDiscardUnsaved).setOnClickListener {
-                    dialog.dismiss()
-                    resetToNewDocument()
-                }
-                dialogView.findViewById<View>(R.id.btnCancelUnsaved).setOnClickListener {
-                    dialog.dismiss()
-                }
-
-                dialog.show()
-                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            }
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = this,
+                title = getString(R.string.new_document_warning_title),
+                message = getString(R.string.new_document_warning_message),
+                iconRes = R.drawable.ic_warning,
+                positiveText = getString(R.string.btn_discard),
+                negativeText = getString(android.R.string.cancel),
+                onPositive = { resetToNewDocument() }
+            )
         } else {
             resetToNewDocument()
         }
@@ -487,36 +466,18 @@ class NotepadActivity : AppCompatActivity() {
     }
 
     private fun showClearConfirmDialog() {
-        if (isTv) {
-            AlertDialog.Builder(this)
-                .setTitle(R.string.clear_text_confirm_title)
-                .setMessage(R.string.clear_text_confirm_message)
-                .setPositiveButton(R.string.clear_text) { _, _ ->
-                    editText.text.clear()
-                    isModified = true
-                }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
-        } else {
-            val dialogView = layoutInflater.inflate(R.layout.dialog_notepad_clear, null)
-            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create()
-
-            dialogView.findViewById<View>(R.id.btnClearConfirm).setOnClickListener {
-                dialog.dismiss()
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.clear_text_confirm_title),
+            message = getString(R.string.clear_text_confirm_message),
+            iconRes = R.drawable.ic_delete,
+            positiveText = getString(R.string.clear_text),
+            negativeText = getString(android.R.string.cancel),
+            onPositive = {
                 editText.text.clear()
                 isModified = true
             }
-
-            dialogView.findViewById<View>(R.id.btnCancelClear).setOnClickListener {
-                dialog.dismiss()
-            }
-
-            dialog.show()
-            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        }
+        )
     }
 
     private fun saveInPlace(text: String) {

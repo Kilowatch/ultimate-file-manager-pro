@@ -66,6 +66,26 @@ class EdgeMenuOverlayController(private val activity: Activity) {
         fun onActivityDestroyed(activity: Activity) {
             controllers.remove(activity)?.detach()
         }
+
+        fun open(activity: Activity) {
+            if (DeviceUtils.isTvDevice(activity)) return
+            if (activity.isFinishing) return
+            if (QuickAccessManager.getMode(activity) != QuickAccessManager.MODE_EDGE_MENU) return
+            val controller = controllers.getOrPut(activity) { EdgeMenuOverlayController(activity) }
+            controller.attach()
+            controller.openMenu()
+        }
+
+        fun toggle(activity: Activity) {
+            if (DeviceUtils.isTvDevice(activity)) return
+            if (activity.isFinishing) return
+            val controller = controllers[activity] ?: return
+            if (controller.isOpen) {
+                controller.closeMenu(animate = true)
+            } else {
+                controller.openMenu()
+            }
+        }
     }
 
     private var rootView: EdgeMenuRootLayout? = null
@@ -153,6 +173,18 @@ class EdgeMenuOverlayController(private val activity: Activity) {
         overlay.findViewById<View?>(R.id.btnManageTiles)?.setOnClickListener {
             closeMenu(animate = false)
             activity.startActivity(Intent(activity, FloatingBarManageActivity::class.java))
+        }
+        overlay.findViewById<View?>(R.id.btnEdgeHiddenTiles)?.setOnClickListener {
+            closeMenu(animate = false)
+            if (activity is StorageBrowserActivity) {
+                activity.showManageHiddenTilesSheet()
+            } else {
+                val intent = Intent(activity, StorageBrowserActivity::class.java).apply {
+                    putExtra(StorageBrowserActivity.EXTRA_SHOW_MANAGE_TILES, true)
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+                activity.startActivity(intent)
+            }
         }
         overlay.findViewById<View?>(R.id.btnEdgeSettings)?.setOnClickListener {
             closeMenu(animate = false)
@@ -270,6 +302,11 @@ class EdgeMenuOverlayController(private val activity: Activity) {
             rvItems?.visibility = View.VISIBLE
             layoutEmpty?.visibility = View.GONE
         }
+
+        // 5. Manage Hidden Dashboard Tiles
+        val hiddenCount = TileOrderManager.loadHidden(activity).size
+        root.findViewById<View?>(R.id.btnEdgeHiddenTiles)?.visibility =
+            if (hiddenCount > 0) View.VISIBLE else View.GONE
     }
 
     fun openMenu() {
@@ -277,6 +314,7 @@ class EdgeMenuOverlayController(private val activity: Activity) {
         val card = cardDrawer ?: return
         val scrim = viewScrim ?: return
 
+        refreshConfiguration()
         applyWindowInsetsToDrawer()
 
         isAnimating = true

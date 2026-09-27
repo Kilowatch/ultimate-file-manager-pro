@@ -530,7 +530,29 @@ private fun renderCustomRules(container: LinearLayout?, emptyText: TextView?) {
         card.addView(fRow)
         val aRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; setPadding(48, 4, 0, 0) }
         aRow.addView(com.google.android.material.button.MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply { layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(8, 0, 8, 0) }; text = getString(R.string.smart_sort_edit_rule); textSize = 12f; minimumHeight = 0; setPadding(8, 2, 8, 2); setOnClickListener { showEditRuleDialog(idx, container, emptyText) } })
-        aRow.addView(com.google.android.material.button.MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply { layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(8, 0, 8, 0) }; text = getString(R.string.smart_sort_delete_rule); textSize = 12f; minimumHeight = 0; setPadding(8, 2, 8, 2); setOnClickListener { MaterialAlertDialogBuilder(this@SmartSortTvActivity, R.style.UFM_Dialog).setTitle(R.string.smart_sort_delete_rule_confirm).setIcon(R.drawable.ic_delete).setPositiveButton(R.string.smart_sort_delete_rule) { _, _ -> customRules.removeAt(idx); customCategoryPaths.remove(rule.id); customCategoryShareIds.remove(rule.id); renderCustomRules(container, emptyText) }.setNegativeButton(R.string.cancel, null).show() } })
+        aRow.addView(com.google.android.material.button.MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            layoutParams = android.widget.LinearLayout.LayoutParams(0, android.widget.LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { setMargins(8, 0, 8, 0) }
+            text = getString(R.string.smart_sort_delete_rule)
+            textSize = 12f
+            minimumHeight = 0
+            setPadding(8, 2, 8, 2)
+            setOnClickListener {
+                za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                    context = this@SmartSortTvActivity,
+                    title = getString(R.string.smart_sort_delete_rule),
+                    message = getString(R.string.smart_sort_delete_rule_confirm),
+                    iconRes = R.drawable.ic_delete,
+                    positiveText = getString(R.string.smart_sort_delete_rule),
+                    negativeText = getString(R.string.cancel),
+                    onPositive = {
+                        customRules.removeAt(idx)
+                        customCategoryPaths.remove(rule.id)
+                        customCategoryShareIds.remove(rule.id)
+                        renderCustomRules(container, emptyText)
+                    }
+                )
+            }
+        })
         card.addView(aRow)
         container?.addView(card)
     }

@@ -234,6 +234,28 @@
                         android:ellipsize="end" />
                 </LinearLayout>
 
+                <!-- Manage Hidden Tiles Shortcut (visible when dashboard tiles are hidden) -->
+                <FrameLayout
+                    android:id="@+id/btnEdgeHiddenTiles"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    android:contentDescription="@string/cd_manage_tiles">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_tune"
+                        app:tint="@color/mobile_icon_tint"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
                 <!-- Settings Shortcut -->
                 <FrameLayout
                     android:id="@+id/btnEdgeSettings"

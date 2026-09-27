@@ -291,14 +291,17 @@ class ArchiveProgressDialog(
     }
 
     private fun promptCancellation() {
-        MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
-            .setTitle(R.string.archive_cancel_confirm_title)
-            .setMessage(R.string.archive_cancel_confirm_msg)
-            .setPositiveButton(R.string.action_delete) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = activity,
+            title = activity.getString(R.string.archive_cancel_confirm_title),
+            message = activity.getString(R.string.archive_cancel_confirm_msg),
+            iconRes = R.drawable.ic_warning,
+            positiveText = activity.getString(R.string.action_delete),
+            negativeText = activity.getString(R.string.cancel),
+            onPositive = {
                 dismiss()
                 onCancelListener?.invoke()
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        )
     }
 }

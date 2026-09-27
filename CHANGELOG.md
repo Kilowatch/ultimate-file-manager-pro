@@ -8,9 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.5] — 2026-09-27
 
 ### Added
+- **Main Dashboard Edge Menu Hamburger Trigger**: Added dedicated hamburger menu buttons (`btnEdgeMenuLeft` / `btnEdgeMenuRight`) in the main storage header bar with glassmorphism frosted styling to open the slide-out Edge Swipe Menu directly on tap with haptic feedback.
 - **APKMirror Bundle (.apkm) Support**: Added full support for APKMirror App Bundles (`.apkm`), including app icon thumbnail extraction, 512px WebP disk and Room DB caching, Android package fallback icons, Smart Sort app categorization, and direct session-based split package installation.
 
 ### Changed
+- **Mobile Storage Dashboard Title ("UFM Pro")**: Streamlined mobile main dashboard toolbar title to "UFM Pro" for a cleaner, compact presentation.
+- **Relocated "Manage Hidden Tiles" to Edge Menu**: When Edge Swipe Menu is enabled, hidden dashboard tiles (`ic_tune`) are managed via a dedicated frosted button in the Edge Swipe drawer footer (next to Settings), keeping the main screen toolbar clean and free from clutter.
+- **Edge Swipe Settings & Header Toolbar Synchronization**: When Edge Swipe Menu is active, the redundant top-right Settings gear is automatically hidden from the main screen (since Settings is directly accessible inside the swipe drawer footer). The hamburger button is dynamically aligned to the top-left or top-right matching the user's configured swipe edge, and automatically hides during Tile Edit Mode.
 - **Porter SDK 0.7.0 & Modern Protocol Upgrade**: Migrated elevated access integration from legacy `porter-client` to official Porter SDK `0.7.0` (`porter-sdk`, `porter-extras`, and `porter-shizuku-compat`). Updated permission declarations from `eu.darken.porter.permission.API_V23` to `eu.darken.porter.permission.API`. Replaced deprecated `PorterProvider` and `SelectedShizukuProvider` with official `PorterShizukuApiProvider` for unified Shizuku and Shevery compatibility. Eliminated fragile reflection-based process creation in favor of official `PorterConnection.exec(...)` via suspending coroutines. Modernized `ElevatedAccessProbe` and `ElevatedAccessActivity` to reactively observe `Porter.connection` StateFlow and use suspending permission requests.
 
 ### Fixed

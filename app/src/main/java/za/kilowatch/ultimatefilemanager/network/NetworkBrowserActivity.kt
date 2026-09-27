@@ -7540,10 +7540,14 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
 
     private fun showRestrictedFeatureGuidanceDialog() {
-        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.restricted_feature_dialog_title)
-            .setMessage(R.string.restricted_feature_dialog_desc)
-            .setPositiveButton(R.string.btn_open_settings) { _, _ ->
+        za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+            context = this,
+            title = getString(R.string.restricted_feature_dialog_title),
+            message = getString(R.string.restricted_feature_dialog_desc),
+            iconRes = R.drawable.ic_warning,
+            positiveText = getString(R.string.btn_open_settings),
+            negativeText = getString(R.string.cancel),
+            onPositive = {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     try {
                         val intent = Intent(
@@ -7559,9 +7563,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     }
                 }
             }
-            .setNegativeButton(R.string.cancel, null)
-            .create()
-        dialog.show()
+        )
     }
 
     private fun performTvScreenshot() {

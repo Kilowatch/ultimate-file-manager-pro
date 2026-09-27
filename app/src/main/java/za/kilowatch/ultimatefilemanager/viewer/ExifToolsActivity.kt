@@ -454,12 +454,12 @@ class ExifToolsActivity : AppCompatActivity() {
     }
 
     private fun performBatchClean(options: ExifPrivacyOptions, outputDir: File?) {
-        val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.exif_tab_clean)
-            .setMessage(getString(R.string.exif_cleaning_progress, 1, files.size))
-            .setCancelable(false)
-            .create()
-
+        val progressDialog = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+            this,
+            getString(R.string.exif_tab_clean),
+            getString(R.string.exif_cleaning_progress, 1, files.size),
+            R.drawable.ic_exif_cleaner
+        )
         progressDialog.show()
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -540,12 +540,12 @@ class ExifToolsActivity : AppCompatActivity() {
         val items = renamePreviewAdapter.getItems()
         if (items.isEmpty()) return
 
-        val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.exif_tab_rename)
-            .setMessage(getString(R.string.exif_renaming_progress, 1, items.size))
-            .setCancelable(false)
-            .create()
-
+        val progressDialog = za.kilowatch.ultimatefilemanager.media.MediaOperationProgressDialog(
+            this,
+            getString(R.string.exif_tab_rename),
+            getString(R.string.exif_renaming_progress, 1, items.size),
+            R.drawable.ic_edit
+        )
         progressDialog.show()
 
         lifecycleScope.launch(Dispatchers.IO) {

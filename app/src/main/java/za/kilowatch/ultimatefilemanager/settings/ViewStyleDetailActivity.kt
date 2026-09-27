@@ -311,15 +311,15 @@ class ViewStyleDetailActivity : AppCompatActivity() {
     private fun setupActions() {
         findViewById<MaterialButton>(R.id.btnResetDefault).setOnClickListener {
             val presetName = targetMode.name.replace("LIST_", "List ").replace("GRID_", "Grid ")
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.view_reset_confirm_title)
-                .setMessage(getString(R.string.view_reset_confirm_msg, presetName))
-                .setPositiveButton(R.string.view_reset_to_default) { dialog, _ ->
-                    dialog.dismiss()
-                    resetToDefaults()
-                }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = this,
+                title = getString(R.string.view_reset_confirm_title),
+                message = getString(R.string.view_reset_confirm_msg, presetName),
+                iconRes = R.drawable.ic_warning,
+                positiveText = getString(R.string.view_reset_to_default),
+                negativeText = getString(android.R.string.cancel),
+                onPositive = { resetToDefaults() }
+            )
         }
     }
 
@@ -566,15 +566,15 @@ class ViewStyleDetailActivity : AppCompatActivity() {
 
     private fun handleBack() {
         if (hasUnsavedChanges()) {
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.view_discard_confirm_title)
-                .setMessage(R.string.view_discard_confirm_msg)
-                .setPositiveButton(R.string.remote_btn_yes_delete) { dialog, _ ->
-                    dialog.dismiss()
-                    finish()
-                }
-                .setNegativeButton(R.string.remote_btn_no_cancel, null)
-                .show()
+            za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                context = this,
+                title = getString(R.string.view_discard_confirm_title),
+                message = getString(R.string.view_discard_confirm_msg),
+                iconRes = R.drawable.ic_warning,
+                positiveText = getString(R.string.remote_btn_yes_delete),
+                negativeText = getString(R.string.remote_btn_no_cancel),
+                onPositive = { finish() }
+            )
         } else {
             finish()
         }

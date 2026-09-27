@@ -231,6 +231,8 @@ class StorageBrowserActivity : AppCompatActivity() {
         const val EXTRA_GIF_CREATOR_DEST_PICKER = "extra_gif_creator_dest_picker"
         /** When true, the user is picking a drive (e.g. for Twin Window) */
         const val EXTRA_DRIVE_PICKER = "extra_drive_picker"
+        /** When true, opens the Manage Tiles bottom sheet to restore hidden tiles */
+        const val EXTRA_SHOW_MANAGE_TILES = "extra_show_manage_tiles"
         /** Returned by child activity when the user confirms a sync folder */
         const val RESULT_SELECTED_SYNC_PATH = "result_selected_sync_path"
         /** Returned by child activity â€” the absolute path of the selected local folder */
@@ -637,6 +639,9 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     private var btnAddCustomTile: android.widget.ImageView? = null
     private var btnSettingsGear: android.widget.ImageView? = null
+    private var btnEdgeMenuLeft: android.widget.ImageView? = null
+    private var btnEdgeMenuRight: android.widget.ImageView? = null
+    private var imgToolbarLogo: android.widget.ImageView? = null
 
     private var isEditMode = false
 
@@ -954,6 +959,10 @@ class StorageBrowserActivity : AppCompatActivity() {
             intent.removeExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT)
             showPremiumSnackbar(getString(R.string.storage_unavailable_redirect))
         }
+        if (intent?.getBooleanExtra(EXTRA_SHOW_MANAGE_TILES, false) == true) {
+            intent.removeExtra(EXTRA_SHOW_MANAGE_TILES)
+            showManageHiddenTilesSheet()
+        }
     }
 
     override fun onResume() {
@@ -972,6 +981,10 @@ class StorageBrowserActivity : AppCompatActivity() {
             intent.removeExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT)
             showPremiumSnackbar(getString(R.string.storage_unavailable_redirect))
         }
+        if (intent.getBooleanExtra(EXTRA_SHOW_MANAGE_TILES, false)) {
+            intent.removeExtra(EXTRA_SHOW_MANAGE_TILES)
+            showManageHiddenTilesSheet()
+        }
 
         // Reload in onResume to pick up new network shares or USB mounts instantly
         loadStorageVolumes()
@@ -980,6 +993,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         applyDynamicThemeColors()
         if (!isTv) {
             updateFloatingBarUi()
+            updateHeaderActionButtons()
         }
 
         
@@ -1570,6 +1584,21 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
             toolbar?.addView(btnSettingsGear)
             toolbar?.addView(btnAddCustomTile)
+
+            imgToolbarLogo = findViewById(R.id.imgToolbarLogo)
+            btnEdgeMenuLeft = findViewById(R.id.btnEdgeMenuLeft)
+            btnEdgeMenuLeft?.imageTintList = android.content.res.ColorStateList.valueOf(initialTint)
+            btnEdgeMenuLeft?.setOnClickListener {
+                it.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+                za.kilowatch.ultimatefilemanager.storage.EdgeMenuOverlayController.open(this@StorageBrowserActivity)
+            }
+            btnEdgeMenuRight = findViewById(R.id.btnEdgeMenuRight)
+            btnEdgeMenuRight?.imageTintList = android.content.res.ColorStateList.valueOf(initialTint)
+            btnEdgeMenuRight?.setOnClickListener {
+                it.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+                za.kilowatch.ultimatefilemanager.storage.EdgeMenuOverlayController.open(this@StorageBrowserActivity)
+            }
+            updateHeaderActionButtons()
         } else {
             val pad = (12 * density).toInt()
             val size = (48 * density).toInt()
@@ -1595,16 +1624,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             if (isEditMode) {
                 exitEditMode()
             } else {
-                ManageTilesBottomSheet
-                    .newInstance()
-                    .withTiles(buildAllTilesForSheet())
-                    .withTileIcons(TileIconManager.getAllTileIcons(this))
-                    .withTileIconRes(TileIconManager.getAllTileIconRes(this))
-                    .apply {
-                        onRestored  = { loadStorageVolumes() }
-                        onTileClick = { item -> onStorageTileClicked(item) }
-                    }
-                    .show(supportFragmentManager, ManageTilesBottomSheet.TAG)
+                showManageHiddenTilesSheet()
             }
         }
 
@@ -1901,6 +1921,8 @@ class StorageBrowserActivity : AppCompatActivity() {
         btnImportColorCode?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
         btnAddCustomTile?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
         btnSettingsGear?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnEdgeMenuLeft?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnEdgeMenuRight?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
         if (!isTv) {
             cardFloatingBar?.setCardBackgroundColor(resolveTileBackgroundColor())
             cardFloatingBar?.strokeColor = resolveTileStrokeColor()
@@ -3296,13 +3318,41 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateHeaderActionButtons() {
+        if (isTv) return
+        val isEdgeMenu = za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.getMode(this) ==
+                za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.MODE_EDGE_MENU
+        val isLeft = za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.getEdgePosition(this) ==
+                za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.EDGE_LEFT
+
+        if (isEditMode) {
+            btnAddCustomTile?.visibility = View.GONE
+            btnSettingsGear?.visibility = View.GONE
+            btnEdgeMenuLeft?.visibility = View.GONE
+            btnEdgeMenuRight?.visibility = View.GONE
+            imgToolbarLogo?.visibility = View.VISIBLE
+        } else {
+            btnAddCustomTile?.visibility = View.VISIBLE
+            if (isEdgeMenu) {
+                btnSettingsGear?.visibility = View.GONE
+                btnEdgeMenuLeft?.visibility = if (isLeft) View.VISIBLE else View.GONE
+                btnEdgeMenuRight?.visibility = if (!isLeft) View.VISIBLE else View.GONE
+                imgToolbarLogo?.visibility = if (isLeft) View.GONE else View.VISIBLE
+            } else {
+                btnSettingsGear?.visibility = View.VISIBLE
+                btnEdgeMenuLeft?.visibility = View.GONE
+                btnEdgeMenuRight?.visibility = View.GONE
+                imgToolbarLogo?.visibility = View.VISIBLE
+            }
+        }
+    }
+
     /** Shows or hides the Manage Tiles button (only visible when there are hidden tiles). */
     private fun updateHiddenBadge() {
         val hiddenCount = TileOrderManager.loadHidden(this).size
 
-        // Hide "Create Custom Tile" button in edit mode
-        btnAddCustomTile?.visibility = if (isEditMode) View.GONE else View.VISIBLE
-        btnSettingsGear?.visibility = if (isEditMode) View.GONE else View.VISIBLE
+        // Update header buttons (Add Tile, Settings Gear, Edge Menu Hamburger)
+        updateHeaderActionButtons()
 
         if (isEditMode) {
             // In Edit Mode
@@ -3333,8 +3383,10 @@ class StorageBrowserActivity : AppCompatActivity() {
                 btnManageTiles.setImageResource(R.drawable.ic_tune)
                 btnManageTiles.visibility = if (hiddenCount > 0) View.VISIBLE else View.GONE
             } else {
+                val isEdgeMenu = za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.getMode(this) ==
+                        za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.MODE_EDGE_MENU
                 btnManageTiles.setImageResource(R.drawable.ic_tune)
-                btnManageTiles.visibility = if (hiddenCount > 0) View.VISIBLE else View.GONE
+                btnManageTiles.visibility = if (!isEdgeMenu && hiddenCount > 0) View.VISIBLE else View.GONE
                 btnManageTiles.clearColorFilter()
                 btnManageTiles.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 // Hide color button in normal mode
@@ -3342,6 +3394,19 @@ class StorageBrowserActivity : AppCompatActivity() {
                 btnImportColorCode?.visibility = View.GONE
             }
         }
+    }
+
+    fun showManageHiddenTilesSheet() {
+        ManageTilesBottomSheet
+            .newInstance()
+            .withTiles(buildAllTilesForSheet())
+            .withTileIcons(TileIconManager.getAllTileIcons(this))
+            .withTileIconRes(TileIconManager.getAllTileIconRes(this))
+            .apply {
+                onRestored  = { loadStorageVolumes() }
+                onTileClick = { item -> onStorageTileClicked(item) }
+            }
+            .show(supportFragmentManager, ManageTilesBottomSheet.TAG)
     }
 
     private fun enterEditMode() {

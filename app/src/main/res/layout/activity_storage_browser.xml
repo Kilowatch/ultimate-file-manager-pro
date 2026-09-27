@@ -38,6 +38,22 @@
             android:background="@android:color/transparent"
             app:menu="@menu/menu_storage_browser">
 
+            <!-- Edge Menu Button (Left) -->
+            <ImageView
+                android:id="@+id/btnEdgeMenuLeft"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="start"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_menu"
+                android:contentDescription="@string/quick_access_mode_edge_menu"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_btn_icon_frosted"
+                app:tint="@color/mobile_icon_tint"
+                android:visibility="gone" />
+
             <!-- Custom Title Layout inside Toolbar to guarantee alignment -->
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -47,6 +63,7 @@
                 android:layout_gravity="start">
 
                 <ImageView
+                    android:id="@+id/imgToolbarLogo"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_storage_browser_logo"
@@ -56,7 +73,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/storage_title"
+                    android:text="@string/storage_title_mobile"
                     android:textAppearance="@style/TextAppearance.Material3.TitleMedium.Emphasized"
                     android:textColor="@color/mobile_text_primary"
                     android:letterSpacing="0.01" />
@@ -105,6 +122,22 @@
                 android:padding="8dp"
                 android:src="@drawable/ic_import_code"
                 android:contentDescription="@string/tile_color_import"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_btn_icon_frosted"
+                app:tint="@color/mobile_icon_tint"
+                android:visibility="gone" />
+
+            <!-- Edge Menu Button (Right) -->
+            <ImageView
+                android:id="@+id/btnEdgeMenuRight"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_menu"
+                android:contentDescription="@string/quick_access_mode_edge_menu"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="@drawable/bg_btn_icon_frosted"
