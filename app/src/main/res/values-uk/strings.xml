@@ -298,6 +298,9 @@ Ultimate File Manager Pro
     <string name="storage_title">
 Ultimate File Manager Pro
 </string>
+    <string name="storage_title_mobile">
+UFM Pro
+</string>
     <string name="storage_internal">
 Внутрішнє сховище
 </string>
@@ -8366,6 +8369,18 @@ Dropbox
 </string>
     <string name="dropbox_auth_failed">
 Не вдалося автентифікувати: %1$s
+</string>
+    <string name="dropbox_auth_failed_title">
+Authentication Failed
+</string>
+    <string name="dropbox_auth_failed_subtitle">
+Connection or verification error
+</string>
+    <string name="dropbox_auth_failed_help">
+Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+</string>
+    <string name="dropbox_auth_clock_warning">
+Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
 </string>
     <string name="dropbox_auth_verifying">
 Перевірка коду…

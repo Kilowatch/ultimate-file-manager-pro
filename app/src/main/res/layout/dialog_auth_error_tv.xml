@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Premium TV Policy Blocked dialog.
+<!-- Premium TV Authentication Error dialog.
      Uses yellow-focused indicators for interactive elements. -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="500dp"
+    android:layout_width="520dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_tv_dialog_surface"
@@ -19,32 +19,32 @@
         android:layout_marginBottom="14dp">
 
         <ImageView
-            android:id="@+id/imgPolicyIcon"
+            android:id="@+id/imgErrorIcon"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_lock"
+            android:src="@drawable/ic_warning"
             app:tint="?attr/ufmFocusFill"
             android:contentDescription="@null" />
     </FrameLayout>
 
     <!-- Title -->
     <TextView
-        android:id="@+id/txtPolicyTitle"
+        android:id="@+id/txtErrorTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/policy_blocked_title"
+        android:text="@string/dropbox_auth_failed_title"
         android:textColor="@color/tv_text_primary"
         android:textSize="20sp"
         android:fontFamily="sans-serif-black" />
 
     <TextView
-        android:id="@+id/txtPolicySubtitle"
+        android:id="@+id/txtErrorSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/policy_blocked_subtitle"
+        android:text="@string/dropbox_auth_failed_subtitle"
         android:textColor="?attr/ufmFocusFill"
         android:textSize="13sp"
         android:textAllCaps="true"
@@ -53,33 +53,39 @@
 
     <!-- Body text -->
     <TextView
-        android:id="@+id/txtPolicyMessage"
+        android:id="@+id/txtErrorMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/policy_blocked_message"
+        android:layout_marginBottom="16dp"
+        android:text="@string/dropbox_auth_failed_help"
         android:textColor="@color/tv_text_secondary"
         android:textSize="14sp"
         android:gravity="center"
         android:lineSpacingExtra="2dp" />
 
-    <!-- Technical Details (Optional) -->
-    <TextView
-        android:id="@+id/txtPolicyDetails"
+    <!-- Technical Details (Scrollable if needed) -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:padding="10dp"
-        android:background="#20FFFFFF"
-        android:textColor="#80FFFFFF"
-        android:textSize="12sp"
-        android:fontFamily="monospace"
-        android:visibility="gone" />
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/txtErrorDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="#20FFFFFF"
+            android:textColor="#CCFFFFFF"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:textIsSelectable="true" />
+    </androidx.core.widget.NestedScrollView>
 
     <!-- OK Button (TV focusable) -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPolicyOk"
+        android:id="@+id/btnErrorOk"
         style="@style/TvContinueButton"
         android:layout_width="180dp"
         android:layout_height="48dp"

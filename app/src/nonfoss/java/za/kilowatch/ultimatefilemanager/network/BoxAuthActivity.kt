@@ -235,7 +235,9 @@ class BoxAuthActivity : AppCompatActivity() {
                 finish()
             } catch (e: Exception) {
                 GoRoLog.e("BoxAuth", "Token exchange or userinfo failed", e)
-                showAuthErrorDialog("Auth failed: ${e.message}")
+                val isPolicy = e.message?.contains("policy", ignoreCase = true) == true ||
+                               e.message?.contains("restricted", ignoreCase = true) == true
+                showAuthErrorDialog("Auth failed: ${e.message}", isPolicyBlocked = isPolicy)
             }
         }
     }
@@ -267,7 +269,7 @@ class BoxAuthActivity : AppCompatActivity() {
         gson.fromJson(response.bodyString, JsonObject::class.java)
     }
 
-    private fun showAuthErrorDialog(message: String) {
+    private fun showAuthErrorDialog(message: String, isPolicyBlocked: Boolean = false) {
         if (isFinishing || isDestroyed) return
 
         val dialogView = layoutInflater.inflate(R.layout.dialog_policy_blocked, null)
@@ -278,7 +280,13 @@ class BoxAuthActivity : AppCompatActivity() {
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialogView.findViewById<android.widget.TextView>(R.id.txtPolicyDetails)?.text = message
+        if (!isPolicyBlocked) {
+            dialogView.findViewById<android.widget.TextView>(R.id.txtPolicyTitle)?.setText(R.string.add_online_storage_title)
+            dialogView.findViewById<android.widget.TextView>(R.id.txtPolicySubtitle)?.visibility = View.GONE
+        }
+        val txtDetails = dialogView.findViewById<android.widget.TextView>(R.id.txtPolicyDetails)
+        txtDetails?.text = message
+        txtDetails?.visibility = View.VISIBLE
         dialogView.findViewById<View>(R.id.btnPolicyOk).setOnClickListener {
             dialog.dismiss()
             finish()

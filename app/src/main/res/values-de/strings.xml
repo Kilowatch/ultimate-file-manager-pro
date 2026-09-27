@@ -298,6 +298,9 @@ Speicher
     <string name="storage_title">
 Ultimate File Manager Pro
 </string>
+    <string name="storage_title_mobile">
+UFM Pro
+</string>
     <string name="storage_internal">
 Interner Speicher
 </string>
@@ -8367,6 +8370,10 @@ Erfolgreich mit Dropbox verbunden
     <string name="dropbox_auth_failed">
 Authentifizierung fehlgeschlagen: %1$s
 </string>
+    <string name="dropbox_auth_failed_title">Anmeldung fehlgeschlagen</string>
+    <string name="dropbox_auth_failed_subtitle">Verbindungs- oder Überprüfungsfehler</string>
+    <string name="dropbox_auth_failed_help">Der Autorisierungscode konnte bei Dropbox nicht validiert werden. Bitte prüfen Sie, ob der Code korrekt eingegeben wurde, noch gültig ist und Datum/Uhrzeit Ihres Geräts stimmen.</string>
+    <string name="dropbox_auth_clock_warning">Gerätedatum/Uhrzeit ungenau. Das Systemdatum Ihres Fernsehers liegt in der Vergangenheit, wodurch keine sichere Verbindung zu Dropbox aufgebaut werden kann. Bitte korrigieren Sie Datum und Uhrzeit in den Android-TV-Einstellungen.</string>
     <string name="dropbox_auth_verifying">
 Code wird überprüft…
 </string>

@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Porter SDK 0.7.0 & Modern Protocol Upgrade**: Migrated elevated access integration from legacy `porter-client` to official Porter SDK `0.7.0` (`porter-sdk`, `porter-extras`, and `porter-shizuku-compat`). Updated permission declarations from `eu.darken.porter.permission.API_V23` to `eu.darken.porter.permission.API`. Replaced deprecated `PorterProvider` and `SelectedShizukuProvider` with official `PorterShizukuApiProvider` for unified Shizuku and Shevery compatibility. Eliminated fragile reflection-based process creation in favor of official `PorterConnection.exec(...)` via suspending coroutines. Modernized `ElevatedAccessProbe` and `ElevatedAccessActivity` to reactively observe `Porter.connection` StateFlow and use suspending permission requests.
 
 ### Fixed
+- **Dropbox Android TV Authentication & Error Dialogs**:
+  - Fixed an issue where Dropbox manual code authentication failures on Android TV were misidentified as enterprise policy (MDM/Intune) blocks.
+  - Introduced a dedicated TV authentication error dialog (`dialog_auth_error_tv.xml`) that displays transparent status descriptions and keeps scrollable technical error details (`txtErrorDetails`) visible.
+  - Added PKCE `codeVerifier` state preservation across on-screen keyboard (IME) launches and activity recreation in `DropboxManualCodeAuthActivity`.
+  - Added system clock skew validation on Android TV to warn users if an unsynchronized post-factory reset device date/time is preventing secure TLS/OAuth connections.
+  - Decoupled enterprise policy dialogs across `DropboxAuthActivity`, `GoogleDriveAuthActivity`, and `BoxAuthActivity` so standard OAuth, network, and token exchange failures display accurate error details rather than assuming policy restrictions.
 - **NFS Media Streaming & Playback (`LibNfsClient`, `LibNfsBridge`, `nfs_jni.c`, `NfsShareClient`)**:
   - Fixed media files (`wav`, `mp3`, `mkv`, `mp4`, etc.) failing to stream or stalling indefinitely on "Buffering" in the internal player (`UfmMedia3DataSource`) and producing a black screen in external players via `NetworkHttpProxyServer`.
   - Implemented safe 64 KB chunking in `LibNfsRandomAccess.read()` and `write()`, preventing large block reads (up to 8 MB) from overwhelming native JNI heap allocation and triggering synchronous RPC socket timeouts.

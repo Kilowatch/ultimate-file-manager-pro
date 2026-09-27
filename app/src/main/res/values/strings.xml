@@ -2911,6 +2911,10 @@
     <string name="dropbox_auth_waiting">Connecting to Dropbox…</string>
     <string name="dropbox_auth_success">Connected successfully to Dropbox</string>
     <string name="dropbox_auth_failed">Failed to authenticate: %1$s</string>
+    <string name="dropbox_auth_failed_title">Authentication Failed</string>
+    <string name="dropbox_auth_failed_subtitle">Connection or verification error</string>
+    <string name="dropbox_auth_failed_help">Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.</string>
+    <string name="dropbox_auth_clock_warning">Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.</string>
     <string name="dropbox_auth_verifying">Verifying code…</string>
     <string name="gdrive_premium_title">Google Drive Notice</string>
     <string name="gdrive_premium_message">Due to Google security policies, UFM Pro can only access files that have been created or opened within this app. To view all your Google Drive files, please use the official Google Drive app.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\nWould you like to continue?</string>

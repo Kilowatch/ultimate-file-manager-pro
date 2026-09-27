@@ -298,6 +298,9 @@ Ultimate File Manager Pro
     <string name="storage_title">
 Ultimate File Manager Pro
 </string>
+    <string name="storage_title_mobile">
+UFM Pro
+</string>
     <string name="storage_internal">
 التخزين الداخلي
 </string>
@@ -8367,6 +8370,18 @@ Dropbox
     <string name="dropbox_auth_failed">
 فشل التوثيق: %1$s
 </string>
+    <string name="dropbox_auth_failed_title">
+Authentication Failed
+</string>
+    <string name="dropbox_auth_failed_subtitle">
+Connection or verification error
+</string>
+    <string name="dropbox_auth_failed_help">
+Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+</string>
+    <string name="dropbox_auth_clock_warning">
+Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+</string>
     <string name="dropbox_auth_verifying">
 جارٍ التحقق من الرمز...
 </string>
@@ -9360,6 +9375,38 @@ URL الخادم (مثل: https://cloud.example.com/…)
 </string>
     <string name="webdav_setup_http_warning_cancel">
 إلغاء
+</string>
+
+    <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
+    <string name="webdav_setup_allow_insecure_tls">
+Allow untrusted / self-signed certificate
+</string>
+    <string name="webdav_setup_allow_insecure_tls_sub">
+Accept self-signed or private CA SSL certificates (common on local NAS devices)
+</string>
+    <string name="webdav_setup_password_keep_hint">
+Password (leave blank to keep current)
+</string>
+    <string name="webdav_cert_dialog_title">
+Untrusted SSL Certificate
+</string>
+    <string name="webdav_cert_dialog_msg">
+The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+</string>
+    <string name="webdav_cert_dialog_subject">
+Subject
+</string>
+    <string name="webdav_cert_dialog_issuer">
+Issuer
+</string>
+    <string name="webdav_cert_dialog_valid">
+Validity
+</string>
+    <string name="webdav_cert_dialog_fingerprint">
+SHA-256 Fingerprint
+</string>
+    <string name="webdav_cert_dialog_trust">
+Trust &amp; Connect
 </string>
 
     <!-- About Section -->

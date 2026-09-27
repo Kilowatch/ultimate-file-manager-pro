@@ -14,6 +14,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -132,7 +133,7 @@ class DropboxAuthActivity : AppCompatActivity() {
     private fun handleRedirect(data: Uri) {
         val error = data.getQueryParameter("error")
         if (error != null) {
-            showAuthErrorDialog("OAuth error: $error")
+            showAuthErrorDialog("OAuth error: $error", isPolicyBlocked = false)
             return
         }
         // Sometimes Dropbox passes the code back using the 'oauth_token' or 'code' query parameter
@@ -167,7 +168,9 @@ class DropboxAuthActivity : AppCompatActivity() {
                 finish()
             } catch (e: Exception) {
                 GoRoLog.e("DropboxAuth", "Token exchange failed", e)
-                showAuthErrorDialog(getString(R.string.dropbox_auth_failed, e.message))
+                val isPolicy = e.message?.contains("policy", ignoreCase = true) == true ||
+                               e.message?.contains("restricted", ignoreCase = true) == true
+                showAuthErrorDialog(getString(R.string.dropbox_auth_failed, e.message), isPolicyBlocked = isPolicy)
             }
         }
     }
@@ -187,7 +190,18 @@ class DropboxAuthActivity : AppCompatActivity() {
             formFields = formParams
         )
         val body = response.bodyString
-        if (!response.isSuccessful) throw IOException("Token exchange failed (${response.statusCode}): $body")
+        if (!response.isSuccessful) {
+            var detail = body
+            try {
+                val json = gson.fromJson(body, JsonObject::class.java)
+                val err = json.get("error")?.asString
+                val desc = json.get("error_description")?.asString
+                if (!err.isNullOrBlank()) {
+                    detail = if (!desc.isNullOrBlank()) "$err: $desc" else err
+                }
+            } catch (_: Exception) {}
+            throw IOException("Token exchange failed (${response.statusCode}): $detail")
+        }
         gson.fromJson(body, JsonObject::class.java)
     }
 
@@ -201,10 +215,14 @@ class DropboxAuthActivity : AppCompatActivity() {
         gson.fromJson(response.bodyString, JsonObject::class.java)
     }
 
-    private fun showAuthErrorDialog(message: String, isPolicyBlocked: Boolean = true) {
+    private fun showAuthErrorDialog(message: String, isPolicyBlocked: Boolean = false) {
         if (isFinishing || isDestroyed) return
 
-        val layoutId = if (isTv) R.layout.dialog_policy_blocked_tv else R.layout.dialog_policy_blocked
+        val layoutId = if (isTv) {
+            if (isPolicyBlocked) R.layout.dialog_policy_blocked_tv else R.layout.dialog_auth_error_tv
+        } else {
+            R.layout.dialog_policy_blocked
+        }
         val dialogView = layoutInflater.inflate(layoutId, null)
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setCancelable(true)
@@ -213,27 +231,50 @@ class DropboxAuthActivity : AppCompatActivity() {
 
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        if (!isPolicyBlocked) {
-            dialogView.findViewById<TextView>(R.id.txtPolicyTitle)?.setText(R.string.add_online_storage_title)
-        }
-        dialogView.findViewById<TextView>(R.id.txtPolicyDetails)?.text = message
-        dialogView.findViewById<View>(R.id.btnPolicyOk).setOnClickListener {
-            dialog.dismiss()
-            finish()
-        }
-
-        if (isTv) {
-            val btnOk = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPolicyOk)
+        if (isTv && !isPolicyBlocked) {
+            dialogView.findViewById<TextView>(R.id.txtErrorMessage)?.text = message
+            val btnOk = dialogView.findViewById<MaterialButton>(R.id.btnErrorOk)
+            btnOk.setOnClickListener {
+                dialog.dismiss()
+                finish()
+            }
             btnOk.setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
                     v.setBackgroundColor(ColorblindPalette.focusFill(this))
-                    (v as com.google.android.material.button.MaterialButton).setTextColor(ColorblindPalette.focusFillText(this))
+                    (v as MaterialButton).setTextColor(ColorblindPalette.focusFillText(this))
                 } else {
                     v.setBackgroundColor(getColor(R.color.tv_glass_white_10))
-                    (v as com.google.android.material.button.MaterialButton).setTextColor(getColor(R.color.tv_text_primary))
+                    (v as MaterialButton).setTextColor(getColor(R.color.tv_text_primary))
                 }
             }
             btnOk.requestFocus()
+        } else {
+            if (!isPolicyBlocked) {
+                dialogView.findViewById<TextView>(R.id.txtPolicyTitle)?.setText(R.string.add_online_storage_title)
+                dialogView.findViewById<TextView>(R.id.txtPolicySubtitle)?.visibility = View.GONE
+                dialogView.findViewById<TextView>(R.id.txtPolicyMessage)?.setText(R.string.dropbox_auth_failed_help)
+            }
+            val txtDetails = dialogView.findViewById<TextView>(R.id.txtPolicyDetails)
+            txtDetails?.text = message
+            txtDetails?.visibility = View.VISIBLE
+            dialogView.findViewById<View>(R.id.btnPolicyOk).setOnClickListener {
+                dialog.dismiss()
+                finish()
+            }
+
+            if (isTv) {
+                val btnOk = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPolicyOk)
+                btnOk.setOnFocusChangeListener { v, hasFocus ->
+                    if (hasFocus) {
+                        v.setBackgroundColor(ColorblindPalette.focusFill(this))
+                        (v as com.google.android.material.button.MaterialButton).setTextColor(ColorblindPalette.focusFillText(this))
+                    } else {
+                        v.setBackgroundColor(getColor(R.color.tv_glass_white_10))
+                        (v as com.google.android.material.button.MaterialButton).setTextColor(getColor(R.color.tv_text_primary))
+                    }
+                }
+                btnOk.requestFocus()
+            }
         }
         dialog.show()
     }
