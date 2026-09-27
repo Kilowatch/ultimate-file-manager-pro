@@ -25,9 +25,6 @@ object ShizukuShellWrapper {
      */
     const val PORTER_PACKAGE = "eu.darken.porter"
 
-    @Volatile
-    private var cachedPrimaryPrefix: String? = null
-    private val cachedSdPrefixes = java.util.concurrent.ConcurrentHashMap<String, String>()
 
     fun isShizukuInstalled(context: android.content.Context): Boolean {
         return try {
@@ -143,6 +140,9 @@ object ShizukuShellWrapper {
         return true
     }
 
+    private val cachedPrimaryPrefixes = java.util.concurrent.ConcurrentHashMap<String, String>()
+    private val cachedSdPrefixes = java.util.concurrent.ConcurrentHashMap<String, String>()
+
     fun isProtectedPath(path: String): Boolean {
         return path.contains("/Android/data") || path.contains("/Android/obb")
     }
@@ -152,70 +152,133 @@ object ShizukuShellWrapper {
     }
 
     /**
+     * Extracts the Android multi-user ID from a given path (e.g. /storage/emulated/10 -> "10").
+     * Defaults to primary user "0" if unparseable.
+     */
+    fun extractUserId(path: String): String {
+        val emulatedMatch = Regex("^/storage/emulated/(\\d+)").find(path)
+        if (emulatedMatch != null) return emulatedMatch.groupValues[1]
+        val userMatch = Regex("^/mnt/user/(\\d+)").find(path)
+        if (userMatch != null) return userMatch.groupValues[1]
+        val passThroughMatch = Regex("^/mnt/pass_through/(\\d+)").find(path)
+        if (passThroughMatch != null) return passThroughMatch.groupValues[1]
+        val runtimeMatch = Regex("^/mnt/runtime/[^/]+/emulated/(\\d+)").find(path)
+        if (runtimeMatch != null) return runtimeMatch.groupValues[1]
+        return "0"
+    }
+
+    /**
      * Resolves the working path for shell commands.
      * On Android 11-14+, accessing `/storage/emulated/0/Android/data/<pkg>` via FUSE is blocked
-     * by MediaProvider isolation. We route through pass-through mount points where UID 2000 has access.
+     * by MediaProvider isolation. We route through pass-through or runtime mount points where UID 2000 has access.
      */
     fun getWorkingPath(path: String): String {
         if (!isProtectedPath(path)) return path
 
-        // Primary emulated storage (/storage/emulated/0 or /sdcard)
+        val userId = extractUserId(path)
+
+        // Primary emulated storage (/storage/emulated/<userId>, /sdcard, etc.)
+        val emulatedPrefix = "/storage/emulated/$userId"
         val primaryMatch = when {
+            path.startsWith(emulatedPrefix) -> path.removePrefix(emulatedPrefix)
             path.startsWith("/storage/emulated/0") -> path.removePrefix("/storage/emulated/0")
             path.startsWith("/sdcard") -> path.removePrefix("/sdcard")
+            path.startsWith("/storage/self/primary") -> path.removePrefix("/storage/self/primary")
+            path.startsWith("/mnt/sdcard") -> path.removePrefix("/mnt/sdcard")
             else -> null
         }
 
         if (primaryMatch != null) {
-            val prefix = resolvePrimaryPrefix()
+            val prefix = resolvePrimaryPrefix(userId)
             return "$prefix$primaryMatch"
         }
 
-        // Secondary SD card (/storage/XXXX-XXXX/...)
-        val sdMatch = Regex("^/storage/([A-Fa-f0-9]{4}-[A-Fa-f0-9]{4})(.*)").find(path)
+        // Secondary SD card / USB drive (/storage/<uuid>/...)
+        val sdMatch = Regex("^/storage/([^/]+)(/.*)?").find(path)
         if (sdMatch != null) {
             val uuid = sdMatch.groupValues[1]
             val sub = sdMatch.groupValues[2]
-            val prefix = resolveSdPrefix(uuid)
-            return "$prefix$sub"
+            if (uuid != "emulated" && uuid != "self") {
+                val prefix = resolveSdPrefix(uuid, userId)
+                return "$prefix$sub"
+            }
         }
 
         return path
     }
 
-    private fun resolvePrimaryPrefix(): String {
-        cachedPrimaryPrefix?.let { return it }
-        
+    private fun resolvePrimaryPrefix(userId: String = "0"): String {
+        cachedPrimaryPrefixes[userId]?.let { return it }
+
+        // Ordered by accessibility for UID 2000 / shell across Mobile and Android TV:
+        // 1. /mnt/pass_through — Mobile FUSE passthrough (preserves exact proven mobile behavior)
+        // 2. /mnt/runtime/full — Standard Android Vold mount granted to privileged/shell users (works on Android TV!)
+        // 3. /mnt/user — User-specific storage mount
+        // 4. Fallbacks for specific vendor ROMs
         val candidates = listOf(
-            "/mnt/pass_through/0/emulated/0",
-            "/data/media/0",
-            "/mnt/androidwritable/0/emulated/0",
-            "/storage/emulated/0"
+            "/mnt/pass_through/$userId/emulated/$userId",
+            "/mnt/runtime/full/emulated/$userId",
+            "/mnt/user/$userId/emulated/$userId",
+            "/mnt/user/$userId/primary",
+            "/mnt/runtime/write/emulated/$userId",
+            "/mnt/runtime/default/emulated/$userId",
+            "/mnt/androidwritable/$userId/emulated/$userId",
+            "/data/media/$userId"
         )
         for (cand in candidates) {
             val (code, _) = runCommand("test -d '$cand/Android'")
             if (code == 0) {
-                cachedPrimaryPrefix = cand
+                cachedPrimaryPrefixes[userId] = cand
+                Log.d("ShizukuShellWrapper", "Resolved primary prefix for user $userId: $cand")
                 return cand
             }
         }
-        val fallback = "/storage/emulated/0"
-        cachedPrimaryPrefix = fallback
+
+        // If standard candidates failed, try inspecting /proc/mounts dynamically
+        val dynamicMount = discoverMountFromProc(userId)
+        if (dynamicMount != null) {
+            cachedPrimaryPrefixes[userId] = dynamicMount
+            Log.d("ShizukuShellWrapper", "Resolved dynamic primary prefix for user $userId: $dynamicMount")
+            return dynamicMount
+        }
+
+        val fallback = "/storage/emulated/$userId"
+        cachedPrimaryPrefixes[userId] = fallback
+        Log.w("ShizukuShellWrapper", "Falling back to default prefix for user $userId: $fallback")
         return fallback
     }
 
-    private fun resolveSdPrefix(uuid: String): String {
+    private fun discoverMountFromProc(userId: String): String? {
+        val (code, lines) = runCommand("cat /proc/mounts 2>/dev/null")
+        if (code != 0 || lines.isEmpty()) return null
+        for (line in lines) {
+            val parts = line.split("\\s+".toRegex())
+            if (parts.size >= 2) {
+                val mountPoint = parts[1]
+                if (mountPoint.contains("emulated/$userId") && !mountPoint.startsWith("/storage/emulated")) {
+                    val (testCode, _) = runCommand("test -d '$mountPoint/Android'")
+                    if (testCode == 0) return mountPoint
+                }
+            }
+        }
+        return null
+    }
+
+    private fun resolveSdPrefix(uuid: String, userId: String = "0"): String {
         cachedSdPrefixes[uuid]?.let { return it }
 
         val candidates = listOf(
             "/mnt/media_rw/$uuid",
-            "/mnt/pass_through/0/$uuid",
+            "/mnt/pass_through/$userId/$uuid",
+            "/mnt/runtime/full/$uuid",
+            "/mnt/user/$userId/$uuid",
             "/storage/$uuid"
         )
         for (cand in candidates) {
-            val (code, _) = runCommand("test -d '$cand/Android'")
+            val (code, _) = runCommand("test -d '$cand/Android' || test -d '$cand'")
             if (code == 0) {
                 cachedSdPrefixes[uuid] = cand
+                Log.d("ShizukuShellWrapper", "Resolved SD prefix for $uuid: $cand")
                 return cand
             }
         }
@@ -225,21 +288,21 @@ object ShizukuShellWrapper {
     }
 
     fun exists(path: String): Boolean {
-        val workingPath = getWorkingPath(path)
+        val workingPath = getWorkingPath(path).trimEnd('/')
         val safePath = workingPath.replace("'", "'\\''")
         val (code, _) = runCommand("test -e '$safePath'")
         return code == 0
     }
 
     fun getFileSize(path: String): Long {
-        val workingPath = getWorkingPath(path)
+        val workingPath = getWorkingPath(path).trimEnd('/')
         val safePath = workingPath.replace("'", "'\\''")
         val (code, output) = runCommand("stat -c \"%s\" '$safePath' 2>/dev/null")
         return if (code == 0 && output.isNotEmpty()) output.first().trim().toLongOrNull() ?: 0L else 0L
     }
 
     fun getLastModified(path: String): Long {
-        val workingPath = getWorkingPath(path)
+        val workingPath = getWorkingPath(path).trimEnd('/')
         val safePath = workingPath.replace("'", "'\\''")
         val (code, output) = runCommand("stat -c \"%Y\" '$safePath' 2>/dev/null")
         return if (code == 0 && output.isNotEmpty()) (output.first().trim().toLongOrNull() ?: 0L) * 1000L else 0L
@@ -265,13 +328,18 @@ object ShizukuShellWrapper {
     }
 
     fun listFiles(path: String): List<java.io.File> {
-        val workingPath = getWorkingPath(path)
+        val workingPath = getWorkingPath(path).trimEnd('/')
         val safeWorkingPath = workingPath.replace("'", "'\\''")
-        
-        // Iterates safely over direct children without shell glob expansion errors on empty folders
-        val cmd = "for f in '$safeWorkingPath'/* '$safeWorkingPath'/.*; do if [ -e \"\$f\" ] && [ \"\$f\" != '$safeWorkingPath/.' ] && [ \"\$f\" != '$safeWorkingPath/..' ]; then stat -c \"%F|%s|%Y|%n\" \"\$f\" 2>/dev/null; fi; done"
+
+        // 1. Primary listing attempt: stat -c with file type, size, mtime, name
+        // Iterates safely over direct children including hidden dot-files
+        val cmd = "for f in '$safeWorkingPath'/* '$safeWorkingPath'/.*; do " +
+                "if [ -e \"\$f\" ] || [ -L \"\$f\" ]; then " +
+                "if [ \"\$f\" != '$safeWorkingPath/.' ] && [ \"\$f\" != '$safeWorkingPath/..' ]; then " +
+                "stat -c \"%F|%s|%Y|%n\" \"\$f\" 2>/dev/null; " +
+                "fi; fi; done"
         val (code, output) = runCommand(cmd)
-        
+
         val results = mutableListOf<java.io.File>()
         for (line in output) {
             val parts = line.split("|", limit = 4)
@@ -280,27 +348,45 @@ object ShizukuShellWrapper {
                 val size = parts[1].toLongOrNull() ?: 0L
                 val modified = (parts[2].toLongOrNull() ?: 0L) * 1000L
                 val fullPath = parts[3]
-                
+
                 val name = fullPath.substringAfterLast("/")
                 if (name.isEmpty() || name == "." || name == "..") continue
-                
+
                 val isDir = fType.contains("directory", ignoreCase = true)
                 results.add(ShizukuFile(path, name, isDir, size, modified))
             }
         }
+
+        // 2. Fallback listing attempt: if stat produced no entries (unsupported stat -c or restricted Toybox on Android TV)
+        if (results.isEmpty()) {
+            val fbCmd = "ls -1Ap '$safeWorkingPath' 2>/dev/null"
+            val (fbCode, fbOutput) = runCommand(fbCmd)
+            if (fbCode == 0 && fbOutput.isNotEmpty()) {
+                for (rawLine in fbOutput) {
+                    val entry = rawLine.trim()
+                    if (entry.isEmpty() || entry == "." || entry == ".." || entry == "./" || entry == "../") continue
+                    val isDir = entry.endsWith("/")
+                    val name = entry.trimEnd('/')
+                    if (name.isEmpty()) continue
+                    results.add(ShizukuFile(path, name, isDir, 0L, 0L))
+                }
+            }
+        }
+
+        Log.d("ShizukuShellWrapper", "listFiles: path=$path -> workingPath=$workingPath, count=${results.size}")
         return results
     }
 
     fun delete(path: String): Boolean {
-        val workingPath = getWorkingPath(path)
+        val workingPath = getWorkingPath(path).trimEnd('/')
         val safePath = workingPath.replace("'", "'\\''")
         val (code, _) = runCommand("rm -rf '$safePath'")
         return code == 0
     }
 
     fun copy(src: String, dest: String): Boolean {
-        val workingSrc = getWorkingPath(src)
-        val workingDest = getWorkingPath(dest)
+        val workingSrc = getWorkingPath(src).trimEnd('/')
+        val workingDest = getWorkingPath(dest).trimEnd('/')
         val safeSrc = workingSrc.replace("'", "'\\''")
         val safeDest = workingDest.replace("'", "'\\''")
         val (code, _) = runCommand("cp -r '$safeSrc' '$safeDest'")
@@ -309,8 +395,8 @@ object ShizukuShellWrapper {
     }
 
     fun move(src: String, dest: String): Boolean {
-        val workingSrc = getWorkingPath(src)
-        val workingDest = getWorkingPath(dest)
+        val workingSrc = getWorkingPath(src).trimEnd('/')
+        val workingDest = getWorkingPath(dest).trimEnd('/')
         val safeSrc = workingSrc.replace("'", "'\\''")
         val safeDest = workingDest.replace("'", "'\\''")
         val (code, _) = runCommand("mv '$safeSrc' '$safeDest'")
@@ -318,7 +404,7 @@ object ShizukuShellWrapper {
     }
 
     fun mkdir(path: String): Boolean {
-        val workingPath = getWorkingPath(path)
+        val workingPath = getWorkingPath(path).trimEnd('/')
         val safePath = workingPath.replace("'", "'\\''")
         val (code, _) = runCommand("mkdir -p '$safePath'")
         return code == 0
