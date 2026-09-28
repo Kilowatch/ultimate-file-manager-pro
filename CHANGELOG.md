@@ -5,6 +5,15 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.6] — 2026-09-28
+
+### Added
+- **Music Tag Editor Online Metadata Sync**: Identify recordings and releases online via the keyless MusicBrainz v2 Web Service with side-by-side diff review.
+- **High-Resolution Album Art Picker**: Search and download master album covers (up to 3000×3000px) directly in-app from Apple Music, Deezer, and Cover Art Archive.
+
+### Fixed
+- **Onboarding Permission Screen Privacy Policy Redirection**: Fixed an issue where tapping "Continue" on the "Grant Permissions" screen (`WelcomeActivity`) opened the Privacy Policy screen (`PolicyActivity`) instead of the main Storage screen (`StorageBrowserActivity`). Because mobile devices default to `ID_LAST_OPENED` startup and `PolicyActivity` was missing from `LastLocationManager`'s activity exclusions, reviewing policies during onboarding recorded `PolicyActivity` as the last opened location. Excluded all `ui.policy.*` activities from location tracking, added self-healing resolution in `resolveStartIntent()`, and anchored `recordStorageBrowser()` upon onboarding completion.
+
 ## [2.1.5] — 2026-09-27
 
 ### Added

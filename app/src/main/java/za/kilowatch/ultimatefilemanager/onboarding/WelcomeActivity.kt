@@ -497,6 +497,7 @@ class WelcomeActivity : AppCompatActivity() {
 
     private fun markOnboardingComplete() {
         PolicyAcceptanceManager.setOnboardingComplete(this, true)
+        za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordStorageBrowser(this)
     }
 
     private fun navigateToDefaultStartScreen() {

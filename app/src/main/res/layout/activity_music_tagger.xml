@@ -152,49 +152,61 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="14dp"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSearchOnlineCover"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/music_tag_btn_search_online_cover"
+                            android:textSize="13sp"
+                            app:cornerRadius="12dp"
+                            app:icon="@drawable/ic_search"
+                            app:iconGravity="textStart"
+                            app:iconSize="18dp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnChangeCover"
                             style="@style/Widget.Material3.Button.TonalButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="38dp"
-                            android:layout_marginEnd="8dp"
-                            android:paddingHorizontal="14dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
                             android:text="@string/music_tag_btn_change_art"
-                            android:textSize="12sp"
-                            app:cornerRadius="19dp"
+                            android:textSize="13sp"
+                            app:cornerRadius="12dp"
                             app:icon="@drawable/ic_file_image"
-                            app:iconSize="16dp" />
+                            app:iconGravity="textStart"
+                            app:iconSize="18dp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnRemoveCover"
                             style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="38dp"
-                            android:layout_marginEnd="8dp"
-                            android:paddingHorizontal="14dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
                             android:text="@string/music_tag_btn_remove_art"
-                            android:textSize="12sp"
-                            app:cornerRadius="19dp"
+                            android:textSize="13sp"
+                            app:cornerRadius="12dp"
                             app:icon="@drawable/ic_delete"
-                            app:iconSize="16dp" />
+                            app:iconGravity="textStart"
+                            app:iconSize="18dp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnExtractCover"
                             style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="38dp"
-                            android:paddingHorizontal="14dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="@string/music_tag_btn_save_art"
-                            android:textSize="12sp"
-                            app:cornerRadius="19dp"
+                            android:textSize="13sp"
+                            app:cornerRadius="12dp"
                             app:icon="@drawable/ic_copy"
-                            app:iconSize="16dp" />
+                            app:iconGravity="textStart"
+                            app:iconSize="18dp" />
 
                     </LinearLayout>
 
@@ -209,6 +221,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
                 android:orientation="vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSearchMusicBrainz"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/music_tag_btn_musicbrainz_sync"
+                    android:textSize="12sp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_search"
+                    app:iconSize="16dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAutoFillFilename"

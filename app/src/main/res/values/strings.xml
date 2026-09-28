@@ -4432,6 +4432,26 @@
     <string name="properties_section_audio_tags">Audio Tags</string>
     <string name="properties_btn_edit_audio_tags">Edit Audio Tags</string>
     <string name="music_tag_specs">Technical Specs</string>
+    <!-- Music Tag Online Sync & High-Res Cover Picker -->
+    <string name="music_tag_btn_search_online_cover">Search Online Art</string>
+    <string name="music_tag_btn_musicbrainz_sync">Identify Online (MusicBrainz)</string>
+    <string name="music_tag_cover_picker_title">Search Online Artwork</string>
+    <string name="music_tag_search_covers_hint">Artist and Album name…</string>
+    <string name="music_tag_searching_artwork">Searching Apple Music, Deezer &amp; Cover Art Archive…</string>
+    <string name="music_tag_no_artwork_found">No artwork found for this query</string>
+    <string name="music_tag_cover_applied">Applied online album artwork</string>
+    <string name="music_tag_cover_download_error">Failed to download artwork</string>
+    <string name="music_tag_musicbrainz_search_title">MusicBrainz Tag Search</string>
+    <string name="music_tag_search_query_hint">Track title or Album name…</string>
+    <string name="music_tag_searching_musicbrainz">Searching MusicBrainz…</string>
+    <string name="music_tag_no_musicbrainz_results">No matching recordings or releases found</string>
+    <string name="music_tag_diff_title">Review Online Tags</string>
+    <string name="music_tag_diff_subtitle">Select fields to apply to track</string>
+    <string name="music_tag_diff_apply">Apply Selected Tags</string>
+    <string name="music_tag_select_all">Select All</string>
+    <string name="music_tag_tab_recordings">Recordings</string>
+    <string name="music_tag_tab_releases">Albums / Releases</string>
+    <string name="music_tag_tracks_count">%d tracks</string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">Tap icon to edit</string>
     <string name="settings_icon_tap_edit_mode_subtitle_enabled">Tapping a folder or file icon in list view enters selection mode</string>

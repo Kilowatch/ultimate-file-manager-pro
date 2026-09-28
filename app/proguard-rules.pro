@@ -453,5 +453,16 @@
     public *;
 }
 
+# ── MusicBrainz & Cover Art Search Models (Gson Reflection) ───────────────
+-keepclassmembers class za.kilowatch.ultimatefilemanager.audio.musicbrainz.model.** {
+    @com.google.gson.annotations.SerializedName <fields>;
+    public <init>(...);
+}
+-keepclassmembers class za.kilowatch.ultimatefilemanager.audio.covers.model.** {
+    @com.google.gson.annotations.SerializedName <fields>;
+    public <init>(...);
+}
+
+
 
 

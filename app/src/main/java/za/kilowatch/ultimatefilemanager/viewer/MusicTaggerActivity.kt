@@ -31,6 +31,12 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.audio.AudioTagData
 import za.kilowatch.ultimatefilemanager.audio.AudioTagManager
 import za.kilowatch.ultimatefilemanager.audio.FilenameTagParser
+import za.kilowatch.ultimatefilemanager.audio.covers.OnlineCoverPickerBottomSheet
+import za.kilowatch.ultimatefilemanager.audio.musicbrainz.MusicBrainzSearchBottomSheet
+import za.kilowatch.ultimatefilemanager.audio.musicbrainz.TagDiffItem
+import za.kilowatch.ultimatefilemanager.audio.musicbrainz.TagFieldDiffBottomSheet
+import za.kilowatch.ultimatefilemanager.audio.musicbrainz.model.MbRecordingItem
+import za.kilowatch.ultimatefilemanager.audio.musicbrainz.model.MbReleaseDetails
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
@@ -68,11 +74,13 @@ class MusicTaggerActivity : AppCompatActivity() {
 
     // Cover Art
     private lateinit var imgCoverArt: ImageView
+    private lateinit var btnSearchOnlineCover: MaterialButton
     private lateinit var btnChangeCover: MaterialButton
     private lateinit var btnRemoveCover: MaterialButton
     private lateinit var btnExtractCover: MaterialButton
 
     // Quick Tools
+    private lateinit var btnSearchMusicBrainz: MaterialButton
     private lateinit var btnAutoFillFilename: MaterialButton
     private lateinit var btnRenameFromTags: MaterialButton
 
@@ -178,10 +186,12 @@ class MusicTaggerActivity : AppCompatActivity() {
         recyclerTracks = findViewById(R.id.recyclerTracks)
 
         imgCoverArt = findViewById(R.id.imgCoverArt)
+        btnSearchOnlineCover = findViewById(R.id.btnSearchOnlineCover)
         btnChangeCover = findViewById(R.id.btnChangeCover)
         btnRemoveCover = findViewById(R.id.btnRemoveCover)
         btnExtractCover = findViewById(R.id.btnExtractCover)
 
+        btnSearchMusicBrainz = findViewById(R.id.btnSearchMusicBrainz)
         btnAutoFillFilename = findViewById(R.id.btnAutoFillFilename)
         btnRenameFromTags = findViewById(R.id.btnRenameFromTags)
 
@@ -216,6 +226,14 @@ class MusicTaggerActivity : AppCompatActivity() {
         btnApplyAction = findViewById(R.id.btnApplyAction)
 
         // Listeners
+        btnSearchOnlineCover.setOnClickListener {
+            openOnlineCoverPicker()
+        }
+
+        btnSearchMusicBrainz.setOnClickListener {
+            openMusicBrainzSearch()
+        }
+
         btnChangeCover.setOnClickListener {
             val intent = Intent(this, StorageBrowserActivity::class.java).apply {
                 putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
@@ -554,6 +572,248 @@ class MusicTaggerActivity : AppCompatActivity() {
         )
     }
 
+    private fun openOnlineCoverPicker() {
+        val album = edtAlbum.text?.toString()?.trim() ?: ""
+        val artist = edtArtist.text?.toString()?.trim() ?: ""
+        val sheet = OnlineCoverPickerBottomSheet.newInstance(album = album, artist = artist)
+        sheet.setOnCoverSelectedListener { bytes, mimeType, _ ->
+            currentArtworkBytes = bytes
+            currentArtworkMime = mimeType
+            isArtworkModified = true
+            isArtworkRemoved = false
+            val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+            if (bmp != null) {
+                imgCoverArt.setImageBitmap(bmp)
+                btnRemoveCover.visibility = View.VISIBLE
+                btnExtractCover.visibility = View.VISIBLE
+            }
+            Snackbar.make(findViewById(R.id.main), R.string.music_tag_cover_applied, Snackbar.LENGTH_SHORT).show()
+        }
+        sheet.show(supportFragmentManager, OnlineCoverPickerBottomSheet.TAG)
+    }
+
+    private fun openMusicBrainzSearch() {
+        val isBatch = files.size > 1
+        val title = if (isBatch) "" else (edtTitle.text?.toString()?.trim() ?: "")
+        val artist = edtArtist.text?.toString()?.trim() ?: ""
+        val album = edtAlbum.text?.toString()?.trim() ?: ""
+
+        val sheet = MusicBrainzSearchBottomSheet.newInstance(
+            title = title,
+            artist = artist,
+            album = album,
+            isBatch = isBatch
+        )
+
+        sheet.setOnRecordingResolved { recording, releaseDetails, artwork ->
+            showSingleTrackDiff(recording, releaseDetails, artwork)
+        }
+
+        sheet.setOnReleaseDetailsResolved { details, artwork ->
+            if (isBatch) {
+                applyBatchRelease(details, artwork)
+            } else {
+                showReleaseDiff(details, artwork)
+            }
+        }
+
+        sheet.show(supportFragmentManager, MusicBrainzSearchBottomSheet.TAG)
+    }
+
+    private fun showSingleTrackDiff(
+        recording: MbRecordingItem,
+        releaseDetails: MbReleaseDetails?,
+        artwork: Pair<ByteArray, String>?
+    ) {
+        val rel = recording.releases.firstOrNull()
+        val mediaSummary = rel?.media?.firstOrNull()
+
+        // Match track from releaseDetails if available
+        val matchedTrack = releaseDetails?.media?.flatMap { it.tracks }?.firstOrNull {
+            it.recording?.id == recording.id || (it.title.isNotBlank() && it.title.equals(recording.title, ignoreCase = true))
+        } ?: releaseDetails?.media?.firstOrNull()?.tracks?.firstOrNull()
+
+        val matchedMedia = releaseDetails?.media?.firstOrNull { m ->
+            m.tracks.any { it.id == matchedTrack?.id }
+        }
+
+        val newTitle = recording.title
+        val newArtist = recording.displayArtist()
+        val newAlbum = releaseDetails?.title ?: rel?.title ?: ""
+        val newAlbumArtist = releaseDetails?.displayArtist() ?: rel?.displayArtist() ?: newArtist
+        val newYear = releaseDetails?.releaseYear() ?: rel?.releaseYear() ?: ""
+        val newGenre = releaseDetails?.primaryGenre() ?: ""
+        val newTrackNumber = matchedTrack?.number?.ifBlank { matchedTrack.position.takeIf { it > 0 }?.toString() } ?: ""
+        val newTrackTotal = matchedMedia?.trackCount?.takeIf { it > 0 }?.toString() ?: if ((mediaSummary?.trackCount ?: 0) > 0) mediaSummary!!.trackCount.toString() else (rel?.trackCount?.takeIf { it > 0 }?.toString() ?: "")
+        val newDiscNumber = matchedMedia?.position?.takeIf { it > 0 }?.toString() ?: if ((mediaSummary?.position ?: 0) > 0) mediaSummary!!.position.toString() else "1"
+        val newDiscTotal = if ((releaseDetails?.media?.size ?: 0) > 0) releaseDetails!!.media.size.toString() else "1"
+
+        val diffItems = mutableListOf<TagDiffItem>()
+        if (newTitle.isNotBlank()) diffItems.add(TagDiffItem("title", getString(R.string.music_tag_hint_title), edtTitle.text?.toString() ?: "", newTitle))
+        if (newArtist.isNotBlank()) diffItems.add(TagDiffItem("artist", getString(R.string.music_tag_hint_artist), edtArtist.text?.toString() ?: "", newArtist))
+        if (newAlbum.isNotBlank()) diffItems.add(TagDiffItem("album", getString(R.string.music_tag_hint_album), edtAlbum.text?.toString() ?: "", newAlbum))
+        if (newAlbumArtist.isNotBlank()) diffItems.add(TagDiffItem("albumArtist", getString(R.string.music_tag_hint_album_artist), edtAlbumArtist.text?.toString() ?: "", newAlbumArtist))
+        if (newYear.isNotBlank()) diffItems.add(TagDiffItem("year", getString(R.string.music_tag_hint_year), edtYear.text?.toString() ?: "", newYear))
+        if (newGenre.isNotBlank()) diffItems.add(TagDiffItem("genre", getString(R.string.music_tag_hint_genre), edtGenre.text?.toString() ?: "", newGenre))
+        if (newTrackNumber.isNotBlank()) diffItems.add(TagDiffItem("trackNumber", getString(R.string.music_tag_hint_track), edtTrackNumber.text?.toString() ?: "", newTrackNumber))
+        if (newTrackTotal.isNotBlank()) diffItems.add(TagDiffItem("trackTotal", getString(R.string.music_tag_hint_total_tracks), edtTrackTotal.text?.toString() ?: "", newTrackTotal))
+        if (newDiscNumber.isNotBlank()) diffItems.add(TagDiffItem("discNumber", getString(R.string.music_tag_hint_disc), edtDiscNumber.text?.toString() ?: "", newDiscNumber))
+        if (newDiscTotal.isNotBlank()) diffItems.add(TagDiffItem("discTotal", getString(R.string.music_tag_hint_total_discs), edtDiscTotal.text?.toString() ?: "", newDiscTotal))
+
+        if (artwork != null && artwork.first.isNotEmpty()) {
+            diffItems.add(TagDiffItem("artwork", getString(R.string.music_tag_cover_art), if (currentArtworkBytes != null) "Current artwork" else "None", "Online cover", artworkBytes = artwork.first))
+        }
+
+        val diffSheet = TagFieldDiffBottomSheet.newInstance()
+        diffSheet.setDiffData(diffItems) { selected ->
+            for (item in selected) {
+                when (item.key) {
+                    "title" -> edtTitle.setText(item.newValue)
+                    "artist" -> edtArtist.setText(item.newValue)
+                    "album" -> edtAlbum.setText(item.newValue)
+                    "albumArtist" -> edtAlbumArtist.setText(item.newValue)
+                    "year" -> edtYear.setText(item.newValue)
+                    "genre" -> edtGenre.setText(item.newValue)
+                    "trackNumber" -> edtTrackNumber.setText(item.newValue)
+                    "trackTotal" -> edtTrackTotal.setText(item.newValue)
+                    "discNumber" -> edtDiscNumber.setText(item.newValue)
+                    "discTotal" -> edtDiscTotal.setText(item.newValue)
+                    "artwork" -> {
+                        currentArtworkBytes = artwork!!.first
+                        currentArtworkMime = artwork.second
+                        isArtworkModified = true
+                        isArtworkRemoved = false
+                        val bmp = BitmapFactory.decodeByteArray(currentArtworkBytes, 0, currentArtworkBytes!!.size)
+                        if (bmp != null) {
+                            imgCoverArt.setImageBitmap(bmp)
+                            btnRemoveCover.visibility = View.VISIBLE
+                            btnExtractCover.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+            Snackbar.make(findViewById(R.id.main), R.string.music_tag_autofill_detected, Snackbar.LENGTH_SHORT).show()
+        }
+        diffSheet.show(supportFragmentManager, TagFieldDiffBottomSheet.TAG)
+    }
+
+    private fun showReleaseDiff(releaseDetails: MbReleaseDetails, artwork: Pair<ByteArray, String>?) {
+        val newAlbum = releaseDetails.title
+        val newArtist = releaseDetails.displayArtist()
+        val newAlbumArtist = releaseDetails.displayArtist()
+        val newYear = releaseDetails.releaseYear()
+        val newGenre = releaseDetails.primaryGenre()
+        val totalDiscs = if (releaseDetails.media.isNotEmpty()) releaseDetails.media.size.toString() else "1"
+        val totalTracks = releaseDetails.media.firstOrNull()?.trackCount?.toString() ?: ""
+
+        val diffItems = mutableListOf<TagDiffItem>()
+        if (newArtist.isNotBlank()) diffItems.add(TagDiffItem("artist", getString(R.string.music_tag_hint_artist), edtArtist.text?.toString() ?: "", newArtist))
+        if (newAlbum.isNotBlank()) diffItems.add(TagDiffItem("album", getString(R.string.music_tag_hint_album), edtAlbum.text?.toString() ?: "", newAlbum))
+        if (newAlbumArtist.isNotBlank()) diffItems.add(TagDiffItem("albumArtist", getString(R.string.music_tag_hint_album_artist), edtAlbumArtist.text?.toString() ?: "", newAlbumArtist))
+        if (newYear.isNotBlank()) diffItems.add(TagDiffItem("year", getString(R.string.music_tag_hint_year), edtYear.text?.toString() ?: "", newYear))
+        if (newGenre.isNotBlank()) diffItems.add(TagDiffItem("genre", getString(R.string.music_tag_hint_genre), edtGenre.text?.toString() ?: "", newGenre))
+        if (totalTracks.isNotBlank()) diffItems.add(TagDiffItem("trackTotal", getString(R.string.music_tag_hint_total_tracks), edtTrackTotal.text?.toString() ?: "", totalTracks))
+        if (totalDiscs.isNotBlank()) diffItems.add(TagDiffItem("discTotal", getString(R.string.music_tag_hint_total_discs), edtDiscTotal.text?.toString() ?: "", totalDiscs))
+
+        if (artwork != null && artwork.first.isNotEmpty()) {
+            diffItems.add(TagDiffItem("artwork", getString(R.string.music_tag_cover_art), if (currentArtworkBytes != null) "Current artwork" else "None", "Online cover", artworkBytes = artwork.first))
+        }
+
+        val diffSheet = TagFieldDiffBottomSheet.newInstance()
+        diffSheet.setDiffData(diffItems) { selected ->
+            for (item in selected) {
+                when (item.key) {
+                    "artist" -> edtArtist.setText(item.newValue)
+                    "album" -> edtAlbum.setText(item.newValue)
+                    "albumArtist" -> edtAlbumArtist.setText(item.newValue)
+                    "year" -> edtYear.setText(item.newValue)
+                    "genre" -> edtGenre.setText(item.newValue)
+                    "trackTotal" -> edtTrackTotal.setText(item.newValue)
+                    "discTotal" -> edtDiscTotal.setText(item.newValue)
+                    "artwork" -> {
+                        currentArtworkBytes = artwork!!.first
+                        currentArtworkMime = artwork.second
+                        isArtworkModified = true
+                        isArtworkRemoved = false
+                        val bmp = BitmapFactory.decodeByteArray(currentArtworkBytes, 0, currentArtworkBytes!!.size)
+                        if (bmp != null) {
+                            imgCoverArt.setImageBitmap(bmp)
+                            btnRemoveCover.visibility = View.VISIBLE
+                            btnExtractCover.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+            Snackbar.make(findViewById(R.id.main), R.string.music_tag_autofill_detected, Snackbar.LENGTH_SHORT).show()
+        }
+        diffSheet.show(supportFragmentManager, TagFieldDiffBottomSheet.TAG)
+    }
+
+    private fun applyBatchRelease(releaseDetails: MbReleaseDetails, artwork: Pair<ByteArray, String>?) {
+        val albumTitle = releaseDetails.title
+        val artistName = releaseDetails.displayArtist()
+        val year = releaseDetails.releaseYear()
+        val genre = releaseDetails.primaryGenre()
+        val totalDiscs = if (releaseDetails.media.isNotEmpty()) releaseDetails.media.size.toString() else "1"
+
+        // Flatten all tracks from all media discs
+        val allMbTracks = releaseDetails.media.flatMap { media ->
+            media.tracks.map { track ->
+                Triple(media.position.toString(), track.number.ifBlank { track.position.toString() }, track.title)
+            }
+        }
+
+        if (artwork != null && artwork.first.isNotEmpty()) {
+            currentArtworkBytes = artwork.first
+            currentArtworkMime = artwork.second
+            isArtworkModified = true
+            isArtworkRemoved = false
+            val bmp = BitmapFactory.decodeByteArray(currentArtworkBytes, 0, currentArtworkBytes!!.size)
+            if (bmp != null) {
+                imgCoverArt.setImageBitmap(bmp)
+                btnRemoveCover.visibility = View.VISIBLE
+                btnExtractCover.visibility = View.VISIBLE
+            }
+        }
+
+        var matchedCount = 0
+        for ((index, file) in files.withIndex()) {
+            val cached = tagCache[file.absolutePath] ?: AudioTagData()
+            if (albumTitle.isNotBlank()) cached.album = albumTitle
+            if (artistName.isNotBlank()) {
+                if (cached.artist.isBlank()) cached.artist = artistName
+                cached.albumArtist = artistName
+            }
+            if (year.isNotBlank()) cached.year = year
+            if (genre.isNotBlank()) cached.genre = genre
+            cached.discTotal = totalDiscs
+            if (artwork != null) {
+                cached.artworkBytes = artwork.first
+                cached.artworkMime = artwork.second
+            }
+
+            val mbTrack = if (index < allMbTracks.size) allMbTracks[index] else null
+            if (mbTrack != null) {
+                cached.discNumber = mbTrack.first
+                cached.trackNumber = mbTrack.second
+                cached.trackTotal = releaseDetails.media.firstOrNull()?.trackCount?.toString() ?: allMbTracks.size.toString()
+                cached.title = mbTrack.third
+                matchedCount++
+            }
+
+            tagCache[file.absolutePath] = cached
+        }
+
+        loadTrackIntoForm(files[selectedIndex])
+        thumbAdapter.notifyDataSetChanged()
+
+        Snackbar.make(
+            findViewById(R.id.main),
+            "Matched $matchedCount tracks to \"$albumTitle\"",
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
+
     private fun saveTags() {
         saveFormIntoCache(files[selectedIndex])
 
@@ -590,24 +850,35 @@ class MusicTaggerActivity : AppCompatActivity() {
                 }
             } else {
                 // Batch Mode
+                var successCount = 0
+                val errors = mutableListOf<String>()
                 val autoNumber = switchAutoNumber.isChecked
-                val commonData = tagCache[files[selectedIndex].absolutePath] ?: AudioTagData()
 
-                val (successCount, errors) = AudioTagManager.batchWriteCommonTags(
-                    context = this@MusicTaggerActivity,
-                    files = files,
-                    commonData = commonData,
-                    applyAlbum = commonData.album.isNotBlank(),
-                    applyArtist = commonData.artist.isNotBlank(),
-                    applyAlbumArtist = commonData.albumArtist.isNotBlank(),
-                    applyYear = commonData.year.isNotBlank(),
-                    applyGenre = commonData.genre.isNotBlank(),
-                    autoNumber = autoNumber,
-                    updateArtwork = isArtworkModified,
-                    removeArtwork = isArtworkRemoved
-                ) { current, total ->
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        progressDialog.setMessage("Updating track $current of $total...")
+                for ((index, file) in files.withIndex()) {
+                    val fileData = tagCache[file.absolutePath] ?: AudioTagData()
+                    if (autoNumber) {
+                        fileData.trackNumber = (index + 1).toString()
+                        fileData.trackTotal = files.size.toString()
+                    }
+                    if (isArtworkModified && currentArtworkBytes != null) {
+                        fileData.artworkBytes = currentArtworkBytes
+                        fileData.artworkMime = currentArtworkMime
+                    }
+
+                    val ok = AudioTagManager.writeTags(
+                        context = this@MusicTaggerActivity,
+                        targetFile = file,
+                        data = fileData,
+                        updateArtwork = isArtworkModified,
+                        removeArtwork = isArtworkRemoved
+                    )
+                    if (ok) {
+                        successCount++
+                    } else {
+                        errors.add("${file.name}: Write failed")
+                    }
+                    withContext(Dispatchers.Main) {
+                        progressDialog.setMessage("Updating track ${index + 1} of ${files.size}...")
                     }
                 }
 

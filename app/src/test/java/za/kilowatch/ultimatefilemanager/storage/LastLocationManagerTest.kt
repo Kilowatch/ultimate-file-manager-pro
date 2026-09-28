@@ -16,6 +16,10 @@ import za.kilowatch.ultimatefilemanager.MainActivity
 import za.kilowatch.ultimatefilemanager.onboarding.WelcomeActivity
 import za.kilowatch.ultimatefilemanager.security.SecurityUnlockActivity
 import za.kilowatch.ultimatefilemanager.viewer.ImageViewerActivity
+import za.kilowatch.ultimatefilemanager.ui.policy.PolicyActivity
+import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
+import za.kilowatch.ultimatefilemanager.ui.policy.LicensesActivity
+import za.kilowatch.ultimatefilemanager.ui.DevicePairingActivity
 import org.robolectric.Robolectric
 import java.io.File
 
@@ -203,6 +207,18 @@ class LastLocationManagerTest {
 
         val imageViewer = Robolectric.buildActivity(ImageViewerActivity::class.java).get()
         assertFalse(LastLocationManager.isRecordableGenericActivity(imageViewer))
+
+        val policyActivity = Robolectric.buildActivity(PolicyActivity::class.java).get()
+        assertFalse(LastLocationManager.isRecordableGenericActivity(policyActivity))
+
+        val policySelectionActivity = Robolectric.buildActivity(PolicySelectionActivity::class.java).get()
+        assertFalse(LastLocationManager.isRecordableGenericActivity(policySelectionActivity))
+
+        val licensesActivity = Robolectric.buildActivity(LicensesActivity::class.java).get()
+        assertFalse(LastLocationManager.isRecordableGenericActivity(licensesActivity))
+
+        val devicePairingActivity = Robolectric.buildActivity(DevicePairingActivity::class.java).get()
+        assertFalse(LastLocationManager.isRecordableGenericActivity(devicePairingActivity))
     }
 
     @Test
@@ -215,5 +231,20 @@ class LastLocationManagerTest {
 
         val intent = LastLocationManager.resolveStartIntent(context)
         assertEquals(StorageBrowserActivity::class.java.name, intent.component?.className)
+    }
+
+    @Test
+    fun testStalePolicyActivityInPreferencesSelfHealsToStorageBrowser() {
+        val prefs = context.getSharedPreferences("last_location_prefs", Context.MODE_PRIVATE)
+        prefs.edit()
+            .putString("container_type", "GENERIC_ACTIVITY")
+            .putString("generic_class_name", "za.kilowatch.ultimatefilemanager.ui.policy.PolicyActivity")
+            .apply()
+
+        val intent = LastLocationManager.resolveStartIntent(context)
+        assertEquals(StorageBrowserActivity::class.java.name, intent.component?.className)
+
+        // Verify it self-healed in preferences
+        assertEquals("STORAGE_BROWSER", prefs.getString("container_type", null))
     }
 }

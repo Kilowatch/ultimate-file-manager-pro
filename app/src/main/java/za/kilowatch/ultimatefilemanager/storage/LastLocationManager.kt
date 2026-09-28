@@ -203,7 +203,7 @@ object LastLocationManager {
         // Exclude onboarding, gate, and trampoline activities
         if (className.startsWith("za.kilowatch.ultimatefilemanager.onboarding.") ||
             className == "za.kilowatch.ultimatefilemanager.MainActivity" ||
-            className == "za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity"
+            className.startsWith("za.kilowatch.ultimatefilemanager.ui.policy.")
         ) {
             return false
         }
@@ -241,6 +241,7 @@ object LastLocationManager {
             className == "za.kilowatch.ultimatefilemanager.ui.AdbPairingActivity" ||
             className == "za.kilowatch.ultimatefilemanager.ui.AdbPairingTvActivity" ||
             className == "za.kilowatch.ultimatefilemanager.ui.TvPairingActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.ui.DevicePairingActivity" ||
             className == "za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity" ||
             className == "za.kilowatch.ultimatefilemanager.storage.TileColorImportTvActivity" ||
             className == "za.kilowatch.ultimatefilemanager.storage.TileColorTvActivity" ||
@@ -390,7 +391,11 @@ object LastLocationManager {
                 val className = prefs.getString(KEY_GENERIC_CLASS_NAME, null)
                 val intentUri = prefs.getString(KEY_GENERIC_INTENT_URI, null)
 
-                if (className.isNullOrEmpty()) {
+                if (className.isNullOrEmpty() ||
+                    className.startsWith("za.kilowatch.ultimatefilemanager.ui.policy.") ||
+                    className.startsWith("za.kilowatch.ultimatefilemanager.onboarding.") ||
+                    className == "za.kilowatch.ultimatefilemanager.MainActivity"
+                ) {
                     recordStorageBrowser(context)
                     return Intent(context, StorageBrowserActivity::class.java)
                 }
