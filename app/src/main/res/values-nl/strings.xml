@@ -914,9 +914,7 @@ VPN actief
 Beheer op afstand niet beschikbaar
 </string>
     <string name="vpn_warning_message">Remote Manager kan niet werken terwijl een VPN actief is. De VPN voorkomt detectie van het IP-adres van uw lokale netwerk.\n\nAls u een lokale DNS-blocker of ad-blocker (zoals AdGuard) gebruikt in plaats van een echte VPN, kunt u deze waarschuwing negeren en doorgaan.\n\nAnders koppelt u uw VPN los en probeert u het opnieuw.</string>
-    <string name="vpn_warning_close">
-Dichtbij
-</string>
+    <string name="vpn_warning_close">Sluiten</string>
     <string name="vpn_warning_continue">
 Ga toch door
 </string>
