@@ -15185,6 +15185,7 @@ The extracted or converted file cannot be saved back to the remote share, so it 
 \n
 Do you want to proceed?
 </string>
+    <string name="shizuku_tv_download_msg">Verhoogde Manager (Shizuku of Shevery) is niet geïnstalleerd op dit apparaat.\n\nGa naar een van de volgende URL\'s op uw telefoon of computer om de nieuwste APK te downloaden en sideload deze vervolgens naar deze tv:\n\nShizuku:\n%1$s\n\nShevery:\n%2$s</string>
 </resources>
 
 
