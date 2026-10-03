@@ -558,9 +558,7 @@ FTP
     <string name="widget_ftp_sftp_sftp_label">
 SFTP
 </string>
-    <string name="widget_ftp_sftp_running">
-Rennen
-</string>
+    <string name="widget_ftp_sftp_running">Actief</string>
     <string name="widget_ftp_sftp_stopped">
 Gestopt
 </string>
