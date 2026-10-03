@@ -3217,9 +3217,7 @@ Opties
     <string name="cancel">
 Annuleren
 </string>
-    <string name="close">
-Dichtbij
-</string>
+    <string name="close">Sluiten</string>
 
     <!-- SMB Network Discovery -->
     <string name="smb_scan_title">
