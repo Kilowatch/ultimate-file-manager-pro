@@ -10611,9 +10611,7 @@ Toevoegen
     <string name="icon_action_settings">
 Instellingen
 </string>
-    <string name="icon_action_close">
-Dichtbij
-</string>
+    <string name="icon_action_close">Sluiten</string>
     <string name="icon_action_edit">
 Bewerking
 </string>
