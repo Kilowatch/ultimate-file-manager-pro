@@ -5842,9 +5842,7 @@ Er zijn geen kluismappen aanwezig.
     <string name="remote_add_vault_first">
 Voeg eerst een map toe aan de kluis om een ​​kluisvermelding te maken.
 </string>
-    <string name="remote_close">
-Dichtbij
-</string>
+    <string name="remote_close">Sluiten</string>
     <string name="remote_locked">
 Vergrendeld
 </string>
