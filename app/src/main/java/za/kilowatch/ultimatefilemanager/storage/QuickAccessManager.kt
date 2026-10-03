@@ -124,7 +124,7 @@ object QuickAccessManager {
 
     fun setItemIds(context: Context, ids: List<String>) {
         val arr = JSONArray()
-        ids.forEach { arr.put(it) }
+        ids.distinct().forEach { arr.put(it) }
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putString(KEY_ITEMS, arr.toString())

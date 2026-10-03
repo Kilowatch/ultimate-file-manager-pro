@@ -154,25 +154,27 @@ class FloatingBarManageActivity : AppCompatActivity() {
         allTileIcons = TileIconManager.getAllTileIcons(this)
         allTileIconRes = TileIconManager.getAllTileIconRes(this)
 
-        val allKnown = StorageBrowserActivity.buildAllKnownTiles(this)
+        val allKnown = StorageBrowserActivity.buildAllKnownTiles(this).distinctBy { it.id }
         val hiddenIds = TileOrderManager.loadHidden(this)
-        val dockedIds = FloatingBarManager.getItemIds(this)
+        val dockedIds = FloatingBarManager.getItemIds(this).distinct()
 
         val byId = allKnown.associateBy { it.id }
 
         dockedItems.clear()
+        val seenDockedIds = mutableSetOf<String>()
         for (id in dockedIds) {
             val item = byId[id]
-            if (item != null) {
+            if (item != null && seenDockedIds.add(item.id)) {
                 dockedItems.add(item)
             }
         }
 
         availableItems.clear()
-        val dockedSet = dockedIds.toSet()
+        val dockedSet = seenDockedIds
+        val seenAvailableIds = mutableSetOf<String>()
         for (item in allKnown) {
             // Must not be in docked bar and must not be hidden
-            if (!dockedSet.contains(item.id) && !hiddenIds.contains(item.id)) {
+            if (!dockedSet.contains(item.id) && !hiddenIds.contains(item.id) && seenAvailableIds.add(item.id)) {
                 availableItems.add(item)
             }
         }
@@ -191,10 +193,12 @@ class FloatingBarManageActivity : AppCompatActivity() {
     }
 
     private fun dockItem(item: StorageItem) {
-        val availIndex = availableItems.indexOfFirst { it.id == item.id }
-        if (availIndex >= 0) {
-            availableItems.removeAt(availIndex)
-            availableAdapter.notifyItemRemoved(availIndex)
+        val indicesToRemove = availableItems.indices.filter { availableItems[it].id == item.id }.reversed()
+        if (indicesToRemove.isNotEmpty()) {
+            for (idx in indicesToRemove) {
+                availableItems.removeAt(idx)
+                availableAdapter.notifyItemRemoved(idx)
+            }
 
             dockedItems.add(item)
             val insertIndex = dockedItems.size - 1
@@ -212,8 +216,10 @@ class FloatingBarManageActivity : AppCompatActivity() {
             dockedAdapter.notifyItemRemoved(dockIndex)
             dockedAdapter.notifyItemRangeChanged(dockIndex, dockedItems.size - dockIndex)
 
-            availableItems.add(0, item)
-            availableAdapter.notifyItemInserted(0)
+            if (availableItems.none { it.id == item.id }) {
+                availableItems.add(0, item)
+                availableAdapter.notifyItemInserted(0)
+            }
 
             FloatingBarManager.removeItem(this, item.id)
             updateCountsAndEmptyStates()

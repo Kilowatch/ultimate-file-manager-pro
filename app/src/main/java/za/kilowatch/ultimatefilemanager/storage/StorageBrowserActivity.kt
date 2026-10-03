@@ -273,9 +273,19 @@ class StorageBrowserActivity : AppCompatActivity() {
             val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
             val volumes = storageManager.storageVolumes
             val storageItems = mutableListOf<StorageItem>()
+            val seenVolumeIds = mutableSetOf<String>()
+            val seenMountPaths = mutableSetOf<String>()
             
             for (volume in volumes) {
                 val item = volumeToItem(context, volume) ?: continue
+                if (!seenVolumeIds.add(item.id)) {
+                    Log.w(TAG, "getConnectedStorages: skipping duplicate volume id=${item.id}")
+                    continue
+                }
+                if (item.mountPath.isNotEmpty() && !seenMountPaths.add(item.mountPath)) {
+                    Log.w(TAG, "getConnectedStorages: skipping duplicate mount path=${item.mountPath}")
+                    continue
+                }
                 storageItems.add(item)
             }
 
@@ -485,7 +495,7 @@ class StorageBrowserActivity : AppCompatActivity() {
          * tile IDs to full [StorageItem]s.
          */
         fun buildAllKnownTiles(context: Context): List<StorageItem> {
-            val items = getConnectedStorages(context, localOnly = false).toMutableList()
+            val items = getConnectedStorages(context, localOnly = true).toMutableList()
             val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)
 
             // â”€â”€ Online Storages (individual accounts) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -586,7 +596,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
             items.add(StorageItem(id = "terminal_tile", label = context.getString(R.string.adb_terminal_title), iconRes = R.drawable.ic_terminal, totalBytes = 0, usedBytes = 0, mountPath = "", isTerminalTile = true))
             items.add(StorageItem(id = "shizuku_tile", label = context.getString(R.string.shizuku_title), iconRes = R.drawable.ic_shizuku_logo, totalBytes = 0, usedBytes = 0, mountPath = "", isShizukuTile = true, subtitle = context.getString(R.string.shizuku_subtitle)))
-            if (!isTv) {
+            if (!isTv && items.none { it.id == "root_storage_tile" }) {
                 items.add(StorageItem(id = "root_storage_tile", label = context.getString(R.string.root_storage_title), iconRes = R.drawable.ic_root_storage, totalBytes = 0, usedBytes = 0, mountPath = "/", isRootTile = true, subtitle = context.getString(R.string.root_storage_subtitle)))
             }
             items.add(StorageItem(id = "network_tile", label = context.getString(R.string.network_tile_title), iconRes = R.drawable.ic_network, totalBytes = 0, usedBytes = 0, mountPath = "", isNetworkTile = true))
@@ -620,7 +630,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 ))
             }
 
-            return items
+            return items.distinctBy { it.id }
         }
     }
 
