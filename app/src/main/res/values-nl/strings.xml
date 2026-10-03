@@ -795,9 +795,7 @@ HTTPS-webserver
     <string name="remote_option_web_desc">
 Voer een lokale HTTPS-webserver uit op dit apparaat. U kunt uw bestanden openen en beheren vanuit elke webbrowser in uw netwerk.
 </string>
-    <string name="remote_status_running">
-Rennen
-</string>
+    <string name="remote_status_running">Actief</string>
     <string name="remote_device_ip">
 IP-adres van apparaat:
 </string>
