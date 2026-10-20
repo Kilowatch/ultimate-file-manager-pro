@@ -65,7 +65,10 @@ static struct rpc_context *get_rpc_from_nfs(struct nfs_context *nfs) {
 
 static void throw_io(JNIEnv *env, const char *msg) {
     jclass cls = (*env)->FindClass(env, "java/io/IOException");
-    if (cls) (*env)->ThrowNew(env, cls, msg);
+    if (cls) {
+        (*env)->ThrowNew(env, cls, msg);
+        (*env)->DeleteLocalRef(env, cls);
+    }
 }
 
 /* ── Lifecycle ────────────────────────────────────────────────────────────── */
@@ -327,7 +330,17 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsListDir(
 
     /* Second pass: build the array */
     jclass strCls = (*env)->FindClass(env, "java/lang/String");
+    if (!strCls) {
+        nfs_closedir(nfs, dir);
+        return NULL;
+    }
     jobjectArray result = (*env)->NewObjectArray(env, count, strCls, NULL);
+    (*env)->DeleteLocalRef(env, strCls);
+    if (!result) {
+        nfs_closedir(nfs, dir);
+        return NULL;
+    }
+
     int i = 0;
     char buf[1024];
     while ((entry = nfs_readdir(nfs, dir)) != NULL) {
@@ -341,8 +354,11 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsListDir(
                  entry->name, type,
                  (unsigned long long)entry->size,
                  (unsigned long long)entry->mtime.tv_sec);
-        (*env)->SetObjectArrayElement(env, result, i++,
-                                      (*env)->NewStringUTF(env, buf));
+        jstring js = (*env)->NewStringUTF(env, buf);
+        if (js) {
+            (*env)->SetObjectArrayElement(env, result, i++, js);
+            (*env)->DeleteLocalRef(env, js);
+        }
     }
     nfs_closedir(nfs, dir);
     return result;
@@ -658,13 +674,26 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsListExports(
     LOGI("nfsListExports(%s): %d export(s) found", server, count);
 
     jclass strCls = (*env)->FindClass(env, "java/lang/String");
+    if (!strCls) {
+        mount_free_export_list(exports);
+        return NULL;
+    }
     jobjectArray result = (*env)->NewObjectArray(env, count, strCls, NULL);
+    (*env)->DeleteLocalRef(env, strCls);
+    if (!result) {
+        mount_free_export_list(exports);
+        return NULL;
+    }
+
     e = exports;
     int i = 0;
     while (e) {
         LOGI("nfsListExports(%s): export[%d] = \"%s\"", server, i, e->ex_dir);
-        (*env)->SetObjectArrayElement(env, result, i++,
-                                      (*env)->NewStringUTF(env, e->ex_dir));
+        jstring js = (*env)->NewStringUTF(env, e->ex_dir);
+        if (js) {
+            (*env)->SetObjectArrayElement(env, result, i++, js);
+            (*env)->DeleteLocalRef(env, js);
+        }
         e = e->ex_next;
     }
     mount_free_export_list(exports);
@@ -695,13 +724,26 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsFindLocalServers(
     LOGI("nfsFindLocalServers: %d server(s) found via broadcast", count);
 
     jclass strCls = (*env)->FindClass(env, "java/lang/String");
+    if (!strCls) {
+        free_nfs_srvr_list(srvrs);
+        return NULL;
+    }
     jobjectArray result = (*env)->NewObjectArray(env, count, strCls, NULL);
+    (*env)->DeleteLocalRef(env, strCls);
+    if (!result) {
+        free_nfs_srvr_list(srvrs);
+        return NULL;
+    }
+
     s = srvrs;
     int i = 0;
     while (s) {
         LOGI("nfsFindLocalServers: server[%d] = %s", i, s->addr);
-        (*env)->SetObjectArrayElement(env, result, i++,
-                                      (*env)->NewStringUTF(env, s->addr));
+        jstring js = (*env)->NewStringUTF(env, s->addr);
+        if (js) {
+            (*env)->SetObjectArrayElement(env, result, i++, js);
+            (*env)->DeleteLocalRef(env, js);
+        }
         s = s->next;
     }
     free_nfs_srvr_list(srvrs);

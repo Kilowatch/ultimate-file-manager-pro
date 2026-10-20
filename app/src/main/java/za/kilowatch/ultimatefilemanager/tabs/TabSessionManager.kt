@@ -133,10 +133,10 @@ object TabSessionManager {
             }
 
             if (isAvailable) {
-                // Also verify that currentPath exists, otherwise fallback to rootPath
-                if (tab.storageType == StorageType.LOCAL) {
-                    val cur = File(tab.currentPath)
-                    if (!cur.exists()) {
+                // Also verify that currentPath exists and is accessible, otherwise fallback to rootPath
+                if (tab.storageType == StorageType.LOCAL || tab.storageType == StorageType.SAF) {
+                    val isCurAccessible = za.kilowatch.ultimatefilemanager.storage.LastLocationManager.isPathAccessible(context, tab.currentPath, false)
+                    if (!isCurAccessible) {
                         tab.currentPath = tab.rootPath
                     }
                 }

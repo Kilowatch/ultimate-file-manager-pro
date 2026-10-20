@@ -70,11 +70,17 @@ object LastLocationManager {
         isRemovable: Boolean,
         isRoot: Boolean
     ) {
+        val sanitizedPath = if (isPathAccessible(context, currentPath, isRoot)) {
+            currentPath
+        } else {
+            mountPath
+        }
+
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit()
             .putString(KEY_CONTAINER_TYPE, TYPE_FILE_BROWSER)
             .putString(KEY_MOUNT_PATH, mountPath)
-            .putString(KEY_CURRENT_PATH, currentPath)
+            .putString(KEY_CURRENT_PATH, sanitizedPath)
             .putString(KEY_STORAGE_LABEL, storageLabel)
             .putString(KEY_STORAGE_ID, storageId)
             .putString(KEY_STORAGE_TYPE, storageType)
@@ -293,8 +299,8 @@ object LastLocationManager {
                     }
                 }
 
-                // If storage mount is valid but child directory was removed, fall back to mount root
-                val effectivePath = if (!currentPath.isNullOrEmpty() && File(currentPath).exists()) {
+                // If storage mount is valid but child directory was removed or is an inaccessible protected path, fall back to mount root
+                val effectivePath = if (!currentPath.isNullOrEmpty() && isPathAccessible(context, currentPath, isRoot)) {
                     currentPath
                 } else {
                     mountPath
@@ -372,9 +378,14 @@ object LastLocationManager {
                         }
                     } else {
                         val isSaf = SafTreeManager.isSafPath(tab.rootPath) || tab.storageType == za.kilowatch.ultimatefilemanager.tabs.StorageType.SAF
+                        val tabEffectivePath = if (!tab.currentPath.isNullOrEmpty() && isPathAccessible(context, tab.currentPath, false)) {
+                            tab.currentPath
+                        } else {
+                            tab.rootPath
+                        }
                         return Intent(context, FileBrowserActivity::class.java).apply {
                             putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, tab.rootPath)
-                            putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, tab.currentPath)
+                            putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, tabEffectivePath)
                             putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, tab.storageLabel)
                             putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, if (isSaf) "SAF" else "LOCAL")
                         }
@@ -503,5 +514,33 @@ object LastLocationManager {
         } else {
             NetworkShareRepository.getInstance(context).getById(shareId) != null
         }
+    }
+
+    /**
+     * Checks if a storage subpath is physically present and accessible to browse.
+     * Special handling for Android 11+ Scoped Storage protected folders (Android/data, Android/obb):
+     * direct File.exists() evaluates to true on disk, but reading requires SAF permission, Root,
+     * or Elevated Access. If none of these access methods are active, returns false.
+     */
+    fun isPathAccessible(context: Context, path: String, isRoot: Boolean = false): Boolean {
+        if (path.isEmpty()) return false
+
+        if (isRoot) {
+            val root = File("/")
+            return root.exists() && root.canRead()
+        }
+
+        if (SafTreeManager.isSafPath(path)) {
+            val locId = path.removePrefix("saf://").substringBefore('/')
+            val loc = SafLocationRepository.getLocationById(context, locId)
+            return loc != null && SafTreeManager.hasTreePermissionForPath(context, path)
+        }
+
+        if (ShizukuShellWrapper.isProtectedPath(path)) {
+            return ShizukuShellWrapper.isProtectedPathAccessible(context, path)
+        }
+
+        val file = File(path)
+        return file.exists()
     }
 }

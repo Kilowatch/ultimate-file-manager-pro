@@ -21,6 +21,7 @@ import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
 import za.kilowatch.ultimatefilemanager.ui.policy.LicensesActivity
 import za.kilowatch.ultimatefilemanager.ui.DevicePairingActivity
 import org.robolectric.Robolectric
+import org.robolectric.annotation.Config
 import java.io.File
 
 @RunWith(RobolectricTestRunner::class)
@@ -246,5 +247,72 @@ class LastLocationManagerTest {
 
         // Verify it self-healed in preferences
         assertEquals("STORAGE_BROWSER", prefs.getString("container_type", null))
+    }
+
+    @Test
+    @Config(sdk = [30])
+    fun testFileBrowserProtectedAndroidDataFallsBackToMountPathWhenUnauthorized() {
+        val testDir = File(context.filesDir, "valid_storage").apply { mkdirs() }
+        val protectedDataDir = File(testDir, "Android/data").apply { mkdirs() }
+
+        val prefs = context.getSharedPreferences("last_location_prefs", Context.MODE_PRIVATE)
+        prefs.edit()
+            .putString("container_type", "FILE_BROWSER")
+            .putString("file_mount_path", testDir.absolutePath)
+            .putString("file_current_path", protectedDataDir.absolutePath)
+            .putString("file_storage_label", "Internal Storage")
+            .putString("file_storage_id", "primary")
+            .putString("file_storage_type", "LOCAL")
+            .putBoolean("file_is_removable", false)
+            .putBoolean("file_is_root", false)
+            .apply()
+
+        // Unauthorized protected paths must fall back to mountPath
+        val intent = LastLocationManager.resolveStartIntent(context)
+        assertEquals(FileBrowserActivity::class.java.name, intent.component?.className)
+        assertEquals(testDir.absolutePath, intent.getStringExtra(FileBrowserActivity.EXTRA_MOUNT_PATH))
+        assertEquals(testDir.absolutePath, intent.getStringExtra(FileBrowserActivity.EXTRA_INITIAL_PATH))
+    }
+
+    @Test
+    @Config(sdk = [30])
+    fun testRecordFileBrowserSanitizesInaccessibleProtectedPath() {
+        val testDir = File(context.filesDir, "valid_storage_record").apply { mkdirs() }
+        val protectedDataDir = File(testDir, "Android/data").apply { mkdirs() }
+
+        LastLocationManager.recordFileBrowser(
+            context = context,
+            mountPath = testDir.absolutePath,
+            currentPath = protectedDataDir.absolutePath,
+            storageLabel = "Internal Storage",
+            storageId = "primary",
+            storageType = "LOCAL",
+            isRemovable = false,
+            isRoot = false
+        )
+
+        val prefs = context.getSharedPreferences("last_location_prefs", Context.MODE_PRIVATE)
+        // Should sanitize currentPath to mountPath when unauthorized
+        assertEquals(testDir.absolutePath, prefs.getString("file_current_path", null))
+    }
+
+    @Test
+    @Config(sdk = [30])
+    fun testTabbedBrowserProtectedAndroidDataFallsBackToRootPathInTab() {
+        val testDir = File(context.filesDir, "tab_storage").apply { mkdirs() }
+        val protectedDataDir = File(testDir, "Android/data").apply { mkdirs() }
+
+        val tab = TabModel(
+            title = "Protected Tab",
+            storageType = StorageType.LOCAL,
+            rootPath = testDir.absolutePath,
+            currentPath = protectedDataDir.absolutePath,
+            storageLabel = "Internal Storage"
+        )
+
+        val (validTabs, _) = TabSessionManager.validateAndPrune(context, listOf(tab))
+        assertEquals(1, validTabs.size)
+        // Tab's currentPath must be sanitized back to rootPath
+        assertEquals(testDir.absolutePath, validTabs[0].currentPath)
     }
 }

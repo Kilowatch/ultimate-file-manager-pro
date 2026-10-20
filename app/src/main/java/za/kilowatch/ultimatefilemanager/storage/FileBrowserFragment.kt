@@ -411,9 +411,18 @@ class FileBrowserFragment : Fragment() {
         val initExists = if (isInitRoot) {
             true
         } else if (isInitProtected) {
-            if (ShizukuShellWrapper.canUseShizukuForPath(cleanInit!!)) ShizukuShellWrapper.exists(cleanInit)
-            else if (context != null && SafTreeManager.hasTreePermissionForPath(requireContext(), cleanInit)) SafTreeManager.exists(requireContext(), cleanInit)
-            else true
+            if (ShizukuShellWrapper.canUseShizukuForPath(cleanInit!!)) {
+                cleanInit.startsWith(rootPath) && File(cleanInit).exists()
+            } else if (context != null && SafTreeManager.hasTreePermissionForPath(requireContext(), cleanInit)) {
+                SafTreeManager.exists(requireContext(), cleanInit)
+            } else if (context != null && za.kilowatch.ultimatefilemanager.settings.RootPreferenceManager.isRootEnabled(requireContext()) &&
+                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isAuthorized(requireContext())) {
+                za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(cleanInit)
+            } else if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R && File(cleanInit).canRead()) {
+                File(cleanInit).exists()
+            } else {
+                false
+            }
         } else if (isInitSaf) {
             context != null && SafTreeManager.exists(requireContext(), cleanInit!!)
         } else {

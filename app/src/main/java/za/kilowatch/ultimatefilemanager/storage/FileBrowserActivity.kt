@@ -569,9 +569,18 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             val initExists = if (isInitRoot) {
                 za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(cleanInit)
             } else if (isInitProtected) {
-                if (ShizukuShellWrapper.canUseShizukuForPath(cleanInit)) ShizukuShellWrapper.exists(cleanInit)
-                else if (SafTreeManager.hasTreePermissionForPath(this, cleanInit)) SafTreeManager.exists(this, cleanInit)
-                else true
+                if (ShizukuShellWrapper.canUseShizukuForPath(cleanInit)) {
+                    cleanInit.startsWith(rootPath) && File(cleanInit).exists()
+                } else if (SafTreeManager.hasTreePermissionForPath(this, cleanInit)) {
+                    SafTreeManager.exists(this, cleanInit)
+                } else if (za.kilowatch.ultimatefilemanager.settings.RootPreferenceManager.isRootEnabled(this) &&
+                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isAuthorized(this)) {
+                    za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.exists(cleanInit)
+                } else if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R && File(cleanInit).canRead()) {
+                    File(cleanInit).exists()
+                } else {
+                    false
+                }
             } else if (isInitSaf) {
                 SafTreeManager.exists(this, cleanInit)
             } else {

@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Looper
 import android.util.Log
 import eu.darken.porter.sdk.PermissionState
 import eu.darken.porter.sdk.Porter
@@ -154,11 +155,34 @@ object ShizukuShellWrapper {
     private val cachedSdPrefixes = java.util.concurrent.ConcurrentHashMap<String, String>()
 
     fun isProtectedPath(path: String): Boolean {
-        return path.contains("/Android/data") || path.contains("/Android/obb")
+        val normalized = path.replace('\\', '/')
+        return normalized.contains("/Android/data") || normalized.contains("/Android/obb")
     }
 
     fun canUseShizukuForPath(path: String): Boolean {
         return isProtectedPath(path) && isAuthorized()
+    }
+
+    /**
+     * Non-blocking check for whether a protected path (/Android/data, /Android/obb) is currently
+     * accessible via any valid access mechanism (Elevated Access, SAF, Root, or direct read)
+     * without executing synchronous shell IPC.
+     */
+    fun isProtectedPathAccessible(context: Context, path: String): Boolean {
+        if (!isProtectedPath(path)) return true
+        if (canUseShizukuForPath(path)) return true
+        if (SafTreeManager.hasTreePermissionForPath(context, path)) return true
+        if (za.kilowatch.ultimatefilemanager.settings.RootPreferenceManager.isRootEnabled(context) &&
+            RootShellWrapper.isAuthorized(context)) return true
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R) {
+            return try {
+                val f = java.io.File(path)
+                f.exists() && f.canRead()
+            } catch (_: Throwable) {
+                false
+            }
+        }
+        return false
     }
 
     /**
@@ -323,6 +347,9 @@ object ShizukuShellWrapper {
      * Returns a pair of (exitCode, stdout_lines).
      */
     fun runCommand(cmd: String): Pair<Int, List<String>> {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            Log.w("ShizukuShellWrapper", "runCommand invoked synchronously on Main Thread: $cmd")
+        }
         if (!isAuthorized()) return Pair(-1, emptyList())
         val connection = Porter.connection.value ?: return Pair(-1, emptyList())
         return try {
