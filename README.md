@@ -59,6 +59,8 @@ Pre-compiled production binaries for all supported platforms are published on ev
 | 💻 **Windows Desktop** | [`UltimateFileManagerProCompanion_x64_en-US.msi`](https://github.com/Kilowatch/ultimate-file-manager-pro/releases/latest/download/UltimateFileManagerProCompanion_x64_en-US.msi) | 64-bit Windows MSI Package Installer | MSI Installer |
 | 🐧 **Linux Desktop** | [`ufm-companion-x86_64.AppImage`](https://github.com/Kilowatch/ultimate-file-manager-pro/releases/latest/download/ufm-companion-x86_64.AppImage) | Universal Wayland-first Linux AppImage (No installation required) | AppImage |
 | 🐧 **Linux Desktop** | [`ufm-companion_amd64.deb`](https://github.com/Kilowatch/ultimate-file-manager-pro/releases/latest/download/ufm-companion_amd64.deb) | Debian / Ubuntu 64-bit package installer | DEB Package |
+| 🐧 **Linux Desktop** | [`ufm-companion-x86_64.rpm`](https://github.com/Kilowatch/ultimate-file-manager-pro/releases/latest/download/ufm-companion-x86_64.rpm) | Fedora / RHEL / openSUSE 64-bit package installer | RPM Package |
+| 🐧 **Linux Desktop** | [`ufm-companion-bin (AUR)`](https://aur.archlinux.org/packages/ufm-companion-bin) | Arch Linux AUR package (wraps the official AppImage) | AUR |
 | 📦 **Source Code** | [GitHub Releases](https://github.com/Kilowatch/ultimate-file-manager-pro/releases/latest) | Complete source code archives | Zip / Tarball |
 
 > [!TIP]
@@ -181,6 +183,36 @@ UFM includes a native, Wayland-first Linux desktop companion built with Rust, GT
 
 ### Building & Running the Linux Companion
 
+#### Install (pick one)
+
+```bash
+# ⚡ One-line install (Linux: auto-picks .deb / .rpm / AUR / AppImage)
+curl -fsSL https://raw.githubusercontent.com/Kilowatch/ultimate-file-manager-pro/main/UFM-Linux/scripts/install.sh | sh
+
+# Pinned release, non-interactive:
+curl -fsSL https://raw.githubusercontent.com/Kilowatch/ultimate-file-manager-pro/main/UFM-Linux/scripts/install.sh | sh -s -- --tag v2.1.8 --yes
+```
+
+```bash
+# AppImage (universal, no install)
+chmod +x ufm-companion-x86_64.AppImage
+./ufm-companion-x86_64.AppImage
+
+# Debian / Ubuntu
+sudo apt install ./ufm-companion_amd64.deb
+
+# Fedora / RHEL / openSUSE
+sudo dnf install ./ufm-companion-x86_64.rpm
+# openSUSE: sudo zypper install ./ufm-companion-x86_64.rpm
+
+# Arch Linux (AUR wraps the official AppImage → /opt/ufm-companion)
+yay -S ufm-companion-bin
+# or: paru -S ufm-companion-bin
+```
+
+> AUR sources live in [`UFM-Linux/packaging/aur/`](UFM-Linux/packaging/aur/) and the
+> published package is at https://aur.archlinux.org/packages/ufm-companion-bin.
+
 #### Prerequisites (Debian / Ubuntu / Pop!_OS)
 ```bash
 sudo apt update && sudo apt install -y \
@@ -202,10 +234,11 @@ npm install
 # Run in development mode
 npm run tauri dev
 
-# Build universal AppImage and Debian package
-npm run tauri build -- --bundles appimage,deb
+# Build universal AppImage, Debian and RPM packages
+npm run tauri build -- --bundles appimage,deb,rpm
 ```
 *Detailed Linux companion documentation can be found at [UFM-Linux/README.md](UFM-Linux/README.md).*
+*AUR packaging sources: [UFM-Linux/packaging/aur/](UFM-Linux/packaging/aur/).*
 
 ---
 

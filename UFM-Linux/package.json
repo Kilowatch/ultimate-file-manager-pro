@@ -9,8 +9,13 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "build:appimage": "tauri build --bundles appimage",
+    "build:deb": "tauri build --bundles deb",
+    "build:rpm": "tauri build --bundles rpm",
+    "build:linux": "tauri build --bundles appimage,deb,rpm",
     "verify:appimage": "bash scripts/verify-appimage.sh",
-    "release:appimage": "npm run build:appimage && npm run verify:appimage"
+    "verify:linux": "bash scripts/verify-appimage.sh && ls -lh src-tauri/target/release/bundle/deb/*.deb src-tauri/target/release/bundle/rpm/*.rpm",
+    "release:appimage": "npm run build:appimage && npm run verify:appimage",
+    "release:linux": "npm run build:linux && npm run verify:linux"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",

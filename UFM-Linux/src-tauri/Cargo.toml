@@ -4,6 +4,9 @@ version = "0.1.0"
 description = "Ultimate File Manager Pro Native Linux Companion"
 authors = ["Kilowatch <support@kilowatch.co.za>"]
 edition = "2021"
+license = "GPL-3.0-only"
+homepage = "https://github.com/Kilowatch/ultimate-file-manager-pro"
+repository = "https://github.com/Kilowatch/ultimate-file-manager-pro"
 
 [lib]
 name = "ufm_linux_lib"
