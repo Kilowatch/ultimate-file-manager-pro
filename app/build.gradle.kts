@@ -93,8 +93,8 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 296          // Mobile versionCode; TV = this + 1
-val appVersionName = "2.1.8"      // Shown in Play Store listing
+val appVersionCode = 298          // Mobile versionCode; TV = this + 1
+val appVersionName = "2.1.9"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
 // TODO: REMOVE — Set to true to simulate an older version for auto-update testing
@@ -144,7 +144,6 @@ android {
             abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86"))
         }
 
-        buildConfigField("Boolean", "IS_FOSS", "false")
     }
 
     // ── Two-dimension flavor model ────────────────────────────────────────────────
@@ -185,6 +184,7 @@ android {
             buildConfigField("Boolean", "ONEDRIVE_ENABLED", "true")
             // Box — available on Google Play builds.
             buildConfigField("Boolean", "BOX_ENABLED", "true")
+            buildConfigField("Boolean", "IS_FOSS", "false")
         }
         create("amazon") {
             dimension = "store"
@@ -197,6 +197,7 @@ android {
             buildConfigField("Boolean", "ONEDRIVE_ENABLED", "false")
             // Box — available on Amazon builds (no Google Play Services dependency).
             buildConfigField("Boolean", "BOX_ENABLED", "true")
+            buildConfigField("Boolean", "IS_FOSS", "false")
         }
 
         create("foss") {

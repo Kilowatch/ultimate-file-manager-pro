@@ -301,6 +301,25 @@ class FileBrowserFragment : Fragment() {
     private var currentSizeFilter = SortFilterSheet.SizeFilter.ANY
     private var activeTagsFilter: Set<String> = emptySet()
 
+    /**
+     * Holds the per-folder "show hidden" override from [SortFilterPreferenceManager].
+     * `null` means no folder-specific override is active — fall back to the global
+     * [za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled].
+     * Set in [loadDirectory]'s IO coroutine whenever a folder-specific state is loaded.
+     */
+    private var folderSpecificShowHidden: Boolean? = null
+
+    /**
+     * Cached folder-specific [SortFilterPreferenceManager.SortFilterState] for the current
+     * directory, used by [onResume] to restore the correct view-mode without an extra IO hit.
+     */
+    private var lastAppliedFolderState: za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.SortFilterState? = null
+
+    /** Returns the effective "show hidden files" flag for the current directory. */
+    private fun effectiveShowHidden(): Boolean =
+        folderSpecificShowHidden
+            ?: za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+
     private var rawSearchResults: List<File>? = null
     private var isSearchActive: Boolean = false
     private var isSearchIndexed: Boolean = false
@@ -505,11 +524,14 @@ class FileBrowserFragment : Fragment() {
         applyToolbarIconVisibility()
         updatePasteFab()
         context?.let { ctx ->
-            val savedMode = ViewModeManager.load(ctx)
+            // Prefer the folder-specific viewMode (cached from the last loadDirectory call);
+            // fall back to the global ViewModeManager preference only when no override is active.
+            val folderState = lastAppliedFolderState
+            val effectiveMode = if (folderState?.viewMode != null) folderState.viewMode!! else ViewModeManager.load(ctx)
             val currentSpan = (recyclerFiles.layoutManager as? androidx.recyclerview.widget.GridLayoutManager)?.spanCount
-            val targetSpan = if (ViewModeManager.isGrid(savedMode)) ViewModeManager.spanCount(ctx, savedMode) else 1
-            if (fileAdapter.viewMode != savedMode || (ViewModeManager.isGrid(savedMode) && currentSpan != targetSpan)) {
-                applyViewMode(savedMode)
+            val targetSpan = if (ViewModeManager.isGrid(effectiveMode)) ViewModeManager.spanCount(ctx, effectiveMode) else 1
+            if (fileAdapter.viewMode != effectiveMode || (ViewModeManager.isGrid(effectiveMode) && currentSpan != targetSpan)) {
+                applyViewMode(effectiveMode)
             }
             za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPendingAsync(ctx) { syncedCount ->
                 showFeedback(getString(R.string.root_file_saved_success, syncedCount))
@@ -2957,9 +2979,9 @@ class FileBrowserFragment : Fragment() {
         // Load folder-specific sort settings (or fall back to global) on IO thread
         // before the coroutine that actually reads the files starts.
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            val state = SortFilterPreferenceManager.loadForPath(ctx, targetDir.absolutePath)
-                ?: SortFilterPreferenceManager.loadGlobal(ctx)
+            val folderState = SortFilterPreferenceManager.loadForPath(ctx, targetDir.absolutePath)
             val hasFolderOverride = SortFilterPreferenceManager.hasFolderOverride(ctx, targetDir.absolutePath)
+            val state = folderState ?: SortFilterPreferenceManager.loadGlobal(ctx)
             val viewModeToApply = state.viewMode ?: ViewModeManager.load(ctx)
             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                 sortMode  = state.sortMode
@@ -2968,6 +2990,10 @@ class FileBrowserFragment : Fragment() {
                 currentDateFilter = state.dateFilter
                 currentSizeFilter = state.sizeFilter
                 activeTagsFilter = state.activeTags
+                // Apply folder-specific showHidden override (null = use global setting).
+                folderSpecificShowHidden = if (hasFolderOverride) folderState?.showHidden else null
+                // Cache the state so onResume() can restore viewMode without an IO call.
+                lastAppliedFolderState = if (hasFolderOverride) folderState else null
                 // Badge: tint the sort button to signal a folder-specific override is active
                 updateSortBadge(hasFolderOverride)
                 if (::fileAdapter.isInitialized && fileAdapter.viewMode != viewModeToApply) {
@@ -3023,7 +3049,7 @@ class FileBrowserFragment : Fragment() {
         if (isRoot) {
             folderFlowJob?.cancel()
             lifecycleScope.launch(Dispatchers.IO) {
-                val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                val showHidden = effectiveShowHidden()
                 val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(requireContext().applicationContext).hiddenFileDao().getAllPaths().toSet()
                 val rawFiles = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.listFiles(targetDir.absolutePath)
                 val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
@@ -3077,7 +3103,7 @@ class FileBrowserFragment : Fragment() {
 
         if (hasDeclined) {
             lifecycleScope.launch(Dispatchers.IO) {
-                val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                val showHidden = effectiveShowHidden()
                 val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(requireContext().applicationContext).hiddenFileDao().getAllPaths().toSet()
                 val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {
                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(targetDir.absolutePath)
@@ -3099,7 +3125,7 @@ class FileBrowserFragment : Fragment() {
                     val dao = db.fileIndexDao()
                     dao.getFilesInFolderFlow(targetDir.absolutePath).collectLatest { fileIndices ->
                         withContext(Dispatchers.IO) {
-                            val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                            val showHidden = effectiveShowHidden()
                             val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(requireContext().applicationContext).hiddenFileDao().getAllPaths().toSet()
                             if (fileIndices.isEmpty()) {
                                 val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {

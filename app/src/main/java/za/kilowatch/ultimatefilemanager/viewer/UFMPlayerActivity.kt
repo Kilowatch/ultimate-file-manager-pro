@@ -625,8 +625,29 @@ class UFMPlayerActivity : AppCompatActivity() {
                 sideControlsLayout?.animate()?.alpha(0f)?.setDuration(300)?.withEndAction {
                     sideControlsLayout?.visibility = View.GONE
                 }
+                if (!isTv) hideSystemBarsForVideo()
             }
         }
+    }
+
+    /**
+     * Hides the status bar and navigation bar for an immersive video experience.
+     * Uses transient-show behaviour so a swipe can temporarily reveal the bars.
+     * No-op when called from TV or audio-only contexts.
+     */
+    private fun hideSystemBarsForVideo() {
+        val controller = androidx.core.view.WindowCompat.getInsetsController(window, window.decorView)
+        controller.hide(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+        controller.systemBarsBehavior =
+            androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    }
+
+    /**
+     * Restores status bar and navigation bar visibility when controls are shown.
+     */
+    private fun showSystemBarsForVideo() {
+        androidx.core.view.WindowCompat.getInsetsController(window, window.decorView)
+            .show(androidx.core.view.WindowInsetsCompat.Type.systemBars())
     }
 
     private val progressUpdater = object : Runnable {
@@ -938,6 +959,10 @@ class UFMPlayerActivity : AppCompatActivity() {
                 playerView.player = p
             }
         }
+        // Re-apply system bar state to match the current controls visibility.
+        if (!isTv && ::controlsLayout.isInitialized && controlsLayout.visibility == View.GONE) {
+            hideSystemBarsForVideo()
+        }
     }
 
     override fun onPause() {
@@ -1154,6 +1179,10 @@ class UFMPlayerActivity : AppCompatActivity() {
         insetsController.isAppearanceLightNavigationBars = false
 
         resetHideTimer()
+        // After re-inflating, re-apply immersive state if controls are already hidden.
+        if (!isTv && ::controlsLayout.isInitialized && controlsLayout.visibility == View.GONE) {
+            hideSystemBarsForVideo()
+        }
     }
 
     // ── Init Views ──────────────────────────────────────────────────
@@ -1676,6 +1705,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             sideControlsLayout?.animate()?.alpha(0f)?.setDuration(250)?.withEndAction {
                 sideControlsLayout?.visibility = View.GONE
             }
+            if (!isTv) hideSystemBarsForVideo()
         }
     }
 
@@ -1688,6 +1718,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         sideControlsLayout?.visibility = View.VISIBLE
         sideControlsLayout?.alpha = 1f
         subtitleView.setPadding(0, 0, 0, dp(100))
+        if (!isTv) showSystemBarsForVideo()
 
         val isPlayingNow = if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
             svgPlayerView.isPlaying

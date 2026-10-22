@@ -1069,8 +1069,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             CrashReportDialogHelper.maybeShowCrashReportDialog(this, lifecycleScope)
         }
 
-        // Check for FOSS updates on app launch / re-open (at most once per activity session)
-        if (za.kilowatch.ultimatefilemanager.BuildConfig.IS_FOSS && !hasCheckedFossUpdateThisSession) {
+        // Check for FOSS updates on app launch / re-open (at most once per activity session).
+        // Non-FOSS builds use a no-op stub, so no guard is needed.
+        if (!hasCheckedFossUpdateThisSession) {
             hasCheckedFossUpdateThisSession = true
             za.kilowatch.ultimatefilemanager.update.FossUpdateManager.checkOnAppOpen(this)
         }

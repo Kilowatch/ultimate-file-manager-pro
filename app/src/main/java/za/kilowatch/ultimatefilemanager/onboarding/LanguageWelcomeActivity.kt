@@ -111,18 +111,13 @@ class LanguageWelcomeActivity : AppCompatActivity() {
         }
         
         val txtFossLegalNotice = findViewById<TextView>(R.id.txtFossLegalNotice)
-        if (BuildConfig.IS_FOSS) {
-            txtFossLegalNotice?.visibility = View.VISIBLE
-        } else {
-            txtFossLegalNotice?.visibility = View.GONE
-        }
+        // On FOSS builds the layout includes txtFossLegalNotice; on non-FOSS it is absent (null).
+        txtFossLegalNotice?.visibility = View.VISIBLE
 
         btnSetDefault.setOnClickListener {
             LocaleHelper.save(this, selectedLocale)
             setWelcomeFinished()
-            if (BuildConfig.IS_FOSS) {
-                PolicyAcceptanceManager.recordBothAccepted(this)
-            }
+            maybeAutoAcceptPolicy()
             goToNextScreen()
         }
         
@@ -252,8 +247,23 @@ class LanguageWelcomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun maybeAutoAcceptPolicy() {
+        // On FOSS builds the legal notice is shown inline on this screen, so we
+        // auto-accept policy here (no separate PolicyWelcomeActivity). On non-FOSS
+        // builds this is a no-op — PolicyWelcomeActivity handles acceptance instead.
+        // The txtFossLegalNotice view is only inflated in the FOSS layout overlay,
+        // so its presence is a reliable indicator of the build variant at runtime.
+        val hasFossNotice = findViewById<android.view.View>(R.id.txtFossLegalNotice) != null
+        if (hasFossNotice) {
+            PolicyAcceptanceManager.recordBothAccepted(this)
+        }
+    }
+
     private fun goToNextScreen() {
-        val targetClass = if (BuildConfig.IS_FOSS) {
+        // FOSS builds skip the policy screen (auto-accepted above);
+        // non-FOSS builds proceed to PolicyWelcomeActivity.
+        val hasFossNotice = findViewById<android.view.View>(R.id.txtFossLegalNotice) != null
+        val targetClass = if (hasFossNotice) {
             WelcomeActivity::class.java
         } else {
             PolicyWelcomeActivity::class.java

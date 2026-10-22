@@ -194,6 +194,13 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
     private var rawSearchResults: List<File>? = null
     private var isSearchActive = false
     private var isSearchIndexed = false
+
+    private var folderSpecificShowHidden: Boolean? = null
+
+    private fun effectiveShowHidden(): Boolean {
+        return folderSpecificShowHidden
+            ?: za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+    }
     private var isTransferring = false
     private var folderFlowJob: kotlinx.coroutines.Job? = null
     private var storageSpaceJob: kotlinx.coroutines.Job? = null
@@ -688,7 +695,9 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         }
         applyLeftHandedFabSettings()
         applyToolbarIconVisibility()
-        val savedMode = ViewModeManager.load(this)
+        val hasFolderOverride = if (isCategoryMode || !::currentDir.isInitialized) false else SortFilterPreferenceManager.hasFolderOverride(this, currentDir.absolutePath)
+        val folderState = if (hasFolderOverride) SortFilterPreferenceManager.loadForPath(this, currentDir.absolutePath) else null
+        val savedMode = folderState?.viewMode ?: ViewModeManager.load(this)
         val currentSpan = (recyclerFiles.layoutManager as? androidx.recyclerview.widget.GridLayoutManager)?.spanCount
         val targetSpan = if (ViewModeManager.isGrid(savedMode)) ViewModeManager.spanCount(this, savedMode) else 1
         if (fileAdapter.viewMode != savedMode || (ViewModeManager.isGrid(savedMode) && currentSpan != targetSpan)) {
@@ -3363,7 +3372,10 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             currentSizeFilter = sizeFilter
             activeTagsFilter = tags
             if (scope == SortFilterSheet.Scope.GLOBAL) {
+                folderSpecificShowHidden = null
                 za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
+            } else {
+                folderSpecificShowHidden = showHidden
             }
 
             if (isCategoryMode) {
@@ -5424,6 +5436,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                     currentSizeFilter = state.sizeFilter
                     activeTagsFilter = state.activeTags
                 }
+                folderSpecificShowHidden = if (hasFolderOverride) state.showHidden else null
                 updateSortBadge(hasFolderOverride)
                 if (fileAdapter.viewMode != viewModeToApply) {
                     applyViewMode(viewModeToApply)
@@ -5514,7 +5527,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         if (isRestrictedRoot) {
             folderFlowJob?.cancel()
             folderFlowJob = lifecycleScope.launch(Dispatchers.IO) {
-                val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                val showHidden = effectiveShowHidden()
                 val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
 
                 val locations = za.kilowatch.ultimatefilemanager.storage.SafLocationRepository.getLocationsForStorage(this@FileBrowserActivity, targetDir.absolutePath)
@@ -5560,7 +5573,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         val isRootDir = isRootStorage || targetDir is za.kilowatch.ultimatefilemanager.storage.RootFile || za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.isRootPath(targetDir.absolutePath)
         if (isRootDir) {
             folderFlowJob = lifecycleScope.launch(Dispatchers.IO) {
-                val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                val showHidden = effectiveShowHidden()
                 val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
                 coroutineContext.ensureActive()
                 val rawFiles = za.kilowatch.ultimatefilemanager.storage.RootShellWrapper.listFiles(targetDir.absolutePath)
@@ -5644,7 +5657,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 // ── Non-indexed storage: full filesystem walk ────────────────
                 folderFlowJob = lifecycleScope.launch(Dispatchers.IO) {
                     try {
-                        val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                        val showHidden = effectiveShowHidden()
                         val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
                         val isSaf = currentDir is za.kilowatch.ultimatefilemanager.storage.SafFile ||
                                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(currentDir.absolutePath) ||
@@ -5679,7 +5692,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             }
         } else if (hasDeclined) {
             folderFlowJob = lifecycleScope.launch(Dispatchers.IO) {
-                val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                val showHidden = effectiveShowHidden()
                 val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
 
                 val db = UfmIndexingDatabase.getInstance(applicationContext)
@@ -5715,7 +5728,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                     val dao = db.fileIndexDao()
                     dao.getFilesInFolderFlow(targetDir.absolutePath).collectLatest { fileIndices ->
                         withContext(Dispatchers.IO) {
-                            val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                            val showHidden = effectiveShowHidden()
                             val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
 
                             if (fileIndices.isEmpty()) {
@@ -5862,7 +5875,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             sortMode = sortMode,
             sortOrder = sortOrder,
             filterType = effectiveFilter,
-            showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled,
+            showHidden = effectiveShowHidden(),
             groupByDate = false,
             activeTags = activeTagsFilter,
             dateFilter = currentDateFilter,
@@ -5883,7 +5896,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                     showAllAsIndexed = isSearchIndexed,
                     hiddenPaths = hiddenPaths,
                     searchBasePath = currentDir.absolutePath,
-                    showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+                    showHidden = effectiveShowHidden()
                 )
                 updateEmptyState(processed.isEmpty())
             }

@@ -304,6 +304,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var currentSizeFilter = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SizeFilter.ANY
     private var isSearchActive = false
     private var activeTagsFilter: Set<String> = emptySet()
+
+    private var folderSpecificShowHidden: Boolean? = null
+
+    private fun effectiveShowHidden(): Boolean {
+        return folderSpecificShowHidden
+            ?: za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+    }
     
     private lateinit var fileAdapter: NetworkFileAdapter
 
@@ -743,7 +750,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
         updatePasteFab()
         applyToolbarIconVisibility()
         if (::fileAdapter.isInitialized) {
-            val savedMode = ViewModeManager.load(this)
+            val hasFolderOverride = ::share.isInitialized && za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(this, currentPath, share.id)
+            val folderState = if (hasFolderOverride) za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForPath(this, currentPath, share.id) else null
+            val savedMode = folderState?.viewMode ?: ViewModeManager.load(this)
             val currentSpan = (recyclerFiles.layoutManager as? androidx.recyclerview.widget.GridLayoutManager)?.spanCount
             val targetSpan = if (ViewModeManager.isGrid(savedMode)) ViewModeManager.spanCount(this, savedMode) else 1
             if (fileAdapter.viewMode != savedMode || (ViewModeManager.isGrid(savedMode) && currentSpan != targetSpan)) {
@@ -2128,7 +2137,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         // Cancel any in-flight async applyData() so its full listing cannot overwrite
         // the filtered search result when it completes.
         applyDataJob?.cancel()
-        val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        val showHidden = effectiveShowHidden()
         val queryMatching = currentFiles.filter { it.name.contains(query, ignoreCase = true) }
         val processed = computeDisplayFiles(
             snapshot = queryMatching,
@@ -3254,6 +3263,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 currentDateFilter = state.dateFilter
                 currentSizeFilter = state.sizeFilter
                 activeTagsFilter = state.activeTags
+                folderSpecificShowHidden = if (hasFolderOverride) state.showHidden else null
                 updateSortBadge(hasFolderOverride)
                 if (fileAdapter.viewMode != viewModeToApply) {
                     applyViewMode(viewModeToApply)
@@ -3467,7 +3477,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         // the 5 s ANR watchdog threshold (reported from an NVIDIA SHIELD, SDK 30,
         // app 1.8.6-GOOGLE).
         val snapshot = currentFiles
-        val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        val showHidden = effectiveShowHidden()
         val filterTypeNow = filterType
         val dateFilterNow = currentDateFilter
         val sizeFilterNow = currentSizeFilter
@@ -3847,7 +3857,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
             currentSizeFilter = sizeFilter
             activeTagsFilter = tags
             if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.GLOBAL) {
+                folderSpecificShowHidden = null
                 za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
+            } else {
+                folderSpecificShowHidden = showHidden
             }
 
             if (!isSearchActive) {

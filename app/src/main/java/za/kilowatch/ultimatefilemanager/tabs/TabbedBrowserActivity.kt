@@ -575,7 +575,15 @@ class TabbedBrowserActivity : AppCompatActivity(),
         val (validSavedTabs, _) = TabSessionManager.validateAndPrune(this, savedTabs)
 
         val initialPath = intent.getStringExtra(EXTRA_INITIAL_PATH)
-        val initialRoot = intent.getStringExtra(EXTRA_INITIAL_ROOT_PATH) ?: initialPath
+        // Resolve the true storage mount root: prefer the explicitly-passed EXTRA_INITIAL_ROOT_PATH;
+        // if absent, derive it from the path so FileBrowserFragment.rootPath is always the
+        // volume root (e.g. /storage/emulated/0) and not the current deep folder.
+        val intentRoot = intent.getStringExtra(EXTRA_INITIAL_ROOT_PATH)
+        val initialRoot = when {
+            !intentRoot.isNullOrEmpty() -> intentRoot
+            !initialPath.isNullOrEmpty() -> resolveStorageMountRoot(initialPath)
+            else -> initialPath
+        }
         val initialLabel = intent.getStringExtra(EXTRA_INITIAL_LABEL)
         val initialShareId = intent.getStringExtra(EXTRA_INITIAL_SHARE_ID)
         val initialTypeStr = intent.getStringExtra(EXTRA_INITIAL_STORAGE_TYPE)
@@ -899,6 +907,47 @@ class TabbedBrowserActivity : AppCompatActivity(),
             startActivity(intent)
         }
         finish()
+    }
+
+    /**
+     * Resolves the storage mount root for a given file-system path so that
+     * [TabModel.rootPath] always holds the volume root and not a deep subfolder.
+     *
+     * Priority:
+     * 1. SAF paths are returned as-is (they already encode the root).
+     * 2. Paths inside /storage/emulated/0 (or /sdcard) → internal storage root.
+     * 3. Paths inside an SD card / USB volume detected via [StorageManager] → that volume root.
+     * 4. Fallback: [android.os.Environment.getExternalStorageDirectory].
+     */
+    private fun resolveStorageMountRoot(path: String): String {
+        if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(path)) return path
+
+        val internalRoot = android.os.Environment.getExternalStorageDirectory().absolutePath
+        val normalised = path.trimEnd('/')
+
+        // Internal primary storage
+        if (normalised.startsWith(internalRoot)) return internalRoot
+        if (normalised.startsWith("/sdcard")) return "/sdcard"
+
+        // Check mounted volumes (SD cards, USB OTG, etc.)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            try {
+                val sm = getSystemService(android.os.storage.StorageManager::class.java)
+                val volumes = sm?.storageVolumes ?: emptyList()
+                for (vol in volumes) {
+                    val state = vol.state
+                    if (state != android.os.Environment.MEDIA_MOUNTED &&
+                        state != android.os.Environment.MEDIA_MOUNTED_READ_ONLY) continue
+                    try {
+                        val volPath = (vol.javaClass.getMethod("getPath").invoke(vol) as? String)
+                            ?.trimEnd('/') ?: continue
+                        if (normalised.startsWith(volPath)) return volPath
+                    } catch (_: Throwable) {}
+                }
+            } catch (_: Throwable) {}
+        }
+
+        return internalRoot
     }
 
     private fun updateBreadcrumbs(tab: TabModel) {

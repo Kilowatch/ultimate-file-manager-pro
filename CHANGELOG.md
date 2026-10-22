@@ -5,6 +5,15 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.9] — 2026-10-21
+
+### Fixed
+- **Custom Sort & Filter Hidden Files Visibility (`.env` and Dotfiles)**: Fixed an issue across `FileBrowserFragment`, `FileBrowserActivity`, `NetworkBrowserFragment`, and `NetworkBrowserActivity` where setting "Show hidden files" in folder-specific custom sort & filter had no effect because file listing and search filtering checked global hidden files preferences instead of honoring folder-specific overrides.
+- **Landscape Video Player Status Bar Visibility (`UFMPlayerActivity`)**: Fixed an issue where the system status bar remained visible during video playback in landscape. The player now hides system bars in immersive mode whenever playback controls hide, and restores them when controls appear.
+- **Grid View Reset to List View on Exiting Video Player (`FileBrowserFragment`, `FileBrowserActivity`, `NetworkBrowserFragment`, `NetworkBrowserActivity`)**: Fixed a bug where folders configured with custom grid view reset to list view after playing a video, caused by `onResume()` reloading global view preferences without checking folder-level overrides.
+- **First Tab Upper Directory Navigation in Tabbed Mode (`TabbedBrowserActivity`)**: Fixed an issue where the first tab prevented users from navigating up to parent directories because `TabbedBrowserActivity` initialized the tab's root path to the deep target folder rather than resolving the true storage mount root.
+- **Google Play Device and Network Abuse Policy Violation (version codes 292/293)**: Moved `FossUpdateManager`, `FossUpdatePreferenceManager`, and `ElevatedAppDownloadManager` out of the shared `src/main/` source set and into `src/foss/` only, with lightweight no-op stubs in `src/nonfoss/`. APK-download and silent-install bytecode is now physically absent from Google Play and Amazon AAB builds. On Google Play / Amazon builds, the "Download" flow for elevated companion apps (Shizuku, Porter, Shevery) is replaced with a browser redirect to the respective GitHub releases page.
+
 ## [2.1.8] — 2026-10-06
 
 ### Added

@@ -311,9 +311,7 @@ object SettingsBackupManager {
         if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
             add("ufm_tv_server_prefs",   context.getString(R.string.backup_pref_tv_server))
         }
-        if (za.kilowatch.ultimatefilemanager.BuildConfig.IS_FOSS) {
-            add("ufm_foss_update_prefs", context.getString(R.string.backup_pref_foss_update))
-        }
+        add("ufm_foss_update_prefs", context.getString(R.string.backup_pref_foss_update))
 
         val shares = NetworkShareRepository.getInstance(context).getAll()
         for (share in shares) {

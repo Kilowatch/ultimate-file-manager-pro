@@ -291,7 +291,7 @@ class SettingsActivity : AppCompatActivity() {
         cardCrashReport.setOnClickListener { toggleCrashReport() }
         switchCrashReport.setOnCheckedChangeListener(null)
 
-        // Check for Updates (FOSS only)
+        // Check for Updates (FOSS only — views are absent from non-FOSS layouts so findViewByIds return null)
         cardFossUpdateCheck = findViewById(R.id.cardFossUpdateCheck)
         dividerFossUpdateCheck = findViewById(R.id.dividerFossUpdateCheck)
         switchFossUpdateCheck = findViewById(R.id.switchFossUpdateCheck)

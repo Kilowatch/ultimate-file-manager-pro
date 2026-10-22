@@ -132,6 +132,13 @@ class NetworkBrowserFragment : Fragment() {
     private var isSearchActive = false
     private var activeTagsFilter: Set<String> = emptySet()
     private var currentFiles: List<NetworkFile> = emptyList()
+
+    private var folderSpecificShowHidden: Boolean? = null
+
+    private fun effectiveShowHidden(): Boolean {
+        return folderSpecificShowHidden
+            ?: za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+    }
     private var layoutSelectionBar: View? = null
     private var txtSelectionCount: TextView? = null
     private var layoutEmpty: View? = null
@@ -276,7 +283,9 @@ class NetworkBrowserFragment : Fragment() {
         updatePasteFab()
         if (::fileAdapter.isInitialized) {
             context?.let { ctx ->
-                val savedMode = ViewModeManager.load(ctx)
+                val hasFolderOverride = ::share.isInitialized && za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(ctx, currentPath, share.id)
+                val folderState = if (hasFolderOverride) za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForPath(ctx, currentPath, share.id) else null
+                val savedMode = folderState?.viewMode ?: ViewModeManager.load(ctx)
                 val currentSpan = (recyclerFiles.layoutManager as? androidx.recyclerview.widget.GridLayoutManager)?.spanCount
                 val targetSpan = if (ViewModeManager.isGrid(savedMode)) ViewModeManager.spanCount(ctx, savedMode) else 1
                 if (fileAdapter.viewMode != savedMode || (ViewModeManager.isGrid(savedMode) && currentSpan != targetSpan)) {
@@ -1377,6 +1386,7 @@ class NetworkBrowserFragment : Fragment() {
                     currentDateFilter = state.dateFilter
                     currentSizeFilter = state.sizeFilter
                     activeTagsFilter = state.activeTags
+                    folderSpecificShowHidden = if (hasFolderOverride) state.showHidden else null
                     updateSortBadge(hasFolderOverride)
                     if (fileAdapter.viewMode != viewModeToApply) {
                         applyViewMode(viewModeToApply)
@@ -2625,7 +2635,7 @@ class NetworkBrowserFragment : Fragment() {
      * adapter/RecyclerView updates run on the main thread.
      */
     private suspend fun doSearchInternal(query: String, snapshot: List<NetworkFile>) {
-        val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        val showHidden = effectiveShowHidden()
         val sortedAndFiltered = withContext(kotlinx.coroutines.Dispatchers.Default) {
             val baseList = if (query.isEmpty()) snapshot else snapshot.filter { it.name.contains(query, ignoreCase = true) }
             val filtered = baseList.filter { isNetworkFileVisible(it, showHidden) }
@@ -2733,7 +2743,7 @@ class NetworkBrowserFragment : Fragment() {
             sortMode = sortMode,
             sortOrder = sortOrder,
             filterType = filterType,
-            showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled,
+            showHidden = effectiveShowHidden(),
             groupByDate = false,
             activeTags = activeTagsFilter,
             dateFilter = currentDateFilter,
@@ -2851,7 +2861,10 @@ class NetworkBrowserFragment : Fragment() {
             currentSizeFilter = sizeFilter
             activeTagsFilter = tags
             if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.GLOBAL) {
+                folderSpecificShowHidden = null
                 za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
+            } else {
+                folderSpecificShowHidden = showHidden
             }
 
             if (!isSearchActive) {
