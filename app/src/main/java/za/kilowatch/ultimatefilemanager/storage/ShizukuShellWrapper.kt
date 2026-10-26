@@ -27,32 +27,25 @@ object ShizukuShellWrapper {
     const val PORTER_PACKAGE = "eu.darken.porter"
 
 
-    fun isShizukuInstalled(context: android.content.Context): Boolean {
-        return try {
-            context.packageManager.getPackageInfo(SHIZUKU_PACKAGE, 0)
-            true
-        } catch (e: Exception) {
+    fun isPackageInstalled(context: Context, packageName: String): Boolean = try {
+        val pm = context.packageManager
+        val launchIntent = pm.getLaunchIntentForPackage(packageName)
+            ?: pm.getLeanbackLaunchIntentForPackage(packageName)
+        if (launchIntent != null) {
+            val appInfo = pm.getPackageInfo(packageName, 0).applicationInfo
+            appInfo != null && appInfo.enabled && (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_INSTALLED) != 0
+        } else {
             false
         }
+    } catch (_: Exception) {
+        false
     }
 
-    fun isSheveryInstalled(context: android.content.Context): Boolean {
-        return try {
-            context.packageManager.getPackageInfo(SHEVERY_PACKAGE, 0)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
+    fun isShizukuInstalled(context: Context): Boolean = isPackageInstalled(context, SHIZUKU_PACKAGE)
 
-    fun isPorterInstalled(context: Context): Boolean {
-        return try {
-            context.packageManager.getPackageInfo(PORTER_PACKAGE, 0)
-            true
-        } catch (_: Exception) {
-            false
-        }
-    }
+    fun isSheveryInstalled(context: Context): Boolean = isPackageInstalled(context, SHEVERY_PACKAGE)
+
+    fun isPorterInstalled(context: Context): Boolean = isPackageInstalled(context, PORTER_PACKAGE)
 
     fun isElevatedManagerInstalled(context: Context): Boolean {
         return isPorterInstalled(context) || isShizukuInstalled(context) || isSheveryInstalled(context)

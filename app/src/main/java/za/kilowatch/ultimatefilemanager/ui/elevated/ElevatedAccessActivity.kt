@@ -589,6 +589,7 @@ class ElevatedAccessActivity : AppCompatActivity() {
 
     private fun openManagerApp(manager: ElevatedManager) {
         val launchIntent = packageManager.getLaunchIntentForPackage(manager.packageName)
+            ?: packageManager.getLeanbackLaunchIntentForPackage(manager.packageName)
         if (launchIntent != null) {
             startActivity(launchIntent)
         } else {

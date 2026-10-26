@@ -50,14 +50,21 @@ class SystemElevatedAccessProbe(private val context: Context) : ElevatedAccessPr
     private val tag = "ElevatedAccessProbe"
 
     override fun isInstalled(packageName: String): Boolean = try {
-        context.packageManager.getPackageInfo(packageName, 0)
-        true
+        val pm = context.packageManager
+        val launchIntent = pm.getLaunchIntentForPackage(packageName)
+            ?: pm.getLeanbackLaunchIntentForPackage(packageName)
+        if (launchIntent != null) {
+            val appInfo = pm.getPackageInfo(packageName, 0).applicationInfo
+            appInfo != null && appInfo.enabled && (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_INSTALLED) != 0
+        } else {
+            false
+        }
     } catch (_: Exception) {
         false
     }
 
     override fun launcherIcon(packageName: String): Drawable? = try {
-        context.packageManager.getApplicationIcon(packageName)
+        if (!isInstalled(packageName)) null else context.packageManager.getApplicationIcon(packageName)
     } catch (_: Exception) {
         null
     }
