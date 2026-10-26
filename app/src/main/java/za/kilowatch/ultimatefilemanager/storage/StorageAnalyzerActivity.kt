@@ -45,6 +45,11 @@ import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.util.ThemeColors
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.widget.RadioButton
+import android.widget.CheckBox
+import za.kilowatch.ultimatefilemanager.indexing.FileIndex
 import java.io.File
 import android.os.StatFs
 import android.text.format.Formatter
@@ -62,7 +67,12 @@ import android.widget.Spinner
  *  - Non-indexed → Overview tab only (filesystem walk), others show "not indexed" banner
  *  - Duplicate delete → calls IndexingRepository.deleteFromIndex() per file
  */
-class StorageAnalyzerActivity : AppCompatActivity() {
+interface DuplicateTabHost {
+    fun showStrategyDialog(onChosen: (DuplicateRetentionManager.DuplicateRetentionPolicy) -> Unit)
+    fun registerDuplicateAdapter(a: AnalyzerDuplicateAdapter)
+}
+
+class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
     private val TAG = "StorageAnalyzerActivity"
 
     // ── View references ─────────────────────────────────────────────────────
@@ -156,12 +166,7 @@ class StorageAnalyzerActivity : AppCompatActivity() {
 
         viewPager.registerOnPageChangeCallback(object : androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                if (position != TAB_DUPLICATES) {
-                    fabDeleteDuplicates.visibility = android.view.View.GONE
-                } else {
-                    val count = duplicateAdapter?.checkedFiles?.size ?: 0
-                    fabDeleteDuplicates.visibility = if (count > 0) android.view.View.VISIBLE else android.view.View.GONE
-                }
+                updateDuplicateFab()
             }
         })
 
@@ -685,6 +690,7 @@ class StorageAnalyzerActivity : AppCompatActivity() {
 
                 // Notify each tab fragment
                 pagerAdapter.onReportReady(report)
+                updateDuplicateFab()
             }
         }
     }
@@ -693,11 +699,58 @@ class StorageAnalyzerActivity : AppCompatActivity() {
     // FAB for duplicate deletion
     // ──────────────────────────────────────────────────────────────────────────
 
+    private fun updateDuplicateFab() {
+        if (viewPager.currentItem != TAB_DUPLICATES) {
+            fabDeleteDuplicates.visibility = View.GONE
+            return
+        }
+        val report = viewModel.report.value
+        val hasDuplicates = report?.duplicateGroups?.isNotEmpty() == true
+        if (!hasDuplicates) {
+            fabDeleteDuplicates.visibility = View.GONE
+            return
+        }
+        val count = duplicateAdapter?.checkedFiles?.size ?: 0
+        fabDeleteDuplicates.visibility = View.VISIBLE
+        if (count > 0) {
+            fabDeleteDuplicates.text = getString(R.string.analyzer_delete_selected_count, count)
+        } else {
+            fabDeleteDuplicates.text = getString(R.string.analyzer_delete_all_duplicates)
+        }
+    }
+
     private fun setupDeleteFab() {
         fabDeleteDuplicates.setOnClickListener {
             val adapter = duplicateAdapter ?: return@setOnClickListener
             val toDelete = adapter.checkedFiles.toList()
-            if (toDelete.isEmpty()) return@setOnClickListener
+            if (toDelete.isEmpty()) {
+                // Bulk delete directly from FAB
+                val rememberedPolicy = DuplicateRetentionManager.getStrategy(this)
+                if (rememberedPolicy != null) {
+                    adapter.selectAllDuplicates(rememberedPolicy)
+                    val selected = adapter.checkedFiles.toList()
+                    val frag = if (::pagerAdapter.isInitialized) pagerAdapter.getFragment(TAB_DUPLICATES) as? DuplicatesTabFragment else null
+                    frag?.updateControls()
+                    if (selected.isNotEmpty()) {
+                        showBulkDeleteConfirmDialog(selected) {
+                            deleteDuplicates(selected, adapter)
+                        }
+                    }
+                } else {
+                    showStrategyDialog { chosenPolicy ->
+                        adapter.selectAllDuplicates(chosenPolicy)
+                        val selected = adapter.checkedFiles.toList()
+                        val frag = if (::pagerAdapter.isInitialized) pagerAdapter.getFragment(TAB_DUPLICATES) as? DuplicatesTabFragment else null
+                        frag?.updateControls()
+                        if (selected.isNotEmpty()) {
+                            showBulkDeleteConfirmDialog(selected) {
+                                deleteDuplicates(selected, adapter)
+                            }
+                        }
+                    }
+                }
+                return@setOnClickListener
+            }
 
             // Safety check: is any group being entirely deleted?
             val dangerousFiles = mutableListOf<String>()
@@ -706,51 +759,134 @@ class StorageAnalyzerActivity : AppCompatActivity() {
                 val groupFiles = group.files
                 val selectedInGroup = groupFiles.filter { gf -> adapter.checkedFiles.any { it.path == gf.path } }
                 if (selectedInGroup.size == groupFiles.size && groupFiles.isNotEmpty()) {
-                    // All files in this group are selected!
                     dangerousFiles.add(groupFiles.first().filename)
                 }
             }
 
             val onConfirm = {
-                deleteDuplicates(toDelete.map { it.path }.toSet(), adapter)
+                deleteDuplicates(toDelete, adapter)
             }
 
             if (dangerousFiles.isNotEmpty()) {
                 DuplicateSafetySheet.newInstance(dangerousFiles, onConfirm)
                     .show(supportFragmentManager, DuplicateSafetySheet.TAG)
             } else {
-                val layoutRes = if (isTv) R.layout.dialog_analyzer_delete_confirm_tv else R.layout.dialog_analyzer_delete_confirm
-                val dialogView = layoutInflater.inflate(layoutRes, null)
-                val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                    .setView(dialogView)
-                    .create()
-
-                val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
-                val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
-
-                txtTitle?.text = getString(R.string.delete)
-                txtMessage?.text = getString(R.string.analyzer_delete_confirm_msg)
-
-                dialogView.findViewById<View>(R.id.btnDeleteConfirm)?.setOnClickListener {
-                    dialog.dismiss()
-                    onConfirm()
-                }
-                dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
-                    dialog.dismiss()
-                }
-
-                dialog.show()
-                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+                showBulkDeleteConfirmDialog(toDelete, onConfirm)
             }
         }
     }
 
-    private fun deleteDuplicates(paths: Set<String>, adapter: AnalyzerDuplicateAdapter) {
+    override fun showStrategyDialog(onChosen: (DuplicateRetentionManager.DuplicateRetentionPolicy) -> Unit) {
+        val layoutRes = if (isTv) R.layout.dialog_duplicate_strategy_tv else R.layout.dialog_duplicate_strategy
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val cardKeepOldest = dialogView.findViewById<View>(R.id.cardKeepOldest)
+        val cardKeepNewest = dialogView.findViewById<View>(R.id.cardKeepNewest)
+        val radioKeepOldest = dialogView.findViewById<RadioButton>(R.id.radioKeepOldest)
+        val radioKeepNewest = dialogView.findViewById<RadioButton>(R.id.radioKeepNewest)
+        val checkRemember = dialogView.findViewById<CheckBox>(R.id.checkRememberStrategy)
+        val btnConfirm = dialogView.findViewById<View>(R.id.btnConfirmStrategy)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelStrategy)
+
+        var selectedPolicy = DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST
+
+        cardKeepOldest?.setOnClickListener {
+            selectedPolicy = DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST
+            radioKeepOldest?.isChecked = true
+            radioKeepNewest?.isChecked = false
+        }
+        cardKeepNewest?.setOnClickListener {
+            selectedPolicy = DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_NEWEST
+            radioKeepNewest?.isChecked = true
+            radioKeepOldest?.isChecked = false
+        }
+
+        btnConfirm?.setOnClickListener {
+            val remember = checkRemember?.isChecked == true
+            if (remember) {
+                DuplicateRetentionManager.saveStrategy(this, selectedPolicy, true)
+            }
+            dialog.dismiss()
+            onChosen(selectedPolicy)
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
+    private fun showBulkDeleteConfirmDialog(
+        toDelete: List<FileIndex>,
+        onConfirm: () -> Unit
+    ) {
+        val layoutRes = if (isTv) R.layout.dialog_analyzer_delete_confirm_tv else R.layout.dialog_analyzer_delete_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+
+        val totalBytes = toDelete.sumOf { it.size }
+        val sizeFormatted = Formatter.formatFileSize(this, totalBytes)
+        txtTitle?.text = getString(R.string.analyzer_bulk_delete_confirm_title, toDelete.size)
+        txtMessage?.text = getString(R.string.analyzer_bulk_delete_confirm_msg, toDelete.size, sizeFormatted)
+
+        dialogView.findViewById<View>(R.id.btnDeleteConfirm)?.setOnClickListener {
+            dialog.dismiss()
+            onConfirm()
+        }
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
+    private fun showDeleteCompletionDialog(deletedCount: Int, savedBytes: Long, failedCount: Int) {
+        if (deletedCount == 0 && failedCount == 0) return
+        val layoutRes = if (isTv) R.layout.dialog_duplicate_completion_tv else R.layout.dialog_duplicate_completion
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtCompletionTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtCompletionMessage)
+        val txtFailure = dialogView.findViewById<TextView>(R.id.txtCompletionFailure)
+        val btnDone = dialogView.findViewById<View>(R.id.btnCompletionDone)
+
+        val sizeFormatted = Formatter.formatFileSize(this, savedBytes)
+        txtTitle?.text = getString(R.string.analyzer_delete_completion_title)
+        txtMessage?.text = getString(R.string.analyzer_delete_completion_msg, deletedCount, sizeFormatted)
+
+        if (failedCount > 0) {
+            txtFailure?.visibility = View.VISIBLE
+            txtFailure?.text = getString(R.string.analyzer_delete_completion_failed, failedCount)
+        } else {
+            txtFailure?.visibility = View.GONE
+        }
+
+        btnDone?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
+    private fun deleteDuplicates(toDelete: List<FileIndex>, adapter: AnalyzerDuplicateAdapter) {
+        val totalBytes = toDelete.sumOf { it.size }
+        val paths = toDelete.map { it.path }.toSet()
         lifecycleScope.launch {
-            // Run the blocking File.delete() calls (native remove syscall) on the IO
-            // dispatcher: on slow or busy storage a single delete can exceed the 5 s
-            // ANR watchdog threshold and freeze the main thread (reported from a
-            // KTC JVC 2K TV, SDK 34, app 1.8.0-GOOGLE).
             val (deleted, failedCount, hasProtectedFailed) = withContext(Dispatchers.IO) {
                 val deleted = mutableSetOf<String>()
                 var failedCount = 0
@@ -767,7 +903,6 @@ class StorageAnalyzerActivity : AppCompatActivity() {
                         f.exists() && f.delete()
                     }
                     if (success) {
-                        // Keep the Room index in sync
                         indexingRepo.deleteFromIndex(path)
                         deleted.add(path)
                     } else {
@@ -779,9 +914,19 @@ class StorageAnalyzerActivity : AppCompatActivity() {
                 }
                 Triple(deleted, failedCount, hasProtectedFailed)
             }
+
+            val deletedBytes = toDelete.filter { it.path in deleted }.sumOf { it.size }
             adapter.removeFiles(deleted)
-            fabDeleteDuplicates.visibility = View.GONE
-            if (failedCount > 0) {
+            updateDuplicateFab()
+
+            val frag = if (::pagerAdapter.isInitialized) pagerAdapter.getFragment(TAB_DUPLICATES) as? DuplicatesTabFragment else null
+            frag?.updateControls()
+
+            if (deleted.isNotEmpty()) {
+                showDeleteCompletionDialog(deleted.size, deletedBytes, failedCount)
+            }
+
+            if (failedCount > 0 && deleted.isEmpty()) {
                 val shizukuAuthorized = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isAuthorized()
                 val msg = if (hasProtectedFailed && !shizukuAuthorized) {
                     getString(R.string.delete_error_shizuku_required)
@@ -794,11 +939,14 @@ class StorageAnalyzerActivity : AppCompatActivity() {
     }
 
     /** Called by the Duplicates fragment when its adapter is created. */
-    fun registerDuplicateAdapter(a: AnalyzerDuplicateAdapter) {
+    override fun registerDuplicateAdapter(a: AnalyzerDuplicateAdapter) {
         duplicateAdapter = a
         a.onSelectionChanged = { count ->
-            fabDeleteDuplicates.visibility = if (count > 0) View.VISIBLE else View.GONE
+            updateDuplicateFab()
+            val frag = if (::pagerAdapter.isInitialized) pagerAdapter.getFragment(TAB_DUPLICATES) as? DuplicatesTabFragment else null
+            frag?.updateControls()
         }
+        updateDuplicateFab()
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -1110,6 +1258,11 @@ class LargeFilesTabFragment : AnalyzerTabFragment() {
 /* ── Duplicates Tab ──────────────────────────────────────────────────────── */
 class DuplicatesTabFragment : AnalyzerTabFragment() {
 
+    private val viewModel: StorageAnalyzerViewModel by lazy {
+        androidx.lifecycle.ViewModelProvider(requireActivity())[StorageAnalyzerViewModel::class.java]
+    }
+    private var duplicateAdapter: AnalyzerDuplicateAdapter? = null
+
     companion object { fun newInstance() = DuplicatesTabFragment() }
 
     override fun onCreateView(inf: LayoutInflater, container: ViewGroup?, state: Bundle?): View =
@@ -1120,13 +1273,61 @@ class DuplicatesTabFragment : AnalyzerTabFragment() {
 
         // Observe the Phase-2 verification flag from the shared ViewModel to drive the
         // "Verifying content…" progress indicator pinned at the bottom of the list.
-        val vm = (activity as? StorageAnalyzerActivity)?.viewModel ?: return
         viewLifecycleOwner.lifecycleScope.launch {
-            vm.isDuplicateScanRunning.collectLatest { running: Boolean ->
+            viewModel.isDuplicateScanRunning.collectLatest { running: Boolean ->
                 view.findViewById<View>(R.id.layoutVerifying)?.visibility =
                     if (running) View.VISIBLE else View.GONE
             }
         }
+
+        view.findViewById<View>(R.id.btnSelectAllDuplicates)?.setOnClickListener {
+            val host = activity as? DuplicateTabHost ?: return@setOnClickListener
+            val adapter = duplicateAdapter ?: return@setOnClickListener
+            val ctx = it.context
+            val policy = DuplicateRetentionManager.getStrategy(ctx)
+            if (policy != null) {
+                adapter.selectAllDuplicates(policy)
+                updateControls()
+            } else {
+                host.showStrategyDialog { chosenPolicy ->
+                    adapter.selectAllDuplicates(chosenPolicy)
+                    updateControls()
+                }
+            }
+        }
+
+        view.findViewById<View>(R.id.btnClearSelection)?.setOnClickListener {
+            duplicateAdapter?.clearSelection()
+            updateControls()
+        }
+    }
+
+    fun updateControls() {
+        val v = view ?: return
+        val ctx = context ?: return
+        val report = viewModel.report.value ?: return
+        val layoutControls = v.findViewById<View>(R.id.layoutDuplicateControls)
+        val txtSummary = v.findViewById<TextView>(R.id.txtDuplicateSummary)
+        val btnClear = v.findViewById<View>(R.id.btnClearSelection)
+        val btnSelectAll = v.findViewById<View>(R.id.btnSelectAllDuplicates)
+
+        val groups = report.duplicateGroups
+        if (groups.isEmpty()) {
+            layoutControls?.visibility = View.GONE
+            return
+        }
+
+        layoutControls?.visibility = View.VISIBLE
+        val totalWasted = groups.sumOf { it.wastedBytes }
+        txtSummary?.text = getString(
+            R.string.analyzer_duplicate_summary,
+            groups.size,
+            Formatter.formatFileSize(ctx, totalWasted)
+        )
+
+        val checkedCount = duplicateAdapter?.checkedFiles?.size ?: 0
+        btnClear?.visibility = if (checkedCount > 0) View.VISIBLE else View.GONE
+        btnSelectAll?.visibility = View.VISIBLE
     }
 
     override fun bindReport(report: AnalyzerReport) {
@@ -1137,11 +1338,17 @@ class DuplicatesTabFragment : AnalyzerTabFragment() {
         val noHash = report.duplicateGroups.isEmpty() && report.isIndexed
         v.findViewById<TextView>(R.id.txtListEmptyState)?.visibility =
             if (noHash) View.VISIBLE else View.GONE
-        if (noHash) return
+        if (noHash) {
+            v.findViewById<View>(R.id.layoutDuplicateControls)?.visibility = View.GONE
+            return
+        }
 
         val adapter = AnalyzerDuplicateAdapter(report.duplicateGroups, isTv)
-        (activity as? StorageAnalyzerActivity)?.registerDuplicateAdapter(adapter)
+        duplicateAdapter = adapter
+        (activity as? DuplicateTabHost)?.registerDuplicateAdapter(adapter)
         makeRecycler(v, R.id.recyclerAnalyzerList).adapter = adapter
+
+        updateControls()
     }
 }
 

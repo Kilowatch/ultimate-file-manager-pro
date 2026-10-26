@@ -5,6 +5,14 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.2] — 2026-10-26
+
+### Added
+- **Bulk Duplicate Deletion (Issue #57)**: Added bulk duplicate selection and deletion to Storage Analyzer (Duplicates tab) and Folder Duplicate Finder, allowing users to remove redundant duplicate copies while strictly preserving exactly one original file per duplicate group.
+- **Duplicate Retention Strategy Setting**: Added a customizable duplicate retention strategy setting ("Keep Oldest", "Keep Newest", or "Always Ask") with "Remember my choice" persistence and preference management in Settings under the Storage & Indexing section.
+- **Duplicate Controls Header & Original Badge**: Added duplicate summary action strip displaying group count and reclaimable space alongside "Select All Duplicates" and "Clear" actions, with frosted "Original" badge indicators designating preserved files.
+- **UFMStandard Duplicate Strategy & Completion Dialogs**: Added theme-aware frosted glass strategy selection and cleanup completion dialogs showing exact count of files deleted and total storage reclaimed, with Android TV D-pad navigation support.
+
 ## [2.2.1] — 2026-10-26
 
 ### Added

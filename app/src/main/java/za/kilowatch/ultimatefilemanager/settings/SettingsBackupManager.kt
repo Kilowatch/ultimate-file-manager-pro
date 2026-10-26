@@ -298,6 +298,7 @@ object SettingsBackupManager {
         add("selection_checkbox_prefs", context.getString(R.string.backup_pref_selection_checkbox))
         add("ufm_keyboard_shortcuts_prefs", context.getString(R.string.backup_pref_keyboard_shortcuts))
         add("ufm_saf_locations_prefs",   context.getString(R.string.backup_pref_saf_locations))
+        add("prefs_duplicate_retention", context.getString(R.string.backup_pref_duplicate_retention))
         add("adb_preferences",           context.getString(R.string.backup_pref_adb_settings))
         add("grid_text_position_prefs",  context.getString(R.string.backup_pref_grid_text_position))
         add("ufm_view_style_prefs_v2",   context.getString(R.string.backup_pref_view_styles))
@@ -642,7 +643,8 @@ object SettingsBackupManager {
                 "ufm_tv_server_prefs"       to R.string.backup_pref_tv_server,
                 "ufm_foss_update_prefs"     to R.string.backup_pref_foss_update,
                 "grid_text_position_prefs"  to R.string.backup_pref_grid_text_position,
-                "ufm_view_style_prefs_v2"   to R.string.backup_pref_view_styles
+                "ufm_view_style_prefs_v2"   to R.string.backup_pref_view_styles,
+                "prefs_duplicate_retention" to R.string.backup_pref_duplicate_retention
             )
             while (keys.hasNext()) {
                 val key = keys.next()

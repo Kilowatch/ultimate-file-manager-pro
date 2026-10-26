@@ -141,6 +141,71 @@
 
     </LinearLayout>
 
+    <!-- Duplicate Bulk Controls Header Strip (Duplicates Tab only) -->
+    <LinearLayout
+        android:id="@+id/layoutDuplicateControls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/txtDuplicateSummary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="45 duplicate groups · saves 1.2 GB" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClearSelection"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/analyzer_clear_selection"
+            android:textColor="?attr/ufmDenied"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:focusable="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSelectAllDuplicates"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/analyzer_select_all_duplicates"
+            android:textColor="@android:color/white"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:focusable="true"
+            app:cornerRadius="10dp"
+            app:backgroundTint="?attr/colorPrimary"
+            android:layout_marginStart="6dp" />
+
+    </LinearLayout>
+
     <!-- Main list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerAnalyzerList"
@@ -149,7 +214,7 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutDuplicateControls"
         app:layout_constraintBottom_toTopOf="@id/layoutVerifying"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

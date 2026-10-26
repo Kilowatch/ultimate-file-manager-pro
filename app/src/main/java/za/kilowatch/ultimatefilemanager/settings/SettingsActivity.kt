@@ -169,6 +169,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var cardNetworkThumbnails: View
     private lateinit var txtVideoThumbnailTimeSubtitle: TextView
+    private var txtDuplicateRetentionSubtitle: TextView? = null
     private lateinit var txtApkExtractSubtitle: TextView
     private lateinit var txtSearchResultsLimitSubtitle: TextView
 
@@ -771,6 +772,14 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, StorageIndexerActivity::class.java))
         }
 
+        // Duplicate Retention Strategy row
+        val cardDuplicateRetention = findViewById<View>(R.id.cardDuplicateRetention)
+        txtDuplicateRetentionSubtitle = findViewById(R.id.txtDuplicateRetentionSubtitle)
+        updateDuplicateRetentionSubtitle()
+        cardDuplicateRetention?.setOnClickListener {
+            showDuplicateRetentionSettingsDialog()
+        }
+
         // Manage Custom Drive Names row
         val cardStorageRename = findViewById<View>(R.id.cardStorageRename)
         cardStorageRename?.setOnClickListener {
@@ -842,6 +851,7 @@ class SettingsActivity : AppCompatActivity() {
             setupTvCardFocus(cardAnalytics)
             setupTvCardFocus(cardDbViewer)
             cardStorageRename?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardDuplicateRetention)?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardHiddenFiles)
             setupTvCardFocus(cardRecycleBin)
             setupTvCardFocus(cardMediaThumbnails)
@@ -1866,6 +1876,45 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateDuplicateRetentionSubtitle() {
+        val mode = za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.getPreferenceMode(this)
+        val subtitleRes = when (mode) {
+            za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_OLDEST -> R.string.settings_duplicate_retention_summary_oldest
+            za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_NEWEST -> R.string.settings_duplicate_retention_summary_newest
+            else -> R.string.settings_duplicate_retention_summary_ask
+        }
+        txtDuplicateRetentionSubtitle?.setText(subtitleRes)
+    }
+
+    private fun showDuplicateRetentionSettingsDialog() {
+        val currentMode = za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.getPreferenceMode(this)
+        val options = arrayOf(
+            getString(R.string.settings_duplicate_retention_summary_oldest),
+            getString(R.string.settings_duplicate_retention_summary_newest),
+            getString(R.string.settings_duplicate_retention_summary_ask)
+        )
+        val selectedIdx = when (currentMode) {
+            za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_OLDEST -> 0
+            za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_NEWEST -> 1
+            else -> 2
+        }
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.settings_duplicate_retention_title)
+            .setSingleChoiceItems(options, selectedIdx) { dialog, which ->
+                val newMode = when (which) {
+                    0 -> za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_OLDEST
+                    1 -> za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_NEWEST
+                    else -> za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_ASK
+                }
+                za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.setPreferenceMode(this, newMode)
+                updateDuplicateRetentionSubtitle()
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
     private fun setupQuickAccessSection() {
         val layoutSectionQuickAccess = findViewById<View>(R.id.layoutSectionQuickAccess)
         if (isTv) {
@@ -2532,6 +2581,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardFavorites, "settings_favorites", R.drawable.ic_star),
             CardIcon(R.id.cardFolderSort, "settings_folder_sort", R.drawable.ic_sort),
             CardIcon(R.id.cardStorageRename, "settings_custom_drive_names", R.drawable.ic_edit),
+            CardIcon(R.id.cardDuplicateRetention, "settings_duplicate_retention", R.drawable.ic_duplicate),
             CardIcon(R.id.cardDefaultApps, "settings_default_apps", R.drawable.ic_apps),
             CardIcon(R.id.cardFileServerTiles, "settings_file_server_tiles", R.drawable.ic_ufm_ftp),
             CardIcon(R.id.cardHiddenFiles, "settings_hidden_files", R.drawable.ic_eye),

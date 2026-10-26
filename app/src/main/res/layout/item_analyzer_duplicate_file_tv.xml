@@ -107,6 +107,22 @@
                 tools:text="4.2 MB" />
 
             <TextView
+                android:id="@+id/txtDupPreservedBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:textSize="10.5sp"
+                android:fontFamily="sans-serif-bold"
+                android:background="@drawable/bg_badge_in_folder"
+                android:textColor="@color/ufm_primary"
+            android:duplicateParentState="true"
+                android:text="@string/analyzer_badge_original"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
                 android:id="@+id/txtDupLocationBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -116,7 +132,7 @@
                 android:textSize="10.5sp"
                 android:fontFamily="sans-serif-bold"
                 android:background="@drawable/bg_badge_in_folder"
-                android:textColor="#00897B"
+                android:textColor="@color/ufm_primary"
                 android:duplicateParentState="true"
                 android:visibility="gone"
                 tools:visibility="visible"

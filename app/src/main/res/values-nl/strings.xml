@@ -1183,6 +1183,74 @@ Interne opslag
 Verwijderen
 </string>
 
+    <!-- Bulk duplicate deletion & retention strategy -->
+    <string name="analyzer_select_all_duplicates">
+Select All Duplicates
+</string>
+    <string name="analyzer_clear_selection">
+Clear
+</string>
+    <string name="analyzer_delete_all_duplicates">
+Delete All Duplicates
+</string>
+    <string name="analyzer_delete_selected_count">
+Delete Selected (%1$d)
+</string>
+    <string name="analyzer_badge_original">
+Original
+</string>
+    <string name="analyzer_strategy_title">
+Duplicate Retention Strategy
+</string>
+    <string name="analyzer_strategy_oldest">
+Keep Oldest (Original)
+</string>
+    <string name="analyzer_strategy_oldest_desc">
+Preserves the oldest file by modification date and deletes newer copies.
+</string>
+    <string name="analyzer_strategy_newest">
+Keep Newest
+</string>
+    <string name="analyzer_strategy_newest_desc">
+Preserves the most recently modified file and deletes older copies.
+</string>
+    <string name="analyzer_strategy_remember">
+Remember my choice
+</string>
+    <string name="analyzer_bulk_delete_confirm_title">
+Delete %1$d Duplicate Files?
+</string>
+    <string name="analyzer_bulk_delete_confirm_msg">
+One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+</string>
+    <string name="analyzer_delete_completion_title">
+Cleanup Complete
+</string>
+    <string name="analyzer_delete_completion_msg">
+Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+</string>
+    <string name="analyzer_delete_completion_failed">
+%1$d files could not be deleted due to permissions.
+</string>
+    <string name="analyzer_duplicate_summary">
+%1$d duplicate groups · saves %2$s
+</string>
+    <string name="settings_duplicate_retention_title">
+Duplicate Retention Strategy
+</string>
+    <string name="settings_duplicate_retention_summary_oldest">
+Keep oldest file (Original)
+</string>
+    <string name="settings_duplicate_retention_summary_newest">
+Keep newest file
+</string>
+    <string name="settings_duplicate_retention_summary_ask">
+Always ask
+</string>
+    <string name="backup_pref_duplicate_retention">
+Duplicate Retention Strategy
+</string>
+
     <!-- Theme -->
     <string name="theme_title">Uiterlijk</string>
     <string name="theme_tile_subtitle">
@@ -6645,9 +6713,7 @@ Instelling: %1$s
     <string name="smb_share_prefix">SMB-share: %1$s (%2$s)</string>
     <string name="ftp_share_prefix">FTP-share: %1$s (%2$s)</string>
     <string name="sftp_share_prefix">SFTP-share: %1$s (%2$s)</string>
-    <string name="scp_share_prefix">
-SCP-aandeel: %1$s (%2$s)
-</string>
+    <string name="scp_share_prefix">SCP-share: %1$s (%2$s)</string>
     <string name="file_server_port_item">
 Bestandsserverpoort (%1$d)
 </string>

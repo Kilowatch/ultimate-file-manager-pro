@@ -39,6 +39,9 @@ class AnalyzerDuplicateAdapter(
     /** Currently selected file paths (for deletion). */
     val checkedFiles = mutableSetOf<FileIndex>()
 
+    /** File paths designated as preserved originals by smart bulk selection. */
+    val preservedPaths = mutableSetOf<String>()
+
     private fun buildRows(gs: List<DuplicateGroup>): List<Row> {
         val result = mutableListOf<Row>()
         for (g in gs) {
@@ -60,12 +63,60 @@ class AnalyzerDuplicateAdapter(
         notifyDataSetChanged()
     }
 
+    /**
+     * Selects all duplicate files across all groups based on [policy],
+     * keeping exactly 1 original copy per group preserved.
+     *
+     * @return count of selected files to delete.
+     */
+    fun selectAllDuplicates(policy: DuplicateRetentionManager.DuplicateRetentionPolicy = DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST): Int {
+        checkedFiles.clear()
+        preservedPaths.clear()
+
+        for (g in groups) {
+            if (g.files.size <= 1) continue
+            val sorted = when (policy) {
+                DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST -> {
+                    g.files.sortedWith(
+                        compareBy<FileIndex> { it.lastModified }
+                            .thenBy { it.path.length }
+                            .thenBy { it.path }
+                    )
+                }
+                DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_NEWEST -> {
+                    g.files.sortedWith(
+                        compareByDescending<FileIndex> { it.lastModified }
+                            .thenBy { it.path.length }
+                            .thenBy { it.path }
+                    )
+                }
+            }
+            val original = sorted.first()
+            preservedPaths.add(original.path)
+            checkedFiles.addAll(sorted.drop(1))
+        }
+        refresh()
+        onSelectionChanged(checkedFiles.size)
+        return checkedFiles.size
+    }
+
+    /**
+     * Clears all selections and preserved badges.
+     */
+    fun clearSelection() {
+        checkedFiles.clear()
+        preservedPaths.clear()
+        refresh()
+        onSelectionChanged(0)
+    }
+
     /** Remove file rows for a set of paths (after deletion). */
     fun removeFiles(deletedPaths: Set<String>) {
         val updated = groups.map { g ->
             g.copy(files = g.files.filter { it.path !in deletedPaths })
         }.filter { it.files.size > 1 }
         checkedFiles.removeAll { it.path in deletedPaths }
+        preservedPaths.removeAll(deletedPaths)
         submitList(updated)
     }
 
@@ -130,6 +181,10 @@ class AnalyzerDuplicateAdapter(
                 }
                 vh.imgFileIcon?.setImageResource(iconRes)
 
+                // Preserved "Original" badge
+                val isPreserved = fi.path in preservedPaths && checkedFiles.isNotEmpty()
+                vh.txtPreservedBadge?.visibility = if (isPreserved) View.VISIBLE else View.GONE
+
                 if (!targetFolder.isNullOrEmpty()) {
                     val cleanFileFolder = fi.folderPath.trimEnd('/')
                     val cleanTarget = targetFolder.trimEnd('/')
@@ -158,8 +213,32 @@ class AnalyzerDuplicateAdapter(
                 vh.checkbox.setOnCheckedChangeListener(null)
                 vh.checkbox.isChecked = checkedFiles.contains(fi)
                 vh.checkbox.setOnCheckedChangeListener { _, checked ->
-                    if (checked) checkedFiles.add(fi) else checkedFiles.remove(fi)
+                    val wasEmpty = checkedFiles.isEmpty()
+                    if (checked) {
+                        checkedFiles.add(fi)
+                    } else {
+                        checkedFiles.remove(fi)
+                    }
+                    val nowEmpty = checkedFiles.isEmpty()
+                    val group = groups.firstOrNull { g -> g.files.any { it.path == fi.path } }
+                    var groupBadgeRemoved = false
+                    if (group != null) {
+                        val allChecked = group.files.all { it in checkedFiles }
+                        if (allChecked) {
+                            group.files.forEach {
+                                if (preservedPaths.remove(it.path)) {
+                                    groupBadgeRemoved = true
+                                }
+                            }
+                        }
+                    }
                     onSelectionChanged(checkedFiles.size)
+                    if (wasEmpty != nowEmpty || groupBadgeRemoved) {
+                        vh.itemView.post { notifyDataSetChanged() }
+                    } else {
+                        val isPreserved = fi.path in preservedPaths && !nowEmpty
+                        vh.txtPreservedBadge?.visibility = if (isPreserved) View.VISIBLE else View.GONE
+                    }
                 }
                 vh.itemView.setOnClickListener { vh.checkbox.isChecked = !vh.checkbox.isChecked }
             }
@@ -183,6 +262,7 @@ class AnalyzerDuplicateAdapter(
         val txtName          : TextView  = v.findViewById(R.id.txtDupFileName)
         val txtPath          : TextView  = v.findViewById(R.id.txtDupFilePath)
         val txtSize          : TextView  = v.findViewById(R.id.txtDupFileSize)
+        val txtPreservedBadge: TextView? = v.findViewById(R.id.txtDupPreservedBadge)
         val txtLocationBadge : TextView  = v.findViewById(R.id.txtDupLocationBadge)
         val imgFileIcon      : ImageView? = v.findViewById(R.id.imgDupFileIcon)
         val checkbox         : CheckBox  = v.findViewById(R.id.checkDupFile)
