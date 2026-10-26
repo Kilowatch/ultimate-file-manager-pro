@@ -12227,9 +12227,7 @@ Achtergrond van vergrendelscherm bijgewerkt
     <string name="toast_wallpaper_set_failed">
 Kan achtergrond niet instellen
 </string>
-    <string name="icon_toolbar_set_home_wallpaper">
-Stel Thuisachtergrond in
-</string>
+    <string name="icon_toolbar_set_home_wallpaper">Stel Startscherm in</string>
     <string name="icon_toolbar_set_lock_wallpaper">
 Achtergrond vergrendelen instellen
 </string>
