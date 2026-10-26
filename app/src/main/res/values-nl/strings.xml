@@ -3688,9 +3688,7 @@ Exporteren
     <string name="tile_color_import">
 Importcode
 </string>
-    <string name="tile_color_export_title">
-Deel tegelkleuren
-</string>
+    <string name="tile_color_export_title">Share tegelkleuren</string>
     <string name="tile_color_import_title">
 Tegelkleuren importeren
 </string>
