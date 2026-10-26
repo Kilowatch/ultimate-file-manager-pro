@@ -2827,9 +2827,7 @@ Alleen SMB3 (modern veilig)
     <string name="network_field_connection_type">
 Verbindingstype
 </string>
-    <string name="network_conn_type_share">
-Deel
-</string>
+    <string name="network_conn_type_share">Share</string>
     <string name="network_conn_type_server">
 Server
 </string>
