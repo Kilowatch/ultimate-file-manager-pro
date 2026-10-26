@@ -65,8 +65,8 @@ object NetworkHttpProxyServer {
     class Session(
         val share: NetworkShare,
         val path: String,
-        val mimeType: String,
-        val fileSize: Long,
+        @Volatile var mimeType: String,
+        @Volatile var fileSize: Long,
         val authToken: String = generateAuthToken(),
         val createdAt: Long = System.currentTimeMillis()
     ) {
@@ -122,6 +122,17 @@ object NetworkHttpProxyServer {
         return bytes.joinToString("") { "%02x".format(it) }
     }
 
+    private fun generateDeterministicKey(share: NetworkShare, path: String): String {
+        val raw = "${share.id}:${share.type}:${share.host}:${share.port}:${share.remotePath}:$path"
+        return UUID.nameUUIDFromBytes(raw.toByteArray(Charsets.UTF_8)).toString()
+    }
+
+    private fun generateDeterministicAuthToken(share: NetworkShare, path: String): String {
+        val raw = "auth:${share.id}:${share.type}:${share.host}:${share.port}:${share.remotePath}:$path"
+        val digest = java.security.MessageDigest.getInstance("SHA-256").digest(raw.toByteArray(Charsets.UTF_8))
+        return digest.take(16).joinToString("") { "%02x".format(it) }
+    }
+
     private val sessions = ConcurrentHashMap<String, Session>()
 
     @Volatile private var serverSocket: ServerSocket? = null
@@ -143,8 +154,7 @@ object NetworkHttpProxyServer {
     fun start() {
         if (serverSocket != null) return
         try {
-            val ss = ServerSocket(0)
-            ss.reuseAddress = true
+            val ss = ServerSocket(0).apply { reuseAddress = true }
             serverSocket = ss
             port = ss.localPort
             GoRoLog.d(TAG, "HTTP proxy started on port $port")
@@ -169,12 +179,22 @@ object NetworkHttpProxyServer {
 
     fun register(share: NetworkShare, path: String, mimeType: String, fileSize: Long): String {
         if (!isRunning) start()
-        val uuid = UUID.randomUUID().toString()
-        val session = Session(share, path, mimeType, fileSize)
-        sessions[uuid] = session
-        GoRoLog.d(TAG, "Registered session $uuid → ${share.host}$path (size=$fileSize)")
-        val fileName = android.net.Uri.encode(path.substringAfterLast('/'))
-        return "http://127.0.0.1:$port/$uuid/$fileName?auth=${session.authToken}"
+        val key = generateDeterministicKey(share, path)
+        val authToken = generateDeterministicAuthToken(share, path)
+        sessions.compute(key) { _, existing ->
+            if (existing != null) {
+                existing.mimeType = mimeType
+                existing.fileSize = fileSize
+                existing.cancelIdleHandleCloseLocked()
+                existing
+            } else {
+                Session(share, path, mimeType, fileSize, authToken)
+            }
+        }
+        GoRoLog.d(TAG, "Registered session $key → ${share.host}$path (size=$fileSize)")
+        val rawFileName = path.substringAfterLast('/').ifBlank { "media" }
+        val fileName = android.net.Uri.encode(rawFileName)
+        return "http://127.0.0.1:$port/$key/$fileName?auth=$authToken"
     }
 
     fun unregister(uuid: String) {
@@ -298,6 +318,12 @@ object NetworkHttpProxyServer {
         out: OutputStream, session: Session, stream: ActiveStream,
         fileSize: Long, isRangeRequest: Boolean, rangeStart: Long, rangeEnd: Long
     ) {
+        val rawFileName = session.path.substringAfterLast('/').ifBlank { "media" }
+        val safeFileName = rawFileName.replace("\"", "\\\"").replace("\r", "").replace("\n", "")
+        val encodedFileName = android.net.Uri.encode(rawFileName, "UTF-8")
+        val safeTitle = rawFileName.substringBeforeLast('.').ifBlank { rawFileName }
+            .replace("\r", "").replace("\n", "")
+
         val contentLength = rangeEnd - rangeStart + 1
         val statusLine = if (isRangeRequest) "HTTP/1.1 206 Partial Content\r\n" else "HTTP/1.1 200 OK\r\n"
         val responseHeaders = buildString {
@@ -306,6 +332,10 @@ object NetworkHttpProxyServer {
             append("Content-Length: $contentLength\r\n")
             append("Accept-Ranges: bytes\r\n")
             if (isRangeRequest) append("Content-Range: bytes $rangeStart-$rangeEnd/$fileSize\r\n")
+            append("Content-Disposition: inline; filename=\"$safeFileName\"; filename*=UTF-8''$encodedFileName\r\n")
+            append("icy-name: $safeTitle\r\n")
+            append("icy-description: $safeTitle\r\n")
+            append("X-Title: $safeTitle\r\n")
             append("Connection: close\r\n")
             append("\r\n")
         }
@@ -400,6 +430,12 @@ object NetworkHttpProxyServer {
 
     private fun sendHeadResponse(out: OutputStream, session: Session, fileSize: Long,
                                   isRangeRequest: Boolean, rangeStart: Long, rangeEnd: Long) {
+        val rawFileName = session.path.substringAfterLast('/').ifBlank { "media" }
+        val safeFileName = rawFileName.replace("\"", "\\\"").replace("\r", "").replace("\n", "")
+        val encodedFileName = android.net.Uri.encode(rawFileName, "UTF-8")
+        val safeTitle = rawFileName.substringBeforeLast('.').ifBlank { rawFileName }
+            .replace("\r", "").replace("\n", "")
+
         val contentLength = rangeEnd - rangeStart + 1
         val statusLine = if (isRangeRequest) "HTTP/1.1 206 Partial Content\r\n" else "HTTP/1.1 200 OK\r\n"
         val response = buildString {
@@ -408,6 +444,10 @@ object NetworkHttpProxyServer {
             append("Content-Length: $contentLength\r\n")
             append("Accept-Ranges: bytes\r\n")
             if (isRangeRequest) append("Content-Range: bytes $rangeStart-$rangeEnd/$fileSize\r\n")
+            append("Content-Disposition: inline; filename=\"$safeFileName\"; filename*=UTF-8''$encodedFileName\r\n")
+            append("icy-name: $safeTitle\r\n")
+            append("icy-description: $safeTitle\r\n")
+            append("X-Title: $safeTitle\r\n")
             append("Connection: close\r\n")
             append("\r\n")
         }

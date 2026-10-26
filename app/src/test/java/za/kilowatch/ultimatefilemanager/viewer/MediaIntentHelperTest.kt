@@ -25,12 +25,14 @@ class MediaIntentHelperTest {
         MediaIntentHelper.attachMediaExtras(intent, title, size, "video/mp4")
 
         assertEquals("Big_Buck_Bunny.mp4", intent.getStringExtra("title"))
+        assertEquals("Big_Buck_Bunny.mp4", intent.getStringExtra("extra_title"))
         assertEquals("Big_Buck_Bunny.mp4", intent.getStringExtra(MediaIntentHelper.VLC_EXTRA_ITEM_TITLE))
         assertEquals("Big_Buck_Bunny.mp4", intent.getStringExtra(MediaIntentHelper.VLC_EXTRA_MEDIA_TITLE))
         assertEquals("Big_Buck_Bunny.mp4", intent.getStringExtra(Intent.EXTRA_TITLE))
         assertEquals("Big_Buck_Bunny.mp4", intent.getStringExtra("filename"))
         assertEquals("Big_Buck_Bunny.mp4", intent.getStringExtra("displayName"))
         assertEquals(157286400L, intent.getLongExtra("size", -1L))
+        assertFalse(intent.getBooleanExtra("from_start", true))
     }
 
     @Test
@@ -39,10 +41,12 @@ class MediaIntentHelperTest {
         MediaIntentHelper.attachMediaExtras(intent, "", -1L, null)
 
         assertNull(intent.getStringExtra("title"))
+        assertNull(intent.getStringExtra("extra_title"))
         assertNull(intent.getStringExtra(MediaIntentHelper.VLC_EXTRA_ITEM_TITLE))
         assertNull(intent.getStringExtra(MediaIntentHelper.VLC_EXTRA_MEDIA_TITLE))
         assertNull(intent.getStringExtra(Intent.EXTRA_TITLE))
         assertFalse(intent.hasExtra("size"))
+        assertFalse(intent.getBooleanExtra("from_start", true))
     }
 
     @Test

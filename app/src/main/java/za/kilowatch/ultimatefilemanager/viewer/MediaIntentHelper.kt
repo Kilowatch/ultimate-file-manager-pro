@@ -43,10 +43,16 @@ object MediaIntentHelper {
             // Android Framework Standard
             intent.putExtra(Intent.EXTRA_TITLE, title)
 
+            // Additional external player title keys
+            intent.putExtra("extra_title", title)
+
             // MX Player / Kodi / Other players
             intent.putExtra("filename", title)
             intent.putExtra("displayName", title)
         }
+
+        // VLC & external players: explicitly do not force start from 0:00 so playback can resume
+        intent.putExtra("from_start", false)
 
         if (size > 0L) {
             intent.putExtra("size", size)
