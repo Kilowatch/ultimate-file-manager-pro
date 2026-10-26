@@ -5701,6 +5701,12 @@ PIN दर्ज करें
     <string name="share_receive_title">
 UFM में सहेजें
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 %s से फ़ाइल प्राप्त की जा रही है
 </string>
@@ -8772,16 +8778,16 @@ Porter इंस्टॉल है लेकिन इसकी सेवा �
 एलिवेटेड एक्सेस की जाँच की जा रही है…
 </string>
     <string name="shizuku_download_porter_apk">
-Porter डाउनलोड करें (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 प्री-रिलीज़
 </string>
     <string name="shizuku_download_shizuku_apk">
-Shizuku (APK) डाउनलोड करें
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Shevery (APK) डाउनलोड करें
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 %1$s मैनेजर खोलें
@@ -8790,7 +8796,7 @@ Shevery (APK) डाउनलोड करें
 3-चरण सेटअप गाइड
 </string>
     <string name="shizuku_step_1">
-1. APK इंस्टॉल करें
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. सेवा प्रारंभ करें

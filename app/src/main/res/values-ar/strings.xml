@@ -5701,6 +5701,12 @@ UFM لا يدعم اختيار هذه المجلدات عبر منتقي الن�
     <string name="share_receive_title">
 حفظ إلى UFM
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 استلام ملف من %s
 </string>
@@ -8772,16 +8778,16 @@ Porter مثبت لكن خدمته لا تعمل. الاتصال ينتظر Porte
 جارٍ التحقق من الوصول المرتفع…
 </string>
     <string name="shizuku_download_porter_apk">
-تنزيل Porter (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 إصدار تجريبي
 </string>
     <string name="shizuku_download_shizuku_apk">
-تنزيل Shizuku (APK)
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-تنزيل Shevery (APK)
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 فتح تطبيق %1$s الإداري
@@ -8790,7 +8796,7 @@ Porter مثبت لكن خدمته لا تعمل. الاتصال ينتظر Porte
 دليل الإعداد في 3 خطوات
 </string>
     <string name="shizuku_step_1">
-1. ثبّت ملف APK
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. ابدأ الخدمة

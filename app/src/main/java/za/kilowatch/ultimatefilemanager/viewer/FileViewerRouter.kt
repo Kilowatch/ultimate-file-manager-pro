@@ -814,6 +814,7 @@ object FileViewerRouter {
     ) {
         val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
         Thread {
+            var resolvedSize = fileSizeHint
             val chosenUri = runCatching {
                 val remoteSize = if (fileSizeHint > 0L) {
                     fileSizeHint
@@ -836,23 +837,28 @@ object FileViewerRouter {
                     runCatching { openedHandle?.close() }
                     size
                 }
+                resolvedSize = remoteSize
                 val url = za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer.register(share, remotePath, mimeType, remoteSize)
                 if (url.isNotBlank()) Uri.parse(url) else fallbackUri
             }.getOrElse { fallbackUri }
+            val fileName = remotePath.substringAfterLast('/').ifBlank { "media" }
+            val resolvedMime = MediaIntentHelper.normalizeMediaMimeType(ext, mimeType)
             mainHandler.post {
                 val pm = context.packageManager
                 if (preferredPackage != null && runCatching { pm.getPackageInfo(preferredPackage, 0); true }.getOrDefault(false)) {
                     val direct = Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(chosenUri, mimeType)
+                        setDataAndType(chosenUri, resolvedMime)
                         setPackage(preferredPackage)
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        MediaIntentHelper.attachMediaExtras(this, fileName, resolvedSize, resolvedMime)
                     }
                     if (runCatching { context.startActivity(direct) }.isSuccess) return@post
                 }
                 val chooser = Intent.createChooser(
                     Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(chosenUri, mimeType)
+                        setDataAndType(chosenUri, resolvedMime)
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        MediaIntentHelper.attachMediaExtras(this, fileName, resolvedSize, resolvedMime)
                     },
                     context.getString(R.string.open_with)
                 )
@@ -906,6 +912,8 @@ object FileViewerRouter {
             }
         }
 
+        val resolvedMime = MediaIntentHelper.normalizeMediaMimeType(ext, mimeType)
+
         // -- 1. Try direct launch into the preferred app --
         if (preferredPackage != null) {
             android.util.Log.d(tag, "  Trying direct launch into $preferredPackage")
@@ -914,9 +922,11 @@ object FileViewerRouter {
                             catch (_: PackageManager.NameNotFoundException) { false }
             if (installed) {
                 val directIntent = Intent(Intent.ACTION_VIEW).apply {
-                    setDataAndType(effectiveUri, mimeType)
+                    setDataAndType(effectiveUri, resolvedMime)
                     setPackage(preferredPackage)
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    MediaIntentHelper.attachMediaExtras(this, file.name, file.length(), resolvedMime)
+                    MediaIntentHelper.attachLocalSubtitles(this, context, file)
                 }
                 val resolves = pm.queryIntentActivities(directIntent, PackageManager.MATCH_DEFAULT_ONLY)
                 android.util.Log.d(tag, "  Direct resolves: ${resolves.size}")
@@ -940,8 +950,10 @@ object FileViewerRouter {
         // -- 2. Build system chooser --
         android.util.Log.d(tag, "  Building chooser")
         val viewIntent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(effectiveUri, mimeType)
+            setDataAndType(effectiveUri, resolvedMime)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            MediaIntentHelper.attachMediaExtras(this, file.name, file.length(), resolvedMime)
+            MediaIntentHelper.attachLocalSubtitles(this, context, file)
         }
         val chooser = Intent.createChooser(viewIntent, context.getString(R.string.open_with))
 

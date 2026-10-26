@@ -54,6 +54,7 @@ import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import za.kilowatch.ultimatefilemanager.storage.FilePropertiesBottomSheet
 import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
+import za.kilowatch.ultimatefilemanager.viewer.MediaIntentHelper
 import za.kilowatch.ultimatefilemanager.viewer.OpenAsBottomSheet
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameItem
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
@@ -6279,6 +6280,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                         addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                         addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
                                         SubtitleIntentHelper.attachCachedSubtitleExtras(this, packageName, this@NetworkBrowserActivity, cachedSubs)
+                                        MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                     }
                                     if (preferredPackage != null) {
                                         val pm = packageManager
@@ -6291,6 +6293,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                                 addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
                                                 SubtitleIntentHelper.attachCachedSubtitleExtras(this, packageName, this@NetworkBrowserActivity, cachedSubs)
+                                                MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                             }
                                             val resolves = pm.queryIntentActivities(directIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
                                             if (resolves.isNotEmpty()) {
@@ -6318,6 +6321,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             setDataAndType(uri, mime)
                             addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
                             addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                            MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                         }
 
                         // Attempt direct launch if a preferred package is saved
@@ -6331,6 +6335,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                     setPackage(preferredPackage)
                                     addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                     addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                 }
                                 val resolves = pm.queryIntentActivities(directIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
                                 if (resolves.isNotEmpty()) {
@@ -6455,6 +6460,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                     val fnames = subNames.map { it.name }
                                     SubtitleIntentHelper.attachSubtitleExtras(this, proxySubtitleUris, names, fnames)
                                 }
+                                MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                             }
 
                             // Attempt direct launch if a preferred package is saved
@@ -6480,6 +6486,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                             val fnames = subNames.map { it.name }
                                             SubtitleIntentHelper.attachSubtitleExtras(this, proxySubtitleUris, names, fnames)
                                         }
+                                        MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                     }
                                     val resolves = pm.queryIntentActivities(directIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
                                     if (resolves.isNotEmpty()) { startActivity(directIntent); return@withContext }
@@ -6556,6 +6563,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                 if (cachedSubsFtpTv.isNotEmpty()) {
                                     SubtitleIntentHelper.attachCachedSubtitleExtras(this, packageName, this@NetworkBrowserActivity, cachedSubsFtpTv)
                                 }
+                                MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                             }
 
                             // Attempt direct launch if a preferred package is saved
@@ -6569,6 +6577,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                         setPackage(preferredPackage)
                                         addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                         addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        if (cachedSubsFtpTv.isNotEmpty()) {
+                                            SubtitleIntentHelper.attachCachedSubtitleExtras(this, packageName, this@NetworkBrowserActivity, cachedSubsFtpTv)
+                                        }
+                                        MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                     }
                                     val resolves = pm.queryIntentActivities(directIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
                                     if (resolves.isNotEmpty()) { startActivity(directIntent); return@withContext }

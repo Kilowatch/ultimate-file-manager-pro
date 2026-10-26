@@ -107,6 +107,20 @@
                         android:textSize="11sp"
                         tools:text="From WhatsApp" />
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnRenameFile"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_edit"
+                    android:contentDescription="@string/rename_title"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/bg_icon_circle_accent"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    app:tint="@color/mobile_icon_tint" />
             </LinearLayout>
 
             <LinearLayout

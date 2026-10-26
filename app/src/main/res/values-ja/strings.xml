@@ -5701,6 +5701,12 @@ PINを入力
     <string name="share_receive_title">
 UFMに保存
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 %sからファイルを受信中
 </string>
@@ -8772,16 +8778,16 @@ Porterはインストールされていますが、サービスが実行され�
 管理者権限を確認しています…
 </string>
     <string name="shizuku_download_porter_apk">
-Porterをダウンロード (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 プレリリース
 </string>
     <string name="shizuku_download_shizuku_apk">
-Shizuku（APK）をダウンロード
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Shevery（APK）をダウンロード
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 %1$sマネージャーを開く
@@ -8790,7 +8796,7 @@ Shevery（APK）をダウンロード
 3ステップのセットアップガイド
 </string>
     <string name="shizuku_step_1">
-1. APKをインストール
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. サービスを開始

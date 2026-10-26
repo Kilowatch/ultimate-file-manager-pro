@@ -2013,6 +2013,8 @@
     <string name="save_here">SAVE HERE</string>
     <!-- Share Receiver -->
     <string name="share_receive_title">Save to UFM</string>
+    <string name="share_target_save_to">Save to…</string>
+    <string name="share_target_open_in">Open in…</string>
     <string name="share_receive_from">Receiving file from %s</string>
     <string name="share_receive_select_destination">Select Destination</string>
     <string name="share_receive_save_here">Save Here</string>
@@ -3037,13 +3039,13 @@
     <string name="elevated_state_connected">Connected</string>
     <string name="elevated_state_unknown">Status unavailable</string>
     <string name="elevated_detecting">Checking for elevated access…</string>
-    <string name="shizuku_download_porter_apk">Download Porter (APK)</string>
+    <string name="shizuku_download_porter_apk">Get Porter</string>
     <string name="elevated_prerelease_badge">Pre-release</string>
-    <string name="shizuku_download_shizuku_apk">Download Shizuku (APK)</string>
-    <string name="shizuku_download_shevery_apk">Download Shevery (APK)</string>
+    <string name="shizuku_download_shizuku_apk">Get Shizuku</string>
+    <string name="shizuku_download_shevery_apk">Get Shevery</string>
     <string name="shizuku_open_manager">Open %1$s Manager</string>
     <string name="shizuku_section_setup_guide">3-Step Setup Guide</string>
-    <string name="shizuku_step_1">1. Install APK</string>
+    <string name="shizuku_step_1">1. Install Manager</string>
     <string name="shizuku_step_2">2. Start Service</string>
     <string name="shizuku_step_3">3. Authorize UFM</string>
     <string name="shizuku_service_info_title">Service Information</string>

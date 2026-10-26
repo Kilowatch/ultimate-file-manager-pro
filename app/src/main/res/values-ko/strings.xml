@@ -5701,6 +5701,12 @@ PIN 입력
     <string name="share_receive_title">
 UFM에 저장
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 %s에서 파일 받는 중
 </string>
@@ -8772,16 +8778,16 @@ Porter가 설치되어 있지만 서비스가 실행 중이 아닙니다. 연결
 고급 권한 확인 중…
 </string>
     <string name="shizuku_download_porter_apk">
-Porter 다운로드 (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 사전 출시
 </string>
     <string name="shizuku_download_shizuku_apk">
-Shizuku 다운로드 (APK)
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Shevery 다운로드 (APK)
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 %1$s 관리자 열기
@@ -8790,7 +8796,7 @@ Shevery 다운로드 (APK)
 3단계 설정 가이드
 </string>
     <string name="shizuku_step_1">
-1. APK 설치
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. 서비스 시작

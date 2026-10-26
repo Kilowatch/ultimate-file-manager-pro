@@ -197,6 +197,7 @@ class CategoryFilesActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, mimeType)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                za.kilowatch.ultimatefilemanager.viewer.MediaIntentHelper.attachMediaExtras(this, file.name, file.length(), mimeType)
             }
             if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)

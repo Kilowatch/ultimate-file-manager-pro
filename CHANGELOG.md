@@ -5,6 +5,25 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] — 2026-10-26
+
+### Added
+- **Share Menu Inline File Renaming**: Added an inline rename button and row click action in the Share Receiver screen to allow editing the filename prior to saving.
+- **Universal External File Viewer via ACTION_SEND**: Registered `ACTION_SEND` on `OpenWithActivity`, allowing files shared from 3rd-party apps to be viewed or edited directly in UFM's built-in viewers without having to save first.
+
+### Changed
+- **Share Menu Distinct Activity Labels**: Assigned distinct, descriptive activity labels ("Save to…" / "Speichern nach…" and "Open in…" / "Öffnen in…") to differentiate saving incoming shared files to storage from opening directly in viewers, resolving duplicate ambiguous entries in the Android/Samsung share sheet.
+- **Share Menu Post-Save Navigation (MiXplorer Pattern)**: Replaced the 2-second auto-close timeout upon saving shared files with direct navigation into the destination folder with the newly saved file focused and highlighted, allowing users to immediately rename or reorganize files.
+
+### Fixed
+- **External Player Playback History & Resume Progress (Issue #55)**: Fixed playback history and resume progress not recording in VLC and external media players (MX Player, Just Player, MPV) by attaching missing media title (`title`, `item_title`, `org.videolan.vlc.MediaTitle`, `android.intent.extra.TITLE`), file size, normalized media MIME types, and local sibling subtitle extras across all local and network external viewing paths.
+- **Remote Connection VPN Warning Dialog Transparency (Issue #53)**: Fixed an issue where the VPN active warning dialog for remote connections was ~87% transparent and difficult to read on mobile devices (OnePlus 12 / Oxygen OS 16). Replaced `@drawable/bg_glass_card_dark` with the canonical `UFMStandard` theme-aware frosted glass container (`@drawable/bg_dialog_glass`), applied `R.style.UFM_Dialog` in `VpnWarningHelper`, aligned primary/secondary button hierarchy, and constrained Android TV dialog width to 650dp.
+
+## [2.2.0] — 2026-10-23
+
+### Fixed
+- **Google Play Policy Compliance for Elevated Access Links**: Replaced binary `/releases` URLs with repository project homepages in `ElevatedAppDownloadManager` for Google Play and Amazon builds, updated action button labels to neutral prompts ("Get Shizuku", "Get Porter", "Get Shevery", "1. Install Manager") to eliminate external APK download flags, pruned stale string keys across all 17 translation files, and moved FOSS release parsing unit tests to `src/testFoss/`.
+
 ## [2.1.9] — 2026-10-21
 
 ### Fixed

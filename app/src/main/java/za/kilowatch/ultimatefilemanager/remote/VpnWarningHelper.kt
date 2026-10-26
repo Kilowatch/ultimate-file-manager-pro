@@ -50,7 +50,7 @@ object VpnWarningHelper {
         val btnClose = dialogView.findViewById<MaterialButton>(R.id.btnVpnClose)
         val btnContinue = dialogView.findViewById<MaterialButton>(R.id.btnVpnContinue)
 
-        val dialog = MaterialAlertDialogBuilder(context)
+        val dialog = MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
             .setView(dialogView)
             .setCancelable(true)
             .create()

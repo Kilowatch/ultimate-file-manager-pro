@@ -5701,6 +5701,8 @@ HIER SPEICHERN
     <string name="share_receive_title">
 In UFM speichern
 </string>
+    <string name="share_target_save_to">Speichern nach…</string>
+    <string name="share_target_open_in">Öffnen in…</string>
     <string name="share_receive_from">
 Datei von %s wird empfangen
 </string>
@@ -8764,16 +8766,16 @@ Status nicht verfügbar
 Überprüfe erhöhten Zugriff…
 </string>
     <string name="shizuku_download_porter_apk">
-Porter herunterladen (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 Vorabversion
 </string>
     <string name="shizuku_download_shizuku_apk">
-Shizuku herunterladen (APK)
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Shevery herunterladen (APK)
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 %1$s-Manager öffnen
@@ -8782,7 +8784,7 @@ Shevery herunterladen (APK)
 3-Schritte-Einrichtungsanleitung
 </string>
     <string name="shizuku_step_1">
-1. APK installieren
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. Dienst starten

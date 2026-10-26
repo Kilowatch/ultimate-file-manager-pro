@@ -2827,6 +2827,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                                 val mimeType = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
                                 setDataAndType(uri, mimeType)
                                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                za.kilowatch.ultimatefilemanager.viewer.MediaIntentHelper.attachMediaExtras(this, file.name, file.length(), mimeType)
                             }
                             try {
                                 if (intent.resolveActivity(packageManager) != null) {

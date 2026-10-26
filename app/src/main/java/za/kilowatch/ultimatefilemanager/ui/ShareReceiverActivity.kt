@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -19,11 +20,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity
 import za.kilowatch.ultimatefilemanager.network.NetworkShare
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.network.ShareType
@@ -31,6 +34,7 @@ import za.kilowatch.ultimatefilemanager.network.toNetworkShare
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import java.io.File
 import java.io.FileOutputStream
@@ -51,6 +55,7 @@ class ShareReceiverActivity : AppCompatActivity() {
     private lateinit var layoutEmpty: View
     private lateinit var progressBar: ProgressBar
     private lateinit var btnBack: View
+    private lateinit var btnRenameFile: ImageView
 
     private var isTv = false
     private var sharedItems: List<SharedItem> = emptyList()
@@ -121,12 +126,20 @@ class ShareReceiverActivity : AppCompatActivity() {
         layoutEmpty = findViewById(R.id.layoutEmpty)
         progressBar = findViewById(R.id.progressBar)
         btnBack = findViewById(R.id.btnBack)
+        btnRenameFile = findViewById(R.id.btnRenameFile)
 
         btnBack.setOnClickListener { finish() }
 
         btnBrowse.setOnClickListener { launchDestinationPicker() }
 
         btnSave.setOnClickListener { performSave() }
+
+        btnRenameFile.setOnClickListener { showRenameFileDialog() }
+        layoutFileInfo.setOnClickListener {
+            if (sharedItems.size == 1) {
+                showRenameFileDialog()
+            }
+        }
     }
 
     private fun extractShareIntent() {
@@ -185,6 +198,7 @@ class ShareReceiverActivity : AppCompatActivity() {
                 if (ext.isNotEmpty()) FileTypeIconProvider.iconForExtension(this, ext)
                 else R.drawable.ic_file_generic
             )
+            btnRenameFile.visibility = View.VISIBLE
         } else {
             txtFileName.text = getString(R.string.share_receive_multiple_files, totalFiles)
             if (totalSize > 0) {
@@ -194,9 +208,54 @@ class ShareReceiverActivity : AppCompatActivity() {
                 txtFileSize.visibility = View.GONE
             }
             imgFileIcon.setImageResource(R.drawable.ic_file_generic)
+            btnRenameFile.visibility = View.GONE
         }
 
         txtFileSource.text = getString(R.string.share_receive_from, callingAppName)
+    }
+
+    private fun showRenameFileDialog() {
+        if (sharedItems.size != 1) return
+        val currentItem = sharedItems.first()
+        val layoutRes = if (isTv) R.layout.dialog_file_rename_tv else R.layout.dialog_file_rename
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtOriginalName = dialogView.findViewById<TextView>(R.id.txtOriginalName)
+        val editFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editFileName)
+        val btnSaveRename = dialogView.findViewById<View>(R.id.btnSaveRename)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtOriginalName?.text = currentItem.fileName
+        editFileName?.setText(currentItem.fileName)
+        val dotIndex = currentItem.fileName.lastIndexOf('.')
+        if (dotIndex > 0) {
+            editFileName?.setSelection(0, dotIndex)
+        } else {
+            editFileName?.selectAll()
+        }
+
+        val onSaveAction = {
+            val rawName = editFileName?.text?.toString()?.trim().orEmpty()
+            if (rawName.isNotEmpty()) {
+                val sanitized = ShareReceiverHelper.sanitizeFileName(rawName)
+                if (sanitized.isNotEmpty() && sanitized != currentItem.fileName) {
+                    val updatedItem = currentItem.copy(fileName = sanitized)
+                    sharedItems = listOf(updatedItem)
+                    showFileInfo()
+                }
+            }
+            dialog.dismiss()
+        }
+
+        btnSaveRename?.setOnClickListener { onSaveAction() }
+        btnCancel?.setOnClickListener { dialog.dismiss() }
+
+        DialogInputHelper.setupDialogInput(dialog, editFileName, onSaveAction)
+        dialog.show()
     }
 
     private fun launchDestinationPicker() {
@@ -232,6 +291,8 @@ class ShareReceiverActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             var successCount = 0
             val errors = mutableListOf<String>()
+            val savedLocalFiles = mutableListOf<String>()
+            val savedRemoteFiles = mutableListOf<String>()
 
             try {
                 if (selectedLocalPath != null) {
@@ -245,7 +306,8 @@ class ShareReceiverActivity : AppCompatActivity() {
                             }
                         }
                         try {
-                            saveToLocal(item, destDir)
+                            val savedFile = saveToLocal(item, destDir)
+                            savedLocalFiles.add(savedFile.absolutePath)
                             successCount++
                         } catch (e: Exception) {
                             errors.add("${item.fileName}: ${e.message}")
@@ -273,6 +335,7 @@ class ShareReceiverActivity : AppCompatActivity() {
                         }
                         try {
                             saveToNetwork(item, share, innerPath)
+                            savedRemoteFiles.add(if (innerPath.isEmpty()) item.fileName else "$innerPath/${item.fileName}")
                             successCount++
                         } catch (e: Exception) {
                             errors.add("${item.fileName}: ${e.message}")
@@ -290,8 +353,12 @@ class ShareReceiverActivity : AppCompatActivity() {
                         } else {
                             getString(R.string.share_receive_multiple_success, successCount)
                         }
-                        Snackbar.make(findViewById(R.id.main), msg, Snackbar.LENGTH_LONG).show()
-                        finishAfterDelay()
+                        android.widget.Toast.makeText(this@ShareReceiverActivity, msg, android.widget.Toast.LENGTH_SHORT).show()
+                        if (selectedLocalPath != null) {
+                            navigateToLocalDestination(selectedLocalPath!!, savedLocalFiles.firstOrNull())
+                        } else if (selectedShareId != null) {
+                            navigateToNetworkDestination(selectedShareId!!, selectedNetPath ?: "")
+                        }
                     } else if (successCount > 0) {
                         btnSave.isEnabled = true
                         btnSave.text = originalBtnText
@@ -315,7 +382,7 @@ class ShareReceiverActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveToLocal(item: SharedItem, destDirPath: String) {
+    private fun saveToLocal(item: SharedItem, destDirPath: String): File {
         val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSafPath(destDirPath) ||
                     za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, destDirPath)
         if (isSaf) {
@@ -335,6 +402,7 @@ class ShareReceiverActivity : AppCompatActivity() {
                     input.copyTo(output)
                 }
             } ?: throw java.io.IOException("Cannot read shared file: ${item.fileName}")
+            return File(targetSafPath)
         } else {
             val dir = File(destDirPath)
             if (!dir.exists()) dir.mkdirs()
@@ -355,6 +423,7 @@ class ShareReceiverActivity : AppCompatActivity() {
 
             // Notify MediaStore so new file is indexed immediately
             za.kilowatch.ultimatefilemanager.util.MediaScannerNotifier.scanFile(this, uniqueFile)
+            return uniqueFile
         }
     }
 
@@ -428,9 +497,28 @@ class ShareReceiverActivity : AppCompatActivity() {
         return null
     }
 
-    private fun finishAfterDelay() {
-        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-            finish()
-        }, 2000)
+    private fun navigateToLocalDestination(destDir: String, highlightPath: String?) {
+        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
+        val isInternalSubdir = destDir.startsWith(internalPath)
+        val mountPath = if (isInternalSubdir) internalPath else destDir
+
+        val intent = Intent(this, FileBrowserActivity::class.java).apply {
+            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, mountPath)
+            putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, destDir)
+            if (!highlightPath.isNullOrEmpty()) {
+                putExtra(FileBrowserActivity.EXTRA_FOCUS_PATH, highlightPath)
+            }
+        }
+        startActivity(intent)
+        finish()
+    }
+
+    private fun navigateToNetworkDestination(shareId: String, innerPath: String) {
+        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+            putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, innerPath)
+        }
+        startActivity(intent)
+        finish()
     }
 }

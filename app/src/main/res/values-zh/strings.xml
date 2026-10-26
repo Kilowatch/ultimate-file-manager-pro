@@ -5701,6 +5701,12 @@ UFM 不支持通过系统选择器选择这些文件夹。
     <string name="share_receive_title">
 保存到 UFM
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 正在从 %s 接收文件
 </string>
@@ -8772,16 +8778,16 @@ Porter
 正在检查提权访问…
 </string>
     <string name="shizuku_download_porter_apk">
-下载 Porter（APK）
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 预发布版
 </string>
     <string name="shizuku_download_shizuku_apk">
-下载雫 (APK)
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-下载谢弗里 (APK)
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 打开 %1$s 管理器
@@ -8790,7 +8796,7 @@ Porter
 3 步设置指南
 </string>
     <string name="shizuku_step_1">
-1.安装APK
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. 启动服务

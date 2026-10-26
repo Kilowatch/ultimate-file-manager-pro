@@ -5558,6 +5558,12 @@ BEWAAR HIER
     <string name="share_receive_title">
 Opslaan in UFM
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 Bestand ontvangen van %s
 </string>
@@ -8568,16 +8574,16 @@ Status niet beschikbaar
 Controleren op verhoogde toegang…
 </string>
     <string name="shizuku_download_porter_apk">
-Porter downloaden (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 Pre-release
 </string>
     <string name="shizuku_download_shizuku_apk">
-Shizuku downloaden (APK)
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Shevery (APK) downloaden
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 Open %1$s Beheer
@@ -8586,7 +8592,7 @@ Open %1$s Beheer
 Installatiehandleiding in 3 stappen
 </string>
     <string name="shizuku_step_1">
-1. Installeer APK
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. Start de service

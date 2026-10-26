@@ -5,7 +5,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="650dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_tv_dialog_surface"
@@ -16,7 +16,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:background="#FFFFA726" />
+        android:background="@color/vpn_warning_amber" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                     android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_vpn_warning"
-                    app:tint="#FFFFA726"
+                    app:tint="@color/vpn_warning_amber"
                     android:contentDescription="@null" />
             </FrameLayout>
 
@@ -104,14 +104,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="44dp"
                 android:text="@string/vpn_warning_continue"
-                android:textColor="#FFFFA726"
+                android:textColor="@color/vpn_warning_amber"
                 android:textSize="13sp"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:layout_marginEnd="12dp"
-                app:strokeColor="#FFFFA726"
+                app:strokeColor="@color/vpn_warning_amber"
                 app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -126,7 +126,7 @@
                 android:focusableInTouchMode="false"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                app:backgroundTint="#FFFFA726"
+                app:backgroundTint="@color/vpn_warning_amber"
                 app:cornerRadius="12dp"
                 app:elevation="0dp" />
         </LinearLayout>

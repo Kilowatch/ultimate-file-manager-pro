@@ -93,8 +93,8 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 298          // Mobile versionCode; TV = this + 1
-val appVersionName = "2.1.9"      // Shown in Play Store listing
+val appVersionCode = 304          // Mobile versionCode; TV = this + 1
+val appVersionName = "2.2.1"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
 // TODO: REMOVE — Set to true to simulate an older version for auto-update testing

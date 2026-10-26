@@ -5701,6 +5701,12 @@ SIMPAN DI SINI
     <string name="share_receive_title">
 Simpan ke UFM
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 Menerima file dari %s
 </string>
@@ -8772,16 +8778,16 @@ Status tidak tersedia
 Memeriksa akses yang ditingkatkan…
 </string>
     <string name="shizuku_download_porter_apk">
-Unduh Porter (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 Pra-rilis
 </string>
     <string name="shizuku_download_shizuku_apk">
-Unduh Shizuku (APK)
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Unduh Shevery (APK)
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 Buka Pengelola %1$s
@@ -8790,7 +8796,7 @@ Buka Pengelola %1$s
 Panduan Penyiapan 3 Langkah
 </string>
     <string name="shizuku_step_1">
-1. Instal APK
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. Mulai Layanan

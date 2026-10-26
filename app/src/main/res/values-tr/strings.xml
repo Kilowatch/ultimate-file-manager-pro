@@ -5701,6 +5701,12 @@ BURAYA KAYDET
     <string name="share_receive_title">
 UFM\\\'ye Kaydet
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 %s\\\'dan dosya alınıyor
 </string>
@@ -8772,16 +8778,16 @@ Durum kullanılamıyor
 Yükseltilmiş erişim denetleniyor…
 </string>
     <string name="shizuku_download_porter_apk">
-Porter\\\'ı indir (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 Ön sürüm
 </string>
     <string name="shizuku_download_shizuku_apk">
-Shizuku\\\'yu İndir (APK)
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Shevery\\\'yi İndir (APK)
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 %1$s Yöneticisini Aç
@@ -8790,7 +8796,7 @@ Shevery\\\'yi İndir (APK)
 3 Adımlı Kurulum Rehberi
 </string>
     <string name="shizuku_step_1">
-1. APK Kurun
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. Hizmeti Başlatın

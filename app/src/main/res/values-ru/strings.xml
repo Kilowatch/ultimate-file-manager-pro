@@ -5701,6 +5701,12 @@ UFM не поддерживает выбор этих папок через си
     <string name="share_receive_title">
 Сохранить в UFM
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 Получение файла от %s
 </string>
@@ -8772,16 +8778,16 @@ Porter установлен, но его служба не запущена. П�
 Проверка расширенного доступа…
 </string>
     <string name="shizuku_download_porter_apk">
-Скачать Porter (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 Предварительная версия
 </string>
     <string name="shizuku_download_shizuku_apk">
-Скачать Shizuku (APK)
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Скачать Shevery (APK)
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 Открыть менеджер %1$s
@@ -8790,7 +8796,7 @@ Porter установлен, но его служба не запущена. П�
 Инструкция по настройке за 3 шага
 </string>
     <string name="shizuku_step_1">
-1. Установите APK
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. Запустите службу

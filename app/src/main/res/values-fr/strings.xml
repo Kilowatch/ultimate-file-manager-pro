@@ -5701,6 +5701,12 @@ ENREGISTRER ICI
     <string name="share_receive_title">
 Enregistrer dans UFM
 </string>
+    <string name="share_target_save_to">
+Save to…
+</string>
+    <string name="share_target_open_in">
+Open in…
+</string>
     <string name="share_receive_from">
 Réception du fichier de %s
 </string>
@@ -8772,16 +8778,16 @@ Statut indisponible
 Vérification de l\\\'accès élevé…
 </string>
     <string name="shizuku_download_porter_apk">
-Télécharger Porter (APK)
+Get Porter
 </string>
     <string name="elevated_prerelease_badge">
 Préversion
 </string>
     <string name="shizuku_download_shizuku_apk">
-Télécharger Shizuku (APK)
+Get Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Télécharger Shevery (APK)
+Get Shevery
 </string>
     <string name="shizuku_open_manager">
 Ouvrir le gestionnaire %1$s
@@ -8790,7 +8796,7 @@ Ouvrir le gestionnaire %1$s
 Guide de configuration en 3 étapes
 </string>
     <string name="shizuku_step_1">
-1. Installer l\\\'APK
+1. Install Manager
 </string>
     <string name="shizuku_step_2">
 2. Démarrer le service

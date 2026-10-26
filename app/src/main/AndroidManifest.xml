@@ -704,6 +704,7 @@
         <activity
             android:name=".ui.ShareReceiverActivity"
             android:exported="true"
+            android:label="@string/share_target_save_to"
             android:theme="@style/Theme.UltimateFileManager"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density">
             <intent-filter>
@@ -722,10 +723,17 @@
         <activity
             android:name=".ui.OpenWithActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="@string/share_target_open_in"
             android:icon="@mipmap/ic_launcher"
             android:theme="@style/Theme.UFM.Translucent"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density">
+
+            <!-- 0. Universal share SEND intent for direct viewing in UFM -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
 
             <!-- 1. Universal content:// scheme with wildcard MIME type -->
             <intent-filter>

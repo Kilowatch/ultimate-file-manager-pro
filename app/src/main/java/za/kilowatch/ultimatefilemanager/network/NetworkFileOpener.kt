@@ -38,6 +38,7 @@ import za.kilowatch.ultimatefilemanager.util.ThemeColors
 import za.kilowatch.ultimatefilemanager.util.TransferService
 import za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
+import za.kilowatch.ultimatefilemanager.viewer.MediaIntentHelper
 import za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge
 import za.kilowatch.ultimatefilemanager.viewer.SlideShowActivity
 import za.kilowatch.ultimatefilemanager.viewer.TextViewerActivity
@@ -571,6 +572,7 @@ object NetworkFileOpener {
                                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         SubtitleIntentHelper.attachCachedSubtitleExtras(this, activity.packageName, activity, cachedSubs)
+                                        MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                     }
                                     if (preferredPackage != null) {
                                         val pm = activity.packageManager
@@ -583,6 +585,7 @@ object NetworkFileOpener {
                                                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                                 SubtitleIntentHelper.attachCachedSubtitleExtras(this, activity.packageName, activity, cachedSubs)
+                                                MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                             }
                                             val resolves = pm.queryIntentActivities(directIntent, PackageManager.MATCH_DEFAULT_ONLY)
                                             if (resolves.isNotEmpty()) {
@@ -609,6 +612,7 @@ object NetworkFileOpener {
                             setDataAndType(uri, mime)
                             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                         }
 
                         if (preferredPackage != null) {
@@ -621,6 +625,7 @@ object NetworkFileOpener {
                                     setPackage(preferredPackage)
                                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                 }
                                 val resolves = pm.queryIntentActivities(directIntent, PackageManager.MATCH_DEFAULT_ONLY)
                                 if (resolves.isNotEmpty()) {
@@ -710,6 +715,7 @@ object NetworkFileOpener {
                                     val fnames = subNames.map { it.name }
                                     SubtitleIntentHelper.attachSubtitleExtras(this, proxySubtitleUris, names, fnames)
                                 }
+                                MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                             }
 
                             if (preferredPackage != null) {
@@ -734,6 +740,7 @@ object NetworkFileOpener {
                                             val fnames = subNames.map { it.name }
                                             SubtitleIntentHelper.attachSubtitleExtras(this, proxySubtitleUris, names, fnames)
                                         }
+                                        MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                     }
                                     val resolves = pm.queryIntentActivities(directIntent, PackageManager.MATCH_DEFAULT_ONLY)
                                     if (resolves.isNotEmpty()) { activity.startActivity(directIntent); return@withContext }
@@ -784,6 +791,7 @@ object NetworkFileOpener {
                                 if (cachedSubsFtpTv.isNotEmpty()) {
                                     SubtitleIntentHelper.attachCachedSubtitleExtras(this, activity.packageName, activity, cachedSubsFtpTv)
                                 }
+                                MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                             }
 
                             if (preferredPackage != null) {
@@ -796,6 +804,10 @@ object NetworkFileOpener {
                                         setPackage(preferredPackage)
                                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        if (cachedSubsFtpTv.isNotEmpty()) {
+                                            SubtitleIntentHelper.attachCachedSubtitleExtras(this, activity.packageName, activity, cachedSubsFtpTv)
+                                        }
+                                        MediaIntentHelper.attachMediaExtras(this, file.name, file.size, mime)
                                     }
                                     val resolves = pm.queryIntentActivities(directIntent, PackageManager.MATCH_DEFAULT_ONLY)
                                     if (resolves.isNotEmpty()) { activity.startActivity(directIntent); return@withContext }

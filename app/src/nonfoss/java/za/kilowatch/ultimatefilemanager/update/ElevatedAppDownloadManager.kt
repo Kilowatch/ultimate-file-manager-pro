@@ -30,21 +30,21 @@ object ElevatedAppDownloadManager {
             displayName = "Porter",
             primaryRepo = "d4rken-org/porter",
             fallbackRepo = null,
-            fallbackWebUrl = "https://github.com/d4rken-org/porter/releases",
+            fallbackWebUrl = "https://github.com/d4rken-org/porter",
             iconRes = R.drawable.ic_porter_logo
         ),
         SHIZUKU(
             displayName = "Shizuku",
             primaryRepo = "thedjchi/Shizuku",
             fallbackRepo = "RikkaApps/Shizuku",
-            fallbackWebUrl = "https://github.com/thedjchi/Shizuku/releases/latest",
+            fallbackWebUrl = "https://github.com/thedjchi/Shizuku",
             iconRes = R.drawable.ic_shield_check
         ),
         SHEVERY(
             displayName = "Shevery",
             primaryRepo = "HmnDev-Tech/shevery",
             fallbackRepo = null,
-            fallbackWebUrl = "https://github.com/HmnDev-Tech/shevery/releases/latest",
+            fallbackWebUrl = "https://github.com/HmnDev-Tech/shevery",
             iconRes = R.drawable.ic_lightning
         )
     }

@@ -3461,6 +3461,7 @@ class FileBrowserFragment : Fragment() {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, mimeType)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                za.kilowatch.ultimatefilemanager.viewer.MediaIntentHelper.attachMediaExtras(this, file.name, file.length(), mimeType)
             }
             startActivity(Intent.createChooser(intent, getString(R.string.open_with)))
         } catch (e: Exception) {
