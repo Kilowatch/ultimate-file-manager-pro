@@ -111,8 +111,9 @@ class LanguageWelcomeActivity : AppCompatActivity() {
         }
         
         val txtFossLegalNotice = findViewById<TextView>(R.id.txtFossLegalNotice)
-        // On FOSS builds the layout includes txtFossLegalNotice; on non-FOSS it is absent (null).
-        txtFossLegalNotice?.visibility = View.VISIBLE
+        // Show inline legal notice only on FOSS builds; on Google / Amazon builds the notice
+        // is hidden and explicit review is performed in PolicyWelcomeActivity instead.
+        txtFossLegalNotice?.visibility = if (BuildConfig.IS_FOSS) View.VISIBLE else View.GONE
 
         btnSetDefault.setOnClickListener {
             LocaleHelper.save(this, selectedLocale)
@@ -249,21 +250,17 @@ class LanguageWelcomeActivity : AppCompatActivity() {
 
     private fun maybeAutoAcceptPolicy() {
         // On FOSS builds the legal notice is shown inline on this screen, so we
-        // auto-accept policy here (no separate PolicyWelcomeActivity). On non-FOSS
-        // builds this is a no-op — PolicyWelcomeActivity handles acceptance instead.
-        // The txtFossLegalNotice view is only inflated in the FOSS layout overlay,
-        // so its presence is a reliable indicator of the build variant at runtime.
-        val hasFossNotice = findViewById<android.view.View>(R.id.txtFossLegalNotice) != null
-        if (hasFossNotice) {
+        // auto-accept policies here (no separate PolicyWelcomeActivity). On non-FOSS
+        // (Google Play / Amazon) builds, explicit acceptance is required via PolicyWelcomeActivity.
+        if (BuildConfig.IS_FOSS) {
             PolicyAcceptanceManager.recordBothAccepted(this)
         }
     }
 
     private fun goToNextScreen() {
-        // FOSS builds skip the policy screen (auto-accepted above);
-        // non-FOSS builds proceed to PolicyWelcomeActivity.
-        val hasFossNotice = findViewById<android.view.View>(R.id.txtFossLegalNotice) != null
-        val targetClass = if (hasFossNotice) {
+        // FOSS builds skip PolicyWelcomeActivity (auto-accepted above).
+        // Google / Amazon builds proceed to PolicyWelcomeActivity unless policies were already accepted.
+        val targetClass = if (BuildConfig.IS_FOSS || PolicyAcceptanceManager.arePoliciesAccepted(this)) {
             WelcomeActivity::class.java
         } else {
             PolicyWelcomeActivity::class.java

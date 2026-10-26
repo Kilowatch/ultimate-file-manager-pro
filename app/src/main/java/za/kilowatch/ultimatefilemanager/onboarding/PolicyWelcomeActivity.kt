@@ -19,6 +19,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.ui.policy.PolicyActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 
@@ -49,7 +50,13 @@ class PolicyWelcomeActivity : AppCompatActivity() {
 
         PolicyAcceptanceManager.addObserver(policyObserver)
 
-        // Bypass directly to the regular onboarding/permissions if policies already accepted
+        // Bypass directly to the regular onboarding/permissions if policies already accepted or running on FOSS
+        if (BuildConfig.IS_FOSS) {
+            PolicyAcceptanceManager.recordBothAccepted(this)
+            startActivity(Intent(this, WelcomeActivity::class.java))
+            finish()
+            return
+        }
         if (PolicyAcceptanceManager.arePoliciesAccepted(this)) {
             startActivity(Intent(this, WelcomeActivity::class.java))
             finish()
