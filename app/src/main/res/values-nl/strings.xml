@@ -6645,9 +6645,7 @@ Instelling: %1$s
     <string name="smb_share_prefix">SMB-share: %1$s (%2$s)</string>
     <string name="ftp_share_prefix">FTP-share: %1$s (%2$s)</string>
     <string name="sftp_share_prefix">SFTP-share: %1$s (%2$s)</string>
-    <string name="scp_share_prefix">
-SCP-aandeel: %1$s (%2$s)
-</string>
+    <string name="scp_share_prefix">SCP-share: %1$s (%2$s)</string>
     <string name="file_server_port_item">
 Bestandsserverpoort (%1$d)
 </string>
