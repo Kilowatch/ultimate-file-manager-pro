@@ -12214,9 +12214,7 @@ Crash- en bevriezingsdetectie uitgeschakeld
 </string>
 
     <!-- Wallpaper Actions -->
-    <string name="action_set_home_wallpaper">
-Stel Thuisachtergrond in
-</string>
+    <string name="action_set_home_wallpaper">Stel Startscherm in</string>
     <string name="action_set_lock_wallpaper">
 Achtergrond vergrendelen instellen
 </string>
