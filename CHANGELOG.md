@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Mobile Main Menu Header & Action Controls**: Replicated header controls to match the modern design with bold "UFM Pro" title, circular frosted left edge menu button, 44dp circular primary accent action button (`btnAddCustomTile`), and modernized "Devices & Features" section header with accent underline and pill view mode toggle.
 - **Material 3 Mobile Dark Theme Palette Modernization**: Updated default mobile dark theme tokens across backgrounds (`#0B1729`), card surfaces (`#142640`), elevated nested surfaces (`#1B304D`), 1dp outlines (`#344B68`), primary accents (`#80D0F5`), and typography (`#F2F5FA`/`#AABBD1`), while strictly isolating Android TV themes and colors.
 - **Main Menu List and Grid View Visual Synchronization**: Synchronized mobile single-column list cards and grid cards to share the unified 20dp radii, `#142640` dark card surfaces, 1dp `#344B68` borders, squircle icon badges, and cyan progress indicators.
+- **Main Menu Category & Tile Reordering Animation**: Enabled fluid live reordering animations and custom sequence placement when dragging categories by header or tiles within and across categories.
 
 ### Fixed
 - **Main Menu Header Action Buttons**: Fixed an issue where the hamburger button was shown instead of the settings gear icon and app logo when Edge Swipe Menu was disabled.

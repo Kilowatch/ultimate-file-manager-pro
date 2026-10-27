@@ -1682,6 +1682,11 @@ class StorageBrowserActivity : AppCompatActivity() {
             onTileDroppedIntoCustomTile = { _, _ ->
                 loadStorageVolumes()
             }
+            onEnterEditModeRequested = {
+                if (!isEditMode) {
+                    enterEditMode()
+                }
+            }
             onTileFocused = { item ->
                 lastFocusedTileId = item.id
             }
@@ -3243,11 +3248,16 @@ class StorageBrowserActivity : AppCompatActivity() {
                 // Reset all card strokes
                 val density = resources.displayMetrics.density
                 for (i in 0 until recyclerView.childCount) {
-                    val c = recyclerView.getChildAt(i)
-                        ?.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardStorage)
+                    val childView = recyclerView.getChildAt(i)
+                    val c = childView?.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardStorage)
                     if (c != null) {
                         c.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
                         c.strokeColor = getColor(R.color.mobile_glass_stroke)
+                    }
+                    val groupCard = childView?.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardCategoryGroup)
+                    if (groupCard != null) {
+                        groupCard.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                        groupCard.strokeColor = getColor(R.color.mobile_glass_stroke)
                     }
                 }
 

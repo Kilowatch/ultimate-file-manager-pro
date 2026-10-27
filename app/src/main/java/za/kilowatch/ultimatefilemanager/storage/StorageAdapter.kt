@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.storage
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.content.ClipData
 import android.content.ClipDescription
@@ -84,6 +85,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
     var onCategoryHeaderToggled: ((categoryId: String, isExpanded: Boolean) -> Unit)? = null
     var onTileDroppedIntoCustomTile: ((tileId: String, customTileId: String) -> Unit)? = null
+    var onEnterEditModeRequested: (() -> Unit)? = null
 
     fun setTileColors(colors: Map<String, TileColorConfig>) {
         if (tileColors == colors) return
@@ -312,7 +314,9 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
                 val titleStr = if (isBuiltin) {
                     val titleRes = allCategoriesInfo[catId]!!.first
-                    if (ctx != null) ctx.getString(titleRes) else catId
+                    if (ctx != null) {
+                        try { ctx.getString(titleRes) } catch (_: Exception) { catId }
+                    } else catId
                 } else {
                     customCats[catId] ?: catId
                 }
@@ -402,19 +406,36 @@ private fun ImageView.safeSetIcon(resId: Int) {
             }
         }
 
-        val nonHeaders = items.filter { !it.isCategoryHeader }
-        val newRaw = mutableListOf<StorageItem>()
-        for (nh in nonHeaders) {
-            val found = rawItems.find { it.id == nh.id } ?: nh
-            newRaw.add(found)
-        }
-        for (raw in rawItems) {
-            if (newRaw.none { it.id == raw.id }) {
-                newRaw.add(raw)
+        if (viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED && !isTv) {
+            val ctx = adapterContext
+            val newRaw = mutableListOf<StorageItem>()
+            for (header in items) {
+                val catId = header.categoryId ?: continue
+                val catTiles = rawItems.filter { categoryForTile(it, ctx) == catId }
+                newRaw.addAll(catTiles)
             }
+            for (raw in rawItems) {
+                if (newRaw.none { it.id == raw.id }) {
+                    newRaw.add(raw)
+                }
+            }
+            rawItems.clear()
+            rawItems.addAll(newRaw)
+        } else {
+            val nonHeaders = items.filter { !it.isCategoryHeader }
+            val newRaw = mutableListOf<StorageItem>()
+            for (nh in nonHeaders) {
+                val found = rawItems.find { it.id == nh.id } ?: nh
+                newRaw.add(found)
+            }
+            for (raw in rawItems) {
+                if (newRaw.none { it.id == raw.id }) {
+                    newRaw.add(raw)
+                }
+            }
+            rawItems.clear()
+            rawItems.addAll(newRaw)
         }
-        rawItems.clear()
-        rawItems.addAll(newRaw)
     }
 
     fun onDragFinished(context: android.content.Context? = null, draggedItem: StorageItem? = null) {
@@ -426,7 +447,11 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 MainMenuViewModeManager.saveCategoryOrder(ctx, newCatOrder)
             }
 
-            // 2. Extract and save tile category memberships ONLY when a regular tile was dragged.
+            // 2. Persist rawItems order to TileOrderManager
+            val orderedIds = rawItems.map { it.id }
+            TileOrderManager.save(ctx, orderedIds)
+
+            // 3. Extract and save tile category memberships ONLY when a regular tile was dragged.
             // When a category header is dragged, we only reorder the categories themselves without
             // reassigning the category memberships of the tiles under them.
             if (draggedItem == null || !draggedItem.isCategoryHeader) {
@@ -443,6 +468,69 @@ private fun ImageView.safeSetIcon(resId: Int) {
             }
         }
         refreshDisplayedList(ctx)
+        safeNotifyDataSetChanged()
+    }
+
+    fun reorderTile(context: Context, draggedItemId: String, targetCatId: String, targetIndex: Int) {
+        val draggedItem = rawItems.find { it.id == draggedItemId } ?: return
+
+        // 1. Remove from current position in rawItems
+        rawItems.removeAll { it.id == draggedItemId }
+
+        // 2. Persist new category assignment
+        MainMenuViewModeManager.saveTileCategory(context, draggedItemId, targetCatId)
+
+        // 3. Find remaining items in target category
+        val catItems = rawItems.filter { categoryForTile(it, context) == targetCatId }
+
+        if (catItems.isEmpty()) {
+            val savedCatOrder = MainMenuViewModeManager.loadCategoryOrder(context)
+            val targetCatOrderIdx = savedCatOrder.indexOf(targetCatId)
+            var inserted = false
+            if (targetCatOrderIdx >= 0) {
+                for (idx in (targetCatOrderIdx + 1) until savedCatOrder.size) {
+                    val nextCat = savedCatOrder[idx]
+                    val firstItemOfNextCat = rawItems.firstOrNull { categoryForTile(it, context) == nextCat }
+                    if (firstItemOfNextCat != null) {
+                        val rawInsertIdx = rawItems.indexOfFirst { it.id == firstItemOfNextCat.id }
+                        if (rawInsertIdx >= 0) {
+                            rawItems.add(rawInsertIdx, draggedItem)
+                            inserted = true
+                            break
+                        }
+                    }
+                }
+            }
+            if (!inserted) {
+                rawItems.add(draggedItem)
+            }
+        } else {
+            val clampedIndex = targetIndex.coerceIn(0, catItems.size)
+            if (clampedIndex < catItems.size) {
+                val pivotItem = catItems[clampedIndex]
+                val rawInsertIdx = rawItems.indexOfFirst { it.id == pivotItem.id }
+                if (rawInsertIdx >= 0) {
+                    rawItems.add(rawInsertIdx, draggedItem)
+                } else {
+                    rawItems.add(draggedItem)
+                }
+            } else {
+                val lastItem = catItems.last()
+                val rawInsertIdx = rawItems.indexOfFirst { it.id == lastItem.id }
+                if (rawInsertIdx >= 0) {
+                    rawItems.add(rawInsertIdx + 1, draggedItem)
+                } else {
+                    rawItems.add(draggedItem)
+                }
+            }
+        }
+
+        // 4. Persist global order
+        val orderedIds = rawItems.map { it.id }
+        TileOrderManager.save(context, orderedIds)
+
+        // 5. Refresh adapter and notify
+        refreshDisplayedList(context)
         safeNotifyDataSetChanged()
     }
 
@@ -604,6 +692,18 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 context.getString(R.string.main_menu_section_items_count, count)
             }
 
+            // Enable layout transition for smooth child tile sliding animations
+            val layoutTransition = LayoutTransition().apply {
+                enableTransitionType(LayoutTransition.CHANGING)
+                disableTransitionType(LayoutTransition.APPEARING)
+                disableTransitionType(LayoutTransition.DISAPPEARING)
+                disableTransitionType(LayoutTransition.CHANGE_APPEARING)
+                disableTransitionType(LayoutTransition.CHANGE_DISAPPEARING)
+                setDuration(LayoutTransition.CHANGING, 180)
+                setInterpolator(LayoutTransition.CHANGING, DecelerateInterpolator())
+            }
+            layoutCategoryItems.layoutTransition = layoutTransition
+
             if (isExpanded) {
                 // Header highlighted when expanded
                 layoutCategoryHeader.setBackgroundResource(R.drawable.bg_category_header_highlight)
@@ -658,26 +758,31 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 }
             }
 
-            // Header long-press in edit mode starts whole-category drag reordering
+            // Header long-press starts whole-category drag reordering (enters edit mode if needed)
             if (!isTv && onLongPress != null) {
                 layoutCategoryHeader.setOnLongClickListener {
-                    if (isEditMode) {
-                        itemView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                        onLongPress.invoke(item, this@CategoryGroupViewHolder)
-                        true
-                    } else false
+                    itemView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    onEnterEditModeRequested?.invoke()
+                    onLongPress.invoke(item, this@CategoryGroupViewHolder)
+                    true
                 }
             }
 
-            // Drop target listener: accept dropped tiles from other categories!
+            // Outer card drag listener: handles hover border and auto-expanding collapsed categories
             cardCategoryGroup.setOnDragListener { _, event ->
                 when (event.action) {
                     DragEvent.ACTION_DRAG_STARTED -> {
-                        event.clipDescription?.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) == true
+                        val state = event.localState as? StorageItem
+                        state != null && !state.isCategoryHeader
                     }
                     DragEvent.ACTION_DRAG_ENTERED -> {
                         cardCategoryGroup.strokeWidth = (2 * density).toInt()
                         cardCategoryGroup.setStrokeColor(ContextCompat.getColor(context, R.color.theme_primary))
+                        if (!item.isCategoryExpanded) {
+                            item.isCategoryExpanded = true
+                            MainMenuViewModeManager.setCategoryExpanded(context, catId, true)
+                            bind(item)
+                        }
                         true
                     }
                     DragEvent.ACTION_DRAG_EXITED -> {
@@ -690,10 +795,8 @@ private fun ImageView.safeSetIcon(resId: Int) {
                         cardCategoryGroup.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
                         val droppedItem = event.localState as? StorageItem
                         if (droppedItem != null && catId.isNotBlank()) {
-                            MainMenuViewModeManager.saveTileCategory(context, droppedItem.id, catId)
-                            MainMenuViewModeManager.setCategoryExpanded(context, catId, true)
-                            refreshDisplayedList(context)
-                            safeNotifyDataSetChanged()
+                            val targetIdx = layoutCategoryItems.childCount
+                            reorderTile(context, droppedItem.id, catId, targetIdx)
                             itemView.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                         }
                         true
@@ -706,146 +809,259 @@ private fun ImageView.safeSetIcon(resId: Int) {
                     else -> false
                 }
             }
+
+            // Nested items container drag listener: live reordering with fluid animations
+            layoutCategoryItems.setOnDragListener { v, event ->
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        val state = event.localState as? StorageItem
+                        state != null && !state.isCategoryHeader
+                    }
+                    DragEvent.ACTION_DRAG_ENTERED -> {
+                        val dragged = event.localState as? StorageItem ?: return@setOnDragListener false
+                        if (!item.isCategoryExpanded) {
+                            item.isCategoryExpanded = true
+                            MainMenuViewModeManager.setCategoryExpanded(context, catId, true)
+                            bind(item)
+                        }
+                        val existingView = layoutCategoryItems.findViewWithTag<View>(dragged.id)
+                        if (existingView == null) {
+                            val placeholder = createChildTileView(context, dragged)
+                            placeholder.alpha = 0.35f
+                            layoutCategoryItems.addView(placeholder)
+                        }
+                        true
+                    }
+                    DragEvent.ACTION_DRAG_LOCATION -> {
+                        val dragged = event.localState as? StorageItem ?: return@setOnDragListener false
+                        val draggedView = layoutCategoryItems.findViewWithTag<View>(dragged.id) ?: return@setOnDragListener true
+                        val currentIdx = layoutCategoryItems.indexOfChild(draggedView)
+                        if (currentIdx == -1) return@setOnDragListener true
+
+                        // Auto-scroll RecyclerView if near screen edge
+                        val locOnScreen = IntArray(2)
+                        v.getLocationOnScreen(locOnScreen)
+                        val screenY = locOnScreen[1] + event.y
+                        val displayMetrics = context.resources.displayMetrics
+                        val topThreshold = 100 * displayMetrics.density
+                        val bottomThreshold = displayMetrics.heightPixels - (120 * displayMetrics.density)
+                        val rv = attachedRecyclerView
+                        if (rv != null) {
+                            if (screenY < topThreshold) {
+                                rv.scrollBy(0, -18)
+                            } else if (screenY > bottomThreshold) {
+                                rv.scrollBy(0, 18)
+                            }
+                        }
+
+                        // Determine target index based on child midpoints (excluding dragged view)
+                        val y = event.y
+                        var targetIdx = 0
+                        for (i in 0 until layoutCategoryItems.childCount) {
+                            val child = layoutCategoryItems.getChildAt(i)
+                            if (child === draggedView) continue
+                            val midY = (child.top + child.bottom) / 2f
+                            if (y > midY) {
+                                targetIdx++
+                            }
+                        }
+
+                        if (targetIdx != currentIdx) {
+                            layoutCategoryItems.removeView(draggedView)
+                            val safeTarget = targetIdx.coerceIn(0, layoutCategoryItems.childCount)
+                            layoutCategoryItems.addView(draggedView, safeTarget)
+                            itemView.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+                        }
+                        true
+                    }
+                    DragEvent.ACTION_DRAG_EXITED -> {
+                        val dragged = event.localState as? StorageItem
+                        if (dragged != null && categoryForTile(dragged, context) != catId) {
+                            val placeholder = layoutCategoryItems.findViewWithTag<View>(dragged.id)
+                            if (placeholder != null) {
+                                layoutCategoryItems.removeView(placeholder)
+                            }
+                        }
+                        true
+                    }
+                    DragEvent.ACTION_DROP -> {
+                        val dragged = event.localState as? StorageItem ?: return@setOnDragListener false
+                        val draggedView = layoutCategoryItems.findViewWithTag<View>(dragged.id)
+                        val dropIdx = if (draggedView != null) {
+                            layoutCategoryItems.indexOfChild(draggedView)
+                        } else {
+                            layoutCategoryItems.childCount
+                        }
+                        draggedView?.alpha = 1.0f
+
+                        reorderTile(context, dragged.id, catId, dropIdx)
+                        itemView.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                        true
+                    }
+                    DragEvent.ACTION_DRAG_ENDED -> {
+                        for (i in 0 until layoutCategoryItems.childCount) {
+                            layoutCategoryItems.getChildAt(i).alpha = 1.0f
+                        }
+                        val dragged = event.localState as? StorageItem
+                        if (dragged != null && categoryForTile(dragged, context) != catId) {
+                            val dangling = layoutCategoryItems.findViewWithTag<View>(dragged.id)
+                            if (dangling != null) {
+                                layoutCategoryItems.removeView(dangling)
+                            }
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+
+        private fun createChildTileView(context: Context, childItem: StorageItem): View {
+            val inflater = LayoutInflater.from(context)
+            val childView = inflater.inflate(R.layout.item_storage_nested_card, layoutCategoryItems, false)
+            childView.tag = childItem.id
+
+            val cardStorage = childView.findViewById<MaterialCardView>(R.id.cardStorage)
+            val iconContainer = childView.findViewById<FrameLayout>(R.id.iconContainer)
+            val imgIcon = childView.findViewById<ImageView>(R.id.imgStorageIcon)
+            val txtLabel = childView.findViewById<TextView>(R.id.txtStorageLabel)
+            val txtCapacity = childView.findViewById<TextView>(R.id.txtStorageCapacity)
+            val progressBar = childView.findViewById<ProgressBar>(R.id.progressStorage)
+            val txtNewBadge = childView.findViewById<TextView>(R.id.txtNewBadge)
+            val btnEjectTile = childView.findViewById<ImageView>(R.id.btnEjectTile)
+            val btnHideTile = childView.findViewById<ImageView>(R.id.btnHideTile)
+
+            imgIcon.safeSetIcon(childItem.iconRes)
+            applyCustomIcon(childItem, imgIcon)
+            txtLabel.text = childItem.label
+            txtCapacity.text = formatTileSubtitle(context, childItem)
+
+            val showProgress = !childItem.isUnmounted && childItem.totalBytes > 0L
+            if (showProgress) {
+                progressBar.visibility = View.VISIBLE
+                progressBar.max = 100
+                progressBar.progress = childItem.usagePercent
+            } else {
+                progressBar.visibility = View.GONE
+            }
+
+            txtNewBadge.visibility = if (childItem.isNewlyMounted) View.VISIBLE else View.GONE
+
+            if (!isEditMode && UsbEjectManager.isRemovableStorage(childItem)) {
+                btnEjectTile.visibility = View.VISIBLE
+                if (childItem.isUnmounted) {
+                    btnEjectTile.setImageResource(R.drawable.ic_mount)
+                    btnEjectTile.contentDescription = context.getString(R.string.cd_remount_storage)
+                } else {
+                    btnEjectTile.setImageResource(R.drawable.ic_eject)
+                    btnEjectTile.contentDescription = context.getString(R.string.cd_safely_remove)
+                }
+                btnEjectTile.setOnClickListener { onEjectClick?.invoke(childItem) }
+            } else {
+                btnEjectTile.visibility = View.GONE
+                btnEjectTile.setOnClickListener(null)
+            }
+
+            if (isEditMode) {
+                val isCustom = childItem.isCustomTile
+                val showBtn = (childItem.isHideable || isCustom) && !isColorPickMode
+                btnHideTile.visibility = if (showBtn) View.VISIBLE else View.GONE
+                if (isCustom) {
+                    btnHideTile.setImageResource(R.drawable.ic_settings)
+                    btnHideTile.setOnClickListener { onEditModeClick?.invoke(childItem) }
+                } else {
+                    btnHideTile.setImageResource(R.drawable.ic_close)
+                    btnHideTile.setOnClickListener { onHideClick?.invoke(childItem) }
+                }
+            } else {
+                btnHideTile.visibility = View.GONE
+                btnHideTile.setOnClickListener(null)
+            }
+
+            val colorConfig = tileColors[childItem.id] ?: TileColorConfig()
+            applyCustomColors(context, cardStorage, iconContainer, imgIcon, txtLabel, txtCapacity, colorConfig, R.color.quick_bar_bg)
+
+            cardStorage.setOnClickListener {
+                if (isEditMode) {
+                    onEditModeClick?.invoke(childItem)
+                } else {
+                    onStorageClick(childItem)
+                }
+            }
+
+            // Long press starts child tile drag reordering
+            cardStorage.setOnLongClickListener {
+                cardStorage.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                onEnterEditModeRequested?.invoke()
+                childView.alpha = 0.25f
+                val clipData = ClipData.newPlainText("tile_id", childItem.id)
+                val shadowBuilder = View.DragShadowBuilder(cardStorage)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    cardStorage.startDragAndDrop(clipData, shadowBuilder, childItem, 0)
+                } else {
+                    @Suppress("DEPRECATION")
+                    cardStorage.startDrag(clipData, shadowBuilder, childItem, 0)
+                }
+                true
+            }
+
+            // If this tile is a custom tile, accept drops to move items inside it
+            if (childItem.isCustomTile) {
+                val density = context.resources.displayMetrics.density
+                cardStorage.setOnDragListener { _, event ->
+                    when (event.action) {
+                        DragEvent.ACTION_DRAG_STARTED -> {
+                            val state = event.localState as? StorageItem
+                            state != null && !state.isCategoryHeader && !state.isCustomTile && state.id != childItem.id
+                        }
+                        DragEvent.ACTION_DRAG_ENTERED -> {
+                            val dragged = event.localState as? StorageItem
+                            if (dragged != null && dragged.id != childItem.id && !dragged.isCustomTile) {
+                                cardStorage.strokeWidth = (4 * density).toInt()
+                                cardStorage.setStrokeColor(za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(context))
+                                true
+                            } else false
+                        }
+                        DragEvent.ACTION_DRAG_EXITED -> {
+                            cardStorage.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                            cardStorage.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                            true
+                        }
+                        DragEvent.ACTION_DROP -> {
+                            cardStorage.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                            cardStorage.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                            val dragged = event.localState as? StorageItem
+                            if (dragged != null && dragged.id != childItem.id && !dragged.isCustomTile) {
+                                CustomTileManager.setTileParent(context, dragged.id, childItem.id)
+                                val order = CustomTileManager.loadTileOrder(context, childItem.id).toMutableList()
+                                if (dragged.id !in order) {
+                                    order.add(dragged.id)
+                                    CustomTileManager.saveTileOrder(context, childItem.id, order)
+                                }
+                                itemView.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                                onTileDroppedIntoCustomTile?.invoke(dragged.id, childItem.id)
+                                refreshDisplayedList(context)
+                                safeNotifyDataSetChanged()
+                            }
+                            true
+                        }
+                        DragEvent.ACTION_DRAG_ENDED -> {
+                            cardStorage.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                            cardStorage.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            }
+
+            return childView
         }
 
         private fun populateChildItems(context: Context, groupItems: List<StorageItem>, currentCatId: String) {
             layoutCategoryItems.removeAllViews()
-            val inflater = LayoutInflater.from(context)
-
             for (childItem in groupItems) {
-                val childView = inflater.inflate(R.layout.item_storage_nested_card, layoutCategoryItems, false)
-                val cardStorage = childView.findViewById<MaterialCardView>(R.id.cardStorage)
-                val iconContainer = childView.findViewById<FrameLayout>(R.id.iconContainer)
-                val imgIcon = childView.findViewById<ImageView>(R.id.imgStorageIcon)
-                val txtLabel = childView.findViewById<TextView>(R.id.txtStorageLabel)
-                val txtCapacity = childView.findViewById<TextView>(R.id.txtStorageCapacity)
-                val progressBar = childView.findViewById<ProgressBar>(R.id.progressStorage)
-                val txtNewBadge = childView.findViewById<TextView>(R.id.txtNewBadge)
-                val btnEjectTile = childView.findViewById<ImageView>(R.id.btnEjectTile)
-                val btnHideTile = childView.findViewById<ImageView>(R.id.btnHideTile)
-
-                imgIcon.safeSetIcon(childItem.iconRes)
-                applyCustomIcon(childItem, imgIcon)
-                txtLabel.text = childItem.label
-                txtCapacity.text = formatTileSubtitle(context, childItem)
-
-                val showProgress = !childItem.isUnmounted && childItem.totalBytes > 0L
-                if (showProgress) {
-                    progressBar.visibility = View.VISIBLE
-                    progressBar.max = 100
-                    progressBar.progress = childItem.usagePercent
-                } else {
-                    progressBar.visibility = View.GONE
-                }
-
-                txtNewBadge.visibility = if (childItem.isNewlyMounted) View.VISIBLE else View.GONE
-
-                if (!isEditMode && UsbEjectManager.isRemovableStorage(childItem)) {
-                    btnEjectTile.visibility = View.VISIBLE
-                    if (childItem.isUnmounted) {
-                        btnEjectTile.setImageResource(R.drawable.ic_mount)
-                        btnEjectTile.contentDescription = context.getString(R.string.cd_remount_storage)
-                    } else {
-                        btnEjectTile.setImageResource(R.drawable.ic_eject)
-                        btnEjectTile.contentDescription = context.getString(R.string.cd_safely_remove)
-                    }
-                    btnEjectTile.setOnClickListener { onEjectClick?.invoke(childItem) }
-                } else {
-                    btnEjectTile.visibility = View.GONE
-                    btnEjectTile.setOnClickListener(null)
-                }
-
-                if (isEditMode) {
-                    val isCustom = childItem.isCustomTile
-                    val showBtn = (childItem.isHideable || isCustom) && !isColorPickMode
-                    btnHideTile.visibility = if (showBtn) View.VISIBLE else View.GONE
-                    if (isCustom) {
-                        btnHideTile.setImageResource(R.drawable.ic_settings)
-                        btnHideTile.setOnClickListener { onEditModeClick?.invoke(childItem) }
-                    } else {
-                        btnHideTile.setImageResource(R.drawable.ic_close)
-                        btnHideTile.setOnClickListener { onHideClick?.invoke(childItem) }
-                    }
-                } else {
-                    btnHideTile.visibility = View.GONE
-                    btnHideTile.setOnClickListener(null)
-                }
-
-                val colorConfig = tileColors[childItem.id] ?: TileColorConfig()
-                applyCustomColors(context, cardStorage, iconContainer, imgIcon, txtLabel, txtCapacity, colorConfig, R.color.quick_bar_bg)
-
-                cardStorage.setOnClickListener {
-                    if (isEditMode) {
-                        onEditModeClick?.invoke(childItem)
-                    } else {
-                        onStorageClick(childItem)
-                    }
-                }
-
-                // Native Drag & Drop: long press on child tile allows dragging across sub-menus!
-                cardStorage.setOnLongClickListener {
-                    cardStorage.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                    val clipData = ClipData.newPlainText("tile_id", childItem.id)
-                    val shadowBuilder = View.DragShadowBuilder(cardStorage)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        cardStorage.startDragAndDrop(clipData, shadowBuilder, childItem, 0)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        cardStorage.startDrag(clipData, shadowBuilder, childItem, 0)
-                    }
-                    true
-                }
-
-                // If this tile is a custom tile, accept drops to move items inside it
-                if (childItem.isCustomTile) {
-                    val density = context.resources.displayMetrics.density
-                    cardStorage.setOnDragListener { _, event ->
-                        when (event.action) {
-                            DragEvent.ACTION_DRAG_STARTED -> {
-                                event.clipDescription?.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) == true
-                            }
-                            DragEvent.ACTION_DRAG_ENTERED -> {
-                                val dragged = event.localState as? StorageItem
-                                if (dragged != null && dragged.id != childItem.id && !dragged.isCustomTile) {
-                                    cardStorage.strokeWidth = (4 * density).toInt()
-                                    cardStorage.setStrokeColor(za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(context))
-                                    true
-                                } else false
-                            }
-                            DragEvent.ACTION_DRAG_EXITED -> {
-                                cardStorage.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
-                                cardStorage.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
-                                true
-                            }
-                            DragEvent.ACTION_DROP -> {
-                                cardStorage.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
-                                cardStorage.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
-                                val dragged = event.localState as? StorageItem
-                                if (dragged != null && dragged.id != childItem.id && !dragged.isCustomTile) {
-                                    CustomTileManager.setTileParent(context, dragged.id, childItem.id)
-                                    val order = CustomTileManager.loadTileOrder(context, childItem.id).toMutableList()
-                                    if (dragged.id !in order) {
-                                        order.add(dragged.id)
-                                        CustomTileManager.saveTileOrder(context, childItem.id, order)
-                                    }
-                                    itemView.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-                                    onTileDroppedIntoCustomTile?.invoke(dragged.id, childItem.id)
-                                    refreshDisplayedList(context)
-                                    safeNotifyDataSetChanged()
-                                }
-                                true
-                            }
-                            DragEvent.ACTION_DRAG_ENDED -> {
-                                cardStorage.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
-                                cardStorage.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
-                                true
-                            }
-                            else -> false
-                        }
-                    }
-                }
-
-                layoutCategoryItems.addView(childView)
+                layoutCategoryItems.addView(createChildTileView(context, childItem))
             }
         }
     }
