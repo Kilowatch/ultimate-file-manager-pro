@@ -1283,6 +1283,9 @@ Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
     <string name="analyzer_delete_completion_failed">
 %1$d files could not be deleted due to permissions.
 </string>
+    <string name="analyzer_delete_progress">
+Deleting %1$d of %2$d files…
+</string>
     <string name="analyzer_duplicate_summary">
 %1$d duplicate groups · saves %2$s
 </string>

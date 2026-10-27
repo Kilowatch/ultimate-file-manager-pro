@@ -141,70 +141,143 @@
 
     </LinearLayout>
 
-    <!-- Duplicate Bulk Controls Header Strip (Duplicates Tab only) -->
-    <LinearLayout
+    <!-- Duplicate Bulk Controls Header Card (Duplicates Tab only) -->
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/layoutDuplicateControls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/mobile_glass_card"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/mobile_glass_stroke"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/txtDuplicateSummary"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="12.5sp"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="1"
-            android:ellipsize="end"
-            tools:text="45 duplicate groups · saves 1.2 GB" />
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnClearSelection"
-            style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:minHeight="0dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="0dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/analyzer_clear_selection"
-            android:textColor="?attr/ufmDenied"
-            android:textSize="12.5sp"
-            android:fontFamily="sans-serif-bold"
-            android:focusable="true"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            <!-- Line 1: Hero Badge + Title & Summary -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSelectAllDuplicates"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:minHeight="0dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="0dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/analyzer_select_all_duplicates"
-            android:textColor="@android:color/white"
-            android:textSize="12.5sp"
-            android:fontFamily="sans-serif-bold"
-            android:focusable="true"
-            app:cornerRadius="10dp"
-            app:backgroundTint="?attr/colorPrimary"
-            android:layout_marginStart="6dp" />
+                <!-- Hero Duplicate Icon Badge -->
+                <FrameLayout
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_btn_icon_frosted">
 
-    </LinearLayout>
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_duplicate"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <!-- Title & Summary Text -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/analyzer_tab_duplicates"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-bold" />
+
+                    <TextView
+                        android:id="@+id/txtDuplicateSummary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="12.5sp"
+                        android:fontFamily="sans-serif"
+                        android:layout_marginTop="2dp"
+                        tools:text="45 duplicate groups · saves 1.2 GB" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Line 2: Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+
+                <!-- Clear Action Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClearSelection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:minHeight="0dp"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="19dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:backgroundTint="@color/mobile_glass_card"
+                    app:icon="@drawable/ic_deselect_all"
+                    app:iconSize="16dp"
+                    app:iconPadding="6dp"
+                    app:iconTint="?attr/ufmDenied"
+                    android:text="@string/analyzer_clear_selection"
+                    android:textColor="?attr/ufmDenied"
+                    android:textSize="12.5sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    android:layout_marginEnd="8dp"
+                    tools:visibility="visible" />
+
+                <!-- Select All Action Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectAllDuplicates"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="38dp"
+                    android:minHeight="0dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="19dp"
+                    app:icon="@drawable/ic_select_all"
+                    app:iconSize="16dp"
+                    app:iconPadding="6dp"
+                    app:iconTint="@android:color/white"
+                    app:backgroundTint="?attr/colorPrimary"
+                    android:text="@string/analyzer_select_all_duplicates"
+                    android:textColor="@android:color/white"
+                    android:textSize="12.5sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:focusable="true" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Main list -->
     <androidx.recyclerview.widget.RecyclerView

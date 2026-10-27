@@ -38,6 +38,10 @@ interface FileIndexDao {
     @Query("DELETE FROM file_index WHERE path = :path")
     suspend fun deleteByPath(path: String): Int
 
+    /** Hard-delete multiple entries by paths. */
+    @Query("DELETE FROM file_index WHERE path IN (:paths)")
+    suspend fun deleteByPaths(paths: List<String>): Int
+
     /** Hard-delete all entries whose path starts with [pathPrefix]. Used for folder deletes. */
     @Query("DELETE FROM file_index WHERE path = :pathPrefix OR path LIKE :pathPrefix || '/%'")
     suspend fun deleteByPathPrefix(pathPrefix: String): Int

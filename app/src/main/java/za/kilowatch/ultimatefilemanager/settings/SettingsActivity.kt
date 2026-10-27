@@ -1887,32 +1887,64 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showDuplicateRetentionSettingsDialog() {
+        val layoutRes = if (isTv) R.layout.dialog_duplicate_retention_settings_tv else R.layout.dialog_duplicate_retention_settings
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
         val currentMode = za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.getPreferenceMode(this)
-        val options = arrayOf(
-            getString(R.string.settings_duplicate_retention_summary_oldest),
-            getString(R.string.settings_duplicate_retention_summary_newest),
-            getString(R.string.settings_duplicate_retention_summary_ask)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val options = listOf(
+            Triple(R.id.btnRetentionOldest, R.id.checkRetentionOldest, za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_OLDEST),
+            Triple(R.id.btnRetentionNewest, R.id.checkRetentionNewest, za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_NEWEST),
+            Triple(R.id.btnRetentionAsk, R.id.checkRetentionAsk, za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_ASK)
         )
-        val selectedIdx = when (currentMode) {
-            za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_OLDEST -> 0
-            za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_NEWEST -> 1
-            else -> 2
+
+        var defaultFocusView: View? = null
+
+        options.forEach { (btnId, checkId, mode) ->
+            val btn = dialogView.findViewById<View>(btnId)
+            val check = dialogView.findViewById<ImageView>(checkId)
+            val isSelected = currentMode == mode
+            check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+            if (isSelected) {
+                defaultFocusView = btn
+            }
+
+            btn?.setOnClickListener {
+                dialog.dismiss()
+                za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.setPreferenceMode(this, mode)
+                updateDuplicateRetentionSubtitle()
+                val label = when (mode) {
+                    za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_OLDEST -> getString(R.string.settings_duplicate_retention_summary_oldest)
+                    za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_NEWEST -> getString(R.string.settings_duplicate_retention_summary_newest)
+                    else -> getString(R.string.settings_duplicate_retention_summary_ask)
+                }
+                android.widget.Toast.makeText(
+                    this,
+                    getString(R.string.settings_duplicate_retention_toast, label),
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            if (isTv && btn != null) {
+                setupTvCardFocus(btn)
+            }
         }
 
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.settings_duplicate_retention_title)
-            .setSingleChoiceItems(options, selectedIdx) { dialog, which ->
-                val newMode = when (which) {
-                    0 -> za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_OLDEST
-                    1 -> za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_NEWEST
-                    else -> za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_ASK
-                }
-                za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.setPreferenceMode(this, newMode)
-                updateDuplicateRetentionSubtitle()
-                dialog.dismiss()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            (defaultFocusView ?: dialogView.findViewById(R.id.btnRetentionOldest))?.requestFocus()
+        }
     }
 
     private fun setupQuickAccessSection() {

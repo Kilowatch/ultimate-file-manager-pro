@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="650dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_dialog_glass"
@@ -18,7 +18,7 @@
         android:layout_height="48dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/bg_btn_icon_frosted"
-        android:layout_marginBottom="14dp">
+        android:layout_marginBottom="12dp">
 
         <ImageView
             android:layout_width="24dp"
@@ -37,18 +37,17 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/analyzer_strategy_title"
         android:textColor="@color/tv_text_primary"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:fontFamily="sans-serif-black"
         android:textAlignment="center"
-        android:layout_marginBottom="18dp" />
+        android:layout_marginBottom="16dp" />
 
-    <!-- Radio Options Container -->
-    <RadioGroup
-        android:id="@+id/radioGroupStrategy"
+    <!-- Options Container -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="14dp">
+        android:layout_marginBottom="12dp">
 
         <!-- Option: Keep Oldest (Original) -->
         <LinearLayout
@@ -62,40 +61,59 @@
             android:clickable="true"
             android:focusable="true"
             android:nextFocusDown="@id/cardKeepNewest"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="10dp">
 
-            <RadioButton
-                android:id="@+id/radioKeepOldest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:clickable="false"
-                android:focusable="false"
-                app:buttonTint="@color/selector_tv_button_yellow" />
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="14dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_history"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="12dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/analyzer_strategy_oldest"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="15sp"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:duplicateParentState="true"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/analyzer_strategy_oldest_desc"
-                    android:textColor="@color/tv_text_secondary"
+                    android:textColor="@color/selector_tv_btn_secondary_text"
+                    android:duplicateParentState="true"
                     android:textSize="12.5sp"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/checkKeepOldest"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_check_circle"
+                app:tint="@color/selector_tv_icon_tint_yellow"
+                android:duplicateParentState="true"
+                android:visibility="visible"
+                android:layout_marginStart="8dp"
+                android:importantForAccessibility="no" />
         </LinearLayout>
 
         <!-- Option: Keep Newest -->
@@ -112,40 +130,59 @@
             android:nextFocusUp="@id/cardKeepOldest"
             android:nextFocusDown="@id/checkRememberStrategy">
 
-            <RadioButton
-                android:id="@+id/radioKeepNewest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:clickable="false"
-                android:focusable="false"
-                app:buttonTint="@color/selector_tv_button_yellow" />
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="14dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_sync"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="12dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/analyzer_strategy_newest"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="15sp"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:duplicateParentState="true"
+                    android:textSize="16sp"
                     android:fontFamily="sans-serif-bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/analyzer_strategy_newest_desc"
-                    android:textColor="@color/tv_text_secondary"
+                    android:textColor="@color/selector_tv_btn_secondary_text"
+                    android:duplicateParentState="true"
                     android:textSize="12.5sp"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/checkKeepNewest"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_check_circle"
+                app:tint="@color/selector_tv_icon_tint_yellow"
+                android:duplicateParentState="true"
+                android:visibility="gone"
+                android:layout_marginStart="8dp"
+                android:importantForAccessibility="no" />
         </LinearLayout>
-    </RadioGroup>
+    </LinearLayout>
 
     <!-- Remember Choice Checkbox -->
     <androidx.appcompat.widget.AppCompatCheckBox
@@ -174,6 +211,7 @@
         android:insetBottom="0dp"
         app:cornerRadius="12dp"
         android:background="@drawable/selector_tv_button_yellow"
+        app:backgroundTint="@null"
         android:focusable="true"
         android:nextFocusUp="@id/checkRememberStrategy"
         android:nextFocusDown="@id/btnCancelStrategy"
@@ -181,7 +219,6 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancelStrategy"
-        style="@style/Widget.Material3Expressive.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:text="@string/cancel"
@@ -189,8 +226,10 @@
         android:insetTop="0dp"
         android:insetBottom="0dp"
         app:cornerRadius="12dp"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:textColor="@color/tv_button_text_selector"
         android:focusable="true"
-        android:nextFocusUp="@id/btnConfirmStrategy"
-        android:textColor="@color/tv_text_secondary" />
+        android:nextFocusUp="@id/btnConfirmStrategy" />
 
 </LinearLayout>

@@ -376,23 +376,30 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
 
         val cardKeepOldest = dialogView.findViewById<View>(R.id.cardKeepOldest)
         val cardKeepNewest = dialogView.findViewById<View>(R.id.cardKeepNewest)
-        val radioKeepOldest = dialogView.findViewById<RadioButton>(R.id.radioKeepOldest)
-        val radioKeepNewest = dialogView.findViewById<RadioButton>(R.id.radioKeepNewest)
+        val checkKeepOldest = dialogView.findViewById<ImageView>(R.id.checkKeepOldest)
+        val checkKeepNewest = dialogView.findViewById<ImageView>(R.id.checkKeepNewest)
         val checkRemember = dialogView.findViewById<CheckBox>(R.id.checkRememberStrategy)
         val btnConfirm = dialogView.findViewById<View>(R.id.btnConfirmStrategy)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancelStrategy)
 
         var selectedPolicy = DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST
 
+        fun updateSelection(policy: DuplicateRetentionManager.DuplicateRetentionPolicy) {
+            selectedPolicy = policy
+            val isOldest = policy == DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST
+            checkKeepOldest?.visibility = if (isOldest) View.VISIBLE else View.GONE
+            checkKeepNewest?.visibility = if (!isOldest) View.VISIBLE else View.GONE
+            cardKeepOldest?.isSelected = isOldest
+            cardKeepNewest?.isSelected = !isOldest
+        }
+
+        updateSelection(DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST)
+
         cardKeepOldest?.setOnClickListener {
-            selectedPolicy = DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST
-            radioKeepOldest?.isChecked = true
-            radioKeepNewest?.isChecked = false
+            updateSelection(DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST)
         }
         cardKeepNewest?.setOnClickListener {
-            selectedPolicy = DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_NEWEST
-            radioKeepNewest?.isChecked = true
-            radioKeepOldest?.isChecked = false
+            updateSelection(DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_NEWEST)
         }
 
         btnConfirm?.setOnClickListener {
@@ -410,6 +417,10 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
 
         dialog.show()
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        if (isTv) {
+            cardKeepOldest?.requestFocus()
+        }
     }
 
     private fun showBulkDeleteConfirmDialog(
@@ -476,12 +487,27 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
 
     private fun deleteDuplicates(toDelete: List<FileIndex>, adapter: AnalyzerDuplicateAdapter) {
         val paths = toDelete.map { it.path }.toSet()
+        val totalCount = paths.size
+
+        val progressLayoutRes = if (isTv) R.layout.dialog_deletion_progress_tv else R.layout.dialog_deletion_progress
+        val progressView = layoutInflater.inflate(progressLayoutRes, null)
+        val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(progressView)
+            .setCancelable(false)
+            .create()
+
+        val txtProgressDesc = progressView.findViewById<TextView>(R.id.txtDescription)
+        txtProgressDesc?.text = getString(R.string.analyzer_delete_progress, 0, totalCount)
+        progressDialog.show()
+        progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
         lifecycleScope.launch {
             val repo = UfmApplication.indexingRepository
             val (deleted, failedCount, hasProtectedFailed) = withContext(Dispatchers.IO) {
                 val deleted = mutableSetOf<String>()
                 var failedCount = 0
                 var hasProtectedFailed = false
+                var processed = 0
 
                 for (path in paths) {
                     val f = File(path)
@@ -496,7 +522,6 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
                     }
 
                     if (success) {
-                        repo.deleteFromIndex(path)
                         deleted.add(path)
                     } else {
                         failedCount++
@@ -504,8 +529,26 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
                             hasProtectedFailed = true
                         }
                     }
+                    processed++
+                    if (processed % 15 == 0 || processed == totalCount) {
+                        val current = processed
+                        withContext(Dispatchers.Main) {
+                            txtProgressDesc?.text = getString(R.string.analyzer_delete_progress, current, totalCount)
+                        }
+                    }
+                }
+                if (deleted.isNotEmpty()) {
+                    repo.deleteFromIndex(deleted)
                 }
                 Triple(deleted, failedCount, hasProtectedFailed)
+            }
+
+            try {
+                if (progressDialog.isShowing && !isFinishing && !isDestroyed) {
+                    progressDialog.dismiss()
+                }
+            } catch (e: Exception) {
+                // Ignore dismissal errors
             }
 
             if (deleted.isNotEmpty()) {

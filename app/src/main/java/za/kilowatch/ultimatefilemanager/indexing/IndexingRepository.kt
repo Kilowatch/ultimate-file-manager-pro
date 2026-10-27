@@ -301,6 +301,21 @@ class IndexingRepository(
      * Hard-delete a single path from the index.
      * Called after a file is moved (cut+paste) to remove the stale source entry.
      */
+    suspend fun deleteFromIndex(paths: Collection<String>) {
+        if (paths.isEmpty()) return
+        try {
+            paths.chunked(500).forEach { chunk ->
+                dao.deleteByPaths(chunk)
+            }
+        } catch (e: Exception) {
+            GoRoLog.e(TAG, "deleteFromIndex batch failed: ${e.message}")
+        }
+    }
+
+    /**
+     * Hard-delete a single path from the index.
+     * Called after a file is moved (cut+paste) to remove the stale source entry.
+     */
     suspend fun deleteFromIndex(path: String) {
         try {
             dao.deleteByPath(path)

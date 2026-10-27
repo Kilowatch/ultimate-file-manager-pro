@@ -193,69 +193,122 @@
 
     </LinearLayout>
 
-    <!-- Duplicate Bulk Controls Header Strip -->
-    <LinearLayout
+    <!-- Duplicate Bulk Controls Header Card (TV) -->
+    <FrameLayout
         android:id="@+id/layoutDuplicateControls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_dialog_glass"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/layoutScopeDescTv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/txtDuplicateSummary"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/tv_text_secondary"
-            android:textSize="13sp"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="1"
-            android:ellipsize="end"
-            tools:text="45 duplicate groups · saves 1.2 GB" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnClearSelection"
-            style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:minHeight="0dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="0dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/analyzer_clear_selection"
-            android:textColor="?attr/ufmDenied"
-            android:textSize="13sp"
-            android:fontFamily="sans-serif-bold"
-            android:focusable="true"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            <!-- TV Icon Badge -->
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSelectAllDuplicates"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:minHeight="0dp"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="0dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/analyzer_select_all_duplicates"
-            android:textColor="@color/tv_button_focused_yellow_text"
-            android:textSize="13sp"
-            android:fontFamily="sans-serif-bold"
-            android:background="@drawable/selector_tv_button_yellow"
-            android:focusable="true"
-            android:layout_marginStart="8dp" />
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_duplicate"
+                    app:tint="@color/tv_button_focused_yellow_text"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
 
-    </LinearLayout>
+            <!-- TV Title & Summary Text -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/analyzer_tab_duplicates"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold" />
+
+                <TextView
+                    android:id="@+id/txtDuplicateSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="45 duplicate groups · saves 1.2 GB" />
+            </LinearLayout>
+
+            <!-- Clear Action Button (TV) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnClearSelection"
+                style="@style/Widget.Material3Expressive.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:minHeight="0dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_deselect_all"
+                app:iconSize="18dp"
+                app:iconPadding="4dp"
+                app:iconTint="?attr/ufmDenied"
+                android:text="@string/analyzer_clear_selection"
+                android:textColor="?attr/ufmDenied"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-bold"
+                android:focusable="true"
+                android:visibility="gone"
+                android:layout_marginEnd="8dp"
+                tools:visibility="visible" />
+
+            <!-- Select All Action Button (TV) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSelectAllDuplicates"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:minHeight="0dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_select_all"
+                app:iconSize="18dp"
+                app:iconPadding="6dp"
+                app:iconTint="@color/tv_button_focused_yellow_text"
+                android:text="@string/analyzer_select_all_duplicates"
+                android:textColor="@color/tv_button_focused_yellow_text"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-bold"
+                android:background="@drawable/selector_tv_button_yellow"
+                android:focusable="true" />
+
+        </LinearLayout>
+    </FrameLayout>
 
     <!-- Main List -->
     <androidx.recyclerview.widget.RecyclerView

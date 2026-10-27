@@ -18,7 +18,7 @@
         android:layout_height="48dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/bg_btn_icon_frosted"
-        android:layout_marginBottom="14dp">
+        android:layout_marginBottom="12dp">
 
         <ImageView
             android:layout_width="24dp"
@@ -37,18 +37,17 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/analyzer_strategy_title"
         android:textColor="@color/mobile_text_primary"
-        android:textSize="19sp"
+        android:textSize="20sp"
         android:fontFamily="sans-serif-black"
         android:textAlignment="center"
-        android:layout_marginBottom="18dp" />
+        android:layout_marginBottom="16dp" />
 
-    <!-- Radio Options Container -->
-    <RadioGroup
-        android:id="@+id/radioGroupStrategy"
+    <!-- Options Container -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="14dp">
+        android:layout_marginBottom="12dp">
 
         <!-- Option: Keep Oldest (Original) -->
         <LinearLayout
@@ -61,30 +60,35 @@
             android:padding="14dp"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="10dp">
 
-            <RadioButton
-                android:id="@+id/radioKeepOldest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:clickable="false"
-                android:focusable="false"
-                app:buttonTint="?attr/colorPrimary" />
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_history"
+                    app:tint="?attr/colorPrimary"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="10dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/analyzer_strategy_oldest"
                     android:textColor="@color/mobile_text_primary"
-                    android:textSize="14.5sp"
+                    android:textSize="15sp"
                     android:fontFamily="sans-serif-bold" />
 
                 <TextView
@@ -95,6 +99,17 @@
                     android:textSize="12sp"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/checkKeepOldest"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_check_circle"
+                app:tint="?attr/colorPrimary"
+                android:visibility="visible"
+                tools:visibility="visible"
+                android:layout_marginStart="8dp"
+                android:importantForAccessibility="no" />
         </LinearLayout>
 
         <!-- Option: Keep Newest -->
@@ -109,28 +124,33 @@
             android:clickable="true"
             android:focusable="true">
 
-            <RadioButton
-                android:id="@+id/radioKeepNewest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:clickable="false"
-                android:focusable="false"
-                app:buttonTint="?attr/colorPrimary" />
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_sync"
+                    app:tint="?attr/colorPrimary"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="10dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/analyzer_strategy_newest"
                     android:textColor="@color/mobile_text_primary"
-                    android:textSize="14.5sp"
+                    android:textSize="15sp"
                     android:fontFamily="sans-serif-bold" />
 
                 <TextView
@@ -141,8 +161,19 @@
                     android:textSize="12sp"
                     android:layout_marginTop="2dp" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/checkKeepNewest"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_check_circle"
+                app:tint="?attr/colorPrimary"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_marginStart="8dp"
+                android:importantForAccessibility="no" />
         </LinearLayout>
-    </RadioGroup>
+    </LinearLayout>
 
     <!-- Remember Choice Checkbox -->
     <androidx.appcompat.widget.AppCompatCheckBox
@@ -151,7 +182,7 @@
         android:layout_height="wrap_content"
         android:text="@string/analyzer_strategy_remember"
         android:textColor="@color/mobile_text_secondary"
-        android:textSize="13sp"
+        android:textSize="13.5sp"
         app:buttonTint="?attr/colorPrimary"
         android:layout_marginBottom="20dp" />
 
@@ -162,13 +193,13 @@
         android:layout_height="50dp"
         android:text="@string/btn_continue"
         android:textColor="@android:color/white"
-        android:textSize="14.5sp"
+        android:textSize="15sp"
         android:fontFamily="sans-serif-bold"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         app:cornerRadius="12dp"
         app:backgroundTint="?attr/colorPrimary"
-        android:layout_marginBottom="6dp" />
+        android:layout_marginBottom="8dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancelStrategy"
