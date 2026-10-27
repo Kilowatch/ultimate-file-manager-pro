@@ -1,5 +1,10 @@
 package za.kilowatch.ultimatefilemanager.storage
 
+import android.content.Context
+import android.content.ClipData
+import android.content.ClipDescription
+import android.os.Build
+import android.view.DragEvent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -14,6 +19,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -77,6 +83,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
     private var tileIconRes: Map<String, Int> = emptyMap()
 
     var onCategoryHeaderToggled: ((categoryId: String, isExpanded: Boolean) -> Unit)? = null
+    var onTileDroppedIntoCustomTile: ((tileId: String, customTileId: String) -> Unit)? = null
 
     fun setTileColors(colors: Map<String, TileColorConfig>) {
         if (tileColors == colors) return
@@ -318,7 +325,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
                 val groupItems = rawItems.filter { categoryForTile(it, ctx) == catId }
                 if (groupItems.isNotEmpty() || isCustom) {
-                    val expanded = if (ctx != null) MainMenuViewModeManager.isCategoryExpanded(ctx, catId) else true
+                    val expanded = if (ctx != null) MainMenuViewModeManager.isCategoryExpanded(ctx, catId) else (catId == MainMenuViewModeManager.CATEGORY_STORAGE)
                     val header = StorageItem(
                         id = "header_$catId",
                         label = titleStr,
@@ -329,12 +336,10 @@ private fun ImageView.safeSetIcon(resId: Int) {
                         isCategoryHeader = true,
                         categoryId = catId,
                         isCategoryExpanded = expanded,
-                        categoryItemCount = groupItems.size
+                        categoryItemCount = groupItems.size,
+                        categoryGroupItems = groupItems
                     )
                     categorized.add(header)
-                    if (expanded) {
-                        categorized.addAll(groupItems)
-                    }
                 }
             }
 
@@ -511,8 +516,9 @@ private fun ImageView.safeSetIcon(resId: Int) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_CATEGORY_HEADER -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_storage_category_header, parent, false)
-                CategoryHeaderViewHolder(view)
+                val layoutRes = if (isTv) R.layout.item_storage_category_header else R.layout.item_storage_category_group
+                val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
+                if (isTv) CategoryHeaderViewHolder(view) else CategoryGroupViewHolder(view)
             }
             VIEW_TYPE_GRID -> {
                 val layoutRes = if (isTv) R.layout.item_storage_grid_tv else R.layout.item_storage_grid
@@ -529,10 +535,10 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items.getOrNull(position) ?: return
-        if (holder is CategoryHeaderViewHolder) {
-            holder.bind(item)
-        } else if (holder is StorageViewHolder) {
-            holder.bind(item)
+        when (holder) {
+            is CategoryGroupViewHolder -> holder.bind(item)
+            is CategoryHeaderViewHolder -> holder.bind(item)
+            is StorageViewHolder -> holder.bind(item)
         }
     }
 
@@ -546,6 +552,9 @@ private fun ImageView.safeSetIcon(resId: Int) {
         holder.itemView.translationX = 0f
         holder.itemView.translationY = 0f
         holder.itemView.elevation = 0f
+        if (holder is CategoryGroupViewHolder) {
+            holder.itemView.findViewById<LinearLayout>(R.id.layoutCategoryItems)?.removeAllViews()
+        }
         if (holder is StorageViewHolder) {
             holder.itemView.findViewById<View>(R.id.cardStorage)?.let { card ->
                 card.animate().cancel()
@@ -558,11 +567,296 @@ private fun ImageView.safeSetIcon(resId: Int) {
         }
     }
 
+    inner class CategoryGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val cardCategoryGroup: MaterialCardView = itemView.findViewById(R.id.cardCategoryGroup)
+        private val layoutCategoryHeader: View = itemView.findViewById(R.id.layoutCategoryHeader)
+        private val iconContainerCategory: FrameLayout = itemView.findViewById(R.id.iconContainerCategory)
+        private val imgCategoryIcon: ImageView = itemView.findViewById(R.id.imgCategoryIcon)
+        private val txtCategoryTitle: TextView = itemView.findViewById(R.id.txtCategoryTitle)
+        private val txtCategorySubtitle: TextView = itemView.findViewById(R.id.txtCategorySubtitle)
+        private val txtCategoryCountPill: TextView = itemView.findViewById(R.id.txtCategoryCountPill)
+        private val btnDeleteCategoryHeader: ImageView? = itemView.findViewById(R.id.btnDeleteCategoryHeader)
+        private val imgCategoryChevron: ImageView = itemView.findViewById(R.id.imgCategoryChevron)
+        private val layoutCategoryItems: LinearLayout = itemView.findViewById(R.id.layoutCategoryItems)
+
+        fun bind(item: StorageItem) {
+            val context = itemView.context
+            val density = context.resources.displayMetrics.density
+
+            // Enforce solid card background and stroke on outer card
+            cardCategoryGroup.setCardBackgroundColor(ContextCompat.getColor(context, R.color.mobile_glass_card))
+            cardCategoryGroup.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+            cardCategoryGroup.strokeColor = ContextCompat.getColor(context, R.color.mobile_glass_stroke)
+
+            imgCategoryIcon.safeSetIcon(item.iconRes)
+            val iconTint = DefaultIconColorManager.getMobileIconTint(context)
+            imgCategoryIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+            txtCategoryTitle.text = item.label
+
+            val catId = item.categoryId ?: ""
+            val isExpanded = item.isCategoryExpanded
+            val groupItems = item.categoryGroupItems
+            val count = groupItems.size
+
+            val countText = if (count == 1) {
+                context.getString(R.string.main_menu_section_item_count_single)
+            } else {
+                context.getString(R.string.main_menu_section_items_count, count)
+            }
+
+            if (isExpanded) {
+                // Header highlighted when expanded
+                layoutCategoryHeader.setBackgroundResource(R.drawable.bg_category_header_highlight)
+                txtCategorySubtitle.visibility = View.VISIBLE
+                txtCategorySubtitle.text = countText
+                txtCategoryCountPill.visibility = View.GONE
+                imgCategoryChevron.setImageResource(R.drawable.ic_expand_less)
+                layoutCategoryItems.visibility = View.VISIBLE
+                populateChildItems(context, groupItems, catId)
+            } else {
+                // Header NOT highlighted when collapsed
+                layoutCategoryHeader.background = null
+                txtCategorySubtitle.visibility = View.GONE
+                txtCategoryCountPill.visibility = View.VISIBLE
+                txtCategoryCountPill.text = countText
+                imgCategoryChevron.setImageResource(R.drawable.ic_chevron_right)
+                layoutCategoryItems.visibility = View.GONE
+                layoutCategoryItems.removeAllViews()
+            }
+
+            val isCustomCategory = !isTv && catId.isNotBlank() && MainMenuViewModeManager.loadCustomCategories(context).containsKey(catId)
+            if (isEditMode && isCustomCategory) {
+                btnDeleteCategoryHeader?.visibility = View.VISIBLE
+                imgCategoryChevron.visibility = View.GONE
+                btnDeleteCategoryHeader?.setOnClickListener {
+                    onEditModeClick?.invoke(item)
+                }
+            } else {
+                btnDeleteCategoryHeader?.visibility = View.GONE
+                imgCategoryChevron.visibility = View.VISIBLE
+                btnDeleteCategoryHeader?.setOnClickListener(null)
+            }
+
+            // Smooth expand/collapse animation with TransitionManager
+            layoutCategoryHeader.setOnClickListener {
+                if (isEditMode && isCustomCategory) {
+                    onEditModeClick?.invoke(item)
+                } else {
+                    val parentView = itemView.parent as? ViewGroup ?: (itemView as? ViewGroup)
+                    if (parentView != null) {
+                        val transition = android.transition.AutoTransition().apply {
+                            duration = 200
+                            interpolator = DecelerateInterpolator()
+                        }
+                        android.transition.TransitionManager.beginDelayedTransition(parentView, transition)
+                    }
+                    val newExpanded = !item.isCategoryExpanded
+                    item.isCategoryExpanded = newExpanded
+                    MainMenuViewModeManager.setCategoryExpanded(context, catId, newExpanded)
+                    onCategoryHeaderToggled?.invoke(catId, newExpanded)
+                    bind(item)
+                }
+            }
+
+            // Header long-press in edit mode starts whole-category drag reordering
+            if (!isTv && onLongPress != null) {
+                layoutCategoryHeader.setOnLongClickListener {
+                    if (isEditMode) {
+                        itemView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                        onLongPress.invoke(item, this@CategoryGroupViewHolder)
+                        true
+                    } else false
+                }
+            }
+
+            // Drop target listener: accept dropped tiles from other categories!
+            cardCategoryGroup.setOnDragListener { _, event ->
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        event.clipDescription?.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) == true
+                    }
+                    DragEvent.ACTION_DRAG_ENTERED -> {
+                        cardCategoryGroup.strokeWidth = (2 * density).toInt()
+                        cardCategoryGroup.setStrokeColor(ContextCompat.getColor(context, R.color.theme_primary))
+                        true
+                    }
+                    DragEvent.ACTION_DRAG_EXITED -> {
+                        cardCategoryGroup.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                        cardCategoryGroup.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                        true
+                    }
+                    DragEvent.ACTION_DROP -> {
+                        cardCategoryGroup.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                        cardCategoryGroup.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                        val droppedItem = event.localState as? StorageItem
+                        if (droppedItem != null && catId.isNotBlank()) {
+                            MainMenuViewModeManager.saveTileCategory(context, droppedItem.id, catId)
+                            MainMenuViewModeManager.setCategoryExpanded(context, catId, true)
+                            refreshDisplayedList(context)
+                            safeNotifyDataSetChanged()
+                            itemView.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                        }
+                        true
+                    }
+                    DragEvent.ACTION_DRAG_ENDED -> {
+                        cardCategoryGroup.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                        cardCategoryGroup.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+
+        private fun populateChildItems(context: Context, groupItems: List<StorageItem>, currentCatId: String) {
+            layoutCategoryItems.removeAllViews()
+            val inflater = LayoutInflater.from(context)
+
+            for (childItem in groupItems) {
+                val childView = inflater.inflate(R.layout.item_storage_nested_card, layoutCategoryItems, false)
+                val cardStorage = childView.findViewById<MaterialCardView>(R.id.cardStorage)
+                val iconContainer = childView.findViewById<FrameLayout>(R.id.iconContainer)
+                val imgIcon = childView.findViewById<ImageView>(R.id.imgStorageIcon)
+                val txtLabel = childView.findViewById<TextView>(R.id.txtStorageLabel)
+                val txtCapacity = childView.findViewById<TextView>(R.id.txtStorageCapacity)
+                val progressBar = childView.findViewById<ProgressBar>(R.id.progressStorage)
+                val txtNewBadge = childView.findViewById<TextView>(R.id.txtNewBadge)
+                val btnEjectTile = childView.findViewById<ImageView>(R.id.btnEjectTile)
+                val btnHideTile = childView.findViewById<ImageView>(R.id.btnHideTile)
+
+                imgIcon.safeSetIcon(childItem.iconRes)
+                applyCustomIcon(childItem, imgIcon)
+                txtLabel.text = childItem.label
+                txtCapacity.text = formatTileSubtitle(context, childItem)
+
+                val showProgress = !childItem.isUnmounted && childItem.totalBytes > 0L
+                if (showProgress) {
+                    progressBar.visibility = View.VISIBLE
+                    progressBar.max = 100
+                    progressBar.progress = childItem.usagePercent
+                } else {
+                    progressBar.visibility = View.GONE
+                }
+
+                txtNewBadge.visibility = if (childItem.isNewlyMounted) View.VISIBLE else View.GONE
+
+                if (!isEditMode && UsbEjectManager.isRemovableStorage(childItem)) {
+                    btnEjectTile.visibility = View.VISIBLE
+                    if (childItem.isUnmounted) {
+                        btnEjectTile.setImageResource(R.drawable.ic_mount)
+                        btnEjectTile.contentDescription = context.getString(R.string.cd_remount_storage)
+                    } else {
+                        btnEjectTile.setImageResource(R.drawable.ic_eject)
+                        btnEjectTile.contentDescription = context.getString(R.string.cd_safely_remove)
+                    }
+                    btnEjectTile.setOnClickListener { onEjectClick?.invoke(childItem) }
+                } else {
+                    btnEjectTile.visibility = View.GONE
+                    btnEjectTile.setOnClickListener(null)
+                }
+
+                if (isEditMode) {
+                    val isCustom = childItem.isCustomTile
+                    val showBtn = (childItem.isHideable || isCustom) && !isColorPickMode
+                    btnHideTile.visibility = if (showBtn) View.VISIBLE else View.GONE
+                    if (isCustom) {
+                        btnHideTile.setImageResource(R.drawable.ic_settings)
+                        btnHideTile.setOnClickListener { onEditModeClick?.invoke(childItem) }
+                    } else {
+                        btnHideTile.setImageResource(R.drawable.ic_close)
+                        btnHideTile.setOnClickListener { onHideClick?.invoke(childItem) }
+                    }
+                } else {
+                    btnHideTile.visibility = View.GONE
+                    btnHideTile.setOnClickListener(null)
+                }
+
+                val colorConfig = tileColors[childItem.id] ?: TileColorConfig()
+                applyCustomColors(context, cardStorage, iconContainer, imgIcon, txtLabel, txtCapacity, colorConfig, R.color.quick_bar_bg)
+
+                cardStorage.setOnClickListener {
+                    if (isEditMode) {
+                        onEditModeClick?.invoke(childItem)
+                    } else {
+                        onStorageClick(childItem)
+                    }
+                }
+
+                // Native Drag & Drop: long press on child tile allows dragging across sub-menus!
+                cardStorage.setOnLongClickListener {
+                    cardStorage.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    val clipData = ClipData.newPlainText("tile_id", childItem.id)
+                    val shadowBuilder = View.DragShadowBuilder(cardStorage)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        cardStorage.startDragAndDrop(clipData, shadowBuilder, childItem, 0)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        cardStorage.startDrag(clipData, shadowBuilder, childItem, 0)
+                    }
+                    true
+                }
+
+                // If this tile is a custom tile, accept drops to move items inside it
+                if (childItem.isCustomTile) {
+                    val density = context.resources.displayMetrics.density
+                    cardStorage.setOnDragListener { _, event ->
+                        when (event.action) {
+                            DragEvent.ACTION_DRAG_STARTED -> {
+                                event.clipDescription?.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) == true
+                            }
+                            DragEvent.ACTION_DRAG_ENTERED -> {
+                                val dragged = event.localState as? StorageItem
+                                if (dragged != null && dragged.id != childItem.id && !dragged.isCustomTile) {
+                                    cardStorage.strokeWidth = (4 * density).toInt()
+                                    cardStorage.setStrokeColor(za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(context))
+                                    true
+                                } else false
+                            }
+                            DragEvent.ACTION_DRAG_EXITED -> {
+                                cardStorage.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                                cardStorage.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                                true
+                            }
+                            DragEvent.ACTION_DROP -> {
+                                cardStorage.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                                cardStorage.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                                val dragged = event.localState as? StorageItem
+                                if (dragged != null && dragged.id != childItem.id && !dragged.isCustomTile) {
+                                    CustomTileManager.setTileParent(context, dragged.id, childItem.id)
+                                    val order = CustomTileManager.loadTileOrder(context, childItem.id).toMutableList()
+                                    if (dragged.id !in order) {
+                                        order.add(dragged.id)
+                                        CustomTileManager.saveTileOrder(context, childItem.id, order)
+                                    }
+                                    itemView.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                                    onTileDroppedIntoCustomTile?.invoke(dragged.id, childItem.id)
+                                    refreshDisplayedList(context)
+                                    safeNotifyDataSetChanged()
+                                }
+                                true
+                            }
+                            DragEvent.ACTION_DRAG_ENDED -> {
+                                cardStorage.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                                cardStorage.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                }
+
+                layoutCategoryItems.addView(childView)
+            }
+        }
+    }
+
     inner class CategoryHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val cardCategoryHeader: MaterialCardView? = itemView.findViewById(R.id.cardCategoryHeader)
         private val iconContainer: FrameLayout? = itemView.findViewById(R.id.iconContainerHeader)
         private val imgIcon: ImageView = itemView.findViewById(R.id.imgCategoryIcon)
         private val txtTitle: TextView = itemView.findViewById(R.id.txtCategoryTitle)
-        private val txtCount: TextView = itemView.findViewById(R.id.txtCategoryCount)
+        private val txtSubtitle: TextView? = itemView.findViewById(R.id.txtCategorySubtitle)
+        private val txtCount: TextView? = itemView.findViewById(R.id.txtCategoryCount)
         private val imgChevron: ImageView = itemView.findViewById(R.id.imgCategoryChevron)
         private val btnDeleteCategoryHeader: ImageView? = itemView.findViewById(R.id.btnDeleteCategoryHeader)
 
@@ -571,6 +865,13 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
         fun bind(item: StorageItem) {
             val context = itemView.context
+            val density = context.resources.displayMetrics.density
+
+            // Enforce solid card background and stroke so it is ALWAYS preserved on scroll
+            cardCategoryHeader?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.mobile_glass_card))
+            cardCategoryHeader?.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+            cardCategoryHeader?.strokeColor = ContextCompat.getColor(context, R.color.mobile_glass_stroke)
+
             imgIcon.setImageResource(item.iconRes)
             val iconTint = if (isTv) {
                 DefaultIconColorManager.getTvIconTint(context)
@@ -579,88 +880,26 @@ private fun ImageView.safeSetIcon(resId: Int) {
             }
             imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
             txtTitle.text = item.label
+
+            val catId = item.categoryId ?: ""
+            val isExpanded = item.isCategoryExpanded
             val count = item.categoryItemCount
-            txtCount.text = if (count == 1) {
+            val countText = if (count == 1) {
                 context.getString(R.string.main_menu_section_item_count_single)
             } else {
                 context.getString(R.string.main_menu_section_items_count, count)
             }
 
-            val catId = item.categoryId ?: ""
-            val isExpanded = item.isCategoryExpanded
-            imgChevron.rotation = if (isExpanded) 0f else -90f
-
-            val density = context.resources.displayMetrics.density
-            when (itemSize) {
-                MainMenuViewModeManager.ItemSize.LARGE -> {
-                    itemView.setPadding((16 * density).toInt(), (14 * density).toInt(), (16 * density).toInt(), (14 * density).toInt())
-                    val lp = itemView.layoutParams as? ViewGroup.MarginLayoutParams
-                    if (lp != null) {
-                        lp.topMargin = (14 * density).toInt()
-                        lp.bottomMargin = (6 * density).toInt()
-                        itemView.layoutParams = lp
-                    }
-
-                    iconContainer?.layoutParams?.width = (44 * density).toInt()
-                    iconContainer?.layoutParams?.height = (44 * density).toInt()
-                    imgIcon.layoutParams.width = (24 * density).toInt()
-                    imgIcon.layoutParams.height = (24 * density).toInt()
-
-                    txtTitle.textSize = 17f
-                    txtCount.textSize = 12f
-                    txtCount.setPadding((10 * density).toInt(), (4 * density).toInt(), (10 * density).toInt(), (4 * density).toInt())
-
-                    imgChevron.layoutParams.width = (24 * density).toInt()
-                    imgChevron.layoutParams.height = (24 * density).toInt()
-                    btnDeleteCategoryHeader?.layoutParams?.width = (32 * density).toInt()
-                    btnDeleteCategoryHeader?.layoutParams?.height = (32 * density).toInt()
-                }
-                MainMenuViewModeManager.ItemSize.MEDIUM -> {
-                    itemView.setPadding((14 * density).toInt(), (10 * density).toInt(), (14 * density).toInt(), (10 * density).toInt())
-                    val lp = itemView.layoutParams as? ViewGroup.MarginLayoutParams
-                    if (lp != null) {
-                        lp.topMargin = (10 * density).toInt()
-                        lp.bottomMargin = (4 * density).toInt()
-                        itemView.layoutParams = lp
-                    }
-
-                    iconContainer?.layoutParams?.width = (36 * density).toInt()
-                    iconContainer?.layoutParams?.height = (36 * density).toInt()
-                    imgIcon.layoutParams.width = (20 * density).toInt()
-                    imgIcon.layoutParams.height = (20 * density).toInt()
-
-                    txtTitle.textSize = 15f
-                    txtCount.textSize = 11f
-                    txtCount.setPadding((8 * density).toInt(), (3 * density).toInt(), (8 * density).toInt(), (3 * density).toInt())
-
-                    imgChevron.layoutParams.width = (20 * density).toInt()
-                    imgChevron.layoutParams.height = (20 * density).toInt()
-                    btnDeleteCategoryHeader?.layoutParams?.width = (28 * density).toInt()
-                    btnDeleteCategoryHeader?.layoutParams?.height = (28 * density).toInt()
-                }
-                MainMenuViewModeManager.ItemSize.SMALL -> {
-                    itemView.setPadding((10 * density).toInt(), (6 * density).toInt(), (10 * density).toInt(), (6 * density).toInt())
-                    val lp = itemView.layoutParams as? ViewGroup.MarginLayoutParams
-                    if (lp != null) {
-                        lp.topMargin = (6 * density).toInt()
-                        lp.bottomMargin = (2 * density).toInt()
-                        itemView.layoutParams = lp
-                    }
-
-                    iconContainer?.layoutParams?.width = (28 * density).toInt()
-                    iconContainer?.layoutParams?.height = (28 * density).toInt()
-                    imgIcon.layoutParams.width = (16 * density).toInt()
-                    imgIcon.layoutParams.height = (16 * density).toInt()
-
-                    txtTitle.textSize = 13f
-                    txtCount.textSize = 10f
-                    txtCount.setPadding((6 * density).toInt(), (2 * density).toInt(), (6 * density).toInt(), (2 * density).toInt())
-
-                    imgChevron.layoutParams.width = (16 * density).toInt()
-                    imgChevron.layoutParams.height = (16 * density).toInt()
-                    btnDeleteCategoryHeader?.layoutParams?.width = (24 * density).toInt()
-                    btnDeleteCategoryHeader?.layoutParams?.height = (24 * density).toInt()
-                }
+            if (isExpanded) {
+                txtSubtitle?.visibility = View.VISIBLE
+                txtSubtitle?.text = countText
+                txtCount?.visibility = View.GONE
+                imgChevron.setImageResource(R.drawable.ic_expand_less)
+            } else {
+                txtSubtitle?.visibility = View.GONE
+                txtCount?.visibility = View.VISIBLE
+                txtCount?.text = countText
+                imgChevron.setImageResource(R.drawable.ic_chevron_right)
             }
 
             val isCustomCategory = !isTv && catId.isNotBlank() && MainMenuViewModeManager.loadCustomCategories(context).containsKey(catId)
@@ -696,7 +935,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 }
             }
 
-            // Mobile: touch-hold on header starts drag
+            // Mobile: touch-hold on header starts drag for category reordering in edit mode
             if (!isTv && onLongPress != null) {
                 itemView.setOnTouchListener { _, motionEvent ->
                     when (motionEvent.action) {
@@ -1133,58 +1372,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 imgIcon.safeSetIcon(item.iconRes)
                 applyCustomIcon(item, imgIcon)
                 txtLabel.text = item.label
-                txtCapacity.text = when {
-                    item.isRecentFilesTile -> item.subtitle ?: context.getString(R.string.recent_files_subtitle)
-                    item.isAddStorageLocationTile -> context.getString(R.string.add_storage_location_subtitle)
-                    item.isSafCustomLocation -> item.subtitle ?: context.getString(R.string.saf_storage)
-                    item.isTwinWindowTile -> context.getString(R.string.twin_window_subtitle)
-                    item.isNotepadTile    -> context.getString(R.string.notepad_tile_subtitle)
-                    item.isScannerTile    -> context.getString(R.string.scanner_tile_subtitle)
-                    item.isTerminalTile -> context.getString(R.string.adb_terminal_subtitle)
-                    item.isPairedDevicesTile -> context.getString(R.string.manage_links_with_other_devices)
-                    item.isSettingsTile   -> context.getString(R.string.font_size_tile_subtitle)
-                    item.isAppsTile      -> context.getString(R.string.apps_tile_subtitle)
-                    item.isRemoteTile    -> context.getString(R.string.remote_tile_subtitle)
-                    item.isTvRemoteTile  -> item.subtitle ?: ""
-                    item.isSearchTile    -> context.getString(R.string.search_tile_subtitle)
-                    item.isAnalyzerTile  -> context.getString(R.string.analyzer_tile_subtitle)
-
-                    item.isVaultTile     -> context.getString(R.string.vault_tile_subtitle)
-                    item.isLegalTile     -> context.getString(R.string.policy_selection_subtitle)
-                    item.isRateUsTile    -> context.getString(R.string.rate_us_subtitle)
-                    item.isAboutTile     -> context.getString(R.string.about_tile_subtitle)
-                    item.isSupportTile   -> context.getString(R.string.support_tile_subtitle)
-                    item.isSafTile       -> context.getString(R.string.saf_tile_subtitle)
-                    item.isNetworkTile   -> context.getString(R.string.network_tile_subtitle)
-                    item.isOnlineStoragesTile -> za.kilowatch.ultimatefilemanager.util.DeviceUtils.getOnlineStoragesSubtitle(context)
-                    item.isTipJarTile    -> context.getString(R.string.tip_jar_subtitle)
-                    item.isSyncTile      -> context.getString(R.string.sync_subtitle)
-                    item.isAdvancedSyncTile -> context.getString(R.string.advanced_sync_subtitle)
-                    item.isExtractsTile  -> item.subtitle ?: context.getString(R.string.browse_extracted_apps)
-                    item.isFavoriteTile  -> if (item.favoriteIsFolder) context.getString(R.string.favorite_folder) else context.getString(R.string.favorite_file)
-                    item.isRecycleBinTile -> item.subtitle ?: context.getString(R.string.recycle_bin_title)
-                    item.isCustomTile -> item.subtitle ?: ""
-                    item.isNetworkRoot   -> {
-                        item.subtitle ?: run {
-                            val share = item.networkShare
-                            if (share != null) {
-                                val typeLabel = when (share.type) {
-                                    ShareType.AWS_S3    -> context.getString(R.string.add_online_storage_aws_s3)
-                                    ShareType.IDRIVE_E2 -> context.getString(R.string.add_online_storage_idrive_e2)
-                                    ShareType.NFS       -> share.type.name
-                                    ShareType.DLNA      -> share.type.name
-                                    else               -> share.type.name
-                                }
-                                "$typeLabel \u2022 ${share.host}"
-                            } else ""
-                        }
-                    }
-                    item.isOnlineStorage -> item.subtitle ?: ""
-                    item.isShizukuTile -> item.subtitle ?: ""
-                    item.isFileServerTile -> context.getString(R.string.file_server_tile_subtitle)
-                    item.isSmartSortTile -> context.getString(R.string.smart_sort_tile_subtitle)
-                    else -> ""
-                }
+                txtCapacity.text = formatTileSubtitle(context, item)
             } else {
                 val showProgress = !item.isUnmounted && item.totalBytes > 0L && (viewMode == MainMenuViewModeManager.ViewMode.LIST || viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED)
                 if (showProgress) {
@@ -1206,14 +1394,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 imgIcon.safeSetIcon(item.iconRes)
                 applyCustomIcon(item, imgIcon)
                 txtLabel.text = item.label
-
-                if (item.isUnmounted || item.totalBytes <= 0L) {
-                    txtCapacity.text = item.subtitle?.ifEmpty { null } ?: context.getString(R.string.storage_unmounted_tap_to_mount)
-                } else {
-                    val freeFormatted  = Formatter.formatFileSize(context, item.freeBytes)
-                    val totalFormatted = Formatter.formatFileSize(context, item.totalBytes)
-                    txtCapacity.text   = context.getString(R.string.storage_free_format, freeFormatted, totalFormatted)
-                }
+                txtCapacity.text = formatTileSubtitle(context, item)
 
                 if (showProgress) {
                     progressBar.max      = 100
@@ -1264,7 +1445,12 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
             // Apply custom tile colors (overrides accent tiles)
             // Note: colorConfig was already fetched at the top of bind() for the focus listener.
-            applyCustomColors(context, card, iconContainer, imgIcon, txtLabel, txtCapacity, colorConfig)
+            val defaultTileBg = if (viewMode == MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED && !isTv) {
+                R.color.quick_bar_bg
+            } else {
+                R.color.mobile_glass_card
+            }
+            applyCustomColors(context, card, iconContainer, imgIcon, txtLabel, txtCapacity, colorConfig, defaultTileBg)
 
             itemView.setOnClickListener {
                 if (isEditMode) {
@@ -1342,111 +1528,195 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 )
                 iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
                 label.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_primary))
-                card.strokeWidth = 0
-                card.setStrokeColor(Color.TRANSPARENT)
+                val density = context.resources.displayMetrics.density
+                card.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                card.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
             }
         }
 
-        private fun applyCustomColors(
-            context: android.content.Context,
-            card: MaterialCardView,
-            iconContainer: FrameLayout?,
-            icon: ImageView?,
-            label: TextView,
-            capacity: TextView,
-            config: TileColorConfig
-        ) {
-            // Tile background color
-            if (config.tileBgColor != Color.TRANSPARENT) {
-                card.setCardBackgroundColor(config.tileBgColor)
-            } else {
-                card.setCardBackgroundColor(
-                    ContextCompat.getColor(context, R.color.mobile_glass_card)
-                )
-            }
+    }
 
-            // Ring color
-            if (config.ringColor != Color.TRANSPARENT) {
-                val strokePx = (2 * context.resources.displayMetrics.density).toInt()
-                card.strokeWidth = strokePx
-                card.setStrokeColor(config.ringColor)
-            } else {
-                card.strokeWidth = 0
-                card.setStrokeColor(Color.TRANSPARENT)
-            }
+    private fun formatTileSubtitle(context: android.content.Context, item: StorageItem): String {
+        val isSpecialTile = item.isAppsTile || item.isRemoteTile || item.isTvRemoteTile ||
+                item.isSearchTile || item.isAnalyzerTile ||
+                item.isVaultTile || item.isLegalTile || item.isRateUsTile || item.isSafTile ||
+                item.isNetworkTile || item.isNetworkRoot || item.isPairedDevicesTile ||
+                item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile ||
+                item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile || item.isRecentFilesTile ||
+                item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage ||
+                item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile ||
+                item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile ||
+                item.isAddStorageLocationTile || item.isSafCustomLocation
 
-            // Icon tint color
-            if (config.iconColor != Color.TRANSPARENT) {
-                icon?.setColorFilter(config.iconColor)
-            } else {
-                // No per-tile custom icon color — restore to white
-                icon?.clearColorFilter()
-                icon?.imageTintList = android.content.res.ColorStateList.valueOf(
-                    ContextCompat.getColor(context, R.color.mobile_icon_tint)
-                )
-            }
-
-            // Icon background color
-            if (config.iconBgColor != Color.TRANSPARENT) {
-                if (isTv) {
-                    val newDrawable = GradientDrawable()
-                    newDrawable.shape = GradientDrawable.OVAL
-                    newDrawable.setColor(config.iconBgColor)
-                    iconContainer?.background = newDrawable
-                } else {
-                    val density = context.resources.displayMetrics.density
-                    val newDrawable = GradientDrawable().apply {
-                        shape = GradientDrawable.RECTANGLE
-                        cornerRadius = 12 * density
-                        setColor(config.iconBgColor)
-                        setStroke((1 * density).toInt(), ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+        return if (isSpecialTile) {
+            when {
+                item.isRecentFilesTile -> item.subtitle ?: context.getString(R.string.recent_files_subtitle)
+                item.isAddStorageLocationTile -> context.getString(R.string.add_storage_location_subtitle)
+                item.isSafCustomLocation -> item.subtitle ?: context.getString(R.string.saf_storage)
+                item.isTwinWindowTile -> context.getString(R.string.twin_window_subtitle)
+                item.isNotepadTile -> context.getString(R.string.notepad_tile_subtitle)
+                item.isScannerTile -> context.getString(R.string.scanner_tile_subtitle)
+                item.isTerminalTile -> context.getString(R.string.adb_terminal_subtitle)
+                item.isPairedDevicesTile -> context.getString(R.string.manage_links_with_other_devices)
+                item.isSettingsTile -> context.getString(R.string.font_size_tile_subtitle)
+                item.isAppsTile -> context.getString(R.string.apps_tile_subtitle)
+                item.isRemoteTile -> context.getString(R.string.remote_tile_subtitle)
+                item.isTvRemoteTile -> item.subtitle ?: ""
+                item.isSearchTile -> context.getString(R.string.search_tile_subtitle)
+                item.isAnalyzerTile -> context.getString(R.string.analyzer_tile_subtitle)
+                item.isVaultTile -> context.getString(R.string.vault_tile_subtitle)
+                item.isLegalTile -> context.getString(R.string.policy_selection_subtitle)
+                item.isRateUsTile -> context.getString(R.string.rate_us_subtitle)
+                item.isAboutTile -> context.getString(R.string.about_tile_subtitle)
+                item.isSupportTile -> context.getString(R.string.support_tile_subtitle)
+                item.isSafTile -> context.getString(R.string.saf_tile_subtitle)
+                item.isNetworkTile -> context.getString(R.string.network_tile_subtitle)
+                item.isOnlineStoragesTile -> za.kilowatch.ultimatefilemanager.util.DeviceUtils.getOnlineStoragesSubtitle(context)
+                item.isTipJarTile -> context.getString(R.string.tip_jar_subtitle)
+                item.isSyncTile -> context.getString(R.string.sync_subtitle)
+                item.isAdvancedSyncTile -> context.getString(R.string.advanced_sync_subtitle)
+                item.isExtractsTile -> item.subtitle ?: context.getString(R.string.browse_extracted_apps)
+                item.isFavoriteTile -> if (item.favoriteIsFolder) context.getString(R.string.favorite_folder) else context.getString(R.string.favorite_file)
+                item.isRecycleBinTile -> item.subtitle ?: context.getString(R.string.recycle_bin_title)
+                item.isCustomTile -> item.subtitle ?: ""
+                item.isNetworkRoot -> {
+                    item.subtitle ?: run {
+                        val share = item.networkShare
+                        if (share != null) {
+                            val typeLabel = when (share.type) {
+                                za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3 -> context.getString(R.string.add_online_storage_aws_s3)
+                                za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> context.getString(R.string.add_online_storage_idrive_e2)
+                                za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> share.type.name
+                                za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> share.type.name
+                                else -> share.type.name
+                            }
+                            "$typeLabel \u2022 ${share.host}"
+                        } else ""
                     }
-                    iconContainer?.background = newDrawable
                 }
-            } else {
-                // Reset to default drawable
-                if (isTv) {
-                    iconContainer?.setBackgroundResource(R.drawable.bg_glass_card)
-                } else {
-                    iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
-                }
+                item.isOnlineStorage -> item.subtitle ?: ""
+                item.isShizukuTile -> item.subtitle ?: ""
+                item.isFileServerTile -> context.getString(R.string.file_server_tile_subtitle)
+                item.isSmartSortTile -> context.getString(R.string.smart_sort_tile_subtitle)
+                else -> ""
             }
-
-            // Label text color
-            if (config.labelColor != Color.TRANSPARENT) {
-                label.setTextColor(config.labelColor)
-                capacity.setTextColor(config.labelColor)
+        } else {
+            if (item.isUnmounted || item.totalBytes <= 0L) {
+                item.subtitle?.ifEmpty { null } ?: context.getString(R.string.storage_unmounted_tap_to_mount)
             } else {
-                // Reset to default colors
-                label.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_primary))
-                capacity.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_secondary))
+                val freeFormatted = Formatter.formatFileSize(context, item.freeBytes)
+                val totalFormatted = Formatter.formatFileSize(context, item.totalBytes)
+                context.getString(R.string.storage_free_format, freeFormatted, totalFormatted)
+            }
+        }
+    }
+
+    private fun applyCustomColors(
+        context: android.content.Context,
+        card: MaterialCardView,
+        iconContainer: FrameLayout?,
+        icon: ImageView?,
+        label: TextView,
+        capacity: TextView,
+        config: TileColorConfig,
+        defaultBgRes: Int = R.color.mobile_glass_card
+    ) {
+        // Tile background color
+        if (config.tileBgColor != Color.TRANSPARENT) {
+            card.setCardBackgroundColor(config.tileBgColor)
+        } else {
+            card.setCardBackgroundColor(
+                ContextCompat.getColor(context, defaultBgRes)
+            )
+        }
+
+        // Ring color
+        if (config.ringColor != Color.TRANSPARENT) {
+            val strokePx = (2 * context.resources.displayMetrics.density).toInt()
+            card.strokeWidth = strokePx
+            card.setStrokeColor(config.ringColor)
+        } else {
+            if (!isTv) {
+                val strokePx = (1 * context.resources.displayMetrics.density).toInt().coerceAtLeast(1)
+                card.strokeWidth = strokePx
+                card.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+            } else {
+                card.strokeWidth = 0
+                card.setStrokeColor(Color.TRANSPARENT)
             }
         }
 
-        /**
-         * Applies a custom icon to the tile ImageView. Priority:
-         * 1. Custom file icon (decoded bitmap)
-         * 2. Saved built-in icon resource override
-         * 3. Default item.iconRes (set by [bind])
-         */
-        private fun applyCustomIcon(item: StorageItem, icon: ImageView) {
-            val customPath: String? = tileIcons[item.id]
-            if (!customPath.isNullOrEmpty()) {
-                val bm = BitmapFactory.decodeFile(customPath)
-                if (bm != null) {
-                    icon.setImageBitmap(bm)
-                    return
+        // Icon tint color
+        if (config.iconColor != Color.TRANSPARENT) {
+            icon?.setColorFilter(config.iconColor)
+        } else {
+            icon?.clearColorFilter()
+            icon?.imageTintList = android.content.res.ColorStateList.valueOf(
+                ContextCompat.getColor(context, R.color.mobile_icon_tint)
+            )
+        }
+
+        // Icon background color
+        if (config.iconBgColor != Color.TRANSPARENT) {
+            if (isTv) {
+                val newDrawable = GradientDrawable()
+                newDrawable.shape = GradientDrawable.OVAL
+                newDrawable.setColor(config.iconBgColor)
+                iconContainer?.background = newDrawable
+            } else {
+                val density = context.resources.displayMetrics.density
+                val newDrawable = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    cornerRadius = 10 * density
+                    setColor(config.iconBgColor)
+                    setStroke((1 * density).toInt(), ContextCompat.getColor(context, R.color.mobile_glass_stroke))
                 }
+                iconContainer?.background = newDrawable
             }
-            // Check for saved built-in icon resource override
-            val savedRes = tileIconRes[item.id] ?: 0
-            if (savedRes != 0 && savedRes != item.iconRes) {
-                try {
-                    icon.setImageResource(savedRes)
-                } catch (_: Exception) {
-                    // Stale resource ID survived migration (e.g. severely old prefs).
-                    // Fall through and let the caller render the default item.iconRes.
-                }
+        } else {
+            // Reset to default drawable
+            if (isTv) {
+                iconContainer?.setBackgroundResource(R.drawable.bg_glass_card)
+            } else if (defaultBgRes == R.color.quick_bar_bg) {
+                iconContainer?.setBackgroundResource(R.drawable.bg_squircle_nested_icon)
+            } else {
+                iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
+            }
+        }
+
+        // Label text color
+        if (config.labelColor != Color.TRANSPARENT) {
+            label.setTextColor(config.labelColor)
+            capacity.setTextColor(config.labelColor)
+        } else {
+            label.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_primary))
+            capacity.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_secondary))
+        }
+    }
+
+    /**
+     * Applies a custom icon to the tile ImageView. Priority:
+     * 1. Custom file icon (decoded bitmap)
+     * 2. Saved built-in icon resource override
+     * 3. Default item.iconRes (set by [bind])
+     */
+    private fun applyCustomIcon(item: StorageItem, icon: ImageView) {
+        val customPath: String? = tileIcons[item.id]
+        if (!customPath.isNullOrEmpty()) {
+            val bm = BitmapFactory.decodeFile(customPath)
+            if (bm != null) {
+                icon.setImageBitmap(bm)
+                return
+            }
+        }
+        // Check for saved built-in icon resource override
+        val savedRes = tileIconRes[item.id] ?: 0
+        if (savedRes != 0 && savedRes != item.iconRes) {
+            try {
+                icon.setImageResource(savedRes)
+            } catch (_: Exception) {
+                // Stale resource ID survived migration (e.g. severely old prefs).
+                // Fall through and let the caller render the default item.iconRes.
             }
         }
     }

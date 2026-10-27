@@ -41,9 +41,24 @@ object MainMenuViewModeManager {
 
     fun loadViewMode(context: Context): ViewMode {
         cachedViewMode?.let { return it }
-        val ordinal = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getInt(KEY_VIEW_MODE, ViewMode.LIST.ordinal)
-        val mode = ViewMode.entries.getOrElse(ordinal) { ViewMode.LIST }
+        val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val mode: ViewMode
+        if (prefs.contains(KEY_VIEW_MODE)) {
+            val ordinal = prefs.getInt(KEY_VIEW_MODE, ViewMode.LIST.ordinal)
+            mode = ViewMode.entries.getOrElse(ordinal) { ViewMode.LIST }
+        } else {
+            // Check if upgrading user (has existing settings/onboarding completed)
+            val globalPrefs = context.applicationContext.getSharedPreferences("ufm_prefs", Context.MODE_PRIVATE)
+            val isExistingUser = globalPrefs.contains("welcome_languages_finished") || globalPrefs.all.isNotEmpty()
+            mode = if (isExistingUser) {
+                // Preserve backwards compatibility for upgrading users
+                ViewMode.LIST
+            } else {
+                // New install defaults to modern categorized view
+                ViewMode.MODERN_CATEGORIZED
+            }
+            prefs.edit().putInt(KEY_VIEW_MODE, mode.ordinal).apply()
+        }
         cachedViewMode = mode
         return mode
     }
@@ -93,8 +108,9 @@ object MainMenuViewModeManager {
     private const val KEY_CUSTOM_CATEGORIES = "main_menu_tile_categories"
 
     fun isCategoryExpanded(context: Context, categoryId: String): Boolean {
+        val defaultExpanded = (categoryId == CATEGORY_STORAGE)
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getBoolean(PREF_PREFIX_EXPANDED + categoryId, true)
+            .getBoolean(PREF_PREFIX_EXPANDED + categoryId, defaultExpanded)
     }
 
     fun setCategoryExpanded(context: Context, categoryId: String, expanded: Boolean) {

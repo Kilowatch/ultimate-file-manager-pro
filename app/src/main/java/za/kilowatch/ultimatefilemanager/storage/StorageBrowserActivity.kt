@@ -1406,29 +1406,32 @@ class StorageBrowserActivity : AppCompatActivity() {
         btnToggleList = findViewById(R.id.btnToggleList)
 
         btnToggleGrid?.setOnClickListener {
-            if (isTv) {
-                val currentMode = MainMenuViewModeManager.loadViewMode(this)
-                if (currentMode != MainMenuViewModeManager.ViewMode.GRID) {
-                    MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.GRID)
-                    applyViewMode(animate = true)
-                }
-                showViewModeOptions(isListView = false)
+            val currentMode = MainMenuViewModeManager.loadViewMode(this)
+            if (currentMode != MainMenuViewModeManager.ViewMode.GRID) {
+                MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.GRID)
+                applyViewMode(animate = true)
             } else {
                 showViewModeOptions(isListView = false)
             }
         }
+        btnToggleGrid?.setOnLongClickListener {
+            showViewModeOptions(isListView = false)
+            true
+        }
 
         btnToggleList?.setOnClickListener {
-            if (isTv) {
-                val currentMode = MainMenuViewModeManager.loadViewMode(this)
-                if (currentMode != MainMenuViewModeManager.ViewMode.LIST) {
-                    MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.LIST)
-                    applyViewMode(animate = true)
-                }
-                showViewModeOptions(isListView = true)
+            val currentMode = MainMenuViewModeManager.loadViewMode(this)
+            if (currentMode == MainMenuViewModeManager.ViewMode.GRID) {
+                val targetMode = if (isTv) MainMenuViewModeManager.ViewMode.LIST else MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED
+                MainMenuViewModeManager.saveViewMode(this, targetMode)
+                applyViewMode(animate = true)
             } else {
                 showViewModeOptions(isListView = true)
             }
+        }
+        btnToggleList?.setOnLongClickListener {
+            showViewModeOptions(isListView = true)
+            true
         }
 
         if (isTv) {
@@ -1557,18 +1560,20 @@ class StorageBrowserActivity : AppCompatActivity() {
         // "Add Custom Tile" button
         val density = resources.displayMetrics.density
         if (!isTv) {
-            val pad = (8 * density).toInt()
+            val pad = (10 * density).toInt()
+            val size = (44 * density).toInt()
             val margin = (8 * density).toInt()
-            val initialTint = DefaultIconColorManager.getMobileIconTint(this)
+            val onAccentColor = getColor(R.color.ufm_on_primary)
+            val iconTint = getColor(R.color.mobile_icon_tint)
             btnAddCustomTile = ImageView(this).apply {
                 setImageResource(R.drawable.ic_add)
                 contentDescription = getString(R.string.custom_tile_add_button)
                 setPadding(pad, pad, pad, pad)
-                setBackgroundResource(R.drawable.bg_btn_icon_frosted)
-                imageTintList = android.content.res.ColorStateList.valueOf(initialTint)
+                setBackgroundResource(R.drawable.bg_fab_add_circle)
+                imageTintList = android.content.res.ColorStateList.valueOf(onAccentColor)
                 layoutParams = androidx.appcompat.widget.Toolbar.LayoutParams(
-                    androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
-                    androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
+                    size,
+                    size,
                     android.view.Gravity.END
                 ).apply { this.marginEnd = margin }
                 setOnClickListener { showAddOptionsDialog() }
@@ -1576,9 +1581,11 @@ class StorageBrowserActivity : AppCompatActivity() {
             btnSettingsGear = ImageView(this).apply {
                 setImageResource(R.drawable.ic_gear)
                 contentDescription = getString(R.string.settings)
-                setPadding(pad, pad, pad, pad)
+                val gearPad = (8 * density).toInt()
+                setPadding(gearPad, gearPad, gearPad, gearPad)
                 setBackgroundResource(R.drawable.bg_btn_icon_frosted)
-                setColorFilter(getColor(R.color.mobile_icon_tint))
+                setColorFilter(iconTint)
+                visibility = View.GONE
                 layoutParams = androidx.appcompat.widget.Toolbar.LayoutParams(
                     androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
                     androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
@@ -1597,14 +1604,17 @@ class StorageBrowserActivity : AppCompatActivity() {
             toolbar?.addView(btnAddCustomTile)
 
             imgToolbarLogo = findViewById(R.id.imgToolbarLogo)
+            imgToolbarLogo?.visibility = View.GONE
             btnEdgeMenuLeft = findViewById(R.id.btnEdgeMenuLeft)
-            btnEdgeMenuLeft?.imageTintList = android.content.res.ColorStateList.valueOf(initialTint)
+            btnEdgeMenuLeft?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+            btnEdgeMenuLeft?.visibility = View.VISIBLE
             btnEdgeMenuLeft?.setOnClickListener {
                 it.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
                 za.kilowatch.ultimatefilemanager.storage.EdgeMenuOverlayController.open(this@StorageBrowserActivity)
             }
             btnEdgeMenuRight = findViewById(R.id.btnEdgeMenuRight)
-            btnEdgeMenuRight?.imageTintList = android.content.res.ColorStateList.valueOf(initialTint)
+            btnEdgeMenuRight?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+            btnEdgeMenuRight?.visibility = View.GONE
             btnEdgeMenuRight?.setOnClickListener {
                 it.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
                 za.kilowatch.ultimatefilemanager.storage.EdgeMenuOverlayController.open(this@StorageBrowserActivity)
@@ -1669,6 +1679,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             viewMode = initMode
             gridColumnCount = initCols
             itemSize = initSize
+            onTileDroppedIntoCustomTile = { _, _ ->
+                loadStorageVolumes()
+            }
             onTileFocused = { item ->
                 lastFocusedTileId = item.id
             }
@@ -1927,13 +1940,13 @@ class StorageBrowserActivity : AppCompatActivity() {
     private fun applyDynamicThemeColors() {
         val iconTint = if (isTv) DefaultIconColorManager.getTvIconTint(this) else DefaultIconColorManager.getMobileIconTint(this)
         findViewById<View?>(R.id.viewSectionUnderline)?.backgroundTintList = android.content.res.ColorStateList.valueOf(iconTint)
-        btnManageTiles.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnManageTiles.imageTintList = android.content.res.ColorStateList.valueOf(if (isTv) iconTint else getColor(R.color.mobile_icon_tint))
         btnColorTile?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
         btnImportColorCode?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
-        btnAddCustomTile?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnAddCustomTile?.imageTintList = android.content.res.ColorStateList.valueOf(if (isTv) iconTint else getColor(R.color.ufm_on_primary))
         btnSettingsGear?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
-        btnEdgeMenuLeft?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
-        btnEdgeMenuRight?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        btnEdgeMenuLeft?.imageTintList = android.content.res.ColorStateList.valueOf(if (isTv) iconTint else getColor(R.color.mobile_icon_tint))
+        btnEdgeMenuRight?.imageTintList = android.content.res.ColorStateList.valueOf(if (isTv) iconTint else getColor(R.color.mobile_icon_tint))
         if (!isTv) {
             cardFloatingBar?.setCardBackgroundColor(resolveTileBackgroundColor())
             cardFloatingBar?.strokeColor = resolveTileStrokeColor()
@@ -3167,7 +3180,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         val pos = vh.bindingAdapterPosition
                         if (pos == RecyclerView.NO_POSITION) continue
                         val item = storageAdapter.getItems().getOrNull(pos) ?: continue
-                        if (!item.isCustomTile || draggedItemData?.isCustomTile == true) continue
+                        if (!item.isCustomTile || draggedItemData?.isCustomTile == true || draggedItemData?.isCategoryHeader == true) continue
 
                         val targetRect = android.graphics.Rect()
                         child.getHitRect(targetRect)
@@ -3198,8 +3211,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                             card?.strokeWidth = (4 * density).toInt()
                             card?.strokeColor = za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this@StorageBrowserActivity)
                         } else {
-                            card?.strokeWidth = 0
-                            card?.strokeColor = android.graphics.Color.TRANSPARENT
+                            val strokePx = (1 * density).toInt().coerceAtLeast(1)
+                            card?.strokeWidth = strokePx
+                            card?.strokeColor = getColor(R.color.mobile_glass_stroke)
                         }
                     }
                 }
@@ -3227,17 +3241,18 @@ class StorageBrowserActivity : AppCompatActivity() {
                 dragTargetCustomTileId = null
 
                 // Reset all card strokes
+                val density = resources.displayMetrics.density
                 for (i in 0 until recyclerView.childCount) {
                     val c = recyclerView.getChildAt(i)
                         ?.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardStorage)
                     if (c != null) {
-                        c.strokeWidth = 0
-                        c.strokeColor = android.graphics.Color.TRANSPARENT
+                        c.strokeWidth = (1 * density).toInt().coerceAtLeast(1)
+                        c.strokeColor = getColor(R.color.mobile_glass_stroke)
                     }
                 }
 
                 val applyDrop = {
-                    if (droppedItem != null && targetId != null && !droppedItem.isCustomTile) {
+                    if (droppedItem != null && targetId != null && !droppedItem.isCustomTile && !droppedItem.isCategoryHeader) {
                         // Dropped onto a custom tile — move it inside
                         CustomTileManager.setTileParent(this@StorageBrowserActivity, droppedItem.id, targetId)
                         // Add to custom tile's internal order
@@ -3332,20 +3347,18 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     private fun updateHeaderActionButtons() {
         if (isTv) return
-        val isEdgeMenu = za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.getMode(this) ==
-                za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.MODE_EDGE_MENU
-        val isLeft = za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.getEdgePosition(this) ==
-                za.kilowatch.ultimatefilemanager.storage.QuickAccessManager.EDGE_LEFT
 
         if (isEditMode) {
             btnAddCustomTile?.visibility = View.GONE
             btnSettingsGear?.visibility = View.GONE
             btnEdgeMenuLeft?.visibility = View.GONE
             btnEdgeMenuRight?.visibility = View.GONE
-            imgToolbarLogo?.visibility = View.VISIBLE
+            imgToolbarLogo?.visibility = View.GONE
         } else {
             btnAddCustomTile?.visibility = View.VISIBLE
+            val isEdgeMenu = QuickAccessManager.getMode(this) == QuickAccessManager.MODE_EDGE_MENU
             if (isEdgeMenu) {
+                val isLeft = QuickAccessManager.getEdgePosition(this) == QuickAccessManager.EDGE_LEFT
                 btnSettingsGear?.visibility = View.GONE
                 btnEdgeMenuLeft?.visibility = if (isLeft) View.VISIBLE else View.GONE
                 btnEdgeMenuRight?.visibility = if (!isLeft) View.VISIBLE else View.GONE
@@ -5643,6 +5656,8 @@ class StorageBrowserActivity : AppCompatActivity() {
         val currentMode = MainMenuViewModeManager.loadViewMode(this)
         val isGrid = currentMode == MainMenuViewModeManager.ViewMode.GRID
         val activeColor = if (isTv) getColor(R.color.tv_accent) else DefaultIconColorManager.getMobileIconTint(this)
+        val activeIconTint = if (isTv) getColor(R.color.white) else getColor(R.color.ufm_on_primary)
+        val inactiveTint = if (isTv) getColor(R.color.tv_text_secondary) else getColor(R.color.mobile_text_secondary)
 
         fun createActiveDrawable(): android.graphics.drawable.Drawable {
             val density = resources.displayMetrics.density
@@ -5656,10 +5671,9 @@ class StorageBrowserActivity : AppCompatActivity() {
         btnToggleGrid?.let { gridBtn ->
             if (isGrid) {
                 gridBtn.background = createActiveDrawable()
-                gridBtn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.white))
+                gridBtn.imageTintList = android.content.res.ColorStateList.valueOf(activeIconTint)
             } else {
                 gridBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                val inactiveTint = if (isTv) getColor(R.color.tv_text_secondary) else za.kilowatch.ultimatefilemanager.util.ThemeColors.onSurfaceVariant(this@StorageBrowserActivity)
                 gridBtn.imageTintList = android.content.res.ColorStateList.valueOf(inactiveTint)
             }
         }
@@ -5667,10 +5681,9 @@ class StorageBrowserActivity : AppCompatActivity() {
         btnToggleList?.let { listBtn ->
             if (!isGrid) {
                 listBtn.background = createActiveDrawable()
-                listBtn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.white))
+                listBtn.imageTintList = android.content.res.ColorStateList.valueOf(activeIconTint)
             } else {
                 listBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                val inactiveTint = if (isTv) getColor(R.color.tv_text_secondary) else za.kilowatch.ultimatefilemanager.util.ThemeColors.onSurfaceVariant(this@StorageBrowserActivity)
                 listBtn.imageTintList = android.content.res.ColorStateList.valueOf(inactiveTint)
             }
         }

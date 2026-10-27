@@ -75,7 +75,8 @@ data class StorageItem(
     val isCategoryHeader: Boolean = false,
     val categoryId: String? = null,
     var isCategoryExpanded: Boolean = true,
-    var categoryItemCount: Int = 0
+    var categoryItemCount: Int = 0,
+    val categoryGroupItems: List<StorageItem> = emptyList()
 ) {
     val freeBytes: Long get() = totalBytes - usedBytes
 

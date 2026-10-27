@@ -133,33 +133,33 @@
          to before the Expressive migration. Dynamic colors are never applied on
          TV, so these @color/ufm_* values are the TV's permanent palette. -->
     <style name="Base.Theme.UltimateFileManager.Tv" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary -->
-        <item name="colorPrimary">@color/ufm_primary</item>
-        <item name="colorPrimaryDark">@color/ufm_primary_dark</item>
+        <!-- Primary (Frozen TV Palette) -->
+        <item name="colorPrimary">@color/tv_accent</item>
+        <item name="colorPrimaryDark">@color/tv_bg_gradient_start</item>
         <item name="colorOnPrimary">@color/white</item>
 
         <!-- Secondary (replaces deprecated colorAccent in M3) -->
-        <item name="colorSecondary">@color/ufm_accent</item>
+        <item name="colorSecondary">@color/tv_accent</item>
         <item name="colorOnSecondary">@color/white</item>
-        <item name="colorSecondaryContainer">@color/ufm_accent_light</item>
-        <item name="colorOnSecondaryContainer">@color/ufm_text_primary</item>
+        <item name="colorSecondaryContainer">@color/tv_accent_glow</item>
+        <item name="colorOnSecondaryContainer">@color/tv_text_primary</item>
 
         <!-- Surfaces -->
-        <item name="colorSurface">@color/ufm_surface</item>
-        <item name="colorSurfaceVariant">@color/ufm_surface_variant</item>
-        <item name="colorOnSurface">@color/ufm_text_primary</item>
-        <item name="colorOnSurfaceVariant">@color/ufm_text_secondary</item>
-        <item name="android:colorBackground">@color/ufm_background</item>
-        <item name="android:windowBackground">@color/ufm_background</item>
+        <item name="colorSurface">@color/tv_dialog_background</item>
+        <item name="colorSurfaceVariant">@color/tv_surface_focused</item>
+        <item name="colorOnSurface">@color/tv_text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/tv_text_secondary</item>
+        <item name="android:colorBackground">@color/tv_bg_gradient_start</item>
+        <item name="android:windowBackground">@color/tv_bg_gradient_start</item>
 
         <!-- Text -->
-        <item name="android:textColorPrimary">@color/ufm_text_primary</item>
-        <item name="android:textColorSecondary">@color/ufm_text_secondary</item>
-        <item name="android:textColorHint">@color/ufm_text_hint</item>
+        <item name="android:textColorPrimary">@color/tv_text_primary</item>
+        <item name="android:textColorSecondary">@color/tv_text_secondary</item>
+        <item name="android:textColorHint">@color/tv_text_hint</item>
 
         <!-- Status bar (light background, dark icons) -->
-        <item name="android:statusBarColor">@color/ufm_background</item>
-        <item name="android:navigationBarColor">@color/ufm_background</item>
+        <item name="android:statusBarColor">@color/tv_bg_gradient_start</item>
+        <item name="android:navigationBarColor">@color/tv_bg_gradient_start</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:windowAnimationStyle">@style/UFM.WindowAnimation</item>

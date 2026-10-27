@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Nested Card for Child Storage Tiles inside Category Groups on Mobile.
+    Matches images/mainmenu.jpeg:
+    - 20dp corner radius, elevated surface (#1B304D), 1dp outline (#344B68).
+    - Squircle icon container, primary/secondary text, horizontal cyan progress bar,
+      eject button, edit hide/settings button, and trailing chevron.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardStorage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/quick_bar_bg"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:rippleColor="@color/mobile_glass_ripple">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp">
+
+            <!-- Squircle Icon Badge -->
+            <FrameLayout
+                android:id="@+id/iconContainer"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_squircle_nested_icon">
+
+                <ImageView
+                    android:id="@+id/imgStorageIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/cd_storage_icon"
+                    app:tint="@color/mobile_icon_tint"
+                    android:src="@drawable/ic_storage_internal" />
+            </FrameLayout>
+
+            <!-- Tile Information (Label, Capacity, Progress Bar) -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:id="@+id/txtStorageLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="Internal Storage" />
+
+                <TextView
+                    android:id="@+id/txtStorageCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/mobile_card_text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    tools:text="14.2 GB free of 64.0 GB" />
+
+                <!-- Usage Progress Bar (real storage volumes) -->
+                <ProgressBar
+                    android:id="@+id/progressStorage"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="6dp"
+                    android:progressDrawable="@drawable/bg_storage_progress_cyan"
+                    android:visibility="gone"
+                    tools:progress="55"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <!-- NEW Badge -->
+            <TextView
+                android:id="@+id/txtNewBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_status_badge_accent"
+                android:fontFamily="sans-serif-black"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:text="@string/storage_new_badge"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp"
+                android:visibility="gone" />
+
+            <!-- Eject Button -->
+            <ImageView
+                android:id="@+id/btnEjectTile"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginStart="6dp"
+                android:padding="7dp"
+                android:src="@drawable/ic_eject"
+                android:contentDescription="@string/cd_safely_remove"
+                android:background="@drawable/bg_btn_icon_frosted"
+                app:tint="@color/mobile_icon_tint"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone" />
+
+            <!-- Trailing Chevron -->
+            <ImageView
+                android:id="@+id/imgStorageChevron"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="@color/mobile_card_text_secondary"
+                android:contentDescription="@null"
+                android:layout_marginStart="4dp" />
+
+        </LinearLayout>
+
+        <!-- Hide / Edit Button (X) in Edit Mode -->
+        <ImageView
+            android:id="@+id/btnHideTile"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_remove_circle"
+            android:visibility="gone"
+            android:contentDescription="@string/hide_tile"
+            android:elevation="6dp" />
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

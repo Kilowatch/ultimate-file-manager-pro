@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Modern Categorized Outer Card Group for Mobile Main Menu.
+    - 24dp corner radius, #142640 card background, 1dp #344B68 stroke.
+    - Category header with squircle icon badge, title, subtitle / count pill, and chevron.
+    - Highlighted header when expanded, unhighlighted when collapsed.
+    - Nested items container for child tiles with balanced top/bottom padding.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardCategoryGroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    app:rippleColor="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Category Header Row -->
+        <LinearLayout
+            android:id="@+id/layoutCategoryHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <!-- Category Squircle Icon Badge -->
+            <FrameLayout
+                android:id="@+id/iconContainerCategory"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_squircle_category_icon">
+
+                <ImageView
+                    android:id="@+id/imgCategoryIcon"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_storage_internal"
+                    app:tint="@color/mobile_icon_tint"
+                    android:contentDescription="@null" />
+            </FrameLayout>
+
+            <!-- Title & Subtitle column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:id="@+id/txtCategoryTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="17sp"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="0.01"
+                    tools:text="Storage" />
+
+                <TextView
+                    android:id="@+id/txtCategorySubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/mobile_card_text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:visibility="gone"
+                    tools:text="4 items" />
+            </LinearLayout>
+
+            <!-- Collapsed item count pill badge -->
+            <TextView
+                android:id="@+id/txtCategoryCountPill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/mobile_card_text_secondary"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-bold"
+                android:background="@drawable/bg_category_count_pill"
+                android:layout_marginEnd="10dp"
+                tools:text="6 items" />
+
+            <!-- Edit Mode Delete Button (for custom categories) -->
+            <ImageView
+                android:id="@+id/btnDeleteCategoryHeader"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="6dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:src="@drawable/ic_close"
+                app:tint="@color/mobile_icon_tint"
+                android:contentDescription="@string/custom_header_delete_title"
+                android:visibility="gone"
+                android:layout_marginEnd="8dp" />
+
+            <!-- Expand / Collapse Chevron Indicator -->
+            <ImageView
+                android:id="@+id/imgCategoryChevron"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="@color/mobile_card_text_secondary"
+                android:contentDescription="@null" />
+
+        </LinearLayout>
+
+        <!-- Nested Items Container -->
+        <LinearLayout
+            android:id="@+id/layoutCategoryItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

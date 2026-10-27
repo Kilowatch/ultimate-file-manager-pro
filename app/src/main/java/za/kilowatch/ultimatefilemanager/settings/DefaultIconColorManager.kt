@@ -32,9 +32,11 @@ object DefaultIconColorManager {
 
     // ── Built-in fallback constants ──────────────────────────────────────────
 
-    const val DEFAULT_LIGHT: Int  = 0xFF1C2B3A.toInt()
-    const val DEFAULT_DARK: Int   = 0xFF7DAECC.toInt()
-    const val DEFAULT_AMOLED: Int = 0xFFE8C98A.toInt()
+    const val DEFAULT_LIGHT: Int       = 0xFF1C2B3A.toInt()
+    const val DEFAULT_DARK: Int        = 0xFF80D0F5.toInt()
+    const val DEFAULT_TV_DARK: Int     = 0xFF7DAECC.toInt()
+    const val DEFAULT_AMOLED: Int      = 0xFF80D0F5.toInt()
+    const val DEFAULT_AMOLED_TV: Int   = 0xFFE8C98A.toInt()
 
     // ── Preference keys ─────────────────────────────────────────────────────
 
@@ -143,10 +145,22 @@ object DefaultIconColorManager {
     }
 
     /**
-     * Overload for context callers.
+     * Overload for context callers: respects TV vs Mobile defaults.
      */
     fun getDefaultColor(context: Context, theme: Int = ThemeHelper.getSavedTheme(context)): Int {
-        return getDefaultColor(theme)
+        val isTv = DeviceUtils.isTvDevice(context)
+        return when (theme) {
+            ThemeHelper.THEME_LIGHT  -> DEFAULT_LIGHT
+            ThemeHelper.THEME_DARK   -> if (isTv) DEFAULT_TV_DARK else DEFAULT_DARK
+            ThemeHelper.THEME_AMOLED -> if (isTv) DEFAULT_AMOLED_TV else DEFAULT_AMOLED
+            ThemeHelper.THEME_SYSTEM -> {
+                val mode = AppCompatDelegate.getDefaultNightMode()
+                if (mode == AppCompatDelegate.MODE_NIGHT_YES) {
+                    if (isTv) DEFAULT_TV_DARK else DEFAULT_DARK
+                } else DEFAULT_LIGHT
+            }
+            else -> if (isTv) DEFAULT_TV_DARK else DEFAULT_DARK
+        }
     }
 
     /**
@@ -244,7 +258,7 @@ object DefaultIconColorManager {
         getCustomColor(context, theme)?.let { return it }
 
         // 3. Fall back to built-in default
-        return getDefaultColor(theme)
+        return getDefaultColor(context, theme)
     }
 
     private fun prefKey(theme: Int): String = when (theme) {

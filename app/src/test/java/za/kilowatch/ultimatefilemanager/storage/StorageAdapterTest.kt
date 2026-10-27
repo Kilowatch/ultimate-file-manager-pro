@@ -102,10 +102,8 @@ class StorageAdapterTest {
         // First item in categorized mode is the category header (e.g. Utilities for twin window)
         val items = adapter.getItems()
         val headerIdx = items.indexOfFirst { it.isCategoryHeader }
-        val tileIdx = items.indexOfFirst { !it.isCategoryHeader }
         assert(headerIdx >= 0)
-        assert(tileIdx >= 0)
         assertEquals(StorageAdapter.VIEW_TYPE_CATEGORY_HEADER, adapter.getItemViewType(headerIdx))
-        assertEquals(StorageAdapter.VIEW_TYPE_STORAGE, adapter.getItemViewType(tileIdx))
+        assert(items[headerIdx].categoryGroupItems.isNotEmpty())
     }
 }

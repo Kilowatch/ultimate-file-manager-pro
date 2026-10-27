@@ -68,13 +68,15 @@
                     android:layout_height="32dp"
                     android:src="@drawable/ic_storage_browser_logo"
                     android:layout_marginEnd="12dp"
-                    android:contentDescription="@string/app_name" />
+                    android:contentDescription="@string/app_name"
+                    android:visibility="visible" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/storage_title_mobile"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium.Emphasized"
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif-black"
                     android:textColor="@color/mobile_text_primary"
                     android:letterSpacing="0.01" />
 
@@ -160,6 +162,7 @@
         android:layout_marginTop="@dimen/margin_md"
         android:clickable="true"
         android:focusable="true"
+        android:visibility="gone"
         app:cardBackgroundColor="@color/mobile_glass_card"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
@@ -336,18 +339,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/storage_section_devices"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="@color/mobile_text_primary"
                 android:textSize="22sp"
                 android:fontFamily="sans-serif-black"
                 android:letterSpacing="0.01" />
 
-            <!-- Accent underline bar — uses ?attr/colorPrimary to honour Dynamic Colors -->
+            <!-- Accent underline bar -->
             <View
                 android:id="@+id/viewSectionUnderline"
-                android:layout_width="36dp"
-                android:layout_height="3dp"
+                android:layout_width="48dp"
+                android:layout_height="4dp"
                 android:layout_marginTop="6dp"
-                android:background="?attr/colorPrimary" />
+                android:background="@drawable/bg_section_underline" />
         </LinearLayout>
 
         <!-- View Mode Toggle Container -->
@@ -369,8 +372,8 @@
                 android:src="@drawable/ic_grid_view_custom"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@drawable/bg_view_toggle_item_active"
-                app:tint="@color/white" />
+                android:background="@android:color/transparent"
+                app:tint="@color/mobile_text_secondary" />
 
             <ImageView
                 android:id="@+id/btnToggleList"
@@ -380,8 +383,8 @@
                 android:src="@drawable/ic_list_view_custom"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@android:color/transparent"
-                app:tint="@color/white" />
+                android:background="@drawable/bg_view_toggle_item_active"
+                app:tint="@color/ufm_on_primary" />
         </LinearLayout>
 
     </RelativeLayout>

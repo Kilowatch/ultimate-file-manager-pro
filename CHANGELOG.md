@@ -8,10 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.2] — 2026-10-26
 
 ### Added
+- **Modern Categorized Main Menu Card Architecture**: Added an elevated categorized card hierarchy for mobile with outer container cards, expandable and collapsible category groups, squircle category icon containers, item count pill badges, and nested storage cards with cyan progress bars and trailing chevrons.
+- **Main Menu Upgrade Backward-Compatibility**: Preserved existing users' view mode preferences (`LIST` or `GRID`) across app upgrades, while configuring clean/fresh installs to default to the modern categorized layout.
 - **Bulk Duplicate Deletion (Issue #57)**: Added bulk duplicate selection and deletion to Storage Analyzer (Duplicates tab) and Folder Duplicate Finder, allowing users to remove redundant duplicate copies while strictly preserving exactly one original file per duplicate group.
 - **Duplicate Retention Strategy Setting**: Added a customizable duplicate retention strategy setting ("Keep Oldest", "Keep Newest", or "Always Ask") with "Remember my choice" persistence and preference management in Settings under the Storage & Indexing section.
 - **Duplicate Controls Header & Original Badge**: Added duplicate summary action strip displaying group count and reclaimable space alongside "Select All Duplicates" and "Clear" actions, with frosted "Original" badge indicators designating preserved files.
 - **UFMStandard Duplicate Strategy & Completion Dialogs**: Added theme-aware frosted glass strategy selection and cleanup completion dialogs showing exact count of files deleted and total storage reclaimed, with Android TV D-pad navigation support.
+
+### Changed
+- **Mobile Main Menu Header & Action Controls**: Replicated header controls to match the modern design with bold "UFM Pro" title, circular frosted left edge menu button, 44dp circular primary accent action button (`btnAddCustomTile`), and modernized "Devices & Features" section header with accent underline and pill view mode toggle.
+- **Material 3 Mobile Dark Theme Palette Modernization**: Updated default mobile dark theme tokens across backgrounds (`#0B1729`), card surfaces (`#142640`), elevated nested surfaces (`#1B304D`), 1dp outlines (`#344B68`), primary accents (`#80D0F5`), and typography (`#F2F5FA`/`#AABBD1`), while strictly isolating Android TV themes and colors.
+- **Main Menu List and Grid View Visual Synchronization**: Synchronized mobile single-column list cards and grid cards to share the unified 20dp radii, `#142640` dark card surfaces, 1dp `#344B68` borders, squircle icon badges, and cyan progress indicators.
+
+### Fixed
+- **Main Menu Header Action Buttons**: Fixed an issue where the hamburger button was shown instead of the settings gear icon and app logo when Edge Swipe Menu was disabled.
+- **Main Menu Category Header Background & Stroke Persistence**: Fixed category headers losing their dark surface background and outline border during scrolling or across collapsed states.
+- **Main Menu First Tile Padding**: Balanced top padding between category header cards and the first tile to ensure uniform spacing throughout the menu.
+- **Tile Drag & Drop Across Categories**: Restored individual tile drag-and-drop functionality between sub-menu categories by binding tiles directly to the RecyclerView.
 
 ## [2.2.1] — 2026-10-26
 
