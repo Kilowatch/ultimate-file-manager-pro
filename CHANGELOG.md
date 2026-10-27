@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **UFMStandard Duplicate Strategy & Completion Dialogs**: Added theme-aware frosted glass strategy selection and cleanup completion dialogs showing exact count of files deleted and total storage reclaimed, with Android TV D-pad navigation support.
 
 ### Changed
+- **Mobile Browsing Visual Synchronization**: Refined Mobile browsing UI across SAF, Local, Network, Cloud, and Tabbed browsers to match new design specifications:
+  - Added squircle bubble container for standard folder and generic file icons.
+  - Preserved full-bleed rendering without bubbles for custom icons and loaded thumbnails (images, videos, APKs).
+  - Added yellow star badge on the bottom-right corner of favorite items.
+  - Transformed breadcrumb path bar into a cohesive rounded capsule bar.
+  - Replaced rotated arrows with clean trailing chevrons and added subtle row dividers.
+  - Synchronized storage mode pill badge (`LOCAL`, `SAF`, `NETWORK`, `CLOUD`) across all browser views.
 - **Mobile Main Menu Header & Action Controls**: Replicated header controls to match the modern design with bold "UFM Pro" title, circular frosted left edge menu button, 44dp circular primary accent action button (`btnAddCustomTile`), and modernized "Devices & Features" section header with accent underline and pill view mode toggle.
 - **Material 3 Mobile Dark Theme Palette Modernization**: Updated default mobile dark theme tokens across backgrounds (`#0B1729`), card surfaces (`#142640`), elevated nested surfaces (`#1B304D`), 1dp outlines (`#344B68`), primary accents (`#80D0F5`), and typography (`#F2F5FA`/`#AABBD1`), while strictly isolating Android TV themes and colors.
 - **Main Menu List and Grid View Visual Synchronization**: Synchronized mobile single-column list cards and grid cards to share the unified 20dp radii, `#142640` dark card surfaces, 1dp `#344B68` borders, squircle icon badges, and cyan progress indicators.

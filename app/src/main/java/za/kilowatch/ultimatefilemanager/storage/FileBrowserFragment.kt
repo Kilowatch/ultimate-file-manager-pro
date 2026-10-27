@@ -520,6 +520,7 @@ class FileBrowserFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        context?.let { ctx -> if (::fileAdapter.isInitialized) fileAdapter.refreshFavorites(ctx) }
         applyLeftHandedFabSettings()
         applyToolbarIconVisibility()
         updatePasteFab()
@@ -3034,6 +3035,7 @@ class FileBrowserFragment : Fragment() {
             badgeStorage.text = when {
                 isRoot -> "ROOT"
                 storageLabel.contains("Vault", ignoreCase = true) -> "VAULT"
+                SafTreeManager.isSafPath(rootPath) -> "SAF"
                 rootPath.contains("emulated", ignoreCase = true) -> "LOCAL"
                 rootPath.contains("sdcard", ignoreCase = true) || rootPath.contains("storage/", ignoreCase = true) -> "STORAGE"
                 else -> "LOCAL"
@@ -4782,6 +4784,8 @@ class FileBrowserFragment : Fragment() {
                     isNetwork = false
                 )
                 za.kilowatch.ultimatefilemanager.settings.FavoritesManager.addFavorite(ctx, favorite)
+                fileAdapter.refreshFavorites(ctx)
+                fileAdapter.notifyItemRangeChanged(0, fileAdapter.itemCount)
                 fileAdapter.exitSelectionMode()
                 showPremiumSnackbar(getString(R.string.favorite_added))
                 dialog.dismiss()

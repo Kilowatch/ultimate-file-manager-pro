@@ -64,7 +64,7 @@
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="3dp"
                 android:background="@drawable/bg_storage_badge"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/storage_badge_text"
                 android:textSize="11sp"
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.04"
@@ -299,7 +299,7 @@
             android:layout_height="36dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingHorizontal="10dp" />
+            android:paddingHorizontal="12dp" />
     </HorizontalScrollView>
 
     <!-- ViewPager2 for swipeable, modern tab page transitions -->

@@ -741,6 +741,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (::fileAdapter.isInitialized) fileAdapter.refreshFavorites(this)
         applyLeftHandedFabSettings()
         // Returning from the external player finishes the stream keep-alive (service lifetime
         // is owned by TransferManager; mirrors the old "stop service if not transferring").
@@ -2599,6 +2600,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     shareId = share.id
                 )
                 za.kilowatch.ultimatefilemanager.settings.FavoritesManager.addFavorite(this, favorite)
+                fileAdapter.refreshFavorites(this)
+                fileAdapter.notifyItemRangeChanged(0, fileAdapter.itemCount)
                 fileAdapter.exitSelectionMode()
                 showPremiumSnackbar(getString(R.string.favorite_added))
                 dialog.dismiss()

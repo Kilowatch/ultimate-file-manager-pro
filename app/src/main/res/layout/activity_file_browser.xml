@@ -65,7 +65,7 @@
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="3dp"
                 android:background="@drawable/bg_storage_badge"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="@color/storage_badge_text"
                 android:textSize="11sp"
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.04"
@@ -333,12 +333,16 @@
         android:id="@+id/layoutBreadcrumbsScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
         android:scrollbars="none"
         android:overScrollMode="never"
         android:requiresFadingEdge="horizontal"
         android:fadingEdgeLength="16dp"
-        android:background="@color/mobile_glass_header"
+        android:background="@drawable/bg_breadcrumb_bar"
         android:visibility="gone"
+        app:layout_goneMarginTop="0dp"
         app:layout_constraintTop_toBottomOf="@id/barrier_header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -349,7 +353,7 @@
             android:layout_height="38dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingHorizontal="10dp" />
+            android:paddingHorizontal="12dp" />
     </HorizontalScrollView>
 
     <!-- Hidden compat stubs for action views -->

@@ -44,7 +44,7 @@
             android:id="@+id/iconContainer"
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:background="@drawable/bg_icon_circle_accent"
+            android:background="@drawable/bg_squircle_file_bubble"
             android:layout_marginVertical="2dp"
             android:clipChildren="false"
             android:clipToPadding="false"
@@ -59,12 +59,25 @@
                 app:tint="@color/mobile_icon_tint"
                 tools:src="@drawable/ic_folder" />
 
+            <!-- Favorite Badge (Star) at Bottom-Right -->
+            <ImageView
+                android:id="@+id/imgFavoriteBadge"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/ic_star"
+                app:tint="#FFC107"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+
+
             <!-- Indexed Badge -->
             <ImageView
                 android:id="@+id/imgIndexedBadge"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
-                android:layout_gravity="bottom|end"
+                android:layout_gravity="bottom|start"
                 android:src="@drawable/ic_lightning"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -219,8 +232,7 @@
         <ImageView
             android:layout_width="14dp"
             android:layout_height="14dp"
-            android:src="@drawable/ic_arrow_back"
-            android:rotation="180"
+            android:src="@drawable/ic_chevron_right"
             android:alpha="0.4"
             app:tint="@color/mobile_text_secondary"
             android:contentDescription="@null" />
@@ -232,6 +244,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="bottom"
-        android:background="@color/mobile_glass_header" />
+        android:background="@color/mobile_file_divider" />
 
 </FrameLayout>

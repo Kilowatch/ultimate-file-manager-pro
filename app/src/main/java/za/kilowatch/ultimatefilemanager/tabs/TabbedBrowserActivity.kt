@@ -683,10 +683,10 @@ class TabbedBrowserActivity : AppCompatActivity(),
     private fun updateBadgeAndBreadcrumbs(tab: TabModel) {
         val accentColor = tab.getAccentColor()
         badgeStorageType.text = when (tab.storageType) {
-            StorageType.LOCAL -> getString(R.string.storage_internal).uppercase()
-            StorageType.SAF -> getString(R.string.storage_sd_card).uppercase()
-            StorageType.NETWORK -> (tab.protocol ?: getString(R.string.storage_network)).uppercase()
-            StorageType.CLOUD -> (tab.protocol ?: getString(R.string.storage_cloud)).uppercase()
+            StorageType.LOCAL -> "LOCAL"
+            StorageType.SAF -> "SAF"
+            StorageType.NETWORK -> (tab.protocol ?: "NETWORK").uppercase()
+            StorageType.CLOUD -> (tab.protocol ?: "CLOUD").uppercase()
         }
         badgeStorageType.setTextColor(accentColor)
         updateBreadcrumbs(tab)

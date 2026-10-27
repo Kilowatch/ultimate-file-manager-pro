@@ -119,6 +119,14 @@ class NetworkFileAdapter(
     private var showHidden: Boolean = false
 
     private val childCountCache = mutableMapOf<String, Int>()
+    private val favoritePaths = mutableSetOf<String>()
+    private var favoritesLoaded = false
+
+    fun refreshFavorites(context: Context) {
+        favoritePaths.clear()
+        favoritePaths.addAll(za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavorites(context).map { it.path })
+        favoritesLoaded = true
+    }
     private var childCountJob: Job? = null
 
     private val dateFormat = SimpleDateFormat("MMM dd, yyyy • HH:mm", Locale.getDefault())
@@ -648,6 +656,7 @@ class NetworkFileAdapter(
         private val iconContainer: View? = itemView.findViewById(R.id.iconContainer)
         private val layoutRow: View? = itemView.findViewById(R.id.layoutFileRow)
         private val imgClipboardBadge: ImageView? = itemView.findViewById(R.id.imgClipboardBadge)
+        private val imgFavoriteBadge: ImageView? = itemView.findViewById(R.id.imgFavoriteBadge)
         private val context: Context = itemView.context
 
         init {
@@ -733,6 +742,19 @@ class NetworkFileAdapter(
             imgIcon.startAnimation(anim)
         }
 
+        private fun formatDate(timestamp: Long): String {
+            if (timestamp <= 0) return ""
+            val now = System.currentTimeMillis()
+            val diff = now - timestamp
+            return when {
+                diff < 60_000 -> context.getString(R.string.just_now)
+                diff < 3_600_000 -> "${diff / 60_000}m ago"
+                diff < 86_400_000 -> "${diff / 3_600_000}h ago"
+                diff < 604_800_000 -> "${diff / 86_400_000}d ago"
+                else -> java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault()).format(java.util.Date(timestamp))
+            }
+        }
+
         private fun stopPulse() {
             imgIcon.clearAnimation()
             imgIcon.alpha = 1.0f
@@ -808,7 +830,7 @@ class NetworkFileAdapter(
                             container.layoutParams = iconParams
 
                             val radiusPx = listStyle.iconCornerRadiusDp * density
-                            container.clipToOutline = radiusPx > 0f
+                            container.clipToOutline = false
                             container.outlineProvider = object : android.view.ViewOutlineProvider() {
                                 override fun getOutline(v: android.view.View, outline: android.graphics.Outline) {
                                     outline.setRoundRect(0, 0, v.width, v.height, radiusPx)
@@ -937,9 +959,15 @@ class NetworkFileAdapter(
             imgIcon.clipToOutline = false
             stopPulse()
 
-            // Remove all background circles and padding for consistency across grid and list
-            imgIcon.setPadding(0, 0, 0, 0)
-            iconContainer?.setBackgroundResource(0)
+            if (!isTv && !isGrid) {
+                iconContainer?.setBackgroundResource(R.drawable.bg_squircle_file_bubble)
+                val padPx = (9 * context.resources.displayMetrics.density + 0.5f).toInt()
+                imgIcon.setPadding(padPx, padPx, padPx, padPx)
+                imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+            } else {
+                imgIcon.setPadding(0, 0, 0, 0)
+                iconContainer?.setBackgroundResource(0)
+            }
 
             if (file.iconRes != 0) {
                 // Custom icon (e.g. TV action items: screenshot, record screen, sideload, settings, remote)
@@ -1012,6 +1040,13 @@ class NetworkFileAdapter(
                     imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
                     val iconTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
                     imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTintColor)
+                    if (!isTv && !isGrid) {
+                        iconContainer?.setBackgroundResource(R.drawable.bg_squircle_file_bubble)
+                        val padPx = (9 * context.resources.displayMetrics.density + 0.5f).toInt()
+                        imgIcon.setPadding(padPx, padPx, padPx, padPx)
+                        imgIcon.clipToOutline = false
+                        imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                    }
                     if (isGrid && !isTv) {
                         val gridStyle = za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.getGridStyle(context, viewMode)
                         val iconPadPx = (gridStyle.iconPaddingDp * context.resources.displayMetrics.density + 0.5f).toInt()
@@ -1022,7 +1057,7 @@ class NetworkFileAdapter(
                         txtDisk?.visibility = View.GONE
                         circularDisk?.visibility = View.GONE
                         val childCount = childCountCache[file.path]
-                        val dateStr = if (file.lastModified > 0) dateFormat.format(Date(file.lastModified)) else ""
+                        val dateStr = if (file.lastModified > 0) formatDate(file.lastModified) else ""
                         if (childCount != null) {
                             val itemsText = "$childCount item${if (childCount != 1) "s" else ""}"
                             txtDetails.text = if (dateStr.isNotEmpty()) "$itemsText · $dateStr" else itemsText
@@ -1045,6 +1080,13 @@ class NetworkFileAdapter(
                     imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, file.name.substringAfterLast('.', "")))
                     val fileTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
                     imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(fileTintColor)
+                    if (!isTv && !isGrid) {
+                        iconContainer?.setBackgroundResource(R.drawable.bg_squircle_file_bubble)
+                        val padPx = (9 * context.resources.displayMetrics.density + 0.5f).toInt()
+                        imgIcon.setPadding(padPx, padPx, padPx, padPx)
+                        imgIcon.clipToOutline = false
+                        imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                    }
                     if (isGrid && !isTv) {
                         val gridStyle = za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.getGridStyle(context, viewMode)
                         val iconPadPx = (gridStyle.iconPaddingDp * context.resources.displayMetrics.density + 0.5f).toInt()
@@ -1057,7 +1099,7 @@ class NetworkFileAdapter(
                     } else {
                         Formatter.formatFileSize(context, file.size)
                     }
-                    val dateStr = if (file.lastModified > 0) dateFormat.format(Date(file.lastModified)) else ""
+                    val dateStr = if (file.lastModified > 0) formatDate(file.lastModified) else ""
                     txtDetails.text = if (dateStr.isNotEmpty()) "$sizeStr • $dateStr" else sizeStr
                 }
                 

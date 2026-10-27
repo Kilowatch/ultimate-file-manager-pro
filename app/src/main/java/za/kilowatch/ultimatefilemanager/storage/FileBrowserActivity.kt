@@ -690,6 +690,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
     override fun onResume() {
         super.onResume()
+        if (::fileAdapter.isInitialized) fileAdapter.refreshFavorites(this)
         za.kilowatch.ultimatefilemanager.storage.RootStagingManager.syncAllPendingAsync(this) { syncedCount ->
             showPremiumSnackbar(getString(R.string.root_file_saved_success, syncedCount))
         }
@@ -4358,6 +4359,8 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                     isNetwork = false
                 )
                 za.kilowatch.ultimatefilemanager.settings.FavoritesManager.addFavorite(this, favorite)
+                fileAdapter.refreshFavorites(this)
+                fileAdapter.notifyItemRangeChanged(0, fileAdapter.itemCount)
                 fileAdapter.exitSelectionMode()
                 showPremiumSnackbar(getString(R.string.favorite_added))
                 dialog.dismiss()
@@ -5510,6 +5513,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             badgeStorage.text = when {
                 storageLabel.contains("Vault", ignoreCase = true) -> "VAULT"
                 isCategoryMode -> "CATEGORY"
+                SafTreeManager.isSafPath(rootPath) || isRestrictedRoot -> "SAF"
                 rootPath.contains("emulated", ignoreCase = true) -> "LOCAL"
                 rootPath.contains("sdcard", ignoreCase = true) || rootPath.contains("storage/", ignoreCase = true) -> "STORAGE"
                 else -> "LOCAL"

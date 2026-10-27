@@ -116,6 +116,14 @@
     <color name="quick_bar_bg">#FF1B304D</color>
     <color name="quick_bar_stroke">#FF344B68</color>
     <color name="quick_bar_icon_tint">#FFF2F5FA</color>
+    <!-- Mobile File Item & Navigation Styling -->
+    <color name="file_icon_bubble_bg">#FF162A47</color>
+    <color name="file_icon_bubble_stroke">#FF243C5E</color>
+    <color name="mobile_file_divider">#FF13253E</color>
+    <color name="breadcrumb_bar_bg">#FF10213A</color>
+    <color name="storage_badge_bg">#FF152B49</color>
+    <color name="storage_badge_stroke">#FF2B64A3</color>
+    <color name="storage_badge_text">#FF64A2F4</color>
     <!-- Floating Bottom Dock — 100% opaque composite matching mobile tile surface -->
     <color name="floating_bar_bg">#FF142640</color>
     <color name="floating_bar_stroke">#FF344B68</color>

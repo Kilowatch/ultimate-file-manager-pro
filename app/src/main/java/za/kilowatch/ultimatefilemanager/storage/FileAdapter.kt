@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.storage
 
+import android.content.Context
 import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
@@ -318,6 +319,14 @@ class FileAdapter(
     private val storageLabels = mutableMapOf<String, String>()
     private val indexedPaths = mutableSetOf<String>()
     private val hiddenPaths = mutableSetOf<String>()
+    private val favoritePaths = mutableSetOf<String>()
+    private var favoritesLoaded = false
+
+    fun refreshFavorites(context: Context) {
+        favoritePaths.clear()
+        favoritePaths.addAll(za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavorites(context).map { it.path })
+        favoritesLoaded = true
+    }
     private var showAllAsIndexed = false
     private var searchBasePath: String? = null
     private var showHidden: Boolean = false
@@ -423,6 +432,7 @@ class FileAdapter(
         this.hiddenPaths.clear()
         this.hiddenPaths.addAll(hiddenPaths)
         this.showAllAsIndexed = showAllAsIndexed
+        attachedContext?.let { refreshFavorites(it) }
 
         this.storageLabels.clear()
         this.storageLabels.putAll(storageLabels)
@@ -901,6 +911,7 @@ class FileAdapter(
         private val checkSelect: CheckBox = itemView.findViewById(R.id.checkSelect)
         private val layoutRow: View = itemView.findViewById(R.id.layoutFileRow)
         private val imgIndexedBadge: ImageView = itemView.findViewById(R.id.imgIndexedBadge)
+        private val imgFavoriteBadge: ImageView? = itemView.findViewById(R.id.imgFavoriteBadge)
         private val imgAppBadge: ImageView? = itemView.findViewById(R.id.imgAppBadge)
         // iconContainer has a transitionName set dynamically per position for shared element transitions
         private val iconContainer: View? = itemView.findViewById(R.id.iconContainer)
@@ -1041,7 +1052,7 @@ class FileAdapter(
                             container.layoutParams = iconParams
 
                             val radiusPx = listStyle.iconCornerRadiusDp * density
-                            container.clipToOutline = radiusPx > 0f
+                            container.clipToOutline = false
                             container.outlineProvider = object : android.view.ViewOutlineProvider() {
                                 override fun getOutline(v: android.view.View, outline: android.graphics.Outline) {
                                     outline.setRoundRect(0, 0, v.width, v.height, radiusPx)
@@ -1188,9 +1199,16 @@ class FileAdapter(
             imgIcon.clipToOutline = false
             itemView.findViewById<View>(R.id.viewSelectionOverlay)?.visibility = View.GONE
 
-            // Remove all background circles and padding for consistency across grid and list
-            imgIcon.setPadding(0, 0, 0, 0)
-            iconContainer?.setBackgroundResource(0)
+            if (!isTv && !isGrid) {
+                iconContainer?.setBackgroundResource(R.drawable.bg_squircle_file_bubble)
+                val padPx = (9 * context.resources.displayMetrics.density + 0.5f).toInt()
+                imgIcon.setPadding(padPx, padPx, padPx, padPx)
+                imgIcon.clipToOutline = false
+                imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+            } else {
+                imgIcon.setPadding(0, 0, 0, 0)
+                iconContainer?.setBackgroundResource(0)
+            }
 
             if (file.isDirectoryCached()) {
                 imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
@@ -1321,7 +1339,16 @@ class FileAdapter(
                     txtSize.visibility = View.VISIBLE
                 } else if (!isGrid) {
                     // ── Normal icon mode (list) ───────────────────────────────
-                    iconContainer?.setBackgroundResource(0)
+                    if (!isTv) {
+                        iconContainer?.setBackgroundResource(R.drawable.bg_squircle_file_bubble)
+                        val padPx = (9 * context.resources.displayMetrics.density + 0.5f).toInt()
+                        imgIcon.setPadding(padPx, padPx, padPx, padPx)
+                        imgIcon.clipToOutline = false
+                        imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                    } else {
+                        iconContainer?.setBackgroundResource(0)
+                        imgIcon.setPadding(0, 0, 0, 0)
+                    }
                     imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
                     val tintColor = if (isTv) {
                         DefaultIconColorManager.getTvIconTint(context)
@@ -1388,6 +1415,13 @@ class FileAdapter(
 
             // ── Indexed badge, hidden badge, selection, click handling ─────────
             // Must run for BOTH directories and files.
+
+            // Favorite status indicator (Star badge on mobile)
+            if (!favoritesLoaded) {
+                refreshFavorites(context)
+            }
+            val isFavorite = file.absolutePath in favoritePaths
+            imgFavoriteBadge?.visibility = if (!isTv && isFavorite) View.VISIBLE else View.GONE
 
             // Indexed status: lightning bolt badge
             val isIndexed = showAllAsIndexed || file.absolutePath in indexedPaths

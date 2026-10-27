@@ -278,6 +278,7 @@ class NetworkBrowserFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        context?.let { ctx -> if (::fileAdapter.isInitialized) fileAdapter.refreshFavorites(ctx) }
         applyLeftHandedFabSettings()
         applyToolbarIconVisibility()
         updatePasteFab()
@@ -3100,6 +3101,8 @@ class NetworkBrowserFragment : Fragment() {
                     shareId = share.id
                 )
                 FavoritesManager.addFavorite(ctx, favorite)
+                fileAdapter.refreshFavorites(ctx)
+                fileAdapter.notifyItemRangeChanged(0, fileAdapter.itemCount)
                 fileAdapter.exitSelectionMode()
                 showPremiumSnackbar(getString(R.string.favorite_added))
                 dialog.dismiss()
