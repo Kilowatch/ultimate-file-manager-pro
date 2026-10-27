@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Main Menu Category & Tile Reordering Animation**: Enabled fluid live reordering animations and custom sequence placement when dragging categories by header or tiles within and across categories.
 
 ### Fixed
+- **Fresh Install Main Menu Default View Mode**: Fixed fresh installs falsely falling back to List view mode during onboarding, ensuring clean installs default to Modern Categorized with only the Storage category expanded.
 - **Main Menu Header Action Buttons**: Fixed an issue where the hamburger button was shown instead of the settings gear icon and app logo when Edge Swipe Menu was disabled.
 - **Main Menu Category Header Background & Stroke Persistence**: Fixed category headers losing their dark surface background and outline border during scrolling or across collapsed states.
 - **Main Menu First Tile Padding**: Balanced top padding between category header cards and the first tile to ensure uniform spacing throughout the menu.

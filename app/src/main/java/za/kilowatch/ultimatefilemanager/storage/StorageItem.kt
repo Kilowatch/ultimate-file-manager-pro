@@ -74,7 +74,7 @@ data class StorageItem(
     val parentCustomTileId: String? = null,
     val isCategoryHeader: Boolean = false,
     val categoryId: String? = null,
-    var isCategoryExpanded: Boolean = true,
+    var isCategoryExpanded: Boolean = false,
     var categoryItemCount: Int = 0,
     val categoryGroupItems: List<StorageItem> = emptyList()
 ) {

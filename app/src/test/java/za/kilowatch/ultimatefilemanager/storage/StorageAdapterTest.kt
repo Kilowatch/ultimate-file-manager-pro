@@ -162,4 +162,21 @@ class StorageAdapterTest {
         assertEquals(listOf("tile_sdcard"), connectAfterMove!!.categoryGroupItems.map { it.id })
         assertEquals(MainMenuViewModeManager.CATEGORY_CONNECT, MainMenuViewModeManager.loadTileCategory(context, "tile_sdcard"))
     }
+
+    @Test
+    fun freshInstallDefaultsToModernCategorizedAndOnlyStorageExpanded() {
+        val context = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>()
+        context.getSharedPreferences("ufm_main_menu_prefs", android.content.Context.MODE_PRIVATE).edit().clear().commit()
+
+        val mode = MainMenuViewModeManager.loadViewMode(context)
+        assertEquals(MainMenuViewModeManager.ViewMode.MODERN_CATEGORIZED, mode)
+
+        assert(MainMenuViewModeManager.isCategoryExpanded(context, MainMenuViewModeManager.CATEGORY_STORAGE))
+        assertFalse(MainMenuViewModeManager.isCategoryExpanded(context, MainMenuViewModeManager.CATEGORY_CONNECT))
+        assertFalse(MainMenuViewModeManager.isCategoryExpanded(context, MainMenuViewModeManager.CATEGORY_SYNC))
+        assertFalse(MainMenuViewModeManager.isCategoryExpanded(context, MainMenuViewModeManager.CATEGORY_ORGANIZE))
+        assertFalse(MainMenuViewModeManager.isCategoryExpanded(context, MainMenuViewModeManager.CATEGORY_UTILITIES))
+        assertFalse(MainMenuViewModeManager.isCategoryExpanded(context, MainMenuViewModeManager.CATEGORY_SECURITY))
+        assertFalse(MainMenuViewModeManager.isCategoryExpanded(context, MainMenuViewModeManager.CATEGORY_SETTINGS))
+    }
 }

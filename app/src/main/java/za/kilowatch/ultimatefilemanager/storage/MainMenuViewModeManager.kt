@@ -42,21 +42,15 @@ object MainMenuViewModeManager {
     fun loadViewMode(context: Context): ViewMode {
         cachedViewMode?.let { return it }
         val prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)
+        val defaultMode = if (isTv) ViewMode.LIST else ViewMode.MODERN_CATEGORIZED
         val mode: ViewMode
         if (prefs.contains(KEY_VIEW_MODE)) {
-            val ordinal = prefs.getInt(KEY_VIEW_MODE, ViewMode.LIST.ordinal)
-            mode = ViewMode.entries.getOrElse(ordinal) { ViewMode.LIST }
+            val ordinal = prefs.getInt(KEY_VIEW_MODE, defaultMode.ordinal)
+            mode = ViewMode.entries.getOrElse(ordinal) { defaultMode }
         } else {
-            // Check if upgrading user (has existing settings/onboarding completed)
-            val globalPrefs = context.applicationContext.getSharedPreferences("ufm_prefs", Context.MODE_PRIVATE)
-            val isExistingUser = globalPrefs.contains("welcome_languages_finished") || globalPrefs.all.isNotEmpty()
-            mode = if (isExistingUser) {
-                // Preserve backwards compatibility for upgrading users
-                ViewMode.LIST
-            } else {
-                // New install defaults to modern categorized view
-                ViewMode.MODERN_CATEGORIZED
-            }
+            // Fresh install: defaults to MODERN_CATEGORIZED on mobile, LIST on TV
+            mode = defaultMode
             prefs.edit().putInt(KEY_VIEW_MODE, mode.ordinal).apply()
         }
         cachedViewMode = mode
