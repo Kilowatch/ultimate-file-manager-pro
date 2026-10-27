@@ -6,8 +6,8 @@
     android:id="@+id/cardEdgeTile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="10dp"
-    android:layout_marginVertical="4dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="5dp"
     android:clickable="true"
     android:focusable="true"
     app:cardBackgroundColor="@color/mobile_glass_card"
@@ -22,15 +22,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="10dp">
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="12dp">
 
-        <!-- Frosted Squircle Icon Container -->
+        <!-- Squircle Category-style Icon Container -->
         <FrameLayout
             android:id="@+id/containerIcon"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:background="@drawable/bg_btn_icon_frosted">
+            android:background="@drawable/bg_squircle_category_icon">
 
             <ImageView
                 android:id="@+id/imgTileIcon"
@@ -48,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="14dp"
             android:orientation="vertical">
 
             <TextView
@@ -56,8 +56,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_card_text_primary"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif-medium"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
                 android:maxLines="1"
                 android:ellipsize="end"
                 tools:text="Internal Storage" />
@@ -66,9 +66,9 @@
                 android:id="@+id/txtTileSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="3dp"
                 android:textColor="@color/mobile_card_text_secondary"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 android:fontFamily="sans-serif"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -77,8 +77,8 @@
 
         <!-- Trailing Chevron -->
         <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_chevron_right"
             android:alpha="0.4"

@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
@@ -16,6 +17,8 @@ import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
@@ -26,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.FloatingBarManageActivity
 import za.kilowatch.ultimatefilemanager.settings.SettingsActivity
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
@@ -223,7 +227,7 @@ class EdgeMenuOverlayController(private val activity: Activity) {
         root.isMenuOpen = isOpen
 
         val density = activity.resources.displayMetrics.density
-        drawerWidthPx = (300 * density).toInt()
+        drawerWidthPx = minOf((330 * density).toInt(), (activity.resources.displayMetrics.widthPixels * 0.84f).toInt())
         root.edgeThresholdPx = 28f * density
 
         // 1. Layout Gravity & Corner Radii
@@ -237,15 +241,15 @@ class EdgeMenuOverlayController(private val activity: Activity) {
             card.shapeAppearanceModel = card.shapeAppearanceModel.toBuilder()
                 .setTopLeftCornerSize(0f)
                 .setBottomLeftCornerSize(0f)
-                .setTopRightCornerSize(20f * density)
-                .setBottomRightCornerSize(20f * density)
+                .setTopRightCornerSize(24f * density)
+                .setBottomRightCornerSize(24f * density)
                 .build()
         } else {
             card.shapeAppearanceModel = card.shapeAppearanceModel.toBuilder()
                 .setTopRightCornerSize(0f)
                 .setBottomRightCornerSize(0f)
-                .setTopLeftCornerSize(20f * density)
-                .setBottomLeftCornerSize(20f * density)
+                .setTopLeftCornerSize(24f * density)
+                .setBottomLeftCornerSize(24f * density)
                 .build()
         }
 
@@ -307,6 +311,16 @@ class EdgeMenuOverlayController(private val activity: Activity) {
         val hiddenCount = TileOrderManager.loadHidden(activity).size
         root.findViewById<View?>(R.id.btnEdgeHiddenTiles)?.visibility =
             if (hiddenCount > 0) View.VISIBLE else View.GONE
+
+        // 6. Dynamic Category Icon Color (Manage Tiles button & Subtitle)
+        val accentColor = DefaultIconColorManager.getMobileIconTint(activity)
+
+        val btnManage = root.findViewById<View?>(R.id.btnManageTiles)
+        btnManage?.backgroundTintList = ColorStateList.valueOf(accentColor)
+        btnManage?.findViewById<ImageView?>(R.id.imgManageTilesAdd)?.imageTintList = ColorStateList.valueOf(Color.WHITE)
+        btnManage?.findViewById<TextView?>(R.id.txtManageTilesLabel)?.setTextColor(Color.WHITE)
+
+        root.findViewById<TextView?>(R.id.txtMenuSubtitle)?.setTextColor(accentColor)
     }
 
     fun openMenu() {
@@ -419,8 +433,8 @@ class EdgeMenuOverlayController(private val activity: Activity) {
                 return if (Color.alpha(bg) == 255) bg else ColorUtils.compositeColors(bg, screenBg)
             }
         }
-        val glassCardColor = ContextCompat.getColor(activity, R.color.mobile_glass_card)
-        return ColorUtils.compositeColors(glassCardColor, screenBg)
+        val defaultDrawerBg = ContextCompat.getColor(activity, R.color.sidebar_drawer_bg)
+        return ColorUtils.compositeColors(defaultDrawerBg, screenBg)
     }
 
     private fun resolveOpaqueStrokeColor(): Int {

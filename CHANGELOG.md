@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **UFMStandard Duplicate Strategy & Completion Dialogs**: Added theme-aware frosted glass strategy selection and cleanup completion dialogs showing exact count of files deleted and total storage reclaimed, with Android TV D-pad navigation support.
 
 ### Changed
+- **Dynamic Category Icon Color Synchronization**: Synchronized main menu "+" button, edge drawer "Manage Tiles" button, and tile icon bubbles with user-configured category icon colors, dynamically applying the active theme tint with luminance-based contrasting icon and label colors.
+- **Mobile Sidebar (Hamburger Drawer) Modernization**: Redesigned mobile quick access edge drawer (hamburger sidebar) to match modern theme styling with high-contrast deep navy container, 44dp vibrant blue squircle icon bubbles, 52dp primary action pill button, and matching squircle header and settings controls.
 - **Mobile Browsing Visual Synchronization**: Refined Mobile browsing UI across SAF, Local, Network, Cloud, and Tabbed browsers to match new design specifications:
   - Added squircle bubble container for standard folder and generic file icons.
   - Preserved full-bleed rendering without bubbles for custom icons and loaded thumbnails (images, videos, APKs).

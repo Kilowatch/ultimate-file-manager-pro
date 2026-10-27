@@ -12,9 +12,11 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import java.io.File
 
 /**
@@ -97,10 +99,22 @@ class EdgeMenuAdapter(
         } else {
             holder.txtTitle.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_primary))
         }
+        holder.txtSubtitle.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_secondary))
+
+        val catIconTint = DefaultIconColorManager.getMobileIconTint(context)
 
         if (config != null && config.iconBgColor != Color.TRANSPARENT) {
-            holder.containerIcon.backgroundTintList = ColorStateList.valueOf(config.iconBgColor)
+            val density = context.resources.displayMetrics.density
+            val customBg = android.graphics.drawable.GradientDrawable().apply {
+                shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+                cornerRadius = 12 * density
+                setColor(config.iconBgColor)
+                setStroke((1 * density).toInt(), ContextCompat.getColor(context, R.color.mobile_glass_stroke))
+            }
+            holder.containerIcon.background = customBg
+            holder.containerIcon.backgroundTintList = null
         } else {
+            holder.containerIcon.setBackgroundResource(R.drawable.bg_squircle_category_icon)
             holder.containerIcon.backgroundTintList = null
         }
 
@@ -119,7 +133,7 @@ class EdgeMenuAdapter(
             holder.card.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
         }
 
-        bindTileIcon(item, holder.imgIcon)
+        bindTileIcon(item, holder.imgIcon, catIconTint)
 
         holder.itemView.setOnClickListener {
             onTileClick(item)
@@ -128,7 +142,7 @@ class EdgeMenuAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    private fun bindTileIcon(item: StorageItem, imgView: ImageView) {
+    private fun bindTileIcon(item: StorageItem, imgView: ImageView, defaultIconTint: Int) {
         val customPath = tileIcons[item.id]
         val customRes = tileIconRes[item.id]
 
@@ -150,10 +164,7 @@ class EdgeMenuAdapter(
         if (config != null && config.iconColor != 0) {
             imgView.colorFilter = PorterDuffColorFilter(config.iconColor, PorterDuff.Mode.SRC_IN)
         } else {
-            imgView.setColorFilter(
-                ContextCompat.getColor(imgView.context, R.color.mobile_icon_tint),
-                PorterDuff.Mode.SRC_IN
-            )
+            imgView.colorFilter = PorterDuffColorFilter(defaultIconTint, PorterDuff.Mode.SRC_IN)
         }
     }
 

@@ -1563,14 +1563,15 @@ class StorageBrowserActivity : AppCompatActivity() {
             val pad = (10 * density).toInt()
             val size = (44 * density).toInt()
             val margin = (8 * density).toInt()
-            val onAccentColor = getColor(R.color.ufm_on_primary)
+            val mobileIconColor = DefaultIconColorManager.getMobileIconTint(this)
             val iconTint = getColor(R.color.mobile_icon_tint)
             btnAddCustomTile = ImageView(this).apply {
                 setImageResource(R.drawable.ic_add)
                 contentDescription = getString(R.string.custom_tile_add_button)
                 setPadding(pad, pad, pad, pad)
                 setBackgroundResource(R.drawable.bg_fab_add_circle)
-                imageTintList = android.content.res.ColorStateList.valueOf(onAccentColor)
+                backgroundTintList = android.content.res.ColorStateList.valueOf(mobileIconColor)
+                imageTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE)
                 layoutParams = androidx.appcompat.widget.Toolbar.LayoutParams(
                     size,
                     size,
@@ -1948,7 +1949,12 @@ class StorageBrowserActivity : AppCompatActivity() {
         btnManageTiles.imageTintList = android.content.res.ColorStateList.valueOf(if (isTv) iconTint else getColor(R.color.mobile_icon_tint))
         btnColorTile?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
         btnImportColorCode?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
-        btnAddCustomTile?.imageTintList = android.content.res.ColorStateList.valueOf(if (isTv) iconTint else getColor(R.color.ufm_on_primary))
+        if (!isTv) {
+            btnAddCustomTile?.backgroundTintList = android.content.res.ColorStateList.valueOf(iconTint)
+            btnAddCustomTile?.imageTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.WHITE)
+        } else {
+            btnAddCustomTile?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
+        }
         btnSettingsGear?.imageTintList = android.content.res.ColorStateList.valueOf(iconTint)
         btnEdgeMenuLeft?.imageTintList = android.content.res.ColorStateList.valueOf(if (isTv) iconTint else getColor(R.color.mobile_icon_tint))
         btnEdgeMenuRight?.imageTintList = android.content.res.ColorStateList.valueOf(if (isTv) iconTint else getColor(R.color.mobile_icon_tint))

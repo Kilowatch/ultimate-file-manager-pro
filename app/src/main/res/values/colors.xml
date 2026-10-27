@@ -280,4 +280,10 @@
     <color name="syntax_boolean_literal">#FF7C3AED</color>  <!-- violet -->
     <color name="syntax_constant">#FFD97706</color>         <!-- amber -->
 
+    <!-- Sidebar / Edge Menu (Mobile) -->
+    <color name="sidebar_drawer_bg">#FFF5F8FC</color>
+    <color name="sidebar_icon_bubble_bg">#FF2196F3</color>
+    <color name="sidebar_btn_primary">#FF2196F3</color>
+    <color name="sidebar_btn_secondary">#FFE5E7EB</color>
+
 </resources>
