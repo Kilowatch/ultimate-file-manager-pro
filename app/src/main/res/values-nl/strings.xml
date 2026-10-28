@@ -9480,9 +9480,7 @@ Verwijderen als standaard
     <string name="bt_remote_connect_now">
 Maak nu verbinding
 </string>
-    <string name="bt_remote_back">
-Rug
-</string>
+    <string name="bt_remote_back">Terug</string>
     <string name="bt_remote_cancel">
 Annuleren
 </string>
