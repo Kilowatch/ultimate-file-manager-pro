@@ -12200,9 +12200,7 @@ Te veel verzoeken. Probeer het later opnieuw.
     <string name="icon_support_help">
 Hulp en ondersteuning
 </string>
-    <string name="cd_support_back">
-Rug
-</string>
+    <string name="cd_support_back">Terug</string>
     <string name="invalid_email_format">
 Voer een geldig e-mailadres in
 </string>
