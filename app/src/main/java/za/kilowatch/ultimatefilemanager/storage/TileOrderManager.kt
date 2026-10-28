@@ -47,7 +47,7 @@ object TileOrderManager {
         item.isNotepadTile || item.isRecycleBinTile || item.isScannerTile ||
         item.isSmartSortTile || item.isOnlineStoragesTile || item.isFavoriteTile ||
         item.isRecentFilesTile ||
-        item.isSettingsTile || item.isCustomTile || item.isAddStorageLocationTile
+        item.isSettingsTile || item.isCustomTile || item.isAddStorageLocationTile || item.isOtherStorageTile || item.isDocumentProviderTile
 
     // ------------------------------------------------------------------ //
     //  Public API                                                          //

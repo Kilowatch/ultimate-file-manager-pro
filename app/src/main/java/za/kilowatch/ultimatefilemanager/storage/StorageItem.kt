@@ -57,6 +57,9 @@ data class StorageItem(
     val isRecentFilesTile: Boolean = false,
     val isSupportTile: Boolean = false,
     val isAddStorageLocationTile: Boolean = false,
+    val isOtherStorageTile: Boolean = false,
+    val isDocumentProviderTile: Boolean = false,
+    val documentProviderInfo: DocumentProviderInfo? = null,
     val isSafCustomLocation: Boolean = false,
     val safLocation: SafLocation? = null,
     val networkShare: za.kilowatch.ultimatefilemanager.network.NetworkShare? = null,
@@ -104,7 +107,7 @@ data class StorageItem(
          isOnlineStoragesTile || isFileServerTile || isAboutTile ||
          isRecycleBinTile || isLegalTile || isRateUsTile || isTipJarTile ||
          isNotepadTile || isScannerTile || isSmartSortTile || isSupportTile ||
-         isRecentFilesTile || isAddStorageLocationTile || isSafCustomLocation))
+         isRecentFilesTile || isAddStorageLocationTile || isOtherStorageTile || isDocumentProviderTile || isSafCustomLocation))
 
 
     val usagePercent: Int get() {

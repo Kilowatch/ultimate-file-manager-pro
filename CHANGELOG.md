@@ -5,6 +5,24 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.3] — 2026-10-28
+
+### Added
+- **"Other Storage" Provider Catalog & Main Menu Tiles**: Document providers (Google Drive, Proton Drive, Synology DS file, Termux) discovered in "Other Storage" can now be promoted directly onto the Main Storage Menu as persistent tiles with native application icons.
+- **Provider Tile Action Sheet & Unmounting**: Tapping a mounted provider tile opens a dual action sheet to browse/download files or upload/export local files. Long-pressing allows removing the provider tile, returning it to "Other Storage".
+- **Upload to Other Storage**: Added Tools FAB and Floating Quick Action Bar option to upload selected files or zip directories directly to external document providers (Google Drive, Proton Drive, etc.) across standalone, tabbed, and twin-window browsers.
+- **Configurable SAF Copy Destination**: Copied files can now be routed to any custom local folder or remote/network storage location (SMB, FTP, SFTP, NFS, WebDAV) using UFM's memory FAB folder selector, with easy reset to standard Downloads.
+- **Live Transfer Telemetry**: Copying and exporting files via SAF now displays real-time progress, byte counters, and transfer speed in MB/s via UFM's glass transfer dialog.
+- **Targeted Document Provider Export**: In the file share dialog, users can export single files or ZIP archives directly to any provider currently mounted on the Main Menu.
+- **Dedicated Settings Section**: Isolated "Other Storage & SAF Transfers" group in Settings with dynamic path subtitle and folder selection options.
+
+### Fixed
+- **SAF Transfer Progress & Telemetry**: Added live transfer speed (MB/s), byte counters, and buffering indicators to the download/copy progress dialog.
+- **SAF File Copy Conflict Resolution**: Integrated standard conflict dialog (Overwrite, Skip, Keep Both, Apply to All) when copying files to local storage with duplicate names.
+- **Document Provider App Icons**: Main Menu document provider tiles now display full-color native application icons.
+- **Upload File Crash**: Fixed `ActivityNotFoundException` when invoking external document creation providers.
+- **Picker Thumbnail Interaction**: Tapping a file thumbnail in upload picker mode now directly selects the file rather than entering edit selection mode.
+
 ## [2.2.2] — 2026-10-26
 
 ### Added

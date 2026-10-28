@@ -1578,15 +1578,36 @@ private fun ImageView.safeSetIcon(resId: Int) {
                     item.isSearchTile || item.isAnalyzerTile ||
                     item.isVaultTile  || item.isLegalTile   || item.isRateUsTile || item.isSafTile ||
                     item.isNetworkTile || item.isNetworkRoot || item.isPairedDevicesTile ||
-                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isRecentFilesTile || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile || item.isAddStorageLocationTile || item.isSafCustomLocation
+                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isRecentFilesTile || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile || item.isAddStorageLocationTile || item.isOtherStorageTile || item.isSafCustomLocation || item.isDocumentProviderTile
 
             if (isSpecialTile) {
                 circularProgress?.visibility = View.GONE
                 progressBar.visibility   = View.GONE
                 txtNewBadge?.visibility  = View.GONE
 
-                imgIcon.safeSetIcon(item.iconRes)
-                applyCustomIcon(item, imgIcon)
+                val providerIcon = if (item.isDocumentProviderTile) {
+                    item.documentProviderInfo?.icon
+                        ?: (item.documentProviderInfo?.authority ?: item.id.removePrefix("doc_provider_")).let { auth ->
+                            try {
+                                val pi = context.packageManager.resolveContentProvider(auth, 0)
+                                pi?.loadIcon(context.packageManager)
+                                    ?: pi?.applicationInfo?.loadIcon(context.packageManager)
+                                    ?: pi?.packageName?.let { context.packageManager.getApplicationIcon(it) }
+                            } catch (_: Exception) { null }
+                        }
+                        ?: if (!item.documentProviderInfo?.packageName.isNullOrEmpty()) {
+                            try { context.packageManager.getApplicationIcon(item.documentProviderInfo!!.packageName) } catch (_: Exception) { null }
+                        } else null
+                } else null
+
+                if (providerIcon != null) {
+                    imgIcon.setImageDrawable(providerIcon)
+                    imgIcon.clearColorFilter()
+                    imgIcon.imageTintList = null
+                } else {
+                    imgIcon.safeSetIcon(item.iconRes)
+                    applyCustomIcon(item, imgIcon)
+                }
                 txtLabel.text = item.label
                 txtCapacity.text = formatTileSubtitle(context, item)
             } else {
@@ -1667,6 +1688,27 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 R.color.mobile_glass_card
             }
             applyCustomColors(context, card, iconContainer, imgIcon, txtLabel, txtCapacity, colorConfig, defaultTileBg)
+
+            if (item.isDocumentProviderTile) {
+                val docIcon = item.documentProviderInfo?.icon
+                    ?: (item.documentProviderInfo?.authority ?: item.id.removePrefix("doc_provider_")).let { auth ->
+                        try {
+                            val pi = context.packageManager.resolveContentProvider(auth, 0)
+                            pi?.loadIcon(context.packageManager)
+                                ?: pi?.applicationInfo?.loadIcon(context.packageManager)
+                                ?: pi?.packageName?.let { context.packageManager.getApplicationIcon(it) }
+                        } catch (_: Exception) { null }
+                    }
+                    ?: if (!item.documentProviderInfo?.packageName.isNullOrEmpty()) {
+                        try { context.packageManager.getApplicationIcon(item.documentProviderInfo!!.packageName) } catch (_: Exception) { null }
+                    } else null
+
+                if (docIcon != null) {
+                    imgIcon.setImageDrawable(docIcon)
+                    imgIcon.clearColorFilter()
+                    imgIcon.imageTintList = null
+                }
+            }
 
             itemView.setOnClickListener {
                 if (isEditMode) {
@@ -1762,12 +1804,14 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage ||
                 item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile ||
                 item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile ||
-                item.isAddStorageLocationTile || item.isSafCustomLocation
+                item.isAddStorageLocationTile || item.isOtherStorageTile || item.isSafCustomLocation || item.isDocumentProviderTile
 
         return if (isSpecialTile) {
             when {
                 item.isRecentFilesTile -> item.subtitle ?: context.getString(R.string.recent_files_subtitle)
                 item.isAddStorageLocationTile -> context.getString(R.string.add_storage_location_subtitle)
+                item.isDocumentProviderTile -> item.subtitle ?: context.getString(R.string.document_provider_tile_subtitle)
+                item.isOtherStorageTile -> item.subtitle ?: context.getString(R.string.other_storage_subtitle)
                 item.isSafCustomLocation -> item.subtitle ?: context.getString(R.string.saf_storage)
                 item.isTwinWindowTile -> context.getString(R.string.twin_window_subtitle)
                 item.isNotepadTile -> context.getString(R.string.notepad_tile_subtitle)

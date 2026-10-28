@@ -45,6 +45,11 @@ import za.kilowatch.ultimatefilemanager.storage.BatchRenameItem
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity
 import za.kilowatch.ultimatefilemanager.storage.FileToolsBottomSheet
+import za.kilowatch.ultimatefilemanager.storage.DocumentProviderRepository
+import za.kilowatch.ultimatefilemanager.storage.MountedDocumentProvider
+import za.kilowatch.ultimatefilemanager.storage.OtherStorageActivity
+import za.kilowatch.ultimatefilemanager.storage.SafFileTransferManager
+import za.kilowatch.ultimatefilemanager.storage.DocumentProviderExportHelper
 import za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager
 import za.kilowatch.ultimatefilemanager.storage.SortFilterSheet
 import java.io.File
@@ -151,6 +156,22 @@ class NetworkBrowserFragment : Fragment() {
     private var btnOptionsToggle: View? = null
     private var layoutOptionsRow: LinearLayout? = null
     private var isOptionsVisible = false
+    private var pendingExportLocalFile: File? = null
+    private var pendingExportProvider: MountedDocumentProvider? = null
+
+    private val safCreateDocForExportLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return@registerForActivityResult
+        if (result.resultCode == android.app.Activity.RESULT_OK && result.data != null) {
+            val targetUri = result.data?.data
+            val localFile = pendingExportLocalFile
+            val prov = pendingExportProvider
+            if (targetUri != null && localFile != null && prov != null) {
+                SafFileTransferManager.exportLocalFileToSaf(act, localFile, targetUri, prov.displayName)
+            }
+        }
+    }
 
     private val batchRenameTvLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -597,6 +618,13 @@ class NetworkBrowserFragment : Fragment() {
                             dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
                         }
                     }
+                })
+            }
+
+            // Upload to Other Storage
+            if (pm.isIconEnabled(context, pm.KEY_UPLOAD_OTHER_STORAGE)) {
+                list.add(FileToolsBottomSheet.ActionItem("upload_other_storage", getString(R.string.action_upload_other_storage), R.drawable.ic_cloud, "toolbar_upload_other_storage") {
+                    uploadNetworkFilesToOtherStorage(selected)
                 })
             }
 
@@ -1522,6 +1550,7 @@ class NetworkBrowserFragment : Fragment() {
                     }
                 }
             }
+            pm.ACTION_UPLOAD_OTHER_STORAGE -> uploadNetworkFilesToOtherStorage(selected)
             pm.ACTION_SHARE -> {
                 val shareable = selected.filter { !it.isDirectory }
                 if (shareable.isNotEmpty()) {
@@ -3649,6 +3678,114 @@ class NetworkBrowserFragment : Fragment() {
         dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
             job.cancel()
             dialog.dismiss()
+        }
+    }
+
+    private fun uploadNetworkFilesToOtherStorage(files: List<NetworkFile>) {
+        if (files.isEmpty()) return
+        val ctx = context ?: return
+        progressBar.visibility = View.VISIBLE
+        if (::fileAdapter.isInitialized) {
+            fileAdapter.exitSelectionMode()
+        }
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val tempDir = File(ctx.cacheDir, "upload_other_${System.currentTimeMillis()}")
+            tempDir.mkdirs()
+            val localFiles = mutableListOf<File>()
+            for (nf in files) {
+                try {
+                    val localEntry = downloadNetworkEntry(nf, tempDir)
+                    if (localEntry.exists()) {
+                        localFiles.add(localEntry)
+                    }
+                } catch (e: Exception) {
+                    za.kilowatch.ultimatefilemanager.util.GoRoLog.w("NetworkBrowser", "Failed to download ${nf.name}: ${e.message}")
+                }
+            }
+            withContext(Dispatchers.Main) {
+                progressBar.visibility = View.GONE
+                if (localFiles.isNotEmpty()) {
+                    val mounted = DocumentProviderRepository.getMountedProviders(ctx)
+                    showSelectMountedProviderForExportDialog(localFiles, mounted)
+                } else {
+                    view?.let { Snackbar.make(it, getString(R.string.share_error), Snackbar.LENGTH_SHORT).show() }
+                }
+            }
+        }
+    }
+
+    private fun showSelectMountedProviderForExportDialog(files: List<File>, mountedProviders: List<MountedDocumentProvider>) {
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
+        DocumentProviderExportHelper.showSelectMountedProviderDialog(act, files, mountedProviders) { provider ->
+            handleExportToProvider(files, provider)
+        }
+    }
+
+    private fun handleExportToProvider(files: List<File>, provider: MountedDocumentProvider) {
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
+        DocumentProviderExportHelper.handleExportToProvider(
+            activity = act,
+            files = files,
+            provider = provider,
+            onExportSingleFile = { file, prov ->
+                exportSingleFileToProvider(file, prov)
+            },
+            onExportZip = { items, prov ->
+                exportFilesAsZipToProvider(items, prov)
+            },
+            onExportShareSheet = { items, prov ->
+                exportFilesViaSystemSheet(items, prov)
+            }
+        )
+    }
+
+    private fun exportSingleFileToProvider(file: File, provider: MountedDocumentProvider) {
+        val ctx = context ?: return
+        pendingExportLocalFile = file
+        pendingExportProvider = provider
+        val ext = file.extension.lowercase()
+        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = mimeType
+            putExtra(Intent.EXTRA_TITLE, file.name)
+        }
+        try {
+            safCreateDocForExportLauncher.launch(intent)
+        } catch (_: Exception) {
+            exportFilesViaSystemSheet(listOf(file), provider)
+        }
+    }
+
+    private fun exportFilesAsZipToProvider(files: List<File>, provider: MountedDocumentProvider) {
+        val ctx = context ?: return
+        DocumentProviderExportHelper.createZipForExport(
+            context = ctx,
+            files = files,
+            onComplete = { zipFile ->
+                exportSingleFileToProvider(zipFile, provider)
+            },
+            onError = { e ->
+                android.widget.Toast.makeText(ctx, "Failed to create ZIP: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun exportFilesViaSystemSheet(files: List<File>, provider: MountedDocumentProvider) {
+        val ctx = context ?: return
+        try {
+            val uris = ArrayList<Uri>()
+            for (file in files) {
+                uris.add(FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", file))
+            }
+            val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                type = "*/*"
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.share_export_to_cloud_provider)))
+        } catch (e: Exception) {
+            android.widget.Toast.makeText(ctx, "Export failed: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 

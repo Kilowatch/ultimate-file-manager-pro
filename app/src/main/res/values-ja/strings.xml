@@ -15668,6 +15668,226 @@ The extracted or converted file cannot be saved back to the remote share, so it 
 \n
 Do you want to proceed?
 </string>
+
+    <!-- Document Providers & Other Storage (SAF) -->
+    <string name="other_storage_title">
+Other Storage
+</string>
+    <string name="other_storage_subtitle">
+Installed cloud &amp; document providers
+</string>
+    <string name="other_storage_desc">
+Access third-party document providers installed on your device
+</string>
+    <string name="other_storage_provider_count">
+%1$d document providers available
+</string>
+    <string name="other_storage_provider_count_single">
+1 document provider available
+</string>
+    <string name="other_storage_empty">
+No third-party document providers found
+</string>
+    <string name="action_browse_files_saf">
+Browse Files (SAF)
+</string>
+    <string name="action_mount_folder_tree">
+Mount Storage Folder
+</string>
+    <string name="action_connect_native_sync">
+Connect via UFM Native Engine
+</string>
+    <string name="action_open_app">
+Open App
+</string>
+    <string name="dialog_add_storage_choice_title">
+Add Storage Location
+</string>
+    <string name="dialog_add_storage_choice_tree">
+Mount Directory / Folder
+</string>
+    <string name="dialog_add_storage_choice_tree_desc">
+Select a folder from Termux, SD card, or USB drive
+</string>
+    <string name="dialog_add_storage_choice_other">
+Installed Document Providers
+</string>
+    <string name="dialog_add_storage_choice_other_desc">
+Access Proton Drive, Synology DS file, Google Drive &amp; more
+</string>
+    <string name="dialog_add_storage_choice_native">
+High-Speed Cloud &amp; Network
+</string>
+    <string name="dialog_add_storage_choice_native_desc">
+Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+</string>
+    <string name="saf_file_action_dialog_title">
+Open or Copy File
+</string>
+    <string name="saf_file_action_dialog_msg">
+What would you like to do with \"%1$s\"?
+</string>
+    <string name="saf_file_action_open_viewer">
+Open in UFM Viewer
+</string>
+    <string name="saf_file_action_copy_local">
+Copy to Local Storage
+</string>
+    <string name="saf_file_action_remember">
+Remember my choice
+</string>
+    <string name="saf_file_action_always_ask">
+Always Ask
+</string>
+    <string name="saf_files_copied_to_downloads">
+Copied %1$d file(s) to Downloads
+</string>
+    <string name="settings_saf_file_action_title">
+SAF Picked File Action
+</string>
+    <string name="settings_saf_file_action_subtitle_always_ask">
+Always ask whether to open or copy
+</string>
+    <string name="settings_saf_file_action_subtitle_open_viewer">
+Always open in UFM Viewer
+</string>
+    <string name="settings_saf_file_action_subtitle_copy_local">
+Always copy to local storage
+</string>
+    <!-- Document Provider Tiles & Actions (Phase 2) -->
+    <string name="document_provider_tile_subtitle">
+Document Provider
+</string>
+    <string name="doc_provider_action_title">
+Manage %1$s
+</string>
+    <string name="doc_provider_action_browse_title">
+Browse &amp; Download Files
+</string>
+    <string name="doc_provider_action_browse_subtitle">%1$s を開いてファイルを選択し、表示またはローカルにコピー</string>
+    <string name="doc_provider_action_upload_title">
+Upload File to %1$s
+</string>
+    <string name="doc_provider_action_upload_subtitle">
+Select a local file in UFM to save into %1$s
+</string>
+    <string name="doc_provider_remove_title">
+Remove %1$s?
+</string>
+    <string name="doc_provider_remove_msg">
+Remove %1$s from storage? You can re-add it anytime from Other Storage.
+</string>
+    <string name="doc_provider_remove_confirm">
+Remove from Storage
+</string>
+    <string name="doc_provider_removed_toast">
+%1$s removed from storage
+</string>
+    <string name="doc_provider_added_toast">
+%1$s added to storage
+</string>
+    <string name="other_storage_all_added">
+All available providers added
+</string>
+    <string name="other_storage_empty_all_added">
+All installed document providers are already added to your Main Storage Menu.
+</string>
+    <string name="saf_copy_destination_title">
+Destination: %1$s
+</string>
+    <string name="saf_copy_destination_change">
+Change Folder…
+</string>
+    <string name="saf_select_destination_folder">
+Select destination folder
+</string>
+    <string name="saf_copy_destination_confirm_title">
+Set Copy Destination
+</string>
+    <string name="saf_copy_destination_confirm_subtitle">
+SAF Picked Files Destination
+</string>
+    <string name="saf_copy_destination_confirm_message">
+Files copied from document providers will be saved to \"%1$s\".
+</string>
+    <string name="settings_section_saf_transfers">
+Other Storage &amp; SAF Transfers
+</string>
+    <string name="settings_saf_copy_destination_title">
+Copy Destination Folder
+</string>
+    <string name="settings_saf_copy_destination_reset">
+Reset to Default (Downloads)
+</string>
+    <string name="settings_saf_copy_destination_select_new">
+Select New Folder…
+</string>
+    <string name="settings_saf_copy_destination_reset_toast">
+Copy destination reset to Downloads
+</string>
+    <string name="share_export_to_cloud_provider">
+Export to Document Provider
+</string>
+    <string name="share_export_to_cloud_provider_subtitle">
+Save directly to a mounted cloud or document provider
+</string>
+    <string name="share_export_select_provider_title">
+Select Destination Provider
+</string>
+    <string name="share_export_multi_zip_title">
+Export Multiple Files
+</string>
+    <string name="share_export_multi_zip_msg">
+How would you like to export these %1$d files to %2$s?
+</string>
+    <string name="share_export_as_zip">
+Export as ZIP Archive
+</string>
+    <string name="share_export_via_share_sheet">
+Use System Upload Sheet
+</string>
+    <string name="saf_upload_success">
+\"%1$s\" saved to %2$s
+</string>
+    <string name="capability_folder_mount">
+Folder Mountable
+</string>
+    <string name="capability_files_only">
+Files &amp; Cloud
+</string>
+    <string name="capability_native_sync">
+Native Sync Available
+</string>
+    <string name="action_upload_other_storage">
+Upload to Other Storage
+</string>
+    <string name="toolbar_desc_upload_other_storage">
+Upload selected files or folders to external document providers
+</string>
+    <string name="toolbar_upload_other_storage">
+Upload to Other Storage
+</string>
+    <string name="no_mounted_doc_providers_toast">
+No storage provider added. Select a provider to add.
+</string>
+    <string name="saf_files_copied_to_destination">
+Copied %1$d file(s) to %2$s
+</string>
+    <string name="share_export_folder_title">
+Export Folder
+</string>
+    <string name="share_export_folder_msg">
+Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+</string>
+    <string name="share_export_zip_desc">
+Compress into a single ZIP archive and upload
+</string>
+    <string name="share_export_share_sheet_desc">
+Send items using the Android system upload sheet
+</string>
+    <string name="share_export_select_provider_subtitle">
+Select a mounted provider or open Other Storage
+</string>
 </resources>
 
 

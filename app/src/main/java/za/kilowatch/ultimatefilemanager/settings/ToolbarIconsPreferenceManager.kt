@@ -43,6 +43,7 @@ object ToolbarIconsPreferenceManager {
     const val KEY_EXTRACT_SUBTITLES = "pref_icon_extract_subtitles"
     const val KEY_EXTRACT_AUDIO = "pref_icon_extract_audio"
     const val KEY_CONVERT_TO_MP4 = "pref_icon_convert_to_mp4"
+    const val KEY_UPLOAD_OTHER_STORAGE = "pref_icon_upload_other_storage"
 
     const val KEY_QUICK_BAR_ENABLED = "pref_quick_bar_enabled"
     const val KEY_QUICK_BAR_ITEMS = "pref_quick_bar_items"
@@ -82,6 +83,7 @@ object ToolbarIconsPreferenceManager {
     const val ACTION_COPY_ENCRYPT = "copy_encrypt"
     const val ACTION_MOVE_ENCRYPT = "move_encrypt"
     const val ACTION_CHECKSUM = "checksum"
+    const val ACTION_UPLOAD_OTHER_STORAGE = "upload_other_storage"
     const val ACTION_MORE = "more"
 
     val DEFAULT_QUICK_BAR_ITEMS = listOf(

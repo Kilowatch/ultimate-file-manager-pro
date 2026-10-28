@@ -60,6 +60,11 @@ import za.kilowatch.ultimatefilemanager.storage.BatchRenameItem
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity
 import za.kilowatch.ultimatefilemanager.storage.FileToolsBottomSheet
+import za.kilowatch.ultimatefilemanager.storage.DocumentProviderRepository
+import za.kilowatch.ultimatefilemanager.storage.MountedDocumentProvider
+import za.kilowatch.ultimatefilemanager.storage.OtherStorageActivity
+import za.kilowatch.ultimatefilemanager.storage.SafFileTransferManager
+import za.kilowatch.ultimatefilemanager.storage.DocumentProviderExportHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
@@ -279,11 +284,27 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var isAutoBackupFolderPicker = false
     private var isImageCompressDestPickerMode = false
     private var isGifCreatorDestPickerMode = false
+    private var isSafCopyDestPickerMode = false
     private var isSmartSortPickerMode = false
     private var isSmartSortCategoryPickerMode = false
     private var currentFiles: List<NetworkFile> = emptyList()
     private var isTransferring = false
     private var standardShareTempDir: File? = null
+    private var pendingExportLocalFile: File? = null
+    private var pendingExportProvider: MountedDocumentProvider? = null
+
+    private val safCreateDocForExportLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            val targetUri = result.data?.data
+            val localFile = pendingExportLocalFile
+            val prov = pendingExportProvider
+            if (targetUri != null && localFile != null && prov != null) {
+                SafFileTransferManager.exportLocalFileToSaf(this, localFile, targetUri, prov.displayName)
+            }
+        }
+    }
     private lateinit var cacheManager: za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
     
     private val batchRenameTvLauncher = registerForActivityResult(
@@ -586,6 +607,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         isAutoBackupFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
         isImageCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
         isGifCreatorDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_GIF_CREATOR_DEST_PICKER, false)
+        isSafCopyDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SAF_COPY_DEST_PICKER, false)
         isSmartSortPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_PICKER, false)
         isSmartSortCategoryPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_CATEGORY_PICKER, false)
         cacheManager = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(this)
@@ -1349,6 +1371,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
             return
         }
 
+        // SAF Copy destination folder picker mode: show "Use This Folder" FAB
+        if (isSafCopyDestPickerMode) {
+            layoutSelectionBar.visibility = View.GONE
+            showUseFolderFab()
+            return
+        }
+
         // Smart Sort picker mode: show "Smart Sort Here" FAB
         if (isSmartSortPickerMode) {
             layoutSelectionBar.visibility = View.GONE
@@ -1613,6 +1642,14 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
                         }
                     }
+                })
+            }
+
+            // Upload to Other Storage
+            if (pm.isIconEnabled(this, pm.KEY_UPLOAD_OTHER_STORAGE)) {
+                list.add(FileToolsBottomSheet.ActionItem("upload_other_storage", getString(R.string.action_upload_other_storage), R.drawable.ic_cloud, "toolbar_upload_other_storage") {
+                    fileAdapter.exitSelectionMode()
+                    uploadNetworkFilesToOtherStorage(selected)
                 })
             }
 
@@ -2223,6 +2260,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
             fabPaste.setIconResource(R.drawable.ic_gif)
             fabPaste.visibility = View.VISIBLE
             fabPaste.setOnClickListener { showConfirmGifCreatorNetworkFolderDialog() }
+        } else if (isSafCopyDestPickerMode) {
+            fabPaste.setText(R.string.use_this_folder)
+            fabPaste.setIconResource(R.drawable.ic_folder)
+            fabPaste.visibility = View.VISIBLE
+            fabPaste.setOnClickListener { showConfirmSafCopyDestNetworkFolderDialog() }
         } else if (isSmartSortCategoryPickerMode) {
             fabPaste.setText(R.string.use_this_folder)
             fabPaste.setIconResource(R.drawable.ic_folder)
@@ -2405,6 +2447,44 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 putExtra(RESULT_LABEL, displayPath)
                 putExtra(RESULT_TYPE, type)
                 putExtra(RESULT_META_ID, share.id)
+            }
+            setResult(RESULT_OK, result)
+            finish()
+        }
+    }
+
+    private fun showConfirmSafCopyDestNetworkFolderDialog() {
+        val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.select_folder),
+            subtitle = getString(R.string.use_this_folder),
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.use_network_folder_as_default_location, displayPath),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_folder
+        ) {
+            val scheme = when (share.type) {
+                ShareType.SMB              -> "smb"
+                ShareType.FTP              -> "ftp"
+                ShareType.SFTP, ShareType.SCP -> "sftp"
+                ShareType.TV               -> "tv"
+                ShareType.GOOGLE_DRIVE     -> "gdrive"
+                ShareType.DROPBOX          -> "dropbox"
+                ShareType.ONEDRIVE         -> "onedrive"
+                ShareType.AWS_S3           -> "s3"
+                ShareType.IDRIVE_E2        -> "idrive-e2"
+                ShareType.WEBDAV           -> "webdav"
+                ShareType.DLNA             -> "dlna"
+                ShareType.NFS              -> "nfs"
+            }
+            val uriString = "$scheme://${share.id}/$currentPath"
+            val result = Intent().apply {
+                putExtra(RESULT_URI, uriString)
+                putExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH, uriString)
+                putExtra(RESULT_LABEL, displayPath)
             }
             setResult(RESULT_OK, result)
             finish()
@@ -2858,6 +2938,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     }
                 }
             }
+            pm.ACTION_UPLOAD_OTHER_STORAGE -> {
+                fileAdapter.exitSelectionMode()
+                uploadNetworkFilesToOtherStorage(selected)
+            }
             pm.ACTION_SHARE -> {
                 val shareable = selected.filter { !it.isDirectory }
                 if (shareable.isNotEmpty()) shareNetworkFiles(shareable)
@@ -3188,7 +3272,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun updatePasteFab() {
         // In sync/compress/quick-transfer folder picker mode + location picker mode the FAB is "Use This Folder" / "Copy Here" / "Move Here" — never hide it here
-        if (isQuickTransferPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isAutoBackupFolderPicker || isImageCompressDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
+        if (isQuickTransferPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isAutoBackupFolderPicker || isImageCompressDestPickerMode || isSafCopyDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
             showUseFolderFab()
             return
         }
@@ -5131,6 +5215,105 @@ class NetworkBrowserActivity : AppCompatActivity() {
     /**
      * Downloads selected network files to a temp directory, then shares them.
      */
+    private fun uploadNetworkFilesToOtherStorage(files: List<NetworkFile>) {
+        if (files.isEmpty()) return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            val tempDir = File(cacheDir, "upload_other_${System.currentTimeMillis()}")
+            tempDir.mkdirs()
+            val localFiles = mutableListOf<File>()
+            for (nf in files) {
+                try {
+                    val localEntry = downloadNetworkEntry(nf, tempDir)
+                    if (localEntry.exists()) {
+                        localFiles.add(localEntry)
+                    }
+                } catch (e: Exception) {
+                    za.kilowatch.ultimatefilemanager.util.GoRoLog.w("NetworkBrowser", "Failed to download ${nf.name}: ${e.message}")
+                }
+            }
+            withContext(Dispatchers.Main) {
+                progressBar.visibility = View.GONE
+                if (localFiles.isNotEmpty()) {
+                    val mounted = DocumentProviderRepository.getMountedProviders(this@NetworkBrowserActivity)
+                    showSelectMountedProviderForExportDialog(localFiles, mounted)
+                } else {
+                    showPremiumSnackbar(getString(R.string.share_error))
+                }
+            }
+        }
+    }
+
+    private fun showSelectMountedProviderForExportDialog(files: List<File>, mountedProviders: List<MountedDocumentProvider>) {
+        DocumentProviderExportHelper.showSelectMountedProviderDialog(this, files, mountedProviders) { provider ->
+            handleExportToProvider(files, provider)
+        }
+    }
+
+    private fun handleExportToProvider(files: List<File>, provider: MountedDocumentProvider) {
+        DocumentProviderExportHelper.handleExportToProvider(
+            activity = this,
+            files = files,
+            provider = provider,
+            onExportSingleFile = { file, prov ->
+                exportSingleFileToProvider(file, prov)
+            },
+            onExportZip = { items, prov ->
+                exportFilesAsZipToProvider(items, prov)
+            },
+            onExportShareSheet = { items, prov ->
+                exportFilesViaSystemSheet(items, prov)
+            }
+        )
+    }
+
+    private fun exportSingleFileToProvider(file: File, provider: MountedDocumentProvider) {
+        pendingExportLocalFile = file
+        pendingExportProvider = provider
+        val ext = file.extension.lowercase()
+        val mimeType = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = mimeType
+            putExtra(Intent.EXTRA_TITLE, file.name)
+        }
+        try {
+            safCreateDocForExportLauncher.launch(intent)
+        } catch (_: Exception) {
+            exportFilesViaSystemSheet(listOf(file), provider)
+        }
+    }
+
+    private fun exportFilesAsZipToProvider(files: List<File>, provider: MountedDocumentProvider) {
+        DocumentProviderExportHelper.createZipForExport(
+            context = this,
+            files = files,
+            onComplete = { zipFile ->
+                exportSingleFileToProvider(zipFile, provider)
+            },
+            onError = { e ->
+                Toast.makeText(this@NetworkBrowserActivity, "Failed to create ZIP: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun exportFilesViaSystemSheet(files: List<File>, provider: MountedDocumentProvider) {
+        try {
+            val uris = ArrayList<Uri>()
+            for (file in files) {
+                uris.add(FileProvider.getUriForFile(this, "$packageName.fileprovider", file))
+            }
+            val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                type = "*/*"
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.share_export_to_cloud_provider)))
+        } catch (e: Exception) {
+            Toast.makeText(this, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     fun shareNetworkFiles(files: List<NetworkFile>) {
         progressBar.visibility = View.VISIBLE
         fileAdapter.exitSelectionMode()

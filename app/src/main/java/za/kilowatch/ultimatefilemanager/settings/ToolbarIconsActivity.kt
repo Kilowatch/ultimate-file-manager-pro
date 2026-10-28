@@ -112,6 +112,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
                     ToolbarItem(R.drawable.ic_share, R.string.action_share, R.string.toolbar_desc_share, ToolbarIconsPreferenceManager.KEY_SHARE, "toolbar_share"),
                     ToolbarItem(R.drawable.ic_apps, R.string.toolbar_open_with, R.string.action_open_with, ToolbarIconsPreferenceManager.KEY_OPEN_WITH, "toolbar_open_with"),
                     ToolbarItem(R.drawable.ic_apps, R.string.toolbar_open_as, R.string.action_open_as, ToolbarIconsPreferenceManager.KEY_OPEN_AS, "toolbar_open_as"),
+                    ToolbarItem(R.drawable.ic_cloud, R.string.action_upload_other_storage, R.string.toolbar_desc_upload_other_storage, ToolbarIconsPreferenceManager.KEY_UPLOAD_OTHER_STORAGE, "toolbar_upload_other_storage"),
                     ToolbarItem(R.drawable.ic_delete, R.string.action_delete, R.string.toolbar_desc_delete, ToolbarIconsPreferenceManager.KEY_DELETE, "toolbar_delete")
                 )
             ),
@@ -206,6 +207,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.ACTION_COPY_ENCRYPT -> QuickActionDef(pm.ACTION_COPY_ENCRYPT, R.string.action_copy_encrypt, R.drawable.ic_copy_encrypt, "toolbar_copy_encrypt")
             pm.ACTION_MOVE_ENCRYPT -> QuickActionDef(pm.ACTION_MOVE_ENCRYPT, R.string.action_move_encrypt, R.drawable.ic_move_encrypt, "toolbar_move_encrypt")
             pm.ACTION_CHECKSUM -> QuickActionDef(pm.ACTION_CHECKSUM, R.string.action_checksum, R.drawable.ic_checksum, "toolbar_checksum")
+            pm.ACTION_UPLOAD_OTHER_STORAGE -> QuickActionDef(pm.ACTION_UPLOAD_OTHER_STORAGE, R.string.action_upload_other_storage, R.drawable.ic_cloud, "toolbar_upload_other_storage")
             pm.ACTION_MORE -> QuickActionDef(pm.ACTION_MORE, R.string.quick_bar_action_more, R.drawable.ic_arrow_forward)
             else -> QuickActionDef(actionId, R.string.quick_bar_action_more, R.drawable.ic_more)
         }
@@ -247,6 +249,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
             pm.KEY_EXTRACT_SUBTITLES -> pm.ACTION_EXTRACT_SUBTITLES
             pm.KEY_EXTRACT_AUDIO -> pm.ACTION_EXTRACT_AUDIO
             pm.KEY_CONVERT_TO_MP4 -> pm.ACTION_CONVERT_TO_MP4
+            pm.KEY_UPLOAD_OTHER_STORAGE -> pm.ACTION_UPLOAD_OTHER_STORAGE
             pm.KEY_CHECKSUM -> pm.ACTION_CHECKSUM
             else -> prefKey
         }

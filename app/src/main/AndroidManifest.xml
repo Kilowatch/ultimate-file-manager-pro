@@ -101,6 +101,9 @@
         <package android:name="eu.darken.porter" />
         <package android:name="moe.shizuku.privileged.api" />
         <package android:name="com.hamondev.shevery" />
+            <intent>
+            <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
+        </intent>
     </queries>
 
     <application
@@ -144,6 +147,11 @@
             android:exported="true" />
 
         <!-- Storage Browser -->
+        <activity
+            android:name=".storage.OtherStorageActivity"
+            android:exported="false"
+            android:label="@string/other_storage_title" />
+
         <activity
             android:name=".storage.StorageBrowserActivity"
             android:exported="false" />

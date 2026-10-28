@@ -80,6 +80,7 @@ class CustomTileActivity : AppCompatActivity() {
     private var isCertPickerMode = false
     private var isLocationPickerMode = false
     private var isDrivePicker = false
+    private var isSafCopyDestPickerMode = false
 
     // TV D-Pad reorder state
     private var reorderModeItemId: String? = null
@@ -113,7 +114,7 @@ class CustomTileActivity : AppCompatActivity() {
         }
 
     /** True when any folder/file picker mode is active on this activity. */
-    private val isAnyPickerActive: Boolean get() = isPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker || isKeyfilePickerMode || isCertPickerMode || isLocationPickerMode || isDrivePicker
+    private val isAnyPickerActive: Boolean get() = isPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker || isKeyfilePickerMode || isCertPickerMode || isLocationPickerMode || isDrivePicker || isSafCopyDestPickerMode
 
     // Forwards file-browser picker results back through the activity chain
     private val pickerResultLauncher =
@@ -158,6 +159,7 @@ class CustomTileActivity : AppCompatActivity() {
         isCertPickerMode = intent.getBooleanExtra(StorageBrowserActivity.EXTRA_CERT_PICKER, false)
         isLocationPickerMode = intent.getBooleanExtra(StorageBrowserActivity.EXTRA_LOCATION_PICKER, false)
         isDrivePicker = intent.getBooleanExtra(StorageBrowserActivity.EXTRA_DRIVE_PICKER, false)
+        isSafCopyDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SAF_COPY_DEST_PICKER, false)
 
         isTv = DeviceUtils.isTvDevice(this)
         if (isTv) {
@@ -695,6 +697,7 @@ class CustomTileActivity : AppCompatActivity() {
         if (isCertPickerMode) putExtra(StorageBrowserActivity.EXTRA_CERT_PICKER, true)
         if (isLocationPickerMode) putExtra(StorageBrowserActivity.EXTRA_LOCATION_PICKER, true)
         if (isDrivePicker) putExtra(StorageBrowserActivity.EXTRA_DRIVE_PICKER, true)
+        if (isSafCopyDestPickerMode) putExtra(FileBrowserActivity.EXTRA_SAF_COPY_DEST_PICKER, true)
         return this
     }
 

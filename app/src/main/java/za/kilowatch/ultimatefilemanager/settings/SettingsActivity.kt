@@ -172,6 +172,21 @@ class SettingsActivity : AppCompatActivity() {
     private var txtDuplicateRetentionSubtitle: TextView? = null
     private lateinit var txtApkExtractSubtitle: TextView
     private lateinit var txtSearchResultsLimitSubtitle: TextView
+    private var txtSafFileActionSubtitle: TextView? = null
+    private var txtSafCopyDestinationSubtitle: TextView? = null
+
+    private val safCopyDestPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            val selectedPath = result.data?.getStringExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
+                ?: result.data?.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.RESULT_URI)
+            if (!selectedPath.isNullOrEmpty()) {
+                SafFileActionPreferenceManager.setCopyDestinationPath(this, selectedPath)
+                updateSafCopyDestinationSubtitle()
+            }
+        }
+    }
 
     private var cardSearchContainer: MaterialCardView? = null
     private var edtSettingsSearch: EditText? = null
@@ -845,6 +860,22 @@ class SettingsActivity : AppCompatActivity() {
             showSearchResultsLimitDialog()
         }
 
+        // SAF Picked File Action
+        val cardSafFileAction = findViewById<View>(R.id.cardSafFileAction)
+        txtSafFileActionSubtitle = findViewById(R.id.txtSafFileActionSubtitle)
+        updateSafFileActionSubtitle()
+        cardSafFileAction?.setOnClickListener {
+            showSafFileActionDialog()
+        }
+
+        // SAF Copy Destination
+        val cardSafCopyDestination = findViewById<View>(R.id.cardSafCopyDestination)
+        txtSafCopyDestinationSubtitle = findViewById(R.id.txtSafCopyDestinationSubtitle)
+        updateSafCopyDestinationSubtitle()
+        cardSafCopyDestination?.setOnClickListener {
+            showSafCopyDestinationDialog()
+        }
+
         // TV focus highlight
         if (isTv) {
             setupTvCardFocus(cardFontSize)
@@ -885,6 +916,8 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<View>(R.id.cardDefaultIconColors)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardApkExtract)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardSearchResultsLimit)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardSafFileAction)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardSafCopyDestination)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardBackupRestore)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardAutoBackup)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
@@ -1123,6 +1156,8 @@ class SettingsActivity : AppCompatActivity() {
         if (::txtSearchResultsLimitSubtitle.isInitialized) {
             updateSearchResultsLimitSubtitle()
         }
+
+        updateSafFileActionSubtitle()
 
         // Refresh cache copying subtitle
         if (::switchCacheCopy.isInitialized) {
@@ -1747,6 +1782,117 @@ class SettingsActivity : AppCompatActivity() {
 
         if (isTv) {
             (defaultFocusView ?: dialogView.findViewById(R.id.btnLimit500))?.requestFocus()
+        }
+    }
+
+    private fun updateSafFileActionSubtitle() {
+        val action = SafFileActionPreferenceManager.getAction(this)
+        txtSafFileActionSubtitle?.setText(SafFileActionPreferenceManager.getSubtitleRes(action))
+    }
+
+    private fun updateSafCopyDestinationSubtitle() {
+        txtSafCopyDestinationSubtitle?.text = SafFileActionPreferenceManager.getCopyDestinationDisplayName(this)
+    }
+
+    private fun showSafCopyDestinationDialog() {
+        val layoutRes = if (isTv) R.layout.dialog_saf_destination_setting_tv else R.layout.dialog_saf_destination_setting
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val txtCurrentPath = dialogView.findViewById<TextView>(R.id.txtCurrentDestinationPath)
+        val txtDefaultPathInfo = dialogView.findViewById<TextView>(R.id.txtDefaultPathInfo)
+        val cardSelectNew = dialogView.findViewById<View>(R.id.cardSelectNewFolder)
+        val cardReset = dialogView.findViewById<View>(R.id.cardResetDefault)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelDestination)
+
+        val currentPath = SafFileActionPreferenceManager.getCopyDestinationPath(this)
+        txtCurrentPath?.text = getString(R.string.saf_copy_destination_title, currentPath)
+        txtDefaultPathInfo?.text = SafFileActionPreferenceManager.getDefaultCopyDestinationPath()
+
+        cardSelectNew?.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_SAF_COPY_DEST_PICKER, true)
+            }
+            safCopyDestPickerLauncher.launch(intent)
+        }
+
+        cardReset?.setOnClickListener {
+            dialog.dismiss()
+            SafFileActionPreferenceManager.resetCopyDestinationPath(this)
+            updateSafCopyDestinationSubtitle()
+            android.widget.Toast.makeText(this, getString(R.string.settings_saf_copy_destination_reset_toast), android.widget.Toast.LENGTH_SHORT).show()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        if (isTv) {
+            cardSelectNew?.let { setupTvCardFocus(it) }
+            cardReset?.let { setupTvCardFocus(it) }
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            cardSelectNew?.requestFocus()
+        }
+    }
+
+    private fun showSafFileActionDialog() {
+        val layoutRes = if (isTv) R.layout.dialog_saf_action_setting_tv else R.layout.dialog_saf_action_setting
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val currentAction = SafFileActionPreferenceManager.getAction(this)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val options = listOf(
+            Triple(R.id.cardOptionAlwaysAsk, R.id.imgCheckAlwaysAsk, SafFileActionPreferenceManager.ACTION_ALWAYS_ASK),
+            Triple(R.id.cardOptionOpenViewer, R.id.imgCheckOpenViewer, SafFileActionPreferenceManager.ACTION_OPEN_VIEWER),
+            Triple(R.id.cardOptionCopyLocal, R.id.imgCheckCopyLocal, SafFileActionPreferenceManager.ACTION_COPY_LOCAL)
+        )
+
+        var defaultFocusView: View? = null
+
+        options.forEach { (cardId, checkId, action) ->
+            val card = dialogView.findViewById<View>(cardId)
+            val check = dialogView.findViewById<ImageView>(checkId)
+            val isSelected = currentAction == action
+            check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+            if (isSelected) {
+                defaultFocusView = card
+            }
+
+            card?.setOnClickListener {
+                dialog.dismiss()
+                SafFileActionPreferenceManager.setAction(this, action)
+                updateSafFileActionSubtitle()
+            }
+
+            if (isTv && card != null) {
+                setupTvCardFocus(card)
+            }
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancelSetting)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            (defaultFocusView ?: dialogView.findViewById<View>(R.id.cardOptionAlwaysAsk))?.requestFocus()
         }
     }
 
@@ -2607,6 +2753,8 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardColorblind, "settings_colorblind", R.drawable.ic_colorblind),
             CardIcon(R.id.cardApkExtract, "settings_apk_extract", R.drawable.ic_file_apk),
             CardIcon(R.id.cardSearchResultsLimit, "settings_search_limit", R.drawable.ic_search),
+            CardIcon(R.id.cardSafFileAction, "settings_saf_file_action", R.drawable.ic_folder),
+            CardIcon(R.id.cardSafCopyDestination, "settings_saf_copy_destination", R.drawable.ic_download),
             CardIcon(R.id.cardLongPressDuration, "settings_long_press", R.drawable.ic_long_press),
             CardIcon(R.id.cardControlsTimeout, "settings_controls_timeout", R.drawable.ic_controls_timeout),
             CardIcon(R.id.cardToolbarIcons, "settings_toolbar_icons", R.drawable.ic_star),

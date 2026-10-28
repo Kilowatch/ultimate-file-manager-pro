@@ -213,6 +213,8 @@ class FileAdapter(
      * When true, thumbnail decode jobs are deferred to ensure 60fps cursor responsiveness.
      */
     var isFastNavigating: Boolean = false
+    var isSafUploadFilePickerMode: Boolean = false
+    var isPickerMode: Boolean = false
 
     /**
      * Iterates currently attached/visible ViewHolders and requests any pending deferred thumbnails.
@@ -1526,6 +1528,10 @@ class FileAdapter(
                         val item = items[pos]
                         if (item is ListItem.FileEntry) {
                             val currentFile = item.javaFile
+                            if (isSafUploadFilePickerMode || isPickerMode) {
+                                onItemClick(currentFile, targetIconView)
+                                return@setOnClickListener
+                            }
                             if (onItemLongClick != null) {
                                 onItemLongClick.invoke(currentFile)
                             } else if (!isSelectionMode) {

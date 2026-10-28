@@ -1382,6 +1382,161 @@
                                 app:tint="@color/tv_text_secondary"
                                 android:contentDescription="@null" />
                         </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- layoutSectionSafTransfers -->
+            <LinearLayout
+                android:id="@+id/layoutSectionSafTransfers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/headerSafTransfers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_saf_transfers"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupSafTransfers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- Item 1: SAF Picked File Action -->
+                        <LinearLayout
+                            android:id="@+id/cardSafFileAction"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+
+                            <ImageView
+                                android:id="@+id/iconSafFileAction"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_cloud"
+                                android:layout_marginEnd="@dimen/margin_lg"
+                                app:tint="@color/tv_icon_tint"
+                                android:contentDescription="@string/settings_saf_file_action_title" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_saf_file_action_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="18sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtSafFileActionSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_saf_file_action_subtitle_always_ask"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/tv_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="76dp"
+                            android:background="@color/tv_glass_border" />
+
+                        <!-- Item 2: Copy Destination Folder -->
+                        <LinearLayout
+                            android:id="@+id/cardSafCopyDestination"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+
+                            <ImageView
+                                android:id="@+id/iconSafCopyDestination"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_download"
+                                android:layout_marginEnd="@dimen/margin_lg"
+                                app:tint="@color/tv_icon_tint"
+                                android:contentDescription="@string/settings_saf_copy_destination_title" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_saf_copy_destination_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="18sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtSafCopyDestinationSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/saf_copy_destination_title"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/tv_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>

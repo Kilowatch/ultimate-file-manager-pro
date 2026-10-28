@@ -98,6 +98,7 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                 pm.ACTION_SELECT_ALL -> pm.isIconEnabled(context, pm.KEY_SELECT_ALL)
                 pm.ACTION_INVERT_SELECTION -> pm.isIconEnabled(context, pm.KEY_INVERT_SELECTION)
                 pm.ACTION_CHECKSUM -> pm.isIconEnabled(context, pm.KEY_CHECKSUM)
+                pm.ACTION_UPLOAD_OTHER_STORAGE -> pm.isIconEnabled(context, pm.KEY_UPLOAD_OTHER_STORAGE)
                 pm.ACTION_MORE -> true
                 else -> true
             }
@@ -284,6 +285,11 @@ class FloatingQuickActionBar @JvmOverloads constructor(
                     resolvedIconRes = R.drawable.ic_checksum
                     resolvedNameRes = R.string.action_checksum
                     customIconKey = "toolbar_checksum"
+                }
+                pm.ACTION_UPLOAD_OTHER_STORAGE -> {
+                    resolvedIconRes = R.drawable.ic_cloud
+                    resolvedNameRes = R.string.action_upload_other_storage
+                    customIconKey = "toolbar_upload_other_storage"
                 }
                 pm.ACTION_OPEN_WITH -> {
                     resolvedIconRes = R.drawable.ic_apps

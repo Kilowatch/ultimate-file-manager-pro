@@ -125,6 +125,26 @@ class FileBrowserFragment : Fragment() {
     private var btnDuplicateFinder: ImageView? = null
     private var btnLargeFilesFinder: ImageView? = null
     private var btnChecksum: ImageView? = null
+
+    private var pendingExportLocalFile: File? = null
+    private var pendingExportProvider: MountedDocumentProvider? = null
+
+    private val safCreateDocForExportLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val ctx = context
+        if (result.resultCode == android.app.Activity.RESULT_OK && result.data != null && ctx != null) {
+            val targetUri = result.data?.data
+            val localFile = pendingExportLocalFile
+            val prov = pendingExportProvider
+            if (targetUri != null && localFile != null && prov != null && activity is androidx.appcompat.app.AppCompatActivity) {
+                SafFileTransferManager.exportLocalFileToSaf(activity as androidx.appcompat.app.AppCompatActivity, localFile, targetUri, prov.displayName)
+            }
+            pendingExportLocalFile = null
+            pendingExportProvider = null
+        }
+    }
+
     private lateinit var fileAdapter: FileAdapter
 
 
@@ -1511,6 +1531,15 @@ class FileBrowserFragment : Fragment() {
                 })
             }
 
+            // Upload to Other Storage
+            if (pm.isIconEnabled(context, pm.KEY_UPLOAD_OTHER_STORAGE)) {
+                list.add(FileToolsBottomSheet.ActionItem("upload_other_storage", getString(R.string.action_upload_other_storage), R.drawable.ic_cloud, "toolbar_upload_other_storage") {
+                    fileAdapter.exitSelectionMode()
+                    val mounted = DocumentProviderRepository.getMountedProviders(context)
+                    showSelectMountedProviderForExportDialog(selected, mounted)
+                })
+            }
+
             // 4. Share
             if (pm.isIconEnabled(context, pm.KEY_SHARE)) {
                 val shareable = selected.filter { it.isFile }
@@ -2256,6 +2285,11 @@ class FileBrowserFragment : Fragment() {
                         dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
                     }
                 }
+            }
+            pm.ACTION_UPLOAD_OTHER_STORAGE -> {
+                fileAdapter.exitSelectionMode()
+                val mounted = DocumentProviderRepository.getMountedProviders(ctx)
+                showSelectMountedProviderForExportDialog(selected, mounted)
             }
             pm.ACTION_SHARE -> {
                 val shareable = selected.filter { it.isFile }
@@ -3984,6 +4018,7 @@ class FileBrowserFragment : Fragment() {
 
         cardStandard?.let { setupCardFocus(it, ctx.getColor(R.color.tv_glass_border)) }
         cardPremium?.let { setupCardFocus(it, ctx.getColor(R.color.tv_accent)) }
+        (dialogView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardExportMountedProvider))?.let { setupCardFocus(it, ctx.getColor(R.color.tv_glass_border)) }
 
         btnCancel?.let { btn ->
             (btn as? com.google.android.material.button.MaterialButton)?.apply {
@@ -3996,6 +4031,84 @@ class FileBrowserFragment : Fragment() {
                     setTextColor(if (hasFocus) black else white)
                 }
             }
+        }
+    }
+
+
+    private fun showSelectMountedProviderForExportDialog(files: List<File>, mountedProviders: List<MountedDocumentProvider>) {
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
+        DocumentProviderExportHelper.showSelectMountedProviderDialog(act, files, mountedProviders) { provider ->
+            handleExportToProvider(files, provider)
+        }
+    }
+
+    private fun handleExportToProvider(files: List<File>, provider: MountedDocumentProvider) {
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
+        DocumentProviderExportHelper.handleExportToProvider(
+            activity = act,
+            files = files,
+            provider = provider,
+            onExportSingleFile = { file, prov ->
+                exportSingleFileToProvider(file, prov)
+            },
+            onExportZip = { items, prov ->
+                exportFilesAsZipToProvider(items, prov)
+            },
+            onExportShareSheet = { items, prov ->
+                exportFilesViaSystemSheet(items, prov)
+            }
+        )
+    }
+
+    private fun exportSingleFileToProvider(file: File, provider: MountedDocumentProvider) {
+        pendingExportLocalFile = file
+        pendingExportProvider = provider
+        val ext = file.extension.lowercase()
+        val mimeType = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = mimeType
+            putExtra(Intent.EXTRA_TITLE, file.name)
+        }
+        try {
+            safCreateDocForExportLauncher.launch(intent)
+        } catch (_: Exception) {
+            exportFilesViaSystemSheet(listOf(file), provider)
+        }
+    }
+
+    private fun exportFilesAsZipToProvider(files: List<File>, provider: MountedDocumentProvider) {
+        val ctx = context ?: return
+        DocumentProviderExportHelper.createZipForExport(
+            context = ctx,
+            files = files,
+            onComplete = { zipFile ->
+                exportSingleFileToProvider(zipFile, provider)
+            },
+            onError = { e ->
+                android.widget.Toast.makeText(ctx, "Failed to create ZIP: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun exportFilesViaSystemSheet(files: List<File>, provider: MountedDocumentProvider) {
+        val ctx = context ?: return
+        try {
+            val uris = ArrayList<android.net.Uri>()
+            for (file in files) {
+                uris.add(androidx.core.content.FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", file))
+            }
+            val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                type = "*/*"
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                if (provider.packageName.isNotEmpty()) {
+                    // setPackage(provider.packageName) omitted to avoid ActivityNotFoundException
+                }
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.share_export_to_cloud_provider)))
+        } catch (e: Exception) {
+            android.widget.Toast.makeText(ctx, "Export failed: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -4012,7 +4125,19 @@ class FileBrowserFragment : Fragment() {
 
         val cardStandardShare = dialogView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardStandardShare)
         val cardPremiumShare = dialogView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardPremiumShare)
+        val cardExportMountedProvider = dialogView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardExportMountedProvider)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        val mountedProviders = DocumentProviderRepository.getMountedProviders(ctx)
+        if (mountedProviders.isNotEmpty()) {
+            cardExportMountedProvider?.visibility = View.VISIBLE
+            cardExportMountedProvider?.setOnClickListener {
+                dialog.dismiss()
+                showSelectMountedProviderForExportDialog(files, mountedProviders)
+            }
+        } else {
+            cardExportMountedProvider?.visibility = View.GONE
+        }
 
         cardStandardShare.setOnClickListener {
             dialog.dismiss()

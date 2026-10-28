@@ -146,6 +146,25 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
     private var floatingQuickBar: za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar? = null
+
+    private var pendingExportLocalFile: File? = null
+    private var pendingExportProvider: MountedDocumentProvider? = null
+
+    private val safCreateDocForExportLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK && result.data != null) {
+            val targetUri = result.data?.data
+            val localFile = pendingExportLocalFile
+            val prov = pendingExportProvider
+            if (targetUri != null && localFile != null && prov != null) {
+                SafFileTransferManager.exportLocalFileToSaf(this, localFile, targetUri, prov.displayName)
+            }
+            pendingExportLocalFile = null
+            pendingExportProvider = null
+        }
+    }
+
     private lateinit var fileAdapter: FileAdapter
     private var layoutBreadcrumbsScroll: android.widget.HorizontalScrollView? = null
     private var layoutBreadcrumbs: android.widget.LinearLayout? = null
@@ -432,6 +451,9 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
         /** When true, the user is picking a destination folder for Auto Backup */
         const val EXTRA_AUTO_BACKUP_FOLDER_PICKER = "extra_auto_backup_folder_picker"
+        /** When true, the user is picking a destination folder for SAF file copies */
+        const val EXTRA_SAF_COPY_DEST_PICKER = "extra_saf_copy_dest_picker"
+        const val EXTRA_SAF_UPLOAD_FILE_PICKER = "extra_saf_upload_file_picker"
 
         /** When true, the user is picking a file to attach to a support request */
         const val EXTRA_SUPPORT_ATTACHMENT_PICKER = "extra_support_attachment_picker"
@@ -462,6 +484,8 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
     private var isNotepadFolderPicker = false
     private var isScannerFolderPicker = false
     private var isAutoBackupFolderPicker = false
+    private var isSafCopyDestPickerMode = false
+    private var isSafUploadFilePickerMode = false
     private var isSupportAttachmentPicker = false
     private var isSmartSortPickerMode = false
 
@@ -637,6 +661,8 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         isNotepadFolderPicker = intent.getBooleanExtra(EXTRA_NOTEPAD_FOLDER_PICKER, false)
         isScannerFolderPicker = intent.getBooleanExtra(EXTRA_SCANNER_FOLDER_PICKER, false)
         isAutoBackupFolderPicker = intent.getBooleanExtra(EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
+        isSafCopyDestPickerMode = intent.getBooleanExtra(EXTRA_SAF_COPY_DEST_PICKER, false)
+        isSafUploadFilePickerMode = intent.getBooleanExtra(EXTRA_SAF_UPLOAD_FILE_PICKER, false)
         isSupportAttachmentPicker = intent.getBooleanExtra(EXTRA_SUPPORT_ATTACHMENT_PICKER, false)
         isSmartSortPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_PICKER, false)
 
@@ -753,7 +779,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isExtractDestPickerMode ||
                 isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isLocationPickerMode ||
                 isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
-                isScannerFolderPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker ||
+                isScannerFolderPicker || isAutoBackupFolderPicker || isSafCopyDestPickerMode || isSupportAttachmentPicker ||
                 isFromSearch
 
         if (!isAnyPicker && ::rootPath.isInitialized && ::currentDir.isInitialized) {
@@ -1406,6 +1432,27 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             val result = Intent().apply {
                 putExtra(RESULT_SELECTED_LOCAL_PATH, path)
                 putExtra(RESULT_SELECTED_PATH, path)
+            }
+            setResult(RESULT_OK, result)
+            finish()
+        }
+    }
+
+    private fun showConfirmSafCopyDestDialog() {
+        val path = currentDir.absolutePath
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.saf_copy_destination_confirm_title),
+            subtitle = getString(R.string.saf_copy_destination_confirm_subtitle),
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.saf_copy_destination_confirm_message, path),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_folder
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
             setResult(RESULT_OK, result)
             finish()
@@ -2219,6 +2266,8 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             }
         )
 
+        fileAdapter.isSafUploadFilePickerMode = isSafUploadFilePickerMode
+        fileAdapter.isPickerMode = isPickerMode
         recyclerFiles.setHasFixedSize(true)
         recyclerFiles.setItemViewCacheSize(12)
         (recyclerFiles.itemAnimator as? androidx.recyclerview.widget.SimpleItemAnimator)?.supportsChangeAnimations = false
@@ -2409,7 +2458,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             isGifCreatorDestPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode ||
             isAdvancedSyncDestPickerMode || isLocationPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode ||
             isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
-            isScannerFolderPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker ||
+            isScannerFolderPicker || isAutoBackupFolderPicker || isSafCopyDestPickerMode || isSupportAttachmentPicker ||
             isKeyfilePickerMode || isCertPickerMode || isSmartSortPickerMode) {
             layoutSelectionBar.visibility = View.GONE
             applyPickerFabState()
@@ -2765,6 +2814,15 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                             dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
                         }
                     }
+                })
+            }
+
+            // Upload to Other Storage
+            if (pm.isIconEnabled(this, pm.KEY_UPLOAD_OTHER_STORAGE)) {
+                list.add(FileToolsBottomSheet.ActionItem("upload_other_storage", getString(R.string.action_upload_other_storage), R.drawable.ic_cloud, "toolbar_upload_other_storage") {
+                    fileAdapter.exitSelectionMode()
+                    val mounted = DocumentProviderRepository.getMountedProviders(this)
+                    showSelectMountedProviderForExportDialog(selected, mounted)
                 })
             }
 
@@ -3469,6 +3527,11 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                         dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
                     }
                 }
+            }
+            pm.ACTION_UPLOAD_OTHER_STORAGE -> {
+                fileAdapter.exitSelectionMode()
+                val mounted = DocumentProviderRepository.getMountedProviders(this)
+                showSelectMountedProviderForExportDialog(selected, mounted)
             }
             pm.ACTION_SHARE -> {
                 val shareable = selected.filter { it.isFile }
@@ -4657,6 +4720,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
         cardStandard?.let { setupCardFocus(it, getColor(R.color.tv_glass_border)) }
         cardPremium?.let { setupCardFocus(it, getColor(R.color.tv_accent)) }
+        (dialogView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardExportMountedProvider))?.let { setupCardFocus(it, getColor(R.color.tv_glass_border)) }
 
         btnCancel?.let { btn ->
             (btn as? com.google.android.material.button.MaterialButton)?.apply {
@@ -4672,6 +4736,80 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         }
     }
 
+
+    private fun showSelectMountedProviderForExportDialog(files: List<File>, mountedProviders: List<MountedDocumentProvider>) {
+        DocumentProviderExportHelper.showSelectMountedProviderDialog(this, files, mountedProviders) { provider ->
+            handleExportToProvider(files, provider)
+        }
+    }
+
+    private fun handleExportToProvider(files: List<File>, provider: MountedDocumentProvider) {
+        DocumentProviderExportHelper.handleExportToProvider(
+            activity = this,
+            files = files,
+            provider = provider,
+            onExportSingleFile = { file, prov ->
+                exportSingleFileToProvider(file, prov)
+            },
+            onExportZip = { items, prov ->
+                exportFilesAsZipToProvider(items, prov)
+            },
+            onExportShareSheet = { items, prov ->
+                exportFilesViaSystemSheet(items, prov)
+            }
+        )
+    }
+
+    private fun exportSingleFileToProvider(file: File, provider: MountedDocumentProvider) {
+        pendingExportLocalFile = file
+        pendingExportProvider = provider
+        val ext = file.extension.lowercase()
+        val mimeType = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = mimeType
+            putExtra(Intent.EXTRA_TITLE, file.name)
+        }
+        try {
+            safCreateDocForExportLauncher.launch(intent)
+        } catch (_: Exception) {
+            exportFilesViaSystemSheet(listOf(file), provider)
+        }
+    }
+
+    private fun exportFilesAsZipToProvider(files: List<File>, provider: MountedDocumentProvider) {
+        DocumentProviderExportHelper.createZipForExport(
+            context = this,
+            files = files,
+            onComplete = { zipFile ->
+                exportSingleFileToProvider(zipFile, provider)
+            },
+            onError = { e ->
+                android.widget.Toast.makeText(this@FileBrowserActivity, "Failed to create ZIP: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun exportFilesViaSystemSheet(files: List<File>, provider: MountedDocumentProvider) {
+        try {
+            val uris = ArrayList<android.net.Uri>()
+            for (file in files) {
+                uris.add(androidx.core.content.FileProvider.getUriForFile(this, "${packageName}.fileprovider", file))
+            }
+            val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                type = "*/*"
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                if (provider.packageName.isNotEmpty()) {
+                    // setPackage(provider.packageName) omitted to avoid ActivityNotFoundException
+                }
+            }
+            startActivity(Intent.createChooser(intent, getString(R.string.share_export_to_cloud_provider)))
+        } catch (e: Exception) {
+            android.widget.Toast.makeText(this, "Export failed: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun shareFiles(files: List<File>) {
         if (files.isEmpty()) return
         val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
@@ -4684,7 +4822,19 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
 
         val cardStandardShare = dialogView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardStandardShare)
         val cardPremiumShare = dialogView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardPremiumShare)
+        val cardExportMountedProvider = dialogView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardExportMountedProvider)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        val mountedProviders = DocumentProviderRepository.getMountedProviders(this)
+        if (mountedProviders.isNotEmpty()) {
+            cardExportMountedProvider?.visibility = View.VISIBLE
+            cardExportMountedProvider?.setOnClickListener {
+                dialog.dismiss()
+                showSelectMountedProviderForExportDialog(files, mountedProviders)
+            }
+        } else {
+            cardExportMountedProvider?.visibility = View.GONE
+        }
 
         cardStandardShare.setOnClickListener {
             dialog.dismiss()
@@ -4791,7 +4941,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             isGifCreatorDestPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode ||
             isAdvancedSyncDestPickerMode || isLocationPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode ||
             isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
-            isScannerFolderPicker || isAutoBackupFolderPicker || isKeyfilePickerMode ||
+            isScannerFolderPicker || isAutoBackupFolderPicker || isSafCopyDestPickerMode || isKeyfilePickerMode ||
             isCertPickerMode || isSupportAttachmentPicker || isSmartSortPickerMode) {
             applyPickerFabState()
             return
@@ -4906,6 +5056,12 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 fabPaste.setIconResource(R.drawable.ic_cloud)
                 fabPaste.visibility = View.VISIBLE
                 fabPaste.setOnClickListener { showConfirmAutoBackupFolderDialog() }
+            }
+            isSafCopyDestPickerMode -> {
+                fabPaste.setText(R.string.use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_folder)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmSafCopyDestDialog() }
             }
             isSupportAttachmentPicker -> {
                 fabPaste.setText(R.string.support_attach_file)
