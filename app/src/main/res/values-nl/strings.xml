@@ -5253,9 +5253,7 @@ Maak eerst verbinding met ADB
     <string name="no_adb_devices_found_on">
 Geen ADB-apparaten gevonden op netwerk
 </string>
-    <string name="back">
-Rug
-</string>
+    <string name="back">Terug</string>
     <string name="refresh_debloat_list">
 Vernieuw de Debloat-lijst
 </string>
