@@ -10809,9 +10809,7 @@ Raster Groot
 </string>
 
     <!-- Icon navigation labels -->
-    <string name="icon_nav_back">
-Rug
-</string>
+    <string name="icon_nav_back">Terug</string>
     <string name="icon_nav_forward">
 Vooruit
 </string>
