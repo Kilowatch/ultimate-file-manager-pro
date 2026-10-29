@@ -6684,9 +6684,7 @@ Automatisch sluiten over %1$d seconden…
     <string name="transfer_settings_success">
 Instellingen succesvol overgedragen naar %1$s
 </string>
-    <string name="transfer_settings_success_count">
-%1$d artikel(en) succesvol toegepast
-</string>
+    <string name="transfer_settings_success_count">%1$d item(s) succesvol toegepast</string>
     <string name="transfer_settings_rejected">
 Overboeking afgewezen
 </string>
