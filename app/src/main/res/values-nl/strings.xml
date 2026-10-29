@@ -11905,9 +11905,7 @@ Hulpmiddelen
 </string>
 
     <!-- File Protection -->
-    <string name="protected_delete_title">
-Artikel beschermd
-</string>
+    <string name="protected_delete_title">Item beschermd</string>
     <string name="protected_delete_message">
 Het bestand of de map is beveiligd en kan niet worden verwijderd. Het moet eerst onbeschermd worden voordat het kan worden verwijderd.
 </string>
