@@ -7607,9 +7607,7 @@ Bestanden verplaatsen…
 Bestanden kopiëren…
 </string>
     <string name="item_0_totalfiles">Item 0 / %1$d</string>
-    <string name="item_index_totalcount">
-Artikel %1$d / %2$d
-</string>
+    <string name="item_index_totalcount">Item %1$d / %2$d</string>
     <string name="copiedmb_mb_totalmb_mb_percent">
 %1$s MB / %2$s MB (%3$d%%)
 </string>
