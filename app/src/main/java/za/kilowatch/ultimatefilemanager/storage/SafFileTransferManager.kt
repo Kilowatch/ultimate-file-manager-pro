@@ -566,6 +566,7 @@ object SafFileTransferManager {
         }
 
         transferJob = activity.lifecycleScope.launch(Dispatchers.IO) {
+            val fileName = localFile.name
             val totalBytes = localFile.length()
             var bytesWritten = 0L
             var speedLastBytes = 0L
@@ -615,6 +616,9 @@ object SafFileTransferManager {
                 if (e !is CancellationException && !isCancelled) {
                     GoRoLog.e(TAG, "Upload failed: ${e.message}")
                 }
+            } finally {
+                // Strictly clean up staged temporary export files or directories in cacheDir
+                DocumentProviderExportHelper.cleanupTempFile(activity, localFile)
             }
 
             if (success && !isCancelled) {
@@ -636,7 +640,7 @@ object SafFileTransferManager {
                 if (success && !isCancelled) {
                     Toast.makeText(
                         activity,
-                        activity.getString(R.string.saf_upload_success, localFile.name, providerLabel),
+                        activity.getString(R.string.saf_upload_success, fileName, providerLabel),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

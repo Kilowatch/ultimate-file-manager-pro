@@ -32,6 +32,7 @@ class ArchiveProgressDialog(
 
     private val isTv = DeviceUtils.isTvDevice(activity)
     private var alertDialog: AlertDialog? = null
+    var customTitle: String? = initialTitle
 
     // UI View References
     private var imgHeroIcon: ImageView? = null
@@ -167,7 +168,11 @@ class ArchiveProgressDialog(
                 }
                 ArchiveOperationType.COMPRESS -> {
                     txtBadge?.setText(R.string.archive_badge_compressing)
-                    txtTitle?.setText(R.string.archive_progress_compressing)
+                    if (customTitle != null) {
+                        txtTitle?.text = customTitle
+                    } else {
+                        txtTitle?.setText(R.string.archive_progress_compressing)
+                    }
                     imgHeroIcon?.setImageResource(R.drawable.ic_file_archive)
                 }
                 ArchiveOperationType.ADD -> {

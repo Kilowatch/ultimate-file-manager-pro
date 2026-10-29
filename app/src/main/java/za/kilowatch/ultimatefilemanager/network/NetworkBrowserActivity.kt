@@ -290,18 +290,28 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var currentFiles: List<NetworkFile> = emptyList()
     private var isTransferring = false
     private var standardShareTempDir: File? = null
+    private var stagedExportTempDir: File? = null
     private var pendingExportLocalFile: File? = null
     private var pendingExportProvider: MountedDocumentProvider? = null
 
     private val safCreateDocForExportLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
+        val localFile = pendingExportLocalFile
+        val prov = pendingExportProvider
+        pendingExportLocalFile = null
+        pendingExportProvider = null
+
         if (result.resultCode == RESULT_OK && result.data != null) {
             val targetUri = result.data?.data
-            val localFile = pendingExportLocalFile
-            val prov = pendingExportProvider
             if (targetUri != null && localFile != null && prov != null) {
                 SafFileTransferManager.exportLocalFileToSaf(this, localFile, targetUri, prov.displayName)
+            } else if (localFile != null) {
+                DocumentProviderExportHelper.cleanupTempFile(this, localFile)
+            }
+        } else {
+            if (localFile != null) {
+                DocumentProviderExportHelper.cleanupTempFile(this, localFile)
             }
         }
     }
@@ -591,6 +601,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }
         enableEdgeToEdge()
 
+        lifecycleScope.launch(Dispatchers.IO) {
+            DocumentProviderExportHelper.pruneStaleExportTempFiles(this@NetworkBrowserActivity)
+        }
+
         // Picker mode
         isPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_PICKER_MODE, false)
         val extString = intent.getStringExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS) ?: ""
@@ -796,6 +810,16 @@ class NetworkBrowserActivity : AppCompatActivity() {
             }
             standardShareTempDir = null
         }
+
+        // Clean up staged export temp dir if returning from external provider app share
+        stagedExportTempDir?.let { tempDir ->
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    tempDir.deleteRecursively()
+                } catch (_: Exception) {}
+            }
+            stagedExportTempDir = null
+        }
         
         // If browsing a paired TV/Phone, check if it's still connected
         val pairedDeviceId = intent.getStringExtra(EXTRA_PAIRED_DEVICE_ID)
@@ -876,11 +900,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        stagedExportTempDir?.let { tempDir ->
+            try { tempDir.deleteRecursively() } catch (_: Exception) {}
+            stagedExportTempDir = null
+        }
         // Clean up temporary downloaded files
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 cacheDir.listFiles()?.forEach { file ->
-                    if (file.isDirectory && file.name.startsWith("share_temp_")) {
+                    if (file.isDirectory && (file.name.startsWith("share_temp_") || file.name.startsWith("upload_other_"))) {
                         file.deleteRecursively()
                         android.util.Log.d("NetworkBrowserActivity", "Cleaned up temporary directory: ${file.absolutePath}")
                     }
@@ -5221,6 +5249,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val tempDir = File(cacheDir, "upload_other_${System.currentTimeMillis()}")
             tempDir.mkdirs()
+            stagedExportTempDir = tempDir
             val localFiles = mutableListOf<File>()
             for (nf in files) {
                 try {
@@ -5239,6 +5268,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     showSelectMountedProviderForExportDialog(localFiles, mounted)
                 } else {
                     showPremiumSnackbar(getString(R.string.share_error))
+                    stagedExportTempDir = null
+                    tempDir.deleteRecursively()
                 }
             }
         }
@@ -5262,7 +5293,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 exportFilesAsZipToProvider(items, prov)
             },
             onExportShareSheet = { items, prov ->
-                exportFilesViaSystemSheet(items, prov)
+                DocumentProviderExportHelper.exportFilesViaProviderApp(this, items, prov)
             }
         )
     }
@@ -5280,14 +5311,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
         try {
             safCreateDocForExportLauncher.launch(intent)
         } catch (_: Exception) {
-            exportFilesViaSystemSheet(listOf(file), provider)
+            DocumentProviderExportHelper.exportFilesViaProviderApp(this, listOf(file), provider)
         }
     }
 
     private fun exportFilesAsZipToProvider(files: List<File>, provider: MountedDocumentProvider) {
         DocumentProviderExportHelper.createZipForExport(
-            context = this,
+            activity = this,
             files = files,
+            provider = provider,
             onComplete = { zipFile ->
                 exportSingleFileToProvider(zipFile, provider)
             },
@@ -5295,23 +5327,6 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 Toast.makeText(this@NetworkBrowserActivity, "Failed to create ZIP: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         )
-    }
-
-    private fun exportFilesViaSystemSheet(files: List<File>, provider: MountedDocumentProvider) {
-        try {
-            val uris = ArrayList<Uri>()
-            for (file in files) {
-                uris.add(FileProvider.getUriForFile(this, "$packageName.fileprovider", file))
-            }
-            val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
-                type = "*/*"
-                putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-            startActivity(Intent.createChooser(intent, getString(R.string.share_export_to_cloud_provider)))
-        } catch (e: Exception) {
-            Toast.makeText(this, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
     }
 
     fun shareNetworkFiles(files: List<NetworkFile>) {

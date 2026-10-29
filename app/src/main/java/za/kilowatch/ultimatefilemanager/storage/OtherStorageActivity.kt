@@ -359,4 +359,13 @@ class OtherStorageActivity : AppCompatActivity() {
         } catch (_: Exception) {}
         return name
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                File(cacheDir, "saf_temp").deleteRecursively()
+            } catch (_: Exception) {}
+        }
+    }
 }

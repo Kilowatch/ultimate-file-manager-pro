@@ -422,17 +422,20 @@ object ArchiveManager {
 
         fun addFileRecursive(file: File, parentPath: String) {
             if (Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException("Compression cancelled")
+            val currentPath = if (parentPath.isEmpty()) file.name else "$parentPath/${file.name}"
             val params = ZipParameters(parameters)
-            if (parentPath.isNotEmpty()) {
-                if (file.isDirectory) params.rootFolderNameInZip = "$parentPath/${file.name}"
-                else params.fileNameInZip = "$parentPath/${file.name}"
-            }
             if (file.isDirectory) {
-                zipFile.addFolder(file, params)
-                file.listFiles()?.forEach { child ->
-                    addFileRecursive(child, if (parentPath.isEmpty()) file.name else "$parentPath/${file.name}")
+                val children = file.listFiles()
+                if (children.isNullOrEmpty()) {
+                    params.rootFolderNameInZip = currentPath
+                    zipFile.addFolder(file, params)
+                } else {
+                    children.forEach { child ->
+                        addFileRecursive(child, currentPath)
+                    }
                 }
             } else {
+                params.fileNameInZip = currentPath
                 zipFile.addFile(file, params)
                 filesProcessed++
                 bytesProcessed += file.length()

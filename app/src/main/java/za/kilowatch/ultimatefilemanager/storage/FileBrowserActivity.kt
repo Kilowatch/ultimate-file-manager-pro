@@ -153,15 +153,22 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
     private val safCreateDocForExportLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
+        val localFile = pendingExportLocalFile
+        val prov = pendingExportProvider
+        pendingExportLocalFile = null
+        pendingExportProvider = null
+
         if (result.resultCode == android.app.Activity.RESULT_OK && result.data != null) {
             val targetUri = result.data?.data
-            val localFile = pendingExportLocalFile
-            val prov = pendingExportProvider
             if (targetUri != null && localFile != null && prov != null) {
                 SafFileTransferManager.exportLocalFileToSaf(this, localFile, targetUri, prov.displayName)
+            } else if (localFile != null) {
+                DocumentProviderExportHelper.cleanupTempFile(this, localFile)
             }
-            pendingExportLocalFile = null
-            pendingExportProvider = null
+        } else {
+            if (localFile != null) {
+                DocumentProviderExportHelper.cleanupTempFile(this, localFile)
+            }
         }
     }
 
@@ -540,6 +547,10 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 systemBars.right, systemBars.bottom
             )
             insets
+        }
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            DocumentProviderExportHelper.pruneStaleExportTempFiles(this@FileBrowserActivity)
         }
 
         val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
@@ -4755,7 +4766,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 exportFilesAsZipToProvider(items, prov)
             },
             onExportShareSheet = { items, prov ->
-                exportFilesViaSystemSheet(items, prov)
+                DocumentProviderExportHelper.exportFilesViaProviderApp(this, items, prov)
             }
         )
     }
@@ -4773,14 +4784,15 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         try {
             safCreateDocForExportLauncher.launch(intent)
         } catch (_: Exception) {
-            exportFilesViaSystemSheet(listOf(file), provider)
+            DocumentProviderExportHelper.exportFilesViaProviderApp(this, listOf(file), provider)
         }
     }
 
     private fun exportFilesAsZipToProvider(files: List<File>, provider: MountedDocumentProvider) {
         DocumentProviderExportHelper.createZipForExport(
-            context = this,
+            activity = this,
             files = files,
+            provider = provider,
             onComplete = { zipFile ->
                 exportSingleFileToProvider(zipFile, provider)
             },
@@ -4788,26 +4800,6 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 android.widget.Toast.makeText(this@FileBrowserActivity, "Failed to create ZIP: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
             }
         )
-    }
-
-    private fun exportFilesViaSystemSheet(files: List<File>, provider: MountedDocumentProvider) {
-        try {
-            val uris = ArrayList<android.net.Uri>()
-            for (file in files) {
-                uris.add(androidx.core.content.FileProvider.getUriForFile(this, "${packageName}.fileprovider", file))
-            }
-            val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
-                type = "*/*"
-                putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                if (provider.packageName.isNotEmpty()) {
-                    // setPackage(provider.packageName) omitted to avoid ActivityNotFoundException
-                }
-            }
-            startActivity(Intent.createChooser(intent, getString(R.string.share_export_to_cloud_provider)))
-        } catch (e: Exception) {
-            android.widget.Toast.makeText(this, "Export failed: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun shareFiles(files: List<File>) {

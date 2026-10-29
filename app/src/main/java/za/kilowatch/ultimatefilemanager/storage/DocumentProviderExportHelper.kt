@@ -14,30 +14,99 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
+import za.kilowatch.ultimatefilemanager.archive.ArchiveOperationType
+import za.kilowatch.ultimatefilemanager.archive.ArchiveProgressDialog
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
 
 /**
  * Universal UFMStandard helper for selecting export destination providers
- * and handling single-file, folder, and multi-file zip exports to external providers.
+ * and handling single-file, folder, and multi-file zip exports to external providers
+ * with canonical ArchiveProgressDialog telemetry.
  */
 object DocumentProviderExportHelper {
 
     private const val TAG = "DocProviderExport"
+
+    /**
+     * Cleans up a specific temporary export file or staging directory if it resides in [context.cacheDir].
+     * Safe to call on any file: if the file is outside cacheDir (e.g. user storage), it is untouched.
+     */
+    fun cleanupTempFile(context: Context, file: File?) {
+        if (file == null) return
+        try {
+            val cachePath = context.cacheDir.canonicalPath
+            val filePath = file.canonicalPath
+            if (filePath.startsWith(cachePath)) {
+                val parent = file.parentFile
+                if (parent != null && parent.name.startsWith("upload_other_")) {
+                    parent.deleteRecursively()
+                } else if (file.isDirectory) {
+                    file.deleteRecursively()
+                } else {
+                    file.delete()
+                }
+            }
+        } catch (_: Exception) {}
+    }
+
+    /**
+     * Cleans up temporary staging files or directories if they reside in [context.cacheDir].
+     */
+    fun cleanupTempFiles(context: Context, files: List<File>?) {
+        if (files.isNullOrEmpty()) return
+        try {
+            val cachePath = context.cacheDir.canonicalPath
+            for (f in files) {
+                val fPath = f.canonicalPath
+                if (fPath.startsWith(cachePath)) {
+                    val parent = f.parentFile
+                    if (parent != null && parent.name.startsWith("upload_other_")) {
+                        parent.deleteRecursively()
+                        break
+                    } else if (f.isDirectory) {
+                        f.deleteRecursively()
+                    } else {
+                        f.delete()
+                    }
+                }
+            }
+        } catch (_: Exception) {}
+    }
+
+    /**
+     * Scans [context.cacheDir] and prunes any stale temporary export archives (*.zip)
+     * or network export staging folders (upload_other_*) older than [maxAgeMs].
+     */
+    fun pruneStaleExportTempFiles(context: Context, maxAgeMs: Long = 10 * 60 * 1000L) {
+        try {
+            val cacheDir = context.cacheDir
+            val now = System.currentTimeMillis()
+            cacheDir.listFiles()?.forEach { file ->
+                try {
+                    if (file.name.startsWith("upload_other_") && (now - file.lastModified() > maxAgeMs)) {
+                        file.deleteRecursively()
+                    } else if (file.name.endsWith(".zip") && (now - file.lastModified() > maxAgeMs)) {
+                        file.delete()
+                    }
+                } catch (_: Exception) {}
+            }
+        } catch (_: Exception) {}
+    }
 
     /**
      * Shows a canonical UFMStandard dialog allowing the user to select which mounted Document Provider
@@ -68,6 +137,7 @@ object DocumentProviderExportHelper {
             .setView(dialogView)
             .create()
 
+        var providerSelected = false
         val rv = dialogView.findViewById<RecyclerView>(R.id.rvMountedProviders)
         val cardOtherStorage = dialogView.findViewById<MaterialCardView>(R.id.cardOtherStorage)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
@@ -80,17 +150,26 @@ object DocumentProviderExportHelper {
 
         rv.layoutManager = LinearLayoutManager(activity)
         rv.adapter = ProviderChoiceAdapter(activity, mountedProviders, installedProviders, isTv) { provider ->
+            providerSelected = true
             dialog.dismiss()
             onProviderSelected(provider)
         }
 
         cardOtherStorage.setOnClickListener {
+            providerSelected = true
             dialog.dismiss()
+            cleanupTempFiles(activity, files)
             activity.startActivity(Intent(activity, OtherStorageActivity::class.java))
         }
 
         btnCancel.setOnClickListener {
             dialog.dismiss()
+        }
+
+        dialog.setOnDismissListener {
+            if (!providerSelected) {
+                cleanupTempFiles(activity, files)
+            }
         }
 
         if (isTv) {
@@ -143,6 +222,10 @@ object DocumentProviderExportHelper {
         val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtExportChoiceSubtitle)
         val cardZip = dialogView.findViewById<MaterialCardView>(R.id.cardExportZip)
         val cardShareSheet = dialogView.findViewById<MaterialCardView>(R.id.cardExportShareSheet)
+        val txtZipDesc = dialogView.findViewById<TextView>(R.id.txtExportZipSubtitle)
+        val txtShareTitle = dialogView.findViewById<TextView>(R.id.txtExportShareSheetTitle)
+        val txtShareDesc = dialogView.findViewById<TextView>(R.id.txtExportShareSheetSubtitle)
+        val imgShareIcon = dialogView.findViewById<ImageView>(R.id.imgExportShareSheetIcon)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
 
         if (files.size == 1 && files.first().isDirectory) {
@@ -153,18 +236,71 @@ object DocumentProviderExportHelper {
             txtSubtitle.text = activity.getString(R.string.share_export_multi_zip_msg, files.size, provider.displayName)
         }
 
+        txtShareTitle?.text = activity.getString(R.string.share_export_via_app, provider.displayName)
+        if (files.any { it.isDirectory }) {
+            txtZipDesc?.text = activity.getString(R.string.share_export_as_zip_folder_desc, provider.displayName)
+            txtShareDesc?.text = activity.getString(R.string.share_export_via_app_folder_desc, provider.displayName)
+        } else {
+            txtZipDesc?.text = activity.getString(R.string.share_export_as_zip_desc, provider.displayName)
+            txtShareDesc?.text = activity.getString(R.string.share_export_via_app_desc, provider.displayName)
+        }
+
+        // Resolve app icon for Option 2 (Upload via Provider App)
+        val iconDrawable = try {
+            if (provider.packageName.isNotEmpty()) {
+                activity.packageManager.getApplicationIcon(provider.packageName)
+            } else null
+        } catch (_: Exception) { null }
+
+        if (iconDrawable != null && imgShareIcon != null) {
+            imgShareIcon.setImageDrawable(iconDrawable)
+            imgShareIcon.imageTintList = null
+        }
+
+        var optionSelected = false
+
         cardZip.setOnClickListener {
+            optionSelected = true
             dialog.dismiss()
             onExportZip(files, provider)
         }
 
         cardShareSheet.setOnClickListener {
-            dialog.dismiss()
-            onExportShareSheet(files, provider)
+            if (files.any { it.isDirectory }) {
+                val title = activity.getString(R.string.folder_upload_notice_title)
+                val msg = if (files.size == 1 && files.first().isDirectory) {
+                    activity.getString(R.string.folder_upload_notice_single_msg, files.first().name, provider.displayName)
+                } else {
+                    activity.getString(R.string.folder_upload_notice_multi_msg, provider.displayName)
+                }
+                za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                    context = activity,
+                    title = title,
+                    message = msg,
+                    iconRes = R.drawable.ic_warning,
+                    positiveText = activity.getString(R.string.btn_upload_files_only),
+                    negativeText = activity.getString(R.string.cancel),
+                    onPositive = {
+                        optionSelected = true
+                        dialog.dismiss()
+                        onExportShareSheet(files, provider)
+                    }
+                )
+            } else {
+                optionSelected = true
+                dialog.dismiss()
+                onExportShareSheet(files, provider)
+            }
         }
 
         btnCancel.setOnClickListener {
             dialog.dismiss()
+        }
+
+        dialog.setOnDismissListener {
+            if (!optionSelected) {
+                cleanupTempFiles(activity, files)
+            }
         }
 
         if (isTv) {
@@ -187,62 +323,131 @@ object DocumentProviderExportHelper {
     }
 
     /**
-     * Recursively compresses files/folders into a single zip archive in cacheDir and returns the zip file.
+     * Compresses files/folders into a single zip archive in cacheDir using [ArchiveManager.compress]
+     * while displaying canonical [ArchiveProgressDialog] telemetry.
      */
     fun createZipForExport(
-        context: Context,
+        activity: AppCompatActivity,
         files: List<File>,
+        provider: MountedDocumentProvider,
         onComplete: (File) -> Unit,
         onError: (Exception) -> Unit
     ) {
         val baseName = if (files.size == 1) files.first().nameWithoutExtension.ifEmpty { files.first().name } else "Archive"
         val zipName = if (files.size == 1) "$baseName.zip" else "${baseName}_${System.currentTimeMillis() % 10000}.zip"
-        val tempZip = File(context.cacheDir, zipName)
+        val tempZip = File(activity.cacheDir, zipName)
 
-        val scope = (context as? AppCompatActivity)?.lifecycleScope ?: GlobalScope
-        scope.launch(Dispatchers.IO) {
+        val progressTitle = activity.getString(R.string.archive_progress_zipping_other_storage, provider.displayName)
+        val (calcFiles, _) = ArchiveManager.calculateTotalFilesAndBytes(files)
+        val progressDialog = ArchiveProgressDialog(activity, initialTitle = progressTitle, initialArchiveName = zipName)
+        progressDialog.show(
+            operation = ArchiveOperationType.COMPRESS,
+            archiveName = zipName,
+            totalFiles = calcFiles
+        )
+
+        var compressJob: kotlinx.coroutines.Job? = null
+        progressDialog.setOnCancelListener {
+            compressJob?.cancel()
+            tempZip.delete()
+            cleanupTempFiles(activity, files)
+        }
+
+        compressJob = activity.lifecycleScope.launch(Dispatchers.IO) {
             try {
-                ZipOutputStream(tempZip.outputStream().buffered()).use { zos ->
-                    val buffer = ByteArray(64 * 1024)
-                    for (file in files) {
-                        if (file.isDirectory) {
-                            val rootPath = file.parentFile?.absolutePath ?: ""
-                            file.walkTopDown().forEach { f ->
-                                if (f.isFile) {
-                                    val relPath = f.absolutePath.removePrefix(rootPath).removePrefix(File.separator)
-                                    val entry = ZipEntry(relPath.replace(File.separatorChar, '/'))
-                                    zos.putNextEntry(entry)
-                                    f.inputStream().buffered().use { fis ->
-                                        var len: Int
-                                        while (fis.read(buffer).also { len = it } != -1) {
-                                            zos.write(buffer, 0, len)
-                                        }
-                                    }
-                                    zos.closeEntry()
-                                }
-                            }
-                        } else if (file.isFile) {
-                            val entry = ZipEntry(file.name)
-                            zos.putNextEntry(entry)
-                            file.inputStream().buffered().use { fis ->
-                                var len: Int
-                                while (fis.read(buffer).also { len = it } != -1) {
-                                    zos.write(buffer, 0, len)
-                                }
-                            }
-                            zos.closeEntry()
+                val result = ArchiveManager.compress(
+                    context = activity,
+                    sourceFiles = files,
+                    destFile = tempZip,
+                    password = null,
+                    format = ArchiveManager.Format.ZIP,
+                    onArchiveProgress = { progress ->
+                        activity.runOnUiThread {
+                            progressDialog.update(progress)
                         }
                     }
-                }
+                )
                 withContext(Dispatchers.Main) {
-                    onComplete(tempZip)
+                    progressDialog.dismiss()
+                    if (result.isSuccess) {
+                        cleanupTempFiles(activity, files)
+                        onComplete(tempZip)
+                    } else {
+                        tempZip.delete()
+                        cleanupTempFiles(activity, files)
+                        val ex = result.exceptionOrNull() ?: Exception("Compression failed")
+                        onError(if (ex is Exception) ex else Exception(ex.message))
+                    }
+                }
+            } catch (e: CancellationException) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    tempZip.delete()
+                    cleanupTempFiles(activity, files)
+                    Toast.makeText(activity, R.string.archive_cancelled, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                GoRoLog.e(TAG, "Failed to zip files for export: ${e.message}")
                 withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    tempZip.delete()
+                    cleanupTempFiles(activity, files)
+                    GoRoLog.e(TAG, "Failed to zip files for export: ${e.message}")
                     onError(e)
                 }
             }
+        }
+    }
+
+    /**
+     * Directly launches the provider application's upload/share activity for the given files,
+     * bypassing the generic Android system "Share With" sheet when the target package supports it.
+     */
+    fun exportFilesViaProviderApp(
+        activity: AppCompatActivity,
+        files: List<File>,
+        provider: MountedDocumentProvider
+    ) {
+        try {
+            val regularFiles = files.flatMap { file ->
+                if (file.isDirectory) file.walkTopDown().filter { it.isFile }.toList()
+                else listOf(file)
+            }
+
+            if (regularFiles.isEmpty()) {
+                Toast.makeText(activity, "No files found to upload", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            val uris = ArrayList<android.net.Uri>()
+            for (f in regularFiles) {
+                uris.add(FileProvider.getUriForFile(activity, "${activity.packageName}.fileprovider", f))
+            }
+
+            val intent = Intent(if (uris.size == 1) Intent.ACTION_SEND else Intent.ACTION_SEND_MULTIPLE).apply {
+                type = "*/*"
+                if (uris.size == 1) {
+                    putExtra(Intent.EXTRA_STREAM, uris.first())
+                } else {
+                    putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+                }
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                if (provider.packageName.isNotEmpty()) {
+                    setPackage(provider.packageName)
+                }
+            }
+
+            val resolveActivities = if (provider.packageName.isNotEmpty()) {
+                activity.packageManager.queryIntentActivities(intent, 0)
+            } else emptyList()
+
+            if (resolveActivities.isNotEmpty()) {
+                activity.startActivity(intent)
+            } else {
+                intent.setPackage(null)
+                activity.startActivity(Intent.createChooser(intent, activity.getString(R.string.share_export_to_cloud_provider)))
+            }
+        } catch (e: Exception) {
+            Toast.makeText(activity, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 

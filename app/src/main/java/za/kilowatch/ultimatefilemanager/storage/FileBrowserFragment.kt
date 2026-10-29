@@ -132,16 +132,23 @@ class FileBrowserFragment : Fragment() {
     private val safCreateDocForExportLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        val ctx = context
-        if (result.resultCode == android.app.Activity.RESULT_OK && result.data != null && ctx != null) {
+        val act = activity as? androidx.appcompat.app.AppCompatActivity
+        val localFile = pendingExportLocalFile
+        val prov = pendingExportProvider
+        pendingExportLocalFile = null
+        pendingExportProvider = null
+
+        if (result.resultCode == android.app.Activity.RESULT_OK && result.data != null && act != null) {
             val targetUri = result.data?.data
-            val localFile = pendingExportLocalFile
-            val prov = pendingExportProvider
-            if (targetUri != null && localFile != null && prov != null && activity is androidx.appcompat.app.AppCompatActivity) {
-                SafFileTransferManager.exportLocalFileToSaf(activity as androidx.appcompat.app.AppCompatActivity, localFile, targetUri, prov.displayName)
+            if (targetUri != null && localFile != null && prov != null) {
+                SafFileTransferManager.exportLocalFileToSaf(act, localFile, targetUri, prov.displayName)
+            } else if (localFile != null) {
+                DocumentProviderExportHelper.cleanupTempFile(act, localFile)
             }
-            pendingExportLocalFile = null
-            pendingExportProvider = null
+        } else {
+            if (localFile != null && act != null) {
+                DocumentProviderExportHelper.cleanupTempFile(act, localFile)
+            }
         }
     }
 
@@ -4055,12 +4062,13 @@ class FileBrowserFragment : Fragment() {
                 exportFilesAsZipToProvider(items, prov)
             },
             onExportShareSheet = { items, prov ->
-                exportFilesViaSystemSheet(items, prov)
+                DocumentProviderExportHelper.exportFilesViaProviderApp(act, items, prov)
             }
         )
     }
 
     private fun exportSingleFileToProvider(file: File, provider: MountedDocumentProvider) {
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
         pendingExportLocalFile = file
         pendingExportProvider = provider
         val ext = file.extension.lowercase()
@@ -4073,43 +4081,23 @@ class FileBrowserFragment : Fragment() {
         try {
             safCreateDocForExportLauncher.launch(intent)
         } catch (_: Exception) {
-            exportFilesViaSystemSheet(listOf(file), provider)
+            DocumentProviderExportHelper.exportFilesViaProviderApp(act, listOf(file), provider)
         }
     }
 
     private fun exportFilesAsZipToProvider(files: List<File>, provider: MountedDocumentProvider) {
-        val ctx = context ?: return
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
         DocumentProviderExportHelper.createZipForExport(
-            context = ctx,
+            activity = act,
             files = files,
+            provider = provider,
             onComplete = { zipFile ->
                 exportSingleFileToProvider(zipFile, provider)
             },
             onError = { e ->
-                android.widget.Toast.makeText(ctx, "Failed to create ZIP: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(act, "Failed to create ZIP: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
             }
         )
-    }
-
-    private fun exportFilesViaSystemSheet(files: List<File>, provider: MountedDocumentProvider) {
-        val ctx = context ?: return
-        try {
-            val uris = ArrayList<android.net.Uri>()
-            for (file in files) {
-                uris.add(androidx.core.content.FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", file))
-            }
-            val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
-                type = "*/*"
-                putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                if (provider.packageName.isNotEmpty()) {
-                    // setPackage(provider.packageName) omitted to avoid ActivityNotFoundException
-                }
-            }
-            startActivity(Intent.createChooser(intent, getString(R.string.share_export_to_cloud_provider)))
-        } catch (e: Exception) {
-            android.widget.Toast.makeText(ctx, "Export failed: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun shareFiles(files: List<File>) {

@@ -941,15 +941,22 @@ class StorageBrowserActivity : AppCompatActivity() {
     private val safCreateDocumentLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
+        val localFile = pendingExportLocalFile
+        val prov = pendingExportProvider
+        pendingExportLocalFile = null
+        pendingExportProvider = null
+
         if (result.resultCode == RESULT_OK && result.data != null) {
             val targetUri = result.data?.data
-            val localFile = pendingExportLocalFile
-            val prov = pendingExportProvider
             if (targetUri != null && localFile != null && prov != null) {
                 SafFileTransferManager.exportLocalFileToSaf(this, localFile, targetUri, prov.label)
+            } else if (localFile != null) {
+                DocumentProviderExportHelper.cleanupTempFile(this, localFile)
             }
-            pendingExportLocalFile = null
-            pendingExportProvider = null
+        } else {
+            if (localFile != null) {
+                DocumentProviderExportHelper.cleanupTempFile(this, localFile)
+            }
         }
     }
 
@@ -1850,6 +1857,11 @@ class StorageBrowserActivity : AppCompatActivity() {
             unregisterReceiver(storageReceiver)
         } catch (_: Exception) { }
         unregisterStorageVolumeCallback()
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                java.io.File(cacheDir, "saf_temp").deleteRecursively()
+            } catch (_: Exception) { }
+        }
     }
 
     private fun setupViews() {

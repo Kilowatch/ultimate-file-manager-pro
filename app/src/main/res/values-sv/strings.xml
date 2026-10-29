@@ -15865,6 +15865,47 @@ Send items using the Android system upload sheet
     <string name="share_export_select_provider_subtitle">
 Select a mounted provider or open Other Storage
 </string>
+    <string name="archive_progress_zipping_other_storage">
+Zipping for %1$s…
+</string>
+    <string name="archive_progress_zipping_for_other_storage">
+Zipping for Other Storage…
+</string>
+    <string name="share_export_via_app">
+Upload via %1$s
+</string>
+    <string name="share_export_via_app_desc">
+Send files directly into %1$s
+</string>
+    <string name="share_export_as_zip_desc">
+Compress into a ZIP archive and choose destination folder in %1$s
+</string>
+    <string name="share_export_as_zip_folder_desc">
+Preserves the folder structure and original directory inside a ZIP archive in %1$s
+</string>
+    <string name="share_export_via_app_folder_desc">
+Uploads individual files directly into %1$s (external upload screens cannot create directories)
+</string>
+    <string name="folder_upload_notice_title">
+Folder Upload Notice
+</string>
+    <string name="folder_upload_notice_single_msg">
+External upload screens (such as %2$s) cannot create directories.\n
+\n
+Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+\n
+To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+</string>
+    <string name="folder_upload_notice_multi_msg">
+External upload screens (such as %1$s) cannot create directories.\n
+\n
+Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+\n
+To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+</string>
+    <string name="btn_upload_files_only">
+Upload Files Only
+</string>
 </resources>
 
 
