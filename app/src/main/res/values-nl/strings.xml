@@ -7606,9 +7606,7 @@ Bestanden verplaatsen…
     <string name="copying_files_1">
 Bestanden kopiëren…
 </string>
-    <string name="item_0_totalfiles">
-Artikel 0 / %1$d
-</string>
+    <string name="item_0_totalfiles">Item 0 / %1$d</string>
     <string name="item_index_totalcount">
 Artikel %1$d / %2$d
 </string>
