@@ -13296,9 +13296,7 @@ Klassieke lijst
 Platte lijst met één kolom (groot, gemiddeld, klein)
 </string>
     <string name="main_menu_section_items_count">%1$d items</string>
-    <string name="main_menu_section_item_count_single">
-1 artikel
-</string>
+    <string name="main_menu_section_item_count_single">1 item</string>
 
     <!-- Reset Category Layout -->
     <string name="reset_categorized_layout_section">
