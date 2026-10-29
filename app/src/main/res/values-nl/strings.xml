@@ -6376,9 +6376,7 @@ Geen apps gevonden
     <string name="remote_msg_apps_plural">
 %d apps
 </string>
-    <string name="remote_msg_item_singular">
-%d artikel
-</string>
+    <string name="remote_msg_item_singular">%d item</string>
     <string name="remote_msg_items_plural">
 %d artikelen
 </string>
