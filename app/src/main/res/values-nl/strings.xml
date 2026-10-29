@@ -1843,9 +1843,7 @@ Verplaatsen naar…
     <string name="quick_transfer_select_dest">
 Selecteer de doelmap
 </string>
-    <string name="quick_transfer_copy_confirm">
-%1$d artikel(en) hier kopiëren?
-</string>
+    <string name="quick_transfer_copy_confirm">%1$d item(s) hier kopiëren?</string>
     <string name="quick_transfer_move_confirm">
 %1$d item(s) hierheen verplaatsen?
 </string>
