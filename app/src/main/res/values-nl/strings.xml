@@ -2127,9 +2127,7 @@ Verplaatsen en coderen
     <string name="clipboard_cut">
 %1$d item(s) geknipt naar klembord
 </string>
-    <string name="paste_success">
-%1$d artikel(en) succesvol geplakt
-</string>
+    <string name="paste_success">%1$d item(s) succesvol geplakt</string>
     <string name="paste_error">
 Sommige items kunnen niet worden geplakt
 </string>
