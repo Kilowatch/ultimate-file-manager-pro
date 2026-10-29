@@ -5948,9 +5948,7 @@ bestand(en) overgeslagen
     <string name="remote_btn_done">
 Klaar
 </string>
-    <string name="remote_delete_title">
-Artikel verwijderen?
-</string>
+    <string name="remote_delete_title">Item verwijderen?</string>
     <string name="remote_delete_msg">
 Weet je zeker dat je dit wilt verwijderen?
 </string>
