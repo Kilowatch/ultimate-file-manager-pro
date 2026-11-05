@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dynamic Subtitle Elevation**: Automatically elevates subtitles above player controls when media controls are visible and lowers them when controls hide.
 
 ### Fixed
+- **Storage Browser Dialog Window Token Crash**: Fixed an unhandled `WindowManager$BadTokenException` ("Unable to add window -- token android.os.BinderProxy is not valid; is your activity running?") when launching auto-backup restore, password prompts, rating dialogs, or crash submission dialogs while the activity is transitioning, stopped, or backgrounded on Android TV and mobile devices.
 - **Android TV Preview Channel Publishing**: Attached the channel logo directly during channel creation, resolving channel rollback in the TV Provider and ensuring UFM correctly appears in Android TV "Customize channels".
 
 ## [2.2.3] — 2026-10-28

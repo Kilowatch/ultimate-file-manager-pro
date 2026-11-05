@@ -25,6 +25,21 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
  */
 object UfmDialogHelper {
 
+    private fun AlertDialog.safeShow() {
+        val activity = context as? android.app.Activity
+        if (activity != null && (activity.isFinishing || activity.isDestroyed)) return
+        if (activity is androidx.lifecycle.LifecycleOwner &&
+            !activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+            return
+        }
+        try {
+            show()
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        } catch (e: Exception) {
+            android.util.Log.w("UfmDialogHelper", "safeShow: Failed to show dialog: ${e.message}")
+        }
+    }
+
     /**
      * Shows a UFMStandard action confirmation or informational dialog.
      */
@@ -75,8 +90,7 @@ object UfmDialogHelper {
             btnCancel?.visibility = View.GONE
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.safeShow()
         return dialog
     }
 
@@ -111,8 +125,7 @@ object UfmDialogHelper {
             onCancel?.invoke()
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.safeShow()
         return dialog
     }
 
@@ -154,8 +167,7 @@ object UfmDialogHelper {
             dialog.dismiss()
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.safeShow()
         return dialog
     }
 
@@ -214,8 +226,7 @@ object UfmDialogHelper {
             dialog.dismiss()
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.safeShow()
         return dialog
     }
 
@@ -256,8 +267,7 @@ object UfmDialogHelper {
             dialog.dismiss()
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.safeShow()
         return dialog
     }
 }

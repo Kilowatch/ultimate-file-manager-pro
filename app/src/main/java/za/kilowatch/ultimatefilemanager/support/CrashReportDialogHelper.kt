@@ -80,6 +80,10 @@ object CrashReportDialogHelper {
         lifecycleScope: LifecycleCoroutineScope
     ) {
         if (activity.isFinishing || activity.isDestroyed) return
+        if (activity is androidx.lifecycle.LifecycleOwner &&
+            !activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+            return
+        }
         val isTv = DeviceUtils.isTvDevice(activity)
 
         val layoutRes = if (isTv) R.layout.dialog_crash_report_tv else R.layout.dialog_crash_report
@@ -161,9 +165,12 @@ object CrashReportDialogHelper {
             }
         }
 
-        dialog.show()
-
-        if (isTv) btnSend.requestFocus()
+        try {
+            dialog.show()
+            if (isTv) btnSend.requestFocus()
+        } catch (e: Exception) {
+            android.util.Log.w("CrashReport", "Failed to show crash report dialog: ${e.message}")
+        }
     }
 
     // ── Submission ───────────────────────────────────────────────────────────

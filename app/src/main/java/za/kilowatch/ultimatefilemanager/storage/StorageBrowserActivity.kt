@@ -3,6 +3,8 @@ package za.kilowatch.ultimatefilemanager.storage
 import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
 
 import android.app.Activity
+import android.app.Dialog
+import android.view.WindowManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -775,10 +777,12 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        if (isTv) {
-            cardTreeMount.requestFocus()
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            if (isTv) {
+                cardTreeMount.requestFocus()
+            }
         }
     }
 
@@ -848,9 +852,11 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        edtName?.requestFocus()
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            edtName?.requestFocus()
+        }
     }
 
     private fun showRenameStorageLocationDialog(item: StorageItem) {
@@ -888,9 +894,11 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        edtName?.requestFocus()
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            edtName?.requestFocus()
+        }
     }
 
 
@@ -1054,10 +1062,12 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        if (isTv) {
-            btnOpenViewer.requestFocus()
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            if (isTv) {
+                btnOpenViewer.requestFocus()
+            }
         }
     }
 
@@ -1215,10 +1225,12 @@ class StorageBrowserActivity : AppCompatActivity() {
 
         btnCancel.setOnClickListener { dialog.dismiss() }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        if (isTv) {
-            cardBrowse.requestFocus()
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            if (isTv) {
+                cardBrowse.requestFocus()
+            }
         }
     }
 
@@ -1260,10 +1272,12 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-        if (isTv) {
-            btnRemoveConfirm?.requestFocus()
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            if (isTv) {
+                btnRemoveConfirm?.requestFocus()
+            }
         }
     }
 
@@ -1310,7 +1324,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        dialog.show()
+        dialog.safeShow()
     }
     
     private var lottieEmptyStorage: com.airbnb.lottie.LottieAnimationView? = null
@@ -1540,6 +1554,48 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
     }
 
+    // ── Safe Dialog Presentation Helper ────────────────────────────────────────
+
+    /**
+     * Shows a Dialog safely by verifying the Activity is running and the lifecycle
+     * is at least STARTED, and catching [WindowManager.BadTokenException] in case
+     * the window token was invalidated by the OS during an asynchronous dispatch or transition.
+     */
+    private fun Dialog.safeShow(): Boolean {
+        if (this@StorageBrowserActivity.isFinishing || this@StorageBrowserActivity.isDestroyed) return false
+        if (!this@StorageBrowserActivity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return false
+        return try {
+            show()
+            true
+        } catch (e: WindowManager.BadTokenException) {
+            Log.w(TAG, "safeShow: Window token invalid or activity not running: ${e.message}")
+            false
+        } catch (e: IllegalStateException) {
+            Log.w(TAG, "safeShow: Activity in illegal state: ${e.message}")
+            false
+        } catch (e: Exception) {
+            Log.w(TAG, "safeShow: Failed to show dialog: ${e.message}")
+            false
+        }
+    }
+
+    private fun MaterialAlertDialogBuilder.safeShow(): androidx.appcompat.app.AlertDialog? {
+        if (this@StorageBrowserActivity.isFinishing || this@StorageBrowserActivity.isDestroyed) return null
+        if (!this@StorageBrowserActivity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return null
+        return try {
+            show()
+        } catch (e: WindowManager.BadTokenException) {
+            Log.w(TAG, "safeShow: Window token invalid or activity not running: ${e.message}")
+            null
+        } catch (e: IllegalStateException) {
+            Log.w(TAG, "safeShow: Activity in illegal state: ${e.message}")
+            null
+        } catch (e: Exception) {
+            Log.w(TAG, "safeShow: Failed to show dialog: ${e.message}")
+            null
+        }
+    }
+
     // ── Auto-Backup Restore Detection ─────────────────────────────────────────
 
     private fun checkAutoBackupRestore() {
@@ -1578,7 +1634,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
             // Show the restore dialog on the main thread
             withContext(Dispatchers.Main) {
-                if (!isFinishing && !isDestroyed) {
+                if (!isFinishing && !isDestroyed && lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
                     showBackupRestoreDialog(configExists, themeExists)
                 }
             }
@@ -1586,7 +1642,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     private fun showBackupRestoreDialog(configExists: Boolean, themeExists: Boolean) {
-        if (isFinishing || isDestroyed) return
+        if (isFinishing || isDestroyed || !lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return
         val ctx = this
 
         val detectedItems = mutableListOf<String>()
@@ -1606,23 +1662,29 @@ class StorageBrowserActivity : AppCompatActivity() {
             .create()
 
         btnRestore.setOnClickListener {
-            dialog.dismiss()
+            try {
+                dialog.dismiss()
+            } catch (_: Exception) {}
             performAutoBackupRestore(configExists, themeExists)
         }
 
         btnSkip.setOnClickListener {
-            dialog.dismiss()
+            try {
+                dialog.dismiss()
+            } catch (_: Exception) {}
             AutoBackupPrefs.setRestorePromptShown(ctx)
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        }
     }
 
     private fun performAutoBackupRestore(configExists: Boolean, themeExists: Boolean) {
         val ctx = this@StorageBrowserActivity
 
-        // Check if any file needs a password â€” read formats on IO thread
+        // Check if any file needs a password — read formats on IO thread
         lifecycleScope.launch(Dispatchers.IO) {
             var needsPassword = false
             if (configExists) {
@@ -1640,8 +1702,10 @@ class StorageBrowserActivity : AppCompatActivity() {
 
             if (needsPassword) {
                 withContext(Dispatchers.Main) {
-                    showSingleRestorePasswordDialog { password ->
-                        doAutoBackupRestore(password, configExists, themeExists)
+                    if (!isFinishing && !isDestroyed && lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+                        showSingleRestorePasswordDialog { password ->
+                            doAutoBackupRestore(password, configExists, themeExists)
+                        }
                     }
                 }
             } else {
@@ -1651,6 +1715,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     private fun showSingleRestorePasswordDialog(onPassword: (String) -> Unit) {
+        if (isFinishing || isDestroyed || !lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) return
         val isTv = DeviceUtils.isTvDevice(this)
         val dialogView = LayoutInflater.from(this).inflate(
             if (isTv) R.layout.dialog_backup_import_password_tv
@@ -1671,13 +1736,15 @@ class StorageBrowserActivity : AppCompatActivity() {
         btnDecrypt.setOnClickListener {
             val pw = edtPassword.text?.toString() ?: ""
             if (pw.isEmpty()) return@setOnClickListener
-            dialog.dismiss()
+            try {
+                dialog.dismiss()
+            } catch (_: Exception) {}
             onPassword(pw)
         }
 
-        dialog.show()
+        dialog.safeShow()
 
-        if (isTv) {
+        if (dialog.isShowing && isTv) {
             val yellow = ColorblindPalette.focusFill(this)
             val black = ColorblindPalette.focusFillText(this)
             btnDecrypt.backgroundTintList = android.content.res.ColorStateList.valueOf(yellow)
@@ -1857,6 +1924,10 @@ class StorageBrowserActivity : AppCompatActivity() {
             unregisterReceiver(storageReceiver)
         } catch (_: Exception) { }
         unregisterStorageVolumeCallback()
+        try {
+            currentSafActionDialog?.dismiss()
+        } catch (_: Exception) { }
+        currentSafActionDialog = null
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 java.io.File(cacheDir, "saf_temp").deleteRecursively()
@@ -2458,7 +2529,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        dialog.show()
+        dialog.safeShow()
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
@@ -2847,7 +2918,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         .setCancelable(true)
                         .create()
                     dialogView.findViewById<View>(R.id.btnGotIt)?.setOnClickListener { dialog.dismiss() }
-                    dialog.show()
+                    dialog.safeShow()
                     dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
                 } else {
                     startActivity(Intent(this, za.kilowatch.ultimatefilemanager.network.TvRemoteActivity::class.java))
@@ -4001,7 +4072,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             btnGotIt.requestFocus()
         }
 
-        dialog.show()
+        dialog.safeShow()
     }
 
     private fun exitEditMode() {
@@ -4199,7 +4270,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        dialog.show()
+        dialog.safeShow()
     }
 
     private fun showCreateHeaderDialog() {
@@ -4246,7 +4317,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        dialog.show()
+        dialog.safeShow()
         za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtTitle) {
             dialogView.findViewById<View>(R.id.btnCreateHeader)?.performClick()
         }
@@ -4295,7 +4366,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        dialog.show()
+        dialog.safeShow()
         za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtTitle) {
             btnSave.performClick()
         }
@@ -4384,8 +4455,10 @@ class StorageBrowserActivity : AppCompatActivity() {
             targetImageView.requestFocus()
         }
 
-        iconPickerDialog.show()
-        iconPickerDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        iconPickerDialog.safeShow()
+        if (iconPickerDialog.isShowing) {
+            iconPickerDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        }
     }
 
     private fun showCreateCustomTileDialogTv(isEdit: Boolean, existingData: CustomTileManager.CustomTileData?) {
@@ -4429,7 +4502,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
         }
         btnCancel.setOnClickListener { dialog.dismiss() }
-        dialog.show()
+        dialog.safeShow()
         za.kilowatch.ultimatefilemanager.util.DialogInputHelper.setupDialogInput(dialog, edtTitle) {
             btnSave.performClick()
         }
@@ -4452,7 +4525,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         1 -> confirmDeleteCustomTile(item) // Delete
                     }
                 }
-                .show()
+                .safeShow()
         } else {
             val dialogView = layoutInflater.inflate(R.layout.dialog_custom_tile_options, null)
             val imgHeaderIcon = dialogView.findViewById<ImageView>(R.id.imgCustomTileHeaderIcon)
@@ -4492,7 +4565,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
 
-            dialog.show()
+            dialog.safeShow()
             dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
     }
@@ -4540,7 +4613,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
             .setNegativeButton(R.string.cancel, null)
-            .show()
+            .safeShow()
     }
 
     private fun showMoveToCustomTileDialogTv(item: StorageItem) {
@@ -4564,7 +4637,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 loadStorageVolumes()
             }
             .setNegativeButton(R.string.cancel, null)
-            .show()
+            .safeShow()
     }
 
     private fun confirmDeleteCustomTile(item: StorageItem) {
@@ -4600,7 +4673,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
 
-            dialog.show()
+            dialog.safeShow()
             dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
     }
@@ -4665,7 +4738,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
 
-            dialog.show()
+            dialog.safeShow()
             dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
     }
@@ -6398,7 +6471,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
         }
 
-        dialog.show()
+        dialog.safeShow()
     }
 
     private fun setupTvCardFocusForDialog(card: MaterialCardView) {

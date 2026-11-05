@@ -26,6 +26,11 @@ object ReviewUiHelper {
      * Shows a premium, theme-reactive review popup.
      */
     fun showReviewPopup(activity: Activity) {
+        if (activity.isFinishing || activity.isDestroyed) return
+        if (activity is androidx.lifecycle.LifecycleOwner &&
+            !activity.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+            return
+        }
         val isTv = DeviceUtils.isTvDevice(activity)
         
         val builder = MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
@@ -121,7 +126,11 @@ object ReviewUiHelper {
             }
         }
 
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        try {
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        } catch (e: Exception) {
+            Log.w(TAG, "showReviewPopup: Failed to show dialog: ${e.message}")
+        }
     }
 }
