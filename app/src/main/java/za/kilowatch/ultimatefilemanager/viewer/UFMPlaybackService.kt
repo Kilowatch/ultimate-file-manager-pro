@@ -1174,16 +1174,28 @@ class UFMPlaybackService : Service() {
                 val metadata = builder.build()
 
                 // Update queue item metadata in-place
-                val updatedItems = queueManager.queue.toMutableList()
-                val idx = queueManager.currentIndex
-                if (idx in updatedItems.indices) {
-                    updatedItems[idx] = updatedItems[idx].copy(
-                        title = title ?: updatedItems[idx].title,
-                        artist = artist ?: updatedItems[idx].artist,
-                        album = album ?: updatedItems[idx].album,
-                        duration = if (extractedDuration > 0L) extractedDuration else updatedItems[idx].duration
+                val current = queueManager.currentItem
+                if (current != null && current.path == item.path) {
+                    val updated = current.copy(
+                        title = title ?: current.title,
+                        artist = artist ?: current.artist,
+                        album = album ?: current.album,
+                        duration = if (extractedDuration > 0L) extractedDuration else current.duration
                     )
-                    queueManager.setQueue(updatedItems, idx)
+                    queueManager.replaceItem(queueManager.currentIndex, updated)
+                } else {
+                    val queue = queueManager.queue
+                    val foundIdx = queue.indexOfFirst { it.path == item.path }
+                    if (foundIdx >= 0) {
+                        val target = queue[foundIdx]
+                        val updated = target.copy(
+                            title = title ?: target.title,
+                            artist = artist ?: target.artist,
+                            album = album ?: target.album,
+                            duration = if (extractedDuration > 0L) extractedDuration else target.duration
+                        )
+                        queueManager.replaceItem(foundIdx, updated)
+                    }
                 }
 
                 playbackCallback?.onMetadataChanged(metadata)

@@ -377,6 +377,7 @@ class UFMPlayerActivity : AppCompatActivity() {
 
                     val newIdx = playlist.indexOf(trackInfo.path).takeIf { it >= 0 }
                         ?: (playbackService?.queueManager?.currentIndex ?: currentIndex)
+                            .coerceIn(0, (playlist.size - 1).coerceAtLeast(0))
                     currentIndex = newIdx
                     if (isTv) {
                         tvPlaylistAdapter?.setCurrentIndex(newIdx)

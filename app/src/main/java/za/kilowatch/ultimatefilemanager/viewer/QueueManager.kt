@@ -23,61 +23,72 @@ data class QueueItem(
 /**
  * Mutable playback queue with index tracking, shuffle, repeat, and navigation.
  *
+ * Fully thread-safe and bounds-checked across all operations.
  * Shuffle excludes the current index when choosing the next track (per clarification).
  */
 class QueueManager {
 
+    private val lock = Any()
     private val items = mutableListOf<QueueItem>()
-    /** Public getter; write via [setCurrentIndex]. */
-    var currentIndex = 0
-        internal set
 
-    val size: Int get() = items.size
-    val isEmpty: Boolean get() = items.isEmpty()
-    val currentItem: QueueItem? get() = items.getOrNull(currentIndex)
-    val queue: List<QueueItem> get() = items.toList()
+    /** Public getter; write via [setCurrentIndex] or clamped setter. */
+    var currentIndex: Int = 0
+        get() = synchronized(lock) { field }
+        internal set(value) = synchronized(lock) {
+            field = if (items.isEmpty()) 0 else value.coerceIn(0, items.size - 1)
+        }
+
+    val size: Int get() = synchronized(lock) { items.size }
+    val isEmpty: Boolean get() = synchronized(lock) { items.isEmpty() }
+    val currentItem: QueueItem?
+        get() = synchronized(lock) {
+            val idx = currentIndex
+            if (idx in items.indices) items[idx] else null
+        }
+    val queue: List<QueueItem> get() = synchronized(lock) { items.toList() }
 
     // ── Queue Mutation ──────────────────────────────────────────────
 
-    /** Set an entirely new queue and reset index to 0. */
-    fun setQueue(newItems: List<QueueItem>, startIndex: Int = 0) {
+    /** Set an entirely new queue and reset index to [startIndex] (clamped). */
+    fun setQueue(newItems: List<QueueItem>, startIndex: Int = 0) = synchronized(lock) {
         items.clear()
         items.addAll(newItems)
         currentIndex = startIndex.coerceIn(0, (items.size - 1).coerceAtLeast(0))
     }
 
     /** Append items to the end of the queue. */
-    fun addToQueue(newItems: List<QueueItem>) {
+    fun addToQueue(newItems: List<QueueItem>) = synchronized(lock) {
         items.addAll(newItems)
     }
 
     /** Insert items after the current track (play next). */
-    fun playNext(newItems: List<QueueItem>) {
+    fun playNext(newItems: List<QueueItem>) = synchronized(lock) {
         val insertAt = (currentIndex + 1).coerceAtMost(items.size)
         items.addAll(insertAt, newItems)
     }
 
     /** Remove a single item at [index]. Returns true if successful. */
-    fun removeAt(index: Int): Boolean {
+    fun removeAt(index: Int): Boolean = synchronized(lock) {
         if (index < 0 || index >= items.size) return false
         items.removeAt(index)
         // Adjust current index if needed
-        if (index < currentIndex) currentIndex--
-        else if (index == currentIndex && currentIndex >= items.size) {
+        if (index < currentIndex) {
+            currentIndex--
+        } else if (index == currentIndex && currentIndex >= items.size) {
             currentIndex = (items.size - 1).coerceAtLeast(0)
         }
         return true
     }
 
     /** Replace an item at [index] with [newItem]. */
-    fun replaceItem(index: Int, newItem: QueueItem) {
+    fun replaceItem(index: Int, newItem: QueueItem) = synchronized(lock) {
         if (index in items.indices) {
             items[index] = newItem
         }
     }
 
     /** Move an item from [fromIndex] to [toIndex]. */
-    fun moveItem(fromIndex: Int, toIndex: Int) {
+    fun moveItem(fromIndex: Int, toIndex: Int) = synchronized(lock) {
         if (fromIndex < 0 || fromIndex >= items.size) return
         if (toIndex < 0 || toIndex >= items.size) return
         if (fromIndex == toIndex) return
@@ -95,7 +106,7 @@ class QueueManager {
     }
 
     /** Clear the entire queue. */
-    fun clear() {
+    fun clear() = synchronized(lock) {
         items.clear()
         currentIndex = 0
     }
@@ -107,7 +118,7 @@ class QueueManager {
      * - If [isShuffle] and size > 1, picks a random index excluding [currentIndex].
      * - Otherwise wraps forward with modulo.
      */
-    fun nextIndex(isShuffle: Boolean): Int? {
+    fun nextIndex(isShuffle: Boolean): Int? = synchronized(lock) {
         if (items.isEmpty()) return null
         if (items.size == 1) return 0
 
@@ -124,7 +135,7 @@ class QueueManager {
      * - If [isShuffle], picks a random index.
      * - Otherwise wraps backward.
      */
-    fun prevIndex(isShuffle: Boolean): Int? {
+    fun prevIndex(isShuffle: Boolean): Int? = synchronized(lock) {
         if (items.isEmpty()) return null
         if (items.size == 1) return 0
 
@@ -136,18 +147,20 @@ class QueueManager {
     }
 
     /** Set the current index if valid. */
-    fun setCurrentIndex(index: Int): Boolean {
+    fun setCurrentIndex(index: Int): Boolean = synchronized(lock) {
         if (index < 0 || index >= items.size) return false
         currentIndex = index
         return true
     }
 
     /** Return indices that can be shuffled into (excludes current). */
-    fun shuffleCandidates(): List<Int> {
+    fun shuffleCandidates(): List<Int> = synchronized(lock) {
         if (items.size <= 1) return emptyList()
         return items.indices.filter { it != currentIndex }
     }
 
     /** Get item at index, or null. */
-    fun get(index: Int): QueueItem? = items.getOrNull(index)
+    fun get(index: Int): QueueItem? = synchronized(lock) {
+        if (index in items.indices) items[index] else null
+    }
 }

@@ -113,16 +113,17 @@ class TvPlayerPlaylistAdapter(
 
     fun updateItems(newItems: List<QueueItem>, newIndex: Int) {
         items = newItems
-        currentIndex = newIndex
+        currentIndex = if (newItems.isEmpty()) 0 else newIndex.coerceIn(0, newItems.size - 1)
         notifyDataSetChanged()
     }
 
     fun setCurrentIndex(newIndex: Int) {
-        if (currentIndex == newIndex) return
+        val clampedIndex = if (items.isEmpty()) 0 else newIndex.coerceIn(0, items.size - 1)
+        if (currentIndex == clampedIndex) return
         val oldIndex = currentIndex
-        currentIndex = newIndex
+        currentIndex = clampedIndex
         if (oldIndex in items.indices) notifyItemChanged(oldIndex)
-        if (newIndex in items.indices) notifyItemChanged(newIndex)
+        if (currentIndex in items.indices) notifyItemChanged(currentIndex)
     }
 
     fun getCurrentIndex(): Int = currentIndex

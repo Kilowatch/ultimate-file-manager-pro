@@ -16,7 +16,7 @@ import za.kilowatch.ultimatefilemanager.R
  */
 class QueueAdapter(
     private var items: MutableList<QueueItem>,
-    private val currentIndex: Int,
+    private var currentIndex: Int,
     private val onItemClick: (Int) -> Unit,
     private val onItemMove: (Int, Int) -> Unit,
     private val onItemDismiss: (Int) -> Unit
@@ -66,6 +66,7 @@ class QueueAdapter(
     /** Update the data set and current index. */
     fun updateData(newItems: MutableList<QueueItem>, newIndex: Int) {
         items = newItems
+        currentIndex = if (newItems.isEmpty()) 0 else newIndex.coerceIn(0, newItems.size - 1)
         notifyDataSetChanged()
     }
 
