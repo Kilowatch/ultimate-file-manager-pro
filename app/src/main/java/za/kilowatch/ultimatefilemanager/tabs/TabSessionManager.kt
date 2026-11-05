@@ -9,6 +9,7 @@ import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.storage.SafLocationRepository
 import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
 import java.io.File
+import java.util.concurrent.Executors
 
 object TabSessionManager {
 
@@ -16,16 +17,35 @@ object TabSessionManager {
     private const val KEY_TABS_JSON = "tabs_json"
     private const val KEY_ACTIVE_TAB_ID = "active_tab_id"
 
+    // Dedicated single-thread writer so disk persistence is serialized and never runs on the main
+    // thread. We use commit() (NOT apply()): apply() posts the write to android.app.QueuedWork, and
+    // the framework then calls QueuedWork.waitToFinish() on the main thread during
+    // Activity.onPause()/onStop(), blocking it for the full fsync() duration — on slow devices or
+    // during concurrent disk I/O that flush can exceed 5 s, causing an ANR.
+    // commit() is synchronous but never touches QueuedWork, so the main thread is never blocked.
+    // See SecureTokenStore, FileTagsManager, and PlayerStateManager KDoc for the same rationale.
+    private val ioWriter = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "ufm-tab-session-writer").apply { isDaemon = true }
+    }
+
     fun saveSession(context: Context, tabs: List<TabModel>, activeTabId: String) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val appContext = context.applicationContext
         val jsonArray = JSONArray()
         for (tab in tabs) {
             jsonArray.put(tab.toJson())
         }
-        prefs.edit()
-            .putString(KEY_TABS_JSON, jsonArray.toString())
-            .putString(KEY_ACTIVE_TAB_ID, activeTabId)
-            .apply()
+        val jsonString = jsonArray.toString()
+        ioWriter.execute {
+            try {
+                appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                    .edit()
+                    .putString(KEY_TABS_JSON, jsonString)
+                    .putString(KEY_ACTIVE_TAB_ID, activeTabId)
+                    .commit()
+            } catch (e: Exception) {
+                // Ignore write failures in background
+            }
+        }
     }
 
     fun loadSession(context: Context): Pair<List<TabModel>, String?> {
@@ -59,10 +79,17 @@ object TabSessionManager {
     }
 
     fun clearSession(context: Context) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .clear()
-            .apply()
+        val appContext = context.applicationContext
+        ioWriter.execute {
+            try {
+                appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .commit()
+            } catch (e: Exception) {
+                // Ignore write failures in background
+            }
+        }
     }
 
     /**

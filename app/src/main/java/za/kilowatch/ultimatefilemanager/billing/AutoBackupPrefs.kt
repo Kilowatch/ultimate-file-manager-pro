@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import java.io.File
+import java.util.concurrent.Executors
 
 /**
  * SharedPreferences wrapper for all auto-backup settings and password storage.
@@ -115,41 +116,65 @@ object AutoBackupPrefs {
         }
     }
 
+    // Dedicated single-thread writer so disk persistence is serialized and never runs on the main
+    // thread. We use commit() (NOT apply()): apply() posts the write to android.app.QueuedWork, and
+    // the framework then calls QueuedWork.waitToFinish() on the main thread during
+    // Activity.onPause()/onStop(), blocking it for the full fsync() duration — on slow devices or
+    // during concurrent disk I/O that flush can exceed 5 s, causing an ANR.
+    // commit() is synchronous but never touches QueuedWork, so the main thread is never blocked.
+    // See SecureTokenStore, FileTagsManager, and PlayerStateManager KDoc for the same rationale.
+    private val ioWriter = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "ufm-autobackup-prefs-writer").apply { isDaemon = true }
+    }
+
+    private fun editAsync(context: Context, block: SharedPreferences.Editor.() -> Unit) {
+        val appContext = context.applicationContext
+        ioWriter.execute {
+            try {
+                val editor = getPrefs(appContext).edit()
+                editor.block()
+                editor.commit()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to persist AutoBackupPrefs: ${e.message}")
+            }
+        }
+    }
+
     // ── Configuration getters/setters ─────────────────────────────────────────
 
     fun isEnabled(context: Context): Boolean =
         getPrefs(context).getBoolean(KEY_ENABLED, false)
 
     fun setEnabled(context: Context, enabled: Boolean) {
-        getPrefs(context).edit().putBoolean(KEY_ENABLED, enabled).apply()
+        editAsync(context) { putBoolean(KEY_ENABLED, enabled) }
     }
 
     fun isBackupSettings(context: Context): Boolean =
         getPrefs(context).getBoolean(KEY_BACKUP_SETTINGS, true)
 
     fun setBackupSettings(context: Context, enabled: Boolean) {
-        getPrefs(context).edit().putBoolean(KEY_BACKUP_SETTINGS, enabled).apply()
+        editAsync(context) { putBoolean(KEY_BACKUP_SETTINGS, enabled) }
     }
 
     fun isBackupTheme(context: Context): Boolean =
         getPrefs(context).getBoolean(KEY_BACKUP_THEME, true)
 
     fun setBackupTheme(context: Context, enabled: Boolean) {
-        getPrefs(context).edit().putBoolean(KEY_BACKUP_THEME, enabled).apply()
+        editAsync(context) { putBoolean(KEY_BACKUP_THEME, enabled) }
     }
 
     fun getScheduleType(context: Context): String =
         getPrefs(context).getString(KEY_SCHEDULE, "weekly") ?: "weekly"
 
     fun setScheduleType(context: Context, type: String) {
-        getPrefs(context).edit().putString(KEY_SCHEDULE, type).apply()
+        editAsync(context) { putString(KEY_SCHEDULE, type) }
     }
 
     fun isUsePassword(context: Context): Boolean =
         getPrefs(context).getBoolean(KEY_USE_PASSWORD, false)
 
     fun setUsePassword(context: Context, usePassword: Boolean) {
-        getPrefs(context).edit().putBoolean(KEY_USE_PASSWORD, usePassword).apply()
+        editAsync(context) { putBoolean(KEY_USE_PASSWORD, usePassword) }
     }
 
     // ── Password (EncryptedSharedPreferences) ─────────────────────────────────
@@ -171,22 +196,22 @@ object AutoBackupPrefs {
         getPrefs(context).getBoolean(KEY_SETTINGS_DIRTY, false)
 
     fun setSettingsDirty(context: Context) {
-        getPrefs(context).edit().putBoolean(KEY_SETTINGS_DIRTY, true).apply()
+        editAsync(context) { putBoolean(KEY_SETTINGS_DIRTY, true) }
     }
 
     fun clearSettingsDirty(context: Context) {
-        getPrefs(context).edit().putBoolean(KEY_SETTINGS_DIRTY, false).apply()
+        editAsync(context) { putBoolean(KEY_SETTINGS_DIRTY, false) }
     }
 
     fun isThemeDirty(context: Context): Boolean =
         getPrefs(context).getBoolean(KEY_THEME_DIRTY, false)
 
     fun setThemeDirty(context: Context) {
-        getPrefs(context).edit().putBoolean(KEY_THEME_DIRTY, true).apply()
+        editAsync(context) { putBoolean(KEY_THEME_DIRTY, true) }
     }
 
     fun clearThemeDirty(context: Context) {
-        getPrefs(context).edit().putBoolean(KEY_THEME_DIRTY, false).apply()
+        editAsync(context) { putBoolean(KEY_THEME_DIRTY, false) }
     }
 
     // ── First-boot / restore flags ────────────────────────────────────────────
@@ -203,7 +228,7 @@ object AutoBackupPrefs {
 
     fun setBackupFilesPresentOnFirstBoot(context: Context, present: Boolean) {
         cachedFilesOnFirstBoot = present
-        getPrefs(context).edit().putBoolean(KEY_FILES_ON_FIRST_BOOT, present).apply()
+        editAsync(context) { putBoolean(KEY_FILES_ON_FIRST_BOOT, present) }
     }
 
     fun isRestorePromptShown(context: Context): Boolean {
@@ -218,7 +243,7 @@ object AutoBackupPrefs {
 
     fun setRestorePromptShown(context: Context) {
         cachedRestorePromptShown = true
-        getPrefs(context).edit().putBoolean(KEY_RESTORE_PROMPT_SHOWN, true).apply()
+        editAsync(context) { putBoolean(KEY_RESTORE_PROMPT_SHOWN, true) }
     }
 
     // ── Custom location getters/setters ───────────────────────────────────────
@@ -227,28 +252,28 @@ object AutoBackupPrefs {
         getPrefs(context).getString(KEY_CUSTOM_LOCATION_TYPE, "") ?: ""
 
     fun setCustomLocationType(context: Context, type: String) {
-        getPrefs(context).edit().putString(KEY_CUSTOM_LOCATION_TYPE, type).apply()
+        editAsync(context) { putString(KEY_CUSTOM_LOCATION_TYPE, type) }
     }
 
     fun getCustomLocalPath(context: Context): String =
         getPrefs(context).getString(KEY_CUSTOM_LOCAL_PATH, "") ?: ""
 
     fun setCustomLocalPath(context: Context, path: String) {
-        getPrefs(context).edit().putString(KEY_CUSTOM_LOCAL_PATH, path).apply()
+        editAsync(context) { putString(KEY_CUSTOM_LOCAL_PATH, path) }
     }
 
     fun getCustomShareId(context: Context): String =
         getPrefs(context).getString(KEY_CUSTOM_SHARE_ID, "") ?: ""
 
     fun setCustomShareId(context: Context, shareId: String) {
-        getPrefs(context).edit().putString(KEY_CUSTOM_SHARE_ID, shareId).apply()
+        editAsync(context) { putString(KEY_CUSTOM_SHARE_ID, shareId) }
     }
 
     fun getCustomNetPath(context: Context): String =
         getPrefs(context).getString(KEY_CUSTOM_NET_PATH, "") ?: ""
 
     fun setCustomNetPath(context: Context, netPath: String) {
-        getPrefs(context).edit().putString(KEY_CUSTOM_NET_PATH, netPath).apply()
+        editAsync(context) { putString(KEY_CUSTOM_NET_PATH, netPath) }
     }
 
     fun isCustomLocationSet(context: Context): Boolean {
@@ -261,12 +286,12 @@ object AutoBackupPrefs {
     }
 
     fun clearCustomLocation(context: Context) {
-        getPrefs(context).edit()
-            .putString(KEY_CUSTOM_LOCATION_TYPE, "")
-            .putString(KEY_CUSTOM_LOCAL_PATH, "")
-            .putString(KEY_CUSTOM_SHARE_ID, "")
-            .putString(KEY_CUSTOM_NET_PATH, "")
-            .apply()
+        editAsync(context) {
+            putString(KEY_CUSTOM_LOCATION_TYPE, "")
+            putString(KEY_CUSTOM_LOCAL_PATH, "")
+            putString(KEY_CUSTOM_SHARE_ID, "")
+            putString(KEY_CUSTOM_NET_PATH, "")
+        }
     }
 
     /**

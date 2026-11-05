@@ -1,6 +1,8 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.content.SharedPreferences
+import java.util.concurrent.Executors
 
 /**
  * Manages the Twin Window layout preference on mobile devices.
@@ -13,6 +15,31 @@ object TwinWindowPreferenceManager {
     private const val PREFS_NAME = "twin_window_prefs"
     private const val KEY_VERTICAL_SPLIT = "is_vertical_split"
 
+    // Dedicated single-thread writer so disk persistence is serialized and never runs on the main
+    // thread. We use commit() (NOT apply()): apply() posts the write to android.app.QueuedWork, and
+    // the framework then calls QueuedWork.waitToFinish() on the main thread during
+    // Activity.onPause()/onStop(), blocking it for the full fsync() duration — on slow devices or
+    // during concurrent disk I/O that flush can exceed 5 s, causing an ANR.
+    // commit() is synchronous but never touches QueuedWork, so the main thread is never blocked.
+    // See SecureTokenStore, FileTagsManager, and PlayerStateManager KDoc for the same rationale.
+    private val ioWriter = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "ufm-twin-prefs-writer").apply { isDaemon = true }
+    }
+
+    private fun editAsync(context: Context, block: SharedPreferences.Editor.() -> Unit) {
+        val appContext = context.applicationContext
+        ioWriter.execute {
+            try {
+                val prefs = appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                val editor = prefs.edit()
+                editor.block()
+                editor.commit()
+            } catch (e: Exception) {
+                // Ignore write failures in background
+            }
+        }
+    }
+
     /** Returns true when the user has enabled the vertical layout for Twin Window. Defaults to vertical on TV. */
     fun isVerticalSplit(context: Context): Boolean {
         val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)
@@ -22,10 +49,9 @@ object TwinWindowPreferenceManager {
 
     /** Persists the vertical split state. */
     fun setVerticalSplit(context: Context, isVertical: Boolean) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean(KEY_VERTICAL_SPLIT, isVertical)
-            .apply()
+        editAsync(context) {
+            putBoolean(KEY_VERTICAL_SPLIT, isVertical)
+        }
     }
 
     private const val KEY_DEFAULT_STARTUP = "is_default_startup"
@@ -38,10 +64,9 @@ object TwinWindowPreferenceManager {
 
     /** Persists the default startup state. */
     fun setDefaultStartup(context: Context, isDefault: Boolean) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean(KEY_DEFAULT_STARTUP, isDefault)
-            .apply()
+        editAsync(context) {
+            putBoolean(KEY_DEFAULT_STARTUP, isDefault)
+        }
     }
 
     // ── Pane 2 remembered storage ─────────────────────────────────────────────
@@ -67,13 +92,12 @@ object TwinWindowPreferenceManager {
         label: String? = null,
         shareId: String? = null
     ) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(KEY_PANE2_TYPE, type)
-            .putString(KEY_PANE2_LOCAL_PATH, path)
-            .putString(KEY_PANE2_LOCAL_LABEL, label)
-            .putString(KEY_PANE2_SHARE_ID, shareId)
-            .apply()
+        editAsync(context) {
+            putString(KEY_PANE2_TYPE, type)
+            putString(KEY_PANE2_LOCAL_PATH, path)
+            putString(KEY_PANE2_LOCAL_LABEL, label)
+            putString(KEY_PANE2_SHARE_ID, shareId)
+        }
     }
 
     /** Returns the remembered pane 2 type ("local", "network", "apps"). Defaults to "local". */
@@ -106,21 +130,19 @@ object TwinWindowPreferenceManager {
 
     /** Persists the current subfolder shown in pane 2 so it can be restored on next launch. */
     fun savePane2InitialPath(context: Context, path: String?) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(KEY_PANE2_INITIAL_PATH, path)
-            .apply()
+        editAsync(context) {
+            putString(KEY_PANE2_INITIAL_PATH, path)
+        }
     }
 
     /** Clears the remembered pane 2 selection (resets to default Internal Storage on next launch). */
     fun clearPane2Selection(context: Context) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .remove(KEY_PANE2_TYPE)
-            .remove(KEY_PANE2_LOCAL_PATH)
-            .remove(KEY_PANE2_LOCAL_LABEL)
-            .remove(KEY_PANE2_SHARE_ID)
-            .remove(KEY_PANE2_INITIAL_PATH)
-            .apply()
+        editAsync(context) {
+            remove(KEY_PANE2_TYPE)
+            remove(KEY_PANE2_LOCAL_PATH)
+            remove(KEY_PANE2_LOCAL_LABEL)
+            remove(KEY_PANE2_SHARE_ID)
+            remove(KEY_PANE2_INITIAL_PATH)
+        }
     }
 }

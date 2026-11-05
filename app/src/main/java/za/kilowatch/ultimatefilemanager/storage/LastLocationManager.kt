@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Environment
 import android.os.storage.StorageManager
 import za.kilowatch.ultimatefilemanager.UfmApplication
@@ -14,6 +15,7 @@ import za.kilowatch.ultimatefilemanager.network.PairingManager
 import za.kilowatch.ultimatefilemanager.tabs.TabSessionManager
 import za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity
 import java.io.File
+import java.util.concurrent.Executors
 
 /**
  * Manages the persistence and resolution of the user's last-opened browsing location on mobile.
@@ -57,6 +59,31 @@ object LastLocationManager {
     private const val KEY_NET_IS_ONLINE = "net_is_online"
     private const val KEY_NET_PAIRED_DEVICE_ID = "net_paired_device_id"
 
+    // Dedicated single-thread writer so disk persistence is serialized and never runs on the main
+    // thread. We use commit() (NOT apply()): apply() posts the write to android.app.QueuedWork, and
+    // the framework then calls QueuedWork.waitToFinish() on the main thread during
+    // Activity.onPause()/onStop(), blocking it for the full fsync() duration — on slow devices or
+    // during concurrent disk I/O that flush can exceed 5 s, causing an ANR.
+    // commit() is synchronous but never touches QueuedWork, so the main thread is never blocked.
+    // See SecureTokenStore, FileTagsManager, and PlayerStateManager KDoc for the same rationale.
+    private val ioWriter = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "ufm-last-location-writer").apply { isDaemon = true }
+    }
+
+    private fun editAsync(context: Context, block: SharedPreferences.Editor.() -> Unit) {
+        val appContext = context.applicationContext
+        ioWriter.execute {
+            try {
+                val prefs = appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                val editor = prefs.edit()
+                editor.block()
+                editor.commit()
+            } catch (e: Exception) {
+                // Ignore write failures in background
+            }
+        }
+    }
+
     /**
      * Records that the user is currently browsing in [FileBrowserActivity].
      */
@@ -76,17 +103,16 @@ object LastLocationManager {
             mountPath
         }
 
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit()
-            .putString(KEY_CONTAINER_TYPE, TYPE_FILE_BROWSER)
-            .putString(KEY_MOUNT_PATH, mountPath)
-            .putString(KEY_CURRENT_PATH, sanitizedPath)
-            .putString(KEY_STORAGE_LABEL, storageLabel)
-            .putString(KEY_STORAGE_ID, storageId)
-            .putString(KEY_STORAGE_TYPE, storageType)
-            .putBoolean(KEY_IS_REMOVABLE, isRemovable)
-            .putBoolean(KEY_IS_ROOT, isRoot)
-            .apply()
+        editAsync(context) {
+            putString(KEY_CONTAINER_TYPE, TYPE_FILE_BROWSER)
+            putString(KEY_MOUNT_PATH, mountPath)
+            putString(KEY_CURRENT_PATH, sanitizedPath)
+            putString(KEY_STORAGE_LABEL, storageLabel)
+            putString(KEY_STORAGE_ID, storageId)
+            putString(KEY_STORAGE_TYPE, storageType)
+            putBoolean(KEY_IS_REMOVABLE, isRemovable)
+            putBoolean(KEY_IS_ROOT, isRoot)
+        }
     }
 
     /**
@@ -100,15 +126,14 @@ object LastLocationManager {
         isOnlineStorage: Boolean,
         pairedDeviceId: String? = null
     ) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit()
-            .putString(KEY_CONTAINER_TYPE, TYPE_NETWORK_BROWSER)
-            .putString(KEY_NET_SHARE_ID, shareId)
-            .putString(KEY_NET_CURRENT_PATH, currentPath)
-            .putString(KEY_NET_STORAGE_LABEL, storageLabel)
-            .putBoolean(KEY_NET_IS_ONLINE, isOnlineStorage)
-            .putString(KEY_NET_PAIRED_DEVICE_ID, pairedDeviceId)
-            .apply()
+        editAsync(context) {
+            putString(KEY_CONTAINER_TYPE, TYPE_NETWORK_BROWSER)
+            putString(KEY_NET_SHARE_ID, shareId)
+            putString(KEY_NET_CURRENT_PATH, currentPath)
+            putString(KEY_NET_STORAGE_LABEL, storageLabel)
+            putBoolean(KEY_NET_IS_ONLINE, isOnlineStorage)
+            putString(KEY_NET_PAIRED_DEVICE_ID, pairedDeviceId)
+        }
     }
 
     /**
@@ -116,47 +141,44 @@ object LastLocationManager {
      * (Tab contents and active tab are persisted directly via [TabSessionManager]).
      */
     fun recordTabbedBrowser(context: Context) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit()
-            .putString(KEY_CONTAINER_TYPE, TYPE_TABBED_BROWSER)
-            .apply()
+        editAsync(context) {
+            putString(KEY_CONTAINER_TYPE, TYPE_TABBED_BROWSER)
+        }
     }
 
     /**
      * Records that the user is currently in [TwinWindowActivity].
      */
     fun recordTwinWindow(context: Context) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit()
-            .putString(KEY_CONTAINER_TYPE, TYPE_TWIN_WINDOW)
-            .apply()
+        editAsync(context) {
+            putString(KEY_CONTAINER_TYPE, TYPE_TWIN_WINDOW)
+        }
     }
 
     /**
      * Records that the user is on the main storage screen ([StorageBrowserActivity]).
      */
     fun recordStorageBrowser(context: Context) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit()
-            .putString(KEY_CONTAINER_TYPE, TYPE_STORAGE_BROWSER)
-            .apply()
+        editAsync(context) {
+            putString(KEY_CONTAINER_TYPE, TYPE_STORAGE_BROWSER)
+        }
     }
 
     /**
      * Records any standard feature activity (Settings, App Manager, Notepad, Sync, etc.).
      */
     fun recordGenericActivity(activity: Activity) {
-        val prefs = activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val intentUri = try {
             activity.intent?.toUri(Intent.URI_INTENT_SCHEME)
         } catch (_: Throwable) {
             null
         }
-        prefs.edit()
-            .putString(KEY_CONTAINER_TYPE, TYPE_GENERIC_ACTIVITY)
-            .putString(KEY_GENERIC_CLASS_NAME, activity.javaClass.name)
-            .putString(KEY_GENERIC_INTENT_URI, intentUri)
-            .apply()
+        val className = activity.javaClass.name
+        editAsync(activity) {
+            putString(KEY_CONTAINER_TYPE, TYPE_GENERIC_ACTIVITY)
+            putString(KEY_GENERIC_CLASS_NAME, className)
+            putString(KEY_GENERIC_INTENT_URI, intentUri)
+        }
     }
 
     /**
@@ -266,8 +288,9 @@ object LastLocationManager {
      * Clears recorded last location.
      */
     fun clear(context: Context) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().clear().apply()
+        editAsync(context) {
+            clear()
+        }
     }
 
     /**

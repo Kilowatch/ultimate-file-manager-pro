@@ -9,11 +9,23 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.OutputStreamWriter
 import java.util.UUID
+import java.util.concurrent.Executors
 
 class PairingManager(private val context: Context) {
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val secureStore: SecureTokenStore by lazy { SecureTokenStore.getInstance(context) }
+
+    // Dedicated single-thread writer so disk persistence is serialized and never runs on the main
+    // thread. We use commit() (NOT apply()): apply() posts the write to android.app.QueuedWork, and
+    // the framework then calls QueuedWork.waitToFinish() on the main thread during
+    // Activity.onPause()/onStop(), blocking it for the full fsync() duration — on slow devices or
+    // during concurrent disk I/O that flush can exceed 5 s, causing an ANR.
+    // commit() is synchronous but never touches QueuedWork, so the main thread is never blocked.
+    // See SecureTokenStore, FileTagsManager, and PlayerStateManager KDoc for the same rationale.
+    private val ioWriter = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "ufm-pairing-writer").apply { isDaemon = true }
+    }
 
     @Volatile
     private var cachedDeviceId: String? = null
@@ -43,7 +55,10 @@ class PairingManager(private val context: Context) {
         var id = prefs.getString(KEY_MY_DEVICE_ID, null)
         if (id == null) {
             id = UUID.randomUUID().toString()
-            prefs.edit().putString(KEY_MY_DEVICE_ID, id).apply()
+            val newId = id
+            ioWriter.execute {
+                prefs.edit().putString(KEY_MY_DEVICE_ID, newId).commit()
+            }
         }
         cachedDeviceId = id
         return id
@@ -121,17 +136,20 @@ class PairingManager(private val context: Context) {
                 currentDevices[index] = currentDevices[index].copy(isConnected = isConnected)
                 cachedDevices = currentDevices.toList()
                 val stringSet = currentDevices.map { it.toSharedPrefsString() }.toSet()
-                prefs.edit().putStringSet(KEY_PAIRED_DEVICES, stringSet).apply()
+                ioWriter.execute {
+                    prefs.edit().putStringSet(KEY_PAIRED_DEVICES, stringSet).commit()
+                }
             }
         }
     }
 
-    // Must only be called from a worker thread (Dispatchers.IO).
-    // Uses commit() internally (via SecureTokenStore) rather than apply() to
-    // avoid QueuedWork blocking the main thread during Activity.onPause().
+    // Persists paired devices on dedicated single-thread background writer.
+    // Uses commit() (NOT apply()) to avoid QueuedWork blocking the main thread during Activity.onPause()/onStop().
     private fun saveDevices(devices: List<PairedDevice>) {
         val stringSet = devices.map { it.toSharedPrefsString() }.toSet()
-        prefs.edit().putStringSet(KEY_PAIRED_DEVICES, stringSet).apply()
+        ioWriter.execute {
+            prefs.edit().putStringSet(KEY_PAIRED_DEVICES, stringSet).commit()
+        }
 
         // Persist secrets to encrypted store
         if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -185,7 +203,9 @@ class PairingManager(private val context: Context) {
 
         // Re-save using the new 7-field format (secrets no longer in CSV)
         val newStringSet = migratedDevices.map { it.toSharedPrefsString() }.toSet()
-        prefs.edit().putStringSet(KEY_PAIRED_DEVICES, newStringSet).apply()
+        ioWriter.execute {
+            prefs.edit().putStringSet(KEY_PAIRED_DEVICES, newStringSet).commit()
+        }
         Log.i("PairingManager", "Migration complete — ${migratedDevices.size} device(s) updated")
     }
 
