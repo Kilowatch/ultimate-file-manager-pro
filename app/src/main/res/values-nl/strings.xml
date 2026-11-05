@@ -3242,9 +3242,7 @@ Overslaan (veiligste)
 Gebruik nieuwste
 </string>
     <string name="conflict_strategy_keep_local">Behoud lokaal bestand</string>
-    <string name="conflict_strategy_keep_remote">
-Blijf op afstand
-</string>
+    <string name="conflict_strategy_keep_remote">Behoud extern bestand</string>
 
     <!-- Advanced Sync Triggers & Constraints -->
     <string name="trigger_instant">
