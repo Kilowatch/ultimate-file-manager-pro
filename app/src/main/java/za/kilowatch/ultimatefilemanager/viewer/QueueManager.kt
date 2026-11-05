@@ -45,26 +45,26 @@ class QueueManager {
             val idx = currentIndex
             if (idx in items.indices) items[idx] else null
         }
-    val queue: List<QueueItem> get() = synchronized(lock) { items.toList() }
+    val queue: List<QueueItem> get() = synchronized(lock) { items.filterNotNull().toList() }
 
     // ── Queue Mutation ──────────────────────────────────────────────
 
     /** Set an entirely new queue and reset index to [startIndex] (clamped). */
     fun setQueue(newItems: List<QueueItem>, startIndex: Int = 0) = synchronized(lock) {
         items.clear()
-        items.addAll(newItems)
+        items.addAll(newItems.filterNotNull())
         currentIndex = startIndex.coerceIn(0, (items.size - 1).coerceAtLeast(0))
     }
 
     /** Append items to the end of the queue. */
     fun addToQueue(newItems: List<QueueItem>) = synchronized(lock) {
-        items.addAll(newItems)
+        items.addAll(newItems.filterNotNull())
     }
 
     /** Insert items after the current track (play next). */
     fun playNext(newItems: List<QueueItem>) = synchronized(lock) {
         val insertAt = (currentIndex + 1).coerceAtMost(items.size)
-        items.addAll(insertAt, newItems)
+        items.addAll(insertAt, newItems.filterNotNull())
     }
 
     /** Remove a single item at [index]. Returns true if successful. */

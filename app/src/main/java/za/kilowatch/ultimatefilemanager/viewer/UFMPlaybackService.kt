@@ -211,7 +211,9 @@ class UFMPlaybackService : Service() {
         playbackCallback = callback
         // Push current track and state immediately
         queueManager.currentItem?.let { item ->
-            callback.onTrackChanged(item)
+            if (item.path.isNotEmpty()) {
+                callback.onTrackChanged(item)
+            }
         }
         player?.let { p ->
             callback.onPlaybackStateChanged(p.isPlaying, p.playbackState, isCurrentLocal)
@@ -369,7 +371,8 @@ class UFMPlaybackService : Service() {
         val wasPlaying = player?.isPlaying == true
         val currentPos = player?.currentPosition ?: 0L
 
-        queueManager.setQueue(items, newIndex ?: queueManager.currentIndex)
+        val validItems = items.filterNotNull()
+        queueManager.setQueue(validItems, newIndex ?: queueManager.currentIndex)
 
         // If the current track changed, restart playback
         if (newIndex != null && newIndex != queueManager.currentIndex) {

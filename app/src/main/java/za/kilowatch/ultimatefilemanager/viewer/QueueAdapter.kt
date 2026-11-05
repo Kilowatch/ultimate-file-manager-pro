@@ -36,7 +36,7 @@ class QueueAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
+        val item = items.getOrNull(position) ?: return
         val isCurrent = position == currentIndex
 
         holder.txtTitle.text = item.title ?: item.path.substringAfterLast("/")
@@ -65,8 +65,8 @@ class QueueAdapter(
 
     /** Update the data set and current index. */
     fun updateData(newItems: MutableList<QueueItem>, newIndex: Int) {
-        items = newItems
-        currentIndex = if (newItems.isEmpty()) 0 else newIndex.coerceIn(0, newItems.size - 1)
+        items = newItems.filterNotNull().toMutableList()
+        currentIndex = if (items.isEmpty()) 0 else newIndex.coerceIn(0, items.size - 1)
         notifyDataSetChanged()
     }
 

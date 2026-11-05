@@ -365,17 +365,18 @@ class UFMPlayerActivity : AppCompatActivity() {
                 currentTrackInfo = trackInfo
                 hasPendingNextTrack = false
                 nextTrackOverlay.hideImmediately()
-                if (trackInfo != null) {
-                    val ext = trackInfo.path.substringAfterLast('.', "").lowercase()
+                if (trackInfo != null && trackInfo.path.isNotEmpty()) {
+                    val trackPath = trackInfo.path
+                    val ext = trackPath.substringAfterLast('.', "").lowercase()
                     if (za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.isCinemaAudioExtension(ext)) {
                         if (!za.kilowatch.ultimatefilemanager.media.FFmpegMediaHelper.hasDecoderForAudioExtension(ext)) {
                             checkAndPromptCinemaAudioFallback("Device lacks decoder for $ext")
                         }
                     }
-                    val fileName = trackInfo.path.substringAfterLast("/")
+                    val fileName = trackPath.substringAfterLast("/")
                     txtTitle.text = trackInfo.title ?: fileName
 
-                    val newIdx = playlist.indexOf(trackInfo.path).takeIf { it >= 0 }
+                    val newIdx = playlist.indexOf(trackPath).takeIf { it >= 0 }
                         ?: (playbackService?.queueManager?.currentIndex ?: currentIndex)
                             .coerceIn(0, (playlist.size - 1).coerceAtLeast(0))
                     currentIndex = newIdx
@@ -384,7 +385,7 @@ class UFMPlayerActivity : AppCompatActivity() {
                     }
 
                     if (ext == "svg" || ext == "svgz") {
-                        loadSvgFile(trackInfo.path)
+                        loadSvgFile(trackPath)
                         return@runOnUiThread
                     } else if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
                         svgPlayerView.pause()
@@ -518,11 +519,12 @@ class UFMPlayerActivity : AppCompatActivity() {
         override fun onQueueChanged(queue: List<QueueItem>) {
             runOnUiThread {
                 val currentIdx = playbackService?.queueManager?.currentIndex ?: currentIndex
+                val validQueue = queue.filterNotNull()
                 playlist.clear()
-                playlist.addAll(queue.map { it.path })
-                queueAdapter?.updateData(queue.toMutableList(), currentIdx)
+                playlist.addAll(validQueue.mapNotNull { it.path.takeIf { p -> p.isNotEmpty() } })
+                queueAdapter?.updateData(validQueue.toMutableList(), currentIdx)
                 if (isTv) {
-                    tvPlaylistAdapter?.updateItems(queue, currentIdx)
+                    tvPlaylistAdapter?.updateItems(validQueue, currentIdx)
                     updatePlaylistCountText()
                 }
             }

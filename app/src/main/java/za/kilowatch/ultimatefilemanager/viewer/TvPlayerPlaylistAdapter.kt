@@ -68,7 +68,7 @@ class TvPlayerPlaylistAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
+        val item = items.getOrNull(position) ?: return
         val isCurrent = position == currentIndex
         val ctx = holder.itemView.context
 
@@ -112,8 +112,8 @@ class TvPlayerPlaylistAdapter(
     override fun getItemCount(): Int = items.size
 
     fun updateItems(newItems: List<QueueItem>, newIndex: Int) {
-        items = newItems
-        currentIndex = if (newItems.isEmpty()) 0 else newIndex.coerceIn(0, newItems.size - 1)
+        items = newItems.filterNotNull()
+        currentIndex = if (items.isEmpty()) 0 else newIndex.coerceIn(0, items.size - 1)
         notifyDataSetChanged()
     }
 

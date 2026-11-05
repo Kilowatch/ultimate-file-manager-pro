@@ -57,6 +57,32 @@ class QueueManagerTest {
     }
 
     @Test
+    fun testNullElementSafety() {
+        val qm = QueueManager()
+        val itemsWithNull = listOf<QueueItem?>(
+            QueueItem(path = "/storage/file_0.mp4"),
+            null,
+            QueueItem(path = "/storage/file_1.mp4")
+        )
+        @Suppress("UNCHECKED_CAST")
+        qm.setQueue(itemsWithNull as List<QueueItem>, 0)
+
+        assertEquals(2, qm.size)
+        assertEquals(2, qm.queue.size)
+        assertEquals("/storage/file_0.mp4", qm.get(0)?.path)
+        assertEquals("/storage/file_1.mp4", qm.get(1)?.path)
+
+        @Suppress("UNCHECKED_CAST")
+        qm.addToQueue(listOf(null, QueueItem(path = "/storage/file_2.mp4")) as List<QueueItem>)
+        assertEquals(3, qm.size)
+
+        @Suppress("UNCHECKED_CAST")
+        qm.playNext(listOf(null, QueueItem(path = "/storage/file_next.mp4")) as List<QueueItem>)
+        assertEquals(4, qm.size)
+        assertTrue(qm.queue.none { it == null })
+    }
+
+    @Test
     fun testReplaceItem() {
         val qm = QueueManager()
         val items = (0 until 5).map { QueueItem(path = "/storage/track_$it.mp3") }
