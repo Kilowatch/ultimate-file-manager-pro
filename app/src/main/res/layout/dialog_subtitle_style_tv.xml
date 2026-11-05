@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android TV Subtitle Styling Customizer — UFMStandard 10-Foot Centered Glass Dialog
+    Adheres strictly to UFMStandard:
+    - Root width: 680dp centered modal window with transparent background
+    - Container: @drawable/bg_dialog_glass
+    - 48dp frosted squircle hero badge: @drawable/bg_btn_icon_frosted with tv_accent
+    - 10-foot typography: 22sp title, 16sp-18sp body
+    - Full D-pad navigation with yellow focus highlights (@drawable/selector_tv_button_yellow)
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="680dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp">
+
+    <!-- Header Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_subtitles"
+                app:tint="@color/tv_accent"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subtitle_style_dialog_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/settings_subtitle_style_desc"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="480dp"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Live Subtitle Preview Box -->
+            <za.kilowatch.ultimatefilemanager.viewer.subtitles.SubtitlePreviewView
+                android:id="@+id/subtitlePreviewView"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Mode Selector Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:id="@+id/btnModeSystem"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/subtitle_style_mode_system"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:focusable="true"
+                    android:clickable="true" />
+
+                <TextView
+                    android:id="@+id/btnModeCustom"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/subtitle_style_mode_custom"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:layout_marginStart="12dp"
+                    android:focusable="true"
+                    android:clickable="true" />
+            </LinearLayout>
+
+            <!-- System Mode Details Section -->
+            <LinearLayout
+                android:id="@+id/layoutSystemSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_tv_card_glass"
+                android:padding="16dp"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subtitle_style_mode_system_desc"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="3dp" />
+
+                <TextView
+                    android:id="@+id/txtSystemUnavailableHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/subtitle_style_system_unavailable"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/btnOpenSystemSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/subtitle_style_open_system"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+
+            <!-- Custom Mode Details Section -->
+            <LinearLayout
+                android:id="@+id/layoutCustomSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_tv_card_glass"
+                android:padding="16dp"
+                android:layout_marginBottom="14dp"
+                android:visibility="gone">
+
+                <!-- Text Size Stepper Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/subtitle_style_text_size"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <Button
+                        android:id="@+id/btnTextSizeDec"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="−"
+                        android:textSize="18sp"
+                        android:textColor="@color/tv_text_primary"
+                        android:background="@drawable/selector_tv_button_yellow"
+                        android:focusable="true"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:id="@+id/txtTextSizeValue"
+                        android:layout_width="64dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="100%"
+                        android:textColor="@color/tv_accent"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-bold" />
+
+                    <Button
+                        android:id="@+id/btnTextSizeInc"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="+"
+                        android:textSize="18sp"
+                        android:textColor="@color/tv_text_primary"
+                        android:background="@drawable/selector_tv_button_yellow"
+                        android:focusable="true"
+                        android:clickable="true" />
+                </LinearLayout>
+
+                <!-- Text Color -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subtitle_style_text_color"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutColorSwatches"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Background Opacity -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subtitle_style_bg_color"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutBgChips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Edge Type -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subtitle_style_edge_type"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="8dp" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:id="@+id/layoutEdgeChips"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <!-- Bottom Margin Stepper Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/subtitle_style_bottom_margin"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <Button
+                        android:id="@+id/btnBottomMarginDec"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="−"
+                        android:textSize="18sp"
+                        android:textColor="@color/tv_text_primary"
+                        android:background="@drawable/selector_tv_button_yellow"
+                        android:focusable="true"
+                        android:clickable="true" />
+
+                    <TextView
+                        android:id="@+id/txtBottomMarginValue"
+                        android:layout_width="64dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="28 dp"
+                        android:textColor="@color/tv_accent"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-bold" />
+
+                    <Button
+                        android:id="@+id/btnBottomMarginInc"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="+"
+                        android:textSize="18sp"
+                        android:textColor="@color/tv_text_primary"
+                        android:background="@drawable/selector_tv_button_yellow"
+                        android:focusable="true"
+                        android:clickable="true" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Embedded Styles Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_tv_card_glass"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/subtitle_style_apply_embedded"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/subtitle_style_apply_embedded_desc"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchApplyEmbedded"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- Done Action Button -->
+            <Button
+                android:id="@+id/btnDone"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/btn_done"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-bold"
+                android:background="@drawable/selector_tv_button_yellow"
+                android:focusable="true"
+                android:clickable="true"
+                android:textAllCaps="false" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

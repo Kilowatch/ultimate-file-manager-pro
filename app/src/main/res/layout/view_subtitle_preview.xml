@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Live Subtitle Preview Container (UFMStandard) -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:background="@drawable/bg_subtitle_preview"
+    android:clipToOutline="true">
+
+    <!-- Subtitle View -->
+    <androidx.media3.ui.SubtitleView
+        android:id="@+id/previewSubtitleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|center_horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp" />
+
+    <!-- Subtle Preview Chip in top-end corner -->
+    <TextView
+        android:id="@+id/txtPreviewBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_chip"
+        android:paddingStart="8dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="3dp"
+        android:text="@string/subtitle_style_preview_title"
+        android:textColor="@color/ufm_primary"
+        android:textSize="11sp"
+        android:fontFamily="sans-serif-medium" />
+</FrameLayout>

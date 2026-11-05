@@ -53,6 +53,7 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.PlayerView
+import za.kilowatch.ultimatefilemanager.viewer.subtitles.SubtitleStyleApplier
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import coil3.ImageLoader
@@ -705,6 +706,7 @@ class SlideShowActivity : AppCompatActivity() {
                     val newPlayer = ExoPlayer.Builder(context).build()
                     player = newPlayer
                     holder.playerView.player = newPlayer
+                    SubtitleStyleApplier.apply(holder.playerView, context)
                     newPlayer.setMediaSource(mediaSource)
                     newPlayer.prepare()
                     newPlayer.addListener(playerListener)

@@ -82,15 +82,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Subtitle overlay — positioned at bottom of video surface -->
-    <androidx.media3.ui.SubtitleView
-        android:id="@+id/subtitleView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="140dp"
-        android:visibility="gone" />
-
     <!-- Top Bar -->
     <LinearLayout
         android:id="@+id/topBar"
@@ -300,14 +291,35 @@
         android:elevation="16dp"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/trackSheetTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/tv_text_primary"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:text="@string/audio_track" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/trackSheetTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="@string/audio_track" />
+
+            <ImageButton
+                android:id="@+id/btnTrackSheetSubtitleStyle"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="7dp"
+                android:background="@drawable/selector_tv_button_yellow"
+                android:src="@drawable/ic_subtitles"
+                app:tint="@color/tv_accent"
+                android:focusable="true"
+                android:clickable="true"
+                android:contentDescription="@string/subtitle_style_dialog_title"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <za.kilowatch.ultimatefilemanager.viewer.MaxHeightScrollView
             android:id="@+id/trackSheetScrollView"

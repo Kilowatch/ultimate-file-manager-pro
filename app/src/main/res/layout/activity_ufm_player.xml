@@ -50,15 +50,6 @@
         app:tint="@color/ufm_text_secondary"
         android:visibility="gone" />
 
-    <!-- Subtitle overlay — positioned at bottom of video surface -->
-    <androidx.media3.ui.SubtitleView
-        android:id="@+id/subtitleView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="100dp"
-        android:visibility="gone" />
-
     <!-- Gesture Overlay (Mobile video gesture controls) -->
     <za.kilowatch.ultimatefilemanager.viewer.PlayerGestureOverlayView
         android:id="@+id/gestureOverlay"
@@ -163,14 +154,33 @@
             android:elevation="16dp"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/trackSheetTitle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="@string/audio_track" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/trackSheetTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="@string/audio_track" />
+
+                <ImageButton
+                    android:id="@+id/btnTrackSheetSubtitleStyle"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:padding="6dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:src="@drawable/ic_subtitles"
+                    app:tint="?attr/colorPrimary"
+                    android:contentDescription="@string/subtitle_style_dialog_title"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <za.kilowatch.ultimatefilemanager.viewer.MaxHeightScrollView
                 android:id="@+id/trackSheetScrollView"

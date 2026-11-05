@@ -11850,6 +11850,125 @@ Proton Drive
 Длина перемотки установлена на %1$s
 </string>
 
+    <!-- Subtitle Style & Accessibility Customization -->
+    <string name="settings_subtitle_style_title">
+Subtitle style
+</string>
+    <string name="settings_subtitle_style_desc">
+Configure in-app subtitle appearance, font size, and system caption synchronization.
+</string>
+    <string name="subtitle_style_summary_system">
+System caption style
+</string>
+    <string name="subtitle_style_summary_custom">
+UFM custom style (%1$s)
+</string>
+    <string name="subtitle_style_dialog_title">
+Subtitle Style
+</string>
+    <string name="subtitle_style_mode_system">
+System Caption Style
+</string>
+    <string name="subtitle_style_mode_system_desc">
+Follows device Accessibility caption settings even when system captions are disabled.
+</string>
+    <string name="subtitle_style_mode_custom">
+UFM Custom Style
+</string>
+    <string name="subtitle_style_mode_custom_desc">
+Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+</string>
+    <string name="subtitle_style_open_system">
+Open Device Caption Settings
+</string>
+    <string name="subtitle_style_system_unavailable">
+System caption settings not available on this device; using UFM style.
+</string>
+    <string name="subtitle_style_preview_title">
+Preview
+</string>
+    <string name="subtitle_style_preview_line1">
+Ultimate File Manager Pro
+</string>
+    <string name="subtitle_style_preview_line2">
+Live subtitle preview • Crisp text styling
+</string>
+    <string name="subtitle_style_text_size">
+Text size
+</string>
+    <string name="subtitle_style_text_color">
+Text color
+</string>
+    <string name="subtitle_style_bg_color">
+Background opacity
+</string>
+    <string name="subtitle_style_edge_type">
+Edge effect
+</string>
+    <string name="subtitle_style_edge_none">
+None
+</string>
+    <string name="subtitle_style_edge_outline">
+Outline
+</string>
+    <string name="subtitle_style_edge_drop_shadow">
+Drop shadow
+</string>
+    <string name="subtitle_style_edge_raised">
+Raised
+</string>
+    <string name="subtitle_style_edge_depressed">
+Depressed
+</string>
+    <string name="subtitle_style_bottom_margin">
+Bottom margin
+</string>
+    <string name="subtitle_style_apply_embedded">
+Apply embedded styles (ASS/SSA/TTML)
+</string>
+    <string name="subtitle_style_apply_embedded_desc">
+When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+</string>
+    <string name="subtitle_style_color_yellow">
+Yellow
+</string>
+    <string name="subtitle_style_color_white">
+White
+</string>
+    <string name="subtitle_style_color_cyan">
+Cyan
+</string>
+    <string name="subtitle_style_color_green">
+Green
+</string>
+    <string name="subtitle_style_color_magenta">
+Magenta
+</string>
+    <string name="subtitle_style_color_orange">
+Orange
+</string>
+    <string name="subtitle_style_bg_transparent">
+None
+</string>
+    <string name="subtitle_style_bg_25">
+25%
+</string>
+    <string name="subtitle_style_bg_50">
+50%
+</string>
+    <string name="subtitle_style_bg_75">
+75%
+</string>
+    <string name="subtitle_style_bg_100">
+Solid
+</string>
+    <string name="player_track_sheet_subtitle_style">
+Subtitle Style…
+</string>
+    <string name="player_track_sheet_subtitle_style_desc">
+Customize colors, size &amp; appearance
+</string>
+
     <!-- UFM Media Player — Speed & Skip Toasts -->
     <string name="player_speed_title">
 Скорость воспроизведения

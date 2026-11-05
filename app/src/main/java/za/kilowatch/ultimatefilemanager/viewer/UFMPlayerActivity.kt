@@ -46,6 +46,9 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.SubtitleView
+import za.kilowatch.ultimatefilemanager.viewer.subtitles.SubtitleStyleApplier
+import za.kilowatch.ultimatefilemanager.viewer.subtitles.CaptioningObserver
+import za.kilowatch.ultimatefilemanager.viewer.subtitles.SubtitleStyleDialog
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -117,7 +120,9 @@ class UFMPlayerActivity : AppCompatActivity() {
     private lateinit var btnInfo: ImageButton
     private lateinit var btnSkipBack: ImageButton
     private lateinit var btnSkipForward: ImageButton
-    private lateinit var subtitleView: SubtitleView
+    private val subtitleView: SubtitleView? get() = if (::playerView.isInitialized) playerView.subtitleView else null
+    private var btnTrackSheetSubtitleStyle: ImageButton? = null
+    private var captioningObserver: CaptioningObserver? = null
     private lateinit var trackSheetLayout: View
     private lateinit var trackSheetList: LinearLayout
     private lateinit var trackSheetTitle: TextView
@@ -291,6 +296,7 @@ class UFMPlayerActivity : AppCompatActivity() {
                 val p = svc.getPlayer()
                 player = p
                 playerView.player = p
+                applySubtitleStyle()
                 p?.removeListener(activityPlayerListener)
                 p?.addListener(activityPlayerListener)
                 p?.currentTracks?.let { tracks ->
@@ -617,7 +623,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             if (!isDestroyed && !isFinishing && !isShowingSheet && !isTvPlaylistDrawerOpen && !(isTv && isTvSeeking)) {
                 controlsLayout.animate().alpha(0f).setDuration(300).withEndAction {
                     controlsLayout.visibility = View.GONE
-                    subtitleView.setPadding(0, 0, 0, dp(16))
+                    SubtitleStyleApplier.updateBottomPadding(subtitleView, this@UFMPlayerActivity, extraOffsetPx = 0)
                 }
                 topBar.animate().alpha(0f).setDuration(300).withEndAction {
                     topBar.visibility = View.GONE
@@ -905,7 +911,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             audioPlaceholder.visibility = View.GONE
             audioPosterScrim.visibility = View.GONE
             playerView.visibility = View.GONE
-            subtitleView.visibility = View.GONE
+            subtitleView?.visibility = View.GONE
             btnSubtitles.visibility = View.GONE
             updateAlpha(btnAudioTrack, false)
             btnAudioTrack.isEnabled = false
@@ -957,12 +963,15 @@ class UFMPlayerActivity : AppCompatActivity() {
             playbackService?.getPlayer()?.let { p ->
                 player = p
                 playerView.player = p
+                applySubtitleStyle()
             }
         }
         // Re-apply system bar state to match the current controls visibility.
         if (!isTv && ::controlsLayout.isInitialized && controlsLayout.visibility == View.GONE) {
             hideSystemBarsForVideo()
         }
+        captioningObserver?.register()
+        applySubtitleStyle()
     }
 
     override fun onPause() {
@@ -978,9 +987,12 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        captioningObserver?.unregister()
     }
 
     override fun onDestroy() {
+        captioningObserver?.unregister()
+        captioningObserver = null
         if (::svgPlayerView.isInitialized) {
             svgPlayerView.destroy()
         }
@@ -1146,6 +1158,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             playbackService?.getPlayer()?.let { p ->
                 player = p
                 playerView.player = p
+                applySubtitleStyle()
                 p.removeListener(activityPlayerListener)
                 p.addListener(activityPlayerListener)
                 p.currentTracks?.let { detectAndUpdateTracks(it) }
@@ -1213,7 +1226,16 @@ class UFMPlayerActivity : AppCompatActivity() {
         btnInfo = findViewById(R.id.btnInfo)
         btnSkipBack = findViewById(R.id.btnSkipBack)
         btnSkipForward = findViewById(R.id.btnSkipForward)
-        subtitleView = findViewById(R.id.subtitleView)
+        btnTrackSheetSubtitleStyle = findViewById(R.id.btnTrackSheetSubtitleStyle)
+        btnTrackSheetSubtitleStyle?.setOnClickListener {
+            dismissTrackSheet()
+            SubtitleStyleDialog.show(supportFragmentManager, this) {
+                applySubtitleStyle()
+            }
+        }
+        captioningObserver = CaptioningObserver(this) {
+            runOnUiThread { applySubtitleStyle() }
+        }
         trackSheetLayout = findViewById(R.id.trackSheetLayout)
         trackSheetList = findViewById(R.id.trackSheetList)
         trackSheetTitle = findViewById(R.id.trackSheetTitle)
@@ -1328,7 +1350,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             }
         }
 
-        subtitleView.visibility = View.GONE
+        subtitleView?.visibility = View.GONE
 
         updateAlpha(btnAudioTrack, false)
         updateAlpha(btnSubtitles, false)
@@ -1697,7 +1719,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         if (!isDestroyed && !isFinishing && !isShowingSheet && !isTvPlaylistDrawerOpen) {
             controlsLayout.animate().alpha(0f).setDuration(250).withEndAction {
                 controlsLayout.visibility = View.GONE
-                subtitleView.setPadding(0, 0, 0, dp(16))
+                SubtitleStyleApplier.updateBottomPadding(subtitleView, this, extraOffsetPx = 0)
             }
             topBar.animate().alpha(0f).setDuration(250).withEndAction {
                 topBar.visibility = View.GONE
@@ -1717,7 +1739,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         topBar.alpha = 1f
         sideControlsLayout?.visibility = View.VISIBLE
         sideControlsLayout?.alpha = 1f
-        subtitleView.setPadding(0, 0, 0, dp(100))
+        SubtitleStyleApplier.updateBottomPadding(subtitleView, this, extraOffsetPx = dp(84))
         if (!isTv) showSystemBarsForVideo()
 
         val isPlayingNow = if (::svgPlayerView.isInitialized && svgPlayerView.visibility == View.VISIBLE) {
@@ -2051,11 +2073,11 @@ class UFMPlayerActivity : AppCompatActivity() {
         updateAlpha(btnSubtitles, hasSubtitles)
 
         if (anySubSelected) {
-            if (subtitleView.visibility != View.VISIBLE) {
-                subtitleView.visibility = View.VISIBLE
+            if (subtitleView?.visibility != View.VISIBLE) {
+                subtitleView?.visibility = View.VISIBLE
             }
         } else {
-            subtitleView.visibility = View.GONE
+            subtitleView?.visibility = View.GONE
         }
     }
 
@@ -2206,6 +2228,13 @@ class UFMPlayerActivity : AppCompatActivity() {
             }
             p.trackSelectionParameters = builder.build()
             p.currentTracks?.let { detectAndUpdateTracks(it) }
+            applySubtitleStyle()
+        }
+    }
+
+    private fun applySubtitleStyle() {
+        if (::playerView.isInitialized) {
+            SubtitleStyleApplier.apply(playerView, this)
         }
     }
 
@@ -2232,6 +2261,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         trackSheetTitle.text = getString(
             if (isAudio) R.string.audio_track else R.string.subtitles
         )
+        btnTrackSheetSubtitleStyle?.visibility = if (isAudio) View.GONE else View.VISIBLE
 
         trackSheetList.removeAllViews()
 
@@ -2271,6 +2301,18 @@ class UFMPlayerActivity : AppCompatActivity() {
                     onClick = { applySubtitleTrack(track); dismissTrackSheet() }
                 ))
             }
+            trackSheetList.addView(createTrackItemView(
+                label = getString(R.string.player_track_sheet_subtitle_style),
+                type = null,
+                isSelected = false,
+                isTv = isTv,
+                onClick = {
+                    dismissTrackSheet()
+                    SubtitleStyleDialog.show(supportFragmentManager, this@UFMPlayerActivity) {
+                        applySubtitleStyle()
+                    }
+                }
+            ))
         }
 
         val scrollView = findViewById<MaxHeightScrollView?>(R.id.trackSheetScrollView)
@@ -2777,7 +2819,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         audioPoster.visibility = View.GONE
         audioPlaceholder.visibility = View.GONE
         audioPosterScrim.visibility = View.GONE
-        subtitleView.visibility = View.GONE
+        subtitleView?.visibility = View.GONE
         btnSubtitles.visibility = View.GONE
         updateAlpha(btnAudioTrack, false)
         btnAudioTrack.isEnabled = false

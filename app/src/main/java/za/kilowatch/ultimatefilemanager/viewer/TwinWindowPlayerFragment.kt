@@ -31,6 +31,7 @@ import androidx.media3.datasource.DataSource
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import za.kilowatch.ultimatefilemanager.viewer.subtitles.SubtitleStyleApplier
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
@@ -470,6 +471,7 @@ class TwinWindowPlayerFragment : Fragment() {
 
         player = newPlayer
         playerView.player = newPlayer
+        SubtitleStyleApplier.apply(playerView, requireContext())
 
         newPlayer.addListener(object : Player.Listener {
             override fun onTracksChanged(tracks: androidx.media3.common.Tracks) {
@@ -795,6 +797,9 @@ class TwinWindowPlayerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        if (::playerView.isInitialized) {
+            SubtitleStyleApplier.apply(playerView, requireContext())
+        }
         player?.let {
             if (!it.isPlaying) {
                 it.play()

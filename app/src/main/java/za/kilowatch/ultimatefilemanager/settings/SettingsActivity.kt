@@ -33,6 +33,7 @@ import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager.ViewMode
 import za.kilowatch.ultimatefilemanager.storage.FloatingBarManager
+import za.kilowatch.ultimatefilemanager.viewer.subtitles.SubtitleStyleDialog
 import za.kilowatch.ultimatefilemanager.storage.QuickAccessManager
 
 /**
@@ -131,6 +132,7 @@ class SettingsActivity : AppCompatActivity() {
     private var switchPlayerGestures: SwitchMaterial? = null
     private var switchPlayerButtonToasts: SwitchMaterial? = null
     private var txtPlayerButtonToastsSubtitle: TextView? = null
+    private var txtSubtitleStyleSubtitle: TextView? = null
 
     private var switchBreadcrumbs: SwitchMaterial? = null
     private var txtBreadcrumbsSubtitle: TextView? = null
@@ -653,7 +655,20 @@ class SettingsActivity : AppCompatActivity() {
         if (cardSkipLength != null) {
             txtSkipLengthSubtitle = findViewById(R.id.txtSkipLengthSubtitle)
             updateSkipLengthSubtitle()
+        updateSubtitleStyleSubtitle()
             cardSkipLength.setOnClickListener { showSkipLengthDialog() }
+        }
+
+        // Subtitle Style row
+        val cardSubtitleStyle = findViewById<View>(R.id.cardSubtitleStyle)
+        if (cardSubtitleStyle != null) {
+            txtSubtitleStyleSubtitle = findViewById(R.id.txtSubtitleStyleSubtitle)
+            updateSubtitleStyleSubtitle()
+            cardSubtitleStyle.setOnClickListener {
+                SubtitleStyleDialog.show(supportFragmentManager, this) {
+                    updateSubtitleStyleSubtitle()
+                }
+            }
         }
 
         // Breadcrumbs toggle (mobile only)
@@ -899,6 +914,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<View>(R.id.cardAutoplayNext)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardBackgroundVideoMode)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardSkipLength)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardSubtitleStyle)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardMiniPlayer)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardResumeAfterInterruption)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardPlayerButtonToasts)?.let { setupTvCardFocus(it) }
@@ -1254,6 +1270,7 @@ class SettingsActivity : AppCompatActivity() {
             updatePlayerButtonToastsSubtitle(enabled)
         }
         updateSkipLengthSubtitle()
+        updateSubtitleStyleSubtitle()
 
         // Refresh Breadcrumbs subtitle
         switchBreadcrumbs?.let { sw ->
@@ -2359,6 +2376,10 @@ class SettingsActivity : AppCompatActivity() {
         txtSkipLengthSubtitle?.text = PlayerPreferencesManager.formatSkipLabel(this)
     }
 
+    private fun updateSubtitleStyleSubtitle() {
+        txtSubtitleStyleSubtitle?.text = PlayerPreferencesManager.formatSubtitleStyleSummary(this)
+    }
+
     private fun showSkipLengthDialog() {
         val layoutRes = if (isTv) R.layout.dialog_skip_length_tv else R.layout.dialog_skip_length
         val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
@@ -2395,6 +2416,7 @@ class SettingsActivity : AppCompatActivity() {
                 dialog.dismiss()
                 PlayerPreferencesManager.setSkipLengthSeconds(this, seconds)
                 updateSkipLengthSubtitle()
+        updateSubtitleStyleSubtitle()
                 val label = PlayerPreferencesManager.formatSkipLabel(this)
                 android.widget.Toast.makeText(this, getString(R.string.skip_length_toast_set, label), android.widget.Toast.LENGTH_SHORT).show()
             }
@@ -2780,6 +2802,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardMiniPlayer, "settings_mini_player", R.drawable.ic_list_view_custom),
             CardIcon(R.id.cardResumeAfterInterruption, "settings_resume_interruption", R.drawable.ic_phone),
             CardIcon(R.id.cardSkipLength, "settings_skip_length", R.drawable.ic_skip_forward),
+            CardIcon(R.id.cardSubtitleStyle, "settings_subtitle_style", R.drawable.ic_subtitles),
             CardIcon(R.id.cardRootAccess, "settings_root_access", R.drawable.ic_root_storage),
             CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
             CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size),

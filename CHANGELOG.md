@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.4] — 2026-11-05
 
 ### Added
+- **Subtitle Styling Customization (Mobile & Android TV)**: Full subtitle styling customization for the video player supporting both system caption styles and custom UFM styling (yellow `#FBBF24` font, outline, size, color, background, edge effects, and bottom margin).
+- **UFMStandard Subtitle Styling Dialogs**: Mobile glass bottom sheet and Android TV centered 680dp D-pad navigable dialog featuring interactive live subtitle preview against a simulated video gradient.
+- **Direct Subtitle Styling Quick-Access**: Added a direct "Subtitle Style" entry button in the in-player subtitle track selection sheet.
+- **Global Subtitle Styling Settings**: Dedicated Subtitle Styling preference under Player Settings in SettingsActivity with live summary updates.
+- **Direct CaptioningManager Integration**: Direct OS captioning style retrieval reading system font scale and user style regardless of whether the global master accessibility CC toggle is enabled.
 - **Custom "Open With" Resolver & Chooser (Mobile & Android TV)**: Replaced Android's capped system resolver with a custom, high-performance "Open With" experience that discovers and lists all installed applications capable of handling the file with no 10-app limit.
 - **Full Media Player & Document Visibility**: Added package queries for popular video players (MX Player Free/Pro, VLC, Just Player, Kodi, MPV, Nova) and document viewers, guaranteeing they appear in the chooser without needing broad query permissions.
 - **UFMStandard Glass Mobile Bottom Sheet**: Displays file preview header (name, size, MIME type badge), responsive 4-column app grid, dynamic search bar when over 12 apps are installed, a dedicated "Always use selected app" glass card with toggle switch, and a full-width "Use Android System Chooser" button.
@@ -20,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Save Favorite Home Screen Toggle**: Added an "Add to home screen" checkbox in the Add/Save Favorite dialog across Standalone, Tabbed, and Twin-Window browsers.
 - **Favorite Star Badge Overlays**: Overlaid a distinctive gold star badge on the top-right corner of all launcher shortcut icons and TV preview cards.
 - **Manage Favorites Home Screen Actions**: Tapping the trash icon in Settings → Manage Favorites for a pinned item opens a UFMStandard dialog with options to either remove from the home screen or delete the favorite completely.
+
+### Changed
+- **Unified Subtitle Rendering**: Consolidated video player subtitle rendering to the canonical `playerView.subtitleView`, removing redundant overlaid subtitle views.
+- **Dynamic Subtitle Elevation**: Automatically elevates subtitles above player controls when media controls are visible and lowers them when controls hide.
 
 ### Fixed
 - **Android TV Preview Channel Publishing**: Attached the channel logo directly during channel creation, resolving channel rollback in the TV Provider and ensuring UFM correctly appears in Android TV "Customize channels".
