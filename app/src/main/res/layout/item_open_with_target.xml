@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="8dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- App Icon with Badge support -->
+    <FrameLayout
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="6dp">
+
+        <ImageView
+            android:id="@+id/imgAppIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            tools:src="@mipmap/ic_launcher"
+            android:contentDescription="@null" />
+
+        <!-- Optional Work Profile Badge -->
+        <ImageView
+            android:id="@+id/imgBadge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="bottom|end"
+            android:visibility="gone"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- App Display Label (Max 2 lines, centered) -->
+    <TextView
+        android:id="@+id/txtAppLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="2"
+        android:minLines="2"
+        android:ellipsize="end"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-medium"
+        tools:text="MX Player Pro" />
+
+    <!-- Disambiguation package (shown only if identical app names) -->
+    <TextView
+        android:id="@+id/txtDisambiguation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="middle"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="10sp"
+        android:visibility="gone"
+        tools:text="com.mxtech.videoplayer.pro" />
+
+</LinearLayout>

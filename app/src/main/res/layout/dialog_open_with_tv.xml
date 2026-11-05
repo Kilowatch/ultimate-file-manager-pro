@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Open With Dialog - Centered 780dp Glass Panel with Full D-Pad Navigation -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="780dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="26dp">
+
+    <!-- Header with Hero Icon Badge and File Details -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_apps"
+                app:tint="@color/tv_accent"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtHeaderTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/open_with_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:id="@+id/txtFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="sample_video.mkv" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Glass Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tv_glass_border"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- TV D-Pad Instruction Hint -->
+    <TextView
+        android:id="@+id/txtTvInstructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:text="@string/open_with_tv_instructions"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-medium" />
+
+    <!-- Content Area: App Grid, Loading, or Empty -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="280dp">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvApps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:clipToPadding="false"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/emptyStateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/txtEmptyMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/open_with_no_apps"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="16sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSearchPlayStore"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/selector_tv_button_yellow"
+                android:text="@string/open_with_search_store"
+                android:textColor="@color/tv_button_focused_yellow_text"
+                android:focusable="true" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Glass Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tv_glass_border"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Embedded TV Action Buttons (Always stacked horizontally with D-pad navigation) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnJustOnce"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:text="@string/open_with_just_once"
+            android:textColor="@color/tv_button_focused_yellow_text"
+            android:fontFamily="sans-serif-bold"
+            android:textSize="14sp"
+            android:focusable="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAlways"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/selector_tv_button"
+            android:text="@string/open_with_always"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="14sp"
+            android:focusable="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSystemChooser"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1.2"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/selector_tv_button"
+            android:text="@string/open_with_system_chooser"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="13sp"
+            android:focusable="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="0.8"
+            android:background="@drawable/selector_tv_button"
+            android:text="@android:string/cancel"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="14sp"
+            android:focusable="true" />
+    </LinearLayout>
+
+</LinearLayout>

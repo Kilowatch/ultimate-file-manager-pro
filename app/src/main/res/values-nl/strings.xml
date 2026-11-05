@@ -15644,6 +15644,53 @@ The file or folder could not be found. It may have been moved, deleted, or is on
     <string name="fav_shortcut_error_ok">
 OK
 </string>
+
+    <!-- Custom Open With Resolver & Chooser -->
+    <string name="open_with_title">
+Open with
+</string>
+    <string name="open_with_search_hint">
+Search apps…
+</string>
+    <string name="open_with_just_once">
+Just once
+</string>
+    <string name="open_with_always">
+Always
+</string>
+    <string name="open_with_always_use_for_ext">
+Always use selected app for .%1$s files
+</string>
+    <string name="open_with_system_chooser">
+More options (System chooser)
+</string>
+    <string name="open_with_always_title">
+Always use selected app
+</string>
+    <string name="open_with_always_desc">
+Remember default for .%1$s files
+</string>
+    <string name="open_with_no_apps">
+No installed applications found to open this file
+</string>
+    <string name="open_with_search_store">
+Search Google Play Store
+</string>
+    <string name="open_with_app_info">
+App info
+</string>
+    <string name="open_with_app_info_desc">
+View application details and system settings
+</string>
+    <string name="open_with_set_default">
+Always use this app
+</string>
+    <string name="open_with_launch_failed">
+Unable to launch %1$s. Falling back to system chooser…
+</string>
+    <string name="open_with_tv_instructions">
+Press OK to open • Long-press OK for default app options
+</string>
 </resources>
 
 

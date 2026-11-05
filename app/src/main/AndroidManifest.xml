@@ -104,8 +104,54 @@
         <package android:name="eu.darken.porter" />
         <package android:name="moe.shizuku.privileged.api" />
         <package android:name="com.hamondev.shevery" />
-            <intent>
+        <!-- Popular media players, document viewers, and editor safety net -->
+        <package android:name="com.mxtech.videoplayer.ad" />
+        <package android:name="com.mxtech.videoplayer.pro" />
+        <package android:name="org.videolan.vlc" />
+        <package android:name="org.videolan.vlc.debug" />
+        <package android:name="com.brouken.player" />
+        <package android:name="org.xbmc.kodi" />
+        <package android:name="is.xyz.mpv" />
+        <package android:name="org.courville.nova" />
+        <package android:name="com.clov4r.android.nil" />
+        <package android:name="com.google.android.exoplayer2.demo" />
+        <package android:name="com.google.android.apps.docs" />
+        <package android:name="com.adobe.reader" />
+        <package android:name="com.microsoft.office.word" />
+        <package android:name="com.microsoft.office.excel" />
+        <package android:name="com.microsoft.office.powerpoint" />
+        <package android:name="com.mobisystems.office" />
+
+        <intent>
             <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="video/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="audio/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="image/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="application/pdf" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="text/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="application/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="*/*" />
         </intent>
     </queries>
 

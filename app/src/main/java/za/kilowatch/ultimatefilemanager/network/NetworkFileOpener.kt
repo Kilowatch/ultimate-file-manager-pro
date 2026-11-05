@@ -596,9 +596,14 @@ object NetworkFileOpener {
                                         DefaultOpenManager.clearPreferredPackage(activity, extension, isNetwork = true)
                                     }
                                     try {
-                                        val chooser = Intent.createChooser(externalIntent, activity.getString(R.string.open_with))
-                                        chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        activity.startActivity(chooser)
+                                        za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                                            context = activity,
+                                            uri = uri,
+                                            mimeType = mime,
+                                            fileName = file.name,
+                                            isNetwork = true,
+                                            forceChooser = true
+                                        )
                                     } catch (_: Exception) {
                                         showError(activity, activity.getString(R.string.no_app_found_to_open_this_file_type), snackAnchorView, onShowSnackbar)
                                     }
@@ -637,12 +642,14 @@ object NetworkFileOpener {
                         }
 
                         try {
-                            val chooser = Intent.createChooser(intent, activity.getString(R.string.open_with))
-                            chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            if (remember) {
-                                registerChosenComponentReceiver(activity, extension, chooser)
-                            }
-                            activity.startActivity(chooser)
+                            za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                                context = activity,
+                                uri = uri,
+                                mimeType = mime,
+                                fileName = file.name,
+                                isNetwork = true,
+                                forceChooser = (preferredPackage == null)
+                            )
                         } catch (_: Exception) {
                             showError(activity, activity.getString(R.string.no_app_found_to_open_this_file_type), snackAnchorView, onShowSnackbar)
                         }
@@ -749,11 +756,14 @@ object NetworkFileOpener {
                             }
 
                             try {
-                                val chooser = Intent.createChooser(intent, activity.getString(R.string.open_with))
-                                if (remember) {
-                                    registerChosenComponentReceiver(activity, extension, chooser)
-                                }
-                                activity.startActivity(chooser)
+                                za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                                    context = activity,
+                                    uri = Uri.parse(proxyUrl),
+                                    mimeType = mime,
+                                    fileName = file.name,
+                                    isNetwork = true,
+                                    forceChooser = (preferredPackage == null)
+                                )
                             } catch (_: Exception) {
                                 showError(activity, activity.getString(R.string.no_app_found_to_open_this_file_type), snackAnchorView, onShowSnackbar)
                             }
@@ -816,12 +826,14 @@ object NetworkFileOpener {
                             }
 
                             try {
-                                val chooser = Intent.createChooser(intent, activity.getString(R.string.open_with))
-                                chooser.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                if (remember) {
-                                    registerChosenComponentReceiver(activity, extension, chooser)
-                                }
-                                activity.startActivity(chooser)
+                                za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                                    context = activity,
+                                    uri = uri,
+                                    mimeType = mime,
+                                    fileName = file.name,
+                                    isNetwork = true,
+                                    forceChooser = (preferredPackage == null)
+                                )
                             } catch (_: Exception) {
                                 showError(activity, activity.getString(R.string.no_app_found_to_open_this_file_type), snackAnchorView, onShowSnackbar)
                             }

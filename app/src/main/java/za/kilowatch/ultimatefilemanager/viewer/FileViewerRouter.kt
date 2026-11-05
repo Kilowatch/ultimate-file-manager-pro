@@ -860,15 +860,15 @@ object FileViewerRouter {
                     }
                     if (runCatching { context.startActivity(direct) }.isSuccess) return@post
                 }
-                val chooser = Intent.createChooser(
-                    Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(chosenUri, resolvedMime)
-                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                        MediaIntentHelper.attachMediaExtras(this, fileName, resolvedSize, resolvedMime)
-                    },
-                    context.getString(R.string.open_with)
+                za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                    context = context,
+                    uri = chosenUri,
+                    mimeType = resolvedMime,
+                    fileName = fileName,
+                    file = null,
+                    isNetwork = true,
+                    forceChooser = true
                 )
-                runCatching { context.startActivity(chooser) }
             }
         }.apply {
             isDaemon = true
@@ -907,7 +907,6 @@ object FileViewerRouter {
         // -- 0. SAF added-location media: hand external players a local HTTP proxy URL
         //        (served from the fast random-access reader) instead of the SAF content URI,
         //        which the FUSE/proxy path cannot sustain for external players.
-        //        Size stat + registration happen off the main thread (review fix).
         var effectiveUri = uri
         if ((ext in AUDIO_EXTENSIONS || ext in VIDEO_EXTENSIONS) &&
             za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
@@ -920,96 +919,16 @@ object FileViewerRouter {
 
         val resolvedMime = MediaIntentHelper.normalizeMediaMimeType(ext, mimeType)
 
-        // -- 1. Try direct launch into the preferred app --
-        if (preferredPackage != null) {
-            android.util.Log.d(tag, "  Trying direct launch into $preferredPackage")
-            val pm = context.packageManager
-            val installed = try { pm.getPackageInfo(preferredPackage, 0); true }
-                            catch (_: PackageManager.NameNotFoundException) { false }
-            if (installed) {
-                val directIntent = Intent(Intent.ACTION_VIEW).apply {
-                    setDataAndType(effectiveUri, resolvedMime)
-                    setPackage(preferredPackage)
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                    MediaIntentHelper.attachMediaExtras(this, file.name, file.length(), resolvedMime)
-                    MediaIntentHelper.attachLocalSubtitles(this, context, file)
-                }
-                val resolves = pm.queryIntentActivities(directIntent, PackageManager.MATCH_DEFAULT_ONLY)
-                android.util.Log.d(tag, "  Direct resolves: ${resolves.size}")
-                if (resolves.isNotEmpty()) {
-                    try {
-                        context.startActivity(directIntent)
-                        android.util.Log.d(tag, "  Direct launch OK")
-                        return
-                    } catch (e: Exception) {
-                        android.util.Log.e(tag, "  Direct launch failed, falling to chooser: ${e.message}", e)
-                    }
-                } else {
-                    android.util.Log.d(tag, "  Preferred app cannot handle mime -- falling to chooser")
-                }
-            } else {
-                android.util.Log.d(tag, "  Preferred package not installed -- clearing pref")
-            }
-            DefaultOpenManager.clearPreferredPackage(context, ext, isNetwork = isNetwork)
-        }
-
-        // -- 2. Build system chooser --
-        android.util.Log.d(tag, "  Building chooser")
-        val viewIntent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(effectiveUri, resolvedMime)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            MediaIntentHelper.attachMediaExtras(this, file.name, file.length(), resolvedMime)
-            MediaIntentHelper.attachLocalSubtitles(this, context, file)
-        }
-        val chooser = Intent.createChooser(viewIntent, context.getString(R.string.open_with))
-
-        // -- 3. Best-effort: attach selection callback (non-fatal if this fails) --
-        if (remember && context is Activity) {
-            try {
-                android.util.Log.d(tag, "  Attaching callback (API ${android.os.Build.VERSION.SDK_INT})")
-                val callbackAction = "${context.packageName}.CHOSEN_EXTERNAL_APP_$ext"
-                // setPackage makes the intent semi-explicit — required on API 34+ when using FLAG_MUTABLE
-                val callbackIntent = Intent(callbackAction).apply { setPackage(context.packageName) }
-                val receiver = object : BroadcastReceiver() {
-                    override fun onReceive(ctx: Context, intent: Intent) {
-                        ctx.unregisterReceiver(this)
-                        @Suppress("DEPRECATION")
-                        val component = intent.getParcelableExtra<ComponentName>(Intent.EXTRA_CHOSEN_COMPONENT)
-                        android.util.Log.d(tag, "  CHOSEN_COMPONENT: $component")
-                        if (component != null) {
-                            DefaultOpenManager.setPreferredPackage(ctx, ext, isNetwork = isNetwork, component.packageName)
-                            android.util.Log.d(tag, "  Saved pkg: ${component.packageName}")
-                        }
-                    }
-                }
-                val piFlags = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S)
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-                else PendingIntent.FLAG_UPDATE_CURRENT
-                val pi = PendingIntent.getBroadcast(context, ext.hashCode(), callbackIntent, piFlags)
-                android.util.Log.d(tag, "  PendingIntent OK, flags=$piFlags")
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    context.registerReceiver(receiver, IntentFilter(callbackAction), Context.RECEIVER_NOT_EXPORTED)
-                } else {
-                    @Suppress("UnspecifiedRegisterReceiverFlag")
-                    context.registerReceiver(receiver, IntentFilter(callbackAction))
-                }
-                android.util.Log.d(tag, "  Receiver registered OK")
-                chooser.putExtra(Intent.EXTRA_CHOSEN_COMPONENT_INTENT_SENDER, pi.intentSender)
-            } catch (e: Exception) {
-                android.util.Log.e(tag, "  Callback setup FAILED (chooser still opens): ${e.message}", e)
-            }
-        } else {
-            android.util.Log.d(tag, "  No callback: remember=$remember isActivity=${context is Activity}")
-        }
-
-        // -- 4. Always launch the chooser -- completely independent of callback setup --
-        try {
-            android.util.Log.d(tag, "  startActivity(chooser)")
-            context.startActivity(chooser)
-            android.util.Log.d(tag, "  Chooser launched OK")
-        } catch (e: Exception) {
-            android.util.Log.e(tag, "  startActivity(chooser) FAILED: ${e.message}", e)
-        }
+        // Delegate to unified OpenWithManager
+        za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+            context = context,
+            file = file,
+            uri = effectiveUri,
+            mimeType = resolvedMime,
+            fileName = file.name,
+            isNetwork = isNetwork,
+            forceChooser = (preferredPackage == null)
+        )
     }
 
     const val EXTRA_FILE_PATH = "extra_file_path"

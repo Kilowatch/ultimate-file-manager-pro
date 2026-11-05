@@ -6525,10 +6525,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                         )
                                     }
                                     try {
-                                        val chooser = android.content.Intent.createChooser(externalIntent, getString(R.string.open_with))
-                                        chooser.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                        startActivity(chooser)
-                                    } catch (e: android.content.ActivityNotFoundException) {
+                                        za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                                            context = this@NetworkBrowserActivity,
+                                            uri = uri,
+                                            mimeType = mime,
+                                            fileName = file.name,
+                                            isNetwork = true,
+                                            forceChooser = true
+                                        )
+                                    } catch (e: Exception) {
                                         showPremiumSnackbar(getString(R.string.no_app_found_to_open_this_file_type))
                                     }
                                 }
@@ -6569,37 +6574,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         }
 
                         try {
-                            val chooser = android.content.Intent.createChooser(intent, getString(R.string.open_with))
-                            chooser.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            if (remember) {
-                                val callbackAction = "${packageName}.CHOSEN_NET_APP_$extension"
-                                val callbackIntent = android.content.Intent(callbackAction).apply { setPackage(packageName) }
-                                val piFlags = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S)
-                                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_MUTABLE
-                                else android.app.PendingIntent.FLAG_UPDATE_CURRENT
-                                val pi = android.app.PendingIntent.getBroadcast(this@NetworkBrowserActivity, extension.hashCode(), callbackIntent, piFlags)
-                                val recv = object : android.content.BroadcastReceiver() {
-                                    override fun onReceive(ctx: android.content.Context, intent: android.content.Intent) {
-                                        ctx.unregisterReceiver(this)
-                                        @Suppress("DEPRECATION")
-                                        val component = intent.getParcelableExtra<android.content.ComponentName>(android.content.Intent.EXTRA_CHOSEN_COMPONENT)
-                                        if (component != null) {
-                                            za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager.setPreferredPackage(
-                                                ctx, extension, isNetwork = true, component.packageName
-                                            )
-                                        }
-                                    }
-                                }
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                                    registerReceiver(recv, android.content.IntentFilter(callbackAction), android.content.Context.RECEIVER_NOT_EXPORTED)
-                                } else {
-                                    @Suppress("UnspecifiedRegisterReceiverFlag")
-                                    registerReceiver(recv, android.content.IntentFilter(callbackAction))
-                                }
-                                chooser.putExtra(android.content.Intent.EXTRA_CHOSEN_COMPONENT_INTENT_SENDER, pi.intentSender)
-                            }
-                            startActivity(chooser)
-                        } catch (e: android.content.ActivityNotFoundException) {
+                            za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                                context = this@NetworkBrowserActivity,
+                                uri = uri,
+                                mimeType = mime,
+                                fileName = file.name,
+                                isNetwork = true,
+                                forceChooser = (preferredPackage == null)
+                            )
+                        } catch (e: Exception) {
                             showPremiumSnackbar(getString(R.string.no_app_found_to_open_this_file_type))
                         }
                     }
@@ -6716,36 +6699,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             }
 
                             try {
-                                val chooser = android.content.Intent.createChooser(intent, getString(R.string.open_with))
-                                if (remember) {
-                                    val callbackAction = "${packageName}.CHOSEN_NET_APP_$extension"
-                                    val callbackIntent = android.content.Intent(callbackAction).apply { setPackage(packageName) }
-                                    val piFlags = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S)
-                                        android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_MUTABLE
-                                    else android.app.PendingIntent.FLAG_UPDATE_CURRENT
-                                    val pi = android.app.PendingIntent.getBroadcast(this@NetworkBrowserActivity, extension.hashCode(), callbackIntent, piFlags)
-                                    val recv = object : android.content.BroadcastReceiver() {
-                                        override fun onReceive(ctx: android.content.Context, intent: android.content.Intent) {
-                                            ctx.unregisterReceiver(this)
-                                            @Suppress("DEPRECATION")
-                                            val component = intent.getParcelableExtra<android.content.ComponentName>(android.content.Intent.EXTRA_CHOSEN_COMPONENT)
-                                            if (component != null) {
-                                                za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager.setPreferredPackage(
-                                                    ctx, extension, isNetwork = true, component.packageName
-                                                )
-                                            }
-                                        }
-                                    }
-                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                                        registerReceiver(recv, android.content.IntentFilter(callbackAction), android.content.Context.RECEIVER_NOT_EXPORTED)
-                                    } else {
-                                        @Suppress("UnspecifiedRegisterReceiverFlag")
-                                        registerReceiver(recv, android.content.IntentFilter(callbackAction))
-                                    }
-                                    chooser.putExtra(android.content.Intent.EXTRA_CHOSEN_COMPONENT_INTENT_SENDER, pi.intentSender)
-                                }
-                                startActivity(chooser)
-                            } catch (e: android.content.ActivityNotFoundException) {
+                                za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                                    context = this@NetworkBrowserActivity,
+                                    uri = android.net.Uri.parse(proxyUrl),
+                                    mimeType = mime,
+                                    fileName = file.name,
+                                    isNetwork = true,
+                                    forceChooser = (preferredPackage == null)
+                                )
+                            } catch (e: Exception) {
                                 showPremiumSnackbar(getString(R.string.no_app_found_to_open_this_file_type))
                             }
                         }
@@ -6810,37 +6772,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             }
 
                             try {
-                                val chooser = android.content.Intent.createChooser(intent, getString(R.string.open_with))
-                                chooser.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                if (remember) {
-                                    val callbackAction = "${packageName}.CHOSEN_NET_APP_$extension"
-                                    val callbackIntent = android.content.Intent(callbackAction).apply { setPackage(packageName) }
-                                    val piFlags = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S)
-                                        android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_MUTABLE
-                                    else android.app.PendingIntent.FLAG_UPDATE_CURRENT
-                                    val pi = android.app.PendingIntent.getBroadcast(this@NetworkBrowserActivity, extension.hashCode(), callbackIntent, piFlags)
-                                    val recv = object : android.content.BroadcastReceiver() {
-                                        override fun onReceive(ctx: android.content.Context, intent: android.content.Intent) {
-                                            ctx.unregisterReceiver(this)
-                                            @Suppress("DEPRECATION")
-                                            val component = intent.getParcelableExtra<android.content.ComponentName>(android.content.Intent.EXTRA_CHOSEN_COMPONENT)
-                                            if (component != null) {
-                                                za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager.setPreferredPackage(
-                                                    ctx, extension, isNetwork = true, component.packageName
-                                                )
-                                            }
-                                        }
-                                    }
-                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                                        registerReceiver(recv, android.content.IntentFilter(callbackAction), android.content.Context.RECEIVER_NOT_EXPORTED)
-                                    } else {
-                                        @Suppress("UnspecifiedRegisterReceiverFlag")
-                                        registerReceiver(recv, android.content.IntentFilter(callbackAction))
-                                    }
-                                    chooser.putExtra(android.content.Intent.EXTRA_CHOSEN_COMPONENT_INTENT_SENDER, pi.intentSender)
-                                }
-                                startActivity(chooser)
-                            } catch (e: android.content.ActivityNotFoundException) {
+                                za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                                    context = this@NetworkBrowserActivity,
+                                    uri = uri,
+                                    mimeType = mime,
+                                    fileName = file.name,
+                                    isNetwork = true,
+                                    forceChooser = (preferredPackage == null)
+                                )
+                            } catch (e: Exception) {
                                 showPremiumSnackbar(getString(R.string.no_app_found_to_open_this_file_type))
                             }
                         }

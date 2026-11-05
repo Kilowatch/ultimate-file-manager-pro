@@ -3498,15 +3498,11 @@ class FileBrowserFragment : Fragment() {
         }
         if (za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.openFile(requireActivity(), file, transitionView)) return
         try {
-            val extension = file.extension.lowercase()
-            val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "*/*"
-            val uri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", file)
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, mimeType)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                za.kilowatch.ultimatefilemanager.viewer.MediaIntentHelper.attachMediaExtras(this, file.name, file.length(), mimeType)
-            }
-            startActivity(Intent.createChooser(intent, getString(R.string.open_with)))
+            za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                context = requireContext(),
+                file = file,
+                fragmentManager = parentFragmentManager
+            )
         } catch (e: Exception) {
             Log.e("FileBrowser", "Open error: ${e.message}")
         }

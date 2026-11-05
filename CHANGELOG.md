@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.4] — 2026-11-05
 
 ### Added
+- **Custom "Open With" Resolver & Chooser (Mobile & Android TV)**: Replaced Android's capped system resolver with a custom, high-performance "Open With" experience that discovers and lists all installed applications capable of handling the file with no 10-app limit.
+- **Full Media Player & Document Visibility**: Added package queries for popular video players (MX Player Free/Pro, VLC, Just Player, Kodi, MPV, Nova) and document viewers, guaranteeing they appear in the chooser without needing broad query permissions.
+- **UFMStandard Glass Mobile Bottom Sheet**: Displays file preview header (name, size, MIME type badge), responsive 4-column app grid, dynamic search bar when over 12 apps are installed, a dedicated "Always use selected app" glass card with toggle switch, and a full-width "Use Android System Chooser" button.
+- **UFMStandard 10-Foot TV Dialog**: Centered 780dp glass dialog with 10-foot typography (18sp text, 56dp+ icons), full D-pad remote directional navigation with yellow glow focus highlights, "Just once" / "Always" footer buttons, and long-press OK context menu ("Always use this app", "App info").
+- **Media & Subtitle Extra Parity**: Full integration with UFM's media intent engine, automatically attaching video titles, resume tracking (`from_start = false`), and sibling subtitles for external players, plus MX Player extras.
+- **Default Application Management**: Set persistent app associations per file extension ("Always"), with automatic recovery if an app is uninstalled, and backup/restore registration in SettingsBackupManager.
 - **Favorites Home Screen Presence (Mobile & Android TV)**: Any saved favorite (folder or file, local or network) can now be pinned directly to the device home screen.
 - **Mobile Launcher Shortcuts**: Pinned shortcuts on mobile launch directly into the folder or open the file in UFM's viewer.
 - **Android TV Preview Channel**: Added a dedicated "UFM Favorites" preview channel on Android TV with 16:9 glass poster cards for pinned items.

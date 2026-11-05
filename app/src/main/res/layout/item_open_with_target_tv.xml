@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:foreground="@drawable/selector_tv_card"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/tv_glass_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="16dp">
+
+        <!-- App Icon (56dp+ for 10-foot viewing) -->
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:id="@+id/imgAppIcon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                tools:src="@mipmap/ic_launcher"
+                android:contentDescription="@null" />
+
+            <ImageView
+                android:id="@+id/imgBadge"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom|end"
+                android:visibility="gone"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <!-- App Label (18sp TV typography) -->
+        <TextView
+            android:id="@+id/txtAppLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="2"
+            android:minLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-bold"
+            tools:text="VLC" />
+
+        <!-- Disambiguation / Package -->
+        <TextView
+            android:id="@+id/txtDisambiguation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="middle"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="org.videolan.vlc" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

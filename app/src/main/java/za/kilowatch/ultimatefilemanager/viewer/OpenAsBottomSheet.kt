@@ -270,7 +270,13 @@ class OpenAsBottomSheet : BottomSheetDialogFragment() {
                 }
             }
             ID_EXTERNAL -> {
-                FileViewerRouter.showOpenWithDialog(ctx, file, isNetwork = isNetwork)
+                za.kilowatch.ultimatefilemanager.viewer.openwith.OpenWithManager.show(
+                    context = ctx,
+                    file = file,
+                    fileName = name,
+                    isNetwork = isNetwork,
+                    forceChooser = true
+                )
             }
         }
     }
