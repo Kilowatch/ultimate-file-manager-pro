@@ -3241,9 +3241,7 @@ Overslaan (veiligste)
     <string name="conflict_strategy_newest">
 Gebruik nieuwste
 </string>
-    <string name="conflict_strategy_keep_local">
-Blijf lokaal
-</string>
+    <string name="conflict_strategy_keep_local">Behoud lokaal bestand</string>
     <string name="conflict_strategy_keep_remote">
 Blijf op afstand
 </string>
