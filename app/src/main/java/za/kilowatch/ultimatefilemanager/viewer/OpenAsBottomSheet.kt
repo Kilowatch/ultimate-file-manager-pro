@@ -37,6 +37,12 @@ class OpenAsBottomSheet : BottomSheetDialogFragment() {
     private var fileName: String? = null
     private var isNetwork: Boolean = false
     private var isTv: Boolean = false
+    var onCancelCallback: (() -> Unit)? = null
+
+    override fun onCancel(dialog: android.content.DialogInterface) {
+        super.onCancel(dialog)
+        onCancelCallback?.invoke()
+    }
 
     data class OpenAsOption(
         val id: String,

@@ -541,6 +541,16 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             // On Android TV, if paired devices exist and setting is enabled, start background foreground service
             if (DeviceUtils.isTvDevice(this@UfmApplication)) {
                 za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.start(this@UfmApplication, delayMs = 2500L)
+                // Reset stale channel ID pref (migration: old builds used publishDefaultChannel
+                // which silently approved the channel — force a fresh channel creation so the
+                // user-facing approval dialog will be shown on next addProgram() call.
+                val tvPrefs = getSharedPreferences("ufm_favorites_prefs", android.content.Context.MODE_PRIVATE)
+                val migratedKey = "tv_channel_migrated_v3"
+                if (!tvPrefs.getBoolean(migratedKey, false)) {
+                    tvPrefs.edit().remove("tv_favorites_channel_id").putBoolean(migratedKey, true).apply()
+                    android.util.Log.d("UfmApplication", "TV channel pref reset for browsable migration")
+                }
+                za.kilowatch.ultimatefilemanager.shortcuts.FavoriteHomeScreenManager.ensureTvChannel(this@UfmApplication)
             }
         }.apply { name = "ufm-pairing-init"; isDaemon = true; start() }
 

@@ -3122,6 +3122,15 @@ class NetworkBrowserFragment : Fragment() {
         val edtFavoriteName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFavoriteName)
         val btnSaveFavorite = dialogView.findViewById<View>(R.id.btnSaveFavorite)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+        val rowAddToHomeScreen = dialogView.findViewById<View>(R.id.rowAddToHomeScreen)
+        val switchAddToHomeScreen = dialogView.findViewById<android.widget.CompoundButton>(R.id.switchAddToHomeScreen)
+
+        if (!isOnTv && !za.kilowatch.ultimatefilemanager.shortcuts.FavoriteHomeScreenManager.isMobilePinSupported(ctx)) {
+            rowAddToHomeScreen?.visibility = View.GONE
+        }
+        rowAddToHomeScreen?.setOnClickListener {
+            switchAddToHomeScreen?.toggle()
+        }
 
         txtOriginalName?.text = file.name
         edtFavoriteName?.setText(file.name)
@@ -3147,13 +3156,16 @@ class NetworkBrowserFragment : Fragment() {
                 } else {
                     file.path
                 }
+                val addToHome = switchAddToHomeScreen?.isChecked == true
                 val favorite = FavoritesManager.FavoriteItem(
-                    id = "fav_${System.currentTimeMillis()}",
+                    id = java.util.UUID.randomUUID().toString(),
                     path = effectivePath,
                     label = name,
                     isFolder = file.isDirectory,
                     isNetwork = true,
-                    shareId = share.id
+                    shareId = share.id,
+                    isPinnedMobile = (!isOnTv && addToHome),
+                    isPinnedTv = (isOnTv && addToHome)
                 )
                 FavoritesManager.addFavorite(ctx, favorite)
                 fileAdapter.refreshFavorites(ctx)
@@ -3161,6 +3173,12 @@ class NetworkBrowserFragment : Fragment() {
                 fileAdapter.exitSelectionMode()
                 showPremiumSnackbar(getString(R.string.favorite_added))
                 dialog.dismiss()
+
+                if (addToHome) {
+                    // pinOrSchedule manages threading internally for TV. Pass the hosting
+                    // Activity so the browsable dialog can be shown from a foreground window.
+                    za.kilowatch.ultimatefilemanager.shortcuts.FavoriteHomeScreenManager.pinOrSchedule(ctx, favorite, activity)
+                }
             }
         }
 

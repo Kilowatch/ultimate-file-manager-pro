@@ -5,6 +5,19 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.4] — 2026-11-05
+
+### Added
+- **Favorites Home Screen Presence (Mobile & Android TV)**: Any saved favorite (folder or file, local or network) can now be pinned directly to the device home screen.
+- **Mobile Launcher Shortcuts**: Pinned shortcuts on mobile launch directly into the folder or open the file in UFM's viewer.
+- **Android TV Preview Channel**: Added a dedicated "UFM Favorites" preview channel on Android TV with 16:9 glass poster cards for pinned items.
+- **Save Favorite Home Screen Toggle**: Added an "Add to home screen" checkbox in the Add/Save Favorite dialog across Standalone, Tabbed, and Twin-Window browsers.
+- **Favorite Star Badge Overlays**: Overlaid a distinctive gold star badge on the top-right corner of all launcher shortcut icons and TV preview cards.
+- **Manage Favorites Home Screen Actions**: Tapping the trash icon in Settings → Manage Favorites for a pinned item opens a UFMStandard dialog with options to either remove from the home screen or delete the favorite completely.
+
+### Fixed
+- **Android TV Preview Channel Publishing**: Attached the channel logo directly during channel creation, resolving channel rollback in the TV Provider and ensuring UFM correctly appears in Android TV "Customize channels".
+
 ## [2.2.3] — 2026-10-28
 
 ### Added

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.shortcuts.FavoriteHomeScreenManager
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
@@ -92,6 +93,14 @@ class ManageFavoritesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        val currentList = FavoritesManager.getFavorites(this)
+        if (currentList.isNotEmpty()) {
+            if (isTv) {
+                FavoriteHomeScreenManager.reconcileTv(this, currentList)
+            } else {
+                FavoriteHomeScreenManager.reconcileMobile(this, currentList)
+            }
+        }
         loadFavorites()
     }
 
@@ -114,6 +123,61 @@ class ManageFavoritesActivity : AppCompatActivity() {
     }
 
     private fun showDeleteFavoriteDialog(favorite: FavoritesManager.FavoriteItem) {
+        val isPinned = if (isTv) favorite.isPinnedTv else favorite.isPinnedMobile
+        if (isPinned) {
+            showHomeOptionsDialog(favorite)
+        } else {
+            showSingleDeleteConfirmDialog(favorite)
+        }
+    }
+
+    private fun showHomeOptionsDialog(favorite: FavoritesManager.FavoriteItem) {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_favorite_home_options_tv
+            else R.layout.dialog_favorite_home_options,
+            null
+        )
+
+        val txtLabel = dialogView.findViewById<TextView>(R.id.txtFavoriteLabel)
+        val btnRemoveFromHome = dialogView.findViewById<View>(R.id.btnRemoveFromHome)
+        val btnDeleteFavorite = dialogView.findViewById<View>(R.id.btnDeleteFavorite)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtLabel?.text = favorite.label
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnRemoveFromHome?.setOnClickListener {
+            dialog.dismiss()
+            if (isTv) {
+                FavoriteHomeScreenManager.removeProgram(this, favorite)
+            } else {
+                FavoriteHomeScreenManager.disableShortcut(this, favorite)
+            }
+            loadFavorites()
+        }
+
+        btnDeleteFavorite?.setOnClickListener {
+            dialog.dismiss()
+            showSingleDeleteConfirmDialog(favorite)
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            btnCancel?.requestFocus()
+        }
+    }
+
+    private fun showSingleDeleteConfirmDialog(favorite: FavoritesManager.FavoriteItem) {
         val dialogView = LayoutInflater.from(this).inflate(
             if (isTv) R.layout.dialog_favorite_remove_confirm_tv
             else R.layout.dialog_favorite_remove_confirm,
@@ -144,7 +208,7 @@ class ManageFavoritesActivity : AppCompatActivity() {
         dialog.show()
 
         if (isTv) {
-            btnCancel.requestFocus()
+            btnCancel?.requestFocus()
         }
     }
 

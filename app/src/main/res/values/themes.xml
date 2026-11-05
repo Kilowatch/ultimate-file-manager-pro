@@ -386,6 +386,15 @@
         <item name="backgroundTint">@android:color/transparent</item>
         <item name="android:elevation">0dp</item>
     </style>
+
+    <!-- Transparent pass-through theme for shortcut handler activities -->
+    <style name="Theme.UFM.Transparent" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
     <!-- TV Yellow Focus style for buttons/spinners -->
     <style name="TvYellowFocusStyle">
         <item name="android:background">@drawable/selector_tv_button_yellow</item>

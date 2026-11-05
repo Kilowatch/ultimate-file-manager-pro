@@ -78,6 +78,46 @@
             android:focusable="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Add to home screen toggle row (TV) -->
+    <LinearLayout
+        android:id="@+id/rowAddToHomeScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:focusable="true"
+        android:background="@drawable/selector_tv_button"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="22dp">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_star"
+            app:tint="?attr/ufmFocusFill"
+            android:layout_marginEnd="12dp"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/fav_home_add_shortcut"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="15sp" />
+
+        <CheckBox
+            android:id="@+id/switchAddToHomeScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:checked="false"
+            android:buttonTint="?attr/ufmFocusFill" />
+    </LinearLayout>
+
     <!-- Buttons -->
     <LinearLayout
         android:layout_width="match_parent"

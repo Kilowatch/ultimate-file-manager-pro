@@ -116,6 +116,7 @@ build_tool_config.json
 build_output/
 APKScripts/
 build.bat
+feature.txt
 
 # ── Python / Scripts (Internal Dev Tools) ────────────────────
 # Comment these out if you WANT to include your helper scripts:

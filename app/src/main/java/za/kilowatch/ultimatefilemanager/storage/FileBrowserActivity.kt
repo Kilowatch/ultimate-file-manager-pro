@@ -4415,6 +4415,15 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         val edtFavoriteName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFavoriteName)
         val btnSaveFavorite = dialogView.findViewById<View>(R.id.btnSaveFavorite)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+        val rowAddToHomeScreen = dialogView.findViewById<View>(R.id.rowAddToHomeScreen)
+        val switchAddToHomeScreen = dialogView.findViewById<android.widget.CompoundButton>(R.id.switchAddToHomeScreen)
+
+        if (!isOnTv && !za.kilowatch.ultimatefilemanager.shortcuts.FavoriteHomeScreenManager.isMobilePinSupported(this)) {
+            rowAddToHomeScreen?.visibility = View.GONE
+        }
+        rowAddToHomeScreen?.setOnClickListener {
+            switchAddToHomeScreen?.toggle()
+        }
 
         txtOriginalName?.text = file.name
         edtFavoriteName?.setText(file.name)
@@ -4425,12 +4434,15 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             if (name.isEmpty()) {
                 showPremiumSnackbar(getString(R.string.favorite_name_empty))
             } else {
+                val addToHome = switchAddToHomeScreen?.isChecked == true
                 val favorite = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.FavoriteItem(
-                    id = "fav_${System.currentTimeMillis()}",
+                    id = java.util.UUID.randomUUID().toString(),
                     path = file.absolutePath,
                     label = name,
                     isFolder = file.isDirectory,
-                    isNetwork = false
+                    isNetwork = false,
+                    isPinnedMobile = (!isOnTv && addToHome),
+                    isPinnedTv = (isOnTv && addToHome)
                 )
                 za.kilowatch.ultimatefilemanager.settings.FavoritesManager.addFavorite(this, favorite)
                 fileAdapter.refreshFavorites(this)
@@ -4438,6 +4450,13 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 fileAdapter.exitSelectionMode()
                 showPremiumSnackbar(getString(R.string.favorite_added))
                 dialog.dismiss()
+
+                if (addToHome) {
+                    // pinOrSchedule manages threading internally for TV (addProgram runs on a worker
+                    // thread and dispatches the browsable dialog back on main). Call directly here so
+                    // the Activity reference is still valid and not null-checked incorrectly.
+                    za.kilowatch.ultimatefilemanager.shortcuts.FavoriteHomeScreenManager.pinOrSchedule(this, favorite, this)
+                }
             }
         }
 

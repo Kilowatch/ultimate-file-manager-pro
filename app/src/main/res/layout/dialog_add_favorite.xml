@@ -84,6 +84,42 @@
             android:textSize="15sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Add to home screen toggle row -->
+    <LinearLayout
+        android:id="@+id/rowAddToHomeScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="20dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_star"
+            app:tint="?attr/colorPrimary"
+            android:layout_marginEnd="10dp"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/fav_home_add_shortcut"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchAddToHomeScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false" />
+    </LinearLayout>
+
     <!-- Save Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSaveFavorite"

@@ -5655,6 +5655,19 @@
     <string name="folder_upload_notice_single_msg">External upload screens (such as %2$s) cannot create directories.\n\nOnly the files inside "%1$s" will be uploaded, not the original folder itself.\n\nTo preserve the full directory structure, choose "Export as ZIP Archive" instead.</string>
     <string name="folder_upload_notice_multi_msg">External upload screens (such as %1$s) cannot create directories.\n\nOnly the files inside selected folders will be uploaded, not the original folders themselves.\n\nTo preserve the full directory structure, choose "Export as ZIP Archive" instead.</string>
     <string name="btn_upload_files_only">Upload Files Only</string>
+
+    <!-- Favorites Home Screen Presence -->
+    <string name="fav_home_options_title">Home Screen Options</string>
+    <string name="fav_home_add_shortcut">Add to home screen</string>
+    <string name="fav_home_remove_shortcut">Remove from home screen</string>
+    <string name="fav_home_delete_favorite">Delete favorite</string>
+    <string name="fav_shortcut_requested_toast">Shortcut requested — check your home screen</string>
+    <string name="fav_shortcut_disabled_toast">Shortcut disabled. Remove it manually from your home screen.</string>
+    <string name="fav_tv_channel_name">UFM Favorites</string>
+    <string name="fav_tv_channel_declined_msg">Channel not approved. You can enable it later in TV Settings → Channels.</string>
+    <string name="fav_shortcut_error_title">Item unavailable</string>
+    <string name="fav_shortcut_error_body">The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.</string>
+    <string name="fav_shortcut_error_ok">OK</string>
 </resources>
 
 

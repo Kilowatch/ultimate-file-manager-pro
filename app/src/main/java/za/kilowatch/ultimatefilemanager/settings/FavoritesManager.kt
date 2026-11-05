@@ -22,7 +22,10 @@ object FavoritesManager {
         val label: String,
         val isFolder: Boolean,
         val isNetwork: Boolean,
-        val shareId: String? = null
+        val shareId: String? = null,
+        val isPinnedMobile: Boolean = false,
+        val isPinnedTv: Boolean = false,
+        val tvProgramUri: String? = null
     ) {
         fun toJson(): JSONObject {
             val json = JSONObject()
@@ -32,6 +35,9 @@ object FavoritesManager {
             json.put("isFolder", isFolder)
             json.put("isNetwork", isNetwork)
             json.put("shareId", shareId)
+            json.put("isPinnedMobile", isPinnedMobile)
+            json.put("isPinnedTv", isPinnedTv)
+            json.put("tvProgramUri", tvProgramUri)
             return json
         }
 
@@ -44,7 +50,10 @@ object FavoritesManager {
                         label = json.getString("label"),
                         isFolder = json.getBoolean("isFolder"),
                         isNetwork = json.optBoolean("isNetwork", false),
-                        shareId = if (json.has("shareId")) json.optString("shareId", null) else null
+                        shareId = if (json.has("shareId") && !json.isNull("shareId")) json.optString("shareId", null) else null,
+                        isPinnedMobile = json.optBoolean("isPinnedMobile", false),
+                        isPinnedTv = json.optBoolean("isPinnedTv", false),
+                        tvProgramUri = if (json.has("tvProgramUri") && !json.isNull("tvProgramUri")) json.optString("tvProgramUri", null) else null
                     )
                 } catch (e: Exception) {
                     null
@@ -85,12 +94,31 @@ object FavoritesManager {
         }
     }
 
+    fun updateItem(context: Context, updatedItem: FavoriteItem) {
+        val currentFavorites = getFavorites(context).toMutableList()
+        val index = currentFavorites.indexOfFirst { it.id == updatedItem.id }
+        if (index != -1) {
+            currentFavorites[index] = updatedItem
+            saveFavorites(context, currentFavorites)
+            notifyWidget(context)
+        }
+    }
+
     fun removeFavorite(context: Context, path: String) {
         val currentFavorites = getFavorites(context).toMutableList()
+        val toRemove = currentFavorites.filter { it.path == path }
         val removed = currentFavorites.removeAll { it.path == path }
         if (removed) {
             saveFavorites(context, currentFavorites)
             notifyWidget(context)
+            // Trigger cleanup for pinned shortcuts / TV programs
+            toRemove.forEach { item ->
+                try {
+                    za.kilowatch.ultimatefilemanager.shortcuts.FavoriteHomeScreenManager.onFavoriteRemoved(context, item)
+                } catch (e: Throwable) {
+                    Log.w("FavoritesManager", "Failed to clean home presence: ${e.message}")
+                }
+            }
         }
     }
 

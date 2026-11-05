@@ -203,15 +203,16 @@ object FileViewerRouter {
      *    for the enter transition into [ImageViewerActivity]. Pass null to skip.
      * @return true if handled (dialog shown or viewer launched), false if caller should fall back.
      */
-    fun openFile(context: Context, file: File, transitionView: android.view.View? = null, isNetwork: Boolean = false): Boolean {
+    fun openFile(context: Context, file: File, transitionView: android.view.View? = null, isNetwork: Boolean = false, onCancel: (() -> Unit)? = null): Boolean {
         val ext = file.extension.lowercase()
         if (ext !in ALL_SUPPORTED && !isDotConfigFile(file.name)) {
             if (hasExternalHandler(context, file)) {
-                showOpenWithDialog(context, file, isNetwork = isNetwork)
+                showOpenWithDialog(context, file, isNetwork = isNetwork, onCancel = onCancel)
                 return true
             } else if (context is androidx.fragment.app.FragmentActivity) {
-                OpenAsBottomSheet.newInstance(file.absolutePath, file.name, isNetwork)
-                    .show(context.supportFragmentManager, OpenAsBottomSheet.TAG)
+                val sheet = OpenAsBottomSheet.newInstance(file.absolutePath, file.name, isNetwork)
+                sheet.onCancelCallback = onCancel
+                sheet.show(context.supportFragmentManager, OpenAsBottomSheet.TAG)
                 return true
             }
             return false
@@ -263,7 +264,7 @@ object FileViewerRouter {
 
         if (hasExternalApps) {
             // Show choice dialog
-            showOpenWithDialog(context, file, isNetwork = isNetwork)
+            showOpenWithDialog(context, file, isNetwork = isNetwork, onCancel = onCancel)
         } else {
             // No external apps — open directly in built-in viewer
             openInBuiltInViewer(context, file, transitionView)
@@ -461,7 +462,7 @@ object FileViewerRouter {
      * Shows a premium-styled "Open with" dialog letting the user choose
      * between UFM's built-in viewer or an external app.
      */
-    fun showOpenWithDialog(context: Context, file: File, isNetwork: Boolean = false) {
+    fun showOpenWithDialog(context: Context, file: File, isNetwork: Boolean = false, onCancel: (() -> Unit)? = null) {
         if (context !is Activity) {
             openInBuiltInViewer(context, file)
             return
@@ -665,14 +666,19 @@ object FileViewerRouter {
         ) {
             dialog.dismiss()
             if (context is androidx.fragment.app.FragmentActivity) {
-                OpenAsBottomSheet.newInstance(file.absolutePath, file.name, isNetwork)
-                    .show(context.supportFragmentManager, OpenAsBottomSheet.TAG)
+                val sheet = OpenAsBottomSheet.newInstance(file.absolutePath, file.name, isNetwork)
+                sheet.onCancelCallback = onCancel
+                sheet.show(context.supportFragmentManager, OpenAsBottomSheet.TAG)
             }
         }
         root.addView(openAsBtn, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply { topMargin = dp(8) })
+
+        if (onCancel != null) {
+            dialog.setOnCancelListener { onCancel.invoke() }
+        }
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()

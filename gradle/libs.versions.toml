@@ -9,6 +9,7 @@ material = "1.14.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 leanback = "1.0.0"
+tvprovider = "1.0.0"
 lifecycleRuntimeKtx = "2.6.2"
 cardview = "1.0.0"
 recyclerview = "1.3.2"
@@ -53,6 +54,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-leanback = { group = "androidx.leanback", name = "leanback", version.ref = "leanback" }
+androidx-tvprovider = { group = "androidx.tvprovider", name = "tvprovider", version.ref = "tvprovider" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleRuntimeKtx" }

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Home Options Dialog - UFM Glass Standard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="650dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="32dp"
+    android:gravity="center_horizontal">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/imgHeroIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_star"
+            app:tint="?attr/ufmFocusFill"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fav_home_options_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Favorite Label Subtitle -->
+    <TextView
+        android:id="@+id/txtFavoriteLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        android:layout_marginBottom="26dp"
+        tools:text="My Favorite Folder" />
+
+    <!-- Button 1: Remove from home screen -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRemoveFromHome"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/fav_home_remove_shortcut"
+        android:background="@drawable/selector_tv_button_yellow"
+        app:backgroundTint="@null"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textColor="?attr/ufmFocusFillText"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-bold"
+        android:focusable="true"
+        android:textAllCaps="false"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Button 2: Delete favorite -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDeleteFavorite"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/fav_home_delete_favorite"
+        android:background="@drawable/bg_tv_btn_delete_selector"
+        app:backgroundTint="@null"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-bold"
+        android:focusable="true"
+        android:textAllCaps="false"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Button 3: Cancel -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/cancel"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="15sp"
+        android:focusable="true"
+        android:textAllCaps="false" />
+
+</LinearLayout>

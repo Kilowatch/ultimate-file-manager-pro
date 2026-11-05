@@ -4,6 +4,9 @@
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <!-- Android TV Preview Channels & Programs -->
+    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" />
+    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <!-- Notifications (API 33+) -->
@@ -412,6 +415,20 @@
         <activity
             android:name=".settings.ManageFavoritesActivity"
             android:exported="false" />
+
+        <!-- Favorite Shortcut Router -->
+        <activity
+            android:name=".shortcuts.FavoriteShortcutActivity"
+            android:theme="@style/Theme.UFM.Transparent"
+            android:exported="true"
+            android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="ufm" android:host="open" />
+            </intent-filter>
+        </activity>
 
         <!-- Folder Sort Overrides Manager -->
         <activity
@@ -1222,6 +1239,17 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Android TV: Initialize Preview Channels & Programs -->
+        <receiver
+            android:name=".shortcuts.TvInitializeProgramsReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.tv.action.INITIALIZE_PROGRAMS" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 
