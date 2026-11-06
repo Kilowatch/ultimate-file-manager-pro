@@ -67,6 +67,15 @@ class ImageViewerActivity : AppCompatActivity() {
     private var currentImageFile: File? = null
     private var isDrawMode = false
 
+    private val destPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            ViewerTransferHelper.handlePickerResult(this, result.data!!)
+            showTransferDialog()
+        }
+    }
+
     // Held as an explicit Lazy (rather than `by lazy`) so onDestroy can tell whether it was
     // ever initialized before shutting it down — an Activity that never loaded an image must
     // not construct an ImageLoader just to shut it down.
@@ -379,7 +388,63 @@ class ImageViewerActivity : AppCompatActivity() {
                 fitImageToView()
                 return true
             }
+
+            override fun onLongPress(e: MotionEvent) {
+                if (isTv || isDrawMode || (::drawingOverlay.isInitialized && drawingOverlay.isCropMode)) return
+                showTransferDialog()
+            }
         })
+    }
+
+    private fun showTransferDialog() {
+        val file = currentImageFile ?: return
+        ViewerTransferHelper.showTransferDialog(
+            activity = this,
+            fileName = file.name,
+            srcLocalFile = file,
+            srcShare = null,
+            srcNetPath = null,
+            onRequestPickDestination = {
+                destPickerLauncher.launch(ViewerTransferHelper.createPickerIntent(this))
+            },
+            onMoveSuccess = {
+                advanceToNextImageOrFinish()
+            }
+        )
+    }
+
+    private fun advanceToNextImageOrFinish() {
+        val file = currentImageFile ?: run { finish(); return }
+        val parentDir = file.parentFile ?: run { finish(); return }
+
+        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this, file)
+        val files = if (isSaf) {
+            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this, parentDir.absolutePath)
+        } else {
+            parentDir.listFiles()?.toList() ?: emptyList()
+        }
+
+        val imageSiblings = files.filter { candidate ->
+            !candidate.isDirectory &&
+                    candidate.extension.lowercase() in FileViewerRouter.IMAGE_EXTENSIONS &&
+                    candidate.absolutePath != file.absolutePath
+        }.sortedWith(za.kilowatch.ultimatefilemanager.util.NaturalSort.byName { it.name })
+
+        if (imageSiblings.isEmpty()) {
+            finish()
+        } else {
+            val nextFile = imageSiblings.firstOrNull {
+                za.kilowatch.ultimatefilemanager.util.NaturalSort.naturalCompare(it.name, file.name) > 0
+            } ?: imageSiblings.first()
+
+            currentImageFile = nextFile
+            txtTitle.text = nextFile.name
+            scaleFactor = 1f
+            translateX = 0f
+            translateY = 0f
+            rotationDegrees = 0f
+            loadImage(nextFile)
+        }
     }
 
     private fun setupTouchHandling() {

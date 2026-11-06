@@ -286,4 +286,8 @@
     <color name="sidebar_btn_primary">#FF2196F3</color>
     <color name="sidebar_btn_secondary">#FFE5E7EB</color>
 
+    <!-- Viewer Transfer Action Buttons -->
+    <color name="viewer_btn_move_light_red">#EF5350</color>
+    <color name="viewer_btn_copy_green">#4CAF50</color>
+
 </resources>

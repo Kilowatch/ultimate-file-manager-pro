@@ -146,6 +146,75 @@ class SlideShowActivity : AppCompatActivity() {
         }
     }
 
+    private var wasSlideshowPlayingBeforeDialog = false
+    private var wasVideoPlayingBeforeDialog = false
+
+    private val destPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            ViewerTransferHelper.handlePickerResult(this, result.data!!)
+            showTransferDialog(viewPager.currentItem)
+        } else {
+            resumePlaybackAfterDialog()
+        }
+    }
+
+    private fun pausePlaybackForDialog() {
+        wasSlideshowPlayingBeforeDialog = isSlideshowPlaying
+        wasVideoPlayingBeforeDialog = player?.isPlaying == true
+        handler.removeCallbacks(slideshowRunnable)
+        player?.pause()
+    }
+
+    private fun resumePlaybackAfterDialog() {
+        if (wasVideoPlayingBeforeDialog) {
+            player?.play()
+        }
+        if (wasSlideshowPlayingBeforeDialog && playlist.isNotEmpty()) {
+            handler.removeCallbacks(slideshowRunnable)
+            handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
+        }
+    }
+
+    private fun showTransferDialog(position: Int) {
+        if (isTv) return
+        val path = playlist.getOrNull(position) ?: return
+        val fileName = path.substringAfterLast("/")
+        val isNetwork = shareId.isNotEmpty() || shareHost.isNotEmpty()
+
+        pausePlaybackForDialog()
+
+        val srcLocalFile = if (!isNetwork) File(path) else null
+        val srcShare = if (isNetwork) {
+            NetworkShareRepository.getInstance(this).getById(shareId)
+                ?: NetworkShare(
+                    id = shareId,
+                    host = shareHost,
+                    name = shareName,
+                    type = try { ShareType.valueOf(provider) } catch (_: Exception) { ShareType.SMB }
+                )
+        } else null
+        val srcNetPath = if (isNetwork) path else null
+
+        ViewerTransferHelper.showTransferDialog(
+            activity = this,
+            fileName = fileName,
+            srcLocalFile = srcLocalFile,
+            srcShare = srcShare,
+            srcNetPath = srcNetPath,
+            onRequestPickDestination = {
+                destPickerLauncher.launch(ViewerTransferHelper.createPickerIntent(this))
+            },
+            onMoveSuccess = {
+                onItemDeleted(position)
+            },
+            onDismissOrCancel = {
+                resumePlaybackAfterDialog()
+            }
+        )
+    }
+
     private val handler = Handler(Looper.getMainLooper())
 
     private val coilLoaderLazy = lazy {
@@ -433,9 +502,19 @@ class SlideShowActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager() {
-        val adapter = SlideShowAdapter(this, playlist, shareId, shareHost, shareName, provider, remotePathExtra, coilLoader, viewPager) {
-            toggleControls()
-        }
+        val adapter = SlideShowAdapter(
+            context = this,
+            playlist = playlist,
+            shareId = shareId,
+            shareHost = shareHost,
+            shareName = shareName,
+            provider = provider,
+            remotePath = remotePathExtra,
+            coilLoader = coilLoader,
+            viewPager = viewPager,
+            onItemClick = { toggleControls() },
+            onItemLongClick = { position -> showTransferDialog(position) }
+        )
         viewPager.adapter = adapter
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -1561,7 +1640,9 @@ class SlideShowActivity : AppCompatActivity() {
 // ── Touch Zoom Listener ──
 class ZoomTouchListener(
     private val viewPager: ViewPager2,
-    private val imageView: ImageView
+    private val imageView: ImageView,
+    private val onItemClick: (() -> Unit)? = null,
+    private val onLongPress: (() -> Unit)? = null
 ) : View.OnTouchListener {
 
     private val matrix = Matrix()
@@ -1593,6 +1674,15 @@ class ZoomTouchListener(
     })
 
     private val gestureDetector = GestureDetector(imageView.context, object : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            onItemClick?.invoke()
+            return true
+        }
+
+        override fun onLongPress(e: MotionEvent) {
+            onLongPress?.invoke()
+        }
+
         override fun onDoubleTap(e: MotionEvent): Boolean {
             if (scaleFactor > minScaleFactor * 1.01f) {
                 reset()
@@ -1737,7 +1827,8 @@ class SlideShowAdapter(
     private val remotePath: String,
     private val coilLoader: ImageLoader,
     private val viewPager: ViewPager2,
-    private val onItemClick: () -> Unit
+    private val onItemClick: () -> Unit,
+    private val onItemLongClick: (Int) -> Unit = {}
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -1755,10 +1846,14 @@ class SlideShowAdapter(
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == TYPE_VIDEO) {
             val view = inflater.inflate(R.layout.item_slideshow_video, parent, false)
-            VideoViewHolder(view, onItemClick)
+            VideoViewHolder(view, onItemClick) { holderPos ->
+                if (holderPos != RecyclerView.NO_POSITION) onItemLongClick(holderPos)
+            }
         } else {
             val view = inflater.inflate(R.layout.item_slideshow_image, parent, false)
-            ImageViewHolder(view, viewPager, coilLoader, shareId, shareHost, shareName, provider, remotePath, onItemClick)
+            ImageViewHolder(view, viewPager, coilLoader, shareId, shareHost, shareName, provider, remotePath, onItemClick) { holderPos ->
+                if (holderPos != RecyclerView.NO_POSITION) onItemLongClick(holderPos)
+            }
         }
     }
 
@@ -1798,7 +1893,8 @@ class SlideShowAdapter(
         private val shareName: String,
         private val provider: String,
         private val remotePath: String,
-        private val onItemClick: () -> Unit
+        private val onItemClick: () -> Unit,
+        private val onItemLongClick: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
         val drawingOverlay: DrawingOverlayView = itemView.findViewById(R.id.drawingOverlay)
@@ -1818,14 +1914,27 @@ class SlideShowAdapter(
         }
 
         fun bind(path: String) {
-            zoomTouchListener = ZoomTouchListener(viewPager, imageView)
+            zoomTouchListener = ZoomTouchListener(
+                viewPager = viewPager,
+                imageView = imageView,
+                onItemClick = onItemClick,
+                onLongPress = {
+                    val pos = bindingAdapterPosition
+                    if (pos != RecyclerView.NO_POSITION) onItemLongClick(pos)
+                }
+            )
             imageView.setOnTouchListener(zoomTouchListener)
 
             imageView.scaleType = ImageView.ScaleType.MATRIX
 
-            // Single tap listener to toggle controls
+            // Single tap and long click listener fallback
             itemView.setOnClickListener { onItemClick() }
             imageView.setOnClickListener { onItemClick() }
+            itemView.setOnLongClickListener {
+                val pos = bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) onItemLongClick(pos)
+                true
+            }
 
             val isLocal = shareId.isEmpty() && shareHost.isEmpty()
             if (isLocal) {
@@ -1966,14 +2075,25 @@ class SlideShowAdapter(
     // Video Page ViewHolder
     class VideoViewHolder(
         itemView: View,
-        private val onItemClick: () -> Unit
+        private val onItemClick: () -> Unit,
+        private val onItemLongClick: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         val playerView: PlayerView = itemView.findViewById(R.id.playerView)
         val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
 
         fun bind(path: String) {
-            itemView.setOnClickListener { onItemClick() }
-            playerView.setOnClickListener { onItemClick() }
+            val clickListener = View.OnClickListener { onItemClick() }
+            val longClickListener = View.OnLongClickListener {
+                val pos = bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) onItemLongClick(pos)
+                true
+            }
+            itemView.setOnClickListener(clickListener)
+            itemView.setOnLongClickListener(longClickListener)
+            playerView.setOnClickListener(clickListener)
+            playerView.setOnLongClickListener(longClickListener)
+            playerView.videoSurfaceView?.setOnClickListener(clickListener)
+            playerView.videoSurfaceView?.setOnLongClickListener(longClickListener)
         }
     }
 }

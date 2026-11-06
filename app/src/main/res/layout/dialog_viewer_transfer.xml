@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mobile Viewer & Slide Show Triage Transfer Dialog — UFMStandard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="20dp"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:id="@+id/imgTransferHero"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_move"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Dialog Title -->
+    <TextView
+        android:id="@+id/txtTransferTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/viewer_transfer_dialog_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Current File Subtitle -->
+    <TextView
+        android:id="@+id/txtTransferSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:textAlignment="center"
+        android:maxLines="2"
+        android:ellipsize="middle"
+        android:layout_marginBottom="16dp"
+        tools:text="IMG_20261106.jpg • /DCIM/Camera" />
+
+    <!-- Destination Card -->
+    <LinearLayout
+        android:id="@+id/cardDestination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="14dp"
+        android:layout_marginBottom="18dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <FrameLayout
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:id="@+id/imgDestCardIcon"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_folder"
+                    app:tint="?attr/colorPrimary"
+                    android:contentDescription="@null" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtDestLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/viewer_transfer_dest_label"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="11sp"
+                    android:textAllCaps="true"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/txtDestFolderName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="Favorites" />
+
+                <TextView
+                    android:id="@+id/txtDestPath"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="12sp"
+                    android:maxLines="2"
+                    android:ellipsize="middle"
+                    android:visibility="gone"
+                    tools:text="/storage/emulated/0/Pictures/Favorites"
+                    tools:visibility="visible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Change Destination Button placed below to avoid horizontal crowding -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnChangeDestination"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/viewer_transfer_change_dest"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-bold"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_edit"
+            app:iconSize="16dp"
+            app:iconTint="@color/white"
+            app:iconGravity="textStart"
+            app:backgroundTint="?attr/colorPrimary"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="10dp" />
+    </LinearLayout>
+
+    <!-- Action Buttons Stack (per UFMStandard: primary stacked on top, secondary/cancel below) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnMoveToDestination"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/viewer_transfer_move_generic"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-bold"
+        app:icon="@drawable/ic_move"
+        app:iconTint="@color/white"
+        app:iconGravity="textStart"
+        app:backgroundTint="@color/viewer_btn_move_light_red"
+        app:cornerRadius="12dp"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCopyToDestination"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/viewer_transfer_copy_generic"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-bold"
+        app:icon="@drawable/ic_copy"
+        app:iconTint="@color/white"
+        app:iconGravity="textStart"
+        app:backgroundTint="@color/viewer_btn_copy_green"
+        app:cornerRadius="12dp"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelTransfer"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@android:string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -453,6 +453,9 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         /** When true, the user is picking a destination folder for Document Scanner Save As */
         const val EXTRA_SCANNER_FOLDER_PICKER = "extra_scanner_folder_picker"
 
+        /** When true, the user is picking a destination folder for UFM Viewer and Slide Show triage */
+        const val EXTRA_VIEWER_DEST_PICKER = "extra_viewer_dest_picker"
+
         /** When true, the user is picking a folder for Smart Sort */
         const val EXTRA_SMART_SORT_PICKER = "extra_smart_sort_picker"
 
@@ -490,6 +493,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
     private var isShareDestPickerMode = false
     private var isNotepadFolderPicker = false
     private var isScannerFolderPicker = false
+    private var isViewerDestPicker = false
     private var isAutoBackupFolderPicker = false
     private var isSafCopyDestPickerMode = false
     private var isSafUploadFilePickerMode = false
@@ -671,6 +675,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
         isShareDestPickerMode = intent.getBooleanExtra(EXTRA_SHARE_DEST_PICKER, false)
         isNotepadFolderPicker = intent.getBooleanExtra(EXTRA_NOTEPAD_FOLDER_PICKER, false)
         isScannerFolderPicker = intent.getBooleanExtra(EXTRA_SCANNER_FOLDER_PICKER, false)
+        isViewerDestPicker = intent.getBooleanExtra(EXTRA_VIEWER_DEST_PICKER, false)
         isAutoBackupFolderPicker = intent.getBooleanExtra(EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
         isSafCopyDestPickerMode = intent.getBooleanExtra(EXTRA_SAF_COPY_DEST_PICKER, false)
         isSafUploadFilePickerMode = intent.getBooleanExtra(EXTRA_SAF_UPLOAD_FILE_PICKER, false)
@@ -790,7 +795,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isExtractDestPickerMode ||
                 isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isLocationPickerMode ||
                 isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
-                isScannerFolderPicker || isAutoBackupFolderPicker || isSafCopyDestPickerMode || isSupportAttachmentPicker ||
+                isScannerFolderPicker || isViewerDestPicker || isAutoBackupFolderPicker || isSafCopyDestPickerMode || isSupportAttachmentPicker ||
                 isFromSearch
 
         if (!isAnyPicker && ::rootPath.isInitialized && ::currentDir.isInitialized) {
@@ -1439,6 +1444,28 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             description = getString(R.string.scanner_folder_picker_title),
             actionText = getString(R.string.scanner_use_this_folder),
             actionIconRes = R.drawable.ic_scanner
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
+                putExtra(RESULT_SELECTED_PATH, path)
+            }
+            setResult(RESULT_OK, result)
+            finish()
+        }
+    }
+
+    private fun showConfirmViewerDestDialog() {
+        val path = currentDir.absolutePath
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.viewer_picker_confirm_title),
+            subtitle = getString(R.string.viewer_picker_confirm_subtitle),
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.viewer_picker_confirm_desc),
+            actionText = getString(R.string.viewer_picker_fab_text),
+            actionIconRes = R.drawable.ic_check_circle
         ) {
             val result = Intent().apply {
                 putExtra(RESULT_SELECTED_LOCAL_PATH, path)
@@ -2469,7 +2496,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             isGifCreatorDestPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode ||
             isAdvancedSyncDestPickerMode || isLocationPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode ||
             isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
-            isScannerFolderPicker || isAutoBackupFolderPicker || isSafCopyDestPickerMode || isSupportAttachmentPicker ||
+            isScannerFolderPicker || isViewerDestPicker || isAutoBackupFolderPicker || isSafCopyDestPickerMode || isSupportAttachmentPicker ||
             isKeyfilePickerMode || isCertPickerMode || isSmartSortPickerMode) {
             layoutSelectionBar.visibility = View.GONE
             applyPickerFabState()
@@ -4952,7 +4979,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             isGifCreatorDestPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode ||
             isAdvancedSyncDestPickerMode || isLocationPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode ||
             isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
-            isScannerFolderPicker || isAutoBackupFolderPicker || isSafCopyDestPickerMode || isKeyfilePickerMode ||
+            isScannerFolderPicker || isViewerDestPicker || isAutoBackupFolderPicker || isSafCopyDestPickerMode || isKeyfilePickerMode ||
             isCertPickerMode || isSupportAttachmentPicker || isSmartSortPickerMode) {
             applyPickerFabState()
             return
@@ -5061,6 +5088,12 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                 fabPaste.setIconResource(R.drawable.ic_scanner)
                 fabPaste.visibility = View.VISIBLE
                 fabPaste.setOnClickListener { showConfirmScannerFolderDialog() }
+            }
+            isViewerDestPicker -> {
+                fabPaste.setText(R.string.viewer_picker_fab_text)
+                fabPaste.setIconResource(R.drawable.ic_folder)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmViewerDestDialog() }
             }
             isAutoBackupFolderPicker -> {
                 fabPaste.setText(R.string.auto_backup_select_folder)

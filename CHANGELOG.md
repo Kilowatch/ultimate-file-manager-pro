@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.4] — 2026-11-05
 
 ### Added
+- **Mobile Long-Press Viewer & Slide Show Triage**: Mobile long-press triage dialog in UFM Viewer and Slide Show to rapidly Copy or Move items to a persistent destination folder across Local, SAF, Network, and Cloud storage with zero data loss conflict handling.
 - **Subtitle Styling Customization (Mobile & Android TV)**: Full subtitle styling customization for the video player supporting both system caption styles and custom UFM styling (yellow `#FBBF24` font, outline, size, color, background, edge effects, and bottom margin).
 - **UFMStandard Subtitle Styling Dialogs**: Mobile glass bottom sheet and Android TV centered 680dp D-pad navigable dialog featuring interactive live subtitle preview against a simulated video gradient.
 - **Direct Subtitle Styling Quick-Access**: Added a direct "Subtitle Style" entry button in the in-player subtitle track selection sheet.

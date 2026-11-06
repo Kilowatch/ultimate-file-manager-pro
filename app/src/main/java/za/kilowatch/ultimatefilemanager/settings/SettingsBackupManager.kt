@@ -308,6 +308,7 @@ object SettingsBackupManager {
             add("tabs_preferences",          context.getString(R.string.backup_pref_tabs))
             add("root_preferences",          context.getString(R.string.backup_pref_root))
             add("floating_bar_prefs",        context.getString(R.string.backup_pref_floating_bar))
+            add("viewer_transfer_prefs",     context.getString(R.string.backup_pref_viewer_transfer))
         }
         if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
             add("ufm_tv_server_prefs",   context.getString(R.string.backup_pref_tv_server))
@@ -644,7 +645,8 @@ object SettingsBackupManager {
                 "ufm_foss_update_prefs"     to R.string.backup_pref_foss_update,
                 "grid_text_position_prefs"  to R.string.backup_pref_grid_text_position,
                 "ufm_view_style_prefs_v2"   to R.string.backup_pref_view_styles,
-                "prefs_duplicate_retention" to R.string.backup_pref_duplicate_retention
+                "prefs_duplicate_retention" to R.string.backup_pref_duplicate_retention,
+                "viewer_transfer_prefs"     to R.string.backup_pref_viewer_transfer
             )
             while (keys.hasNext()) {
                 val key = keys.next()

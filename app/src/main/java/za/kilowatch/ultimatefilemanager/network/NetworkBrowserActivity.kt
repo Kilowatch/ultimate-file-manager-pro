@@ -281,6 +281,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var quickTransferIsMove = false
     private var isShareDestPickerMode = false
     private var isScannerFolderPicker = false
+    private var isViewerDestPicker = false
     private var isAutoBackupFolderPicker = false
     private var isImageCompressDestPickerMode = false
     private var isGifCreatorDestPickerMode = false
@@ -618,6 +619,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         quickTransferIsMove = intent.getStringExtra(EXTRA_QUICK_TRANSFER_OP)?.equals("MOVE", ignoreCase = true) == true
         isShareDestPickerMode = intent.getBooleanExtra(EXTRA_SHARE_DEST_PICKER, false)
         isScannerFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, false)
+        isViewerDestPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_VIEWER_DEST_PICKER, false)
         isAutoBackupFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
         isImageCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
         isGifCreatorDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_GIF_CREATOR_DEST_PICKER, false)
@@ -1373,6 +1375,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         // Scanner folder picker mode: show "Use This Folder" FAB
         if (isScannerFolderPicker) {
+            layoutSelectionBar.visibility = View.GONE
+            showUseFolderFab()
+            return
+        }
+
+        // Viewer destination picker mode: show "Select as Destination" FAB
+        if (isViewerDestPicker) {
             layoutSelectionBar.visibility = View.GONE
             showUseFolderFab()
             return
@@ -2273,6 +2282,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
             fabPaste.setIconResource(R.drawable.ic_scanner)
             fabPaste.visibility = View.VISIBLE
             fabPaste.setOnClickListener { showConfirmScannerNetworkFolderDialog() }
+        } else if (isViewerDestPicker) {
+            fabPaste.setText(R.string.viewer_picker_fab_text)
+            fabPaste.setIconResource(R.drawable.ic_folder)
+            fabPaste.visibility = View.VISIBLE
+            fabPaste.setOnClickListener { showConfirmViewerDestNetworkDialog() }
         } else if (isAutoBackupFolderPicker) {
             fabPaste.setText(R.string.auto_backup_select_folder)
             fabPaste.setIconResource(R.drawable.ic_cloud)
@@ -2540,6 +2554,28 @@ class NetworkBrowserActivity : AppCompatActivity() {
             description = getString(R.string.scanner_folder_picker_title),
             actionText = getString(R.string.scanner_use_this_folder),
             actionIconRes = R.drawable.ic_scanner
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_SHARE_ID, share.id)
+                putExtra(RESULT_SELECTED_NET_PATH, currentPath)
+            }
+            setResult(RESULT_OK, result)
+            finish()
+        }
+    }
+
+    private fun showConfirmViewerDestNetworkDialog() {
+        val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.viewer_picker_confirm_title),
+            subtitle = getString(R.string.viewer_picker_confirm_subtitle),
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.viewer_picker_confirm_desc),
+            actionText = getString(R.string.viewer_picker_fab_text),
+            actionIconRes = R.drawable.ic_check_circle
         ) {
             val result = Intent().apply {
                 putExtra(RESULT_SELECTED_SHARE_ID, share.id)
@@ -3318,7 +3354,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun updatePasteFab() {
         // In sync/compress/quick-transfer folder picker mode + location picker mode the FAB is "Use This Folder" / "Copy Here" / "Move Here" — never hide it here
-        if (isQuickTransferPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isAutoBackupFolderPicker || isImageCompressDestPickerMode || isSafCopyDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
+        if (isQuickTransferPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isViewerDestPicker || isAutoBackupFolderPicker || isImageCompressDestPickerMode || isSafCopyDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
             showUseFolderFab()
             return
         }

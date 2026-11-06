@@ -16142,6 +16142,55 @@ Unable to launch %1$s. Falling back to system chooser…
     <string name="open_with_tv_instructions">
 Press OK to open • Long-press OK for default app options
 </string>
+    <!-- Viewer & Slide Show Long-Press Transfer -->
+    <string name="viewer_picker_fab_text">
+Select as Destination
+</string>
+    <string name="viewer_picker_confirm_title">
+Viewer Destination
+</string>
+    <string name="viewer_picker_confirm_subtitle">
+Confirm Destination Folder
+</string>
+    <string name="viewer_picker_confirm_desc">
+Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+</string>
+    <string name="viewer_transfer_dialog_title">
+File Actions
+</string>
+    <string name="viewer_transfer_dest_label">
+Destination Folder
+</string>
+    <string name="viewer_transfer_no_dest_prompt">
+No destination selected — tap to choose
+</string>
+    <string name="viewer_transfer_change_dest">
+Change
+</string>
+    <string name="viewer_transfer_copy_to">
+Copy to %1$s
+</string>
+    <string name="viewer_transfer_move_to">
+Move to %1$s
+</string>
+    <string name="viewer_transfer_copy_generic">
+Copy to destination
+</string>
+    <string name="viewer_transfer_move_generic">
+Move to destination
+</string>
+    <string name="viewer_transfer_copied_success">
+Copied to %1$s
+</string>
+    <string name="viewer_transfer_moved_success">
+Moved to %1$s
+</string>
+    <string name="viewer_transfer_same_folder">
+Source and destination are the same folder
+</string>
+    <string name="backup_pref_viewer_transfer">
+Viewer Transfer Destination
+</string>
 </resources>
 
 
